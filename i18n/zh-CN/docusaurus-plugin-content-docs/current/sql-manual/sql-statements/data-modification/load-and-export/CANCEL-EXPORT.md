@@ -32,8 +32,8 @@ under the License.
 
 ```sql
 CANCEL EXPORT
-[FROM <db_name>]
-WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
+[ FROM <db_name> ]
+WHERE [ LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "<state>" ]
 ```
 
 ## 可选参数
@@ -49,6 +49,10 @@ WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDIN
 **3. `<label_pattern>`**
 
   模糊匹配的 label 表达式。如果要撤销多个 EXPORT 作业，可以使用 `LIKE` 进行模糊匹配。
+
+**4. `<state>`**
+
+  state 可选项: `PENDING`、`IN_QUEUE`、`EXPORTING`。
 
 ## 权限控制
 

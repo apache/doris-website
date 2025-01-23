@@ -25,7 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 This statement is used to undo an export job for the specified label. Or batch undo export jobs via fuzzy matching.
@@ -34,8 +33,8 @@ This statement is used to undo an export job for the specified label. Or batch u
 
 ```sql
 CANCEL EXPORT
-[FROM <db_name>]
-WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDING/IN_QUEUE/EXPORTING"]
+[ FROM <db_name> ]
+WHERE [ LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "<state>" ]
 ```
 
 ## Optional Parameters
@@ -51,6 +50,10 @@ WHERE [LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "PENDIN
 **3. `<label_pattern>`**
 
   A label expression for fuzzy matching. If you want to undo multiple EXPORT jobs, you can use `LIKE` for fuzzy matching.
+
+**4. `<state>`**
+
+  state options: `PENDING`,`IN_QUEUE`,`EXPORTING`.
 
 ## Access Control Requirements
 

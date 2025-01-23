@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于展示指定的导出任务的执行情况
@@ -35,15 +32,15 @@ under the License.
 
 ```sql
 SHOW EXPORT
-[FROM <db_name>]
+[ FROM <db_name> ]
   [
     WHERE
-      [ID = <job_id>]
-      [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL = <label>]
+      [ ID = <job_id> ]
+      [ STATE = { "PENDING" | "EXPORTING" | "FINISHED" | "CANCELLED" } ]
+      [ LABEL = <label> ]
    ]
-[ORDER BY <column_name> [ASC|DESC] [, column_name [ASC|DESC] ... ]
-[LIMIT <limit>];
+[ ORDER BY <column_name> [ ASC | DESC ] [, column_name [ ASC | DESC ] ... ] ]
+[ LIMIT <limit> ];
 ```
 
 ## 可选参数

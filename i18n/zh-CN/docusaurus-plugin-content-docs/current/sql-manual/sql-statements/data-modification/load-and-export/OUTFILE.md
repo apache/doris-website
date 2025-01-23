@@ -35,8 +35,8 @@ under the License.
 ```sql
 <query_stmt>
 INTO OUTFILE "<file_path>"
-[<format_as>]
-[<properties>]
+[ FORMAT AS <format_as> ]
+[ <properties> ]
 ```
 
 ## 必选参数
@@ -59,18 +59,19 @@ INTO OUTFILE "<file_path>"
 
 **1. `<format_as>`**
 
-```sql
-FORMAT AS CSV
-```
+   指定导出格式。目前支持如下格式：  
+   - `CSV` (默认)
+   - `PARQUET`
+   - `CSV_WITH_NAMES`
+   - `CSV_WITH_NAMES_AND_TYPES`
+   - `ORC`
 
-   指定导出格式。支持 CSV、PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC。 默认为 CSV。
-
-   > 注：PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC 在 1.2 版本开始支持。
+   >   注：PARQUET、CSV_WITH_NAMES、CSV_WITH_NAMES_AND_TYPES、ORC 在 1.2 版本开始支持。
 
 **2. `<properties>`**  
 
 ```sql
-[PROPERTIES ("<key>"="<value>", ...)]
+[ PROPERTIES ("<key>"="<value>" [, ... ]) ]
 ```  
 
 目前支持通过 Broker 进程，或通过 S3/HDFS 协议进行导出。

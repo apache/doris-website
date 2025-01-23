@@ -31,13 +31,13 @@ This statement is used to display information about indexes in a table. Currentl
 ## Syntax
 
 ```SQL
-SHOW INDEX[ES] FROM [<db_name>.]<table_name> [FROM <db_name>];
+SHOW INDEX [ ES ] FROM [ <db_name>. ] <table_name> [ FROM <db_name> ];
 ```
 
 ## Varaint Syntax
 
 ```SQL
-SHOW KEY[S] FROM [<db_name>.]<table_name> [FROM <db_name>];
+SHOW KEY[ S ] FROM [ <db_name>. ] <table_name> [ FROM <db_name> ];
 ```
 ## Required Parameters
 

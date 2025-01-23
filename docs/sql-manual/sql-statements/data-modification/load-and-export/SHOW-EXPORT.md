@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
 This statement is used to display the execution status of a specified export job.
@@ -35,15 +32,15 @@ This statement is used to display the execution status of a specified export job
 
 ```sql
 SHOW EXPORT
-[FROM <db_name>]
+[ FROM <db_name> ]
   [
     WHERE
-      [ID = <job_id>]
-      [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL = <label>]
+      [ ID = <job_id> ]
+      [ STATE = { "PENDING" | "EXPORTING" | "FINISHED" | "CANCELLED" } ]
+      [ LABEL = <label> ]
    ]
-[ORDER BY <column_name> [ASC|DESC] [, column_name [ASC|DESC] ... ]
-[LIMIT <limit>];
+[ ORDER BY <column_name> [ ASC | DESC ] [, column_name [ ASC | DESC ] ... ] ]
+[ LIMIT <limit> ];
 ```
 
 ## Optional Parameters

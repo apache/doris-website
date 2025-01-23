@@ -33,7 +33,7 @@ Before each import task is initiated, execute the statement to clean up the labe
 ## Syntax  
 
 ```sql
-CLEAN LABEL [<label>] FROM <db_name>;
+CLEAN LABEL [ <label> ] FROM <db_name>;
 ```
 
 ## Required Parameters

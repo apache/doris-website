@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 This statement is used to delete an index with a specified name from a table. Currently, only bitmap indexes are supported.
@@ -33,7 +31,7 @@ This statement is used to delete an index with a specified name from a table. Cu
 ## Syntax
 
 ```sql
-DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>;
+DROP INDEX [ IF EXISTS ] <index_name> ON [ <db_name> . ] <table_name>;
 ```
 
 ## Required Parameters

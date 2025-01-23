@@ -24,26 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## 描述
 
 `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
-`EXPORT`是一个异步操作，该命令会提交一个`EXPORT JOB`到 Doris，任务提交成功立即返回。执行后可使用 [SHOW EXPORT](./SHOW-EXPORT) 命令查看进度。
+`EXPORT` 是一个异步操作，该命令会提交一个 `EXPORT JOB` 到 Doris，任务提交成功立即返回。执行后可使用 [SHOW EXPORT](./SHOW-EXPORT) 命令查看进度。
 
 ## 语法：
 
   ```sql
   EXPORT TABLE <table_name>
-  [PARTITION (<partation_name>[,<partation_name>])]
-  [WHERE]
+  [ PARTITION ( <partation_name> [ , ... ] ) ]
+  [ <where_clause> ]
   TO <export_path>
-  [<properties>]
-  WITH BROKER/S3/HDFS
-  [<broker_properties>];
+  [ <properties> ]
+  WITH <target_storage>
+  [ <broker_properties> ];
   ```
 
 ## 必选参数  
@@ -58,16 +54,20 @@ under the License.
 
 ## 可选参数  
 
-**1. `<partation_name>`**
+**1. `<where_clause>`**
+
+  可以指定导出数据的过滤条件。
+
+**2. `<partation_name>`**
 
   可以只导出指定表的某些指定分区，只对 Doris 本地表有效。
 
-**2. `<properties>`**
+**3. `<properties>`**
 
   用于指定一些导出参数。
 
   ```sql
-  [PROPERTIES ("<key>"="<value>", ...)]
+  [ PROPERTIES ("<key>"="<value>" [, ... ]) ]
   ```
 
   可以指定如下参数：  
@@ -99,13 +99,18 @@ under the License.
   要使用 delete_existing_files 参数，还需要在 fe.conf 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。  
   :::  
 
-**3. `WITH BROKER`**
+**4. `<target_storage>`**  
+    存储介质，可选 BROKER、S3、HDFS。  
 
-  可以通过 Broker 进程写数据到远端存储上。这里需要定义相关的连接信息供 Broker 使用。
+**5. `<broker_properties>`**  
+    根据 `<target_storage>` 不同的存储介质，需要指定不同的属性。  
+
+- **BROKER**  
+  可以通过 Broker 进程写数据到远端存储上。这里需要定义相关的连接信息供 Broker 使用。  
 
   ```sql
   WITH BROKER "broker_name"
-  ("<key>"="<value>"[,...])
+  ("<key>"="<value>" [,...])
   ```  
 
   **Broker 相关属性：**  
@@ -115,12 +120,12 @@ under the License.
   - `kerberos_principal`: 指定 kerberos 的 principal
   - `kerberos_keytab`: 指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问  
 
-**4. `WITH HDFS`**
+- **HDFS**  
 
   可以直接将数据写到远端 HDFS 上。
 
   ```sql
-  WITH HDFS ("<key>"="<value>"[,...])
+  WITH HDFS ("<key>"="<value>" [,...])
   ```  
 
   **HDFS 相关属性：**  
@@ -136,13 +141,12 @@ under the License.
   - `hadoop.kerberos.principal`: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体
   - `hadoop.kerberos.keytab`: 设置 keytab 本地文件路径  
 
-
-**5. `WITH S3`**
+- **S3**  
 
   可以直接将数据写到远端 S3 对象存储上。
 
   ```sql
-  WITH S3 ("<key>"="<value>"[,...])
+  WITH S3 ("<key>"="<value>" [,...])
   ```  
 
   **S3 相关属性：**
@@ -258,21 +262,21 @@ PROPERTIES ("columns" = "k1,k2");
 
 - 将 Test 表中的所有数据导出到本地存储，导出其他格式的文件
 ```sql
-// parquet
+-- parquet
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "parquet"
 );
 
-// orc
+-- orc
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "orc"
 );
 
-// csv(csv_with_names) , Use 'AA' as the column separator and 'zz' as the row separator
+-- csv(csv_with_names) , Use 'AA' as the column separator and 'zz' as the row separator
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names",
@@ -280,7 +284,7 @@ PROPERTIES (
   "line_delimiter" = "zz"
 );
 
-// csv(csv_with_names_and_types) 
+-- csv(csv_with_names_and_types) 
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names_and_types"

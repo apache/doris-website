@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
 该语句用于从一个表中删除指定名称的索引，目前仅支持 bitmap 索引。
@@ -32,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>;
+DROP INDEX [ IF EXISTS ] <index_name> ON [ <db_name> . ] <table_name>;
 ```
 
 ## 必选参数

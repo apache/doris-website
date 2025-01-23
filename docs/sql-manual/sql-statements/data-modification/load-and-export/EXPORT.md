@@ -24,25 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-The `EXPORT` command is used to export the data of a specified table to a designated location as a file. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through Broker process, S3 protocol, or HDFS protocol.
+`EXPORT` command is used to export the data of the specified table as a file to the specified location. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through the Broker process, S3 protocol, or HDFS protocol.
 
-`EXPORT` is an asynchronous operation, and the command submits an `EXPORT JOB` to Doris. The task will be successfully submitted and returns immediately. 
+`EXPORT` is an asynchronous operation. This command will submit an `EXPORT JOB` to Doris, and the task will be returned immediately after successful submission. After execution, you can use the [SHOW EXPORT](./SHOW-EXPORT) command to view the progress.
 
 ## Syntax
 
   ```sql
   EXPORT TABLE <table_name>
-  [PARTITION (<partation_name>[,<partation_name>])]
-  [WHERE]
+  [ PARTITION ( <partation_name> [ , ... ] ) ]
+  [ <where_clause> ]
   TO <export_path>
-  [<properties>]
-  WITH BROKER/S3/HDFS
-  [<broker_properties>];
+  [ <properties> ]
+  WITH <target_storage>
+  [ <broker_properties> ];
   ```
 
 ## Required Parameters
@@ -56,17 +53,20 @@ The `EXPORT` command is used to export the data of a specified table to a design
   The exported file path. It can be a directory or a file directory plus a file prefix, such as `hdfs://path/to/my_file_`
 
 ## Optional Parameters
+**1. `<where_clause>`**
 
-**1. `<partation_name>`**
+  Optional parameter to specify filter conditions for exporting data.
 
-  It is possible to export only some specified partitions of the specified table.
+**2. `<partition_name>`**
 
-**2. `<properties>`**
+  Optional parameter to export specific partitions of a table, applicable only to Doris local tables.
 
-  Used to specify some export parameters.
+**3. `<properties>`**
+
+  Used to specify additional export parameters.
 
   ```sql
-  [PROPERTIES ("key"="value", ...)]
+  [ PROPERTIES ("<key>"="<value>" [, ... ]) ]
   ```
 
   The following parameters can be specified:
@@ -99,13 +99,20 @@ The `EXPORT` command is used to export the data of a specified table to a design
   Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment. 
   :::
 
-**3. `WITH BROKER`**
+
+**4. `<target_storage>`**
+  Storage medium, optional BROKER, S3, HDFS.
+
+**5. `<broker_properties>`**
+Depending on the storage medium of `<target_storage>`, different properties need to be specified.
+
+- **BROKER**
 
   The export function needs to write data to the remote storage through the Broker process. Here you need to define the relevant connection information for the broker to use.
 
   ```sql
   WITH BROKER "broker_name"
-  ("key"="value"[,...])
+  ("<key>"="<value>" [,...])
   ```  
 
   **Broker properties:**  
@@ -115,13 +122,12 @@ The `EXPORT` command is used to export the data of a specified table to a design
   - `kerberos_principal`: specifies the principal of kerberos
   - `kerberos_keytab`: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
 
-
-**4. `WITH HDFS`**
+- **HDFS**
 
   You can directly write data to the remote HDFS.
 
   ```sql
-  WITH HDFS ("key"="value"[,...])
+  WITH HDFS ("key"="value" [,...])
   ```  
 
   **HDFS properties: **
@@ -137,13 +143,12 @@ The `EXPORT` command is used to export the data of a specified table to a design
   - `hadoop.kerberos.principal`: the Kerberos pincipal that Doris will use when connectiong to HDFS.
   - `hadoop.kerberos.keytab`: HDFS client keytab location.
 
-
-**5. `WITH S3`**
+- **S3**
 
   You can directly write data to a remote S3 object store
 
   ```sql
-  WITH S3 ("key"="value"[,...])
+  WITH S3 ("key"="value" [,...])
   ```  
 
   **S3 properties：**
@@ -257,21 +262,21 @@ PROPERTIES ("columns" = "k1,k2");
 - Export all data in the test table to local storage with a non-default file format.
 
 ```sql
-// parquet
+-- parquet
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "parquet"
 );
 
-// orc
+-- orc
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "orc"
 );
 
-// csv(csv_with_names) , Use 'AA' as the column separator and 'zz' as the row separator
+-- csv(csv_with_names) , Use 'AA' as the column separator and 'zz' as the row separator
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names",
@@ -279,7 +284,7 @@ PROPERTIES (
   "line_delimiter" = "zz"
 );
 
-// csv(csv_with_names_and_types) 
+-- csv(csv_with_names_and_types) 
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names_and_types"

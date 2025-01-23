@@ -36,8 +36,8 @@ This statement is used to export query results to a file using the `SELECT INTO 
 ```sql
 <query_stmt>
 INTO OUTFILE "<file_path>"
-[<format_as>]
-[<properties>]
+[ FORMAT AS <format_as> ]
+[ <properties> ]
 ```
 
 ## Required Parameters
@@ -61,18 +61,19 @@ INTO OUTFILE "<file_path>"
 
 **1. `<format_as>`**
 
-```sql
-FORMAT AS CSV
-```
-
-   Specifies the export format. Supported formats include CSV, PARQUET, CSV_WITH_NAMES, CSV_WITH_NAMES_AND_TYPES and ORC. Default is CSV.
+   Specifies the export format. Supported formats include :   
+   - `CSV` (Default)
+   - `PARQUET`
+   - `CSV_WITH_NAMES`
+   - `CSV_WITH_NAMES_AND_TYPES`
+   - `ORC`
 
    > Note: PARQUET, CSV_WITH_NAMES, CSV_WITH_NAMES_AND_TYPES, and ORC are supported starting in version 1.2 .
 
 **2. `<properties>`**  
 
 ```sql
-[PROPERTIES ("key"="value", ...)]
+[ PROPERTIES ("<key>"="<value>" [, ... ]) ]
 ```  
 
 Specify related properties. Currently exporting via the Broker process, S3 protocol, or HDFS protocol is supported.
@@ -186,9 +187,6 @@ The user executing this SQL command must have at least the following privileges:
    | array                   | list       |
 
 
-
-
-
 ### Export data volume and export efficiency
 
    This function essentially executes an SQL query command. The final result is a single-threaded output. Therefore, the time-consuming of the entire export includes the time-consuming of the query itself and the time-consuming of writing the final result set. If the query is large, you need to set the session variable `query_timeout` to appropriately extend the query timeout.
@@ -197,7 +195,7 @@ The user executing this SQL command must have at least the following privileges:
 
    Doris does not manage exported files. Including the successful export, or the remaining files after the export fails, all need to be handled by the user.
 
-### 导出到本地文件
+### Export to local file
    To export to a local file, you need configure `enable_outfile_to_local=true` in fe.conf.
 
    ```sql

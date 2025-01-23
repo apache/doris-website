@@ -33,7 +33,7 @@ under the License.
 ## 语法  
 
 ```sql
-CLEAN LABEL [<label>] FROM <db_name>;
+CLEAN LABEL [ <label> ] FROM <db_name>;
 ```
 
 ## 必选参数
