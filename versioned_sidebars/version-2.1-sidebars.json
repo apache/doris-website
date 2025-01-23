@@ -134,7 +134,8 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
-                                "data-operate/import/data-source/migrate-data-from-other-olap"
+                                "data-operate/import/data-source/migrate-data-from-other-olap",
+                                "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
                         },
                         {
@@ -1441,7 +1442,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",

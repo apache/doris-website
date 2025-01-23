@@ -158,7 +158,8 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
-                                "data-operate/import/data-source/migrate-data-from-other-olap"
+                                "data-operate/import/data-source/migrate-data-from-other-olap",
+                                "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
                         },
                         {
@@ -1005,6 +1006,9 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/format",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/format-number",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking"
                                     ]
                                 },
