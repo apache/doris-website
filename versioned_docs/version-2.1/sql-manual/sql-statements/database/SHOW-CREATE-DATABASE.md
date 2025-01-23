@@ -24,49 +24,67 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
-This statement checks the creation of the doris database, support database from both internal catalog and hms catalog
+This statement checks the creation information of the doris built-in database or catalog database.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CREATE DATABASE db_name;
+SHOW CREATE DATABASE [<catalog>].<db_name>;
 ```
 
-illustrate:
+## Required parameters
 
-- `db_name`: The name of the database
-- if specific a database from hms catalog, will return same with this stmt in hive
+** 1. `<db_name>`**
+>  Database Name
 
-## Examples
+## Optional parameters
 
-1. View the creation of the test database in doris internal catalog
+** 1. `<catalog>`**
+>  Indicates whether the table is internal or external
 
-    ```sql
-    mysql> SHOW CREATE DATABASE test;
-    +----------+----------------------------+
-    | Database | Create Database |
-    +----------+----------------------------+
-    | test | CREATE DATABASE `test` |
-    +----------+----------------------------+
-    1 row in set (0.00 sec)
-    ```
+## Return Value
 
-2. view a database named `hdfs_text` from a hms catalog
+| Database | Create Database |
+|:---------|:-----------|
+| Database Name    | Corresponding database creation statement  |
 
-    ```sql
-    mysql> show create database hdfs_text;                                                                                     
-    +-----------+------------------------------------------------------------------------------------+                         
-    | Database  | Create Database                                                                    |                         
-    +-----------+------------------------------------------------------------------------------------+                         
-    | hdfs_text | CREATE DATABASE `hdfs_text` LOCATION 'hdfs://HDFS1009138/hive/warehouse/hdfs_text' |                         
-    +-----------+------------------------------------------------------------------------------------+                         
-    1 row in set (0.01 sec)  
-    ```
-   
-## Keywords
+## Permission Control
 
-     SHOW, CREATE, DATABASE
+The user executing this SQL command must have at least the following permissions:
 
-## Best Practice
+| Permissions         | Object    | Notes             |
+|:-----------|:------|:---------------|
+| SELECT_PRIV | Corresponding database | Requires read permission on the corresponding database |
+
+## Example
+
+- View the creation of the test database in doris
+
+   ```sql
+   SHOW CREATE DATABASE test;
+   ```
+
+   ```text
+   +----------+------------------------+
+   | Database | Create Database        |
+   +----------+------------------------+
+   | test     | CREATE DATABASE `test` |
+   +----------+------------------------+
+   ```
+
+- View the creation information of the database hdfs_text in the hive catalog
+
+   ```sql
+   SHOW CREATE DATABASE hdfs_text;
+   ```
+
+   ```text
+   +-----------+------------------------------------------------------------------------------------+                         
+   | Database  | Create Database                                                                    |                         
+   +-----------+------------------------------------------------------------------------------------+                         
+   | hdfs_text | CREATE DATABASE `hdfs_text` LOCATION 'hdfs://HDFS1009138/hive/warehouse/hdfs_text' |                         
+   +-----------+------------------------------------------------------------------------------------+  
+   ```

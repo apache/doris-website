@@ -24,27 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ### 描述
 
 该语句用于根据 database id 查找对应的 database name（仅管理员使用）
 
-语法：
+## 语法
 
 ```sql
-SHOW DATABASE [database_id]
+SHOW DATABASE <database_id>
 ```
 
-### 示例
+## 必选参数
 
-1. 根据 database id 查找对应的 database name
-   
+** 1. `<database_id>`**
+>  数据库对应id号
+
+## 返回结果
+
+| DbName |
+|:---------|
+| 数据库名称    |
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限         | 对象   | 说明            |
+|:-----------|:-----|:--------------|
+| ADMIN_PRIV | 整个集群 | 需要对整个集群具有管理权限 |
+
+## 示例
+
+- 根据 database id 查找对应的 database name
+
     ```sql
-    SHOW DATABASE 1001;
+    SHOW DATABASE 10396;
     ```
 
-### 关键词
-
-SHOW, DATABASE, ID
-
-
-
+    ```text
+    +------------+
+    | DbName     |
+    +------------+
+    | example_db |
+    +------------+
+    ```

@@ -27,79 +27,70 @@ under the License.
 
 ## Description
 
-This statement is used to set properties of the specified database. (administrator only)
+This statement is used to set the properties of the specified database. (For administrators only)
 
-1) Set the database data quota, the unit is B/K/KB/M/MB/G/GB/T/TB/P/PB
-
-```sql
-ALTER DATABASE db_name SET DATA QUOTA quota;
-```
-
-2) Rename the database
+## Syntax
 
 ```sql
-ALTER DATABASE db_name RENAME new_db_name;
+ALTER DATABASE <db_name> RENAME|SET DATA QUOTA|REPLICA QUOT <new_db_name>|<quota> [PROPERTIES ("<key>"="<value>", ...)]
 ```
 
-3) Set the quota for the number of copies of the database
+## Required parameters
 
-```sql
-ALTER DATABASE db_name SET REPLICA QUOTA quota;
-```
+** 1. `<db_name>`**
+>  Database Name
 
-illustrate:
-    After renaming the database, use the REVOKE and GRANT commands to modify the appropriate user permissions, if necessary.
-    The default data quota for the database is 1024GB, and the default replica quota is 1073741824.
+** 2. `<new_db_name>`**
+>  New database name
 
-4) Modify the properties of an existing database
+** 3. `<quota>`**
+>  Database data volume quota or database replica number quota
 
-```sql
-ALTER DATABASE db_name SET PROPERTIES ("key"="value", ...); 
-```
+## Optional parameters
+
+** 1. `<PROPERTIES>`**
+>  Additional information about this database
+
+## Permission Control
+
+The user executing this SQL command must have at least the following permissions:
+
+| Permissions         | Object   | Notes            |
+|:-----------|:-----|:--------------|
+| ALTER_PRIV | Corresponding database | You need to have the permission to change the corresponding database. |
+
+## Precautions
+
+After renaming the database, use the REVOKE and GRANT commands to modify the corresponding user permissions if necessary. The default data volume quota for a database is 1024 GB, and the default replica number quota is 1073741824.
 
 ## Example
 
-1. Set the specified database data volume quota
+- Set the data volume quota for the specified database
 
-```sql
-ALTER DATABASE example_db SET DATA QUOTA 10995116277760;
-The above unit is bytes, which is equivalent to
-ALTER DATABASE example_db SET DATA QUOTA 10T;
+  ```sql
+    ALTER DATABASE example_db SET DATA QUOTA 10995116277760;
+  ```
 
-ALTER DATABASE example_db SET DATA QUOTA 100G;
+- Rename the database example_db to example_db2
 
-ALTER DATABASE example_db SET DATA QUOTA 200M;
-```
+  ```sql
+    ALTER DATABASE example_db RENAME example_db2;
+  ```
 
-2. Rename the database example_db to example_db2
+- Set a quota for the number of copies of a specified database
 
-```sql
-ALTER DATABASE example_db RENAME example_db2;
-```
+  ```sql
+    ALTER DATABASE example_db SET REPLICA QUOTA 102400;
+  ```
 
-3. Set the quota for the number of copies of the specified database
+- Modify the default replica distribution strategy of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
 
-```sql
-ALTER DATABASE example_db SET REPLICA QUOTA 102400;
-```
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "tag.location.default:2");
+  ```
 
-4. Modify the default replica distribution policy for tables in db (this operation only applies to newly created tables and will not modify existing tables in db)
+- Cancel the default replica distribution policy of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
 
-```sql
-ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "tag.location.default:2");
-```
-
-5. Cancel the default replica distribution policy for tables in db (this operation only applies to newly created tables and will not modify existing tables in db)
-
-```sql
-ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
-```
-
-## Keywords
-
-```text
-ALTER,DATABASE,RENAME
-```
-
-## Best Practice
-
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
+  ```

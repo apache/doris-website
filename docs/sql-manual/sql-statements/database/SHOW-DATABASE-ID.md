@@ -25,26 +25,47 @@ under the License.
 -->
 
 
-## Description
+### Description
 
-This statement is used to find the corresponding database name according to the database id (only for administrators)
+This statement is used to find the corresponding database name based on the database id (only used by administrators)
 
-grammar:
+## Syntax
 
 ```sql
-SHOW DATABASE [database_id]
+SHOW DATABASE <database_id>
 ```
+
+## Required parameters
+
+** 1. `<database_id>`**
+>  Database corresponding id number
+
+## Return Value
+
+| DbName |
+|:---------|
+| Database Name     |
+
+## Permission Control
+
+The user executing this SQL command must have at least the following permissions:
+
+| Permissions         | Object   | Notes            |
+|:-----------|:-----|:--------------|
+| ADMIN_PRIV | The entire cluster | Requires administrative privileges for the entire cluster |
 
 ## Example
 
-1. Find the corresponding database name according to the database id
+- Find the corresponding database name according to the database id
 
     ```sql
-    SHOW DATABASE 1001;
+    SHOW DATABASE 10396;
     ```
 
-## Keywords
-
-SHOW, DATABASE, ID
-
-
+    ```text
+    +------------+
+    | DbName     |
+    +------------+
+    | example_db |
+    +------------+
+    ```

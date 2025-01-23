@@ -24,70 +24,81 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
-This statement is used to display the currently visible db
+This statement is used to display the currently visible database.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW DATABASES [FROM catalog] [filter expr];
+SHOW DATABASES [FROM <catalog>] [<filter_expr>];
 ```
 
-illustrate:
-1. `SHOW DATABASES` will get all database names from current catalog.
-2. `SHOW DATABASES FROM catalog` will all database names from the catalog named 'catalog'.
-3. `SHOW DATABASES filter_expr` will get filtered database names from current catalog.
-4. `SHOW DATABASES FROM catalog filter_expr` is not support yet.
+## Optional parameters
 
-## Examples
-1. Display all the database names from current catalog.
+** 1. `<catalog>`**
+>  Corresponding catalog
+
+** 2. `<filter_expr>`**
+>  Filter by specified conditions
+
+## Return Value
+
+| Database |
+|:-------|
+| Database Name  |
+
+## Permission Control
+
+The user executing this SQL command must have at least the following permissions:
+
+| Permissions         | Object    | Notes             |
+|:-----------|:------|:---------------|
+| SELECT_PRIV | Corresponding database | Requires read permission on the corresponding database |
+
+## 示例
+
+- Displays the names of all current databases.
 
    ```sql
    SHOW DATABASES;
    ```
 
-   ```
-  +--------------------+
-  | Database           |
-  +--------------------+
-  | test               |
-  | information_schema |
-  +--------------------+
+   ```text
+   +--------------------+
+   | Database           |
+   +--------------------+
+   | test               |
+   | information_schema |
+   +--------------------+
    ```
 
-2. Display all database names from the catalog named 'hms_catalog'.
+- Will display all database names in `hms_catalog`.
 
    ```sql
-   SHOW DATABASES from hms_catalog;
+   SHOW DATABASES FROM hms_catalog;
    ```
 
-   ```
-  +---------------+
-  | Database      |
-  +---------------+
-  | default       |
-  | tpch          |
-  +---------------+
+   ```text
+   +---------------+
+   | Database      |
+   +---------------+
+   | default       |
+   | tpch          |
+   +---------------+
    ```
 
-3. Display the filtered database names from current catalog with the expr 'like'.
+- Displays the names of all databases currently filtered by the expression `like 'infor%'`.
 
    ```sql
    SHOW DATABASES like 'infor%';
    ```
 
+   ```text
+   +--------------------+
+   | Database           |
+   +--------------------+
+   | information_schema |
+   +--------------------+
    ```
-  +--------------------+
-  | Database           |
-  +--------------------+
-  | information_schema |
-  +--------------------+
-   ```
-
-## Keywords
-
-    SHOW, DATABASES
-
-## Best Practice
-
