@@ -24,30 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-This statement is used to display all created role information, including role name, included users and permissions.
+The `SHOW ROLES` statement is used to display all created role information, including role name, included users and permissions.
 
-grammar:
+## Syntax 
 
-```SQL
+```sql
 SHOW ROLES
 ```
 
-## Examples
+## Return Value
 
-1. View created roles
+| Column                | DataType    | Note       
+|-----------------------|-------------|----
+| Name                  | string      | Role Name
+| Comment               | string      | Comment
+| Users                 | string      | Included Users
+| GlobalPrivs           | string      | Global Privileges
+| CatalogPrivs          | string      | Catalog Privileges
+| DatabasePrivs         | string      | Database Privileges
+| TablePrivs            | string      | Table Privileges
+| ResourcePrivs         | string      | Resource Privileges
+| WorkloadGroupPrivs    | string      | Workload Group Privileges  
 
-    ```SQL
-    SHOW ROLES
-    ```
+## Access Control Requirements
 
-## Keywords
+The user executing this SQL command must have at least the following privileges:
 
-    SHOW, ROLES
+| Privilege     | Object    | Notes |
+|:--------------|:----------|:------|
+| GRANT_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with GRANT_PRIV permissions  |
 
-## Best Practice
 
+## Example
+
+- View created roles
+
+```sql
+SHOW ROLES
+```

@@ -24,34 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-The statement user creates a role
+The `CREATE ROLE` statement is used to create an unprivileged role, which can be subsequently granted with the GRANT command.
+
+## Syntax 
 
 ```sql
-  CREATE ROLE role_name [comment];
+ CREATE ROLE <role_name> [<comment>];
 ```
 
-This statement creates an unprivileged role, which can be subsequently granted with the GRANT command.
+## Required Parameters
+
+**1. `<role_name>`**：The name of the role. 
+
+## Optional Parameters
+
+**1. `<comment>`**：The comment of the role.
+
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege     | Object    | Notes |
+|:--------------|:----------|:------|
+| ADMIN_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with ADMIN_PRIV permissions  |
 
 ## Example
 
-1. Create a role
+- Create a role
 
-    ```sql
-    CREATE ROLE role1;
-    ```
+```sql
+CREATE ROLE role1;
+```
 
-2. Create a role with comment
+- Create a role with comment
 
-    ```sql
-    CREATE ROLE role2 COMMENT "this is my first role";
-    ```
-
-## Keywords
-
-CREATE, ROLE
-
-## Best Practice
+```sql
+CREATE ROLE role2 COMMENT "this is my first role";
+```

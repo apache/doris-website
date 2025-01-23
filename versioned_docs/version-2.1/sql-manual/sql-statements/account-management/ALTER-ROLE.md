@@ -24,28 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-Statement used to modify a role
+The `ALTER ROLE` statement is used to modify a role.
+
+## Syntax 
 
 ```sql
- ALTER ROLE role_name comment;
+ ALTER ROLE <role_name> COMMENT <comment>;
 ```
 
-## Examples
+## Required Parameters
 
-1. Modify the role's comment
+**1. `<role_name>`**：The name of the role. 
 
-    ```sql
-    ALTER ROLE role1 COMMENT "this is my first role";
-    ```
+## Optional Parameters
 
-## Keywords
+**1. `<comment>`**：The comment of the role.
 
-    ALTER, ROLE
 
-## Best Practice
+## Access Control Requirements
 
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege     | Object    | Notes |
+|:--------------|:----------|:------|
+| ADMIN_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with ADMIN_PRIV permissions  |
+
+## Example
+
+- Modify the role's comment
+
+```sql
+ALTER ROLE role1 COMMENT "this is my first role";
+```
