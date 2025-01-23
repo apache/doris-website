@@ -24,32 +24,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## curdate,current_date
 ## 描述
+
+获取当前的日期，以 DATE 类型返回。
+
+## 别名
+
+- curdate
+- current_date
+
 ## 语法
 
-`DATE CURDATE()`
-
-获取当前的日期，以DATE类型返回
-
-## 举例s
-
+```sql
+CURDATE()
 ```
-mysql> SELECT CURDATE();
+
+## 返回值
+
+当前的日期。
+
+## 示例 
+
+```sql
+SELECT CURDATE();
+```
+
+```text
 +------------+
 | CURDATE()  |
 +------------+
 | 2019-12-20 |
 +------------+
+```
 
-mysql> SELECT CURDATE() + 0;
+```sql
+SELECT CURDATE() + 0;
+```
+
+```text
 +---------------+
 | CURDATE() + 0 |
 +---------------+
 |      20191220 |
 +---------------+
 ```
-
-### keywords
-
-    CURDATE,CURRENT_DATE

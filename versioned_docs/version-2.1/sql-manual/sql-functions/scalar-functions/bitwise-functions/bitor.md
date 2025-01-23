@@ -24,34 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitor
-### description
-#### Syntax
+## Description
+Used to perform a bitwise OR operation on two integers.
 
-`BITOR(Integer-type lhs, Integer-type rhs)`
+Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
 
-Returns the result of the OR operation of two integers.
-
-Integer range: TINYINT、SMALLINT、INT、BIGINT、LARGEINT
-
-### example
-
-```
-mysql> select bitor(3,5) ans;
-+------+
-| ans  |
-+------+
-|    7 |
-+------+
-
-mysql> select bitor(4,7) ans;
-+------+
-| ans  |
-+------+
-|    7 |
-+------+
+## Syntax
+```sql
+BITOR( <lhs>, <rhs>)
 ```
 
-### keywords
+## Parameters
+| parameter | description                                                             |
+|-----------|-------------------------------------------------------------------------|
+| `<lhs>`   | The first BOOLEAN value to be evaluated                                 |
+| `<rhs>`   | The second BOOLEAN value to be evaluated |
 
-    BITOR
+## Return Value
+
+Returns the result of the OR operation on two integers.
+
+## Examples
+```sql
+select BITOR(3,5), BITOR(4,7);
+```
+
+```text
++---------+---------+
+| (3 | 5) | (4 | 7) |
++---------+---------+
+|       7 |       7 |
++---------+---------+
+```

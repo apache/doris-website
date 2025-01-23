@@ -155,6 +155,7 @@ curl -X POST http://be_host:webserver_port/api/compaction/run?tablet_id=xxxx\&co
 
 * status：触发任务状态，当成功触发时为Success；当因某些原因（比如，没有获取到合适的版本）时，返回Fail。
 * msg：给出具体的成功或失败的信息。
+
 ### 示例
 
 ```
@@ -210,3 +211,5 @@ curl -X GET http://be_host:webserver_port/api/compaction/run_status?tablet_id=xx
 
 ```
 curl -X GET http://192.168.10.24:8040/api/compaction/run_status?tablet_id=10015
+
+```
