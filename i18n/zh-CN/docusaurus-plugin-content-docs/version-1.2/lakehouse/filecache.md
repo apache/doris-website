@@ -57,13 +57,13 @@ SET GLOBAL enable_file_cache = true;
 ### BE 配置
 添加参数到 BE 节点的配置文件 conf/be.conf 中，并重启 BE 节点让配置生效。
 
-|  参数   | 说明  |
-|  ---  | ---  |
-| `enable_file_cache`  | 是否启用 File Cache，默认 false |
+|  参数                               | 说明                                      |
+|  --------------------------------  | ----------------------------------------- |
+| `enable_file_cache`                | 是否启用 File Cache，默认 false             |
 | `file_cache_max_file_segment_size` | 单个 Block 的大小上限，默认 4MB，需要大于 4096 |
-| `file_cache_path` | 缓存目录的相关配置，json格式，例子: `[{"path": "/path/to/file_cache1", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache2", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache3", "total_size":53687091200,"query_limit": "10737418240"}]`。`path` 是缓存的保存路径，`total_size` 是缓存的大小上限，`query_limit` 是单个查询能够使用的最大缓存大小。 |
-| `enable_file_cache_query_limit` | 是否限制单个 query 使用的缓存大小，默认 false |
-| `clear_file_cache` | BE 重启时是否删除之前的缓存数据，默认 false |
+| `file_cache_path`                  | 缓存目录的相关配置，json格式，例子: `[{"path": "/path/to/file_cache1", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache2", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache3", "total_size":53687091200,"query_limit": "10737418240"}]`。`path` 是缓存的保存路径，`total_size` 是缓存的大小上限，`query_limit` 是单个查询能够使用的最大缓存大小。          |
+| `enable_file_cache_query_limit`    | 是否限制单个 query 使用的缓存大小，默认 false  |
+| `clear_file_cache`                 | BE 重启时是否删除之前的缓存数据，默认 false    |
 
 ### 查看 File Cache 命中情况
 

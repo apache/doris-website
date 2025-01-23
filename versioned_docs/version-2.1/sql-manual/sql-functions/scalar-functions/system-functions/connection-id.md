@@ -1,7 +1,7 @@
 ---
 {
-    "title": "connection_id",
-    "language": "zh-CN"
+  "title": "CONNECTION_ID",
+  "language": "en"
 }
 ---
 
@@ -21,3 +21,31 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Get the connection number of the current sql client.
+
+## Syntax
+
+```sql
+CONNECTION_ID()
+```
+
+## Return Value
+
+The connection number of the current sql client.
+
+## Examples
+
+```sql
+select connection_id();
+```
+
+```text
++-----------------+
+| connection_id() |
++-----------------+
+|             549 |
++-----------------+
+```

@@ -24,48 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_shift_left
-### description
-#### syntax
+## Description
+Functions for left shift operations are usually used to perform bit shift operations, which shift all bits of a binary number to the left by a specified number of bits. It is a form of bitwise operation that is often used to process binary data or perform efficient mathematical calculations.
 
-`BIT_SHIFT_LEFT(BIGINT x, TINYINT c)`
-
-Do logical left shift to `BIGINT` type x by c bits, and return result as a `BIGINT`.
-Return zero if `c` is less than 0.
-
-### example
-Normal case
+For the maximum value of BIGINT type, 9223372036854775807, a one-bit left shift results in -2.
+## Syntax
 ```sql
-select 8 as x, number as c, bit_shift_left(8, number) as bit_shift_left from numbers("number"="5")
---------------
-
-+------+------+----------------+
-| x    | c    | bit_shift_left |
-+------+------+----------------+
-|    8 |    0 |              8 |
-|    8 |    1 |             16 |
-|    8 |    2 |             32 |
-|    8 |    3 |             64 |
-|    8 |    4 |            128 |
-+------+------+----------------+
-5 rows in set (0.04 sec)
+BIT_SHIFT_LEFT( <x>, <bits>)
 ```
-Left shift result of `9223372036854775807` which is `BIGINT_MAX` by 1 bit will get -2.
+
+## Parameters
+| parameter | description                       |
+|-----------|-----------------------------------|
+| `<x>`     | The number to be shifted                         |
+| `<bits>`  |The number of bits to shift left. It is an integer that determines how many bits `<x>` will be shifted left |
+
+## Return Value
+
+Returns an integer representing the result of a left shift operation.
+
+## Examples
 ```sql
-WITH tbl AS (
-  SELECT 9223372036854775807 AS BIGINT_MAX
-)
-SELECT BIGINT_MAX, bit_shift_left(BIGINT_MAX, 1)
-FROM tbl
---------------
-
-+---------------------+-------------------------------+
-| BIGINT_MAX          | bit_shift_left(BIGINT_MAX, 1) |
-+---------------------+-------------------------------+
-| 9223372036854775807 |                            -2 |
-+---------------------+-------------------------------+
-1 row in set (0.05 sec)
+select BIT_SHIFT_LEFT(5, 2), BIT_SHIFT_LEFT(-5, 2), BIT_SHIFT_LEFT(9223372036854775807, 1);
 ```
-### keywords
 
-    BITSHIFT, BITSHIFTLEFT
+```text
++----------------------+-----------------------+----------------------------------------+
+| bit_shift_left(5, 2) | bit_shift_left(-5, 2) | bit_shift_left(9223372036854775807, 1) |
++----------------------+-----------------------+----------------------------------------+
+|                   20 |                   -20 |                                     -2 |
++----------------------+-----------------------+----------------------------------------+
+```

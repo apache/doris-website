@@ -23,35 +23,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+## Description
 
-### Description
+Extract the keys of the given `map` into an `ARRAY` of the corresponding type
 
-#### Syntax
-
-`ARRAY<K> map_keys(Map<K, V> map)`
-
-Extracts the keys of a given `map` into an `ARRAY` of the corresponding type.
-
-### Example
+## Syntax
 
 ```sql
-mysql> select map_keys(map(1, "100", 0.1, 2));
-+-------------------------------------------------------------------------------------------------+
-| map_keys(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT))) |
-+-------------------------------------------------------------------------------------------------+
-| [1.0, 0.1]                                                                                      |
-+-------------------------------------------------------------------------------------------------+
-1 row in set (0.15 sec)
-
-mysql> select map_keys(map());
-+-----------------+
-| map_keys(map()) |
-+-----------------+
-| []              |
-+-----------------+
-1 row in set (0.12 sec)
+MAP_KEYS(<map>)
 ```
 
-### Keywords
+## Parameters
 
-MAP, KEYS, MAP_KEYS
+| Parameter | Description |
+| -- | -- |
+| `<map>` | Input map content |
+
+## Return Value
+
+Extract the keys of the given `map` into an `ARRAY` of the corresponding type
+
+## Example
+
+```sql
+select map_keys(map()),map_keys(map(1, "100", 0.1, 2));
+```
+
+```text
++-----------------+-------------------------------------------------------------------------------------------------+
+| map_keys(map()) | map_keys(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT))) |
++-----------------+-------------------------------------------------------------------------------------------------+
+| []              | [1.0, 0.1]                                                                                      |
++-----------------+-------------------------------------------------------------------------------------------------+
+```

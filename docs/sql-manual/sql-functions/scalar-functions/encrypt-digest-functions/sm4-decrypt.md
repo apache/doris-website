@@ -22,32 +22,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-### Description
+SM4 is a national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce and other fields. The SM4_DECRYPT function is used to decrypt data using SM4. The default algorithm is `SM4_128_ECB`.
 
-SM4 is a China's national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce, and other fields. The SM4_DECRYPT function is used to decrypt data using the SM4 algorithm. By default, it uses the `SM4_128_ECB` algorithm.
-
-### Syntax
+## Syntax
 
 ```sql
-VARCHAR SM4_DECRYPT(VARCHAR str, VARCHAR key_str [, VARCHAR init_vector [, VARCHAR encryption_mode]])
+SM4_DECRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ```
 
-### Parameters
 
-- `str` is the text to be decrypted;
-- `key_str` is the key. Note that this key is not a hexadecimal encoding, but a string representation of the encoded key. For example, for 128-bit key encryption, `key_str` should be 16-length. If the key is not long enough, use **zero padding** to make it up. If it is longer than that, the final key is found using a cyclic xor method. For example, if the 128-bit key used by the algorithm finally is `key`, then `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...`
-- `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
-- `encryption_mode` is the encryption algorithm, optionally available in variable.
+## Parameters
 
-### Example
+| parameter           | description                                                                                                                                                                                         |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<str>`             | The text to be decrypted                                                                                                                                                                            |
+| `<key_str>`         | is the key. Note that this key is not a hexadecimal encoding, but an encoded string representation. For example, for 128-bit key encryption, the length of `key_str` should be 16. If the key length is insufficient, use **zero padding** to make it complete. If the length exceeds, use circular XOR to find the final key. For example, if the 128-bit key used by the algorithm is `key`, then `key[i] = key_str[i] ^ key_str[i+128] ^ key_str[i+256] ^ ...` |
+| `<init_vector>`     | It is the initial vector used in the algorithm. It is only effective under specific algorithms. If not specified, Doris uses the built-in vector                                                                                                                                                          |
+| `<encryption_mode>` | For encryption algorithms, optional values are given in variables                                                                                                                                   |
 
+
+## Return Value
+
+If decryption is successful: Returns the decrypted data, usually a binary representation of the plaintext.
+
+If decryption fails: Returns NULL.
+
+## Examples
+
+### Decryption successful
+
+Using the default algorithm
 ```sql
 set block_encryption_mode='';
 select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
 ```
 
-```
+```text
 +--------------------------------------------------------------------------------+
 | sm4_decrypt(from_base64('aDjwRflBrDjhBZIOFNw3Tg=='), '***', '', 'SM4_128_ECB') |
 +--------------------------------------------------------------------------------+
@@ -55,12 +67,13 @@ select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIOFNw3Tg=='),'F3229A0B371ED2D9441B
 +--------------------------------------------------------------------------------+
 ```
 
+Using SM4_128_CBC algorithm
 ```sql
 set block_encryption_mode="SM4_128_CBC";
 select SM4_DECRYPT(FROM_BASE64('FSYstvOmH2cXy7B/072Mug=='),'F3229A0B371ED2D9441B830D21A390C3');
 ```
 
-```
+```text
 +--------------------------------------------------------------------------------+
 | sm4_decrypt(from_base64('FSYstvOmH2cXy7B/072Mug=='), '***', '', 'SM4_128_CBC') |
 +--------------------------------------------------------------------------------+
@@ -68,14 +81,29 @@ select SM4_DECRYPT(FROM_BASE64('FSYstvOmH2cXy7B/072Mug=='),'F3229A0B371ED2D9441B
 +--------------------------------------------------------------------------------+
 ```
 
+Use SM4_128_CBC algorithm and initial vector
 ```sql
-select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
+select SM4_DECRYPT(FROM_BASE64('1Y4NGIukSbv9OrkZnRD1bQ=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
 ```
 
+```text
++------------------------------------------------------------------------------------------+
+| sm4_decrypt(from_base64('1Y4NGIukSbv9OrkZnRD1bQ=='), '***', '0123456789', 'SM4_128_CBC') |
++------------------------------------------------------------------------------------------+
+| text                                                                                     |
++------------------------------------------------------------------------------------------+
 ```
-+--------------------------------------------------------------------------------------------------------+
-| sm4_decrypt(from_base64('G7yqOKfEyxdagboz6Qf01A=='), 'F3229A0B371ED2D9441B830D21A390C3', '0123456789') |
-+--------------------------------------------------------------------------------------------------------+
-| text                                                                                                   |
-+--------------------------------------------------------------------------------------------------------+
+
+### Decryption failed
+```sql
+set block_encryption_mode='';
+select SM4_DECRYPT(FROM_BASE64('aDjwRflBrDjhBZIdOFNw3Tg=='),'F3229A0B371ED2D9441B830D21A390C3');
+```
+
+```text
++---------------------------------------------------------------------------------+
+| sm4_decrypt(from_base64('aDjwRflBrDjhBZIdOFNw3Tg=='), '***', '', 'SM4_128_ECB') |
++---------------------------------------------------------------------------------+
+| NULL                                                                            |
++---------------------------------------------------------------------------------+
 ```
