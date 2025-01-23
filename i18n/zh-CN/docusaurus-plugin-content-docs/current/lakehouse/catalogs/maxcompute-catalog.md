@@ -165,9 +165,13 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 
 ### 如何获取 Endpoint 和 Quota(适用于 Doris 2.1.7 之后)
 
-1. 如果使用数据传输服务独享资源组，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中【使用独享数据服务资源组】章节中的【2.授权】来开启相应的权限，并在【配额（Quota）管理】列表中，查看并复制对应的 `QuotaName`，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC 或公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
+1. 如果使用数据传输服务独享资源组
 
-2. 如果使用按量付费，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中【使用开放存储（按量付费）】的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
+	请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts) 中【使用独享数据服务资源组】章节中的【2.授权】来开启相应的权限，并在【配额（Quota）管理】列表中，查看并复制对应的 `QuotaName`，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC 或公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
+
+2. 如果使用按量付费
+
+	请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中【使用开放存储（按量付费）】的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
 
 3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域Endpoint对照表】来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据【各地域Endpoint对照表（阿里云VPC网络连接方式）】表中的【VPC网络Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域Endpoint对照表（阿里云经典网络连接方式）】表中的【经典网络Endpoint】列、或者选择【各地域Endpoint对照表（外网连接方式)】表中的【外网Endpoint列来配置 `mc.endpoint`。
 

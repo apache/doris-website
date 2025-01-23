@@ -48,7 +48,7 @@ CREATE CATALOG mysql_catalog PROPERTIES (
     'jdbc_url' = 'jdbc:mysql://host:3306',
     'driver_url' = 'mysql-connector-j-8.3.0.jar',
     'driver_class' = 'com.mysql.cj.jdbc.Driver'
-)
+);
 ```
 
 `jdbc_url` 定义要传递给 MySQL JDBC 驱动程序的连接信息和参数。支持的 URL 的参数可在 [MySQL 开发指南](https://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html) 中找到。

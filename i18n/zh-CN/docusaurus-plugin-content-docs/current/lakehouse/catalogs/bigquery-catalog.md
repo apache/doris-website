@@ -44,8 +44,8 @@ BigQuery Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/communi
 > 需要 JDK 17 版本。
 
 ```shell
-$ git clone https://github.com/apache/Doris-thirdparty.git
-$ cd Doris-thirdparty
+$ git clone https://github.com/apache/doris-thirdparty.git
+$ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-bigquery
 $ mvn clean install -DskipTest
