@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_PERCENT_RANK",
+    "title": "PERCENT_RANK",
     "language": "zh-CN"
 }
 ---

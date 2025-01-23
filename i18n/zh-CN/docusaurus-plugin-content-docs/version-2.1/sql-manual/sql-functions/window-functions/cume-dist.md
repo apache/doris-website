@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_CUME_DIST",
+    "title": "CUME_DIST",
     "language": "zh-CN"
 }
 ---

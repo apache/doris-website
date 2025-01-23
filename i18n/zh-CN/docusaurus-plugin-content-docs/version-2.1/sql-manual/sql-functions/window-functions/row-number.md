@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_ROW_NUMBER",
+    "title": "ROW_NUMBER",
     "language": "zh-CN"
 }
 ---
