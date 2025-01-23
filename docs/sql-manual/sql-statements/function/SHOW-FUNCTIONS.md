@@ -67,7 +67,7 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 
 ## Return Value
 
-| 列名 | 说明         |
+| Column | Description         |
 | -- |------------|
 | Signature | Function name and parameter type   |
 | Return Type | The data type of the value returned by the function |
@@ -81,7 +81,7 @@ The user who executes this SQL command must have at least the following permissi
 
 | Privilege  | Object   | Notes       |
 |:--------------|:---------|:--------------|
-| SHOW    | Function | You need to have the show permission on this function |
+| SHOW_PRIV    | Function | You need to have the show permission on this function |
 
 ## Examples
 

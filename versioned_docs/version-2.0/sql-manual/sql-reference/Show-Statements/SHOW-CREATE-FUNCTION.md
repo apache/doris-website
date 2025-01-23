@@ -62,12 +62,20 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ]
 
 ## Return Value
 
-| Column          | Instructions          |
+| Column          | Description          |
 |-----------------|-------------|
 | SYMBOL          | Function package name        |
 | FILE            | jar package path     |
 | ALWAYS_NULLABLE | Whether the result can be NULL |
 | TYPE            | Function type        |
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege | Object   | Notes       |
+|:----------|:---------|:--------------|
+| SHOW_PRIV | Function | You need to have the show permission on this function |
 
 ## Examples
 

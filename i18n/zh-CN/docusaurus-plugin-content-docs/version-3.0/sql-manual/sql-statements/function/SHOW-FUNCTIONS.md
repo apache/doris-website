@@ -82,7 +82,7 @@ SHOW GLOBAL [ FULL ] FUNCTIONS [ LIKE '<function_pattern>' ]
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）     |
 |:--------------|:-----------|:--------------|
-| SHOW    | 函数  | 需要对该函数有 show 权限 |
+| SHOW_PRIV     | 函数  | 需要对该函数有 show 权限 |
 
 ## 示例
 

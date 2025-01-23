@@ -69,6 +69,14 @@ SHOW CREATE [ GLOBAL ] FUNCTION <function_name>( <arg_type> ) [ FROM <db_name> ]
 | ALWAYS_NULLABLE | 结果是否可以为 NULL |
 | TYPE | 函数类型        |
 
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）     |
+|:--------------|:-----------|:--------------|
+| SHOW_PRIV     | 函数  | 需要对该函数有 show 权限 |
+
 ## 示例
 
 ```sql
