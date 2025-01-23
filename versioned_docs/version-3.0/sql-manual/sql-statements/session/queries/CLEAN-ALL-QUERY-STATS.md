@@ -42,11 +42,11 @@ CLEAN [ { ALL| DATABASE | TABLE } ] QUERY STATS [ { [ FOR <db_name>] | [ { FROM 
 
 **2. `DATABASE`**
 
-> DATABASE clears statistics of a database
+> Use DATABASE to clear database query statistics
 
 **3. `TABLE`**
 
-> TABLE Indicates that statistics of a table are cleared
+> Use TABLE to clear table query statistics
 
 ## Optional Parameters
 
@@ -65,9 +65,9 @@ The user who executes this SQL command must have at least the following permissi
 
 | Privilege    | Object   | Notes                 |
 |:-------------|:---------|:--------------------------|
-| ADMIN        | ALL      | If ALL is specified, the ADMIN permission is required     |
-| ALTER        | DATABASE | If the database is specified, the ALTER permission for the corresponding database is required |
-| ADMIN        | TABLE    | If you specify a table, you need alter permission for that table     |
+| ADMIN_PRIV        | ALL      | If ALL is specified, the ADMIN permission is required     |
+| ALTER_PRIV        | DATABASE | If the database is specified, the ALTER permission for the corresponding database is required |
+| ADMIN_PRIV        | TABLE    | If you specify a table, you need alter permission for that table     |
 
 
 ## Examples

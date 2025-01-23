@@ -65,9 +65,9 @@ CLEAN [ { ALL| DATABASE | TABLE } ] QUERY STATS [ { [ FOR <db_name>] | [ { FROM 
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 |:--------------|:-----------|:--------------------------|
-| ADMIN         | ALL        | 如果指定 ALL 则需要 ADMIN 权限     |
-| ALTER         | 库          | 如果指定数据库则需要对应数据库的 ALTER 权限 |
-| ADMIN         | 表          | 如果指定表则需要对应表的 alter 权限     |
+| ADMIN_PRIV         | ALL        | 如果指定 ALL 则需要 ADMIN 权限     |
+| ALTER_PRIV         | 数据库        | 如果指定数据库则需要对应数据库的 ALTER 权限 |
+| ADMIN_PRIV         | 表          | 如果指定表则需要对应表的 alter 权限     |
 
 
 ## 示例

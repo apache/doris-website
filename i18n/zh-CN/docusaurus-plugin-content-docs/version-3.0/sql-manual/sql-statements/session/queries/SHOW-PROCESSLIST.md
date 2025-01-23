@@ -72,7 +72,7 @@ SHOW [FULL] PROCESSLIST
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                  |
 |:--------------|:-----------|:---------------------------|
-| ADMIN         | DATABASE   | 若需要查看其他用户的连接信息则需要 ADMIN 权限 |
+| ADMIN_PRIV         | 数据库   | 若需要查看其他用户的连接信息则需要 ADMIN 权限 |
 
 ## 示例
 

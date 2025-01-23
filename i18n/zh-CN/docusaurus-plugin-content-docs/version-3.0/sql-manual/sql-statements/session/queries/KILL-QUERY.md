@@ -56,6 +56,14 @@ KILL QUERY [ { <processlist_id> | <query_id> } ]
 
 > 表示是否是当前连接的线程
 
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）              |
+|:--------------|:-----------|:-----------------------|
+| GRANT_PRIV         | 数据库          | 若需要 KILL 语句需要获得 GRANT 权限 |
+
 ## 注意事项
 
 - 线程进程列表标识符可以从 SHOW PROCESSLIST 输出的 Id 列查询

@@ -62,6 +62,14 @@ KILL QUERY [ { <processlist_id> | <query_id> } ]
 
 - The Connection ID can be queried from SELECT CONNECTION_ID()
 
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege    | Object    | Notes                      |
+|:--------------|:-----------|:-----------------------|
+| GRANT_PRIV         | DATABASE   | GRANT permission is required for the KILL statement |
+
 ## Examples
 
 ```sql

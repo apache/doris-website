@@ -56,6 +56,14 @@ KILL QUERY [ { <processlist_id> | <query_id> } ]
 
 > Indicates whether the thread is currently connected
 
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege    | Object    | Notes                      |
+|:--------------|:-----------|:-----------------------|
+| GRANT_PRIV         | DATABASE   | GRANT permission is required for the KILL statement |
+
 ## Usage Notes
 
 - The thread process list identifier can be queried from the Id column output by the SHOW PROCESSLIST

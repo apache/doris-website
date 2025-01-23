@@ -39,7 +39,7 @@ SHOW [FULL] PROCESSLIST
 
 **1. `FULL`**
 
-> 表示是否查看其他用户的连接信息
+> Indicates whether to view the connection information of other users
 
 ## Return Value
 
@@ -73,7 +73,7 @@ The user who executes this SQL command must have at least the following permissi
 
 | Privilege    | Object    | Notes                      |
 |:-------------|:----------|:---------------------------|
-| ADMIN        | DATABASE  | If you want to view the connection information of other users, you need the ADMIN permission |
+| ADMIN_PRIV        | DATABASE  | If you want to view the connection information of other users, you need the ADMIN permission |
 
 ## Examples
 
