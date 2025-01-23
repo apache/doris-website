@@ -24,34 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## 描述
 
 该语句用于展示仓库的创建语句。
 
-语法：
+## 语法
 
 ```sql
-SHOW CREATE REPOSITORY for repository_name;
+SHOW CREATE REPOSITORY for <repo_name>;
 ```
 
-说明：
-- `repository_name`: 仓库名称
+## 必选参数
+**<repo_name>**
+> 仓库的唯一名称
 
 ## 示例
 
-1. 展示指定仓库的创建语句
+展示指定仓库的创建语句
 
-   ```sql
-   SHOW CREATE REPOSITORY for test_repository
-   ```
-
-## 关键词
-
-    SHOW, CREATE, REPOSITORY
-
-### 最佳实践
-
+```sql
+SHOW CREATE REPOSITORY for example_repo;
+```

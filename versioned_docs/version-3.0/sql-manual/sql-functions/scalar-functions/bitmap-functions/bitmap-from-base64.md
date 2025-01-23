@@ -22,40 +22,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_base64
+## Description
 
-### description
-#### Syntax
+Convert a base64 string (which can be converted by `bitmap_to_base64` function) to a BITMAP. Returns NULL when the input string is invalid.
 
-`BITMAP BITMAP_FROM_BASE64(VARCHAR input)`
+## Syntax
 
-Convert a base64 string(result of function `bitmap_to_base64`) into a bitmap. If input string is invalid, return NULL.
-
-### example
-
-```
-mysql> select bitmap_to_string(bitmap_from_base64("AA=="));
-+----------------------------------------------+
-| bitmap_to_string(bitmap_from_base64("AA==")) |
-+----------------------------------------------+
-|                                              |
-+----------------------------------------------+
-
-mysql> select bitmap_to_string(bitmap_from_base64("AQEAAAA="));
-+-----------------------------------+
-| bitmap_to_string(bitmap_from_base64("AQEAAAA=")) |
-+-----------------------------------+
-| 1                                 |
-+-----------------------------------+
-
-mysql> select bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y="));
-+----------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y=")) |
-+----------------------------------------------------------------------------------+
-| 1,9999999                                                                        |
-+----------------------------------------------------------------------------------+
+```sql
+ BITMAP_FROM_BASE64(<base64_str>)
 ```
 
-### keywords
+## Parameters
 
-    BITMAP_FROM_BASE64,BITMAP
+| Parameter      | Description                                                     |
+|----------------|-----------------------------------------------------------------|
+| `<base64_str>` | base64 string (can be converted by `bitmap_to_base64` function) |
+
+## Return Value
+
+Returns a BITMAP
+- When the input field is invalid, the result is NULL
+
+## Examples
+
+```sql
+select bitmap_to_string(bitmap_from_base64("AA==")) bts;
+```
+
+```text
++------+
+| bts  |
++------+
+|      |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_base64("AQEAAAA=")) bts;
+```
+
+```text
++------+
+| bts  |
++------+
+| 1    |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y=")) bts;
+```
+
+```text
++-----------+
+| bts       |
++-----------+
+| 1,9999999 |
++-----------+
+```

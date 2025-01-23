@@ -24,13 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## lcase
-### Description
-#### Syntax
+## Description
 
-`INT lcase (VARCHAR str)`
+Convert all strings in the parameter to lowercase. Another alias for this function is [lower](./lower.md).
 
-Convert all strings in parameters to lowercase. Another alias for this function is [lower](./lower.md).
+## Alias
 
-### keywords
-    LCASE
+- LOWER
+
+## Syntax
+
+```sql
+LCASE ( <str> )
+```
+
+## Parameters
+
+| Parameter | Description |
+|-----------|--------------|
+| `<str>`   | String to be converted to lowercase |
+
+## Return Value
+
+Parameter `<str>` String converted to lowercase
+
+## Example
+
+```sql
+SELECT LCASE("AbC123"),LOWER("AbC123")
+```
+
+```text
++-----------------+-----------------+
+| lower('AbC123') | lower('AbC123') |
++-----------------+-----------------+
+| abc123          | abc123          |
++-----------------+-----------------+
+```

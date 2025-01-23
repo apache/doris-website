@@ -22,40 +22,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_from_base64
-
 ## 描述
+
+将一个 base64 字符串（可以由 `bitmap_to_base64` 函数转换来）转化为一个 BITMAP。当输入字符串不合法时，返回 NULL。
+
 ## 语法
 
-`BITMAP BITMAP_FROM_BASE64(VARCHAR input)`
+```sql
+ BITMAP_FROM_BASE64(<base64_str>)
+```
 
-将一个base64字符串(`bitmap_to_base64`函数的结果)转化为一个BITMAP。当输入字符串不合法时，返回NULL。
+## 参数
+
+| 参数             | 说明                                     |
+|----------------|----------------------------------------|
+| `<base64_str>` | base64 字符串(可以由`bitmap_to_base64`函数转换来) |
+
+## 返回值
+
+返回一个 BITMAP
+- 当输入字段不合法时，结果返回 NULL
 
 ## 举例
 
-```
-mysql> select bitmap_to_string(bitmap_from_base64("AA=="));
-+----------------------------------------------+
-| bitmap_to_string(bitmap_from_base64("AA==")) |
-+----------------------------------------------+
-|                                              |
-+----------------------------------------------+
-
-mysql> select bitmap_to_string(bitmap_from_base64("AQEAAAA="));
-+-----------------------------------+
-| bitmap_to_string(bitmap_from_base64("AQEAAAA=")) |
-+-----------------------------------+
-| 1                                 |
-+-----------------------------------+
-
-mysql> select bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y="));
-+----------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y=")) |
-+----------------------------------------------------------------------------------+
-| 1,9999999                                                                        |
-+----------------------------------------------------------------------------------+
+```sql
+select bitmap_to_string(bitmap_from_base64("AA==")) bts;
 ```
 
-### keywords
+```text
++------+
+| bts  |
++------+
+|      |
++------+
+```
 
-    BITMAP_FROM_BASE64,BITMAP
+```sql
+select bitmap_to_string(bitmap_from_base64("AQEAAAA=")) bts;
+```
+
+```text
++------+
+| bts  |
++------+
+| 1    |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_base64("AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y=")) bts;
+```
+
+```text
++-----------+
+| bts       |
++-----------+
+| 1,9999999 |
++-----------+
+```

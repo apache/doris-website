@@ -32,64 +32,60 @@ hudi_meta table-valued-function(tvf), using for read hudi metadata, operation hi
 ## Syntax
 
 ```sql
-hudi_meta(
-  "table" = "ctl.db.tbl", 
-  "query_type" = "timeline"
-  ...
+HUDI_META(
+    "table" = "<table>", 
+    "query_type" = "<query_type>"
   );
 ```
 
-**parameter description**
+## Required Parameters
+Each parameter in the `hudi_meta` table function (tvf) is a `"key"="value"` pair.
 
-Each parameter in hudi_meta tvf is a pair of `"key"="value"`.
+| Field        | Description                                                                                                                        |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`    | The full table name, which must be specified in the format of `database_name.table_name` for the hudi table that you want to view. |
+| `<query_type>` | The type of metadata you want to view. Currently, only `timeline` is supported.                                                    |
 
-Related parameters:
-- `table`： (required) Use hudi table name the format `catlog.database.table`.
-- `query_type`： (required) The type of hudi metadata. Only `timeline` is currently supported.
 
-## Example
+## Examples
 
-Read and access the hudi tabular metadata for timeline.
+- Read and access the hudi tabular metadata for timeline.
 
-```sql
-select * from hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
+    ```sql
+    select * from hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
+    ```
 
-```
+- Can be used with `desc function` :
+    
+    ```sql
+    desc function hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
+    ```
 
-Can be used with `desc function` :
+- Inspect the hudi table timeline
+    
+    ```sql
+    select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline");
+    ```
+    ```text
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    | timestamp         | action | file_name                | state     | state_transition_time |
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    | 20240724195843565 | commit | 20240724195843565.commit | COMPLETED | 20240724195844269     |
+    | 20240724195845718 | commit | 20240724195845718.commit | COMPLETED | 20240724195846653     |
+    | 20240724195848377 | commit | 20240724195848377.commit | COMPLETED | 20240724195849337     |
+    | 20240724195850799 | commit | 20240724195850799.commit | COMPLETED | 20240724195851676     |
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    ```
 
-```sql
-desc function hudi_meta("table" = "ctl.db.tbl", "query_type" = "timeline");
-```
+- Filtered by timestamp
 
-## Keywords
-
-    hudi_meta, table-valued-function, tvf
-
-## Best Practice
-
-Inspect the hudi table timeline :
-
-```sql
-select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline");
-+-------------------+--------+--------------------------+-----------+-----------------------+
-| timestamp         | action | file_name                | state     | state_transition_time |
-+-------------------+--------+--------------------------+-----------+-----------------------+
-| 20240724195843565 | commit | 20240724195843565.commit | COMPLETED | 20240724195844269     |
-| 20240724195845718 | commit | 20240724195845718.commit | COMPLETED | 20240724195846653     |
-| 20240724195848377 | commit | 20240724195848377.commit | COMPLETED | 20240724195849337     |
-| 20240724195850799 | commit | 20240724195850799.commit | COMPLETED | 20240724195851676     |
-+-------------------+--------+--------------------------+-----------+-----------------------+
-```
-
-Filtered by timestamp :
-
-```sql
-select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline") 
-where timestamp = 20240724195843565;
-+-------------------+--------+--------------------------+-----------+-----------------------+
-| timestamp         | action | file_name                | state     | state_transition_time |
-+-------------------+--------+--------------------------+-----------+-----------------------+
-| 20240724195843565 | commit | 20240724195843565.commit | COMPLETED | 20240724195844269     |
-+-------------------+--------+--------------------------+-----------+-----------------------+
-```
+    ```sql
+    select * from hudi_meta("table" = "hudi_ctl.test_db.test_tbl", "query_type" = "timeline") where timestamp = 20240724195843565;
+    ```
+    ```text
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    | timestamp         | action | file_name                | state     | state_transition_time |
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    | 20240724195843565 | commit | 20240724195843565.commit | COMPLETED | 20240724195844269     |
+    +-------------------+--------+--------------------------+-----------+-----------------------+
+    ```

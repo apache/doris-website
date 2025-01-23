@@ -22,49 +22,89 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_to_array
+## Description
 
-### description
-#### Syntax
+Converts a Bitmap into an Array.
 
-`ARRAY_BIGINT bitmap_to_array(BITMAP input)`
+## Syntax
 
-Convert a input BITMAP to Array.
-If input is null, return null.
-
-### example
-
+```sql
+BITMAP_TO_ARRAY(<bitmap>)
 ```
-mysql> select bitmap_to_array(null);
+
+## Parameters
+
+| Parameter  | Description                     |
+|------------|---------------------------------|
+| `<bitmap>` | A Bitmap type column or expression |
+
+## Return Value
+
+An array containing all the bit positions in the Bitmap.  
+Returns `NULL` if the Bitmap is `NULL`.
+
+## Examples
+
+To convert a `NULL` Bitmap to an array:
+
+```sql
+select bitmap_to_array(null);
+```
+
+The result will be:
+
+```text
 +------------------------+
 | bitmap_to_array(NULL)  |
 +------------------------+
 | NULL                   |
 +------------------------+
+```
 
-mysql> select bitmap_to_array(bitmap_empty());
+To convert an empty Bitmap to an array:
+
+```sql
+select bitmap_to_array(bitmap_empty());
+```
+
+The result will be:
+
+```text
 +---------------------------------+
 | bitmap_to_array(bitmap_empty()) |
 +---------------------------------+
 | []                              |
 +---------------------------------+
+```
 
-mysql> select bitmap_to_array(to_bitmap(1));
+To convert a Bitmap with a single element to an array:
+
+```sql
+select bitmap_to_array(to_bitmap(1));
+```
+
+The result will be:
+
+```text
 +-------------------------------+
 | bitmap_to_array(to_bitmap(1)) |
 +-------------------------------+
 | [1]                           |
 +-------------------------------+
+```
 
-mysql> select bitmap_to_array(bitmap_from_string('1,2,3,4,5'));
+To convert a Bitmap with multiple elements to an array:
+
+```sql
+select bitmap_to_array(bitmap_from_string('1,2,3,4,5'));
+```
+
+The result will be:
+
+```text
 +--------------------------------------------------+
 | bitmap_to_array(bitmap_from_string('1,2,3,4,5')) |
 +--------------------------------------------------+
 | [1, 2, 3, 4, 5]                                  |
-+--------------------------------------------------
-
++--------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_TO_ARRAY,BITMAP

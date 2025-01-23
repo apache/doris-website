@@ -24,56 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bit_shift_right
-### description
-#### syntax
+## Description
+Used for right shift operations, usually used to shift all bits of a binary number to the right by a specified number of bits. This operation is usually used to process binary data, or for some mathematical calculations (such as efficient implementation of division).
 
-`BIT_SHIFT_RIGHT(BIGINT x, TINYINT c)`
+The result of logically shifting -1 right by one position is BIGINT_MAX(9223372036854775807).
 
-Return result of logical right shift of `BIGINT` type x by c bits.
+Shifting a number right by a negative amount always results in a result of 0.
 
-### example
-Normal case
+## Syntax
 ```sql
-select 1024 as x, number as c, bit_shift_right(1024, number) as bit_shift_right from numbers("number"="5")
---------------
-
-+------+------+-----------------+
-| x    | c    | bit_shift_right |
-+------+------+-----------------+
-| 1024 |    0 |            1024 |
-| 1024 |    1 |             512 |
-| 1024 |    2 |             256 |
-| 1024 |    3 |             128 |
-| 1024 |    4 |              64 |
-+------+------+-----------------+
-5 rows in set (0.03 sec)
-```
-Logical right shift `BIGINT` -1 by 1 bits gets `BIGINT_MAX`
-```sql
-select bit_shift_right(-1, 1)
---------------
-
-+------------------------+
-| bit_shift_right(-1, 1) |
-+------------------------+
-|    9223372036854775807 |
-+------------------------+
-```
-Return zero if `c` is less than 0
-```sql
-select bit_shift_right(100, -1)
---------------
-
-+--------------------------+
-| bit_shift_right(100, -1) |
-+--------------------------+
-|                        0 |
-+--------------------------+
-1 row in set (0.04 sec)
+BIT_SHIFT_RIGHT( <x>, <bits>)
 ```
 
+## Parameters
+| parameter | description                      |
+|-----------|----------------------------------|
+| `<x>`     | The number to be shifted                        |
+| `<bits>`  | The number of bits to shift right. It is an integer that determines how many bits `<x>` will be shifted right. |
 
-### keywords
+## Return Value
 
-    BITSHIFT, BITSHIFTRIGHT
+Returns an integer representing the result of a right shift operation.
+
+## Examples
+
+```sql
+select BIT_SHIFT_RIGHT(1024,3), BIT_SHIFT_RIGHT(-1,1), BIT_SHIFT_RIGHT(100, -1);
+```
+
+```text
++--------------------------+------------------------+--------------------------+
+| bit_shift_right(1024, 3) | bit_shift_right(-1, 1) | bit_shift_right(100, -1) |
++--------------------------+------------------------+--------------------------+
+|                      128 |    9223372036854775807 |                        0 |
++--------------------------+------------------------+--------------------------+
+```

@@ -1356,8 +1356,7 @@
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-hash64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-base64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap-with-check"
+                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove"
                                     ]
                                 },
                                 {
@@ -1379,7 +1378,6 @@
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-catalog",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/database",
-                                        "sql-manual/sql-functions/scalar-functions/system-functions/password",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/session-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/version-function",
@@ -1539,7 +1537,6 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers-outer"
                             ]
