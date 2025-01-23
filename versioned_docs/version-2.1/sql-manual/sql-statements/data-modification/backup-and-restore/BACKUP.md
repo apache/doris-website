@@ -38,8 +38,8 @@ TO `<repository_name>`
 [ {ON|EXCLUDE]} 
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
-
-[PROPERTIES ("key" = "value" [,...])];
+    
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
 ```
 
 ## Required Parameters
@@ -69,7 +69,7 @@ The name of the table to be backed up. If not specified, the entire database wil
 
 The name of the partition to be backed up. If not specified, all partitions of the corresponding table will be backed up.
 
-**3.`<PROPERTIES>`**
+**3.`[ PROPERTIES ( "<key>" = "<value>" [ , ... ] ) ]`**
 
 Data snapshot attributes, in the format: `<key>` = `<value>`，currently supports the following properties:
 

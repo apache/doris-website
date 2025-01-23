@@ -52,7 +52,7 @@ Backup timestamp.
 
 ## Return Value
 
-| Column | Note |
+| Column | Description |
 | -- | -- |
 | Snapshot | The name of the backup |
 | Timestamp | corresponds to the time version of the backup |

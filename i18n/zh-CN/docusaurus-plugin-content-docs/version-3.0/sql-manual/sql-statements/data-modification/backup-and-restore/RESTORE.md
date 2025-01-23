@@ -38,10 +38,10 @@ FROM `<repository_name>`
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
-[PROPERTIES ("key" = "value" [,...])];
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
 ```
 
-## 参数
+## 必选参数
 
 **1.`<db_name>`**
 
@@ -55,22 +55,7 @@ FROM `<repository_name>`
 
 仓库名。您可以通过 [CREATE REPOSITORY](./CREATE-REPOSITORY.md) 创建仓库
 
-**4.`<table_name>`**
-
-需要恢复的表名。如不指定则恢复整个数据库
-
-- ON 子句中标识需要恢复的表和分区。如果不指定分区，则默认恢复该表的所有分区。所指定的表和分区必须已存在于仓库备份中
-- EXCLUDE 子句中标识不需要恢复的表和分区。除了所指定的表或分区之外仓库中所有其他表的所有分区将被恢复
-
-**5.`<partition_name>`**
-
-需要恢复的分区名。如不指定则恢复对应表的所有分区
-
-**6.`<table_alias>`**
-
-表别名
-
-**7.`<PROPERTIES>`**
+**4.`[ PROPERTIES ( "<key>" = "<value>" [ , ... ] ) ]`**
 
 恢复操作属性，格式为 `<key>` = `<value>`，目前支持以下属性：
 
@@ -80,6 +65,23 @@ FROM `<repository_name>`
 - "reserve_dynamic_partition_enable" = "true"：默认为 false。当该属性为 true 时，恢复的表会保留该表备份之前的'dynamic_partition_enable'属性值。该值不为 true 时，则恢复出来的表的'dynamic_partition_enable'属性值会设置为 false。
 - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
 - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。
+
+## 可选参数
+
+**1.`<table_name>`**
+
+需要恢复的表名。如不指定则恢复整个数据库
+
+- ON 子句中标识需要恢复的表和分区。如果不指定分区，则默认恢复该表的所有分区。所指定的表和分区必须已存在于仓库备份中
+- EXCLUDE 子句中标识不需要恢复的表和分区。除了所指定的表或分区之外仓库中所有其他表的所有分区将被恢复
+
+**2.`<partition_name>`**
+
+需要恢复的分区名。如不指定则恢复对应表的所有分区
+
+**3.`<table_alias>`**
+
+表别名
 
 ## 注意事项：
 

@@ -37,7 +37,7 @@ TO `<repository_name>`
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
 
-[PROPERTIES ("key" = "value" [,...])];
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
 ```
 
 ## 必选参数
@@ -67,7 +67,7 @@ TO `<repository_name>`
 
 需要备份的分区名。如不指定则备份对应表的所有分区。
 
-**3.`<PROPERTIES>`**
+**3.`[ PROPERTIES ( "<key>" = "<value>" [ , ... ] ) ]`**
 
 数据快照属性，格式为 `<key>` = `<value>`，目前支持以下属性：
 

@@ -48,7 +48,7 @@ Backup name.
 
 ## Return Value
 
-| Column | Note |
+| Column | Description |
 | -- | -- |
 | JobId | Unique job id |
 | SnapshotName | The name of the backup |

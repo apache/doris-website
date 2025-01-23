@@ -38,10 +38,10 @@ FROM `<repository_name>`
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
-[PROPERTIES ("key" = "value" [,...])];
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
 ```
 
-## Parameters
+## Required Parameters
 
 **1.`<db_name>`**
 
@@ -55,22 +55,7 @@ Data snapshot name
 
 Warehouse name. You can create a repository via [CREATE REPOSITORY](./CREATE-REPOSITORY.md)
 
-**4.`<table_name>`**
-
-The name of the table to be restored. If not specified, the entire database will be restored.
-
-- The tables and partitions that need to be restored are identified in the ON clause. If no partition is specified, all partitions of the table are restored by default. The specified table and partition must already exist in the warehouse backup.
-- Tables and partitions that do not require recovery are identified in the EXCLUDE clause. All partitions of all other tables in the warehouse except the specified table or partition will be restored.
-
-**5.`<partition_name>`**
-
-The name of the partition to be restored. If not specified, all partitions of the corresponding table will be restored.
-
-**6.`<table_alias>`**
-
-table alias
-
-**7.`<PROPERTIES>`**
+**4.`[ PROPERTIES ( "<key>" = "<value>" [ , ... ] ) ]`**
 
 Restoration operation attributes, the format is `<key>` = `<value>`，currently supports the following properties:
 
@@ -84,6 +69,23 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
   - This feature is supported since the Apache Doris 1.2.6  version
 - "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
   - This feature is supported since the Apache Doris 1.2.6  version
+
+## Optional Parameters
+
+**1.`<table_name>`**
+
+The name of the table to be restored. If not specified, the entire database will be restored.
+
+- The tables and partitions that need to be restored are identified in the ON clause. If no partition is specified, all partitions of the table are restored by default. The specified table and partition must already exist in the warehouse backup.
+- Tables and partitions that do not require recovery are identified in the EXCLUDE clause. All partitions of all other tables in the warehouse except the specified table or partition will be restored.
+
+**2.`<partition_name>`**
+
+The name of the partition to be restored. If not specified, all partitions of the corresponding table will be restored.
+
+**3.`<table_alias>`**
+
+table alias
 
 ## Usage Notes
 

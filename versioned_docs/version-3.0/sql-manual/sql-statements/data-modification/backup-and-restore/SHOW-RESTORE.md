@@ -45,7 +45,7 @@ The name of the database to which the recovery task belongs.
 
 - brief: only show key information of RESTORE tasks, columns RestoreObjs, Progress, TaskErrMsg will not show
 
-| Column | Note |
+| Column | Description |
 | -- | -- |
 | JobId | Unique job id |
 | Label | The name of the backup to restore |
