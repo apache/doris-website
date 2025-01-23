@@ -30,17 +30,23 @@ under the License.
 
 查看所有/指定存储策略关联的表和分区
 
-语法：
+## 语法
 
 ```sql
-SHOW STORAGE POLICY USING [FOR some_policy]
+SHOW STORAGE POLICY USING [FOR <some_policy>]
 ```
+## 可选参数
+| 参数名称          | 描述                                                         |
+|-------------------|--------------------------------------------------------------|
+| `<policy_name>` | 指定要查询的存储策略名称。如果提供了此参数，则只显示指定存储策略的详细信息；如果不提供此参数，则显示所有存储策略的信息。 |
 
 ## 示例
 
 1. 查看所有启用了存储策略的对象
    ```sql
-   mysql> show storage policy using;
+   show storage policy using;
+   ```
+   ```sql
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
    | PolicyName            | Database                                | Table                                  | Partitions |
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
@@ -54,7 +60,9 @@ SHOW STORAGE POLICY USING [FOR some_policy]
 2. 查看使用存储策略 test_storage_policy 的对象
 
     ```sql
-    mysql> show storage policy using for test_storage_policy;
+    show storage policy using for test_storage_policy;
+    ```
+    ```sql
     +---------------------+-----------+---------------------------------+------------+
     | PolicyName          | Database  | Table                           | Partitions |
     +---------------------+-----------+---------------------------------+------------+
@@ -63,8 +71,3 @@ SHOW STORAGE POLICY USING [FOR some_policy]
     +---------------------+-----------+---------------------------------+------------+
    ```
 
-## 关键词
-
-    SHOW, STORAGE, POLICY, USING
-
-### 最佳实践

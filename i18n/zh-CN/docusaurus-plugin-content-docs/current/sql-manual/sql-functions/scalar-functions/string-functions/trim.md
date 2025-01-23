@@ -24,31 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## trim
+
 ## 描述
+
+用于删除字符串两端的空格或指定字符，当没有rhs参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉rhs
+
 ## 语法
 
-`VARCHAR trim(VARCHAR str[, VARCHAR rhs])`
-
-
-当没有rhs参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉rhs
-
-## 举例
-
+```sql
+RTIM( <str> [ , <rhs>])
 ```
-mysql> SELECT trim('   ab d   ') str;
+## 必选参数
+
+| 参数 | 描述 |
+|------|------|
+| `<str>` | 删除该字符串两端的空格 |
+
+
+## 可选参数
+
+| 参数 | 描述 |
+|------|------|
+| `<rhs>` | 去掉该指定字符 |
+
+## 返回值
+
+删除两端的空格或指定字符后的字符串
+
+
+## 示例
+
+```sql
+SELECT trim('   ab d   ') str;
+```
+```sql
+
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT trim('ababccaab','ab') str;
+```sql
+SELECT trim('ababccaab','ab') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
 | cca  |
 +------+
 ```
-### keywords
-    TRIM
+
