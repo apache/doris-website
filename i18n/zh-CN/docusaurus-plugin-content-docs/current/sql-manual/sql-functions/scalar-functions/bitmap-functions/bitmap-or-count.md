@@ -24,54 +24,108 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_or_count
 ## 描述
+
+计算两个及以上输入 Bitmap 的并集，返回并集的元素个数。
+
 ## 语法
 
-`BigIntVal bitmap_or_count(BITMAP lhs, BITMAP rhs, ...)`
-
-计算两个及以上输入bitmap的并集，返回并集的个数.
-
-## 举例
-
+```sql
+bitmap_or_count(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_empty());
+
+## 参数
+
+| 参数          | 描述           |
+|-------------|--------------|
+| `<bitmap1>` | 第一个 Bitmap   |
+| `<bitmap2>` | 第二个 Bitmap   |
+| ...         | ...          |
+| `<bitmapN>` | 第 N 个 Bitmap |
+
+## 返回值
+
+多个 Bitmap 并集的元素个数。  
+如果有 Bitmap 为 `NULL` 则返回 `NULL`。
+
+## 示例
+
+计算一个非空 Bitmap 和一个空 Bitmap 的并集中的元素数量：
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_empty());
+```
+
+结果如下：
+
+```text
 +--------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_empty()) |
 +--------------------------------------------------------------+
 |                                                            3 |
 +--------------------------------------------------------------+
+```
 
+计算两个相同 Bitmap 的并集中的元素数量：
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_from_string('1,2,3'));
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2,3'));
+```
+
+结果如下：
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2,3')) |
 +---------------------------------------------------------------------------+
 |                                                                         3 |
 +---------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
+计算两个不同 Bitmap 的并集中的元素数量：
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'));
+```
+
+结果如下：
+
+```text
 +---------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5')) |
 +---------------------------------------------------------------------------+
 |                                                                         5 |
 +---------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty());
+计算多个 Bitmap（包括一个空 Bitmap）的并集中的元素数量：
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty());
+```
+
+结果如下：
+
+```text
 +-----------------------------------------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), bitmap_empty()) |
 +-----------------------------------------------------------------------------------------------------------+
 |                                                                                                         6 |
 +-----------------------------------------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL);
+计算多个 Bitmap（包括一个 `NULL` 值）的并集中的元素数量：
+
+```sql
+select bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL);
+```
+
+结果如下：
+
+```text
 +-------------------------------------------------------------------------------------------------+
 | bitmap_or_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'), to_bitmap(100), NULL) |
 +-------------------------------------------------------------------------------------------------+
 |                                                                                            NULL |
 +-------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_OR_COUNT,BITMAP

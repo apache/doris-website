@@ -99,7 +99,7 @@ $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standal
 配置 config/connect-distributed.properties
 
 ```properties
-# 修改 broker 地址
+# 修改 kafka server 地址
 bootstrap.servers=127.0.0.1:9092
 
 # 修改 group.id，同一集群的需要一致

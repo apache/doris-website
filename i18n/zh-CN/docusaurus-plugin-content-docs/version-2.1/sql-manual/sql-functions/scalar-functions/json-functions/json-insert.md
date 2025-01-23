@@ -24,18 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_insert
-
-
 ## 描述
+`JSON_INSERT` 函数用于在 JSON 中插入数据并返回结果。
+
 ## 语法
+```sql
+JSON_INSERT (<json_str>, <path>,  <val>[, <path>,  <val>, ...])
+```
 
-`VARCHAR json_insert(VARCHAR json_str, VARCHAR path, VARCHAR val[, VARCHAR path, VARCHAR val] ...)`
+## 参数
+| 参数          | 描述                                                                                                                             |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `<json_str>` | 要插入的 JSON 对象。可以是任意类型元素的 JSON 对象，包括`NULL`，如果没有指定元素，则返回一个空数组。如果 `json_str` 不是有效的 JSON 或任何 `path` 参数不是有效的路径表达式或包含了 * 通配符，则会返回错误 |
+| `<path>` | 要插入的 JSON 路径。如果是 `NULL` ，则返回 NULL                                                                                              |
+| `<val>`        | 要插入 JSON 的值。如果是 `NULL` ，则会在对应的位置插入 `NULL` 的 value 值。                                                                           |
 
 
-`json_insert` 函数在 JSON 中插入数据并返回结果。如果 `json_str` 或 `path` 为 NULL，则返回 NULL。否则，如果 `json_str` 不是有效的 JSON 或任何 `path` 参数不是有效的路径表达式或包含了 * 通配符，则会返回错误。
-
-路径值对按从左到右的顺序进行评估。
+需要注意的是，路径值对按从左到右的顺序进行评估。
 
 如果 JSON 中不存在该路径，则路径值对会添加该值到 JSON 中，如果路径标识某个类型的值，则：
 
@@ -44,30 +49,47 @@ under the License.
 
 否则，对于 JSON 中不存在的某个路径的路径值对将被忽略且不会产生任何影响。
 
-## 举例
+## 返回值
+返回一个 JSON 值。
 
+## 示例
+```sql
+select json_insert(null, null, null);
 ```
-MySQL> select json_insert(null, null, null);
+```text
 +---------------------------------+
 | json_insert(NULL, NULL, 'NULL') |
 +---------------------------------+
 | NULL                            |
 +---------------------------------+
-
-MySQL> select json_insert('{"k": 1}', "$.k", 2);
+```
+```sql
+select json_insert('{"k": 1}', "$.k", 2);
+```
+```text
 +---------------------------------------+
 | json_insert('{\"k\": 1}', '$.k', '2') |
 +---------------------------------------+
 | {"k":1}                               |
 +---------------------------------------+
-
-MySQL> select json_insert('{"k": 1}', "$.j", 2);
+```
+```sql
+select json_insert('{"k": 1}', "$.j", 2);
+```
+```text
 +---------------------------------------+
 | json_insert('{\"k\": 1}', '$.j', '2') |
 +---------------------------------------+
 | {"k":1,"j":2}                         |
 +---------------------------------------+
 ```
-
-### keywords
-JSON, json_insert
+```sql
+select json_insert('{"k": 1}', "$.j", null);
+```
+```text
++-----------------------------------------------+
+| json_insert('{"k": 1}', '$.j', 'NULL', '660') |
++-----------------------------------------------+
+| {"k":1,"j":null}                              |
++-----------------------------------------------+
+```

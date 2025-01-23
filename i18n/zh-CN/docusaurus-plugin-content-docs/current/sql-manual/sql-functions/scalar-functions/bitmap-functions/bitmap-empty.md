@@ -24,37 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_empty
 ## 描述
+
+构建一个空 BITMAP。主要用于 insert 或 stream load 时填充默认值。例如：
+
+```
+cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://127.0.0.1:8040/api/test_database/test_table/_stream_load
+```
+
 ## 语法
 
-`BITMAP BITMAP_EMPTY()`
-
-返回一个空bitmap。主要用于 insert 或 stream load 时填充默认值。例如
-
+```sql
+BITMAP_EMPTY()
 ```
-cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,v1,v2=bitmap_empty()"   http://host:8410/api/test/testDb/_stream_load
-```
+
+## 返回值
+
+返回一个无元素的空 BITMAP。
 
 ## 举例
 
+```sql
+select bitmap_to_string(bitmap_empty());
 ```
-mysql> select bitmap_count(bitmap_empty());
-+------------------------------+
-| bitmap_count(bitmap_empty()) |
-+------------------------------+
-|                            0 |
-+------------------------------+
 
-mysql> select bitmap_to_string(bitmap_empty());
+```text
 +----------------------------------+
 | bitmap_to_string(bitmap_empty()) |
 +----------------------------------+
 |                                  |
 +----------------------------------+
-
 ```
 
-### keywords
+```sql
+select bitmap_count(bitmap_empty());
+```
 
-    BITMAP_EMPTY,BITMAP
+```text
++------------------------------+
+| bitmap_count(bitmap_empty()) |
++------------------------------+
+|                            0 |
++------------------------------+
+```

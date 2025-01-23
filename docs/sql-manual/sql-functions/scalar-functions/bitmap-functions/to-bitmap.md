@@ -24,38 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_bitmap
-### description
-#### Syntax
+## Description
 
-`BITMAP TO_BITMAP(expr)`
+Converts an unsigned bigint to a Bitmap.
 
-Convert an unsigned bigint (ranging from 0 to 18446744073709551615) to a bitmap containing that value. 
-Null will be return when the input value is not in this range.
-Mainly be used to load integer value into bitmap column, e.g.,
+The input is an unsigned bigint with a value in the range 0 to 18446744073709551615, and the output is a Bitmap containing that element.
 
-```
-cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user_id, user_id=to_bitmap(user_id)"   http://host:8410/api/test/testDb/_stream_load
+## Syntax
+
+```sql
+TO_BITMAP(<expr>)
 ```
 
-### example
+## Parameters
 
+| Parameter | Description                                        |
+|-----------|----------------------------------------------------|
+| `<expr>`  | An unsigned bigint with a range of 0 to 18446744073709551615 |
+
+## Return Value
+
+A Bitmap containing the corresponding bigint.  
+Returns `NULL` if the input value is not within the specified range.
+
+## Examples
+
+To convert an integer to a Bitmap and count the number of elements in the Bitmap:
+
+```sql
+select bitmap_count(to_bitmap(10));
 ```
-mysql> select bitmap_count(to_bitmap(10));
+
+The result will be:
+
+```text
 +-----------------------------+
 | bitmap_count(to_bitmap(10)) |
 +-----------------------------+
 |                           1 |
 +-----------------------------+
+```
 
-MySQL> select bitmap_to_string(to_bitmap(-1));
+To convert a negative integer to a Bitmap, which is outside the valid range, and convert it to a string:
+
+```sql
+select bitmap_to_string(to_bitmap(-1));
+```
+
+The result will be:
+
+```text
 +---------------------------------+
 | bitmap_to_string(to_bitmap(-1)) |
 +---------------------------------+
 |                                 |
 +---------------------------------+
 ```
-
-### keywords
-
-    TO_BITMAP,BITMAP

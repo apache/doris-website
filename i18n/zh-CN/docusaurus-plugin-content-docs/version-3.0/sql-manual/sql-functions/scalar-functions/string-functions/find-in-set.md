@@ -24,24 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## find_in_set
 ## 描述
+
+返回 strlist 中第一次出现 str 的位置（从1开始计数）。
+
+strlist 是用逗号分隔的字符串。特殊情况:
+
+- 如果没有找到，返回0。
+- 任一参数为 NULL ，返回 NULL。
+
 ## 语法
 
-`INT find_in_set(VARCHAR str, VARCHAR strlist)`
+```sql
+FIND_IN_SET ( <str> , <strlist> )
+```
 
+## 参数
 
-返回 strlist 中第一次出现 str 的位置（从1开始计数）。strlist 是用逗号分隔的字符串。如果没有找到，返回0。任意参数为 NULL ，返回 NULL。
+| 参数          | 说明       |
+|-------------|----------|
+| `<str>`     | 需要查找的字符串 |
+| `<strlist>` | 需要被查找的字符串 |
+
+## 返回值
+
+参数 `<str>` 在参数 `<strlist>` 第一次出现的位置。特殊情况：
+- 如果没有找到，返回0。
+- 任一参数为 NULL ，返回 NULL。
 
 ## 举例
 
+```sql
+SELECT FIND_IN_SET("b", "a,b,c")
 ```
-mysql> select find_in_set("b", "a,b,c");
-+---------------------------+
+
+```text
 | find_in_set('b', 'a,b,c') |
 +---------------------------+
 |                         2 |
 +---------------------------+
 ```
-### keywords
-    FIND_IN_SET,FIND,IN,SET

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "month_floor",
+    "title": "MONTH_FLOOR",
     "language": "en"
 }
 ---
@@ -24,39 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## month_floor
-### description
-#### Syntax
+
+## Description
+
+Rounds down a datetime value to the nearest specified month interval. If a starting time (origin) is provided, it uses that time as the reference for calculating the interval.
+
+## Syntax
 
 ```sql
-DATETIME MONTH_FLOOR(DATETIME datetime)
-DATETIME MONTH_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period)
-DATETIME MONTH_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+MONTH_FLOOR(<datetime>)
+MONTH_FLOOR(<datetime>, <origin>)
+MONTH_FLOOR(<datetime>, <period>)
+MONTH_FLOOR(<datetime>, <period>, <origin>)
 ```
 
-Convert the date to the nearest rounding down time of the specified time interval period.
+## Parameters
 
-- datetime: a valid date expression.
-- period: specifies how many months each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<datetime>`  | The datetime value to round down, of type DATETIME or DATETIMEV2 |
+| `<period>`    | The month interval value, of type INT, representing the number of months in each interval |
+| `<origin>`    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
 
-### example
+## Return Value
 
+Returns a value of type DATETIME, representing the rounded-down datetime value. The time portion of the result will be set to 00:00:00.
+
+## Example
+
+```sql
+SELECT MONTH_FLOOR("2023-07-13 22:28:18", 5);
 ```
-mysql> select month_floor("2023-07-13 22:28:18", 5);
+
+```text
 +--------------------------------------------------------------+
 | month_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +--------------------------------------------------------------+
 | 2023-05-01 00:00:00                                          |
 +--------------------------------------------------------------+
-1 row in set (0.12 sec)
 ```
 
-### keywords
+**Note:**
+- If no period is specified, it defaults to a 1-month interval.
+- The period must be a positive integer.
+- The result is always rounded down to a past time.
+- The time portion of the returned value is always set to 00:00:00.
+- Unlike MONTH_CEIL, MONTH_FLOOR always discards the portion that exceeds the interval.
 
-    MONTH_FLOOR, MONTH, FLOOR
-
-### Best Practice
+## Best Practices
 
 See also [date_floor](./date_floor)
