@@ -31,14 +31,14 @@ under the License.
 ## 语法
 
 ```sql
-MONEY_FORMAT(<Number>)
+MONEY_FORMAT(<number>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<Number>` | 需要被格式化的数字 |
+| `<number>` | 需要被格式化的数字 |
 
 ## 返回值
 
