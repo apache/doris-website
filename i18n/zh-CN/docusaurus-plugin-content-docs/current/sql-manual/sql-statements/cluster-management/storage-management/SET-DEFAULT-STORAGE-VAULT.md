@@ -34,8 +34,7 @@ under the License.
 SET vault_name DEFAULT STORAGE VAULT
 ```
 
-> 注意：
->
+## 注意事项：
 > 1. 只有 ADMIN 用户可以设置默认存储库
 
 ## 示例
@@ -46,8 +45,3 @@ SET vault_name DEFAULT STORAGE VAULT
    SET s3_vault AS DEFAULT STORAGE VAULT;
    ```
 
-## 相关命令
-
-## 关键词
-
-    SET, DEFAULT, STORAGE, VAULT
