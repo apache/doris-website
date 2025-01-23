@@ -1061,9 +1061,10 @@ explain memo plan <query_sql>
 - 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限。
 
 ### 物化视图修改
-```sql
 
 #### 修改物化视图属性
+
+```sql
 ALTER MATERIALIZED VIEW mv_1
 SET(
   "grace_period" = "10"
