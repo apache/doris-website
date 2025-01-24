@@ -45,7 +45,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 
 ## Optional parameters
 
-** 1. `<PROPERTIES>`**
+** 1. `[PROPERTIES ("<key>"="<value>", ...)]`**
 >  Used to specify properties or parameters when installing a plug-in
 
 ## Permission Control

@@ -37,9 +37,16 @@ SHOW PLUGINS
 
 ## Return Value
 
-|Description| Version | JavaVersion | ClassName | SoName   | Sources | Status | Properties |
-|-----------|---------|-------------|------|----------|------|------|-------|
-|Corresponding plug-in description| Plug-in corresponding version number | Corresponding Java version number | Program class name | Program shared object name | Plugin Source | Installation Status | Plugin Properties  |
+| Column | Description |
+| ------ | ----------- |
+| Description | Corresponding plug-in description |
+| Version | Plug-in corresponding version number |
+| JavaVersion | Corresponding Java version number |
+| ClassName | Program class name |
+| SoName | Program shared object name |
+| Sources | Plugin Source |
+| Status | Installation Status |
+| Properties | Plugin Properties  |
 
 ## Permission Control
 
@@ -58,9 +65,11 @@ The user executing this SQL command must have at least the following permissions
     ```
 
     ```text
-    |Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
-    |-----------|-------|-----------|---------|------|-------|------|----------|
-    |builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
-    |builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
-    |builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
+    +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
+   | Name                          | Type    | Description                                               | Version | JavaVersion | ClassName                                                  | SoName | Sources | Status    | Properties |
+   +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
+   | __builtin_AuditLoader         | AUDIT   | builtin audit loader, to load audit log to internal table | 2.1.0   | 1.8.31      | org.apache.doris.plugin.audit.AuditLoader                  | NULL   | Builtin | INSTALLED | {}         |
+   | __builtin_AuditLogBuilder     | AUDIT   | builtin audit logger                                      | 0.12.0  | 1.8.31      | org.apache.doris.plugin.audit.AuditLogBuilder              | NULL   | Builtin | INSTALLED | {}         |
+   | __builtin_SqlDialectConverter | DIALECT | builtin sql dialect converter                             | 2.1.0   | 1.8.31      | org.apache.doris.plugin.dialect.HttpDialectConverterPlugin | NULL   | Builtin | INSTALLED | {}         |
+   +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
     ```

@@ -45,7 +45,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
  
 ## 可选参数
 
-** 1. `<PROPERTIES>`**
+** 1. `[PROPERTIES ("<key>"="<value>", ...)]`**
 > 用于指定安装插件时的属性或参数
 
 ## 权限控制

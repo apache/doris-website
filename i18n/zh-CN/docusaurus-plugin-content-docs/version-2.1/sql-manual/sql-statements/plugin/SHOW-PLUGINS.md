@@ -37,9 +37,16 @@ SHOW PLUGINS
 
 ## 返回值
 
-| Description | Version | JavaVersion | ClassName | SoName   | Sources | Status | Properties |
-|--------|---------|-------------|------|----------|------|------|-------|
-| 对应插件描述 | 插件对应版本号 | 对应 Java 版本号 | 程序类名 | 程序共享对象名称 | 插件来源 | 安装状态 | 插件属性  |
+| Column | Description |
+| ------ |----|
+| Description | 对应插件描述 |
+| Version | 插件对应版本号 |
+| JavaVersion | 对应 Java 版本号 |
+| ClassName | 程序类名 |
+| SoName | 程序共享对象名称 |
+| Sources | 插件来源 |
+| Status | 安装状态 |
+| Properties | 插件属性 |
 
 ## 权限控制
 
@@ -58,9 +65,11 @@ SHOW PLUGINS
     ```
 
     ```text
-    |Description|Version|JavaVersion|ClassName|SoName|Sources|Status|Properties|
-    |-----------|-------|-----------|---------|------|-------|------|----------|
-    |builtin audit loader, to load audit log to internal table|2.1.0|1.8.31|org.apache.doris.plugin.audit.AuditLoader||Builtin|INSTALLED|{}|
-    |builtin audit logger|0.12.0|1.8.31|org.apache.doris.plugin.audit.AuditLogBuilder||Builtin|INSTALLED|{}|
-    |builtin sql dialect converter|2.1.0|1.8.31|org.apache.doris.plugin.dialect.HttpDialectConverterPlugin||Builtin|INSTALLED|{}|
+   +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
+   | Name                          | Type    | Description                                               | Version | JavaVersion | ClassName                                                  | SoName | Sources | Status    | Properties |
+   +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
+   | __builtin_AuditLoader         | AUDIT   | builtin audit loader, to load audit log to internal table | 2.1.0   | 1.8.31      | org.apache.doris.plugin.audit.AuditLoader                  | NULL   | Builtin | INSTALLED | {}         |
+   | __builtin_AuditLogBuilder     | AUDIT   | builtin audit logger                                      | 0.12.0  | 1.8.31      | org.apache.doris.plugin.audit.AuditLogBuilder              | NULL   | Builtin | INSTALLED | {}         |
+   | __builtin_SqlDialectConverter | DIALECT | builtin sql dialect converter                             | 2.1.0   | 1.8.31      | org.apache.doris.plugin.dialect.HttpDialectConverterPlugin | NULL   | Builtin | INSTALLED | {}         |
+   +-------------------------------+---------+-----------------------------------------------------------+---------+-------------+------------------------------------------------------------+--------+---------+-----------+------------+
     ```
