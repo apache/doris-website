@@ -24,27 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## hours_add
-### description
-#### Syntax
+## Description
 
-`DATETIME HOURS_ADD(DATETIME date, INT hours)`
+Returns a new datetime value that is the result of adding a specified number of hours to the input datetime.
 
-Add specified hours from date time or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is DATETIME.
-
-### example
-
-```
-mysql> select hours_add("2020-02-02 02:02:02", 1);
-+-------------------------------------+
-| hours_add('2020-02-02 02:02:02', 1) |
-+-------------------------------------+
-| 2020-02-02 03:02:02                 |
-+-------------------------------------+
+```sql
+HOURS_ADD(<date>, <hours>)
 ```
 
-### keywords
+## Parameters
 
-    HOURS_ADD
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<date>`      | The input datetime value, which can be of type DATETIME or DATE |
+| `<hours>`     | The number of hours to add, of type INT         |
+
+## Return Value
+
+Returns a value of type DATETIME, representing the time value after adding the specified number of hours to the input datetime.
+
+## Example
+
+```sql
+SELECT HOURS_ADD('2020-02-02 02:02:02', 1);
+```
+
+```text
++------------------------------------------------------------+
+| hours_add(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), 1) |
++------------------------------------------------------------+
+| 2020-02-02 03:02:02                                        |
++------------------------------------------------------------+
+```

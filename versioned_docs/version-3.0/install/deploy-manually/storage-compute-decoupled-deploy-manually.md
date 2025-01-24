@@ -1,6 +1,6 @@
 ---
 {
-    "title": "deploy storage compute decoupled manually",
+    "title": "Deploy Storage Compute Decoupled Manually",
     "language": "en"
 }
 ---

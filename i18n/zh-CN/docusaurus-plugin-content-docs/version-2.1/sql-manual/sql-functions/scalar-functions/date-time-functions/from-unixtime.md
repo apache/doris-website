@@ -24,21 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_unixtime
 ## 描述
+
+将 unix 时间戳转化为对应的 time 格式。特殊情况：
+- 目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`，超出范围的 `unix_timestamp` 将会得到 NULL
+
 ## 语法
 
-`DATETIME FROM_UNIXTIME(BIGINT unix_timestamp[, VARCHAR string_format])`
+```sql
+FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
+```
 
+## 参数
 
-将 unix 时间戳转化为对应的 time 格式，返回的格式由 `string_format` 指定
+| 参数 | 说明 |
+| -- | -- |
+| `<unix_timestamp>` | unix 时间戳 |
+| `<string_format>` | format 格式，默认为 %Y-%m-%d %H:%i:%s|
 
-支持 `date_format` 中的 format 格式，默认为 %Y-%m-%d %H:%i:%s
+## 返回值
 
-传入的是整型，返回的是字符串类型
-
-目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`，超出范围的 `unix_timestamp` 将会得到 NULL
-
+返回指定格式的日期。
 
 ## 举例
 
@@ -71,18 +77,3 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 | 2007-12-01 00:30:19                              |
 +--------------------------------------------------+
 ```
-
-对于超过范围的时间戳，可以采用from_second函数
-`DATETIME FROM_SECOND(BIGINT unix_timestamp)`
-```
-mysql> select from_second(21474836470);
-+--------------------------+
-| from_second(21474836470) |
-+--------------------------+
-| 2650-07-06 16:21:10      |
-+--------------------------+
-```
-
-### keywords
-
-    FROM_UNIXTIME,FROM,UNIXTIME

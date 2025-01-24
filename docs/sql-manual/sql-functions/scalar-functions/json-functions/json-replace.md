@@ -24,13 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_replace
 
-### Description
-#### Syntax
+## Description
+The JSON_REPLACE function is used to update data in a JSON and return the result.
 
-`VARCHAR json_replace(VARCHAR json_str, VARCHAR path, VARCHAR val[, VARCHAR path, VARCHAR val] ...)`
+## Syntax
+```sql
+JSON_REPLACE (<json_str>, <path>, <val>[, <jsonPath>, <val>, ...])
+```
 
+## Parameters
+| Parameter           | Description                                                                                          |
+|--------------|---------------------------------------------------------------------------------------------|
+| `<json_str>`  | The JSON data to be replaced. It can be a JSON object with elements of any type, including NULL. If no elements are specified, an empty array is returned. If json_str is not a valid JSON, an error will be returned. |
+| `<path>` | The JSON path to be replaced.                                                          |
+| `<val>`      | The value to replace the value corresponding to the JSON_PATH Key. If it is NULL, then a NULL value will be inserted at the corresponding position.                     |
+
+## Return Values
 
 `json_replace` function updates data in a JSON and returns the result.Returns NULL if `json_str` or `path` is NULL. Otherwise, an error occurs if the `json_str` argument is not a valid JSON or any path argument is not a valid path expression or contains a * wildcard.
 
@@ -40,30 +50,45 @@ A path-value pair for an existing path in the json overwrites the existing json 
 
 Otherwise, a path-value pair for a nonexisting path in the json is ignored and has no effect.
 
-### example
+### Examples
 
+```sql
+select json_replace(null, null, null);
 ```
-MySQL> select json_replace(null, null, null);
+```text
 +----------------------------------+
 | json_replace(NULL, NULL, 'NULL') |
 +----------------------------------+
 | NULL                             |
 +----------------------------------+
-
-MySQL> select json_replace('{"k": 1}', "$.k", 2);
+```
+```sql
+select json_replace('{"k": 1}', "$.k", 2);
+```
+```text
 +----------------------------------------+
 | json_replace('{\"k\": 1}', '$.k', '2') |
 +----------------------------------------+
 | {"k":2}                                |
 +----------------------------------------+
-
-MySQL> select json_replace('{"k": 1}', "$.j", 2);
+```
+```sql
+select json_replace('{"k": 1}', "$.j", 2);
+```
+```text
 +----------------------------------------+
 | json_replace('{\"k\": 1}', '$.j', '2') |
 +----------------------------------------+
 | {"k":1}                                |
 +----------------------------------------+
 ```
-
-### keywords
-JSON, json_replace
+```sql
+select json_replace(null, null, 's');
+```
+```text
++--------------------------------------+
+| json_replace(NULL, NULL, 's', '006') |
++--------------------------------------+
+| NULL                                 |
++--------------------------------------+
+```

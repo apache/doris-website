@@ -14,7 +14,7 @@ to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
@@ -24,154 +24,163 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-The GRANT command has the following functions:
+The GRANT command is used to:
 
-1. Grant the specified permissions to a user or role.
-2. Grant the specified role to a user.
+1. Grant specified privileges to a user or role.
+2. Grant specified roles to a user.
 
->Note that.
->
->"Grant specified roles to user" is supported in versions 2.0 and later
+**Related Commands**
+
+- [REVOKE FROM](./REVOKE-FROM.md)
+- [SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
+- [CREATE ROLE](./CREATE-ROLE.md)
+- [CREATE WORKLOAD GROUP](../cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md)
+- [CREATE RESOURCE](../cluster-management/compute-management/CREATE-RESOURCE.md)
+
+## Syntax
+
+**Grant specified privileges to a user or role**
 
 ```sql
-GRANT privilege_list ON priv_level TO user_identity [ROLE role_name]
-
-GRANT privilege_list ON RESOURCE resource_name TO user_identity [ROLE role_name]
-
-GRANT role_list TO user_identity
+GRANT <privilege_list> 
+ON { <priv_level> 
+    | RESOURCE <resource_name> 
+    | WORKLOAD GROUP <workload_group_name>
+   } 
+TO { <user_identity> | ROLE <role_name> }
 ```
 
-GRANT privilege_list ON WORKLOAD GROUP workload_group_name TO user_identity [ROLE role_name]
+**Grant specified roles to a user**
 
-privilege_list is a list of privileges to be granted, separated by commas. Currently Doris supports the following permissions:
+```sql
+GRANT <role_list> TO <user_identity> 
+```
 
-    NODE_PRIV: Cluster node operation permissions, including node online and offline operations. User who has NODE_PRIV and GRANT_PRIV permission, can grant NODE_PRIV to other users.
-    ADMIN_PRIV: All privileges except NODE_PRIV.
-    GRANT_PRIV: Privilege for operation privileges. Including creating and deleting users, roles, authorization and revocation, setting passwords, etc.
-    SELECT_PRIV: read permission on the specified database or table
-    LOAD_PRIV: Import privileges on the specified database or table
-    ALTER_PRIV: Schema change permission for the specified database or table
-    CREATE_PRIV: Create permission on the specified database or table
-    DROP_PRIV: drop privilege on the specified database or table
-    USAGE_PRIV: access to the specified resource
-    SHOW_VIEW_PRIV: View permission to `view` creation statements (starting from version 2.0.3, 'SELECT_PRIV' and 'LOAD_PRIV' permissions cannot be 'SHOW CREATE TABLE view_name', has one of `CREATE_PRIV`，`ALTER_PRIV`，`DROP_PRIV`，`SHOW_VIEW_PRIV` can `SHOW CREATE TABLE view_name`) 
-    
-    ALL and READ_WRITE in legacy permissions will be converted to: SELECT_PRIV,LOAD_PRIV,ALTER_PRIV,CREATE_PRIV,DROP_PRIV;
-    READ_ONLY is converted to SELECT_PRIV.
+## Required Parameters
 
-Permission classification:
+**1. `<privilege_list>`**
 
-    1. Node Privilege: NODE_PRIV
-    2. database table permissions: SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV
-    3. Resource  and workload groups Privilege: USAGE_PRIV
+A comma-separated list of privileges to be granted. Currently supported privileges include:
 
-Priv_level supports the following four forms:
+- NODE_PRIV: Cluster node operation permissions, including node online and offline operations.
+- ADMIN_PRIV: All privileges except NODE_PRIV.
+- GRANT_PRIV: Privilege for operation privileges, including creating and deleting users, roles, authorization and revocation, setting passwords, etc.
+- SELECT_PRIV: Read permission on the specified database or table.
+- LOAD_PRIV: Import privileges on the specified database or table.
+- ALTER_PRIV: Schema change permission for the specified database or table.
+- CREATE_PRIV: Create permission on the specified database or table.
+- DROP_PRIV: Drop privilege on the specified database or table.
+- USAGE_PRIV: Access to the specified resource and Workload Group permissions.
+- SHOW_VIEW_PRIV: Permission to view view creation statements.
 
-    1. *.*.* permissions can be applied to all catalogs, all databases and all tables in them
-    2. catalog_name.*.* permissions can be applied to all databases and all tables in them
-    3. catalog_name.db.* permissions can be applied to all tables under the specified database
-    4. catalog_name.db.tbl permission can be applied to the specified table under the specified database
-    
-    The catalog or database, table specified here may be not exist.
+Legacy privilege conversion:
 
-resource_name supports the following two forms:
+- ALL and READ_WRITE will be converted to: SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV.
+- READ_ONLY is converted to SELECT_PRIV.
 
-    1. * Permissions apply to all resources
-    2. The resource permission applies to the specified resource
-    
-    The resource specified here can be a non-existing resource. In addition, please distinguish the resources here from external tables, and use catalog as an alternative if you use external tables.
+**2. `<priv_level>`**
 
-workload_group_name specifies the workload group name and supports `%` and `_` match characters, `%` can match any string and `_` matches any single character.
+Supports the following four forms:
 
-user_identity:
+- ..*: Privileges can be applied to all catalogs and all databases and tables within them.
+- catalog_name..: Privileges can be applied to all databases and tables in the specified catalog.
+- catalog_name.db.*: Privileges can be applied to all tables under the specified database.
+- catalog_name.db.tbl: Privileges can be applied to the specified table under the specified database.
 
-    The user_identity syntax here is the same as CREATE USER. And must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the effective time of the authority may be delayed by about 1 minute.
-    
-    You can also assign permissions to the specified ROLE, if the specified ROLE does not exist, it will be created automatically.
+**3. `<resource_name>`**
 
-role_list is the list of roles to be assigned, separated by commas,the specified role must exist.
+Specifies the resource name, supporting `%` and `*` to match all resources, but does not support wildcards, such as res*.
+
+**4. `<workload_group_name>`**
+
+Specifies the workload group name, supporting `%` and `*` to match all workload groups, but does not support wildcards.
+
+**5. `<user_identity>`**
+
+Specifies the user to receive the privileges. Must be a user_identity created with CREATE USER. The host in user_identity can be a domain name. If it is a domain name, the effective time of the authority may be delayed by about 1 minute.
+
+**6. `<role_name>`**
+
+Specifies the role to receive the privileges. If the specified role does not exist, it will be created automatically.
+
+**7. `<role_list>`**
+
+A comma-separated list of roles to be assigned. The specified roles must exist.
+
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following privileges:
+
+| Privilege | Object | Notes                |
+| :---------------- | :------------- | :---------------------------- |
+| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the GRANT operation. |
 
 ## Examples
 
-1. Grant permissions to all catalog and databases and tables to the user
+- Grant permissions to all catalogs and databases and tables to the user:
 
-   ```sql
-   GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
-   ```
+    ```sql
+    GRANT SELECT_PRIV ON *.*.* TO 'jack'@'%';
+    ```
 
-2. Grant permissions to the specified database table to the user
+- Grant permissions to the specified database table to the user:
 
-   ```sql
-   GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1 TO 'jack'@'192.8.%';
-   ```
+    ```sql
+    GRANT SELECT_PRIV,ALTER_PRIV,LOAD_PRIV ON ctl1.db1.tbl1  TO 'jack'@'192.8.%';
+    ```
 
-3. Grant permissions to the specified database table to the role
+- Grant permissions to the specified database table to the role:
 
-   ```sql
-   GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
-   ```
+    ```sql
+    GRANT LOAD_PRIV ON ctl1.db1.* TO ROLE 'my_role';
+    ```
 
-4. Grant access to all resources to users
+- Grant access to all resources to users:
 
-   ```sql
-   GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
-   ```
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE * TO 'jack'@'%';
+    ```
 
-5. Grant the user permission to use the specified resource
+- Grant the user permission to use the specified resource:
 
-   ```sql
-   GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
-   ```
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'%';
+    ```
 
-6. Grant access to specified resources to roles
+- Grant access to specified resources to roles:
 
-   ```sql
-   GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
-   ```
-   
+    ```sql
+    GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO ROLE 'my_role';
+    ```
 
-
-7. Grant the specified role to a user
+- Grant the specified role to a user:
 
     ```sql
     GRANT 'role1','role2' TO 'jack'@'%';
     ```
-:::tip Tips
-This feature is supported since the Apache Doris 2.0 version
-:::
- 
 
-8. Grant the specified workload group 'g1' to user jack
+- Grant the specified workload group 'g1' to user jack:
 
     ```sql
-    GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%'.
+    GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
     ```
 
-9. match all workload groups granted to user jack
+- Match all workload groups granted to user jack:
 
     ```sql
-    GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%'.
+    GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
     ```
 
-10. grant the workload group 'g1' to the role my_role
+- Grant the workload group 'g1' to the role my_role:
 
     ```sql
-    GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'my_role'.
+    GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'my_role';
     ```
 
-11. Allow jack to view the creation statement of view1 under db1
+- Allow jack to view the creation statement of view1 under db1:
 
     ```sql
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
     ```
-
-## Keywords
-
-    GRANT
-
-## Best Practice
-

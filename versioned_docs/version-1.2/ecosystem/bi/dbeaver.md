@@ -74,18 +74,23 @@ Currently verified using DBeaver version 24.0.0
    :::
 
   - internal catalog
+
     ![connect internal catalog](/images/dbeaver4.png)
+    
   - external catalog
+
     ![connect external catalog](/images/dbeaver5.png)
 
 5. Test data source connection
 
    After filling in the connection information, click Test Connection in the lower left corner to verify the accuracy of the database connection information. DBeaver returns to the following dialog box to confirm the configuration of the connection information. Click OK to confirm that the configured connection information is correct. Then click Finish in the lower right corner to complete the connection configuration.
+
    ![test connection](/images/dbeaver6.png)
 
 6. Connect to database
 
    After the database connection is established, you can see the created data source connection in the database connection navigation on the left, and you can connect and manage the database through DBeaver.
+   
    ![create connection](/images/dbeaver7.png)
 
 ## Function support

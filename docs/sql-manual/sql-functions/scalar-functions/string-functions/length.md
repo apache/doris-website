@@ -24,31 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## length
-### Description
-#### Syntax
+## Description
 
-`INT length (VARCHAR str)`
+Returns the number of bytes in a string.
 
+## Syntax
 
-Returns the length of the string in byte size.
-
-### example
-
+```sql
+LENGTH ( <str> )
 ```
-mysql> select length("abc");
-+---------------+
-| length('abc') |
-+---------------+
-|             3 |
-+---------------+
 
-mysql> select length("中国");
-+------------------+
-| length('中国')   |
-+------------------+
-|                6 |
-+------------------+
+## Parameters
+
+| Parameter | Description |
+|-----------| --------------- |
+| `<str>`   | The string whose bytes need to be calculated |
+
+## Return Value
+
+The number of bytes in the string `<str>`.
+
+## Example
+
+```sql
+SELECT LENGTH("abc"),length("中国")
 ```
-### keywords
-    LENGTH
+
+```text
++---------------+------------------+
+| length('abc') | length('中国')   |
++---------------+------------------+
+|             3 |                2 |
++---------------+------------------+
+```
