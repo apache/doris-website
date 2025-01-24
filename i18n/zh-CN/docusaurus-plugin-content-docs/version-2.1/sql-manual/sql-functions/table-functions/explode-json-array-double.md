@@ -26,9 +26,9 @@ under the License.
 
 ## Description
 
-The table function is used in conjunction with Lateral View and can support multiple Lateral Views. It only supports the new optimizer.
+表函数，需配合 Lateral View使用，并且支持多个Lateral View。它仅支持新的优化器。
 
-It expands an array column into multiple rows and adds a column indicating the position, returning a struct type. When the array is NULL or empty, posexplode_outer returns NULL. Both posexplode and posexplode_outer will return NULL elements within the array.
+该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为NULL或空时，posexplode_outer会返回 NULL。posexplode和posexplode_outer均会返回数组中的NULL元素。
 
 ## Syntax
 ```sql
