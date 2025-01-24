@@ -38,17 +38,21 @@ ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 
 ## Required Parameters
 
-**1. `<user_identity>`**：a user_identity uniquely identifies a user.The syntax is:'user_name'@'host'.
-`user_identity` consists of two parts, user_name and host, where username is the username. Host identifies the host address where the client connects. The host part can use % for fuzzy matching. If no host is specified, it defaults to '%', which means the user can connect to Doris from any host.
-The host part can also be specified as a domain, the syntax is: 'user_name'@['domain'], even if it is surrounded by square brackets, Doris will think this is a domain and try to resolve its ip address. 
+**<user_identity>**
+
+> A user_identity uniquely identifies a user.The syntax is:'user_name'@'host'.
+> `user_identity` consists of two parts, user_name and host, where username is the username. Host identifies the host address where the client connects. The host part can use % for fuzzy matching. If no host is specified, it defaults to '%', which means the user can connect to Doris from any host.
+> The host part can also be specified as a domain, the syntax is: 'user_name'@['domain'], even if it is surrounded by square brackets, Doris will think this is a domain and try to resolve its ip address. 
 
 ## Optional Parameters
 
-**1. `<password>`**：Specify the user password. 
+**<password>**
 
-**2. `<password_policy>`**
-    
-    `password_policy` is a clause used to specify policies related to password authentication login. Currently, the following policies are supported:
+> Specify the user password. 
+
+**<password_policy>**
+
+> `password_policy` is a clause used to specify policies related to password authentication login. Currently, the following policies are supported:
 
 ```sql
     - PASSWORD_HISTORY [n|DEFAULT]
@@ -58,24 +62,25 @@ The host part can also be specified as a domain, the syntax is: 'user_name'@['do
     - ACCOUNT_UNLOCK
 ```
 
-- `PASSWORD_HISTORY`
+> - `PASSWORD_HISTORY`
+>
+>    Whether to allow the current user to use historical passwords when resetting their passwords. For example, `PASSWORD_HISTORY 10` means that it is forbidden to use the password set in the past 10 times as a new password. If set to `PASSWORD_HISTORY DEFAULT`, the value in the global variable `password_history` will be used. `0` means do not enable this feature. Default is 0.
+>
+> - `PASSWORD_EXPIRE`
+>
+>    Set the expiration time of the current user's password. For example `PASSWORD_EXPIRE INTERVAL 10 DAY` means the password will expire in 10 days. `PASSWORD_EXPIRE NEVER` means that the password does not expire. If set to `PASSWORD_EXPIRE DEFAULT`, the value in the global variable `default_password_lifetime` is used. Defaults to NEVER (or 0), which means it will not expire.
+>
+> - `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
+>
+>    When the current user logs in, if the user logs in with the wrong password for n times, the account will be locked, and the lock time is set. For example, `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` means that if you log in wrongly for 3 times, the account will be locked for one day.
+>    
+> - ACCOUNT_UNLOCK
+>    
+>    `ACCOUNT_UNLOCK` is used to unlock a locked user.
 
-    Whether to allow the current user to use historical passwords when resetting their passwords. For example, `PASSWORD_HISTORY 10` means that it is forbidden to use the password set in the past 10 times as a new password. If set to `PASSWORD_HISTORY DEFAULT`, the value in the global variable `password_history` will be used. `0` means do not enable this feature. Default is 0.
+**<comment>**
 
-- `PASSWORD_EXPIRE`
-
-    Set the expiration time of the current user's password. For example `PASSWORD_EXPIRE INTERVAL 10 DAY` means the password will expire in 10 days. `PASSWORD_EXPIRE NEVER` means that the password does not expire. If set to `PASSWORD_EXPIRE DEFAULT`, the value in the global variable `default_password_lifetime` is used. Defaults to NEVER (or 0), which means it will not expire.
-
-- `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
-
-    When the current user logs in, if the user logs in with the wrong password for n times, the account will be locked, and the lock time is set. For example, `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` means that if you log in wrongly for 3 times, the account will be locked for one day.
-    
-- ACCOUNT_UNLOCK
-    
-    `ACCOUNT_UNLOCK` is used to unlock a locked user.
-
-**3. `<comment>`**：Specify the user comment.
-
+>Specify the user comment.
 
 ## Access Control Requirements
 
@@ -88,6 +93,7 @@ The user executing this SQL command must have at least the following privileges:
 ## Usage Notes
 
 1. This command give over supports modifying user roles from versions 2.0. Please use [GRANT](./GRANT.md) and [REVOKE](./REVOKE.md) for related operations
+
 2. In an ALTER USER command, only one of the following account attributes can be modified at the same time:
 - Change password
 - Modify `PASSWORD_HISTORY`

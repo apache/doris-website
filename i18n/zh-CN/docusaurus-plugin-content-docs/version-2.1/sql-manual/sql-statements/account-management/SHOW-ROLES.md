@@ -36,17 +36,17 @@ SHOW ROLES
 
 ## 返回值
 
-| 列名                   | 类型   | 说明    
-|-----------------------|--------|----
-| Name                  | string | 角色名称
-| Comment               | string | 注释
-| Users                 | string | 包含的用户
-| GlobalPrivs           | string | 全局权限
-| CatalogPrivs          | string | Catalog权限
-| DatabasePrivs         | string | 数据库权限
-| TablePrivs            | string | 表权限
-| ResourcePrivs         | string | 资源权限
-| WorkloadGroupPrivs    | string | WorkloadGroup权限   
+| 列名                   | 类型   | 说明              |
+|-----------------------|--------|-------------------|
+| Name                  | string | 角色名称           |
+| Comment               | string | 注释              |
+| Users                 | string | 包含的用户         |
+| GlobalPrivs           | string | 全局权限           |
+| CatalogPrivs          | string | Catalog权限       |
+| DatabasePrivs         | string | 数据库权限         |
+| TablePrivs            | string | 表权限            |
+| ResourcePrivs         | string | 资源权限           |
+| WorkloadGroupPrivs    | string | WorkloadGroup权限  |  
 
 ## 权限控制
 

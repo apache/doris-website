@@ -36,7 +36,9 @@ The `DROP USER` statement is used to delete a user.
 
 ## Required Parameters
 
-**1. `<user_identity>`**：The specified user identity.
+**<user_identity>**
+
+> The specified user identity.
 
 ## Access Control Requirements
 

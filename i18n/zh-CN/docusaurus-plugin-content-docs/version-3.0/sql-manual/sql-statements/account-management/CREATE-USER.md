@@ -38,21 +38,26 @@ CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 
 ## 必选参数
 
-**1. `<user_identity>`**：一个用户的唯一标识，语法为：'user_name'@'host'
-    
-    `user_identity` 由两部分组成，user_name 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，即表示该用户可以从任意 host 连接到 Doris。host 部分也可指定为 domain，，即使用中括号包围，则 Doris 会认为这个是一个 domain，并尝试解析其 ip 地址。
+**<user_identity>**
+
+> 一个用户的唯一标识，语法为：'user_name'@'host' 
+> `user_identity` 由两部分组成，user_name 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，即表示该用户可以从任意 host 连接到 Doris。
+> host 部分也可指定为 domain，，即使用中括号包围，则 Doris 会认为这个是一个 domain，并尝试解析其 ip 地址。
 
 ## 可选参数
 
-**1. `<password>`**：指定用户密码
+**<password>**
 
-**2. `<role_name>`**：指定用户角色。
+> 指定用户密码
 
-    如果指定了角色，则会自动将该角色所拥有的权限赋予新创建的这个用户。如果不指定，则该用户默认没有任何权限。指定的 ROLE 必须已经存在。
+**<role_name>**
 
-**3. `<password_policy>`**
+> 指定用户角色。
+> 如果指定了角色，则会自动将该角色所拥有的权限赋予新创建的这个用户。如果不指定，则该用户默认没有任何权限。指定的 ROLE 必须已经存在。
 
-    用于指定密码认证登录相关策略的子句，目前支持以下策略：
+**<password_policy>**
+
+> 用于指定密码认证登录相关策略的子句，目前支持以下策略：
 
 ```sql
     - PASSWORD_HISTORY [n|DEFAULT]
@@ -61,21 +66,22 @@ CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
     - PASSWORD_LOCK_TIME [n DAY/HOUR/SECOND|UNBOUNDED]
 ```
 
-- `PASSWORD_HISTORY`
+> - `PASSWORD_HISTORY`
+>
+> 是否允许当前用户重置密码时使用历史密码。如 `PASSWORD_HISTORY 10` 表示禁止使用过去 10 次设置过的密码为新密码。如果设置为 `PASSWORD_HISTORY DEFAULT`，则会使用全局变量 `password_history` 中的值。`0` 表示不启用这个功能。默认为 0。
+>
+> - `PASSWORD_EXPIRE`
+>
+> 设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值。默认为 NEVER（或 0），表示不会过期。
+>
+> - `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
+>
+> 设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定，并设置锁定时间。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果 3 次错误登录，则账户会被锁定一天。
+被锁定的账户可以通过 ALTER USER 语句主动解锁。
 
-    是否允许当前用户重置密码时使用历史密码。如 `PASSWORD_HISTORY 10` 表示禁止使用过去 10 次设置过的密码为新密码。如果设置为 `PASSWORD_HISTORY DEFAULT`，则会使用全局变量 `password_history` 中的值。`0` 表示不启用这个功能。默认为 0。
+**<comment>**
 
-- `PASSWORD_EXPIRE`
-
-    设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值。默认为 NEVER（或 0），表示不会过期。
-
-- `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
-
-    设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定，并设置锁定时间。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果 3 次错误登录，则账户会被锁定一天。
-    被锁定的账户可以通过 ALTER USER 语句主动解锁。
-
-**4. `<comment>`**：指定用户注释
-
+> 指定用户注释
 
 ## 权限控制
 

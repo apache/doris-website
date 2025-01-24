@@ -37,13 +37,19 @@ SET PASSWORD [FOR <user_identity>] =
 
 ## Required Parameters
 
-**1. `<plain_password>`**：The input is a plaintext password. 
+**<plain_password>**
 
-**2. `<hashed_password>`**：The input is an encrypted password.
+> The input is a plaintext password. 
+
+**<hashed_password>**
+
+> The input is an encrypted password.
 
 ## Optional Parameters
 
-**1. `<user_identity>`**：The user_identity here must exactly match the user_identity specified when creating a user with CREATE USER, otherwise an error will be reported that the user does not exist. If user_identity is not specified, the current user is 'username'@'ip', which may not match any user_identity. Current users can be viewed through SHOW GRANTS.
+**<user_identity>**
+
+> The user_identity here must exactly match the user_identity specified when creating a user with CREATE USER, otherwise an error will be reported that the user does not exist. If user_identity is not specified, the current user is 'username'@'ip', which may not match any user_identity. Current users can be viewed through SHOW GRANTS.
 
 ## Access Control Requirements
 
@@ -55,7 +61,7 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Usage Notes
 
-1. If the `FOR user_identity` field does not exist, then change the current user's password.
+- If the `FOR user_identity` field does not exist, then change the current user's password.
 
 ## Example
 

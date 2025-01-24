@@ -36,7 +36,9 @@ under the License.
 
 ## 必选参数
 
-**1. `<user_identity>`**：指定的用户identity。
+**<user_identity>**
+
+> 指定的用户identity。
 
 ## 权限控制
 

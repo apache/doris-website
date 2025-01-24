@@ -37,13 +37,19 @@ SET PASSWORD [FOR <user_identity>] =
 
 ## 必选参数
 
-**1. `<plain_password>`**：输入的是明文密码。
+**<plain_password>**
 
-**2. `<hashed_password>`**：输入的是已加密的密码。
+> 输入的是明文密码。
+
+**<hashed_password>**
+
+> 输入的是已加密的密码。
 
 ## 可选参数
 
-**1. `<user_identity>`**：必须完全匹配在使用 CREATE USER 创建用户时指定的 user_identity，否则会报错用户不存在。如果不指定 user_identity，则当前用户为 'username'@'ip'，这个当前用户，可能无法匹配任何 user_identity。可以通过 SHOW GRANTS 查看当前用户。
+**<user_identity>**
+
+> 必须完全匹配在使用 CREATE USER 创建用户时指定的 user_identity，否则会报错用户不存在。如果不指定 user_identity，则当前用户为 'username'@'ip'，这个当前用户，可能无法匹配任何 user_identity。可以通过 SHOW GRANTS 查看当前用户。
 
 ## 权限控制
 
@@ -55,7 +61,7 @@ SET PASSWORD [FOR <user_identity>] =
 
 ## 注意事项
 
-如果 `FOR user_identity` 字段不存在，那么修改当前用户的密码。
+- 如果 `FOR user_identity` 字段不存在，那么修改当前用户的密码。
 
 ## 示例
 - 修改当前用户的密码

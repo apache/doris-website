@@ -36,17 +36,17 @@ SHOW ROLES
 
 ## Return Value
 
-| Column                | DataType    | Note       
-|-----------------------|-------------|----
-| Name                  | string      | Role Name
-| Comment               | string      | Comment
-| Users                 | string      | Included Users
-| GlobalPrivs           | string      | Global Privileges
-| CatalogPrivs          | string      | Catalog Privileges
-| DatabasePrivs         | string      | Database Privileges
-| TablePrivs            | string      | Table Privileges
-| ResourcePrivs         | string      | Resource Privileges
-| WorkloadGroupPrivs    | string      | Workload Group Privileges  
+| Column                | DataType    | Note                           |
+|-----------------------|-------------|--------------------------------|
+| Name                  | string      | Role Name                      |
+| Comment               | string      | Comment                        |
+| Users                 | string      | Included Users                 |
+| GlobalPrivs           | string      | Global Privileges              |
+| CatalogPrivs          | string      | Catalog Privileges             |
+| DatabasePrivs         | string      | Database Privileges            |
+| TablePrivs            | string      | Table Privileges               |
+| ResourcePrivs         | string      | Resource Privileges            |
+| WorkloadGroupPrivs    | string      | Workload Group Privileges      |
 
 ## Access Control Requirements
 
