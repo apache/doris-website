@@ -452,7 +452,9 @@
                                 "lakehouse/best-practices/doris-hudi",
                                 "lakehouse/best-practices/doris-paimon",
                                 "lakehouse/best-practices/doris-iceberg",
-                                "lakehouse/best-practices/doris-lakesoul"
+                                "lakehouse/best-practices/doris-lakesoul",
+                                "lakehouse/best-practices/tpch",
+                                "lakehouse/best-practices/tpcds"
                             ]
                         }
                     ]
