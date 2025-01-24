@@ -31,7 +31,7 @@ This statement is used to display the creation statement of an import job.
 ## Syntax
 
 ```sql
-SHOW CREATE LOAD for load_name;
+SHOW CREATE LOAD FOR <load_name>;
 ```
 
 ## Required Parameters

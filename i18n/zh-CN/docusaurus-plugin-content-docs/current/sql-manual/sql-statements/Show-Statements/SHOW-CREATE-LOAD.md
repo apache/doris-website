@@ -31,7 +31,7 @@ under the License.
 ## 语法：
 
 ```sql
-SHOW CREATE LOAD for load_name;
+SHOW CREATE LOAD FOR <load_name>;
 ```
 
 ## 必选参数

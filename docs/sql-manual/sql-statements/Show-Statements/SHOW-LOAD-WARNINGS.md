@@ -35,7 +35,7 @@ SHOW LOAD WARNINGS
 [FROM <db_name>]
 [
    WHERE
-   [LABEL [ = "<your_label>" ]]
+   [LABEL  = [ "<your_label>" ]]
    [LOAD_JOB_ID = ["<job_id>"]]
 ]
 ```
