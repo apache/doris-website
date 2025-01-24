@@ -39,6 +39,12 @@ illustrate:
 1. LIKE: Fuzzy query can be performed according to the catalog name
 
 
+## Optional Parameters
+
+**1. `<catalog_name>`**
+
+The name of the catalog to be displayed.
+
 ## Return Value
 
 | Column Name    | Description |
@@ -50,6 +56,11 @@ illustrate:
 | CreateTime     | Creation time  |
 | LastUpdateTime | Last updated time |
 | Comment        | comments about the catalog |
+
+## Access Control Requirements
+| Privilege                                                                                    | Object  | Notes                                     |
+|:---------------------------------------------------------------------------------------------|:--------|:------------------------------------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog | One of the above permissions is required. |
 
 
 ## Examples

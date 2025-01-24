@@ -26,8 +26,9 @@ under the License.
 
 ## 描述
 
-该语句用于设置指定数据目录的属性。（仅管理员使用）
+该语句用于设置指定数据目录的属性。
 
+## 语法
 1) 重命名数据目录
 
     ```sql
@@ -37,14 +38,37 @@ under the License.
 2) 设置数据目录属性
 
     ```sql
-    ALTER CATALOG <catalog_name> SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); 
+    ALTER CATALOG <catalog_name> SET PROPERTIES ('<key1>' = '<value1>' [, '<key2>' = '<value2>']); 
     ```
 
 3) 修改数据目录注释
 
     ```sql
-    ALTER CATALOG <catalog_name> MODIFY COMMENT "new catalog comment";
+    ALTER CATALOG <catalog_name> MODIFY COMMENT <"new catalog comment">;
     ```
+
+## 必选参数
+
+**1. `<catalog_name>`**
+
+需要修改的 Catalog 名称
+
+**2. `<new_catalog_name>`**
+
+修改后的新 Catalog 名称
+
+**3. `'<key1>' = '<value1>'`**
+
+需要修改/添加的 Catalog 属性的key和value
+
+**4. `<"new catalog comment">`**
+
+修改后的 Catalog 注释
+
+## 权限控制
+| 权限（Privilege） | 对象（Object）    | 说明（Notes）                 |
+|:--------------|:--------------|:--------------------------|
+| ALTER_PRIV    | Catalog       | 需要有对应catalog的ALTER_PRIV权限 |
 
 ## 注意事项
 

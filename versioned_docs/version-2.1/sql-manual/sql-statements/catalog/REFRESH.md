@@ -36,6 +36,26 @@ REFRESH DATABASE <[catalog_name.]database_name>;
 REFRESH TABLE <[catalog_name.][database_name.]table_name>;
 ```
 
+## Required Parameters
+
+**1. `<catalog_name>`**
+
+The name of the catalog that needs to be refreshed.
+
+**2. `<[catalog_name.]database_name>`**
+
+The name of the database within the catalog that needs to be refreshed.
+
+**3. `<[catalog_name.][database_name.]table_name>`**
+
+The name of the table within the catalog that needs to be refreshed.
+
+## Access Control Requirements
+| Privilege                                                                                    | Object  | Notes                                     |
+|:---------------------------------------------------------------------------------------------|:--------|:------------------------------------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog | One of the above permissions is required. |
+
+
 ## Usage Notes
 When the Catalog is refreshed, the object-related Cache is forced to be invalidated. Including Partition Cache, Schema Cache, File Cache, etc.
 

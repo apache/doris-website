@@ -38,6 +38,12 @@ SHOW CATALOGS [LIKE <catalog_name>]
 
 LIKE：可按照 CATALOG 名进行模糊查询
 
+## 可选参数
+
+**1. `<catalog_name>`**
+
+需要显示 catalog 的名字
+
 ## 返回值
 
 
@@ -50,6 +56,11 @@ LIKE：可按照 CATALOG 名进行模糊查询
 | CreateTime | 创建时间 |
 | LastUpdateTime | 最后更新时间 |
 | Comment | 备注 |
+
+## 权限控制
+| 权限（Privilege）                                                                                | 对象（Object） | 说明（Notes）      |
+|:---------------------------------------------------------------------------------------------|:-----------|:---------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog    | 需要有上述权限中的一种就可以 |
 
 
 ## 示例

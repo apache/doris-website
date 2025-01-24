@@ -33,9 +33,18 @@ under the License.
 SHOW CREATE CATALOG <catalog_name>;
 ```
 
-说明：
+## 必选参数
 
-`catalog_name`: 为 Doris 中存在的数据目录的名称。
+**1. `<catalog_name>`**
+
+需要查看创建语句的 catalog 的名字
+
+
+## 权限控制
+| 权限（Privilege）                                                                                | 对象（Object） | 说明（Notes）      |
+|:---------------------------------------------------------------------------------------------|:-----------|:---------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog    | 需要有上述权限中的一种就可以 |
+
 
 ## 示例
 

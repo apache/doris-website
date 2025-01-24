@@ -34,6 +34,17 @@ under the License.
 DROP CATALOG [IF EXISTS] <catalog_name>;
 ```
 
+## 必选参数
+
+**1. `<catalog_name>`**
+
+需要删除 catalog 的名字
+
+## 权限控制
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                |
+|:--------------|:-----------|:-------------------------|
+| DROP_PRIV     | Catalog    | 需要有对应catalog的DROP_PRIV权限 |
+
 ## 示例
 
 1. 删除数据目录 hive

@@ -38,9 +38,17 @@ This statement shows the creating statement of a doris catalog.
 SHOW CREATE CATALOG <catalog_name>;
 ```
 
-illustrate:
+## Required Parameters
 
-- `catalog_name`: The name of the catalog which exist in doris.
+**1. `<catalog_name>`**
+
+The name of the catalog whose creation statement needs to be viewed.
+
+## Access Control Requirements
+| Privilege                                                                                    | Object  | Notes                                     |
+|:---------------------------------------------------------------------------------------------|:--------|:------------------------------------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog | One of the above permissions is required. |
+
 
 ## Example
 
