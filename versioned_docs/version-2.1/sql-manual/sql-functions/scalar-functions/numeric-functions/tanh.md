@@ -22,31 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## tanh
+## Description
 
-### description
-#### Syntax
+Returns the hyperbolic tangent of x.
 
-`DOUBLE tanh(DOUBLE x)`
-Returns the hyperbolic tangent of `x`, tanh(x) = sinh(x) / cosh(x).
+## Syntax
 
-### example
-
-```
-mysql> select tanh(0);
-+---------+
-| tanh(0) |
-+---------+
-|       0 |
-+---------+
-
-mysql> select tanh(1);
-+---------------------+
-| tanh(1)             |
-+---------------------+
-| 0.76159415595576485 |
-+---------------------+
+```sql
+TANH(<x>)
 ```
 
-### keywords
-	TANH
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<x>` | The value for which the hyperbolic tangent is to be calculated |
+
+## Return Value
+
+The hyperbolic tangent of parameter x.
+
+## Example
+
+```sql
+select tanh(0),tanh(1);
+```
+
+```text
++-------------------------+-------------------------+
+| tanh(cast(0 as DOUBLE)) | tanh(cast(1 as DOUBLE)) |
++-------------------------+-------------------------+
+|                       0 |      0.7615941559557649 |
++-------------------------+-------------------------+
+```

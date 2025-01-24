@@ -24,38 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## concat
-### Description
-#### Syntax
+## Description
 
-`VARCHAR concat (VARCHAR,...)`
+Concatenates multiple strings. Special cases:
 
+- If any of the parameter values ​​is NULL, the result returned is NULL
 
-Connect multiple strings and return NULL if any of the parameters is NULL
+## Syntax
 
-### example
-
+```sql
+CONCAT ( <expr> [ , <expr> ... ] )
 ```
-mysql> select concat("a", "b");
-+------------------+
-| concat('a', 'b') |
-+------------------+
-| ab               |
-+------------------+
 
-mysql> select concat("a", "b", "c");
-+-----------------------+
-| concat('a', 'b', 'c') |
-+-----------------------+
-| abc                   |
-+-----------------------+
+## Parameters
 
-mysql> select concat("a", null, "c");
-+------------------------+
-| concat('a', NULL, 'c') |
-+------------------------+
-| NULL                   |
-+------------------------+
+| Parameter | Description |
+|-----------|--------------|
+| `<expr>`  | The strings to be concatenated |
+
+## Return value
+
+Parameter list `<expr>` The strings to be concatenated. Special cases:
+
+- If any of the parameter values ​​is NULL, the result returned is NULL
+
+## Example
+
+```sql
+SELECT  CONCAT("a", "b"),CONCAT("a", "b", "c"),CONCAT("a", null, "c")
 ```
-### keywords
-    CONCAT
+
+```text
++------------------+-----------------------+------------------------+
+| concat('a', 'b') | concat('a', 'b', 'c') | concat('a', NULL, 'c') |
++------------------+-----------------------+------------------------+
+| ab               | abc                   | NULL                   |
++------------------+-----------------------+------------------------+
+```

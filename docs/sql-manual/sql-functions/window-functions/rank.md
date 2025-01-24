@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_RANK",
+    "title": "RANK",
     "language": "en"
 }
 ---
@@ -11,35 +11,46 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION RANK
-### description
+## Description
 
-The RANK() function is used to represent rankings. Unlike DENSE_RANK(), RANK() will have vacancies. For example, if there are two 1s in a row, the third number in RANK() is 3, not 2.
+RANK() is a window function that returns the rank of values in an ordered dataset. Rankings start at 1 and increment sequentially. When identical values occur, they receive the same rank, but this creates gaps in the ranking sequence. For example, if the first two rows are tied for rank 1, the next different value will be ranked 3 (not 2).
 
-```sql
-RANK() OVER(partition_by_clause order_by_clause)
-```
-
-### example
-
-rank by x
+## Syntax
 
 ```sql
-select x, y, rank() over(partition by x order by y) as rank from int_t;
-
-| x  | y    | rank     |
-|----|------|----------|
-| 1  | 1    | 1        |
-| 1  | 2    | 2        |
-| 1  | 2    | 2        |
-| 2  | 1    | 1        |
-| 2  | 2    | 2        |
-| 2  | 3    | 3        |
-| 3  | 1    | 1        |
-| 3  | 1    | 1        |
-| 3  | 2    | 3        |
+RANK()
 ```
 
-### keywords
+## Return Value
 
-    WINDOW,FUNCTION,RANK
+Returns a BIGINT rank value. Returns the same rank for identical values, but creates gaps in the sequence.
+
+## Examples
+
+```sql
+SELECT 
+    department,
+    employee_name,
+    salary,
+    RANK() OVER (
+        PARTITION BY department 
+        ORDER BY salary DESC
+    ) as salary_rank
+FROM employees;
+```
+
+```text
++------------+---------------+--------+-------------+
+| department | employee_name | salary | salary_rank |
++------------+---------------+--------+-------------+
+| Sales      | Alice        | 10000  | 1           |
+| Sales      | Bob          | 10000  | 1           |
+| Sales      | Charlie      | 8000   | 3           |  -- Note this is 3, not 2
+| IT         | David        | 12000  | 1           |
+| IT         | Eve          | 11000  | 2           |
+| IT         | Frank        | 11000  | 2           |
+| IT         | Grace        | 9000   | 4           |  -- Note this is 4, not 3
++------------+---------------+--------+-------------+
+```
+
+In this example, the data is partitioned by department and ranked by salary within each department. When identical salaries occur (like Alice and Bob, Eve and Frank), they receive the same rank, but this creates gaps in subsequent rankings.

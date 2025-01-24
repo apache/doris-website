@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_LEAD",
+    "title": "LEAD",
     "language": "en"
 }
 ---
@@ -11,18 +11,30 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION LEAD
-### description
+## Description
 
-The LEAD() method is used to calculate the value of the current line several lines backwards.
+LEAD() is a window function used to access data from subsequent rows without performing a self-join. It retrieves the value from the Nth row after the current row within a partition.
+
+## Syntax
 
 ```sql
-LEAD(expr, offset, default) OVER (partition_by_clause order_by_clause)
+LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 ```
 
-### example
+## Parameters
+| Parameter           | Description                                                                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| expr                | The expression whose value needs to be retrieved                                                                                                          |
+| offset              | Optional. Number of rows to look ahead. Default is 1. When negative, behaves like LAG function. Maximum value is 1,000,000 when IGNORE NULLS is specified |
+| default             | Optional. Default value to return when the offset goes beyond the window range. Default is NULL                                                           |
 
-Calculate the trend of the closing price of the second day compared with the closing price of the day, that is, the closing price of the second day is higher or lower than that of the day.
+## Return Value
+
+Returns the same data type as the input expression.
+
+## Examples
+
+Calculate the difference between each salesperson's current sales and next day's sales:
 
 ```sql
 select stock_symbol, closing_date, closing_price,    
@@ -34,9 +46,12 @@ when false then "flat or lower"
 end as "trending"   
 from stock_ticker    
 order by closing_date;
+```
 
+```text
++--------------+---------------------+---------------+---------------+
 | stock_symbol | closing_date        | closing_price | trending      |
-|--------------|---------------------|---------------|---------------|
+| ------------ | ------------------- | ------------- | ------------- |
 | JDR          | 2014-09-13 00:00:00 | 12.86         | higher        |
 | JDR          | 2014-09-14 00:00:00 | 12.89         | higher        |
 | JDR          | 2014-09-15 00:00:00 | 12.94         | flat or lower |
@@ -44,8 +59,5 @@ order by closing_date;
 | JDR          | 2014-09-17 00:00:00 | 14.03         | higher        |
 | JDR          | 2014-09-18 00:00:00 | 14.75         | flat or lower |
 | JDR          | 2014-09-19 00:00:00 | 13.98         | flat or lower |
++--------------+---------------------+---------------+---------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,LEAD

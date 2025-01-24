@@ -24,35 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_extract
+## Description
+JSON_EXTRACT is a series of functions that extract the field specified by json_path from JSON data and provide different series of functions according to the type of the field to be extracted.
 
-### description
+* JSON_EXTRACT returns the VARCHAR type for a json string of the VARCHAR type.
+* JSON_EXTRACT_ISNULL returns the BOOLEAN type indicating whether it is a json null.
+* JSON_EXTRACT_BOOL returns the BOOLEAN type.
+* JSON_EXTRACT_INT returns the INT type.
+* JSON_EXTRACT_BIGINT returns the BIGINT type.
+* JSON_EXTRACT_LARGEINT returns the LARGEINT type.
+* JSON_EXTRACT_DOUBLE returns the DOUBLE type.
+* JSON_EXTRACT_STRING returns the STRING type.
 
-#### Syntax
+## Alias
+* JSONB_EXTRACT is the same as JSON_EXTRACT.
+* JSONB_EXTRACT_ISNULL is the same as JSON_EXTRACT_ISNULL.
+* JSONB_EXTRACT_BOOL is the same as JSON_EXTRACT_BOOL.
+* JSONB_EXTRACT_INT is the same as JSON_EXTRACT_INT.
+* JSONB_EXTRACT_BIGINT is the same as JSON_EXTRACT_BIGINT.
+* JSONB_EXTRACT_LARGEINT is the same as JSON_EXTRACT_LARGEINT.
+* JSONB_EXTRACT_DOUBLE is the same as JSON_EXTRACT_DOUBLE.
+* JSONB_EXTRACT_STRING is the same as JSON_EXTRACT_STRING.
 
+## Syntax
 ```sql
-`VARCHAR json_extract(VARCHAR json_str, VARCHAR path[, VARCHAR path] ...))`
-JSON jsonb_extract(JSON j, VARCHAR json_path)
-BOOLEAN json_extract_isnull(JSON j, VARCHAR json_path)
-BOOLEAN json_extract_bool(JSON j, VARCHAR json_path)
-INT json_extract_int(JSON j, VARCHAR json_path)
-BIGINT json_extract_bigint(JSON j, VARCHAR json_path)
-LARGEINT json_extract_largeint(JSON j, VARCHAR json_path)
-DOUBLE json_extract_double(JSON j, VARCHAR json_path)
-STRING json_extract_string(JSON j, VARCHAR json_path)
+JSON_EXTRACT (<json_str>, <path>[, path] ...)
 ```
+```sql
+JSON_EXTRACT_ISNULL (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_BOOL (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_INT (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_BIGINT (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_LARGEINT (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_DOUBLE (<json_str>, <path>)
+```
+```sql
+JSON_EXTRACT_STRING (<json_str>, <path>)
+```
+Alias functions have the same syntax and usage as the above functions, except for the function names.
 
-json_extract functions extract field specified by json_path from JSON. A series of functions are provided for different datatype.
-- json_extract with VARCHAR argument, extract and return VARCHAR datatype
-- jsonb_extract extract and return JSON datatype
-- json_extract_isnull check if the field is json null and return BOOLEAN datatype
-- json_extract_bool extract and return BOOLEAN datatype
-- json_extract_int extract and return INT datatype
-- json_extract_bigint extract and return BIGINT datatype
-- json_extract_largeint extract and return LARGEINT datatype
-- json_extract_double extract and return DOUBLE datatype
-- json_extract_STRING extract and return STRING datatype
-
+## Parameters
+| Parameter           | Description                          |
+|--------------|-----------------------------|
+| `<json_str>` | The JSON-type parameter or field to be extracted.         |
+| `<path>`     | The JSON path to extract the target element from the target JSON. |
 json path syntax:
 - '$' for json document root
 - '.k1' for element of json object with key 'k1'
@@ -60,73 +85,103 @@ json path syntax:
 - '[i]' for element of json array at index i
   - Use '$[last]' to get the last element of json_array, and '$[last-1]' to get the penultimate element, and so on.
 
+## Return Values
+According to the type of the field to be extracted, return the data type of the specified JSON_PATH in the target JSON. Special case handling is as follows:
+* If the field specified by json_path does not exist in the JSON, return NULL.
+* If the actual type of the field specified by json_path in the JSON is inconsistent with the type specified by json_extract_t.
+* if it can be losslessly converted to the specified type, return the specified type t; if not, return NULL.
 
-Exception handling is as follows:
-- if the field specified by json_path does not exist, return NULL
-- if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
 
 
-## json_exists_path and json_type
-### description
-
-#### Syntax
-
+## Examples
 ```sql
-BOOLEAN json_exists_path(JSON j, VARCHAR json_path)
-STRING json_type(JSON j, VARCHAR json_path)
+SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
 ```
 
-There are two extra functions to check field existence and type
-- json_exists_path check the existence of the field specified by json_path, return TRUE or FALS
-- json_type get the type as follows of the field specified by json_path, return NULL if it does not exist
-  - object
-  - array
-  - null
-  - bool
-  - int
-  - bigint
-  - largeint
-  - double
-  - string
-
-### example
-
-refer to [json tutorial](../../sql-reference/Data-Types/JSON.md) for more.
-
-```
-mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
+```text
 +------------------------------------------------------+
 | json_extract('{"id": 123, "name": "doris"}', '$.id') |
 +------------------------------------------------------+
 | 123                                                  |
 +------------------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> SELECT json_extract('[1, 2, 3]', '$.[1]');
+```
+```sql
+SELECT json_extract('[1, 2, 3]', '$.[1]');
+```
+```text
 +------------------------------------+
 | json_extract('[1, 2, 3]', '$.[1]') |
 +------------------------------------+
 | 2                                  |
 +------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> SELECT json_extract('{"k1": "v1", "k2": { "k21": 6.6, "k22": [1, 2] } }', '$.k1', '$.k2.k21', '$.k2.k22', '$.k2.k22[1]');
+```
+```sql
+SELECT json_extract('{"k1": "v1", "k2": { "k21": 6.6, "k22": [1, 2] } }', '$.k1', '$.k2.k21', '$.k2.k22', '$.k2.k22[1]');
+```
+```text
 +-------------------------------------------------------------------------------------------------------------------+
 | json_extract('{"k1": "v1", "k2": { "k21": 6.6, "k22": [1, 2] } }', '$.k1', '$.k2.k21', '$.k2.k22', '$.k2.k22[1]') |
 +-------------------------------------------------------------------------------------------------------------------+
 | ["v1",6.6,[1,2],2]                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
+```
+```sql
+SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
+```
+```text
 +-----------------------------------------------------------------+
 | json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name') |
 +-----------------------------------------------------------------+
 | [null,"doris"]                                                  |
 +-----------------------------------------------------------------+
-1 row in set (0.01 sec)
 ```
-
-
-### keywords
-JSONB, JSON, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_largeint,json_extract_double, json_extract_string, json_exists_path, json_type
+```sql
+SELECT JSON_EXTRACT_ISNULL('{"id": 123, "name": "doris"}', '$.id');
+```
+```text
++----------------------------------------------------------------------------+
+| jsonb_extract_isnull(cast('{"id": 123, "name": "doris"}' as JSON), '$.id') |
++----------------------------------------------------------------------------+
+|                                                                          0 |
++----------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_BOOL('{"id": 123, "name": "NULL"}', '$.id');
+```
+```text
++-------------------------------------------------------------------------+
+| jsonb_extract_bool(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
++-------------------------------------------------------------------------+
+|                                                                    NULL |
++-------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_INT('{"id": 123, "name": "NULL"}', '$.id');
+```
+```text
++------------------------------------------------------------------------+
+| jsonb_extract_int(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
++------------------------------------------------------------------------+
+|                                                                    123 |
++------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_INT('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++---------------------------------------------------------------------------+
+| jsonb_extract_int(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
++---------------------------------------------------------------------------+
+|                                                                      NULL |
++---------------------------------------------------------------------------+
+```
+```sql
+SELECT JSON_EXTRACT_STRING('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++------------------------------------------------------------------------------+
+| jsonb_extract_string(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
++------------------------------------------------------------------------------+
+| doris                                                                        |
++------------------------------------------------------------------------------+
+```

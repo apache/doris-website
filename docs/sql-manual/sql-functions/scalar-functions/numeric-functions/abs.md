@@ -22,46 +22,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## abs
 
-### description
-#### Syntax
+## Description
+
+Returns the absolute value of `x`
+
+## Syntax
 
 ```sql
-SMALLINT abs(TINYINT x)
-INT abs(SMALLINT x)
-BIGINT abs(INT x)
-LARGEINT abs(BIGINT x)
-LARGEINT abs(LARGEINT x)
-DOUBLE abs(DOUBLE x)
-FLOAT abs(FLOAT x)
-DECIMAL abs(DECIMAL x)` 
+ABS(<x>) 
 ```
 
-Returns the absolute value of `x`.
+## Parameters  
 
-### example
+| Parameter | Description |  
+| -- | -- |  
+| `<x>` | The value for which the absolute value is to be calculated |  
 
+## Return Value  
+
+The absolute value of parameter `x`. 
+
+## Example
+
+```sql
+select abs(-2);
 ```
-mysql> select abs(-2);
+
+```text
 +---------+
 | abs(-2) |
 +---------+
 |       2 |
 +---------+
-mysql> select abs(3.254655654);
+```
+
+```sql
+select abs(3.254655654);
+```
+
+```text
 +------------------+
 | abs(3.254655654) |
 +------------------+
 |      3.254655654 |
 +------------------+
-mysql> select abs(-3254654236547654354654767);
+```
+
+```sql
+select abs(-3254654236547654354654767);
+```
+
+```text
 +---------------------------------+
 | abs(-3254654236547654354654767) |
 +---------------------------------+
 | 3254654236547654354654767       |
 +---------------------------------+
 ```
-
-### keywords
-	ABS

@@ -24,37 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## append_trailing_char_if_absent
+## Description
 
-### description
+Used to add a specific character (such as a space, a specific symbol, etc.) to the end of a string if the character does not exist at the end of the string. The function is to ensure that the string ends with a specific character.
 
-#### Syntax
+## Syntax
 
-`VARCHAR append_trailing_char_if_absent(VARCHAR str, VARCHAR trailing_char)`
-
-If the @str string is non-empty and does not contain the @trailing_char character at the end, it appends the @trailing_char character to the end.
-@trailing_char contains only one character, and it will return NULL if contains more than one character
-
-### example
-
-```
-MySQL [test]> select append_trailing_char_if_absent('a','c');
-+------------------------------------------+
-| append_trailing_char_if_absent('a', 'c') |
-+------------------------------------------+
-| ac                                       |
-+------------------------------------------+
-1 row in set (0.02 sec)
-
-MySQL [test]> select append_trailing_char_if_absent('ac','c');
-+-------------------------------------------+
-| append_trailing_char_if_absent('ac', 'c') |
-+-------------------------------------------+
-| ac                                        |
-+-------------------------------------------+
-1 row in set (0.00 sec)
+```sql
+APPEND_TRAILING_CHAR_IF_ABSENT ( <str> , <trailing_char> )
 ```
 
-### keywords
+## Parameters
 
-    APPEND_TRAILING_CHAR_IF_ABSENT
+| Parameters        | Description |
+|-------------------|-----------------------------|
+| `<str>`           | Target string to be judged |
+| `<trailing_char>` | Character to be added to the end of the string (if the character does not exist) |
+
+## Return value
+
+Parameters The string after concatenation of `<str>` and `<trailing_char>` (if `<trailing_char>` does not exist in `<str>`)
+
+## Example
+
+``` sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('a','c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'cd')
+```
+
+```text 
++------------------------------------------+-------------------------------------------+--------------------------------------------+
+| append_trailing_char_if_absent('a', 'c') | append_trailing_char_if_absent('ac', 'c') | append_trailing_char_if_absent('ac', 'cd') |
++------------------------------------------+-------------------------------------------+--------------------------------------------+
+| ac                                       | ac                                        | accd                                       |
++------------------------------------------+-------------------------------------------+--------------------------------------------+
+```
