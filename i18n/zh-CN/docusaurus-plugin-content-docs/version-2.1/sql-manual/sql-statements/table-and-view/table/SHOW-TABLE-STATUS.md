@@ -59,7 +59,7 @@ SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 | Create_time          | Datetime      | 表的创建时间                                                                                                  |
 | Update_time          | Datetime      | 表的最近更新时间                                                                                                |
 | Check_time           | Datetime      | 使用 check table 或myisamchk工具检查表的最近时间                                                                     |
-| Collation            | 字符集           | 表的默认字符集，目前只支持 utf-8                                                                                     |
+| Collation            | 字符串           | 表的默认字符集，目前只支持 utf-8                                                                                     |
 | Checksum             | 字符串           | 如果启用，则对整个表的内容计算时的校验和                                                                                    |
 | Create_options       | 字符串           | 指表创建时的其他所有选项                                                                                            |
 | Comment              | 字符串           | 表注释                                                                                                     |
