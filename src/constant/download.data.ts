@@ -1957,7 +1957,7 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on Kubernetes',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
-        link: 'https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env',
+        link: 'https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-doris-operator',
     },
     {
         title: 'Doris on AWS',
