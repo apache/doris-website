@@ -36,13 +36,13 @@ The `ALTER ROLE` statement is used to modify a role.
 
 ## Required Parameters
 
-**<role_name>**
+**1. `<role_name>`**
 
 > The name of the role. 
 
 ## Optional Parameters
 
-**<comment>**
+**1. `<comment>`**
 
 > The comment of the role.
 

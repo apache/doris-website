@@ -32,22 +32,22 @@ SET PASSWORD 语句用于修改一个用户的登录密码。
 
 ```sql
 SET PASSWORD [FOR <user_identity>] =
-    [PASSWORD(<plain_password>)]|[<hashed_password>]
+    [ PASSWORD(<plain_password>)] | [<hashed_password> ]
 ```
 
 ## 必选参数
 
-**<plain_password>**
+**1. `<plain_password>`**
 
-> 输入的是明文密码。
+> 输入的是明文密码,以密码 `123456` 为例，直接使用 字符串`123456`。
 
-**<hashed_password>**
+**2. `<hashed_password>`**
 
-> 输入的是已加密的密码。
+> 输入的是已加密的密码。以密码 `123456` 为例，直接使用字符串`*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9`, 字符串为函数 `PASSWORD('123456')` 的返回值。
 
 ## 可选参数
 
-**<user_identity>**
+**1. `<user_identity>`**
 
 > 必须完全匹配在使用 CREATE USER 创建用户时指定的 user_identity，否则会报错用户不存在。如果不指定 user_identity，则当前用户为 'username'@'ip'，这个当前用户，可能无法匹配任何 user_identity。可以通过 SHOW GRANTS 查看当前用户。
 

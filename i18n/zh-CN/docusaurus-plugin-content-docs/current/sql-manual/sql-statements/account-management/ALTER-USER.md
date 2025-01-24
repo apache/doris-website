@@ -34,11 +34,18 @@ ALTER USER 语句用于修改一个用户的账户属性，包括密码、和密
 ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 [<password_policy>]
 [<comment>]
+
+password_policy:
+    1. PASSWORD_HISTORY [ <n> | DEFAULT ]
+    2. PASSWORD_EXPIRE [ DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }]
+    3. FAILED_LOGIN_ATTEMPTS <n>
+    4. PASSWORD_LOCK_TIME [ UNBOUNDED ｜ <n> { DAY | HOUR | SECOND } ]
+    5. ACCOUNT_UNLOCK
 ```
 
 ## 必选参数
 
-**<user_identity>**
+**1. `<user_identity`>**
 
 > 一个用户的唯一标识，语法为：'user_name'@'host'
 > `user_identity` 由两部分组成，user_name 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，即表示该用户可以从任意 host 连接到 Doris。
@@ -46,40 +53,36 @@ ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 
 ## 可选参数
 
-**<password>**：
+**1. `<password>`**
 
 > 指定用户密码
 
-**<password_policy>**
+**2. `<password_policy>`**
 
 > 用于指定密码认证登录相关策略的子句，目前支持以下策略：
-
-```sql
-    - PASSWORD_HISTORY [n|DEFAULT]
-    - PASSWORD_EXPIRE [DEFAULT|NEVER|INTERVAL n DAY/HOUR/SECOND]
-    - FAILED_LOGIN_ATTEMPTS n
-    - PASSWORD_LOCK_TIME [n DAY/HOUR/SECOND|UNBOUNDED]
-    - ACCOUNT_UNLOCK
-```
-
-> - `PASSWORD_HISTORY`
+>
+> `PASSWORD_HISTORY [<n> | DEFAULT]`
 >
 > 是否允许当前用户重置密码时使用历史密码。如 `PASSWORD_HISTORY 10` 表示禁止使用过去 10 次设置过的密码为新密码。如果设置为 `PASSWORD_HISTORY DEFAULT`，则会使用全局变量 `password_history` 中的值。`0` 表示不启用这个功能。默认为 0。
 >
-> - `PASSWORD_EXPIRE`
+> `PASSWORD_EXPIRE [ DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }]`
 >
 > 设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值。默认为 NEVER（或 0），表示不会过期。
 >
-> - `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
->
-> 设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定，并设置锁定时间。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果 3 次错误登录，则账户会被锁定一天。
+> `FAILED_LOGIN_ATTEMPTS <n>` 
+> 
+> 设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定。如 `FAILED_LOGIN_ATTEMPTS 3` 表示如果 3 次错误登录，则账户会被锁定。
 > 被锁定的账户可以通过 ALTER USER 语句主动解锁。
+>  
+> `PASSWORD_LOCK_TIME [ UNBOUNDED ｜ <n> { DAY | HOUR | SECOND } ]`
 >
-> - `ACCOUNT_UNLOCK` 
+> 设置如果账户被锁定，将设置锁定时间。如 `PASSWORD_LOCK_TIME 1 DAY` 表示账户会被锁定一天。
+>
+> `ACCOUNT_UNLOCK` 
 >
 > 解锁用户
 
-**<comment>**
+**3. `<comment>`**
 
 > 指定用户注释
 

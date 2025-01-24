@@ -36,7 +36,7 @@ under the License.
 
 ## 必选参数
 
-**<user_identity>**
+**1. `<user_identity>`**
 
 > 指定的用户identity。
 

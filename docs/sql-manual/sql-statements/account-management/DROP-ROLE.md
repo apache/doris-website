@@ -36,7 +36,7 @@ The `DROP ROLE` statement is used to removes a role.
 
 ## Required Parameters
 
-**<role_name>**：
+**1. `<role_name>`**：
 
 > The name of the role. 
 

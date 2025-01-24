@@ -36,11 +36,11 @@ ALTER ROLE 语句用于修改一个角色的注释
 
 ## 必选参数
 
-**<role_name>**
+**1. `<role_name>`**
 
 > 指定角色名称。
 
-**<comment>**
+**2. `<comment>`**
 
 > 指定角色注释。    
 

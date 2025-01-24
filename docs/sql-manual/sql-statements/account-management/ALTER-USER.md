@@ -34,11 +34,18 @@ The `ALTER USER` statement is used to modify a user's account attributes, includ
 ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 [<password_policy>]
 [<comment>]
+
+password_policy:
+    1. PASSWORD_HISTORY [ <n> | DEFAULT ]
+    2. PASSWORD_EXPIRE [ DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }]
+    3. FAILED_LOGIN_ATTEMPTS <n>
+    4. PASSWORD_LOCK_TIME [ UNBOUNDED ｜ <n> { DAY | HOUR | SECOND } ]
+    5. ACCOUNT_UNLOCK
 ```
 
 ## Required Parameters
 
-**<user_identity>**
+**1. `<user_identity`>**
 
 > A user_identity uniquely identifies a user.The syntax is:'user_name'@'host'.
 > `user_identity` consists of two parts, user_name and host, where username is the username. Host identifies the host address where the client connects. The host part can use % for fuzzy matching. If no host is specified, it defaults to '%', which means the user can connect to Doris from any host.
@@ -46,39 +53,35 @@ ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
 
 ## Optional Parameters
 
-**<password>**
+**1. `<password>`**
 
 > Specify the user password. 
 
-**<password_policy>**
+**2. `<password_policy>`**
 
 > `password_policy` is a clause used to specify policies related to password authentication login. Currently, the following policies are supported:
-
-```sql
-    - PASSWORD_HISTORY [n|DEFAULT]
-    - PASSWORD_EXPIRE [DEFAULT|NEVER|INTERVAL n DAY/HOUR/SECOND]
-    - FAILED_LOGIN_ATTEMPTS n
-    - PASSWORD_LOCK_TIME [n DAY/HOUR/SECOND|UNBOUNDED]
-    - ACCOUNT_UNLOCK
-```
-
-> - `PASSWORD_HISTORY`
+>
+> `PASSWORD_HISTORY [<n> | DEFAULT]`
 >
 >    Whether to allow the current user to use historical passwords when resetting their passwords. For example, `PASSWORD_HISTORY 10` means that it is forbidden to use the password set in the past 10 times as a new password. If set to `PASSWORD_HISTORY DEFAULT`, the value in the global variable `password_history` will be used. `0` means do not enable this feature. Default is 0.
 >
-> - `PASSWORD_EXPIRE`
+> `PASSWORD_EXPIRE [ DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }]`
 >
 >    Set the expiration time of the current user's password. For example `PASSWORD_EXPIRE INTERVAL 10 DAY` means the password will expire in 10 days. `PASSWORD_EXPIRE NEVER` means that the password does not expire. If set to `PASSWORD_EXPIRE DEFAULT`, the value in the global variable `default_password_lifetime` is used. Defaults to NEVER (or 0), which means it will not expire.
 >
-> - `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
+> `FAILED_LOGIN_ATTEMPTS <n>` 
 >
->    When the current user logs in, if the user logs in with the wrong password for n times, the account will be locked, and the lock time is set. For example, `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` means that if you log in wrongly for 3 times, the account will be locked for one day.
+> When the current user logs in, if the user logs in with the wrong password for n times, the account will be locked.For example, `FAILED_LOGIN_ATTEMPTS 3` means that if you log in wrongly for 3 times, the account will be locked.
+>   
+> `PASSWORD_LOCK_TIME [ UNBOUNDED ｜ <n> { DAY | HOUR | SECOND } ]`
+>
+> When the account is locked, the lock time is set. For example, `PASSWORD_LOCK_TIME 1 DAY` means that the account will be locked for one day.
+>
+> `ACCOUNT_UNLOCK`
 >    
-> - ACCOUNT_UNLOCK
->    
->    `ACCOUNT_UNLOCK` is used to unlock a locked user.
+> `ACCOUNT_UNLOCK` is used to unlock a locked user.
 
-**<comment>**
+**3. `<comment>`**
 
 >Specify the user comment.
 

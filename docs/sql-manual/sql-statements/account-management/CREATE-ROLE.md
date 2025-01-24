@@ -36,13 +36,13 @@ The `CREATE ROLE` statement is used to create an unprivileged role, which can be
 
 ## Required Parameters
 
-**<role_name>**
+**1. `<role_name>`**
 
 > The name of the role. 
 
 ## Optional Parameters
 
-**<comment>**
+**1. `<comment>`**
 
 > The comment of the role.
 
