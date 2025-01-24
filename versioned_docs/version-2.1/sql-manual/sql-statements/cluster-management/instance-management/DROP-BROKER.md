@@ -45,15 +45,15 @@ ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>"
 ```
 ## Required Parameters
 
-**1. <broker_name>**
+**1. `<broker_name>`**
 
 The name of the broker process to be deleted.
 
-**2. < host>**
+**2. `<host>`**
 
 The IP of the node where the broker process to be deleted is located. If FQDN is enabled, use the FQDN of the node.
 
-**3. <ipc_port>**
+**3. `<ipc_port>`**
 The PORT of the node where the broker process to be deleted is located, and the default value of this port is 8000.
 
 

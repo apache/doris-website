@@ -37,15 +37,15 @@ ALTER SYSTEM ADD BROKER <broker_name> "<host>:<ipc_port>" [,"<host>:<ipc_port>" 
 ```
 
 ## 必选参数
-**1. \<broker_name\>**
+**1. `<broker_name>`**
 
 给添加的 `broker` 进程起的名字。同一个集群中的 broker_name 建议保持一致。
 
-**2. \<host\>**
+**2. `<host>`**
 
 需要添加的 `broker` 进程所在节点的 `IP` ，如果启用了 `FQDN`，则使用该节点的 `FQDN`。
 
-**3. \<ipc_port\>**
+**3. `<ipc_port>`**
 
 需要添加的 `broker` 进程所在节点的 `PORT` ，该端口默认值为 `8000`。
 

@@ -44,15 +44,15 @@ ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>"
 ```
 ## 必选参数
 
-**1. \<broker_name\>**
+**1. `<broker_name>`**
 
 需要删除的 `broker` 进程的名字。
 
-**2. \<host\>**
+**2. `<host>`**
 
 需要删除的 `broker` 进程所在节点的 `IP` ，如果启用了 `FQDN`，则使用该节点的 `FQDN`。
 
-**3. \<ipc_port\>**
+**3. `<ipc_port>`**
 
 需要删除的 `broker` 进程所在节点的 `PORT` ，该端口默认值为 `8000`。
 
