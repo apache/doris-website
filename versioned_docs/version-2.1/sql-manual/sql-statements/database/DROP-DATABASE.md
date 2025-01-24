@@ -32,7 +32,7 @@ This statement is used to delete a database.
 ## Syntax
 
 ```sql
-DROP DATABASE [IF EXISTS] <db_name> [<FORCE>];
+DROP DATABASE [IF EXISTS] <db_name> [FORCE];
 ```
 
 ## Required parameters
@@ -42,7 +42,7 @@ DROP DATABASE [IF EXISTS] <db_name> [<FORCE>];
 
 ## Optional parameters
 
-** 1. `<FORCE>`**
+** 1. `FORCE`**
 >  Force deletion without going to the Recycle Bin
 
 ## Permission Control

@@ -27,12 +27,14 @@ under the License.
 
 ## Description
 
-This statement is used to set the properties of the specified database. (For administrators only)
+This statement is used to set the properties of a specified db, change the db name, and set various quotas for the db.
 
 ## Syntax
 
 ```sql
-ALTER DATABASE <db_name> RENAME|SET DATA QUOTA|REPLICA QUOT <new_db_name>|<quota> [PROPERTIES ("<key>"="<value>", ...)]
+ALTER DATABASE <db_name> RENAME <new_name>
+ALTER DATABASE <db_name> SET { DATA | REPLICA | TRANSACTION } QUOTA <quota>
+ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
 ```
 
 ## Required parameters
@@ -46,9 +48,7 @@ ALTER DATABASE <db_name> RENAME|SET DATA QUOTA|REPLICA QUOT <new_db_name>|<quota
 ** 3. `<quota>`**
 >  Database data volume quota or database replica number quota
 
-## Optional parameters
-
-** 1. `<PROPERTIES>`**
+** 4. `<PROPERTIES>`**
 >  Additional information about this database
 
 ## Permission Control

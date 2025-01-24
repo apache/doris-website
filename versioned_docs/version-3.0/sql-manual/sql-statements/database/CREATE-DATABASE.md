@@ -33,7 +33,7 @@ This statement is used to create a new database
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] <db_name>
-    [PROPERTIES ("<key>"="<value>", ...)];
+    [PROPERTIES ("<key>"="<value>"[, ... ])];
 ```
 
 ## Required parameters

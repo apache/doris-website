@@ -32,7 +32,7 @@ This statement checks the creation information of the doris built-in database or
 ## Syntax
 
 ```sql
-SHOW CREATE DATABASE [<catalog>].<db_name>;
+SHOW CREATE DATABASE [<catalog>.]<db_name>;
 ```
 
 ## Required parameters
@@ -47,9 +47,10 @@ SHOW CREATE DATABASE [<catalog>].<db_name>;
 
 ## Return Value
 
-| Database | Create Database |
+| Column | Description |
 |:---------|:-----------|
-| Database Name    | Corresponding database creation statement  |
+| Database | Database Name |
+| Create Database | Corresponding database creation statement |
 
 ## Permission Control
 

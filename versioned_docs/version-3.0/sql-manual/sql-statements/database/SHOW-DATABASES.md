@@ -45,9 +45,9 @@ SHOW DATABASES [FROM <catalog>] [<filter_expr>];
 
 ## Return Value
 
-| Database |
-|:-------|
-| Database Name  |
+| Column | Description |
+|:---------|:-----------|
+| Database |  Database Name|
 
 ## Permission Control
 

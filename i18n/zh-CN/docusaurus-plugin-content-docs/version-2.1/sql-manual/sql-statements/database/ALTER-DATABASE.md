@@ -27,12 +27,14 @@ under the License.
 
 ## 描述
 
-该语句用于设置指定数据库的属性。（仅管理员使用）
+该语句用于设置指定 db 的属性和改动 db 名字以及设定 db 的多种 quota。
 
 ## 语法
 
 ```sql
-ALTER DATABASE <db_name> RENAME|SET DATA QUOTA|REPLICA QUOT <new_db_name>|<quota> [PROPERTIES ("<key>"="<value>", ...)]
+ALTER DATABASE <db_name> RENAME <new_name>
+ALTER DATABASE <db_name> SET { DATA | REPLICA | TRANSACTION } QUOTA <quota>
+ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
 ```
 
 ## 必选参数
@@ -46,9 +48,7 @@ ALTER DATABASE <db_name> RENAME|SET DATA QUOTA|REPLICA QUOT <new_db_name>|<quota
 ** 3. `<quota>`**
 >  数据库数据量配额或者数据库的副本数量配额
 
-## 可选参数
-
-** 1. `<PROPERTIES>`**
+** 4. `<PROPERTIES>`**
 >  该数据库的附加信息
 
 ## 权限控制

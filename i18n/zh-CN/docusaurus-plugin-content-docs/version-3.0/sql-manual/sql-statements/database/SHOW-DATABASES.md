@@ -45,9 +45,9 @@ SHOW DATABASES [FROM <catalog>] [<filter_expr>];
 
 ## 返回结果
 
-| Database |
-|:-------|
-| 数据库名称  |
+|  列 | 描述    |
+|:--|:------|
+| Database |  数据库名称|
 
 ## 权限控制
 

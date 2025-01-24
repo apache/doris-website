@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW CREATE DATABASE [<catalog>].<db_name>;
+SHOW CREATE DATABASE [<catalog>.]<db_name>;
 ```
 
 ## 必选参数
@@ -47,9 +47,10 @@ SHOW CREATE DATABASE [<catalog>].<db_name>;
 
 ## 返回结果
 
-| Database | Create Database |
+| 列 | 描述 |
 |:---------|:-----------|
-| 数据库名称    | 对应数据库创建语句  |
+| Database | 数据库名称 |
+| Create Database | 对应数据库创建语句 |
 
 ## 权限控制
 

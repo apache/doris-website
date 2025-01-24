@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-DROP DATABASE [IF EXISTS] <db_name> [<FORCE>];
+DROP DATABASE [IF EXISTS] <db_name> [FORCE];
 ```
 
 ## 必选参数
@@ -42,7 +42,7 @@ DROP DATABASE [IF EXISTS] <db_name> [<FORCE>];
 
 ## 可选参数
 
-** 1. `<FORCE>`**
+** 1. `FORCE`**
 >  强制删除，不走回收站
 
 ## 权限控制

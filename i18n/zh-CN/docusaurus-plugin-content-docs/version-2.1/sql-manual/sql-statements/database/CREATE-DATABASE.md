@@ -33,7 +33,7 @@ under the License.
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] <db_name>
-    [PROPERTIES ("<key>"="<value>", ...)];
+    [PROPERTIES ("<key>"="<value>"[, ... ])];
 ```
 
 ## 必选参数

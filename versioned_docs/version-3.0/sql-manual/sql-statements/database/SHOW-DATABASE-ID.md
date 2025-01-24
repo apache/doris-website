@@ -42,9 +42,9 @@ SHOW DATABASE <database_id>
 
 ## Return Value
 
-| DbName |
-|:---------|
-| Database Name     |
+| Column | Description |
+|:---------|:-----------|
+| DbName |  Database Name|
 
 ## Permission Control
 
