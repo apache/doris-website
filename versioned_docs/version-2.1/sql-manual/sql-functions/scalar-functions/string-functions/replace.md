@@ -24,23 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## replace
-### description
-#### Syntax
+## Description
 
-`VARCHAR REPLACE (VARCHAR str, VARCHAR old, VARCHAR new)`
+The REPLACE function is used to replace a part of characters in a string with other characters.
 
-replace all old substring with new substring in str 
+## Syntax
 
-### example
-
+```sql
+REPLACE ( <str>, <old>, <new> )
 ```
-mysql> select replace("http://www.baidu.com:9090", "9090", "");
-+------------------------------------------------------+
-| replace('http://www.baidu.com:9090', '9090', '') |
-+------------------------------------------------------+
-| http://www.baidu.com:                                |
-+------------------------------------------------------+
+
+## Parameters
+
+| Parameter      | Description                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------|
+| `<str>` | The string that needs to be replaced.                                                               |
+| `<old>` | The substring that needs to be replaced. If `<old>` is not in `<str>`, no replacement will be made. |
+| `<new>` | The new substring used to replace `<old>`.                                                            |
+
+## Return Value
+
+Returns the new string after replacing the substring. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+
+## Examples
+
+```sql
+SELECT replace('hello world', 'world', 'universe');
 ```
-### keywords
-    REPLACE
+
+```text
++---------------------------------------------+
+| replace('hello world', 'world', 'universe') |
++---------------------------------------------+
+| hello universe                              |
++---------------------------------------------+
+```
