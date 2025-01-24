@@ -30,8 +30,6 @@ This statement is used to recover previously deleted databases, tables, or parti
 
 It supports recovering specified metadata by name or ID and allows renaming the recovered metadata.
 
-You can query the currently recoverable metadata using `SHOW CATALOG RECYCLE BIN`.
-
 ## Syntax:
 
 ```sql

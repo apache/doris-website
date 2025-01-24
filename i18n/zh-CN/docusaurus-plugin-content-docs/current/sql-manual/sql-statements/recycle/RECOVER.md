@@ -30,8 +30,6 @@ under the License.
 
 支持通过 name、id 来恢复指定的元信息，并且支持将恢复的元信息重命名。
 
-可以通过 `SHOW CATALOG RECYCLE BIN` 来查询当前可恢复的元信息。
-
 ## 语法：
 
 ```sql

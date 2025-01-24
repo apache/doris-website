@@ -28,8 +28,6 @@ under the License.
 
 This statement is used to immediately delete databases, tables, or partitions in the recycle bin.
 
-You can query the currently deletable metadata using `SHOW CATALOG RECYCLE BIN`.
-
 ## Syntax
 
 ```sql
@@ -64,6 +62,7 @@ Delete a partition by PartitionId
 - When deleting databases, tables, or partitions, the recycle bin will delete them after `catalog_trash_expire_second` seconds (set in `fe.conf`). This statement will delete them immediately.
 - `'DbId'`, `'TableId'`, and `'PartitionId'` are case-insensitive and do not distinguish between single and double quotes.
 - When deleting a database not in the recycle bin, all tables and partitions with the same `DbId` in the recycle bin will also be deleted. It will only report an error if nothing (database, table, or partition) is deleted. The same applies when deleting a table not in the recycle bin.
+- You can query the currently deletable metadata using `SHOW CATALOG RECYCLE BIN`.
 
 ## Examples
 
