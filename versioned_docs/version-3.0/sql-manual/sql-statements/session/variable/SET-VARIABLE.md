@@ -38,20 +38,21 @@ SET variable_assignment [, variable_assignment] [ ... ]
 Where:
 ```sql
 variable_assignment
-  : [(<user_var_name> = expr) | ([<effective_scope>] <system_var_name> = expr)]
+  : <user_var_name> = <expr>
+  | [ <effective_scope> ] <system_var_name> = <expr>
 ```
 
 ## Required Parameters
-**<user_var_name>**
-> Specifies the variable of user level, for example : time_zone and so on
+**<1. user_var_name>**
+> Specifies the variable of user level, for example : @@your_variable_name, variable name starts with `@@`
 
-**<system_var_name>**
+**<2. system_var_name>**
 > Specifies the variable of system level, for example : exec_mem_limit and so on
 
 ## Optional Parameters
-**<effective_scope>**
+**<1. effective_scope>**
 
-> Effective scope is one of `GLOBAL` or `SESSION`. If there is no effective scope, default value is `SESSION`.
+> Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
 ## Access Control Requirements
 Users executing this SQL command must have at least the following privileges:
@@ -68,7 +69,7 @@ Users executing this SQL command must have at least the following privileges:
 
 ## Example
 
-- Set the time zone to Dongba District
+- Set the time zone to East Eighth District
 
    ```
    SET time_zone = "Asia/Shanghai";
@@ -80,3 +81,9 @@ Users executing this SQL command must have at least the following privileges:
    ```
    SET GLOBAL exec_mem_limit = 137438953472
    ```
+- Set a user variable
+
+   ```
+   SET @@your_variable_name = your_variable_value;
+   ```
+

@@ -37,12 +37,12 @@ UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
 ## Required Parameters
-**<variable_name>**
+**<1. variable_name>**
 > Specifies the variable name, or if you want to unset all variables, this parameter you can give a keyword `ALL`.
 
 ## Optional Parameters
-**<effective_scope>**
-> Effective scope is one of `GLOBAL` or `SESSION`. If there is no effective scope, default value is `SESSION`.
+**<1. effective_scope>**
+> Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
 ## Access Control Requirements
 Users executing this SQL command must have at least the following privileges:

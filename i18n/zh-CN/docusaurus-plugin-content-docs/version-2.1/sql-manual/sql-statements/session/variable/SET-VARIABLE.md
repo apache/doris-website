@@ -37,20 +37,21 @@ SET variable_assignment [, variable_assignment] [ ... ]
 其中
 ```sql
 variable_assignment
-  : [(<user_var_name> = expr) | ([<effective_scope>] <system_var_name> = expr)]
+  : <user_var_name> = <expr>
+  | [ <effective_scope> ] <system_var_name> = <expr>
 ```
 
 ## 必选参数
-**<user_var_name>**
-> 指定用户层级的变量，比如：time_zone 等
+**<1. user_var_name>**
+> 指定用户层级的变量，比如：@@your_variable_name 等以`@@`开头的变量名称
 
-**<system_var_name>**
+**<2. system_var_name>**
 > 指定系统层级的变量，比如exec_mem_limit 等
 
 ## 可选参数
-**<effective_scope>**
+**<1. effective_scope>**
 
-> 生效范围的取值可以是`GLOBAL`或者`SESSION`之一，如果不指定该值，默认为`SESSION`。
+> 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 
 ## 权限控制
 执行此 SQL 命令的用户必须至少具有以下权限：
@@ -78,5 +79,10 @@ variable_assignment
 
    ```
    SET GLOBAL exec_mem_limit = 137438953472
+   ```
+
+- 设置用户变量
+   ```
+   SET @@your_variable_name = your_variable_value;
    ```
 

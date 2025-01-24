@@ -43,8 +43,8 @@ UNSET [<effective_scope>] VARIABLE (<variable_name>)
 
 
 ## 可选参数
-**<effective_scope>**
-> 生效范围的取值可以是`GLOBAL`或者`SESSION`之一，如果不指定该值，默认为`SESSION`。
+**<1. effective_scope>**
+> 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 
 
 ## 权限控制

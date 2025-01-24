@@ -32,17 +32,17 @@ This statement is used to display Doris system variables, which can be queried b
 ## Syntax
 
 ```sql
-SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where>]
+SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where clause>]
 ```
 
 ## Optional Parameters
-**<effective_scope>**
-> Effective scope is one of `GLOBAL` or `SESSION`. If there is no effective scope, default value is `SESSION`.
+**<1. effective_scope>**
+> Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
-**<like_pattern>**
+**<2. like_pattern>**
 > Use like statement to match and filter result
 
-**<where>**
+**<3. where>**
 > Use where statement to match and filter result
 
 ## Access Control Requirements
@@ -64,9 +64,13 @@ Users executing this SQL command must have at least the following privileges:
 
 - Show variables is mainly used to view the values of system variables.
 - Executing the SHOW VARIABLES command does not require any privileges, it only requires being able to connect to the server.
-- Use the like statement to match with variable_name.
-- The % percent wildcard can be used anywhere in the matching pattern
 - The column `Changed` from `Return Value`, 0 means no changed and 1 means changed.
+- There are some restrictions when using the `SHOW` statement:
+  - Can not use `or` in where clause
+  - Column names are on the left
+  - Only supports equivalent comparisons in where clause
+  - Use the like statement to match with variable_name.
+  - The % percent wildcard can be used anywhere in the matching pattern
 
 
 ## Example
