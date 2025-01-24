@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-为满足用户在 Kubernetes 平台上对 Doris 的高效部署和运维需求诞生的 [Kubernetes Operator](https://github.com/apache/doris-operator)（简称：Doris Operator），
-集成了原生 Kubernetes 资源的复杂管理能力，并融合了 Doris 组件间的分布式协同、用户集群形态的按需定制等经验，为用户提供了一个更简洁、高效、易用的容器化部署方案。
-旨在实现 Doris 在 Kubernetes 上的高效管控，帮助用户减少运维管理和学习成本的同时，提供强大的功能和灵活的配置能力。
+[Kubernetes Operator](https://github.com/apache/doris-operator) (referred to as Doris Operator) was born to meet the user's demand for efficient deployment and operation of Doris on the Kubernetes platform. 
+It integrates the complex management capabilities of native Kubernetes resources, and integrates the distributed collaboration between Doris components, on-demand customization of user cluster forms, and other experiences, providing users with a more concise, efficient and easy-to-use containerized deployment solution. 
+It aims to achieve efficient management and control of Doris on Kubernetes, helping users reduce operation and maintenance management and learning costs while providing powerful functions and flexible configuration capabilities.
 
-Doris Operator 基于 Kubernetes CustomResourceDefinitions（CRD）实现了 Doris 在 Kubernetes 平台的配置、管理和调度。 Doris Operator 能够根据用户自定义的期望状态，自动创建 Pods 及其他资源以启动服务。通过自动注册机制，可将所有启动的服务整合成一个完整的 Doris 集群。这一实现显着降低了在 Doris 集群中处理配置信息、节点发现与注册、访问通信及健康检查等生产环境必备操作的复杂性和学习成本。
+Doris Operator implements the configuration, management and scheduling of Doris on the Kubernetes platform based on Kubernetes CustomResourceDefinitions (CRD). Doris Operator can automatically create Pods and other resources to start services according to the user-defined desired state. Through the automatic registration mechanism, all started services can be integrated into a complete Doris cluster. This implementation significantly reduces the complexity and learning cost of processing configuration information, node discovery and registration, access communication and health checks in the Doris cluster, which are essential operations in the production environment.
 
 ## Doris Operator Architecture
 
@@ -72,7 +72,8 @@ Based on the deployment definition provided by Doris Operator, users can customi
 
 ## Compatibility
 
-Doris Operator is developed in accordance with standard K8s specifications and is compatible with all standard K8s platforms, including those provided by mainstream cloud vendors, self-built K8s platforms based on standards, and user-built platforms.
+Doris Operator is developed in accordance with standard K8s specifications and is compatible with all standard K8s platforms, including those provided by mainstream cloud vendors, self-built K8s platforms based on standards, and user-built platforms.  
+
 ### Cloud vendor compatibility
 
 Fully compatible with the containerized service platforms of mainstream cloud vendors. For environment preparation and usage suggestions for Doris Operator, please refer to the following documents:
@@ -102,4 +103,3 @@ Before deploying Doris Operator on Kubernetes, you need to install Doris Operato
 
 * For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation.md)
 * For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster.md)
-
