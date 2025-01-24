@@ -1122,6 +1122,7 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-point",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",

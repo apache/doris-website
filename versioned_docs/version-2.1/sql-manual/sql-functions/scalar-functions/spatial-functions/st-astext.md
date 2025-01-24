@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_ASTEXT,ST_ASWKT",
+    "title": "ST_ASTEXT",
     "language": "en"
 }
 ---
@@ -27,6 +27,10 @@ under the License.
 ## Description
 
 Convert a geometric figure to a representation of WKT (Well Known Text)
+
+## Alias
+
+- ST_ASWKT
 
 ## Syntax
 

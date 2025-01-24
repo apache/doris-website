@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOMETRYFROMTEXT,ST_GEOMFROMTEXT",
+    "title": "ST_GEOMETRYFROMTEXT",
     "language": "en"
 }
 ---
@@ -27,6 +27,11 @@ under the License.
 ## Description
 
 Convert a linear WKT (Well Known Text) to the corresponding memory geometry
+
+
+## Alias
+
+- ST_GEOMFROMTEXT
 
 ## Syntax
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_LINEFROMTEXT,ST_LINESTRINGFROMTEXT",
+    "title": "ST_LINEFROMTEXT",
     "language": "en"
 }
 ---
@@ -27,6 +27,10 @@ under the License.
 ## Description
 
 Converts a WKT (Well Known Text) to a memory representation in the form of a Line
+
+## Alias
+
+- ST_LINESTRINGFROMTEXT
 
 ## Syntax
 
