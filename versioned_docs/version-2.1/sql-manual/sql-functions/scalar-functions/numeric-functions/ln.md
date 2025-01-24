@@ -22,40 +22,66 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ln
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE ln(DOUBLE x)`
 Returns the natural logarithm of `x` to base `e`.
 
-:::tip
-Another alias for this function is `dlog1`.
-:::
+## Alias
 
-### example
+- DLOG1
 
+## Syntax
+
+```sql
+LN(<x>)
 ```
-mysql> select ln(1);
-+---------+
-| ln(1.0) |
-+---------+
-|       0 |
-+---------+
-mysql> select ln(e());
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<x>`   | Antilogarithm should be greater than 0 |
+
+## Return value
+
+Return a float-point number. Special cases:
+
+- If x IS NULL, return NULL
+
+## Example
+
+```sql
+select ln(1);
+```
+
+```text
++-----------------------+
+| ln(cast(1 as DOUBLE)) |
++-----------------------+
+|                   0.0 |
++-----------------------+
+```
+
+```sql
+select ln(e());
+```
+
+```text
 +---------+
 | ln(e()) |
 +---------+
-|       1 |
+|     1.0 |
 +---------+
-mysql> select ln(10);
-+--------------------+
-| ln(10.0)           |
-+--------------------+
-| 2.3025850929940459 |
-+--------------------+
 ```
 
-### keywords
-	LN, DLOG1
+```sql
+select ln(10);
+```
+
+```text
++------------------------+
+| ln(cast(10 as DOUBLE)) |
++------------------------+
+|      2.302585092994046 |
++------------------------+
+```

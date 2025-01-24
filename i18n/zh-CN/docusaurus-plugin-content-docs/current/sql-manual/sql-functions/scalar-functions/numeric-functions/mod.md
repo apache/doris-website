@@ -22,34 +22,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mod
-
 ## 描述
+
+求整数类型，a / b的余数，浮点类型请使用fmod函数。
+
 ## 语法
 
-`mod(col_a, col_b)`  
+```sql
+MOD(<col_a> , <col_b>)
+```
 
-`column`支持以下类型：`TINYINT` `SMALLINT` `INT` `BIGINT` `LARGEINT` `FLOAT` `DOUBLE` `DECIMAL`
+## 参数
 
-求a / b的余数。浮点类型请使用fmod函数。
+| 参数 | 说明 |
+| -- | -- |
+| `<col_a>` | 被除数 |
+| `<col_b>` | 除  数 不能为0|
+
+## 返回值
+
+返回一个整型。特殊情况：
+
+- 当 col_a 为 `NULL` 或 col_b 为 `NULL`时，返回 `NULL`
 
 ## 举例
 
-```
-mysql> select mod(10, 3);
-+------------+
-| mod(10, 3) |
-+------------+
-|          1 |
-+------------+
-
-mysql> select fmod(10.1, 3.2);
-+-----------------+
-| fmod(10.1, 3.2) |
-+-----------------+
-|      0.50000024 |
-+-----------------+
+```sql
+select mod(10, 3);
 ```
 
-### keywords
-	MOD，FMOD
+```text
++----------+
+| (10 % 3) |
++----------+
+|        1 |
++----------+
+```
+
+```sql
+select mod(10, 0);
+```
+
+```text
++----------+
+| (10 % 0) |
++----------+
+|     NULL |
++----------+
+```
