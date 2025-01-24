@@ -24,63 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to delete db/table/partition in catalog recycle bin instantly.
+This statement is used to immediately delete databases, tables, or partitions in the recycle bin.
 
-You can get all meta informations that can be deleted by statement `SHOW CATALOG RECYCLE BIN`.
+You can query the currently deletable metadata using `SHOW CATALOG RECYCLE BIN`.
 
-grammar:
+## Syntax
 
-1. delete database by DbId
+```sql
+DROP CATALOG RECYCLE BIN WHERE { 'DbId' = <db_id> | 'TableId' = <table_id> | 'PartitionId' = <partition_id> }
+```
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'DbId' = db_id;
-  ```
+## Required Parameters
 
-2. delete table by TableId
+Delete a database by DbId
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'TableId' = table_id;
-  ```
+**1. `<db_id>`**
+> The ID of the database to be immediately deleted.
 
- 3. delete partition by PartitionId
+Delete a table by TableId
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'PartitionId' = partition_id;
-  ```
+**1. `<table_id>`**
+> The ID of the table to be immediately deleted.
 
-illustrate:
+Delete a partition by PartitionId
 
-- When drop db/table/partition, the catalog recycle bin will delete them after catalog_trash_expire_second(in fe.conf) seconds. This statement will delete them to free disk usage timely.
-- `'DbId'`, `'TableId'` and `'PartitionId'` will be case-insensitive and not distinguish between `'` and `''`.
-- When drop a database which is not in catalog recycle bin, it will also delete all tables and partitions with same DbId in catalog recycle bin. Only if nothing is deleted, it will report an error. When drop a table which is not in catalog recycle bin, the treatment is similar.
+**1. `<partition_id>`**
+> The ID of the partition to be immediately deleted.
 
-## Example
+## Access Control Requirements
 
-1. Delete the database(include tables and partitions with same DbId) with id example_db_id
+| Privilege   | Object | Note |
+|-------------|--------|------|
+| ADMIN_PRIV  |        |      |
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'DbId' = example_db_id;
-  ```
+## Usage Notes
 
-2. Delete the table(include partitions with same TableId) with id example_tbl_id
+- When deleting databases, tables, or partitions, the recycle bin will delete them after `catalog_trash_expire_second` seconds (set in `fe.conf`). This statement will delete them immediately.
+- `'DbId'`, `'TableId'`, and `'PartitionId'` are case-insensitive and do not distinguish between single and double quotes.
+- When deleting a database not in the recycle bin, all tables and partitions with the same `DbId` in the recycle bin will also be deleted. It will only report an error if nothing (database, table, or partition) is deleted. The same applies when deleting a table not in the recycle bin.
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'TableId' = example_tbl_id;
-  ```
+## Examples
 
-3. Delete the partition with id p1_id
+1. Delete the database, tables, and partitions with DbId `example_db_id`
 
-  ```sql
-  DROP CATALOG RECYCLE BIN WHERE 'PartitionId' = p1_id;
-  ```
+    ```sql
+    DROP CATALOG RECYCLE BIN WHERE 'DbId' = example_db_id;
+    ```
 
-## Keywords
+2. Delete the table and partitions with TableId `example_tbl_id`
 
-DROP, CATALOG, RECYCLE, BIN
+    ```sql
+    DROP CATALOG RECYCLE BIN WHERE 'TableId' = example_tbl_id;
+    ```
 
-## Best Practice
+3. Delete the partition with PartitionId `p1_id`
 
+    ```sql
+    DROP CATALOG RECYCLE BIN WHERE 'PartitionId' = p1_id;
+    ```
