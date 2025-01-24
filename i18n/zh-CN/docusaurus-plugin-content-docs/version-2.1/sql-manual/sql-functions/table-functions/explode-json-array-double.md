@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
 表函数，需配合 Lateral View使用，并且支持多个Lateral View。它仅支持新的优化器。
 
