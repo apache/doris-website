@@ -31,42 +31,44 @@ This statement is used to modify the definition of a logical view.
 ## Syntax
 
 ```sql
-ALTER VIEW [db_name.]<view_name> 
- ([column_definition])
+ALTER VIEW [<db_name>.]<view_name> 
+ ([<column_definition>])
 AS <query_stmt>
 ```
 
 Where:
 ```sql
 column_definition:
-    column_name [COMMENT 'comment'] [,...]
+    <column_name> [COMMENT '<comment>'] [,...]
 ```
 
 ## Required Parameters
 
-**<view_name>**
-> The identifier (i.e., name) of the view; it must be unique within the database where the view is created.  
-> The identifier must start with a letter character (if Unicode name support is enabled, it can be a character in any language) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., `My View`).  
-> The identifier cannot use reserved keywords.  
-> For more details, see identifier requirements and reserved keywords.
+**1. `<view_name>`**
+> The identifier (i.e., name) of the view to be modified.
 
-**<query_stmt>**
+**2. `<query_stmt>`**
 > The SELECT query statement that defines the view.
 
 ## Optional Parameters
 
-**<db_name>**
+**1. `<db_name>`**
 > The name of the database where the view resides. If not specified, the current database is used by default.
 
-**<column_definition>**
-> The column definitions of the view.
+**2. `<column_definition>`**
+> The column definitions of the view.  
+> Where:  
+> **1. `<column_name>`**  
+> Column name.  
+> **2. `<comment>`**  
+> Column comment.
 
 ## Access Control Requirements
 
-| Privilege     | Object  | Notes                                 |
-|---------------|---------|---------------------------------------------|
-| Alter_priv    | View    | Alter_priv privilege is required on the view being modified. |
-| Select_Priv   | Table, View | Select_Priv privilege is required on the tables, views, or materialized views being queried. |
+| Privilege     | Object   | Notes                                                                 |
+|---------------|----------|-----------------------------------------------------------------------|
+| ALTER_PRIV   | View     | ALTER_PRIV privilege is required on the view being modified.         |
+| SELECT_PRIV  | Table, View | SELECT_PRIV privilege is required on the tables, views, or materialized views being queried. |
 
 ## Example
 
