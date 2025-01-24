@@ -42,7 +42,7 @@ SEC_TO_TIME(<seconds>)
 
 ## Return Value
 - Returns a TIME value in the format `HH:MM:SS`, representing the time calculated from the start of a day (00:00:00).
-- If <seconds> is NULL, the function returns NULL.
+- If `<seconds>`  is NULL, the function returns NULL.
 
 ## Example
 ```sql

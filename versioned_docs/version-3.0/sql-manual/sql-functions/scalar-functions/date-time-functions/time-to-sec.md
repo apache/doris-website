@@ -41,7 +41,7 @@ TIME_TO_SEC(<time>)
 
 ## Return Value
 - Returns an integer representing the total seconds of the input time value.
-- If <time> is NULL, the function returns NULL.
+- If `<time>`  is NULL, the function returns NULL.
 
 ## Example
 
