@@ -37,6 +37,22 @@ WHERE
 [id = <transaction_id> | label = <label_name>];
 ```
 
+## Required Parameters
+
+**1. `<transaction_id>`**
+
+The transaction ID whose details need to be viewed.
+
+**2. `<label_name>`**
+
+The label whose transaction details need to be viewed.
+
+## Optional Parameters
+
+**1. `<db_name>`**
+
+The database whose transaction details need to be viewed.
+
 ## Return Value
 
 | Column Name         | Description |
@@ -56,7 +72,13 @@ WHERE
 | Reason              | Error message | 
 | ErrorReplicasCount  | Number of replicas with errors | 
 | ListenerId          | ID of the related import job | 
-| TimeoutMs           | Transaction timeout duration in milliseconds | 
+| TimeoutMs           | Transaction timeout duration in milliseconds |
+
+## Access Control Requirements
+
+| Privilege | Object | Notes |
+| :-------------- | :----------- | :------------------------ |
+| ADMIN_PRIV | Database | Only users with ADMIN_PRIV can perform this operation. |
 
 ## Examples
 

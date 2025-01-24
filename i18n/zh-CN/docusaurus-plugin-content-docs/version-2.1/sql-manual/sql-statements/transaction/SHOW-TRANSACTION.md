@@ -36,7 +36,22 @@ WHERE
 [id = <transaction_id> | label = <label_name>];
 ```
 
-## 返回结果
+## 必选参数
+**1. `<transaction_id>`**
+
+需要查看事务详情的 transaction id
+
+**2. `<label_name>`**
+
+需要查看事务详情的 label
+
+## 可选参数
+
+**1. `<db_name>`**
+
+需要查看事务详情的database
+
+## 返回值
 
 | Column name  | Description |
 |---|---|
@@ -56,6 +71,12 @@ WHERE
 | ErrorReplicasCount | 有错误的副本数  | 
 | ListenerId | 相关的导入作业的 id  | 
 | TimeoutMs | 事务超时时间，单位毫秒  | 
+
+## 权限控制
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）               |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV    | Database   | 只有拥有 ADMIN_PRIV 的用户才能操作 |
 
 
 ## 示例
