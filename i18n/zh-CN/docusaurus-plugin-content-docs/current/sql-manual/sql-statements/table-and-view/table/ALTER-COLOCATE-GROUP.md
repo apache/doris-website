@@ -33,25 +33,25 @@ under the License.
 ## 语法
 
 ```sql
-ALTER COLOCATE GROUP  [database.] <group_name>
+ALTER COLOCATE GROUP  [ <database.> ] <group_name>
 SET (
     <property_list>
-);
+    );
 ```
 ## 必选参数
 
-**1. \<group_name\>**
+**1. `<group_name>`**
 
 指定要修改的 colocate group 的名称。
 
-**2.\<property_list\>**
+**2.`<property_list>`**
 
 `property_list` 是 `colocation group` 属性，目前只支持修改 `replication_num` 和 `replication_allocation`。
 修改 `colocation group` 的这两个属性修改之后，同时把该 group 的表的属性 `default.replication_allocation` 、
 属性 `dynamic.replication_allocation `、以及已有分区的 `replication_allocation`改成跟它一样。
 
 ## 可选参数
-**1. \<database\>**
+**1. `<database>`**
 
 指定要修改的 `colocate group` 的所属数据库。
 

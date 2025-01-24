@@ -36,33 +36,42 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [TEMPORARY] PARTITIONS FROM [db_name.] <table_name> [WHERE] [ORDER BY] [LIMIT];
+SHOW [ TEMPORARY ] PARTITIONS
+    FROM [ <db_name.> ] <table_name>
+    [ <where_clause> ]
+    [ ORDER BY <order_by_key> ]
+    [ LIMIT <limit_rows> ];
 ```
 
 ## 必选参数
-**1. \<table_name\>**
+**1. `<table_name>`**
 
 需要指定查看分区信息的表名称。
 
 
 ## 可选参数
-**1. \<TEMPORARY\>**
+**1. `<TEMPORARY>`**
 
 是否需要列出临时分区
 
-**2. \<db_name\>**
+**2. `<db_name>`**
 
 需要指定查看分区信息的数据库名称。
 
-**3. \<WHERE\>**
+**3. `<where_clause>`**
 
 过滤条件，支持 `PartitionId`,`PartitionName`,`State`,`Buckets`,`ReplicationNum`,`LastConsistencyCheckTime` 等列的过滤。
 
-**4. \<ORDER BY\>**
+需要注意的是：
+1. 目前 `where`子句只支持 `=` 操作符，不支持 `>`、`<`、`>=`、`<=` 等操作符。
+2. `where`子句使用 `=` 操作符时，列名需要在左侧。
+
+
+**4. `<order_by_key>`**
 
 排序条件，支持 `PartitionId`,`PartitionName`,`State`,`Buckets`,`ReplicationNum`,`LastConsistencyCheckTime` 等列的排序。
 
-**5. \<LIMIT\>**
+**5. `<limit_rows>`**
 
 返回的最大行数。
 
@@ -101,7 +110,7 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.] <table_name> [WHERE] [ORDER BY] [LIM
 1. 展示指定 db 下指定表的所有非临时分区信息
 
 ```sql
-SHOW  PARTITIONS FROM t_agg;
+SHOW PARTITIONS FROM t_agg;
 ```
 ```text
 +-------------+---------------+----------------+---------------------+--------+--------------+-------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+

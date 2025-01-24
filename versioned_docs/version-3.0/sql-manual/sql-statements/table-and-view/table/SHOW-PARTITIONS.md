@@ -38,32 +38,41 @@ It supports returning all partitions, including multi-level partitions.
 ## Syntax
 
 ```sql
-SHOW [TEMPORARY] PARTITIONS FROM [db_name.] <table_name> [WHERE] [ORDER BY] [LIMIT];
+SHOW [ TEMPORARY ] PARTITIONS 
+    FROM [ <db_name.> ] <table_name> 
+    [ <where_clause> ] 
+    [ ORDER BY <order_by_key> ] 
+    [ LIMIT <limit_rows> ];
 ```
 
 ## Required Parameters
-**1. \<table_name\>**
+**1. `<table_name>`**
 
 The name of the table for which partition information needs to be viewed must be specified.
 
 
 ## Optional Parameters
-**1. \<TEMPORARY\>**
+**1. `<TEMPORARY>`**
 
 Whether to query the information of temporary partitions.
 
-**2. \<db_name\>**
+**2. `<db_name>`**
 
 The name of the database for which partition information needs to be viewed must be specified.
 
-**3. \<WHERE\>**
+**3. `<where_clause>`**
 
 Filter conditions, supporting filtering on columns such as PartitionId, PartitionName, State, Buckets, ReplicationNum, LastConsistencyCheckTime, etc.
-**4. \<ORDER BY\>**
+
+Please note that:
+1. Currently, the where clause only supports the = operator and does not support operators such as >, <, >=, <=, etc.
+2. When using the = operator in the where clause, the column name needs to be on the left side.
+
+**4. `<order_by_key>`**
 
 Sorting conditions, supporting sorting on columns such as PartitionId, PartitionName, State, Buckets, ReplicationNum, LastConsistencyCheckTime, etc.
 
-**5. \<LIMIT\>**
+**5. `<limit_rows>`**
 
 The maximum number of rows returned.
 
@@ -102,7 +111,7 @@ The SHOW permission for the table to be viewed is required.
 1. Show all non-temporary partition information for a specified table in a specified database.
 
 ```sql
-SHOW  PARTITIONS FROM t_agg;
+SHOW PARTITIONS FROM t_agg;
 ```
 ```text
 +-------------+---------------+----------------+---------------------+--------+--------------+-------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+

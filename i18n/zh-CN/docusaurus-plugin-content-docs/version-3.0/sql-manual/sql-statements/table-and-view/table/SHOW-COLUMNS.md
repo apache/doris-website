@@ -32,17 +32,17 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [FULL] COLUMNS FROM <tbl>;
+SHOW [ <FULL> ] COLUMNS FROM <tbl>;
 ```
 
 ## 必选参数
-**1. \<tbl\>**
+**1. `<tbl>`**
 
 需要指定查看列信息的表名称。
 
 
 ## 可选参数
-**1. \<FULL\>**
+**1. `<FULL>`**
 
 如果指定了 `FULL` 关键字，会返回列的详细信息，包括列的聚合类型、权限、注释等。
 
@@ -95,5 +95,6 @@ SHOW COLUMNS FROM t_agg;
 | v2    | int             | YES  | NO   | NULL    | SUM     |
 +-------+-----------------+------+------+---------+---------+
 ```
+
 
 

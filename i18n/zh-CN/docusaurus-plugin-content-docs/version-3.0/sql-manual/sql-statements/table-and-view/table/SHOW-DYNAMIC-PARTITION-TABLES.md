@@ -33,11 +33,11 @@ under the License.
 ## 语法：
 
 ```sql
-SHOW DYNAMIC PARTITION TABLES [FROM <db_name>];
+SHOW DYNAMIC PARTITION TABLES [ FROM <db_name> ];
 ```
 
 ## 可选参数
-**1. \<db_name\>**
+**1. `<db_name>`**
 
 指定展示动态分区表状态的 `DB` 名称，如果不指定，则默认展示当前 `DB` 下的所有动态分区表状态。
 

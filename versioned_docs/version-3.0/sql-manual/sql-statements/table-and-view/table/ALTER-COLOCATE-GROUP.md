@@ -34,24 +34,24 @@ This statement is used to modify the properties of a Colocation Group.
 ## Syntax
 
 ```sql
-ALTER COLOCATE GROUP  [database.] <group_name>
+ALTER COLOCATE GROUP  [<database.>] <group_name>
 SET (
     <property_list>
 );
 ```
 ## Required Parameters
 
-**1. \<group_name\>**
+**1. `<group_name>`**
 
 Specify the name of the colocate group to be modified.
 
-**2.\<property_list\>**
+**2.`<property_list>`**
 
 `property_list` is a property of the `colocation group`, and currently only supports modifying `replication_num` and `replication_allocation`. After modifying these two properties of the `colocation group`, simultaneously change the properties `default.replication_allocation`, `dynamic.replication_allocation`, and replication_allocation of the existing partitions of the group's tables to be the same as it.
 
 ## Optional Parameters
 
-**1. \<database\>**
+**1. `<database>`**
 
 Specify the database to which the `colocate group` to be modified belongs.
 

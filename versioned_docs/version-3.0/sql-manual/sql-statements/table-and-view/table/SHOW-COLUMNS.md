@@ -33,16 +33,16 @@ This statement is used to specify the column information of a table.
 ## Syntax
 
 ```sql
-SHOW [FULL] COLUMNS FROM <tbl>;
+SHOW [<FULL>] COLUMNS FROM <tbl>;
 ```
 
 ## Required Parameters
-**1. \<tbl\>**
+**1. `<tbl>`**
 
 The name of the table for which column information needs to be viewed must be specified.
 
 ## Optional Parameters
-**1. \<FULL\>**
+**1. `<FULL>`**
 
 If the `FULL` keyword is specified, detailed information about the columns will be returned, including the aggregation type, permissions, comments, etc. of the columns.
 

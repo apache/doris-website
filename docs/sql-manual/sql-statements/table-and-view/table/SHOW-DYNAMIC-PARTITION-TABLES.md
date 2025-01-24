@@ -31,11 +31,11 @@ This statement is used to display the status of all dynamic partition tables in 
 ## Syntax：
 
 ```sql
-SHOW DYNAMIC PARTITION TABLES [FROM <db_name>];
+SHOW DYNAMIC PARTITION TABLES [ FROM <db_name> ];
 ```
 
 ## Required Parameters
-**1. \<db_name\>**
+**1. `<db_name>`**
 
 pecify the `DB` name to display the status of dynamic partition tables. If not specified, the status of all dynamic partition tables in the current `DB` will be displayed by default.
 ## Return Value
