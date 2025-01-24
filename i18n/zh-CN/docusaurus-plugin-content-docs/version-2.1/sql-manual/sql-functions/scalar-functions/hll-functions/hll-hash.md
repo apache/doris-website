@@ -24,22 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HLL_HASH
 ## 描述
+
+将一个值转换为 HLL（HyperLogLog）类型。该函数通常用于数据加载时，将普通类型的值转换为 HLL 类型，常用于处理大数据集的去重和计数操作。
+
+特殊情况：
+- 如果输入值为 NULL，则返回 NULL。
+
 ## 语法
 
-`HLL_HASH(value)`
+```sql
+HLL_HASH(<value>)
+```
 
-HLL_HASH 将一个值转换为 hll 类型。通常用于导入数据时，将普通类型的值导入到 hll 列中。
+## 参数
+
+| 参数     | 说明                                                   |
+| -------- | ------------------------------------------------------ |
+| `<value>` | 需要转换为 HLL 类型的值。可以是字符串、数字或任意数据类型。 |
+
+## 返回值
+
+返回一个 HLL 类型的值。返回结果类型为 HLL。
 
 ## 举例
+
+```sql
+select HLL_CARDINALITY(HLL_HASH('abc'));
 ```
-MySQL > select HLL_CARDINALITY(HLL_HASH('abc'));
+
+```text
 +----------------------------------+
 | hll_cardinality(HLL_HASH('abc')) |
 +----------------------------------+
 |                                1 |
 +----------------------------------+
 ```
-### keywords
-HLL,HLL_HASH
