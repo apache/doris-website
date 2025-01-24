@@ -22,58 +22,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random
+## Description
 
-### description
-#### Syntax
+Returns a random number between 0 and 1, or returns the required random number according to the parameters.
 
-`DOUBLE random()`
-Returns a random number between 0 and 1.
+- Note: All parameters must be constants.
 
-`DOUBLE random(DOUBLE seed)`
-Returns a random number between 0 and 1, seeded with `seed`.
+## Alias
 
-`BIGINT random(BIGINT a, BIGINT b)`
-Returns a random number between a and b. a must be less than b.
+- RAND
 
-Alias: `rand`.
-
-Note: All parameters must be constants.
-
-### example
+## Syntax
 
 ```sql
-mysql> select random();
-+---------------------+
-| random()            |
-+---------------------+
-| 0.35446706030596947 |
-+---------------------+
+RANDOM()
 
-mysql> select rand(1.2);
+RANDOM(<seed>)
+
+RANDOM(<a> , <b>)
+```
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<seed>` | random number generator seed. Returns a fixed sequence of random numbers based on the seed value. |
+| `<a>` | The lower bound of a random number. |
+| `<b>` | The upper bound of a random number. It must be less than the lower bound. |
+
+## Return value
+
+- If no parameters are passed: Returns a random number between 0 and 1.
+
+- If a single parameter seed is passed: Generates the same sequence of random numbers based on the provided seed value seed.
+
+- If two parameters a and b are passed: Returns a random integer between a and b.
+
+## Example
+
+```sql
+select random();
+```
+
+```text
++--------------------+
+| random()           |
++--------------------+
+| 0.8047437125910604 |
++--------------------+
+```
+
+```sql
+select rand(1.2);
+```
+
+```text
 +---------------------+
 | rand(1)             |
 +---------------------+
 | 0.13387664401253274 |
 +---------------------+
-1 row in set (0.13 sec)
+```
 
-mysql> select rand(1.2);
-+---------------------+
-| rand(1)             |
-+---------------------+
-| 0.13387664401253274 |
-+---------------------+
-1 row in set (0.11 sec)
+```sql
+select rand(-20, -10);
+```
 
-mysql> select rand(-20, -10);
+```text
 +------------------+
 | random(-20, -10) |
 +------------------+
-|              -13 |
+|              -10 |
 +------------------+
-1 row in set (0.10 sec)
 ```
-
-### keywords
-	RANDOM, RAND

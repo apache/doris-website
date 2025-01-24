@@ -22,34 +22,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pmod
-
 ## 描述
+
+返回模运算 x mod y 在模系中的最小正数解。具体而言，通过计算 (x % y + y) % y 得出结果。
+
 ## 语法
 
 ```sql
-BIGINT PMOD(BIGINT x, BIGINT y)
-DOUBLE PMOD(DOUBLE x, DOUBLE y)
+PMOD(<x> , <y>)
 ```
-返回在模系下`x mod y`的最小正数解.
-具体地来说, 返回 `(x%y+y)%y`.
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 被除数 |
+| `<y>` | 除数 不能为0 |
+
+## 返回值
+
+返回一个整型或浮点数。特殊情况：
+
+- 当 x=0 时，返回0。
+- 当 x is NULL 或 y is NULL时，返回NULL。
 
 ## 举例
 
+```sql
+SELECT PMOD(13,5);
 ```
-MySQL [test]> SELECT PMOD(13,5);
+
+```text
 +-------------+
 | pmod(13, 5) |
 +-------------+
 |           3 |
 +-------------+
-MySQL [test]> SELECT PMOD(-13,5);
-+-------------+
-| pmod(-13, 5) |
-+-------------+
-|           2 |
-+-------------+
 ```
 
-### keywords
-	PMOD
+```sql
+SELECT PMOD(-13,5);
+```
+
+```text
++--------------+
+| pmod(-13, 5) |
++--------------+
+|            2 |
++--------------+
+```
+
+```sql
+SELECT PMOD(0,-12);
+```
+
+```text
++--------------+
+| pmod(0, -12) |
++--------------+
+|            0 |
++--------------+
+```
+
+```sql
+SELECT PMOD(0,null);
+```
+
+```text
++-------------------------------+
+| pmod(cast(0 as DOUBLE), NULL) |
++-------------------------------+
+|                          NULL |
++-------------------------------+
+```
