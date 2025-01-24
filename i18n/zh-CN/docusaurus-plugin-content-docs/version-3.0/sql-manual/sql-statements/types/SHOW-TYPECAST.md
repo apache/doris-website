@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW TYPECAST",
-    "language": "zh-CN"
+  "title": "SHOW TYPECAST",
+  "language": "zh-CN"
 }
 ---
 
@@ -66,37 +66,39 @@ SHOW TYPE_CAST [ IN | FROM <db>];
 ## 示例
 
 - 查看数据库 TESTDB 下所有的类型转换
-```sql
-SHOW TYPE_CAST IN TESTDB;
-```
-```text
-**************************** 1. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-**************************** 2. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-**************************** 3. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-```
+    ```sql
+    SHOW TYPE_CAST IN TESTDB;
+    ```
+    ```text
+    +----------------+----------------+
+    | Origin Type    | Cast Type      |
+    +----------------+----------------+
+    | DATETIMEV2     | BOOLEAN        |
+    | DATETIMEV2     | TINYINT        |
+    | DATETIMEV2     | SMALLINT       |
+    | DATETIMEV2     | INT            |
+    | DATETIMEV2     | BIGINT         |
+    | DATETIMEV2     | LARGEINT       |
+    | DATETIMEV2     | FLOAT          |
+    | DATETIMEV2     | DOUBLE         |
+    | DATETIMEV2     | DATE           |
+    | DATETIMEV2     | DATETIME       |
+    | DATETIMEV2     | DATEV2         |
+    | DATETIMEV2     | DATETIMEV2     |
+    | DATETIMEV2     | DECIMALV2      |
+    | DATETIMEV2     | DECIMAL32      |
+    | DATETIMEV2     | DECIMAL64      |
+    | DATETIMEV2     | DECIMAL128     |
+    | DATETIMEV2     | DECIMAL256     |
+    | DATETIMEV2     | VARCHAR        |
+    | DATETIMEV2     | STRING         |
+    | DECIMAL256     | DECIMAL128     |
+    | DECIMAL256     | DECIMAL256     |
+    | DECIMAL256     | VARCHAR        |
+    | DECIMAL256     | STRING         |
+    +----------------+----------------+
+    ```
 
-- 查看当前会话所在数据库下所有的类型转换
-
-```sql
-SHOW TYPE_CAST;
-```
-```text
-**************************** 1. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-**************************** 2. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-**************************** 3. row ******************** ******
-Origin Type: TIMEV2
-  Cast Type: TIMEV2
-```
 
 
 
