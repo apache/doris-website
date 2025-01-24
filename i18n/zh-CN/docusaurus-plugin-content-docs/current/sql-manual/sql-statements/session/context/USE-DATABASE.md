@@ -70,26 +70,22 @@ USE { [<catalog_name>.]<database_name>[@<compute_group_name>] | @<compute_group_
 1. 如果 demo 数据库存在，尝试使用它：
 
    ```sql
-   mysql> use demo;
-   Database changed
+   use demo;
    ```
 
 2. 如果 demo 数据库在 hms_catalog 的 Catalog 下存在，尝试切换到 hms_catalog, 并使用它：
 
     ```sql
-    mysql> use hms_catalog.demo;
-    Database changed
+    use hms_catalog.demo;
     ```
 3. 如果 demo 数据库在当前目录中存在，并且您想使用名为 'cg1' 的计算组，请尝试访问它：
 
     ```sql
-    mysql> use demo@cg1;
-    Database changed
+    use demo@cg1;
     ```
 
 4. 如果您只想使用名为 'cg1' 的计算组，请尝试访问它：
 
     ```sql
-    mysql> use @cg1;
-    Database changed
+    use @cg1;
     ```
