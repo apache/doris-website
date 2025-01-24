@@ -24,25 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## seconds_diff
-### description
-#### Syntax
+## Description
+The function calculates the time difference between two datetime values and returns the difference in seconds.
 
-`INT seconds_diff(DATETIME enddate, DATETIME startdate)`
+## Syntax
 
-The difference between the start time and the end time is seconds
-
-### example
-
+```sql
+SECONDS_DIFF(<end_datetime>, <start_datetime>)
 ```
-mysql> select seconds_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
-+------------------------------------------------------------+
-| seconds_diff('2020-12-25 22:00:00', '2020-12-25 21:00:00') |
-+------------------------------------------------------------+
-|                                                       3600 |
-+------------------------------------------------------------+
+## Parameters
+
+| Parameter          | Description                                                                 |
+|--------------------|-----------------------------------------------------------------------------|
+| `<end_datetime>`   | Required. The ending datetime value. Supports the DATETIME and DATE type.   |
+| `<start_datetime>` | Required. The starting datetime value. Supports the DATETIME and DATE type. |
+
+## Return Value
+- Returns an integer representing the difference in seconds between two datetime values:
+    - If `<end_datetime>` is later than `<start_datetime>`, returns a positive value.
+    - If `<end_datetime>` is earlier than `<start_datetime>`, returns a negative value.
+    - If `<end_datetime>` and `<start_datetime>` are equal, returns 0.
+- If either parameter is NULL, the function returns NULL.
+- If the input datetime values are invalid (e.g., 0000-00-00T00:00:00), the function returns NULL.
+
+## Example
+```sql
+SELECT SECONDS_DIFF('2025-01-23 12:35:56', '2025-01-23 12:34:56');
 ```
-
-### keywords
-
-    seconds_diff
+```text
++----------------------------------------------------------------------------------------------------------+
+| seconds_diff(cast('2025-01-23 12:35:56' as DATETIMEV2(0)), cast('2025-01-23 12:34:56' as DATETIMEV2(0))) |
++----------------------------------------------------------------------------------------------------------+
+|                                                                                                       60 |
++----------------------------------------------------------------------------------------------------------+
+```

@@ -24,25 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second
-### description
-#### Syntax
+## Description
+The function returns the second part of the specified datetime value. The range of seconds is 0 to 59.
 
-`INT SECOND(DATETIME date)`
+## Syntax
 
-Returns second information in the time type, ranging from 0,59
-
-The parameter is Date or Datetime type
-
-### example
-
+```sql
+SECOND(<datetime>)
 ```
-mysql> select second('2018-12-31 23:59:59');
-+-----------------------------+
-| second('2018-12-31 23:59:59') |
-+-----------------------------+
-|                          59 |
-+-----------------------------+
+## Parameters
+
+| Parameter    | Description                                                        |
+|--------------|--------------------------------------------------------------------|
+| `<datetime>` | The input date or datetime value. Supports DATE or DATETIME types. |
+
+## Return Value
+- Returns an integer representing the second part of the input datetime value, ranging from 0 to 59.
+- If the input is NULL, the function returns NULL.
+- If the input is an invalid date (e.g., 0000-00-00 00:00:00), the function returns NULL.
+
+## Example
+```sql
+select second('2018-12-31 23:59:59');
 ```
-### keywords
-    SECOND
+```text
++---------------------------------------------+
+| second(cast('2018-12-30' as DATETIMEV2(0))) |
++---------------------------------------------+
+|                                           0 |
++---------------------------------------------+
+```
