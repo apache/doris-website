@@ -45,7 +45,7 @@ LOCALTIMESTAMP([<precision>]))
 ## Return Value
 
 - Returns the current system time as a DATETIME type.
-- If the specified <precision> is out of range (e.g., negative or greater than 6), the function will return an error.
+- If the specified `<precision>` is out of range (e.g., negative or greater than 6), the function will return an error.
 
 ## Example
 
