@@ -36,7 +36,7 @@ Please use [JDBC Catalog](https://doris.apache.org/docs/dev/lakehouse/multi-cata
 
 By creating JDBC External Tables, Doris can access external tables via JDBC, the standard database access inferface. This allows Doris to visit various databases without tedious data ingestion, and give full play to its own OLAP capabilities to perform data analysis on external tables:
 
-::tip Tips
+:::tip Tips
 This feature is supported since the Apache Doris 1.2 version
 :::
 

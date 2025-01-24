@@ -23,3 +23,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+The ORTHOGONAL_BITMAP_UNION_COUNT function returns the number of elements in the set after performing a union calculation on the Bitmap expression.
+
+## Syntax
+
+```sql
+ORTHOGONAL_BITMAP_UNION_COUNT(<bitmap_column>, <column_to_filter>, <filter_values>)
+```
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<bitmap_column>` | The Bitmap type expression needs to be obtained |
+| `<column_to_filter>` | Optional. The dimension column that needs to be filtered |
+| `<filter_values>` | Optional. A variable-length parameter, used to filter different values of the dimension column |
+
+## Return Value
+
+Returns a value of type BIGINT.
+
+## Example
+
+```sql
+select ORTHOGONAL_BITMAP_UNION_COUNT(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+```
+
+```text
++------------------------------------------+
+| orthogonal_bitmap_union_count(`members`) |
++------------------------------------------+
+|                                286957811 |
++------------------------------------------+
+```

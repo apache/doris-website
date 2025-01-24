@@ -24,53 +24,107 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_xor
 ## 描述
+
+计算两个及以上输入 Bitmap 的差集，返回新的 Bitmap。
+
 ## 语法
 
-`BITMAP BITMAP_XOR(BITMAP lhs, BITMAP rhs, ...)`
-
-计算两个及以上输入bitmap的差集，返回新的bitmap.
-
-## 举例
-
+```sql
+bitmap_xor(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ```
-mysql> select bitmap_count(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'))) cnt;
+
+## 参数
+
+| 参数          | 描述           |
+|-------------|--------------|
+| `<bitmap1>` | 第一个 Bitmap   |
+| `<bitmap2>` | 第二个 Bitmap   |
+| ...         | ...          |
+| `<bitmapN>` | 第 N 个 Bitmap |
+
+## 返回值
+
+多个 Bitmap 差集的 Bitmap。
+
+## 示例
+
+计算两个 Bitmap 的对称差集：
+
+```sql
+select bitmap_count(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'))) cnt;
+```
+
+结果如下：
+
+```text
 +------+
 | cnt  |
 +------+
 |    2 |
 +------+
+```
 
-mysql> select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4')));
+将两个 Bitmap 的对称差集转换为字符串：
+
+```sql
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4')));
+```
+
+结果如下：
+
+```text
 +----------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'))) |
 +----------------------------------------------------------------------------------------+
 | 1,4                                                                                    |
 +----------------------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'),bitmap_from_string('3,4,5')));
+计算三个 Bitmap 的对称差集：
+
+```sql
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5')));
+```
+
+结果如下：
+
+```text
 +---------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'))) |
 +---------------------------------------------------------------------------------------------------------------------+
 | 1,3,5                                                                                                               |
 +---------------------------------------------------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'),bitmap_from_string('3,4,5'),bitmap_empty()));
+计算多个 Bitmap（包括一个空 Bitmap）的对称差集：
+
+```sql
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), bitmap_empty()));
+```
+
+结果如下：
+
+```text
 +-------------------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), bitmap_empty())) |
 +-------------------------------------------------------------------------------------------------------------------------------------+
 | 1,3,5                                                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------------------+
+```
 
-MySQL> select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'),bitmap_from_string('1,2,3,4'),bitmap_from_string('3,4,5'),NULL));
+计算多个 Bitmap（包括一个 `NULL` 值）的对称差集：
+
+```sql
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), NULL));
+```
+
+结果如下：
+
+```text
 +---------------------------------------------------------------------------------------------------------------------------+
 | bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), NULL)) |
 +---------------------------------------------------------------------------------------------------------------------------+
 | NULL                                                                                                                      |
 +---------------------------------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-
-    BITMAP_XOR,BITMAP

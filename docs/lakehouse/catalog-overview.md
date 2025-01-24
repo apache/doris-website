@@ -112,7 +112,7 @@ mysql> SHOW CATALOGS;
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-You can view the statement to create a catalog using [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG.md).
+You can view the statement to create a catalog using [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG).
 
 ### Switching Catalog
 

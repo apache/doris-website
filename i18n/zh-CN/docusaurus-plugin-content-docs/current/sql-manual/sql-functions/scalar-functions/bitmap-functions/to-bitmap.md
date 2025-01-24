@@ -24,38 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_bitmap
 ## 描述
-## 语法
 
-`BITMAP TO_BITMAP(expr)`
+将一个无符号的长整型数转换为 Bitmap。
 
 输入为取值在 0 ~ 18446744073709551615 区间的 unsigned bigint ，输出为包含该元素的bitmap。
-当输入值不在此范围时， 会返回NULL。
-该函数主要用于stream load任务将整型字段导入Doris表的bitmap字段。例如
 
-```
-cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user_id, user_id=to_bitmap(user_id)"   http://host:8410/api/test/testDb/_stream_load
+## 语法
+
+`to_bitmap(<expr>)`
+
+## 参数
+
+| 参数        | 描述                                     |
+|-----------|----------------------------------------|
+| `<expr>` | 无符号的长整型数, 范围为 0 ~ 18446744073709551615 |
+
+## 返回值
+
+包含对应长整型数的 Bitmap。  
+当输入值不在对应范围内时，则返回 `NULL`。
+
+## 示例
+
+将一个整数转换为 Bitmap 并计算 Bitmap 中的元素数量：
+
+```sql
+select bitmap_count(to_bitmap(10));
 ```
 
-## 举例
+结果如下：
 
-```
-mysql> select bitmap_count(to_bitmap(10));
+```text
 +-----------------------------+
 | bitmap_count(to_bitmap(10)) |
 +-----------------------------+
 |                           1 |
 +-----------------------------+
+```
 
-MySQL> select bitmap_to_string(to_bitmap(-1));
+将一个负整数转换为 Bitmap（该整数在有效范围之外），并将其转换为字符串：
+
+```sql
+select bitmap_to_string(to_bitmap(-1));
+```
+
+结果如下：
+
+```text
 +---------------------------------+
 | bitmap_to_string(to_bitmap(-1)) |
 +---------------------------------+
 |                                 |
 +---------------------------------+
 ```
-
-### keywords
-
-    TO_BITMAP,BITMAP

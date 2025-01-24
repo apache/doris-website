@@ -24,47 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_quote
-### Description
-#### Syntax
-
-`VARCHAR json_quote(VARCHAR)`
-
-
+## Description
 Enclose json_value in double quotes ("), escape special characters contained.
 
-### example
-
+## Syntax
+```sql
+JSON_QUOTE (<a>)
 ```
-MySQL> SELECT json_quote('null'), json_quote('"null"');
+
+## Parameters
+
+| Parameter | Description                                       |
+|-----------|------------------------------------------|
+| `<a>`     | The value of the json_value to be enclosed.   |
+
+
+## Return Values
+Return a json_value. Special cases are as follows:
+* If the passed parameter is NULL, return NULL.
+
+### Examples
+```sql
+SELECT json_quote('null'), json_quote('"null"');
+```
+```text
 +--------------------+----------------------+
 | json_quote('null') | json_quote('"null"') |
 +--------------------+----------------------+
 | "null"             | "\"null\""           |
 +--------------------+----------------------+
-
-
-MySQL> SELECT json_quote('[1, 2, 3]');
+```
+```sql
+SELECT json_quote('[1, 2, 3]');
+```
+```text
 +-------------------------+
 | json_quote('[1, 2, 3]') |
 +-------------------------+
 | "[1, 2, 3]"             |
 +-------------------------+
-
-
-MySQL> SELECT json_quote(null);
+```
+```sql
+SELECT json_quote(null);
+```
+```text
 +------------------+
 | json_quote(null) |
 +------------------+
 | NULL             |
 +------------------+
-
-MySQL> select json_quote("\n\b\r\t");
+```
+```sql
+select json_quote("\n\b\r\t");
+```
+```text
 +------------------------+
 | json_quote('\n\b\r\t') |
 +------------------------+
 | "\n\b\r\t"             |
 +------------------------+
 ```
-### keywords
-json,quote,json_quote

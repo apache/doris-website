@@ -24,32 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_contains
 ## 描述
+
+计算输入值是否在 BITMAP 中，返回值是 boolean 值.
+
 ## 语法
 
-`BOOLEAN BITMAP_CONTAINS(BITMAP bitmap, BIGINT input)`
+```sql
+BITMAP_CONTAINS(<bitmap>, <bigint>)
+```
 
-计算输入值是否在Bitmap列中，返回值是Boolean值.
+## 参数
+
+| 参数         | 说明         |
+|------------|------------|
+| `<bitmap>` | BITMAP 集合  |
+| `<bitint>` | 被判断是否存在的整数 |
+
+## 返回值
+
+返回一个 boolean
+- 当参数存在空时，返回 NULL
 
 ## 举例
 
-```
-mysql> select bitmap_contains(to_bitmap(1),2) cnt;
-+------+
-| cnt  |
-+------+
-|    0 |
-+------+
-
-mysql> select bitmap_contains(to_bitmap(1),1) cnt;
-+------+
-| cnt  |
-+------+
-|    1 |
-+------+
+```sql
+select bitmap_contains(to_bitmap(1),2) cnt1, bitmap_contains(to_bitmap(1),1) cnt2;
 ```
 
-### keywords
+```text
++------+------+
+| cnt1 | cnt2 |
++------+------+
+|    0 |    1 |
++------+------+
+```
 
-    BITMAP_CONTAINS,BITMAP
