@@ -24,38 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## repeat
 ## 描述
+
+REPEAT 函数用于将一个字符串重复指定的次数。
+
 ## 语法
 
-`VARCHAR repeat(VARCHAR str, INT count)`
+```sql
+REPEAT( <str>, <count> )
+```
 
+## 参数
 
-将字符串 str 重复 count 次输出，count 小于1时返回空串，str，count 任一为NULL时，返回 NULL
+| 参数 | 说明                        |
+| -- |---------------------------|
+| `<str>` | 需要被重复的字符串                 |
+| `<count>` | 重复的次数，必须为非负整数，小于 1 时将返回空串 |
 
 :::tip
-repeat 函数默认最多重复 10000 次，可通过会话变量调整限制。
-```
+repeat 函数默认最多重复 10000 次，如果超过这个次数将会报错，可通过会话变量调整限制：
+```sql
 set repeat_max_num = 20000
 ```
 :::
 
+## 返回值
+
+返回重复指定的次数的字符串。特殊情况：
+
+- 任意参数中有一个为 NULL，则返回 NULL
+
 ## 举例
 
+```sql
+SELECT repeat("a", 3);
 ```
-mysql> SELECT repeat("a", 3);
+
+```text
 +----------------+
 | repeat('a', 3) |
 +----------------+
 | aaa            |
 +----------------+
+```
 
-mysql> SELECT repeat("a", -1);
+```sql
+SELECT repeat("a", -1);
+```
+
+```text
 +-----------------+
 | repeat('a', -1) |
 +-----------------+
 |                 |
 +-----------------+
 ```
-### keywords
-    REPEAT

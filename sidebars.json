@@ -452,7 +452,9 @@
                                 "lakehouse/best-practices/doris-hudi",
                                 "lakehouse/best-practices/doris-paimon",
                                 "lakehouse/best-practices/doris-iceberg",
-                                "lakehouse/best-practices/doris-lakesoul"
+                                "lakehouse/best-practices/doris-lakesoul",
+                                "lakehouse/best-practices/tpch",
+                                "lakehouse/best-practices/tpcds"
                             ]
                         }
                     ]
@@ -890,9 +892,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dfloor",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog1",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog10",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
@@ -905,7 +905,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/ceil",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/fpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
@@ -980,8 +979,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/right",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/split-by-char",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/translate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
@@ -2049,6 +2046,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",
                         "releasenotes/v2.1/release-2.1.5",

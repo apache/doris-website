@@ -24,22 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HLL_EMPTY
-### description
-#### Syntax
+## Description
 
-`HLL_EMPTY(value)`
+`HLL_EMPTY` returns an empty HLL (HyperLogLog) value, representing a data set with no elements.
 
-HLL_EMPTY returns a null value of type hll.
+## Syntax
 
-### example
+```sql
+HLL_EMPTY()
 ```
-MySQL > select hll_cardinality(hll_empty());
+
+## Return Value
+
+Returns an empty HLL type value, representing a data set with no elements.
+
+## Example
+
+```sql
+select hll_cardinality(hll_empty());
+```
+
+```text
 +------------------------------+
 | hll_cardinality(hll_empty()) |
 +------------------------------+
 |                            0 |
 +------------------------------+
 ```
-### keywords
-HLL,HLL_EMPTY

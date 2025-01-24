@@ -1,6 +1,6 @@
 ---
 {
-    "title": "random_bytes",
+    "title": "RANDOM_BYTES",
     "language": "en"
 }
 ---
@@ -24,31 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## random_bytes
-### description
+## Description
 
-The `random_bytes` function generates a sequence of random bytes.
+The RANDOM_BYTES function is used to generate a random byte sequence of the specified length.
 
-#### Syntax
+## Syntax
 
 ```sql
-VARCHAR random_bytes(INT len)
+RANDOM_BYTES( <len> )
 ```
 
-### Parameters
+## Parameters
 
-- len: The `random_bytes` function takes a single argument, which specifies the length of the generated random byte sequence.
+| Parameter | Description                                                                                                                                               |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<len>`   | This parameter specifies the length of the random byte sequence to be generated. This value must be greater than 0; otherwise, an error will be occurred. |
 
-### example
+## Return Value
 
+Returns a random byte sequence of the specified length, encoded in hexadecimal. Special cases:
+
+- If any of the parameters is NULL, NULL will be returned.
+
+## Examples
+
+```sql
+select random_bytes(7);
 ```
-mysql> select random_bytes(7);
-+------------------------------------------------+
-| random_bytes(7) |
-+------------------------------------------------+
-| 0x53edd97401fb6d                               |
-+------------------------------------------------+
+
+```text
++------------------+
+| random_bytes(7)  |
++------------------+
+| 0x869684a082ab4b |
++------------------+
 ```
 
-### keywords
-    RANDOM BYTES
+```sql
+select random_bytes(-1);
+```
+
+```text
+(1105, 'errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]argument -1 of function random_bytes at row 0 was invalid.')
+```

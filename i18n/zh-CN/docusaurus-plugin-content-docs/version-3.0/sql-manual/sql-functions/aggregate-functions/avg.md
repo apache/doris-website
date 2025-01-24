@@ -1,7 +1,7 @@
 ---
 {
-    "title": "AVG",
-    "language": "zh-CN"
+"title": "AVG",
+"language": "zh-CN"
 }
 ---
 
@@ -24,34 +24,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## AVG
 ## 描述
+
+计算指定列或表达式的所有非NULL值的平均值。
+
 ## 语法
 
-`AVG([DISTINCT] expr)`
+```sql
+AVG([DISTINCT] <expr>)
+```
 
+## 参数
 
-用于返回选中字段的平均值
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 是一个表达式或列，通常是一个数值列或者能够转换为数值的表达式 |
+| `[DISTINCT]` | 是一个可选的关键字，表示对expr中的重复值进行去重后再计算平均值 |
 
-可选字段DISTINCT参数可以用来返回去重平均值
+## 返回值
+
+返回所选列或表达式的平均值，如果组内的所有记录均为NULL，则该函数返回NULL
 
 ## 举例
 
+```sql
+SELECT datetime, AVG(cost_time) FROM log_statis group by datetime;
 ```
-mysql> SELECT datetime, AVG(cost_time) FROM log_statis group by datetime;
+
+```text
 +---------------------+--------------------+
 | datetime            | avg(`cost_time`)   |
 +---------------------+--------------------+
 | 2019-07-03 21:01:20 | 25.827794561933533 |
 +---------------------+--------------------+
+```
 
-mysql> SELECT datetime, AVG(distinct cost_time) FROM log_statis group by datetime;
+```sql
+SELECT datetime, AVG(distinct cost_time) FROM log_statis group by datetime;
+```
+
+```text
 +---------------------+---------------------------+
 | datetime            | avg(DISTINCT `cost_time`) |
 +---------------------+---------------------------+
 | 2019-07-04 02:23:24 |        20.666666666666668 |
 +---------------------+---------------------------+
-
 ```
-### keywords
-AVG

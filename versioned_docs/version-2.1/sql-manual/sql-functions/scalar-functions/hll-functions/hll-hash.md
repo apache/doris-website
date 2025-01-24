@@ -24,23 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HLL_HASH
-### description
-#### Syntax
+## Description
 
-`HLL_HASH(value)`
+Converts a given value to the HLL (HyperLogLog) type. This function is typically used during data loading to create an HLL from raw data.
 
-HLL_HASH converts a value to hll type. 
-Typically used when loading data.
+## Syntax
 
-### example
+```sql
+HLL_HASH(<value>)
 ```
-MySQL > select HLL_CARDINALITY(HLL_HASH('abc'));
+
+## Parameters
+
+| Parameter | Description                                                   |
+|-----------|---------------------------------------------------------------|
+| `<value>` | The value to be converted to HLL type. This can be a string, number, or any data type. |
+
+## Examples
+
+```sql
+SELECT HLL_CARDINALITY(HLL_HASH('abc'));
+```
+
+```text
 +----------------------------------+
 | hll_cardinality(HLL_HASH('abc')) |
 +----------------------------------+
 |                                1 |
 +----------------------------------+
 ```
-### keywords
-HLL,HLL_HASH
