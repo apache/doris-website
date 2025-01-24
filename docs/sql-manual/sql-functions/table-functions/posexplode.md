@@ -41,7 +41,7 @@ POSEXPLODE_OUTER(<arr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<arr>` | Array type |
+| `<arr>` | An array that is to be expanded |
 
 ## Return Value
 

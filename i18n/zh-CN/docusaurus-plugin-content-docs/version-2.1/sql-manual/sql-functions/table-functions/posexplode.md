@@ -40,7 +40,7 @@ POSEXPLODE_OUTER(<arr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<arr>` | array类型 |
+| `<arr>` | 待展开的 array 数组 |
 
 
 ## 返回值
