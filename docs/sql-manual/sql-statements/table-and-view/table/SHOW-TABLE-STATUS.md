@@ -43,26 +43,26 @@ SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 
 ## Return value
 
-| Column          | Data Type     | Notes                                        |
-|:----------------|:--------------|:---------------------------------------------|
-| Name            | String        | Table name                                   |
-| Engine          | String        | Table engine                                 |
-| Version         | String        | Table version                                |
-| Row_format      | String        | table row's format                           |
-| Rows            | String        | Number of rows in the table                  |
-| Avg_row_length  | Integer       | Average length of each row of data           |
-| Data_length     | Integer       | Data size of the table                       |
-| Max_data_length | Integer       | Maximum length of the data row               |
-| Index_length    | Integer       | Length of the index                          |
-| Data_free       |               |                                              |
-| Auto_increment  |               |                                              |
-| Create_time     | Datetime      | Creation time                                |
-| Update_time     | Datetime      | Update time                                  |
-| Check_time      | Datetime      | Check time                                   |
-| Collation       | Character set | Character set, currently only supports utf-8 |
-| Checksum        | String        | Table Checksum                               |
-| Create_options  | string        | Table options                                |
-| Comment         | string        | Table comment                                |
+| Column              | DataType        | Notes                                                                                                                                                                                                                     |
+|:--------------------|:----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name                | String          | Table name                                                                                                                                                                                                                |
+| Engine              | String          | Storage engine for the table                                                                                                                                                                                              |
+| Version             | String          | Version                                                                                                                                                                                                                   |
+| Row_format          | String          | Row format. For the MyISAM engine, this may be Dynamic, Fixed, or Compressed. Dynamic rows have variable length, such as Varchar or Blob type fields. Fixed rows have fixed length, such as Char and Integer type fields. |
+| Rows                | String          | Number of rows in the table. For non-transactional tables, this value is exact, for transactional engines, this value is usually estimated.                                                                               |
+| Avg_row_length      | Integer         | Average number of bytes per row                                                                                                                                                                                           |
+| Data_length         | Integer         | The amount of data in the entire table (in bytes)                                                                                                                                                                         |
+| Max_data_length     | Integer         | The maximum amount of data that a table can hold                                                                                                                                                                          |
+| Index_length        | Integer         | The amount of disk space occupied by an index                                                                                                                                                                             |
+| Data_free           | Integer         | For the MyISAM engine, identifies the space that has been allocated but is now unused, and includes the space for deleted rows.                                                                                           |
+| Auto_increment      | Integer         | The value of the next Auto_increment                                                                                                                                                                                      |
+| Create_time         | Datetime        | The creation time of the table                                                                                                                                                                                            |
+| Update_time         | Datetime        | The last update time of the table                                                                                                                                                                                         |
+| Check_time          | Datetime        | The last time to check the table using the check table or myisamchk tool                                                                                                                                                  |
+| Collation           | Character set   | The default character set of the table, currently only supports utf-8                                                                                                                                                     |
+| Checksum            | String          | If enabled, the checksum calculated for the entire table content                                                                                                                                                          |
+| Create_options      | String          | Refers to all other options when the table is created                                                                                                                                                                     |
+| Comment             | String          | Table comment                                                                                                                                                                                                             |
 
 ## Access Control Requirements
 

@@ -43,26 +43,26 @@ SHOW TABLE STATUS [ FROM [ <catalog_name>.]<db_name> ] [ LIKE <like_condition> ]
 
 ## 返回值
 
-| 列名（Column）           | 类型（DataType） | 说明（Notes）       |
-|:---------------------|:-------------|:----------------|
-| Name                 | 字符串          | 表名称             |
-| Engine               | 字符串          | 表引擎             |
-| Version              | 字符串          | 表版本             |
-| Row_format           | 字符串          | 表行的格式           |
-| Rows                 | 字符串          | 表的行数            |
-| Avg_row_length       | 整型           | 每行数据平均长度        |
-| Data_length          | 整型           | 表的数据大小          |
-| Max_data_length      | 整型           | 最大数据行的长度        |
-| Index_length         | 整型           | 索引的长度           |
-| Data_free            |              |                 |
-| Auto_increment       |              |                 |
-| Create_time          | Datetime     | 创建时间            |
-| Update_time          | Datetime     | 更新时间            |
-| Check_time           | Datetime     | 检查时间            |
-| Collation            | 字符集          | 字符集，目前只支持 utf-8 |
-| Checksum             | 字符串          | 校验和             |
-| Create_options       | 字符串          | 创建的选项           |
-| Comment              | 字符串          | 表注释             |
+| 列名（Column）           | 类型（DataType）  | 说明（Notes）                                                                                               |
+|:---------------------|:--------------|:--------------------------------------------------------------------------------------------------------|
+| Name                 | 字符串           | 表名称                                                                                                     |
+| Engine               | 字符串           | 表的存储引擎                                                                                                  |
+| Version              | 字符串           | 版本                                                                                                      |
+| Row_format           | 字符串           | 行格式。对于MyISAM引擎，这可能是Dynamic，Fixed或Compressed。动态行的行长度可变，例如Varchar或Blob类型字段。固定行是指行长度不变，例如Char和Integer类型字段。 |
+| Rows                 | 字符串           | 表中的行数。对于非事务性表，这个值是精确的，对于事务性引擎，这个值通常是估算的。                                                                |
+| Avg_row_length       | 整型            | 平均每行包括的字节数                                                                                              |
+| Data_length          | 整型            | 整个表的数据量(单位：字节)                                                                                          |
+| Max_data_length      | 整型            | 表可以容纳的最大数据量                                                                                             |
+| Index_length         | 整型            | 索引占用磁盘的空间大小                                                                                             |
+| Data_free            | 整型            | 对于MyISAM引擎，标识已分配，但现在未使用的空间，并且包含了已被删除行的空间。                                                               |
+| Auto_increment       | 整型            | 下一个Auto_increment的值                                                                                     |
+| Create_time          | Datetime      | 表的创建时间                                                                                                  |
+| Update_time          | Datetime      | 表的最近更新时间                                                                                                |
+| Check_time           | Datetime      | 使用 check table 或myisamchk工具检查表的最近时间                                                                     |
+| Collation            | 字符集           | 表的默认字符集，目前只支持 utf-8                                                                                     |
+| Checksum             | 字符串           | 如果启用，则对整个表的内容计算时的校验和                                                                                    |
+| Create_options       | 字符串           | 指表创建时的其他所有选项                                                                                            |
+| Comment              | 字符串           | 表注释                                                                                                     |
 
 ## 权限控制
 
