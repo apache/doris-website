@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BITMAP_AGG",
-    "language": "zh-CN"
+"title": "BITMAP_AGG",
+"language": "zh-CN"
 }
 ---
 
@@ -24,63 +24,67 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+聚合某列的值（不包括任何空值）返回一行bitmap值，即多行转一行。
 
 ## 语法
 
-`BITMAP_AGG(expr)`
+```sql
+BITMAP_AGG(<expr>)
+```
 
-聚合 expr 的值（不包括任何空值）得到 bitmap。
-expr 的类型需要为 TINYINT,SMALLINT,INT 和 BIGINT 类型。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` |待合并数值的列或表达式，expr 的类型需要为 TINYINT,SMALLINT,INT,LARGEINT 和 BIGINT 类型，也支持可以转化为以上类型的 VARCHAR。 |
+
+## 返回值
+
+返回 BITMAP 类型的值。特殊情况：
+
+- 如果某个值小于 0 或者大于 18446744073709551615，该值会被忽略，不会合并到 Bitmap 中
 
 ## 举例
-```
-MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
-+-------------+----------------+-------------+
-| n_nationkey | n_name         | n_regionkey |
-+-------------+----------------+-------------+
-|           0 | ALGERIA        |           0 |
-|           1 | ARGENTINA      |           1 |
-|           2 | BRAZIL         |           1 |
-|           3 | CANADA         |           1 |
-|           4 | EGYPT          |           4 |
-|           5 | ETHIOPIA       |           0 |
-|           6 | FRANCE         |           3 |
-|           7 | GERMANY        |           3 |
-|           8 | INDIA          |           2 |
-|           9 | INDONESIA      |           2 |
-|          10 | IRAN           |           4 |
-|          11 | IRAQ           |           4 |
-|          12 | JAPAN          |           2 |
-|          13 | JORDAN         |           4 |
-|          14 | KENYA          |           0 |
-|          15 | MOROCCO        |           0 |
-|          16 | MOZAMBIQUE     |           0 |
-|          17 | PERU           |           1 |
-|          18 | CHINA          |           2 |
-|          19 | ROMANIA        |           3 |
-|          20 | SAUDI ARABIA   |           4 |
-|          21 | VIETNAM        |           2 |
-|          22 | RUSSIA         |           3 |
-|          23 | UNITED KINGDOM |           3 |
-|          24 | UNITED STATES  |           1 |
-+-------------+----------------+-------------+
-
-MySQL > select n_regionkey, bitmap_to_string(bitmap_agg(n_nationkey)) from nation group by n_regionkey;
-+-------------+---------------------------------------------+
-| n_regionkey | bitmap_to_string(bitmap_agg(`n_nationkey`)) |
-+-------------+---------------------------------------------+
-|           4 | 4,10,11,13,20                               |
-|           2 | 8,9,12,18,21                                |
-|           1 | 1,2,3,17,24                                 |
-|           0 | 0,5,14,15,16                                |
-|           3 | 6,7,19,22,23                                |
-+-------------+---------------------------------------------+
-
-MySQL > select bitmap_count(bitmap_agg(n_nationkey))  from nation;
-+-----------------------------------------+
-| bitmap_count(bitmap_agg(`n_nationkey`)) |
-+-----------------------------------------+
-|                                      25 |
-+-----------------------------------------+
+```sql
+select * from test_bitmap_agg;
 ```
 
+```text
++------+------+------+------+------+-------------+----------------------+
+| id   | k0   | k1   | k2   | k3   | k4          | k5                   |
++------+------+------+------+------+-------------+----------------------+
+|    1 |   10 | 110  |   11 |  300 | 10000000000 | 0                    |
+|    2 |   20 | 120  |   21 |  400 | 20000000000 | 200000000000000      |
+|    3 |   30 | 130  |   31 |  350 | 30000000000 | 300000000000000      |
+|    4 |   40 | 140  |   41 |  500 | 40000000000 | 18446744073709551616 |
+|    5 |   50 | 150  |   51 |  250 | 50000000000 | 18446744073709551615 |
+|    6 |   60 | 160  |   61 |  600 | 60000000000 | -1                   |
+|    7 |   60 | 160  |  120 |  600 | 60000000000 | NULL                 |
++------+------+------+------+------+-------------+----------------------+
+```
+
+```sql
+select bitmap_to_string(bitmap_agg(k0)) from test_bitmap_agg;
+```
+
+```text
++----------------------------------+
+| bitmap_to_string(bitmap_agg(k0)) |
++----------------------------------+
+| 10,20,30,40,50,60                |
++----------------------------------+
+```
+
+```sql
+select bitmap_to_string(bitmap_agg(k5)) from test_bitmap_agg;
+```
+
+```text
++--------------------------------------------------------+
+| bitmap_to_string(bitmap_agg(cast(k5 as BIGINT)))       |
++--------------------------------------------------------+
+| 0,200000000000000,300000000000000,18446744073709551615 |
++--------------------------------------------------------+
+```

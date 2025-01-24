@@ -24,90 +24,74 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## local
-
-### Name
-
-local
-
 ## 描述
 
 Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
-该函数需要 ADMIN 权限。
-
 ## 语法
 
 ```sql
-local(
-  "file_path" = "path/to/file.txt", 
-  "backend_id" = "be_id",
-  "format" = "csv",
-  "keyn" = "valuen" 
-  ...
+LOCAL(
+  "file_path" = "<file_path>", 
+  "backend_id" = "<backend_id>",
+  "format" = "<format>"
+  [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
   );
 ```
 
-**参数说明**
+## Required Parameters
+| 参数            | 说明                                                                                                                                                                                                | 备注                                              |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径, 其中 `user_files_secure_path` 参数是 [be的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
+| `backend_id`    |  文件所在的 BE 节点的 ID，可以通过 `show backends` 命令得到                                                                                               | 在 2.1.1 之前的版本中，Doris 仅支持指定某个 BE 节点读取该节点上的本地数据文件 |
+| `format`        | 文件格式，必填，当前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`                                                                  |                                                 |
 
-- 访问local文件的相关参数：
+## Optional Parameters
+| 参数               | 说明                                                                                                                         | 备注                                                                          |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| `shared_storage`   | 默认为 false。如果为 true，表示指定的文件存在于共享存储上（比如 NAS）。共享存储必须兼容 POXIS 文件接口，并且同时挂载在所有 BE 节点上。 <br /> 当 `shared_storage` 为 true 时，可以不设置 `backend_id`，Doris 可能会利用到所有 BE 节点进行数据访问。如果设置了 `backend_id`，则仍然仅在指定 BE 节点上执行。  | 从 2.1.2 版本开始支持                                                              |
+| `column_separator` | 列分隔符，选填，默认为 `\t`                                                                                                           |                                                                             |
+| `line_delimiter`   | 行分隔符，选填，默认为 `\n`                                                                                                           |                                                                             |
+| `compress_type`    | 压缩类型，选填，目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`，默认值为 `UNKNOWN`，将根据 `uri` 后缀自动推断类型                     |                                                                     |
+| `read_json_by_line`| 对于 JSON 格式的导入，选填，默认为 `true`                                                                                                | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `strip_outer_array`| 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `json_root`        | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `json_paths`       | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `num_as_string`    | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `fuzzy_parse`      | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `trim_double_quotes`| 对于 CSV 格式的导入，选填，默认为 `false`，为 `true` 时表示裁剪掉 CSV 文件每个字段最外层的双引号                                                              | csv 格式                                                                      |
+| `skip_lines`       | 对于 CSV 格式的导入，选填，默认为 0，表示跳过 CSV 文件的前几行。当设置格式为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效                        | csv 格式                                                                      |
+| `path_partition_keys`| 选填，指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`，则填写 `path_partition_keys="city,date"`，将从路径中自动读取相应的列名和列值进行导入 |                                                                             |
 
-    - `file_path`
-    
-        （必填）待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径, 其中 `user_files_secure_path` 参数是 [be的一个配置项](../../../admin-manual/config/be-config.md) 。
-    
-        路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log`
+## 权限控制
 
-- 执行方式相关：
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
 
-    在 2.1.1 之前的版本中，Doris 仅支持指定某一个 BE 节点，读取该节点上的本地数据文件。
-    
-    - `backend_id`:
-    
-        文件所在的 be id。 `backend_id` 可以通过 `show backends` 命令得到。
-    
-    从 2.1.2 版本开始，Doris 增加了新的参数 `shared_storage`。
-    
-    - `shared_storage`
-    
-        默认为 false。如果为 true，表示指定的文件存在于共享存储上（比如 NAS）。共享存储必须兼容 POXIS 文件接口，并且同时挂载在所有 BE 节点上。
-    
-        当 `shared_storage` 为 true 时，可以不设置 `backend_id`，Doris 可能会利用到所有 BE 节点进行数据访问。如果设置了 `backend_id`，则仍然仅在指定 BE 节点上执行。
 
-- 文件格式相关参数：
+## 注意事项
 
-    - `format`：(必填) 目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
-    - `column_separator`：(选填) 列分割符, 默认为`\t`。 
-    - `line_delimiter`：(选填) 行分割符，默认为`\n`。
-    - `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。 默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
+- 关于 local tvf 的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。
 
-- 以下参数适用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
+- 通过 local tvf 访问 NAS 上的数据
 
-    - `read_json_by_line`： (选填) 默认为 `"true"`
-    - `strip_outer_array`： (选填) 默认为 `"false"`
-    - `json_root`： (选填) 默认为空
-    - `json_paths`： (选填) 默认为空
-    - `num_as_string`： (选填) 默认为 `false`
-    - `fuzzy_parse`： (选填) 默认为 `false`
+  NAS 共享存储允许同时挂载到多个节点。每个节点都可以像访问本地文件一样访问共享存储中的文件。因此，可以将 NAS 视为本地文件系统，通过 local tvf 进行访问。
 
-- 以下参数适用于csv格式的导入：
+  当设置 `"shared_storage" = "true"` 时，Doris 会认为所指定的文件可以在任意 BE 节点访问。当使用通配符指定了一组文件时，Doris 会将访问文件的请求分发到多个 BE 节点上，这样可以利用多个节点的进行分布式文件扫描，提升查询性能。
 
-    - `trim_double_quotes`： 布尔类型，选填，默认值为 `false`，为 `true` 时表示裁剪掉 csv 文件每个字段最外层的双引号
-    - `skip_lines`： 整数类型，选填，默认值为0，含义为跳过csv文件的前几行。当设置format设置为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效 
 
-- 其他参数：
-    - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`, 则填写 `path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
 
-## 举例s
-
+## 示例
 分析指定 BE 上的日志文件：
-
 ```sql
-mysql> select * from local(
+select * from local(
         "file_path" = "log/be.out",
         "backend_id" = "10006",
         "format" = "csv")
        where c1 like "%start_time%" limit 10;
+```
+```text
 +--------------------------------------------------------+
 | c1                                                     |
 +--------------------------------------------------------+
@@ -119,12 +103,13 @@ mysql> select * from local(
 ```
 
 读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv格式文件：
-
 ```sql
-mysql> select * from local(
+select * from local(
       "file_path" = "student.csv", 
       "backend_id" = "10003", 
       "format" = "csv");
+```
+```text
 +------+---------+--------+
 | c1   | c2      | c3     |
 +------+---------+--------+
@@ -137,13 +122,14 @@ mysql> select * from local(
 ```
 
 访问 NAS 上的共享数据：
-
 ```sql
-mysql> select * from local(
+select * from local(
         "file_path" = "/mnt/doris/prefix_*.txt",
         "format" = "csv",
         "column_separator" =",",
         "shared_storage" = "true");
+```
+```text
 +------+------+------+
 | c1   | c2   | c3   |
 +------+------+------+
@@ -156,12 +142,13 @@ mysql> select * from local(
 ```
 
 可以配合`desc function`使用
-
 ```sql
-mysql> desc function local(
+desc function local(
       "file_path" = "student.csv", 
       "backend_id" = "10003", 
       "format" = "csv");
+```
+```text
 +-------+------+------+-------+---------+-------+
 | Field | Type | Null | Key   | Default | Extra |
 +-------+------+------+-------+---------+-------+
@@ -170,22 +157,6 @@ mysql> desc function local(
 | c3    | TEXT | Yes  | false | NULL    | NONE  |
 +-------+------+------+-------+---------+-------+
 ```
-
-### Keywords
-
-    local, table-valued-function, tvf
-
-### Best Practice
-
-- 关于 local tvf 的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。
-
-- 通过 local tvf 访问 NAS 上的数据
-
-    NAS 共享存储允许同时挂载到多个节点。每个节点都可以像访问本地文件一样访问共享存储中的文件。因此，可以将 NAS 视为本地文件系统，通过 local tvf 进行访问。
-
-    当设置 `"shared_storage" = "true"` 时，Doris 会认为所指定的文件可以在任意 BE 节点访问。当使用通配符指定了一组文件时，Doris 会将访问文件的请求分发到多个 BE 节点上，这样可以利用多个节点的进行分布式文件扫描，提升查询性能。
-
-
 
 
 

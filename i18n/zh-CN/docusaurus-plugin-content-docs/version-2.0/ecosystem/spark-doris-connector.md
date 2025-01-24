@@ -250,7 +250,7 @@ kafkaSource.selectExpr("CAST(value as STRING)")
 ### Java 示例
 
 `samples/doris-demo/spark-demo/` 下提供了 Java
-版本的示例，可供参考，[这里](https://github.com/apache/incubator-doris/tree/master/samples/doris-demo/spark-demo)
+版本的示例，可供参考，[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/spark-demo)
 
 ## 配置
 

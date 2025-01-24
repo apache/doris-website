@@ -24,16 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+MAP_AGG 函数用于根据多行数据中的键值对形成一个映射结构。
 
 ## 语法
 
-`MAP_AGG(expr1, expr2)`
+`MAP_AGG(<expr1>, <expr2>)`
 
-返回一个 map, 由 expr1 作为键，expr2 作为对应的值。
+## 参数说明
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr1>` | 用于指定作为键的表达式。 |
+| `<expr2>` | 用于指定作为对应的值的表达式。 |
+
+## 返回值
+
+返回映射后的 MAP 类型的值。
 
 ## 举例
+
+```sql
+select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 ```
-MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
+
+```text
 +-------------+----------------+-------------+
 | n_nationkey | n_name         | n_regionkey |
 +-------------+----------------+-------------+
@@ -63,8 +79,13 @@ MySQL > select `n_nationkey`, `n_name`, `n_regionkey` from `nation`;
 |          23 | UNITED KINGDOM |           3 |
 |          24 | UNITED STATES  |           1 |
 +-------------+----------------+-------------+
+```
 
-MySQL > select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` group by `n_regionkey`;
+```sql
+select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` group by `n_regionkey`;
+```
+
+```text
 +-------------+---------------------------------------------------------------------------+
 | n_regionkey | map_agg(`n_nationkey`, `n_name`)                                          |
 +-------------+---------------------------------------------------------------------------+
@@ -74,8 +95,13 @@ MySQL > select `n_regionkey`, map_agg(`n_nationkey`, `n_name`) from `nation` gro
 |           4 | {4:"EGYPT", 10:"IRAN", 11:"IRAQ", 13:"JORDAN", 20:"SAUDI ARABIA"}         |
 |           2 | {8:"INDIA", 9:"INDONESIA", 12:"JAPAN", 18:"CHINA", 21:"VIETNAM"}          |
 +-------------+---------------------------------------------------------------------------+
+```
 
-MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` group by `n_regionkey`;
+```sql
+select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` group by `n_regionkey`;
+```
+
+```text
 +-------------+------------------------------------------------------------------------+
 | n_regionkey | map_agg(`n_name`, (`n_nationkey` % 5))                                 |
 +-------------+------------------------------------------------------------------------+
@@ -86,4 +112,3 @@ MySQL > select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` g
 |           4 | {"EGYPT":4, "IRAN":0, "IRAQ":1, "JORDAN":3, "SAUDI ARABIA":0}          |
 +-------------+------------------------------------------------------------------------+
 ```
-

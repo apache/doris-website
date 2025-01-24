@@ -28,7 +28,7 @@ under the License.
 
 Bucket Shuffle Join is a new function officially added in Doris 0.14. The purpose is to provide local optimization for some join queries to reduce the time-consuming of data transmission between nodes and speed up the query.
 
-It's design, implementation can be referred to [ISSUE 4394](https://github.com/apache/incubator-doris/issues/4394)。
+It's design, implementation can be referred to [ISSUE 4394](https://github.com/apache/doris/issues/4394)。
 
 ## Noun Interpretation
 

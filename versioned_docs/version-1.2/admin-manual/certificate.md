@@ -37,6 +37,7 @@ Enabling SSL functionality in Doris requires configuring both a CA key certifica
 In addition to the Doris default certificate file, you can also generate a custom certificate file through `openssl`. Here are the steps (refer to [Creating SSL Certificates and Keys Using OpenSSL](https://dev.mysql.com/doc/refman/8.0/en/creating-ssl-files-using-openssl.html)):
 
 1. Generate the CA, server-side, and client-side keys and certificates:
+
 ```shell
 # Generate the CA certificate
 openssl genrsa 2048 > ca-key.pem
@@ -61,11 +62,13 @@ openssl x509 -req -in client-req.pem -days 3600 \
 ```
 
 2. Verify the created certificates:
+
 ```shell
 openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 ```
 
 3. Combine your key and certificate in a PKCS#12 (P12) bundle.
+
 ```shell
 # Package the CA key and certificate
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12

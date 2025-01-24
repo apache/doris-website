@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Aliyun OSS",
+    "title": "阿里云 OSS",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 提供两种方式从 Aliyun OSS 导入文件：
-- 使用 S3 Load 将 Aliyun OSS 文件导入到 Doris 中，这是一个异步的导入方式。
-- 使用 TVF 将 Aliyun OSS 文件导入到 Doris 中，这是一个同步的导入方式。
+Doris 提供两种方式从阿里云 OSS 导入文件：
+- 使用 S3 Load 将阿里云 OSS 文件导入到 Doris 中，这是一个异步的导入方式。
+- 使用 TVF 将阿里云 OSS 文件导入到 Doris 中，这是一个同步的导入方式。
 
 ## 使用 S3 Load 导入 
 
@@ -34,7 +34,7 @@ Doris 提供两种方式从 Aliyun OSS 导入文件：
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Aliyun OSS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在阿里云 OSS 上，其内容如下：
 
 ```
 1,Emily,25
@@ -125,7 +125,7 @@ mysql> select * from test_s3load;
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Aliyun OSS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在阿里云 OSS 上，其内容如下：
 
 ```
 1,Emily,25

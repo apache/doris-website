@@ -243,7 +243,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
 
-将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) 和 [ADD OBSERVER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER)。
+将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER) 和 [ADD OBSERVER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER)。
 
 生产环境中，请确保在 FOLLOWER 角色中的前端 （FE） 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
 
@@ -254,8 +254,17 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 1. 配置 be.conf
 
    在 `be.conf` 文件中，需要配置以下关键参数：
+    - deploy_mode
+      - 描述：指定 doris 启动模式
+      - 格式：cloud 表示存算分离模式，其它存算一体模式
+      - 示例：cloud
+    - file_cache_path
+      - 描述： 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。path 指定磁盘路径，total_size 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+      - 格式： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
+      - 示例： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
+      - 默认： [{"path":"${DORIS_HOME}/file_cache"}]
 
-2. 启动 BE 进程
+3. 启动 BE 进程
 
    使用以下命令启动 Backend：
 
@@ -263,7 +272,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    bin/start_be.sh --daemon
    ```
 
-3. 将 BE 添加到集群：
+4. 将 BE 添加到集群：
 
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
@@ -275,9 +284,9 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    可以通过 PROPERTIES 设置 BE 所在的 计算组。
 
-   更详细的用法请参考 [ADD BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) 和 [REMOVE BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND)。
+   更详细的用法请参考 [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 和 [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND)。
 
-4. 验证 BE 状态
+5. 验证 BE 状态
 
    检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
 
@@ -326,7 +335,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    );
    ```
 
-   要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT)。
+   要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 3. 设置默认 Storage Vault
 

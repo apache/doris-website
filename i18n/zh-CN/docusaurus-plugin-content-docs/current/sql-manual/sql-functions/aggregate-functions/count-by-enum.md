@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COUNT_BY_ENUM",
-    "language": "zh-CN"
+"title": "COUNT_BY_ENUM",
+"language": "zh-CN"
 }
 ---
 
@@ -24,20 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COUNT_BY_ENUM
-
-COUNT_BY_ENUM
-
 ## 描述
-## 语法
-
-`count_by_enum(expr1, expr2, ... , exprN);`
 
 将列中数据看作枚举值，统计每个枚举值的个数。返回各个列枚举值的个数，以及非 null 值的个数与 null 值的个数。
 
+## 语法
+
+```sql
+COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
+```
+
 ## 参数
 
-`expr1` — 至少填写一个输入。值为字符串（STRING）类型的列。
+| 参数 | 说明 |
+| -- | -- |
+| `<expr1>` | 至少填写一个输入。值为字符串（STRING）类型的列 |
 
 ## 返回值
 
@@ -83,8 +84,6 @@ COUNT_BY_ENUM
 ## 举例
 
 ```sql
-DROP TABLE IF EXISTS count_by_enum_test;
-
 CREATE TABLE count_by_enum_test(
                 `id` varchar(1024) NULL,
                 `f1` text REPLACE_IF_NOT_NULL NULL,
@@ -96,16 +95,22 @@ DISTRIBUTED BY HASH(id) BUCKETS 3
 PROPERTIES ( 
     "replication_num" = "1"
 ); 
+```
 
+```sql
 INSERT into count_by_enum_test (id, f1, f2, f3) values
                                         (1, "F", "10", "北京"),
                                         (2, "F", "20", "北京"),
                                         (3, "M", NULL, "上海"),
                                         (4, "M", NULL, "上海"),
                                         (5, "M", NULL, "广州");
+```
 
+```sql
 SELECT * from count_by_enum_test;
+```
 
+```text
 +------+------+------+--------+
 | id   | f1   | f2   | f3     |
 +------+------+------+--------+
@@ -115,33 +120,41 @@ SELECT * from count_by_enum_test;
 | 5    | M    | NULL | 广州   |
 | 1    | F    | 10   | 北京   |
 +------+------+------+--------+
+```
 
+```sql
 select count_by_enum(f1) from count_by_enum_test;
+```
 
+```text
 +------------------------------------------------------+
 | count_by_enum(`f1`)                                  |
 +------------------------------------------------------+
 | [{"cbe":{"M":3,"F":2},"notnull":5,"null":0,"all":5}] |
 +------------------------------------------------------+
+```
 
+```sql
 select count_by_enum(f2) from count_by_enum_test;
+```
 
+```text
 +--------------------------------------------------------+
 | count_by_enum(`f2`)                                    |
 +--------------------------------------------------------+
 | [{"cbe":{"10":1,"20":1},"notnull":2,"null":3,"all":5}] |
 +--------------------------------------------------------+
+```
 
+```sql
 select count_by_enum(f1,f2,f3) from count_by_enum_test;
+```
 
+```text
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | count_by_enum(`f1`, `f2`, `f3`)                                                                                                                                                   |
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | [{"cbe":{"M":3,"F":2},"notnull":5,"null":0,"all":5},{"cbe":{"20":1,"10":1},"notnull":2,"null":3,"all":5},{"cbe":{"广州":1,"上海":2,"北京":2},"notnull":5,"null":0,"all":5}]       |
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-
 ```
 
-### keywords
-
-COUNT_BY_ENUM

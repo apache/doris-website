@@ -26,7 +26,7 @@ under the License.
 
 ## Creating tables
 
-Users can use the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) statement to create a table in Doris. You can also use the [LIKE](./sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) or [AS](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT.md) clause to derive the table definition from another table.
+Users can use the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) statement to create a table in Doris. You can also use the [LIKE](./sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) or [AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) clause to derive the table definition from another table.
 
 ## Table name
 
@@ -34,7 +34,7 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 ## Table property
 
-In the Doris CREATE TABLE statement, you can specify various [table properties](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties). Among them, the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold storage policy (storage_policy) properties apply to the partitions. That is, once a partition is created, it will have its own set of properties. Modifying the table properties will only affect partitions created in the future, and will not apply retroactively to partitions that have already been created. For more information about these properties, please refer to [modifying table properties](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+In the Doris CREATE TABLE statement, you can specify various [table properties](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties). Among them, the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold storage policy (storage_policy) properties apply to the partitions. That is, once a partition is created, it will have its own set of properties. Modifying the table properties will only affect partitions created in the future, and will not apply retroactively to partitions that have already been created. For more information about these properties, please refer to [modifying table properties](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)
 
 
 ## Notes

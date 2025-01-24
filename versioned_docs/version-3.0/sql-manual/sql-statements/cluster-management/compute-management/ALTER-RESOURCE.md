@@ -25,24 +25,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
-
 ## Description
 
 This statement is used to modify an existing resource. Only the root or admin user can modify resources.
-Syntax:
+
+## Syntax
 
 ```sql
-ALTER RESOURCE 'resource_name'
-PROPERTIES ("key"="value", ...);
+ALTER RESOURCE '<resource_name>'
+PROPERTIES (
+  `<property>`, 
+  [ , ... ]
+);
 ```
 
-Note: The resource type does not support modification.
+## Parameters
 
-## Example
+1.`<property>`
+
+The `<property>` format is `<key>` = `<value>`, and modifying the `<value>` where `<key>` equals 'type' is not supported.
+
+The modified properties parameters can be referenced in the [CREATE-RESOURCE](./CREATE-RESOURCE.md) section.
+
+
+## Examples
 
 1. Modify the working directory of the Spark resource named spark0:
 
@@ -74,11 +80,3 @@ ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```sql
   ALTER RESOURCE "showPolicy_1_resource" PROPERTIES("s3.connection.maximum" = "1111");
 ```
-
-## Keywords
-
-```text
-ALTER, RESOURCE
-```
-
-## Best Practice

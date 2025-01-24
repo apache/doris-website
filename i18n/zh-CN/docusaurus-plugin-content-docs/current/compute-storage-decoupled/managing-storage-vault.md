@@ -40,38 +40,39 @@ PROPERTIES
 
 ### 创建 HDFS  Storage Vault
 
-创建基于 HDFS 的存算分离模式 Doris 集群，需要确保所有的节点（包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
+创建基于 HDFS 的存算分离模式 Doris 集群，需要确保所有的节点 (包括 FE / BE 节点、Meta Service) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
 ```sql
-CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
-    PROPERTIES (
-        "type"="hdfs",                                     -- required
-        "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
-        "path_prefix"="big/data",                          -- optional,  一般按照业务名称填写
-        "hadoop.username"="user"                           -- optional
-        "hadoop.security.authentication"="kerberos"        -- optional
-        "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
-        "hadoop.kerberos.keytab"="/etc/emr.keytab"         -- optional
-    );
+CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
+PROPERTIES (
+    "type" = "hdfs",                                     -- required
+    "fs.defaultFS" = "hdfs://127.0.0.1:8020",            -- required
+    "path_prefix" = "big/data",                          -- optional,  一般按照业务名称填写
+    "hadoop.username" = "user"                           -- optional
+    "hadoop.security.authentication" = "kerberos"        -- optional
+    "hadoop.kerberos.principal" = "hadoop/127.0.0.1@XXX" -- optional
+    "hadoop.kerberos.keytab" = "/etc/emr.keytab"         -- optional
+);
 ```
 
 ### 创建 S3  Storage Vault
 
 ```SQL
-CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
-    PROPERTIES (
-        "type"="S3",                                   -- required
-        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
-        "s3.region" = "bj",                            -- required
-        "s3.bucket" = "bucket",                        -- required
-        "s3.root.path" = "big/data/prefix",            -- required
-        "s3.access_key" = "ak",                        -- required
-        "s3.secret_key" = "sk",                        -- required
-        "provider" = "OSS"                             -- required
-    );
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault_demo
+PROPERTIES (
+    "type" = "S3",                                 -- required
+    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+    "s3.region" = "cn-beijing",                    -- required
+    "s3.bucket" = "bucket",                        -- required
+    "s3.root.path" = "big/data/prefix",            -- required
+    "s3.access_key" = "ak",                        -- required
+    "s3.secret_key" = "sk",                        -- required
+    "provider" = "OSS",                            -- required
+    "use_path_style" = "false"                     -- optional
+);
 ```
 
-更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多云厂商示例和参数说明可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 ## 查看 Storage Vault 
 
@@ -110,8 +111,8 @@ CREATE TABLE IF NOT EXISTS supplier (
 UNIQUE KEY (s_suppkey)
 DISTRIBUTED BY HASH(s_suppkey) BUCKETS 1
 PROPERTIES (
-"replication_num" = "1",
-"storage_vault_name" = "ssb_hdfs_vault"
+  "replication_num" = "1",
+  "storage_vault_name" = "hdfs_demo_vault"
 );
 ```
 
@@ -129,7 +130,7 @@ HDFS Storage Vault 禁止修改的属性:
 - `path_prefix`
 - `fs.defaultFS`
 
-更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT.md)。
+更多属性说明见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 **示例**
 
@@ -171,7 +172,7 @@ GRANT
 
 仅 Admin 用户有权限执行 `GRANT` 语句，该语句用于向 User / Role 授予指定 Storage Vault 的权限。拥有某个 Storage Vault 的 `USAGE_PRIV` 权限的 User / Role 可进行以下操作：
 
-- 通过 `SHOW STORAGE VAULT` 查看该 Storage Vault 的信息；
+- 通过 `SHOW STORAGE VAULTS` 查看该 Storage Vault 的信息；
 - 建表时在 `PROPERTIES` 中指定使用该 Storage Vault 。
 
 ### 撤销

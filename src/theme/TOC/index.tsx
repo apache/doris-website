@@ -18,7 +18,7 @@ import styles from './styles.module.css';
 const LINK_CLASS_NAME = 'table-of-contents__link toc-highlight';
 const LINK_ACTIVE_CLASS_NAME = 'table-of-contents__link--active';
 
-function downloadFile(url, filename) {
+export function downloadFile(url:string, filename:string) {
     var xml = new XMLHttpRequest();
     xml.open('GET', url, true);
     xml.responseType = 'blob';

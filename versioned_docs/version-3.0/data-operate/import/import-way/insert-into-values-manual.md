@@ -135,31 +135,19 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 
 ### Parameter configuration
 
-**FE** **configuration**
+**FE Config**
 
-insert_load_default_timeout_second
+| Name | Default Value | Description |
+| --- | --- | --- |
+| insert_load_default_timeout_second | 14400s (4 hours) | Timeout for import tasks, in seconds. If the import task does not complete within this timeout period, it will be canceled by the system and marked as `CANCELLED`. |
 
-- Default value: 14400s (4 hours)
-- Description: Timeout for import tasks, measured in seconds. If the import task does not complete within this timeout period, it will be canceled by the system and marked as CANCELLED.
+**Session Variable**
 
-**Environment parameters**
-
-insert_timeout
-
-- Default value: 14400s (4 hours)
-- Description: Timeout for INSERT INTO VALUES as an SQL statement, measured in seconds. 
-
-enable_insert_strict
-
-- Default value: true
-- Description: If this is set to true, INSERT INTO VALUES will fail when the task involves invalid data. If set to false, INSERT INTO VALUES will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully.
-- Explanation: Until version 2.1.4, INSERT INTO VALUES cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
-
-insert_max_filter_ratio
-
-- Default value: 1.0
-
-- Description: Since version 2.1.5. Only effective when `enable_insert_strict` is false. Used to control the error tolerance when using `INSERT INTO VALUES`. The default value is 1.0, which means all errors are tolerated. It can be a decimal between 0 and 1. It means that when the number of error rows exceeds this ratio, the INSERT task will fail.
+| Name | Default Value | Description |
+| --- | --- | --- |
+| insert_timeout | 14400s (4 hours) | Timeout for INSERT INTO as an SQL statement, in seconds. |
+| enable_insert_strict | true | If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully. Until version 2.1.4. INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch. |
+| insert_max_filter_ratio | 1.0 | Since version 2.1.5. Only effective when `enable_insert_strict` is false. Used to control the error tolerance when using `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means all errors are tolerated. It can be a decimal between 0 and 1. It means that when the number of error rows exceeds this ratio, the INSERT task will fail. |
 
 ### Return values
 

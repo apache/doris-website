@@ -24,38 +24,71 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to view the BE nodes in the cluster
+This statement is used to view the basic status information of BE nodes.
+
+## Syntax
 
 ```sql
- SHOW BACKENDS;
+ SHOW BACKENDS
 ```
 
-illustrate:
+## Return Value
 
-        1. LastStartTime indicates the last BE start time.
-        2. LastHeartbeat indicates the last heartbeat.
-        3. Alive indicates whether the node is alive or not.
-        4. If SystemDecommissioned is true, it means that the node is being safely decommissioned.
-        5. If ClusterDecommissioned is true, it means that the node is going offline in the current cluster.
-        6. TabletNum represents the number of shards on the node.
-        7. DataUsedCapacity Indicates the space occupied by the actual user data.
-        8. AvailCapacity Indicates the available space on the disk.
-        9. TotalCapacity represents the total disk space. TotalCapacity = AvailCapacity + DataUsedCapacity + other non-user data files occupy space.
-       10. UsedPct Indicates the percentage of disk used.
-       11. ErrMsg is used to display the error message when the heartbeat fails.
-       12. Status is used to display some status information of BE in JSON format, including the time information of the last time BE reported its tablet.
-       13. HeartbeatFailureCounter: The current number of heartbeats that have failed consecutively. If the number exceeds the `max_backend_heartbeat_failure_tolerance_count` configuration, the isAlive will be set to false.
-       14. NodeRole is used to display the role of Backend node. Now there are two roles: mix and computation. Mix node represent the origin Backend node and computation Node represent the compute only node.
+| Column                      | Note                                                                                                                                                                                                                                                           |
+|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| BackendId               | The ID of the current BE.                                                                                                                                                                                                                                      |
+| Host                    | The IP address or host name of the current BE.                                                                                                                                                                                                                 |
+| HeartbeatPort           | The communication port of the heartbeat service of the current BE.                                                                                                                                                                                             |
+| BePort                  | The thrift RPC communication port of the current BE.                                                                                                                                                                                                           |
+| HttpPort                | The HTTP communication port of the current BE.                                                                                                                                                                                                                 |
+| BrpcPort                | The bRPC communication port of the current BE.                                                                                                                                                                                                                 |
+| ArrowFlightSqlPort      | The communication port of the ArrowFlight protocol of the current BE.                                                                                                                                                                                          |
+| LastStartTime           | The timestamp when the current BE started.                                                                                                                                                                                                                     |
+| LastHeartbeat           | The timestamp of the last successful heartbeat sent by the current BE.                                                                                                                                                                                         |
+| Alive                   | Whether the current BE is alive.                                                                                                                                                                                                                               |
+| SystemDecommissioned    | When this value is true, it means that the current BE node is in the process of safe decommissioning.                                                                                                                                                          |
+| TabletNum               | The number of tablets stored on the current BE.                                                                                                                                                                                                                |
+| DataUsedCapacity        | The disk space occupied by the data of the current BE.                                                                                                                                                                                                         |
+| TrashUsedCapacity       | The disk space occupied by the data in the trash of the current BE.                                                                                                                                                                                            |
+| AvailCapacity           | The available disk space of the current BE.                                                                                                                                                                                                                    |
+| TotalCapacity           | The total disk space of the current BE. TotalCapacity = AvailCapacity + TrashUsedCapacity + DataUsedCapacity + Disk space occupied by other non-user data files.                                                                                               |
+| UsedPct                 | The percentage of the total used disk space of the current BE.                                                                                                                                                                                                 |
+| MaxDiskUsedPct          | The maximum percentage of the used disk space among all disks of the current BE.                                                                                                                                                                               |
+| RemoteUsedCapacity      | The disk space occupied by the data uploaded to the remote storage after the hot and cold tiering function is used by the current BE.                                                                                                                          |
+| Tag                     | The tag information of the current BE, displayed in JSON format. The name of the current BE resource group is saved.                                                                                                                                           |
+| ErrMsg                  | The error message when the heartbeat of the current BE fails.                                                                                                                                                                                                  |
+| Version                 | The version information of the current BE.                                                                                                                                                                                                                     |
+| Status                  | Some status information of the current BE, displayed in JSON format, including: lastSuccessReportTabletsTime, lastStreamLoadTime, isQueryDisabled, isLoadDisabled, etc. It should be noted that the information saved in different versions may vary slightly. |
+| HeartbeatFailureCounter | The number of consecutive failed heartbeats of the current BE. If the number exceeds the `max_backend_heartbeat_failure_tolerance_count` configured by the FE Master (the default value is 1), the `Alive` field will be set to false.                         |
+| NodeRole                | The role of the current BE. There are two types: `mix` is the default role, and `computation` means that the current node is only used for federated analysis queries.                                                                                         |
+
+## Access Control Requirements
+
+The user who executes this SQL must have at least the following permissions:
+
+| Privilege  | Object | Notes |
+|------------|----|----|
+| ADMIN_PRIV |    |    |
+
+## Usage Notes
+
+If further filtering of the query results is required, the table-valued function [backends()](../../../sql-functions/table-valued-functions/backends.md) can be used. SHOW BACKENDS is equivalent to the following statement:
+```sql
+SELECT * FROM BACKENDS();
+```
 
 ## Examples
 
-## Keywords
+```sql
+SHOW BACKENDS;
+```
 
-    SHOW, BACKENDS
-
-## Best Practice
-
+```text
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+| BackendId | Host      | HeartbeatPort | BePort | HttpPort | BrpcPort | ArrowFlightSqlPort | LastStartTime       | LastHeartbeat       | Alive | SystemDecommissioned | TabletNum | DataUsedCapacity | TrashUsedCapacity | AvailCapacity | TotalCapacity | UsedPct | MaxDiskUsedPct | RemoteUsedCapacity | Tag                      | ErrMsg | Version                     | Status                                                                                                                                   | HeartbeatFailureCounter | NodeRole |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+| 10002     | 127.0.0.1 | 9050          | 9060   | 8040     | 8060     | 10040              | 2025-01-20 02:11:39 | 2025-01-21 11:52:40 | true  | false                | 281       | 9.690 MB         | 0.000             | 10.505 GB     | 71.750 GB     | 85.36 % | 85.36 %        | 0.000              | {"location" : "default"} |        | doris-2.1.7-rc03-443e87e203 | {"lastSuccessReportTabletsTime":"2025-01-21 11:51:59","lastStreamLoadTime":1737460114345,"isQueryDisabled":false,"isLoadDisabled":false} | 0                       | mix      |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+
+```

@@ -107,7 +107,7 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 | 1        | 100      | beijing   | 1.1      |
 | 2        | 200      | shanghai  | 1.2      |
 | 3        | 300      | guangzhou | 1.3      |
-| 4        | \N       | chongqing | 1.4      |
+| 4        | `\N`     | chongqing | 1.4      |
 
 > Note: `\N` means null in the source file.
 
@@ -195,7 +195,7 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 | 1        | 100      | beijing   | 1.1      |
 | 2        | 200      | shanghai  | 1.2      |
 | 3        | 300      | guangzhou | 1.3      |
-| \N       | 400      | chongqing | 1.4      |
+| `\N`     | 400      | chongqing | 1.4      |
 
 1. Convert the column values in the source file and import them into the table
 
@@ -286,7 +286,7 @@ Assuming that the source file has 4 columns, the contents are as follows (the he
 | 1        | 100      | beijing   | 1.1      |
 | 2        | 200      | shanghai  | 1.2      |
 | 3        | 300      | guangzhou | 1.3      |
-| \N       | 400      | chongqing | 1.4      |
+| `\N`     | 400      | chongqing | 1.4      |
 
 1. In the default case of column mapping and transformation, filter directly
 

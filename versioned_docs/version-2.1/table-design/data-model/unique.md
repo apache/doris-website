@@ -61,7 +61,7 @@ In Doris, there are two types of update semantics for the Unique Key Model:
 
 ### Creating a Merge-on-write Table
 
-When creating a table, the **UNIQUE KEY** keyword can be used to specify a Unique Key table. The merge-on-write mode can be enabled by explicitly setting the `enable_unique_key_merge_on_write` attribute. Since Doris version 2.1, the merge-on-read mode is enabled by default:
+When creating a table, the **UNIQUE KEY** keyword can be used to specify a Unique Key table. The merge-on-write mode can be enabled by explicitly setting the `enable_unique_key_merge_on_write` attribute. Since Doris version 2.1, the merge-on-write mode is enabled by default:
 
 
 ```sql

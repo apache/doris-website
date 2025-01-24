@@ -26,7 +26,7 @@ under the License.
 
 Kudu Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 Trino Kudu Connector 来访问 Kudu 表。
 
-:::caution
+:::notice
 该功能为实验功能，自 3.0.1 版本开始支持。
 :::
 
@@ -43,9 +43,9 @@ Kudu Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/h
 
 > 需要 JDK 17 版本。
 
-```text
-$ git clone https://github.com/apache/Doris-thirdparty.git
-$ cd Doris-thirdparty
+```shell
+$ git clone https://github.com/apache/doris-thirdparty.git
+$ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-kudu
 $ mvn clean package -Dmaven.test.skip=true
@@ -53,13 +53,13 @@ $ mvn clean package -Dmaven.test.skip=true
 
 完成编译后，会在 `trino/plugin/trino-kudu/target/` 下得到 `trino-kudu-435/` 目录。
 
-也可以直接下载预编译的 [trino-kudu-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-kudu-435-20240724.tar.gz) 并解压。
+也可以直接下载预编译的 [trino-kudu-435-20240724.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-kudu-435-20240724.tar.gz) 并解压。
 
 ### 部署 Kudu Connector
 
 将 `trino-kudu-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下。（如果没有，可以手动创建）。
 
-```plain&#x20;text
+```text
 ├── bin
 ├── conf
 ├── connectors
@@ -82,11 +82,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* {TrinoProperties}
+* `{TrinoProperties}`
 
   TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 Kudu 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -117,7 +117,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | binary           | varbinary     | string        | 需要适用 HEX(col) 删除查询，才能返回和 Trino 一样的显示结果。 |
 | string           | varchar       | string        |                                         |
 | date             | date          | date          |                                         |
-| unixtime\_micros | timestamp(3)  | datetime(3)   |                                         |
+| unixtime_micros | timestamp(3)  | datetime(3)   |                                         |
 | other            | UNSUPPORTED   |               |                                         |
 
 ## 基础示例

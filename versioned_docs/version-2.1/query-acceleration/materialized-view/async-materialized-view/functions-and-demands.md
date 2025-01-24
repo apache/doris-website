@@ -1139,7 +1139,7 @@ For transparent rewriting, materialized views typically have two states:
 - **Normal:** The materialized view is available for transparent rewriting.
 - **Unavailable/Abnormal:** The materialized view cannot be used for transparent rewriting. However, it can still be queried directly.
 
-For more details, see [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
+For more details, see [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
 #### Querying Refresh Task Information
 

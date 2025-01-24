@@ -49,7 +49,7 @@ The choice of bucket columns involves a trade-off between query throughput and q
 
 Here are some examples: Assuming there are 10 BEs, each with one disk. If a table has a total size of 500MB, 4-8 tablets can be considered. For 5GB: 8-16 tablets. For 50GB: 32 tablets. For 500GB: It is recommended to partition the table, with each partition size around 50GB and 16-32 tablets per partition. For 5TB: It is recommended to partition the table, with each partition size around 50GB and 16-32 tablets per partition.
 
-The data volume of a table can be viewed using the [SHOW DATA](../../sql-manual/sql-statements/Show-Statements/SHOW-DATA) command, and the result should be divided by the number of replicas to obtain the actual data volume of the table.
+The data volume of a table can be viewed using the [SHOW DATA](../../sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA) command, and the result should be divided by the number of replicas to obtain the actual data volume of the table.
 
 ## Random distribution
 

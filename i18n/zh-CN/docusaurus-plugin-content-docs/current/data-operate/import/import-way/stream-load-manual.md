@@ -27,7 +27,6 @@ under the License.
 Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。一般来说，可以使用 Stream Load 导入 10GB 以下的文件，如果文件过大，建议将文件进行切分后使用 Stream Load 进行导入。Stream Load 可以保证一批导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
 :::tip
-提示
 
 相比于直接使用 `curl` 的单并发导入，更推荐使用专用导入工具 Doris Streamloader。该工具是一款用于将数据导入 Doris 数据库的专用客户端工具，可以提供**多并发导入**的功能，降低大数据量导入的耗时。点击 [Doris Streamloader 文档](../../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
 :::
@@ -68,7 +67,7 @@ Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，�
 
 ### 前置检查
 
-Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -299,7 +298,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | column_separator             | 用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 `\x01`，需要指定命令 `-H "column_separator:\x01"`。 |
 | line_delimiter               | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。例如，指定换行符为 `\n`，需要指定命令 `-H "line_delimiter:\n"`。 |
 | columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../../../data-operate/import/load-data-convert)。 |
-| where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
+| where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
 | max_filter_ratio             | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。例如，最大程度保证所有正确的数据都可以导入（容忍度 100%），需要指定命令 `-H "max_filter_ratio:1"`。 |
 | partitions                   | 用于指定这次导入所涉及的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
 | timeout                      | 指定导入的超时时间。单位秒。默认是 600 秒。可设置范围为 1 秒 ~ 259200 秒。例如，指定导入超时时间为 1200s，需要指定命令 `-H "timeout:1200"`。 |
@@ -360,7 +359,11 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ---------------------- | ------------------------------------------------------------ |
 | TxnId                  | 导入事务的 ID                                                |
 | Label                  | 导入作业的 label，通过 -H "label:<label_id>" 指定            |
-| Status                 | 导入的最终状态 Success：表示导入成功 Publish Timeout：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试 Label Already Exists：Label 重复，需要更换 labelFail：导入失败 |
+| Status                 | 导入的最终状态                                              |
+|                        | - Success：表示导入成功                                     |
+|                        | - Publish Timeout：该状态也表示导入已经完成，但数据可能会延迟可见，无需重试 |
+|                        | - Label Already Exists：Label 重复，需要更换 label         |
+|                        | - Fail：导入失败                                            |
 | ExistingJobStatus      | 已存在的 Label 对应的导入作业的状态。这个字段只有在当 Status 为 "Label Already Exists" 时才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。"RUNNING" 表示作业还在执行，"FINISHED" 表示作业成功。 |
 | Message                | 导入错误信息                                                 |
 | NumberTotalRows        | 导入总处理的行数                                             |
@@ -377,49 +380,6 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ErrorURL               | 如果有数据质量问题，通过访问这个 URL 查看具体错误行          |
 
 通过 ErrorURL 可以查看因为数据质量不佳导致的导入失败数据。使用命令 `curl "<ErrorURL>"` 命令直接查看错误数据的信息。
-
-## TVF 在 Stream Load 中的应用 - http_stream 模式
-
-依托 Doris 最新引入的 Table Value Function（TVF）的功能，在 Stream Load 中，可以通过使用 SQL 表达式来表达导入的参数。这个专门为 Stream Load 提供的 TVF 为 http_stream。
-
-:::caution
-注意
-
-使用 TVF http_stream 进行 Stream Load 导入时的 Rest API URL 不同于 Stream Load 普通导入的 URL。
-
-- 普通导入的 URL 为：
-  
-    http://fe_host:http_port/api/{db}/{table}/_stream_load
-
-- 使用 TVF http_stream 导入的 URL 为：
-
-    http://fe_host:http_port/api/_http_stream
-:::
-
-使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-在 Header 中添加一个`sql`的参数，去替代之前参数中的`column_separator`、`line_delimiter`、`where`、`columns`等参数，使用起来非常方便。
-
-load_sql 举例：
-
-```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-```
-
-http_stream 支持的参数：
-
-"column_separator" = ",", "format" = "CSV",
-
-...
-
-示例：
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ## 导入举例
 

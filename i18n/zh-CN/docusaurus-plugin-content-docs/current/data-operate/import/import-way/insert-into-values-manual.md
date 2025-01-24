@@ -44,7 +44,7 @@ INSERT INTO VALUES 通过 MySQL 协议提交和传输。下例以 MySQL 命令�
 
 ### 前置检查
 
-INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -138,35 +138,19 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 
 ### 导入配置参数
 
-**01 FE 配置**
+**FE 配置**
 
-**insert_load_default_timeout_second**
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_load_default_timeout_second | 14400（4 小时） | 导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 `CANCELLED`。 |
 
-- 默认值：14400（4 小时）
+**环境变量**
 
-- 参数描述：导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 CANCELLED。
-
-**02 环境变量**
-
-**insert_timeout**
-
-- 默认值：14400（4 小时）
-
-- 参数描述：INSERT INTO VALUES 作为 SQL 语句的的超时时间，单位：秒。
-
-**enable_insert_strict**
-
-- 默认值：true
-
-- 参数描述：如果设置为 true，当 INSERT INTO VALUES 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO VALUES 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。
-
-- 解释：2.1.4 版本及以前，INSERT INTO VALUES 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
-
-**insert_max_filter_ratio**
-
-- 默认值：1.0
-
-- 参数描述：自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制 `INSERT INTO VALUES` 时的错误容忍率。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
+| enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
 
 ### 导入返回值
 

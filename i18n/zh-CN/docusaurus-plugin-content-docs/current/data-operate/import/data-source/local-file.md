@@ -32,7 +32,7 @@ Stream Load 是通过 HTTP 协议将本地文件或数据流导入到 Doris 中�
 
 - **streamloader**
 
-Streamloader工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多并发导入的功能，降低大数据量导入的耗时。支持并发导入CSV格式的数据，导入其他格式（JSON、Parquet 与 ORC ）时，可以同时导入多个文件，但是无法并发。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
+Streamloader工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多文件，多并发导入的功能，降低大数据量导入的耗时。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
 
 - **MySQL Load**
 

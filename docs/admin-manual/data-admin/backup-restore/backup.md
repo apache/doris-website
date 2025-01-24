@@ -32,7 +32,7 @@ For concepts related to backup, please refer to [Backup and Restore](./overview.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
+Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
 
 ### Option 1: Create Repository on S3
 
@@ -162,7 +162,7 @@ PROPERTIES
 
 ## Step 2. Backup
 
-Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
+Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP).
 
 It is recommended to use meaningful label names, such as those containing the databases and tables included in the backup.
 
@@ -262,4 +262,4 @@ mysql> SHOW SNAPSHOT ON example_repo;
 
 ## Step 5. Cancel Backup (if necessary)
 
-You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
+You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP).

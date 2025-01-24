@@ -28,7 +28,7 @@ under the License.
 
 Runtime Filter is a new feature officially added in Doris 0.15. It is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of scanned data, avoid unnecessary I/O and network transmission, and speed up the query.
 
-It's design, implementation and effects, please refer to [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116).
+It's design, implementation and effects, please refer to [ISSUE 6116](https://github.com/apache/doris/issues/6116).
 
 ## Noun Interpretation
 
@@ -156,7 +156,7 @@ In most cases, the GLOBAL strategy can optimize queries in a wider range of scen
 
 If the join query involved in the cluster does not improve performance due to Runtime Filter, you can change the setting to OFF to completely turn off the function.
 
-When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116)
+When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/doris/issues/6116)
 
 #### 3.runtime_filter_wait_time_ms
 Waiting for Runtime Filter is time consuming.

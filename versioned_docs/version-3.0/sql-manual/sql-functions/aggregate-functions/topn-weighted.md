@@ -24,37 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TOPN_WEIGHTED
-### description
-#### Syntax
+## Description
 
-`ARRAY<T> topn_weighted(expr, BigInt weight, INT top_num[, INT space_expand_rate])`
+The TOPN_WEIGHTED function returns the N most frequent values in the specified column with weighted counting. Unlike the regular TOPN function, TOPN_WEIGHTED allows adjusting the importance of values through weights.
 
-The topn_weighted function is calculated using the Space-Saving algorithm, and the sum of the weights in expr is the result of the top n numbers, which is an approximate value
+## Syntax
 
-The space_expand_rate parameter is optional and is used to set the number of counters used in the Space-Saving algorithm
+```sql
+TOPN_WEIGHTED(<expr>, <weight>, <top_num> [, <space_expand_rate>])
 ```
-counter numbers = top_num * space_expand_rate
-```
-The higher value of space_expand_rate, the more accurate result will be. The default value is 50
 
-### example
-```
-mysql> select topn_weighted(k5,k1,3) from baseall;
-+------------------------------+
-| topn_weighted(`k5`, `k1`, 3) |
-+------------------------------+
-| [0, 243.325, 100.001]        |
-+------------------------------+
-1 row in set (0.02 sec)
+## Parameters
 
-mysql> select topn_weighted(k5,k1,3,100) from baseall;
-+-----------------------------------+
-| topn_weighted(`k5`, `k1`, 3, 100) |
-+-----------------------------------+
-| [0, 243.325, 100.001]             |
-+-----------------------------------+
-1 row in set (0.02 sec)
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | The column or expression to be counted |
+| `<weight>` | The column or expression to adjust the weight |
+| `<top_num>` | The number of the most frequent values to return. It must be a positive integer. |
+| `<space_expand_rate>` | Optional, the value to set the counter_numbers used in the Space-Saving algorithm. `counter_numbers = top_num * space_expand_rate`. The value of space_expand_rate should be greater than 1, and the default value is 50. |
+
+## Return Value
+
+Return an array containing values and weighted counts.
+
+## Examples
+```sql
+-- create example table
+CREATE TABLE product_sales (
+    product_id INT,
+    sale_amount DECIMAL(10,2),
+    sale_date DATE
+) DISTRIBUTED BY HASH(product_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- insert test data
+INSERT INTO product_sales VALUES
+(1, 100.00, '2024-01-01'),
+(2, 50.00, '2024-01-01'),
+(1, 150.00, '2024-01-01'),
+(3, 75.00, '2024-01-01'),
+(1, 200.00, '2024-01-01'),
+(2, 80.00, '2024-01-01'),
+(1, 120.00, '2024-01-01'),
+(4, 90.00, '2024-01-01');
+
+-- find the top 3 products with highest sales amount
+SELECT TOPN_WEIGHTED(product_id, sale_amount, 3) as top_products
+FROM product_sales;
 ```
-### keywords
-TOPN, TOPN_WEIGHTED
+
+```text
++--------------+
+| top_products |
++--------------+
+| [1, 2, 4]    |
++--------------+
+```

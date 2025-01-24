@@ -24,107 +24,98 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+The `DELETE` statement removes data from a specified table or partition based on conditions through the MySQL protocol. It supports specifying the data to be deleted using simple predicate combinations and also supports using the `USING` clause to join multiple tables for deletion on primary key tables.
 
-The DELETE statement conditionally deletes data from a specified table or partition using the MySQL protocol.The Delete operation differs from import-based bulk deletion in that it is similar to the INSERT INTO statement, which is a synchronous process.All Delete operations are a separate import job in Doris.
-
-The DELETE statement generally requires the specification of tables and partitions as well as deletion conditions to filter the data to be deleted, and will delete data from both the base and rollup tables.
-
-The syntax of the DELETE statement is detailed in the [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) syntax. Unlike the Insert into command, Delete cannot specify `label` manually. For the concept of `label` , refer to the [Insert Into](../../data-operate/import/insert-into-manual) documentation.
-
-### Delete by Specifying a Filter Predicate
+## Delete by Specifying Filter Predicates
 
 ```sql
 DELETE FROM table_name [table_alias]
-    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-    WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
+  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+  WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
 ### Required Parameters
 
-- table_name: Specify the table from which the data should be deleted;
+- `table_name`: The table from which data needs to be deleted.
 
-- column_name: Columns belonging to table_name
+- `column_name`: A column belonging to `table_name`.
 
-- op: Logical comparison operators, optional types include: =, >, <, >=, <=, !=, in, not in
+- `op`: Logical comparison operators, including: =, >, <, >=, <=, !=, in, not in.
 
-- value | value_list: Values or lists of values for logical comparisons
+- `value | value_list`: The value or list of values for logical comparison.
 
 ### Optional Parameters
 
-- PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specify the name of the partition in which the deletion is to be performed. If the partition does not exist in the table, an error will be reported.
+- `PARTITION partition_name | PARTITIONS (partition_name [, partition_name])`: Specifies the partition name where the data deletion is to be executed. If the table does not have this partition, an error will be reported.
 
-- table_alias: Aliases of the Table
+- `table_alias`: Alias for the table.
 
-### Note
+### Usage Restrictions
 
-- When using the table model Aggregate, you can only specify conditions on the key column.
+- When using the Aggregate table model, conditions can only be specified on Key columns. If the selected Key column does not exist in a Rollup, deletion cannot be performed.
 
-- If the selected key column does not exist in a rollup, it cannot be deleted.
+- For partitioned tables, partitions need to be specified. If not specified, Doris will infer the partition from the conditions.
 
-- Conditions can only be related to each other by "and". If you want an "or" relationship, you need to write the conditions in two separate DELETE statements;
+  - Doris cannot infer the partition from the conditions in two cases:
+    1. The conditions do not include partition columns.
+    2. The `op` of the partition column is `not in`.
 
-- If the table is partitioned, you need to specify the partition. If not, doris will infer the partition from the condition.In two cases, doris cannot infer the partition from the condition:
-
-  - The condition does not contain a partition column
-
-  - The op for the partition column is "not in". When the partition table does not specify a partition, or a partition cannot be inferred from the condition, you need to set the session variable `delete_without_partition` to true, in which case delete is applied to all partitions.
-
-- This statement may reduce query efficiency for a period of time after execution. The extent of the impact depends on the number of deleted conditions specified in the statement. The more conditions specified, the greater the impact.
+  - When the partitioned table does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
 
 ### Examples
 
-**1. Delete the row in my_table partition p1 where column k1 is 3.**
+**1. Delete rows in partition `p1` of `my_table` where the value of column `k1` is 3**
 
 ```sql
 DELETE FROM my_table PARTITION p1
-    WHERE k1 = 3;
+  WHERE k1 = 3;
 ```
 
-**2. Delete rows in my_table partition p1 where column k1 is greater than or equal to 3 and column k2 is "abc".**
+**2. Delete rows in partition `p1` of `my_table` where the value of column `k1` is greater than or equal to 3 and the value of column `status` is "outdated"**
 
 ```sql
 DELETE FROM my_table PARTITION p1
-WHERE k1 = 3 AND k2 = "abc";
+WHERE k1 >= 3 AND status = "outdated";
 ```
 
-**3. Delete rows in my_table partition (p1, p2) where column k1 is greater than or equal to 3 and column k2 is "abc".**
+**3. Delete rows in partitions `p1` and `p2` of `my_table` where the value of column `k1` is greater than or equal to 3 and the value of column `dt` is between "2024-10-01" and "2024-10-31"**
 
 ```sql
 DELETE FROM my_table PARTITIONS (p1, p2)
-WHERE k1 = 3 AND k2 = "abc";
+WHERE k1 >= 3 AND dt >= "2024-10-01" AND dt <= "2024-10-31";
 ```
 
-## Delete via the USING clause
+## Delete Using the `USING` Clause
+
+In some scenarios, users need to join multiple tables to accurately determine the data to be deleted. In such cases, the `USING` clause is very useful. The syntax is as follows:
 
 ```sql
 DELETE FROM table_name [table_alias]
-    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-    [USING additional_tables]
-    WHERE condition
+  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+  [USING additional_tables]
+  WHERE condition
 ```
 
-### Required parameters
+### Required Parameters
 
-- table_name: Specify the table from which the data should be deleted;
+- `table_name`: The table from which data needs to be deleted.
+- `WHERE condition`: Specifies the condition for selecting the rows to be deleted.
 
-- WHERE condition: Specify a condition for selecting rows for deletion;
+### Optional Parameters
 
-### Optional parameters
+- `PARTITION partition_name | PARTITIONS (partition_name [, partition_name])`: Specifies the partition name where the data deletion is to be executed. If the table does not have this partition, an error will be reported.
+- `table_alias`: Alias for the table.
 
-- PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specify the name of the partition in which the deletion is to be performed. If the partition does not exist in the table, an error will be reported.
+### Notes
 
-- table_alias: Aliases of the Table
-
-### Note
-
-- Only conditions on the key column can be specified when using the UNIQUE model.
+- This form can only be used on UNIQUE KEY model tables.
 
 ### Example
 
-Use the result of joining the `t2` and `t3` tables to delete the data in `t1`. The deleted table only supports the UNIQUE model.
+Using the join result of tables `t2` and `t3`, delete data from `t1`. The table to be deleted only supports the unique model.
 
 ```sql
--- Create t1, t2, t3 tables
+-- Create tables t1, t2, t3
 CREATE TABLE t1
   (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 UNIQUE KEY (id)
@@ -141,7 +132,7 @@ CREATE TABLE t3
 DISTRIBUTED BY HASH (id)
 PROPERTIES('replication_num'='1');
 
--- insert data
+-- Insert data
 INSERT INTO t1 VALUES
   (1, 1, '1', 1.0, '2000-01-01'),
   (2, 2, '2', 2.0, '2000-01-02'),
@@ -159,13 +150,13 @@ INSERT INTO t3 VALUES
   (4),
   (5);
 
--- remove rows from t1
+-- Delete data from t1
 DELETE FROM t1
   USING t2 INNER JOIN t3 ON t2.id = t3.id
   WHERE t1.id = t2.id;
 ```
 
-The expected result is that the column with `id=1` in table `t1` is deleted.
+The expected result is to delete the row in table `t1` where `id` is `1`.
 
 ```Plain
 +----+----+----+--------+------------+
@@ -176,99 +167,27 @@ The expected result is that the column with `id=1` in table `t1` is deleted.
 +----+----+----+--------+------------+
 ```
 
-## Returned Results
+## Related Configuration
 
-Delete command is a SQL command that return results synchronously. The results are classified as follows:
+**Timeout Configuration**
 
-### Implementation Success
-
-If Delete completes successfully and is visible, the following results are returned.`Query OK`indicates success.
-
-```sql
-mysql> delete from test_tbl PARTITION p1 where k1 = 1;
-Query OK, 0 rows affected (0.04 sec)
-{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'VISIBLE', 'txnId':'4005'}
-```
-
-### Submitted Successfully but Invisible
-
-Doris transaction commit is divided into two steps: commit and release version, only after the completion of the release version step, the results will be visible to the user.
-
-If the commit has been successful, then it can be assumed that it will eventually be published successfully, Doris will try to wait for a certain period of time after the commit is completed, if the timeout period is exceeded even if the published version is not yet complete, it will be preferred to return to the user, prompting the user that the commit has been completed.
-
- If Delete has been submitted and executed, but the release version is still not published and visible, the following result will be returned:
-
-```sql
-mysql> delete from test_tbl PARTITION p1 where k1 = 1;
-Query OK, 0 rows affected (0.04 sec)
-{'label':'delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251', 'status':'COMMITTED', 'txnId':'4005', 'err':'delete job is committed but may be taking effect later' }
-```
-
-The result will also return a json string:
-
-- `affected rows`：Indicates the rows affected by this deletion. Since Doris deletion is currently a logical deletion, this value is constant at 0;
-
-- `label`：The automatically generated label identifies the import job. Each import job has a Label that is unique within a single database;
-
-- `status`：Indicates whether the data deletion is visible. If it's visible, the result displays `VISIBLE`; if  it's invisible, the result displays `COMMITTED`;
-
-- `txnId`：The transaction id corresponding to Delete;
-
-- `err`：This field will display the details of Delete.
-
-### Commit Failed, Transaction Cancelled
-
-If the Delete statement fails to commit, the transaction will be automatically aborted by Doris and the following result will be returned:
-
-```sql
-mysql> delete from test_tbl partition p1 where k1 > 80;
-ERROR 1064 (HY000): errCode = 2, detailMessage = {Cause of error}
-```
-
-For example, a timeout deletion will return the timeout time and the outstanding `(tablet=replica)`
-
-```sql
-mysql> delete from test_tbl partition p1 where k1 > 80;
-ERROR 1064 (HY000): errCode = 2, detailMessage = failed to delete replicas from job: 4005, Unfinished replicas:10000=60000, 10001=60000, 10002=60000
-```
-
-### Summary
-
-The correct logic for handling the results returned by Delete is:
-
-- If returns `ERROR 1064 (HY000)` , the deletion failed;
-
-- If returns`Query OK`, the deletion is successful;
-
-  - If `status` is `COMMITTED`, it means that the data is still not visible, users can wait for a while and then check the result with `show delete`;
-
-  - If `STATUS` is `VISIBLE`, the deletion is successful.
-
-## Configurations
-
-**TIMEOUT Configurations**
-
-- `insert_timeout`
-
-Because delete itself is a SQL command and treated as a special kind of insert, the delete statement also subject to session limitations. Timeout is determined by the `insert_timeout` value in the session, which can be increased in seconds by `SET insert_timeout = xxx`.
+- `insert_timeout`: Since the delete operation is an SQL command and is considered a special load, the delete statement is affected by the `insert_timeout` value in the Session. You can increase the timeout by `SET insert_timeout = xxx`, where the unit is seconds.
 
 **IN Predicate Configuration**
 
-- `max_allowed_in_element_num_of_delete`
-
-If the user needs to occupy more elements when using the in predicate, the user can adjust the maximum number of elements allowed to be carried by `max_allowed_in_element_num_of_delete`. The default value is 1024.
+- `max_allowed_in_element_num_of_delete`: If the user needs to use a large number of elements in the `in` predicate, this item can be adjusted to increase the allowed element limit. The default value is 1024.
 
 ## View History
 
-Users can view the history of deletions that have been performed by using the show delete statement.
+Users can view the history of completed delete records using the `SHOW DELETE` statement.
 
-### Syntax
+The syntax is as follows:
 
 ```sql
 SHOW DELETE [FROM db_name]
 ```
 
-### Example
+Example:
 
 ```sql
 mysql> show delete from test_db;
@@ -280,3 +199,13 @@ mysql> show delete from test_db;
 +-----------+---------------+---------------------+-----------------+----------+
 2 rows in set (0.00 sec)
 ```
+
+## Performance Recommendations
+
+1. On detail tables (Duplicate Key) and aggregate tables (Aggregate Key), the delete operation executes quickly, but a large number of delete operations in a short period will affect query performance.
+
+2. On primary key tables (Unique Key), the delete operation is converted into an `INSERT INTO` statement. When deleting a large range, the execution speed is slow, but a large number of delete operations in a short period will not significantly affect query performance.
+
+## Syntax
+
+For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) syntax manual.

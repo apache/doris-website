@@ -57,13 +57,13 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
    
     当前 Doris 内部保留 30 分钟内最近成功的 label。
     
-2. column_separator：用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
+2. column_separator：用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
    
     如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
     
     可以使用多个字符的组合作为列分隔符。
     
-3. line_delimiter：用于指定导入文件中的换行符，默认为\n。可以使用做多个字符的组合作为换行符。
+3. line_delimiter：用于指定导入文件中的换行符，默认为`\n`。可以使用做多个字符的组合作为换行符。
    
 4. columns：用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。
    

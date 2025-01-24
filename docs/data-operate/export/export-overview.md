@@ -56,7 +56,7 @@ The similarities and differences between the three export methods are as follows
 |Supported export data formats|Parquet, ORC, CSV|Parquet, ORC, CSV|MySQL Dump proprietary format|
 |Supports exporting external tables|Yes|Partially supported|No|
 |Supports exporting views|Yes|Yes|Yes|
-|Supported export locations|S3, HDFS, LOCAL|S3, HDFS, LOCAL|LOCAL|
+|Supported export locations|S3, HDFS|S3, HDFS|LOCAL|
 
 ### SELECT INTO OUTFILE
 

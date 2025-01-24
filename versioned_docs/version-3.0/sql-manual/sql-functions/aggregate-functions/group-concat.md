@@ -24,25 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_CONCAT
-### description
-#### Syntax
+## Description
 
-`VARCHAR GROUP_CONCAT([DISTINCT] VARCHAR str[, VARCHAR sep] [ORDER BY { col_name | expr} [ASC | DESC]])`
+The GROUP_CONCAT function concatenates multiple rows of results in the result set into a string.
 
+## Syntax
 
-This function is an aggregation function similar to sum (), and group_concat links multiple rows of results in the result set to a string. The second parameter, sep, is a connection symbol between strings, which can be omitted. This function usually needs to be used with group by statements.
-
-Support Order By for sorting multi-row results, sorting and aggregation columns can be different.
-
-:::caution
-`group_concat` don't support using `distinct` with `order by` together.
-:::
-
-### example
-
+```sql
+GROUP_CONCAT([DISTINCT] <str>[, <sep>] [ORDER BY { <col_name> | <expr>} [ASC | DESC]])
 ```
-mysql> select value from test;
+
+## Parameters
+
+| Parameters | Description |
+| ------------ | ---------------------- |
+| `<str>`      | Required. The expression of the value to be concatenated. |
+| `<sep>`      | Optional. The separator between strings. |
+| `<col_name>` | Optional. The column used for sorting.   |
+| `<expr>`     | Optional. The expression used for sorting. |
+
+## Return Value
+
+Returns a value of type VARCHAR.
+
+## Example
+
+```sql
+select value from test;
+```
+
+```text
 +-------+
 | value |
 +-------+
@@ -51,35 +62,52 @@ mysql> select value from test;
 | c     |
 | c     |
 +-------+
+```
 
-mysql> select GROUP_CONCAT(value) from test;
+```sql
+select GROUP_CONCAT(value) from test;
+```
+
+```text
 +-----------------------+
 | GROUP_CONCAT(`value`) |
 +-----------------------+
-| a, b, c, c              |
+| a, b, c, c            |
 +-----------------------+
+```
 
-mysql> select GROUP_CONCAT(value, " ") from test;
-+----------------------------+
-| GROUP_CONCAT(`value`, ' ') |
-+----------------------------+
-| a b c c                     |
-+----------------------------+
+```sql
+select GROUP_CONCAT(DISTINCT value) from test;
+```
 
-mysql> select GROUP_CONCAT(DISTINCT value) from test;
+```text
 +-----------------------+
 | GROUP_CONCAT(`value`) |
 +-----------------------+
 | a, b, c               |
 +-----------------------+
+```
 
-mysql> select GROUP_CONCAT(value, NULL) from test;
+```sql 
+select GROUP_CONCAT(value, " ") from test;
+```
+
+```text
++----------------------------+
+| GROUP_CONCAT(`value`, ' ') |
++----------------------------+
+| a b c c                    |
++----------------------------+
+```
+
+```sql
+select GROUP_CONCAT(value, NULL) from test;
+```
+
+```text
 +----------------------------+
 | GROUP_CONCAT(`value`, NULL)|
 +----------------------------+
 | NULL                       |
 +----------------------------+
 ```
-
-### keywords
-GROUP_CONCAT,GROUP,CONCAT

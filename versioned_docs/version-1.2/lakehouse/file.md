@@ -136,15 +136,15 @@ SELECT * FROM s3(
     "Format" = "parquet",
     "use_path_style"="true")
 LIMIT 5;
-+-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
++-----------+------------------------------------------+----------------+----------+----------------+
 | p_partkey | p_name                                   | p_mfgr         | p_brand  | p_type                  | p_size | p_container | p_retailprice | p_comment           |
-+-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
++-----------+------------------------------------------+----------------+----------+----------------+
 |         1 | goldenrod lavender spring chocolate lace | Manufacturer#1 | Brand#13 | PROMO BURNISHED COPPER  |      7 | JUMBO PKG   |           901 | ly. slyly ironi     |
 |         2 | blush thistle blue yellow saddle         | Manufacturer#1 | Brand#13 | LARGE BRUSHED BRASS     |      1 | LG CASE     |           902 | lar accounts amo    |
 |         3 | spring green yellow purple cornsilk      | Manufacturer#4 | Brand#42 | STANDARD POLISHED BRASS |     21 | WRAP CASE   |           903 | egular deposits hag |
 |         4 | cornflower chocolate smoke green pink    | Manufacturer#3 | Brand#34 | SMALL PLATED BRASS      |     14 | MED DRUM    |           904 | p furiously r       |
 |         5 | forest brown coral puff cream            | Manufacturer#3 | Brand#32 | STANDARD POLISHED TIN   |     15 | SM PKG      |           905 |  wake carefully     |
-+-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
++-----------+------------------------------------------+----------------+----------+----------------+
 ```
 
 You can put the Table Value Function anywhere that you used to put Table in the SQL, such as in the WITH or FROM clause in CTE. In this way, you can treat the file as a normal table and conduct analysis conveniently.

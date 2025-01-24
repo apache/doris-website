@@ -24,24 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_X
-### Description
-#### Syntax
 
-`DOUBLE ST_X(POINT point)`
+## Description
 
+When point is a valid POINT type, return the corresponding x-coordinate value
 
-When point is a valid POINT type, the corresponding X coordinate value is returned.
+## Syntax
 
-### example
-
+```sql
+ST_X( <point>)
 ```
-mysql> SELECT ST_X(ST_Point(24.7, 56.7));
+
+## Parameters
+
+| Parameters | Instructions |
+|------|----------|
+| `<point>` | The geometric coordinates of a two-dimensional point |
+
+## Return Value
+
+X value in geometric coordinates
+
+## Examples
+
+```sql
+SELECT ST_X(ST_Point(24.7, 56.7));
+```
+
+```text
 +----------------------------+
 | st_x(st_point(24.7, 56.7)) |
 +----------------------------+
 |                       24.7 |
 +----------------------------+
 ```
-### keywords
-ST_X,ST,X

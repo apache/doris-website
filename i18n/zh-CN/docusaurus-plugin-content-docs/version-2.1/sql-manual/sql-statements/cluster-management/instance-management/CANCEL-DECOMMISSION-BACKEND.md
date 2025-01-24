@@ -24,43 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
-该语句用于撤销一个节点下线操作。（仅管理员使用！）
+该语句用于撤销一个 BE 节点下线操作。
 
-语法：
-
-- 通过 host 和 port 查找 backend
+## 语法
 
 ```sql
-CANCEL DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
+CANCEL DECOMMISSION BACKEND "<be_identifier>" [, "<be_identifier>" ... ]
 ```
 
-- 通过 backend_id 查找 backend
+其中：
 
 ```sql
-CANCEL DECOMMISSION BACKEND "id1","id2","id3...";
+be_identifier
+  : "<be_host>:<be_heartbeat_port>"
+  | "<backend_id>"
 ```
+
+## 必选参数
+
+**1. <be_host>**
+
+> 可以是 BE 节点的主机名或 IP 地址
+
+**2. <heartbeat_port>**
+
+> BE 节点的心跳端口，默认为 9050 
+
+**3. <backend_id>**
+
+> BE 节点的 ID
+
+:::tip
+`<be_host>`、`<be_heartbeat_port>`及`<backend_id>`均可通过[SHOW BACKENDS](./SHOW-BACKENDS.md)语句查询获得。
+:::
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限        | 对象 | 说明 |
+|-----------|----|----|
+| NODE_PRIV |    |    |
+
+## 注意事项
+
+1. 执行此命令后，可以通过[SHOW BACKENDS](./SHOW-BACKENDS.md)语句查看下线状态（`SystemDecommissioned`列的值为`false`）和下线进度（`TabletNum`列的值不再缓慢下降）
+2. 集群会重新慢慢的把其他节点的 tablet 迁移回当前 BE，使得最终每台 BE 的 tablet 数量趋于相近
 
 ## 示例
 
- 1. 取消两个节点的下线操作：
-    
-      ```sql
-       CANCEL DECOMMISSION BACKEND "host1:port", "host2:port";
-      ```
+1. 根据 BE 的 Host 和 HeartbeatPort 从集群中安全下线两个节点
+   ```sql
+   CANCEL DECOMMISSION BACKEND "192.168.0.1:9050", "192.168.0.2:9050";
+   ```
 
- 2. 取消 backend_id 为 1 的节点的下线操作：
-
-    ```sql
-    CANCEL DECOMMISSION BACKEND "1","2";
-    ```
-
-## 关键词
-
-    CANCEL, DECOMMISSION, CANCEL ALTER
-
-## 最佳实践
-
+2. 根据 BE 的 ID 从集群中安全下线一个节点
+   ```sql
+   CANCEL DECOMMISSION BACKEND "10002";
+   ```

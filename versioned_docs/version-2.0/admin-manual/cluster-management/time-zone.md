@@ -236,7 +236,7 @@ wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
 
 Then generate the specific zoneinfo data according the README file in the extracted folder. The generated data should be copied to override `$TZDIR` folder.
 
-Please note that all the above operations **must** be restarted **on the corresponding BE to take effect after they are done on the BE machine.
+Please note that all the above operations **must** be restarted on the corresponding BE to take effect after they are done on the BE machine.
 
 ## Extended Reading
 

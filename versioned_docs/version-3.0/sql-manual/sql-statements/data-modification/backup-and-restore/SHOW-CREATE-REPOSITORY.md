@@ -24,31 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 This statement is used to demonstrate the creation statement of a repository.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CREATE REPOSITORY for repository_name;
+SHOW CREATE REPOSITORY for <repo_name>;
 ```
 
-illustrate:
--  `repository_name`: repository name
+## Required Parameters
+**<repo_name>**
+> The unique name of the repository.
 
-## Example
+## Examples
 
-1. Show the creation statement of the specified repository
+Show the creation statement of the specified repository
 
-    ```sql
-    SHOW CREATE REPOSITORY for test_repository
-    ```
-
-## Keywords
-
-    SHOW, CREATE, REPOSITORY
-
-## Best Practice
-
+```sql
+SHOW CREATE REPOSITORY for test_repository;
+```

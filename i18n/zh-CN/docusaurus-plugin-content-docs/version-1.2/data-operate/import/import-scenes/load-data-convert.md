@@ -107,7 +107,7 @@ under the License.
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| 4    | \N   | chongqing | 1.4  |
+| 4    | `\N` | chongqing | 1.4  |
 
 > 注：`\N` 在源文件中表示 null。
 
@@ -195,7 +195,7 @@ under the License.
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| \N   | 400  | chongqing | 1.4  |
+| `\N` | 400  | chongqing | 1.4  |
 
 1. 将源文件中的列值经转换后导入表中
 
@@ -286,7 +286,7 @@ under the License.
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| \N   | 400  | chongqing | 1.4  |
+| `\N` | 400  | chongqing | 1.4  |
 
 1. 在列映射和转换缺省的情况下，直接过滤
 

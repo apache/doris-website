@@ -29,15 +29,19 @@ Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，
 Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，且数据量比较大的场景。 
 从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
+在 Doris 早期版本中，S3 Load 和 HDFS Load 都是通过 `WITH BROKER` 连接到具体的 Broker 进程实现的。
+随着版本的更新，S3 Load 和 HDFS Load 作为最常用的导入方式得到了优化，现在它们不再依赖额外的 Broker 进程，但仍然使用与 Broker Load 类似的语法。
+由于历史原因以及语法上的相似，S3 Load、HDFS Load 和 Broker Load 这三种导入方式被统称为 Broker Load。
+
 ## 使用限制
 
-支持的存储后端:
+支持的存储后端：
 
 - S3 协议
 - HDFS 协议
 - 其他协议（需要相应的 Broker 进程）
 
-支持的数据类型:
+支持的数据类型：
 
 - CSV
 - JSON
@@ -72,7 +76,7 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 ## 快速上手
 
-本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
+本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
 
 ### 前置检查
 
@@ -148,19 +152,19 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 其中 `provider` 字段需要根据实际的对象存储服务商填写。
 Doris 支持的 provider 列表：
 
+- "S3" (亚马逊 AWS)
+- "AZURE" (微软 Azure)
+- "GCP" (谷歌 GCP)
 - "OSS" (阿里云)
 - "COS" (腾讯云)
 - "OBS" (华为云)
 - "BOS" (百度云)
-- "S3" (亚马逊 AWS)
-- "AZURE" (微软 Azure)
-- "GCP" (谷歌 GCP)
 
 如不在列表中 (例如 MinIO)，可以尝试使用 "S3" (兼容 AWS 模式)
 
 ### 查看导入作业
 
-Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) 命令查看
+Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -222,7 +226,6 @@ WITH [S3|HDFS|BROKER broker_name]
 | --- | --- | --- | --- |
 | "timeout" | Long | 14400 | 导入的超时时间，单位秒。范围是 1 秒 ~ 259200 秒。 |
 | "max_filter_ratio" | Float | 0.0 | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。 |
-| "exec_mem_limit" | Long | 2147483648 (2GB) | 导入内存限制。默认为 2GB。单位为字节。 |
 | "strict_mode" | Boolean | false | 是否开启严格模式。 |
 | "partial_columns" | Boolean | false | 是否使用部分列更新，只在表模型为 Unique Key 且采用 Merge on Write 时有效。 |
 | "timezone" | String | "Asia/Shanghai" | 本次导入所使用的时区。该参数会影响所有导入涉及的和时区有关的函数结果。 |
@@ -256,7 +259,6 @@ WITH [S3|HDFS|BROKER broker_name]
 
 | Session Variable | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| exec_mem_limit | Long | 2147483648 (2GB) | 导入内存限制，单位：字节。 |
 | time_zone | String | "Asia/Shanghai" | 默认时区，会影响导入中时区相关的函数结果。 |
 | send_batch_parallelism | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
 
@@ -438,21 +440,12 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
 
 ### 其他 Broker 导入
 
-其他远端存储系统的 Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录。目前提供了如下存储系统的 Broker 实现。
-
-- 阿里云 OSS
-
-- 百度云 BOS
+其他远端存储系统的 Broker 是 Doris 集群中的可选进程，主要用于支持 Doris 对远端存储中文件和目录的读写。目前，Doris 提供了多种远端存储系统的 Broker 实现。
+历史版本中，Doris 还支持过各种对象存储的 Broker，但现在更推荐使用 `WITH S3` 方式来导入对象存储中的数据，而不再推荐使用 `WITH BROKER`。
 
 - 腾讯云 CHDFS
-
 - 腾讯云 GFS
-
-- 华为云 OBS
-
 - JuiceFS 
-
-- GCS
 
 Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。
 
@@ -847,4 +840,4 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ## 更多帮助
 
-关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。

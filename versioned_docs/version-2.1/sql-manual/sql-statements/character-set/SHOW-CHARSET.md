@@ -28,32 +28,34 @@ under the License.
 
 ## Description
 
-The "SHOW CHARACTER" command is used to display the available character sets in the current database management system,
-along with some associated properties for each character set. These properties may include the name of the character set,
-the default collation, and the maximum byte length, among others. By running the "SHOW CHARACTER" command, you can view the list of supported character sets in the system along with their detailed information.
+The "SHOW CHARSET" command is used to display the character sets available in the current database management system and some properties associated with each character set.
 
-The "SHOW CHARACTER" command returns the following fields:
+These properties may include the name of the character set, default collation, maximum byte length, etc. A list of character sets supported on the system and their details can be viewed by running the "SHOW CHARSET" command.
 
-Charset: Character set
-Description: Description
-Default Collation: Default collation name
-Maxlen: Maximum byte length.
+## Syntax
+```sql
+SHOW CHARSET
+```
 
+## Return Value
+| column name | description |
+| -- |-------------|
+| Charset | Character Set         |
+| Description | Description          |
+| Default Collation | Default collation name      |
+| Maxlen | Maximum byte length      |
 
 ## Examples
 
 ```sql
-mysql> show charset;
-
-| Charset   | Description     | Default collation | Maxlen |
-|-----------|-----------------|-------------------|--------|
-| utf8mb4   | UTF-8 Unicode   | utf8mb4_0900_bin  | 4      |
-
+SHOW CHARSET;
 ```
 
-## Keywords
-
-    SHOW, CHARSET
-
-## Best Practice
+```text
++---------+---------------+-------------------+--------+
+| Charset | Description   | Default collation | Maxlen |
++---------+---------------+-------------------+--------+
+| utf8mb4 | UTF-8 Unicode | utf8mb4_0900_bin  | 4      |
++---------+---------------+-------------------+--------+
+```
 

@@ -205,7 +205,7 @@ To optimize query performance and save object storage resources, local Cache has
 
 For specific configurations, please refer to (../../lakehouse/filecache).
 
-## Common Issues
+## FAQ
 
 1.  `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
 

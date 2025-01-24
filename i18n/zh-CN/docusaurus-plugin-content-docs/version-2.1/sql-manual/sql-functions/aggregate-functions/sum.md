@@ -24,23 +24,55 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SUM
 ## 描述
+
+用于返回选中字段所有值的和。
+
 ## 语法
 
-`SUM(expr)`
+```sql
+SUM(<expr>)
+```
 
+## 参数
 
-用于返回选中字段所有值的和
+| 参数 | 说明 |
+| --- | --- |
+| `<expr>` | 要计算和的字段 |
+
+## 返回值
+
+返回选中字段所有值的和。
 
 ## 举例
+```sql
+-- 创建示例表
+CREATE TABLE sales_table (
+    product_id INT,
+    price DECIMAL(10,2),
+    quantity INT
+) DISTRIBUTED BY HASH(product_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- 插入测试数据
+INSERT INTO sales_table VALUES
+(1, 99.99, 2),
+(2, 159.99, 1),
+(3, 49.99, 5),
+(4, 299.99, 1),
+(5, 79.99, 3);
+
+-- 计算销售总金额
+SELECT SUM(price * quantity) as total_sales
+FROM sales_table;
 ```
-MySQL > select sum(scan_rows) from log_statis group by datetime;
-+------------------+
-| sum(`scan_rows`) |
-+------------------+
-|       8217360135 |
-+------------------+
+
+```text
++-------------+
+| total_sales |
++-------------+
+|     1149.88 |
++-------------+
 ```
-### keywords
-SUM

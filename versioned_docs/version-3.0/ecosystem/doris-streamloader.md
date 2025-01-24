@@ -38,7 +38,7 @@ Doris Streamloader is a client tool designed for loading data into Apache Doris.
 ## Installation
 
 Source Code: https://github.com/apache/doris-streamloader/
-Binary File: https://doris.incubator.apache.org/download
+Binary File: https://doris.apache.org/download
 
 :::note
 The obtained result is the executable binary.

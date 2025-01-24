@@ -78,7 +78,7 @@ From the version of `Apache Doris 1.2.1 Docker Image`, the interface list of eac
 
 | process name | interface name | interface definition | interface example |
 | -------------- |-------------| ------------------- | -------------------------------------------------------------- |
-| FE\BE\BROKER    | FE_SERVERS | FE node main information | fe1:172.20.80.2:9010,fe2:172.20.80.3:9010,fe3:172.20.80.4:9010 |
+| `FE\BE\BROKER`    | FE_SERVERS | FE node main information | fe1:172.20.80.2:9010,fe2:172.20.80.3:9010,fe3:172.20.80.4:9010 |
 | FE | FE_ID       | FE node ID | 1 |
 | BE | BE_ADDR     | BE node main information | 172.20.80.5:9050 |
 | BE | NODE_ROLE | BE node type | computation |

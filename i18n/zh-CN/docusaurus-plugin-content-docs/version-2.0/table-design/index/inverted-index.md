@@ -305,6 +305,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
 -- 2.3 在保持词顺序的前提下，对最后一个词 keyword2 做前缀匹配，默认找 50 个前缀词（session 变量 inverted_index_max_expansions 控制）
+-- 需要保证 keyword1, keyword2 在原文分词后也是相邻的，不能中间有其他词
 -- 'keyword1 keyword2abc' 能匹配，因为 keyword1 完全一样，最后一个 keyword2abc 是 keyword2 的前缀
 -- 'keyword1 keyword2' 也能匹配，因为 keyword2 也是 keyword2 的前缀
 -- 'keyword1 keyword3' 不能匹配，因为 keyword3 不是 keyword2 的前缀

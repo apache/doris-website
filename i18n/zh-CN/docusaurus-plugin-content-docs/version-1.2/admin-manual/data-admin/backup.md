@@ -48,9 +48,9 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
    如果该表是动态分区表，备份之后会自动禁用动态分区属性，在做恢复的时候需要手动将该表的动态分区属性启用，命令如下：
 
-   ```sql
+```sql
    ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
-   ```
+```
 
 4. 备份和恢复操作都不会保留表的 `colocate_with` 属性。
 
@@ -58,7 +58,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
 1. 创建一个 hdfs 的远程仓库 example_repo：
 
-   ```sql
+```sql
    CREATE REPOSITORY `example_repo`
    WITH BROKER `hdfs_broker`
    ON LOCATION "hdfs://hadoop-name-node:54310/path/to/repo/"
@@ -67,11 +67,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
       "username" = "user",
       "password" = "password"
    );
-   ```
+```
 
 2. 创建一个 s3 的远程仓库 : s3_repo
 
-   ```
+```
    CREATE REPOSITORY `s3_repo`
    WITH S3
    ON LOCATION "s3://bucket_name/test"
@@ -82,7 +82,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
        "AWS_SECRET_KEY"="xxx",
        "AWS_REGION" = "xxx"
    ); 
-   ```
+```
 
    >注意：
    >
@@ -90,16 +90,16 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
 2. 全量备份 example_db 下的表 example_tbl 到仓库 example_repo 中：
 
-   ```sql
+```sql
    BACKUP SNAPSHOT example_db.snapshot_label1
    TO example_repo
    ON (example_tbl)
    PROPERTIES ("type" = "full");
-   ```
+```
 
 3. 全量备份 example_db 下，表 example_tbl 的 p1, p2 分区，以及表 example_tbl2 到仓库 example_repo 中：
 
-   ```sql
+```sql
    BACKUP SNAPSHOT example_db.snapshot_label2
    TO example_repo
    ON
@@ -107,11 +107,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
       example_tbl PARTITION (p1,p2),
       example_tbl2
    );
-   ```
+```
 
 4. 查看最近 backup 作业的执行情况：
 
-   ```sql
+```sql
    mysql> show BACKUP\G;
    *************************** 1. row ***************************
                   JobId: 17891847
@@ -129,11 +129,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```
 
 5. 查看远端仓库中已存在的备份
 
-   ```sql
+```sql
    mysql> SHOW SNAPSHOT ON example_repo WHERE SNAPSHOT = "snapshot_label1";
    +-----------------+---------------------+--------+
    | Snapshot        | Timestamp           | Status |
@@ -141,7 +141,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
    | snapshot_label1 | 2022-04-08-15-52-29 | OK     |
    +-----------------+---------------------+--------+
    1 row in set (0.15 sec)
-   ```
+```
 
 BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
 

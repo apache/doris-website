@@ -98,7 +98,7 @@ Create the plugins directory under $KAFKA_HOME and put the downloaded doris-kafk
 Configure config/connect-distributed.properties
 
 ```properties
-# Modify broker address
+# Modify kafka server address
 bootstrap.servers=127.0.0.1:9092
 
 # Modify group.id, the same cluster needs to be consistent

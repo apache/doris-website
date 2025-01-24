@@ -48,7 +48,7 @@ maven 依赖
 配置 config/connect-standalone.properties
 
 ```properties
-# 修改 broker 地址
+# 修改 kafka server 地址
 bootstrap.servers=127.0.0.1:9092
 
 # 修改为创建的 plugins 目录

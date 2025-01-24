@@ -83,7 +83,7 @@ FE 与 BE 进程都是可以横向扩展的，单集群可以支持到数百台�
   
 - 存储层：存储层可以使用 S3、HDFS、OSS、COS、OBS、Minio、Ceph 等共享存储存放 Doris 的数据文件，包含包括 Segment 文件、反向索引的索引文件等。
 
-![存算分离整体架构和技术特点](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.png)
+![存算分离整体架构和技术特点](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.jpg)
 
 ## Apache Doris 的核心特性
 

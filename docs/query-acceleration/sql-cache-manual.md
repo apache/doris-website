@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-SQL Cache is a query optimization mechanism provided by Doris that can significantly enhance query performance. It reduces redundant computations by caching query results, making it suitable for scenarios where data update frequency is low.
+SQL Cache is a query optimization mechanism provided by Doris that can significantly enhance query performance. It reduces redundant computations by caching query results, making it suitable for scenarios where data update infrequently.
 
 SQL Cache stores and retrieves caches based on the following key factors:
 
@@ -230,7 +230,7 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_row_count'='3000');
 ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 ```
 
-## Troubleshooting Cache Invalidation
+## Troubleshooting Cache Miss
 
 The reasons for cache invalidation typically include the following:
 

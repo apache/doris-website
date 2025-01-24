@@ -24,18 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MIN_BY
-### description
-#### Syntax
+## Description
 
-`MIN_BY(expr1, expr2)`
+The MIN_BY function is used to return the corresponding associated value based on the minimum value of the specified column.
 
+## Syntax
 
-Returns the value of an expr1 associated with the minimum value of expr2 in a group.
-
-### example
+```sql
+MIN_BY(<expr1>, <expr2>)
 ```
-MySQL > select * from tbl;
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `<expr1>` | The expression used to specify the corresponding association. |
+| `<expr2>` | The expression used to specify the minimum value for statistics. |
+
+## Return Value
+
+Returns the same data type as the input expression <expr1>.
+
+## Example
+
+```sql
+select * from tbl;
+```
+
+```text
 +------+------+------+------+
 | k1   | k2   | k3   | k4   |
 +------+------+------+------+
@@ -44,13 +60,16 @@ MySQL > select * from tbl;
 |    4 | 3    | 2    |    1 |
 |    3 | 4    | 2    |    1 |
 +------+------+------+------+
+```
 
-MySQL > select min_by(k1, k4) from tbl;
+```sql
+select min_by(k1, k4) from tbl;
+```
+
+```text
 +--------------------+
 | min_by(`k1`, `k4`) |
 +--------------------+
 |                  4 |
 +--------------------+ 
 ```
-### keywords
-MIN_BY

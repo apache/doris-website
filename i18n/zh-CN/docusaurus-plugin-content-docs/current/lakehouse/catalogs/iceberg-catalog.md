@@ -26,7 +26,11 @@ under the License.
 
 Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作。
 
-> 注：用户可以通过 Hive Catalog 访问使用 Hive Metastore 作为元数据的 Iceberg 表。但依然推荐直接使用 Iceberg Catalog 以避免一些兼容性问题。
+[使用 Docker 快速体验 Apache Doris & Iceberg](../best-practices/doris-iceberg.md)
+
+:::tip
+用户可以通过 Hive Catalog 访问使用 Hive Metastore 作为元数据的 Iceberg 表。但依然推荐直接使用 Iceberg Catalog 以避免一些兼容性问题。
+:::
 
 ## 适用场景
 
@@ -51,7 +55,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* \<iceberg\_catalog\_type>
+* `<iceberg_catalog_type>`
 
   Iceberg Catalog 的类型，支持以下几种：
 
@@ -65,21 +69,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
 
-* \<warehouse>
+* `<warehouse>`
 
-  Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 \`hadoop\` 时，需指定这个参数。
+  Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定这个参数。
 
-  `warehouse` 的路径必须指向 `Database` 路径的上一级。如你的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`
+  `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`
 
-* MetaStoreProperties
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* StorageProperties
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* CommonProperties
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -111,7 +115,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 
@@ -222,13 +226,25 @@ CREATE CATALOG iceberg_dlf PROPERTIES (
 
 ### Iceberg on Rest
 
-该方式需要预先提供 REST 服务，用户需实现获取 Iceberg 元数据的 REST 接口。
-
 ```sql
 CREATE CATALOG iceberg_rest PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'rest',
     'uri' = 'http://172.21.0.1:8181'
+);
+```
+
+### Iceberg on Rest with MINIO
+
+```sql
+CREATE CATALOG iceberg_minio PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'rest',
+    'uri' = 'http://172.21.0.1:8181',
+    's3.access_key' = 'ak',
+    's3.secret_key' = 'sk',
+    's3.endpoint' = 'http://10.0.0.1:9000',
+    's3.region' = 'us-east-1'
 );
 ```
 
@@ -247,20 +263,6 @@ CREATE CATALOG iceberg_gdm PROPERTIES (
 );
 ```
 
-### Iceberg on Rest with MINIO
-
-```sql
-CREATE CATALOG iceberg_minio PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'uri' = 'http://10.0.0.1:8181',
-    's3.access_key' = 'ak',
-    's3.secret_key' = 'sk',
-    's3.endpoint' = 'http://10.0.0.1:9000',
-    's3.region' = 'us-east-1'
-);
-```
-
 ## 查询操作
 
 ### 基础查询
@@ -271,7 +273,7 @@ SWITCH iceberg;
 USE iceberg_db;
 SELECT * FROM iceberg_tbl LIMIT 10;
 
--- 2. use hive database directly
+-- 2. use iceberg database directly
 USE iceberg.iceberg_db;
 SELECT * FROM iceberg_tbl LIMIT 10;
 
@@ -291,7 +293,22 @@ SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 SELECT * FROM iceberg_meta(
     'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
     'query_type' = 'snapshots'
-);
+)\G
+
+*************************** 1. row ***************************
+ committed_at: 2024-11-28 11:07:29
+  snapshot_id: 8903826400153112036
+    parent_id: -1
+    operation: append
+manifest_list: oss://path/to/metadata/snap-8903826400153112036-1-3835e66d-9a18-4cb0-b9b0-9ec80527ad8d.avro
+      summary: {"added-data-files":"2","added-records":"3","added-files-size":"2742","changed-partition-count":"2","total-records":"3","total-files-size":"2742","total-data-files":"2","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
+*************************** 2. row ***************************
+ committed_at: 2024-11-28 11:10:11
+  snapshot_id: 6099853805930794326
+    parent_id: 8903826400153112036
+    operation: append
+manifest_list: oss://path/to/metadata/snap-6099853805930794326-1-dd46a1bd-219b-4fb0-bb46-ac441d8b3105.avro
+      summary: {"added-data-files":"1","added-records":"1","added-files-size":"1367","changed-partition-count":"1","total-records":"4","total-files-size":"4109","total-data-files":"3","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
 ```
 
 可以使用 `FOR TIME AS OF` 和 `FOR VERSION AS OF` 语句，根据快照 ID 或者快照产生的时间读取历史版本的数据。示例如下：
@@ -304,15 +321,9 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 
 ## 写入操作
 
-> 使用前，请先设置：
->
-> set global enable\_nereids\_planner = true;
->
-> set global enable\_fallback\_to\_original\_planner = false;
-
 ### INSERT INTO
 
-INSERT 操作会数据以追加的方式写入到目标表中。
+INSERT 操作会将数据以追加的方式写入到目标表中。
 
 例如：
 
@@ -357,13 +368,7 @@ PROPERTIES (
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
-注：
-
-在 HDFS 上的 Iceberg 表数据会写入到最终目录，提交 Iceberg 元数据进行管理。
-
-写入的数据文件名称格式为：`<query-id>_<uuid>-<index>.<compress-type>.<file-type>`
-
-### 相关参数（Configurations）
+### 相关参数
 
 * BE
 
@@ -386,7 +391,7 @@ SWITCH iceberg;
 CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 ```
 
-也可以使用全限定名创建，或指定 location（目前只有 hms 类型的 catalog 支持指定 location），如：
+也可以使用全限定名创建，或指定 location（目前只有 hms 类型的 Catalog 支持指定 location），如：
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
@@ -412,15 +417,15 @@ mysql> SHOW CREATE DATABASE iceberg_db;
 DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 ```
 
-:::caution 注意
+:::caution
 对于 Iceberg Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错
 :::
 
-### 创建和删除表（Table Management）
+### 创建和删除表
 
-* 创建
+* **创建**
 
-  Apache Doris 支持在 Iceberg 中创建分区或非分区表。
+  Doris 支持在 Iceberg 中创建分区或非分区表。
 
   例如：
 
@@ -464,25 +469,25 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   );
   ```
 
-  创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Iceberg 的建表语句。关于分区表的分区函数，可以参阅后面的\[分区]小节。
+  创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Iceberg 的建表语句。关于分区表的分区函数，可以参阅后面的【分区】小节。
 
-* 删除
+* **删除**
 
-  可以通过 `DROP TABLE` 语句删除一个 iceberg 表。当前删除表后，会同时删除数据，包括分区数据。
+  可以通过 `DROP TABLE` 语句删除一个 Iceberg 表。当前删除表后，会同时删除数据，包括分区数据。
 
   例如：
 
   ```sql
-  drop table iceberg_tb;
+  DROP TABLE [IF EXISTS] iceberg_tbl;
   ```
 
-* 列类型映射
+* **列类型映射**
 
-  参考【列类型映射】部分
+  参考【列类型映射】部分。
 
-* 分区
+* **分区**
 
-  Iceberg 中的分区类型对应 Apache Doris 中的 List 分区。因此，在 Apache Doris 中 创建 Iceberg 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Apache Doris 会根据数据的值，自动创建对应的 Iceberg 分区。
+  Iceberg 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Iceberg 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Iceberg 分区。
 
   * 支持创建单列或多列分区表。
 
@@ -500,19 +505,19 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
       * `truncate(L, col)`
 
-* 文件格式
+* **文件格式**
 
   * Parquet（默认）
 
   * ORC
 
-* 压缩格式
+* **压缩格式**
 
   * Parquet：snappy，zstd（默认），plain。（plain 就是不采用压缩）
 
   * ORC：snappy，zlib（默认），zstd，plain。（plain 就是不采用压缩）
 
-* 存储介质
+* **存储介质**
 
   * HDFS
 

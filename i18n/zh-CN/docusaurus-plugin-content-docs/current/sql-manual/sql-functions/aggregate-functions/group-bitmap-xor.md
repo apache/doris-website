@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BITMAP_XOR",
-    "language": "zh-CN"
+"title": "GROUP_BITMAP_XOR",
+"language": "zh-CN"
 }
 ---
 
@@ -24,18 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_BITMAP_XOR
 ## 描述
+
+主要用于合并多个bitmap的值，并对结果进行按位 xor 计算
+
 ## 语法
 
-`BITMAP GROUP_BITMAP_XOR(expr)`
+```sql
+GROUP_BITMAP_XOR(<expr>)
+```
 
-对expr进行 xor 计算, 返回新的bitmap。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 支持bitmap的数据类型 |
+
+## 返回值
+
+返回值的数据类型为BITMAP。
 
 ## 举例
 
+```sql
+ select page, bitmap_to_string(user_id) from pv_bitmap;
 ```
-mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
+
+```text
 +------+-----------------------------+
 | page | bitmap_to_string(`user_id`) |
 +------+-----------------------------+
@@ -43,15 +58,16 @@ mysql>  select page, bitmap_to_string(user_id) from pv_bitmap;
 | m    | 1,3,6,15                    |
 | m    | 4,7                         |
 +------+-----------------------------+
+```
 
-mysql> select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap group by page;
+```sql
+select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap group by page;
+```
+
+```text
 +------+-----------------------------------------------+
 | page | bitmap_to_string(group_bitmap_xor(`user_id`)) |
 +------+-----------------------------------------------+
 | m    | 1,3,6,8,15                                    |
 +------+-----------------------------------------------+
 ```
-
-### keywords
-
-    GROUP_BITMAP_XOR,BITMAP

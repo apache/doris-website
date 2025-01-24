@@ -230,11 +230,11 @@ canal是属于阿里巴巴otter项目下的一个子项目，主要用途是基�
 
 3. 修改instance配置文件（可拷贝conf/example/instance.properties）
 
-   ```text
+```text
    vim conf/{your destination}/instance.properties
-   ```
+```
 
-   ```text
+```text
    ## canal instance serverId
    canal.instance.mysql.slaveId = 1234
    ## mysql adress
@@ -242,26 +242,26 @@ canal是属于阿里巴巴otter项目下的一个子项目，主要用途是基�
    ## mysql username/password
    canal.instance.dbUsername = canal
    canal.instance.dbPassword = canal
-   ```
+```
 
 4. 启动
 
-   ```text
+```text
    sh bin/startup.sh
-   ```
+```
 
 5. 验证启动成功
 
-   ```text
+```text
    cat logs/{your destination}/{your destination}.log
-   ```
+```
 
-   ```text
+```text
    2013-02-05 22:50:45.636 [main] INFO  c.a.o.c.i.spring.support.PropertyPlaceholderConfigurer - Loading properties file from class path resource [canal.properties]
    2013-02-05 22:50:45.641 [main] INFO  c.a.o.c.i.spring.support.PropertyPlaceholderConfigurer - Loading properties file from class path resource [xxx/instance.properties]
    2013-02-05 22:50:45.803 [main] INFO  c.a.otter.canal.instance.spring.CanalInstanceWithSpring - start CannalInstance for 1-xxx 
    2013-02-05 22:50:45.810 [main] INFO  c.a.otter.canal.instance.spring.CanalInstanceWithSpring - start successful....
-   ```
+```
 
 ### Canal端说明
 
@@ -428,7 +428,7 @@ binlog_desc
 
   作业当前所处的阶段。作业状态之间的转换如下图所示：
 
-  ```text
+```text
                      +-------------+
          create job  |  PENDING    |    resume job
          +-----------+             <-------------+
@@ -442,11 +442,11 @@ binlog_desc
          +----------->             <-------------+
         stop job     +-------------+    stop job
         system error
-  ```
+```
 
   作业提交之后状态为PENDING，由FE调度执行启动canal client后状态变成RUNNING，用户可以通过 STOP/PAUSE/RESUME 三个命令来控制作业的停止，暂停和恢复，操作后作业状态分别为CANCELLED/PAUSED/RUNNING。
 
-  作业的最终阶段只有一个CANCELLED，当作业状态变为CANCELLED后，将无法再次恢复。当作业发生了错误时，若错误是不可恢复的，状态会变成CANCELLED，否则会变成PAUSED。
+  作业的最终阶段只有一个CANCELLED，当作业状态变为CANCELLED后，将无法再次恢复。当作业发生了错误时，若错误是不可恢复的，状态会变成CANCELLED，否则会变成PAUSED。
 
 - Channel
 
@@ -497,9 +497,9 @@ binlog_desc
 
 - `min_sync_commit_size`
 
-  ```
+```
   提交事务需满足的最小event数量。若Fe接收到的event数量小于它，会继续等待下一批数据直到时间超过了`sync_commit_interval_second `为止。默认值是10000个events，如果你想修改此配置，请确保此值小于canal端的`canal.instance.memory.buffer.size`配置（默认16384），否则在ack前Fe会尝试获取比store队列长度更多的event，导致store队列阻塞至超时为止。
-  ```
+```
 
 - `min_bytes_sync_commit`
 
@@ -521,7 +521,7 @@ binlog_desc
 
 2. 删除了数据库后数据同步作业还会继续运行吗？
 
-   不会。删除数据库后的几秒日志中可能会出现找不到元数据的错误，之后该数据同步作业会被FE的定时调度检查时停止。
+   不会。删除数据库后的几秒日志中可能会出现找不到元数据的错误，之后该数据同步作业会被FE的定时调度检查时停止。
 
 3. 多个数据同步作业可以配置相同的`ip:port + destination`吗？
 

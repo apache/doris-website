@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BITMAP_UNION",
-    "language": "zh-CN"
+"title": "BITMAP_UNION",
+"language": "zh-CN"
 }
 ---
 
@@ -24,13 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## BITMAP_UNION
-
 ## 描述
+
+计算输入Bitmap 的并集，返回新的bitmap
+
+## 语法
+
+```sql
+BITMAP_UNION(<expr>)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 支持BITMAP的数据类型 |
+
+## 返回值
+
+返回值的数据类型为 BITMAP。
 
 ## 举例
 
-#### Create table
+```sql
+select dt,page,bitmap_to_string(user_id) from pv_bitmap;
+```
+
+```text
++------+------+---------------------------+
+| dt   | page | bitmap_to_string(user_id) |
++------+------+---------------------------+
+|    1 | 100  | 100,200,300               |
+|    2 | 200  | 300                       |
++------+------+---------------------------+
+```
+
+计算 user_id 的去重值：
+
+```
+select bitmap_count(bitmap_union(user_id)) from pv_bitmap;
+```
+
+```text
++-------------------------------------+
+| bitmap_count(bitmap_union(user_id)) |
++-------------------------------------+
+|                                   3 |
++-------------------------------------+
+```
+
+### Create table
 
 建表时需要使用聚合模型，数据类型是 bitmap , 聚合函数是 bitmap_union
 
@@ -50,7 +93,7 @@ DISTRIBUTED BY HASH(`dt`) BUCKETS 2;
 ALTER TABLE pv_bitmap ADD ROLLUP pv (page, user_id);
 ```
 
-#### Data Load
+### Data Load
 
 `TO_BITMAP(expr)` : 将 0 ~ 18446744073709551615 的 unsigned bigint 转为 bitmap
 
@@ -58,7 +101,7 @@ ALTER TABLE pv_bitmap ADD ROLLUP pv (page, user_id);
 
 `BITMAP_HASH(expr)`或者`BITMAP_HASH64(expr)`: 将任意类型的列通过 Hash 的方式转为 bitmap
 
-##### Stream Load
+#### Stream Load
 
 ``` 
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user_id, user_id=to_bitmap(user_id)"   http://host:8410/api/test/testDb/_stream_load
@@ -72,7 +115,7 @@ cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user
 cat data | curl --location-trusted -u user:passwd -T - -H "columns: dt,page,user_id, user_id=bitmap_empty()"   http://host:8410/api/test/testDb/_stream_load
 ```
 
-##### Insert Into
+#### Insert Into
 
 id2 的列类型是 bitmap
 ```
@@ -98,51 +141,3 @@ id2 的列类型是 String
 ```
 insert into bitmap_table1 select id, bitmap_hash(id_string) from table;
 ```
-
-#### Data Query
-### 语法
-
-
-`BITMAP_UNION(expr)` : 计算输入 Bitmap 的并集，返回新的bitmap
-
-`BITMAP_UNION_COUNT(expr)`: 计算输入 Bitmap 的并集，返回其基数，和 BITMAP_COUNT(BITMAP_UNION(expr)) 等价。目前推荐优先使用 BITMAP_UNION_COUNT ，其性能优于 BITMAP_COUNT(BITMAP_UNION(expr))
-
-`BITMAP_UNION_INT(expr)` : 计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和
-COUNT(DISTINCT expr) 相同
-
-`INTERSECT_COUNT(bitmap_column_to_count, filter_column, filter_values ...)` : 计算满足
-filter_column 过滤条件的多个 bitmap 的交集的基数值。
-bitmap_column_to_count 是 bitmap 类型的列，filter_column 是变化的维度列，filter_values 是维度取值列表
-
-
-#### 举例
-
-下面的 SQL 以上面的 pv_bitmap table 为例：
-
-计算 user_id 的去重值：
-
-```
-select bitmap_union_count(user_id) from pv_bitmap;
-
-select bitmap_count(bitmap_union(user_id)) from pv_bitmap;
-```
-
-计算 id 的去重值：
-
-```
-select bitmap_union_int(id) from pv_bitmap;
-```
-
-计算 user_id 的 留存:
-
-```
-select intersect_count(user_id, page, 'meituan') as meituan_uv,
-intersect_count(user_id, page, 'waimai') as waimai_uv,
-intersect_count(user_id, page, 'meituan', 'waimai') as retention //在 'meituan' 和 'waimai' 两个页面都出现的用户数
-from pv_bitmap
-where page in ('meituan', 'waimai');
-```
-
-### keywords
-
-BITMAP,BITMAP_COUNT,BITMAP_EMPTY,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP,BITMAP_UNION_COUNT,INTERSECT_COUNT

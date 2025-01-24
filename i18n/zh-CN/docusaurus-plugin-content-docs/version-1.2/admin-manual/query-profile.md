@@ -26,8 +26,6 @@ under the License.
 
 # 查询执行的统计
 
-# 查询执行的统计
-
 本文档主要介绍Doris在查询执行的统计结果。利用这些统计的信息，可以更好的帮助我们了解Doris的执行情况，并有针对性的进行相应**Debug与调优工作**。
 
 也可以参考如下语法在命令行中查看导入和查询的 Profile：
@@ -54,6 +52,8 @@ mysql> set enable_profile=true;
 ```
 
 之后执行对应的SQL语句之后（旧版本为`is_report_success`），在FE的Web页面就可以看到对应SQL语句执行的Report信息：
+
+
 ![image.png](/images/running_profile.png)
 
 这里会列出最新执行完成的**100条语句**，我们可以通过Profile查看详细的统计信息。

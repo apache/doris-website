@@ -83,7 +83,7 @@ Starting from version 3.0, a compute-storage decoupled deployment architecture c
   
 - Storage Layer: The storage layer can use shared storage solutions such as S3, HDFS, OSS, COS, OBS, Minio, and Ceph to store Doris's data files, including Segment files and inverted index files.
 
-![Overall Architecture and Technical Features of Compute-Storage Decoupling](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.png)
+![Overall Architecture and Technical Features of Compute-Storage Decoupling](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.jpg)
 
 ## Core Features of Apache Doris
 

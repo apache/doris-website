@@ -24,5 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:
 
+* Reading and writing data in the Catalog.
+* Reading data using Table Valued Functions.
+* Reading data with Broker Load.
+* Writing data during Export.
+* Writing data with Outfile.
+
+## Supported Compression Formats
+
+* uncompressed
+* snappy
+* lz4
+* zstd
+* lzo
+* zlib

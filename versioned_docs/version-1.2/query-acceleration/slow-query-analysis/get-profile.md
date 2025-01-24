@@ -74,11 +74,12 @@ We often encounter situations where the execution time of the corresponding SQL 
     
     --Execute the corresponding Query
     mysql> select id,name from test.test where name like "%RuO%";
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-    | id                        | name                                                                                                                        |
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-    | 1ZWXYGbb8nr5Pi29J4cEMyEMb | ZN1nqzBRSl1rTrr99rnX1aplxhRuOUTLw6so7rzjlRQ317gTPxh0dHljmrARDJjH7FjRkJW9c7YuUBmWikq7eNgmFKJPreWirDrGrFzUYH4eP6kDtSA3UTnNIIj |
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+    +---------------------------+---------------------------------------------------------------+
+    | id                        | name                                                          |
+    +---------------------------+---------------------------------------------------------------+
+    | 1ZWXYGbb8nr5Pi29J4cEMyEMb | ZN1nqzBRSl1rTrr99rnX1aplxhRuOUTLw6so7rzjlRQ317gTPxh0dHljmrARDJ|
+    |                           | jH7FjRkJW9c7YuUBmWikq7eNgmFKJPreWirDrGrFzUYH4eP6kDtSA3UTnNIIj |
+    +---------------------------+---------------------------------------------------------------+
     1 row in set (0.01 sec)
     ```
 
@@ -100,12 +101,12 @@ When the cluster cannot access the external network normally, it needs to obtain
     ```
     --Find the Profile ID according to the corresponding query
     mysql> show query profile "/";
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
+    +-----------------------------------+-----------+---------------------+---------------------+
     | Profile ID                        | Task Type | Start Time          | End Time            | Total | Task State | User | Default Db | Sql Statement                                         |
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
+    +-----------------------------------+-----------+---------------------+---------------------+
     | 1b0bb22689734d30-bbe56e17c2ff21dc | QUERY     | 2024-02-28 11:00:17 | 2024-02-28 11:00:17 | 7ms   | EOF        | root |            | select id,name from test.test where name like "%RuO%" |
     | 202fb174510c4772-965289e8f7f0cf10 | QUERY     | 2024-02-25 19:39:20 | 2024-02-25 19:39:20 | 19ms  | EOF        | root |            | select id,name from test.test where name like "%KJ%"  |
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
+    +-----------------------------------+-----------+---------------------+---------------------+
     2 rows in set (0.00 sec)
     ```
 
@@ -120,7 +121,7 @@ When the cluster cannot access the external network normally, it needs to obtain
     100  1211    0  1211    0     0   168k      0 --:--:-- --:--:-- --:--:--  168k
     ```
 
-- The returned Profile line break is \ \n, which is inconvenient to analyze. You can replace \ \n with \n in a text editing tool.
+- The returned Profile line break is `\ \n`, which is inconvenient to analyze. You can replace `\ \n` with `\n` in a text editing tool.
 
     ```
     [user@VM-10-6-centos profile]$ cat test.profile

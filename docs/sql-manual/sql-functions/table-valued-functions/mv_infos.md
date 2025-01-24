@@ -24,79 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `mv_infos`
-
-### Name
-
-mv_infos
-
-### description
+## Description
 
 Table function, generating temporary tables for asynchronous materialized views, which can view information about asynchronous materialized views created in a certain database.
 
-This function is used in the from clause.
-
-This funciton is supported since 2.1.0.
-
-#### syntax
-
-`mv_infos("database"="")`
-
-mv_infos() Table structure:
+## Syntax
 ```sql
-mysql> desc function mv_infos("database"="tpch100");
-+--------------------+---------+------+-------+---------+-------+
-| Field              | Type    | Null | Key   | Default | Extra |
-+--------------------+---------+------+-------+---------+-------+
-| Id                 | BIGINT  | No   | false | NULL    | NONE  |
-| Name               | TEXT    | No   | false | NULL    | NONE  |
-| JobName            | TEXT    | No   | false | NULL    | NONE  |
-| State              | TEXT    | No   | false | NULL    | NONE  |
-| SchemaChangeDetail | TEXT    | No   | false | NULL    | NONE  |
-| RefreshState       | TEXT    | No   | false | NULL    | NONE  |
-| RefreshInfo        | TEXT    | No   | false | NULL    | NONE  |
-| QuerySql           | TEXT    | No   | false | NULL    | NONE  |
-| EnvInfo            | TEXT    | No   | false | NULL    | NONE  |
-| MvProperties       | TEXT    | No   | false | NULL    | NONE  |
-| MvPartitionInfo    | TEXT    | No   | false | NULL    | NONE  |
-| SyncWithBaseTables | BOOLEAN | No   | false | NULL    | NONE  |
-+--------------------+---------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
+MV_INFOS("database"="<database>")
 ```
 
-* Id: Materialized View ID
-* Name: Materialized View Name
-* JobName: The job name corresponding to the materialized view
-* State: Materialized View State
-* SchemaChangeDetail: The reason why the materialized view State becomes a SchemeChange
-* RefreshState: Materialized view refresh status
-* RefreshInfo: Refreshing strategy information defined by materialized views
-* QuerySql: Query statements defined by materialized views
-* EnvInfo: Environmental information during the creation of materialized views
-* MvProperties: Materialized visual attributes
-* MvPartitionInfo: Partition information of materialized views
-* SyncWithBaseTables：Is it synchronized with the base table data? To see which partition is not synchronized, please use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md)
+## Required Parameters
+**`<database>`**
+> Specify the cluster database name to be queried
 
-### example
 
-1. View all materialized views under db1
+## Return Value
 
-```sql
-mysql> select * from mv_infos("database"="db1");
-```
+| Field                  | Type    | Description                                                         |
+|------------------------|---------|---------------------------------------------------------------------|
+| Id                     | BIGINT  | Materialized view ID                                                |
+| Name                   | TEXT    | Materialized view name                                              |
+| JobName                | TEXT    | Job name corresponding to the materialized view                      |
+| State                  | TEXT    | State of the materialized view                                       |
+| SchemaChangeDetail     | TEXT    | Reason for the state change to SchemaChange                         |
+| RefreshState           | TEXT    | Refresh state of the materialized view                               |
+| RefreshInfo            | TEXT    | Refresh strategy information defined for the materialized view       |
+| QuerySql               | TEXT    | SQL query defined for the materialized view                          |
+| EnvInfo                | TEXT    | Environment information when the materialized view was created       |
+| MvProperties           | TEXT    | Materialized view properties                                         |
+| MvPartitionInfo        | TEXT    | Partition information of the materialized view                       |
+| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
 
-2. View the materialized view named mv1 under db1
+## Examples
 
-```sql
-mysql> select * from mv_infos("database"="db1") where Name = "mv1";
-```
-
-3. View the status of the materialized view named mv1 under db1
+View all materialized views under test
 
 ```sql
-mysql> select State from mv_infos("database"="db1") where Name = "mv1";
+select * from mv_infos("database"="test");
+```
+```text
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name                     | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                                                                                         | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1                      | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user`                                                                      | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
+| 21788 | test_tablet_type_mtmv_mv | inner_mtmv_21788 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`test_tablet_type_mtmv_table`.`k2`, `internal`.`test`.`test_tablet_type_mtmv_table`.`k3` from `internal`.`test`.`test_tablet_type_mtmv_table` | {}                                                        | MTMVPartitionInfo{partitionType=SELF_MANAGE}                                                              |                  0 |
++-------+--------------------------+------------------+--------+--------------------+--------------+---------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
 ```
 
-### keywords
+View the materialized view named mv1 under test
 
-    mv, infos
+```sql
+select * from mv_infos("database"="test") where Name = "mv1";
+```
+```text
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| Id    | Name | JobName          | State  | SchemaChangeDetail | RefreshState | RefreshInfo                           | QuerySql                                                                                    | MvProperties                                              | MvPartitionInfo                                                                                           | SyncWithBaseTables |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+| 19494 | mv1  | inner_mtmv_19494 | NORMAL |                    | SUCCESS      | BUILD DEFERRED REFRESH AUTO ON MANUAL | SELECT `internal`.`test`.`user`.`k2`, `internal`.`test`.`user`.`k3` FROM `internal`.`test`.`user` | {partition_sync_limit=100, partition_sync_time_unit=YEAR} | MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'} |                  1 |
++-------+------+------------------+--------+--------------------+--------------+---------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+--------------------+
+```

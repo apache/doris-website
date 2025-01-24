@@ -26,32 +26,34 @@ under the License.
 
 # Truncate
 
-This statement is used to clear the data of a specified table or partition in Doris
+Use this statement to clear data from a specified table and its partitions.
 
 ## Syntax
 
-```SQL
-TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)];
+```sql
+TRUNCATE TABLE [db.]tbl [PARTITION(p1, p2, ...)];
 ```
 
-- This statement only clears the data within a table or partition but preserves the table or partition itself.
-- Unlike DELETE, this statement can only clear the specified table or partition as a whole and cannot be added with filter conditions.
-- Unlike DELETE, truncating data will not affect query performance.
-- The data deleted by this operation is not recoverable.
-- When using this command, the table status must be NORMAL, which means that tables undergoing SCHEMA CHANGE can not be truncated.
-- This command may cause ongoing imports to fail.
+- This statement clears the data but retains the table or partition structure.
 
-## Example
+- Unlike DELETE, TRUNCATE only performs metadata operations, making it faster and not affecting query performance.
 
-1. Truncate the table `tbl` under `example_db`.
+- Data removed by this operation cannot be recovered.
 
-```SQL
+- The table status must be NORMAL, and there should be no ongoing SCHEMA CHANGE operations.
+
+- This command may cause ongoing import tasks to fail.
+
+## Examples
+
+**1. Clear the table `tbl` in the `example_db` database**
+
+```sql
 TRUNCATE TABLE example_db.tbl;
 ```
 
-2. Truncate partitions `p1` and `p2` of table `tbl`.
+**2. Clear the `p1` and `p2` partitions of the table `tbl`**
 
-```SQL
+```sql
 TRUNCATE TABLE tbl PARTITION(p1, p2);
 ```
-

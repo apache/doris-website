@@ -24,23 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ANY_VALUE
-
-ANY_VALUE
-
-
 ## 描述
+
+返回分组中表达式或列的任意一个值。如果存在非NULL值，返回任意非NULL值，否则返回NULL。
+
+## 别名
+
+- ANY
+
 ## 语法
 
-`ANY_VALUE(expr)`
+```sql
+ANY_VALUE(<expr>)
+```
 
-如果expr中存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。
+## 参数
 
-别名函数： `ANY(expr)`
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 要聚合的列或表达式 |
+
+## 返回值
+
+如果存在非NULL值，返回任意非NULL值，否则返回NULL。
 
 ## 举例
+
+```sql
+select id, any_value(name) from cost2 group by id;
 ```
-mysql> select id, any_value(name) from cost2 group by id;
+
+```text
 +------+-------------------+
 | id   | any_value(`name`) |
 +------+-------------------+
@@ -48,5 +62,3 @@ mysql> select id, any_value(name) from cost2 group by id;
 |    2 | jack              |
 +------+-------------------+
 ```
-### keywords
-ANY_VALUE, ANY

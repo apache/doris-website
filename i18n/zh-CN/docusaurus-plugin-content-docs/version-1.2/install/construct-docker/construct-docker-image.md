@@ -95,9 +95,9 @@ Dockerfile 脚本编写需要注意以下几点：
 
 1. 创建构建环境目录
 
-   ```shell
+```shell
    mkdir -p ./docker-build/fe/resource
-   ```
+```
 
 2. 下载[官方二进制包](https://doris.apache.org/zh-CN/download)/编译的二进制包
 
@@ -105,7 +105,7 @@ Dockerfile 脚本编写需要注意以下几点：
 
 3. 编写 FE 的 Dockerfile 脚本
 
-   ```powershell
+```powershell
    # 选择基础镜像
    FROM openjdk:8u342-jdk
    
@@ -127,7 +127,7 @@ Dockerfile 脚本编写需要注意以下几点：
    RUN chmod 755 /opt/apache-doris/fe/bin/init_fe.sh
    
    ENTRYPOINT ["/opt/apache-doris/fe/bin/init_fe.sh"]
-   ```
+```
 
    编写后命名为 `Dockerfile` 并保存至 `./docker-build/fe` 目录下
 
@@ -143,10 +143,10 @@ Dockerfile 脚本编写需要注意以下几点：
 
    构建 FE：
 
-   ```shell
+```shell
    cd ./docker-build/fe
    docker build . -t ${fe-tagName}
-   ```
+```
 
 
 #### 构建 BE
@@ -158,18 +158,18 @@ mkdir -p ./docker-build/be/resource
 ```
 2. 构建环境目录如下：
 
-   ```sql
+```sql
    └── docker-build                                                // 构建根目录 
        └── be                                                      // BE 构建目录
            ├── dockerfile                                          // dockerfile 脚本
            └── resource                                            // 资源目录
                ├── init_be.sh                                      // 启动及注册脚本
                └── apache-doris-x.x.x-bin-x86_64/arm-be.tar.gz     // 二进制程序包
-   ```
+```
 
 3. 编写 BE 的 Dockerfile 脚本
 
-   ```powershell
+```powershell
    # 选择基础镜像
    FROM openjdk:8u342-jdk
    
@@ -191,7 +191,7 @@ mkdir -p ./docker-build/be/resource
    RUN chmod 755 /opt/apache-doris/be/bin/init_be.sh
    
    ENTRYPOINT ["/opt/apache-doris/be/bin/init_be.sh"]
-   ```
+```
 
    编写后命名为 `Dockerfile` 并保存至 `./docker-build/be` 目录下
 
@@ -207,16 +207,16 @@ mkdir -p ./docker-build/be/resource
 
    构建 BE：
 
-   ```shell
+```shell
    cd ./docker-build/be
    docker build . -t ${be-tagName}
-   ```
+```
 
    构建完成后，会有 `Success` 字样提示，这时候通过以下命令可查看刚构建完成的 Image 镜像
 
-   ```shell
+```shell
    docker images
-   ```
+```
 
 #### 构建 Broker
 
@@ -228,18 +228,18 @@ mkdir -p ./docker-build/broker/resource
 
 2. 构建环境目录如下：
 
-   ```sql
+```sql
    └── docker-build                                                // 构建根目录 
        └── broker                                                  // BROKER 构建目录
            ├── dockerfile                                          // dockerfile 脚本
            └── resource                                            // 资源目录
                ├── init_broker.sh                                  // 启动及注册脚本
                └── apache-doris-x.x.x-bin-broker.tar.gz            // 二进制程序包
-   ```
+```
 
 3. 编写 Broker 的 Dockerfile 脚本
 
-   ```powershell
+```powershell
    # 选择基础镜像
    FROM openjdk:8u342-jdk
    
@@ -261,7 +261,7 @@ mkdir -p ./docker-build/broker/resource
    RUN chmod 755 /opt/apache-doris/broker/bin/init_broker.sh
    
    ENTRYPOINT ["/opt/apache-doris/broker/bin/init_broker.sh"]
-   ```
+```
 
    编写后命名为 `Dockerfile` 并保存至 `./docker-build/broker` 目录下
 
@@ -277,16 +277,16 @@ mkdir -p ./docker-build/broker/resource
 
    构建 Broker：
 
-   ```shell
+```shell
    cd ./docker-build/broker
    docker build . -t ${broker-tagName}
-   ```
+```
 
    构建完成后，会有 `Success` 字样提示，这时候通过以下命令可查看刚构建完成的 Image 镜像
 
-   ```shell
+```shell
    docker images
-   ```
+```
 
 ## 推送镜像至 DockerHub 或私有仓库
 

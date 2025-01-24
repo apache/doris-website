@@ -86,20 +86,20 @@ Install successful
 
 Logstash Doris output plugin 的配置如下：
 
-配置 | 说明
---- | ---
-`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
-`password` | Doris 用户的密码
-`db` | 要写入的 Doris 库名
-`table` | 要写入的 Doris 表名
-`label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 logstash
-`headers` | Doris Stream Load 的 headers 参数，语法格式为 ruby map，例如：headers => { "format" => "json" "read_json_by_line" => "true" }
-`mapping` | Logstash 字段到 Doris 表字段的映射， 参考后续章节的使用示例
-`message_only` | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
-`max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
-`log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
-`log_speed_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
+配置                     | 说明
+----------------------- | -------------------------------------------------------------------------------------------------------------------------
+`http_hosts`            | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
+`user`                  | Doris 用户名，该用户需要有doris对应库表的导入权限
+`password`              | Doris 用户的密码
+`db`                    | 要写入的 Doris 库名
+`table`                 | 要写入的 Doris 表名
+`label_prefix`          | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 logstash
+`headers`               | Doris Stream Load 的 headers 参数，语法格式为 ruby map，例如：headers => { "format" => "json" "read_json_by_line" => "true" }
+`mapping`               | Logstash 字段到 Doris 表字段的映射， 参考后续章节的使用示例
+`message_only`          | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
+`max_retries`           | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
+`log_request`           | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
+`log_speed_interval`    | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
 
 
 ## 使用示例

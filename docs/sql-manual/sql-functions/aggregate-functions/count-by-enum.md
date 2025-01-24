@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COUNT_BY_ENUM",
-    "language": "en"
+"title": "COUNT_BY_ENUM",
+"language": "en"
 }
 ---
 
@@ -24,22 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COUNT_BY_ENUM 
+## Description
 
-COUNT_BY_ENUM
+Treat the data in the column as enumeration values and count the number of each enumeration value. Returns the number of enumeration values for each column, as well as the number of non-null values and the number of null values.
 
-### Description
-#### Syntax
+## Syntax
 
-`count_by_enum(expr1, expr2, ... , exprN);`
+```sql
+COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
+```
 
-Treats the data in a column as an enumeration and counts the number of values in each enumeration. Returns the number of enumerated values for each column, and the number of non-null values versus the number of null values.
+## Parameters
 
-#### Arguments
+| Parameter | Description |
+| -- | -- |
+| `<expr1>` | Fill in at least one input. Column whose value is of type STRING |
 
-`expr1` — At least one input must be specified. The value is a column of type `STRING`.
-
-##### Returned value
+## Returned value
 
 Returns a JSONArray string.
 
@@ -81,11 +82,9 @@ Description: The return value is a JSON array string and the order of the intern
 * all: total number, including both null and non-null values.
 
 
-### example
+## Example
 
 ```sql
-DROP TABLE IF EXISTS count_by_enum_test;
-
 CREATE TABLE count_by_enum_test(
                                    `id` varchar(1024) NULL,
                                    `f1` text REPLACE_IF_NOT_NULL NULL,
@@ -97,16 +96,23 @@ DISTRIBUTED BY HASH(id) BUCKETS 3
 PROPERTIES ( 
     "replication_num" = "1"
 );
+```
 
+```sql
 INSERT into count_by_enum_test (id, f1, f2, f3) values
                                                     (1, "F", "10", "China"),
                                                     (2, "F", "20", "China"),
                                                     (3, "M", NULL, "United States"),
                                                     (4, "M", NULL, "United States"),
                                                     (5, "M", NULL, "England");
+```
 
+
+```sql
 SELECT * from count_by_enum_test;
+```
 
+```text
 +------+------+------+---------------+
 | id   | f1   | f2   | f3            |
 +------+------+------+---------------+
@@ -116,33 +122,40 @@ SELECT * from count_by_enum_test;
 | 4    | M    | NULL | United States |
 | 5    | M    | NULL | England       |
 +------+------+------+---------------+
+```
 
+```sql
 select count_by_enum(f1) from count_by_enum_test;
+```
 
+```text
 +------------------------------------------------------+
 | count_by_enum(`f1`)                                  |
 +------------------------------------------------------+
 | [{"cbe":{"M":3,"F":2},"notnull":5,"null":0,"all":5}] |
 +------------------------------------------------------+
+```
 
+```sql
 select count_by_enum(f2) from count_by_enum_test;
+```
 
+```text
 +--------------------------------------------------------+
 | count_by_enum(`f2`)                                    |
 +--------------------------------------------------------+
 | [{"cbe":{"10":1,"20":1},"notnull":2,"null":3,"all":5}] |
 +--------------------------------------------------------+
+```
 
+```sql
 select count_by_enum(f1,f2,f3) from count_by_enum_test;
+```
 
+```text
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | count_by_enum(`f1`, `f2`, `f3`)                                                                                                                                                          |
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | [{"cbe":{"M":3,"F":2},"notnull":5,"null":0,"all":5},{"cbe":{"20":1,"10":1},"notnull":2,"null":3,"all":5},{"cbe":{"England":1,"United States":2,"China":2},"notnull":5,"null":0,"all":5}] |
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    
 ```
-
-### keywords
-
-COUNT_BY_ENUM

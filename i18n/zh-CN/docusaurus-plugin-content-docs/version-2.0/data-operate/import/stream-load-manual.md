@@ -373,7 +373,11 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ---------------------- | ------------------------------------------------------------ |
 | TxnId                  | 导入事务的 ID                                                |
 | Label                  | 导入作业的 label，通过 -H "label:<label_id>" 指定            |
-| Status                 | 导入的最终状态 Success：表示导入成功 Publish Timeout：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试 Label Already Exists：Label 重复，需要更换 labelFail：导入失败 |
+| Status                 | 导入的最终状态                                              |
+|                        | - Success：表示导入成功                                     |
+|                        | - Publish Timeout：该状态也表示导入已经完成，但数据可能会延迟可见，无需重试 |
+|                        | - Label Already Exists：Label 重复，需要更换 label         |
+|                        | - Fail：导入失败                                            |
 | ExistingJobStatus      | 已存在的 Label 对应的导入作业的状态。这个字段只有在当 Status 为 "Label Already Exists" 时才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。"RUNNING" 表示作业还在执行，"FINISHED" 表示作业成功。 |
 | Message                | 导入错误信息                                                 |
 | NumberTotalRows        | 导入总处理的行数                                             |
@@ -390,49 +394,6 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ErrorURL               | 如果有数据质量问题，通过访问这个 URL 查看具体错误行          |
 
 通过 ErrorURL 可以查看因为数据质量不佳导致的导入失败数据。使用命令 `curl "<ErrorURL>"` 命令直接查看错误数据的信息。
-
-## TVF 在 Stream Load 中的应用 - http_stream 模式
-
-依托 Doris 最新引入的 Table Value Function（TVF）的功能，在 Stream Load 中，可以通过使用 SQL 表达式来表达导入的参数。这个专门为 Stream Load 提供的 TVF 为 http_stream。
-
-:::caution
-注意
-
-使用 TVF http_stream 进行 Stream Load 导入时的 Rest API URL 不同于 Stream Load 普通导入的 URL。
-
-- 普通导入的 URL 为：
-  
-    http://fe_host:http_port/api/{db}/{table}/_stream_load
-
-- 使用 TVF http_stream 导入的 URL 为：
-
-    http://fe_host:http_port/api/_http_stream
-:::
-
-使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-在 Header 中添加一个`sql`的参数，去替代之前参数中的`column_separator`、`line_delimiter`、`where`、`columns`等参数，使用起来非常方便。
-
-load_sql 举例：
-
-```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-```
-
-http_stream 支持的参数：
-
-"column_separator" = ",", "format" = "CSV",
-
-...
-
-示例：
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ## 导入举例
 

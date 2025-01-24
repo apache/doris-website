@@ -858,7 +858,7 @@ JOB e_daily
 
 :::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
 
 :::
 

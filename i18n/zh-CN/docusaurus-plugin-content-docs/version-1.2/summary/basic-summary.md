@@ -35,6 +35,7 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 # 使用场景
 
 如下图所示，数据源经过各种数据集成和加工处理后，通常会入库到实时数仓 Doris 和离线湖仓（Hive, Iceberg, Hudi 中），Apache Doris 被广泛应用在以下场景中。
+
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sekvbs5ih5rb16wz6n9k.png)
 
 -   报表分析

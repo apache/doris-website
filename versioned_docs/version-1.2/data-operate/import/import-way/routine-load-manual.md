@@ -264,7 +264,7 @@ Here is an example with a column type of TinyInt
 
 | source data | source data example | string to int | strict_mode   | result                 |
 | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| Null value  | \N                  | N/A           | true or false | NULL                   |
+| Null value  | `\N`                  | N/A           | true or false | NULL                   |
 | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
 | not null    | aaa                 | NULL          | false         | NULL                   |
 | not null    | 1                   | 1             | true or false | correct data           |
@@ -277,7 +277,7 @@ Here is an example with the column type Decimal(1,0)
 
 | source data | source data example | string to int | strict_mode   | result                 |
 | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| Null value  | \N                  | N/A           | true or false | NULL                   |
+| Null value  | `\N`                  | N/A           | true or false | NULL                   |
 | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
 | not null    | aaa                 | NULL          | false         | NULL                   |
 | not null    | 1 or 10             | 1             | true or false | correct data           |

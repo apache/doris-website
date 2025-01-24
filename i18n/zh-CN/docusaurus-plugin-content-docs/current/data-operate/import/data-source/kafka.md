@@ -34,6 +34,8 @@ Doris 通过 Routine Load 持续消费 Kafka Topic 中的数据。提交 Routine
 
 Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。用户可通过 Kafka Connect 插件轻松导入多种序列化格式（如 JSON、Avro、Protobuf），并支持解析 Debezium 组件的数据格式。更多文档请参考 [Doris Kafka Connector](../../../ecosystem/doris-kafka-connector.md)。
 
+在大多数情况下，可以直接选择 Routine Load 进行数据导入，无需集成外部组件即可消费 Kafka 数据。当需要加载 Avro、Protobuf 格式的数据，或通过 Debezium 采集的上游数据库数据时，可以使用 Doris Kafka Connector。
+
 ## 使用 Routine Load 消费 Kafka 数据
 
 ### 使用限制
@@ -43,7 +45,7 @@ Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。�
 
 ### 操作示例
 
-在 Doris 中通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务，分为单表导入和多表导入。详细语法请参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。
+在 Doris 中通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务，分为单表导入和多表导入。详细语法请参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。
 
 #### 单表导入
 
@@ -99,7 +101,7 @@ mysql> select * from test_routineload_tbl;
 
 #### 多表导入
 
-对于需要同时导入多张表的场景，Kafka 中的数据需包含表名信息。支持从 Kafka 的 Value 中获取动态表名，格式为：`table_name|{"col1": "val1", "col2": "val2"}`。CSV 格式类似：`table_name|val1,val2,val3`。注意，表名必须与 Doris 中的表名一致，否则导入失败，且动态表不支持后面介绍的 column_mapping 配置。
+对于需要同时导入多张表的场景，Kafka 中的数据必须包含表名信息，格式为：`table_name|data`。例如，导入 CSV 数据时，格式应为：`table_name|val1,val2,val3`。请注意，表名必须与 Doris 中的表名完全一致，否则导入将失败，并且不支持后面介绍的 column_mapping 配置。
 
 **第 1 步：准备数据**
 

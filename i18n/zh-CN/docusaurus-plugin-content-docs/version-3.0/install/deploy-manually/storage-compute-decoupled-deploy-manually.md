@@ -254,8 +254,17 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 1. 配置 be.conf
 
    在 `be.conf` 文件中，需要配置以下关键参数：
+    - deploy_mode
+      - 描述：指定 doris 启动模式
+      - 格式：cloud 表示存算分离模式，其它存算一体模式
+      - 示例：cloud
+    - file_cache_path
+      - 描述： 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。path 指定磁盘路径，total_size 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+      - 格式： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
+      - 示例： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
+      - 默认： [{"path":"${DORIS_HOME}/file_cache"}]
 
-2. 启动 BE 进程
+3. 启动 BE 进程
 
    使用以下命令启动 Backend：
 
@@ -263,7 +272,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    bin/start_be.sh --daemon
    ```
 
-3. 将 BE 添加到集群：
+4. 将 BE 添加到集群：
 
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
@@ -277,7 +286,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    更详细的用法请参考 [ADD BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) 和 [REMOVE BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND)。
 
-4. 验证 BE 状态
+5. 验证 BE 状态
 
    检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
 

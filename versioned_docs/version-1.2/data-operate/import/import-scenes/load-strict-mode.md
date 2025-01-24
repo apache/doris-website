@@ -106,7 +106,7 @@ For an imported column type that contains range restrictions, if the original da
 
    | Primitive data type | Primitive data example | Converted value to TinyInt | Strict mode | Result                   |
    | ------------------- | ---------------------- | -------------------------- | ----------- | ------------------------ |
-   | NULL                | \N                     | NULL                       | ON or OFF   | NULL                     |
+   | NULL                | `\N`                     | NULL                       | ON or OFF   | NULL                     |
    | Non-null value      | "abc" or 2000          | NULL                       | On          | Illegal value (filtered) |
    | non-null value      | "abc"                  | NULL                       | off         | NULL                     |
    | non-null value      | 1                      | 1                          | on or off   | import correctly         |
@@ -120,7 +120,7 @@ For an imported column type that contains range restrictions, if the original da
 
    | Primitive Data Types | Examples of Primitive Data | Converted to Decimal | Strict Mode | Result                   |
    | -------------------- | -------------------------- | -------------------- | ----------- | ------------------------ |
-   | Null                 | \N                         | null                 | On or Off   | NULL                     |
+   | Null                 | `\N`                         | null                 | On or Off   | NULL                     |
    | non-null value       | aaa                        | NULL                 | on          | illegal value (filtered) |
    | non-null value       | aaa                        | NULL                 | off         | NULL                     |
    | non-null value       | 1 or 10                    | 1 or 10              | on or off   | import correctly         |

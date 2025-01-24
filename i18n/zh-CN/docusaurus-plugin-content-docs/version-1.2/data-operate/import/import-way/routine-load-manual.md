@@ -138,13 +138,13 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
    第一种只有一条记录，且为json对象：
 
-   ```json
+```json
    {"category":"a9jadhx","author":"test","price":895}
-   ```
+```
 
    第二种为json数组，数组中可含多条记录
 
-   ```json
+```json
    [
        {   
            "category":"11",
@@ -165,11 +165,11 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
            "timestamp":1589191387
        }
    ]
-   ```
+```
    
    创建待导入的Doris数据表
    
-   ```sql
+```sql
    CREATE TABLE `example_tbl` (
       `category` varchar(24) NULL COMMENT "",
       `author` varchar(24) NULL COMMENT "",
@@ -190,11 +190,11 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
    PROPERTIES (
        "replication_num" = "1"
    );
-   ```
+```
    
    以简单模式导入json数据
    
-   ```sql
+```sql
    CREATE ROUTINE LOAD example_db.test_json_label_1 ON table1
    COLUMNS(category,price,author)
    PROPERTIES
@@ -213,11 +213,11 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
    	"kafka_partitions" = "0,1,2",
    	"kafka_offsets" = "0,0,0"
     );
-   ```
+```
    
    精准导入json格式数据
    
-   ```sql
+```sql
    CREATE ROUTINE LOAD example_db.test1 ON example_tbl
    COLUMNS(category, author, price, timestamp, dt=from_unixtime(timestamp, '%Y%m%d'))
    PROPERTIES
@@ -238,7 +238,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
        "kafka_partitions" = "0,1,2",
        "kafka_offsets" = "0,0,0"
    );
-   ```
+```
 
 **注意：** 表里的分区字段 `dt`  在我们的数据里并没有，而是在我们Routine load 语句里通过 `dt=from_unixtime(timestamp, '%Y%m%d')` 转换出来的
 
@@ -252,7 +252,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 | source data | source data example | string to int | strict_mode   | result                 |
 | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| 空值        | \N                  | N/A           | true or false | NULL                   |
+| 空值        | `\N`                  | N/A           | true or false | NULL                   |
 | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
 | not null    | aaa                 | NULL          | false         | NULL                   |
 | not null    | 1                   | 1             | true or false | correct data           |
@@ -263,7 +263,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 | source data | source data example | string to int | strict_mode   | result                 |
 | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| 空值        | \N                  | N/A           | true or false | NULL                   |
+| 空值        | `\N`                  | N/A           | true or false | NULL                   |
 | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
 | not null    | aaa                 | NULL          | false         | NULL                   |
 | not null    | 1 or 10             | 1             | true or false | correct data           |
@@ -276,15 +276,15 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 1. 上传文件
 
-   ```sql
+```sql
    CREATE FILE "ca.pem" PROPERTIES("url" = "https://example_url/kafka-key/ca.pem", "catalog" = "kafka");
    CREATE FILE "client.key" PROPERTIES("url" = "https://example_urlkafka-key/client.key", "catalog" = "kafka");
    CREATE FILE "client.pem" PROPERTIES("url" = "https://example_url/kafka-key/client.pem", "catalog" = "kafka");
-   ```
+```
 
 2. 创建例行导入作业
 
-   ```sql
+```sql
    CREATE ROUTINE LOAD db1.job1 on tbl1
    PROPERTIES
    (
@@ -300,7 +300,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
        "property.ssl.key.location" = "FILE:client.key",
        "property.ssl.key.password" = "abcdefg"
    );
-   ```
+```
 
 > Doris 通过 Kafka 的 C++ API `librdkafka` 来访问 Kafka 集群。`librdkafka` 所支持的参数可以参阅
 >
@@ -319,7 +319,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 1. 创建例行导入作业
 
-   ```sql
+```sql
    CREATE ROUTINE LOAD db1.job1 on tbl1
    PROPERTIES (
    "desired_concurrent_number"="1",
@@ -333,7 +333,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
        "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
        "property.sasl.kerberos.principal" = "doris@YOUR.COM"
    );
-   ```
+```
 
 **注意：**
 - 若要使 Doris 访问开启kerberos认证方式的Kafka集群，需要在 Doris 集群所有运行节点上部署 Kerberos 客户端 kinit，并配置 krb5.conf，填写KDC 服务信息等。
@@ -399,13 +399,14 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
    在创建导入作业时，这三个参数可以有以下组合：
 
-   | 组合 | `kafka_partitions` | `kafka_offsets` | `property.kafka_default_offset` | 行为                                                         |
-   | ---- | ------------------ | --------------- | ------------------------------- | ------------------------------------------------------------ |
-   | 1    | No                 | No              | No                              | 系统会自动查找topic对应的所有分区并从 OFFSET_END 开始消费    |
-   | 2    | No                 | No              | Yes                             | 系统会自动查找topic对应的所有分区并从 default offset 指定的位置开始消费 |
-   | 3    | Yes                | No              | No                              | 系统会从指定分区的 OFFSET_END 开始消费                       |
-   | 4    | Yes                | Yes             | No                              | 系统会从指定分区的指定offset 处开始消费                      |
-   | 5    | Yes                | No              | Yes                             | 系统会从指定分区，default offset 指定的位置开始消费          |
+| 组合             | kafka_partitions             | kafka_offsets       | property.kafka_default_offset                             | 行为                                                                                                                                   |
+|-----------------|------------------------------|---------------------|-----------------------------------------------------------| ---------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | No               | No            | No                            | 系统会自动查找topic对应的所有分区并从 OFFSET_END 开始消费             |
+| 2    | No               | No            | Yes                           | 系统会自动查找topic对应的所有分区并从 default offset 指定的位置开始消费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+| 3    | Yes              | No            | No                            | 系统会从指定分区的 OFFSET_END 开始消费                              |
+| 4    | Yes              | Yes           | No                            | 系统会从指定分区的指定offset 处开始消费                              |
+| 5    | Yes              | No            | Yes                           | 系统会从指定分区，default offset 指定的位置开始消费                  |
+
 
 7. STOP和PAUSE的区别
 

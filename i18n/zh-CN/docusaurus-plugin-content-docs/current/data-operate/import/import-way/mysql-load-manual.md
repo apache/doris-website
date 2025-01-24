@@ -270,4 +270,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## 更多帮助
 
-关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。
+关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../../sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD) 命令手册。

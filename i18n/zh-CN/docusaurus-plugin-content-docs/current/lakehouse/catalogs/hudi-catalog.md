@@ -26,6 +26,8 @@ under the License.
 
 Hudi Catalog 复用了 Hive Catalog。通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hudi 的库表信息，并进行数据查询。
 
+[使用 Docker 快速体验 Apache Doris & Hudi](../best-practices/doris-hudi.md)
+
 ## 适用场景
 
 | 场景 | 说明                 |
@@ -49,19 +51,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* {MetaStoreProperties}
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* {StorageProperties}
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
-* {HudiProperties}
+* `{HudiProperties}`
 
   | 参数名称                            | 曾用名                        | 说明                                                                                                                                                       | 默认值   |
   | ------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
@@ -88,7 +90,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [ AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/google-cloud-storage.md)
+* [ Google Cloud Storage](../storages/gcs.md)
 
 * [ 阿里云 OSS](../storages/aliyun-oss.md)
 
@@ -167,10 +169,25 @@ SELECT * FROM hudi_ctl.hudi_db.hudi_tbl LIMIT 10;
 可以通过 `hudi_meta()` 表函数查询查询指定 Hudi 表的 Timeline：
 
 ```sql
-SELECT * FROM iceberg_meta(
+SELECT * FROM hudi_meta(
     'table' = 'hudi_ctl.hudi_db.hudi_tbl',
     'query_type' = 'timeline'
 );
+
++-------------------+--------+--------------------------+-----------+-----------------------+
+| timestamp         | action | file_name                | state     | state_transition_time |
++-------------------+--------+--------------------------+-----------+-----------------------+
+| 20241202171214902 | commit | 20241202171214902.commit | COMPLETED | 20241202171215756     |
+| 20241202171217258 | commit | 20241202171217258.commit | COMPLETED | 20241202171218127     |
+| 20241202171219557 | commit | 20241202171219557.commit | COMPLETED | 20241202171220308     |
+| 20241202171221769 | commit | 20241202171221769.commit | COMPLETED | 20241202171222541     |
+| 20241202171224269 | commit | 20241202171224269.commit | COMPLETED | 20241202171224995     |
+| 20241202171226401 | commit | 20241202171226401.commit | COMPLETED | 20241202171227155     |
+| 20241202171228827 | commit | 20241202171228827.commit | COMPLETED | 20241202171229570     |
+| 20241202171230907 | commit | 20241202171230907.commit | COMPLETED | 20241202171231686     |
+| 20241202171233356 | commit | 20241202171233356.commit | COMPLETED | 20241202171234288     |
+| 20241202171235940 | commit | 20241202171235940.commit | COMPLETED | 20241202171236757     |
++-------------------+--------+--------------------------+-----------+-----------------------+
 ```
 
 可以使用 `FOR TIME AS OF` 语句，根据快照的时间 ([时间格式](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#timetravel)和 Hudi 官网保持一致) 读取历史版本的数据。示例如下：
@@ -212,7 +229,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 
-## 附录（Appendix）
+## 附录
 
 ### 版本更新记录
 

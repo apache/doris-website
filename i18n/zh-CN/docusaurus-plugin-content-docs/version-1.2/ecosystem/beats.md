@@ -64,20 +64,20 @@ go build -o heartbeat-doris heartbeat/heartbeat.go
 
 Beats Doris output plugin 的配置如下：
 
-配置 | 说明
---- | ---
-`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
-`password` | Doris 用户的密码
-`database` | 要写入的 Doris 库名
-`table` | 要写入的 Doris 表名
-`label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 beats
-`headers` | Doris Stream Load 的 headers 参数，语法格式为 YAML map
-`codec_format_string` | 输出到 Doris Stream Load 的format string，%{[a][b]} 代表输入中的 a.b 字段，参考后续章节的使用示例
-`bulk_max_size` | Doris Stream Load 的 batch size，默认为100000
-`max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
-`log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 true
-`log_progress_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
+配置                      | 说明
+------------------------ | -------------------------------------------------------------------------------------------------------------------------
+`http_hosts`             | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
+`user`                   | Doris 用户名，该用户需要有doris对应库表的导入权限
+`password`               | Doris 用户的密码
+`database`               | 要写入的 Doris 库名
+`table`                  | 要写入的 Doris 表名
+`label_prefix`           | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 beats
+`headers`                | Doris Stream Load 的 headers 参数，语法格式为 YAML map
+`codec_format_string`    | 输出到 Doris Stream Load 的format string，%{[a][b]} 代表输入中的 a.b 字段，参考后续章节的使用示例
+`bulk_max_size`          | Doris Stream Load 的 batch size，默认为100000
+`max_retries`            | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
+`log_request`            | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 true
+`log_progress_interval`  | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
 
 
 ## 使用示例

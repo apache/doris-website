@@ -701,7 +701,11 @@ These values represent the creation time of the load, the start time of the ETL 
 
 Display the detailed running status of some jobs, which will be updated when ETL ends. It includes the number of loaded files, the total size (bytes), the number of subtasks, the number of processed original lines, etc.
 
-```{"ScannedRows":139264,"TaskNumber":1,"FileNumber":1,"FileSize":940754064}```
+```
+
+    {"ScannedRows":139264,"TaskNumber":1,"FileNumber":1,"FileSize":940754064}
+
+```
 
 + URL
 

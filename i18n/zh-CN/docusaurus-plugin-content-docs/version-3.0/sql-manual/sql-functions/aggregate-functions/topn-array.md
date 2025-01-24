@@ -24,36 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-｜
+## 描述
+
+TOPN_ARRAY 函数返回指定列中出现频率最高的 N 个值的数组。与 TOPN 函数不同，TOPN_ARRAY 返回一个数组类型，便于后续处理和分析。
+
 ## 语法
 
-`ARRAY<T> topn_array(expr, INT top_num[, INT space_expand_rate])`
-
-该 topn_array 函数使用 Space-Saving 算法计算 expr 中的 top_num 个频繁项，返回由前 top_num 个组成的数组，该结果为近似值
-
-space_expand_rate 参数是可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数
+```sql
+TOPN_ARRAY(<expr>, <top_num> [, <space_expand_rate>])
 ```
-counter numbers = top_num * space_expand_rate
-```
-space_expand_rate 的值越大，结果越准确，默认值为 50
+
+## 参数
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 要统计的列或表达式 |
+| `<top_num>` | 要返回的最高频率值的数量，必须是正整数 |
+| `<space_expand_rate>` | 可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数`counter_numbers = top_num * space_expand_rate` space_expand_rate 的值越大，结果越准确，默认值为50 |
+
+## 返回值
+返回一个数组，包含出现频率最高的 N 个值。
 
 ## 举例
+```sql
+-- 创建示例表
+CREATE TABLE page_visits (
+    page_id INT,
+    user_id INT,
+    visit_date DATE
+) DISTRIBUTED BY HASH(page_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- 插入测试数据
+INSERT INTO page_visits VALUES
+(1, 101, '2024-01-01'),
+(2, 102, '2024-01-01'),
+(1, 103, '2024-01-01'),
+(3, 101, '2024-01-01'),
+(1, 104, '2024-01-01'),
+(2, 105, '2024-01-01'),
+(1, 106, '2024-01-01'),
+(4, 107, '2024-01-01');
+
+-- 查找访问量最高的前3个页面
+SELECT TOPN_ARRAY(page_id, 3) as top_pages
+FROM page_visits;
 ```
-mysql> select topn_array(k3,3) from baseall;
-+--------------------------+
-| topn_array(`k3`, 3)      |
-+--------------------------+
-| [3021, 2147483647, 5014] |
-+--------------------------+
-1 row in set (0.02 sec)
 
-mysql> select topn_array(k3,3,100) from baseall;
-+--------------------------+
-| topn_array(`k3`, 3, 100) |
-+--------------------------+
-| [3021, 2147483647, 5014] |
-+--------------------------+
-1 row in set (0.02 sec)
+```text
++-----------+
+| top_pages |
++-----------+
+| [1, 2, 4] |
++-----------+
 ```
-
-

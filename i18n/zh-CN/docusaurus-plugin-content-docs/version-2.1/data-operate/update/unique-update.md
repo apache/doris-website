@@ -23,14 +23,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-主要讲述如何使用 Update 命令来更新 Doris 中的数据。Update 命令只能在 Unique 数据模型的表中执行。
+主要讲述如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
 
 ## 适用场景
 
-- 对满足某些条件的行，修改其取值
+- 小范围数据更新：适用于更新少量数据的场景，例如修复某些记录中的错误字段，或更新某些字段的状态（如订单状态更新等）。
 
-- 适合少量数据，不频繁的更新
+- ETL 批量加工部分字段：适用于大批量更新某个字段，常见于 ETL 加工场景。注意：大范围数据更新仅适合低频调用。
 
 ## 基本原理
 
@@ -44,7 +43,7 @@ Update 语法在 Doris 中是一个同步语法，即 Update 语句执行成功�
 
 Update 语句的性能和待更新的行数以及条件的检索效率密切相关。
 
-- 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。Update 更新比较适合偶发更新的场景，比如修改个别行的值。Update 并不适合大批量的修改数据。
+- 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。 对于小范围更新，Doris支持的频率与`INSERT INTO`语句类似， 对于大范围更新，由于单个update执行的时间较长， 仅适用于低频调用。
 
 - 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要扫全表，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
 

@@ -323,65 +323,20 @@ FROM KAFKA [data_source_properties]
 
 **01 FE 配置参数**
 
-**max_routine_load_task_concurrent_num**
-
-- 默认值：256
-
-- 动态配置：是
-
-- FE Master 独有配置：是
-
-- 参数描述：限制 Routine Load 的导入作业最大子并发数量。建议维持在默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。
-
-**max_routine_load_task_num_per_be**
-
-- 默认值：1024
-
-- 动态配置：是
-
-- FE Master 独有配置：是
-
-- 参数描述：每个 BE 限制的最大并发 Routine Load 任务数。`max_routine_load_task_num_per_be` 应该小 `routine_load_thread_pool_size` 于参数。
-
-**max_routine_load_job_num**
-
-- 默认值：100
-
-- 动态配置：是
-
-- FE Master 独有配置：是
-
-- 参数描述：限制最大 Routine Load 作业数，包括 NEED_SCHEDULED，RUNNING，PAUSE
-
-**max_tolerable_backend_down_num**
-
-- 默认值：0
-
-- 动态配置：是
-
-- FE Master 独有配置：是
-
-- 参数描述：只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都是 alive 状态踩允许重新调度。
-
-**period_of_auto_resume_min**
-
-- 默认值：5（分钟）
-
-- 动态配置：是
-
-- FE Master 独有配置：是
-
-- 参数描述：自动恢复 Routine Load 的周期
+| 参数名称                          | 默认值 | 动态配置 | FE Master 独有配置 | 参数描述                                                                                     |
+|-----------------------------------|--------|----------|---------------------|----------------------------------------------------------------------------------------------|
+| max_routine_load_task_concurrent_num | 256    | 是       | 是                  | 限制 Routine Load 的导入作业最大子并发数量。建议维持在默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。 |
+| max_routine_load_task_num_per_be  | 1024   | 是       | 是                  | 每个 BE 限制的最大并发 Routine Load 任务数。`max_routine_load_task_num_per_be` 应该小于 `routine_load_thread_pool_size`。 |
+| max_routine_load_job_num           | 100    | 是       | 是                  | 限制最大 Routine Load 作业数，包括 NEED_SCHEDULED，RUNNING，PAUSE。                        |
+| max_tolerable_backend_down_num     | 0      | 是       | 是                  | 只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都是 alive 状态时允许重新调度。 |
+| period_of_auto_resume_min          | 5（分钟） | 是       | 是                  | 自动恢复 Routine Load 的周期。                                                               |
 
 **02 BE 配置参数**
 
-**max_consumer_num_per_group**
 
-- 默认值：3
-
-- 动态配置：是
-
-- 描述：一个子任务重最多生成几个 consumer 消费数据。对于 Kafka 数据源，一个 consumer 可能消费一个或多个 Kafka Partition。假设一个任务需要消费 6 个 Kafka Partitio，则会生成 3 个 consumer，每个 consumer 消费 2 个 partition。如果只有 2 个 partition，则只会生成 2 个 consumer，每个 consumer 消费 1 个 partition。
+| 参数名称                     | 默认值 | 动态配置 | 描述                                                                                                           |
+|------------------------------|--------|----------|----------------------------------------------------------------------------------------------------------------|
+| max_consumer_num_per_group   | 3      | 是       | 一个子任务最多生成几个 consumer 消费
 
 **03 导入配置参数**
 
@@ -1648,169 +1603,95 @@ mysql> SELECT * FROM routine_test08;
 
 **导入 SSL 认证的 Kafka 数据**
 
-1. 导入数据样例
+导入命令样例：
 
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad21",
+            "property.security.protocol" = "ssl",
+            "property.ssl.ca.location" = "FILE:ca.pem",
+            "property.ssl.certificate.location" = "FILE:client.pem",
+            "property.ssl.key.location" = "FILE:client.key",
+            "property.ssl.key.password" = "ssl_passwd"
+        );  
+```
 
-2. 建表结构
+参数说明：
 
-    ```sql
-    CREATE TABLE demo.routine_test20 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
-
-3. 导入命令
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
-            PROPERTIES
-            (
-                "format" = "json"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "192.168.100.129:9092",
-                "kafka_topic" = "routineLoad21",
-                "property.security.protocol" = "ssl",
-                "property.ssl.ca.location" = "FILE:ca.pem",
-                "property.ssl.certificate.location" = "FILE:client.pem",
-                "property.ssl.key.location" = "FILE:client.key",
-                "property.ssl.key.password" = "ssl_passwd"
-            );  
-    ```
-
-4. 导入结果
-
-    ```sql
-    mysql> select * from routine_test20;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.01 sec)
-    ```
+| 参数                              | 介绍                                                         |
+| --------------------------------- | ------------------------------------------------------------ |
+| property.security.protocol        | 使用的安全协议，如上述的例子使用的是 SSL                     |
+| property.ssl.ca.location          | CA（Certificate Authority）证书的位置                        |
+| property.ssl.certificate.location | （如果 Kafka server 端开启了 client 认证才需要配置）Client 的 public key 的位置 |
+| property.ssl.key.location         | （如果 Kafka server 端开启了 client 认证才需要配置）Client 的 private key 的位置 |
+| property.ssl.key.password         | （如果 Kafka server 端开启了 client 认证才需要配置）Client 的 private key 的密码 |
 
 **导入 Kerberos 认证的 Kafka 数据**
 
-1. 导入数据样例
+导入命令样例：
 
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad21",
+            "property.security.protocol" = "SASL_PLAINTEXT",
+            "property.sasl.kerberos.service.name" = "kafka",
+            "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
+            "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
+        );  
+```
 
-2. 建表结构
+参数说明：
 
-    ```sql
-    CREATE TABLE demo.routine_test21 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
+| 参数                                | 介绍                                                |
+| ----------------------------------- | --------------------------------------------------- |
+| property.security.protocol          | 使用的安全协议，如上述的例子使用的是 SASL_PLAINTEXT |
+| property.sasl.kerberos.service.name | 指定 broker service name，默认是 Kafka              |
+| property.sasl.kerberos.keytab       | keytab 文件的位置                                   |
+| property.sasl.kerberos.principal    | 指定 kerberos principal                             |
 
-3. 导入命令
+导入 PLAIN 认证的 Kafka 集群
 
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
-    PROPERTIES
-    (
-        "format" = "json"
-    )
-    FROM KAFKA
-    (
-        "kafka_broker_list" = "192.168.100.129:9092",
-        "kafka_topic" = "routineLoad21",
-        "property.security.protocol" = "SASL_PLAINTEXT",
-        "property.sasl.kerberos.service.name" = "kafka",
-        "property.sasl.kerberos.keytab"="/path/to/kafka_client.keytab",
-        "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
-    );  
-    ```
+1. 导入命令样例：
 
-4. 导入结果
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad22",
+            "property.security.protocol"="SASL_PLAINTEXT",
+            "property.sasl.mechanism"="PLAIN",
+            "property.sasl.username"="admin",
+            "property.sasl.password"="admin"
+        );  
+```
 
-    ```sql
-    mysql> select * from routine_test21;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.01 sec)
-    ```
+参数说明：
 
-**导入 PLAIN 认证的 Kafka 集群**
-
-1. 导入数据样例
-
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
-
-2. 建表结构
-
-    ```sql
-    CREATE TABLE demo.routine_test22 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
-
-3. 导入命令
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
-            PROPERTIES
-            (
-                "format" = "json"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "192.168.100.129:9092",
-                "kafka_topic" = "routineLoad22",
-                "property.security.protocol"="SASL_PLAINTEXT",
-                "property.sasl.mechanism"="PLAIN",
-                "property.sasl.username"="admin",
-                "property.sasl.password"="admin"
-            );  
-    ```
-
-4. 导入结果
-
-    ```sql
-    mysql> select * from routine_test22;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.02 sec)
-    ```
+| 参数                       | 介绍                                                |
+| -------------------------- | --------------------------------------------------- |
+| property.security.protocol | 使用的安全协议，如上述的例子使用的是 SASL_PLAINTEXT |
+| property.sasl.mechanism    | 指定 SASL 认证机制为 PLAIN                          |
+| property.sasl.username     | SASL 的用户名                                       |
+| property.sasl.password     | SASL 的密码                                         |
 
 ### 一流多表导入
 

@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于删除资源组。
 
+
+## 语法
+
 ```sql
-DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
+DROP WORKLOAD GROUP [IF EXISTS] '<rg_name>'
 ```
 
 ## 示例
@@ -42,10 +42,3 @@ DROP WORKLOAD GROUP [IF EXISTS] 'rg_name'
     ```sql
     drop workload group if exists g1;
     ```
-
-## 关键词
-
-    DROP, WORKLOAD, GROUP
-
-### 最佳实践
-

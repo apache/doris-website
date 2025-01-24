@@ -24,79 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends`
+## Description
 
-### Name
+The table function generates the frontends temporary table, which allows you to view the FE node information in the current doris cluster.
 
-frontends
-
-### description
-
-Table-Value-Function, generate a temporary table named `frontends`. This tvf is used to view the information of BE nodes in the doris cluster.
-
-This function is used in `FROM` clauses.
-
-#### syntax
-
-`frontends()`
-
-The table schema of `frontends()` tvf：
-```
-mysql> desc function frontends();
-+-------------------+------+------+-------+---------+-------+
-| Field             | Type | Null | Key   | Default | Extra |
-+-------------------+------+------+-------+---------+-------+
-| Name              | TEXT | No   | false | NULL    | NONE  |
-| Host              | TEXT | No   | false | NULL    | NONE  |
-| EditLogPort       | TEXT | No   | false | NULL    | NONE  |
-| HttpPort          | TEXT | No   | false | NULL    | NONE  |
-| QueryPort         | TEXT | No   | false | NULL    | NONE  |
-| RpcPort           | TEXT | No   | false | NULL    | NONE  |
-| ArrowFlightSqlPort| TEXT | No   | false | NULL    | NONE  |
-| Role              | TEXT | No   | false | NULL    | NONE  |
-| IsMaster          | TEXT | No   | false | NULL    | NONE  |
-| ClusterId         | TEXT | No   | false | NULL    | NONE  |
-| Join              | TEXT | No   | false | NULL    | NONE  |
-| Alive             | TEXT | No   | false | NULL    | NONE  |
-| ReplayedJournalId | TEXT | No   | false | NULL    | NONE  |
-| LastHeartbeat     | TEXT | No   | false | NULL    | NONE  |
-| IsHelper          | TEXT | No   | false | NULL    | NONE  |
-| ErrMsg            | TEXT | No   | false | NULL    | NONE  |
-| Version           | TEXT | No   | false | NULL    | NONE  |
-| CurrentConnected  | TEXT | No   | false | NULL    | NONE  |
-+-------------------+------+------+-------+---------+-------+
-17 rows in set (0.022 sec)
+## Syntax
+```sql
+FRONTENDS()
 ```
 
-The information displayed by the `frontends` tvf is basically consistent with the information displayed by the `show frontends` statement. However, the types of each field in the `frontends` tvf are more specific, and you can use the `frontends` tvf to perform operations such as filtering and joining.
+## Access Control Requirements
 
-The information displayed by the `frontends` tvf is authenticated, which is consistent with the behavior of `show frontends`, user must have ADMIN/OPERATOR privelege.
+| Privilege  | Object | Notes |
+| :--------- |:-------|:------|
+| ADMIN_PRIV | global |       |
 
-### example
+## Return Value
+| Field                    | Description                                                                                             |
+|--------------------------|---------------------------------------------------------------------------------------------------------|
+| **Name**                 | The unique name of the frontend node.                                                                   |
+| **Host**                 | The IP address or hostname of the frontend node.                                                        |
+| **EditLogPort**          | The port used for edit log communication.                                                               |
+| **HttpPort**             | The HTTP port for the frontend node.                                                                    |
+| **QueryPort**            | The port used for query execution on the frontend node.                                                 |
+| **RpcPort**              | The port used for RPC communication.                                                                    |
+| **ArrowFlightSqlPort**   | The Arrow Flight SQL port (used for integration with Apache Arrow for high-performance data transport). |
+| **Role**                 | The role of the frontend node (e.g., `FOLLOWER`).                                                       |
+| **IsMaster**             | Indicates whether the node is a master node (true/false).                                               |
+| **ClusterId**            | The identifier for the cluster to which the frontend node belongs.                                      |
+| **Join**                 | Indicates if the frontend node is part of the cluster (true/false).                                     |
+| **Alive**                | Indicates if the frontend node is alive (true/false).                                                   |
+| **ReplayedJournalId**    | The last journal ID that was replayed by the frontend node.                                             |
+| **LastStartTime**        | The timestamp of the last start time of the frontend node.                                              |
+| **LastHeartbeat**        | The timestamp for the last heartbeat received from the frontend node.                                   |
+| **IsHelper**             | Indicates whether the frontend node is a helper node (true/false).                                      |
+| **ErrMsg**               | Any error messages reported by the frontend node.                                                       |
+| **Version**              | The version of the frontend node.                                                                       |
+
+
+## Examples
+show frontends cluster information
+```sql
+select * from frontends();
 ```
-mysql> select * from frontends()\G
-*************************** 1. row ***************************
-             Name: fe_5fa8bf19_fd6b_45cb_89c5_25a5ebc45582
-               IP: 10.xx.xx.14
-      EditLogPort: 9013
-         HttpPort: 8034
-        QueryPort: 9033
-          RpcPort: 9023
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1258341841
-             Join: true
-            Alive: true
-ReplayedJournalId: 186
-    LastHeartbeat: 2023-06-15 16:53:12
-         IsHelper: true
-           ErrMsg: 
-          Version: doris-0.0.0-trunk-4b18cde0c7
- CurrentConnected: Yes
-1 row in set (0.060 sec)
+
+```text
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| Name                                    | Host       | EditLogPort | HttpPort | QueryPort | RpcPort | ArrowFlightSqlPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastStartTime       | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.xx.xx.90 | 9010        | 8030     | 9030      | 9020    | -1               | FOLLOWER | true     | 917153130 | true | true  | 555248            | 2025-01-13 14:11:31 | 2025-01-16 14:27:56 | true     |        | doris-0.0.0--83f899b32b | Yes              |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
 ```
-
-### keywords
-
-    frontends

@@ -24,34 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_array_intersect
-### description
-#### Syntax
+## Description
 
-`expr GROUP_ARRAY_INTERSECT(expr)`
+Calculate the intersection elements of the input array across all rows and return a new array.
 
-calculate the intersect element from all arrays given, return a new array
+## Syntax
 
-### example
-
-```
-mysql> select c_array_string from group_array_intersect_test where id in (18, 20);
-+--------------------------------+
-| c_array_string                 |
-+--------------------------------+
-| ["a", "b", "c", "d", "e", "f"] |
-| ["a", null]                    |
-+--------------------------------+
-2 rows in set (0.02 sec)
-
-mysql> select group_array_intersect(c_array_string) from group_array_intersect_test where id in (18, 20);
-+---------------------------------------+
-| group_array_intersect(c_array_string) |
-+---------------------------------------+
-| ["a"]                                 |
-+---------------------------------------+
-1 row in set (0.03 sec)
+```sql
+GROUP_ARRAY_INTERSECT(<expr>)
 ```
 
-### keywords
-GROUP_ARRAY_INTERSECT, ARRAY
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | Array columns or array values that require intersection |
+
+## Return Value
+
+Returns an array containing the intersection results
+
+## Example
+
+```sql
+select c_array_string from group_array_intersect_test where id in (18, 20);
+```
+
+```text
++------+---------------------------+
+| id   | col                       |
++------+---------------------------+
+|    1 | ["a", "b", "c", "d", "e"] |
+|    2 | ["a", "b"]                |
+|    3 | ["a", null]               |
++------+---------------------------+
+```
+
+```sql
+select group_array_intersect(col) from group_array_intersect_test;
+```
+
+```text
++----------------------------+
+| group_array_intersect(col) |
++----------------------------+
+| ["a"]                      |
++----------------------------+
+```
+

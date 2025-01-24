@@ -153,7 +153,7 @@ Download the [source code](https://github.com/apache/doris/tree/master/extension
 
 #### 1. Stream reads the data and imports it to Doris
 
-For instructions on using the doriswriter plug-in, please refer to [here](https://github.com/apache/incubator-doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md).
+For instructions on using the doriswriter plug-in, please refer to [here](https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md).
 
 #### 2.Mysql reads the data and imports it to Doris
 

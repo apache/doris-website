@@ -208,7 +208,7 @@ under the License.
 - 限制了表达式树的深度，默认为 200；
 - array string 返回值 单引号变双引号；
 - 对 Doris 的进程名重命名为 DorisFE 和 DorisBE；
-- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
+- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 ## 正式踏上 2.0 之旅
 
