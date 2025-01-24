@@ -37,7 +37,7 @@ SHOW PLUGINS
 
 ## 返回值
 
-| Column | Description |
+| 列 | 描述 |
 | ------ |----|
 | Description | 对应插件描述 |
 | Version | 插件对应版本号 |
