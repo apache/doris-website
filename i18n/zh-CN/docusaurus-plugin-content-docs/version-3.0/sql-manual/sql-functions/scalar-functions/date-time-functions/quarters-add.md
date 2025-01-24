@@ -42,8 +42,8 @@ QUARTERS_ADD(<date/datetime>, <quarters>)
 
 ## 返回值
 - 返回一个日期值，与输入的日期类型一致。
-- 如果 <date/datetime> 为 NULL，函数返回 NULL。
-- 如果 <date/datetime> 为非法日期（如 0000-00-00），函数返回 NULL。
+- 如果 `<date/datetime>` 为 NULL，函数返回 NULL。
+- 如果 `<date/datetime>` 为非法日期（如 0000-00-00），函数返回 NULL。
 
 ## 举例
 

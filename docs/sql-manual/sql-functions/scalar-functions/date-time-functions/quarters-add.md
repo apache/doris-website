@@ -41,9 +41,9 @@ QUARTERS_ADD(<date/datetime>, <quarters>)
 | `<quarters>`      | The number of quarters to add or subtract. Positive integers add quarters, while negative integers subtract quarters. |
 
 ## Return Value
-•	Returns a date value consistent with the input date type.
-•	If <date/datetime> is NULL, the function returns NULL.
-•	If <date/datetime> is an invalid date (e.g., 0000-00-00), the function returns NULL.
+- Returns a date value consistent with the input date type.
+- If `<date/datetime>` is NULL, the function returns NULL.
+- If `<date/datetime>` is an invalid date (e.g., 0000-00-00), the function returns NULL.
 
 ### Example
 
