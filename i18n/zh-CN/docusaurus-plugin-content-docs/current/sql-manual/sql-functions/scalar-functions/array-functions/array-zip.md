@@ -30,15 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_ZIP(<array1>, <array2>)
+ARRAY_ZIP(<array>[, <array> ])
 ```
 
 ## 参数
 
-| 参数 | 说明 |
-|--|--|
-| `<array1>` | 待合并的数组 |
-| `<array2>` | 待合并的数组 |
+| 参数 | 说明   |
+|--|------|
+| `<array>` | 输入数组 |
 
 ## 返回值
 

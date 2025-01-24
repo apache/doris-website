@@ -36,14 +36,14 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_SHUFFLE(<array1>, <seed>)
+ARRAY_SHUFFLE(<array>, <seed>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 |--|--|
-| `<array1>` | 要进行随机排列的数组 |
+| `<array>` | 要进行随机排列的数组 |
 | `<seed>` | 可选参数，是设定伪随机数生成器用于生成伪随机数的初始数值 |
 
 ## 返回值

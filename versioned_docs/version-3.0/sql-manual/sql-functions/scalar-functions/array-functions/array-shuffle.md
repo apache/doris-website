@@ -36,14 +36,14 @@ Randomly arrange the elements in an array
 ## Syntax
 
 ```sql
-ARRAY_SHUFFLE(<array1>, <seed>)
+ARRAY_SHUFFLE(<array>, <seed>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |--|--|
-| `<array1>` | The array to be randomly permuted |
+| `<array>` | The array to be randomly permuted |
 | `<seed>` | An optional parameter that sets the initial value of the pseudo-random number generator used to generate pseudo-random numbers |
 
 ## Return Value

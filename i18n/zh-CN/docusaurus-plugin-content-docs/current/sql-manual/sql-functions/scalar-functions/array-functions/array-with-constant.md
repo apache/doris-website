@@ -30,7 +30,7 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_WITH_CONSTANT(<n>, <T>)
+ARRAY_WITH_CONSTANT(<n>, <element>)
 ```
 
 ## 参数
@@ -38,7 +38,7 @@ ARRAY_WITH_CONSTANT(<n>, <T>)
 | 参数 | 说明   |
 |--|------|
 | `<n>` | 元数个数 |
-| `<T>` | 指定元素 |
+| `<element>` | 指定元素 |
 
 ## 返回值
 

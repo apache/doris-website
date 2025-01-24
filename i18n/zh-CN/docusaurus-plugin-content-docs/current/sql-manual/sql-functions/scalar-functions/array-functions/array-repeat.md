@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_REPEAT(<T>, <n>)
+ARRAY_REPEAT(<element>, <n>)
 ```
 
 ## 参数
@@ -40,7 +40,7 @@ ARRAY_REPEAT(<T>, <n>)
 | 参数 | 说明   |
 |--|------|
 | `<n>` | 元数个数 |
-| `<T>` | 指定元素 |
+| `<element>` | 指定元素 |
 
 ## 返回值
 

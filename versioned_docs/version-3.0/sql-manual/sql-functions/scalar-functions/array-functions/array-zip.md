@@ -30,15 +30,14 @@ Merges all arrays into a single array. The resulting array contains correspondin
 ## Syntax
 
 ```sql
-ARRAY_ZIP(<array1>, <array2>)
+ARRAY_ZIP(<array>[, <array> ])
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |--|--|
-| `<array1>` | The array to be merged |
-| `<array2>` | The array to be merged |
+| `<array>` | Input array |
 
 ## Return Value
 

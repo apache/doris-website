@@ -32,15 +32,14 @@ Merge multiple arrays without duplicate elements to generate a new array
 ## Syntax
 
 ```sql
-ARRAY_UNION(<array1>, <array2>)
+ARRAY_UNION(<array>[, <array> ])
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |--|--|
-| `<array1>` | The array to be merged |
-| `<array2>` | The array to be merged |
+| `<array>` | The array to be merged |
 
 ## Return Value
 

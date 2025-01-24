@@ -32,7 +32,7 @@ Generates an array containing n repeated elements T
 ## Syntax
 
 ```sql
-ARRAY_REPEAT(<T>, <n>)
+ARRAY_REPEAT(<element>, <n>)
 ```
 
 ## Parameters
@@ -40,7 +40,7 @@ ARRAY_REPEAT(<T>, <n>)
 | Parameter | Description |
 |--|--|
 | `<n>` | Number of digits |
-| `<T>` | Specifying Elements |
+| `<element>` | Specifying Elements |
 
 ## Return Value
 

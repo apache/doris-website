@@ -30,7 +30,7 @@ Generates an array containing n repeated elements T
 ## Syntax
 
 ```sql
-ARRAY_WITH_CONSTANT(<n>, <T>)
+ARRAY_WITH_CONSTANT(<n>, <element>)
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ ARRAY_WITH_CONSTANT(<n>, <T>)
 | Parameter | Description |
 |--|--|
 | `<n>` | Number of digits |
-| `<T>` | Specifying Elements |
+| `<element>` | Specifying Elements |
 
 ## Return Value
 

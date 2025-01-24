@@ -39,8 +39,8 @@ COUNTEQUAL(<arr>, <value>)
 
 | Parameter | Description |
 |--|--|
-| `<arr>` | The array to be judged |
-| `<value>` | Elements to be judged |
+| `<arr>` | Input arrayd |
+| `<value>` | Judging elements |
 
 ## Return Value
 

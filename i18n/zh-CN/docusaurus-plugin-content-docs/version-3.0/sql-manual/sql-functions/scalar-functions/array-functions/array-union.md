@@ -32,15 +32,14 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_UNION(<array1>, <array2>)
+ARRAY_UNION(<array>[, <array> ])
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 |--|--|
-| `<array1>` | 待合并的数组 |
-| `<array2>` | 待合并的数组 |
+| `<array>` | 待合并的数组 |
 
 ## 返回值
 
