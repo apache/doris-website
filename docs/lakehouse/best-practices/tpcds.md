@@ -53,7 +53,7 @@ You can also directly download the precompiled [trino-tpcds-435.tar.gz](https://
 
 Place the `trino-tpcds-435/` directory under the `connectors/` directory of all FE and BE deployment paths. (If not present, you can create it manually).
 
-```
+```text
 ├── bin
 ├── conf
 ├── connectors
@@ -79,7 +79,7 @@ The `tpcds.split-count` is the concurrency number, which is recommended to be se
 
 The TPCDS Catalog has pre-built TPCDS datasets of different Scale Factors, which can be viewed using the `SHOW DATABASES` and `SHOW TABLES` commands.
 
-```
+```sql
 mysql> SWITCH tpcds;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -143,7 +143,7 @@ The data of these pre-built datasets is not actually stored but is generated in 
 
 The following example quickly builds a TPCDS test data set on Hive using the CTAS statement:
 
-```
+```sql
 CREATE TABLE hive.tpcds100.call_center            PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.call_center           ;
 CREATE TABLE hive.tpcds100.catalog_page           PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.catalog_page          ;
 CREATE TABLE hive.tpcds100.catalog_returns        PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.catalog_returns       ;

@@ -53,7 +53,7 @@ mvn clean install -DskipTest
 
 将 `trino-tpcds-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下。（如果没有，可以手动创建）。
 
-```
+```text
 ├── bin
 ├── conf
 ├── connectors
@@ -79,7 +79,7 @@ CREATE CATALOG `tpcds` PROPERTIES (
 
 TPCDS Catalog 中预制了不同 Scale Factor 的 TPCDS 数据集，可以通过 `SHOW DATABASES` 和 `SHOW TABLES` 命令查看。
 
-```
+```sql
 mysql> SWITCH tpcds;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -143,7 +143,7 @@ mysql> SHOW TABLES;
 
 以下示例通过 CTAS 语句快速构建一个 Hive 上的 TPCDS 测试数据集：
 
-```
+```sql
 CREATE TABLE hive.tpcds100.call_center            PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.call_center           ;
 CREATE TABLE hive.tpcds100.catalog_page           PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.catalog_page          ;
 CREATE TABLE hive.tpcds100.catalog_returns        PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.catalog_returns       ;

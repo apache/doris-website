@@ -53,7 +53,7 @@ You can also directly download the precompiled [trino-tpch-435.tar.gz](https://g
 
 Place the `trino-tpch-435/` directory into the `connectors/` directory of all FE and BE deployment paths. (If not present, you can create it manually).
 
-```
+```text
 ├── bin
 ├── conf
 ├── connectors
@@ -82,7 +82,7 @@ When `"tpch.column-naming" = "STANDARD"`, the column names in the TPCH table wil
 
 The TPCH Catalog has pre-configured TPCH datasets of different Scale Factors, which can be viewed using the `SHOW DATABASES` and `SHOW TABLES` commands.
 
-```
+```sql
 mysql> SWITCH tpch;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -129,7 +129,7 @@ The data in these pre-configured datasets is not actually stored but is generate
 
 The following example quickly builds a TPCH test dataset on Hive using the CTAS statement:
 
-```
+```sql
 CREATE TABLE hive.tpch100.customer PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.customer  ;
 CREATE TABLE hive.tpch100.lineitem PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.lineitem  ;
 CREATE TABLE hive.tpch100.nation   PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.nation    ;

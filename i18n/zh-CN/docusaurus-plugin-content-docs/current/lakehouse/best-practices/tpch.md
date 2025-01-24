@@ -53,7 +53,7 @@ mvn clean install -DskipTest
 
 将 `trino-tpch-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下。（如果没有，可以手动创建）。
 
-```
+```text
 ├── bin
 ├── conf
 ├── connectors
@@ -82,7 +82,7 @@ CREATE CATALOG `tpch` PROPERTIES (
 
 TPCH Catalog 中预制了不同 Scale Factor 的 TPCH 数据集，可以通过 `SHOW DATABASES` 和 `SHOW TABLES` 命令查看。
 
-```
+```sql
 mysql> SWITCH tpch;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -129,7 +129,7 @@ mysql> SHOW TABLES;
 
 以下示例通过 CTAS 语句快速构建一个 Hive 上的 TPCH 测试数据集：
 
-```
+```sql
 CREATE TABLE hive.tpch100.customer PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.customer  ;
 CREATE TABLE hive.tpch100.lineitem PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.lineitem  ;
 CREATE TABLE hive.tpch100.nation   PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.nation    ;
