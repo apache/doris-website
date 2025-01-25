@@ -37,15 +37,15 @@ CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT <comment>]
 
 ## Required Parameters
 
-### 1. `<catalog_name>`
+**1. `<catalog_name>`**
 The name of the catalog to be created.
 
-### 2. `"<key>"="<value>"`
+**2. `"<key>"="<value>"`**
 The parameters for creating the catalog.
 
 ## Optional Parameters
 
-### 1. `<comment>`
+**1. `<comment>`**
 The comment for the catalog to be created.
 
 ## Access Control Requirements

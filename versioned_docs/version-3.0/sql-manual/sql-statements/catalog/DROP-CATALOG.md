@@ -37,7 +37,7 @@ DROP CATALOG [IF EXISTS] <catalog_name>;
 
 ## Required Parameters
 
-### 1. `<catalog_name>`
+**1. `<catalog_name>`**
 The name of the catalog to be dropped.
 
 ## Access Control Requirements

@@ -32,8 +32,8 @@ This statement refreshes the metadata of the specified Catalog/Database/Table.
 
 ```sql
 REFRESH CATALOG <catalog_name>;
-REFRESH DATABASE <[catalog_name.]database_name>;
-REFRESH TABLE <[catalog_name.][database_name.]table_name>;
+REFRESH DATABASE [<catalog_name.>]<database_name>;;
+REFRESH TABLE [[<catalog_name.>]<database_name>.]<table_name>;
 ```
 
 ## Required Parameters
