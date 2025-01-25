@@ -1,6 +1,6 @@
 ---
 {
-    "title": "tokenize",
+    "title": "TOKENIZE",
     "language": "en"
 }
 ---
@@ -23,3 +23,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## Description
+
+Returns the result of text tokenization. Tokenization is the process of splitting text into a set of tokens.
+
+## Syntax
+
+```sql
+ARRAY<VARCHAR> tokenize(VARCHAR txt, VARCHAR tokenizer_args)
+```
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `txt`            | The text to be tokenized |
+| `tokenizer_args` | Tokenizer arguments, a Doris PROPERTIES format string. For detailed information, refer to the inverted index documentation. |
+
+## Return Value
+
+Returns the tokenization result of the text `txt` based on the tokenizer arguments `tokenizer_args`.
+
+## Examples
+
+```sql
+mysql> SELECT tokenize('I love Doris', '"parser"="english"');
++------------------------------------------------+
+| tokenize('I love Doris', '"parser"="english"') |
++------------------------------------------------+
+| ["i", "love", "doris"]                         |
++------------------------------------------------+
+1 row in set (0.02 sec)
+```
