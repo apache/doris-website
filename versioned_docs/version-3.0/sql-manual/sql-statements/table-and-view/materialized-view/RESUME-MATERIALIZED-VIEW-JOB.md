@@ -35,7 +35,7 @@ RESUME MATERIALIZED VIEW JOB ON <mv_name>
 ```
 
 ## Required Parameters
-**<mv_name>**
+**1. `<mv_name>`**
 > Specifies the materialized view name.
 >
 > The materialized view name must start with a letter character (or any language character if unicode name support is enabled) and cannot contain spaces or special characters unless the entire materialized view name string is enclosed in backticks (e.g., `My Object`).

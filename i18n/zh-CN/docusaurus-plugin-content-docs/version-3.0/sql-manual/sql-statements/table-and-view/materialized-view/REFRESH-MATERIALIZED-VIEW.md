@@ -39,12 +39,12 @@ REFRESH MATERIALIZED VIEW <mv_name> <refresh_type>
 其中:
 ```sql
 refresh_type
-  : [partitionSpec | COMPLETE | AUTO]
+  : [ <partitionSpec> | COMPLETE | AUTO ]
 ```
 
 ```sql
 partitionSpec
-  : PARTITIONS (<partition_name1>[ , partition_name2 ][ ... ])
+  : PARTITIONS (<partition_name> [, <partition_name> [, ... ] ])
 ```
 
 ## 必选参数
@@ -64,6 +64,10 @@ partitionSpec
 >
 > 其刷新方式可以是`COMPLETE`， `AUTO`， `partitionSpec` 三种之一
 
+## 可选参数
+**1. `<partition_name>`**
+> 指定要刷新分区的分区名称
+>
 
 ## 权限控制
 执行此 SQL 命令的用户必须至少具有以下权限：

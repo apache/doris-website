@@ -38,16 +38,16 @@ REFRESH MATERIALIZED VIEW <mv_name> <refresh_type>
 Where:
 ```sql
 refresh_type
-  : [partitionSpec | COMPLETE | AUTO]
+  : [ <partitionSpec> | COMPLETE | AUTO ]
 ```
 
 ```sql
 partitionSpec
-  : PARTITIONS (<partition_name1>[ , partition_name2 ][ ... ])
+  : PARTITIONS (<partition_name> [, <partition_name> [, ... ] ])
 ```
 
 ## Required Parameters
-**<mv_name>**
+**1. `<mv_name>`**
 > Specifies the materialized view name.
 >
 > The materialized view name must start with a letter character (or any language character if unicode name support is enabled) and cannot contain spaces or special characters unless the entire materialized view name string is enclosed in backticks (e.g., `My Object`).
@@ -56,11 +56,15 @@ partitionSpec
 >
 > For more details, see Reserved Keywords.
 
-**<refresh_type>**
+**2. `<refresh_type>`**
 > Specifies the refresh type of this materialized view.
 >
 > The refresh type may be one of the partitionSpec, COMPLETE or AUTO.
 
+## Optional Parameters
+**1. `<partition_name>`**
+> Specifies the partition name when refresh the partition
+>
 
 ## Access Control Requirements
 Users executing this SQL command must have at least the following privileges:
