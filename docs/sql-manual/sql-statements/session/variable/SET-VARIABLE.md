@@ -43,14 +43,14 @@ variable_assignment
 ```
 
 ## Required Parameters
-**<1. user_var_name>**
+**1. `<user_var_name>`**
 > Specifies the variable of user level, for example : @@your_variable_name, variable name starts with `@@`
 
-**<2. system_var_name>**
+**2. `<system_var_name>`**
 > Specifies the variable of system level, for example : exec_mem_limit and so on
 
 ## Optional Parameters
-**<1. effective_scope>**
+**1. `<effective_scope>`**
 
 > Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 

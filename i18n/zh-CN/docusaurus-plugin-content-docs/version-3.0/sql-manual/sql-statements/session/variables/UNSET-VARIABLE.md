@@ -38,12 +38,12 @@ UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
 ## 必选参数
-**<1. variable_name>**
+**1. `<variable_name>`**
 > 指定变量名称，如果需要unset全部变量，可以写一个`ALL`关键字
 
 
 ## 可选参数
-**<1. effective_scope>**
+**2. `<effective_scope>`**
 > 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 
 

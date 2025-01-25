@@ -36,13 +36,13 @@ SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where>]
 ```
 
 ## 可选参数
-**<1. effective_scope>**
+**1. `<effective_scope>`**
 > 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 
-**<2. like_pattern>**
+**2. `<like_pattern>`**
 > 使用like语句去匹配和过滤最终结果
 
-**<3. where>**
+**3. `<where>`**
 > 使用where语句去匹配和过滤最终结果
 
 ## 权限控制

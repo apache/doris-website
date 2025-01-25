@@ -43,14 +43,14 @@ variable_assignment
 ```
 
 ## 必选参数
-**<1. user_var_name>**
+**1. `<user_var_name>`**
 > 指定用户层级的变量，比如：@@your_variable_name 等以`@@`开头的变量名称
 
-**<2. system_var_name>**
+**2. `<system_var_name>`**
 > 指定系统层级的变量，比如exec_mem_limit 等
 
 ## 可选参数
-**<1. effective_scope>**
+**1. `<effective_scope>`**
 
 > 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 

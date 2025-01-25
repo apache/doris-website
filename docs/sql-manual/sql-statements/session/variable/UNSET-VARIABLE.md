@@ -38,11 +38,11 @@ UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
 ## Required Parameters
-**<1. variable_name>**
+**1. `<variable_name>`**
 > Specifies the variable name, or if you want to unset all variables, this parameter you can give a keyword `ALL`.
 
 ## Optional Parameters
-**<1. effective_scope>**
+**1. `<effective_scope>`**
 > Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
 ## Access Control Requirements

@@ -36,13 +36,13 @@ SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where clause>]
 ```
 
 ## Optional Parameters
-**<1. effective_scope>**
+**1. `<effective_scope>`**
 > Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
-**<2. like_pattern>**
+**2. `<like_pattern>`**
 > Use like statement to match and filter result
 
-**<3. where>**
+**3. `<where>`**
 > Use where statement to match and filter result
 
 ## Access Control Requirements
