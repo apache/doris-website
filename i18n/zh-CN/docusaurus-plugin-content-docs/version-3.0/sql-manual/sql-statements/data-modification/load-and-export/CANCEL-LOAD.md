@@ -33,7 +33,7 @@ under the License.
 ```sql
 CANCEL LOAD
 [FROM <db_name>]
-WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING>" |" <ETL> "| "<LOADING>"]
+WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDING" | "ETL" | "LOADING" } ]
 ```
 
 ## 必选参数

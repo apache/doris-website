@@ -35,11 +35,11 @@ LOAD DATA
 [ LOCAL ]
 INFILE "<file_name>"
 INTO TABLE "<tbl_name>"
-[ PARTITION (<partition_name> [, <partition_name>] ...) ]
+[ PARTITION (<partition_name> [, ... ]) ]
 [ COLUMNS TERMINATED BY "<column_separator>" ]
 [ LINES TERMINATED BY "<line_delimiter>" ]
-[ IGNORE number {LINES | ROWS} ]
-[ (col_name_or_user_var [, col_name_or_user_var] ...) ]
+[ IGNORE <number> {LINES | ROWS} ]
+[ (<col_name_or_user_var> [, ... ] ) ]
 [ SET (col_name={<expr> | DEFAULT} [, col_name={<expr> | DEFAULT}] ...) ]
 [ PROPERTIES ("key1" = "value1" [, "key2"="value2"]) ]
 ```
@@ -56,7 +56,7 @@ INTO TABLE "<tbl_name>"
 
 ## 可选参数
 
-**1. `<LOCAL>`**
+**1. `LOCAL`**
 
 > 指定`LOCAL`表示读取客户端文件。不指定表示读取 FE 服务端本地文件。导入 FE 本地文件的功能默认是关闭的，需要在 FE 节点上设置`mysql_load_server_secure_path`来指定安全路径，才能打开该功能。
 
@@ -72,7 +72,7 @@ INTO TABLE "<tbl_name>"
 
 > 指定行分隔符。
 
-**5. `<IGNORE num LINES>`**
+**5. `IGNORE <number> { LINES | ROWS }`**
 
 > 用户跳过 CSV 的表头，可以跳过任意行数。该语法也可以用`IGNORE num ROWS`代替。
 

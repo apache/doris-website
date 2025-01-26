@@ -33,7 +33,7 @@ This statement is used to cancel an import job with a specified `label`, or to c
 ```sql
 CANCEL LOAD
 [FROM <db_name>]
-WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = "<PENDING>" | "<ETL>" | "<LOADING>"]
+WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDING" | "ETL" | "LOADING" } ]
 ```
 
 ## Required Parameters

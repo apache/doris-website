@@ -35,11 +35,11 @@ LOAD DATA
 [ LOCAL ]
 INFILE "<file_name>"
 INTO TABLE "<tbl_name>"
-[ PARTITION (<partition_name> [, <partition_name>] ...) ]
+[ PARTITION (<partition_name> [, ... ]) ]
 [ COLUMNS TERMINATED BY "<column_separator>" ]
 [ LINES TERMINATED BY "<line_delimiter>" ]
-[ IGNORE number {LINES | ROWS} ]
-[ (col_name_or_user_var [, col_name_or_user_var] ...) ]
+[ IGNORE <number> {LINES | ROWS} ]
+[ (<col_name_or_user_var> [, ... ] ) ]
 [ SET (col_name={<expr> | DEFAULT} [, col_name={<expr> | DEFAULT}] ...) ]
 [ PROPERTIES ("key1" = "value1" [, "key2"="value2"]) ]
 ```
@@ -56,7 +56,7 @@ INTO TABLE "<tbl_name>"
 
 ## Optional Parameters
 
-**1. `<LOCAL>`**
+**1. `LOCAL`**
 
 > Specifying `LOCAL` indicates reading files from the client. Omitting it means reading files from the local storage of the FE server. The function of importing files from the FE server is disabled by default. You need to set `mysql_load_server_secure_path` on the FE node to specify a secure path to enable this function.
 
@@ -72,7 +72,7 @@ INTO TABLE "<tbl_name>"
 
 > Specify the line delimiter.
 
-**5. `<IGNORE num LINES>`**
+**5. `IGNORE <number> { LINES | ROWS }`**
 
 > Users can skip the header of the CSV file or any number of lines. This syntax can also be replaced with `IGNORE num ROWS`.
 

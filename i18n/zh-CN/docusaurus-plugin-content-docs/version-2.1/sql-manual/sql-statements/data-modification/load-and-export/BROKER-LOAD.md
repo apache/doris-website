@@ -36,20 +36,20 @@ Broker Load 是 Doris 的数据导入方式，主要用于从远程存储系统�
 ```sql
 LOAD LABEL <db_name>.<load_label>
 (
-[ <MERGE> | <APPEND> | <DELETE> ]
+[ { MERGE | APPEND | DELETE } ]
 DATA INFILE
 (
 "<file_path>"[, ...]
 )
 [ NEGATIVE ]
 INTO TABLE `<table_name>`
-[ PARTITION (<p1>, <p2>, ...) ]
+[ PARTITION ( <partition_name> [ , ... ] ) ]
 [ COLUMNS TERMINATED BY "<column_separator>" ]
 [ LINES TERMINATED BY "<line_delimiter>" ]
 [ FORMAT AS "<file_type>" ]
 [ COMPRESS_TYPE AS "<compress_type>" ]
 [ (<column_list>) ]
-[ COLUMNS FROM PATH AS (<c1>, <c2>, ...) ]
+[ COLUMNS FROM PATH AS (<column_name> [ , ... ] ) ]
 [ SET (<column_mapping>) ]
 [ PRECEDING FILTER <predicate> ]
 [ WHERE <predicate> ]
@@ -62,9 +62,8 @@ WITH BROKER "<broker_name>"
     [ , ... ])
 [ PROPERTIES (
     <load_properties>
-    [ , ... ]) 
-    ]
-[COMMENT "<comments>" ];
+    [ , ... ]) ]
+[COMMENT "<comment>" ];
 ```
 
 ## 必选参数
