@@ -24,7 +24,7 @@ under the License.
 
 ## Description
 
-Returns the smallest positive solution of the modulo operation x mod y within the modular system. Specifically, the result is obtained by calculating (x % y + y) % y.
+Returns the smallest positive solution of the modulo operation x mod y within the modular system, which is obtained by calculating (x % y + y) % y.
 
 ## Syntax
 

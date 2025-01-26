@@ -35,18 +35,18 @@ Returns a random number between 0 and 1, or returns the required random number a
 ## Syntax
 
 ```sql
-RANDOM()
+RANDOM() -- Generates a random number between 0 and 1
 
-RANDOM(<seed>)
+RANDOM(<seed>) -- Generates a fixed sequence of random numbers between 0 and 1 based on the seed value
 
-RANDOM(<a> , <b>)
+RANDOM(<a> , <b>) -- Generates a random number between a and b
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-----------|------------|
-| `<seed>` | random number generator seed. Returns a fixed sequence of random numbers based on the seed value. |
+| `<seed>` | random number generator seed. Returns a fixed sequence of random numbers between 0 and 1. |
 | `<a>` | The lower bound of a random number. |
 | `<b>` | The upper bound of a random number. It must be less than the lower bound. |
 
@@ -54,7 +54,7 @@ RANDOM(<a> , <b>)
 
 - If no parameters are passed: Returns a random number between 0 and 1.
 
-- If a single parameter seed is passed: Generates the same sequence of random numbers based on the provided seed value seed.
+- If a single parameter seed is passed: Returns a fixed sequence of random numbers between 0 and 1.
 
 - If two parameters a and b are passed: Returns a random integer between a and b.
 
