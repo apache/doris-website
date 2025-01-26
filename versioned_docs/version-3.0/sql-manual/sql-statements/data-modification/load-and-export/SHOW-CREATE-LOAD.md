@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW CREATE LOAD",
+    "title": "SHOW-CREATE-LOAD",
     "language": "en"
 }
 ---
@@ -24,34 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-This statement is used to demonstrate the creation statement of a import job.
+This statement is used to display the creation statement of an import job.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CREATE LOAD for load_name;
+SHOW CREATE LOAD FOR <load_name>;
 ```
 
-illustrate:
+## Required Parameters
 
--  `load_name`: import job name
+**`<load_name>`**
 
-## Example
+> The name of the routine import job.
 
-1. Show the creation statement of the specified import job under the default db
+## Access Control Requirements
 
-    ```sql
-    SHOW CREATE LOAD for test_load
-    ```
+Users executing this SQL command must have at least the following permissions:
 
-## Keywords
+| Privilege | Object | Notes |
+| :---------------- | :------------- | :---------------------------- |
+| ADMIN/OPERATOR | Database | Cluster administrator privileges are required. |
 
-    SHOW, CREATE, LOAD
+## Return Value
 
-## Best Practice
+Returns the creation statement of the specified import job.
 
+## Examples
+
+- Display the creation statement of the specified import job in the default database.
+
+```sql
+SHOW CREATE LOAD for test_load
+```
