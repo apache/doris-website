@@ -240,7 +240,7 @@
         }
         .tabs__item {
             border: 1px solid transparent;
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
             border-bottom: 1px;
             font-size: 0.875rem;
             height: 2.75rem;

@@ -88,7 +88,7 @@ Codename:	AltArch
 
 <Tabs>
   <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
-    <p>
+    <div>
 
 1. 创建软件下载安装包根目录和软件安装根目录
 
@@ -98,8 +98,8 @@ mkdir /opt/tools
 # 创建软件安装根目录
 mkdir /opt/software
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 2. 安装依赖项
 
@@ -151,8 +151,8 @@ mkdir /opt/software
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 3. 配置环境变量
 
@@ -178,8 +178,8 @@ node --version
 gcc --version
 > gcc-11
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 4. 安装其他额外环境和组件
 
@@ -197,18 +197,18 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 ```
-  </p>
+  </div>
   </TabItem>
   <TabItem value="Ubuntu 20.04" label="Ubuntu 20.04">
-    <p>
+    <div>
 
 1. 更新 apt-get 软件库
 
 ```shell
 apt-get update
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 2. 检查 shell 命令集
 
@@ -225,8 +225,8 @@ sudo dpkg-reconfigure dash
 ```
 
   然后选择 no 或者 否 并确认。这样做将重新配置 dash，并使其不作为默认的 shell 工具
-  </p>
-    <p>
+  </div>
+    <div>
 
 3. 创建软件下载安装包根目录和软件安装根目录
 
@@ -236,8 +236,8 @@ sudo dpkg-reconfigure dash
   # 创建软件安装根目录
   mkdir /opt/software
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 4. 安装依赖项
 
@@ -286,8 +286,8 @@ sudo dpkg-reconfigure dash
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 5. 配置环境变量
 
@@ -313,8 +313,8 @@ node --version
 gcc --version
 > gcc-11
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 6. 安装其他额外环境和组件
 
@@ -343,7 +343,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 ```
-  </p>
+  </div>
   </TabItem>
 </Tabs>
 

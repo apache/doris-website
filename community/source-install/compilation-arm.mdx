@@ -85,7 +85,7 @@ Codename:	AltArch
 
 <Tabs>
   <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
-    <p>
+    <div>
 
 1. Create root directories for pacakges
 
@@ -95,8 +95,8 @@ mkdir /opt/tools
 # Create root directory for software installation
 mkdir /opt/software
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 2. Installing dependencies
 
@@ -148,8 +148,8 @@ mkdir /opt/software
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 3. Configure environment variables
 
@@ -175,8 +175,8 @@ node --version
 gcc --version
 > gcc-11
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 4. Install other environments and components
 
@@ -194,18 +194,18 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 ```
-  </p>
+  </div>
   </TabItem>
   <TabItem value="Ubuntu 20.04" label="Ubuntu 20.04">
-    <p>
+    <div>
 
 1. Update apt-get repository
 
 ```shell
 apt-get update
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 2. Check the shell command set
 
@@ -222,8 +222,8 @@ sudo dpkg-reconfigure dash
 ```
 
   Then select no to confirm. After these steps, dash will no longer be the default shell tool.
-  </p>
-    <p>
+  </div>
+    <div>
 
 3. Create root directories for packages
 
@@ -233,8 +233,8 @@ sudo dpkg-reconfigure dash
   # Create root directory for software installation
   mkdir /opt/software
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 4. Installing dependencies
   - Git
@@ -282,8 +282,8 @@ sudo dpkg-reconfigure dash
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 5. Configure environment variables
 
@@ -309,8 +309,8 @@ node --version
 gcc --version
 > gcc-11
 ```
-  </p>
-    <p>
+  </div>
+    <div>
 
 6. Install other environments and components
 
@@ -339,7 +339,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 ```
-  </p>
+  </div>
   </TabItem>
 </Tabs>
 
@@ -369,7 +369,7 @@ export USE_AVX2=OFF
 export USE_UNWIND=OFF
 ```
 
-If you still encounter problems when compiling or starting, please consult the [FAQ](#FAQ). If there is no relevant solution, feel free to [raise an issue](https://github.com/apache/doris/issues).
+If you still encounter problems when compiling or starting, please consult the [FAQ](#faq). If there is no relevant solution, feel free to [raise an issue](https://github.com/apache/doris/issues).
 
 ## FAQ
 
