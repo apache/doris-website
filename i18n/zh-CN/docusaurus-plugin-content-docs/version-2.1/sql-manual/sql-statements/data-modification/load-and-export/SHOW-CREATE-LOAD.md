@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW CREATE LOAD",
+    "title": "SHOW-CREATE-LOAD",
     "language": "zh-CN"
 }
 ---
@@ -24,32 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
-该语句用于展示导入作业的创建语句。
+该语句用于展示导入作业的创建语句.
 
-语法：
+## 语法：
 
 ```sql
-SHOW CREATE LOAD for load_name;
+SHOW CREATE LOAD FOR <load_name>;
 ```
 
-说明：
-          1.  `load_name`: 例行导入作业名称
+## 必选参数
 
-## 示例
+**`<load_name>`**
 
-1. 展示默认 db 下指定导入作业的创建语句
+> 例行导入作业名称
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
+| :---------------- | :------------- | :---------------------------- |
+| ADMIN/OPERATOR        | 库（Database）    | 需要集群管理员权限 |
+
+## 返回值
+
+返回指定导入作业的创建语句。
+
+## 举例
+
+- 展示默认db下指定导入作业的创建语句
 
    ```sql
    SHOW CREATE LOAD for test_load
    ```
-
-## 关键词
-
-    SHOW, CREATE, LOAD
-
-## 最佳实践
 
