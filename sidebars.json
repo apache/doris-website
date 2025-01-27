@@ -1221,6 +1221,7 @@
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-first-index",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-last-index",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-first",
+                                        "sql-manual/sql-functions/scalar-functions/array-functions/array-flatten",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-last",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-count",
