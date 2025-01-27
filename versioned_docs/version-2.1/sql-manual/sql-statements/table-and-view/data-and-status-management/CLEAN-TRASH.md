@@ -1,9 +1,8 @@
 ---
 {
-    "title": "CLEAN TRASH",
-    "language": "en"
+   "title": "ADMIN CLEAN TRASH",
+   "language": "en"
 }
-
 
 ---
 
@@ -28,26 +27,28 @@ under the License.
 
 ## Description
 
-This statement is used to clean up garbage data in the backend
+This statement is used to clear garbage data in backend.
 
-grammar:
+## Syntax
 
 ```sql
 ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
 ```
 
-illustrate:
+## Parameters
 
-1. Use BackendHost:BackendHeartBeatPort to indicate the backend that needs to be cleaned up, and clean up all backends without adding the on limit.
+| Parameter  | Description |
+| ----- | ---- |
+| ON    | Specify the backend to be cleaned up. If you do not add ON, all backend is cleared by default. |
 
 ## Examples
 
-1. Clean up the junk data of all be nodes.
+```sql
+-- Clean up the junk data of all be nodes.
+ADMIN CLEAN TRASH;
+```
 
-        ADMIN CLEAN TRASH;
-
-2. Clean up the junk data of '192.168.0.1:9050' and '192.168.0.2:9050'.
-
-        ADMIN CLEAN TRASH ON ("192.168.0.1:9050","192.168.0.2:9050");
-
-## Keywords
+```sql
+-- Clean up garbage data for '192.168.0.1:9050' and '192.168.0.2:9050'.
+ADMIN CLEAN TRASH ON ("192.168.0.1:9050", "192.168.0.2:9050");
+```

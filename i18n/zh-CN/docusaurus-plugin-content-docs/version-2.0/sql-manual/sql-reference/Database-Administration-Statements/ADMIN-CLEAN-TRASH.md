@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-CLEAN-TRASH",
+    "title": "ADMIN CLEAN TRASH",
     "language": "zh-CN"
 }
 
@@ -25,39 +25,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-CLEAN-TRASH
-
-### Name
-
-ADMIN CLEAN TRASH
-
 ## 描述
 
-该语句用于清理 backend 内的垃圾数据
+该语句用于清理 backend 内的垃圾数据。
 
-语法：
+## 语法
 
 ```sql
 ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
 ```
 
-说明：
+## 参数
 
-1. 以 BackendHost:BackendHeartBeatPort 表示需要清理的 backend ，不添加on限定则清理所有 backend 。
+| 参数  | 说明 |
+| ----- | ---- |
+| ON    | 指定需要清理的 backend。如果不加 ON，默认清理所有 backend。 |
 
-## 举例
+## 示例
 
-1. 清理所有be节点的垃圾数据。
+```sql
+-- 清理所有be节点的垃圾数据。
+ADMIN CLEAN TRASH;
+```
 
-        ADMIN CLEAN TRASH;
-
-2. 清理'192.168.0.1:9050'和'192.168.0.2:9050'的垃圾数据。
-
-        ADMIN CLEAN TRASH ON ("192.168.0.1:9050","192.168.0.2:9050");
-
-### Keywords
-
-    ADMIN, CLEAN, TRASH
-
-### Best Practice
-
+```sql
+-- 清理'192.168.0.1:9050'和'192.168.0.2:9050'的垃圾数据。
+ADMIN CLEAN TRASH ON ("192.168.0.1:9050", "192.168.0.2:9050");
+```

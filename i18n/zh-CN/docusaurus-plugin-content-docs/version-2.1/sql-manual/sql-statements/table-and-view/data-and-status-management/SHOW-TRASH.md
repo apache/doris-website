@@ -31,37 +31,31 @@ under the License.
 
 该语句用于查看 backend 内的垃圾数据占用空间。
 
-语法：
+## 语法：
 
 ```sql
 SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
 ```
 
-说明：
+## 参数
 
+| 参数  | 说明                                      |
+| ----- |-----------------------------------------|
+| ON    | 指定需要查看的 backend。如果不加 ON，默认查看所有 backend。 |
 
-1. Backend 格式为该节点的 BackendHost:BackendHeartBeatPort
-2. TrashUsedCapacity 表示该节点垃圾数据占用空间。
 
 ## 示例
 
 1. 查看所有 be 节点的垃圾数据占用空间。
 
 
-   ```sql
-    SHOW TRASH;
-   ```
+```sql
+SHOW TRASH;
+```
 
 2. 查看'192.168.0.1:9050'的垃圾数据占用空间 (会显示具体磁盘信息)。
->>>>>>> b09980be91d (2.1)
 
-   ```sql
-   SHOW TRASH ON "192.168.0.1:9050";
-   ```
 
-## 关键词
-
-    SHOW, TRASH
-
-## 最佳实践
-
+```sql
+SHOW TRASH ON "192.168.0.1:9050";
+```
