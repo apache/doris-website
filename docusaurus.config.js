@@ -185,10 +185,6 @@ const config = {
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
                 },
-                gtag: {
-                    trackingID: 'G-DT7W9E9722',
-                    anonymizeIP: true,
-                },
                 sitemap: {
                     changefreq: 'weekly',
                     priority: 0.5,
@@ -235,7 +231,7 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'apache_doris_meetup_singapore',
+                id: 'support_us',
                 content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
                 <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
                     </a>`,
