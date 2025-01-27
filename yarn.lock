@@ -1861,37 +1861,6 @@
     react-json-view-lite "^1.2.0"
     tslib "^2.6.0"
 
-"@docusaurus/plugin-google-analytics@3.6.3":
-  version "3.6.3"
-  resolved "https://registry.npmmirror.com/@docusaurus/plugin-google-analytics/-/plugin-google-analytics-3.6.3.tgz#63648d469b1e3c50fad8878e7a7db9856e503d5f"
-  integrity sha512-rCDNy1QW8Dag7nZq67pcum0bpFLrwvxJhYuVprhFh8BMBDxV0bY+bAkGHbSf68P3Bk9C3hNOAXX1srGLIDvcTA==
-  dependencies:
-    "@docusaurus/core" "3.6.3"
-    "@docusaurus/types" "3.6.3"
-    "@docusaurus/utils-validation" "3.6.3"
-    tslib "^2.6.0"
-
-"@docusaurus/plugin-google-gtag@3.6.3":
-  version "3.6.3"
-  resolved "https://registry.npmmirror.com/@docusaurus/plugin-google-gtag/-/plugin-google-gtag-3.6.3.tgz#8a1388b4123904be17e661ea7aa71d798d0c046e"
-  integrity sha512-+OyDvhM6rqVkQOmLVkQWVJAizEEfkPzVWtIHXlWPOCFGK9X4/AWeBSrU0WG4iMg9Z4zD4YDRrU+lvI4s6DSC+w==
-  dependencies:
-    "@docusaurus/core" "3.6.3"
-    "@docusaurus/types" "3.6.3"
-    "@docusaurus/utils-validation" "3.6.3"
-    "@types/gtag.js" "^0.0.12"
-    tslib "^2.6.0"
-
-"@docusaurus/plugin-google-tag-manager@3.6.3":
-  version "3.6.3"
-  resolved "https://registry.npmmirror.com/@docusaurus/plugin-google-tag-manager/-/plugin-google-tag-manager-3.6.3.tgz#38cbe416803f29782807cebf3ebf240cb47c3c74"
-  integrity sha512-1M6UPB13gWUtN2UHX083/beTn85PlRI9ABItTl/JL1FJ5dJTWWFXXsHf9WW/6hrVwthwTeV/AGbGKvLKV+IlCA==
-  dependencies:
-    "@docusaurus/core" "3.6.3"
-    "@docusaurus/types" "3.6.3"
-    "@docusaurus/utils-validation" "3.6.3"
-    tslib "^2.6.0"
-
 "@docusaurus/plugin-pwa@3.6.3":
   version "3.6.3"
   resolved "https://registry.npmmirror.com/@docusaurus/plugin-pwa/-/plugin-pwa-3.6.3.tgz#aa5aa2c2a1cb19d466e0b7d1f309771888af16fc"
@@ -1942,9 +1911,6 @@
     "@docusaurus/plugin-content-docs" "3.6.3"
     "@docusaurus/plugin-content-pages" "3.6.3"
     "@docusaurus/plugin-debug" "3.6.3"
-    "@docusaurus/plugin-google-analytics" "3.6.3"
-    "@docusaurus/plugin-google-gtag" "3.6.3"
-    "@docusaurus/plugin-google-tag-manager" "3.6.3"
     "@docusaurus/plugin-sitemap" "3.6.3"
     "@docusaurus/theme-classic" "3.6.3"
     "@docusaurus/theme-common" "3.6.3"
@@ -3223,11 +3189,6 @@
     "@types/express-serve-static-core" "^4.17.33"
     "@types/qs" "*"
     "@types/serve-static" "*"
-
-"@types/gtag.js@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.npmmirror.com/@types/gtag.js/-/gtag.js-0.0.12.tgz#095122edca896689bdfcdd73b057e23064d23572"
-  integrity sha512-YQV9bUsemkzG81Ea295/nF/5GijnD2Af7QhEofh7xu+kvCN6RdodgNwwGWXB5GMI3NoyvQo0odNctoH/qLMIpg==
 
 "@types/hast@^3.0.0":
   version "3.0.4"
@@ -11859,7 +11820,6 @@ workbox-build@^7.0.0:
     workbox-cacheable-response "7.3.0"
     workbox-core "7.3.0"
     workbox-expiration "7.3.0"
-    workbox-google-analytics "7.3.0"
     workbox-navigation-preload "7.3.0"
     workbox-precaching "7.3.0"
     workbox-range-requests "7.3.0"
@@ -11889,16 +11849,6 @@ workbox-expiration@7.3.0:
   dependencies:
     idb "^7.0.1"
     workbox-core "7.3.0"
-
-workbox-google-analytics@7.3.0:
-  version "7.3.0"
-  resolved "https://registry.npmmirror.com/workbox-google-analytics/-/workbox-google-analytics-7.3.0.tgz#3c4d4956c0a9800dfb587d82ec8bc0f9cf963791"
-  integrity sha512-ii/tSfFdhjLHZ2BrYgFNTrb/yk04pw2hasgbM70jpZfLk0vdJAXgaiMAWsoE+wfJDNWoZmBYY0hMVI0v5wWDbg==
-  dependencies:
-    workbox-background-sync "7.3.0"
-    workbox-core "7.3.0"
-    workbox-routing "7.3.0"
-    workbox-strategies "7.3.0"
 
 workbox-navigation-preload@7.3.0:
   version "7.3.0"
