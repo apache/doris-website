@@ -59,10 +59,10 @@ select compress('abc');
 | 0x03000000789C4B4C4A0600024D0127 |
 +----------------------------------+
 ```
+```sql
+select compress('');
 ```
-mysql> select compress('');
-```
-```
+```text 
 +--------------+
 | compress('') |
 +--------------+

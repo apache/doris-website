@@ -60,10 +60,10 @@ select uncompress(compress('abc'));
 | abc                         |
 +-----------------------------+
 ```
-```
+```sql
 select uncompress('0x03000000789C4B4C4A0600024D019');
 ```
-```
+```text 
 +-----------------------------------------------+
 | uncompress('0x03000000789C4B4C4A0600024D019') |
 +-----------------------------------------------+
@@ -71,10 +71,10 @@ select uncompress('0x03000000789C4B4C4A0600024D019');
 +-----------------------------------------------+
 ```
 `0x03000000789c4b4c4a0600024d019` is `compress('abc')` has carried on the tiny changes, it is illegal.
-```
+```sql
 select uncompress(compress(''));
 ```
-```
+```text 
 +--------------------------+
 | uncompress(compress('')) |
 +--------------------------+
