@@ -24,39 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## arrays_overlap
-
-arrays_overlap
 
 ## 描述
 
+判断left和right数组中是否包含公共元素
+
 ## 语法
 
-`BOOLEAN arrays_overlap(ARRAY<T> left, ARRAY<T> right)`
-
-判断left和right数组中是否包含公共元素。返回结果如下：
-
+```sql
+ARRAYS_OVERLAP(<left>, <right>)
 ```
-1    - left和right数组存在公共元素；
-0    - left和right数组不存在公共元素；
-NULL - left或者right数组为NULL；或者left和right数组中，任意元素为NULL；
-```
+
+## 参数
+
+| 参数 | 说明 |
+|--|--|
+| `<left>` | 待判断的数组 |
+| `<right>` | 带判断的数组 |
+
+## 返回值
+
+返回判断结果： 1：left和right数组存在公共元素；0：left和right数组不存在公共元素；NULL：left或者right数组为NULL；或者left和right数组中，任意元素为NULL
 
 ## 举例
 
-```
-mysql> select c_left,c_right,arrays_overlap(c_left,c_right) from array_test;
-+--------------+-----------+-------------------------------------+
-| c_left       | c_right   | arrays_overlap(`c_left`, `c_right`) |
-+--------------+-----------+-------------------------------------+
-| [1, 2, 3]    | [3, 4, 5] |                                   1 |
-| [1, 2, 3]    | [5, 6]    |                                   0 |
-| [1, 2, NULL] | [1]       |                                NULL |
-| NULL         | [1, 2]    |                                NULL |
-| [1, 2, 3]    | [1, 2]    |                                   1 |
-+--------------+-----------+-------------------------------------+
+```sql
+SELECT ARRAYS_OVERLAP(['a', 'b', 'c'], [1, 2, 'b']);
 ```
 
-### keywords
-
-ARRAY,ARRAYS,OVERLAP,ARRAYS_OVERLAP
+```text
++--------------------------------------------------+
+| arrays_overlap(['a', 'b', 'c'], ['1', '2', 'b']) |
++--------------------------------------------------+
+|                                                1 |
++--------------------------------------------------+
+```

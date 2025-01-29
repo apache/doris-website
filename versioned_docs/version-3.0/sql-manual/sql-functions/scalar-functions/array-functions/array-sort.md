@@ -22,52 +22,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_sort
 
-array_sort
+## Description
 
-### description
+Sort the elements in an array in ascending order
 
-#### Syntax
+## Syntax
 
-`ARRAY<T> array_sort(ARRAY<T> arr)`
-
-Return the array which has been sorted in ascending order. Return NULL for NULL input.
-If the element of array is NULL, it will be placed in the front of the sorted array.
-
-### example
-
-```mysql> select k1, k2, array_sort(k2) from array_test;
-+------+-----------------------------+-----------------------------+
-| k1   | k2                          | array_sort(`k2`)            |
-+------+-----------------------------+-----------------------------+
-|  1   | [1, 2, 3, 4, 5]             | [1, 2, 3, 4, 5]             |
-|  2   | [6, 7, 8]                   | [6, 7, 8]                   |
-|  3   | []                          | []                          |
-|  4   | NULL                        | NULL                        |
-|  5   | [1, 2, 3, 4, 5, 4, 3, 2, 1] | [1, 1, 2, 2, 3, 3, 4, 4, 5] |
-|  6   | [1, 2, 3, NULL]             | [NULL, 1, 2, 3]             |
-|  7   | [1, 2, 3, NULL, NULL]       | [NULL, NULL, 1, 2, 3]       |
-|  8   | [1, 1, 2, NULL, NULL]       | [NULL, NULL, 1, 1, 2]       |
-|  9   | [1, NULL, 1, 2, NULL, NULL] | [NULL, NULL, NULL, 1, 1, 2] |
-+------+-----------------------------+-----------------------------+
-
-mysql> select k1, k2, array_sort(k2) from array_test01;
-+------+------------------------------------------+------------------------------------------+
-| k1   | k2                                       | array_sort(`k2`)                         |
-+------+------------------------------------------+------------------------------------------+
-|  1   | ['a', 'b', 'c', 'd', 'e']                | ['a', 'b', 'c', 'd', 'e']                |
-|  2   | ['f', 'g', 'h']                          | ['f', 'g', 'h']                          |
-|  3   | ['']                                     | ['']                                     |
-|  3   | [NULL]                                   | [NULL]                                   |
-|  5   | ['a', 'b', 'c', 'd', 'e', 'a', 'b', 'c'] | ['a', 'a', 'b', 'b', 'c', 'c', 'd', 'e'] |
-|  6   | NULL                                     | NULL                                     |
-|  7   | ['a', 'b', NULL]                         | [NULL, 'a', 'b']                         |
-|  8   | ['a', 'b', NULL, NULL]                   | [NULL, NULL, 'a', 'b']                   |
-+------+------------------------------------------+------------------------------------------+
+```sql
+ARRAY_SORT(<arr>)
 ```
 
-### keywords
+## Parameters
 
-ARRAY, SORT, ARRAY_SORT
+| Parameter | Description |
+|--|--|
+| `<arr>` | Corresponding array |
 
+## Return Value
+
+Returns an array sorted in ascending order. If the input array is NULL, it returns NULL. If the array elements contain NULL, the output sorted array will put NULL first.
+
+## Example
+
+```sql
+SELECT ARRAY_SORT([1, 2, 3, 6]),ARRAY_SORT([1, 4, 3, 5, NULL]),ARRAY_SORT([NULL]);
+```
+
+```text
++--------------------------+--------------------------------+--------------------+
+| array_sort([1, 2, 3, 6]) | array_sort([1, 4, 3, 5, NULL]) | array_sort([NULL]) |
++--------------------------+--------------------------------+--------------------+
+| [1, 2, 3, 6]             | [null, 1, 3, 4, 5]             | [null]             |
++--------------------------+--------------------------------+--------------------+
+```

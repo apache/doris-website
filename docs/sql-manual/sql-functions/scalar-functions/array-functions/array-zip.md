@@ -22,34 +22,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_zip
 
-array_zip
+## Description
 
-### description
+Merges all arrays into a single array. The resulting array contains corresponding elements from the source arrays, grouped in the order of the argument list.
 
-Combines all all arrays into a single array. The resulting array contains the corresponding elements of the source arrays grouped into structs in the listed order of arguments.
+## Syntax
 
-#### Syntax
-
-`Array<Struct<T1, T2,...>> array_zip(Array<T1>, Array<T2>, ...)`
-
-#### Returned value
-
-Array with elements from the source arrays grouped into tuples. Data types in the tuple are the same as types of the input arrays and in the same order as arrays are passed.
-
-### example
-
-```
-mysql> select array_zip(['a', 'b', 'c'], [1, 2, 3]);
-+-------------------------------------------------+
-| array_zip(ARRAY('a', 'b', 'c'), ARRAY(1, 2, 3)) |
-+-------------------------------------------------+
-| [{'a', 1}, {'b', 2}, {'c', 3}]                  |
-+-------------------------------------------------+
-1 row in set (0.01 sec)
+```sql
+ARRAY_ZIP(<array>[, <array> ])
 ```
 
-### keywords
+## Parameters
 
-ARRAY,ZIP,ARRAY_ZIP
+| Parameter | Description |
+|--|--|
+| `<array>` | Input array |
+
+## Return Value
+
+Returns an array with the elements from the source array grouped into a structure. The data types in the structure are the same as the input array and are in the order in which the array was passed.
+
+## Example
+
+```sql
+SELECT ARRAY_ZIP(['a', 'b', 'c'], [1, 2, 3]);
+```
+
+```text
++--------------------------------------------------------+
+| array_zip(['a', 'b', 'c'], [1, 2, 3])                  |
++--------------------------------------------------------+
+| [{"1":"a", "2":1}, {"1":"b", "2":2}, {"1":"c", "2":3}] |
++--------------------------------------------------------+
+```

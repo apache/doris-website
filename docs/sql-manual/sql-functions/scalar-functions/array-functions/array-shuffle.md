@@ -24,58 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_shuffle
 
-array_shuffle
-shuffle
+## Description
 
-### description
+Randomly arrange the elements in an array
 
-#### Syntax
+## Aliases
 
-```sql
-ARRAY<T> array_shuffle(ARRAY<T> array1, [INT seed])
-ARRAY<T> shuffle(ARRAY<T> array1, [INT seed])
-```
+- SHUFFLE
 
-Randomly arrange the elements in the array. Among them, the parameter array1 is the array to be randomly arranged, and the optional parameter seed is to set the initial value used by the pseudo-random number generator to generate pseudo-random numbers.
-Shuffle has the same function as array_shuffle.
-
-```
-array_shuffle(array1);
-array_shuffle(array1, 0);
-shuffle(array1);
-shuffle(array1, 0);
-```
-
-### example
+## Syntax
 
 ```sql
-
-mysql [test]> select c_array1, array_shuffle(c_array1) from array_test; 
-+-----------------------+---------------------------+
-| c_array1              | array_shuffle(`c_array1`) |
-+-----------------------+---------------------------+
-| [1, 2, 3, 4, 5, NULL] | [2, NULL, 5, 3, 4, 1]     |
-| [6, 7, 8, NULL]       | [7, NULL, 8, 6]           |
-| [1, NULL]             | [1, NULL]                 |
-| NULL                  | NULL                      |
-+-----------------------+---------------------------+
-4 rows in set (0.01 sec)
-
-MySQL [test]> select c_array1, array_shuffle(c_array1, 0) from array_test; 
-+-----------------------+------------------------------+
-| c_array1              | array_shuffle(`c_array1`, 0) |
-+-----------------------+------------------------------+
-| [1, 2, 3, 4, 5, NULL] | [1, 3, 2, NULL, 4, 5]        |
-| [6, 7, 8, NULL]       | [6, 8, 7, NULL]              |
-| [1, NULL]             | [1, NULL]                    |
-| NULL                  | NULL                         |
-+-----------------------+------------------------------+
-4 rows in set (0.01 sec)
-
+ARRAY_SHUFFLE(<array>, <seed>)
 ```
 
-### keywords
+## Parameters
 
-ARRAY,ARRAY_SHUFFLE,SHUFFLE
+| Parameter | Description |
+|--|--|
+| `<array>` | The array to be randomly permuted |
+| `<seed>` | An optional parameter that sets the initial value of the pseudo-random number generator used to generate pseudo-random numbers |
+
+## Return Value
+
+Randomize the elements in an array. The parameter array1 is the array to be randomly arranged, and the optional parameter seed is the initial value used by the pseudo-random number generator to generate pseudo-random numbers. shuffle has the same function as array_shuffle.
+
+## Example
+
+```sql
+SELECT ARRAY_SHUFFLE([1, 2, 3, 6]),ARRAY_SHUFFLE([1, 4, 3, 5, NULL],1);
+```
+
+```text
++-----------------------------+--------------------------------------+
+| array_shuffle([1, 2, 3, 6]) | array_shuffle([1, 4, 3, 5, NULL], 1) |
++-----------------------------+--------------------------------------+
+| [2, 6, 3, 1]                | [4, 1, 3, 5, null]                   |
++-----------------------------+--------------------------------------+
+```

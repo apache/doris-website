@@ -24,53 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_size (size, cardinality)
-array_size (size, cardinality)
-### description
 
-#### Syntax
+## Description
+
+Count the number of elements in an array
+
+## Aliases
+
+- SIZE
+- CARDINALITY
+
+## Syntax
 
 ```sql
-BIGINT size(ARRAY<T> arr) 
-BIGINT array_size(ARRAY<T> arr) 
-BIGINT cardinality(ARRAY<T> arr)
+ARRAY_SIZE(<arr>) 
 ```
 
-Returns the size of the array, returns NULL for NULL input.
+## Parameters
 
-### example
+| Parameter | Description |
+|--|--|
+| `<arr>` | The array to be calculated |
 
-```
-mysql> select k1,k2,size(k2) from array_test;
-+------+-----------+------------+
-| k1   | k2        | size(`k2`) |
-+------+-----------+------------+
-|    1 | [1, 2, 3] |          3 |
-|    2 | []        |          0 |
-|    3 | NULL      |       NULL |
-+------+-----------+------------+
+## Return Value
 
-mysql> select k1,k2,array_size(k2) from array_test;
-+------+-----------+------------------+
-| k1   | k2        | array_size(`k2`) |
-+------+-----------+------------------+
-|    1 | [1, 2, 3] |                3 |
-|    2 | []        |                0 |
-|    3 | NULL      |             NULL |
-+------+-----------+------------------+
+Returns the number of elements in the array. If the input array is NULL, it returns NULL.
 
-mysql> select k1,k2,cardinality(k2) from array_test;
-+------+-----------+-------------------+
-| k1   | k2        | cardinality(`k2`) |
-+------+-----------+-------------------+
-|    1 | [1, 2, 3] |                 3 |
-|    2 | []        |                 0 |
-|    3 | NULL      |              NULL |
-+------+-----------+-------------------+
+## Example
 
+```sql
+SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
 ```
 
-### keywords
-
-ARRAY_SIZE, SIZE, CARDINALITY
-
+```text
++------------------------------+---------------------+-----------------+
+| cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
++------------------------------+---------------------+-----------------+
+|                            3 |                   1 |               0 |
++------------------------------+---------------------+-----------------+
+```

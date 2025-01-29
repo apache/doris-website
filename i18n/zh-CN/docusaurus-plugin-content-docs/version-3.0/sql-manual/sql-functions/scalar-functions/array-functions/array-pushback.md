@@ -22,55 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_pushback
-
-array_pushback
 
 ## 描述
 
+将 value 添加到数组的尾部。
+
 ## 语法
 
-`Array<T> array_pushback(Array<T> arr, T value)`
+```sql
+ARRAY_PUSHBACK(<arr>, <value>)
+```
 
-将 value 添加到数组的尾部。
+## 参数
+
+| 参数 | 说明 |
+|--|---|
+| `<arr>` | 对应数组 |
+| `<value>` | 待添加的值 |
 
 ## 返回值
 
 返回添加 value 后的数组
 
-类型：Array.
-
 ## 举例
 
-```
-mysql> select array_pushback([1, 2], 3);
-+---------------------------------+
-| array_pushback(ARRAY(1, 2), 3)  |
-+---------------------------------+
-| [1, 2, 3]                       |
-+---------------------------------+
-
-mysql> select col3, array_pushback(col3, 6) from array_test;
-+-----------+----------------------------+
-| col3      | array_pushback(`col3`, 6)  |
-+-----------+----------------------------+
-| [3, 4, 5] | [3, 4, 5, 6]               |
-| [NULL]    | [NULL, 6]                  |
-| NULL      | NULL                       |
-| []        | [6]                        |
-+-----------+----------------------------+
-
-mysql> select col1, col3, array_pushback(col3, col1) from array_test;
-+------+-----------+---------------------------------+
-| col1 | col3      | array_pushback(`col3`, `col1`)  |
-+------+-----------+---------------------------------+
-|    0 | [3, 4, 5] | [3, 4, 5, 0]                    |
-|    1 | [NULL]    | [NULL, 1]                       |
-|    2 | NULL      | NULL                            |
-|    3 | []        | [3]                             |
-+------+-----------+---------------------------------+
+```sql
+SELECT ARRAY_PUSHBACK([1, 2], 3),ARRAY_PUSHBACK([3, 4], 6);
 ```
 
-### keywords
-
-ARRAY,PUSHBACK,ARRAY_PUSHBACK
+```text
++---------------------------+---------------------------+
+| array_pushback([1, 2], 3) | array_pushback([3, 4], 6) |
++---------------------------+---------------------------+
+| [1, 2, 3]                 | [3, 4, 6]                 |
++---------------------------+---------------------------+
+```

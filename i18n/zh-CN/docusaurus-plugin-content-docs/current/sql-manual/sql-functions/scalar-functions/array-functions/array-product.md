@@ -24,38 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_product
-
-array_product
 
 ## 描述
 
+计算数组中所有元素的乘积
+
 ## 语法
 
-`T array_product(ARRAY<T> arr)`
+```sql
+ARRAY_PRODUCT(<arr>)
+```
 
-返回数组中所有元素的乘积，数组中的`NULL`值会被跳过。空数组以及元素全为`NULL`值的数组，结果返回`NULL`值。
+## 参数
+
+| 参数 | 说明 |
+|--|--|
+| `<arr>` | 对应数组 |
+
+## 返回值
+
+返回数组中所有元素的乘积，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
 
 ## 举例
 
-```shell
-mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1)
-    -> distributed by hash(k1) buckets 1 properties('replication_num' = '1');
-mysql> insert into array_type_table values (0, []), (1, [NULL]), (2, [1, 2, 3]), (3, [1, NULL, 3]);
-mysql> select k2, array_product(k2) from array_type_table;
-+--------------+---------------------+
-| k2           | array_product(`k2`) |
-+--------------+---------------------+
-| []           |                NULL |
-| [NULL]       |                NULL |
-| [1, 2, 3]    |                   6 |
-| [1, NULL, 3] |                   3 |
-+--------------+---------------------+
-4 rows in set (0.01 sec)
-
+```sql
+SELECT ARRAY_PRODUCT([1, 2, 3]),ARRAY_PRODUCT([1, NULL, 3]),ARRAY_PRODUCT([NULL]);
 ```
 
-### keywords
-
-ARRAY,PRODUCT,ARRAY_PRODUCT
-
+```text
++--------------------------+-----------------------------+----------------------------------------------+
+| array_product([1, 2, 3]) | array_product([1, NULL, 3]) | array_product(cast([NULL] as ARRAY<DOUBLE>)) |
++--------------------------+-----------------------------+----------------------------------------------+
+|                        6 |                           3 |                                         NULL |
++--------------------------+-----------------------------+----------------------------------------------+
+```
