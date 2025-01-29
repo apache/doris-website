@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV4",
-"language": "zh-CN"
+    "title": "TO_IPV4",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,35 +22,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV4
-
-TO_IPV4
-
 ## 描述
+输入IPv4地址的字符串形式，并返回IPv4类型的值。
 
 ## 语法
+```sql
+TO_IPV4(<ipv4_str>)
+```
 
-`IPV4 TO_IPV4(STRING ipv4_str)`
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | 字符串类型的ipv4地址 |
 
-该函数类似ipv4_string_to_num，输入IPv4地址的字符串形式，并返回IPv4类型的值。
-该值的二进制形式等于ipv4_string_to_num函数返回值的二进制形式。
-如果IPv4地址为非法格式，则抛出异常。
-
-### 注意事项
-
-入参 `ipv4_str` 不能为 `NULL`，若为 `NULL`，则抛出异常。
+## 返回值
+返回IPv4类型的值，该值的二进制形式等于ipv4_string_to_num函数返回值的二进制形式。
+- 如果IPv4地址为非法格式，则抛出异常
 
 ## 举例
-
 ```sql
-mysql> select to_ipv4('255.255.255.255');
+SELECT to_ipv4('255.255.255.255');
+```
+```text
 +----------------------------+
 | to_ipv4('255.255.255.255') |
 +----------------------------+
 | 255.255.255.255            |
 +----------------------------+
 ```
-
-### Keywords
-
-TO_IPV4, IP

@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_STRING_TO_NUM_OR_NULL",
-"language": "en"
+    "title": "IPV4_STRING_TO_NUM_OR_NULL",
+    "language": "en"
 }
 ---
 
@@ -22,35 +22,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_STRING_TO_NUM_OR_NULL
 
-IPV4_STRING_TO_NUM_OR_NULL
-
-### Description
-
-#### Syntax
-
-`BIGINT IPV4_STRING_TO_NUM_OR_NULL(VARCHAR ipv4_string)`
-
-`BIGINT INET_ATON(VARCHAR ipv4_string)`
-
+## Description
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
-#### Notice
+## Alias
+- INET_ATON
 
-If the input string is not a valid IPv4 address, `NULL` is returned. This function has an alias of `INET_ATON`.
-
-### Example
+## Syntax
 ```sql
-mysql> select ipv4_string_to_num_or_null('192.168.0.1'); 
+IPV4_STRING_TO_NUM_OR_NULL(<ipv4_string>)
+```
+
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_string>`      | String type of ipv4, like 'A.B.C.D'  |
+
+## Return Value
+Returns a BIGINT number representing the corresponding IPv4 address in big endian.
+- If the input string is not a valid IPv4 address, `NULL` is returned.
+
+## Example
+```sql
+select ipv4_string_to_num_or_null('192.168.0.1'); 
+```
+```text
 +-------------------------------------------+ 
 | ipv4_string_to_num_or_null('192.168.0.1') | 
 +-------------------------------------------+ 
 | 3232235521                                | 
 +-------------------------------------------+ 
-1 row in set (0.01 sec)
+```
 
-mysql> select str, ipv4_string_to_num_or_null(str) from ipv4_str; 
+```sql
+select str, ipv4_string_to_num_or_null(str) from ipv4_str; 
+```
+```text
 +-----------------+---------------------------------+ 
 |str              | ipv4_string_to_num_or_null(str) | 
 +-----------------+---------------------------------+ 
@@ -59,9 +67,4 @@ mysql> select str, ipv4_string_to_num_or_null(str) from ipv4_str;
 | 255.255.255.255 | 4294967295                      | 
 | invalid         | NULL                            | 
 +-----------------+---------------------------------+ 
-4 rows in set (0.01 sec)
 ```
-
-### Keywords
-
-IPV4_STRING_TO_NUM_OR_NULL, INET_ATON, IP

@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV6_STRING_TO_NUM",
-"language": "zh-CN"
+    "title": "IPV6_STRING_TO_NUM",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,48 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV6_STRING_TO_NUM
-
-IPV6_STRING_TO_NUM
-
 ## 描述
+IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
 
 ## 语法
+```sql
+IPV6_STRING_TO_NUM(<ipv6_string>)
+```
 
-`VARCHAR IPV6_STRING_TO_NUM(VARCHAR ipv6_string)`
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_string>`      | 字符串类型的ipv6地址  |
 
-IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
-如果输入字符串包含有效的 IPv4 地址，则返回其等效的 IPv6 地址。
-
-### 注意事项
-
-如果输入非法的 IP 地址或者 `NULL`，会抛出异常
+## 返回值
+返回二进制格式的 IPv6 地址。
+- 如果输入非法的 IP 地址或者 `NULL`，会抛出异常
+- 如果输入字符串包含有效的 IPv4 地址，则返回其等效的 IPv6 地址。
 
 ## 举例
 ```sql
-mysql> select hex(ipv6_string_to_num('1111::ffff'));
-+---------------------------------------+
-| hex(ipv6_string_to_num('1111::ffff')) |
-+---------------------------------------+
-| 1111000000000000000000000000FFFF      |
-+---------------------------------------+
-1 row in set (0.02 sec)
-
-mysql> select hex(ipv6_string_to_num('192.168.0.1'));
-+----------------------------------------+
-| hex(ipv6_string_to_num('192.168.0.1')) |
-+----------------------------------------+
-| 00000000000000000000FFFFC0A80001       |
-+----------------------------------------+
-1 row in set (0.02 sec)
-
-mysql> select hex(ipv6_string_to_num('notaaddress'));
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Invalid IPv6 value
-
-mysql> select addr_src, hex(ipv6_string_to_num(addr_src)) from ipv4_string_test where addr_src is null;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv6 value like '::' first
+select hex(ipv6_string_to_num('1111::ffff')), hex(ipv6_string_to_num('192.168.0.1'));
 ```
-
-### Keywords
-
-IPV6_STRING_TO_NUM, IP
+```text
++---------------------------------------+----------------------------------------+
+| hex(ipv6_string_to_num('1111::ffff')) | hex(ipv6_string_to_num('192.168.0.1')) |
++---------------------------------------+----------------------------------------+
+| 1111000000000000000000000000FFFF      | 00000000000000000000FFFFC0A80001       |
++---------------------------------------+----------------------------------------+
+```
+```sql
+select hex(ipv6_string_to_num('notaaddress'));
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Invalid IPv6 value
+```

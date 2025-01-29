@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV4_STRING",
-"language": "zh-CN"
+    "title": "IS_IPV4_STRING",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,29 +22,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV4_STRING
-
-IS_IPV4_STRING
-
 ## 描述
-
-## 语法
-
-`BOOLEAN IS_IPV4_STRING(STRING ipv4_str)`
-
 接收一个表示形式为字符串的IPv4地址作为参数，如果为格式正确且合法的IPv4地址，返回true；反之，返回false。
 
-## 举例
-
+## 语法
 ```sql
-mysql> select is_ipv4_string(NULL);
-+----------------------+
-| is_ipv4_string(NULL) |
-+----------------------+
-|                 NULL |
-+----------------------+
+IS_IPV4_STRING(<ipv4_str>)
+```
 
-mysql> CREATE TABLE `test_is_ipv4_string` (
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | 字符串类型的ipv4地址 |
+
+## 返回值
+如果为格式正确且合法的IPv4地址，返回true；反之，返回false。
+- 如果输入为NULL, 则返回NULL
+
+## 举例
+```sql
+CREATE TABLE `test_is_ipv4_string` (
       `id` int,
       `ip_v4` string
     ) ENGINE=OLAP
@@ -52,21 +49,19 @@ mysql> CREATE TABLE `test_is_ipv4_string` (
     PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
     );
-    
-mysql> insert into test_is_ipv4_string values(0, NULL), (1, '0.0.0.'), (2, ''), (3, '.'), (4, '255.255.255.255');
 
-mysql> select id, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
-+------+-----------------------+
-| id   | is_ipv4_string(ip_v4) |
-+------+-----------------------+
-|    0 |                  NULL |
-|    1 |                     0 |
-|    2 |                     0 |
-|    3 |                     0 |
-|    4 |                     1 |
-+------+-----------------------+
+insert into test_is_ipv4_string values(0, NULL), (1, '0.0.0.'), (2, ''), (3, '.'), (4, '255.255.255.255');
+
+select id, ip_v4, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
 ```
-
-### Keywords
-
-IS_IPV4_STRING, IP
+```text
++------+-----------------+-----------------------+
+| id   | ip_v4           | is_ipv4_string(ip_v4) |
++------+-----------------+-----------------------+
+|    0 | NULL            |                  NULL |
+|    1 | 0.0.0.          |                     0 |
+|    2 |                 |                     0 |
+|    3 | .               |                     0 |
+|    4 | 255.255.255.255 |                     1 |
++------+-----------------+-----------------------+
+```

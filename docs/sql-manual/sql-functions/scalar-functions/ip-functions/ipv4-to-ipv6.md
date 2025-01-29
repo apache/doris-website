@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_TO_IPV6",
-"language": "en"
+    "title": "IPV4_TO_IPV6",
+    "language": "en"
 }
 ---
 
@@ -22,30 +22,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_TO_IPV6
+## Description
+Convert ipv4 type address to ipv6 type address.
 
-IPV4_TO_IPV6
-
-### Description
-
-#### Syntax
-
-`IPV6 IPV4_TO_IPV6(IPV4 ipv4)`
-
-accept an IPv4 type address and return the converted IPv6 type address.
-
-### Example
-
+## Syntax
 ```sql
-mysql [(none)]>select ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1')));
-+----------------------+
-| '::ffff:192.168.0.1' |
-+----------------------+
-| ::ffff:192.168.0.1   |
-+----------------------+
-1 row in set (0.02 sec)
+IPV4_TO_IPV6(<ipv4>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4>`      | An IPv4 type address  |
 
-IPV4_TO_IPV6, IP
+## Return Value
+Returns the converted IPv6 type address.
+
+## Example
+```sql
+select ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1')));
+```
+```text
++----------------------------------------------------------+
+| ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1'))) |
++----------------------------------------------------------+
+| ::ffff:192.168.0.1                                       |
++----------------------------------------------------------+
+```

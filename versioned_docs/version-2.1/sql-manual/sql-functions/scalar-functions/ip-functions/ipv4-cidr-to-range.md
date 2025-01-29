@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_CIDR_TO_RANGE",
-"language": "en"
+    "title": "IPV4_CIDR_TO_RANGE",
+    "language": "en"
 }
 ---
 
@@ -22,43 +22,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_CIDR_TO_RANGE
-
-IPV4_CIDR_TO_RANGE
-
-### Description
-
-#### Syntax
-
-`STRUCT<IPV4, IPV4> IPV4_CIDR_TO_RANGE(IPV4 ip_v4, INT16 cidr)`
-
+## Description
 Receive an IPv4 and an Int16 value containing CIDR. Returns a struct that contains two IPv4 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
 
-### Example
-
+## Syntax
 ```sql
-mysql> SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16);
-+-----------------------------------------------------------+
-| ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16) |
-+-----------------------------------------------------------+
-| {"min": "192.168.0.0", "max": "192.168.255.255"}          |
-+-----------------------------------------------------------+
-
-mysql> SELECT ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16);
-+--------------------------------------------------+
-| ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16)   |
-+--------------------------------------------------+
-| {"min": "192.168.0.0", "max": "192.168.255.255"} |
-+--------------------------------------------------+
-
-mysql> SELECT ipv4_cidr_to_range(NULL, NULL);
-+--------------------------------+
-| ipv4_cidr_to_range(NULL, NULL) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
+IPV4_CIDR_TO_RANGE(<ip_v4>, <cidr>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ip_v4>`      | An IPv4 address of type String |
+| `<cidr>`      | The cidr value |
 
-IPV4_CIDR_TO_RANGE, IP
+
+## Return Value
+Returns a struct that contains two IPv4 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16) as re1, ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16) as re2, ipv4_cidr_to_range(NULL, NULL) as re3;
+```
+```text
++------------------------------------------------+------------------------------------------------+------+
+| re1                                            | re2                                            | re3  |
++------------------------------------------------+------------------------------------------------+------+
+| {"min":"192.168.0.0", "max":"192.168.255.255"} | {"min":"192.168.0.0", "max":"192.168.255.255"} | NULL |
++------------------------------------------------+------------------------------------------------+------+
+```
+

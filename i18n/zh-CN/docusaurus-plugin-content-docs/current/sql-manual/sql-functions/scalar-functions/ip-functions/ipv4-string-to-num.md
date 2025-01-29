@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_STRING_TO_NUM",
-"language": "zh-CN"
+    "title": "IPV4_STRING_TO_NUM",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,39 +22,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_STRING_TO_NUM
-
-IPV4_STRING_TO_NUM
-
 ## 描述
-
-## 语法
-
-`BIGINT IPV4_STRING_TO_NUM(VARCHAR ipv4_string)`
-
 获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。
 
-### 注意事项
+## 语法
+```sql
+IPV4_STRING_TO_NUM(<ipv4_string>)
+```
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_string>`      | 字符串类型的ipv4地址, 例如 'A.B.C.D'  |
 
-如果输入字符串不是有效的 IPv4 地址或者 `NULL`，将返回错误
+## 返回值
+返回一个 BIGINT 数字，表示相应的大端 IPv4 地址
+- 如果输入字符串不是有效的 IPv4 地址或者 `NULL`，将返回错误
 
 ## 举例
 ```sql
-mysql> select ipv4_string_to_num('192.168.0.1'); 
+select ipv4_string_to_num('192.168.0.1'); 
+```
+```text
 +-----------------------------------+ 
 | ipv4_string_to_num('192.168.0.1') | 
 +-----------------------------------+ 
 | 3232235521                        | 
 +-----------------------------------+ 
-1 row in set (0.01 sec)
-
-mysql> SELECT ipv4_string_to_num('192.168');
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][INVALID_ARGUMENT][E33] Invalid IPv4 value
-
-mysql> select addr_src, ipv4_string_to_num(addr_src) from ipv4_string_test where addr_src is null;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv4 value like '0.0.0.0' first
 ```
 
-### Keywords
-
-IPV4_STRING_TO_NUM, IP
+```sql
+select ipv4_string_to_num('invalid');
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][INVALID_ARGUMENT][E33] Invalid IPv4 value
+```

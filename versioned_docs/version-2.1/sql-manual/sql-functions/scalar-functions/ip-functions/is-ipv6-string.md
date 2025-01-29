@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV6_STRING",
-"language": "en"
+    "title": "IS_IPV6_STRING",
+    "language": "en"
 }
 ---
 
@@ -22,33 +22,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV6_STRING
 
-IS_IPV6_STRING
+## Description
+Determine whether an IPv6-type address is a valid IPv6 address.
 
-### Description
-
-#### Syntax
-
-`BOOLEAN IS_IPV6_STRING(STRING ipv6_str)`
-
-Receive an IPv6 address in the form of a string as a parameter, and return true if it is a properly formatted and valid IPv6 address; On the contrary, return false.
-
-#### Notice
-
-`If the input parameter is NULL, return NULL, indicating invalid input`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select is_ipv6_string(NULL);
-+----------------------+
-| is_ipv6_string(NULL) |
-+----------------------+
-|                 NULL |
-+----------------------+
+IS_IPV6_STRING(<ipv6_str>)
+```
 
-mysql> CREATE TABLE `test_is_ipv6_string` (
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | An IPv6 address of type String |
+
+
+## Return Value
+If it is a correctly formatted and valid IPv6 address, return true; On the contrary, return false.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+CREATE TABLE `test_is_ipv6_string` (
       `id` int,
       `ip_v6` string
     ) ENGINE=OLAP
@@ -57,20 +53,19 @@ mysql> CREATE TABLE `test_is_ipv6_string` (
     "replication_allocation" = "tag.location.default: 1"
     );
     
-mysql> insert into test_is_ipv6_string values(0, NULL), (1, '::'), (2, ''), (3, '2001:1b70:a1:610::b102:2'), (4, 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg');
+insert into test_is_ipv6_string values(0, NULL), (1, '::'), (2, ''), (3, '2001:1b70:a1:610::b102:2'), (4, 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg');
 
-mysql> select id, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
-+------+-----------------------+
-| id   | is_ipv6_string(ip_v6) |
-+------+-----------------------+
-|    0 |                  NULL |
-|    1 |                     1 |
-|    2 |                     0 |
-|    3 |                     1 |
-|    4 |                     0 |
-+------+-----------------------+
+select id, ip_v6, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
+```
+```text
++------+------------------------------------------+-----------------------+
+| id   | ip_v6                                    | is_ipv6_string(ip_v6) |
++------+------------------------------------------+-----------------------+
+|    0 | NULL                                     |                  NULL |
+|    1 | ::                                       |                     1 |
+|    2 |                                          |                     0 |
+|    3 | 2001:1b70:a1:610::b102:2                 |                     1 |
+|    4 | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg |                     0 |
++------+------------------------------------------+-----------------------+
 ```
 
-### Keywords
-
-IS_IPV6_STRING, IP

@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV4_MAPPED",
-"language": "en"
+    "title": "IS_IPV4_MAPPED",
+    "language": "en"
 }
 ---
 
@@ -22,44 +22,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV4_MAPPED
 
-IS_IPV4_MAPPED
+## Description
+This function takes an IPv6 address represented in numeric form as a binary string, as returned by INET6_ATON().INET6_ATON is also named IPV6_STRING_TO_NUM_OR_NULL.
+- IPv4-mapped addresses have the form `::ffff:ipv4_address`.
 
-### Description
-
-#### Syntax
-
-`VARCHAR IS_IPV4_MAPPED(INET6_ATON(VARCHAR ipv4_addr))`
-
-This function takes an IPv6 address represented in numeric form as a binary string, as returned by INET6_ATON(). 
-It returns 1 if the argument is a valid IPv4-mapped IPv6 address, 0 otherwise, unless expr is NULL, in which case the function returns NULL. 
-IPv4-mapped addresses have the form ::ffff:ipv4_address. 
-
-#### Notice
-
-`When the source input doesn't have a prefix of '::ffff:', but if it's still a valid ipv4 address, this result will also be 1 for the reason that the INET6_ATON() automatically adds the prefix for it.`
-
-### Example
-
+## Syntax
 ```sql
-mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         1 |
-+-----------+
-1 row in set (0.02 sec)
-
-mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         0 |
-+-----------+
-1 row in set (0.03 sec)
+IS_IPV4_MAPPED(INET6_ATON(<ipv4_addr>))
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_addr>`      | An IPv4-compatible addresses, it is like '::ipv4_address'  |
 
-IS_IPV4_MAPPED, IP
+
+## Return Value
+Returns 1 if the argument is a valid IPv4-mapped IPv6 address, 0 otherwise.
+- If input is NULL, the function returns NULL.
+
+
+## Example
+```sql
+SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS re1, IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) AS re2;
+```
+```text
++------+------+
+| re1  | re2  |
++------+------+
+|    1 |    0 |
++------+------+
+```

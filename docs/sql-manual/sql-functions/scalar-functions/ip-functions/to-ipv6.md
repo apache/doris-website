@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV6",
-"language": "en"
+    "title": "TO_IPV6",
+    "language": "en"
 }
 ---
 
@@ -22,35 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV6
+## Description
+Convert a string form of IPv6 address to IPv6 type, which is binary equal to value returned by ipv6_string_to_num.
 
-TO_IPV6
-
-### Description
-
-#### Syntax
-
-`IPV6 TO_IPV6(STRING ipv6_str)`
-
-Convert a string form of IPv6 address to IPv6 type.
-If the IPv6 address has an invalid format, throw an exception.
-Similar to ipv6_string_to_num function, which converts IPv6 address to binary format.
-
-#### Notice
-
-`Input cannot be NULL. If it is NULL, an exception will be thrown.`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select to_ipv6('::');
-+---------------+
-| to_ipv6('::') |
-+---------------+
-| ::            |
-+---------------+
+TO_IPV6(<ipv6_str>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | An IPv6 address of type String |
 
-TO_IPV6, IP
+
+## Return Value
+Returns value of IPv6 type.
+- If the IPv6 address has an invalid format, throw an exception
+
+
+## Example
+```sql
+SELECT to_ipv6('::'),to_ipv6('2001:1b70:a1:610::b102:2');
+```
+```text
++---------------+-------------------------------------+
+| to_ipv6('::') | to_ipv6('2001:1b70:a1:610::b102:2') |
++---------------+-------------------------------------+
+| ::            | 2001:1b70:a1:610::b102:2            |
++---------------+-------------------------------------+
+```

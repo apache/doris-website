@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV6_NUM_TO_STRING",
-"language": "zh-CN"
+    "title": "IPV6_NUM_TO_STRING",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,45 +22,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV6_NUM_TO_STRING
-
-IPV6_NUM_TO_STRING
-
 ## 描述
+接受字符串类型的二进制格式的IPv6地址。以文本格式返回此地址的字符串。
+
+
+## 别名
+- INET6_NTOA
 
 ## 语法
-
-`VARCHAR IPV6_NUM_TO_STRING(VARCHAR ipv6_num)`
-
-`VARCHAR INET6_NTOA(VARCHAR ipv6_num)`
-
-接受字符串类型的二进制格式的IPv6地址。以文本格式返回此地址的字符串。
-IPv6映射的IPv4地址以::ffff:111.222.33。 
-
-### 注意事项
-
-如果输入字符串不是有效的 IPv6 地址的二进制编码，将返回 `NULL`。该函数有一个别名 `INET6_NTOA`。
-
-## 举例
-
 ```sql
-mysql> select ipv6_num_to_string(unhex('2A0206B8000000000000000000000011')) as addr;
-+--------------+
-| addr         |
-+--------------+
-| 2a02:6b8::11 |
-+--------------+
-1 row in set (0.01 sec)
-
-mysql> select ipv6_num_to_string("-23vno12i34nlfwlsj");
-+------------------------------------------+
-| ipv6_num_to_string('-23vno12i34nlfwlsj') |
-+------------------------------------------+
-| NULL                                     |
-+------------------------------------------+
-1 row in set (0.14 sec)
+IPV6_NUM_TO_STRING(<ipv6_num>)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_num>`      | 以字符串类型呈现的ipv6地址的二进制编码值  |
 
-IPV6_NUM_TO_STRING, INET6_NTOA, IP
+## 返回值
+以文本格式返回 ipv6 地址的字符串。
+- 如果输入字符串不是有效的 IPv6 地址的二进制编码，将返回 `NULL`。
+
+## 举例
+```sql
+select ipv6_num_to_string(unhex('2A0206B8000000000000000000000011')) as addr, ipv6_num_to_string("-23vno12i34nlfwlsj");
+```
+```text
++--------------+------------------------------------------+
+| addr         | ipv6_num_to_string('-23vno12i34nlfwlsj') |
++--------------+------------------------------------------+
+| 2a02:6b8::11 | NULL                                     |
++--------------+------------------------------------------+
+```
