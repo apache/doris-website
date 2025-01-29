@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_LINEFROMTEXT,ST_LINESTRINGFROMTEXT",
+    "title": "ST_LINEFROMTEXT",
     "language": "zh-CN"
 }
 ---
@@ -27,6 +27,10 @@ under the License.
 ## 描述
 
 将一个 WKT（Well Known Text）转化为一个 Line 形式的内存表现形式
+
+## 别名
+
+- ST_LINESTRINGFROMTEXT
 
 ## 语法
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_ASTEXT,ST_ASWKT",
+    "title": "ST_ASTEXT",
     "language": "zh-CN"
 }
 ---
@@ -27,6 +27,10 @@ under the License.
 ## 描述
 
 将一个几何图形转化为 WKT（Well Known Text）的表示形式
+
+## 别名
+
+- ST_ASWKT
 
 ## 语法
 

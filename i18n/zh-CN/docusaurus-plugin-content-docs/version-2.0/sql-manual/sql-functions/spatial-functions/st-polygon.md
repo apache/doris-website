@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_POLYGON,ST_POLYGONFROMTEXT",
+    "title": "ST_POLYGON",
     "language": "zh-CN"
 }
 ---
@@ -27,6 +27,11 @@ under the License.
 ## 描述
 
 将一个 WKT（Well Known Text）转化为对应的多边形内存形式
+
+## 别名
+
+- st_polygonfromtext
+- st_polyfromtext
 
 ## 语法
 

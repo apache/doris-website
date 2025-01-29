@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_POLYGON,ST_POLYFROMTEXT,ST_POLYGONFROMTEXT",
+    "title": "ST_POLYGON",
     "language": "en"
 }
 ---
@@ -27,6 +27,11 @@ under the License.
 ## Description
 
 Convert a WKT (Well Known Text) to the corresponding polygonal memory form
+
+## Alias
+
+- st_polygonfromtext
+- st_polyfromtext
 
 ## Syntax
 
