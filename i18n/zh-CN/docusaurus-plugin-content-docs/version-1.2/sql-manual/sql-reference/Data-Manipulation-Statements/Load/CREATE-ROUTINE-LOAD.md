@@ -35,7 +35,7 @@ CREATE ROUTINE LOAD
 
 例行导入（Routine Load）功能，支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 Doris 中。
 
-目前仅支持通过无认证或者 SSL 认证方式，从 Kakfa 导入 CSV 或 Json 格式的数据。
+目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入 CSV 或 Json 格式的数据。
 
 语法：
 

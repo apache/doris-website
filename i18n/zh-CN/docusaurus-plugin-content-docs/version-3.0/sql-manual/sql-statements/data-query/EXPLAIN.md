@@ -128,7 +128,7 @@ Doris EXPLAIN 语句的结果是一个完整的 PLAN。PLAN 内部是按照执�
 | :----------------- | :--------------------------------------- |
 | PARTITION          | 展示当前 Fragment 的数据分布情况           |
 | HAS_COLO_PLAN_NODE | 当前 fragment 中是否存在 colocate 的算子 |
-| Sink               | fragment 数据输出的方式，具体方式先下表  |
+| Sink               | fragment 数据输出的方式，具体方式见下表  |
 
 Sink 方式
 
