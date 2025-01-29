@@ -24,31 +24,45 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_search_all_positions
 ## 描述
+
+返回一组正则表达式在一个字符串中首次出现的位置。
+
+
 ## 语法
 
-`ARRAY<INT> multi_search_all_positions(VARCHAR haystack, ARRAY<VARCHAR> needles)`
+```sql
+ARRAY<INT> multi_search_all_positions(VARCHAR haystack, ARRAY<VARCHAR> patterns)
+```
 
-返回一个 `ARRAY`，其中第 `i` 个元素为 `needles` 中第 `i` 个元素 `needle`，在字符串 `haystack` 中**首次**出现的位置。位置从1开始计数，0代表未找到该元素。**大小写敏感**。
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `haystack` | 被检查的字符串 |
+| `patterns` | 正则表达式数组 |
+
+
+## 返回值
+
+返回一个 `ARRAY`，其中第 `i` 个元素为 `patterns` 数组中第 `i` 个元素（正则表达式），在字符串 `haystack` 中**首次**出现的位置，位置从 1 开始计数，0 代表未找到该元素。
+
 
 ## 举例
 
-```
-mysql> select multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
+```sql
+mysql> SELECT multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
 +----------------------------------------------------------------------+
 | multi_search_all_positions('Hello, World!', ['hello', '!', 'world']) |
 +----------------------------------------------------------------------+
-| [0,13,0]                                                             |
+| [0, 13, 0]                                                             |
 +----------------------------------------------------------------------+
 
-select multi_search_all_positions("Hello, World!", ['hello', '!', 'world', 'Hello', 'World']);
+mysql> SELECT multi_search_all_positions("Hello, World!", ['hello', '!', 'world', 'Hello', 'World']);
 +---------------------------------------------------------------------------------------------+
 | multi_search_all_positions('Hello, World!', ARRAY('hello', '!', 'world', 'Hello', 'World')) |
 +---------------------------------------------------------------------------------------------+
 | [0, 13, 0, 1, 8]                                                                            |
 +---------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    MULTI_SEARCH,SEARCH,POSITIONS

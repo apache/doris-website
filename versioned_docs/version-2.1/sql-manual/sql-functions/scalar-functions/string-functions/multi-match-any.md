@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_match_any
-### Description
-#### Syntax
+## Description
 
-`TINYINT multi_match_any(VARCHAR haystack, ARRAY<VARCHAR> patterns)`
+Returns whether the string matches any of the given regular expressions.
 
+## Syntax
 
-Checks whether the string `haystack` matches the regular expressions `patterns` in re2 syntax. returns 0 if none of the regular expressions are matched and 1 if any of the patterns matches.
-
-### example
-
+```sql
+TINYINT multi_match_any(VARCHAR haystack, ARRAY<VARCHAR> patterns)
 ```
-mysql> select multi_match_any('Hello, World!', ['hello', '!', 'world']);
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `haystack` | The string to be checked |
+| `patterns` | Array of regular expressions |
+
+## Return Value
+
+Returns 1 if the string `haystack` matches any of the regular expressions in the `patterns` array, otherwise returns 0.
+
+## Examples
+
+```sql
+mysql> SELECT multi_match_any('Hello, World!', ['hello', '!', 'world']);
 +-----------------------------------------------------------+
 | multi_match_any('Hello, World!', ['hello', '!', 'world']) |
 +-----------------------------------------------------------+
 | 1                                                         |
 +-----------------------------------------------------------+
 
-mysql> select multi_match_any('abc', ['A', 'bcd']);
+mysql> SELECT multi_match_any('abc', ['A', 'bcd']);
 +--------------------------------------+
 | multi_match_any('abc', ['A', 'bcd']) |
 +--------------------------------------+
 | 0                                    |
 +--------------------------------------+
 ```
-### keywords
-    MULTI_MATCH,MATCH,ANY
