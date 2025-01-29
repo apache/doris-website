@@ -62,17 +62,17 @@ Doris 的聚合模型是为了高效地处理大规模数据查询中的聚合�
 CREATE TABLE IF NOT EXISTS example_tbl_agg
 (
     user_id             LARGEINT    NOT NULL,
-    load_dt             DATE        NOT NULL,
+    load_date           DATE        NOT NULL,
     city                VARCHAR(20),
     last_visit_dt       DATETIME    REPLACE DEFAULT "1970-01-01 00:00:00",
     cost                BIGINT      SUM DEFAULT "0",
     max_dwell           INT         MAX DEFAULT "0",
 )
-AGGREGATE KEY(user_id, date, city)
+AGGREGATE KEY(user_id, load_date, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-上例中定义了用户信息和访问的行为事实表，将 `user_id`、`load_date`、`city` 及 `age` 作为 Key 列进行聚合操作。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。在聚合表中支持一下类型的维度聚合：
+上例中定义了用户信息和访问的行为事实表，将 `user_id`、`load_date` 及 `city` 作为 Key 列进行聚合操作。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。在聚合表中支持一下类型的维度聚合：
 
 * SUM：求和，多行的 Value 进行累加。
 
