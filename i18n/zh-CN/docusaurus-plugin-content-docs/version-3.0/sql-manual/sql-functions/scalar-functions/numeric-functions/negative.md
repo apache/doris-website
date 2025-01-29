@@ -22,28 +22,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## negative
-
 ## 描述
+
+返回传参 x 的负值
+
 ## 语法
 
 ```sql
-BIGINT negative(BIGINT x)
-DOUBLE negative(DOUBLE x)
-DECIMAL negative(DECIMAL x)
+NEGATIVE(<x>)
 ```
-返回`-x`.
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 自变量 支持类型`BIGINT DOUBLE DECIMAL` |
+
+## 返回值
+
+返回整型或者浮点数。特殊情况：
+
+- 当参数为 NULL 时，返回 NULL
+- 当参数为 0 时，返回 0
 
 ## 举例
 
+```sql
+SELECT negative(-10);
 ```
-mysql> SELECT negative(-10);
+
+```text
 +---------------+
 | negative(-10) |
 +---------------+
 |            10 |
 +---------------+
-mysql> SELECT negative(12);
+```
+
+```sql
+SELECT negative(12);
+```
+
+```text
 +--------------+
 | negative(12) |
 +--------------+
@@ -51,5 +71,26 @@ mysql> SELECT negative(12);
 +--------------+
 ```
 
-### keywords
-	NEGATIVE
+```sql
+SELECT negative(0);
+```
+
+```text
++-------------+
+| negative(0) |
++-------------+
+|           0 |
++-------------+
+```
+
+```sql
+SELECT negative(null);
+```
+
+```text
++----------------+
+| negative(NULL) |
++----------------+
+|           NULL |
++----------------+
+```
