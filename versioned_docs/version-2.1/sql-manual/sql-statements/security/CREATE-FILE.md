@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CREATE FILE",
-    "language": "en"
+  "title": "CREATE FILE",
+  "language": "en"
 }
 ---
 
@@ -24,39 +24,72 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
 This statement is used to create and upload a file to the Doris cluster.
-This function is usually used to manage files that need to be used in some other commands, such as certificates, public and private keys, and so on.
+This function is usually used to manage files that need to be used in some other commands, such as certificates, public
+and private keys, and so on.
 
-This command can only be executed by users with `admin` privileges.
-A certain file belongs to a certain database. This file can be used by any user with access rights to database.
-
-A single file size is limited to 1MB.
-A Doris cluster can upload up to 100 files.
-
-grammar:
+## Syntax
 
 ```sql
-CREATE FILE "file_name" [IN database]
-PROPERTIES("key"="value", ...)
+CREATE FILE <file_name>
+        [ { FROM | IN } <database_name>] PROPERTIES ("<key>"="<value>" [ , ... ]);
 ```
 
-illustrate:
+## Required Parameters
 
-- file_name: custom file name.
-- database: The file belongs to a certain db, if not specified, the db of the current session is used.
-- properties supports the following parameters:
-    - url: Required. Specifies the download path for a file. Currently only unauthenticated http download paths are supported. After the command executes successfully, the file will be saved in doris and the url will no longer be needed.
-    - catalog: Required. The classification name of the file can be customized. However, in some commands, files in the specified catalog are looked up. For example, in the routine import, when the data source is kafka, the file under the catalog name kafka will be searched.
-    - md5: optional. md5 of the file. If specified, verification will be performed after the file is downloaded.
+**<file_name>**
 
-## Examples
+**1. `<file_name>`**
 
-1. Create a file ca.pem , classified as kafka
+> Custom file name.
+
+**2. `<key>`**
+
+> File attribute key.
+> - **url**: Required. Specifies an unauthenticated HTTP download URL. After successful execution, the file will be
+    stored
+    in Doris and this URL will no longer be required.
+> - **catalog**: Required. Category name for file classification (user-defined). Used to locate files in specific
+    commands (
+    e.g., searches for files under 'kafka' catalog when Kafka is the data source in scheduled imports).
+> - **md5**: Optional. MD5 checksum of the file. If provided, verification will be performed after download.
+
+**3. `<value>`**
+
+> File attribute value.
+
+## Optional Parameters
+
+**1. `<database_name>`**
+
+> Specifies the database to which the file belongs. Uses current session's database if not specified.
+
+## Access Control Requirements
+
+The user executing this SQL command must possess at least the following privileges:
+
+| Privilege    | Object      | Notes                                                                           |
+|:-------------|:------------|:--------------------------------------------------------------------------------|
+| `ADMIN_PRIV` | User / Role | The user or role must hold the `ADMIN_PRIV` privilege to execute this operation |
+
+## Usage Notes
+
+- File Access Rules
+
+> Each file belongs to a specific database (Database). Users with access privileges to the database can access all files
+> within it.
+
+- File Size and Quantity Limits
+
+> This feature is primarily designed for managing small files such as certificates.  
+> **Size limit**: Individual file size is restricted to 1MB  
+> **Quantity limit**: A Doris cluster supports uploading up to 100 files maximum
+
+## Example
+
+- Create a file ca.pem , classified as kafka
 
    ```sql
    CREATE FILE "ca.pem"
@@ -67,7 +100,7 @@ illustrate:
    );
    ```
 
-2. Create a file client.key, classified as my_catalog
+- Create a file client.key, classified as my_catalog
 
    ```sql
    CREATE FILE "client.key"
@@ -80,17 +113,16 @@ illustrate:
    );
    ```
 
-## Keywords
+- Create a file client_1.key, classified as my_catalog
 
-```text
-CREATE, FILE
-```
-
-## Best Practice
-
-1. This command can only be executed by users with amdin privileges. A certain file belongs to a certain database. This file can be used by any user with access rights to database.
-
-2. File size and quantity restrictions.
-
-   This function is mainly used to manage some small files such as certificates. So a single file size is limited to 1MB. A Doris cluster can upload up to 100 files.
+  ```sql
+  CREATE FILE "client_1.key"
+    FROM my_database
+    PROPERTIES
+    (
+       "url" = "https://test.bj.bcebos.com/kafka-key/client.key",
+       "catalog" = "my_catalog",
+       "md5" = "b5bb901bf10f99205b39a46ac3557dd9"
+    );
+  ```
 
