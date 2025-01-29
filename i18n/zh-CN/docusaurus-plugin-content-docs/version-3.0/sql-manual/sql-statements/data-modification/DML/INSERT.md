@@ -212,7 +212,8 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 2. 超时时间
 
-   INSERT 操作的超时时间由 [会话变量](../../../../advanced/variables.md) `insert_timeout` 控制。默认为 4 小时。超时则作业会被取消。
+   INSERT 操作的超时时间由`max(insert_timeout, query_timeout)` 控制。二者均为环境变量，insert_timeout默认为 4 小时，query_timeout默认为5分钟。超时则作业会被取消。引入`insert_timeout`的原因是让insert语句默认拥有较长的超时时间，
+   使导入任务不受普通查询默认较短的超时时间的影响。
 
 3. Label 和原子性
 
