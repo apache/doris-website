@@ -24,17 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract
-### Description
-#### Syntax
+## Description
 
-`VARCHAR regexp_extract (VARCHAR str, VARCHAR pattern, int pos)`
+The string STR is matched regularly and the POS matching part which conforms to pattern is extracted. Patterns need to match exactly some part of the STR to return to the matching part of the pattern.
 
-The string STR is matched regularly and the POS matching part which conforms to pattern is extracted. Patterns need to match exactly some part of the STR to return to the matching part of the pattern. If there is no match, return an empty string.
+- If there is no match, return an empty string.
 
-Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+- Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
-### example
+## Syntax
+
+`VARCHAR regexp_extract (VARCHAR str, VARCHAR pattern, INTEGER pos)`
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `str` | The column need to do regular matching.|
+| `pattern` | Target pattern.|
+| `pos` | The parameter used to specify the position in the string from which to start searching for the regular expression match. It is an integer value representing the character position in the string (starting from 1). `pos` must be specified. |
+
+## Example
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
@@ -58,6 +68,3 @@ mysql> select regexp_extract('这是一段中文This is a passage in English 123
 | This is a passage in English 1234567                                                          |
 +-----------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP_EXTRACT,REGEXP,EXTRACT
