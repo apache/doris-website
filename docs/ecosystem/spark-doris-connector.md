@@ -39,7 +39,7 @@ Github: https://github.com/apache/doris-spark-connector
 
 | Connector | Spark               | Doris       | Java | Scala      |
 |-----------|---------------------|-------------|------|------------|
-| 24.0.0    | 3.5 ~ 3.0, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
+| 24.0.0    | 3.5 ~ 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 1.3.2     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.6 | 8    | 2.12, 2.11 |
 | 1.3.1     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.0 | 8    | 2.12, 2.11 |
 | 1.3.0     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.0 | 8    | 2.12, 2.11 |
@@ -53,10 +53,20 @@ Github: https://github.com/apache/doris-spark-connector
 ```
 <dependency>
     <groupId>org.apache.doris</groupId>
-    <artifactId>spark-doris-connector-3.4_2.12</artifactId>
+    <artifactId>spark-doris-connector-spark-3.5</artifactId>
     <version>24.0.0</version>
 </dependency>
 ``` 
+
+::: tip
+
+Starting from version 24.0.0, the naming rules of the Doris connector package have been adjusted:
+1. No longer contains Scala version information。
+2. For Spark 2.x versions, use the package named `spark-doris-connector-spark-2` uniformly, and by default only compile based on Scala 2.11 version. If you need Scala 2.12 version, please compile it yourself.
+3. For Spark 3.x versions, use the package named `spark-doris-connector-spark-3.x` according to the specific Spark version. Applications based on Spark 3.0 version can use the package `spark-doris-connector-spark-3.1`.
+
+:::
+
 **Note**
 
 1. Please replace the corresponding Connector version according to different Spark and Scala versions.
@@ -67,7 +77,7 @@ Github: https://github.com/apache/doris-spark-connector
 
 When compiling, you can directly run `sh build.sh`, for details, please refer to here.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
 You can also
 
 Execute in the source code directory:
@@ -76,21 +86,21 @@ Execute in the source code directory:
 
 Enter the Scala and Spark versions you need to compile according to the prompts.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar`.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar`.
 Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`.
 
 For example, if `Spark` is running in `Local` mode, put this file in the `jars/` folder. If `Spark` is running in `Yarn` cluster mode, put this file in the pre-deployment package.
 
-For example, upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
+For example, upload `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
 ```shell
 
-1. Upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs.
+1. Upload `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` to hdfs.
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar /spark-jars/
 
-2. Add the `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` dependency in the cluster.
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar
+2. Add the `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` dependency in the cluster.
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar
 
 ```
 
@@ -374,17 +384,17 @@ show databases;
 -- use databases
 use your_doris_db;
 
-// show tables in test
+-- show tables in test
 show tables;
 
-// query table
+-- query table
 select * from your_doris_table;
 
-// write data
+-- write data
 insert into your_doris_table values(xxx);
 insert into your_doris_table select * from your_source_table;
 
-// access table with full name
+-- access table with full name
 select * from your_catalog_name.your_doris_db.your_doris_table;
 insert into your_catalog_name.your_doris_db.your_doris_table values(xxx);
 insert into your_catalog_name.your_doris_db.your_doris_table select * from your_source_table;
@@ -398,6 +408,8 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 |----------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | doris.fenodes                    | --            | Doris FE http address, support multiple addresses, separated by commas                                                                                                                                                                                                                                                                                                                                                                                                          |
 | doris.table.identifier           | --            | Doris table identifier, eg, db1.tbl1                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| doris.user                       | --            | Doris username                                                                                                                                                                                 |
+| doris.password                   | Empty string  | Doris password                                                                                                                                                                                 |
 | doris.request.retries            | 3             | Number of retries to send requests to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | doris.request.connect.timeout.ms | 30000         | Connection timeout for sending requests to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | doris.request.read.timeout.ms    | 30000         | Read timeout for sending request to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -437,10 +449,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 
 | Key                             | Default Value | Comment                                                                                                                                                                                        |
 |---------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| user                            | --            | Doris username                                                                                                                                                                                 |
-| password                        | --            | Doris password                                                                                                                                                                                 |
 | doris.filter.query.in.max.count | 100           | In the predicate pushdown, the maximum number of elements in the in expression value list. If this number is exceeded, the in-expression conditional filtering is processed on the Spark side. |
-| doris.ignore-type               | --            | In a temporary view, specify the field types to ignore when reading the schema. <br/> eg: when 'doris.ignore-type'='bitmap,hll'                                                                |
 
 ### Structured Streaming Configuration
 
