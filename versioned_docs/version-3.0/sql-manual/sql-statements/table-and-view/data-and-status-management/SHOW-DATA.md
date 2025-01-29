@@ -24,37 +24,92 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to display the amount of data, the number of replicas, and the number of statistical rows.
+The `SHOW DATA` statement is used to display information about data volume, replica count, and row statistics. This statement has the following functionalities:
 
-grammar:
+- It can display the data volume and replica count for all tables in the current database.
+- It can show the data volume, replica count, and row statistics for a specified table's materialized views.
+- It can display the quota usage of the database.
+- It supports sorting by data volume, replica count, etc.
+
+## Syntax
 
 ```sql
-SHOW DATA [FROM [db_name.]table_name] [ORDER BY ...];
+SHOW DATA [ FROM [<db_name>.]<table_name> ] [ ORDER BY <order_by_clause> ];
 ```
 
-illustrate:
+Where:
 
-1. If the FROM clause is not specified, the data volume and number of replicas subdivided into each table under the current db will be displayed. The data volume is the total data volume of all replicas. The number of replicas is the number of replicas for all partitions of the table and all materialized views.
+```sql
+order_by_clause:
+    <column_name> [ ASC | DESC ] [ , <column_name> [ ASC | DESC ] ... ]
+```
 
-2. If the FROM clause is specified, the data volume, number of copies and number of statistical rows subdivided into each materialized view under the table will be displayed. The data volume is the total data volume of all replicas. The number of replicas is the number of replicas for all partitions of the corresponding materialized view. The number of statistical rows is the number of statistical rows for all partitions of the corresponding materialized view.
+## Optional Parameters
 
-3. When counting the number of rows, the one with the largest number of rows among the multiple copies shall prevail.
+**1. `FROM [<db_name>.]<table_name>`**
 
-4. The `Total` row in the result set represents the total row. The `Quota` line represents the quota set by the current database. The `Left` line indicates the remaining quota.
+> Specifies the name of the table to view. The database name can be included.
+>
+> If this parameter is not specified, it will display data information for all tables in the current database.
 
-5. If you want to see the size of each Partition, see `help show partitions`.
+**2. `ORDER BY <order_by_clause>`**
 
-6. You can use ORDER BY to sort on any combination of columns.
+> Specifies the sorting method for the result set.
+>
+> Any column can be sorted in ascending (ASC) or descending (DESC) order.
+>
+> Supports multi-column combination sorting.
 
-## Example
+## Return Values
 
-1. Display the data size and RecycleBin size of each database by default.
+Depending on different query scenarios, the following result sets are returned:
 
-    ```
+- When the `FROM` clause is not specified (displaying database-level information):
+
+| Column Name      | Description                          |
+|------------------|--------------------------------------|
+| DbId             | Database ID                          |
+| DbName           | Database name                        |
+| Size             | Total data volume of the database    |
+| RemoteSize       | Remote storage data volume           |
+| RecycleSize      | Recycle bin data volume              |
+| RecycleRemoteSize| Recycle bin remote storage volume    |
+
+- When the `FROM` clause is specified (displaying table-level information):
+
+| Column Name      | Description                          |
+|------------------|--------------------------------------|
+| TableName        | Table name                           |
+| IndexName        | Index (materialized view) name      |
+| Size             | Data size                            |
+| ReplicaCount     | Replica count                        |
+| RowCount         | Row statistics (shown only when viewing a specific table) |
+
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following permissions:
+
+| Privilege       | Object      | Notes                                         |
+| :-------------- | :---------- | :-------------------------------------------- |
+| SELECT          | Table       | SELECT permission is required for viewing the table. |
+
+## Usage Notes
+
+- The data volume statistics include the total data volume of all replicas.
+- The replica count includes all partitions and replicas of all materialized views for the table.
+- When counting rows, it considers the maximum row count among multiple replicas.
+- The `Total` row in the result set indicates aggregated data.
+- The `Quota` row in the result set indicates the current quota set for the database.
+- The `Left` row in the result set indicates remaining quota.
+- If you need to view the size of each partition, use the `SHOW PARTITIONS` command.
+
+## Examples
+
+- Display data volume information for all databases:
+
+    ```sql
     SHOW DATA;
     ```
 
@@ -64,74 +119,62 @@ illustrate:
     +-------+-----------------------------------+--------+------------+-------------+-------------------+
     | 21009 | db1                               | 0      | 0          | 0           | 0                 |
     | 22011 | regression_test_inverted_index_p0 | 72764  | 0          | 0           | 0                 |
-    | 0     | information_schema                | 0      | 0          | 0           | 0                 |
-    | 22010 | regression_test                   | 0      | 0          | 0           | 0                 |
-    | 1     | mysql                             | 0      | 0          | 0           | 0                 |
-    | 22017 | regression_test_show_p0           | 0      | 0          | 0           | 0                 |
-    | 10002 | __internal_schema                 | 46182  | 0          | 0           | 0                 |
     | Total | NULL                              | 118946 | 0          | 0           | 0                 |
     +-------+-----------------------------------+--------+------------+-------------+-------------------+
     ```
 
-2. Display the data volume, replica number, aggregate data volume and aggregate replica number of each table in a database.
+- Display data volume information for all tables in the current database:
 
-   ```sql
-   USE db1;
-   SHOW DATA;
-   ```
+    ```sql
+    USE db1;
+    SHOW DATA;
+    ```
 
-   ```
+    ```text
+    +-----------+-------------+--------------+
+    | TableName | Size        | ReplicaCount |
+    +-----------+-------------+--------------+
+    | tbl1      | 900.000 B   | 6            |
+    | tbl2      | 500.000 B   | 3            |
+    | Total     | 1.400 KB    | 9            |
+    | Quota     | 1024.000 GB | 1073741824   |
+    | Left      | 1021.921 GB | 1073741815   |
+    +-----------+-------------+--------------+
+    ```
+
+- Display detailed data volume information for a specified table:
+
+    ```sql
+    SHOW DATA FROM example_db.test;
+    ```
+
+    ```text
+    +-----------+-----------+-----------+--------------+----------+
+    | TableName | IndexName | Size      | ReplicaCount | RowCount |
+    +-----------+-----------+-----------+--------------+----------+
+    | test      | r1        | 10.000MB  | 30           | 10000    |
+    |           | r2        | 20.000MB  | 30           | 20000    |
+    |           | test2     | 50.000MB  | 30           | 50000    |
+    |           | Total     | 80.000MB  | 90           |          |
+    +-----------+-----------+-----------+--------------+----------+
+    ```
+
+- Sort by replica count in descending order and by data volume in ascending order:
+
+    ```sql
+    SHOW DATA ORDER BY ReplicaCount DESC, Size ASC;
+    ```
+
+    ```text
+    +-----------+-------------+--------------+
+    | TableName | Size        | ReplicaCount |
+    +-----------+-------------+--------------+
+    | table_c   | 3.102 KB    | 40           |
+    | table_d   | .000        | 20           |
+    | table_b   |=324.000 B   |=20           |
+    |=table_a   |=1.266 KB   |=10           |
+    |=Total     |=4.684 KB   |=90           |
+   |=Quota     |=1024.000 GB |=1073741824   |
+   |=Left      |=1024.000 GB |=1073741734   |
    +-----------+-------------+--------------+
-   | TableName | Size        | ReplicaCount |
-   +-----------+-------------+--------------+
-   | tbl1      | 900.000 B   | 6            |
-   | tbl2      | 500.000 B   | 3            |
-   | Total     | 1.400 KB    | 9            |
-   | Quota     | 1024.000 GB | 1073741824   |
-   | Left      | 1021.921 GB | 1073741815   |
-   +-----------+-------------+--------------+
    ```
-
-3. Display the subdivided data volume, the number of replicas and the number of statistical rows of the specified table under the specified db
-
-   ```sql
-   SHOW DATA FROM example_db.test;
-   ```
-
-   ```
-   +-----------+-----------+-----------+--------------+----------+
-   | TableName | IndexName | Size      | ReplicaCount | RowCount |
-   +-----------+-----------+-----------+--------------+----------+
-   | test      | r1        | 10.000MB  | 30           | 10000    |
-   |           | r2        | 20.000MB  | 30           | 20000    |
-   |           | test2     | 50.000MB  | 30           | 50000    |
-   |           | Total     | 80.000    | 90           |          |
-   +-----------+-----------+-----------+--------------+----------+
-   ```
-
-4. It can be combined and sorted according to the amount of data, the number of copies, the number of statistical rows, etc.
-
-   ```sql
-   SHOW DATA ORDER BY ReplicaCount desc,Size asc;
-   ```
-
-   ```
-   +-----------+-------------+--------------+
-   | TableName | Size        | ReplicaCount |
-   +-----------+-------------+--------------+
-   | table_c   | 3.102 KB    | 40           |
-   | table_d   | .000        | 20           |
-   | table_b   | 324.000 B   | 20           |
-   | table_a   | 1.266 KB    | 10           |
-   | Total     | 4.684 KB    | 90           |
-   | Quota     | 1024.000 GB | 1073741824   |
-   | Left      | 1024.000 GB | 1073741734   |
-   +-----------+-------------+--------------+
-   ```
-
-## Keywords
-
-    SHOW, DATA
-
-## Best Practice
-
