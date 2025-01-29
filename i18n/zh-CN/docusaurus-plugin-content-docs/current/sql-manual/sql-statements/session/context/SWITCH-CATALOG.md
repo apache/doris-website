@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SWITCH",
+    "title": "SWITCH CATALOG",
     "language": "zh-CN"
 }
 ---
@@ -27,13 +27,25 @@ under the License.
 
 ## 描述
 
-该语句用于切换数据目录（catalog）
+该语句用于切换数据目录（catalog）。
 
-语法：
+## 语法
 
 ```sql
-SWITCH catalog_name
+SWITCH <catalog_name>
 ```
+
+## 必选参数
+
+**1. `<catalog_name>`**
+> 要切换的数据目录名称。
+
+## 权限控制
+
+| 权限        | 对象   | 说明                                  |
+|-----------|------|-------------------------------------|
+| SELECT_PRIV | 数据目录 | 需要对要切换的数据目录（catalog）有 SELECT_PRIV 权限。 |
+
 
 ## 示例
 
@@ -42,10 +54,4 @@ SWITCH catalog_name
    ```sql
   	SWITCH hive;
   	```
-
-## 关键词
-
-SWITCH, CATALOG
-
-### 最佳实践
 
