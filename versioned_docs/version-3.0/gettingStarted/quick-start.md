@@ -38,22 +38,22 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 
 ## Use Docker for Quick Deployment
 
-### Step 1: Create the docker-compose.yaml File
+### Step 1: Create the docker-compose.yaml
 
-Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `3.0.1`.
+Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `3.0.4`.
 
-```text
+```yaml
 version: "3"
 services:
   fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:doris-fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
      - FE_ID=1
     network_mode: host
   be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:doris-be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
@@ -71,7 +71,7 @@ Start the cluster using the docker-compose command.
 docker-compose -f ./docker-compose.yaml up -d
 ```
 
-### Step 3: Connect to the cluster using MySQL client and check the cluster status
+### Step 3: Check the cluster status
 
 ```sql
 ## Check the FE status to ensure that both the Join and Alive columns are true.
