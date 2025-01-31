@@ -65,7 +65,7 @@ under the License.
 }
 ```
     
-## 示例
+## Examples
 
 1. 查看 `/statistic` 信息
 

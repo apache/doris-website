@@ -26,41 +26,65 @@ under the License.
 
 ## 描述
 
-kurtosis 返回 expr 表达式的[峰度值](https://en.wikipedia.org/wiki/Kurtosis)。此函数使用的公式为 第四阶中心矩 / (方差的平方) - 3，当方差为零时，kurtosis 将返回 NULL。
+KURTOSIS 函数用于计算数据的[峰度值](https://en.wikipedia.org/wiki/Kurtosis)。此函数使用的公式为 第四阶中心矩 / (方差的平方) - 3。
+
+## 别名
+
+KURT_POP,KURTOSIS
 
 ## 语法
 
-`kurtosis(expr)`
+```sql
+KURTOSIS(<expr>)
+```
 
 ## 参数说明
 
-TinyInt/SmallInt/Integer/BigInt/Float/Double, Decimal 会被 cast 成浮点数参与运算。
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 需要获取值的表达式 |
 
-## 返回值说明
+## 返回值
 
-`Double`
+返回 DOUBLE 类型的值。特殊情况：
+
+- 当方差为零时，返回 NULL
 
 ## 举例
 ```sql
-create table statistic_test(tag int, val1 double not null, val2 double null) distributed by hash(tag) properties("replication_num"="1");
+select * from statistic_test;
+```
 
-insert into statistic_test values (1, -10, -10),(2, -20, NULL),(3, 100, NULL),(4, 100, NULL),(5, 1000,1000);
+```text
++-----+------+------+
+| tag | val1 | val2 |
++-----+------+------+
+|   1 |  -10 |   -10|
+|   2 |  -20 |  NULL|
+|   3 |  100 |  NULL|
+|   4 |  100 |  NULL|
+|   5 | 1000 |  1000|
++-----+------+------+
+```
 
-// NULL 值会被忽略
+```sql
 select kurt(val1), kurt(val2) from statistic_test;
---------------
+```
 
+```text
 +-------------------+--------------------+
 | kurt(val1)        | kurt(val2)         |
 +-------------------+--------------------+
 | 0.162124583734851 | -1.3330994719286338 |
 +-------------------+--------------------+
-1 row in set (0.02 sec)
+```
 
+```sql
 // 每组只有一行数据，结果为 NULL
 select kurt(val1), kurt(val2) from statistic_test group by tag;
---------------
+```
 
+```text
 +------------+------------+
 | kurt(val1) | kurt(val2) |
 +------------+------------+
@@ -70,9 +94,5 @@ select kurt(val1), kurt(val2) from statistic_test group by tag;
 |       NULL |       NULL |
 |       NULL |       NULL |
 +------------+------------+
-5 rows in set (0.02 sec)
 ```
 
-## 相关命令
-
-[skew](./skew.md)

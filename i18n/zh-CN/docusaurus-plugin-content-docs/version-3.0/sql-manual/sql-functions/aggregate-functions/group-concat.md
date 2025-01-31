@@ -25,23 +25,36 @@ under the License.
 -->
 
 
+## 描述
+
+GROUP_CONCAT 函数将结果集中的多行结果连接成一个字符串
+
 ## 语法
 
-`VARCHAR GROUP_CONCAT([DISTINCT] VARCHAR str[, VARCHAR sep] [ORDER BY { col_name | expr} [ASC | DESC]])`
+```sql
+GROUP_CONCAT([DISTINCT] <str>[, <sep>] [ORDER BY { <col_name> | <expr>} [ASC | DESC]])
+```
 
+## 参数
 
-该函数是类似于 sum() 的聚合函数，group_concat 将结果集中的多行结果连接成一个字符串。第二个参数 sep 为字符串之间的连接符号，该参数可以省略。该函数通常需要和 group by 语句一起使用。
+| 参数 | 说明 |
+| -- | -- |
+| `<str>` | 必选。需要连接值的表达式 |
+| `<sep>` | 可选。字符串之间的连接符号 |
+| `<col_name>` | 可选。用于指定排序的列 |
+| `<expr>` | 可选。用于指定排序的表达式 |
 
-支持 Order By 进行多行结果的排序，排序和聚合列可不同。
+## 返回值
 
-:::caution
-`group_concat`暂不支持`distinct`和`order by`一起用。
-:::
+返回 VARCHAR 类型的数值。
 
 ## 举例
 
+```sql
+select value from test;
 ```
-mysql> select value from test;
+
+```text
 +-------+
 | value |
 +-------+
@@ -50,34 +63,52 @@ mysql> select value from test;
 | c     |
 | c     |
 +-------+
+```
 
-mysql> select GROUP_CONCAT(value) from test;
+```sql
+select GROUP_CONCAT(value) from test;
+```
+
+```text
 +-----------------------+
 | GROUP_CONCAT(`value`) |
 +-----------------------+
-| a, b, c, c               |
+| a, b, c, c            |
 +-----------------------+
+```
 
-mysql> select GROUP_CONCAT(DISTINCT value) from test;
+```sql
+select GROUP_CONCAT(DISTINCT value) from test;
+```
+
+```text
 +-----------------------+
 | GROUP_CONCAT(`value`) |
 +-----------------------+
 | a, b, c               |
 +-----------------------+
+```
 
-mysql> select GROUP_CONCAT(value, " ") from test;
+```sql 
+select GROUP_CONCAT(value, " ") from test;
+```
+
+```text
 +----------------------------+
 | GROUP_CONCAT(`value`, ' ') |
 +----------------------------+
 | a b c c                    |
 +----------------------------+
+```
 
-mysql> select GROUP_CONCAT(value, NULL) from test;
+```sql
+select GROUP_CONCAT(value, NULL) from test;
+```
+
+```text
 +----------------------------+
 | GROUP_CONCAT(`value`, NULL)|
 +----------------------------+
 | NULL                       |
 +----------------------------+
 ```
-
-

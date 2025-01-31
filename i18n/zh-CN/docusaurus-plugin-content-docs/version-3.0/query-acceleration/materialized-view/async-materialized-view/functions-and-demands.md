@@ -1140,7 +1140,7 @@ SyncWithBaseTables: 1
 - **不可用、状态不正常：** 指的是物化视图不能用于透明改写的简称。尽管如此，该物化视图还是可以直查的。
 
 
-详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
+详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
 
 #### 查询刷新任务 TASK 信息

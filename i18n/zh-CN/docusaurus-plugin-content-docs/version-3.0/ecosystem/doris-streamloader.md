@@ -36,7 +36,7 @@ under the License.
 ## 获取与安装
 
 源代码：https://github.com/apache/doris-streamloader
-二进制文件：https://doris.incubator.apache.org/zh-CN/download
+二进制文件：https://doris.apache.org/zh-CN/download
 
 :::note
 获取结果即为可执行二进制。
@@ -92,11 +92,6 @@ doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} 
    ```json
   doris-streamloader --source_file="dir1,dir2,dir3" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl" 
    ```
-
-:::tip 
-当需要多个文件导入时，使用 Doris Streamloader 也只会产生一个版本号 
-:::
-
 
 
 **2.** `STREAMLOAD_HEADER` **支持 Stream Load 的所有参数，多个参数之间用  '?' 分隔。**

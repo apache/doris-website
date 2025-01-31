@@ -149,7 +149,7 @@ Query:
 }
 ```
     
-## 示例
+## Examples
 
 1. 获取指定 query_id 的 query profile
 

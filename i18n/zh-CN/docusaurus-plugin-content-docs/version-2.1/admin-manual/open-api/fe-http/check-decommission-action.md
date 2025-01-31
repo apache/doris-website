@@ -63,7 +63,7 @@ under the License.
 }
 ```
     
-## 示例
+## Examples
 
 1. 查看指定 BE 节点是否可以下线
 

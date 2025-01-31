@@ -89,11 +89,11 @@ Iceberg 外部表为 Apache Doris 提供了直接访问存储在 Iceberg 数据�
 
 -   在 TPC-H 测试数据集的全部 22 个 SQL 上，1.1 版本均优于 0.15 版本，整体性能约提升了 4.5 倍，部分场景性能达到了十余倍的提升；
 
-![](/images/release-note-1.1.0-SSB.png)
+![release-note-1.1.0-SSB](/images/release-note-1.1.0-SSB.png)
 
 <p align='center'>SSB 测试数据集</p>
 
-![](/images/release-note-1.1.0-TPC-H.png)
+![release-note-1.1.0-TPC-H](/images/release-note-1.1.0-TPC-H.png)
 
 <p align='center'>TPC-H 测试数据集</p>
 
@@ -201,7 +201,7 @@ String 类型是 Apache Doris 在 0.15 版本中引入的新数据类型，在�
 
 如果您遇到任何使用上的问题，欢迎随时通过 GitHub Discussion 论坛或者 Dev 邮件组与我们取得联系。
 
-GitHub 论坛：[https://github.com/apache/incubator-doris/discussions](https://github.com/apache/incubator-doris/discussions)
+GitHub 论坛：[https://github.com/apache/incubator-doris/discussions](https://github.com/apache/doris/discussions)
 
 Dev 邮件组：[dev@doris.apache.org](dev@doris.apache.org)
 

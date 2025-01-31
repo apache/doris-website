@@ -49,8 +49,7 @@ under the License.
 
 * `compact_type`
   
-    - 取值为`base`或`cumulative`或`full`。full_compaction 的使用场景请参考[数据恢复](../../data-admin/restore.md)。
-
+    - 取值为`base`或`cumulative`或`full`。full_compaction 的使用场景请参考[数据恢复](../../trouble-shooting/repairing-data)。
 
 ## Request body
 
@@ -134,7 +133,7 @@ under the License.
 
 * run_status：获取当前手动 compaction 任务执行状态
 
-### 示例
+### Examples
 
 ```shell
 curl -X POST "http://127.0.0.1:8040/api/compaction/run?tablet_id=10015&compact_type=cumulative"

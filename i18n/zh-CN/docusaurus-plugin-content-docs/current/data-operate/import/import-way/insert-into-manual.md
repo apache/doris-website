@@ -43,11 +43,11 @@ INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INT
 
 INSERT INTO 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT)。
 
 ### 前置检查
 
-INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -139,35 +139,19 @@ INSERT INTO target_table SELECT ... FROM source_table;
 
 ### 导入配置参数
 
-**01 FE 配置**
+**FE 配置**
 
-**insert_load_default_timeout_second**
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_load_default_timeout_second | 14400（4 小时） | 导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 `CANCELLED`。 |
 
-- 默认值：14400（4 小时）
+**环境变量**
 
-- 参数描述：导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 CANCELLED。
-
-**02 环境变量**
-
-**insert_timeout**
-
-- 默认值：14400（4 小时）
-
-- 参数描述：INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。
-
-**enable_insert_strict**
-
-- 默认值：true
-
-- 参数描述：如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。
-
-- 解释：在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
-
-**insert_max_filter_ratio**
-
-- 默认值：1.0
-
-- 参数描述：自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
+| enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
 
 ### 导入返回值
 
@@ -223,7 +207,7 @@ Query OK, 2 rows affected, 2 warnings (0.31 sec)
 | Status   | 表示导入数据是否可见。如果可见，显示 `visible`，如果不可见，显示 `committed`<p>- `visible`：表示导入成功，数据可见</p> <p>- `committed`：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试</p> <p>- Label Already Exists：Label 重复，需要更换 label</p> <p>- Fail：导入失败</p> |
 | Err      | 导入错误信息                                                 |
 
-当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD)语句
+当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD)语句
 
 ```sql
 SHOW LOAD WHERE label="xxx";
@@ -233,7 +217,7 @@ SHOW LOAD WHERE label="xxx";
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION)语句查看这批数据的可见状态：
 
 ```sql
 SHOW TRANSACTION WHERE id=4005;
@@ -330,7 +314,7 @@ PROPERTIES (
 );
 ```
 
-2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 语法帮助。
+2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语法帮助。
 
 3. 导入数据 (从 hive.db1.source_tbl 表导入到 target_tbl 表)
 
@@ -414,4 +398,4 @@ FROM s3(
 
 ## 更多帮助
 
-关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。
+关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。

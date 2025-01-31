@@ -167,7 +167,7 @@
     "message": "物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Async-Materialize View": {
+  "sidebar.docs.category.Async-Materialized View": {
     "message": "异步物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
@@ -247,6 +247,10 @@
     "message": "安全合规",
     "description": "The label for category Security in sidebar docs"
   },
+  "sidebar.docs.category.Security Overview": {
+    "message": "安全概述",
+    "description": "The label for category Security Overview in sidebar docs"
+  },
   "sidebar.docs.category.Data Transmission Encryption": {
     "message": "传输加密",
     "description": "The label for category Data Transmission Encryption in sidebar docs"
@@ -322,6 +326,102 @@
   "sidebar.docs.category.SQL Statements": {
     "message": "SQL 语句",
     "description": "The label for category SQL Statements in sidebar docs"
+  },
+  "sidebar.docs.category.Scalar Functions": {
+    "message": "标量函数",
+    "description": "The label for category Scalar Functions in sidebar docs"
+  },
+  "sidebar.docs.category.String Functions": {
+    "message": "字符串函数",
+    "description": "The label for category String Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Date Functions": {
+    "message": "时间日期函数",
+    "description": "The label for category Date Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Functions": {
+    "message": "数值函数",
+    "description": "The label for category Numeric Functions in sidebar docs"
+  },
+  "sidebar.docs.category.GIS Functions": {
+    "message": "地理位置函数",
+    "description": "The label for category GIS Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Encryption Functions": {
+    "message": "加密和信息摘要函数",
+    "description": "The label for category Encryption Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Vector Distance Functions": {
+    "message": "向量函数",
+    "description": "The label for category Encryption Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Bitwise Functions": {
+    "message": "位处理函数",
+    "description": "The label for category Bitwise Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Array Functions": {
+    "message": "ARRAY 函数",
+    "description": "The label for category Array Functions in sidebar docs"
+  },
+  "sidebar.docs.category.MAP Functions": {
+    "message": "MAP 函数",
+    "description": "The label for category MAP Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Struct Functions": {
+    "message": "STRUCT 函数",
+    "description": "The label for category Struct Functions in sidebar docs"
+  },
+  "sidebar.docs.category.JSON Functions": {
+    "message": "JSON 函数",
+    "description": "The label for category JSON Functions in sidebar docs"
+  },
+  "sidebar.docs.category.IP Functions": {
+    "message": "IP 函数",
+    "description": "The label for category JSON Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Bitmap Functions": {
+    "message": "BITMAP 函数",
+    "description": "The label for category Bitmap Functions in sidebar docs"
+  },
+  "sidebar.docs.category.HLL Functions": {
+    "message": "HLL 函数",
+    "description": "The label for category HLL Functions in sidebar docs"
+  },
+  "sidebar.docs.category.System Functions": {
+    "message": "系统函数",
+    "description": "The label for category System Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Other Functions": {
+    "message": "其他函数",
+    "description": "The label for category Other Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Quantile Functions": {
+    "message": "QUANTILE 函数",
+    "description": "The label for category Quantile Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Conditional Functions": {
+    "message": "条件函数",
+    "description": "The label for category Conditional Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregate Functions": {
+    "message": "聚合函数",
+    "description": "The label for category Aggregate Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Combinators": {
+    "message": "函数 Combinators",
+    "description": "The label for category Combinators in sidebar docs"
+  },
+  "sidebar.docs.category.Table Functions": {
+    "message": "表函数",
+    "description": "The label for category Table Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Analytic (Window) Functions": {
+    "message": "分析函数 (窗口函数)",
+    "description": "The label for category Analytic(Window) Functions in sidebar docs"
   },
   "sidebar.docs.category.Data Modification": {
     "message": "数据修改",
@@ -475,82 +575,6 @@
     "message": "IP 类型",
     "description": "The label for category Data Types in sidebar docs"
   },
-  "sidebar.docs.category.Array Functions": {
-    "message": "数组函数",
-    "description": "The label for category Array Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Date Functions": {
-    "message": "日期函数",
-    "description": "The label for category Date Functions in sidebar docs"
-  },
-  "sidebar.docs.category.GIS Functions": {
-    "message": "地理位置函数",
-    "description": "The label for category GIS Functions in sidebar docs"
-  },
-  "sidebar.docs.category.String Functions": {
-    "message": "字符串函数",
-    "description": "The label for category String Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Fuzzy Match": {
-    "message": "模糊匹配",
-    "description": "The label for category Fuzzy Match in sidebar docs"
-  },
-  "sidebar.docs.category.Regular Match": {
-    "message": "正则匹配",
-    "description": "The label for category Regular Match in sidebar docs"
-  },
-  "sidebar.docs.category.Aggregate Functions": {
-    "message": "聚合函数",
-    "description": "The label for category Aggregate Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Bitmap Functions": {
-    "message": "Bitmap 函数",
-    "description": "The label for category Bitmap Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Bitwise Functions": {
-    "message": "Bitwise 函数",
-    "description": "The label for category Bitwise Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Conditional Functions": {
-    "message": "条件函数",
-    "description": "The label for category Conditional Functions in sidebar docs"
-  },
-  "sidebar.docs.category.JSON Functions": {
-    "message": "JSON 函数",
-    "description": "The label for category JSON Functions in sidebar docs"
-  },
-  "sidebar.docs.category.MAP Functions": {
-    "message": "MAP 函数",
-    "description": "The label for category MAP Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Hash Functions": {
-    "message": "Hash 函数",
-    "description": "The label for category Hash Functions in sidebar docs"
-  },
-  "sidebar.docs.category.HLL Functions": {
-    "message": "HLL 函数",
-    "description": "The label for category HLL Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Numeric Functions": {
-    "message": "数学函数",
-    "description": "The label for category Numeric Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Encryption Functions": {
-    "message": "加密和信息摘要函数",
-    "description": "The label for category Encryption Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Table Functions": {
-    "message": "表函数",
-    "description": "The label for category Table Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Table Valued Functions": {
-    "message": "表值函数",
-    "description": "The label for category Table Valued Functions in sidebar docs"
-  },
-  "sidebar.docs.category.Analytic(Window) Functions": {
-    "message": "分析（窗口）函数",
-    "description": "The label for category Analytic(Window) Functions in sidebar docs"
-  },
   "sidebar.docs.category.Cluster management": {
     "message": "集群管理",
     "description": "The label for category Cluster management in sidebar docs"
@@ -615,9 +639,9 @@
     "message": "历史版本",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.cluster management": {
-    "message": "集群管理",
-    "description": "The label for category cluster management in sidebar docs"
+  "sidebar.docs.category.Managing Disater Recovery": {
+    "message": "容灾管理",
+    "description": "The label for category Managing Disater Recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Workload": {
     "message": "负载管理",
@@ -626,6 +650,22 @@
   "sidebar.docs.category.Resource Isolation": {
     "message": "资源隔离",
     "description": "The label for category Resource Isolation in sidebar docs"
+  },
+  "sidebar.docs.category.Trouble Shooting": {
+    "message": "故障诊断处理",
+    "description": "The label for category Trouble Shooting in sidebar docs"
+  },
+  "sidebar.docs.category.information_schema": {
+    "message": "information_schema",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.mysql": {
+    "message": "mysql",
+    "description": "The label for category System Table in sidebar docs"
+  },
+  "sidebar.docs.category.__internal_schema": {
+    "message": "__internal_schema",
+    "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.Best Practices": {
     "message": "最佳实践",

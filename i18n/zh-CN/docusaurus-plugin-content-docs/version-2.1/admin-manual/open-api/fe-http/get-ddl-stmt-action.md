@@ -67,7 +67,7 @@ under the License.
 }
 ```
     
-## 示例
+## Examples
 
 1. 获取指定表的 DDL 语句
 

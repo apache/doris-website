@@ -46,6 +46,7 @@ jobs:
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   cp worker.js ./build/
+                  cp .htaccess ./build/
                   ls build
                   export DORIS_COMMIT=`git rev-parse HEAD`
 
@@ -59,6 +60,8 @@ jobs:
                   endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
                   folder: build
                   onlyUpload: true
+                  otherCacheControl: 0
+                  skipSetting: true
 
             - name: Deploy Website
               if: ${{ github.event.inputs.branch == 'master' }}

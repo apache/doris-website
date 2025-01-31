@@ -28,7 +28,7 @@ under the License.
 
 ## Request
 
-`POST /api/check_tablet_segment_lost?repair={bool}`
+`GET /api/check_tablet_segment_lost?repair={bool}`
 
 ## Description
 
@@ -66,10 +66,10 @@ under the License.
     }
     ```
 
-## 示例
+## Examples
 
 
     ```shell
-    curl -X POST http://127.0.0.1:8040/api/check_tablet_segment_lost?repair=false
+    curl http://127.0.0.1:8040/api/check_tablet_segment_lost?repair=false
     ```
 

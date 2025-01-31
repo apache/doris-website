@@ -27,7 +27,7 @@ under the License.
 
 ## Partition columns
 
-- Partition columns can be specified as one or multiple columns, and the partition columns must be KEY columns. The usage of multi-column partitioning will be introduced later in the summary section of multi-column partitioning.
+- Partition columns can be specified as one or multiple columns, and the partition columns must be KEY columns. 
 
 - When `allow_partition_column_nullable` is set to true, Range partition supports the use of NULL partition columns. List Partition does not support NULL partition columns at all times.
 

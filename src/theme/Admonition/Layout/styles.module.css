@@ -33,6 +33,6 @@
   fill: var(--ifm-alert-foreground-color);
 }
 
-.admonitionContent> :last-child {
+.admonitionContent :last-child {
   margin-bottom: 0 !important;
 }

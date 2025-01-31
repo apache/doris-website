@@ -24,27 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+HLL_UNION_AGG 函数是一种聚合函数，主要用于将多个 HyperLogLog 数据结构合并，估算合并后基数的近似值。
+
 
 ## 语法
 
-`HLL_UNION_AGG(hll)`
+```sql
+hll_union_agg(<hll>)
+```
 
+## 参数
 
-HLL 是基于 HyperLogLog 算法的工程实现，用于保存 HyperLogLog 计算过程的中间结果
+| 参数 | 说明 |
+| -- | -- |
+| `<hll>` | 需要被计算HyperLogLog类型表达式 |
 
-它只能作为表的 value 列类型、通过聚合来不断的减少数据量，以此来实现加快查询的目的
+## 返回值
 
-基于它得到的是一个估算结果，误差大概在 1% 左右，hll 列是通过其它列或者导入数据里面的数据生成的
-
-导入的时候通过 hll_hash 函数来指定数据中哪一列用于生成 hll 列，它常用于替代 count distinct，通过结合 rollup 在业务上用于快速计算 uv 等
+返回 BIGINT 类型的基数值。
 
 ## 举例
+```sql
+select HLL_UNION_AGG(uv_set) from test_uv;
 ```
-MySQL > select HLL_UNION_AGG(uv_set) from test_uv;;
+
+```text
 +-------------------------+
 | HLL_UNION_AGG(`uv_set`) |
 +-------------------------+
 | 17721                   |
 +-------------------------+
 ```
-

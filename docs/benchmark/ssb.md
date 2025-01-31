@@ -26,7 +26,7 @@ under the License.
 
 # Star Schema Benchmark
 
-[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) is a lightweight performance test set in the data warehouse scenario. SSB provides a simplified star schema data based on [TPC-H](http://www.tpc.org/tpch/), which is mainly used to test the performance of multi-table JOIN query under star schema.  In addition, the industry usually flattens SSB into a wide table model (Referred as: SSB flat) to test the performance of the query engine, refer to [Clickhouse](https://clickhouse.com/docs/zh/getting-started).
+[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) is a lightweight performance test set in the data warehouse scenario. SSB provides a simplified star schema data based on [TPC-H](http://www.tpc.org/tpch/), which is mainly used to test the performance of multi-table JOIN query under star schema.  In addition, the industry usually flattens SSB into a wide table model (Referred as: SSB flat) to test the performance of the query engine.
 
 This document mainly introduces the performance of Doris on the SSB 1000G test set.
 
@@ -164,7 +164,7 @@ export DB='ssb'
 sh bin/create-ssb-tables.sh -s 1000
 ```
 
-Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [ create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
+Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [create-ssb-flat-table.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
 
 ### 7.4 Import data
 

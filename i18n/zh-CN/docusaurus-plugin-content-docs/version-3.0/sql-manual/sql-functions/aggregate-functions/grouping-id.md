@@ -24,7 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## GROUPING_ID
 
+### Name
+
+GROUPING_ID
 
 ## 描述
 
@@ -42,15 +46,15 @@ GROUPING_ID ( <column_expression>[ ,...n ] )
 
 是在 `GROUP BY` 子句中包含的列或表达式。
 
-## 返回值
+#### Return Type
 
 BIGINT
 
-## 注意事项
+#### Remarks
 
 GROUPING_ID 函数的入参 `<column_expression>` 必须和 `GROUP BY` 子句的表达式一致。比如说，如果你按 `user_id` 进行 `GROUP BY`，那么你的 GROUPING_ID 函数应该这么写：`GROUPING_ID (user_id)`。再比如说，你按 `name` 进行 `GROUP BY`，那么函数应该这么写：`GROUPING_ID (name)`。
 
-### Comparing GROUPING_ID() to GROUPING()
+#### Comparing GROUPING_ID() to GROUPING()
 
 `GROUPING_ID(<column_expression> [ ,...n ])` 的计算规则为，对于输入的字段（或表达式）列表，分别对每个字段（或表达式）进行 `GROUPING(<column_expression>)` 运算，得到的结果组成一个 01 串。这个 01 串实际上是二进制数，GROUPING_ID 函数会将其转化为十进制数返回。比如说，以 `SELECT a, b, c, SUM(d), GROUPING_ID(a,b,c) FROM T GROUP BY <group by list>` 语句为例，下面展示了 GROUPING_ID() 函数的输入和输出。
 
@@ -64,11 +68,11 @@ GROUPING_ID 函数的入参 `<column_expression>` 必须和 `GROUP BY` 子句的
 | `bc`               | `011`                                                        | `3`                   |
 | `abc`              | `111`                                                        | `7`                   |
 
-### Technical Definition of GROUPING_ID()
+#### Technical Definition of GROUPING_ID()
 
 GROUPING_ID 函数的入参必须是 GROUP BY 子句中的字段（或字段表达式）。GROUPING_ID() 函数返回一个整数位图，位图中的每一位均与 GROUP BY 子句中的字段（或字段表达式）一一对应，位图中的最低位代表第 N 个参数，第二低位代表第 N-1 个参数，以此类推。当某一位被置为 1 时，表示其对应的列不参与分组聚合。
 
-### GROUPING_ID() Equivalents
+#### GROUPING_ID() Equivalents
 
 对于多个字段（或字段表达式）进行分组查询时，以下两个声明是等价的：
 
@@ -152,7 +156,7 @@ INSERT INTO employee VALUES
 13 rows in set (0.01 sec)
 ```
 
-### A. Using GROUPING_ID to identify grouping levels
+#### A. Using GROUPING_ID to identify grouping levels
 
 下面的例子按部门和职级统计雇员的人数。GROUPING_ID() 函数被用来计算每一行的聚合程度，其结果放在 `Job Title` 这一列上。
 
@@ -194,7 +198,7 @@ ORDER BY GROUPING_ID(department, level) ASC;
 13 rows in set (0.01 sec)
 ```
 
-### B. Using GROUPING_ID to filter a result set
+#### B. Using GROUPING_ID to filter a result set
 
 在下面的代码中，将返回部门中的高级人员的行。
 
@@ -227,9 +231,11 @@ HAVING `Job Title` IN ('Senior');
 5 rows in set (0.01 sec)
 ```
 
+### Keywords
 
+GROUPING_ID
 
-## 更多
+### Best Practice
 
 更多信息可以参考：
 - [GROUPING](./grouping.md)
