@@ -6,7 +6,7 @@ const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
+const logoImg = 'https://doris.apache.org/images/logo.svg';
 
 function getDocsVersions() {
     const result = {};
