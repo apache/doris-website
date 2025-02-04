@@ -24,38 +24,91 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## COUNT
-### description
-#### Syntax
+## 描述
 
-`COUNT([DISTINCT] expr)`
+返回指定列的非NULL记录数，或者记录总数
 
+## 语法
 
-用于返回满足要求的行的数目
-
-### example
-
+```sql
+COUNT(DISTINCT <expr> [,<expr>,...])
+COUNT(*)
+COUNT(<expr>)
 ```
-MySQL > select count(*) from log_statis group by datetime;
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 条件表达式（列名） |
+
+## 返回值
+
+返回值为数值类型。如果expr为NULL，则不参数统计
+
+## 举例
+
+```sql
+select * from test_count;
+```
+
+```text
++------+------+------+
+| id   | name | sex  |
++------+------+------+
+|    1 | 1    |    1 |
+|    2 | 2    |    1 |
+|    3 | 3    |    1 |
+|    4 | 0    |    1 |
+|    4 | 4    |    1 |
+|    5 | NULL |    1 |
++------+------+------+
+```
+
+```sql
+select count(*) from test_count;
+```
+
+```text
 +----------+
 | count(*) |
 +----------+
-| 28515903 |
+|        6 |
 +----------+
-
-MySQL > select count(datetime) from log_statis group by datetime;
-+-------------------+
-| count(`datetime`) |
-+-------------------+
-|         28521682  |
-+-------------------+
-
-MySQL > select count(distinct datetime) from log_statis group by datetime;
-+-------------------------------+
-| count(DISTINCT `datetime`)    |
-+-------------------------------+
-|                       71045   |
-+-------------------------------+
 ```
-### keywords
-COUNT
+
+```sql
+select count(name) from test_insert;
+```
+
+```text
++-------------+
+| count(name) |
++-------------+
+|           5 |
++-------------+
+```
+
+```sql
+select count(distinct sex) from test_insert;
+```
+
+```text
++---------------------+
+| count(DISTINCT sex) |
++---------------------+
+|                   1 |
++---------------------+
+```
+
+```sql
+select count(distinct id,sex) from test_insert;
+```
+
+```text
++-------------------------+
+| count(DISTINCT id, sex) |
++-------------------------+
+|                       5 |
++-------------------------+
+```

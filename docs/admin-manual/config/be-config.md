@@ -40,9 +40,28 @@ The location of the `be_custom.conf` file can be configured in `be.conf` through
 
 ## View configuration items
 
-Users can view the current configuration items by visiting BE's web page:
+There are two ways to view the configuration items of BE:
 
-`http://be_host:be_webserver_port/varz`
+1. BE web page
+
+    Users can view the current configuration items by visiting BE's web page:
+
+    `http://be_host:be_webserver_port/varz`
+
+2. View by command
+
+   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
+
+    `SHOW BACKEND CONFIG;`
+
+    The meanings of the columns in the results are as follows:
+
+    1. BackendId: the id of backend.
+    2. Host: the IP of backend.
+    3. Key: the name of the configuration item.
+    4. Value: The value of the current configuration item.
+    5. Type: The configuration item value type, such as integer or string.
+    6. IsMutable: whether it can be dynamically configured. If true, the configuration item can be dynamically configured at runtime. If false, it means that the configuration item can only be configured in be.conf and takes effect after restarting BE.
 
 ## Set configuration items
 
@@ -102,6 +121,12 @@ There are two ways to configure BE configuration items:
 ## Configurations
 
 ### Services
+
+#### `deploy_mode`
+
+* Type: string
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+* Default value: ""
 
 #### `be_port`
 
@@ -430,7 +455,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Default value: 10485760
 
 #### `max_base_compaction_threads`
-git 
+
 * Type: int32
 * Description: The maximum of thread number in base compaction thread pool, -1 means one thread per disk.
 * Default value: 4
@@ -1110,7 +1135,7 @@ BaseCompaction:546859:
 #### `tablet_rowset_stale_sweep_time_sec`
 
 * Type: int64
-* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset‘s create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
+* Description: It is used to control the expiration time of cleaning up the merged rowset version. When the current time now() minus the max created rowset's create time in a version path is greater than tablet_rowset_stale_sweep_time_sec, the current path is cleaned up and these merged rowsets are deleted, the unit is second.
   - When writing is too frequent, Fe may not be able to query the merged version, resulting in a query -230 error. This problem can be avoided by increasing this parameter.
 * Default value: 300
 
@@ -1225,7 +1250,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: The log flushing strategy is kept in memory by default
 * Default value: empty
 
-### Else
+### Others
 
 #### `report_tablet_interval_seconds`
 
@@ -1276,6 +1301,11 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Minimum download speed
 * Default value: 50 (KB/s)
+
+#### `enable_batch_download`
+
+* Description: Whether to download files in batch, it is recommended to open it when the binlog is enabled.
+* Default value: false
 
 #### `priority_queue_remaining_tasks_increased_frequency`
 
@@ -1330,3 +1360,28 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
 * Default: 10000
+
+### Compute and Storage Disaggregated Mode
+
+#### `deploy_mode`
+
+* Default: ""
+
+* Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+* Description: Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This value is usually delivered by the FE to the BE by the heartbeat, no need to configure.
+
+#### `enable_file_cache`
+
+Default: true for cloud mode, false for non-cloud mode.
+* Description: Whether to use file cache.
+
+#### `file_cache_path`
+
+Default: [{"path":"${DORIS_HOME}/file_cache"}]
+* Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
+* format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]

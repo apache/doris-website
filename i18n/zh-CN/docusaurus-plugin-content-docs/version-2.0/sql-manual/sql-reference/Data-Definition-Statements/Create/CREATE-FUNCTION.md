@@ -30,7 +30,7 @@ under the License.
 
 CREATE FUNCTION
 
-### Description
+## 描述
 
 此语句创建一个自定义函数。执行此命令需要用户拥有 `ADMIN` 权限。
 
@@ -79,7 +79,8 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
 
 - `properties`: 用于设定函数相关属性，能够设置的属性包括：	
 
-  - `file`: 表示的包含用户UDF的jar包，当在多机环境时，也可以使用http的方式下载jar包。这个参数是必须设定的。
+  - `file`: 表示的包含用户UDF的jar包，实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 FE 和 BE 节点都能获取到 jar 包。
+            这个参数是必须设定的。
 
   - `symbol`: 表示的是包含UDF类的类名。这个参数是必须设定的
 
@@ -88,7 +89,7 @@ CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
   - `always_nullable`：表示的 UDF 返回结果中是否有可能出现NULL值，是可选参数，默认值为true。
 
 
-### Example
+## 举例
 
 1. 创建一个自定义UDF函数
 

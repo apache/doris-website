@@ -13,9 +13,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,36 +22,72 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PERCENTILE_APPROX
-### description
-#### Syntax
+## 描述
 
-`PERCENTILE_APPROX(expr, DOUBLE p[, DOUBLE compression])`
+`PERCENTILE_APPROX` 函数用于计算近似百分位数，主要用于大数据集的场景。与 `PERCENTILE` 函数相比，它具有以下特点：
 
+1. 内存效率：使用固定大小的内存，即使在处理高基数列（数据量很大）时也能保持较低的内存消耗
+2. 性能优势：适合处理大规模数据集，计算速度快
+3. 精度可调：通过 compression 参数可以在精度和性能之间做平衡
 
-返回第p个百分位点的近似值，p的值介于0到1之间
+## 语法
 
-compression参数是可选项，可设置范围是[2048, 10000]，值越大，精度越高，内存消耗越大，计算耗时越长。
-compression参数未指定或设置的值在[2048, 10000]范围外，以10000的默认值运行
-
-该函数使用固定大小的内存，因此对于高基数的列可以使用更少的内存，可用于计算tp99等统计值
-
-### example
-```
-MySQL > select `table`, percentile_approx(cost_time,0.99) from log_statis group by `table`;
-+---------------------+---------------------------+
-| table    | percentile_approx(`cost_time`, 0.99) |
-+----------+--------------------------------------+
-| test     |                                54.22 |
-+----------+--------------------------------------+
-
-MySQL > select `table`, percentile_approx(cost_time,0.99, 4096) from log_statis group by `table`;
-+---------------------+---------------------------+
-| table    | percentile_approx(`cost_time`, 0.99, 4096.0) |
-+----------+--------------------------------------+
-| test     |                                54.21 |
-+----------+--------------------------------------+
+```sql
+PERCENTILE_APPROX(<col>, <p> [, <compression>])
 ```
 
-### keywords
-PERCENTILE_APPROX,PERCENTILE,APPROX
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<col>` | 需要计算百分位数的列 |
+| `<p>` | 百分位数值，取值范围 `[0.0, 1.0]`，例如 `0.99` 表示 `99` 分位数 |
+| `<compression>` | 可选参数，压缩度，取值范围 `[2048, 10000]`。值越大，精度越高，但内存消耗也越大。如果不指定或超出范围，则使用 `10000`。 |
+
+## 返回值
+
+返回一个 `DOUBLE` 类型的值，表示计算得到的近似百分位数。
+
+## 举例
+
+```sql
+-- 创建示例表
+CREATE TABLE response_times (
+    request_id INT,
+    response_time DECIMAL(10, 2)
+) DUPLICATE KEY(`request_id`)
+DISTRIBUTED BY HASH(`request_id`) BUCKETS AUTO
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+
+-- 插入示例数据
+INSERT INTO response_times VALUES
+(1, 10.5),
+(2, 15.2),
+(3, 20.1),
+(4, 25.8),
+(5, 30.3),
+(6, 35.7),
+(7, 40.2),
+(8, 45.9),
+(9, 50.4),
+(10, 100.6);
+
+-- 使用不同压缩度计算 99 分位数
+SELECT 
+    percentile_approx(response_time, 0.99) as p99_default,          -- 默认压缩度
+    percentile_approx(response_time, 0.99, 2048) as p99_fast,       -- 低压缩度，更快
+    percentile_approx(response_time, 0.99, 10000) as p99_accurate   -- 高压缩度，更精确
+FROM response_times;
+```
+
+```text
++-------------------+-------------------+-------------------+
+| p99_default       | p99_fast          | p99_accurate      |
++-------------------+-------------------+-------------------+
+| 100.5999984741211 | 100.5999984741211 | 100.5999984741211 |
++-------------------+-------------------+-------------------+
+```
+
+

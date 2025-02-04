@@ -30,7 +30,7 @@ under the License.
 
 DROP INDEX
 
-### Description
+## 描述
 
 该语句用于从一个表中删除指定名称的索引，目前仅支持bitmap 索引
 语法：
@@ -39,7 +39,7 @@ DROP INDEX
 DROP INDEX [IF EXISTS] index_name ON [db_name.]table_name;
 ```
 
-### Example
+## 举例
 
 1. 删除索引
 

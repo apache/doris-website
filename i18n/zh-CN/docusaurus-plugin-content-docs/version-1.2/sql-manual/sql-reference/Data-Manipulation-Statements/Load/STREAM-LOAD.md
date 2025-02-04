@@ -30,7 +30,7 @@ under the License.
 
 STREAM LOAD
 
-### Description
+## 描述
 
 stream-load: load data to table in streaming
 
@@ -57,13 +57,13 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
    
     当前 Doris 内部保留 30 分钟内最近成功的 label。
     
-2. column_separator：用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
+2. column_separator：用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
    
     如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
     
     可以使用多个字符的组合作为列分隔符。
     
-3. line_delimiter：用于指定导入文件中的换行符，默认为\n。可以使用做多个字符的组合作为换行符。
+3. line_delimiter：用于指定导入文件中的换行符，默认为`\n`。可以使用做多个字符的组合作为换行符。
    
 4. columns：用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。
    
@@ -121,7 +121,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     
 15. json_root: json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节点，默认值为""。
     
-16. merge_type: 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理，示例：`-H "merge_type: MERGE" -H "delete: flag=1"`
+16. merge_type: 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理，示例：`-H "merge_type: MERGE" -H "delete: flag=1"`
 
 17. delete: 仅在 MERGE 下有意义，表示数据的删除条件
         function_column.sequence_col: 只适用于 UNIQUE_KEYS，相同 key 列下，保证 value 列按照 source_sequence 列进行 REPLACE, source_sequence 可以是数据源中的列，也可以是表结构中的一列。
@@ -181,7 +181,7 @@ ERRORS:
 
 26. skip_lines:   整数类型，默认值为 0, 含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或、`csv_with_names_and_types` 时，该参数会失效。
 27. comment: <version since="1.2.3" type="inline"> 字符串类型，默认值为空。给任务增加额外的信息。</version>
-### Example
+## 举例
 
 1. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，使用 Label 用于去重。指定超时时间为 100 秒
    

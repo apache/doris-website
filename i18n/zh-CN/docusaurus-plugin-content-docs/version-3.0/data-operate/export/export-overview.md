@@ -56,7 +56,7 @@ Apache Doris 提供以下三种不同的数据导出方式：
 |支持导出的数据格式|Parquet、ORC、CSV|Parquet、ORC、CSV|MySQL Dump 专有格式|
 |是否支持导出外表 | 支持 | 部分支持 | 不支持|
 |是否支持导出 View|支持 | 支持 | 支持|
-|支持的导出位置|S3、HDFS、LOCAL|S3、HDFS、LOCAL|LOCAL|
+|支持的导出位置|S3、HDFS|S3、HDFS|LOCAL|
 
 ### SELECT INTO OUTFILE
 

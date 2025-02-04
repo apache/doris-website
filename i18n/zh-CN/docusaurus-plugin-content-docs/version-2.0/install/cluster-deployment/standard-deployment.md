@@ -163,7 +163,7 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 
 ### 检测和关闭系统防火墙
 
-如果发现端口不同，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
+如果发现端口不通，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
 
 ```sql
 sudo systemctl stop firewalld.service
@@ -611,7 +611,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过 Web UI 来完成诸如添加 BE/FE 节点，以及运行其它 SQL 查询。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 http://172.20.63.118:8030，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 

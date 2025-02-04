@@ -30,7 +30,7 @@ under the License.
 
 STREAM LOAD
 
-### Description
+## 描述
 
 stream-load: load data to table in streaming
 
@@ -125,7 +125,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     
 15. json_root: json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节点，默认值为""。
     
-16. merge_type: 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理，示例：`-H "merge_type: MERGE" -H "delete: flag=1"`
+16. merge_type: 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理，示例：`-H "merge_type: MERGE" -H "delete: flag=1"`
 
 17. delete: 仅在 MERGE 下有意义，表示数据的删除条件
 
@@ -169,7 +169,7 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
   
 30. escape  转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为`a,'b,\'c'`。
 
-### Example
+## 举例
 
 1. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，使用 Label 用于去重。指定超时时间为 100 秒
    

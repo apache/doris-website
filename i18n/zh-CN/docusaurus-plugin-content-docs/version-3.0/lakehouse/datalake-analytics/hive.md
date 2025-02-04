@@ -164,6 +164,22 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Hive On OSS-HDFS
+
+首先，需要下载 [Jindo SDK](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/6.x/6.7.8/jindodata_download.md) 然后将他们放置在 `${DORIS_HOME}/fe/lib` 和 `${DORIS_HOME}/be/lib/java_extensions/preload-extensions`，并重启 FE 和 BE。
+
+```
+CREATE CATALOG hive PROPERTIES (
+    "type"="hms",
+    "hive.metastore.uris" = "thrift://172.0.0.1:9083",
+    "oss.endpoint" = "cn-beijing.oss-dls.aliyuncs.com",
+    "oss.access_key" = "ak",
+    "oss.secret_key" = "sk"
+);
+```
+
+注意 OSS-HDFS 的 endpoint 和 OSS 的 endpoint 不同。
+
 ### Hive On OBS
 
 ```sql
@@ -305,6 +321,22 @@ CREATE CATALOG hive PROPERTIES (
 > 如果会话变量 `truncate_char_or_varchar_columns` 开启，则当 Hive 表的 Schema 中 `char` 或者 `varchar` 列的最大长度和底层 Parquet 或者 ORC 文件中的 `schema` 不一致时会按照 Hive 表列的最大长度进行截断。
 
 > 该变量默认为 `false`。
+
+## 查询 Hive 分区
+
+可以通过下面两种方式查询 Hive 分区信息。
+
+- `SHOW PARTITIONS FROM hive_table`
+
+    该语句可以列出指定 Hive 表的所有分区以及分区值信息。
+
+- 使用 `table$partitions` 元数据表
+
+    自 2.1.7 和 3.0.3 版本开始，用户可以通过 `table$partitions` 元数据表查询 Hive 分区信息。`table$partitions` 本质上是一个关系表，所以可以使用在任意 SELECT 语句中。
+
+    ```
+    SELECT * FROM hive_table$partitions;
+    ```
 
 ## 使用 broker 访问 HMS
 

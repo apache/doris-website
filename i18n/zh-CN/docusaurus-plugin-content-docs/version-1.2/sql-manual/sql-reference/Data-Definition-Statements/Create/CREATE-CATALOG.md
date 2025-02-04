@@ -34,7 +34,7 @@ CREATE CATALOG
 
 </version>
 
-### Description
+## 描述
 
 该语句用于创建外部数据目录（catalog）
 
@@ -79,7 +79,7 @@ CREATE CATALOG catalog_name PROPERTIES (
 );
 ```
 
-### Example
+## 举例
 
 1. 新建数据目录 hive
 

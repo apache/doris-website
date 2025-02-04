@@ -24,24 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_Y
-### description
-#### Syntax
+## 描述
 
-`DOUBLE ST_Y(POINT point)`
+当 point 是一个合法的 POINT 类型时，返回对应的 Y 坐标值
 
+## 语法
 
-当point是一个合法的POINT类型时，返回对应的Y坐标值
-
-### example
-
+```sql
+ST_Y( <point>)
 ```
-mysql> SELECT ST_Y(ST_Point(24.7, 56.7));
+
+## 参数
+
+| 参数   | 说明       |
+|------|----------|
+| `<point>` | 二维点的几何坐标 |
+
+## 返回值
+
+几何坐标中的 Y 值
+
+## 举例
+
+```sql
+SELECT ST_Y(ST_Point(24.7, 56.7));
+```
+
+```text
 +----------------------------+
-| st_y(st_point(24.7, 56.7)) |
+| st_x(st_point(24.7, 56.7)) |
 +----------------------------+
-|                       56.7 |
+|                       24.7 |
 +----------------------------+
 ```
-### keywords
-ST_Y,ST,Y

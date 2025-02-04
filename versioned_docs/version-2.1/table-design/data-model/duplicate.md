@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Duplicate Key Model",
-    "language": "en"
+    "title": "Detail Model",
+    "language": "zh-CN"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,132 +24,78 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In certain multidimensional analysis scenarios, the data lacks both a primary key and aggregation requirements. For these cases, the Duplicate Data Model can be employed.
+In Doris, the **Detail Model** is the default table model, and it can be used to store every individual raw data record. The `Duplicate Key` specified during table creation determines the columns by which the data is sorted and stored, which can be used to optimize common queries. It is generally recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Detail Model has the following characteristics:
 
-In the Duplicate Data Model, data is stored precisely as it appears in the imported file, without any aggregation. Even if two rows of data are identical, both will be retained. The Duplicate Key specified in the table creation statement serves solely to indicate which columns the data should be sorted by during storage. It is advisable to select the first 2-4 columns for the Duplicate Key.
+* **Preserving Raw Data**: The Detail Model retains all original data, making it suitable for storing and querying raw data. For use cases that require detailed data analysis later on, it is recommended to use the Detail Model to avoid the risk of data loss.
 
-For instance, consider a table with the following data columns that has no requirements for primary key updates or aggregations based on aggregate keys:
+* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key models, the Detail Model does not perform deduplication or aggregation. Every data insertion, even if two records are identical, will be fully retained.
 
-:::tip
-The actual table structure and data columns have not been provided in the original text. Hence, a specific example cannot be given here. If needed, you can add the specific table structure and data columns based on your actual situation.
-:::
+* **Flexible Data Querying**: The Detail Model retains the complete original data, which allows detailed extraction from the full data set. This enables aggregation operations across any dimension on the full dataset, allowing for metadata auditing and fine-grained analysis.
 
-| ColumnName | Type          | SortKey | Comment        |
-| ---------- | ------------- | ------- | -------------- |
-| timstamp   | DATETIME      | Yes     | Log time       |
-| type       | INT           | Yes     | Log type       |
-| error_code | INT           | Yes     | Error code     |
-| Error_msg  | VARCHAR (128) | No      | Error details  |
-| op_id      | BIGINT        | No      | Operator ID    |
-| op_time    | DATETIME      | No      | Operation time |
+## Use Cases
 
-## **Default Duplicate Model**
+In the Detail Model, data is generally only appended, and old data is not updated. The Detail Model is typically used in scenarios where full raw data is required:
 
-When no data model (Unique, Aggregate, or Duplicate) is specified during table creation, a Duplicate model table is created by default, and the sort columns are automatically selected according to certain rules. For example, in the following table creation statement, if no data model is specified, a Duplicate model table will be established, and the system will automatically select the first three columns as the sort columns.
+* **Log Storage**: Used for storing various types of application logs, such as access logs, error logs, etc. Each piece of data needs to be detailed for future auditing and analysis.
 
-```
-CREATE TABLE IF NOT EXISTS example_tbl_by_default
-(
-    `timestamp` DATETIME NOT NULL COMMENT "Log time",
-    `type` INT NOT NULL COMMENT "Log type",
-    `error_code` INT COMMENT "Error code",
-    `error_msg` VARCHAR(1024) COMMENT "Error detail message",
-    `op_id` BIGINT COMMENT "Operator ID",
-    `op_time` DATETIME COMMENT "Operation time"
-)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
+* **User Behavior Data**: When analyzing user behavior, such as click data or user access paths, it is necessary to retain detailed user actions. This helps in building user profiles and conducting detailed analysis of behavior patterns.
 
-MySQL > desc example_tbl_by_default; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | true  | NULL    | NONE  |
-| type       | INT           | No   | true  | NULL    | NONE  |
-| error_code | INT           | Yes  | true  | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
-```
+* **Transaction Data**: For storing transaction or order data, once a transaction is completed, there is typically no need for data changes...
 
-## **Default Duplicate Model without Sort Columns (Since V2.0 )**
 
-When users have no sorting requirements, they can add the following configuration to the table properties. This way, when creating the default Duplicate model , the system will not automatically select any sort columns.
+## Table Creation Instructions
 
-```
-"enable_duplicate_without_keys_by_default" = "true"
-```
+When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Detail Model. The Detail table must specify the Key columns, which are used to sort the data during storage. In the following example, the Detail table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
 
-The corresponding to CREATE TABLE statement is as follows:
 
-```
-CREATE TABLE IF NOT EXISTS example_tbl_duplicate_without_keys_by_default
-(
-    `timestamp` DATETIME NOT NULL COMMENT "Log time",
-    `type` INT NOT NULL COMMENT "Log type",
-    `error_code` INT COMMENT "Error code",
-    `error_msg` VARCHAR(1024) COMMENT "Error detail message",
-    `op_id` BIGINT COMMENT "Operator ID",
-    `op_time` DATETIME COMMENT "Operation time"
-)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_duplicate_without_keys_by_default" = "true"
-);
+![columnar_storage](/images/table-desigin/columnar-storage.png)
 
-MySQL > desc example_tbl_duplicate_without_keys_by_default;
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | false | NULL    | NONE  |
-| type       | INT           | No   | false | NULL    | NONE  |
-| error_code | INT           | Yes  | false | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
-```
-
-## **Duplicate Model with Sort Columns **
-
-In the table creation statement, the `Duplicate Key` can be designated to indicate that data storage should be sorted according to these key columns. When choosing the `Duplicate Key`, it is recommended to select the first 2-4 columns.
-
-An example of a table creation statement is as follows, specifying sorting based on the `timestamp`, `type`, and `error_code` columns.
-
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
 (
-    `timestamp` DATETIME NOT NULL COMMENT "Log time",
-    `type` INT NOT NULL COMMENT "Log type",
-    `error_code` INT COMMENT "Error code",
-    `error_msg` VARCHAR(1024) COMMENT "Error detail message",
-    `op_id` BIGINT COMMENT "Operator ID",
-    `op_time` DATETIME COMMENT "Operation time"
+    log_time        DATETIME       NOT NULL,
+    log_type        INT            NOT NULL,
+    error_code      INT,
+    error_msg       VARCHAR(1024),
+    op_id           BIGINT,
+    op_time         DATETIME
 )
-DUPLICATE KEY(`timestamp`, `type`, `error_code`)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
-
-MySQL > desc example_tbl_duplicate; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | true  | NULL    | NONE  |
-| type       | INT           | No   | true  | NULL    | NONE  |
-| error_code | INT           | Yes  | true  | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
+DUPLICATE KEY(log_time, log_type, error_code)
+DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 ```
 
-Data will be stored according to the original data in the imported file without any aggregation. Even if two rows of data are exactly the same, the system will retain them all. The `Duplicate Key` specified in the table creation statement is only used to indicate which columns should be used for sorting during data storage. When choosing the `Duplicate Key`, it is recommended to select the first 2-4 columns.
+## Data Insertion and Storage
+
+In a Detail table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Detail Model are used for sorting.
+
+![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
+
+In the example above, there are initially 4 rows of data in the table. After inserting 2 rows, the data is appended (APPEND) to the table, resulting in a total of 6 rows stored in the Detail table.
+
+```sql
+-- 4 rows raw data
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-02 00:00:00', 1, 2, 'success', 13, '2024-11-02 01:00:00'),
+('2024-11-03 00:00:00', 2, 2, 'unknown', 13, '2024-11-03 01:00:00'),
+('2024-11-04 00:00:00', 2, 2, 'unknown', 12, '2024-11-04 01:00:00');
+
+-- insert into 2 rows
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-01 00:00:00', 2, 2, 'unknown', 13, '2024-11-01 01:00:00');
+
+-- check the rows of table
+SELECT * FROM example_tbl_duplicate;
++---------------------+----------+------------+-----------+-------+---------------------+
+| log_time            | log_type | error_code | error_msg | op_id | op_time             |
++---------------------+----------+------------+-----------+-------+---------------------+
+| 2024-11-02 00:00:00 |        1 |          2 | success   |    13 | 2024-11-02 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
+| 2024-11-03 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-03 01:00:00 |
+| 2024-11-04 00:00:00 |        2 |          2 | unknown   |    12 | 2024-11-04 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-01 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
++---------------------+----------+------------+-----------+-------+---------------------+
+```
+

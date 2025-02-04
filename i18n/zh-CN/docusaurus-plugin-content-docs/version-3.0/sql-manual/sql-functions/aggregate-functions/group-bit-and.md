@@ -1,7 +1,7 @@
 ---
 {
-    "title": "GROUP_BIT_AND",
-    "language": "zh-CN"
+"title": "GROUP_BIT_AND",
+"language": "zh-CN"
 }
 ---
 
@@ -24,19 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## group_bit_and
-### description
-#### Syntax
+## 描述
 
-`expr GROUP_BIT_AND(expr)`
+对单个整数列或表达式中的所有值执行按位 and 运算
 
-对expr进行 and 计算, 返回新的expr
-支持所有INT类型
+## 语法
 
-### example
-
+```sql
+GROUP_BIT_AND(<expr>)
 ```
-mysql> select * from group_bit;
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 支持所有INT类型 |
+
+## 返回值
+
+返回一个整数值
+
+## 举例
+
+```sql
+select * from group_bit;
+```
+
+```text
 +-------+
 | value |
 +-------+
@@ -45,9 +59,13 @@ mysql> select * from group_bit;
 |     2 |
 |     4 |
 +-------+
-4 rows in set (0.02 sec)
+```
 
-mysql> select group_bit_and(value) from group_bit;
+```sql
+select group_bit_and(value) from group_bit;
+```
+
+```text
 +------------------------+
 | group_bit_and(`value`) |
 +------------------------+
@@ -55,6 +73,3 @@ mysql> select group_bit_and(value) from group_bit;
 +------------------------+
 ```
 
-### keywords
-
-    GROUP_BIT_AND,BIT

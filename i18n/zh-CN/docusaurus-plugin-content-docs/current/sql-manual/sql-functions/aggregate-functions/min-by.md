@@ -24,18 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MIN_BY
-### description
-#### Syntax
 
-`MIN_BY(expr1, expr2)`
+## 描述
 
+MIN_BY 函数用于根据指定列的最小值，返回对应的的关联值。
 
-返回与 expr2 的最小值关联的 expr1 的值。
+## 语法
 
-### example
+```sql
+MIN_BY(<expr1>, <expr2>)
 ```
-MySQL > select * from tbl;
+
+## 参数说明
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr1>` | 用于指定对应关联的表达式。 |
+| `<expr2>` | 用于指定最小值统计的表达式。 |
+
+## 返回值
+
+返回与输入表达式 <expr1> 相同的数据类型。
+
+## 举例
+```sql
+select * from tbl;
+```
+
+```text
 +------+------+------+------+
 | k1   | k2   | k3   | k4   |
 +------+------+------+------+
@@ -44,13 +60,16 @@ MySQL > select * from tbl;
 |    4 | 3    | 2    |    1 |
 |    3 | 4    | 2    |    1 |
 +------+------+------+------+
+```
 
-MySQL > select min_by(k1, k4) from tbl;
+```sql
+select min_by(k1, k4) from tbl;
+```
+
+```text
 +--------------------+
 | min_by(`k1`, `k4`) |
 +--------------------+
 |                  4 |
 +--------------------+ 
 ```
-### keywords
-MIN_BY

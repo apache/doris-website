@@ -30,7 +30,7 @@ under the License.
 
 SHOW ROLES
 
-### Description
+## 描述
 
 该语句用于展示所有已创建的角色信息，包括角色名称，包含的用户以及权限。
 
@@ -40,7 +40,7 @@ SHOW ROLES
 SHOW ROLES
 ```
 
-### Example
+## 举例
 
 1. 查看已创建的角色
 

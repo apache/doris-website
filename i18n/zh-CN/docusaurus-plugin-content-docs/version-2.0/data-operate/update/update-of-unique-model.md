@@ -34,8 +34,7 @@ under the License.
 
 部分列更新，主要是指直接更新表中某些字段值，而不是全部的字段值。可以采用 Update 语句来进行更新，这种 Update 语句一般采用先将整行数据读出，然后再更新部分字段值，再写回。这种读写事务非常耗时，并且不适合大批量数据写入。Doris 在主键模型的导入更新，提供了可以直接插入或者更新部分列数据的功能，不需要先读取整行数据，这样更新效率就大幅提升了。
 
-:::caution
-注意
+:::caution 注意
 
 1. 2.0 版本仅在 Unique Key 的 Merge-on-Write 实现中支持了部分列更新能力
 2. 从 2.0.2 版本开始，支持使用 INSERT INTO 进行部分列更新
@@ -112,11 +111,11 @@ set enable_unique_key_partial_update=true
 若使用 StreamLoad 可以通过如下方式进行更新：
 
 ```sql
-$cat update.csv
+$ cat update.csv
 
 1,待发货
 
-$ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+$ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 若使用`INSRT INTO`可以通过如下方式进行更新：

@@ -28,8 +28,8 @@ under the License.
 
 IN
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `expr IN (value, ...)`
 
@@ -41,7 +41,7 @@ subquery 只能返回一列，并且子查询返回的列类型必须 expr 类�
 
 如果 subquery 返回bitmap数据类型列，expr必须是整型。
 
-### example
+## 举例
 
 ```
 mysql> select id from cost where id in (1, 2);

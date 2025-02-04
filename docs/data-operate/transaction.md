@@ -36,17 +36,17 @@ Queries and DDL single statements are implicit transactions and are not supporte
 
 Explicit transactions require users to actively start, commit, or roll back transactions. Currently, DDL and query statements are not supported.
 
-    ```sql
-    BEGIN;
-    [INSERT, UPDATE, DELETE statement]
-    COMMIT; / ROLLBACK;
-    ```
+```sql
+BEGIN;
+[INSERT, UPDATE, DELETE statement]
+COMMIT; / ROLLBACK;
+```
 
 ### Implicit Transactions
 
 Implicit transactions refer to SQL statements that are executed without explicitly adding statements to start and commit transactions before and after the statements.
 
-In Doris, except for [Group Commit](import/import-way/group-commit-manual.md), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. Each query or DDL statement is also an implicit transaction.
+In Doris, except for [Group Commit](../data-operate/import/group-commit-manual), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. Each query or DDL statement is also an implicit transaction.
 
 ### Isolation Level
 
@@ -149,8 +149,6 @@ Query OK, 0 rows affected (1.02 sec)
 This method not only achieves atomicity, but also in Doris, it enhances the writing performance of `INSERT INTO VALUES`.
 
 If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
-
-See [Insert Into](import/load-atomicity.md#insert-into) for more details.
 
 ### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
 
@@ -437,7 +435,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18036] commit successfully."
@@ -459,7 +457,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the Transaction ID:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
@@ -469,7 +467,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 - Specify the transaction using the label:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/stream_load2pc
+  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] abort successfully."

@@ -100,4 +100,4 @@ Firstly, Apache Doris is famously fast in Join queries. So if you need to extrac
 
 ## Conclusion
 
-This is the overview of a simple data architecture and how it can provide the data services you need. It ensures data ingestion stability and quality with Flink CDC, and quick data analysis with Apache Doris. The deployment of this architecture is simple, too. If you plan for a data analytic upgrade for your business, you might refer to this case. If you need advice and help, you may join our [community here](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
+This is the overview of a simple data architecture and how it can provide the data services you need. It ensures data ingestion stability and quality with Flink CDC, and quick data analysis with Apache Doris. The deployment of this architecture is simple, too. If you plan for a data analytic upgrade for your business, you might refer to this case. If you need advice and help, you may join our [community here](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).

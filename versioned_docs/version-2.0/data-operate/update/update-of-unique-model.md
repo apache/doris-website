@@ -34,8 +34,7 @@ When load data into the primary key model (Unique model) in Doris using supporte
 
 Updating partial columns mainly refers to directly updating certain field values in a table instead of updating all field values. This can be done using the Update statement, which typically involves reading the entire row data, updating specific field values, and then writing it back. This read-write transaction is time-consuming and not suitable for writing large amounts of data. In the context of load updates on the primary key model, Doris provides a functionality to directly insert or update partial column data without reading the entire row data, significantly improving the update efficiency.
 
-:::caution
-Note:
+:::caution Note:
 
 1. Partial updates are only supported in the Merge-on-Write implementation of the Unique Key starting from version 2.0.
 2. Starting from version 2.0.2, partial updates are supported using INSERT INTO.
@@ -116,7 +115,7 @@ $ cat update.csv
 
 1,To be shipped
 
-$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+$ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 If you are using `INSERT INTO`, you can update as following methods:

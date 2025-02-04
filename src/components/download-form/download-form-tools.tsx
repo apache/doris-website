@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
 import FormSelect from '../form-select/form-select';
 import copy from 'copy-to-clipboard';
-import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
+import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.data';
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
@@ -24,7 +24,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     }, [tool]);
 
     const getArchitectureOptions = useMemo(() => {
-        if (!tool || !version) return [];
+        if (!tool || !version || form.getFieldValue('tool') !== ToolsEnum.StreamLoader) return [];
         const current = data.find(item => item.value === tool).children;
         return current.find(item => version === item.value).children;
     }, [version]);
@@ -46,23 +46,37 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     // };
     const getDownloadLinkByCard = (params: { version: string[]; cpu: string; tarBall: string; type: string }) => {
         const currentTool = data.find(item => tool === item.value).children;
-        if (tool === 'Doris Streamloader') {
+        if (tool === ToolsEnum.StreamLoader) {
+            const currentVersion = currentTool.find(item => version === item.value);
             if (params.tarBall === 'Source') {
-                return !params.type ? `${currentTool[0].source}` : `${currentTool[0].source}.${params.type}`
+                return !params.type ? `${currentTool[0].source}` : `${currentTool[0].source}.${params.type}`;
             } else {
-                return architecture === 'ARM64' ? `${currentTool[0].children[1]}.${params.type}` : `${currentTool[0].children[0]}.${params.type}`
+                const currentCPU: any = currentVersion.children.find(item => params.cpu === item.value);
+                return currentCPU.Binary;
             }
         } else {
-            const currentVersion = currentTool.find(item => version === item.value)
-            const tempType = (params.type === 'sha512' ? 'sha1' : params.type)
-            return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`
+            let currentVersion;
+            if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
+                currentVersion = currentTool
+                    .find(item => item.value === version[0])
+                    .children.find(child => child.value === version[1]);
+            } else {
+                currentVersion = currentTool.find(item => version === item.value);
+            }
+            const tempType = params.type === 'sha512' ? 'sha1' : params.type;
+            return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`;
         }
-
     };
 
     useEffect(() => {
         if (tool) {
-            form.setFieldValue('version', getOptions[0].value);
+            if (tool === ToolsEnum.Flink) {
+                form.setFieldValue('version', [getOptions[0].value, getOptions[0].children[0].value]);
+            } else if (tool === ToolsEnum.Spark) {
+                form.setFieldValue('version', [getOptions[1].value, getOptions[1].children[1].value]);
+            } else {
+                form.setFieldValue('version', getOptions[0].value);
+            }
         }
     }, [tool]);
 
@@ -122,8 +136,17 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 <FormSelect
                                     placeholder="Version"
                                     label="Version"
-                                    isCascader={false}
+                                    isCascader={true}
                                     options={getOptions}
+                                    displayRender={label => {
+                                        if (label.length > 1) {
+                                            return `${label[0]} (${label[1]})`;
+                                        }
+                                        if (label.length > 0) {
+                                            return label[label.length - 1];
+                                        }
+                                        return '';
+                                    }}
                                 />
                             </Form.Item>
                         )

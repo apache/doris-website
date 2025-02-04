@@ -55,7 +55,7 @@ FE 的配置项有两种方式进行查看：
 
    - Key：配置项名称。
    - Value：当前配置项的值。
-   - Type：配置项值类型，如果整型、字符串。
+   - Type：配置项值类型，如整型、字符串。
    - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
    - MasterOnly：是否为 Master FE 节点独有的配置项。如果为 true，则表示该配置项仅在 Master FE 节点有意义，对其他类型的 FE 节点无意义。如果为 false，则表示该配置项在所有 FE 节点中均有意义。
    - Comment：配置项的描述。
@@ -368,6 +368,16 @@ heartbeat_mgr 中处理心跳事件的线程数。
 是否可以动态配置：false
 
 是否为 Master FE 节点独有的配置项：true
+
+#### `enable_cooldown_replica_affinity`
+
+用户可以选择是否首先使用冷却副本进行扫描,默认为true
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
 
 ### 服务
 
@@ -2538,25 +2548,25 @@ SmallFileMgr 中存储的最大文件数
 
 备份作业的默认超时时间
 
-#### `backup_upload_task_num_per_be`
+#### `backup_upload_snapshot_batch_size`
 
-默认值：3
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-备份过程中，分配给每个 be 的 upload 任务最大个数，默认值为 3 个。
-
-#### `restore_download_task_num_per_be`
-
-默认值：3
+默认值：10
 
 是否可以动态配置：true
 
 是否为 Master FE 节点独有的配置项：true
 
-恢复过程中，分配给每个 be 的 download 任务最大个数，默认值为 3 个。
+备份过程中，一个 upload 任务上传的快照数量上限，默认值为10个。
+
+#### `restore_download_snapshot_batch_size`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+恢复过程中，一个 download 任务下载的快照数量上限，默认值为10个。
 
 #### `max_backup_restore_job_num_per_db`
 
@@ -2735,3 +2745,23 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：2000
 
 对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
+
+### 计算与存储分离模式
+
+#### `cluster_id`
+
+默认值：-1
+
+如果节点（FE 或 BE）具有相同的集群 ID，则将认为它们属于同一个 Doris 集群。您应该在计算和存储分离模式中指定一个随机整数。
+
+#### `deploy_mode`
+
+默认值： ""
+
+描述：FE 运行的模式。`cloud` 表示解耦的存储-计算模式。
+
+#### `meta_service_endpoint`
+
+默认值： ""
+
+Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存储和计算分离模式是必要的。

@@ -1,20 +1,21 @@
 .achievement-banner-wrapper {
     display: flex;
-    gap: 24px;
     margin-bottom: 4rem;
 
     .achievement-banner-item {
-        width: 282px;
+        width: 300px;
         text-align: center;
         color: var(--global-colors-text-secondary);
         font-size: 1.25rem;
         line-height: 1.6;
-        div ~ div {
+
+        div~div {
             margin-top: 0.25rem;
         }
+
         .highlight {
             color: var(--ifm-color-primary);
-            font-weight: 540;
+            font-weight: 600;
             font-size: 2.5rem;
         }
     }

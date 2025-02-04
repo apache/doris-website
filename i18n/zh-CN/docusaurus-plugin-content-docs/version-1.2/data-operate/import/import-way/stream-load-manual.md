@@ -112,15 +112,15 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
 - column_separator
 
-  用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
+  用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。
 
-  如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
+  如 hive 文件的分隔符`\x01`，需要指定为`-H "column_separator:\x01"`。
 
   可以使用多个字符的组合作为列分隔符。
 
 - line_delimiter
 
-  用于指定导入文件中的换行符，默认为\n。
+  用于指定导入文件中的换行符，默认为`\n`。
 
   可以使用做多个字符的组合作为换行符。
 
@@ -155,6 +155,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 - format
 
   指定导入数据格式，支持 csv、json，默认是 csv
+  
   <version since="1.2"> format </version> 1.2 支持 csv_with_names(支持 csv 文件行首过滤)、csv_with_names_and_types(支持 csv 文件前两行过滤)、parquet、orc
 
   ```text
@@ -185,13 +186,14 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
   2. 对于导入的某列由函数变换生成时，strict mode 对其不产生影响。
   3. 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。
 
-- merge_type 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理
+- merge_type 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE 其中，APPEND 是默认值，表示这批数据全部需要追加到现有数据中，DELETE 表示删除与这批数据 key 相同的所有行，MERGE 语义 需要与 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理
 
 - two_phase_commit
 
   Stream load 导入可以开启两阶段事务提交模式：在 Stream load 过程中，数据写入完成即会返回信息给用户，此时数据不可见，事务状态为`PRECOMMITTED`，用户手动触发 commit 操作之后，数据才可见。
 
 - enable_profile
+
   <version since="1.2.4">
   </version>
 

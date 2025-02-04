@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE COLUMN
 
-### Description
+## 描述
 
 该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用[SHOW ALTER TABLE COLUMN](../../Show-Statements/SHOW-ALTER.md) 命令查看进度。
 
@@ -133,7 +133,7 @@ ORDER BY (column_name1, column_name2, ...)
 - index 中的所有列都要写出来
 - value 列在 key 列之后
 
-### Example
+## 举例
 
 1. 向 example_rollup_index 的 col1 后添加一个key列 new_col(非聚合模型)
 

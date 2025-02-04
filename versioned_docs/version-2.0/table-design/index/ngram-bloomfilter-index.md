@@ -27,7 +27,7 @@ under the License.
 
 ## Indexing Principles
 
-The NGram BloomFilter index, similar to the BloomFilter index, is a skip list index based on BloomFilter. 
+The NGram BloomFilter index, similar to the BloomFilter index, is a skip index based on BloomFilter. 
 
 Unlike the BloomFilter index, the NGram BloomFilter index is used to accelerate text LIKE queries. Instead of storing the original text values, it tokenizes the text using NGram and stores each token in the BloomFilter. For LIKE queries, the pattern in LIKE '%pattern%' is also tokenized using NGram. Each token is checked against the BloomFilter, and if any token is not found, the corresponding data block does not meet the LIKE condition and can be skipped, reducing IO and accelerating the query.
 
@@ -43,7 +43,7 @@ The NGram BloomFilter index can only accelerate string LIKE queries, and the num
 
 :::
 
-## Syntax
+## Managing Indexes
 
 ### Creating an NGram BloomFilter Index
 
@@ -67,8 +67,14 @@ Explanation of the syntax:
 
 ### Viewing NGram BloomFilter Index
 
+-- Syntax 1: The INDEX section in the table schema with USING NGRAM_BF indicates an inverted index
 ```sql
-SHOW CREATE TABLE table_ngrambf;
+SHOW CREATE TABLE table_name;
+```
+
+-- Syntax 2: IndexType as NGRAM_BF indicates an inverted index
+```sql
+SHOW INDEX FROM idx_name;
 ```
 
 ### Deleting an NGram BloomFilter Index
@@ -84,6 +90,15 @@ CREATE INDEX idx_column_name2(column_name2) ON table_ngrambf USING NGRAM_BF PROP
 
 ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024") COMMENT 'username ngram_bf index';
 ```
+
+## Using Indexes
+
+NGram BloomFilter index is used to accelerate LIKE queries, for example:
+SELECT count() FROM table1 WHERE message LIKE '%error%';
+
+The acceleration effect of the BloomFilter index (including NGram) can be analyzed using the following metrics in the Query Profile:
+- RowsBloomFilterFiltered: The number of rows filtered by the BloomFilter index, which can be compared with other Rows values to analyze the filtering effect of the index.
+- BlockConditionsFilteredBloomFilterTime: The time consumed by the BloomFilter inverted index.
 
 ## Usage Example
 
@@ -141,6 +156,14 @@ curl --location-trusted -u root: -T amazon_reviews_2013.snappy.parquet -H "forma
 curl --location-trusted -u root: -T amazon_reviews_2014.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 curl --location-trusted -u root: -T amazon_reviews_2015.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 ```
+
+:::info
+The data file may exceed 10 GB, and you may need to adjust the streaming_road_max_mb in be.conf to prevent exceeding the upload size limit of the stream load. You can dynamically adjust it by following the steps below:
+```bash
+curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=32768
+```
+Every BE needs to execute the above command.
+:::
 
 **Run a count query to confirm successful data import:**
 

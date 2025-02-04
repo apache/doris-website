@@ -49,7 +49,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 
 ## 基于 Doris 的湖仓一体架构
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon、LakeSoul、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon、LakeSoul、Elasticsearch、MySQL、Oracle、SQL Server 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
 
 
 ![基于 Doris 的湖仓一体架构](/images/doris-based-data-lakehouse-architecture.png)
@@ -160,13 +160,13 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - External Catalog
 
-    可以通过 [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG) 命令创建一个 External Catalog。创建后，可以通过 [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS) 命令查看已创建的 Catalog。
+    可以通过 [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG) 命令创建一个 External Catalog。创建后，可以通过 [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG) 命令查看已创建的 Catalog。
 
 - 切换 Catalog
 
     用户登录 Doris 后，默认进入 Internal Catalog，因此默认的使用和之前版本并无差别，可以直接使用 `SHOW DATABASES`，`USE DB` 等命令查看和切换数据库。
 
-    用户可以通过 [SWITCH](../sql-manual/sql-statements/Utility-Statements/SWITCH) 命令切换 Catalog。如：
+    用户可以通过 [SWITCH](../sql-manual/sql-statements/session/context/SWITCH) 命令切换 Catalog。如：
 
     ```Plain
     SWITCH internal;
@@ -177,7 +177,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - 删除 Catalog
 
-    可以通过 [DROP CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG) 命令删除一个 External Catalog，Internal Catalog 无法删除。该操作仅会删除 Doris 中该 Catalog 的映射信息，并不会修改或变更任何外部数据目录的内容。
+    可以通过 [DROP CATALOG](../sql-manual/sql-statements/catalog/DROP-CATALOG) 命令删除一个 External Catalog，Internal Catalog 无法删除。该操作仅会删除 Doris 中该 Catalog 的映射信息，并不会修改或变更任何外部数据目录的内容。
 
 ### 连接示例
 
@@ -196,7 +196,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-更多查看：[CREATE CATALOG 语法帮助](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG)
+更多查看：[CREATE CATALOG 语法帮助](../sql-manual/sql-statements/catalog/CREATE-CATALOG)
 
 **2. 查看 Catalog**
 
@@ -212,11 +212,11 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS 语法帮助](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS)
+- [SHOW CATALOGS 语法帮助](../sql-manual/sql-statements/catalog/SHOW-CATALOG)
 
-- 可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
+- 可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
 
-- 可以通过 [ALTER CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-CATALOG) 修改 Catalog 的属性。
+- 可以通过 [ALTER CATALOG](../sql-manual/sql-statements/catalog/ALTER-CATALOG) 修改 Catalog 的属性。
 
 **4. 切换 Catalog**
 
@@ -239,7 +239,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/Utility-Statements/SWITCH)
+查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/session/context/SWITCH)
 
 **5. 使用 Catalog**
 

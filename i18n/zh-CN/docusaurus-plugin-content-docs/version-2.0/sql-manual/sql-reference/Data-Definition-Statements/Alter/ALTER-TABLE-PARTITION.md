@@ -30,7 +30,7 @@ under the License.
 
 ALTER TABLE PARTITION
 
-### Description
+## 描述
 
 该语句用于对有 partition 的 table 进行修改操作。
 
@@ -98,7 +98,7 @@ MODIFY PARTITION p1|(p1[, p2, ...]) SET ("key" = "value", ...)
   - in_memory
 -  对于单分区表，partition_name 同表名。
 
-### Example
+## 举例
 
 1. 增加分区, 现有分区 [MIN, 2013-01-01)，增加分区 [2013-01-01, 2014-01-01)，使用默认分桶方式
 
@@ -151,30 +151,12 @@ ALTER TABLE example_db.my_table
 DROP PARTITION p1;
 ```
 
-8. 批量删除分区
 
-```sql
-ALTER TABLE example_db.my_table
-DROP PARTITION p1,
-DROP PARTITION p2,
-DROP PARTITION p3;
-```
-
-9. 增加一个指定上下界的分区
+8. 增加一个指定上下界的分区
 
 ```sql
 ALTER TABLE example_db.my_table
 ADD PARTITION p1 VALUES [("2014-01-01"), ("2014-02-01")); 
-```
-
-10. 批量增加数字类型和时间类型的分区
-
-```sql
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM (1) TO (100) INTERVAL 10;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 YEAR;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 MONTH;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 WEEK;
-ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 DAY;
 ```
 
 ### Keywords

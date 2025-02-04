@@ -11,6 +11,10 @@
     "message": "版本发布与校验",
     "description": "The label for category Doris Introduction in sidebar community"
   },
+  "sidebar.community.category.Source Code Compilation": {
+    "message": "源码编译",
+    "description": "The label for category Source Code Compilation in sidebar community"
+  },
   "sidebar.community.category.Design Documents": {
     "message": "设计文档",
     "description": "The label for category Developer Guide in sidebar community"
@@ -21,6 +25,10 @@
   },
   "sidebar.community.category.Mac Local Dev": {
     "message": "Mac Local 开发",
+    "description": "The label for category Mac Local Dev in sidebar community"
+  },
+  "sidebar.community.category.Announcements": {
+    "message": "Doris 社区声明",
     "description": "The label for category Mac Local Dev in sidebar community"
   }
 }

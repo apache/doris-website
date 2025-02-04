@@ -30,7 +30,7 @@ under the License.
 
 STRUCT
 
-### description
+## 描述
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
 
@@ -56,7 +56,7 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 TODO:支持嵌套 STRUCT 或其他的复杂类型
 ```
 
-### example
+## 举例
 
 建表示例如下：
 

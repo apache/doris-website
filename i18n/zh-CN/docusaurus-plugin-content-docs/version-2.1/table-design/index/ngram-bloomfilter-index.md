@@ -26,7 +26,7 @@ under the License.
 
 ## 索引原理
 
-NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
+n-gram 分词是将一句话或一段文字拆分成多个相邻的词组的分词方法。NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
 
 与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少IO加速查询。
 
@@ -45,7 +45,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 :::
 
 
-## 使用语法
+## 管理索引
 
 ### 创建 NGram BloomFilter 索引
 
@@ -64,7 +64,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 
 **3. `PROPERTIES` 是可选的，用于指定 NGram BloomFilter 索引的额外属性，目前支持的属性如下：**
 
-- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'an ngram example' 在 N = 3 的时候分成 'an ', 'n n', ' ng', 'ngr', 'gra', 'ram' 6 个词。
+- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'This is a simple ngram example' 在 N = 3 的时候分成 'This is a', 'is a simple', 'a simple ngram', 'simple ngram example' 4 个词。
 
 - bf_size：BloomFilter 的大小，单位是 Bit。bf_size 决定每个数据块对应的索引大小，这个值越大占用存储空间越大，同时 Hash 碰撞的概率也越低。
 
@@ -75,7 +75,11 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 ### 查看 NGram BloomFilter 索引
 
 ```sql
-SHOW CREATE TABLE table_ngrambf;
+-- 语法 1，表的 schema 中 INDEX 部分 USING NGRAM_BF 是倒排索引
+SHOW CREATE TABLE table_name;
+
+-- 语法 2，IndexType 为 NGRAM_BF 的是倒排索引
+SHOW INDEX FROM idx_name;
 ```
 
 ### 删除 NGram BloomFilter 索引
@@ -91,6 +95,17 @@ CREATE INDEX idx_column_name2(column_name2) ON table_ngrambf USING NGRAM_BF PROP
 
 ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024") COMMENT 'username ngram_bf index';
 ```
+
+## 使用索引
+
+NGram BloomFilter 索引用于加速 LIKE 查询，比如：
+```sql
+SELECT count() FROM table1 WHERE message LIKE '%error%';
+```
+
+可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括NGram）的加速效果。
+- RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
+- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
 
 
 ## 使用示例
@@ -150,6 +165,14 @@ curl --location-trusted -u root: -T amazon_reviews_2013.snappy.parquet -H "forma
 curl --location-trusted -u root: -T amazon_reviews_2014.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 curl --location-trusted -u root: -T amazon_reviews_2015.snappy.parquet -H "format:parquet" http://127.0.0.1:8030/api/${DB}/amazon_reviews/_stream_load
 ```
+
+:::info
+上面的文件可能超过 10 GB，您可能需要调整 be.conf 的 streaming_load_max_mb 防止超过 stream load 文件上传大小的限制，可以通过下面方式动态调整
+```bash
+curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=32768
+```
+需要每台 be 都执行上述命令。
+:::
 
 **SQL 运行 count() 确认导入数据成功**
 ```

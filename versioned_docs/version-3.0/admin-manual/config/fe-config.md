@@ -48,7 +48,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
 
     `SHOW FRONTEND CONFIG;`
 
@@ -300,7 +300,7 @@ Is it a configuration item unique to the Master FE node: true
 
 Default：-1
 
-node(FE or BE) will be considered belonging to the same Palo cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id.  Cluster id is usually a random integer generated when master FE start at first time. You can also specify one.
 
 #### `heartbeat_mgr_blocking_queue_size`
 
@@ -1497,6 +1497,12 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 Default：1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
+
+#### `label_regex_length`
+
+Default Value: 128 (characters)
+
+The maximum character length of the load label, the default is 128 characters.
 
 #### `transaction_clean_interval_second`
 
@@ -2736,3 +2742,29 @@ To ensure compatibility with the MySQL ecosystem, Doris includes a built-in data
 Default value: 2000
 
 For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
+
+#### `profile_manager_gc_interval_seconds`
+
+Default value: 1
+
+Used to control the interval at which ProfileManager performs profile garbage collection. During garbage collection, ProfileManager purges excess and expired profiles from memory and disk to save memory.
+
+### Compute and Storage Disaggregated Mode
+
+#### `cluster_id`
+
+Default：-1
+
+node(FE or BE) will be considered belonging to the same Doris cluster if they have same cluster id. You should specify one random int in compute and storage disaggregated mode.
+
+#### `deploy_mode`
+
+Default: ""
+
+Description:  The mode in which FE runs. `cloud` indicates the decoupled storage-compute mode.
+
+#### `meta_service_endpoint`
+
+Default: ""
+
+Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.

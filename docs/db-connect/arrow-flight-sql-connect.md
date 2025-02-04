@@ -1,6 +1,6 @@
 ---
 {
-    "title": "High-speed data transmission link based on Arrow Flight SQL",
+    "title": "Connecting by Arrow Flight SQL Protocol",
     "language": "en"
 }
 ---
@@ -24,21 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-- since 2.1
-:::
+Since Doris 2.1, a high-speed data link based on the Arrow Flight SQL protocol has been implemented, allowing SQL queries to rapidly retrieve large volumes of data from Doris in multiple languages. Arrow Flight SQL also provides a universal JDBC driver, supporting seamless interaction with databases that also follow the Arrow Flight SQL protocol. In some scenarios, performance can improve by up to a hundred times compared to data transfer solutions using MySQL Client or JDBC/ODBC drivers.
 
-Doris implements high-speed data links based on the Arrow Flight SQL protocol, and supports multiple languages ​​to use SQL to read large batches of data from Doris at high speed.
+## Implementation Principle
 
-## Usage
+In Doris, query results are organized in columnar format as Blocks. In versions prior to 2.1, data could be transferred to the target client via MySQL Client or JDBC/ODBC drivers, but this required deserializing row-based Bytes into columnar format. By building a high-speed data transfer link based on Arrow Flight SQL, if the target client also supports Arrow columnar format, the entire transfer process avoids serialization and deserialization operations, completely eliminating the time and performance overhead associated with them.
 
-To load large batches of data from Doris to other components, such as Python/Java/Spark/Flink, you can use ADBC/JDBC based on Arrow Flight SQL to replace the past JDBC/Pymysql/Pandas to obtain higher reading performance, which is often encountered in scenarios such as data science and data lake analysis.
+![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql/Arrow_Flight_SQL.png)
 
-Apache Arrow Flight SQL is a protocol developed by the Apache Arrow community to interact with database systems. It is used for ADBC ​​clients to interact with databases that implement the Arrow Flight SQL protocol using the Arrow data format. It has the speed advantage of Arrow Flight and the ease of use of JDBC/ODBC.
+To install Apache Arrow, you can find detailed installation instructions in the official documentation [Apache Arrow](https://arrow.apache.org/install/). For more information on how Doris implements the Arrow Flight protocol, you can refer to [Doris support Arrow Flight SQL protocol](https://github.com/apache/doris/issues/25514).
 
-The motivation, design and implementation, performance test results, and more concepts about Arrow Flight and ADBC ​​for Doris to support Arrow Flight SQL can be found at: [GitHub Issue](https://github.com/apache/doris/issues/25514). This document mainly introduces the use of Doris Arrow Flight SQL and some common problems.
-
-Install Apache Arrow You can find detailed installation tutorials in the official documentation ([Apache Arrow](https://arrow.apache.org/install/))
 
 ## Python Usage
 

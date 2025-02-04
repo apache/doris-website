@@ -1,6 +1,6 @@
 export const AchievementBannerItemsData = [
-    { title: '12K+', content: 'Github stars' },
-    { title: '4000+', content: 'Enterprises using it' },
-    { title: '600+', content: 'Total contributors' },
+    { title: '13K+', content: 'Github stars' },
+    { title: '5000+', content: 'Mid-to-large enterprises using it' },
+    { title: '650+', content: 'Total contributors' },
     { title: '120+', content: 'Monthly active contributors' },
 ];

@@ -30,7 +30,7 @@ under the License.
 
 SHOW VARIABLES
 
-### Description
+## 描述
 
 该语句是用来显示Doris系统变量，可以通过条件查询
 
@@ -48,7 +48,7 @@ SHOW [GLOBAL | SESSION] VARIABLES
 - 使用like语句表示用variable_name进行匹配.
 - %百分号通配符可以用在匹配模式中的任何位置
 
-### Example
+## 举例
 
 1. 这里默认的就是对Variable_name进行匹配,这里是准确匹配
 

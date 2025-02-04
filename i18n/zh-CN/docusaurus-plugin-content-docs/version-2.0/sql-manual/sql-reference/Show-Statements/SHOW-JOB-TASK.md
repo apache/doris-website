@@ -30,7 +30,7 @@ under the License.
 
 SHOW JOB TASK
 
-### Description
+## 描述
 
 该语句用于展示 JOB 子任务的执行结果列表, 默认会保留最新的 20 条记录。
 
@@ -60,7 +60,7 @@ SHOW JOB TASKS FOR job_name;
         * SUCCESS
         * FAIL
 
-### Example
+## 举例
 
 1. 展示名称为 test1 的 JOB 的任务执行列表
 

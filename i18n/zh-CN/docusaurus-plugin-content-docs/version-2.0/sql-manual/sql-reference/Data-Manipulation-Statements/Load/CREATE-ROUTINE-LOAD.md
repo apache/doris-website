@@ -31,7 +31,7 @@ under the License.
 
 CREATE ROUTINE LOAD
 
-### Description
+## 描述
 
 例行导入（Routine Load）功能，支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 Doris 中。
 
@@ -157,8 +157,8 @@ FROM data_source [data_source_properties]
      这三个参数分别表示：
 
      1. 每个子任务最大执行时间，单位是秒。范围为 1 到 60。默认为 10。
-     2. 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000。
-     3. 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 100MB。
+     2. 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000(2.0.13 及更高版本为 20000000)。
+     3. 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 100MB(2.0.13 及更高版本为 1G)。
 
      这三个参数，用于控制一个子任务的执行时间和处理量。当任意一个达到阈值，则任务结束。
 
@@ -375,7 +375,7 @@ FROM data_source [data_source_properties]
     该功能自 Apache Doris  1.2.3 版本起支持
     :::
 
-### Example
+## 举例
 
 1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅
 

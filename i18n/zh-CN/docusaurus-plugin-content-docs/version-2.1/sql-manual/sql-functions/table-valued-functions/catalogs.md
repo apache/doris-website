@@ -24,27 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `catalogs`
+## 描述
 
-### Name
+`CATALOGS()` 函数生成一个临时的 catalogs 表，允许查看当前 Doris 中所有已创建的 catalogs 信息，其结果综合了 `show catalogs` 和 `show catalog xxx` 的信息。
 
+该函数用于 FROM 子句中，便于查询和分析 Doris 中的 catalog 数据。
 
-catalogs
-
-
-### description
-
-表函数，生成 catalogs 临时表，可以查看当前doris中的创建的 catalogs 信息。
-
-该函数用于 from 子句中。
-
-#### syntax
-
-`catalogs()`
-
-catalogs()表结构：
+## 语法
+```sql
+CATALOGS()
 ```
-mysql> desc function catalogs();
+
+## 返回值
+查看 catalog() 函数的返回字段
+```sql
+desc function catalogs();
+```
+```text
 +-------------+--------+------+-------+---------+-------+
 | Field       | Type   | Null | Key   | Default | Extra |
 +-------------+--------+------+-------+---------+-------+
@@ -54,19 +50,24 @@ mysql> desc function catalogs();
 | Property    | TEXT   | No   | false | NULL    | NONE  |
 | Value       | TEXT   | No   | false | NULL    | NONE  |
 +-------------+--------+------+-------+---------+-------+
-5 rows in set (0.04 sec)
 ```
 
-`catalogs()` tvf展示的信息是综合了 `show catalogs` 与 `show catalog xxx` 语句的结果。
+字段含义如下：
 
-可以利用tvf生成的表去做过滤、join等操作。
+| 字段名称        | 类型       | 说明                                                        | 
+|-----------------|----------|-----------------------------------------------------------| 
+| `CatalogId`     | BIGINT   | Catalog 的唯一标识符，用于区分不同的 catalog 实例。                        | 
+| `CatalogName`   | TEXT     | Catalog 的名称，用于标识 Doris 中的 catalog。                        | 
+| `CatalogType`   | TEXT     | Catalog 的类型，例如 `hms`（Hive Metastore）、`es`（Elasticsearch）。 | 
+| `Property`      | TEXT     | 与 catalog 相关的属性名称或配置项。                                    | 
+| `Value`         | TEXT     | 属性的值，描述 catalog 配置的具体内容。                                  |
 
-
-
-### example
-
+## 示例
+查看 doris 集群所有 catalog 信息
+```sql
+select * from catalogs()
 ```
-mysql> select * from catalogs();
+```text
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
 | CatalogId | CatalogName | CatalogType | Property                                   | Value                                                                     |
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
@@ -84,9 +85,4 @@ mysql> select * from catalogs();
 |     16726 | es          | es          | type                                       | es                                                                        |
 |     16726 | es          | es          | hosts                                      | http://127.0.0.1:9200                                                     |
 +-----------+-------------+-------------+--------------------------------------------+---------------------------------------------------------------------------+
-13 rows in set (0.01 sec)
 ```
-
-### keywords
-
-    catalogs

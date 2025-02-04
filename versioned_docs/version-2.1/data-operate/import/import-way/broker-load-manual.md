@@ -24,13 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Why introduce Broker Load?
+Broker Load is initiated from the MySQL API. Doris will actively pull the data from the source based on the information in the LOAD statement. Broker Load is an asynchronous import method. The progress and result of Broker Load tasks can be viewed by the SHOW LOAD statement.
 
-Stream Load is a push-based method, where the data to be imported relies on the client to read and push it to Doris. Broker Load, on the other hand, involves sending an import request to Doris, and Doris actively pulls the data. Therefore, if the data is stored in systems like HDFS or object storage, using Broker Load is the most convenient. This way, the data doesn't need to pass through the client but is directly read and imported by Doris.
+Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
 
 Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
-Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
+In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
+In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
+Due to historical reasons and the similarity in syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+
+## Limitations
+
+Supported data sources:
+
+- S3 protocol
+- HDFS protocol
+- Custom protocol (require broker process)
+
+Supported data types:
+
+- CSV
+- JSON
+- PARQUET
+- ORC
+
+Supported compress types:
+
+- PLAIN
+- GZ
+- LZO
+- BZ2
+- LZ4FRAME
+- DEFLATE
+- LZOP
+- LZ4BLOCK
+- SNAPPYBLOCK
+- ZLIB
+- ZSTD
 
 ## Basic Principles
 
@@ -45,30 +76,105 @@ As seen in the diagram, BE nodes rely on Broker processes to read data from corr
 
 Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, when importing data from HDFS or S3, there is no need to additionally start a Broker process. However, if a customized Broker implementation is required, the corresponding Broker process needs to be deployed.
 
-## SQL syntax for importing
+## Quick start
 
-```sql
-LOAD LABEL load_label
-(
-data_desc1[, data_desc2, ...]
-)
-WITH [HDFS|S3|BROKER broker_name] 
-[broker_properties]
-[load_properties]
-[COMMENT "comments"];
+This section shows a demo for S3 Load.
+For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+
+### Prerequisite check
+
+1. Grant privileges on the table
+
+Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+
+2. S3 authentication and connection info
+
+Here, we mainly introduce how to import data stored in AWS S3. For importing data from other object storage systems that support the S3 protocol, you can refer to the steps for AWS S3.
+
+- AK and SK: First, you need to find or regenerate your AWS `Access Keys`. You can find instructions on how to generate them in the AWS console under `My Security Credentials`.
+
+- REGION and ENDPOINT: The REGION can be selected when creating a bucket or viewed in the bucket list. The S3 ENDPOINT for each REGION can be found in the [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region).
+
+### Create load job
+
+1. Create a CSV file brokerload_example.csv. The file is stored on S3 and its content is as follows:
+
+```
+1,Emily,25
+2,Benjamin,35
+3,Olivia,28
+4,Alexander,60
+5,Ava,17
+6,William,69
+7,Sophia,32
+8,James,64
+9,Emma,37
+10,Liam,64
 ```
 
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+2. Create Doris table for the load
+
+Create the imported table in Doris. The SQL statement is as follows:
+
+```sql
+CREATE TABLE testdb.test_brokerload(
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+3.  Use Broker Load to import data from S3. The bucket name and S3 authentication information should be filled in according to the actual situation:
+
+```sql
+    LOAD LABEL broker_load_2022_04_01
+    (
+        DATA INFILE("s3://your_bucket_name/brokerload_example.csv")
+        INTO TABLE test_brokerload
+        COLUMNS TERMINATED BY ","
+        FORMAT AS "CSV"
+        (user_id, name, age)
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ACCESS_KEY" = "<your-ak>",
+        "AWS_SECRET_KEY"="<your-sk>",
+        "AWS_REGION" = "us-west-2",
+        "compress_type" = "PLAIN"
+    )
+    PROPERTIES
+    (
+        "timeout" = "3600"
+    );
+```
+
+The `provider` specifies the vendor of the S3 Service.
+Supported S3 Provider list:
+
+- "S3" (AWS, Amazon Web Services)
+- "AZURE" (Microsoft Azure)
+- "GCP" (GCP, Google Cloud Platform)
+- "OSS" (Alibaba Cloud)
+- "COS" (Tencent Cloud)
+- "OBS" (Huawei Cloud)
+- "BOS" (Baidu Cloud)
+
+If your service is not in the list (such as MinIO), you can try using "S3" (AWS compatible mode)
+
 
 ## Checking import status
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
+Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command.
 
-```Plain
+```sql
 mysql> show load order by createtime desc limit 1\G;
 *************************** 1. row ***************************
          JobId: 41326624
-         Label: broker_load_2022_04_15
+         Label: broker_load_2022_04_01
          State: FINISHED
       Progress: ETL:100%; LOAD:100%
           Type: BROKER
@@ -87,17 +193,164 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ## Cancelling an Import
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD).
+When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD).
 
-For example: To cancel the import job with the label "broker_load_2022_03_23" on the DEMO database.
+For example: To cancel the import job with the label "broker_load_2022_04_01" on the DEMO database.
 
 ```sql
-CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_03_23";
+CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
-## HDFS Load
+## Reference Manual
 
-### Simple Authentication
+### SQL syntax for broker load
+
+```sql
+LOAD LABEL load_label
+(
+data_desc1[, data_desc2, ...]
+)
+WITH [S3|HDFS|BROKER broker_name] 
+[broker_properties]
+[load_properties]
+[COMMENT "comments"];
+```
+
+The WITH clause specifies how to access the storage system, and `broker_properties` is the configuration parameter for the access method
+
+- `S3`: Storage system using the S3 protocol
+- `HDFS`: Storage system using the HDFS protocol
+- `BROKER broker_name`: Storage system using other protocols. You can view the currently available broker_name list through `SHOW BROKER`. For more information, see "Other Broker Import" in the Common Issues section.
+
+### Related Configurations
+
+**Load Properties**
+
+| Property Name | Type | Default Value | Description |
+| --- | --- | --- | --- |
+| "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
+| "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
+| "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
+| "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
+| "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
+| "load_parallelism" | Integer | 8 | Limits the maximum parallel instances on each backend. |
+| "send_batch_parallelism" | Integer | 1 | The parallelism for sink node to send data, when memtable_on_sink_node is disabled. |
+| "load_to_single_tablet" | Boolean | "false" | Used to specify whether to load data only to a single tablet corresponding to the partition. This parameter is only available when loading to an OLAP table with random bucketing. |
+| "skip_lines" | Integer | "0" | It will skip some lines in the head of a csv file. It will be ignored when the format is csv_with_names or csv_with_names_and_types. |
+| "trim_double_quotes" | Boolean | "false" | Used to specify whether to trim the outermost double quotes of each field in the source files. |
+| "priority" | oneof "HIGH", "NORMAL", "LOW" | "NORMAL" | The priority of the task. |
+
+
+**fe.conf**
+
+The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
+
+| Session Variable | Type | Default Value | Description |
+| --- | --- | --- | --- |
+| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | The minimum amount of data processed by a single BE in a Broker Load job, in bytes. |
+| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | The maximum amount of data processed by a single BE in a Broker Load job, in bytes. Usually, the maximum amount of data supported by an import job is `max_bytes_per_broker_scanner * number of BE nodes`. If you need to import a larger amount of data, you need to adjust the size of the `max_bytes_per_broker_scanner` parameter appropriately. |
+| max_broker_concurrency | Integer | 10 | Limits the maximum number of concurrent imports for a job. |
+| default_load_parallelism | Integer | 8 | Maximum number of concurrent instances per BE node |
+| broker_load_default_timeout_second | 14400 | Default timeout for Broker Load import, in seconds. |
+
+Note: The `min_bytes_per_broker_scanner`, the `max_broker_concurrency`, the size of the source file and the number of BEs in the current cluster jointly determine the number of concurrent execution instances for this load.
+
+```Plain
+Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
+Processing Volume per BE for this Import = Source File Size / Import Concurrency
+```
+
+**session variables**
+
+| Session Variable | Type | Default | Description |
+| --- | --- | --- | --- |
+| time_zone | String | "Asia/Shanghai" | Default time zone, which will affect the results of time zone related functions in import. |
+| send_batch_parallelism | Integer | 1 | The concurrency of the sink node sending data, which takes effect only when `enable_memtable_on_sink_node` is set to false. |
+
+## Common Issues
+
+### Common Errors
+
+**1. Import Error: `Scan bytes per broker scanner exceed limit:xxx`**
+
+Please refer to the best practices section in the documentation and modify the FE configuration items `max_bytes_per_broker_scanner` and `max_broker_concurrency.`
+
+**2. Import Error: : `failed to send batch` or `TabletWriter add batch with unknown id`**
+
+Appropriately adjust the `query_timeout` and `streaming_load_rpc_max_alive_time_sec` settings.
+
+**3. Import Error: `LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
+
+For PARQUET or ORC format data, the column names in the file header must match the column names in the Doris table. For example:
+
+```sql
+(tmp_c1,tmp_c2)
+SET
+(
+    id=tmp_c2,
+    name=tmp_c1
+)
+```
+
+This represents fetching columns named (tmp_c1, tmp_c2) in the parquet or orc file and mapping them to the (id, name) columns in the Doris table. If no set is specified, the columns in the file header will be used for mapping.
+
+:::info Note
+
+If ORC files are generated directly using certain Hive versions, the column headers in the ORC file may not be the Hive metadata, but (_col0, _col1, _col2, ...), which may lead to the Invalid Column Name error. In this case, mapping using SET is necessary.
+:::
+
+**5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
+
+The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating bucket paths.
+
+**6. Import Timeout**
+
+The default timeout for imports is 4 hours. If a timeout occurs, it is not recommended to directly increase the maximum import timeout to solve the problem. If the single import time exceeds the default import timeout of 4 hours, it is best to split the file to be imported and perform multiple imports to solve the problem. Setting an excessively long timeout time can lead to high costs for retrying failed imports.
+
+You can calculate the expected maximum import file data volume for the Doris cluster using the following formula:
+
+Expected Maximum Import File Data Volume = 14400s * 10M/s * Number of BEs
+
+For example, if the cluster has 10 BEs:
+
+Expected Maximum Import File Data Volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
+
+:::info Note
+
+In general, user environments may not reach speeds of 10M/s, so it is recommended to split files exceeding 500G before importing.
+:::
+
+### S3 Load URL style
+
+- The S3 SDK defaults to using the virtual-hosted style method for accessing objects. However, some object storage systems may not have enabled or supported the virtual-hosted style access. In such cases, we can add the `use_path_style` parameter to force the use of the path style method:
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+          "AWS_REGION" = "AWS_REGION",
+          "use_path_style" = "true"
+    )
+  ```
+
+### S3 Load temporary credentials
+
+- Support for accessing all object storage systems that support the S3 protocol using temporary credentials (TOKEN) is available. The usage is as follows:
+
+  ```sql
+    WITH S3
+    (
+          "AWS_ENDPOINT" = "AWS_ENDPOINT",
+          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+          "AWS_REGION" = "AWS_REGION"
+    )
+  ```
+
+### HDFS Simple Authentication
 
 Simple authentication refers to the configuration of Hadoop where hadoop.security.authentication is set to "simple".
 
@@ -110,7 +363,7 @@ Simple authentication refers to the configuration of Hadoop where hadoop.securit
 
 The username should be configured as the user to be accessed, and the password can be left blank.
 
-### Kerberos Authentication
+### HDFS Kerberos Authentication
 
 This authentication method requires the following information:
 
@@ -167,7 +420,7 @@ This configuration is used to access HDFS clusters deployed in HA (High Availabi
 
 An example configuration is as follows:
 
-```Plain
+```sql
 (
     "fs.defaultFS" = "hdfs://my_ha",
     "dfs.nameservices" = "my_ha",
@@ -180,7 +433,7 @@ An example configuration is as follows:
 
 HA mode can be combined with the previous two authentication methods for cluster access. For example, accessing HA HDFS through simple authentication:
 
-```Plain
+```sql
 (
     "username"="user",
     "password"="passwd",
@@ -193,9 +446,50 @@ HA mode can be combined with the previous two authentication methods for cluster
 )
 ```
 
-### Import Example
+### Load with other brokers
 
-- Importing TXT Files from HDFS
+The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage.
+Currently, Doris provides Broker implementations for various remote storage systems.
+In earlier versions, different object storage Brokers were also available, but now it is recommended to use the `WITH S3` method to import data from object storage, and the `WITH BROKER` method is no longer recommended.
+
+- Tencent Cloud CHDFS
+- Tencent Cloud GFS
+- JuiceFS
+
+The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
+
+The Broker serves solely as a data pathway and does not involve any computational tasks, thus requiring minimal memory usage. Typically, a Doris system would deploy one or more Broker processes. Furthermore, Brokers of the same type are grouped together and assigned a unique name (Broker name).
+
+This section primarily focuses on the parameters required by the Broker when accessing different remote storage systems, such as connection information, authentication details, and more. Understanding and correctly configuring these parameters is crucial for successful and secure data exchange between Doris and the remote storage systems.
+
+**Broker Information**
+
+The information of the Broker consists of two parts: the name (Broker name) and the authentication information. The usual syntax format is as follows:
+
+```sql
+WITH BROKER "broker_name" 
+(
+    "username" = "xxx",
+    "password" = "yyy",
+    "other_prop" = "prop_value",
+    ...
+);
+```
+
+**Broker Name**
+
+Typically, users need to specify an existing Broker Name through the `WITH BROKER "broker_name"` clause in the operation command. The Broker Name is a name designated by the user when adding a Broker process through the `ALTER SYSTEM ADD BROKER` command. One name usually corresponds to one or more Broker processes. Doris will select an available Broker process based on the name. Users can view the Brokers that currently exist in the cluster through the `SHOW BROKER` command.
+
+:::info Note
+The Broker Name is merely a user-defined name and does not represent the type of Broker.
+:::
+
+**Authentication Information**
+Different Broker types and access methods require different authentication information. The authentication information is usually provided in the Property Map in a Key-Value format after `WITH BROKER "broker_name"`.
+
+## Broker Load examples
+
+### Importing TXT Files from HDFS
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -217,7 +511,7 @@ HA mode can be combined with the previous two authentication methods for cluster
   );
   ```
 
--  HDFS requires the configuration of NameNode HA (High Availability)
+### HDFS requires the configuration of NameNode HA (High Availability)
 
   ```sql
   LOAD LABEL demo.label_20220402
@@ -244,7 +538,7 @@ HA mode can be combined with the previous two authentication methods for cluster
   );
   ```
 
-- Importing data from HDFS using wildcards to match two batches of files and importing them into two separate tables
+### Importing data from HDFS using wildcards to match two batches of files and importing them into two separate tables
 
   ```sql
   LOAD LABEL example_db.label2
@@ -257,7 +551,7 @@ HA mode can be combined with the previous two authentication methods for cluster
       SET (
           k2 = tmp_k2 + 1,
           k3 = tmp_k3 + 1
-      )
+      ),
       DATA INFILE("hdfs://host:port/input/file-20*")
       INTO TABLE `my_table2`
       COLUMNS TERMINATED BY ","
@@ -272,7 +566,7 @@ HA mode can be combined with the previous two authentication methods for cluster
 
 To import two batches of files matching the wildcards `file-10*` and `file-20*` from HDFS and load them into two separate tables `my_table1` and `my_table2`. In this case, my_table1 specifies that the data should be imported into partition p1, and the values in the second and third columns of the source files should be incremented by 1 before being imported.
 
-- Import a batch of data from HDFS using wildcards
+### Import a batch of data from HDFS using wildcards
 
   ```sql
   LOAD LABEL example_db.label3
@@ -290,7 +584,7 @@ To import two batches of files matching the wildcards `file-10*` and `file-20*` 
 
 To specify the delimiter as the commonly used default delimiter for Hive, which is \x01, and to use the wildcard character * to refer to all files in all directories under the data directory.
 
-- Import Parquet format data and specify the FORMAT as `parquet`
+### Import Parquet format data and specify the FORMAT as `parquet`
 
   ```sql
   LOAD LABEL example_db.label4
@@ -309,10 +603,10 @@ To specify the delimiter as the commonly used default delimiter for Hive, which 
 
 The default method is to determine by file extension.
 
-- Import the data and extract the partition field from the file path
+### Import the data and extract the partition field from the file path
 
   ```sql
-  LOAD LABEL example_db.label10
+  LOAD LABEL example_db.label5
   (
       DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
       INTO TABLE `my_table`
@@ -340,7 +634,7 @@ hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
 
 The file only contains three columns of data:`k1`,`k2`, and `k3`. The other two columns,`city` and `utc_date`, will be extracted from the file path.
 
-- Filter the imported data
+### Filter the imported data
 
   ```sql
   LOAD LABEL example_db.label6
@@ -363,7 +657,7 @@ The file only contains three columns of data:`k1`,`k2`, and `k3`. The other two 
 
 Only the rows where k1 = 1 in the original data and k1 > k2 after transformation will be imported.
 
-- Import data and extract the time partition field from the file path.
+### Import data and extract the time partition field from the file path.
 
   ```sql
   LOAD LABEL example_db.label7
@@ -397,13 +691,18 @@ There are the following files under the path:
 
 The table structure is as follows:
 
-```Plain
-data_time DATETIME,
-k2        INT,
-k3        INT
+```sql
+CREATE TABLE IF NOT EXISTS tbl12 (
+    data_time DATETIME,
+    k2        INT,
+    k3        INT
+) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "3"
+);
 ```
 
-- Use Merge mode for import
+### Use Merge mode for import
 
   ```sql
   LOAD LABEL example_db.label8
@@ -427,7 +726,7 @@ k3        INT
 
 To use Merge mode for import, the "my_table" must be a Unique Key table. When the value of the "v2" column in the imported data is greater than 100, that row will be considered a deletion row. The timeout for the import task is 3600 seconds, and an error rate of up to 10% is allowed.
 
-- Specify the "source_sequence" column during import to ensure the order of replacements.
+### Specify the "source_sequence" column during import to ensure the order of replacements.
 
   ```sql
   LOAD LABEL example_db.label9
@@ -446,9 +745,9 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
   The "my_table" must be a Unique Key model table and have a specified Sequence column. The data will maintain its order based on the values in the "source_sequence" column in the source data.
   ```
 
-- Import the specified file format as `json`, and specify the `json_root` and jsonpaths accordingly.
+### Import the specified file format as `json`, and specify the `json_root` and jsonpaths accordingly.
 
-  ```SQL
+  ```sql
   LOAD LABEL example_db.label10
   (
       DATA INFILE("hdfs://host:port/input/file.json")
@@ -456,7 +755,7 @@ To use Merge mode for import, the "my_table" must be a Unique Key table. When th
       FORMAT AS "json"
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.city, $.code]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -478,7 +777,7 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
       SET (id = id * 10)
       PROPERTIES(
         "json_root" = "$.item",
-        "jsonpaths" = "[$.id, $.code, $.city]"
+        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
       )       
   )
   with HDFS
@@ -488,120 +787,11 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
   );
   ```
 
-## S3 Load
-
-Doris supports importing data directly from object storage systems that support the S3 protocol through the S3 protocol. Here, we mainly introduce how to import data stored in AWS S3. For importing data from other object storage systems that support the S3 protocol, you can refer to the steps for AWS S3.
-
-### Preparation
-
-- AK and SK: First, you need to find or regenerate your AWS `Access Keys`. You can find instructions on how to generate them in the AWS console under `My Security Credentials`.
-
-- REGION and ENDPOINT: The REGION can be selected when creating a bucket or viewed in the bucket list. The S3 ENDPOINT for each REGION can be found in the [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region).
-
-### Import example
-
-```sql
-    LOAD LABEL example_db.exmpale_label_1
-    (
-        DATA INFILE("s3://your_bucket_name/your_file.txt")
-        INTO TABLE load_test
-        COLUMNS TERMINATED BY ","
-    )
-    WITH S3
-    (
-        "AWS_ENDPOINT" = "AWS_ENDPOINT",
-        "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-        "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-        "AWS_REGION" = "AWS_REGION"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600"
-    );
-```
-
-### Common Issues
-
-- The S3 SDK defaults to using the virtual-hosted style method for accessing objects. However, some object storage systems may not have enabled or supported the virtual-hosted style access. In such cases, we can add the `use_path_style` parameter to force the use of the path style method:
-
-  ```Plain
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-          "AWS_REGION" = "AWS_REGION",
-          "use_path_style" = "true"
-    )
-  ```
-
-- Support for accessing all object storage systems that support the S3 protocol using temporary credentials (TOKEN) is available. The usage is as follows:
-
-  ```Plain
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-          "AWS_REGION" = "AWS_REGION"
-    )
-  ```
-
-Importing Data Using Other Brokers
-
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage. Currently, the following storage system Broker implementations are provided:
+### Load from other brokers
 
 - Alibaba Cloud OSS
 
-- Baidu Cloud BOS
-
-- Tencent Cloud CHDFS
-
-- Tencent Cloud GFS
-
-- Huawei Cloud OBS
-
-- JuiceFS
-
-- Google Cloud Storage (GCS)
-
-The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
-
-The Broker serves solely as a data pathway and does not involve any computational tasks, thus requiring minimal memory usage. Typically, a Doris system would deploy one or more Broker processes. Furthermore, Brokers of the same type are grouped together and assigned a unique name (Broker name).
-
-This section primarily focuses on the parameters required by the Broker when accessing different remote storage systems, such as connection information, authentication details, and more. Understanding and correctly configuring these parameters is crucial for successful and secure data exchange between Doris and the remote storage systems.
-
-### Broker Information
-
-The information of the Broker consists of two parts: the name (Broker name) and the authentication information. The usual syntax format is as follows:
-
-```Plain
-WITH BROKER "broker_name" 
-(
-    "username" = "xxx",
-    "password" = "yyy",
-    "other_prop" = "prop_value",
-    ...
-);
-```
-
-**Broker Name**
-
-Typically, users need to specify an existing Broker Name through the `WITH BROKER "broker_name"` clause in the operation command. The Broker Name is a name designated by the user when adding a Broker process through the `ALTER SYSTEM ADD BROKER` command. One name usually corresponds to one or more Broker processes. Doris will select an available Broker process based on the name. Users can view the Brokers that currently exist in the cluster through the `SHOW BROKER` command.
-
-:::info Note
-The Broker Name is merely a user-defined name and does not represent the type of Broker.
-:::
-
-**Authentication Information**
-Different Broker types and access methods require different authentication information. The authentication information is usually provided in the Property Map in a Key-Value format after `WITH BROKER "broker_name"`.
-
-### Broker Examples
-
-- Alibaba Cloud OSS
-
-  ```Plain
+  ```sql
   (
       "fs.oss.accessKeyId" = "",
       "fs.oss.accessKeySecret" = "",
@@ -611,7 +801,7 @@ Different Broker types and access methods require different authentication infor
 
 - JuiceFS
 
-  ```Plain
+  ```sql
   (
       "fs.defaultFS" = "jfs://xxx/",
       "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
@@ -625,96 +815,13 @@ Different Broker types and access methods require different authentication infor
 
   When using a Broker to access GCS, the Project ID is required, while other parameters are optional. Please refer to the [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md) for all parameter configurations.
 
-  ```Plain
+  ```sql
   (
       "fs.gs.project.id" = "Your Project ID",
       "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
       "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
   )
   ```
-
-## Related Configurations
-
-The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
-
-**min_bytes_per_broker_scanner**
-
-- Default: 64MB.
-
-- The minimum amount of data processed by a single BE in a Broker Load job.
-
-**max_bytes_per_broker_scanner**
-
-- Default: 500GB.
-
-- The maximum amount of data processed by a single BE in a Broker Load job.
-
-Typically, the maximum supported data volume for an import job is `max_bytes_per_broker_scanner * the number of BE nodes`. If you need to import a larger volume of data, you may need to adjust the size of the `max_bytes_per_broker_scanner` parameter appropriately.
-
-**max_broker_concurrency**
-
-- Default: 10.
-
-- Limits the maximum concurrency of imports for a job.
-
-- The minimum processed data volume, maximum concurrency, size of the source file, and the current number of BE nodes jointly determine the concurrency of this import.
-
-```Plain
-Import Concurrency = Math.min(Source File Size / Minimum Processing Amount, Maximum Concurrency, Current Number of BE Nodes)
-Processing Volume per BE for this Import = Source File Size / Import Concurrency
-```
-
-## Common Issues
-
-**1. Import Error: `Scan bytes per broker scanner exceed limit:xxx`**
-
-Please refer to the best practices section in the documentation and modify the FE configuration items `max_bytes_per_broker_scanner` and `max_broker_concurrency.`
-
-**2. Import Error: : `failed to send batch` or `TabletWriter add batch with unknown id`**
-
-Appropriately adjust the `query_timeout` and `streaming_load_rpc_max_alive_time_sec` settings.
-
-**3. Import Error: `LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
-
-For PARQUET or ORC format data, the column names in the file header must match the column names in the Doris table. For example:
-
-```Plain
-(tmp_c1,tmp_c2)
-SET
-(
-    id=tmp_c2,
-    name=tmp_c1
-)
-```
-
-This represents fetching columns named (tmp_c1, tmp_c2) in the parquet or orc file and mapping them to the (id, name) columns in the Doris table. If no set is specified, the columns in the file header will be used for mapping.
-
-:::info Note
-
-If ORC files are generated directly using certain Hive versions, the column headers in the ORC file may not be the Hive metadata, but (_col0, _col1, _col2, ...), which may lead to the Invalid Column Name error. In this case, mapping using SET is necessary.
-:::
-
-**5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
-
-The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating bucket paths.
-
-**6. Import Timeout**
-
-The default timeout for imports is 4 hours. If a timeout occurs, it is not recommended to directly increase the maximum import timeout to solve the problem. If the single import time exceeds the default import timeout of 4 hours, it is best to split the file to be imported and perform multiple imports to solve the problem. Setting an excessively long timeout time can lead to high costs for retrying failed imports.
-
-You can calculate the expected maximum import file data volume for the Doris cluster using the following formula:
-
-Expected Maximum Import File Data Volume = 14400s * 10M/s * Number of BEs
-
-For example, if the cluster has 10 BEs:
-
-Expected Maximum Import File Data Volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
-
-:::info Note
-
-In general, user environments may not reach speeds of 10M/s, so it is recommended to split files exceeding 500G before importing.
-:::
-
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.

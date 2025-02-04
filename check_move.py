@@ -45,34 +45,49 @@ def process_md_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-        links = link_pattern.findall(content)
+    links = link_pattern.findall(content)
 
-        for link in links:
-            if not urlparse(link).scheme and not os.path.isabs(link):
-                full_path: str = os.path.normpath(
-                    os.path.join(os.path.dirname(file_path), link)
-                )
-                if not full_path.endswith(".md") and not full_path.endswith(".mdx"):
-                    full_path += ".md"
+    new_content = content
+    for link in links:
+        if not urlparse(link).scheme and not os.path.isabs(link):
+            full_path: str = os.path.normpath(
+                os.path.join(os.path.dirname(file_path), link)
+            )
+            if not full_path.endswith(".md") and not full_path.endswith(".mdx"):
+                full_path += ".md"
 
-                for [from_path, to_path] in move_pairs:
-                    # In md, the link relative path starts from the directory where the document is located, not the document
-                    relative_to_path = os.path.relpath(
-                        to_path, os.path.dirname(file_path)
+            for [from_path, to_path] in move_pairs:
+                # Skip change of suffix
+                from_base, from_ext = os.path.splitext(from_path)
+                to_base, to_ext = os.path.splitext(to_path)
+                if (
+                    from_ext in [".md", ".mdx", ""] or to_ext in [".md", ".mdx", ""]
+                ) and (from_base == to_base):
+                    continue
+                # In md, the link relative path starts from the directory where the document is located, not the document
+                relative_to_path = os.path.relpath(to_path, os.path.dirname(file_path))
+                relative_to_path = remove_suffix(relative_to_path, ".md")
+                relative_to_path = remove_suffix(relative_to_path, ".mdx")
+
+                if is_same_file(full_path, from_path):
+                    print(
+                        f"{file_path} has a link moved by this commit: from {link} to {relative_to_path}"
                     )
-                    relative_to_path = remove_suffix(relative_to_path, ".md")
-                    relative_to_path = remove_suffix(relative_to_path, ".mdx")
+                    change_detected = True
+                    # Replace the old link with the new one
+                    new_content = new_content.replace(
+                        f"({link})", f"({relative_to_path})"
+                    )
 
-                    if is_same_file(full_path, from_path):
-                        print(
-                            f"{file_path} has a link moved by this commit: from {link} to {relative_to_path}"
-                        )
-                        change_detected = True
+            for deleted_path in deletes:
+                if is_same_file(full_path, deleted_path):
+                    print(f"{file_path} has a link removed by this commit: {link}")
+                    change_detected = True
 
-                for deleted_path in deletes:
-                    if is_same_file(full_path, deleted_path):
-                        print(f"{file_path} has a link removed by this commit: {link}")
-                        change_detected = True
+    # Write the updated content back to the file
+    if new_content != content:
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
 
 
 def extract_file_changes(git_show_output: List[AnyStr]):

@@ -1,6 +1,6 @@
 ---
 {
-"title": "集群环境要求",
+"title": "环境要求",
 "language": "zh-CN"
 }
 ---
@@ -45,8 +45,9 @@ systemctl disable firewalld
 ```
 
 如果无法关闭防火墙服务，可以根据规划，打开 FE 与 BE 端口：
+
 :::tip 提示
-如果无法关闭防火墙，需要根据 Kubernetes 映射规则打开 Doris 相应端口的防火墙。具体端口可以参考 [Doris 集群端口规划](../standard-deployment.md#%E7%BD%91%E7%BB%9C%E9%9C%80%E6%B1%82)。
+如果无法关闭防火墙，需要根据 Kubernetes 映射规则打开 Doris 相应端口的防火墙。具体端口可以参考 [Doris 集群端口规划](../standard-deployment.md#端口规划)。
 :::
 
 
@@ -66,8 +67,8 @@ sysctl -p
 
 ```shell
 vi /etc/security/limits.conf 
-* soft nofile 65536
-* hard nofile 65536
+* soft nofile 1000000
+* hard nofile 1000000
 ```
 
 ### 修改虚拟内存区域数量
@@ -83,6 +84,6 @@ sysctl -w vm.max_map_count=2000000
 在部署 Doris 时，建议关闭透明大页。
 
 ```shell
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
+echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```

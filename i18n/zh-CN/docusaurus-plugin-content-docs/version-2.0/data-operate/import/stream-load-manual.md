@@ -36,7 +36,7 @@ Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris �
 - 断点续传，在导入过程中可能出现部分失败的情况，支持在失败点处进行继续传输。
 - 自动重传，在导入出现失败的情况后，无需手动重传，工具会自动重传默认的次数，如果仍然不成功，打印出手动重传的命令。
 
-点击 [Doris Streamloader 文档](../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
+点击 [Doris Streamloader 文档](../../../ecosystem/doris-streamloader) 了解使用方法与实践详情。
 :::
 
 ## 使用场景
@@ -259,7 +259,7 @@ mysql> show stream load from testdb;
 
 ### 取消导入作业
 
-用户无法手动取消 Stream Load，Stream Load 在超时 0 或者导入错误后会被系统自动取消。
+用户无法手动取消 Stream Load，Stream Load 在超时或者导入错误后会被系统自动取消。
 
 ## 参考手册
 
@@ -325,7 +325,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | jsonpaths                    | 导入 JSON 数据格式有两种方式：简单模式：没有指定 jsonpaths 为简单模式，这种模式要求 JSON 数据是对象类型匹配模式：用于 JSON 数据相对复杂，需要通过 jsonpaths 参数匹配对应的 value 在简单模式下，要求 JSON 中的 key 列与表中的列名是一一对应的，如 JSON 数据 {"k1":1, "k2":2, "k3":"hello"}，其中 k1、k2 及 k3 分别对应表中的列。 |
 | strip_outer_array            | 指定 strip_outer_array 为 true 时表示 JSON 数据以数组对象开始且将数组对象中进行展平，默认为 false。在 JSON 数据的最外层是 [] 表示的数组时，需要设置 strip_outer_array 为 true。如以下示例数据，在设置 strip_outer_array 为 true 后，导入 Doris 中生成两行数据`    [{"k1" : 1, "v1" : 2},{"k1" : 3, "v1" : 4}]` |
 | json_root                    | json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节点，默认值为 ""。 |
-| merge_type                   | 数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE:APPEND 是默认值，表示这批数据全部需要追加到现有数据中 DELETE 表示删除与这批数据 key 相同的所有行 MERGE 语义 需要与 delete 条件联合使用，表示满足 delete 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理例如，指定合并模式为 MERGE，需要指定命令`-H "merge_type: MERGE" -H "delete: flag=1"`。 |
+| merge_type                   | 数数据的合并类型，一共支持三种类型 APPEND、DELETE、MERGE；APPEND 是默认值，表示这批数据全部需要追加到现有数据中；DELETE 表示删除与这批数据 key 相同的所有行 MERGE 语义 需要与 DELETE  条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理其余的按照 APPEND 语义处理例如，指定合并模式为 MERGE，需要指定命令`-H "merge_type: MERGE" -H "delete: flag=1"`。 |
 | delete                       | 仅在 MERGE 下有意义，表示数据的删除条件                      |
 | function_column.sequence_col | 只适用于 UNIQUE KEYS 模型，相同 Key 列下，保证 Value 列按照 source_sequence 列进行 REPLACE。source_sequence 可以是数据源中的列，也可以是表结构中的一列。 |
 | fuzzy_parse                  | 布尔类型，为 true 表示 JSON 将以第一行为 schema 进行解析。开启这个选项可以提高 json 导入效率，但是要求所有 json 对象的 key 的顺序和第一行一致，默认为 false，仅用于 JSON 格式 |
@@ -373,7 +373,11 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ---------------------- | ------------------------------------------------------------ |
 | TxnId                  | 导入事务的 ID                                                |
 | Label                  | 导入作业的 label，通过 -H "label:<label_id>" 指定            |
-| Status                 | 导入的最终状态 Success：表示导入成功 Publish Timeout：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试 Label Already Exists：Label 重复，需要更换 labelFail：导入失败 |
+| Status                 | 导入的最终状态                                              |
+|                        | - Success：表示导入成功                                     |
+|                        | - Publish Timeout：该状态也表示导入已经完成，但数据可能会延迟可见，无需重试 |
+|                        | - Label Already Exists：Label 重复，需要更换 label         |
+|                        | - Fail：导入失败                                            |
 | ExistingJobStatus      | 已存在的 Label 对应的导入作业的状态。这个字段只有在当 Status 为 "Label Already Exists" 时才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。"RUNNING" 表示作业还在执行，"FINISHED" 表示作业成功。 |
 | Message                | 导入错误信息                                                 |
 | NumberTotalRows        | 导入总处理的行数                                             |
@@ -390,49 +394,6 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | ErrorURL               | 如果有数据质量问题，通过访问这个 URL 查看具体错误行          |
 
 通过 ErrorURL 可以查看因为数据质量不佳导致的导入失败数据。使用命令 `curl "<ErrorURL>"` 命令直接查看错误数据的信息。
-
-## TVF 在 Stream Load 中的应用 - http_stream 模式
-
-依托 Doris 最新引入的 Table Value Function（TVF）的功能，在 Stream Load 中，可以通过使用 SQL 表达式来表达导入的参数。这个专门为 Stream Load 提供的 TVF 为 http_stream。
-
-:::caution
-注意
-
-使用 TVF http_stream 进行 Stream Load 导入时的 Rest API URL 不同于 Stream Load 普通导入的 URL。
-
-- 普通导入的 URL 为：
-  
-    http://fe_host:http_port/api/{db}/{table}/_stream_load
-
-- 使用 TVF http_stream 导入的 URL 为：
-
-    http://fe_host:http_port/api/_http_stream
-:::
-
-使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-在 Header 中添加一个`sql`的参数，去替代之前参数中的`column_separator`、`line_delimiter`、`where`、`columns`等参数，使用起来非常方便。
-
-load_sql 举例：
-
-```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-```
-
-http_stream 支持的参数：
-
-"column_separator" = ",", "format" = "CSV",
-
-...
-
-示例：
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ## 导入举例
 
@@ -737,7 +698,6 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
-    -H "escape:\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -756,6 +716,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
     -H "enclose:'" \
+    -H "escape:\\" \
     -H "columns:username,age,address" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
@@ -825,7 +786,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format:json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -857,7 +818,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "strip_outer_array:true" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -892,7 +853,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "json_root: $.comment" \
     -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
     -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -973,7 +934,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "format: json" \
     -H "strip_outer_array:true" \
-    -T streamload_example.csv \
+    -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
@@ -1002,7 +963,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT                NULL   COMMENT "ID",
     hou        VARCHAR(10)           NULL   COMMENT "one",
-    arr        BITMAP  BITMAP_UNION  NULL   COMMENT "two"
+    arr        BITMAP  BITMAP_UNION  NOT NULL   COMMENT "two"
 )
 AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
@@ -1041,7 +1002,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 CREATE TABLE testdb.test_streamload(
     typ_id           BIGINT          NULL   COMMENT "ID",
     typ_name         VARCHAR(10)     NULL   COMMENT "NAME",
-    pv               hll hll_union   NULL   COMMENT "hll"
+    pv               hll hll_union   NOT NULL   COMMENT "hll"
 )
 AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;

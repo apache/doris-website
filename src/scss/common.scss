@@ -1,27 +1,5 @@
-.docs-wrapper {
-    .navbar__inner {
-        .navbar__items--right {
-            .header-right-button-github,
-            .header-right-button-slack {
-                display: none;
-            }
-        }
-    }
-    .navbar__bottom {
-        display: none;
-    }
-}
-
 @media screen and (max-width: 996px) {
     .docs-wrapper {
-        .navbar__inner {
-            .navbar__items--right {
-                .docs-search,
-                .custom-navbar-item {
-                    display: none;
-                }
-            }
-        }
         .navbar__bottom {
             display: block;
         }
@@ -62,6 +40,10 @@
         .versions {
             opacity: 0;
         }
+    }
+
+    .theme-doc-markdown{
+        padding-left: 0;
     }
 }
 

@@ -30,7 +30,7 @@ under the License.
 
 SHOW TABLETS
 
-### Description
+## 描述
 
 该语句用于列出指定table的所有tablets（仅管理员使用）
 
@@ -53,7 +53,7 @@ IndexName = rollup_name
 ```
 或者通过`AND`组合的复合条件.
 
-### Example
+## 举例
 
 1. 列出指定table所有的tablets
 

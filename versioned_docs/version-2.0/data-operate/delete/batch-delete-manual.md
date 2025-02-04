@@ -34,7 +34,7 @@ When you delete by Delete statement, each execution of Delete generates an empty
 
 For scenarios like importing data from a transactional database via CDC, Insert and Delete are usually interspersed in the data. In this case, the current Delete operation cannot be implemented.
 
-Based on imported data, there are three ways the data can be merged:
+When importing data, there are several ways to merge it:
 
 1. APPEND: Append all data to existing data.
 
@@ -48,9 +48,9 @@ Batch Delete only works on Unique models.
 
 ## Fundamental
 
-This is achieved by adding a hidden column `DORIS_DELETE_SIGN` to the Unique table.
+This is achieved by adding a hidden column `__DORIS_DELETE_SIGN__` to the Unique table.
 
-When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * and so on, and `DORIS_DELETE_SIGN !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
+When FE parses the query, `__DORIS_DELETE_SIGN__` is removed when it encounters * and so on, and `__DORIS_DELETE_SIGN__ !` `= true`, BE will add a column for judgement when reading, and determine whether to delete by the condition.
 
 - Import
 
@@ -58,7 +58,7 @@ When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * an
 
 - Read
 
-    The read adds `DORIS_DELETE_SIGN !` `= true` condition, BE does not sense this process and executes normally.
+    The read adds `__DORIS_DELETE_SIGN__ !` `= true` condition, BE does not sense this process and executes normally.
 
 - Cumulative Compaction
 
@@ -76,7 +76,7 @@ There are two forms of enabling Batch Delete support:
 
 2. For tables that do not have the above FE configuration changed or for existing tables that do not support Batch Delete, the following statement can be used: `ALTER TABLE tablename ENABLE FEATURE "BATCH_DELETE"` to enable Batch Delete. This is essentially a schema change operation, which returns immediately and can be confirmed by `showing alter table column`.
 
-Then how to determine whether a table supports Batch Delete, you can set a session variable to show hidden columns `SET show_hidden_columns=true`, and after that use `desc tablename`, if there is a `DORIS_DELETE_SIGN` column in the output then it is supported, if there is not then it is not supported.
+Then how to determine whether a table supports Batch Delete, you can set a session variable to show hidden columns `SET show_hidden_columns=true`, and after that use `desc tablename`, if there is a `__DORIS_DELETE_SIGN__` column in the output then it is supported, if there is not then it is not supported.
 
 ## Syntax Description
 
@@ -157,197 +157,34 @@ if session variable `SET show_hidden_columns = true` was executed before running
 ### Check if Batch Delete Support is Enabled
 
 ```sql
-mysql SET show_hidden_columns=true;
+mysql> CREATE TABLE IF NOT EXISTS table1 (
+    ->     siteid INT,
+    ->     citycode INT,
+    ->     username VARCHAR(64),
+    ->     pv BIGINT
+    -> ) UNIQUE KEY (siteid, citycode, username)
+    -> DISTRIBUTED BY HASH(siteid) BUCKETS 10
+    -> PROPERTIES (
+    ->     "replication_num" = "3"
+    -> );
+Query OK, 0 rows affected (0.34 sec)
+
+mysql> SET show_hidden_columns=true;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql DESC test;
-+-----------------------+--------------+------+-------+---------+---------+
-| Field                 | Type         | Null | Key   | Default | Extra   |
-+-----------------------+--------------+------+-------+---------+---------+
-| name                  | VARCHAR(100) | No   | true  | NULL    |         |
-| gender                | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
-| age                   | INT          | Yes  | false | NULL    | REPLACE |
-| DORIS_DELETE_SIGN | TINYINT      | No   | false | 0       | REPLACE |
-+-----------------------+--------------+------+-------+---------+---------+
-4 rows in set (0.00 sec)
+mysql> DESC table1;
++-----------------------+-------------+------+-------+---------+-------+
+| Field                 | Type        | Null | Key   | Default | Extra |
++-----------------------+-------------+------+-------+---------+-------+
+| siteid                | int         | Yes  | true  | NULL    |       |
+| citycode              | int         | Yes  | true  | NULL    |       |
+| username              | varchar(64) | Yes  | true  | NULL    |       |
+| pv                    | bigint      | Yes  | false | NULL    | NONE  |
+| __DORIS_DELETE_SIGN__ | tinyint     | No   | false | 0       | NONE  |
+| __DORIS_VERSION_COL__ | bigint      | No   | false | 0       | NONE  |
++-----------------------+-------------+------+-------+---------+-------+
+6 rows in set (0.01 sec)
 ```
 
 ### Stream Load Usage Examples
-
-1. Import data normally:
-
-    ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: APPEND" -T ~/table1_data http://127.0.0.1: 8130/api/test/table1/_stream_load
-    ```
-
-    The APPEND condition can be omitted, which has the same effect as the following statement:
-
-    ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -T ~/table1_data http://127.0.0.1:8130/api/test/table1 /_stream_load
-    ```
-
-2. Delete all data with the same key as the imported data
-
-    ```Shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: DELETE" -T ~/table1_data http://127.0.0.1: 8130/api/test/table1/_stream_load
-    ```
-
-    Before load:
-
-    ```sql
-    +--------+----------+----------+------+
-    | siteid | citycode | username | pv   |
-    +--------+----------+----------+------+
-    |      3 |        2 | tom      |    2 |
-    |      4 |        3 | bush     |    3 |
-    |      5 |        3 | helen    |    3 |
-    +--------+----------+----------+------+
-    ```
-
-    Load data:
-
-    ```Plain
-    3,2,tom,0
-    ```
-
-    After load:
-
-    ```sql
-    +--------+----------+----------+------+
-    | siteid | citycode | username | pv   |
-    +--------+----------+----------+------+
-    |      4 |        3 | bush     |    3 |
-    |      5 |        3 | helen    |    3 |
-    +--------+----------+----------+------+
-    ```
-
-3. Import the same row as the key column of the row with `site_id=1`
-
-    ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: MERGE" -H "delete: siteid=1" -T ~/ table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-    ```
-
-    Before load:
-
-    ```sql
-    +--------+----------+----------+------+
-    | siteid | citycode | username | pv   |
-    +--------+----------+----------+------+
-    |      4 |        3 | bush     |    3 |
-    |      5 |        3 | helen    |    3 |
-    |      1 |        1 | jim      |    2 |
-    +--------+----------+----------+------+
-    ```
-
-    Load data:
-
-    ```Plain
-    2,1,grace,2
-    3,2,tom,2
-    1,1,jim,2
-    ```
-
-    After load:
-
-    ```sql
-    +--------+----------+----------+------+
-    | siteid | citycode | username | pv   |
-    +--------+----------+----------+------+
-    |      4 |        3 | bush     |    3 |
-    |      2 |        1 | grace    |    2 |
-    |      3 |        2 | tom      |    2 |
-    |      5 |        3 | helen    |    3 |
-    +--------+----------+----------+------+
-    ```
-
-4. When the table has the sequence column, delete all data with the same key as the imported data
-
-    ```shell
-    curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-    ```
-
-    When the unique table has the sequence column, sequence column is used as the basis for the replacement order of the REPLACE aggregate function under the same key column, and the larger value can replace the smaller value. If you want delete some data, the imported data must have the same key and the sequence column must be larger or equal than before.
-
-    For example, one table like this:
-
-    ```sql
-    mysql SET show_hidden_columns=true;
-    Query OK, 0 rows affected (0.00 sec)
-
-    mysql DESC table1;
-    +------------------------+--------------+------+-------+---------+---------+
-    | Field                  | Type         | Null | Key   | Default | Extra   |
-    +------------------------+--------------+------+-------+---------+---------+
-    | name                   | VARCHAR(100) | No   | true  | NULL    |         |
-    | gender                 | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
-    | age                    | INT          | Yes  | false | NULL    | REPLACE |
-    | DORIS_DELETE_SIGN  | TINYINT      | No   | false | 0       | REPLACE |
-    | DORIS_SEQUENCE_COL | INT          | Yes  | false | NULL    | REPLACE |
-    +------------------------+--------------+------+-------+---------+---------+
-    4 rows in set (0.00 sec)
-    ```
-
-    Before load:
-
-    ```sql
-    +-------+--------+------+
-    | name  | gender | age  |
-    +-------+--------+------+
-    | li    | male   |   10 |
-    | wang  | male   |   14 |
-    | zhang | male   |   12 |
-    +-------+--------+------+
-    ```
-
-    If you load data like this:
-
-    ```Plain
-    li,male,10
-    ```
-
-    After load:
-
-    ```sql
-    +-------+--------+------+
-    | name  | gender | age  |
-    +-------+--------+------+
-    | wang  | male   |   14 |
-    | zhang | male   |   12 |
-    +-------+--------+------+
-    ```
-
-    You will find that the data is deleted.
-
-    ```Plain
-    li,male,10
-    ```
-
-    But if you load data like this:
-
-    ```Plain
-    li,male,9
-    ```
-
-    After load:
-
-    ```sql
-    +-------+--------+------+
-    | name  | gender | age  |
-    +-------+--------+------+
-    | li    | male   |   10 |
-    | wang  | male   |   14 |
-    | zhang | male   |   12 |
-    +-------+--------+------+
-    ```
-
-    You will find that the data is not deleted.
-
-    ```Plain
-    li,male,10
-    ```
-
-    This is because in the underlying dependencies, it will first judge the case of the same key, display the row data with a large value in the sequence column, and then check whether the `DORIS_DELETE_SIGN` value of the row is 1. If it is 1, it will not be displayed. If it is 0, it will still be read out.
-
-:::tip Tip
-When data is written and deleted at the same time in the imported data (e.g., in the Flink CDC scenario), using the sequence column can effectively ensure consistency when the data arrives out of order, avoiding the deletion operation of an old version that arrives later, and accidentally deleting the new version of the data that arrives first.
-:::
+Please refer to the sections "Specifying merge_type for DELETE operations" and "Specifying merge_type for MERGE operations" in the [Stream Load Manual](../import/import-way/stream-load-manual.md)

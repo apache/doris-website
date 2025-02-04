@@ -438,12 +438,12 @@ job_properties 子句具体参数选项如下：
 
 | 参数                      | 说明                                                         |
 | ------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number | 默认值：5 <br />参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：<br />` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：<br />- topic_partition_num 表示 Kafka Topic 的 parititon 数量<br />- desired_concurrent_number 表示设置的参数大小 <br />- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数 |
-| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，范围为 1s 到 60s，默认值为 10(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
-| max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
-| max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 100MB。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| desired_concurrent_number | 默认值：256 <br />参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：<br />` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：<br />- topic_partition_num 表示 Kafka Topic 的 parititon 数量<br />- desired_concurrent_number 表示设置的参数大小 <br />- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数 |
+| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000(2.0.13 及更高版本为 20000000)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 10GB。默认是 100MB(2.0.13 及更高版本为 1G)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
-| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<br />严格模式过滤策略如下：<br />- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响 <br />- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列 <br />- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../data-operate/import/load-strict-mode)。|
+| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<br />严格模式过滤策略如下：<br />- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响 <br />- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列 <br />- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../../data-operate/import/error-data-handling#严格模式)。
 | timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
 | format                    | 指定导入数据格式，默认是 csv，支持 json 格式。               |
 | jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 Json 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
@@ -475,34 +475,6 @@ data_source_properties 子句具体参数选项如下：
 | property          | 指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。当参数的 Value 为一个文件时，需要在 Value 前加上关键词："FILE:"。创建文件可以参考 [CREATE FILE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-FILE) 命令文档。更多支持的自定义参数，可以参考 librdkafka 的官方 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文档中，client 端的配置项。如：`"property.client.id" = "12345"``"property.group.id" = "group_id_0"``"property.ssl.ca.location" = "FILE:ca.pem"` |
 
 通过配置 data_source_properties 中的 kafka property 参数，可以配置安全访问选项。目前 Doris 支持多种 Kafka 安全协议，如 plaintext（默认）、SSL、PLAIN、Kerberos 等。
-
-1. 访问 SSL 认证的 Kafka 集群 property 参数示例
-
-```sql
-"property.security.protocol" = "ssl",
-"property.ssl.ca.location" = "FILE:ca.pem",
-"property.ssl.certificate.location" = "FILE:client.pem",
-"property.ssl.key.location" = "FILE:client.key",
-"property.ssl.key.password" = "ssl_passwd"
-```
-
-2. 访问 PLAIN 认证的 Kafka 集群 property 参数示例
-
-```sql
-"property.security.protocol"="SASL_PLAINTEXT",
-"property.sasl.mechanism"="PLAIN",
-"property.sasl.username"="admin",
-"property.sasl.password"="admin_passwd"
-```
-
-3. 访问 Kerberos 认证的 Kafka 集群 property 参数示例
-
-```sql
-"property.security.protocol" = "SASL_PLAINTEXT",
-"property.sasl.kerberos.service.name" = "kafka",
-"property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
-"property.sasl.kerberos.principal" = "doris@YOUR.COM"
-```
 
 ### 导入状态
 
@@ -1224,23 +1196,24 @@ mysql> SELECT * FROM routine_test09;
     3 rows in set (0.01 sec)
     ```
 
-**导入包含包围附的数据**
+**导入包含包围符的数据**
 
 1. 导入数据样例
 
     ```sql
-    { "id" : 1, "name" : "xiaoli", "age":18 }
-    { "id" : 2, "name" : "xiaowang", "age":20 }
-    { "id" : 3, "name" : "xiaoliu", "age":22 }
+    1,"Benjamin",18
+    2,"Emily",20
+    3,"Alexander",22
     ```
 
 2. 建表结构
 
     ```sql
-    CREATE TABLE demo.routine_test12 (
+    CREATE TABLE demo.routine_test11 (
         id      INT            NOT NULL  COMMENT "id",
         name    VARCHAR(30)    NOT NULL  COMMENT "名字",
         age     INT                      COMMENT "年纪",
+        num     INT                      COMMENT "数量"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1253,8 +1226,7 @@ mysql> SELECT * FROM routine_test09;
             PROPERTIES
             (
                 "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "enclose" = "\""
             )
             FROM KAFKA
             (
@@ -1269,13 +1241,13 @@ mysql> SELECT * FROM routine_test09;
 
     ```sql
     mysql> SELECT * FROM routine_test12;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
+    +------+----------------+------+------+
+    | id   | name           | age  | num  |
+    +------+----------------+------+------+
+    |    1 | Benjamin       |   18 |  180 |
+    |    2 | Emily          |   20 |  200 |
+    |    3 | Alexander      |   22 |  220 |
+    +------+----------------+------+------+
     3 rows in set (0.02 sec)
     ```
 
@@ -1765,6 +1737,64 @@ mysql> SELECT * FROM routine_test09;
 
 **导入 SSL 认证的 Kafka 数据**
 
+1. 导入数据样例
+
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
+
+2. 建表结构
+
+    ```sql
+    CREATE TABLE demo.routine_test20 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
+
+3. 导入命令
+
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "192.168.100.129:9092",
+                "kafka_topic" = "routineLoad21",
+                "property.group.id" = "kafka_job21",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+                "property.security.protocol" = "ssl",
+                "property.ssl.ca.location" = "FILE:ca.pem",
+                "property.ssl.certificate.location" = "FILE:client.pem",
+                "property.ssl.key.location" = "FILE:client.key",
+                "property.ssl.key.password" = "ssl_passwd"
+            );  
+    ```
+
+4. 导入结果
+
+    ```sql
+    mysql> select * from routine_test20;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.01 sec)
+    ```
+
 **导入 Kerberos 认证的 Kafka 数据**
 
 1. 导入数据样例
@@ -1920,7 +1950,7 @@ FROM KAFKA
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
 PRECEDING FILTER k1 = 1,
-WHERE k1  100 and k2 like "%doris%"
+WHERE k1 < 100 and k2 like "%doris%"
 PROPERTIES
 (
     "desired_concurrent_number"="3",

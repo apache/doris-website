@@ -5,37 +5,33 @@
     display: flex;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0px 6px 16px rgba(160, 170, 208, 0.15);
+    &.docs {
+        .navbar__inner {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+
     .navbar-left {
         display: flex;
+        .docs-search {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38vw;
+            top: 12px;
+            max-width: 443px;
+        }
     }
-    .docs-search {
-        display: none;
-    }
-    .custom-navbar-item {
-        display: none;
-    }
+
     &.docs {
         .docs-search {
-            display: block;
-        }
-        .custom-navbar-item {
-            display: block;
-        }
-    }
-    &.community {
-        .custom-navbar-item:nth-child(3) {
             display: block;
         }
     }
     &.withoutDoc {
         .docs-search {
             display: block;
-        }
-        .custom-navbar-item {
-            display: block;
-        }
-        .custom-navbar-item:nth-child(4) {
-            display: none;
         }
     }
     &__inner {
@@ -59,6 +55,7 @@
         font-weight: 500;
         padding: var(--ifm-navbar-item-padding-vertical) var(--global-gutter);
         position: relative;
+        color: var(--global-colors-text-primary);
 
         @media screen and (max-width: 1366px) {
             padding: var(--ifm-navbar-item-padding-vertical) 1.25rem;
@@ -68,13 +65,13 @@
             padding: var(--ifm-navbar-item-padding-vertical) 1rem;
         }
 
-        transition: {
-            property: color;
-            timing-function: ease-out;
-            duration: 0.3s;
+        & {
+            transition: {
+                property: color;
+                timing-function: ease-out;
+                duration: 0.3s;
+            }
         }
-
-        color: var(--global-colors-text-primary);
 
         &:hover {
             color: var(--ifm-color-primary);
@@ -314,7 +311,7 @@
         height: 3.75rem;
         &.docs,
         &.community {
-            height: 8.1rem;
+            height: 6.5rem;
             flex-direction: column;
             .navbar__inner {
                 height: 3.75rem;
@@ -341,6 +338,9 @@
                     .navbar__item {
                         display: block;
                     }
+                    .docs-search {
+                        display: none;
+                    }
                 }
                 .docs-nav-mobile::-webkit-scrollbar {
                     display: none;
@@ -361,10 +361,13 @@
                 }
                 .docs {
                     svg {
-                        width: 8.125rem;
-                        height: 1.5625rem;
+                        width: 11rem;
+                        height: 2rem;
                     }
                 }
+            }
+            .docs-search {
+                display: none;
             }
         }
         .navbar__toggle.clean-btn > svg {
@@ -459,9 +462,6 @@
 
         .navbar__items--right {
             .docs-search {
-                display: none;
-            }
-            .custom-navbar-item {
                 display: none;
             }
             .navbar__search-input {

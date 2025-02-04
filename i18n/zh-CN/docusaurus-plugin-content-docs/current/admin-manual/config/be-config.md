@@ -38,9 +38,26 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 ## 查看配置项
 
-用户可以通过访问 BE 的 Web 页面查看当前配置项：
+有两种方式能够查看 BE 配置项：
 
-`http://be_host:be_webserver_port/varz`
+1. 通过 BE 前端页面查看
+
+    在浏览器中打开 BE 前端页面: `http://be_host:be_webserver_port/varz`
+
+2. 通过命令行查看
+
+   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+
+    `SHOW BACKEND CONFIG;`
+
+    结果中各列含义如下：
+
+    1. BackendId: backend 节点 ID。
+    2. Host: backend 节点 IP。
+    3. Key: 配置项名称。
+    4. Value: 配置项的值。
+    5. Type: 配置项值类型，如整型、字符串。
+    6. 是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `be.conf` 中配置并且重启 FE 后生效。
 
 ## 设置配置项
 
@@ -260,7 +277,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 * 描述：该配置主要用来修改 brpc 中 bthreads 的数量。该配置的默认值被设置为 -1, 这意味着 bthreads 的数量将被设置为机器的 cpu 核数。
 
-  - 用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考`https://github.com/apache/incubator-brpc/blob/master/docs/cn/benchmark.md`。
+  - 用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考 `https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md`。
 * 默认值：-1
 
 #### `thrift_rpc_timeout_ms`
@@ -1219,7 +1236,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：日志刷盘的策略，默认保持在内存中
 * 默认值：空
 
-### 其他
+### 其它
 
 #### `report_tablet_interval_seconds`
 
@@ -1265,6 +1282,11 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：下载最低限速
 * 默认值：50 (KB/s)
+
+#### `enable_batch_download`
+
+* 描述：是否允许批量下载文件，建议只在开启 binlog 的情况下打开
+* 默认值：false
 
 #### `priority_queue_remaining_tasks_increased_frequency`
 
@@ -1319,3 +1341,30 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
 * 默认值：10000
 
+### 存算分离模式
+
+#### `deploy_mode`
+
+* 默认值: ""
+
+* 描述: BE 运行的模式。`cloud` 表示算分离模式。
+
+#### `meta_service_endpoint`
+
+* 默认值: ""
+
+* 描述: Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
+
+#### `enable_file_cache`
+
+* 默认值：在存算分离模式下为 true，在非存算分离模式下为 false。
+
+* 描述：是否使用文件缓存。
+
+#### `file_cache_path`
+
+* 默认值： [{"path":"${DORIS_HOME}/file_cache"}]
+
+* 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+
+* 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]

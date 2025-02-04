@@ -39,13 +39,30 @@ From the perspective of accelerating queries and their principles, Doris indexes
 
 Among the above indexes, the prefix index and ZoneMap index are built-in indexes automatically maintained by Doris, requiring no user management. Inverted indexes, BloomFilter indexes, and NGram BloomFilter indexes need to be manually created and managed by the user based on the scenario.
 
-| Type       | Index             | Accelerates Equal | Accelerates Not Equal | Accelerates Range | Accelerates LIKE | Accelerates MATCH (Keywords, Phrases) | Advantages                                | Limitations                              |
-|------------|-------------------|-------------------|-----------------------|-------------------|------------------|----------------------------------------|-------------------------------------------|-------------------------------------------|
-| Point Query | Prefix Index      | YES               | YES                   | YES               | NO               | NO                                     | Most commonly used filter condition      | Only one prefix index per table          |
-| Point Query | Inverted Index    | YES               | YES                   | YES               | COMING           | YES                                    | Supports tokenization and keyword matching, can build index on any column, multi-condition combination | Large index storage space, similar to raw data |
-| Skip       | ZoneMap Index      | YES               | YES                   | YES               | NO               | NO                                     | Built-in index, small index storage space | Only one prefix index per table          |
-| Skip       | BloomFilter Index  | YES               | NO                    | NO                | NO               | NO                                     | More precise than ZoneMap, small index space | Supports few query types, only supports equal, not others (not equal, range, LIKE, MATCH) |
-| Skip       | NGram BloomFilter  | NO                | NO                    | NO                | YES              | NO                                     | Supports LIKE acceleration, small index space | Only supports LIKE acceleration          |
+- Co
+- Comparison of characteristics of different types of indexes
+
+| Type       | Index             | Advantages                                                                                                                        | Limitations                                                                                                             |
+|------------|-------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Point Query| Prefix Index      | Built-in index, best performance.<br />Only one prefix index per table.            | Only one prefix index per table.                                                                                   |
+| Point Query| Inverted Index    | Supports tokenization and keyword matching.<br />Building index on any column.<br />Multi-condition combination and accelerating more functions. | Large index storage space, similar to raw data.                                                                         |
+| Skip       | ZoneMap Index     | Built-in index, small index storage space.<br />Only one prefix index per table.    | Only one prefix index per table.                                                                                   |
+| Skip       | BloomFilter Index | More precise than ZoneMap, medium index space.                                   | Supports few query types.<br />Only supports equal (not others: not equal, range, LIKE, MATCH).                         |
+| Skip       | NGram BloomFilter | Supports LIKE acceleration, medium index space.                                  | Supports few query types.<br />Only supports LIKE acceleration.                                                         |
+
+- List of operators and functions for index acceleration
+
+| Operator or Function    | Prefix Index | Inverted Index  | ZoneMap Index | BloomFilter Index | NGram BloomFilter Index |
+|-------------------------|---------|---------|--------------|-----------------|------------------------|
+| =                       | YES     | YES     | YES          | YES             | NO                     |
+| !=                      | YES     | YES     | NO           | NO              | NO                     |
+| IN                      | YES     | YES     | YES          | YES             | NO                     |
+| NOT IN                  | YES     | YES     | NO           | NO              | NO                     |
+| >, >=, <, <=, BETWEEN   | YES     | YES     | YES          | NO              | NO                     |
+| IS NULL                 | YES     | YES     | YES          | NO              | NO                     |
+| IS NOT NULL             | YES     | YES     | NO           | NO              | NO                     |
+| LIKE                    | NO      | NO      | NO           | NO              | YES                    |
+| MATCH, MATCH_*          | NO      | YES     | NO           | NO              | NO                     |
 
 ## Index Design Guidelines
 

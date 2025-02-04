@@ -69,7 +69,7 @@ Doris JDBC Catalog 支持连接以下数据库：
 | 参数                              | 默认值     | 说明                                           |
 |---------------------------------|---------|---------------------------------------------------|
 | `connection_pool_min_size`      | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。 |
-| `connection_pool_max_size`      | 10      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。   |
+| `connection_pool_max_size`      | 30      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。   |
 | `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。   |
 | `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。 |
 | `connection_pool_keep_alive`    | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。 |
@@ -340,11 +340,27 @@ select * from query("catalog" = "jdbc_catalog", "query" = "select * from db_name
 
 ### HikariCP 连接池版本
 
-**HikariPool-2 - Connection is not available, request timed out after 5000ms**
-* 原因 1：网络不通
-* 原因 2：网络延迟高，导致创建连接超过 5s
-* 原因 3：查询太多导致连接个数超出配置
-* 解决方法
-    * 检查网络
-    * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); 调大连接个数
-    * alter catalog <catalog_name> set properties ('connection_pool_max_wait_time' = '10000'); 调大超时时间
+`Connection is not available, request timed out after 5000ms`
+
+#### 可能的原因：
+- **原因 1**：网络问题（例如，服务器不可达）
+- **原因 2**：身份认证问题，例如无效的用户名或密码
+- **原因 3**：网络延迟过高，导致创建连接超过 5 秒超时时间
+- **原因 4**：并发查询过多，超过了连接池配置的最大连接数
+
+#### 解决方案：
+- **如果只有 "Connection is not available, request timed out after 5000ms" 这一类错误**，请检查 **原因 3** 和 **原因 4**：
+    - 检查是否存在网络延迟过高或资源耗尽的情况。
+    - 调大连接池的最大连接数：
+      ```sql
+      ALTER CATALOG <catalog_name> SET PROPERTIES ('connection_pool_max_size' = '100');
+      ```
+    - 调大连接超时时间：
+      ```sql
+      ALTER CATALOG <catalog_name> SET PROPERTIES ('connection_pool_max_wait_time' = '10000');
+      ```
+
+- **如果除了 "Connection is not available, request timed out after 5000ms" 之外还有其他错误信息**，请检查这些附加错误：
+    - **网络问题**（例如，服务器不可达）可能导致连接失败。请检查网络连接是否正常。
+    - **身份认证问题**（例如，用户名或密码无效）也可能导致连接失败。请检查配置中使用的数据库凭据，确保用户名和密码正确无误。
+    - 根据具体错误信息，调查与网络、数据库或身份认证相关的问题，找出根本原因。

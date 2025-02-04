@@ -31,7 +31,7 @@ under the License.
 5.  部署验证：登录并验证集群正确性
 
 :::tip
-如果需要部署存算分离模式, 在完成上述 1 2 3 步之后,
+如果需要部署存算分离模式，在完成上述 1 2 3 步之后，
 参考以下链接继续完成存算分离模式部署
 1. [存算分离部署前准备](../../compute-storage-decoupled/before-deployment.md)
 2. [存算分离基础模块部署](../../compute-storage-decoupled/compilation-and-deployment.md)
@@ -167,7 +167,7 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 
 ### 检测和关闭系统防火墙
 
-如果发现端口不同，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
+如果发现端口不通，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
 
 ```sql
 sudo systemctl stop firewalld.service
@@ -225,7 +225,7 @@ Doris 各个实例直接通过网络进行通讯，其正常运行需要网络�
 | 实例名称 | 端口名称               | 默认端口 | 通信方向                       | 说明                                                 |
 | -------- | ---------------------- | -------- |----------------------------| ---------------------------------------------------- |
 | BE       | be_port                | 9060     | FE --> BE                  | BE 上 thrift server 的端口，用于接收来自 FE 的请求   |
-| BE       | webserver_port         | 8040     | BE <--> BE                 | BE 上的 http server 的端口                           |
+| BE       | webserver_port         | 8040     | BE <--> BE, Client <--> FE    | BE 上的 http server 的端口                           |
 | BE       | heartbeat_service_port | 9050     | FE --> BE                  | BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳  |
 | BE       | brpc_port              | 8060     | FE <--> BE，BE <--> BE      | BE 上的 brpc 端口，用于 BE 之间通讯                  |
 | FE       | http_port              | 8030     | FE <--> FE，Client <--> FE   | FE 上的 http server 端口                             |
@@ -302,7 +302,7 @@ FE 的配置文件在 FE 部署路径下的 conf 目录中，启动 FE 节点前
 
 4. 修改 Doris 大小写敏感参数 `lower_case_table_names`
 
-  在 Doris 中默认表名大小写敏感。如果有对大小写不敏感的需求，需要在集群初始化时进行设置。表名大小写敏感在集群初始化完成后就无法再进行修改。详细参见 [变量](../../query/query-variables/variables) 文档中关于 `lower_case_table_names` 的介绍。
+  在 Doris 中默认表名大小写敏感。如果有对大小写不敏感的需求，需要在集群初始化时进行设置。表名大小写敏感在集群初始化完成后就无法再进行修改。详细参见变量文档中关于 `lower_case_table_names` 的介绍。
 
 **启动 FE 进程**
 
@@ -615,7 +615,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过 Web UI 来完成诸如添加 BE/FE 节点，以及运行其它 SQL 查询。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 http://172.20.63.118:8030，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 

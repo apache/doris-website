@@ -56,7 +56,7 @@ The similarities and differences between the three export methods are as follows
 |Supported export data formats|Parquet, ORC, CSV|Parquet, ORC, CSV|MySQL Dump proprietary format|
 |Supports exporting external tables|Yes|Partially supported|No|
 |Supports exporting views|Yes|Yes|Yes|
-|Supported export locations|S3, HDFS, LOCAL|S3, HDFS, LOCAL|LOCAL|
+|Supported export locations|S3, HDFS|S3, HDFS|LOCAL|
 
 ### SELECT INTO OUTFILE
 
@@ -86,7 +86,7 @@ Parquet and ORC file formats have their own data types. Doris's export function 
 The following table shows the mapping between Doris data types and Parquet, ORC file format data types:
 
 1. Doris export to ORC file format data type mapping table:
-
+   
     |Doris Type|Orc Type|
     | -------- | ------- |
     |boolean|boolean|
@@ -129,3 +129,4 @@ The following table shows the mapping between Doris data types and Parquet, ORC 
     | struct | struct |
     | map | map |
     | array | list |
+    |json| utf8 |

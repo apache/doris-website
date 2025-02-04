@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Converting Source Data",
+    "title": "Transforming Data During Load",
     "language": "en"
 }
 ---
@@ -24,382 +24,895 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Usage Scenarios
+Doris provides powerful data transformation capabilities during data loading, which can simplify data processing workflows and reduce dependency on additional ETL tools. It mainly supports four types of transformations:
 
-During the import process, Doris supports some transformations on the source data, including mapping, conversion, preceding filtering, and post-filtering.
+- **Column Mapping**: Map source data columns to different columns in the target table.
 
-- Mapping: Import column A from the source data into column B in the target table.
+- **Column Transformation**: Transform source data in real-time using functions and expressions.
 
-- Conversion: Calculate the values in the target column based on the columns in the source data using an expression. Custom functions are supported in the expression.
+- **Pre-filtering**: Filter out unwanted raw data before column mapping and transformation.
 
-- Preceding Filtering: Filter rows in the source data and only import rows that meet the filtering conditions.
+- **Post-filtering**: Filter the final results after column mapping and transformation.
 
-- Post-Filtering: Filter rows in the result and only import rows that meet the filtering conditions.
+Through these built-in data transformation functions, you can improve loading efficiency and ensure consistency in data processing logic.
 
-## Quick Start
+## Load Syntax
 
-### BROKER LOAD
+### Stream Load
 
-```sql
-LOAD LABEL example_db.label1
-(
-    DATA INFILE("bos://bucket/input/file")
-    INTO TABLE `my_table`
-    (k1, k2, tmpk3)
-    PRECEDING FILTER k1 = 1
-    SET (
-        k3 = tmpk3 + 1
-    )
-    WHERE k1 > k2
-)
-WITH BROKER bos
-(
-    ...
-);
-```
+Configure data transformation by setting the following parameters in HTTP headers:
 
-### STREAM LOAD
+| Parameter | Description |
+|-----------|-------------|
+| `columns` | Specify column mapping and transformation |
+| `where` | Specify post-filtering |
 
-```shell
-curl
---location-trusted
--u user:passwd
--H "columns: k1, k2, tmpk3, k3 = tmpk3 + 1"
--H "where: k1 > k2"
--T file.txt
-http://host:port/api/testDb/testTbl/_stream_load
-```
-
-### ROUTINE LOAD
-
-```sql
-CREATE ROUTINE LOAD example_db.label1 ON my_table
-COLUMNS(k1, k2, tmpk3, k3 = tmpk3 + 1),
-PRECEDING FILTER k1 = 1,
-WHERE k1 > k2
-...
-```
-
-## Reference Manual
-
-### Loading Syntax
-
-**Stream Load**
-
-Add `columns` and `where` parameters in the HTTP header.
-
-- `columns` specify column mapping and value transformation.
-
-- `where` specify post-filtering.
-
-Stream load does not support preceding filtering.
+> **Note**: Stream Load does not support pre-filtering.
 
 Example:
-
 ```shell
-curl
---location-trusted
--u user:passwd
--H "columns: k1, k2, tmpk3, k3 = tmpk3 + 1"
--H "where: k1 > k2"
--T file.txt
-http://host:port/api/testDb/testTbl/_stream_load
+curl --location-trusted -u user:passwd \
+    -H "columns: k1, k2, tmp_k3, k3 = tmp_k3 + 1" \
+    -H "where: k1 > 1" \
+    -T data.csv \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
 ```
 
-**Broker Load**
+### Broker Load
 
-Define data transformation in the SQL statement, including:
+Implement data transformation in SQL statements using the following clauses:
 
-- `(k1, k2, tmpk3)` specifies column mapping.
+| Clause | Description |
+|--------|-------------|
+| `column list` | Specify column mapping, format: `(k1, k2, tmp_k3)` |
+| `SET` | Specify column transformation |
+| `PRECEDING FILTER` | Specify pre-filtering |
+| `WHERE` | Specify post-filtering |
 
-- `PRECEDING FILTER` specifies preceding filtering.
+Example:
+```sql
+LOAD LABEL test_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE `test_tbl`
+    (k1, k2, tmp_k3)
+    PRECEDING FILTER k1 = 1
+    SET (
+        k3 = tmp_k3 + 1
+    )
+    WHERE k1 > 1
+)
+WITH S3 (...);
+```
 
-- `SET` specifies column transformation.
+### Routine Load
 
-- `WHERE` specifies post-filtering.
+Implement data transformation in SQL statements using the following clauses:
 
+| Clause | Description |
+|--------|-------------|
+| `COLUMNS` | Specify column mapping and transformation |
+| `PRECEDING FILTER` | Specify pre-filtering |
+| `WHERE` | Specify post-filtering |
+
+Example:
+```sql
+CREATE ROUTINE LOAD test_db.label1 ON test_tbl
+    COLUMNS(k1, k2, tmp_k3, k3 = tmp_k3 + 1),
+    PRECEDING FILTER k1 = 1,
+    WHERE k1 > 1
+    ...
+```
+
+### Insert Into
+
+Insert Into can directly perform data transformation in the `SELECT` statement, using the `WHERE` clause for data filtering.
+
+## Column Mapping
+
+Column mapping is used to define the correspondence between source data columns and target table columns. It can handle the following scenarios:
+- The order of source data columns and target table columns is inconsistent
+- The number of source data columns and target table columns is inconsistent
+
+### Adjusting Column Order
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to map the columns as follows:
+```plain
+column1 -> k1
+column2 -> k3
+column3 -> k2
+column4 -> k4
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 STRING,
+    k3 INT,
+    k4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1,k3,k2,k4" \
+    -T data.csv \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k3, k2, k4)
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4),
+COLUMNS TERMINATED BY ","
+FROM KAFKA (...);
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+-----------+------+------+
+| k1   | k2        | k3   | k4   |
++------+-----------+------+------+
+|    2 | shanghai  |  200 |  1.2 |
+|    4 | chongqing | NULL |  1.4 |
+|    3 | guangzhou |  300 |  1.3 |
+|    1 | beijing   |  100 |  1.1 |
++------+-----------+------+------+
+```
+
+### Source File Columns Exceed Table Columns
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has three columns: k1, k2, and k3. We only need the first, second, and fourth columns from the source file, with the following mapping relationship:
+```plain
+column1 -> k1
+column2 -> k2
+column4 -> k3
+```
+
+To skip certain columns in the source file, you can use any column name that does not exist in the target table during column mapping. These column names can be customized and are not restricted. The data in these columns will be automatically ignored during loading.
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 STRING,
+    k3 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u usr:passwd \
+    -H "column_separator:," \
+    -H "columns: k1,k2,tmp_skip,k3" \
+    -T data.csv \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (tmp_k1, tmp_k2, tmp_skip, tmp_k3)
+    SET (
+        k1 = tmp_k1,
+        k2 = tmp_k2,
+        k3 = tmp_k3
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, tmp_skip, k3),
+PROPERTIES
+(
+    "format" = "csv",
+    "column_separator" = ","
+)
+FROM KAFKA (...);
+```
+
+> Note: The `tmp_skip` in the example can be replaced with any name, as long as it is not in the column definition of the target table.
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+------+
+| k1   | k2   | k3   |
++------+------+------+
+|    1 | 100  |  1.1 |
+|    2 | 200  |  1.2 |
+|    3 | 300  |  1.3 |
+|    4 | NULL |  1.4 |
++------+------+------+
+```
+
+### Source File Columns Less Than Table Columns
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has five columns: k1, k2, k3, k4, and k5. We only need the first, second, third, and fourth columns from the source file, with the following mapping relationship:
+```plain
+column1 -> k1
+column2 -> k3
+column3 -> k2
+column4 -> k4
+k5 uses the default value
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 STRING,
+    k3 INT,
+    k4 DOUBLE,
+    k5 INT DEFAULT 2
+) ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1,k3,k2,k4" \
+    -T data.csv \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (tmp_k1, tmp_k3, tmp_k2, tmp_k4)
+    SET (
+        k1 = tmp_k1,
+        k3 = tmp_k3,
+        k2 = tmp_k2,
+        k4 = tmp_k4
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4),
+COLUMNS TERMINATED BY ","
+FROM KAFKA (...);
+```
+
+Note:
+- If k5 has a default value, it will be filled with the default value
+- If k5 is a nullable column but has no default value, it will be filled with NULL
+- If k5 is a non-nullable column and has no default value, the load will fail
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+-----------+------+------+------+
+| k1   | k2        | k3   | k4   | k5   |
++------+-----------+------+------+------+
+|    1 | beijing   |  100 |  1.1 |    2 |
+|    2 | shanghai  |  200 |  1.2 |    2 |
+|    3 | guangzhou |  300 |  1.3 |    2 |
+|    4 | chongqing | NULL |  1.4 |    2 |
++------+-----------+------+------+------+
+``` 
+
+## Column Transformation
+
+Column transformation allows users to transform column values in the source file, supporting the use of most built-in functions. Column transformation is usually defined together with column mapping, i.e., first map the columns and then transform them.
+
+### Transforming Source File Column Values Before Loading
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to transform the column values as follows:
+```plain
+column1 -> k1
+column2 * 100 -> k3
+column3 -> k2
+column4 -> k4
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 STRING,
+    k3 INT,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, tmp_k3, k2, k4, k3 = tmp_k3 * 100" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
 ```sql
 LOAD LABEL example_db.label1
 (
-    DATA INFILE("bos://bucket/input/file")
-    INTO TABLE `my_table`
-    (k1, k2, tmpk3)
-    PRECEDING FILTER k1 = 1
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp_k3, k2, k4)
     SET (
-        k3 = tmpk3 + 1
+        k3 = tmp_k3 * 100
     )
-    WHERE k1 > k2
 )
-WITH BROKER bos
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp_k3, k2, k4, k3 = tmp_k3 * 100),
+COLUMNS TERMINATED BY ","
+FROM KAFKA (...);
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+-------+------+
+| k1   | k2   | k3    | k4   |
++------+------+-------+------+
+|    1 | beijing   | 10000 |  1.1 |
+|    2 | shanghai  | 20000 |  1.2 |
+|    3 | guangzhou | 30000 |  1.3 |
+|    4 | chongqing |  NULL |  1.4 |
++------+------+-------+------+
+```
+
+### Using Case When Function for Conditional Column Transformation
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to transform the column values as follows:
+```plain
+column1 -> k1
+column2 -> k2
+column3 -> k3 (transformed to area id)
+column4 -> k4
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
 (
-    ...
-);
+    k1 INT,
+    k2 INT,
+    k3 INT,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
 ```
 
-**Routine Load**
-
-Define data transformation in the SQL statement, including:
-
-- `COLUMNS` specifies column mapping and column transformation.
-
-- `PRECEDING FILTER` specifies preceding filtering.
-
-- `WHERE` specifies post-filtering.
-
+#### Loading Data
+- Stream Load
 ```sql
-CREATE ROUTINE LOAD example_db.label1 ON my_table
-COLUMNS(k1, k2, tmpk3, k3 = tmpk3 + 1),
-PRECEDING FILTER k1 = 1,
-WHERE k1 > k2
-...
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, k2, tmp_k3, k4, k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
 ```
 
-**Insert Into**
-
-Insert Into can perform data transformation directly in the `SELECT` statement, and add a `WHERE` clause for data filtering.
-
-
-### Column Mapping
-
-The purpose of column mapping is to describe the information of each column in the load file, which is equivalent to defining names for the columns in the source data. By describing the column mapping relationship, we can load source files with different column orders and column numbers into Doris. Let's illustrate it through examples:
-
-Suppose the source file has 4 columns with the following contents (the column names in the table header are for illustration purposes only and are not actually present in the file):
-
-| Column 1 | Column 2 | Column 3   | Column 4 |
-| -------- | -------- | ---------- | -------- |
-| 1        | 100      | beijing    | 1.1      |
-| 2        | 200      | shanghai   | 1.2      |
-| 3        | 300      | guangzhou  | 1.3      |
-| 4        | \N       | chongqing  | 1.4      |
-
-:::note
-Note: `\N` represents null in the source file.
-:::
-
-1. Adjusting Mapping Order
-
-2. Suppose there are 4 columns in the table: `k1, k2, k3, k4`. The desired load mapping is as follows:
-
-```Plain
-Column 1 -> k1
-Column 2 -> k3
-Column 3 -> k2
-Column 4 -> k4
-```
-
-3. The order of column mapping should be as follows:
-
-```Plain
-(k1, k3, k2, k4)
-```
-
-4. The number of columns in the source file is greater than the number of columns in the table.
-
-5. Suppose there are 3 columns in the table: `k1, k2, k3`. The desired load mapping is as follows:
-
-```Plain
-Column 1 -> k1
-Column 2 -> k3
-Column 3 -> k2
-```
-
-6. The order of column mapping should be as follows:
-
-```Plain
-(k1, k3, k2, tmpk4)
-```
-
-7. Here, `tmpk4` is a custom column name that doesn't exist in the table. Doris will ignore this non-existing column name.
-
-8. The number of columns in the source file is less than the number of columns in the table, and default values will be used to fill the missing columns.
-
-9. Suppose there are 5 columns in the table: `k1, k2, k3, k4, k5`. The desired load mapping is as follows:
-
-```Plain
-Column 1 -> k1
-Column 2 -> k3
-Column 3 -> k2
-```
-
-10. Here, only the first 3 columns from the source file will be used. The columns `k4` and `k5` are expected to be filled with default values.
-
-11. The order of column mapping should be as follows:
-
-```Plain
-(k1, k3, k2)
-```
-
-12. If the columns `k4` and `k5` have default values, they will be filled accordingly. Otherwise, if the columns are nullable, they will be filled with `null` values. Otherwise, the loading job will report an error.
-
-### Pre-filtering
-
-Pre-filtering is a process of filtering the raw data that is read. Currently, it is only supported in BROKER LOAD and ROUTINE LOAD.
-
-Pre-filtering can be applied in the following scenarios:
-
-1. Filtering before transformation: It allows filtering of data before performing column mapping and transformation. This way, unnecessary data can be filtered out in advance.
-
-2. Filtering columns that do not exist in the table: It can be used as a filtering identifier when certain columns are not present in the table.
-
-3. Handling data from multiple tables: For example, if the source data contains data from multiple tables (or data from multiple tables is written to the same Kafka message queue), each row may include a column name that identifies which table the data belongs to. Users can use pre-filtering conditions to select and load the corresponding table data.
-
-### Column Transformation
-
-Column transformation enables users to modify the values of columns in the source files. Currently, Doris supports the use of built-in functions and user-defined functions for transformation.
-
-:::note
-Note: User-defined functions belong to a specific database, and when using custom functions for transformation, users need to have read permissions on that database.
-:::
-
-Transformation operations are typically defined in conjunction with column mapping. In the following example, we illustrate the process:
-
-Assume that the source file has 4 columns with the following content (the column names in the header are for descriptive purposes only and are not actually present in the file):
-
-| Column 1 | Column 2 | Column 3    | Column 4 |
-| -------- | -------- | ----------- | -------- |
-| 1        | 100      | beijing     | 1.1      |
-| 2        | 200      | shanghai    | 1.2      |
-| 3        | 300      | guangzhou   | 1.3      |
-| \N       | 400      | chongqing   | 1.4      |
-
-1. Load the transformed column values into the table from the source file.
-
-2. Assuming the table has 4 columns: `k1`, `k2`, `k3`, `k4`, and we want the following mapping and transformation relationships:
-
-```Plain
-Column 1       -> k1
-Column 2 * 100 -> k3
-Column 3       -> k2
-Column 4       -> k4
-```
-
-3. The order of column mapping should be as follows:
-
-```Plain
-(k1, tmpk3, k2, k4, k3 = tmpk3 * 100)
-```
-
-4. Here, we rename the second column in the source file as `tmpk3` and specify that the value of column `k3` in the table is `tmpk3 * 100`. The final data in the table would be as follows:
-
-| k1   | k2        | k3    | k4   |
-| ---- | --------- | ----- | ---- |
-| 1    | beijing   | 10000 | 1.1  |
-| 2    | shanghai  | 20000 | 1.2  |
-| 3    | guangzhou | 30000 | 1.3  |
-| null | chongqing | 40000 | 1.4  |
-
-5. Perform conditional column transformation using the `case when` function.
-
-6. Assuming the table has 4 columns: `k1`, `k2`, `k3`, `k4`, and we want to transform the values `beijing`, `shanghai`, `guangzhou`, `chongqing` in the source data to their corresponding region IDs before loading:
-
-```Plain
-Column 1                 -> k1
-Column 2                 -> k2
-Column 3 with region ID  -> k3
-Column 4                 -> k4
-```
-
-7. The order of column mapping should be as follows:
-
-```Plain
-(k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-```
-
-8. The final data in the table would be as follows:
-
-| k1   | k2   | k3   | k4   |
-| ---- | ---- | ---- | ---- |
-| 1    | 100  | 1    | 1.1  |
-| 2    | 200  | 2    | 1.2  |
-| 3    | 300  | 3    | 1.3  |
-| null | 400  | 4    | 1.4  |
-
-9. Transform null values in the source file to 0 during load. Also, perform the region ID transformation as shown in example 2.
-
-10. Assuming the table has `k1, k2, k3, k4` as its four columns. While performing the region ID conversion, we also want to convert null values in the k1 column of the source data to 0 during load:
-
-```Plain
-If Column 1 is null, then convert it to 0 -> k1
-Column 2                                  -> k2
-Column 3                                  -> k3
-Column 4                                  -> k4
-```
-
-11. The order of column mapping should be as follows:
-
-```Plain
-(tmpk1, k2, tmpk3, k4, k1 = ifnull(tmpk1, 0), k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-```
-
-12. The final data in the table would be as follows:
-
-| k1   | k2   | k3   | k4   |
-| ---- | ---- | ---- | ---- |
-| 1    | 100  | 1    | 1.1  |
-| 2    | 200  | 2    | 1.2  |
-| 3    | 300  | 3    | 1.3  |
-| 0    | 400  | 4    | 1.4  |
-
-### Post-Filtering
-
-After column mapping and transformation, we can filter out data that we don't want to load into Doris using filtering conditions. Let's illustrate this with an example:
-
-Assume that the source file has 4 columns with the following content (the column names in the table header are for descriptive purposes only and are not actually present):
-
-| Column 1 | Column 2 | Column 3   | Column 4 |
-| -------- | -------- | ---------- | -------- |
-| 1        | 100      | beijing    | 1.1      |
-| 2        | 200      | shanghai   | 1.2      |
-| 3        | 300      | guangzhou  | 1.3      |
-| null     | 400      | chongqing  | 1.4      |
-
-1. Filtering with default column mapping and transformation.
-
-2. Suppose the table has 4 columns: `k1, k2, k3, k4`. We can define filtering conditions directly without column mapping and transformation. For example, if we only want to load data rows from the source file where the value in the 4th column is greater than 1.2, the filtering condition would be:
-
+- Broker Load
 ```sql
-where k4 > 1.2
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k2, tmp_k3, k4)
+    SET (
+        k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END
+    )
+)
+WITH s3 (...);
 ```
 
-3. The final data in the table would be as follows:
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, tmp_k3, k4, k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END),
+COLUMNS TERMINATED BY ","
+FROM KAFKA (...);
+``` 
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 |  100 |    1 |  1.1 |
+|    2 |  200 |    2 |  1.2 |
+|    3 |  300 |    3 |  1.3 |
+|    4 | NULL |    4 |  1.4 |
++------+------+------+------+
+```
 
+### Handling NULL Values in Source Files
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to transform the column values as follows:
+```plain
+column1 -> k1 (transform NULL to 0)
+column2 -> k2
+column3 -> k3
+column4 -> k4
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT,
+    k3 INT,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, tmp_k2, tmp_k3, k4, k2 = ifnull(tmp_k2, 0), k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp_k2, tmp_k3, k4)
+    SET (
+        k2 = ifnull(tmp_k2, 0),
+        k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp_k2, tmp_k3, k4, k2 = ifnull(tmp_k2, 0), k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END),
+COLUMNS TERMINATED BY ","
+FROM KAFKA (...);
+``` 
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 |  100 |    1 |  1.1 |
+|    2 |  200 |    2 |  1.2 |
+|    3 |  300 |    3 |  1.3 |
+|    4 |    0 |    4 |  1.4 |
++------+------+------+------+
+```
+
+
+## Pre-filtering
+
+Pre-filtering is the process of filtering out unwanted raw data before column mapping and transformation. This feature is only supported in Broker Load and Routine Load.
+
+Pre-filtering has the following application scenarios:
+
+- Filtering before transformation
+
+Scenarios where filtering is needed before column mapping and transformation, allowing for the removal of unwanted data before processing.
+
+- Filtering columns that do not exist in the table, only as filtering indicators
+
+For example, source data contains multiple tables' data (or multiple tables' data is written to the same Kafka message queue). Each row of data has a column indicating which table the data belongs to. Users can use pre-filtering conditions to filter out the corresponding table data for loading.
+
+### Example
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+Pre-filtering condition:
+```
+column1 > 1, i.e., only load data where column1 > 1, and filter out other data.
+```
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT,
+    k3 STRING,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+#### Loading Data
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k2, k3, k4)
+    PRECEDING FILTER k1 > 1
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, k3, k4),
+COLUMNS TERMINATED BY ","
+PRECEDING FILTER k1 > 1
+FROM KAFKA (...)
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+-----------+------+
 | k1   | k2   | k3        | k4   |
-| ---- | ---- | --------- | ---- |
-| 3    | 300  | guangzhou | 1.3  |
-| null | 400  | chongqing | 1.4  |
-
-4. In the default case, Doris performs column mapping in sequential order, so the 4th column in the source file is automatically mapped to the `k4` column in the table.
-
-5. Filtering transformed data.
-
-6. Suppose the table has 4 columns: `k1, k2, k3, k4`. In the column transformation example, we converted province names to IDs. Now, let's say we want to filter out data with an ID of 3. The transformation and filtering conditions would be as follows:
-
-```Plain
-(k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-where k3 != 3
++------+------+-----------+------+
+|    2 |  200 | shanghai  |  1.2 |
+|    3 |  300 | guangzhou |  1.3 |
+|    4 | NULL | chongqing |  1.4 |
++------+------+-----------+------+
 ```
 
-7. The final data in the table would be as follows:
 
-| k1   | k2   | k3   | k4   |
-| ---- | ---- | ---- | ---- |
-| 1    | 100  | 1    | 1.1  |
-| 2    | 200  | 2    | 1.2  |
-| null | 400  | 4    | 1.4  |
+## Post-filtering
 
-8. Here, we can observe that the column values used for filtering are the final transformed column values, not the original data.
+Post-filtering is the process of filtering the final results after column mapping and transformation.
 
-9. Filtering with multiple conditions.
 
-10. Suppose the table has 4 columns: `k1, k2, k3, k4`. We want to filter out data where the `k1` column is null and the `k4` column is less than 1.2. The filtering condition would be:
+### Filtering Without Column Mapping and Transformation
 
-```Plain
-where k1 is not null and k4 >= 1.2
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
 ```
 
-11. The final data in the table would be as follows:
+The target table has four columns: k1, k2, k3, and k4. We want to load only the data where the fourth column is greater than 1.2.
 
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT,
+    k3 STRING,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, k2, k3, k4" \
+    -H "where: k4 > 1.2" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k2, k3, k4)
+    where k4 > 1.2
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, k3, k4),
+COLUMNS TERMINATED BY ","
+WHERE k4 > 1.2;
+FROM KAFKA (...)
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+-----------+------+
+| k1   | k2   | k3        | k4   |
++------+------+-----------+------+
+|    3 |  300 | guangzhou |  1.3 |
+|    4 | NULL | chongqing |  1.4 |
++------+------+-----------+------+
+```
+
+### Filtering Transformed Data
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to transform the column values as follows:
+```plain
+column1 -> k1
+column2 -> k2
+column3 -> k3 (transformed to area id)
+column4 -> k4
+```
+
+We want to filter out the data where the transformed k3 value is 3.
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT,
+    k3 INT,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, k2, tmp_k3, k4, k3 = case tmp_k3 when 'beijing' then 1 when 'shanghai' then 2 when 'guangzhou' then 3 when 'chongqing' then 4 else null end" \
+    -H "where: k3 != 3" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k2, tmp_k3, k4)
+    SET (
+        k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END
+    )
+    WHERE k3 != 3
+)
+WITH s3 (...); 
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, tmp_k3, k4),
+COLUMNS TERMINATED BY ","
+SET (
+    k3 = CASE tmp_k3 WHEN 'beijing' THEN 1 WHEN 'shanghai' THEN 2 WHEN 'guangzhou' THEN 3 WHEN 'chongqing' THEN 4 ELSE NULL END
+)
+WHERE k3 != 3;
+FROM KAFKA (...)
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+------+------+
 | k1   | k2   | k3   | k4   |
-| ---- | ---- | ---- | ---- |
-| 2    | 200  | 2    | 1.2  |
-| 3    | 300  | 3    | 1.3  |
++------+------+------+------+
+|    1 |  100 |    1 |  1.1 |
+|    2 |  200 |    2 |  1.2 |
+|    4 | NULL |    4 |  1.4 |
++------+------+------+------+
+```
+
+### Multiple Conditions Filtering
+
+Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
+```plain
+column1,column2,column3,column4
+1,100,beijing,1.1
+2,200,shanghai,1.2
+3,300,guangzhou,1.3
+4,\N,chongqing,1.4
+```
+
+The target table has four columns: k1, k2, k3, and k4. We want to filter out the data where k1 is NULL and k4 is less than 1.2.
+
+#### Creating the Target Table
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT,
+    k3 STRING,
+    k4 DOUBLE
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+#### Loading Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "column_separator:," \
+    -H "columns: k1, k2, k3, k4" \
+    -H "where: k1 is not null and k4 > 1.2" \
+    -T data.csv \
+    http://host:port/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, k2, k3, k4)
+    where k1 is not null and k4 > 1.2
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k2, k3, k4),
+COLUMNS TERMINATED BY ","
+WHERE k1 is not null and k4 > 1.2
+FROM KAFKA (...);
+```
+
+#### Query Results
+```
+mysql> select * from example_table;
++------+------+-----------+------+
+| k1   | k2   | k3        | k4   |
++------+------+-----------+------+
+|    3 |  300 | guangzhou |  1.3 |
+|    4 | NULL | chongqing |  1.4 |
++------+------+-----------+------+
+```

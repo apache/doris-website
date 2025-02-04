@@ -30,7 +30,7 @@ under the License.
 
 SHOW RESTORE
 
-### Description
+## 描述
 
 该语句用于查看 RESTORE 任务
 
@@ -74,7 +74,7 @@ SHOW [BRIEF] RESTORE [FROM DB_NAME]
 
 
 
-### Example
+## 举例
 
 1. 查看 example_db 下最近一次 RESTORE 任务。
     

@@ -83,18 +83,11 @@ There are some limitations to using inverted indexes:
 
 3. DUPLICATE and UNIQUE table models with Merge-on-Write enabled support building inverted indexes on any column. However, AGGREGATE and UNIQUE models without Merge-on-Write enabled only support building inverted indexes on Key columns, as non-Key columns cannot have inverted indexes. This is because these two models require reading all data for merging, so indexes cannot be used for pre-filtering.
 
-To see the effect of inverted indexes on a query, you can analyze relevant metrics in the Query Profile.
-
-- InvertedIndexFilterTime: time consumed by the inverted index
-  - InvertedIndexSearcherOpenTime: time to open the inverted index
-  - InvertedIndexSearcherSearchTime: time for internal queries of the inverted index
-
-- RowsInvertedIndexFiltered: number of rows filtered by the inverted index, can be compared with other Rows values to analyze the filtering effect of the BloomFilter index
 :::
 
-## Syntax
+## Managing Indexes
 
-### Define Inverted Indexes When Creating a Table
+### Defining Inverted Indexes When Creating a Table
 
 In the table creation statement, after the COLUMN definition, is the index definition:
 
@@ -187,6 +180,14 @@ Syntax explanation:
   <p>- From versions 2.0.7 and 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
 </details>
 
+<details>
+  <summary>stopwords</summary>
+
+  **Specifying the stopword list to use, which will affect the behavior of the tokenizer**
+  <p>- The default built-in stopword list includes meaningless words such as 'is,' 'the,' 'a,' etc. When writing or querying, the tokenizer will ignore words that are in the stopword list.</p>
+  <p>- none: Use an empty stopword list</p>
+</details>
+
 **4. `COMMENT` is optional for specifying index comments**
 
 ### Adding Inverted Indexes to Existing Tables
@@ -234,7 +235,7 @@ CANCEL BUILD INDEX ON table_name (job_id1, job_id2, ...);
 
 `BUILD INDEX` creates an asynchronous task executed by multiple threads on each BE. The number of threads can be set using the BE config `alter_index_worker_count`, with a default value of 3.
 
-In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries.
+In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries. 3.0 (Cloud Mode) does not support this command as this moment.
 
 1. If the majority of replicas for a tablet fail to `BUILD INDEX`, the entire `BUILD INDEX` operation fails.
 2. If the time exceeds `alter_table_timeout_second`, the `BUILD INDEX` operation times out.
@@ -256,6 +257,16 @@ ALTER TABLE table_name DROP INDEX idx_name;
 `DROP INDEX` deletes the index definition, so new data will no longer write to the index. This creates an asynchronous task to perform the index deletion, executed by multiple threads on each BE. The number of threads can be set using the BE parameter `alter_index_worker_count`, with a default value of 3.
 
 :::
+
+### Viewing Inverted Index
+
+-- Syntax 1: The INDEX section in the table schema with USING INVERTED indicates an inverted index
+SHOW CREATE TABLE table_name;
+
+-- Syntax 2: IndexType as INVERTED indicates an inverted index
+SHOW INDEX FROM idx_name;
+
+## Using Indexes
 
 ### Accelerating Queries with Inverted Indexes
 
@@ -280,6 +291,7 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 -- 'keyword1 keyword2', 'wordx keyword1 keyword2', 'wordx keyword1 keyword2 wordy' all match because they contain 'keyword1 keyword2' with keyword2 immediately following keyword1
 -- 'keyword1 wordx keyword2' does not match because there is a word between keyword1 and keyword2
 -- 'keyword2 keyword1' does not match because the order is reversed
+-- To use MATCH_PHRASE, you need to enable "support_phrase" = "true" in PROPERTIES.
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
 -- 2.2 Rows in the content column containing both keyword1 and keyword2, with a slop (maximum word distance) of 3
@@ -291,6 +303,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
 -- 2.3 Prefix matching the last word keyword2, with a default limit of 50 prefixes (controlled by session variable inverted_index_max_expansions)
+-- It is necessary to ensure that keyword1 and keyword2 remain adjacent in the original text after tokenization, with no other words in between.
 -- 'keyword1 keyword2abc' matches because keyword1 is identical and keyword2abc is a prefix of keyword2
 -- 'keyword1 keyword2' also matches because keyword2 is a prefix of keyword2
 -- 'keyword1 keyword3' does not match because keyword3 is not a prefix of keyword2
@@ -312,27 +325,31 @@ SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
 ```
 
-### TOKENIZE Function
+### Analyzing Index Acceleration Effects Through Profiles
+
+Inverted query acceleration can be toggled using the session variable `enable_inverted_index_query`, which is set to true by default. To verify the acceleration effect of the index, it can be set to false to turn it off.
+
+The acceleration effect of the inverted index can be analyzed using the following metrics in the Query Profile:
+- RowsInvertedIndexFiltered: The number of rows filtered by the inverted index, which can be compared with other Rows values to analyze the filtering effect of the index.
+- InvertedIndexFilterTime: The time consumed by the inverted index.
+  - InvertedIndexSearcherOpenTime: The time taken to open the inverted index.
+  - InvertedIndexSearcherSearchTime: The time taken for internal queries within the inverted index.
+
+
+### Verifying Tokenization Effects Using Tokenization Functions
 
 To check the actual effect of tokenization or to tokenize a piece of text, you can use the `TOKENIZE` function for verification.
 
 The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
 
-mysql> SELECT TOKENIZE('I love CHINA','"parser"="english"');
+mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
-| tokenize('I love CHINA', '"parser"="english"') |
+| tokenize('I love Doris', '"parser"="english"') |
 +------------------------------------------------+
-| ["i", "love", "china"]                         |
+| ["i", "love", "doris"]                         |
 +------------------------------------------------+
 1 row in set (0.02 sec)
 
-mysql> SELECT TOKENIZE('I love CHINA 我爱我的祖国','"parser"="unicode"');
-+-------------------------------------------------------------------+
-| tokenize('I love CHINA 我爱我的祖国', '"parser"="unicode"')       |
-+-------------------------------------------------------------------+
-| ["i", "love", "china", "我", "爱", "我", "的", "祖", "国"]        |
-+-------------------------------------------------------------------+
-1 row in set (0.02 sec)
 ```
 
 ## Usage Example
@@ -379,7 +396,7 @@ PROPERTIES ("replication_num" = "1");
 **Importing Data via Stream Load**
 
 ```
-wget https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/regression/index/hacknernews_1m.csv.gz
+wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
 curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {

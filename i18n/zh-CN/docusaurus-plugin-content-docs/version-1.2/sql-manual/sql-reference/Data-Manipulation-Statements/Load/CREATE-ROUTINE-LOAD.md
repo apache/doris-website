@@ -31,7 +31,7 @@ under the License.
 
 CREATE ROUTINE LOAD
 
-### Description
+## 描述
 
 例行导入（Routine Load）功能，支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 Doris 中。
 
@@ -178,7 +178,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | 空值        | \N                  | N/A           | true or false | NULL                   |
+     | 空值         | `\N`                | N/A           | true or false | NULL                   |
      | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1                   | 1             | true or false | correct data           |
@@ -189,7 +189,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | 空值        | \N                  | N/A           | true or false | NULL                   |
+     | 空值         |` \N`                | N/A           | true or false | NULL                   |
      | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1 or 10             | 1             | true or false | correct data           |
@@ -332,7 +332,7 @@ FROM data_source [data_source_properties]
         ```
 -  <version since="1.2.3" type="inline"> comment </version>
   - 例行导入任务的注释信息。
-### Example
+## 举例
 
 1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅
 
@@ -558,11 +558,11 @@ Doris 支持指定 Partition 和 Offset 开始消费，还支持了指定时间�
 
 在创建导入作业时，这三个参数可以有以下组合：
 
-| 组合 | `kafka_partitions` | `kafka_offsets` | `property.kafka_default_offset` | 行为                                                         |
-| ---- | ------------------ | --------------- | ------------------------------- | ------------------------------------------------------------ |
-| 1    | No                 | No              | No                              | 系统会自动查找topic对应的所有分区并从 OFFSET_END 开始消费    |
-| 2    | No                 | No              | Yes                             | 系统会自动查找topic对应的所有分区并从 default offset 指定的位置开始消费 |
-| 3    | Yes                | No              | No                              | 系统会从指定分区的 OFFSET_END 开始消费                       |
-| 4    | Yes                | Yes             | No                              | 系统会从指定分区的指定offset 处开始消费                      |
-| 5    | Yes                | No              | Yes                             | 系统会从指定分区，default offset 指定的位置开始消费          |
+| 组合             | kafka_partitions             | kafka_offsets       | property.kafka_default_offset                             | 行为                                                                                                                                   |
+|-----------------|------------------------------|---------------------|-----------------------------------------------------------| ---------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | No               | No            | No                            | 系统会自动查找topic对应的所有分区并从 OFFSET_END 开始消费             |
+| 2    | No               | No            | Yes                           | 系统会自动查找topic对应的所有分区并从 default offset 指定的位置开始消费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+| 3    | Yes              | No            | No                            | 系统会从指定分区的 OFFSET_END 开始消费                              |
+| 4    | Yes              | Yes           | No                            | 系统会从指定分区的指定offset 处开始消费                              |
+| 5    | Yes              | No            | Yes                           | 系统会从指定分区，default offset 指定的位置开始消费                  |
 

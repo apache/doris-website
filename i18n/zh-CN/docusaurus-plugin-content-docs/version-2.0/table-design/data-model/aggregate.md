@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-聚合数据模型，也称为 Aggregate 数据模型。
+聚合数据模型，也称为 Aggregate 数据模型。可根据 Key 列聚合数据，Doris 存储层保留聚合后的数据，从而可以减少存储空间和提升查询性能；通常用于需要汇总或聚合信息（如总数或平均值）的情况。
 
 下面以实际的例子来说明什么是聚合模型，以及如何正确的使用聚合模型。
 
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS example_tbl_agg1
     `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
 )
 AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 3"
 );
 ```
 
@@ -203,115 +203,3 @@ insert into example_tbl_agg1 values
 3.  数据查询阶段。在数据查询时，对于查询涉及到的数据，会进行对应的聚合。
 
 数据在不同时间，可能聚合的程度不一致。比如一批数据刚导入时，可能还未与之前已存在的数据进行聚合。但是对于用户而言，用户只能查询到聚合后的数据。即不同的聚合程度对于用户查询而言是透明的。用户需始终认为数据以最终的完成的聚合程度存在，而不应假设某些聚合还未发生。（可参阅聚合模型的局限性一节获得更多详情。）
-
-## agg_state
-
-```Plain
-AGG_STATE不能作为key列使用，建表时需要同时声明聚合函数的签名。
-用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
-```
-
-建表
-
-```sql
-set enable_agg_state=true;
-create table aggstate(
-    k1 int null,
-    k2 agg_state sum(int),
-    k3 agg_state group_concat(string)
-)
-aggregate key (k1)
-distributed BY hash(k1) buckets 3
-properties("replication_num" = "1");
-```
-
-其中 agg_state 用于声明数据类型为 agg_state，sum/group_concat 为聚合函数的签名。注意 agg_state 是一种数据类型，同 int/array/string
-
-agg_state 只能配合[state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union)函数组合器使用。
-
-agg_state 是聚合函数的中间结果，例如，聚合函数 sum，则 agg_state 可以表示 sum(1,2,3,4,5) 的这个中间状态，而不是最终的结果。
-
-agg_state 类型需要使用 state 函数来生成，对于当前的这个表，则为`sum_state`,`group_concat_state`。
-
-```sql
-insert into aggstate values(1,sum_state(1),group_concat_state('a'));
-insert into aggstate values(1,sum_state(2),group_concat_state('b'));
-insert into aggstate values(1,sum_state(3),group_concat_state('c'));
-```
-
-此时表只有一行 ( 注意，下面的表只是示意图，不是真的可以 select 显示出来)
-
-| k1   | k2         | k3                        |
-| ---- | ---------- | ------------------------- |
-| 1    | sum(1,2,3) | group_concat_state(a,b,c) |
-
-再插入一条数据
-
-```sql
-insert into aggstate values(2,sum_state(4),group_concat_state('d'));
-```
-
-此时表的结构为
-
-| k1   | k2         | k3                        |
-| ---- | ---------- | ------------------------- |
-| 1    | sum(1,2,3) | group_concat_state(a,b,c) |
-| 2    | sum(4)     | group_concat_state(d)     |
-
-我们可以通过 merge 操作来合并多个 state，并且返回最终聚合函数计算的结果
-
-```Plain
-mysql> select sum_merge(k2) from aggstate;
-+---------------+
-| sum_merge(k2) |
-+---------------+
-|            10 |
-+---------------+
-```
-
-`sum_merge` 会先把 sum(1,2,3) 和 sum(4) 合并成 sum(1,2,3,4) ，并返回计算的结果。因为 group_concat 对于顺序有要求，所以结果是不稳定的。
-
-```Plain
-mysql> select group_concat_merge(k3) from aggstate;
-+------------------------+
-| group_concat_merge(k3) |
-+------------------------+
-| c,b,a,d                |
-+------------------------+
-```
-
-如果不想要聚合的最终结果，可以使用 union 来合并多个聚合的中间结果，生成一个新的中间结果。
-
-```sql
-insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate ;
-```
-
-此时的表结构为
-
-| k1   | k2           | k3                          |
-| ---- | ------------ | --------------------------- |
-| 1    | sum(1,2,3)   | group_concat_state(a,b,c)   |
-| 2    | sum(4)       | group_concat_state(d)       |
-| 3    | sum(1,2,3,4) | group_concat_state(a,b,c,d) |
-
-可以通过查询
-
-```Plain
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
-
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
-```
-
-用户可以通过 agg_state 做出更细致的聚合函数操作。
-
-注意 agg_state 存在一定的性能开销。

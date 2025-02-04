@@ -24,130 +24,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-明细模型，也称为 Duplicate 数据模型。
+在明细模型是 Doris 中默认建表的模型，可以使用明细模型保存每一条原始数据记录。在建表时指定的 Duplicate Key，以指明数据存储按照哪些列进行排序，可以用于优化常用查询。一般建议选择三列以下的列作为排序键，具体选择方式参考[排序键](../index/prefix-index)。明细模型有以下特点：
 
-在某些多维分析场景下，数据既没有主键，也没有聚合需求。针对这种需求，可以使用明细数据模型。
+* 保留原始数据：明细模型保留了全量的原始数据，适合于存储与查询原始数据。对于后期希望做详细数据分析的应用场景，建议使用明细模型，避免数据丢失的风险；
 
-在明细数据模型中，数据按照导入文件中的数据进行存储，不会有任何聚合。即使两行数据完全相同，也都会保留。而在建表语句中指定的 Duplicate Key，只是用来指明数据存储按照哪些列进行排序。在 Duplicate Key 的选择上，建议选择前 2-4 列即可。
+* 不去重也不聚合：与聚合模型与主键模型不同，明细模型不会对数据进行去重与聚合操作。每次数据插入时，即使两条相同的数据，都会被完整保留；
 
-举例如下，一个表有如下的数据列，没有主键更新和基于聚合键的聚合需求。
+* 灵活的数据查询：明细模型保留了全量的原始数据，可以从完整数据中提取细节，基于全量数据做任意维度的聚合操作，从而进行元数数据的审计及细粒度的分析。
 
-| ColumnName | Type         | Comment      |
-| ---------- | ------------ | ------------ |
-| timestamp  | DATETIME     | 日志时间     |
-| type       | INT          | 日志类型     |
-| error_code | INT          | 错误码       |
-| error_msg  | VARCHAR(128) | 错误详细信息 |
-| op_id      | BIGINT       | 负责人 ID    |
-| op_time    | DATETIME     | 处理时间     |
+## 使用场景
 
-## 默认为明细模型
+一般明细模型中的数据只进行追加，旧数据不会更新。明细模型一般用于需要全量原始数据的场景：
 
-当创建表的时候没有指定 Unique、Aggregate 或 Duplicate 时，会默认创建一个 Duplicate 模型的表，并自动按照一定规则选定排序列。建表语句举例如下，没有指定任何数据模型，则建立的是明细模型（Duplicate），排序列系统自动选定了前 3 列。
+* 日志存储：用于存储各类的程序操作日志，如访问日志、错误日志等。每一条数据都需要被详细记录，方便后续的审计与分析；
 
-```sql
-CREATE TABLE IF NOT EXISTS example_tbl_by_default
-(
-    `timestamp` DATETIME NOT NULL COMMENT "日志时间",
-    `type` INT NOT NULL COMMENT "日志类型",
-    `error_code` INT COMMENT "错误码",
-    `error_msg` VARCHAR(1024) COMMENT "错误详细信息",
-    `op_id` BIGINT COMMENT "负责人id",
-    `op_time` DATETIME COMMENT "处理时间"
-)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
+* 用户行为数据：在分析用户行为时，如点击数据、用户访问轨迹等，需要保留用户的详细行为，方便后续构建用户画像及对行为路径进行详细分析；
 
-MySQL > desc example_tbl_by_default; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | true  | NULL    | NONE  |
-| type       | INT           | No   | true  | NULL    | NONE  |
-| error_code | INT           | Yes  | true  | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
-```
+* 交易数据：在某些存储交易行为或订单数据时，交易结束时一般不会发生数据变更。明细模型适合保留这一类交易信息，不遗漏任意一笔记录，方便对交易进行精确的对账。
 
-## 无排序列的默认明细模型
+## 建表说明
 
-当用户并没有排序需求的时候，可以通过在表属性中增加如下配置。这样在创建默认明细模型时，系统就不会自动选择任何排序列。
+在建表时，可以通过 `DUPLICATE KEY` 关键字指定明细模型。明细表必须指定数据的 Key 列，用于在存储时对数据进行排序。下例的明细表中存储了日志信息，并针对于 `log_time`、`log_type` 及 `error_code` 三列进行了排序：
 
-```Plain
-"enable_duplicate_without_keys_by_default" = "true"
-```
-
-建表举例如下：
-
-```sql
-CREATE TABLE IF NOT EXISTS example_tbl_duplicate_without_keys_by_default
-(
-    `timestamp` DATETIME NOT NULL COMMENT "日志时间",
-    `type` INT NOT NULL COMMENT "日志类型",
-    `error_code` INT COMMENT "错误码",
-    `error_msg` VARCHAR(1024) COMMENT "错误详细信息",
-    `op_id` BIGINT COMMENT "负责人id",
-    `op_time` DATETIME COMMENT "处理时间"
-)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_duplicate_without_keys_by_default" = "true"
-);
-
-MySQL > desc example_tbl_duplicate_without_keys_by_default;
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | false | NULL    | NONE  |
-| type       | INT           | No   | false | NULL    | NONE  |
-| error_code | INT           | Yes  | false | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
-```
-
-## 指定排序列的明细模型
-
-在建表语句中指定 Duplicate Key，用来指明数据存储按照这些 Key 列进行排序。在 Duplicate Key 的选择上，建议选择前 2-4 列即可。
-
-建表语句举例如下，指定了按照 timestamp、type 和 error_code 三列进行排序。
+![columnar_storage](/images/table-desigin/columnar-storage.png)
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
 (
-    `timestamp` DATETIME NOT NULL COMMENT "日志时间",
-    `type` INT NOT NULL COMMENT "日志类型",
-    `error_code` INT COMMENT "错误码",
-    `error_msg` VARCHAR(1024) COMMENT "错误详细信息",
-    `op_id` BIGINT COMMENT "负责人id",
-    `op_time` DATETIME COMMENT "处理时间"
+    log_time        DATETIME       NOT NULL,
+    log_type        INT            NOT NULL,
+    error_code      INT,
+    error_msg       VARCHAR(1024),
+    op_id           BIGINT,
+    op_time         DATETIME
 )
-DUPLICATE KEY(`timestamp`, `type`, `error_code`)
-DISTRIBUTED BY HASH(`type`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
-
-MySQL > desc example_tbl_duplicate; 
-+------------+---------------+------+-------+---------+-------+
-| Field      | Type          | Null | Key   | Default | Extra |
-+------------+---------------+------+-------+---------+-------+
-| timestamp  | DATETIME      | No   | true  | NULL    | NONE  |
-| type       | INT           | No   | true  | NULL    | NONE  |
-| error_code | INT           | Yes  | true  | NULL    | NONE  |
-| error_msg  | VARCHAR(1024) | Yes  | false | NULL    | NONE  |
-| op_id      | BIGINT        | Yes  | false | NULL    | NONE  |
-| op_time    | DATETIME      | Yes  | false | NULL    | NONE  |
-+------------+---------------+------+-------+---------+-------+
-6 rows in set (0.01 sec)
+DUPLICATE KEY(log_time, log_type, error_code)
+DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 ```
 
-数据按照导入文件中的数据进行存储，不会有任何聚合。即使两行数据完全相同，也都会保留。而在建表语句中指定的 Duplicate Key，只是用来指明数据存储按照哪些列进行排序。在 Duplicate Key 的选择上，建议选择前 2-4 列即可。
+## 数据插入与存储
+
+在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列指做为排序。
+
+![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
+
+如在上例中，表中原有 4 行数据，在插入 2 行数据后，以追加（APPEND）的方式插入到表中，明细表存储共 6 行数据：
+
+```sql
+-- 4 rows raw data
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-02 00:00:00', 1, 2, 'success', 13, '2024-11-02 01:00:00'),
+('2024-11-03 00:00:00', 2, 2, 'unknown', 13, '2024-11-03 01:00:00'),
+('2024-11-04 00:00:00', 2, 2, 'unknown', 12, '2024-11-04 01:00:00');
+
+-- insert into 2 rows
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-01 00:00:00', 2, 2, 'unknown', 13, '2024-11-01 01:00:00');
+
+-- check the rows of table
+SELECT * FROM example_tbl_duplicate;
++---------------------+----------+------------+-----------+-------+---------------------+
+| log_time            | log_type | error_code | error_msg | op_id | op_time             |
++---------------------+----------+------------+-----------+-------+---------------------+
+| 2024-11-02 00:00:00 |        1 |          2 | success   |    13 | 2024-11-02 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
+| 2024-11-03 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-03 01:00:00 |
+| 2024-11-04 00:00:00 |        2 |          2 | unknown   |    12 | 2024-11-04 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | unknown   |    13 | 2024-11-01 01:00:00 |
+| 2024-11-01 00:00:00 |        2 |          2 | timeout   |    12 | 2024-11-01 01:00:00 |
++---------------------+----------+------------+-----------+-------+---------------------+
+```
+

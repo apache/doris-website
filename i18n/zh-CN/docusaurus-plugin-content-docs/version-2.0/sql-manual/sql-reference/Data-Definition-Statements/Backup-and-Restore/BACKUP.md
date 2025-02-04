@@ -30,7 +30,7 @@ under the License.
 
 BACKUP
 
-### Description
+## 描述
 
 该语句用于备份指定数据库下的数据。该命令为异步操作。
 
@@ -59,7 +59,7 @@ PROPERTIES ("key"="value", ...);
   -  "type" = "full"：表示这是一次全量更新（默认）
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。          
 
-### Example
+## 举例
 
 1. 全量备份 example_db 下的表 example_tbl 到仓库 example_repo 中：
 
@@ -107,7 +107,7 @@ BACKUP
 
 1. 同一个数据库下只能进行一个备份操作。
 
-2. 备份操作会备份指定表或分区的基础表及同步物化视图[物化视图](../../../../query/view-materialized-view/materialized-view.md)，并且仅备份一副本，异步物化视图(../../../../query/view-materialized-view/async-materialized-view.md)当前未支持。
+2. 备份操作会备份指定表或分区的基础表及同步物化视图[物化视图](../../../../query-acceleration/materialized-view/sync-materialized-view)，并且仅备份一副本，[异步物化视图](../../../../query-acceleration/materialized-view/async-materialized-view/overview) 当前未支持。
 
 3. 备份操作的效率
 

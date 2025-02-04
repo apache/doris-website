@@ -31,7 +31,7 @@ under the License.
 
 SHOW TRASH
 
-### Description
+## 描述
 
 该语句用于查看 backend 内的垃圾数据占用空间。
 
@@ -46,7 +46,7 @@ SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
 1. Backend 格式为该节点的BackendHost:BackendHeartBeatPort
 2. TrashUsedCapacity 表示该节点垃圾数据占用空间。
 
-### Example
+## 举例
 
 1. 查看所有be节点的垃圾数据占用空间。
 

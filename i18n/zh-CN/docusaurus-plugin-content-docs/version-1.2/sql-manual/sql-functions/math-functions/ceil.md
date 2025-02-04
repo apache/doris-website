@@ -24,8 +24,8 @@ under the License.
 
 ## ceil
 
-### description
-#### Syntax
+## 描述
+## 语法
 
 `BIGINT ceil(DOUBLE x)`
 返回大于或等于`x`的最小整数值.
@@ -34,7 +34,7 @@ under the License.
 该函数的其他别名为 `dceil` 和 `ceiling`。
 :::
 
-### example
+## 举例
 
 ```
 mysql> select ceil(1);

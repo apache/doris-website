@@ -28,7 +28,7 @@ under the License.
 
 ## CREATE-TABLE
 
-### Description
+## 描述
 
 该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md)文档。
 
@@ -448,7 +448,7 @@ UNIQUE KEY(k1, k2)
     * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
     * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
 
-### Example
+## 举例
 
 1. 创建一个明细模型的表
 
@@ -788,7 +788,7 @@ UNIQUE KEY(k1, k2)
 
 #### 分区和分桶
 
-一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partition) 文档。
+一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partitioning/basic-concepts) 文档。
 
 Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
 
@@ -798,7 +798,7 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 #### 动态分区
 
-动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partition) 文档查看更多帮助。
+动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partitioning/dynamic-partition) 文档查看更多帮助。
 
 #### 物化视图
 

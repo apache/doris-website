@@ -426,10 +426,10 @@ Here are the available parameters for the job_properties clause:
 
 | Parameter                   | Description                                                  |
 | --------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number   | <ul><li>Default value: 5</li><li>Description: Specifies the desired concurrency for a single load subtask (load task). It modifies the expected number of load subtasks for a Routine Load job. The actual concurrency during the load process may not be equal to the desired concurrency. The actual concurrency is determined based on factors such as the number of nodes in the cluster, the load on the cluster, and the characteristics of the data source. The actual number of loading subtasks can be calculated using the following formula:</li><li>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`</li> <li>where:</li><li>topic_partition_num: The number of partitions in the Kafka topic</li><li>desired_concurrent_number: The parameter value set</li><li>max_routine_load_task_concurrent_num: The parameter for setting the maximum task parallelism for Routine Load in the FE</li></ul> |
-| max_batch_interval          | The maximum running time for each subtask, in seconds. The range is from 1s to 60s, with a default value of 10s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 200,000. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 1GB. The default value is 100MB. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
+| desired_concurrent_number   | <ul><li>Default value: 256</li><li>Description: Specifies the desired concurrency for a single load subtask (load task). It modifies the expected number of load subtasks for a Routine Load job. The actual concurrency during the load process may not be equal to the desired concurrency. The actual concurrency is determined based on factors such as the number of nodes in the cluster, the load on the cluster, and the characteristics of the data source. The actual number of loading subtasks can be calculated using the following formula:</li><li>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`</li> <li>where:</li><li>topic_partition_num: The number of partitions in the Kafka topic</li><li>desired_concurrent_number: The parameter value set</li><li>max_routine_load_task_concurrent_num: The parameter for setting the maximum task parallelism for Routine Load in the FE</li></ul> |
+| max_batch_interval          | The maximum running time for each subtask, in seconds. Must be greater than 0, with a default value of 10s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
+| max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 200,000(The default value for versions 2.0.13 and higher is 20,000,000). max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
+| max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 10GB. The default value is 100MB(The default value for versions 2.0.13 and higher is 1G). max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
 | strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../data-operate/import/load-strict-mode).</li></ul> |
 | timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
@@ -482,34 +482,6 @@ The available options for the data_source_properties clause are as follows:
 | property          | Specifies custom Kafka parameters. This is equivalent to the "--property" parameter in the Kafka shell. When the value of a parameter is a file, the keyword "FILE:" needs to be added before the value. For creating a file, you can refer to the [CREATE FILE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-FILE) command documentation. For more supported custom parameters, you can refer to the client-side configuration options in the official [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) documentation of librdkafka. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"` |
 
 By configuring the Kafka property parameter in the `data_source_properties`, you can set up security access options. Currently, Doris supports various Kafka security protocols such as plaintext (default), SSL, PLAIN, and Kerberos.
-
-1. Example of property parameters for accessing an SSL-authenticated Kafka cluster:
-
-    ```sql
-    "property.security.protocol" = "ssl",
-    "property.ssl.ca.location" = "FILE:ca.pem",
-    "property.ssl.certificate.location" = "FILE:client.pem",
-    "property.ssl.key.location" = "FILE:client.key",
-    "property.ssl.key.password" = "ssl_passwd"
-    ```
-
-2. Example of property parameters for accessing a PLAIN-authenticated Kafka cluster:
-
-    ```sql
-    "property.security.protocol"="SASL_PLAINTEXT",
-    "property.sasl.mechanism"="PLAIN",
-    "property.sasl.username"="admin",
-    "property.sasl.password"="admin_passwd"
-    ```
-
-3. Example of property parameters for accessing a Kerberos-authenticated Kafka cluster:
-
-    ```sql
-    "property.security.protocol" = "SASL_PLAINTEXT",
-    "property.sasl.kerberos.service.name" = "kafka",
-    "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
-    "property.sasl.kerberos.principal" = "doris@YOUR.COM"
-    ```
 
 ### Load Status
 
@@ -1234,18 +1206,19 @@ The columns in the result set provide the following information:
 1. Load sample data:
 
     ```sql
-    { "id" : 1, "name" : "xiaoli", "age":18 }
-    { "id" : 2, "name" : "xiaowang", "age":20 }
-    { "id" : 3, "name" : "xiaoliu", "age":22 }
+    1,"Benjamin",18
+    2,"Emily",20
+    3,"Alexander",22
     ```
 
 2. Create table:
 
     ```sql
-    CREATE TABLE demo.routine_test12 (
+    CREATE TABLE demo.routine_test11 (
         id      INT            NOT NULL  COMMENT "id",
         name    VARCHAR(30)    NOT NULL  COMMENT "name",
         age     INT                      COMMENT "age",
+        num     INT                      COMMENT "number"
     )
     DUPLICATE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
@@ -1258,8 +1231,7 @@ The columns in the result set provide the following information:
             PROPERTIES
             (
                 "desired_concurrent_number"="1",
-                "format" = "json",
-                "strict_mode" = "false"
+                "enclose" = "\""
             )
             FROM KAFKA
             (
@@ -1273,14 +1245,14 @@ The columns in the result set provide the following information:
 4. Load result:
 
     ```sql
-    mysql> SELECT * FROM routine_test12;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
+    mysql> SELECT * FROM routine_test11;
+    +------+----------------+------+------+
+    | id   | name           | age  | num  |
+    +------+----------------+------+------+
+    |    1 | Benjamin       |   18 |  180 |
+    |    2 | Emily          |   20 |  200 |
+    |    3 | Alexander      |   22 |  220 |
+    +------+----------------+------+------+
     3 rows in set (0.02 sec)
     ```
 
@@ -1769,6 +1741,64 @@ The columns in the result set provide the following information:
 ### Kafka Security Authentication
 
 **Loading Kafka data with SSL authentication**
+
+1. Loading sample data:
+
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
+
+2. Create table:
+
+    ```sql
+    CREATE TABLE demo.routine_test20 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "name",
+        age     INT                      COMMENT "age"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
+
+3. Load command:
+
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "192.168.100.129:9092",
+                "kafka_topic" = "routineLoad21",
+                "property.group.id" = "kafka_job21",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+                "property.security.protocol" = "ssl",
+                "property.ssl.ca.location" = "FILE:ca.pem",
+                "property.ssl.certificate.location" = "FILE:client.pem",
+                "property.ssl.key.location" = "FILE:client.key",
+                "property.ssl.key.password" = "ssl_passwd"
+            );  
+    ```
+
+4. Load result:
+
+    ```sql
+    mysql> select * from routine_test20;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **Loading Kafka data with Kerberos authentication**
 

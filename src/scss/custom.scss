@@ -1,3 +1,4 @@
+@use 'sass:meta';
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -8,23 +9,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './variables';
-@import './components/sidebar';
-@import './components/breadcrumbs';
-@import './components/markdown';
-@import './components/pagination-nav';
-@import './components/navbar';
-@import './components/blog';
-@import './components/search';
-@import './common';
-
+@include meta.load-css('variables');
+@include meta.load-css('components/sidebar');
+@include meta.load-css('components/breadcrumbs');
+@include meta.load-css('components/markdown');
+@include meta.load-css('components/pagination-nav');
+@include meta.load-css('components/navbar');
+@include meta.load-css('components/blog');
+@include meta.load-css('components/search');
+@include meta.load-css('components/toc.scss');
+@include meta.load-css('common');
 
 @layer utilities {
     .transition-slide {
         @apply inline-block transform transition-transform duration-300 hover:translate-x-1 group-hover:translate-x-1;
     }
 }
-
 
 .button-primary {
     display: flex;
@@ -34,23 +34,59 @@
     align-items: center;
     gap: 4px;
     border-radius: 4px;
-    background: var(--b-1, #444FD9);
+    background: var(--b-1, #444fd9);
     color: white;
 }
 
-:root {
-    --font-family-base: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+html[lang='zh-Hans-CN'] {
+    --font-family-base: 'Noto Sans';
+    font-family: 'Noto Sans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+html[lang='en-US'] {
+    --font-family-base: 'Inter';
+    font-family: 'Inter', 'MiSans Latin', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+// :root {
+//     --font-family-base: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// }
 .markdown :where(p, h1, h2, h3, h4, h5, h6, li, blockquote) {
     font-family: var(--font-family-base);
-    color: #2a2f34
+    color: #1F1F26;
+}
+
+body {
+    font-family: var(--font-family-base);
 }
 // body, .markdown {
 //     font-family: var(--font-family-base);
 //     font-weight: 400 !important;
 //     color: #2a2f34
 // }
+
 .navbar__link {
     font-family: var(--font-family-base);
     font-weight: 400 !important;
+}
+
+.alert--success {
+    border: 0px solid rgba(0, 180, 42, 0.5);
+    border-left-width: 5px;
+    border-radius: 4px;
+    background: #eefefa;
+}
+
+.alert--caution {
+    border: 0px solid #ff7d00;
+    border-left-width: 5px;
+    border-radius: 4px;
+    background: rgba(255, 244, 224, 0.8);
+}
+
+.alert--info {
+    border: 0px solid rgba(0, 101, 253, 0.5);
+    border-left-width: 5px;
+    border-radius: 4px;
+    background: rgba(0, 101, 253, 0.08);
 }

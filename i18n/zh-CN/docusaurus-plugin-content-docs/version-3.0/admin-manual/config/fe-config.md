@@ -47,7 +47,7 @@ FE 的配置项有两种方式进行查看：
 
 2. 通过命令查看
 
-   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md)：
 
    `SHOW FRONTEND CONFIG;`
 
@@ -55,7 +55,7 @@ FE 的配置项有两种方式进行查看：
 
    - Key：配置项名称。
    - Value：当前配置项的值。
-   - Type：配置项值类型，如果整型、字符串。
+   - Type：配置项值类型，如整型、字符串。
    - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
    - MasterOnly：是否为 Master FE 节点独有的配置项。如果为 true，则表示该配置项仅在 Master FE 节点有意义，对其他类型的 FE 节点无意义。如果为 false，则表示该配置项在所有 FE 节点中均有意义。
    - Comment：配置项的描述。
@@ -1497,6 +1497,12 @@ NORMAL 优先级挂起加载作业的并发数。
 
 load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清理过时的作业。
 
+#### `label_regex_length`
+
+默认值: 128 (字符)
+
+导入 label 的最大字符长度，默认128个字符。
+
 #### `transaction_clean_interval_second`
 
 默认值：30
@@ -2735,3 +2741,29 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：2000
 
 对于自动分区表，防止用户意外创建大量分区，每个 OLAP 表允许的分区数量为`max_auto_partition_num`。默认 2000。
+
+#### `profile_manager_gc_interval_seconds`
+
+默认值：1
+
+用于控制 ProfileManager 进行 Profile 垃圾回收的间隔时间，垃圾回收期间 ProfileManager 会把多余的以及过期的 profile 从内存和磁盘中清理掉，节省内存。
+
+### 存算分离模式
+
+#### `cluster_id`
+
+默认值：-1
+
+如果节点（FE 或 BE）具有相同的集群 ID，则将认为它们属于同一个 Doris 集群。您应该在计算和存储分离模式中指定一个随机整数。
+
+#### `deploy_mode`
+
+默认值： ""
+
+描述：FE 运行的模式。`cloud` 表示存算分离模式。
+
+#### `meta_service_endpoint`
+
+默认值： ""
+
+Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存算分离模式是必要的。

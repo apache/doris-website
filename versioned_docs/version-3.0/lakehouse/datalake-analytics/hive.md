@@ -164,6 +164,22 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Hive On OSS-HDFS
+
+You need to download [Jindo SDK](https://github.com/aliyun/alibabacloud-jindodata/blob/master/docs/user/6.x/6.7.8/jindodata_download.md) and put them in `${DORIS_HOME}/fe/lib` and `${DORIS_HOME}/be/lib/java_extensions/preload-extensions`, then restart FE and BE.
+
+```
+CREATE CATALOG hive PROPERTIES (
+    "type"="hms",
+    "hive.metastore.uris" = "thrift://172.0.0.1:9083",
+    "oss.endpoint" = "cn-beijing.oss-dls.aliyuncs.com",
+    "oss.access_key" = "ak",
+    "oss.secret_key" = "sk"
+);
+```
+
+Notice that the endpoint of OSS-HDFS is different from OSS endpoint.
+
 ### Hive On OBS
 
 ```sql
@@ -325,6 +341,22 @@ For Hive/Iceberge/Hudi
 > If the session variable `truncate_char_or_varchar_columns` is enabled, when the maximum length of the char or varchar column in the schema of the hive table is inconsistent with the schema in the underlying parquet or orc file, it will be truncated according to the maximum length of the hive table column.
 
 > The variable default is false.
+
+## Query Hive partitions
+
+You can query Hive partition information in the following two ways.
+
+- `SHOW PARTITIONS FROM hive_table`
+
+    This statement can list all partitions and partition value information of the specified Hive table.
+
+- Use `table$partitions` metadata table
+
+    Since versions 2.1.7 and 3.0.3, users can query Hive partition information through the `table$partitions` metadata table. `table$partitions` is essentially a relational table, so it can be used in any SELECT statement.
+
+    ```
+    SELECT * FROM hive_table$partitions;
+    ```
 
 ## Access HMS with broker
 

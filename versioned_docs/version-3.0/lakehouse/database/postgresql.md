@@ -104,6 +104,7 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under the s
 | cidr/inet/macaddr                       | STRING         |                                      |
 | bit                                     | BOOLEAN/STRING |                                      |
 | uuid                                    | STRING         |                                      |
+| array                                   | ARRAY          |                                      |
 | Other                                   | UNSUPPORTED    |                                      |
 
 
@@ -123,12 +124,6 @@ And since the Java part of BE uses the JVM time zone when reading data from the 
 In order to ensure time zone consistency, it is recommended to set the JVM time zone in JAVA_OPTS of be.conf to be consistent with the `time_zone` of the Doris session.
 
 ## Query optimization
-
-### Statistics
-
-Doris maintains table statistics in the Catalog so that it can better optimize query plans when executing queries.
-
-See [external-statistics](../external-statistics) to learn how to collect statistics.
 
 ### Predicate pushdown
 

@@ -25,15 +25,15 @@ under the License.
 -->
 
 ## find_in_set
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT find_in_set(VARCHAR str, VARCHAR strlist)`
 
 
 返回 strlist 中第一次出现 str 的位置（从1开始计数）。strlist 是用逗号分隔的字符串。如果没有找到，返回0。任意参数为 NULL ，返回 NULL。
 
-### example
+## 举例
 
 ```
 mysql> select find_in_set("b", "a,b,c");

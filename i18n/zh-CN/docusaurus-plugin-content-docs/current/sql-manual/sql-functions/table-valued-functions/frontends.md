@@ -24,78 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends`
-
-### Name
-
-frontends
-
-### description
+## 描述
 
 表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。
 
-该函数用于 from 子句中。
-
-#### syntax
-`frontends()`
-
-frontends() 表结构：
-```
-mysql> desc function frontends();
-+-------------------+------+------+-------+---------+-------+
-| Field             | Type | Null | Key   | Default | Extra |
-+-------------------+------+------+-------+---------+-------+
-| Name              | TEXT | No   | false | NULL    | NONE  |
-| Host              | TEXT | No   | false | NULL    | NONE  |
-| EditLogPort       | TEXT | No   | false | NULL    | NONE  |
-| HttpPort          | TEXT | No   | false | NULL    | NONE  |
-| QueryPort         | TEXT | No   | false | NULL    | NONE  |
-| RpcPort           | TEXT | No   | false | NULL    | NONE  |
-| ArrowFlightSqlPort| TEXT | No   | false | NULL    | NONE  |
-| Role              | TEXT | No   | false | NULL    | NONE  |
-| IsMaster          | TEXT | No   | false | NULL    | NONE  |
-| ClusterId         | TEXT | No   | false | NULL    | NONE  |
-| Join              | TEXT | No   | false | NULL    | NONE  |
-| Alive             | TEXT | No   | false | NULL    | NONE  |
-| ReplayedJournalId | TEXT | No   | false | NULL    | NONE  |
-| LastHeartbeat     | TEXT | No   | false | NULL    | NONE  |
-| IsHelper          | TEXT | No   | false | NULL    | NONE  |
-| ErrMsg            | TEXT | No   | false | NULL    | NONE  |
-| Version           | TEXT | No   | false | NULL    | NONE  |
-| CurrentConnected  | TEXT | No   | false | NULL    | NONE  |
-+-------------------+------+------+-------+---------+-------+
-17 rows in set (0.022 sec)
+## 语法
+```sql
+FRONTENDS()
 ```
 
-`frontends()` tvf 展示出来的信息基本与 `show frontends` 语句展示出的信息一致，但是 `frontends()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
+## 权限控制
 
-对 `frontends()` tvf 信息展示进行了鉴权，与 `show frontends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
 
-### example
+## 返回值
+| Field                  | Description                                         |
+|------------------------|-----------------------------------------------------|
+| **Name**               | Frontend 节点的唯一名称。                                   |
+| **Host**               | Frontend 节点的 IP 地址或主机名。                             |
+| **EditLogPort**        | 用于编辑日志通信的端口。                                        |
+| **HttpPort**           | Frontend 节点的 HTTP 端口。                               |
+| **QueryPort**          | Frontend 节点用于执行查询的端口。                               |
+| **RpcPort**            | 用于 RPC 通信的端口。                                       |
+| **ArrowFlightSqlPort** | Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。 |
+| **Role**               | Frontend 节点的角色（例如：`FOLLOWER`）。                      |
+| **IsMaster**           | 表示该节点是否是主节点（True/False）。                            |
+| **ClusterId**          | 该 Frontend 节点所属集群的标识符。                              |
+| **Join**               | 表示该 Frontend 节点是否已经加入集群（True/False）。                |
+| **Alive**              | 表示该 Frontend 节点是否存活（True/False）。                    |
+| **ReplayedJournalId**  | 该 Frontend 节点最后重放的日志 ID。                            |
+| **LastStartTime**      | 该 Frontend 节点最后一次启动的时间戳。                            |
+| **LastHeartbeat**      | 该 Frontend 节点接收到的最后一次心跳时间戳。                         |
+| **IsHelper**           | 表示该 Frontend 节点是否是辅助节点（True/False）。                 |
+| **ErrMsg**             | 该 Frontend 节点的错误信息。                                 |
+| **Version**            | 该 Frontend 节点的版本。                                   |
+| **CurrentConnected**   | 表示该 Frontend 节点当前是否连接到集群（Yes/No）。                   |
+
+
+
+## 示例
+查看 frontends 集群信息
+```sql
+select * from frontends();
 ```
-mysql> select * from frontends()\G
-*************************** 1. row ***************************
-             Name: fe_5fa8bf19_fd6b_45cb_89c5_25a5ebc45582
-               IP: 10.xx.xx.14
-      EditLogPort: 9013
-         HttpPort: 8034
-        QueryPort: 9033
-          RpcPort: 9023
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1258341841
-             Join: true
-            Alive: true
-ReplayedJournalId: 186
-    LastHeartbeat: 2023-06-15 16:53:12
-         IsHelper: true
-           ErrMsg: 
-          Version: doris-0.0.0-trunk-4b18cde0c7
- CurrentConnected: Yes
-1 row in set (0.060 sec)
+
+```text
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| Name                                    | Host       | EditLogPort | HttpPort | QueryPort | RpcPort | ArrowFlightSqlPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastStartTime       | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.xx.xx.90 | 9010        | 8030     | 9030      | 9020    | -1               | FOLLOWER | true     | 917153130 | true | true  | 555248            | 2025-01-13 14:11:31 | 2025-01-16 14:27:56 | true     |        | doris-0.0.0--83f899b32b | Yes              |
++-----------------------------------------+------------+-------------+----------+-----------+---------+--------------------+----------+----------+-----------+------+-------+-------------------+---------------------+---------------------+----------+--------+-------------------------+------------------+
 ```
-
-### keywords
-
-    frontends

@@ -24,7 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-数据更新，主要指针对相同 Key 的数据 Value 列的值的更新，这个更新对于主键模型来说，就是替换，对于聚合模型来说，就是如何完成针对 value 列上的聚合。
+数据更新是指对具有相同 key 的数据记录中的 value 列进行修改。对于不同的数据模型，数据更新的处理方式有所不同：
+
+- **主键（Unique）模型**：主键模型是专门为数据更新设计的一种数据模型。Doris 支持两种存储方式：Merge-on-Read（MoR）和 Merge-on-Write（MoW）。MoR 优化了写入性能，而 MoW 则提供了更好的分析性能。在 Doris 2.0 版本中，默认存储方式为 MoR。主键模型支持使用 `UPDATE` 语句进行少量数据更新，也支持通过导入方式进行批量更新。导入方式包括 Stream Load、Broker Load、Routine Load 和 Insert Into 等，所有导入操作都遵循“UPSERT”语义，即如果记录不存在则插入，存在则更新。更新操作支持整行更新和部分列更新，默认为整行更新。
+
+- **聚合（Aggregate）模型**：在聚合模型中，数据更新是一种特殊用法。当聚合函数设置为 REPLACE 或 REPLACE_IF_NOT_NULL 时，可以实现数据更新。聚合模型仅支持基于导入方式的更新，不支持使用 `UPDATE` 语句。通过设置聚合函数为 REPLACE_IF_NOT_NULL，可以实现部分列更新的能力。
+
+通过对不同模型的数据更新方式的理解，可以更好地选择适合的更新策略，以满足具体的业务需求。
+
+## 不同模型/实现的更新能力对比
+
+### 性能对比
+|                | Unique Key MoW                                                                                                                                                                   | Unique Key MoR                                                                                                                                                                   | Aggregate Key |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| 导入速度       | 导入过程中进行数据去重，小批量实时写入相比 MoR 约有 10%-20% 的性能损失，大批量导入（例如千万级/亿级数据）相比 MoR 约有 30%-50% 的性能损失                                                                                                      | 与 Duplicate Key 接近                                                                                                                                                                 | 与 Duplicate Key 接近  |
+| 查询速度       | 与 Duplicate Key 接近                                                                                                                                                                 | 需要在查询期间进行去重，查询耗时约为 MoW 的 3-10 倍                                                                                                                                                    | 如果聚合函数为 REPLACE/REPLACE_IF_NOT_NULL，查询速度与 MoR 接近 |
+| 谓词下推       | 支持                                                                                                                                                                               | 不支持                                                                                                                                                                              | 不支持        |
+| 资源消耗       | - **导入资源消耗**：相比 Duplicate Key/Unique Key MoR，约额外消耗 10%-30% 的 CPU。<br /> - **查询资源消耗**：与 Duplicate Key 接近，无额外资源消耗。<br /> - **Compaction 资源消耗**：相比 Duplicate Key，消耗更多内存和 CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与 Duplicate Key 相近，无额外资源消耗。<br /> - **查询资源消耗**：相比 Duplicate Key/Unique Key MoW，查询时额外消耗更多的 CPU 和内存。<br /> - **Compaction 资源消耗**：相比 Duplicate Key，需更多内存和 CPU，具体数值取决于数据特征和数据量。 | 与 Unique Key MoR 相同 |
+
+### 功能支持对比
+|                | Unique Key MoW | Unique Key MoR | Aggregate Key  |
+|----------------|----------------|----------------|----------------|
+| UPDATE         | 支持           | 支持           | 不支持         |
+| DELETE         | 支持           | 支持           | 不支持         |
+| sequence 列    | 支持           | 支持           | 不支持         |
+| delete_sign    | 支持           | 支持           | 不支持         |
+| 部分列更新     | 支持           | 不支持         | 支持(但无法更新 null 值) |
+| 倒排索引       | 支持           | 不支持         | 不支持         |
 
 ## 主键（Unique）模型的更新
 
@@ -35,14 +61,14 @@ Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-R
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 (
-    `user_id` LARGEINT NOT NULL,
-    `username` VARCHAR(50) NOT NULL ,
-    `city` VARCHAR(20),
-    `age` SMALLINT,
-    `sex` TINYINT,
-    `phone` LARGEINT,
-    `address` VARCHAR(500),
-    `register_time` DATETIME
+  `user_id` LARGEINT NOT NULL,
+  `username` VARCHAR(50) NOT NULL ,
+  `city` VARCHAR(20),
+  `age` SMALLINT,
+  `sex` TINYINT,
+  `phone` LARGEINT,
+  `address` VARCHAR(500),
+  `register_time` DATETIME
 )
 UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
@@ -53,41 +79,53 @@ PROPERTIES (
 ```
 
 :::caution
-在 Doris 2.1 版本中，写时合并将会是主键模型的默认方式。所以如果使用 Doris 2.1 版本，务必要阅读相关建表文档。
+从 Doris 2.1 版本开始，写时合并是主键模型的默认方式。所以如果使用 Doris 2.1 及以上版本，务必要阅读相关建表文档。
 :::
 
 ### 主键模型的两种更新方式
 
-- 使用 Update 语句更新
+#### 使用 `UPDATE` 语句更新
 
-无论是 MoR 还是 MoW，语义都是完成对指定列的更新。这个适合少量数据，不频繁的更新。
+无论是 MoR 还是 MoW，语义都是完成对指定列的更新。单次 UPDATE 的耗时会随着被更新的数据量的增加而增长。
 
-- 基于导入的批量更新
+#### 基于导入的批量更新
 
-Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导入方式，对于主键表，所有的导入都是“UPSERT”的语义，即如果相同 Key 的行不存在，则插入。对于已经存在的记录，则进行更新。
+Doris 支持多种数据导入方式，包括 Stream Load、Broker Load、Routine Load 以及 Insert Into 等。对于主键表，所有导入操作默认采用“UPSERT”语义：当相同主键的记录不存在时执行插入操作，若记录已存在则进行更新操作。更新方式包括整行更新和部分列更新：
 
-- 如果更新的是所有列，MoR 和 MoW 的语义是一样的，都是覆盖相同 Key 的所有 Value 列。
+- **整行更新**：Unique Key 表的更新默认为整行更新。在导入数据时，用户可以选择提供所有字段，或仅提供部分字段。当用户只提供部分字段时，Doris 会用默认值填充缺失的字段，生成完整记录并进行更新。
 
-- 如果更新的是部分列，MoR 和 MoW 的默认语义是一样的，即使用表 Schema 中缺失列的默认值作为缺失列的值，去覆盖旧的记录。
-
-- 如果更新的是部分列，主键模型采用的是 MoW，并且设置了 MySQL Session 变量 partial_columns = true 或者 HTTP Header partial_columns:true，则被更新的缺失列的值，不是再使用表 Schema 中缺失列的默认值，而是已经存在记录的对应缺失列的值。
+- **部分列更新**：Unique Key MoW 支持部分列更新。用户可以通过设置会话变量 `enable_unique_key_partial_update = true` 或在 HTTP Header 中指定 `partial_columns:true` 来启用此功能。开启后，若导入数据的主键已存在，则仅更新指定的部分字段；若主键不存在，则使用默认值填充缺失字段。
 
 我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/update-of-unique-model) 详细介绍两种更新方式。
 
-### 主键模型的更新事务
+### 主键模型的更新并发控制
 
-无论是使用 Update 语句更新，还是基于导入的批量更新，都可能有多个更新语句或者导入作业在进行，那么多个更新如何生效，如何确保更新的原子性，如何防止数据的不一致，这就是主键模型的更新事务。
+#### 使用 `UPDATE` 语句更新数据
 
-主键模型的更新事务 文档会介绍这块内容。在这篇文档中，我们会重点介绍通过引入隐藏列__**DORIS_SEQUENCE_COL__，**如何实现让开发者自己控制哪一个更新生效，这样通过与开发者协同，可以实现更好的更新事务。
+默认情况下，Doris 不允许在同一时间对同一张表进行多个 `UPDATE` 操作。`UPDATE` 语句通过表级锁来确保隔离性。
+
+用户可以通过修改 FE 配置 `enable_concurrent_update=true` 来调整并发限制。当放宽并发限制时，多个 `UPDATE` 语句如果更新同一行数据，结果将是未定义的。
+
+#### 基于导入的批量更新
+
+Doris 对所有导入更新操作提供原子性保障，即每次导入数据要么全部成功应用，要么全部失败回滚。
+
+对于并发导入更新，Doris 基于系统内部版本控制（按照导入完成提交的顺序进行分配），使用 MVCC 机制确定并发更新的顺序。
+
+由于多个并发导入更新的提交顺序可能无法预期，若这些并发导入涉及相同主键的更新，则其生效顺序也无法预知，最终的可见结果会因此存在不确定性。为解决此问题，Doris 提供了 sequence 列机制，允许用户在并发导入更新时为每一行数据指定版本，以便明确控制并发更新的结果顺序，实现确定性。
+
+我们将在文档 [主键模型的更新并发控制](../update/unique-update-concurrent-control.md) 中对事务机制进行详细介绍。
 
 ## 聚合（Aggregate）模型的更新
 
-上面提到的主键模型的更新方式，更多指的是对于相同的 Key，用新的值替换旧的值。而聚合模型的更新，主要是指的是用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
+聚合模型的更新，主要是指用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
 
-New Agg Value = Agg Func ( Old Agg Value + New Column Value)
+New Agg Value = Agg Func (Old Agg Value, New Column Value)
 
-聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。
+聚合模型只支持基于导入方式的更新，不支持使用 Update 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
 
-在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。
-
-更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+## 主键模型和聚合模型的选择建议
+- 大部分有数据更新需求的场景，都建议**首选主键模型**。例如从 TP 数据库 CDC 同步到 Doris，用户画像，人群圈选等。
+- 下面两类场景，建议使用聚合模型
+  1. 部分字段需要做指标聚合，部分字段需要进行更新
+  2. 对部分列更新有需求，同时对写入性能非常敏感，对查询延迟要求不高的场景，建议使用聚合表 + REPLACE_IF_NOT_NULL 聚合函数

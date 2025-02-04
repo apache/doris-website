@@ -103,6 +103,7 @@ CREATE CATALOG postgresql PROPERTIES (
 | cidr/inet/macaddr                       | STRING          |                                                      |
 | bit                                     | BOOLEAN/STRING  |                                                      |
 | uuid                                    | STRING          |                                                      |
+|array                                    | ARRAY           |                                                      |
 | Other                                   | UNSUPPORTED     |                                                      |
 
 
@@ -122,12 +123,6 @@ CREATE CATALOG postgresql PROPERTIES (
 为了确保时区一致性，建议在 be.conf 的 JAVA_OPTS 中设置 JVM 时区与 Doris session 的 `time_zone` 一致。
 
 ## 查询优化
-
-### 统计信息
-
-Doris 会在 Catalog 中维护表的统计信息，以便在执行查询时能够更好地优化查询计划。
-
-可以查看 [外表统计信息](../external-statistics) 了解如何收集统计信息。
 
 ### 谓词下推
 

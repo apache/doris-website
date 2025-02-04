@@ -1,6 +1,6 @@
 ---
 {
-    "title": "批量删除",
+    "title": "基于导入的批量删除",
     "language": "zh-CN"
 }
 ---
@@ -23,59 +23,125 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-有了 Delete 操作为什么还要引入基于导入的批量删除？
 
-**Delete 操作的局限性**
+## 基于导入的批量删除
 
-使用 Delete 语句的方式删除时，每执行一次 Delete 都会生成一个空的 rowset 来记录删除条件，并产生一个新的数据版本。每次读取都要对删除条件进行过滤，如果频繁删除或者删除条件过多时，都会严重影响查询性能。
+删除操作可以视为数据更新的一种特殊形式。在主键模型（Unique Key）表上，Doris 支持通过导入数据时添加删除标记来实现删除操作。
 
-**Insert 数据和 Delete 数据穿插出现**
+相比 `DELETE` 语句，使用删除标记在以下场景中具有更好的易用性和性能优势：
 
-对于类似于从事务数据库中，通过 CDC 进行数据导入的场景，数据中 Insert 和 Delete 一般是穿插出现的，面对这种场景当前 Delete 操作也是无法实现。
+1. **CDC 场景**：在从 OLTP 数据库同步数据到 Doris 时，binlog 中的 Insert 和 Delete 操作通常交替出现。使用 `DELETE` 语句无法高效处理这些删除操作。通过使用删除标记，可以统一处理 Insert 和 Delete 操作，简化 CDC 写入 Doris 的代码，同时提高数据导入和查询性能。
+2. **批量删除指定主键**：如果需要删除大量主键，使用 `DELETE` 语句的效率较低。每次执行 `DELETE` 都会生成一个空的 rowset 来记录删除条件，并产生一个新的数据版本。频繁删除或删除条件过多时，会严重影响查询性能。
 
-基于数据导入的方式，数据有三种合并方式：
+## 删除标记的工作原理
 
-1. APPEND: 数据全部追加到现有数据中。
+### 原理说明
 
-2. DELETE: 删除所有与导入数据 key 列值相同的行 (当表存在`sequence`列时，需要同时满足主键相同以及 sequence 列的大小逻辑才能正确删除，详见下边用例 4)。
+- **表结构**：删除标记在主键表上存储为一个隐藏列 `__DORIS_DELETE_SIGN__`，该列值为 1 时表示删除标记生效。
+- **数据导入**：用户在导入任务中可以指定删除标记列的映射条件，不同导入任务的用法不同，详见下文语法说明。
+- **查询**：在查询时，Doris FE 会在查询规划中自动添加 `__DORIS_DELETE_SIGN__ != true` 的过滤条件，将删除标记为 1 的数据过滤掉。
+- **数据合并（compaction）**：Doris 的后台数据合并会定期清理删除标记为 1 的数据。
 
-3. MERGE: 根据 DELETE ON 的决定 APPEND 还是 DELETE。
+### 数据示例
 
-批量删除只工作在 Unique 模型上。
+#### 表结构
 
-## 基本原理
+创建一个示例表：
 
-通过在 Unique 表上增加一个隐藏列`DORIS_DELETE_SIGN`来实现。
+```sql
+CREATE TABLE example_table (
+    id BIGINT NOT NULL,
+    value STRING
+)
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "3"
+);
+```
 
-FE 解析查询时，遇到 * 等扩展时去掉`DORIS_DELETE_SIGN`，并且默认加上 `DORIS_DELETE_SIGN != true` 的条件，BE 读取时都会加上一列进行判断，通过条件确定是否删除。
+使用 session 变量 `show_hidden_columns` 查看隐藏列：
 
-- 导入
+```sql
+mysql> set show_hidden_columns=true;
 
-    导入时在 FE 解析时将隐藏列的值设置成 `DELETE ON` 表达式的值。
+mysql> desc example_table;
++-----------------------+---------+------+-------+---------+-------+
+| Field                 | Type    | Null | Key   | Default | Extra |
++-----------------------+---------+------+-------+---------+-------+
+| id                    | bigint  | No   | true  | NULL    |       |
+| value                 | text    | Yes  | false | NULL    | NONE  |
+| __DORIS_DELETE_SIGN__ | tinyint | No   | false | 0       | NONE  |
+| __DORIS_VERSION_COL__ | bigint  | No   | false | 0       | NONE  |
++-----------------------+---------+------+-------+---------+-------+
+```
 
-- 读取
+#### 数据导入
 
-    读取时在所有存在隐藏列的上增加`DORIS_DELETE_SIGN != true` 的条件，be 不感知这一过程，正常执行。
+表中有如下存量数据：
 
-- Cumulative Compaction
+```sql
++------+-------+
+| id   | value |
++------+-------+
+|    1 | foo   |
+|    2 | bar   |
++------+-------+
+```
 
-    Cumulative Compaction 时将隐藏列看作正常的列处理，Compaction 逻辑没有变化。
+通过 `INSERT INTO` 写入 id 为 1 的删除标记（此处仅做原理展示，不介绍各种导入使用删除标记的方法）：
 
-- Base Compaction
+```sql
+mysql> insert into example_table (id, __DORIS_DELETE_SIGN__) values (1, 1);
+```
 
-    Base Compaction 时要将标记为删除的行的删掉，以减少数据占用的空间。
+#### 查询
+
+直接查看数据，可以发现 id 为 1 的记录已被删除：
+
+```sql
+mysql> select * from example_table;
++------+-------+
+| id   | value |
++------+-------+
+|    2 | bar   |
++------+-------+
+```
+
+使用 session 变量 `show_hidden_columns` 查看隐藏列，可以看到 id 为 1 的行并未被实际删除，其隐藏列 `__DORIS_DELETE_SIGN__` 值为 1，在查询时被过滤掉：
+
+```sql
+mysql> set show_hidden_columns=true;
+mysql> select * from example_table;
++------+-------+-----------------------+-----------------------+
+| id   | value | __DORIS_DELETE_SIGN__ | __DORIS_VERSION_COL__ |
++------+-------+-----------------------+-----------------------+
+|    1 | NULL  |                     1 |                     3 |
+|    2 | bar   |                     0 |                     2 |
++------+-------+-----------------------+-----------------------+
+```
 
 ## 语法说明
 
-导入的语法设计方面主要是增加一个指定删除标记列的字段的 column 映射，并且需要在导入的数据中增加一列，各种导入方式设置的语法如下
+不同导入类型在设置删除标记的语法上有所不同，以下是各种导入类型的删除标记使用语法。
+
+### 导入合并方式选择
+
+导入数据时有几种合并方式：
+
+1. **APPEND**：数据全部追加到现有数据中。
+2. **DELETE**：删除所有与导入数据 key 列值相同的行。
+3. **MERGE**：根据 DELETE ON 的条件决定 APPEND 还是 DELETE。
 
 ### Stream Load
 
-`Stream Load` 的写法在 header 中的 columns 字段增加一个设置删除标记列的字段，示例 `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`。
+`Stream Load` 的写法是在 header 中的 columns 字段增加一个设置删除标记列的字段，示例：`-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`。
+
+关于 Stream Load 的使用示例，请查阅 [Stream Load 使用手册](../import/import-way/stream-load-manual.md) 中“指定 merge_type 进行 Delete 操作”和“指定 merge_type 进行 Merge 操作”章节的内容。
 
 ### Broker Load
 
-`Broker Load` 的写法在 `PROPERTIES` 处设置删除标记列的字段，语法如下：
+`Broker Load` 的写法是在 `PROPERTIES` 处设置删除标记列的字段，语法如下：
 
 ```sql
 LOAD LABEL db1.label1
@@ -104,7 +170,7 @@ PROPERTIES
 
 ### Routine Load
 
-`Routine Load`的写法在 `columns`字段增加映射，映射方式同上，语法如下：
+`Routine Load` 的写法是在 `columns` 字段增加映射，映射方式同上，语法如下：
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
@@ -128,211 +194,3 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
      "kafka_offsets" = "101,0,0,200"
  );
 ```
-
-### 注意事项
-
-1. 由于除`Stream Load` 外的导入操作在 doris 内部有可能乱序执行，因此在使用`MERGE` 方式导入时如果不是`Stream Load`，需要与 load sequence 一起使用，具体的语法可以参照`sequence`列 相关的文档；
-
-2. `DELETE ON` 条件只能与 MERGE 一起使用。
-
-如果在执行导入作业前按上文所述开启了`SET show_hidden_columns = true`的 session variable 来查看表是否支持批量删除，按示例完成 DELETE/MERGE 的导入作业后，如果在同一个 session 中执行`select count(*) from xxx`等语句时，需要执行`SET show_hidden_columns = false`或者开启新的 session, 避免查询结果中包含那些被批量删除的记录，导致结果与预期不符。
-
-## 使用示例
-
-### 查看是否启用批量删除支持
-
-```sql
-mysql SET show_hidden_columns=true;
-Query OK, 0 rows affected (0.00 sec)
-
-mysql DESC test;
-+-----------------------+--------------+------+-------+---------+---------+
-| Field                 | Type         | Null | Key   | Default | Extra   |
-+-----------------------+--------------+------+-------+---------+---------+
-| name                  | VARCHAR(100) | No   | true  | NULL    |         |
-| gender                | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
-| age                   | INT          | Yes  | false | NULL    | REPLACE |
-| DORIS_DELETE_SIGN | TINYINT      | No   | false | 0       | REPLACE |
-+-----------------------+--------------+------+-------+---------+---------+
-4 rows in set (0.00 sec)
-```
-
-### Stream Load 使用示例
-
-**1. 正常导入数据：**
-
-```shell
-curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: APPEND"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-```
-
-其中的 APPEND 条件可以省略，与下面的语句效果相同：
-
-```shell
-curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-```
-
-**2. 将与导入数据 Key 相同的数据全部删除**
-
-```shell
-curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-```
-
-假设导入表中原有数据为：
-
-```Plain
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-|      3 |        2 | tom      |    2 |
-|      4 |        3 | bush     |    3 |
-|      5 |        3 | helen    |    3 |
-+--------+----------+----------+------+
-```
-
-导入数据为：
-
-```Plain
-3,2,tom,0
-```
-
-导入后数据变成：
-
-```Plain
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-|      4 |        3 | bush     |    3 |
-|      5 |        3 | helen    |    3 |
-+--------+----------+----------+------+
-```
-
-**3. 将导入数据中与`site_id=1` 的行的 Key 列相同的行**
-
-```shell
-curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: MERGE" -H "delete: siteid=1"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-```
-
-假设导入前数据为：
-
-```Plain
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-|      4 |        3 | bush     |    3 |
-|      5 |        3 | helen    |    3 |
-|      1 |        1 | jim      |    2 |
-+--------+----------+----------+------+
-```
-
-导入数据为：
-
-```Plain
-2,1,grace,2
-3,2,tom,2
-1,1,jim,2
-```
-
-导入后为：
-
-```Plain
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-|      4 |        3 | bush     |    3 |
-|      2 |        1 | grace    |    2 |
-|      3 |        2 | tom      |    2 |
-|      5 |        3 | helen    |    3 |
-+--------+----------+----------+------+
-```
-
-**4. 当存在 sequence 列时，将与导入数据 Key 相同的数据全部删除**
-
-```shell
-curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
-```
-
-当 Unique 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`DORIS_DELETE_SIGN`进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。
-
-假设有表，结构如下
-
-```sql
-mysql SET show_hidden_columns=true;
-Query OK, 0 rows affected (0.00 sec)
-
-mysql DESC table1;
-+------------------------+--------------+------+-------+---------+---------+
-| Field                  | Type         | Null | Key   | Default | Extra   |
-+------------------------+--------------+------+-------+---------+---------+
-| name                   | VARCHAR(100) | No   | true  | NULL    |         |
-| gender                 | VARCHAR(10)  | Yes  | false | NULL    | REPLACE |
-| age                    | INT          | Yes  | false | NULL    | REPLACE |
-| DORIS_DELETE_SIGN  | TINYINT      | No   | false | 0       | REPLACE |
-| DORIS_SEQUENCE_COL | INT          | Yes  | false | NULL    | REPLACE |
-+------------------------+--------------+------+-------+---------+---------+
-4 rows in set (0.00 sec)
-```
-
-假设导入表中原有数据为：
-
-```Plain
-+-------+--------+------+
-| name  | gender | age  |
-+-------+--------+------+
-| li    | male   |   10 |
-| wang  | male   |   14 |
-| zhang | male   |   12 |
-+-------+--------+------+
-```
-
-当导入数据为：
-
-```Plain
-li,male,10
-```
-
-导入后数据后会变成：
-
-```Plain
-+-------+--------+------+
-| name  | gender | age  |
-+-------+--------+------+
-| wang  | male   |   14 |
-| zhang | male   |   12 |
-+-------+--------+------+
-```
-
-会发现数据
-
-```Plain
-li,male,10
-```
-
-被删除成功。
-
-但是假如导入数据为：
-
-```Plain
-li,male,9
-```
-
-导入后数据会变成：
-
-```Plain
-+-------+--------+------+
-| name  | gender | age  |
-+-------+--------+------+
-| li    | male   |   10 |
-| wang  | male   |   14 |
-| zhang | male   |   12 |
-+-------+--------+------+
-```
-
-会看到数据
-
-```Plain
-li,male,10
-```
-
-并没有被删除，这是因为在底层的依赖关系上，会先判断 key 相同的情况，对外展示 sequence 列的值大的行数据，然后在看该行的`DORIS_DELETE_SIGN`值是否为 1，如果为 1 则不会对外展示，如果为 0，则仍会读出来。
-
-当导入数据中同时存在数据写入和删除时（例如 CDC 场景中），使用 Sequence 列可以有效的保证当数据乱序到达时的一致性，避免后到达的一个旧版本的删除操作，误删掉了先到达的新版本的数据。

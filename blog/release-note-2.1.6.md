@@ -6,8 +6,6 @@
     'date': '2024-09-10',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "2",
     "image": '/images/2.1.6.jpg'
 }
 ---
@@ -110,7 +108,7 @@ Dear community, **Apache Doris version 2.1.6 was officially released on Septembe
 
 - Added the system table `table_properties` for viewing table properties.
 
-  - For more information, please refer to the [documentation](https://doris.apache.org/docs/admin-manual/system-tables/table_properties). 
+  - For more information, please refer to the [documentation](https://doris.apache.org/docs/admin-manual/system-tables/information_schema/table_properties). 
 
 - Introduced deadlock and slow lock detection in FE. 
 

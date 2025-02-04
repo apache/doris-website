@@ -110,17 +110,17 @@ Broker 是用于访问外部数据源（如 hdfs）的进程。通常，在每�
 
 Doris 各个实例直接通过网络进行通讯。以下表格展示了所有需要的端口
 
-| 实例名称 | 端口名称 | 默认端口 | 通讯方向 | 说明 |
-|---|---|---|---| ---|
-| BE | be_port | 9060 | FE --> BE | BE 上 thrift server 的端口，用于接收来自 FE 的请求 |
-| BE | webserver_port | 8040 | BE <--> BE | BE 上的 http server 的端口 |
-| BE | heartbeat\_service_port | 9050 | FE --> BE | BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳 |
-| BE | brpc\_port | 8060 | FE <--> BE, BE <--> BE | BE 上的 brpc 端口，用于 BE 之间通讯 |
-| FE | http_port  | 8030 | FE <--> FE，用户 <--> FE |FE 上的 http server 端口 |
-| FE | rpc_port | 9020 | BE --> FE, FE <--> FE | FE 上的 thrift server 端口，每个fe的配置需要保持一致|
-| FE | query_port | 9030 | 用户 <--> FE | FE 上的 mysql server 端口 |
-| FE | edit\_log_port | 9010 | FE <--> FE | FE 上的 bdbje 之间通信用的端口 |
-| Broker | broker\_ipc_port | 8000 | FE --> Broker, BE --> Broker | Broker 上的 thrift server，用于接收请求 |
+| 实例名称    | 端口名称                  | 默认端口    | 通讯方向                      | 说明                                           |
+|------------|-------------------------|------------|------------------------------| ----------------------------------------------|
+| BE         | be_port                 | 9060       | FE --> BE                    | BE 上 thrift server 的端口，用于接收来自 FE 的请求 |
+| BE         | webserver_port          | 8040       | BE <--> BE, Client <--> FE   | BE 上的 http server 的端口                      |
+| BE         | heartbeat\_service_port | 9050       | FE --> BE                    | BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳   |
+| BE         | brpc\_port              | 8060       | FE <--> BE, BE <--> BE       | BE 上的 brpc 端口，用于 BE 之间通讯               |
+| FE         | http_port               | 8030       | FE <--> FE，用户 <--> FE      |FE 上的 http server 端口                         |
+| FE         | rpc_port                | 9020       | BE --> FE, FE <--> FE        | FE 上的 thrift server 端口，每个fe的配置需要保持一致|
+| FE         | query_port              | 9030       | 用户 <--> FE                  | FE 上的 mysql server 端口                       |
+| FE         | edit\_log_port          | 9010       | FE <--> FE                   | FE 上的 bdbje 之间通信用的端口                    |
+| Broker     | broker\_ipc_port        | 8000       | FE --> Broker, BE --> Broker | Broker 上的 thrift server，用于接收请求           |
 
 > 注：
 > 1. 当部署多个 FE 实例时，要保证 FE 的 http\_port 配置相同。
@@ -225,11 +225,13 @@ doris默认为表名大小写敏感，如有表名大小写不敏感的需求需
 * 配置 JAVA_HOME 环境变量
 
   <version since="1.2.0"></version>  
+
   由于从 1.2 版本开始支持 Java UDF 函数，BE 依赖于 Java 环境。所以要预先配置 `JAVA_HOME` 环境变量，也可以在 `start_be.sh` 启动脚本第一行添加 `export JAVA_HOME=your_java_home_path` 来添加环境变量。
 
 * 安装 Java UDF 函数
 
    <version since="1.2.0">安装Java UDF 函数</version>  
+   
    因为从 1.2 版本开始支持 Java UDF 函数，需要从官网下载 Java UDF 函数的 JAR 包放到 BE 的 lib 目录下，否则可能会启动失败。
 
 * 在 FE 中添加所有 BE 节点

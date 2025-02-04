@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Insert Into",
+    "title": "Insert Into Select",
     "language": "zh-CN"
 }
 ---
@@ -27,21 +27,13 @@ under the License.
 
 INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INTO 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
-主要的 Insert Into 命令包含以下两种：
-
-- INSERT INTO tbl SELECT ...
-
-- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
-
 ## 使用场景
 
-1. 用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 INSERT INTO VALUES 的语法，语法和 MySQL 一样。不建议在生产环境中使用 INSERT INTO VALUES。
+1. 用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。
 
-2. 用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。
+2. 与 Multi-Catalog 外部表机制进行配合，如通过 Multi-Catalog 映射 MySQL 或者 Hive 系统中的表，然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
 
-3. 与 Multi-Catalog 外部表机制进行配合，如通过 Multi-Catalog 映射 MySQL 或者 Hive 系统中的表，然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
-
-4. 通过 Table Value Function（TVF）功能，可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询，并且支持自动的列类型推断。然后，通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
+3. 通过 Table Value Function（TVF）功能，可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询，并且支持自动的列类型推断。然后，通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
 
 ## 基本原理
 
@@ -51,29 +43,27 @@ INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INT
 
 INSERT INTO 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md)。
 
 ### 前置检查
 
-INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
+INSERT INTO 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
-
-**INSERT INTO VALUES**
 
 1. 创建源表
 
 ```sql
 CREATE TABLE testdb.test_table(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-2. 使用 INSERT INTO VALUES 向源表导入数据（不推荐在生产环境中使用）
+2. 使用任何方式向源表导入数据（这里以 INSERT INTO VALUES 为例）
 
 ```sql
 INSERT INTO testdb.test_table (user_id, name, age)
@@ -84,34 +74,13 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。可以打开 [group commit](../import-way/group-commit-manual.md) 达到更高的性能。
-
-```JSON
-Query OK, 5 rows affected (0.308 sec)
-{'label':'label_3e52da787aab4222_9126d2fce8f6d1e5', 'status':'VISIBLE', 'txnId':'9081'}
-```
-
-3. 查看导入数据
-
-```sql
-MySQL> SELECT COUNT(*) FROM testdb.test_table;
-+----------+
-| count(*) |
-+----------+
-|        5 |
-+----------+
-1 row in set (0.179 sec)
-```
-
-**INSERT INTO SELECT**
-
-1. 在上述操作的基础上，创建一个新表作为目标表（其 schema 与源表相同）
+3. 在上述操作的基础上，创建一个新表作为目标表（其 schema 与源表相同）
 
 ```sql
 CREATE TABLE testdb.test_table2 LIKE testdb.test_table;
 ```
 
-2. 使用 INSERT INTO SELECT 导入到新表
+4. 使用 INSERT INTO SELECT 导入到新表
 
 ```sql
 INSERT INTO testdb.test_table2
@@ -120,21 +89,23 @@ Query OK, 3 rows affected (0.544 sec)
 {'label':'label_9c2bae970023407d_b2c5b78b368e78a7', 'status':'VISIBLE', 'txnId':'9084'}
 ```
 
-3. 查看导入数据
+5. 查看导入数据
 
 ```sql
-MySQL> SELECT COUNT(*) FROM testdb.test_table2;
-+----------+
-| count(*) |
-+----------+
-|        3 |
-+----------+
-1 row in set (0.071 sec)
+MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
++---------+--------+------+
+| user_id | name   | age  |
++---------+--------+------+
+|       5 | Ava    |   17 |
+|       1 | Emily  |   25 |
+|       3 | Olivia |   28 |
++---------+--------+------+
+3 rows in set (0.02 sec)
 ```
 
-4. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
+6. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
 
-5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
+7. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
 
 ### 查看导入作业
 
@@ -158,10 +129,6 @@ MySQL> SHOW LOAD FROM testdb;
 
 ### 导入命令
 
-INSERT INTO 导入语法如下：
-
-1. INSERT INTO SELECT
-
 INSERT INTO SELECT 一般用于将查询结果保存到目标表中。
 
 ```sql
@@ -170,50 +137,21 @@ INSERT INTO target_table SELECT ... FROM source_table;
 
 其中 SELECT 语句同一般的 SELECT 查询语句，可以包含 WHERE JOIN 等操作。
 
-2. INSERT INTO VALUES
-
-INSERT INTO VALUES 一般仅用于 Demo，不建议在生产环境使用。
-
-```sql
-INSERT INTO target_table (col1, col2, ...)
-VALUES (val1, val2, ...), (val3, val4, ...), ...;
-```
-
 ### 导入配置参数
 
-**01 FE 配置**
+**FE 配置**
 
-**insert_load_default_timeout_second**
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_load_default_timeout_second | 14400（4 小时） | 导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 `CANCELLED`。 |
 
-- 默认值：14400（4 小时）
+**环境变量**
 
-- 参数描述：导入任务的超时时间，单位：秒。导入任务在该超时时间内未完成则会被系统取消，变成 CANCELLED。
-
-**02 环境变量**
-
-**insert_timeout**
-
-- 默认值：14400（4 小时）
-
-- 参数描述：INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。
-
-**enable_insert_strict**
-
-- 默认值：true
-
-- 参数描述：如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。
-
-- 解释：INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
-
-**insert_max_filter_ratio**
-
-- 默认值：1.0
-
-- 参数描述：自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。
-
-**enable_nereids_dml_with_pipeline**
-
-  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](../load-manual)文档。
+| 参数 | 默认值 | 描述 |
+| --- | --- | --- |
+| insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
+| enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
 
 ### 导入返回值
 
@@ -269,7 +207,7 @@ Query OK, 2 rows affected, 2 warnings (0.31 sec)
 | Status   | 表示导入数据是否可见。如果可见，显示 `visible`，如果不可见，显示 `committed`<p>- `visible`：表示导入成功，数据可见</p> <p>- `committed`：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试</p> <p>- Label Already Exists：Label 重复，需要更换 label</p> <p>- Fail：导入失败</p> |
 | Err      | 导入错误信息                                                 |
 
-当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD)语句
+当需要查看被过滤的行时，用户可以通过[ SHOW LOAD ](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD)语句
 
 ```sql
 SHOW LOAD WHERE label="xxx";
@@ -279,7 +217,7 @@ SHOW LOAD WHERE label="xxx";
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION)语句查看这批数据的可见状态：
 
 ```sql
 SHOW TRANSACTION WHERE id=4005;
@@ -336,7 +274,7 @@ SHOW LOAD WARNINGS ON "http://ip:port/api/_load_error_log?file=_shard_13/error_l
 
 Doris 可以创建外部表。创建完成后，可以通过 `INSERT INTO SELECT` 的方式导入外部表的数据，当然也可以通过 SELECT 语句直接查询外部表的数据，
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQL Server 等主流数据湖、数据库的连接访问。
 
 Multi-Catalog 相关功能，请查看湖仓一体文档。
 
@@ -376,7 +314,7 @@ PROPERTIES (
 );
 ```
 
-2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 语法帮助。
+2. 关于创建 Doris 表的详细说明，请参阅 [CREATE-TABLE](../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语法帮助。
 
 3. 导入数据 (从 hive.db1.source_tbl 表导入到 target_tbl 表)
 
@@ -460,4 +398,4 @@ FROM s3(
 
 ## 更多帮助
 
-关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。
+关于 Insert Into 使用的更多详细语法，请参阅 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP INSERT` 获取更多帮助信息。

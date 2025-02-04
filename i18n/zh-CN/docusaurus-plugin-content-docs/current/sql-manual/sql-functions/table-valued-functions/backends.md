@@ -24,88 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `backends`
-
-### Name
-
-backends
-
-### description
+## 描述
 
 表函数，生成 backends 临时表，可以查看当前 doris 集群中的 BE 节点信息。
 
-该函数用于 from 子句中。
-
-#### syntax
-`backends()`
-
-backends() 表结构：
-```
-mysql> desc function backends();
-+-------------------------+---------+------+-------+---------+-------+
-| Field                   | Type    | Null | Key   | Default | Extra |
-+-------------------------+---------+------+-------+---------+-------+
-| BackendId               | BIGINT  | No   | false | NULL    | NONE  |
-| Host                    | TEXT    | No   | false | NULL    | NONE  |
-| HeartbeatPort           | INT     | No   | false | NULL    | NONE  |
-| BePort                  | INT     | No   | false | NULL    | NONE  |
-| HttpPort                | INT     | No   | false | NULL    | NONE  |
-| BrpcPort                | INT     | No   | false | NULL    | NONE  |
-| LastStartTime           | TEXT    | No   | false | NULL    | NONE  |
-| LastHeartbeat           | TEXT    | No   | false | NULL    | NONE  |
-| Alive                   | BOOLEAN | No   | false | NULL    | NONE  |
-| SystemDecommissioned    | BOOLEAN | No   | false | NULL    | NONE  |
-| TabletNum               | BIGINT  | No   | false | NULL    | NONE  |
-| DataUsedCapacity        | BIGINT  | No   | false | NULL    | NONE  |
-| AvailCapacity           | BIGINT  | No   | false | NULL    | NONE  |
-| TotalCapacity           | BIGINT  | No   | false | NULL    | NONE  |
-| UsedPct                 | DOUBLE  | No   | false | NULL    | NONE  |
-| MaxDiskUsedPct          | DOUBLE  | No   | false | NULL    | NONE  |
-| RemoteUsedCapacity      | BIGINT  | No   | false | NULL    | NONE  |
-| Tag                     | TEXT    | No   | false | NULL    | NONE  |
-| ErrMsg                  | TEXT    | No   | false | NULL    | NONE  |
-| Version                 | TEXT    | No   | false | NULL    | NONE  |
-| Status                  | TEXT    | No   | false | NULL    | NONE  |
-| HeartbeatFailureCounter | INT     | No   | false | NULL    | NONE  |
-| NodeRole                | TEXT    | No   | false | NULL    | NONE  |
-+-------------------------+---------+------+-------+---------+-------+
-23 rows in set (0.002 sec)
+## 语法
+```sql
+BACKENDS()
 ```
 
-`backends()` tvf 展示出来的信息基本与 `show backends` 语句展示出的信息一致，但是 `backends()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
+## 权限控制
 
-对 `backends()` tvf 信息展示进行了鉴权，与 `show backends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
 
-### example
+## 返回值
+| Field                       | Description                                         |
+|-----------------------------|-----------------------------------------------------|
+| **BackendId**               | 每个 Backend 节点的唯一标识符。                                |
+| **Host**                    | Backend 节点的 IP 地址或主机名。                              |
+| **HeartbeatPort**           | 用于健康检查（心跳）的端口。                                      |
+| **BePort**                  | Backend 节点与集群通信时使用的端口。                              |
+| **HttpPort**                | Backend 节点的 HTTP 端口。                                |
+| **BrpcPort**                | 用于 BRPC 通信的端口。                                      |
+| **ArrowFlightSqlPort**      | Arrow Flight SQL 端口（用于与 Apache Arrow 集成，进行高性能数据传输）。 |
+| **LastStartTime**           | Backend 节点最后一次启动的时间戳。                               |
+| **LastHeartbeat**           | 接收到的最后一次心跳时间戳。                                      |
+| **Alive**                   | Backend 节点是否处于活动状态（True/False）。                     |
+| **SystemDecommissioned**    | 该 Backend 节点是否已被弃用。                                 |
+| **TabletNum**               | 该 Backend 节点管理的 Tablet 数量。                          |
+| **DataUsedCapacity**        | 该 Backend 节点使用的磁盘空间（以 MB 为单位）。                      |
+| **TrashUsedCapacity**       | 该 Backend 节点垃圾空间的使用情况（以 MB 为单位）。                    |
+| **AvailCapacity**           | 该 Backend 节点的可用磁盘空间。                                |
+| **TotalCapacity**           | 该 Backend 节点的总磁盘容量。                                 |
+| **UsedPct**                 | 该 Backend 节点的磁盘使用百分比。                               |
+| **MaxDiskUsedPct**          | 所有 Tablet 的最大磁盘使用百分比。                               |
+| **RemoteUsedCapacity**      | 远程存储的磁盘空间使用情况（如果适用）。                                |
+| **Tag**                     | 与 Backend 节点关联的标签，通常用于节点分类（例如，位置等）。                 |
+| **ErrMsg**                  | Backend 节点的错误信息。                                    |
+| **Version**                 | Backend 节点的版本。                                      |
+| **Status**                  | Backend 节点的当前状态，包括 Tablet 的成功/失败报告、加载时间和查询状态等。      |
+| **HeartbeatFailureCounter** | 心跳失败的计数，如果有的话。                                      |
+| **NodeRole**                | Backend 节点的角色，例如 `mix` 表示节点同时处理存储和查询。               |
+| **CpuCores**                | Backend 节点的 CPU 核心数。                                |
+| **Memory**                  | Backend 节点的内存大小。                                    |
+
+
+## 示例
+查看 backends 集群信息
+```sql
+select * from backends();
 ```
-mysql> select * from backends()\G
-*************************** 1. row ***************************
-              BackendId: 10002
-                   Host: 10.xx.xx.90
-          HeartbeatPort: 9053
-                 BePort: 9063
-               HttpPort: 8043
-               BrpcPort: 8069
-          LastStartTime: 2023-06-15 16:51:02
-          LastHeartbeat: 2023-06-15 17:09:58
-                  Alive: 1
-   SystemDecommissioned: 0
-              TabletNum: 21
-       DataUsedCapacity: 0
-          AvailCapacity: 5187141550081
-          TotalCapacity: 7750977622016
-                UsedPct: 33.077583202570978
-         MaxDiskUsedPct: 33.077583202583881
-     RemoteUsedCapacity: 0
-                    Tag: {"location" : "default"}
-                 ErrMsg: 
-                Version: doris-0.0.0-trunk-4b18cde0c7
-                 Status: {"lastSuccessReportTabletsTime":"2023-06-15 17:09:02","lastStreamLoadTime":-1,"isQueryDisabled":false,"isLoadDisabled":false}
-HeartbeatFailureCounter: 0
-               NodeRole: mix
-1 row in set (0.038 sec)
+
+```text
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
+| BackendId | Host      | HeartbeatPort | BePort | HttpPort | BrpcPort | ArrowFlightSqlPort | LastStartTime       | LastHeartbeat       | Alive | SystemDecommissioned | TabletNum | DataUsedCapacity | TrashUsedCapacity | AvailCapacity | TotalCapacity | UsedPct | MaxDiskUsedPct | RemoteUsedCapacity | Tag                      | ErrMsg | Version                 | Status                                                                                                                                                                                                                 | HeartbeatFailureCounter | NodeRole | CpuCores | Memory    |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
+| 10020     | 10.xx.xx.90 | 9050          | 9060   | 8040     | 8060     | -1               | 2025-01-13 14:11:31 | 2025-01-16 13:24:55 | true  | false                | 359       | 295.328 MB       | 0.000             | 231.236 GB    | 3.437 TB      | 93.43 % | 93.43 %        | 0.000              | {"location" : "default"} |        | doris-0.0.0--83f899b32b | {"lastSuccessReportTabletsTime":"2025-01-16 13:24:07","lastStreamLoadTime":1737004982210,"isQueryDisabled":false,"isLoadDisabled":false,"isActive":true,"currentFragmentNum":0,"lastFragmentUpdateTime":1737004982195} | 0                       | mix      | 96       | 375.81 GB |
++-----------+-----------+---------------+--------+----------+----------+--------------------+---------------------+---------------------+-------+----------------------+-----------+------------------+-------------------+---------------+---------------+---------+----------------+--------------------+--------------------------+--------+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------+----------+----------+-----------+
 ```
-
-### keywords
-
-    backends

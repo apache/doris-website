@@ -1208,23 +1208,23 @@ As long as one BE is down, Routine Load cannot be automatically restored
 
 #### `max_routine_load_task_num_per_be`
 
-Default：5
+Default：1024
 
 IsMutable：true
 
 MasterOnly：true
 
-the max concurrent routine load task num per BE.  This is to limit the num of routine load tasks sending to a BE, and it should also less than BE config 'routine_load_thread_pool_size'(default 10), which is the routine load task thread pool size on BE.
+the max concurrent routine load task num per BE.  This is to limit the num of routine load tasks sending to a BE, and it should also less than BE config 'max_routine_load_thread_pool_size'(default 1024), which is the routine load task thread pool size on BE. In major versions of 2.0, the default value is 1024 starting with version 2.0.13. And before version 2.0.13 the default value was 5.
 
 #### `max_routine_load_task_concurrent_num`
 
-Default：5
+Default：256
 
 IsMutable：true
 
 MasterOnly：true
 
-the max concurrent routine load task num of a single routine load job
+the max concurrent routine load task num of a single routine load job. In major versions of 2.0, the default value is 256 starting with version 2.0.13. And before version 2.0.13 the default value was 5.
 
 #### `max_routine_load_job_num`
 
@@ -1496,6 +1496,12 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 Default：1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
+
+#### `label_regex_length`
+
+Default Value: 128 (characters)
+
+The maximum character length of the load label, the default is 128 characters.
 
 #### `transaction_clean_interval_second`
 

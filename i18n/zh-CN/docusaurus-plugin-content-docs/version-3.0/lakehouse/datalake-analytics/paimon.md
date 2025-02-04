@@ -150,6 +150,26 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 );
 ```
 
+### 基于 Aliyun DLF 创建 Catalog
+
+该功能自 2.1.7 和 3.0.3 版本支持。
+
+```
+CREATE CATALOG `paimon_dlf` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "dlf",
+    "warehouse" = "oss://xx/yy/",
+    "dlf.proxy.mode" = "DLF_ONLY",
+    "dlf.uid" = "xxxxx",
+    "dlf.region" = "cn-beijing",
+    "dlf.access_key" = "ak",
+    "dlf.secret_key" = "sk"
+    
+    -- "dlf.endpoint" = "dlf.cn-beijing.aliyuncs.com",  -- optional
+    -- "dlf.catalog.id" = "xxxx", -- optional
+);
+```
+
 ## 列类型映射
 
 | Paimon Data Type                      | Doris Data Type           | Comment   |

@@ -802,7 +802,7 @@ NOTE: Multi Partition can be mixed with conventional manual creation of partitio
 
 #### Partitioning and bucketing
 
-A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/data-partition#dynamic-partitioning) document.
+A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/data-partitioning/dynamic-partition) document.
 
 Tables in Doris can be divided into partitioned tables and non-partitioned tables. This attribute is determined when the table is created and cannot be changed afterwards. That is, for partitioned tables, you can add or delete partitions in the subsequent use process, and for non-partitioned tables, you can no longer perform operations such as adding partitions afterwards.
 
@@ -812,7 +812,7 @@ Therefore, it is recommended to confirm the usage method to build the table reas
 
 #### Dynamic Partition
 
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partition#auto-partitioning) document for more help.
+The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partitioning/dynamic-partition) document for more help.
 
 #### Materialized View
 

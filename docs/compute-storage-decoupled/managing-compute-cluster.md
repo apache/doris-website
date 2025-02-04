@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Managing Compute Cluster",
+    "title": "Managing Compute Groups",
     "language": "en"
 }
 ---
@@ -24,348 +24,140 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In the compute-storage decoupled mode, users can organize one or more BE nodes into a compute cluster. This document introduces how to use the compute clusters. The main operations include:
+In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a Compute Group. This document describes how to use compute groups, including operations such as:
 
-- Show all compute clusters
-- Grant compute clusters to users
-- Bind a compute cluster to user (`default_cloud_cluster`) for user-level isolation
+- Viewing all compute groups
+- Granting compute group access
+- Binding compute groups at the user level (`default_compute_group`) for user-level isolation
 
-:::info
+*Note*
+In versions prior to 3.0.2, this was referred to as a Compute Cluster.
 
-`cluster` in this document refers to compute clusters.
+## Compute Group Usage Scenarios
 
-:::
+In a multi-compute group architecture, you can group one or more stateless BE nodes into compute clusters. By using compute cluster specification statements (use @<compute_group_name>), you can allocate specific workloads to specific compute clusters, achieving physical isolation of multiple import and query workloads.
 
-## Show all compute clusters
+Assume there are two compute clusters: C1 and C2.
 
-Use the `show clusters` command to check all compute clusters under the current instance.
+- **Read-Read Isolation**: Before initiating two large queries, use `use @c1` and `use @c2` respectively to ensure that the queries run on different compute nodes. This prevents resource contention (CPU, memory, etc.) when accessing the same dataset.
 
-```SQL
-> mysql show clusters;
-+-------------------------------+------------+------------+
-| cluster                       | is_current | users      |
-+-------------------------------+------------+------------+
-| regression_test_cluster_name0 | FALSE      | root, jack |
-| regression_test_cluster_name5 | FALSE      |            |
-+-------------------------------+------------+------------+
-2 rows in set (0.01 sec)
+- **Read-Write Isolation**: Doris data imports consume substantial resources, especially in scenarios with large data volumes and high-frequency imports. To avoid resource contention between queries and imports, you can use `use @c1` and `use @c2` to specify that queries execute on C1 and imports on C2. Additionally, the C1 compute cluster can access newly imported data in the C2 compute cluster.
 
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
-Query OK, 0 rows affected (0.01 sec)
+- **Write-Write Isolation**: Similar to read-write isolation, imports can also be isolated from each other. For example, when the system has both high-frequency small imports and large batch imports, batch imports typically take longer and have higher retry costs, while high-frequency small imports are quick with lower retry costs. To prevent small imports from interfering with batch imports, you can use `use @c1` and `use @c2` to specify small imports to execute on C1 and batch imports on C2.
+
+## Default Compute Group Selection Mechanism
+
+When a user has not explicitly [set a default compute group](#setting-default-compute-group), the system will automatically select a compute group with Active BE that the user has usage permissions for. Once the default compute group is determined in a specific session, it will remain unchanged during that session unless the user explicitly changes the default setting.
+
+In different sessions, if the following situations occur, the system may automatically change the user's default compute group:
+
+- The user has lost usage permissions for the default compute group selected in the last session
+- A compute group has been added or removed
+- The previously selected default compute group no longer has Alive BE
+
+Situations one and two will definitely lead to a change in the automatically selected default compute group, while situation three may lead to a change.
+
+## Viewing All Compute Groups
+
+Use the `SHOW COMPUTE GROUPS` command to view all compute groups in the current repository. The returned results will display different content based on the user's permission level:
+
+- Users with `ADMIN` privileges can view all compute groups
+- Regular users can only view compute groups for which they have usage permissions (USAGE_PRIV)
+- If a user doesn't have usage permissions for any compute groups, an empty result will be returned
+
+
+```sql
+SHOW COMPUTE GROUPS;
 ```
 
-## Grant compute cluster access privilege
+## Adding Compute Groups
 
-Use the MySQL Client to create a new user.
+Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/account-management/GRANT-TO). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
+To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) command. For example:
 
-**Syntax**
-
-```SQL
-GRANT USAGE_PRIV ON CLUSTER {cluster_name} TO {user}
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
 ```
 
-**Example**
+The above sql will add `host:9050` to compute group `new_group`. The BE will be added to compute group `default_compute_group` if you omit PROPERTIES statement, for example:
 
-```SQL
-// Use the root account to create a new Jack user in the MySQL Client.
-
-mysql CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
-Query OK, 0 rows affected (0.01 sec)
-
-mysql GRANT USAGE_PRIV ON CLUSTER regression_test_cluster_name0 TO jack;
-Query OK, 0 rows affected (0.01 sec)
-
-// Log in to the MySQL Client via Jack.
-
-mysql use d1@regression_test_cluster_name0;
-Database changed
-
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: regression_test_cluster_name0: Usage_priv  (false)
-   CloudStage: NULL
-1 row in set (0.00 sec)
-
-mysql select * from t1;
-+------+------+-------+
-| id   | name | score |
-+------+------+-------+
-|    1 | aaa  |    20 |
-|    2 | bbb  |   320 |
-|    3 | ccc  |    30 |
-|    4 | ddd  |   120 |
-|    5 | eee  |    30 |
-|    6 | fff  |    30 |
-|    7 | ggg  |    90 |
-|    8 | hhh  |    30 |
-+------+------+-------+
-8 rows in set (12.70 sec)
-
-mysql insert into t1 (id, name, score) values (8, "hhh", 30);
-Query OK, 1 row affected (7.22 sec)
-{'label':'insert_6f40c1713baf4d61_9c33c0962c68ab07', 'status':'VISIBLE', 'txnId':'5462662627547136'}
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050';
 ```
 
-If you attempt to grant a Jack user the access privilege to a non-existent compute cluster, the system will not report an error. However, an error will be raised when the user attempts to execute the `use @cluster` command.
+## Granting Compute Group Access
+Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
 
-```SQL
-mysql GRANT USAGE_PRIV ON CLUSTER not_exist_cluster TO jack;
-Query OK, 0 rows affected (0.05 sec)
-
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: not_exist_cluster: Usage_priv  (false)
-   CloudStage: NULL
-1 row in set (0.00 sec)
-
-Switch to the Jack account and execute use @not_exist_cluster, an error will be thrown.
-
-mysql use information_schema@not_exist_cluster;
-No connection. Trying to reconnect...
-Connection id:    1
-Current database: *** NONE ***
-
-ERROR 5091 (42000): Cluster not_exist_cluster not exist
+```sql
+GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
-## Revoke compute cluster access privilege
+## Revoking Compute Group Access
+Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
 
-**Syntax**
-
-```SQL
-REVOKE USAGE_PRIV ON CLUSTER {cluster_name} FROM {user}
+```sql
+REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 ```
 
-**Example**
+## Setting Default Compute Group 
 
-```SQL
-// Use the root account to create a new Jack user in the MySQL Client.
-mysql REVOKE USAGE_PRIV ON CLUSTER regression_test_cluster_name0 FROM jack;
-Query OK, 0 rows affected (0.01 sec)
+To set the default compute group for the current user(This operation requires the current user to already have permission to use the computing group):
 
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: NULL
-   CloudStage: NULL
-1 row in set (0.01 sec)
+```sql
+SET PROPERTY 'default_compute_group' = '{clusterName}';
 ```
 
-## Set default compute cluster 
+To set the default compute group for other users (this operation requires Admin privileges):
 
-Users can set a compute cluster as the default compute cluster.
-
-**Syntax**
-
-Set the default compute cluster for the current user:
-
-```SQL
-SET PROPERTY 'default_cloud_cluster' = '{clusterName}';
+```sql
+SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 ```
 
-Set the default compute cluster for other users (requiring Admin privileges):
+To view the current user's default compute group, the value of `default_compute_group` in the returned result is the default compute group:
 
-```SQL
-SET PROPERTY FOR {user} 'default_cloud_cluster' = '{clusterName}';
-```
-
-Check the default compute cluster of the current user. The value of `default_cloud_cluster` in the returned result will be the default compute cluster.
-
-```SQL
+```sql
 SHOW PROPERTY;
 ```
 
-Check the default compute clusters of other users (requiring Admin privileges). The value of `default_cloud_cluster`in the returned result will be the default compute cluster.
+To view the default compute group of other users, This operation requires the current user to have admin privileges, and the value of `default_compute_group` in the returned result is the default compute group:
 
-```SQL
+```sql
 SHOW PROPERTY FOR {user};
 ```
 
-Check all available compute clusters under the current instance:
+To view all available compute groups in the current repository:
 
-```SQL
-SHOW CLUSTERS;
+```sql
+SHOW COMPUTE GROUPS;
 ```
 
-:::info
+:::info Note
 
-- If the current user has Admin privileges, (e.g. `CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`), then:
-  - They can set the default compute cluster for themselves and other users;
-  - They can view the `PROPERTY` for themselves and other users.
-- If the current user does not have Admin privileges, (e.g. `CREATE USER jack1 IDENTIFIED BY '123456'`), then:
-  - They can set the default compute cluster for themselves;
-  - They can view their own PROPERTY;
-  - They cannot view all compute clusters, as this operation requires the `GRANT ADMIN` privilege.
-- If a default compute cluster is not set for the current user, the system will trigger an error when the user executes data read/write operations. To solve this, the user can execute the `use @cluster` command to specify the compute cluster for the current context, or use the `SET PROPERTY` statement to set the default compute cluster.
-- If the current user has set a default compute cluster, but that cluster is later deleted, an error will also be triggered when executing data read/write operations. The user can execute the `use @cluster` command to re-specify the compute cluster for the current context, or use the `SET PROPERTY` statement to update the default compute cluster setting.
+- If the current user has an Admin role, for example: `CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`, then:
+  - They can set the default compute group for themselves and other users;
+  - They can view their own and other users' `PROPERTY`.
+- If the current user does not have an Admin role, for example: `CREATE USER jack1 IDENTIFIED BY '123456'`, then:
+  - They can set the default compute group for themselves;
+  - They can view their own `PROPERTY`;
+  - They cannot view all compute groups, as this operation requires `GRANT ADMIN` privileges.
+- If the current user has not configured a default compute group, the existing system will trigger an error when performing data read/write operations. To resolve this issue, the user can execute the `use @cluster` command to specify the compute group used by the current context, or use the `SET PROPERTY` statement to set the default compute group.
+- If the current user has configured a default compute group, but that cluster is subsequently deleted, an error will also be triggered during data read/write operations. The user can execute the `use @cluster` command to re-specify the compute group used by the current context, or use the `SET PROPERTY` statement to update the default cluster settings.
 
 :::
 
-**Example**
 
-```SQL
-// Set the default compute cluster for the current user
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name0';
-Query OK, 0 rows affected (0.02 sec)
+## Switching Compute Groups
 
-// Show the default compute cluster of the current user
-mysql show PROPERTY;
-+------------------------+-------------------------------+
-| Key                    | Value                         |
-+------------------------+-------------------------------+
-| cpu_resource_limit     | -1                            |
-| default_cloud_cluster  | regression_test_cluster_name0 |
-| exec_mem_limit         | -1                            |
-| load_mem_limit         | -1                            |
-| max_query_instances    | -1                            |
-| max_user_connections   | 100                           |
-| quota.high             | 800                           |
-| quota.low              | 100                           |
-| quota.normal           | 400                           |
-| resource.cpu_share     | 1000                          |
-| resource.hdd_read_iops | 80                            |
-| resource.hdd_read_mbps | 30                            |
-| resource.io_share      | 1000                          |
-| resource.ssd_read_iops | 1000                          |
-| resource.ssd_read_mbps | 30                            |
-| resource_tags          |                               |
-| sql_block_rules        |                               |
-+------------------------+-------------------------------+
-17 rows in set (0.00 sec)
-
-// Use the root account to create a new Jack user in the MySQL Client
-mysql CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
-Query OK, 0 rows affected (0.01 sec)
-
-// Set the default compute cluster for a Jack user
-mysql SET PROPERTY FOR jack 'default_cloud_cluster' = 'regression_test_cluster_name1';
-Query OK, 0 rows affected (0.00 sec)
-
-// Show the default compute clusters of other users
-mysql show PROPERTY for jack;
-+------------------------+-------------------------------+
-| Key                    | Value                         |
-+------------------------+-------------------------------+
-| cpu_resource_limit     | -1                            |
-| default_cloud_cluster  | regression_test_cluster_name1 |
-| exec_mem_limit         | -1                            |
-| load_mem_limit         | -1                            |
-| max_query_instances    | -1                            |
-| max_user_connections   | 100                           |
-| quota.high             | 800                           |
-| quota.low              | 100                           |
-| quota.normal           | 400                           |
-| resource.cpu_share     | 1000                          |
-| resource.hdd_read_iops | 80                            |
-| resource.hdd_read_mbps | 30                            |
-| resource.io_share      | 1000                          |
-| resource.ssd_read_iops | 1000                          |
-| resource.ssd_read_mbps | 30                            |
-| resource_tags          |                               |
-| sql_block_rules        |                               |
-+------------------------+-------------------------------+
-17 rows in set (0.00 sec)
-```
-
-If the compute cluster that is about to be set as default does not exist, as the default, the system will return an error and prompt the user to use the `SHOW CLUSTERS` command to view all the valid compute clusters in the current warehouse.
-
-The `SHOW CLUSTERS` command will return a result set, where:
-
-- The `Cluster` column shows the name of the compute clusters.
-- The `is_current` column indicates whether the current user is using that compute cluster.
-- The `Users` column shows which users have set that compute cluster as their default.
-
-```SQL
-mysql SET PROPERTY 'default_cloud_cluster' = 'not_exist_cluster';
-ERROR 5091 (42000): errCode = 2, detailMessage = Cluster not_exist_cluster not exist, use SQL 'SHOW CLUSTERS' to get a valid cluster
-
-mysql show clusters;
-+-------------------------------+------------+------------+
-| cluster                       | is_current | users      |
-+-------------------------------+------------+------------+
-| regression_test_cluster_name0 | FALSE      | root, jack |
-| regression_test_cluster_name5 | FALSE      |            |
-+-------------------------------+------------+------------+
-2 rows in set (0.01 sec)
-
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
-Query OK, 0 rows affected (0.01 sec)
-```
-
-## Default compute cluster selection mechanism
-
-When the user has not explicitly set a default compute cluster, the system will automatically select a compute cluster which satifies the following conditions:
-
-- The compute cluster has an active backend.
-- The user has permission to use this compute cluster.
-
-Once a default compute cluster is established for a specific session, it will remain the default throughout that session, unless the user explicitly changes the default setting.
-
-In different sessions, the system may automatically change the user's default compute cluster if any of the following occur:
-
-- The user loses permission to use the compute cluster that was previously selected as the default.
-- Clusters have been added or removed.
-- The previously selected default compute cluster no longer has an active backend.
-
-Scenarios 1 and 2 will definitively trigger the system to automatically select a new default compute cluster, while scenario 3 may potentially lead to a change.
-
-## Switch compute cluster
-
-In a compute-storage decoupled architecture, the user can specify the database and compute cluster to be used.
+Users can specify the database and compute group to use in a compute-storage decoupled architecture.
 
 **Syntax**
 
-```SQL
-USE { [catalog_name.]database_name[@cluster_name] | @cluster_name }
+```sql
+USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
 
-If the name of the database or compute cluster contains a reserved keyword, the respective name needs to be enclosed within backticks \``` to denote it as a quoted identifier.
+If the database or compute group name contains reserved keywords, the corresponding name must be enclosed in backticks ```.
+ 
+## Scaling Compute Groups
 
-**Example**
-
-Use database `test_database`:
-
-```SQL
-USE test_database
-
-USE `test_database`
-```
-
-Use compute cluster `test_cluster`:
-
-```SQL
-USE @test_cluster
-
-USE @`test_cluster`
-```
-
-Use database `test_database` and compute cluster `test_cluster`:
-
-```
-USE test_database@test_cluster
-
-USE `test_database`@`test_cluster`
-```
-
-
-
+You can scale compute groups by adding or removing BE using `ALTER SYSTEM ADD BACKEND` and `ALTER SYSTEM DECOMMISION BACKEND`.

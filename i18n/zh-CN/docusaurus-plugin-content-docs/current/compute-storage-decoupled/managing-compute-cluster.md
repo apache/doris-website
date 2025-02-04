@@ -1,6 +1,6 @@
 ---
 {
-    "title": "计算集群操作",
+    "title": "计算组操作",
     "language": "zh-CN"
 }
 ---
@@ -24,335 +24,139 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算集群 (Compute Cluster)。本文档介绍如何使用计算集群，其中涉及的操作包括：
+在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括：
 
-- 查看所有计算集群
-- 计算集群授权
-- 在用户级别绑定计算集群 (`default_cloud_cluster`) 以达到用户级别的隔离效果
+- 查看所有计算组
+- 计算组授权
+- 在用户级别绑定计算组 (`default_compute_group`) 以达到用户级别的隔离效果
 
-:::info 备注
+*注意*
+3.0.2 之前的版本中叫做计算集群（Compute Cluster）。
 
-本文涉及的 `cluster` 均表示计算集群。
+## 计算组使用场景
 
-:::
+在多计算组的架构下，可以通过将一个或多个无状态的 BE 节点组成计算集群，利用计算集群指定语句 (use @<compute_group_name>) 将特定负载分配到特定的计算集群中，从而实现多导入和查询负载的物理隔离。
 
-## 查看所有计算集群
+假设当前有两个计算集群：C1 和 C2。
 
-可通过 `show clusters` 查看当前仓库拥有的所有计算集群。
+- **读读隔离**：在发起两个大型查询之前，分别使用 `use @c1` 和 `use @c2`，确保两个查询在不同的计算节点上运行，从而避免在访问相同数据集时因 CPU 和内存等资源竞争而相互干扰。
 
-```SQL
-> mysql show clusters;
-+-------------------------------+------------+------------+
-| cluster                       | is_current | users      |
-+-------------------------------+------------+------------+
-| regression_test_cluster_name0 | FALSE      | root, jack |
-| regression_test_cluster_name5 | FALSE      |            |
-+-------------------------------+------------+------------+
-2 rows in set (0.01 sec)
+- **读写隔离**：Doris 的数据导入会消耗大量资源，尤其是在大数据量和高频导入的场景中。为了避免查询和导入之间的资源竞争，可以通过 `use @c1` 和 `use @c2` 指定查询在 C1 上执行，导入在 C2 上执行。同时，C1 计算集群可以访问 C2 计算集群中新导入的数据。
 
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
-Query OK, 0 rows affected (0.01 sec)
+- **写写隔离**：与读写隔离类似，导入之间也可以进行隔离。例如，当系统中存在高频小量导入和大批量导入时，批量导入通常耗时较长且重试成本高，而高频小量导入耗时短且重试成本低。为了避免小量导入对批量导入的干扰，可以通过 `use @c1` 和 `use @c2`，将小量导入指定到 C1 上执行，批量导入指定到 C2 上执行。
+
+
+## 默认计算组的选择机制
+
+当用户未明确[设置默认计算组](#设置默认计算组)时，系统将自动为用户选择一个具有存活计算节点且用户具有使用权限的计算组。在特定会话中确定默认计算组后，默认计算组将在该会话期间保持不变，除非用户显式更改了默认设置。
+
+在不同次的会话中，若发生以下情况，系统可能会自动更改用户的默认计算组：
+
+- 用户失去了在上次会话中所选择默认计算组的使用权限
+- 有计算组被添加或移除
+- 上次所选择的默认计算组不再具有存活计算节点
+
+其中，情况一和情况二必定会导致系统自动选择的默认计算组更改，情况三可能会导致更改。
+
+## 查看所有计算组
+
+使用 `SHOW COMPUTE GROUPS` 命令可以查看当前仓库中的所有计算组。返回结果会根据用户权限级别显示不同内容：
+
+- 具有 `ADMIN` 权限的用户可以查看所有计算组
+- 普通用户只能查看其拥有使用权限（USAGE_PRIV）的计算组
+- 如果用户没有任何计算组的使用权限，则返回结果为空
+
+```sql
+SHOW COMPUTE GROUPS;
 ```
 
-## 授予计算集群访问权限
+## 添加计算组
 
-使用 MySQL Client 创建一个新用户。
+操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/account-management/GRANT-TO)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
+要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 命令。例如：
 
-**语法**
-
-```SQL
-GRANT USAGE_PRIV ON CLUSTER {cluster_name} TO {user}
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
 ```
 
-**示例**
+上面命令会将`host:9050`这台节点添加到`new_group`这个计算组中，您也可以不指定计算组，默认会添加到`default_compute_group`组里，示例：
 
-```SQL
-// 使用 Root 账号在 MySQL Client 中创建 Jack 用户
-mysql CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
-Query OK, 0 rows affected (0.01 sec)
-
-mysql GRANT USAGE_PRIV ON CLUSTER regression_test_cluster_name0 TO jack;
-Query OK, 0 rows affected (0.01 sec)
-
-// 使用 Jack 登录 MySQL Client
-mysql use d1@regression_test_cluster_name0;
-Database changed
-
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: regression_test_cluster_name0: Usage_priv  (false)
-   CloudStage: NULL
-1 row in set (0.00 sec)
-
-mysql select * from t1;
-+------+------+-------+
-| id   | name | score |
-+------+------+-------+
-|    1 | aaa  |    20 |
-|    2 | bbb  |   320 |
-|    3 | ccc  |    30 |
-|    4 | ddd  |   120 |
-|    5 | eee  |    30 |
-|    6 | fff  |    30 |
-|    7 | ggg  |    90 |
-|    8 | hhh  |    30 |
-+------+------+-------+
-8 rows in set (12.70 sec)
-
-mysql insert into t1 (id, name, score) values (8, "hhh", 30);
-Query OK, 1 row affected (7.22 sec)
-{'label':'insert_6f40c1713baf4d61_9c33c0962c68ab07', 'status':'VISIBLE', 'txnId':'5462662627547136'}
+```sql
+ALTER SYSTEM ADD BACKEND 'host:9050';
 ```
 
-若向 Jack 用户授权一个不存在的计算集群，系统不会报错，而会在执行相应的 `use @cluster` 时报错。
+## 授予计算组访问权限
 
-```SQL
-mysql GRANT USAGE_PRIV ON CLUSTER not_exist_cluster TO jack;
-Query OK, 0 rows affected (0.05 sec)
-
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: not_exist_cluster: Usage_priv  (false)
-   CloudStage: NULL
-1 row in set (0.00 sec)
-
-切换到 Jack 账号，执行 use @not_exist_cluster，将出现提示 not_exist_cluster 不存在的报错提示
-
-mysql use information_schema@not_exist_cluster;
-No connection. Trying to reconnect...
-Connection id:    1
-Current database: *** NONE ***
-
-ERROR 5091 (42000): Cluster not_exist_cluster not exist
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+```sql
+GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
-## 撤销计算集群访问权限
-
-**语法**
-
-```SQL
-REVOKE USAGE_PRIV ON CLUSTER {cluster_name} FROM {user}
+## 撤销计算组访问权限
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+```sql
+REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 ```
 
-**示例**
+## 设置默认计算组 
 
-```SQL
-// 使用 Root 账号在 MySQL Client 中创建 Jack 用户
-mysql REVOKE USAGE_PRIV ON CLUSTER regression_test_cluster_name0 FROM jack;
-Query OK, 0 rows affected (0.01 sec)
+为当前用户设置默认计算组（此操作需要当前用户已经拥有计算组的使用权限）：
 
-mysql show grants for jack\G
-*************************** 1. row ***************************
- UserIdentity: 'jack'@'%'
-     Password: Yes
-  GlobalPrivs: Admin_priv  (false)
- CatalogPrivs: NULL
-DatabasePrivs: internal.information_schema: Select_priv  (false)
-   TablePrivs: NULL
-ResourcePrivs: NULL
- CloudCluster: NULL
-   CloudStage: NULL
-1 row in set (0.01 sec)
+```sql
+SET PROPERTY 'default_compute_group' = '{clusterName}';
 ```
 
-## 设置默认计算集群 
+为其他用户设置默认计算组（此操作需要 Admin 权限）：
 
-用户可从多个计算集群选择设置为默认计算集群。
-
-**语法**
-
-为当前用户设置默认计算集群：
-
-```SQL
-SET PROPERTY 'default_cloud_cluster' = '{clusterName}';
+```sql
+SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 ```
 
-为其他用户设置默认计算集群（此操作需要 Admin 权限）：
+查看当前用户默认计算组，返回结果中`default_compute_group` 的值即为默认计算组：
 
-```SQL
-SET PROPERTY FOR {user} 'default_cloud_cluster' = '{clusterName}';
-```
-
-查看当前用户默认计算集群，返回结果中`default_cloud_cluster` 的值即为默认计算集群：
-
-```SQL
+```sql
 SHOW PROPERTY;
 ```
 
-查看其他用户默认计算集群，此操作需要当前用户具备相关权限，返回结果中`default_cloud_cluster` 的值即为默认计算集群：
+查看其他用户默认计算组，此操作需要当前用户具备admin权限，返回结果中`default_compute_group` 的值即为默认计算组：
 
-```SQL
+```sql
 SHOW PROPERTY FOR {user};
 ```
 
-查看当前仓库下所有可用的计算集群：
+查看当前仓库下所有可用的计算组：
 
-```SQL
-SHOW CLUSTERS;
+```sql
+SHOW COMPUTE GROUPS;
 ```
 
 :::info 备注
 
 - 若当前用户拥有 Admin 角色，例如：`CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`，则：
-  - 可以为自身以及其他用户设置默认计算集群；
+  - 可以为自身以及其他用户设置默认计算组；
   - 可以查看自身以及其他用户的 `PROPERTY`。
 - 若当前用户无 Admin 角色，例如：`CREATE USER jack1 IDENTIFIED BY '123456'`，则：
-  - 可以为自身设置默认计算集群；
+  - 可以为自身设置默认计算组；
   - 可以查看自身的 `PROPERTY`；
-  - 无法查看所有计算集群，因该操作需要 `GRANT ADMIN` 权限。
-- 若当前用户未配置默认计算集群，现有系统在执行数据读写操作时将会触发错误。为解决这一问题，用户可通过执行 `use @cluster` 命令来指定当前 Context 所使用的计算集群，或者使用 `SET PROPERTY` 语句来设置默认计算集群。
-- 若当前用户已配置默认计算集群，但随后该集群被删除，则在执行数据读写操作时同样会触发错误。用户可通过执行 `use @cluster` 命令来重新指定当前 Context 所使用的计算集群，或者利用 `SET PROPERTY` 语句来更新默认集群设置。
+  - 无法查看所有计算组，因该操作需要 `GRANT ADMIN` 权限。
+- 若当前用户未配置默认计算组，现有系统在执行数据读写操作时将会触发错误。为解决这一问题，用户可通过执行 `use @cluster` 命令来指定当前 Context 所使用的计算组，或者使用 `SET PROPERTY` 语句来设置默认计算组。
+- 若当前用户已配置默认计算组，但随后该集群被删除，则在执行数据读写操作时同样会触发错误。用户可通过执行 `use @cluster` 命令来重新指定当前 Context 所使用的计算组，或者利用 `SET PROPERTY` 语句来更新默认集群设置。
 
 :::
 
-**示例**
 
-```SQL
-// 设置当前用户的默认计算集群
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name0';
-Query OK, 0 rows affected (0.02 sec)
+## 切换计算组
 
-// 展示当前用户的默认计算集群
-mysql show PROPERTY;
-+------------------------+-------------------------------+
-| Key                    | Value                         |
-+------------------------+-------------------------------+
-| cpu_resource_limit     | -1                            |
-| default_cloud_cluster  | regression_test_cluster_name0 |
-| exec_mem_limit         | -1                            |
-| load_mem_limit         | -1                            |
-| max_query_instances    | -1                            |
-| max_user_connections   | 100                           |
-| quota.high             | 800                           |
-| quota.low              | 100                           |
-| quota.normal           | 400                           |
-| resource.cpu_share     | 1000                          |
-| resource.hdd_read_iops | 80                            |
-| resource.hdd_read_mbps | 30                            |
-| resource.io_share      | 1000                          |
-| resource.ssd_read_iops | 1000                          |
-| resource.ssd_read_mbps | 30                            |
-| resource_tags          |                               |
-| sql_block_rules        |                               |
-+------------------------+-------------------------------+
-17 rows in set (0.00 sec)
-
-// 使用 Root 账号在 MySQL Client 中创建 Jack 用户
-mysql CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
-Query OK, 0 rows affected (0.01 sec)
-
-// 为 jack 用户设置默认计算集群
-mysql SET PROPERTY FOR jack 'default_cloud_cluster' = 'regression_test_cluster_name1';
-Query OK, 0 rows affected (0.00 sec)
-
-// 查看其他用户的默认计算集群
-mysql show PROPERTY for jack;
-+------------------------+-------------------------------+
-| Key                    | Value                         |
-+------------------------+-------------------------------+
-| cpu_resource_limit     | -1                            |
-| default_cloud_cluster  | regression_test_cluster_name1 |
-| exec_mem_limit         | -1                            |
-| load_mem_limit         | -1                            |
-| max_query_instances    | -1                            |
-| max_user_connections   | 100                           |
-| quota.high             | 800                           |
-| quota.low              | 100                           |
-| quota.normal           | 400                           |
-| resource.cpu_share     | 1000                          |
-| resource.hdd_read_iops | 80                            |
-| resource.hdd_read_mbps | 30                            |
-| resource.io_share      | 1000                          |
-| resource.ssd_read_iops | 1000                          |
-| resource.ssd_read_mbps | 30                            |
-| resource_tags          |                               |
-| sql_block_rules        |                               |
-+------------------------+-------------------------------+
-17 rows in set (0.00 sec)
-```
-
-若用户意图设置为默认计算集群的计算集群不存在，系统会报错并提示用户使用 `SHOW CLUSTERS` 命令来查看当前仓库下所有有效的计算集群。`SHOW CLUSTERS` 命令将返回一个结果集，其中：
-
-- `Cluster` 列表示计算集群名称。
-- `is_current` 列表示当前用户是否使用此计算集群。
-- `Users` 列表示该计算集群被以下用户设置为默认计算集群。
-
-```SQL
-mysql SET PROPERTY 'default_cloud_cluster' = 'not_exist_cluster';
-ERROR 5091 (42000): errCode = 2, detailMessage = Cluster not_exist_cluster not exist, use SQL 'SHOW CLUSTERS' to get a valid cluster
-
-mysql show clusters;
-+-------------------------------+------------+------------+
-| cluster                       | is_current | users      |
-+-------------------------------+------------+------------+
-| regression_test_cluster_name0 | FALSE      | root, jack |
-| regression_test_cluster_name5 | FALSE      |            |
-+-------------------------------+------------+------------+
-2 rows in set (0.01 sec)
-
-mysql SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
-Query OK, 0 rows affected (0.01 sec)
-```
-
-## 默认计算集群的选择机制
-
-当用户未明确设置默认计算集群时，系统将自动为用户选择一个具有 Active 后端且用户具有使用权限的计算集群。在特定会话中确定默认计算集群后，默认计算集群将在该会话期间保持不变，除非用户显式更改了默认设置。
-
-在不同次的会话中，若发生以下情况，系统可能会自动更改用户的默认计算集群：
-
-- 用户失去了在上次会话中所选择默认计算集群的使用权限
-- 有集群被添加或移除
-- 上次所选择的默认计算集群不再具有 Active 后端
-
-其中，情况一和情况二必定会导致系统自动选择的默认计算集群更改，情况三可能会导致更改。
-
-## 切换计算集群
-
-用户可在存算分离架构中指定使用的数据库和计算集群。
+用户可在存算分离架构中指定使用的数据库和计算组。
 
 **语法**
 
-```SQL
-USE { [catalog_name.]database_name[@cluster_name] | @cluster_name }
+```sql
+USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
 
-若数据库或计算集群名称包含是保留关键字，需用反引号将相应的名称 ``` 包围。
+若数据库或计算组名称包含是保留关键字，需用反引号将相应的名称 ``` 包围。
 
-**示例**
+## 计算组扩缩容
 
-指定使用数据库 `test_database`：
-
-```SQL
-USE test_database
-或者
-USE `test_database`
-```
-
-指定使用计算集群 `test_cluster`：
-
-```SQL
-USE @test_cluster
-或者
-USE @`test_cluster`
-```
-
-同时指定使用数据库 `test_database` 和计算集群 `test_cluster`
-
-```
-USE test_database@test_cluster
-USE `test_database`@`test_cluster`
-```
+通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。

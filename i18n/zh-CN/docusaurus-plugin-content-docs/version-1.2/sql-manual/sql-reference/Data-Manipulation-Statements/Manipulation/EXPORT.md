@@ -30,7 +30,7 @@ under the License.
 
 EXPORT
 
-### Description
+## 描述
 
 该语句用于将指定表的数据导出到指定位置。
 
@@ -69,8 +69,8 @@ WITH BROKER
 
   可以指定如下参数：
 
-  - `column_separator`：指定导出的列分隔符，默认为\t。仅支持单字节。
-  - `line_delimiter`：指定导出的行分隔符，默认为\n。仅支持单字节。
+  - `column_separator`：指定导出的列分隔符，默认为`\t`。仅支持单字节。
+  - `line_delimiter`：指定导出的行分隔符，默认为`\n`。仅支持单字节。
   - `exec_mem_limit`：导出在单个 BE 节点的内存使用上限，默认为 2GB，单位为字节。
   - `timeout`：导出作业的超时时间，默认为2小时，单位是秒。
   - `tablet_num_per_task`：每个子任务能分配扫描的最大 Tablet 数量。
@@ -100,7 +100,7 @@ fs.s3a.endpoint：AmazonS3的endpoint
         "AWS_REGION" = ""
     )
 
-### Example
+## 举例
 
 1. 将 test 表中的所有数据导出到 hdfs 上
 
@@ -153,7 +153,7 @@ WITH BROKER "broker_name"
 EXPORT TABLE testTbl TO "file:///home/data/a";
 ```
 
-6. 将 testTbl 表中的所有数据导出到 hdfs 上，以不可见字符 "\x07" 作为列或者行分隔符。
+6. 将 testTbl 表中的所有数据导出到 hdfs 上，以不可见字符 `"\x07"` 作为列或者行分隔符。
 
 ```sql
 EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
@@ -174,7 +174,7 @@ WITH BROKER "broker_name"
 EXPORT TABLE testTbl TO "file:///home/data/a" PROPERTIES ("columns" = "k1,v1");
 ```
 
-8. 将 testTbl 表中的所有数据导出到 s3 上，以不可见字符 "\x07" 作为列或者行分隔符。
+8. 将 testTbl 表中的所有数据导出到 s3 上，以不可见字符 `"\x07"` 作为列或者行分隔符。
 
 ```sql
 EXPORT TABLE testTbl TO "s3://hdfs_host:port/a/b/c" 

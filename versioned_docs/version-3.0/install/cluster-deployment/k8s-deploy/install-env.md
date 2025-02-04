@@ -66,8 +66,8 @@ sysctl -p
 
 ```shell
 vi /etc/security/limits.conf 
-* soft nofile 65536
-* hard nofile 65536
+* soft nofile 1000000
+* hard nofile 1000000
 ```
 
 ### Modify the number of virtual memory areas
@@ -83,6 +83,6 @@ sysctl -w vm.max_map_count=2000000
 When deploying Doris, it is recommended to turn off transparent huge pages.
 
 ```shell
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
+echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```

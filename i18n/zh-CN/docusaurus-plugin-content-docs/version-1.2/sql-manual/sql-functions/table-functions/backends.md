@@ -34,13 +34,13 @@ backends
 
 </version>
 
-### description
+## 描述
 
 表函数，生成backends临时表，可以查看当前doris集群中的 BE 节点信息。
 
 该函数用于from子句中。
 
-#### syntax
+## 语法
 `backends()`
 
 backends()表结构：
@@ -81,7 +81,7 @@ mysql> desc function backends();
 
 `backends()` tvf展示出来的信息基本与 `show backends` 语句展示出的信息一致,但是`backends()` tvf的各个字段类型更加明确，且可以利用tvf生成的表去做过滤、join等操作。
 
-### example
+## 举例
 ```
 mysql> select * from backends()\G
 *************************** 1. row ***************************

@@ -25,7 +25,7 @@ under the License.
 -->
 ## 需求场景
 
-未来一个很大的使用场景是类似于 ES 日志存储，日志场景下数据会按照日期来切割数据，很多数据是冷数据，查询很少，需要降低这类数据的存储成本。从节约存储成本角度考虑：
+未来一个很大的使用场景是类似于 ES 日志存储，日志场景下通常会按照日期来切割数据，很多数据是冷数据，查询很少，需要降低这类数据的存储成本。从节约存储成本角度考虑：
 
 -   各云厂商普通云盘的价格都比对象存储贵
 
@@ -39,7 +39,7 @@ under the License.
 
 在 Partition 级别上设置 Freeze time，表示多久这个 Partition 会被 Freeze，并且定义 Freeze 之后存储的 Remote storage 的位置。在 BE 上 daemon 线程会周期性的判断表是否需要 freeze，若 freeze 后会将数据上传到兼容 S3 协议的对象存储和 HDFS 上。
 
-冷热分层支持所有 Doris 功能，只是把部分数据放到对象存储上，以节省成本，不牺牲功能。因此有如下特点：
+冷热分层支持几乎所有 Doris 功能，只是把部分数据放到对象存储上，以节省成本，不牺牲功能。因此有如下特点：
 
 -   冷数据放到对象存储上，用户无需担心数据一致性和数据安全性问题
 -   灵活的 Freeze 策略，冷却远程存储 Property 可以应用到表和 Partition 级别
@@ -64,7 +64,7 @@ under the License.
 
 下面演示如何创建 S3 RESOURCE：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
@@ -95,13 +95,18 @@ CREATE TABLE IF NOT EXISTS create_table_use_created_policy
 UNIQUE KEY(k1)
 DISTRIBUTED BY HASH (k1) BUCKETS 3
 PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
 );
 ```
 
+:::warning 注意
+UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+:::
+
 以及如何创建 HDFS RESOURCE：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "type"="hdfs",
         "fs.defaultFS"="fs_host:default_fs_port",
@@ -127,19 +132,24 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
     UNIQUE KEY(k1)
     DISTRIBUTED BY HASH (k1) BUCKETS 3
     PROPERTIES(
+    "enable_unique_key_merge_on_write" = "false",
     "storage_policy" = "test_policy"
     );
 ```
 
+:::warning 注意
+UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+:::
+
 或者对一个已存在的表，关联 Storage policy
 
-```Plain
+```sql
 ALTER TABLE create_table_not_have_policy set ("storage_policy" = "test_policy");
 ```
 
 或者对一个已存在的 partition，关联 Storage policy
 
-```Plain
+```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="test_policy");
 ```
 
@@ -217,7 +227,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统 (如：minio) 可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 use_path_style 参数来强制使用 path style 方式：
 
-```Plain
+```sql
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (

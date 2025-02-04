@@ -25,14 +25,14 @@ under the License.
 -->
 
 ## extract
-### description
-#### Syntax
+## 描述
+## 语法
 
 `INT extract(unit FROM DATETIME)`
 
 提取DATETIME某个指定单位的值。单位可以为year, month, day, hour, minute或者second
 
-### Example
+## 举例
 
 ```
 mysql> select extract(year from '2022-09-22 17:01:30') as year,
