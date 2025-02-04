@@ -108,7 +108,7 @@ BloomFilter 索引用于加速 WHERE 条件中的等值查询，能加速时自�
 
 可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引的加速效果。
 - RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
-- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
+- BlockConditionsFilteredBloomFilterTime BloomFilter 索引消耗的时间
 
 ## 使用示例
 
