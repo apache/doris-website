@@ -54,7 +54,7 @@ INTO TABLE `<table_name>`
 [ WHERE <predicate> ]
 [ DELETE ON <expr> ]
 [ ORDER BY <source_sequence> ]
-[ PROPERTIES ("<key1>"="<value1>", ...) ]
+[ PROPERTIES ("<key>"="<value>" [, ...] ) ]
 )
 WITH BROKER "<broker_name>"
 (   <broker_properties>

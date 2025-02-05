@@ -41,7 +41,7 @@ INTO TABLE "<tbl_name>"
 [ IGNORE <number> {LINES | ROWS} ]
 [ (<col_name_or_user_var> [, ... ] ) ]
 [ SET (col_name={<expr> | DEFAULT} [, col_name={<expr> | DEFAULT}] ...) ]
-[ PROPERTIES ("key1" = "value1" [ , ... ]) ]
+[ PROPERTIES ("<key>" = "<value>" [ , ... ]) ]
 ```
 
 ## Required Parameters
@@ -80,7 +80,7 @@ INTO TABLE "<tbl_name>"
 
 > Column mapping syntax. For specific parameters, refer to the column mapping section of [Data Transformation during Import](../../../../data-operate/import/import-way/mysql-load-manual.md).
 
-**7. `<properties>`**
+**7.  `properties ("<key>"="<value>",...)`**  
 
 | Parameter | Parameter Description |
 | ---------------------- | ------------------------------------------------------------ |

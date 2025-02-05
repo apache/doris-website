@@ -41,7 +41,7 @@ INTO TABLE "<tbl_name>"
 [ IGNORE <number> {LINES | ROWS} ]
 [ (<col_name_or_user_var> [, ... ] ) ]
 [ SET (col_name={<expr> | DEFAULT} [, col_name={<expr> | DEFAULT}] ...) ]
-[ PROPERTIES ("key1" = "value1" [ , ... ]) ]
+[ PROPERTIES ("<key>" = "<value>" [ , ... ]) ]
 ```
 
 ## 必选参数
@@ -80,7 +80,7 @@ INTO TABLE "<tbl_name>"
 
 > 列映射语法，具体参数详见[导入的数据转换](../../../../data-operate/import/import-way/mysql-load-manual.md) 的列映射章节。
 
-**7. `<properties>`**
+**7.  `properties ("<key>"="<value>",...)`**  
 
 
 | 参数               | 参数说明                                                 |

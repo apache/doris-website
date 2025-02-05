@@ -38,8 +38,8 @@ SHOW LOAD
    [LABEL  = [ "<your_label>" | LIKE "<label_matcher>"]]
    [ STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]
 ]
-[ORDER BY [{ <col_name> | <expr> | <position> }]]
-[LIMIT <limit>][OFFSET <offset>];
+[ORDER BY { <col_name> | <expr> | <position> }]
+[LIMIT <limit>[OFFSET <offset>]];
 ```
 
 ## Optional Parameters
