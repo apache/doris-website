@@ -106,54 +106,54 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
 
 1. 恢复名为 example_db 的 database
 
-```sql
-RECOVER DATABASE example_db;
-```
+    ```sql
+    RECOVER DATABASE example_db;
+    ```
 
 2. 恢复名为 example_tbl 的 table
 
-```sql
-RECOVER TABLE example_db.example_tbl;
-```
+    ```sql
+    RECOVER TABLE example_db.example_tbl;
+    ```
 
 3. 恢复表 example_tbl 中名为 p1 的 partition
 
-```sql
-RECOVER PARTITION p1 FROM example_tbl;
-```
+    ```sql
+    RECOVER PARTITION p1 FROM example_tbl;
+    ```
 
 4. 恢复 example_db_id 且名为 example_db 的 database
 
-```sql
-RECOVER DATABASE example_db example_db_id;
-```
+    ```sql
+    RECOVER DATABASE example_db example_db_id;
+    ```
 
 5. 恢复 example_tbl_id 且名为 example_tbl 的 table
 
-```sql
-RECOVER TABLE example_db.example_tbl example_tbl_id;
-```
+    ```sql
+    RECOVER TABLE example_db.example_tbl example_tbl_id;
+    ```
 
 6. 恢复表 example_tbl 中 p1_id 且名为 p1 的 partition
 
-```sql
-RECOVER PARTITION p1 p1_id FROM example_tbl;
-```
+    ```sql
+    RECOVER PARTITION p1 p1_id FROM example_tbl;
+    ```
 
 7. 恢复 example_db_id 且名为 example_db 的 database，并设定新名字 new_example_db
 
-```sql
-RECOVER DATABASE example_db example_db_id AS new_example_db;
-```
+    ```sql
+    RECOVER DATABASE example_db example_db_id AS new_example_db;
+    ```
 
 8. 恢复名为 example_tbl 的 table，并设定新名字 new_example_tbl
 
-```sql
-RECOVER TABLE example_db.example_tbl AS new_example_tbl;
-```
+    ```sql
+    RECOVER TABLE example_db.example_tbl AS new_example_tbl;
+    ```
 
 9. 恢复表 example_tbl 中 p1_id 且名为 p1 的 partition，并设定新名字 new_p1
 
-```sql
-RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
-```
+    ```sql
+    RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
+    ```
