@@ -30,13 +30,13 @@ under the License.
 
 该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为NULL或空时，posexplode_outer会返回 NULL。posexplode和posexplode_outer均会返回数组中的NULL元素。
 
-## Syntax
+## 语法
 ```sql
 posexplode(array)
 posexplode_outer(array)
 ```
 
-### Example
+### 举例
 
 ```sql
     CREATE TABLE IF NOT EXISTS `table_test`(
@@ -50,7 +50,6 @@ posexplode_outer(array)
         PROPERTIES ("replication_allocation" = "tag.location.default: 1");
 
 mysql> insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
-
 
 mysql [test_query_qa]>select * from table_test order by id;
 +------+----------+--------------------------------+
