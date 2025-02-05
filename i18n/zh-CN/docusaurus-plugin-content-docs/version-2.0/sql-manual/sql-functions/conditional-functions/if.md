@@ -24,21 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## if
 ## 描述
+
+如果表达式 condition 成立，则返回结果 valueTrue；否则返回结果 valueFalseOrNull。  
+返回类型：valueTrue 表达式结果的类型。
+
 ## 语法
 
-`if(boolean condition, type valueTrue, type valueFalseOrNull)`
-
-
-如果表达式 condition 成立，返回结果 valueTrue；否则，返回结果 valueFalseOrNull
-返回类型： valueTrue 表达式结果的类型
-
+```sql
+IF(boolean condition, type valueTrue, type valueFalseOrNull)
+```
 
 ## 举例
 
+```sql
+SELECT user_id, IF(user_id = 1, "true", "false") AS test_if FROM test;
 ```
-mysql> select  user_id, if(user_id = 1, "true", "false") test_if from test;
+
+```text
 +---------+---------+
 | user_id | test_if |
 +---------+---------+
@@ -46,5 +49,3 @@ mysql> select  user_id, if(user_id = 1, "true", "false") test_if from test;
 | 2       | false   |
 +---------+---------+
 ```
-### keywords
-IF

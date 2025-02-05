@@ -24,31 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ifnull
-### description
-#### Syntax
+## Description
 
-`ifnull(expr1, expr2)`
+Returns `<expr1>` if it is not `NULL`; otherwise, returns `<expr2>`.
 
+## Alias
 
-If the value of expr1 is not null, expr1 is returned, otherwise expr2 is returned
+- DSQRT
 
-### example
+## Syntax
 
+```sql
+IFNULL(<expr1>, <expr2>)
 ```
-mysql> select ifnull(1,0);
+
+## Parameters
+
+| Parameter  | Description |
+|-----------|-------------|
+| `<expr1>` | The first expression to check for `NULL`. |
+| `<expr2>` | The value to return if `<expr1>` is `NULL`. |
+
+## Return Value
+
+- Returns `<expr1>` if it is not `NULL`.  
+- Otherwise, returns `<expr2>`.
+
+## Examples
+
+```sql
+SELECT IFNULL(1, 0);
+```
+
+```text
 +--------------+
-| ifnull(1, 0) |
+| IFNULL(1, 0) |
 +--------------+
 |            1 |
 +--------------+
+```
 
-mysql> select ifnull(null,10);
+```sql
+SELECT IFNULL(NULL, 10);
+```
+
+```text
 +------------------+
-| ifnull(NULL, 10) |
+| IFNULL(NULL, 10) |
 +------------------+
 |               10 |
 +------------------+
 ```
-### keywords
-IFNULL
