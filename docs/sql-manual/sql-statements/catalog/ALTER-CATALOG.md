@@ -40,13 +40,13 @@ This statement is used to set properties of the specified catalog.
 2) Modify / Add properties for the catalog
 
     ```sql
-    ALTER CATALOG <catalog_name> SET PROPERTIES ('<key1>' = '<value1>' [, '<key2>' = '<value2>']); 
+    ALTER CATALOG <catalog_name> SET PROPERTIES ('<key>' = '<value>' [, ... ]);  
     ```
 
 3) Modify comment for the catalog
 
     ```sql
-    ALTER CATALOG <catalog_name> MODIFY COMMENT <"new catalog comment">;
+    ALTER CATALOG <catalog_name> MODIFY COMMENT "<new catalog comment>";
     ```
 
 ## Required Parameters
@@ -59,11 +59,11 @@ The name of the catalog that should be modified
 
 New catalog name after modification
 
-**3. `'<key1>' = '<value1>'`**
+**3. `'<key>' = '<value>'`**
 
 The key and value of the catalog properties that need to be modified / added
 
-**4. `<"new catalog comment">`**
+**4. `<new catalog comment>`**
 
 Modified catalog comment
 

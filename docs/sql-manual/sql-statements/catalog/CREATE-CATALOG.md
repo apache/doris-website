@@ -31,8 +31,8 @@ This statement is used to create an external catalog
 ## Syntax
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT <comment>]
-	PROPERTIES ("<key>"="<value>", ...);
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
+	PROPERTIES ("<key>"="<value>" [, ... ]);
 ```
 
 ## Required Parameters

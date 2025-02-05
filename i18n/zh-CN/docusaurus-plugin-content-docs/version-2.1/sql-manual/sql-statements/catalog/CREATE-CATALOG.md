@@ -31,8 +31,8 @@ under the License.
 ## 语法
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT <comment>]
-	PROPERTIES ("<key>"="<value>", ...);
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
+	PROPERTIES ("<key>"="<value>" [, ... ]);
 ```
 
 * hms：Hive MetaStore

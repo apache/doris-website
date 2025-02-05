@@ -32,8 +32,8 @@ This statement refreshes the metadata of the specified Catalog/Database/Table.
 
 ```sql
 REFRESH CATALOG <catalog_name>;
-REFRESH DATABASE [<catalog_name.>]<database_name>;;
-REFRESH TABLE [[<catalog_name.>]<database_name>.]<table_name>;
+REFRESH DATABASE [<catalog_name>.]<database_name>;
+REFRESH TABLE [[<catalog_name>.]<database_name>.]<table_name>;
 ```
 
 ## Required Parameters
@@ -42,11 +42,11 @@ REFRESH TABLE [[<catalog_name.>]<database_name>.]<table_name>;
 
 The name of the catalog that needs to be refreshed.
 
-**2. `<[catalog_name.]database_name>`**
+**2. `[<catalog_name>.]<database_name>`**
 
 The name of the database within the catalog that needs to be refreshed.
 
-**3. `<[catalog_name.][database_name.]table_name>`**
+**3. `[[<catalog_name>.]<database_name>.]<table_name>`**
 
 The name of the table within the catalog that needs to be refreshed.
 

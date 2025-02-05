@@ -38,13 +38,13 @@ under the License.
 2) 设置数据目录属性
 
     ```sql
-    ALTER CATALOG <catalog_name> SET PROPERTIES ('<key1>' = '<value1>' [, '<key2>' = '<value2>']); 
+    ALTER CATALOG <catalog_name> SET PROPERTIES ('<key>' = '<value>' [, ... ]); 
     ```
 
 3) 修改数据目录注释
 
     ```sql
-    ALTER CATALOG <catalog_name> MODIFY COMMENT <"new catalog comment">;
+    ALTER CATALOG <catalog_name> MODIFY COMMENT "<new catalog comment>";
     ```
 
 ## 必选参数
@@ -57,11 +57,11 @@ under the License.
 
 修改后的新 Catalog 名称
 
-**3. `'<key1>' = '<value1>'`**
+**3. `'<key>' = '<value>'`**
 
 需要修改/添加的 Catalog 属性的key和value
 
-**4. `<"new catalog comment">`**
+**4. `<new catalog comment>`**
 
 修改后的 Catalog 注释
 
