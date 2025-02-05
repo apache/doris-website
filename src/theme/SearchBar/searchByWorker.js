@@ -9,7 +9,7 @@ function getRemoteWorker() {
         remoteWorkerPromise = (async () => {
             const timestamp = Date.now();
             const Remote = Comlink.wrap(
-                new Worker(getWorkerURL(`https://cdnd.selectdb.com/worker.js?_=${timestamp}`)),
+                new Worker(getWorkerURL(`https://doris.apache.org/worker.js?_=${timestamp}`)),
             );
             return await new Remote();
         })();
