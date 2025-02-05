@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL-LOAD",
+    "title": "CANCEL LOAD",
     "language": "zh-CN"
 }
 ---
@@ -52,7 +52,7 @@ WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDIN
 
 > 如果使用 `LABEL LIKE "<label_pattern>"`，则会匹配导入任务的 label 包含 label_matcher 的导入任务。
 
-**3. `<PENDING>`**
+**3. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
 
 > 指定了 `PENDING` 表示撤销 STATE = "PENDING" 状态的 job，其余状态同理。
 

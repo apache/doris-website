@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD",
+    "title": "SHOW LOAD",
     "language": "en"
 }
 ---
@@ -36,7 +36,7 @@ SHOW LOAD
 [
    WHERE
    [LABEL  = [ "<your_label>" | LIKE "<label_matcher>"]]
-   [STATE = [ { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]]
+   [ STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]
 ]
 [ORDER BY [{ <col_name> | <expr> | <position> }]]
 [LIMIT <limit>][OFFSET <offset>];
@@ -56,7 +56,7 @@ SHOW LOAD
 
 > When using `LABEL = "<your_label>"`, it will precisely match the specified label.
 
-**4. `<PENDING>`**
+**4. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
 
 > Specifying `PENDING` means matching jobs with the `LOAD = "PENDING"` status. The same applies to other status keywords.
 

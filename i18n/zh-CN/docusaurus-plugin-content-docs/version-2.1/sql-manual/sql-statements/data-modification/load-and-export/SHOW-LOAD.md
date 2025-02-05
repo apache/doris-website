@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD",
+    "title": "SHOW LOAD",
     "language": "zh-CN"
 }
 ---
@@ -36,7 +36,7 @@ SHOW LOAD
 [
    WHERE
    [LABEL  = [ "<your_label>" | LIKE "<label_matcher>"]]
-   [STATE = [ { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]]
+   [ STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]
 ]
 [ORDER BY [{ <col_name> | <expr> | <position> }]]
 [LIMIT <limit>][OFFSET <offset>];
@@ -56,7 +56,7 @@ SHOW LOAD
 
 > 使用 `LABEL = "<your_label>"`，则精确匹配指定的 label。
 
-**4. `<PENDING>`**
+**4. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
 
 > 指定了 `PENDING` 表示匹配 LOAD = "PENDING" 状态的 job，其余状态词同理。
 

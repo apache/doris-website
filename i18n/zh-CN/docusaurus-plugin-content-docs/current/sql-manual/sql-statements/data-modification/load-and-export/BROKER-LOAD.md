@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BROKER-LOAD",
+    "title": "BROKER LOAD",
     "language": "zh-CN"
 }
 ---
@@ -34,7 +34,7 @@ Broker Load 是 Doris 的数据导入方式，主要用于从远程存储系统�
 ## 语法
 
 ```sql
-LOAD LABEL <db_name>.<load_label>
+LOAD LABEL [<db_name>.]<load_label>
 (
 [ { MERGE | APPEND | DELETE } ]
 DATA INFILE
@@ -96,25 +96,55 @@ WITH BROKER "<broker_name>"
 
 ## 可选参数
 
-| 参数名                                   | 参数说明                                                     |
-| ---------------------------------------- | ------------------------------------------------------------ |
-| merge \| append \| delete              | 数据合并类型。默认为 append，表示本次导入是普通的追加写操作。merge 和 delete 类型仅适用于 unique key 模型表。其中 merge 类型需要配合 `[delete on]` 语句使用，以标注 delete flag 列。而 delete 类型则表示本次导入的所有数据皆为删除数据。 |
-| negative                               | 表示 “负” 导入，这种方式仅针对具有整型 sum 聚合类型的聚合数据表。将导入数据中的 sum 聚合列对应的整型数值取反。用于冲抵错误数据。 |
-| partition (p1, p2,...)                | 指定仅导入表的某些分区，其他不在分区范围内的数据会被忽略。   |
-| column_separator                       | 指定列分隔符，仅在 csv 格式下有效，且只能指定单字节分隔符。  |
-| line_delimiter                         | 指定行分隔符，仅在 csv 格式下有效，且只能指定单字节分隔符。  |
-| file_type                              | 指定文件格式，支持 `csv`（默认）、`parquet`、`orc` 格式。    |
-| compress_type                          | 指定文件压缩类型，支持 `gz`、`bz2`、`lz4frame`。             |
-| column_list                            | 指定原始文件中的列顺序。                                     |
-| columns from path as (`<c1>`, `<c2>`,...) | 指定从导入文件路径中抽取的列。                               |
-| column_mapping                         | 指定列的转换函数。                                           |
-| predicate                              | 前置过滤条件。数据先根据 `column list` 和 `columns from path as` 拼接为原始数据行，再根据前置过滤条件进行过滤。 |
-| predicate                              | 根据条件对导入数据进行过滤。                                 |
-| expr                                   | 配合 `merge` 导入模式使用，仅适用于 unique key 模型的表。用于指定导入数据中表示删除标志（delete flag）的列及计算关系。 |
-| source_sequence                        | 仅适用于 unique key 模型的表。用于指定导入数据中表示 sequence col 的列，主要用于导入时保证数据顺序。 |
-| properties ("key1"="value1",...)      | 指定导入文件格式的参数。适用于 csv、json 等格式。例如，可以指定 `json_root`、`jsonpaths`、`fuzzy_parse` 等参数。 `enclose`：包围符；当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。`escape`：转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如""，然后将数据修改为"a,'b,'c'"。 |
+**1. `merge | append | delete`**  
+> 数据合并类型。默认为 `append`，表示本次导入是普通的追加写操作。`merge` 和 `delete` 类型仅适用于 unique key 模型表。`merge` 类型需要配合 `[delete on]` 语句使用，以标注 delete flag 列。而 `delete` 类型则表示本次导入的所有数据皆为删除数据。
 
-**`< load_properties >`** 可选参数如下，并可根据实际环境情况添加。
+**2. `negative`**  
+> 表示 "负" 导入，这种方式仅针对具有整型 sum 聚合类型的聚合数据表。将导入数据中的 sum 聚合列对应的整型数值取反，用于冲抵错误数据。
+
+**3. `<partition_name>`**  
+> 指定仅导入表的某些分区，比如：partition (p1, p2,...)，其他不在分区范围内的数据会被忽略。
+
+**4. `<column_separator>`**  
+> 指定列分隔符，仅在 CSV 格式下有效，且只能指定单字节分隔符。
+
+**5. `<line_delimiter>`**  
+> 指定行分隔符，仅在 CSV 格式下有效，且只能指定单字节分隔符。
+
+**6. `<file_type>`**  
+> 指定文件格式，支持 `csv`（默认）、`parquet`、`orc` 格式。
+
+**7. `<compress_type>`**  
+> 指定文件压缩类型，支持 `gz`、`bz2`、`lz4frame`。
+
+**8. `<column_list>`**  
+> 指定原始文件中的列顺序。
+
+**9. `columns from path as (<c1>, <c2>,...)`**  
+> 指定从导入文件路径中抽取的列。
+
+**10. `<column_mapping>`**  
+> 指定列的转换函数。
+
+**11. `preceding filter <predicate>`**  
+> 数据先根据 `column list` 和 `columns from path as` 拼接为原始数据行，再根据前置过滤条件进行过滤。
+
+**12. `where <predicate>`**  
+> 根据条件对导入数据进行过滤。
+
+**13. `delete on <expr>`**  
+> 配合 `merge` 导入模式使用，仅适用于 unique key 模型的表。用于指定导入数据中表示删除标志（delete flag）的列及计算关系。
+
+**14. `<source_sequence>`**  
+> 仅适用于 unique key 模型的表。用于指定导入数据中表示 sequence col 的列，主要用于导入时保证数据顺序。
+
+**15. `properties ("<key>"="<value>",...)`**  
+> 指定导入文件格式的参数。适用于 CSV、JSON 等格式。例如，可以指定 `json_root`、`jsonpaths`、`fuzzy_parse` 等参数。  
+> `enclose`: 包围符；当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。  
+> 注意：当 `enclose` 设置为 `"` 时，`trim_double_quotes` 一定要设置为 `true`。  
+> `escape`: 转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c" 被作为一个字段解析，则需要指定单字节转义符，例如 ""，然后将数据修改为 "a,'b,'c'"。
+
+**16. `< load_properties >`** 可选参数如下，并可根据实际环境情况添加。
 
 | 参数                   | 参数说明                                                     |
 | ---------------------- | ------------------------------------------------------------ |

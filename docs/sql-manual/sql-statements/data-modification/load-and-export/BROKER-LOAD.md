@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BROKER-LOAD",
+    "title": "BROKER LOAD",
     "language": "en"
 }
 ---
@@ -26,14 +26,14 @@ under the License.
 
 ## Description
 
-Broker Load is a data import method in Doris, primarily used to import large - scale data from remote storage systems such as HDFS or S3. It is initiated through the MySQL API and is an asynchronous import method. The import progress and results can be queried using the `SHOW LOAD` statement.
+Broker Load is a data import method in Doris, primarily used to import large scale data from remote storage systems such as HDFS or S3. It is initiated through the MySQL API and is an asynchronous import method. The import progress and results can be queried using the `SHOW LOAD` statement.
 
-In earlier versions, S3 and HDFS Load relied on the Broker process. However, with version optimizations, data is now read directly from the data source without relying on an additional Broker process. Nevertheless, due to the similar syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+In earlier versions, S3 and HDFS Load relied on the Broker process. Now, data is read directly from the data source without relying on an additional Broker process. Nevertheless, due to the similar syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
 
 ## Syntax
 
 ```sql
-LOAD LABEL <db_name>.<load_label>
+LOAD LABEL [<db_name>.]<load_label>
 (
 [ { MERGE | APPEND | DELETE } ]
 DATA INFILE
@@ -95,25 +95,56 @@ WITH BROKER "<broker_name>"
 
 ## Optional Parameters
 
-| Parameter Name | Parameter Description |
-| ---------------------------------------- | ------------------------------------------------------------ |
-| merge \| append \| delete | Data merge type. The default is `append`, indicating that this import is a normal append - write operation. The `merge` and `delete` types are only applicable to tables with the unique key model. The `merge` type needs to be used in conjunction with the `[delete on]` statement to mark the delete flag column. The `delete` type indicates that all data imported this time is deletion data. |
-| negative | Indicates "negative" import. This method is only applicable to aggregate data tables with an integer sum aggregation type. It negates the integer values corresponding to the sum aggregation columns in the imported data, which is used to offset incorrect data. |
-| partition (p1, p2,...) | Specifies to import only certain partitions of the table. Other data outside the partition range will be ignored. |
-| column_separator | Specifies the column separator, which is only valid in CSV format and can only specify single - byte separators. |
-| line_delimiter | Specifies the line separator, which is only valid in CSV format and can only specify single - byte separators. |
-| file_type | Specifies the file format, supporting `csv` (default), `parquet`, and `orc` formats. |
-| compress_type | Specifies the file compression type, supporting `gz`, `bz2`, and `lz4frame`. |
-| column_list | Specifies the column order in the original file. |
-| columns from path as (`<c1>`, `<c2>`,...) | Specifies the columns to be extracted from the import file path. |
-| column_mapping | Specifies the column conversion function. |
-| predicate | Pre - filtering condition. The data is first spliced into the original data rows according to the `column list` and `columns from path as`, and then filtered according to the pre - filtering condition. |
-| predicate | Filters the imported data according to the condition. |
-| expr | Used in conjunction with the `merge` import mode and is only applicable to tables with the unique key model. It is used to specify the column representing the delete flag in the imported data and the calculation relationship. |
-| source_sequence | Only applicable to tables with the unique key model. It is used to specify the column representing the sequence col in the imported data, mainly to ensure the data order during import. |
-| properties ("key1"="value1",...) | Specifies the parameters for the import file format, applicable to formats such as CSV and JSON. For example, parameters such as `json_root`, `jsonpaths`, and `fuzzy_parse` can be specified. `enclose`: Enclosure character; when a CSV data field contains a line separator or column separator, to prevent accidental truncation, a single - byte character can be specified as the enclosure character for protection. For example, if the column separator is ",", the enclosure character is "'", and the data is "a,'b,c'", then "b,c" will be parsed as one field. Note: When `enclose` is set to `""`, `trim_double_quotes` must be set to `true`. `escape`: Escape character, used to escape characters in the field that are the same as the enclosure character. For example, if the data is "a,'b,'c'", the enclosure character is "'", and you want "b,'c" to be parsed as one field, you need to specify a single - byte escape character, such as "", and then modify the data to "a,'b,'c'". |
+**1. `merge | append | delete`**  
+> Data merge type. The default is `append`, indicating that this import is a normal append-write operation. `merge` and `delete` types are only applicable to tables with the unique key model. The `merge` type needs to be used in conjunction with the `[delete on]` statement to mark the delete flag column. The `delete` type indicates that all data imported this time is deletion data.
 
-The optional parameters for `< load_properties >` are as follows and can be added according to the actual environment.
+**2. `negative`**  
+> Indicates "negative" import. This method is only applicable to aggregate data tables with an integer sum aggregation type. It negates the integer values corresponding to the sum aggregation columns in the imported data, which is used to offset incorrect data.
+
+**3. `<partition_name>`**  
+> Specifies to import only certain partitions of the table, for example: `partition (p1, p2,...)`. Other data outside the partition range will be ignored.
+
+**4. `<column_separator>`**  
+> Specifies the column separator, which is only valid in CSV format and can only specify single-byte separators.
+
+**5. `<line_delimiter>`**  
+> Specifies the line separator, which is only valid in CSV format and can only specify single-byte separators.
+
+**6. `<file_type>`**  
+> Specifies the file format, supporting `csv` (default), `parquet`, and `orc` formats.
+
+**7. `<compress_type>`**  
+> Specifies the file compression type, supporting `gz`, `bz2`, and `lz4frame`.
+
+**8. `<column_list>`**  
+> Specifies the column order in the original file.
+
+**9. `columns from path as (<c1>, <c2>,...)`**  
+> Specifies the columns to be extracted from the import file path.
+
+**10. `<column_mapping>`**  
+> Specifies the column conversion function.
+
+**11. `preceding filter <predicate>`**  
+> Data is first spliced into the original data rows according to `column list` and `columns from path as`, then filtered according to the preceding filter condition.
+
+**12. `where <predicate>`**  
+> Filters the imported data according to the condition.
+
+**13. `delete on <expr>`**  
+> Used in conjunction with the `merge` import mode and is only applicable to tables with the unique key model. It specifies the column representing the delete flag in the imported data and the calculation relationship.
+
+**14. `<source_sequence>`**  
+> Only applicable to tables with the unique key model. It specifies the column representing the sequence column in the imported data, mainly to ensure the data order during import.
+
+**15. `properties ("<key>"="<value>",...)`**  
+> Specifies the parameters for the import file format, applicable to formats such as CSV, JSON, etc. For example, parameters such as `json_root`, `jsonpaths`, and `fuzzy_parse` can be specified.  
+> `enclose`: Enclosure character; when a CSV data field contains a line separator or column separator, a single-byte character can be specified as the enclosure character to prevent accidental truncation. For example, if the column separator is ",", and the enclosure character is "'", and the data is "a,'b,c'", then "b,c" will be parsed as one field.  
+> Note: When `enclose` is set to `"`, `trim_double_quotes` must be set to `true`.  
+> `escape`: Escape character, used to escape characters in the field that are the same as the enclosure character. For example, if the data is "a,'b,'c'", the enclosure character is "'", and you want "b,'c" to be parsed as one field, you need to specify a single-byte escape character, such as `""`, and then modify the data to "a,'b,'c'".
+
+**16. `<load_properties>`**  
+> The optional parameters are as follows and can be added based on the actual environment.
 
 | Parameter | Parameter Description |
 | ---------------------- | ------------------------------------------------------------ |

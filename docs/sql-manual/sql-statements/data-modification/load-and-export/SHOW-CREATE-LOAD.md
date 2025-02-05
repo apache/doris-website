@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-LOAD",
+    "title": "SHOW CREATE LOAD",
     "language": "en"
 }
 ---
@@ -46,7 +46,7 @@ Users executing this SQL command must have at least the following permissions:
 
 | Privilege | Object | Notes |
 | :---------------- | :------------- | :---------------------------- |
-| ADMIN/OPERATOR | Database | Cluster administrator privileges are required. |
+| ADMIN/NODE_PRIV | Database | Cluster administrator privileges are required. |
 
 ## Return Value
 

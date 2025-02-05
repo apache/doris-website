@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-LOAD-WARNINGS",
+    "title": "SHOW LOAD WARNINGS",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-CREATE-LOAD",
+    "title": "SHOW CREATE LOAD",
     "language": "zh-CN"
 }
 ---
@@ -46,7 +46,7 @@ SHOW CREATE LOAD FOR <load_name>;
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| ADMIN/OPERATOR        | 库（Database）    | 需要集群管理员权限 |
+| ADMIN/NODE_PRIV | 库（Database）    | 需要集群管理员权限 |
 
 ## 返回值
 
