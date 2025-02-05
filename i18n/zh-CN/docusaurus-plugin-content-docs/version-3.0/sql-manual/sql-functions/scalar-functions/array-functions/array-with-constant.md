@@ -25,7 +25,7 @@ under the License.
 
 ## 描述
 
-生成一个包含 n 个重复元素 T 的数组
+生成一个包含 n 个重复元素 element 的数组
 
 ## 语法
 
@@ -42,7 +42,7 @@ ARRAY_WITH_CONSTANT(<n>, <element>)
 
 ## 返回值
 
-返回一个数组，包含 n 个重复的 T 元素。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
+返回一个数组，包含 n 个重复的 element 元素。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
 
 ## 举例
 

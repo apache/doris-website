@@ -41,7 +41,7 @@ ARRAY_RANGE(<end>)
 ARRAY_RANGE(<start>, <end>)
 ARRAY_RANGE(<start>, <end>, <step>)
 ARRAY_RANGE(<start_datetime>, <end_datetime>)
-ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <UNIT>)
+ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 ```
 
 ## Parameters

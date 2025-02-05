@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-ARRAY_UNION(<array>[, <array> ])
+ARRAY_UNION(<array>, <array> [, ... ])
 ```
 
 ## 参数
