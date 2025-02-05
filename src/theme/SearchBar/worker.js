@@ -4865,7 +4865,7 @@ var MyBundle = (function (exports) {
       searchContext ? `-${searchContext.replace(/\//g, "-")}` : ""
     )}`;
     // Catch potential attacks.
-    const fullUrl = new URL(url, "https://cdnd.selectdb.com");
+    const fullUrl = new URL(url, "https://doris.apache.org");
     // if (fullUrl.origin !== location.origin) {
     //     throw new Error("Unexpected version url");
     // }
