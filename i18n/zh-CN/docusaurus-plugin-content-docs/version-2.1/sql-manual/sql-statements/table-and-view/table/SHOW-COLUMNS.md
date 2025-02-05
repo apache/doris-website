@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [ <FULL> ] COLUMNS FROM <tbl>;
+SHOW [ FULL ] COLUMNS FROM <tbl>;
 ```
 
 ## 必选参数
@@ -41,22 +41,22 @@ SHOW [ <FULL> ] COLUMNS FROM <tbl>;
 
 
 ## 可选参数
-**1. `<FULL>`**
+**1. `FULL`**
 
 如果指定了 `FULL` 关键字，会返回列的详细信息，包括列的聚合类型、权限、注释等。
 
 ## 返回值
-| 列名                              | 类型       | 说明 |
-|-|-|-|
-| Field | varchar  | 列名 |
-| Type | varchar  | 列类型 |
-| Collation | varchar  | 列的排序规则 |
-| Null | varchar  | 是否允许为 NULL |
-| Key | varchar  | 列的主键 |
-| Default | varchar  | 默认值 |
-| Extra | varchar  | 额外信息 |
-|Privileges| varchar  | 列的权限 |
-| Comment | varchar  | 列的注释 |
+| 列名         | 类型      | 说明         |
+|------------|---------|------------|
+| Field      | varchar | 列名         |
+| Type       | varchar | 列类型        |
+| Collation  | varchar | 列的排序规则     |
+| Null       | varchar | 是否允许为 NULL |
+| Key        | varchar | 列的主键       |
+| Default    | varchar | 默认值        |
+| Extra      | varchar | 额外信息       |
+| Privileges | varchar | 列的权限       |
+| Comment    | varchar | 列的注释       |
 
 ## 权限控制
 需要具备要查看的表的 `SHOW` 权限。

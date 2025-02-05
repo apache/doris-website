@@ -33,7 +33,7 @@ This statement is used to specify the column information of a table.
 ## Syntax
 
 ```sql
-SHOW [<FULL>] COLUMNS FROM <tbl>;
+SHOW [ FULL ] COLUMNS FROM <tbl>;
 ```
 
 ## Required Parameters
@@ -42,22 +42,22 @@ SHOW [<FULL>] COLUMNS FROM <tbl>;
 The name of the table for which column information needs to be viewed must be specified.
 
 ## Optional Parameters
-**1. `<FULL>`**
+**1. `FULL`**
 
 If the `FULL` keyword is specified, detailed information about the columns will be returned, including the aggregation type, permissions, comments, etc. of the columns.
 
 ## Return Value
-| Column                              | DataType       | Note                    |
-|-|-|-------------------------|
-| Field | varchar  | Column Name             |
-| Type | varchar  | Column Data Type        |
-| Collation | varchar  | Column Collation        |
-| Null | varchar  | Whether NULL is Allowed |
-| Key | varchar  | Table's  Primary Key    |
-| Default | varchar  | Default Value           |
-| Extra | varchar  | Extra Info              |
-|Privileges| varchar  | Column Privileges       |
-| Comment | varchar  | Column Comment          |
+| Column     | DataType | Note                    |
+|------------|----------|-------------------------|
+| Field      | varchar  | Column Name             |
+| Type       | varchar  | Column Data Type        |
+| Collation  | varchar  | Column Collation        |
+| Null       | varchar  | Whether NULL is Allowed |
+| Key        | varchar  | Table's  Primary Key    |
+| Default    | varchar  | Default Value           |
+| Extra      | varchar  | Extra Info              |
+| Privileges | varchar  | Column Privileges       |
+| Comment    | varchar  | Column Comment          |
 
 ## Access Control Requirements
 Requires the `SHOW` privilege for the table to be viewed.

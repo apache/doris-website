@@ -39,7 +39,7 @@ under the License.
 
 ```sql
 SHOW [ TEMPORARY ] PARTITIONS
-    FROM [ <db_name.> ] <table_name>
+    FROM [ <db_name>. ] <table_name>
     [ <where_clause> ]
     [ ORDER BY <order_by_key> ]
     [ LIMIT <limit_rows> ];
@@ -52,7 +52,7 @@ SHOW [ TEMPORARY ] PARTITIONS
 
 
 ## 可选参数
-**1. `<TEMPORARY>`**
+**1. `TEMPORARY`**
 
 是否需要列出临时分区
 

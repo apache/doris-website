@@ -68,7 +68,7 @@ pecify the `DB` name to display the status of dynamic partition tables. If not s
 1. View the status of all dynamic partition tables in the current database:
 
  ```sql
- SHOW DYNAMIC PARTITION TABLES;
+SHOW DYNAMIC PARTITION TABLES;
  ```
 ```text
 +-----------+--------+----------+-------------+------+--------+---------+-----------+----------------+---------------------+--------+------------------------+----------------------+-------------------------+

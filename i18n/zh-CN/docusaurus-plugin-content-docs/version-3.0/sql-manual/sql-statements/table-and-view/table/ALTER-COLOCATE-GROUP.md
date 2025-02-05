@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-ALTER COLOCATE GROUP  [ <database.> ] <group_name>
+ALTER COLOCATE GROUP  [ <database>. ] <group_name>
 SET (
     <property_list>
     );
@@ -66,7 +66,7 @@ SET (
 
 ## 示例
 
-1. 修改一个全局 group 的副本数，建表时设置 "colocate_with" = "__global__foo"
+1. 修改一个全局 group 的副本数，建表时设置 `"colocate_with" = "__global__foo"`
 
 ```sql
 ALTER COLOCATE GROUP __global__foo

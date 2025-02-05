@@ -39,7 +39,7 @@ It supports returning all partitions, including multi-level partitions.
 
 ```sql
 SHOW [ TEMPORARY ] PARTITIONS
-    FROM [ <db_name.> ] <table_name>
+    FROM [ <db_name>. ] <table_name>
     [ <where_clause> ]
     [ ORDER BY <order_by_key> ]
     [ LIMIT <limit_rows> ];
@@ -52,7 +52,7 @@ The name of the table for which partition information needs to be viewed must be
 
 
 ## Optional Parameters
-**1. `<TEMPORARY>`**
+**1. `TEMPORARY`**
 
 Whether to query the information of temporary partitions.
 

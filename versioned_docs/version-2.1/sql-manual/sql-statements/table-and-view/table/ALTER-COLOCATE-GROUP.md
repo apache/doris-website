@@ -33,7 +33,7 @@ This statement is used to modify the properties of a Colocation Group.
 ## Syntax
 
 ```sql
-ALTER COLOCATE GROUP  [<database.>] <group_name>
+ALTER COLOCATE GROUP  [<database>.] <group_name>
 SET (
     <property_list>
 );
@@ -62,7 +62,7 @@ Requires `ADMIN` permissions.
 
 ## Examples
 
-1. Modify the replica number of a global group, and set "colocate_with" = "__global__foo" when creating the table.
+1. Modify the replica number of a global group, and set `"colocate_with" = "__global__foo"` when creating the table.
 
 ```sql
 ALTER COLOCATE GROUP __global__foo
