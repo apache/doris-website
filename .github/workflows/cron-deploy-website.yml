@@ -37,8 +37,9 @@ jobs:
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
+                  yarn
                   node ./scripts/update_search_hash.js
-                  yarn && yarn build
+                  yarn build
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
