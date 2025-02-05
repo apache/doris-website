@@ -40,10 +40,10 @@ ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
 ## Required parameters
 
 ** 1. `<db_name>`**
->  Database Name
+>  Specifies the identifier for the database to alter.
 
 ** 2. `<new_db_name>`**
->  New database name
+>  Specifies the new identifier for the database
 
 ** 3. `<quota>`**
 >  Database data volume quota or database replica number quota
