@@ -771,6 +771,15 @@
                 },
                 {
                     "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
