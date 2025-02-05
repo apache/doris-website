@@ -8,9 +8,12 @@ function getRemoteWorker() {
     if (process.env.NODE_ENV === 'production' && !remoteWorkerPromise) {
         remoteWorkerPromise = (async () => {
             const timestamp = Date.now();
-            const Remote = Comlink.wrap(
-                new Worker(getWorkerURL(`https://doris.apache.org/worker.js?_=${timestamp}`)),
-            );
+            // const Remote = Comlink.wrap(
+            //     new Worker(getWorkerURL(`https://doris.apache.org/worker.js?_=${timestamp}`)),
+            // );
+            const Remote = Comlink.wrap(new Worker('https://doris.apache.org/worker.js'));
+            console.log('load worker resource');
+            
             return await new Remote();
         })();
     }
