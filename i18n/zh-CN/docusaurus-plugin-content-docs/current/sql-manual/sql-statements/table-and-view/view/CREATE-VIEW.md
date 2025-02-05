@@ -31,8 +31,8 @@ under the License.
 ## 语法
 
 ```sql
-CREATE VIEW [IF NOT EXISTS] [<db_name>.]<view_name> 
- ([<column_definition>])
+CREATE VIEW [IF NOT EXISTS] [<db_name>.]<view_name>
+   [(<column_definition>)]
 AS <query_stmt>
 ```
 

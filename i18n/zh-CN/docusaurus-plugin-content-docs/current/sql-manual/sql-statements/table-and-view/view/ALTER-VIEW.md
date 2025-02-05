@@ -33,7 +33,7 @@ under the License.
 
 ```sql
 ALTER VIEW [<db_name>.]<view_name> 
- ([<column_definition>])
+ [(<column_definition>)]
 AS <query_stmt>
 ```
 

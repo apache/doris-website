@@ -32,7 +32,7 @@ This statement is used to modify the definition of a logical view.
 
 ```sql
 ALTER VIEW [<db_name>.]<view_name> 
- ([<column_definition>])
+ [(<column_definition>)]
 AS <query_stmt>
 ```
 
