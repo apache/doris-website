@@ -74,7 +74,7 @@ SELECT trim_in('   ab d   ') str;
 +------+
 | str  |
 +------+
-| hello|
+|  ab d|
 +------+
 ```
 
@@ -88,7 +88,7 @@ SELECT trim_in('ababccaab','ab') str;
 +------+
 | str  |
 +------+
-| ab   |
+| cc   |
 +------+
 
 
