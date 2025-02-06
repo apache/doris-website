@@ -61,11 +61,11 @@ ALTER SYSTEM ADD BROKER <broker_name> "<host>:<ipc_port>" [,"<host>:<ipc_port>" 
 
 1. 增加两个 Broker
 
-```sql
-ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
-```
+    ```sql
+    ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
+    ```
 2. 增加一个 Broker，使用 FQDN
 
-```sql
-ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
-```
+    ```sql
+    ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
+    ```

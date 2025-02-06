@@ -35,14 +35,14 @@ This statement is used to delete BROKER nodes.
 ## Syntax
 
 1. Drop all Brokers
-```sql
-ALTER SYSTEM DROP ALL BROKER broker_name;
-```
+    ```sql
+    ALTER SYSTEM DROP ALL BROKER broker_name;
+    ```
 
 2. Drop one or more Broker nodes
-```sql
-ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
-```
+    ```sql
+    ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
+    ```
 ## Required Parameters
 
 **1. `<broker_name>`**
@@ -64,12 +64,12 @@ The user who executes this operation needs to have the NODE_PRIV permission.
 
 1. Delete all Brokers
 
-```sql
-ALTER SYSTEM DROP ALL BROKER broker_name；
-```
+    ```sql
+    ALTER SYSTEM DROP ALL BROKER broker_name；
+    ```
 
 2. Delete a specific Broker node
 
-```sql
-ALTER SYSTEM DROP BROKER broker_name "10.10.10.1:8000";
-```
+    ```sql
+    ALTER SYSTEM DROP BROKER broker_name "10.10.10.1:8000";
+    ```

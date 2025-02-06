@@ -1,7 +1,7 @@
 ---
 {
-   "title": "DROP BROKER",
-   "language": "zh-CN"
+  "title": "DROP BROKER",
+  "language": "zh-CN"
 }
 
 ---
@@ -34,14 +34,14 @@ under the License.
 ## 语法
 
 1. 删除所有 Broker
-```sql
-ALTER SYSTEM DROP ALL BROKER <broker_name>;
-```
+    ```sql
+    ALTER SYSTEM DROP ALL BROKER <broker_name>;
+    ```
 
 2. 删除某一个 Broker 节点
-```sql
-ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
-```
+    ```sql
+    ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>" [, ...] ];
+    ```
 ## 必选参数
 
 **1. `<broker_name>`**
@@ -65,12 +65,12 @@ ALTER SYSTEM DROP BROKER <broker_name> "<host>:<ipc_port>"[, "<host>:<ipc_port>"
 
 1. 删除所有 Broker
 
-```sql
-ALTER SYSTEM DROP ALL BROKER broker_name；
-```
+    ```sql
+    ALTER SYSTEM DROP ALL BROKER broker_name；
+    ```
 
 2. 删除某一个 Broker 节点
 
-```sql
-ALTER SYSTEM DROP BROKER broker_name "10.10.10.1:8000";
-```
+    ```sql
+    ALTER SYSTEM DROP BROKER broker_name "10.10.10.1:8000";
+    ```

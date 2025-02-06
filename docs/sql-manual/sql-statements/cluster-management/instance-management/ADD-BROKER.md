@@ -59,11 +59,11 @@ The user who executes this operation needs to have the NODE_PRIV permission.
 
 1. Add two Brokers
 
-```sql
-ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
-```
+    ```sql
+    ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
+    ```
 2. Add a Broker using FQDN
 
-```sql
-ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
-```
+    ```sql
+    ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
+    ```
