@@ -1,4 +1,5 @@
 import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
+import { useLocation } from '@docusaurus/router';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';
@@ -34,6 +35,7 @@ export default function Layout(props: Props): JSX.Element {
     const history = useHistory();
     const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
     const searchPageDom = useRef<HTMLDivElement>(null);
+    const { hash } = useLocation();
     useKeyboardNavigation();
 
     useEffect(() => {
@@ -48,7 +50,7 @@ export default function Layout(props: Props): JSX.Element {
 
     useEffect(() => {
         if (showSearchPageMobile) {
-            window.scroll(0,0)
+            window.scroll(0, 0);
             document.body.style.overflow = 'hidden';
             searchPageDom.current.style.height = '100vh';
         } else {
@@ -56,6 +58,15 @@ export default function Layout(props: Props): JSX.Element {
             document.body.style.overflow = 'auto';
         }
     }, [showSearchPageMobile]);
+
+    useEffect(() => {
+        if (hash) {
+            const targetElement = document.querySelector(hash);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }, [hash]);
 
     return (
         <DataContext.Provider value={{ showSearchPageMobile, setShowSearchPageMobile }}>
