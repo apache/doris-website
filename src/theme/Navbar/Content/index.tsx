@@ -12,7 +12,8 @@ import { NavbarCommunityLeft, NavbarCommunityBottom, NavbarCommunityRight } from
 import { NavbarCommonLeft, NavbarCommonRight } from './components/NavbarCommon';
 import { DataContext } from '../../Layout';
 import { ARCHIVE_PATH } from '@site/src/constant/common';
-
+import { STAR_COUNT } from '../../../constant/github.data';
+ 
 import styles from './styles.module.css';
 
 enum NavBar {
@@ -72,29 +73,6 @@ export default function NavbarContent(): ReactNode {
 
     const mobileSidebar = useNavbarMobileSidebar();
     const { showSearchPageMobile } = useContext(DataContext);
-    const [star, setStar] = useState<string>('');
-
-    async function getGithubStar() {
-        try {
-            const res = await fetch('https://api.github.com/repos/apache/doris');
-            const data = await res.json();
-            if (data && data.stargazers_count) {
-                const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
-                setStar(starStr);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    function formatStar(star) {
-        return String(star)
-            .split('')
-            .reverse()
-            .reduce((prev, next, index) => {
-                return (index % 3 ? next : next + '.') + prev;
-            });
-    }
 
     const NavbarTypes = {
         [NavBar.DOCS]: {
@@ -109,7 +87,7 @@ export default function NavbarContent(): ReactNode {
         },
         [NavBar.COMMON]: {
             left: <NavbarCommonLeft />,
-            right: <NavbarCommonRight star={star} />,
+            right: <NavbarCommonRight star={STAR_COUNT} />,
             bottom: null,
         },
     };
@@ -127,10 +105,6 @@ export default function NavbarContent(): ReactNode {
             }
         }
     }, [typeof window !== 'undefined' && location.pathname]);
-
-    useEffect(() => {
-        getGithubStar();
-    }, []);
 
     return (
         <NavbarContentLayout
