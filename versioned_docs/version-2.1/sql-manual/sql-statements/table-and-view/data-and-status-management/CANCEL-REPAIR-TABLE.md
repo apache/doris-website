@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CANCEL REPAIR",
+    "title": "CANCEL REPAIR TABLE",
     "language": "en"
 }
 ---
@@ -27,29 +27,59 @@ under the License.
 
 ## Description
 
-This statement is used to cancel the repair of the specified table or partition with high priority
+The `CANCEL REPAIR TABLE` statement is used to cancel high-priority repairs for a specified table or partition. This statement has the following functionalities:
 
-grammar:
+- It can cancel high-priority repairs for an entire table.
+- It can cancel high-priority repairs for specified partitions.
+- It does not affect the system's default replica repair mechanism.
+
+## Syntax
 
 ```sql
-ADMIN CANCEL REPAIR TABLE table_name[ PARTITION (p1,...)];
+ADMIN CANCEL REPAIR TABLE <table_name> [ PARTITION (<partition_name> [, ...]) ];
 ```
 
-illustrate:
+## Required Parameters
 
-1. This statement simply means that the system will no longer repair shard copies of the specified table or partition with high priority. Replicas are still repaired with the default schedule.
+**1. `<table_name>`**
+
+> Specifies the name of the table for which the repair is to be canceled.
+>
+> The table name must be unique within its database.
+
+## Optional Parameters
+
+**1. `PARTITION (<partition_name> [, ...])`**
+
+> Specifies a list of partition names for which the repair is to be canceled.
+>
+> If this parameter is not specified, it will cancel high-priority repairs for the entire table.
+
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following permissions:
+
+| Privilege       | Object      | Notes                                         |
+| :-------------- | :---------- | :-------------------------------------------- |
+| ADMIN           | System      | The user must have ADMIN privileges to execute this command. |
+
+## Usage Notes
+
+- This statement only cancels high-priority repairs and does not stop the system's default replica repair mechanism.
+- After cancellation, the system will still repair replicas using the default scheduling method.
+- If there is a need to re-establish high-priority repairs, the `ADMIN REPAIR TABLE` command can be used.
+- The effects of this command take place immediately after execution.
 
 ## Examples
 
-  1. Cancel high priority repair
+- Cancel high-priority repairs for an entire table:
 
-     ```sql
-      ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1);
-     ```
+    ```sql
+    ADMIN CANCEL REPAIR TABLE tbl;
+    ```
 
-## Keywords
+- Cancel high-priority repairs for specified partitions:
 
-    ADMIN, CANCEL, REPAIR
-
-## Best Practice
-
+    ```sql
+    ADMIN CANCEL REPAIR TABLE tbl PARTITION(p1, p2);
+    ```
