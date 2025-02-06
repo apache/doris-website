@@ -710,7 +710,7 @@ After the upload is successful, you can use the command to view the schema infor
 
    ![use workload group rio](/images/workload-management/use_wg_rio_2.png)
 
-# Frequently Asked Questions
+## Frequently Asked Questions
 1. Why is the CPU hard limit configuration not taking effect?
 * This is usually caused by the following reasons:
     * Environment initialization failed. You need to check the two configuration files under the Doris CGroup path.
