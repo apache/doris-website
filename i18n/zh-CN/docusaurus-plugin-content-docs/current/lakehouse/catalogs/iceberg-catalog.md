@@ -267,7 +267,7 @@ CREATE CATALOG iceberg_gdm PROPERTIES (
 
 ### Iceberg on S3 Tables
 
-```
+```sql
 CREATE CATALOG iceberg_s3 PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 's3tables',
