@@ -22,32 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cosine_distance
 
-### description
-#### Syntax
+## Description
+
+Calculates the cosine distance between two vectors (vector values are coordinates)
+
+## Syntax
 
 ```sql
-DOUBLE cosine_distance(ARRAY<T> array1, ARRAY<T> array2)
+COSINE_DISTANCE(<array1>, <array2>)
 ```
 
-Calculates the cosine distance between two vectors (the values of the vectors are the coordinates).
-Return NULL if input array is NULL or any element of array is NULL.
+## Parameters
 
-#### Notice
-* nested type of input array support: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE
-* input array1 and array2 should have the same element size
+| Parameter | Description |
+|---|--|
+| `<array1>` | The first vector (the vector value is the coordinate). The subtypes of the input array are: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE. The number of elements must be consistent with array2 |
+| `<array2>` | The second vector (the vector value is the coordinate), the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1 |
 
-### example
+## Return Value
 
+Returns the cosine distance between two vectors (where the vector values are coordinates). If the input array is NULL, or any element in the array is NULL, then NULL is returned.
+
+## Example
+
+```sql
+SELECT COSINE_DISTANCE([1, 2], [2, 3]),COSINE_DISTANCE([3, 6], [4, 7]);
 ```
-sql> SELECT cosine_distance([1, 2], [2, 3]);
-+-------------------------------------------+
-| cosine_distance(ARRAY(1, 2), ARRAY(2, 3)) |
-+-------------------------------------------+
-|                     0.0077221232863322609 |
-+-------------------------------------------+
-```
 
-### keywords
-	COSINE_DISTANCE,DISTANCE,COSINE,ARRAY
+```text
++---------------------------------+---------------------------------+
+| cosine_distance([1, 2], [2, 3]) | cosine_distance([3, 6], [4, 7]) |
++---------------------------------+---------------------------------+
+|            0.007722123286332261 |           0.0015396467945875125 |
++---------------------------------+---------------------------------+
+```

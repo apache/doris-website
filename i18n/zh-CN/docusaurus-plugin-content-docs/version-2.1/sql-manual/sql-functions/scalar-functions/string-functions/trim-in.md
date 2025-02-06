@@ -27,11 +27,14 @@ under the License.
 
 ## 描述
 
+
 当没有 `rhs` 参数时，将参数 `str` 中右侧和左侧开始部分连续出现的空格去掉；当有 `rhs` 参数时，在字符串的两端查找并移除 `rhs` 字符集合中的任何字符（不考虑顺序）
+
 
 ## 语法
 
 ```sql
+
 TRIM_IN( <str> [ , <rhs>])
 ```
 ## 必选参数
@@ -51,9 +54,11 @@ TRIM_IN( <str> [ , <rhs>])
 
 删除两端的空格或指定字符后的字符串
 
-## 举例
+## 示例
 
+1. 移除字符串两端的空格：
 ```sql
+
 SELECT trim_in('   ab d   ') str;
 ```
 
@@ -61,18 +66,21 @@ SELECT trim_in('   ab d   ') str;
 +------+
 | str  |
 +------+
-| ab d |
+| hello|
 +------+
 ```
+
 
 ```sql
 SELECT trim_in('ababccaab','ab') str;
 ```
 
 ```sql
+
 +------+
 | str  |
 +------+
-| cc   |
+| ab   |
 +------+
+
 ```

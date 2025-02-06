@@ -1,5 +1,5 @@
 const path = require('path');
-const publicPath = 'https://cdnd.selectdb.com';
+const publicPath = 'https://doris.apache.org';
 module.exports = function (context, options) {
     return {
         name: 'custom-docusaurus-plugin',

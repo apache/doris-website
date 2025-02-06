@@ -26,7 +26,7 @@ under the License.
 
 BigQuery Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 BigQuery Connector 来访问 BigQuery 表。
 
-:::caution
+:::notice
 该功能为实验功能，自 3.0.1 版本开始支持。
 :::
 
@@ -43,9 +43,9 @@ BigQuery Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/communi
 
 > 需要 JDK 17 版本。
 
-```plain&#x20;text
-$ git clone https://github.com/apache/Doris-thirdparty.git
-$ cd Doris-thirdparty
+```shell
+$ git clone https://github.com/apache/doris-thirdparty.git
+$ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-bigquery
 $ mvn clean install -DskipTest
@@ -53,7 +53,7 @@ $ mvn clean install -DskipTest
 
 完成编译后，会在 `trino/plugin/trino-bigquery/target/` 下得到 `trino-bigquery-435/` 目录。
 
-也可以直接下载我们预编译的 [trino-bigquery-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-bigquery-435-20240724.tar.gz) 并解压。
+也可以直接下载我们预编译的 [trino-bigquery-435-20240724.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-bigquery-435-20240724.tar.gz) 并解压。
 
 ### 部署 BigQuery Connector
 
@@ -95,23 +95,15 @@ PROPERTIES (
 );
 ```
 
-* {TrinoProperties}
+* `{TrinoProperties}`
 
   TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
 ### 支持的 BigQuery 版本
-
-更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
-
-### 支持的元数据服务
-
-更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
-
-### 支持的存储系统
 
 更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
 

@@ -24,77 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_part
-### Description
-#### Syntax
+## Description
 
-`VARCHAR split_part(VARCHAR content, VARCHAR delimiter, INT field)`
+The SPLIT_PART function splits a string into multiple parts according to the specified separator and return one of the parts.
 
+## Syntax
 
-Returns the specified partition by splitting the string according to the delimiter. If field is positive, splitting and counting from the beginning of content, otherwise from the ending.
-
-`delimiter` and `field` parameter should be constant.
-
-### example
-
+```sql
+SPLIT_PART ( <str>, <separator>, <part_index> )
 ```
-mysql> select split_part("hello world", " ", 1);
+
+## Parameters
+
+| Parameter      | Description                                           |
+|----------------|-------------------------------------------------------|
+| `<str>`        | The string to be split                                |
+| `<separator>`  | The string used for splitting                         |
+| `<part_index>` | The index of the part to be returned. Starting from 1 |
+
+## Return Value
+
+Returns the specified part of the string split according to the delimiter. Special cases:
+
+- If any of the parameters is NULL, NULL is returned.
+- When `<part_index>` is 0, NULL is returned.
+
+## Examples
+
+```sql
+select split_part("hello world", " ", 1);
+```
+
+```text
 +----------------------------------+
 | split_part('hello world', ' ', 1) |
 +----------------------------------+
 | hello                            |
 +----------------------------------+
-
-
-mysql> select split_part("hello world", " ", 2);
-+----------------------------------+
-| split_part('hello world', ' ', 2) |
-+----------------------------------+
-| world                             |
-+----------------------------------+
-
-mysql> select split_part("2019年7月8号", "月", 1);
-+-----------------------------------------+
-| split_part('2019年7月8号', '月', 1)     |
-+-----------------------------------------+
-| 2019年7                                 |
-+-----------------------------------------+
-
-mysql> select split_part("abca", "a", 1);
-+----------------------------+
-| split_part('abca', 'a', 1) |
-+----------------------------+
-|                            |
-+----------------------------+
-
-mysql> select split_part("prefix_string", "_", -1);
-+--------------------------------------+
-| split_part('prefix_string', '_', -1) |
-+--------------------------------------+
-| string                               |
-+--------------------------------------+
-
-
-mysql> select split_part("prefix_string", "_", -2);
-+--------------------------------------+
-| split_part('prefix_string', '_', -2) |
-+--------------------------------------+
-| prefix                               |
-+--------------------------------------+
-
-mysql> select split_part("abc##123###234", "##", -1);
-+----------------------------------------+
-| split_part('abc##123###234', '##', -1) |
-+----------------------------------------+
-| 234                                    |
-+----------------------------------------+
-
-mysql> select split_part("abc##123###234", "##", -2);
-+----------------------------------------+
-| split_part('abc##123###234', '##', -2) |
-+----------------------------------------+
-| 123#                                   |
-+----------------------------------------+
 ```
-### keywords
-    SPLIT_PART,SPLIT,PART
+
+```sql
+SELECT split_part('apple,banana,cherry', ',', 0);
+```
+
+```text
++-------------------------------------------+
+| split_part('apple,banana,cherry', ',', 0) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
+```

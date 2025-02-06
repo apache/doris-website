@@ -24,22 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HLL_CARDINALITY
-### description
-#### Syntax
+## Description
 
-`HLL_CARDINALITY(hll)`
+`HLL_CARDINALITY` calculates the cardinality of a HyperLogLog (HLL) type value. It is an approximate counting algorithm suitable for estimating the number of distinct elements in large datasets.
 
-HLL_CARDINALITY is used to calculate the cardinality of a single HLL type value.
+## Syntax
 
-### example
+```sql
+HLL_CARDINALITY(<hll>)
 ```
-MySQL > select HLL_CARDINALITY(uv_set) from test_uv;
+
+## Parameters
+
+| Parameter  | Description                                              |
+| ---------- | -------------------------------------------------------- |
+| `<hll>`    | The HLL type value representing the dataset whose cardinality needs to be estimated. |
+
+## Return Value
+
+Returns the estimated cardinality of the HLL type value, representing the number of distinct elements in the dataset.
+
+## Example
+
+```sql
+select HLL_CARDINALITY(uv_set) from test_uv;
+```
+
+```text
 +---------------------------+
 | hll_cardinality(`uv_set`) |
 +---------------------------+
 |                         3 |
 +---------------------------+
 ```
-### keywords
-HLL,HLL_CARDINALITY

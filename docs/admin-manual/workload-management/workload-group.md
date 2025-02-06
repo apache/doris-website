@@ -210,7 +210,7 @@ SELECT name FROM information_schema.workload_groups;
 
 If the g1 Workload Group is not visible, you can use the ADMIN account to execute the GRANT statement to authorize the user. For example:
 ```
-"GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';"
+GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';
 ```
 This statement means granting the user_1 the permission to use the Workload Group named g1.
 More details can be found in [grant](../../sql-manual/sql-statements/account-management/GRANT-TO)。
@@ -709,3 +709,40 @@ After the upload is successful, you can use the command to view the schema infor
 4. Use the sar command (sar -n DEV 1 3600) to monitor the current network card's received traffic. The first column represents the amount of data received per second. The maximum value observed is now 207M per second, indicating that the read IO limit is effective. However, since the sar command reflects machine-level traffic, the observed value is slightly higher than what Doris reports.
 
    ![use workload group rio](/images/workload-management/use_wg_rio_2.png)
+
+# Frequently Asked Questions
+1. Why is the CPU hard limit configuration not taking effect?
+* This is usually caused by the following reasons:
+    * Environment initialization failed. You need to check the two configuration files under the Doris CGroup path.
+      Here, we take the CGroup V1 version as an example. If the user has specified the Doris CGroup path as ```/sys/fs/cgroup/cpu/doris/```,
+      you should first check if the content of ```/sys/fs/cgroup/cpu/doris/query/1/tasks``` contains the thread IDs corresponding to the Workload Group.
+      The "1" in the path represents the Workload Group ID, which can be obtained by running the command ```top -H -b -n 1 -p pid``` to find the thread IDs of the Workload Group.
+      After confirming, ensure that the thread IDs of the Workload Group are written into the tasks file.
+      Then, check if the value of ```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us``` is -1. If it is -1, it means the CPU hard limit configuration has not taken effect.
+    * The CPU usage of the Doris BE process is higher than the CPU hard limit configured for the Workload Group.
+      This is expected because the CPU managed by the Workload Group is primarily for query threads and memtable flush threads for Load.
+      However, the BE process typically has other components consuming CPU as well, such as Compaction.
+      Therefore, the CPU usage of the process is generally higher than the configured limit for the Workload Group.
+      You can create a test Workload Group that only stresses the query load and then check the CPU usage of the
+      Workload Group through the system table ```information_schema.workload_group_resource_usage```.
+      This table only records the CPU usage of the Workload Group and has been supported since version 2.1.6.
+    * Some users have configured the ```cpu_resource_limit```. After configuring this parameter, queries are handled by an independent thread pool that
+      is not managed by the Workload Group. Directly modifying this parameter may affect the stability of the production environment.
+      It is recommended to gradually migrate the query loads that are configured with this parameter to be managed by the Workload Group.
+      The current alternative to this parameter is the session variable ```num_scanner_threads```. The main process is as follows:
+      First, divide the users who have configured ```cpu_resource_limit``` into several batches. When migrating the first batch of users,
+      modify the session variable ```num_scanner_threads``` for these users to 1. Then, assign a Workload Group to these users. After that,
+      change ```cpu_resource_limit``` to -1 and observe the cluster's stability over a period of time. If the cluster remains stable, continue migrating the next batch of users.
+
+2. Why is the default number of Workload Groups limited to 15?
+* Workload Groups are primarily used for dividing resources on a single machine.
+  If too many Workload Groups are created on one machine, each Workload Group will only receive a very small portion of the resources.
+  If the user indeed requires creating this many Workload Groups,
+  you can consider dividing the cluster into multiple groups of BEs and then creating different Workload Groups for each group of BEs.
+  You can also temporarily bypass this limit by modifying the FE configuration ```workload_group_max_num```.
+
+3. Why does the error "Resource temporarily unavailable" occur after configuring many Workload Groups?
+* Each Workload Group corresponds to an independent thread pool.
+  Creating too many Workload Groups may cause the BE process to attempt to start too many threads,
+  exceeding the maximum number of threads allowed for a process by the operating system.
+  To resolve this issue, you can modify the system environment configuration to allow the BE process to create more threads.

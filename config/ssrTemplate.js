@@ -1,4 +1,4 @@
-const fetchUrl = "https://cdnd.selectdb.com";
+const fetchUrl = "https://doris.apache.org";
 
 module.exports = {
   ssrTemplate: `<!DOCTYPE html>
@@ -15,10 +15,10 @@ module.exports = {
       <%~ metaAttribute %>
     <% }); %>
     <% it.stylesheets.forEach((stylesheet) => { %>
-      <link rel="stylesheet" href="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= stylesheet %>" />
+      <link rel="stylesheet" href="<%= 'https://doris.apache.org' %><%= it.baseUrl %><%= stylesheet %>" />
     <% }); %>
     <% it.scripts.forEach((script) => { %>
-      <link rel="preload" href="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= script %>" as="script">
+      <link rel="preload" href="<%= 'https://doris.apache.org' %><%= it.baseUrl %><%= script %>" as="script">
     <% }); %>
   </head>
   <body <%~ it.bodyAttributes %>>
@@ -27,7 +27,7 @@ module.exports = {
       <%~ it.appHtml %>
     </div>
     <% it.scripts.forEach((script) => { %>
-      <script src="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= script %>"></script>
+      <script src="<%= 'https://doris.apache.org' %><%= it.baseUrl %><%= script %>"></script>
     <% }); %>
     <%~ it.postBodyTags %>
   </body>

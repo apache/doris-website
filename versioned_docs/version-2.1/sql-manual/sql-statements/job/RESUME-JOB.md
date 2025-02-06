@@ -24,31 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## Description
 
-Used to restart a JOB in PAUSE state. The restarted job will continue to be executed periodically. A JOB in STOP state cannot be resumed.
+Restore the PAUSED job to the RUNNING state. The RUNNING job will be executed according to the scheduled period.
+
+## Syntax
 
 ```sql
-RESUME JOB WHERE jobName = 'job_name';
+RESUME JOB where jobName = <job_name> ;
 ```
+## Required parameters
 
-## Examples
+**1. `<job_name>`**
+> The `<job_name>` of the recovery task.
 
-1. Restart the JOB named test1.
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
+
+## Example
+
+- Resume the job named example.
 
    ```sql
-   RESUME JOB WHERE jobName = 'test1';
+   RESUME JOB where jobName= 'example';
    ```
-
-## Keywords
-
-        RESUME, JOB
-
-## Best Practice
-
-
-

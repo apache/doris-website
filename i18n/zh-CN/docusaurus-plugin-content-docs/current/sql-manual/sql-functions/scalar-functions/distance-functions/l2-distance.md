@@ -22,32 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## l2_distance
 
 ## 描述
+
+计算欧几里得空间中两点（向量值为坐标）之间的距离
+
 ## 语法
 
 ```sql
-DOUBLE l2_distance(ARRAY<T> array1, ARRAY<T> array2)
+L2_DISTANCE(<array1>, <array2>)
 ```
 
-计算欧几里得空间中两点（向量值为坐标）之间的距离
-如果输入array为NULL，或者array中任何元素为NULL，则返回NULL
+## 参数
 
-### 注意事项
-* 输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE
-* 输入数组array1和array2，元素数量需保持一致
+| 参数 | 说明 |
+| -- |--|
+| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
+| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
+
+## 返回值
+
+返回欧几里得空间中两点（向量值为坐标）之间的距离。如果输入array为NULL，或者array中任何元素为NULL，则返回NULL。
 
 ## 举例
 
-```
-sql> SELECT l2_distance([1, 2], [2, 3]);
-+---------------------------------------+
-| l2_distance(ARRAY(1, 2), ARRAY(2, 3)) |
-+---------------------------------------+
-|                    1.4142135623730951 |
-+---------------------------------------+
+```sql
+SELECT L2_DISTANCE([4, 5], [6, 8]),L2_DISTANCE([3, 6], [4, 5]);
 ```
 
-### keywords
-	L2_DISTANCE,DISTANCE,L2,ARRAY
+```text
++-----------------------------+-----------------------------+
+| l2_distance([4, 5], [6, 8]) | l2_distance([3, 6], [4, 5]) |
++-----------------------------+-----------------------------+
+|           3.605551275463989 |          1.4142135623730951 |
++-----------------------------+-----------------------------+
+```
