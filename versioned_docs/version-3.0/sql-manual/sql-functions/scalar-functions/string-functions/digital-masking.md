@@ -24,19 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### description
+## Description
 
-An alias function with the original function being `CONCAT(LEFT(id,3),'****',RIGHT(id,4))`. Performs data masking on the input `digital_number` and returns the masked result. 
+The `digital_masking` function is used for masking numbers. Based on the specified masking rule, certain characters in the number are replaced with *. This function is an alias for the original function `concat(left(id, 3), '****', right(id, 4))`.
 
-### Syntax
+## Syntax
 
 ```sql
-digital_masking(digital_number)
+DIGITAL_MASKING( <digital_number> )
 ```
 
-### example
+## Parameters
 
-Desensitize the cell phone number
+| Parameter | Description |
+| -- | -- |
+| `<digital_number>` | The digital string that needs to be masked |
+
+## Return Value
+
+Returns the masked digital string.
+
+## Examples
 
 ```sql
 select digital_masking(13812345678);

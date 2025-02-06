@@ -24,35 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timestampadd
-### description
-#### Syntax
+## Description
 
-`DATETIME TIMESTAMPADD(unit, interval, DATETIME datetime_expr)`
+The `timestampadd` function is used to add a specified time unit (such as year, month, day, hour, minute, second, etc.) to a timestamp or date. This function is commonly used for date and time calculations.
 
-Adds the integer expression interval to the date or datetime expression datetime_expr. 
+## Syntax
 
-The unit for interval is given by the unit argument, which should be one of the following values: 
+`TIMESTAMPADD(<unit>, <interval>, <datetime_expr>)`
 
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR.
+## Parameters
 
-### example
+| Parameter | Description |
+| -- | -- |
+| `unit` | Time unit, specifies the time unit to add, common values include SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR |
+| `interval` | The time interval to add, typically an integer, which can be positive or negative to add or subtract the time length |
+| `datetime_expr` | A valid target timestamp or date |
 
+## Return Value
+
+The return value is the new date and time, representing the result of adding or subtracting the specified time interval to the given timestamp.
+
+## Examples
+
+```sql
+SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
 ```
 
-mysql> SELECT TIMESTAMPADD(MINUTE,1,'2019-01-02');
+```text
 +------------------------------------------------+
 | timestampadd(MINUTE, 1, '2019-01-02 00:00:00') |
 +------------------------------------------------+
 | 2019-01-02 00:01:00                            |
 +------------------------------------------------+
+```
 
-mysql> SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
+```sql
+SELECT TIMESTAMPADD(WEEK,1,'2019-01-02');
+```
+
+```text
 +----------------------------------------------+
 | timestampadd(WEEK, 1, '2019-01-02 00:00:00') |
 +----------------------------------------------+
 | 2019-01-09 00:00:00                          |
 +----------------------------------------------+
 ```
-### keywords
-    TIMESTAMPADD

@@ -771,6 +771,15 @@
                 },
                 {
                     "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -899,9 +908,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dfloor",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog1",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog10",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
@@ -914,7 +921,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/ceil",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/fpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
@@ -987,8 +993,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/right",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/split-by-char",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/translate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
@@ -1123,6 +1127,8 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-point",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",
@@ -1515,17 +1521,11 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
                                 "sql-manual/sql-functions/table-functions/explode-variant-array",
                                 "sql-manual/sql-functions/table-functions/explode",
-                                "sql-manual/sql-functions/table-functions/posexplode-outer",
-                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
-                                "sql-manual/sql-functions/table-functions/explode-json-object-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
-                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                                "sql-manual/sql-functions/table-functions/explode-numbers"
                             ]
                         },
                         {
@@ -1588,8 +1588,7 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-PROFILE",
+                                        "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",                                        
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -2016,6 +2015,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",
                         "releasenotes/v2.1/release-2.1.5",

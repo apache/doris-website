@@ -24,56 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 This syntax is used to view transaction details for the specified transaction id or label.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW TRANSACTION
-[FROM db_name]
+[FROM <db_name>]
 WHERE
-[id=transaction_id]
-[label = label_name];
+[id = <transaction_id> | label = <label_name>];
 ```
 
-Example of returned result:
+## Required Parameters
 
-```
-     TransactionId: 4005
-             Label: insert_8d807d5d-bcdd-46eb-be6d-3fa87aa4952d
-       Coordinator: FE: 10.74.167.16
- TransactionStatus: VISIBLE
- LoadJobSourceType: INSERT_STREAMING
-       PrepareTime: 2020-01-09 14:59:07
-        CommitTime: 2020-01-09 14:59:09
-        FinishTime: 2020-01-09 14:59:09
-            Reason:
-ErrorReplicasCount: 0
-        ListenerId: -1
-         TimeoutMs: 300000
-```
+**1. `<transaction_id>`**
 
-* TransactionId: transaction id
-* Label: the label corresponding to the import task
-* Coordinator: The node responsible for transaction coordination
-* TransactionStatus: transaction status
-  * PREPARE: preparation stage
-  * COMMITTED: The transaction succeeded, but the data was not visible
-  * VISIBLE: The transaction succeeded and the data is visible
-  * ABORTED: Transaction failed
-* LoadJobSourceType: Type of import job.
-* PrepareTime: transaction start time
-* CommitTime: The time when the transaction was successfully committed
-* FinishTime: The time when the data is visible
-* Reason: error message
-* ErrorReplicasCount: The number of replicas with errors
-* ListenerId: The id of the related import job
-* TimeoutMs: Transaction timeout, in milliseconds
+The transaction ID whose details need to be viewed.
 
-## Example
+**2. `<label_name>`**
+
+The label whose transaction details need to be viewed.
+
+## Optional Parameters
+
+**1. `<db_name>`**
+
+The database whose transaction details need to be viewed.
+
+## Return Value
+
+| Column Name         | Description |
+|---|---|
+| TransactionId       | Transaction ID | 
+| Label               | Label associated with the import task | 
+| Coordinator         | Node responsible for coordinating the transaction | 
+| TransactionStatus   | Status of the transaction | 
+| PREPARE             | Preparation phase | 
+| COMMITTED           | Transaction succeeded, but data is not visible yet | 
+| VISIBLE             | Transaction succeeded, and data is visible  | 
+| ABORTED             | Transaction failed | 
+| LoadJobSourceType   | Type of the import task | 
+| PrepareTime         | Start time of the transaction | 
+| CommitTime          | Time when the transaction was successfully committed | 
+| FinishTime          | Time when the data became visible | 
+| Reason              | Error message | 
+| ErrorReplicasCount  | Number of replicas with errors | 
+| ListenerId          | ID of the related import job | 
+| TimeoutMs           | Transaction timeout duration in milliseconds |
+
+## Access Control Requirements
+
+| Privilege | Object | Notes |
+| :-------------- | :----------- | :------------------------ |
+| ADMIN_PRIV | Database | Only users with ADMIN_PRIV can perform this operation. |
+
+## Examples
 
 1. View the transaction with id 4005:
 
@@ -92,10 +99,3 @@ ErrorReplicasCount: 0
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
-
-## Keywords
-
-    SHOW, TRANSACTION
-
-## Best Practice
-

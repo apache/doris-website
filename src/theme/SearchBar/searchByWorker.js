@@ -1,16 +1,18 @@
 import * as Comlink from 'comlink';
 let remoteWorkerPromise;
-function getWorkerURL(url) {
-    const content = `importScripts( "${url}" );`;
-    return URL.createObjectURL(new Blob([content], { type: 'text/javascript' }));
-}
+// function getWorkerURL(url) {
+//     const content = `importScripts( "${url}" );`;
+//     return URL.createObjectURL(new Blob([content], { type: 'text/javascript' }));
+// }
 function getRemoteWorker() {
     if (process.env.NODE_ENV === 'production' && !remoteWorkerPromise) {
         remoteWorkerPromise = (async () => {
-            const timestamp = Date.now();
-            const Remote = Comlink.wrap(
-                new Worker(getWorkerURL(`https://cdnd.selectdb.com/worker.js?_=${timestamp}`)),
-            );
+            // const timestamp = Date.now();
+            // const Remote = Comlink.wrap(
+            //     new Worker(getWorkerURL(`https://doris.apache.org/worker.js?_=${timestamp}`)),
+            // );
+            const url = new URL("./worker.js", import.meta.url);
+            const Remote = Comlink.wrap(new Worker(url));
             return await new Remote();
         })();
     }

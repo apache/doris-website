@@ -1,6 +1,6 @@
 ---
 {
-"title": "explode_json_array_double",
+"title": "EXPLODE_JSON_ARRAY_DOUBLE",
 "language": "zh-CN"
 }
 ---
@@ -26,99 +26,90 @@ under the License.
 
 ## 描述
 
-表函数，需配合 Lateral View使用，并且支持多个Lateral View。它仅支持新的优化器。
+`explode_json_array_double` 表函数，接受一个 JSON 数组，其中每个元素是双精度浮点数类型，将该 JSON 数组中的每个浮点数展开为多行，每行包含一个浮点数。配合 LATERAL VIEW 使用。
 
-该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为NULL或空时，posexplode_outer会返回 NULL。posexplode和posexplode_outer均会返回数组中的NULL元素。
+`explode_json_array_double_outer` 和 `explode_json_array_double` 类似，对于空值或 NULL 的处理不同。
+
+如果 JSON 字符串本身为 NULL，`OUTER` 版本会返回一行，且该行中的值为 NULL。普通版本会完全忽略这类记录。
+
+如果 JSON 数组为空，`OUTER` 版本会返回一行，且该行的值为 NULL。普通版本则不会返回任何结果。
 
 ## 语法
+
 ```sql
-POSEXPLODE(<array>)
-POSEXPLODE_OUTER(<array>)
+EXPLODE_JSON_ARRAY_DOUBLE(<json>)
+EXPLODE_JSON_ARRAY_DOUBLE_OUTER(<json>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<array>` | 需要被展开为多行的数组 |
+| `<json>` | json 类型 |
 
 ## 返回值
 
-按照数组array展开的多行。特殊情况：
+展开 JSON 数组，每个元素生成一行，返回双精度浮点数列。
 
-- 当数组为NULL或空时，返回NULL。
-- 当数组存在NULL元素时，返回NULL元素。
-
-### 举例
+## 举例
 
 ```sql
-CREATE TABLE IF NOT EXISTS `table_test`(
-            `id` INT NULL,
-            `name` TEXT NULL,
-            `score` array<string> NULL
-          ) ENGINE=OLAP
-    DUPLICATE KEY(`id`)
-    COMMENT 'OLAP'
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1
-    PROPERTIES ("replication_allocation" = "tag.location.default: 1");
-
-insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+CREATE TABLE json_array_example (
+    id INT,
+    json_array STRING
+)DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS AUTO
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1");
 ```
 
-```sql    
-select * from table_test order by id;
+```sql
+INSERT INTO json_array_example (id, json_array) VALUES
+(1, '[1, 2, 3, 4, 5]'),
+(2, '[1.1, 2.2, 3.3, 4.4]'),
+(3, '["apple", "banana", "cherry"]'),
+(4, '[{"a": 1}, {"b": 2}, {"c": 3}]'),
+(5, '[]'),
+(6, 'NULL');
 ```
 
-```text
-+------+----------+--------------------------------+
-| id   | name     | score                          |
-+------+----------+--------------------------------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |
-|    1 | lisi     | ["null"]                       |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |
-|    3 | lisi2    | [null]                         |
-|    4 | amory    | NULL                           |
-+------+----------+--------------------------------+
-```
-
-```sql  
-select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```sql
+SELECT id, e1
+FROM json_array_example
+LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
+WHERE id = 2;
 ```
 
 ```text
-+------+----------+--------------------------------+------+---------+
-| id   | name     | score                          | k    | v       |
-+------+----------+--------------------------------+------+---------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    0 | Chinese |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    1 | Math    |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    2 | English |
-|    1 | lisi     | ["null"]                       |    0 | null    |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    0 | 88a     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    1 | 90b     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
-|    3 | lisi2    | [null]                         |    0 | NULL    |
-+------+----------+--------------------------------+------+---------+
++------+------+
+| id   | e1   |
++------+------+
+|    2 |  1.1 |
+|    2 |  2.2 |
+|    2 |  3.3 |
+|    2 |  4.4 |
++------+------+
 ```
 
-```sql  
-select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```sql
+SELECT id, e1
+FROM json_array_example
+LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
+WHERE id = 6;
+Empty set (0.01 sec)
+```
+
+```sql
+SELECT id, e1
+FROM json_array_example
+LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE_OUTER(json_array) tmp1 AS e1
+WHERE id = 6;
 ```
 
 ```text
-+------+----------+--------------------------------+------+---------+
-| id   | name     | score                          | k    | v       |
-+------+----------+--------------------------------+------+---------+
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    0 | Chinese |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    1 | Math    |
-|    0 | zhangsan | ["Chinese", "Math", "English"] |    2 | English |
-|    1 | lisi     | ["null"]                       |    0 | null    |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    0 | 88a     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    1 | 90b     |
-|    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
-|    3 | lisi2    | [null]                         |    0 | NULL    |
-|    4 | amory    | NULL                           | NULL | NULL    |
-+------+----------+--------------------------------+------+---------+
++------+------+
+| id   | e1   |
++------+------+
+|    6 | NULL |
++------+------+
 ```
-
-### Keywords
-POSEXPLODE,POSEXPLODE_OUTER
