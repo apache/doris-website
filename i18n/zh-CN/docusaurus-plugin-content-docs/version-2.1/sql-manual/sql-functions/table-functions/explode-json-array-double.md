@@ -32,26 +32,44 @@ under the License.
 
 ## 语法
 ```sql
-posexplode(array)
-posexplode_outer(array)
+POSEXPLODE(<array>)
+POSEXPLODE_OUTER(<array>)
 ```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<array>` | 需要被展开为多行的数组 |
+
+## 返回值
+
+按照数组array展开的多行。特殊情况：
+
+- 当数组为NULL或空时，返回NULL。
+- 当数组存在NULL元素时，返回NULL元素。
 
 ### 举例
 
 ```sql
-    CREATE TABLE IF NOT EXISTS `table_test`(
-                `id` INT NULL,
-                `name` TEXT NULL,
-                `score` array<string> NULL
-              ) ENGINE=OLAP
-        DUPLICATE KEY(`id`)
-        COMMENT 'OLAP'
-        DISTRIBUTED BY HASH(`id`) BUCKETS 1
-        PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+CREATE TABLE IF NOT EXISTS `table_test`(
+            `id` INT NULL,
+            `name` TEXT NULL,
+            `score` array<string> NULL
+          ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    COMMENT 'OLAP'
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES ("replication_allocation" = "tag.location.default: 1");
 
-mysql> insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+```
 
-mysql [test_query_qa]>select * from table_test order by id;
+```sql    
+select * from table_test order by id;
+```
+
+```text
 +------+----------+--------------------------------+
 | id   | name     | score                          |
 +------+----------+--------------------------------+
@@ -61,8 +79,13 @@ mysql [test_query_qa]>select * from table_test order by id;
 |    3 | lisi2    | [null]                         |
 |    4 | amory    | NULL                           |
 +------+----------+--------------------------------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```sql  
+select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
@@ -75,8 +98,13 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 |    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
 |    3 | lisi2    | [null]                         |    0 | NULL    |
 +------+----------+--------------------------------+------+---------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```sql  
+select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
