@@ -74,7 +74,7 @@ The user executing this SQL command must have at least the following privileges:
   ```sql
   admin check tablet (10000, 10001) PROPERTIES("type" = "consistency");
   ```
-
+  
   ```text
   Query OK, 0 rows affected (0.00 sec)
   ```

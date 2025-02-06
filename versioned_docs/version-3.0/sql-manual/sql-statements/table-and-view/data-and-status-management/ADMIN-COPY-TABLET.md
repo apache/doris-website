@@ -1,7 +1,7 @@
 ---
 {
-    "title": "ADMIN COPY TABLET",
-    "language": "en"
+  "title": "ADMIN COPY TABLET",
+  "language": "en"
 }
 ---
 
@@ -88,7 +88,7 @@ The user executing this SQL command must have at least the following privileges:
   ```sql
   ADMIN COPY TABLET 10020 PROPERTIES("backend_id" = "10003");
   ```
-
+  
   ```text
            TabletId: 10020
           BackendId: 10003
@@ -112,7 +112,7 @@ The user executing this SQL command must have at least the following privileges:
   ```sql
   ADMIN COPY TABLET 10010 PROPERTIES("backend_id" = "10003", "version" = "10");
   ```
-
+  
   ```text
            TabletId: 10010
           BackendId: 10003
@@ -130,3 +130,4 @@ The user executing this SQL command must have at least the following privileges:
   "version_info" = "2"
   );
   ```
+

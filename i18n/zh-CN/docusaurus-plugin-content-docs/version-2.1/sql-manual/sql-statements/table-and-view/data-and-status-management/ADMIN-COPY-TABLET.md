@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## 描述
 
 该语句用于为指定的 tablet 制作快照，主要用于本地加载 tablet 来复现问题。
@@ -128,4 +129,3 @@ PROPERTIES 子句允许指定附加参数：
   "version_info" = "2"
   );
   ```
-

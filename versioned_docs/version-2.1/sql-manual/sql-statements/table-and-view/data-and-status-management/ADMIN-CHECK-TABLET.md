@@ -1,7 +1,7 @@
 ---
 {
-    "title": "ADMIN CHECK TABLET",
-    "language": "en"
+   "title": "ADMIN CHECK TABLET",
+   "language": "en"
 }
 ---
 
