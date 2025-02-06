@@ -32,8 +32,8 @@ This statement is used to view BACKUP tasks
 ## Syntax
 
 ```sql
- SHOW BACKUP [FROM <db_name>]
-     [WHERE SnapshotName ( LIKE | = ) '<snapshot_name>' ]
+SHOW BACKUP [FROM <db_name>]
+     [WHERE SnapshotName { LIKE | = } '<snapshot_name>' ]
 ```
 
 ## Parameters

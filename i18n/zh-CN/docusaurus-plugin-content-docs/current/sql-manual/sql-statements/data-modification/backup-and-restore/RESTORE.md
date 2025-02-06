@@ -32,13 +32,13 @@ under the License.
 ## 语法
 
 ```sql
-RESTORE SNAPSHOT <db_name>.<snapshot_name>
+RESTORE SNAPSHOT [<db_name>.]<snapshot_name>
 FROM `<repository_name>`
-[{ON|EXCLUDE]} (
+[ { ON | EXCLUDE } ] (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
-[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]
 ```
 
 ## 必选参数
@@ -82,6 +82,13 @@ FROM `<repository_name>`
 **3.`<table_alias>`**
 
 表别名
+
+## 权限控制
+
+执行此SQL命令的用户必须至少具有以下权限：
+| 权限         | 对象         | 说明          |
+|:------------|:------------|:--------------|
+| LOAD_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 LOAD_PRIV 权限才能进行此操作 |
 
 ## 注意事项：
 

@@ -33,13 +33,13 @@ This statement is used to back up the data under the specified database. This co
 ## Syntax
 
 ```sql
-BACKUP SNAPSHOT <db_name>.<snapshot_name>
+BACKUP SNAPSHOT [<db_name>.]<snapshot_name>
 TO `<repository_name>`
-[ {ON|EXCLUDE]} 
+[ { ON | EXCLUDE } ]
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
-    
-[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
+
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]
 ```
 
 ## Required Parameters
@@ -78,7 +78,10 @@ Data snapshot attributes, in the format: `<key>` = `<value>`，currently support
 
 ## Access Control Requirements
 
-Only root or superuser users can create repositories.
+The user executing this SQL command must have at least the following privileges:
+| Privilege     | Object    | Notes |
+|:--------------|:----------|:------|
+| LOAD_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with LOAD_PRIV permissions  |
 
 ## Usage Notes
 

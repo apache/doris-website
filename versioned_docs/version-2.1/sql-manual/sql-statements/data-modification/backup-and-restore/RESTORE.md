@@ -32,13 +32,13 @@ This statement is used to restore the data backed up by the BACKUP command to th
 ## Syntax
 
 ```sql
-RESTORE SNAPSHOT <db_name>.<snapshot_name>
+RESTORE SNAPSHOT [<db_name>.]<snapshot_name>
 FROM `<repository_name>`
-[{ON|EXCLUDE]} (
+[ { ON | EXCLUDE } ] (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
     [, ...] ) ]
 )
-[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]
 ```
 
 ## Required Parameters
@@ -86,6 +86,13 @@ The name of the partition to be restored. If not specified, all partitions of th
 **3.`<table_alias>`**
 
 table alias
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+| Privilege     | Object    | Notes |
+|:--------------|:----------|:------|
+| LOAD_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with LOAD_PRIV permissions  |
 
 ## Usage Notes
 

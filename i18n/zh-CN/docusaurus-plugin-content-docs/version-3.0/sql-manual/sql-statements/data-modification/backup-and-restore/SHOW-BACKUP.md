@@ -32,7 +32,7 @@ under the License.
 
 ```sql
  SHOW BACKUP [FROM <db_name>]
-     [WHERE SnapshotName ( LIKE | = ) '<snapshot_name>' ]
+     [WHERE SnapshotName { LIKE | = } '<snapshot_name>' ]
 ```
 
 ## 参数

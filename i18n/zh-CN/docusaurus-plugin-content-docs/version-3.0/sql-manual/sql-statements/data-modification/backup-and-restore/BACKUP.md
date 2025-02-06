@@ -31,13 +31,13 @@ under the License.
 ## 语法
 
 ```sql
-BACKUP SNAPSHOT <db_name>.<snapshot_name>
+BACKUP SNAPSHOT [<db_name>.]<snapshot_name>
 TO `<repository_name>`
-[{ON|EXCLUDE]}
+[ { ON | EXCLUDE } ]
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
     [, ...] ) ]
 
-[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]]
+[ PROPERTIES ( "<key>" = "<value>" [ , ... ] )]
 ```
 
 ## 必选参数
@@ -76,7 +76,10 @@ TO `<repository_name>`
 
 ## 权限控制
 
-仅 root 或 superuser 用户可以创建仓库。
+执行此SQL命令的用户必须至少具有以下权限：
+| 权限         | 对象         | 说明          |
+|:------------|:------------|:--------------|
+| LOAD_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 LOAD_PRIV 权限才能进行此操作 |
 
 ## 注意事项：
 

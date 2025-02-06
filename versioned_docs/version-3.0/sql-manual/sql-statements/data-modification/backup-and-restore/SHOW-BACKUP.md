@@ -33,7 +33,7 @@ This statement is used to view BACKUP tasks
 
 ```sql
  SHOW BACKUP [FROM <db_name>]
-     [WHERE SnapshotName ( LIKE | = ) '<snapshot_name>' ]
+     [WHERE SnapshotName { LIKE | = } '<snapshot_name>' ]
 ```
 
 ## Parameters
