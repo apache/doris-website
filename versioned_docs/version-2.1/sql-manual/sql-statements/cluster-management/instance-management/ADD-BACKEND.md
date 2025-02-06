@@ -24,51 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-The ADD BACKEND command is used to add one or more backend nodes to a Doris OLAP database cluster. This command allows administrators to specify the host and port of the new backend nodes, along with optional properties that configure their behavior.
+The ADD BACKEND is used to add one or more BE nodes to the Doris cluster. This command allows administrators to specify the host and port of the new BE nodes, as well as optional properties to configure their behavior.
 
-grammar:
+## Syntax
 
 ```sql
--- Add nodes (add this method if you do not use the multi-tenancy function)
-   ALTER SYSTEM ADD BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...] [PROPERTIES ("key"="value", ...)];
-````
+ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>" [, ...]] [PROPERTIES ("<key>"="<value>" [, ...] )]
+```
 
-### Parameters
+## Required Parameters
 
-* `host` can be a hostname or an ip address of the backend node while `heartbeat_port` is the heartbeat port of the node
-* `PROPERTIES ("key"="value", ...)`: (Optional) A set of key-value pairs that define additional properties for the backend nodes. These properties can be used to customize the configuration of the backends being added. Available properties include:
+**1. <host>**
 
-    * tag.location: Specifies the resource group where the backend node belongs. For example, PROPERTIES ("tag.location" = "groupb").
+> It can be the hostname or IP address of the BE node.
+
+**2. <heartbeat_port>**
+
+> The heartbeat port of the BE node, the default is 9050.
+
+## Optional Parameters
+
+**1. `PROPERTIES ("<key>"="<value>" [, ... ] )`**
+
+> A set of key-value pairs used to define additional properties of the BE node. These properties can be used to customize the configuration of the BE being added. Available properties include:
+> - `tag.location`: Used to specify the Resource Group to which the BE node belongs.
+
+## Access Control Requirements
+
+The user executing this SQL must have at least the following permissions:
+
+| Privilege | Object | Notes |
+|-----------|----|-------|
+| NODE_PRIV |    |       |
+
+## Usage Notes
+
+1. Before adding a new BE node, make sure the node is correctly configured and running.
+2. Using [Resource Group](../../../../admin-manual/workload-management/resource-group.md) can help you better manage and organize the BE nodes in the cluster.
+3. When adding multiple BE nodes, you can specify them in one command to improve efficiency.
+3. After adding the BE nodes, use the [`SHOW BACKENDS`](./SHOW-BACKENDS.md) to verify whether they have been successfully added and are in a normal state.
+4. Consider adding BE nodes in different physical locations or racks to improve the availability and fault tolerance of the cluster.
+5. Regularly check and balance the load in the cluster to ensure that the newly added BE nodes are properly utilized.
 
 ## Examples
 
- 1. Adding Backends Without Additional Properties 
+1. Add BE nodes without additional properties
+   ```sql
+   ALTER SYSTEM ADD BACKEND "192.168.0.1:9050,192.168.0.2:9050";
+   ```
+   This command adds two BE nodes to the cluster:
+   * 192.168.0.1，port 9050
+   * 192.168.0.2，port 9050
+   No additional properties are specified, so the default settings will be applied.
 
-    ```sql
-    ALTER SYSTEM ADD BACKEND "host1:9020,host2:9020";
-    ````
-
-    This command adds two backend nodes to the cluster:
-
-    * host1 with port 9020
-    * host2 with port 9020
-
-    No additional properties are specified, so the default settings will apply to these backends.
-
-2. Adding Backends With Resource Group
-
-    ```sql
-    ALTER SYSTEM ADD BACKEND "host3:9020" PROPERTIES ("tag.location" = "groupb");
-    ````
-
-    This command adds a single backend node (host3 with port 9020) to the cluster in resource group `groupb`:
-
-## Keywords
-
-    ALTER, SYSTEM, ADD, BACKEND, PROPERTIES
-
-## Best Practice
+2. Add a BE node to a specified Resource Group
+   ```sql
+   ALTER SYSTEM ADD BACKEND "doris-be01:9050" PROPERTIES ("tag.location" = "groupb");
+   ```
+   This command adds a single BE node (hostname doris-be01, port 9050) to the Resource Group `groupb` in the cluster.

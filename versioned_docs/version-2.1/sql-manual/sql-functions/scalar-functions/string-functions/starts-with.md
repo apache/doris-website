@@ -5,7 +5,7 @@
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,31 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## starts_with
-### Description
-#### Syntax
+## Description
 
-`BOOLEAN STARTS_WITH(VARCHAR str, VARCHAR prefix)`
+The STARTS_WITH function checks if a string starts with a specified prefix. Returns true if the string starts with the specified prefix; otherwise returns false.
 
-It returns true if the string starts with the specified prefix, otherwise it returns false.
-If any parameter is NULL, it returns NULL.
+## Syntax
 
-### example
-
+```sql
+STARTS_WITH(<str>, <prefix>)
 ```
-MySQL [(none)]> select starts_with("hello world","hello");
+
+## Parameters
+| Parameter | Description                               |
+| --------- | ----------------------------------------- |
+| `<str>` | The string to check. Type: VARCHAR        |
+| `<prefix>` | The prefix string to match. Type: VARCHAR |
+
+## Return Value
+
+Returns BOOLEAN type.
+
+Special cases:
+- Returns NULL if any argument is NULL
+
+## Examples
+
+1. Successful match
+```sql
+SELECT starts_with('hello world', 'hello');
+```
+```text
 +-------------------------------------+
 | starts_with('hello world', 'hello') |
 +-------------------------------------+
 |                                   1 |
 +-------------------------------------+
+```
 
-MySQL [(none)]> select starts_with("hello world","world");
+2. Failed match
+```sql
+SELECT starts_with('hello world', 'world');
+```
+```text
 +-------------------------------------+
 | starts_with('hello world', 'world') |
 +-------------------------------------+
 |                                   0 |
 +-------------------------------------+
 ```
-### keywords
-    STARTS_WITH

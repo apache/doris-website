@@ -24,25 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## St_Point
-### Description
-#### Syntax
+## Description
 
-`POINT ST_Point(DOUBLE x, DOUBLE y)`
+With the given X coordinate value, the Y coordinate value returns the corresponding Point.
 
+The current value is only meaningful in the sphere set, X/Y corresponds to longitude/latitude;
 
-Given the X coordinate value, the Y coordinate value returns the corresponding Point.
-The current value is meaningful only for spherical sets, and X/Y corresponds to longitude/latitude.
+## Syntax
 
-### example
-
+```sql
+ST_Point( <x>, <y>)
 ```
-mysql> SELECT ST_AsText(ST_Point(24.7, 56.7));
+## Parameters
+
+| Parameters | Instructions |
+|-----|--------------|
+| `<x>` | x-coordinate |
+| `<y>` | y-coordinate |
+
+## Return Value
+
+Given horizontal coordinate and vertical coordinate corresponding position information
+
+## Examples
+
+```sql
+SELECT ST_AsText(ST_Point(24.7, 56.7));
+```
+
+```text
 +---------------------------------+
 | st_astext(st_point(24.7, 56.7)) |
 +---------------------------------+
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
-### keywords
-ST_POINT,ST,POINT

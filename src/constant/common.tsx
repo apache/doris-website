@@ -21,3 +21,4 @@ export const BLOG_TAG_ICONS = {
 
 export const VERSIONS = ['1.2', '2.0', '2.1', '3.0', 'dev'];
 export const DEFAULT_VERSION = '2.1';
+export const ARCHIVE_PATH = 'archive-docs';

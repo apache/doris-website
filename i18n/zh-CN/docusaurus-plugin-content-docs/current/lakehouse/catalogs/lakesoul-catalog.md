@@ -47,7 +47,7 @@ CREATE CATALOG lakesoul_catalog PROPERTIES (
 );
 ```
 
-* {LakeSoulProperties}
+* `{LakeSoulProperties}`
 
   | 属性 | 说明 | 示例 |
     | --- | --- | --- |
@@ -55,11 +55,11 @@ CREATE CATALOG lakesoul_catalog PROPERTIES (
     | `lakesoul.pg.password` | PG 源数据库的密码 | |
     | `lakesoul.pg.url` | PG 元数据库的 JDBC URL | `jdbc:postgresql://127.0.0.1:5432/lakesoul_test?stringtype=unspecified` |
 
-* {CommonProperties}
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
   
-如果 LakeSoul 的数据存储在 HDFS 上，需要将 core-site.xml，hdfs-site.xml 和 hive-site.xml 放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
+如果 LakeSoul 的数据存储在 HDFS 上，需要将 `core-site.xml`，`hdfs-site.xml` 和 `hive-site.xml` 放到 FE 和 BE 的 `conf/` 目录下。优先读取 `conf/` 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
 
 ### 支持的 LakeSoul 版本
 

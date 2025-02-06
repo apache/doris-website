@@ -19,12 +19,14 @@ _version_tag="$(date '+%Y%m%d')"
 # generate PDF for dev version
 
 output_path="output.pdf"
+# -V title="Apache Doris 中文手册" \
+# -V title="Apache Doris V1.2 Documentation" \
 
 pandoc -N --toc --smart --latex-engine=xelatex \
 --template=templates/template.tex \
 --listings \
 --columns=80 \
--V title="Apache Doris 中文手册" \
+-V title="Apache Doris V1.2 中文手册" \
 -V date="${_version_tag}" \
 -V CJKmainfont="${MAINFONT}" \
 -V mainfont="${MAINFONT}" \
@@ -32,4 +34,4 @@ pandoc -N --toc --smart --latex-engine=xelatex \
 -V monofont="${MONOFONT}" \
 -V geometry:margin=1in \
 -V include-after="\\input{templates/copyright.tex}" \
-"doc-3.0.md" -s -o "doris-3.0.pdf"
+"doc-1.2.md" -s -o "doris-1.2.pdf"

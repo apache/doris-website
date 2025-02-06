@@ -24,32 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## space
-### Description
-#### Syntax
+## Description
 
-`VARCHAR space(Int num)`
+Generate a string consisting of a specified number of spaces.
 
-Returns a string consisting of num spaces.
+## Syntax
 
-### example
-
+```sql
+SPACE ( <len> )
 ```
-mysql> select length(space(10));
-+-------------------+
-| length(space(10)) |
-+-------------------+
-|                10 |
-+-------------------+
-1 row in set (0.01 sec)
 
-mysql> select length(space(-10));
-+--------------------+
-| length(space(-10)) |
-+--------------------+
-|                  0 |
-+--------------------+
-1 row in set (0.02 sec)
+## Parameters
+
+| Parameter | Description                      |
+|-----------|----------------------------------|
+| `<len>`   | The number of spaces to generate |
+
+## Return Value
+
+Returns a string consisting of the specified number of spaces. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+- When `<len>` is less than 0, an empty string is returned.
+
+## Examples
+
+```sql
+SELECT space(10);
 ```
-### keywords
-    space
+
+```text
++------------+
+| space(10)  |
++------------+
+|            |
++------------+
+```
+
+```sql
+SELECT space(null);
+```
+
+```text
++-------------+
+| space(NULL) |
++-------------+
+| NULL        |
++-------------+
+```

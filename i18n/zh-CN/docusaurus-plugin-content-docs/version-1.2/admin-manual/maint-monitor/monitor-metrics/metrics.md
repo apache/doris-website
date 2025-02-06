@@ -69,93 +69,93 @@ curl http://be_host:webserver_port/metrics?type=json
 
 ### 进程监控
 
-|名称| 标签 |单位 | 含义 | 说明 | 等级 |
-|---|---|---|---|---|---|
-|`doris_fe_cache_added`|{type="partition"}| Num | 新增的 Partition Cache 数量累计值 | |
-||{type="sql"}|Num| 新增的 SQL Cache 数量累计值 | |
-|`doris_fe_cache_hit`|{type="partition"}| Num | 命中 Partition Cache 的计数 | |
-||{type="sql"}| Num | 命中 SQL Cache 的计数 | |
-|`doris_fe_connection_total`| | Num| 当前FE的MySQL端口连接数 | 用于监控查询连接数。如果连接数超限，则新的连接将无法接入 | P0 |
-|`doris_fe_counter_hit_sql_block_rule`|| Num| 被 SQL BLOCK RULE 拦截的查询数量 |  | |
-|`doris_fe_edit_log_clean`| {type="failed"} | Num| 清理历史元数据日志失败的次数 | 不应失败，如失败，需人工介入 | P0|
-|| {type="success"} | Num| 清理历史元数据日志成功的次数 | |
-|`doris_fe_edit_log`| {type="accumulated_bytes"} |字节 | 元数据日志写入量的累计值 | 通过计算斜率可以获得写入速率，来观察是否元数据写入有延迟 | P0 |
-|| {type="current_bytes"} |字节 | 元数据日志当前值 | 用于监控editlog 大小。如果大小超限，需人工介入 | P0 |
-|| {type="read"} |Num| 元数据日志读取次数的计数 | 通过斜率观察元数据读取频率是否正常 |P0 |
-|| {type="write"} |Num | 元数据日志写入次数的计数 |通过斜率观察元数据写入频率是否正常  |P0 |
-|| {type="current"} |Num | 元数据日志当前数量 |用于监控editlog 数量。如果数量超限，需人工介入  |P0 |
-|`doris_fe_editlog_write_latency_ms`| | 毫秒| 元数据日志写入延迟的百分位统计。如 {quantile="0.75"} 表示 75 分位的写入延迟 | |
-|`doris_fe_image_clean`|{type="failed"} | Num | 清理历史元数据镜像文件失败的次数 | 不应失败，如失败，需人工介入 | P0|
-||{type="success"} | Num | 清理历史元数据镜像文件成功的次数 | |
-|`doris_fe_image_push`|{type="failed"} | Num | 将元数据镜像文件推送给其他FE节点的失败的次数 | |
-||{type="success"} | Num | 将元数据镜像文件推送给其他FE节点的成功的次数 | |
-|`doris_fe_image_write`|{type="failed"} | Num | 生成元数据镜像文件失败的次数 | 不应失败，如失败，需人工介入 | P0|
-||{type="success"} | Num | 生成元数据镜像文件成功的次数 | |
-|`doris_fe_job`| | Num | 当前不同作业类型以及不同作业状态的计数。如 {job="load", type="INSERT", state="LOADING"} 表示类型为 INSERT 的导入作业，处于 LOADING 状态的作业个数| 可以根据需要，观察不同类型的作业在集群中的数量 | P0 |
-|`doris_fe_max_journal_id`| | Num | 当前FE节点最大元数据日志ID。如果是Master FE，则是当前写入的最大ID，如果是非Master FE，则代表当前回放的元数据日志最大ID | 用于观察多个FE之间的 id 是否差距过大。过大则表示元数据同步出现问题 | P0 |
-|`doris_fe_max_tablet_compaction_score`| | Num| 所有BE节点中最大的 compaction score 值。  | 该值可以观测当前集群最大的 compaction score，以判断是否过高。如过高则可能出现查询或写入延迟 | P0 |
-|`doris_fe_qps`| | Num/Sec  | 当前FE每秒查询数量（仅统计查询请求）| QPS | P0 |
-|`doris_fe_query_err`| | Num | 错误查询的累积值 | |
-|`doris_fe_query_err_rate`|  | Num/Sec| 每秒错误查询数  | 观察集群是否出现查询错误 | P0 |
-|`doris_fe_query_latency_ms`| | 毫秒| 查询请求延迟的百分位统计。如 {quantile="0.75"} 表示 75 分位的查询延迟 | 详细观察各分位查询延迟 | P0 |
-|`doris_fe_query_latency_ms_db`| | 毫秒| 各个DB的查询请求延迟的百分位统计。如 {quantile="0.75",db="test"} 表示DB test 75 分位的查询延迟 | 详细观察各DB各分位查询延迟 | P0 |
-|`doris_fe_query_olap_table`| | Num| 查询内部表（OlapTable）的请求个数统计 | |
-|`doris_fe_query_total`| | Num | 所有查询请求的累积计数 | |
-|`doris_fe_report_queue_size`| | Num | BE的各种定期汇报任务在FE端的队列长度 | 该值反映了汇报任务在 Master FE 节点上的阻塞程度，数值越大，表示FE处理能力不足 | P0|
-|`doris_fe_request_total`| | Num | 所有通过 MySQL 端口接收的操作请求（包括查询和其他语句）| |
-|`doris_fe_routine_load_error_rows`| | Num | 统计集群内所有 Routine Load 作业的错误行数总和 | |
-|`doris_fe_routine_load_receive_bytes`| | 字节 | 统计集群内所有 Routine Load 作业接收的数据量大小 | |
-|`doris_fe_routine_load_rows`| | Num | 统计集群内所有 Routine Load 作业接收的数据行数 | |
-|`doris_fe_rps`| | Num | 当前FE每秒请求数量（包含查询以及其他各类语句） | 和 QPS 配合来查看集群处理请求的量 | P0 |
-|`doris_fe_scheduled_tablet_num`| | Num | Master FE节点正在调度的 tablet 数量。包括正在修复的副本和正在均衡的副本 | 该数值可以反映当前集群，正在迁移的 tablet 数量。如果长时间有值，说明集群不稳定 | P0 |
-|`doris_fe_tablet_max_compaction_score`| | Num | 各个BE节点汇报的 compaction core。如 {backend="172.21.0.1:9556"} 表示 "172.21.0.1:9556" 这个BE的汇报值|  |
-|`doris_fe_tablet_num`| | Num | 各个BE节点当前tablet总数。如 {backend="172.21.0.1:9556"} 表示 "172.21.0.1:9556" 这个BE的当前tablet数量 | 可以查看 tablet 分布是否均匀以及绝对值是否合理 | P0|
-|`doris_fe_tablet_status_count`| |Num| 统计 Master FE 节点 Tablet调度器所调度的 tablet 数量的累计值。| |
-| | {type="added"} |Num| 统计 Master FE 节点 Tablet调度器所调度的 tablet 数量的累计值。 "added" 表示被调度过的 tablet 数量 | |
-|| {type="in_sched"} |Num| 同上。表示被重复调度的 tablet 数量 |该值如果增长较快，则说明有tablet长时间处于不健康状态，导致被调度器反复调度 |
-|| {type="not_ready"} | Num |同上。表示尚未满足调度触发条件的tablet数量。| 该值如果增长较快，说明有大量 tablet 处于不健康状态但又无法被调度 |
-|| {type="total"} |Num |同上。表示累积的被检查过（但不一定被调度）的tablet数量。| |
-|| {type="unhealthy"}|  Num| 同上。表示累积的被检查过的不健康的 tablet 数量。| |
-|`doris_fe_thread_pool`| | Num | 统计各类线程池的工作线程数和排队情况。`"active_thread_num"` 表示正在执行的任务数。`"pool_size"` 表示线程池总线程数量。`"task_in_queue"` 表示正在排队的任务数| |
-|| {name="agent-task-pool"} | Num | Master FE 用于发送 Agent Task 到 BE的线程池 | |
-|| {name="connect-scheduler-check-timer"} | Num | 用于检查MySQL空闲连接是否超时的线程池 | |
-|| {name="connect-scheduler-pool"} | Num | 用于接收MySQL连接请求的线程池 | |
-|| {name="mysql-nio-pool"} | Num | NIO MySQL Server 用于处理任务的线程池 | |
-|| {name="export-exporting-job-pool"} | Num | exporting状态的export作业的调度线程池 | |
-|| {name="export-pending-job-pool"} | Num | pending状态的export作业的调度线程池| |
-|| {name="heartbeat-mgr-pool"} | Num | Master FE 用于处理各个节点心跳的线程池| |
-|| {name="loading-load-task-scheduler"} | Num | Master FE 用于调度Broker Load作业中，loading task的调度线程池| |
-|| {name="pending-load-task-scheduler"} | Num | Master FE 用于调度Broker Load作业中，pending task的调度线程池| |
-|| {name="schema-change-pool"} | Num | Master FE 用于调度 schema change 作业的线程池 | |
-|| {name="thrift-server-pool"} | Num | FE 端ThriftServer的工作线程池。对应 fe.conf 中 `rpc_port`。用于和BE进行交互。 ||
-|`doris_fe_txn_counter`| | Num | 统计各个状态的导入事务的数量的累计值| 可以观测导入事务的执行情况。 | P0 |
-|| {type="begin"}| Num| 提交的事务数量 | |
-||{type="failed"} | Num| 失败的事务数量| |
-|| {type="reject"} | Num| 被拒绝的事务数量。（如当前运行事务数大于阈值，则新的事务会被拒绝）| |
-|| {type="succes"} | Num| 成功的事务数量| |
-|`doris_fe_txn_status`|  | Num | 统计当前处于各个状态的导入事务的数量。如 {type="committed"} 表示处于 committed 状态的事务的数量 | 可以观测各个状态下导入事务的数量，来判断是否有堆积 | P0 |
-|`doris_fe_query_instance_num`|| Num| 指定用户当前正在请求的fragment instance数目。如 {user="test_u"} 表示用户 test_u 当前正在请求的 instance 数目 |该数值可以用于观测指定用户是否占用过多查询资源| P0 |
-|`doris_fe_query_instance_begin`|| Num| 指定用户请求开始的fragment instance数目。如 {user="test_u"} 表示用户 test_u 开始请求的 instance 数目 |该数值可以用于观测指定用户是否提交了过多查询| P0 |
-|`doris_fe_query_rpc_total`|| Num| 发往指定BE的RPC次数。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC次数 |该数值可以观测是否向某个BE提交了过多RPC| |
-|`doris_fe_query_rpc_failed`|| Num| 发往指定BE的RPC失败次数。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC失败次数 |该数值可以观测某个BE是否存在RPC问题| |
-|`doris_fe_query_rpc_size`|| Num| 指定BE的RPC数据大小。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC数据字节数 |该数值可以观测是否向某个BE提交了过大的RPC| |
-|`doris_fe_txn_exec_latency_ms`| | 毫秒| 事务执行耗时的百分位统计。如 {quantile="0.75"} 表示 75 分位的事务执行耗时 | 详细观察各分位事务执行耗时 | P0 |
-|`doris_fe_txn_publish_latency_ms`| | 毫秒| 事务publish耗时的百分位统计。如 {quantile="0.75"} 表示 75 分位的事务publish耗时 | 详细观察各分位事务publish耗时 | P0 |
-|`doris_fe_txn_num`|| Num| 指定DB正在执行的事务数。如 {db="test"} 表示DB test 当前正在执行的事务数 |该数值可以观测某个DB是否提交了大量事务| P0 |
-|`doris_fe_publish_txn_num`|| Num| 指定DB正在publish的事务数。如 {db="test"} 表示DB test 当前正在publish的事务数 |该数值可以观测某个DB的publish事务数量| P0 |
-|`doris_fe_txn_replica_num`|| Num| 指定DB正在执行的事务打开的副本数。如 {db="test"} 表示DB test 当前正在执行的事务打开的副本数 |该数值可以观测某个DB是否打开了过多的副本，可能会影响其他事务执行| P0 |
-|`doris_fe_thrift_rpc_total`|| Num| FE thrift接口各个方法接收的RPC请求次数。如 {method="report"} 表示 report 方法接收的RPC请求次数 |该数值可以观测某个thrift rpc方法的负载| |
-|`doris_fe_thrift_rpc_latency_ms`|| 毫秒| FE thrift接口各个方法接收的RPC请求耗时。如 {method="report"} 表示 report 方法接收的RPC请求耗时 |该数值可以观测某个thrift rpc方法的负载| |
-|`doris_fe_external_schema_cache` | {catalog="hive"} | Num | 指定 External Catalog 对应的 schema cache 的数量 |||
-|`doris_fe_hive_meta_cache` | {catalog="hive"} | Num | |||
-| | `{type="partition_value"}` | Num | 指定 External Hive Metastore Catalog 对应的 partition value cache 的数量 |||
-| | `{type="partition"}` | Num | 指定 External Hive Metastore Catalog 对应的 partition cache 的数量 |||
-| | `{type="file"}` | Num | 指定 External Hive Metastore Catalog 对应的 file cache 的数量 |||
+|名称                                   | 标签                             | 单位          | 含义                                                                    | 说明                       | 等级  |
+|--------------------------------------|---------------------------------|---------------|------------------------------------------------------------------------|---------------------------|-------|
+|`doris_fe_cache_added`                |{type="partition"}                      | Num    | 新增的 Partition Cache 数量累计值                                         | |
+|                                      |{type="sql"}                            | Num    | 新增的 SQL Cache 数量累计值                                               | |
+|`doris_fe_cache_hit`                  |{type="partition"}                      | Num    | 命中 Partition Cache 的计数                                               | |
+|                                      |{type="sql"}                            | Num    | 命中 SQL Cache 的计数                                                     | |
+|`doris_fe_connection_total`           |                                        | Num    | 当前FE的MySQL端口连接数                                                   | 用于监控查询连接数。如果连接数超限，则新的连接将无法接入 | P0 |
+|`doris_fe_counter_hit_sql_block_rule` |                                        | Num    | 被 SQL BLOCK RULE 拦截的查询数量                                          |  | |
+|`doris_fe_edit_log_clean`             | {type="failed"}                        | Num    | 清理历史元数据日志失败的次数                                                | 不应失败，如失败，需人工介入 | P0|
+|                                      | {type="success"}                       | Num    | 清理历史元数据日志成功的次数                                                 | |
+|`doris_fe_edit_log`                   | {type="accumulated_bytes"}     | 字节    | 元数据日志写入量的累计值                                                     | 通过计算斜率可以获得写入速率，来观察是否元数据写入有延迟 | P0 |
+|                                      | {type="current_bytes"}         | 字节    | 元数据日志当前值                                                           | 用于监控editlog 大小。如果大小超限，需人工介入 | P0 |
+|                                      | {type="read"}                          | Num    | 元数据日志读取次数的计数                                                      | 通过斜率观察元数据读取频率是否正常 |P0 |
+|                                      | {type="write"}                         | Num    | 元数据日志写入次数的计数                                                      |通过斜率观察元数据写入频率是否正常  |P0 |
+|                                      | {type="current"}                       | Num    | 元数据日志当前数量                                                            |用于监控editlog 数量。如果数量超限，需人工介入  |P0 |
+|`doris_fe_editlog_write_latency_ms`   |                                        | 毫秒    | 元数据日志写入延迟的百分位统计。如 {quantile="0.75"} 表示 75 分位的写入延迟        | |
+|`doris_fe_image_clean`                |{type="failed"}                         | Num    | 清理历史元数据镜像文件失败的次数                                                | 不应失败，如失败，需人工介入 | P0|
+|                                      |{type="success"}                        | Num    | 清理历史元数据镜像文件成功的次数                                                | |
+|`doris_fe_image_push`                 |{type="failed"}                         | Num    | 将元数据镜像文件推送给其他FE节点的失败的次数                                      | |
+|                                      |{type="success"}                        | Num    | 将元数据镜像文件推送给其他FE节点的成功的次数                                      | |
+|`doris_fe_image_write`                |{type="failed"}                         | Num    | 生成元数据镜像文件失败的次数                                                    | 不应失败，如失败，需人工介入 | P0|
+|                                      |{type="success"}                        | Num    | 生成元数据镜像文件成功的次数                                                    | |
+|`doris_fe_job`                        |                                        | Num    | 当前不同作业类型以及不同作业状态的计数。如 {job="load", type="INSERT", state="LOADING"} 表示类型为 INSERT 的导入作业，处于 LOADING 状态的作业个数| 可以根据需要，观察不同类型的作业在集群中的数量 | P0 |
+|`doris_fe_max_journal_id`             |                                        | Num    | 当前FE节点最大元数据日志ID。如果是Master FE，则是当前写入的最大ID，如果是非Master FE，则代表当前回放的元数据日志最大ID | 用于观察多个FE之间的 id 是否差距过大。过大则表示元数据同步出现问题 | P0 |
+|`doris_fe_max_tablet_compaction_score`|                                        | Num    | 所有BE节点中最大的 compaction score 值。                                         | 该值可以观测当前集群最大的 compaction score，以判断是否过高。如过高则可能出现查询或写入延迟 | P0 |
+|`doris_fe_qps`                        |                                        | Num/Sec| 当前FE每秒查询数量（仅统计查询请求）                                           | QPS | P0 |
+|`doris_fe_query_err`                  |                                        | Num    | 错误查询的累积值                                                                | |
+|`doris_fe_query_err_rate`             |                                        | Num/Sec| 每秒错误查询数                                                              | 观察集群是否出现查询错误 | P0 |
+|`doris_fe_query_latency_ms`           |                                        | 毫秒    | 查询请求延迟的百分位统计。如 {quantile="0.75"} 表示 75 分位的查询延迟                 | 详细观察各分位查询延迟 | P0 |
+|`doris_fe_query_latency_ms_db`        |                                        | 毫秒    | 各个DB的查询请求延迟的百分位统计。如 {quantile="0.75",db="test"} 表示DB test 75 分位的查询延迟 | 详细观察各DB各分位查询延迟 | P0 |
+|`doris_fe_query_olap_table`           |                                        | Num    | 查询内部表（OlapTable）的请求个数统计                   | |
+|`doris_fe_query_total`                |                                        | Num    | 所有查询请求的累积计数 | |
+|`doris_fe_report_queue_size`          |                                        | Num    | BE的各种定期汇报任务在FE端的队列长度 | 该值反映了汇报任务在 Master FE 节点上的阻塞程度，数值越大，表示FE处理能力不足 | P0|
+|`doris_fe_request_total`              |                                        | Num    | 所有通过 MySQL 端口接收的操作请求（包括查询和其他语句）| |
+|`doris_fe_routine_load_error_rows`    |                                        | Num    | 统计集群内所有 Routine Load 作业的错误行数总和 | |
+|`doris_fe_routine_load_receive_bytes` |                                        | 字节    | 统计集群内所有 Routine Load 作业接收的数据量大小 | |
+|`doris_fe_routine_load_rows`          |                                        | Num    | 统计集群内所有 Routine Load 作业接收的数据行数 | |
+|`doris_fe_rps`                        |                                        | Num    | 当前FE每秒请求数量（包含查询以及其他各类语句） | 和 QPS 配合来查看集群处理请求的量 | P0 |
+|`doris_fe_scheduled_tablet_num`       |                                        | Num    | Master FE节点正在调度的 tablet 数量。包括正在修复的副本和正在均衡的副本 | 该数值可以反映当前集群，正在迁移的 tablet 数量。如果长时间有值，说明集群不稳定 | P0 |
+|`doris_fe_tablet_max_compaction_score`|                                        | Num    | 各个BE节点汇报的 compaction core。如 {backend="172.21.0.1:9556"} 表示 "172.21.0.1:9556" 这个BE的汇报值|  |
+|`doris_fe_tablet_num`                 |                                        | Num    | 各个BE节点当前tablet总数。如 {backend="172.21.0.1:9556"} 表示 "172.21.0.1:9556" 这个BE的当前tablet数量 | 可以查看 tablet 分布是否均匀以及绝对值是否合理 | P0|
+|`doris_fe_tablet_status_count`        |                                        | Num    | 统计 Master FE 节点 Tablet调度器所调度的 tablet 数量的累计值。| |
+|                                      | {type="added"}                         | Num    | 统计 Master FE 节点 Tablet调度器所调度的 tablet 数量的累计值。 "added" 表示被调度过的 tablet 数量 | |
+|                                      | {type="in_sched"}                      | Num    | 同上。表示被重复调度的 tablet 数量 |该值如果增长较快，则说明有tablet长时间处于不健康状态，导致被调度器反复调度 |
+|                                      | {type="not_ready"}                     | Num    |同上。表示尚未满足调度触发条件的tablet数量。| 该值如果增长较快，说明有大量 tablet 处于不健康状态但又无法被调度 |
+|                                      | {type="total"}                         | Num    |同上。表示累积的被检查过（但不一定被调度）的tablet数量。| |
+|                                      | {type="unhealthy"}                     | Num    | 同上。表示累积的被检查过的不健康的 tablet 数量。| |
+|`doris_fe_thread_pool`                |                                        | Num    | 统计各类线程池的工作线程数和排队情况。`"active_thread_num"` 表示正在执行的任务数。`"pool_size"` 表示线程池总线程数量。`"task_in_queue"` 表示正在排队的任务数| |
+|                                      | {name="agent-task-pool"}               | Num    | Master FE 用于发送 Agent Task 到 BE的线程池 | |
+|                                      | {name="connect-scheduler-check-timer"} | Num    | 用于检查MySQL空闲连接是否超时的线程池 | |
+|                                      | {name="connect-scheduler-pool"}        | Num    | 用于接收MySQL连接请求的线程池 | |
+|                                      | {name="mysql-nio-pool"}                | Num    | NIO MySQL Server 用于处理任务的线程池 | |
+|                                      | {name="export-exporting-job-pool"}     | Num    | exporting状态的export作业的调度线程池 | |
+|                                      | {name="export-pending-job-pool"}       | Num    | pending状态的export作业的调度线程池| |
+|                                      | {name="heartbeat-mgr-pool"}            | Num    | Master FE 用于处理各个节点心跳的线程池| |
+|                                      | {name="loading-load-task-scheduler"}   | Num    | Master FE 用于调度Broker Load作业中，loading task的调度线程池| |
+|                                      | {name="pending-load-task-scheduler"}   | Num    | Master FE 用于调度Broker Load作业中，pending task的调度线程池| |
+|                                      | {name="schema-change-pool"}            | Num    | Master FE 用于调度 schema change 作业的线程池 | |
+|                                      | {name="thrift-server-pool"}            | Num    | FE 端ThriftServer的工作线程池。对应 fe.conf 中 `rpc_port`。用于和BE进行交互。 ||
+|`doris_fe_txn_counter`                |                                        | Num    | 统计各个状态的导入事务的数量的累计值| 可以观测导入事务的执行情况。 | P0 |
+|                                      | {type="begin"}                         | Num    | 提交的事务数量 | |
+|                                      |{type="failed"}                         | Num    | 失败的事务数量| |
+|                                      | {type="reject"}                        | Num    | 被拒绝的事务数量。（如当前运行事务数大于阈值，则新的事务会被拒绝）| |
+|                                      | {type="succes"}                        | Num    | 成功的事务数量| |
+|`doris_fe_txn_status`                 |                                        | Num    | 统计当前处于各个状态的导入事务的数量。如 {type="committed"} 表示处于 committed 状态的事务的数量 | 可以观测各个状态下导入事务的数量，来判断是否有堆积 | P0 |
+|`doris_fe_query_instance_num`         |                                        | Num    | 指定用户当前正在请求的fragment instance数目。如 {user="test_u"} 表示用户 test_u 当前正在请求的 instance 数目 |该数值可以用于观测指定用户是否占用过多查询资源| P0 |
+|`doris_fe_query_instance_begin`       |                                        | Num    | 指定用户请求开始的fragment instance数目。如 {user="test_u"} 表示用户 test_u 开始请求的 instance 数目 |该数值可以用于观测指定用户是否提交了过多查询| P0 |
+|`doris_fe_query_rpc_total`            |                                        | Num    | 发往指定BE的RPC次数。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC次数 |该数值可以观测是否向某个BE提交了过多RPC| |
+|`doris_fe_query_rpc_failed`           |                                        | Num    | 发往指定BE的RPC失败次数。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC失败次数 |该数值可以观测某个BE是否存在RPC问题| |
+|`doris_fe_query_rpc_size`             |                                        | Num    | 指定BE的RPC数据大小。如 {be="192.168.10.1"} 表示发往ip为 192.168.10.1 的BE的RPC数据字节数 |该数值可以观测是否向某个BE提交了过大的RPC| |
+|`doris_fe_txn_exec_latency_ms`        |                                        | 毫秒    | 事务执行耗时的百分位统计。如 {quantile="0.75"} 表示 75 分位的事务执行耗时 | 详细观察各分位事务执行耗时 | P0 |
+|`doris_fe_txn_publish_latency_ms`     |                                        | 毫秒    | 事务publish耗时的百分位统计。如 {quantile="0.75"} 表示 75 分位的事务publish耗时 | 详细观察各分位事务publish耗时 | P0 |
+|`doris_fe_txn_num`                    |                                        | Num    | 指定DB正在执行的事务数。如 {db="test"} 表示DB test 当前正在执行的事务数 |该数值可以观测某个DB是否提交了大量事务| P0 |
+|`doris_fe_publish_txn_num`            |                                        | Num    | 指定DB正在publish的事务数。如 {db="test"} 表示DB test 当前正在publish的事务数 |该数值可以观测某个DB的publish事务数量| P0 |
+|`doris_fe_txn_replica_num`            |                                        | Num    | 指定DB正在执行的事务打开的副本数。如 {db="test"} 表示DB test 当前正在执行的事务打开的副本数 |该数值可以观测某个DB是否打开了过多的副本，可能会影响其他事务执行| P0 |
+|`doris_fe_thrift_rpc_total`           |                                        | Num    | FE thrift接口各个方法接收的RPC请求次数。如 {method="report"} 表示 report 方法接收的RPC请求次数 |该数值可以观测某个thrift rpc方法的负载| |
+|`doris_fe_thrift_rpc_latency_ms`      |                                        | 毫秒    | FE thrift接口各个方法接收的RPC请求耗时。如 {method="report"} 表示 report 方法接收的RPC请求耗时 |该数值可以观测某个thrift rpc方法的负载| |
+|`doris_fe_external_schema_cache`      | {catalog="hive"}                       | Num     | 指定 External Catalog 对应的 schema cache 的数量 |||
+|`doris_fe_hive_meta_cache`            | {catalog="hive"}                       | Num     | |||
+|                                      | `{type="partition_value"}`             | Num     | 指定 External Hive Metastore Catalog 对应的 partition value cache 的数量 |||
+|                                      | `{type="partition"}`                   | Num     | 指定 External Hive Metastore Catalog 对应的 partition cache 的数量 |||
+|                                      | `{type="file"}`                        | Num     | 指定 External Hive Metastore Catalog 对应的 file cache 的数量 |||
 
 ### JVM 监控
 
-|名称| 标签 |单位 | 含义 | 说明 | 等级 |
-|---|---|---|---|---|---|
+|名称                     | 标签              |单位     | 含义                                                          | 说明                          | 等级      |
+|------------------------|------------------|---------|--------------------------------------------------------------|------------------------------|----------|
 |`jvm_heap_size_bytes`| | 字节 | JVM 内存监控。标签包含 max, used, committed，分别对应最大值，已使用和已申请的内存 | 观测JVM内存使用情况 | P0 |
 |`jvm_non_heap_size_bytes`| | 字节 | JVM 堆外内存统计| |
 |`jvm_old_gc`| | | 老年代 GC 监控。| 观测是否出现长时间的 FullGC | P0 |
@@ -170,8 +170,8 @@ curl http://be_host:webserver_port/metrics?type=json
 
 ### 机器监控
 
-|名称| 标签 |单位 | 含义 | 说明 | 等级 |
-|---|---|---|---|---|---|
+|名称                 | 标签                    |单位    | 含义                                     | 说明     | 等级     | 
+|--------------------|------------------------|--------|-----------------------------------------|----------|---------|
 |`system_meminfo`| | 字节| FE节点机器的内存监控。采集自 `/proc/meminfo`。包括 `buffers`，`cached`, `memory_available`, `memory_free`, `memory_total` | |
 |`system_snmp`| | FE节点机器的网络监控。采集自 `/proc/net/snmp`。 | | |
 ||`{name="tcp_in_errs"}` | Num| tcp包接收错误的次数| |
@@ -183,8 +183,8 @@ curl http://be_host:webserver_port/metrics?type=json
 
 ### 进程监控
 
-|名称| 标签 |单位 | 含义 | 说明 | 等级 |
-|---|---|---|---|---|---|
+|名称                      | 标签                   |单位     | 含义                         | 说明                | 等级    |
+|-------------------------|-----------------------|---------|-----------------------------|---------------------|--------|
 |`doris_be_active_scan_context_count`| | Num | 展示当前由外部直接打开的scanner的个数 | |
 |`doris_be_add_batch_task_queue_size`| | Num | 记录导入时，接收batch的线程池的队列大小 |如果大于0，则表示导入任务的接收端出现积压 | P0|
 |`agent_task_queue_size`| | Num | 展示各个 Agent Task 处理队列的长度，如 `{type="CREATE_TABLE"}` 表示 CREATE_TABLE 任务队列的长度 | |
@@ -307,8 +307,8 @@ curl http://be_host:webserver_port/metrics?type=json
 
 ### 机器监控
 
-|名称| 标签 |单位 | 含义 | 说明 | 等级 |
-|---|---|---|---|---|---|
+|名称                      | 标签                   |单位     | 含义                         | 说明                | 等级    |
+|-------------------------|-----------------------|---------|-----------------------------|---------------------|--------|
 |`doris_be_cpu`| | Num | CPU 相关监控指标，从 `/proc/stat` 采集。会分别采集每个逻辑核的各项数值。如 `{device="cpu0",mode="nice"}` 表示 cpu0 的 nice 值 | 可计算得出 CPU 使用率 | P0|
 |`doris_be_disk_bytes_read`| |字节| 磁盘读取量累计值。从 `/proc/diskstats` 采集。会分别采集每块磁盘的数值。如 `{device="vdd"}` 表示 vvd 盘的数值 | | |
 |`doris_be_disk_bytes_written`| | 字节 | 磁盘写入量累计值。采集方式同上 | |

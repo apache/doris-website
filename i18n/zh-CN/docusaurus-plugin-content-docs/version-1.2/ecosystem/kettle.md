@@ -58,10 +58,12 @@ mvn clean package -DskipTests
 ```
 ### 构建作业
 在Kettle中的批量加载中找到Doris Stream Loader，构建作业
+
 ![create_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/create_zh.png)
 
 
 点击开始运行作业即可完成数据同步
+
 ![running_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/running_zh.png)
 
 

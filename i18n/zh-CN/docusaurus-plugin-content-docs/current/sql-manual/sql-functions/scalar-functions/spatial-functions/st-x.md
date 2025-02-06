@@ -24,24 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ST_X
 ## 描述
+
+当 point 是一个合法的 POINT 类型时，返回对应的 X 坐标值
+
 ## 语法
 
-`DOUBLE ST_X(POINT point)`
+```sql
+ST_X( <point>)
+```
+## 参数
 
+| 参数        | 说明       |
+|-----------|----------|
+| `<point>` | 二维点的几何坐标 |
 
-当point是一个合法的POINT类型时，返回对应的X坐标值
+## 返回值
+
+几何坐标中的 X 值
 
 ## 举例
 
+```sql
+SELECT ST_X(ST_Point(24.7, 56.7));
 ```
-mysql> SELECT ST_X(ST_Point(24.7, 56.7));
+
+```text
 +----------------------------+
 | st_x(st_point(24.7, 56.7)) |
 +----------------------------+
 |                       24.7 |
 +----------------------------+
 ```
-### keywords
-ST_X,ST,X

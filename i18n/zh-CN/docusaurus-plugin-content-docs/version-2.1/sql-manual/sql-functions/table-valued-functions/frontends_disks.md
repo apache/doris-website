@@ -1,7 +1,7 @@
 ---
 {
-    "title": "frontends_disks",
-    "language": "zh-CN"
+  "title": "FRONTENDS_DISKS",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,63 +24,75 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## `frontends_disks`
-
-### Name
-
-frontends_disks
-
 ## 描述
 
-表函数，生成 frontends_disks 临时表，可以查看当前 doris 集群中的 FE 节点的磁盘信息。
+`frontends_disks` 表函数会生成一个临时表，允许查看当前 Doris 集群中 FE 节点的磁盘信息。其结果基本与 `show frontends disks` 语句展示出的信息一致，但是 `frontends_disks()` 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作
 
-该函数用于 from 子句中。
+该函数可用于 `FROM` 子句中。
+
 
 ## 语法
-`frontends_disks()`
-
-frontends_disks() 表结构：
-```
-mysql> desc function frontends_disks();
-+-------------+------+------+-------+---------+-------+
-| Field       | Type | Null | Key   | Default | Extra |
-+-------------+------+------+-------+---------+-------+
-| Name        | TEXT | No   | false | NULL    | NONE  |
-| Host        | TEXT | No   | false | NULL    | NONE  |
-| DirType     | TEXT | No   | false | NULL    | NONE  |
-| Dir         | TEXT | No   | false | NULL    | NONE  |
-| Filesystem  | TEXT | No   | false | NULL    | NONE  |
-| Capacity    | TEXT | No   | false | NULL    | NONE  |
-| Used        | TEXT | No   | false | NULL    | NONE  |
-| Available   | TEXT | No   | false | NULL    | NONE  |
-| UseRate     | TEXT | No   | false | NULL    | NONE  |
-| MountOn     | TEXT | No   | false | NULL    | NONE  |
-+-------------+------+------+-------+---------+-------+
-11 rows in set (0.14 sec)
+```sql
+FRONTENDS_DISKS()
 ```
 
-`frontends_disks()` tvf 展示出来的信息基本与 `show frontends disks` 语句展示出的信息一致，但是 `frontends_disks()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
+## 权限控制
 
-对 `frontends_disks()` tvf 信息展示进行了鉴权，与 `show frontends disks` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
+| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| :----------------|:-----------| :------------ |
+| ADMIN_PRIV       | 全局         |               |
 
-## 举例
+## 返回值
+查看 frontends_disks() 函数的描述字段
+```sql
+desc function frontends_disks();
 ```
-mysql> select * from frontends_disk()\G
-*************************** 1. row ***************************
-       Name: fe_fe1d5bd9_d1e5_4ccc_9b03_ca79b95c9941
-       Host: 172.XX.XX.1
-    DirType: log
-        Dir: /data/doris/fe-github/log
- Filesystem: /dev/sdc5
-   Capacity: 366G
-       Used: 119G
-  Available: 228G
-    UseRate: 35%
-    MountOn: /data
-......    
-12 row in set (0.03 sec)
+```text
++------------+------+------+-------+---------+-------+
+| Field      | Type | Null | Key   | Default | Extra |
++------------+------+------+-------+---------+-------+
+| Name       | text | No   | false | NULL    | NONE  |
+| Host       | text | No   | false | NULL    | NONE  |
+| DirType    | text | No   | false | NULL    | NONE  |
+| Dir        | text | No   | false | NULL    | NONE  |
+| Filesystem | text | No   | false | NULL    | NONE  |
+| Capacity   | text | No   | false | NULL    | NONE  |
+| Used       | text | No   | false | NULL    | NONE  |
+| Available  | text | No   | false | NULL    | NONE  |
+| UseRate    | text | No   | false | NULL    | NONE  |
+| MountOn    | text | No   | false | NULL    | NONE  |
++------------+------+------+-------+---------+-------+
 ```
 
-### keywords
+字段含义如下：
 
-    frontends_disks
+| 字段名称          | 类型      | 说明                                                     |
+|-------------------|-----------|--------------------------------------------------------|
+| `Name`            | TEXT      | 当前 frontend 的名称，用于唯一标识该 frontend。                      |
+| `Host`            | TEXT      | Frontend 所在的主机地址。                                      |
+| `DirType`         | TEXT      | 磁盘目录的类型，例如 `meta`、`log`、`audit-log`、`temp` 和 `deploy`。 |
+| `Dir`             | TEXT      | 目录路径，表示该磁盘目录在服务器上的实际位置。                                |
+| `Filesystem`      | TEXT      | 磁盘的文件系统类型。                                             |
+| `Capacity`        | TEXT      | 磁盘的总容量。                                                |
+| `Used`            | TEXT      | 已使用的磁盘空间。                                              |
+| `Available`       | TEXT      | 可用的磁盘空间。                                               |
+| `UseRate`         | TEXT      | 磁盘的使用率，表示已用空间与总空间的百分比。                                 |
+| `MountOn`         | TEXT      | 磁盘挂载点，即磁盘在系统中的挂载位置。                                    |
+
+
+## 示例
+查看 doris 集群 frontends 的磁盘信息
+```sql
+select * from frontends_disks();
+```
+```text
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| Name                                    | Host       | DirType   | Dir                                                       | Filesystem   | Capacity | Used | Available | UseRate | MountOn    |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | meta      | /mnt/disk2/doris/fe/doris-meta | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | log       | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | audit-log | /mnt/disk2/doris/fe/log        | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | temp      | /mnt/disk2/doris/fe/temp_dir   | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
+| fe_f4642d47_62a2_44a2_b79d_3259050ab9de | 10.x.x.6 | deploy    | /mnt/disk2/doris/fe            | /dev/nvme1n1 | 3T       | 3T   | 223G      | 94%     | /mnt/disk2                              |
++-----------------------------------------+------------+-----------+-----------------------------------------------------------+--------------+----------+------+-----------+---------+------------+
+```

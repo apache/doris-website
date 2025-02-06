@@ -158,7 +158,8 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
-                                "data-operate/import/data-source/migrate-data-from-other-olap"
+                                "data-operate/import/data-source/migrate-data-from-other-olap",
+                                "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
                         },
                         {
@@ -815,6 +816,15 @@
                 },
                 {
                     "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -942,11 +952,8 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dexp",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dfloor",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog1",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog10",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
@@ -959,7 +966,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/ceil",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/fpow",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
@@ -1033,8 +1039,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/right",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/split-by-char",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/translate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
@@ -1326,7 +1330,6 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-replace",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-set",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-keys",
-                                        "sql-manual/sql-functions/scalar-functions/json-functions/jsonb-extract",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bigint",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-largeint",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool",
@@ -1408,8 +1411,7 @@
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-hash64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-base64",
                                         "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove",
-                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap-with-check"
+                                        "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove"
                                     ]
                                 },
                                 {
@@ -1431,7 +1433,6 @@
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-catalog",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/current-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/database",
-                                        "sql-manual/sql-functions/scalar-functions/system-functions/password",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/session-user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/user",
                                         "sql-manual/sql-functions/scalar-functions/system-functions/version-function",
@@ -1587,7 +1588,6 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers-outer"
                             ]
@@ -1653,7 +1653,7 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-PROFILE",
+                                        
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -2096,6 +2096,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",
                         "releasenotes/v2.1/release-2.1.5",

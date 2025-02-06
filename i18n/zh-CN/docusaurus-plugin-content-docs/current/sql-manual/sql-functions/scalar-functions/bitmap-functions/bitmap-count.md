@@ -24,33 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_count
 ## 描述
+
+计算输入 BITMAP 的元素个数
+
 ## 语法
 
-`BITMAP BITMAP_COUNT(BITMAP lhs)`
+```sql
+BITMAP_COUNT(<bitmap>)
+```
 
-返回输入bitmap的个数。
+## 参数
+
+| 参数         | 说明         |
+|------------|------------|
+| `<bitmap>` | BITMAP 集合  |
+
+## 返回值
+
+返回一个整数
 
 ## 举例
 
+```sql
+select bitmap_count(to_bitmap(1)) cnt;
 ```
-mysql> select bitmap_count(to_bitmap(1)) cnt;
+
+```text
 +------+
 | cnt  |
 +------+
 |    1 |
 +------+
-
-mysql> select bitmap_count(bitmap_and(to_bitmap(1), to_bitmap(1))) cnt;
-+------+
-| cnt  |
-+------+
-|    1 |
-+------+
-
 ```
-
-### keywords
-
-    BITMAP_COUNT

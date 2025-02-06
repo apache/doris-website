@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_floor",
+    "title": "DATE_FLOOR",
     "language": "en"
 }
 ---
@@ -24,91 +24,108 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_floor
-### Description
-**Syntax** 
+## Description
 
-`DATETIME DATE_FLOOR(DATETIME datetime, INTERVAL period type)`
+`date_floor` rounds a given date to the closest lower boundary of the specified time interval.
 
+## Syntax
 
-Converts a date to the nearest rounding down time of a specified time interval period.
+`DATE_FLOOR(<datetime>, INTERVAL <period> <type>)`
 
-The datetime parameter is a valid date expression.
+## Parameters
 
-The period parameter specifies how many units each cycle consists of, starting from 0001-01-01T00:00:00
+| Parameter | Description |
+| -- | -- |
+| `datetime` | The argument is a valid date expression |
+| `period` | The argument specifies how many units make up each period, with the start time being 0001-01-01T00:00:00 |
+| `type` | The argument can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND|
 
-Type: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
+## Return Value
 
-### Example
+The return value is a date or time, representing the result of rounding the input value down to the specified unit.
 
+## Examples
+
+```sql
+select date_floor("0001-01-01 00:00:16",interval 5 second);
 ```
-mysql>select date_floor("0001-01-01 00:00:16",interval 5 second);
+
+```text
 +---------------------------------------------------------------+
 | second_floor('0001-01-01 00:00:16', 5, '0001-01-01 00:00:00') |
 +---------------------------------------------------------------+
 | 0001-01-01 00:00:15                                           |
 +---------------------------------------------------------------+
-1 row in set (0.00 sec)
+```
 
-mysql>select date_floor("0001-01-01 00:00:18",interval 5 second);
+```sql
+select date_floor("0001-01-01 00:00:18",interval 5 second);
+```
+
+```text
 +---------------------------------------------------------------+
 | second_floor('0001-01-01 00:00:18', 5, '0001-01-01 00:00:00') |
 +---------------------------------------------------------------+
 | 0001-01-01 00:00:15                                           |
 +---------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql>select date_floor("2023-07-13 22:28:18",interval 5 minute);
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 minute);
+```
+
+```text
 +---------------------------------------------------------------+
 | minute_floor('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +---------------------------------------------------------------+
 | 2023-07-13 22:25:00                                           |
 +---------------------------------------------------------------+
-1 row in set (0.00 sec)
+```
 
-mysql>select date_floor("2023-07-13 22:28:18",interval 5 hour);
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 hour);
+```
+
+```text
 +-------------------------------------------------------------+
 | hour_floor('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-------------------------------------------------------------+
 | 2023-07-13 18:00:00                                         |
 +-------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql>select date_floor("2023-07-13 22:28:18",interval 5 day);
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 day);
+```
+
+```text
 +------------------------------------------------------------+
 | day_floor('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +------------------------------------------------------------+
 | 2023-07-10 00:00:00                                        |
 +------------------------------------------------------------+
-1 row in set (0.00 sec)
+```
 
-mysql>select date_floor("2023-07-13 22:28:18",interval 5 month);
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 month);
+```
+
+```text
 +--------------------------------------------------------------+
 | month_floor('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +--------------------------------------------------------------+
 | 2023-07-01 00:00:00                                          |
 +--------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql>select date_floor("2023-07-13 22:28:18",interval 5 year);
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 year);
+```
+
+```text
 +-------------------------------------------------------------+
 | year_floor('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-------------------------------------------------------------+
 | 2021-01-01 00:00:00                                         |
 +-------------------------------------------------------------+
-
 ```
-
-### Keywords
-
-    DATE_FLOOR,DATE,FLOOR
-
-### Best Practices
-
-See also
-- [second_floor](./second_floor)
-- [minute_floor](./minute_floor)
-- [hour_floor](./hour_floor)
-- [day_floor](./day_floor)
-- [month_floor](./month_floor)
-- [year_floor](./year_floor)
