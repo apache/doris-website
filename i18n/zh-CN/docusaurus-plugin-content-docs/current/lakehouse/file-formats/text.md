@@ -72,3 +72,20 @@ under the License.
 
   导入功能支持的 JSON 格式，详见导入相关文档。
 
+## 字符集
+
+Doris 目前仅支持 UTF-8 编码的字符集。而某些数据，如 Hive Text 格式表中的数据会包含非 UFT-8 编码的内容，会导致读取失败，并报错：
+
+```text
+Only support csv data in utf8 codec
+```
+
+此时，可以通过设置会话变量：
+
+```sql
+SET enable_text_validate_utf8 = false
+```
+
+来忽略 UFT-8 编码检查，以便能够读取这些内容。注意，这个参数仅用于忽略检查，非 UTF-8 编码的内容仍会显示为乱码。
+
+此参数自 3.0.4 版本支持。

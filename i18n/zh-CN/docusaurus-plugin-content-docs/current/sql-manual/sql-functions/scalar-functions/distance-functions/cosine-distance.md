@@ -22,32 +22,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cosine_distance
 
 ## 描述
+
+计算两个向量（向量值为坐标）之间的余弦距离
+
 ## 语法
 
 ```sql
-DOUBLE cosine_distance(ARRAY<T> array1, ARRAY<T> array2)
+COSINE_DISTANCE(<array1>, <array2>)
 ```
 
-计算两个向量（向量值为坐标）之间的余弦距离
-如果输入array为NULL，或者array中任何元素为NULL，则返回NULL
+## 参数
 
-### 注意事项
-* 输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE
-* 输入数组array1和array2，元素数量需保持一致
+| 参数 | 说明 |
+|---|--|
+| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
+| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
+
+## 返回值
+
+返回两个向量（向量值为坐标）之间的余弦距离。如果输入array为NULL，或者array中任何元素为NULL，则返回NULL。
 
 ## 举例
 
-```
-sql> SELECT cosine_distance([1, 2], [2, 3]);
-+-------------------------------------------+
-| cosine_distance(ARRAY(1, 2), ARRAY(2, 3)) |
-+-------------------------------------------+
-|                     0.0077221232863322609 |
-+-------------------------------------------+
+```sql
+SELECT COSINE_DISTANCE([1, 2], [2, 3]),COSINE_DISTANCE([3, 6], [4, 7]);
 ```
 
-### keywords
-	COSINE_DISTANCE,DISTANCE,COSINE,ARRAY
+```text
++---------------------------------+---------------------------------+
+| cosine_distance([1, 2], [2, 3]) | cosine_distance([3, 6], [4, 7]) |
++---------------------------------+---------------------------------+
+|            0.007722123286332261 |           0.0015396467945875125 |
++---------------------------------+---------------------------------+
+```

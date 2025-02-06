@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_ceil",
+    "title": "DATE_CEIL",
     "language": "en"
 }
 ---
@@ -24,83 +24,93 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_ceil
-### Description
-**Syntax**
+## Description
 
-`DATETIME DATE_CEIL(DATETIME datetime, INTERVAL period type)`
+`date_ceil` rounds a given date to the next upper boundary of the specified time interval.
 
+## Syntax
 
-Convert the date to the nearest rounding up time of the specified time interval period.
+`DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
 
-The datetime parameter is a valid date expression.
+## Parameters
 
-The period parameter specifies how many units each cycle consists of, starting from 0001-01-01T00:00:00
+| Parameter | Description |
+| -- | -- |
+| `datetime` | The argument is a valid date expression |
+| `period` | The argument specifies how many units make up each period, with the start time being 0001-01-01T00:00:00 |
+| `type` | The argument can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND|
 
-Type: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
+## Return Value
 
-### Example
+The return value is a date or time, representing the result of rounding the input value up to the specified unit.
 
+## Examples
+
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 second);
 ```
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 second);
+
+```text
 +--------------------------------------------------------------+
 | second_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +--------------------------------------------------------------+
 | 2023-07-13 22:28:20                                          |
 +--------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 minute);
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 minute);
 +--------------------------------------------------------------+
 | minute_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +--------------------------------------------------------------+
 | 2023-07-13 22:30:00                                          |
 +--------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 hour);
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 hour);
+```
+
+```text
 +------------------------------------------------------------+
 | hour_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +------------------------------------------------------------+
 | 2023-07-13 23:00:00                                        |
 +------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 day);
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 day);
+```
+
+```text
 +-----------------------------------------------------------+
 | day_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-----------------------------------------------------------+
 | 2023-07-15 00:00:00                                       |
 +-----------------------------------------------------------+
-1 row in set (0.00 sec)
+```
 
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 month);
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 month);
+```
+
+```text
 +-------------------------------------------------------------+
 | month_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-------------------------------------------------------------+
 | 2023-12-01 00:00:00                                         |
 +-------------------------------------------------------------+
-1 row in set (0.01 sec)
+```
 
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 year);
+```sql
+select date_ceil("2023-07-13 22:28:18",interval 5 year);
+```
+
+```text
 +------------------------------------------------------------+
 | year_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +------------------------------------------------------------+
 | 2026-01-01 00:00:00                                        |
 +------------------------------------------------------------+
-1 row in set (0.00 sec)
 ```
-
-### Keywords
-
-    DATE_CEIL,DATE,CEIL
-
-### Best Practices
-
-See also
-- [second_ceil](./second_ceil)
-- [minute_ceil](./minute_ceil)
-- [hour_ceil](./hour_ceil)
-- [day_ceil](./day_ceil)
-- [month_ceil](./month_ceil)
-- [year_ceil](./year_ceil)

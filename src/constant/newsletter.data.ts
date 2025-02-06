@@ -1,10 +1,9 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris 3.0.3 just released",
-        content: `Dear community members, the Apache Doris 3.0.3 version was officially released on December 02, 2024, this version further enhances the performance and stability of the system.`,
-        to: '/blog/release-note-3.0.3',
-        image: '3.0.3.jpg',
+        title: "Apache Doris 2.1.8 just released",
+        content: `This version introduces continuous upgrades and enhancements in several key areas, including Lakehouse, Asynchronous Materialized Views, Query Optimizer and Execution Engine, Storage Management, and more.`,
+        image: '2.1.8.jpg',
     },
     {
         tags: ['Best Practice'],

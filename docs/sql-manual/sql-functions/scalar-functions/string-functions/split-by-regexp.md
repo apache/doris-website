@@ -22,41 +22,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_regexp
+## Description
 
-### description
+Split the input string into an array of strings according to the specified regular expression.
 
-#### Syntax
+## Syntax
 
-`ARRAY<STRING> split_by_regexp(STRING str, STRING pattern[, int max_limit])`
-
-Split the string 'str' based on the input regular expression 'pattern', with the option to retain up to the maximum number 'max_imit'. By default, all strings will be retained, and a split string array will be returned.
-
-#### Arguments
-`Str ` - The string that needs to be split Type: `String`
-`Pattern `- Regular expression Type: `String`
-`Max_imit ` - Reserved number, optional parameter Type: `Int`
-
-
-### example
-
+```sql
+SPLIT_BY_REGEXP ( <str>, <pattern> [, <max_limit>] )
 ```
-mysql [test_query_qa]>select split_by_regexp('abcde',"");
+
+## Parameters
+
+| Parameter      | Description                           |
+|---------|------------------------------|
+| `<str>` | The string to be split                     |
+| `<pattern>` | Regular expression                        |
+| `<max_limit>` | Optional parameter, whether to limit the number of elements in the returned string array. The default is no limit |
+
+## Return Value
+
+Return an array of strings split according to the specified regular expression. Special cases:
+
+- If any of the parameters is NULL, NULL is returned.
+
+## Examples
+
+```sql
+SELECT split_by_regexp('abcde',"");
+```
+
+```text
 +------------------------------+
 | split_by_regexp('abcde', '') |
 +------------------------------+
 | ["a", "b", "c", "d", "e"]    |
 +------------------------------+
-1 row in set (0.02 sec)
+```
 
-mysql [test_query_qa]>select split_by_regexp('a12bc23de345f',"\\d+");
+```sql
+select split_by_regexp('a12bc23de345f',"\\d+");
+```
+
+```text
 +-----------------------------------------+
 | split_by_regexp('a12bc23de345f', '\d+') |
 +-----------------------------------------+
 | ["a", "bc", "de", "f"]                  |
 +-----------------------------------------+
-1 row in set (0.01 sec)
 ```
-### keywords
-
-SPLIT_BY_REGEXP,SPLIT

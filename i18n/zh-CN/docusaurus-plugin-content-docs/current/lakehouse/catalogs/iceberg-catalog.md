@@ -69,6 +69,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
 
+  * `s3tables`: 使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
+
 * `<warehouse>`
 
   Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定这个参数。
@@ -89,7 +91,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 Iceberg 版本
 
-当前使用的 Iceberg 依赖为 1.4.3 版本，可以兼容更高版本的 Iceberg。
+当前使用的 Iceberg 依赖为 1.6.1 版本，可以兼容更高版本的 Iceberg。
 
 ### 支持的 Iceberg 格式
 
@@ -260,6 +262,20 @@ CREATE CATALOG iceberg_gdm PROPERTIES (
     'gs.access_key' = 'ak',
     'gs.secret_key' = 'sk',
     'use_path_style' = 'true'
+);
+```
+
+### Iceberg on S3 Tables
+
+```
+CREATE CATALOG iceberg_s3 PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 's3tables',
+    'warehouse' = 'arn:aws:s3tables:us-east-1:169000000000:bucket/doris-s3-table-bucket',
+    's3.region' = 'us-east-1',
+    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.access_key' = 'ak',
+    's3.secret_key' = 'sk'
 );
 ```
 

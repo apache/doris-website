@@ -24,50 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_second
-### description
-#### syntax
+## Description
+The function converts a Unix timestamp (in seconds) into a `DATETIME` value.
 
-`DATETIME FROM_SECOND(BIGINT unix_timestamp)`
-`DATETIME FROM_MILLISECOND(BIGINT unix_timestamp)`
-`DATETIME FROM_MICROSECOND(BIGINT unix_timestamp)`
 
-Converts a timestamp to its DATETIME represent, with argument as an integer and returned as a DATETIME type. Returns `NULL` if `unix_timestamp < 0` or if the function result is greater than `9999-12-31 23:59:59.999999`.
+## Syntax
 
-### example
-
+```sql
+FROM_SECOND(<unix_timestamp>)
 ```
-mysql> set time_zone='Asia/Shanghai';
+## Parameters
 
-mysql> select from_second(-1);
-+---------------------------+
-| from_second(-1)           |
-+---------------------------+
-| NULL                      |
-+---------------------------+
+| Parameter          | Description                                                                                            |
+|--------------------|--------------------------------------------------------------------------------------------------------|
+| `<unix_timestamp>` | Required. The Unix timestamp representing the number of seconds elapsed since 1970-01-01 00:00:00 UTC. |
 
-mysql> select from_millisecond(12345678);
-+----------------------------+
-| from_millisecond(12345678) |
-+----------------------------+
-| 1970-01-01 11:25:45.678    |
-+----------------------------+
+## Return Value
+- Returns a DATETIME value representing the date and time corresponding to the given Unix timestamp.
+- If `<unix_timestamp>` is NULL, the function returns NULL.
+- If `<unix_timestamp>` is out of valid range, the function returns an error.
 
-mysql> select from_microsecond(253402271999999999);
-+--------------------------------------+
-| from_microsecond(253402271999999999) |
-+--------------------------------------+
-| 9999-12-31 23:59:59.999999           |
-+--------------------------------------+
+## Example
 
-mysql> select from_microsecond(253402272000000000);
-+--------------------------------------+
-| from_microsecond(253402272000000000) |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
+```sql
+SELECT FROM_SECOND(1700000000);
 ```
 
-### keywords
-
-    FROM_SECOND,FROM,SECOND,MILLISECOND,MICROSECOND
+```text
++-------------------------+
+| from_second(1700000000) |
++-------------------------+
+| 2023-11-15 06:13:20     |
++-------------------------+
+```
