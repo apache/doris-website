@@ -1519,17 +1519,11 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
                                 "sql-manual/sql-functions/table-functions/explode-variant-array",
                                 "sql-manual/sql-functions/table-functions/explode",
-                                "sql-manual/sql-functions/table-functions/posexplode-outer",
-                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
-                                "sql-manual/sql-functions/table-functions/explode-json-object-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
-                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                                "sql-manual/sql-functions/table-functions/explode-numbers"
                             ]
                         },
                         {
