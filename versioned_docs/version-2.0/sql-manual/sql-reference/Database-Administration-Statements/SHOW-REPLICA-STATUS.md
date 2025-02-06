@@ -112,7 +112,6 @@ where_clause
 | State              | String   | The current state of the replica (e.g., NORMAL).                          |
 | Status             | String   | The health status of the replica (e.g., OK).                              |
 
-
 ## Access Control Requirements
 
 The user executing this SQL command must have at least the following privileges:
