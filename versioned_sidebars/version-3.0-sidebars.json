@@ -1644,7 +1644,7 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-PROFILE",
+                                        
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
