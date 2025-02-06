@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_AREA",
+    "title": "ST_AREA_SQUARE_METERS",
     "language": "zh-CN"
 }
 ---
@@ -28,11 +28,11 @@ under the License.
 
 计算地球球面上区域的面积
 
+
 ## 语法
 
 ```sql
-ST_Area_Square_Meters( <geo>)
-ST_Area_Square_Km( <geo>)
+ST_AREA_SQUARE_METERS( <geo>)
 ```
 ## 参数
 
@@ -43,8 +43,6 @@ ST_Area_Square_Km( <geo>)
 ## 返回值
 
 ST_Area_Square_Meters( <geo>) 返回的单位是平方米
-
-ST_Area_Square_Km( <geo>) 返回的单位是平方千米。
 
 ## 举例
 
@@ -60,17 +58,6 @@ SELECT ST_Area_Square_Meters(ST_Circle(0, 0, 1));
 +-------------------------------------------------+
 ```
 
-```sql
-SELECT ST_Area_Square_Km(ST_Polygon("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"));
-```
-
-```text
-+----------------------------------------------------------------------+
-| st_area_square_km(st_polygon('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')) |
-+----------------------------------------------------------------------+
-|                                                   12364.036567076409 |
-+----------------------------------------------------------------------+
-```
 
 ```sql
 SELECT ST_Area_Square_Meters(ST_Point(0, 1));

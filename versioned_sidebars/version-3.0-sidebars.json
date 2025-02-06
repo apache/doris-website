@@ -1175,6 +1175,8 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-point",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",

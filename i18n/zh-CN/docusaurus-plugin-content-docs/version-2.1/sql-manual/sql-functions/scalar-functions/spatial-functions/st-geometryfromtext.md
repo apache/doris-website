@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOMETRYFROMTEXT,ST_GEOMFROMTEXT",
+    "title": "ST_GEOMETRYFROMTEXT",
     "language": "zh-CN"
 }
 ---
@@ -28,10 +28,14 @@ under the License.
 
 将一个线型 WKT（Well Known Text）转化为对应的内存的几何形式
 
+## 别名
+
+- ST_GEOMFROMTEXT
+
 ## 语法
 
 ```sql
-ST_GeometryFromText( <wkt>)
+ST_GEOMETRYFROMTEXT( <wkt>)
 ```
 ## 参数
 
