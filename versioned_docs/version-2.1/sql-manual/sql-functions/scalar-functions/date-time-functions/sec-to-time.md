@@ -24,25 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sec_to_time
-### description
-#### Syntax
+## Description
+The `SEC_TO_TIME` function converts a value in seconds into a `TIME` type, returning the result in the format `HH:MM:SS`.  
+The input seconds represent the time elapsed since the start of a day (`00:00:00`).
 
-`TIME sec_to_time(INT timestamp)`
 
-The parameter is a timestamp of type INT, and the function returns a time of type TIME.
+## Syntax
 
-### example
-
+```sql
+SEC_TO_TIME(<seconds>)
 ```
-mysql >select sec_to_time(time_to_sec(cast('16:32:18' as time)));
-+----------------------------------------------------+
-| sec_to_time(time_to_sec(CAST('16:32:18' AS TIME))) |
-+----------------------------------------------------+
-| 16:32:18                                           |
-+----------------------------------------------------+
-1 row in set (0.53 sec)
-```
+## Parameters
 
-### keywords
-    SEC_TO_TIME
+| Parameter     | Description                                                                                                                                           |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<seconds>` | Required. The input number of seconds, representing the time elapsed since the start of a day (00:00:00). Supports positive or negative integers. |
+
+## Return Value
+- Returns a TIME value in the format `HH:MM:SS`, representing the time calculated from the start of a day (00:00:00).
+- If `<seconds>`  is NULL, the function returns NULL.
+
+## Example
+```sql
+SELECT SEC_TO_TIME(59738);
+```
+```text
++--------------------+
+| sec_to_time(59738) |
++--------------------+
+| 16:35:38           |
++--------------------+
+```
