@@ -381,7 +381,7 @@
   },
   "sidebar.docs.category.IP Functions": {
     "message": "IP 函数",
-    "description": "The label for category JSON Functions in sidebar docs"
+    "description": "The label for category IP Functions in sidebar docs"
   },
   "sidebar.docs.category.Bitmap Functions": {
     "message": "BITMAP 函数",
@@ -533,23 +533,23 @@
   },
   "sidebar.docs.category.Job": {
     "message": "后台任务",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Job in sidebar docs"
   },
   "sidebar.docs.category.Plugin": {
     "message": "插件",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Plugin in sidebar docs"
   },
   "sidebar.docs.category.Character Set": {
     "message": "字符集",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Character Set in sidebar docs"
   },
   "sidebar.docs.category.Types": {
     "message": "类型",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Types in sidebar docs"
   },
   "sidebar.docs.category.Info System and Help": {
     "message": "系统信息和帮助",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Info System and Help in sidebar docs"
   },
   "sidebar.docs.category.SQL Types": {
     "message": "SQL 类型",
@@ -705,11 +705,11 @@
   },
   "sidebar.get-starting.category.Tutorials": {
     "message": "使用教程",
-    "description": "The label for category BI and Database IDE in sidebar docs"
+    "description": "The label for category Tutorials in sidebar docs"
   },
   "sidebar.get-starting.category.Building lakehouse": {
     "message": "构建 Lakehouse",
-    "description": "The label for category BI and Database IDE in sidebar docs"
+    "description": "The label for category Building lakehouse in sidebar docs"
   },
   "sidebar.docs.category.Cross Cluster Replication": {
     "message": "跨集群复制",
