@@ -35,7 +35,7 @@ Convert a geometric figure to a representation of WKT (Well Known Text)
 ## Syntax
 
 ```sql
-ST_AsText( <geo>)
+ST_ASTEXT( <geo>)
 ```
 
 ## Parameters

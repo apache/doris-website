@@ -35,7 +35,7 @@ Converts a WKT (Well Known Text) to a memory representation in the form of a Lin
 ## Syntax
 
 ```sql
-ST_LineFromText( <wkt>)
+ST_LINEFROMTEXT( <wkt>)
 ```
 
 ## Parameters

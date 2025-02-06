@@ -36,7 +36,7 @@ Convert a linear WKT (Well Known Text) to the corresponding memory geometry
 ## Syntax
 
 ```sql
-ST_GeometryFromText( <wkt>)
+ST_GEOMETRYFROMTEXT( <wkt>)
 ```
 ## Parameters
 

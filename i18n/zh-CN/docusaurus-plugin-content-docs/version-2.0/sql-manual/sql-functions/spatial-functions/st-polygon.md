@@ -30,13 +30,13 @@ under the License.
 
 ## 别名
 
-- st_polygonfromtext
-- st_polyfromtext
+- ST_POLYGONFROMTEXT
+- ST_POLYFROMTEXT
 
 ## 语法
 
 ```sql
-ST_Polygon( <wkt>)
+ST_POLYGON( <wkt>)
 ```
 
 ## 参数

@@ -35,7 +35,7 @@ Converts a standard figure WKB (Well-known binary) to the corresponding memory g
 ## Syntax
 
 ```sql
-ST_GeometryFromWKB( <wkb>)
+ST_GEOMETRYFROMWKB( <wkb>)
 ```
 ## Parameters
 

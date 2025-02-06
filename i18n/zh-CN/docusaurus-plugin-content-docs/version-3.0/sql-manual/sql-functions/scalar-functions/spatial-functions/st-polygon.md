@@ -36,7 +36,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Polygon( <wkt>)
+ST_POLYGON( <wkt>)
 ```
 
 ## 参数

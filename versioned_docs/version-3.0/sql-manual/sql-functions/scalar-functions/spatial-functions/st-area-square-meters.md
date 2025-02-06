@@ -1,7 +1,7 @@
 ---
 {
     "title": "ST_AREA_SQUARE_METERS",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,32 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述
+## Description
 
-计算地球球面上区域的面积
+Calculate the area of the region on the sphere of the Earth
 
-## 别名
 
-- ST_Area_Square_Km
-
-## 语法
+## Syntax
 
 ```sql
-ST_Area_Square_Meters( <geo>)
+ST_AREA_SQUARE_METERS( <geo>)
 ```
-## 参数
 
-| 参数 | 说明     |
+## Parameters
+
+| Parameters | Instructions     |
 | -- |--------|
-| `<geo>` | 地球球面位置 |
+| `<geo>` | The spherical position of the earth |
 
-## 返回值
+## Return Value
 
-ST_Area_Square_Meters( <geo>) 返回的单位是平方米
+ST_Area_Square_Meters( <geo>): the units returned are square meters
 
-ST_Area_Square_Km( <geo>) 返回的单位是平方千米。
-
-## 举例
+## Examples
 
 ```sql
 SELECT ST_Area_Square_Meters(ST_Circle(0, 0, 1));
@@ -63,17 +59,6 @@ SELECT ST_Area_Square_Meters(ST_Circle(0, 0, 1));
 +-------------------------------------------------+
 ```
 
-```sql
-SELECT ST_Area_Square_Km(ST_Polygon("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"));
-```
-
-```text
-+----------------------------------------------------------------------+
-| st_area_square_km(st_polygon('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')) |
-+----------------------------------------------------------------------+
-|                                                   12364.036567076409 |
-+----------------------------------------------------------------------+
-```
 
 ```sql
 SELECT ST_Area_Square_Meters(ST_Point(0, 1));

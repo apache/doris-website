@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_GeometryFromText( <wkt>)
+ST_GEOMETRYFROMTEXT( <wkt>)
 ```
 ## 参数
 

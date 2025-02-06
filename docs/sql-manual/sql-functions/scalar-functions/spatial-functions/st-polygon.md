@@ -30,13 +30,13 @@ Convert a WKT (Well Known Text) to the corresponding polygonal memory form
 
 ## Alias
 
-- st_polygonfromtext
-- st_polyfromtext
+- ST_POLYGONFROMTEXT
+- ST_POLYFROMTEXT
 
 ## Syntax
 
 ```sql
-ST_Polygon( <wkt>)
+ST_POLYGON( <wkt>)
 ```
 
 ## Parameters

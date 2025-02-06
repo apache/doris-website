@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_AsText( <geo>)
+ST_ASTEXT( <geo>)
 ```
 
 # 参数

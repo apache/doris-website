@@ -1,7 +1,7 @@
 ---
 {
-    "title": "ST_ASTEXT",
-    "language": "en"
+    "title": "ST_AREA_SQUARE_KM",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,40 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-Convert a geometric figure to a representation of WKT (Well Known Text)
+计算地球球面上区域的面积
 
-## Alias
 
-- ST_ASWKT
-
-## Syntax
+## 语法
 
 ```sql
-ST_ASTEXT( <geo>)
+ST_AREA_SQUARE_KM( <geo>)
 ```
+## 参数
 
-## Parameters
+| 参数 | 说明     |
+| -- |--------|
+| `<geo>` | 地球球面位置 |
 
-| Parameters | Instructions |
-| -- |----------|
-| `<geo>` | The graph that needs to be converted |
+## 返回值
 
-## Return Value
+ST_Area_Square_Km( <geo>) 返回的单位是平方千米。
 
-The WKT representation of the geometry:
+## 举例
 
-## Examples
+
 
 ```sql
-SELECT ST_AsText(ST_Point(24.7, 56.7));
+SELECT ST_Area_Square_Km(ST_Polygon("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"));
 ```
 
 ```text
-+---------------------------------+
-| st_astext(st_point(24.7, 56.7)) |
-+---------------------------------+
-| POINT (24.7 56.7)               |
-+---------------------------------+
++----------------------------------------------------------------------+
+| st_area_square_km(st_polygon('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')) |
++----------------------------------------------------------------------+
+|                                                   12364.036567076409 |
++----------------------------------------------------------------------+
 ```

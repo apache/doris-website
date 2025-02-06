@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_GeometryFromWKB( <WKB>)
+ST_GEOMETRYFROMWKB( <WKB>)
 ```
 ## 参数
 

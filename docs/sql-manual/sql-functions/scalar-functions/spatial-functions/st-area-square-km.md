@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_ASTEXT",
+    "title": "ST_AREA_SQUARE_KM",
     "language": "en"
 }
 ---
@@ -26,38 +26,35 @@ under the License.
 
 ## Description
 
-Convert a geometric figure to a representation of WKT (Well Known Text)
+Calculate the area of the region on the sphere of the Earth
 
-## Alias
-
-- ST_ASWKT
 
 ## Syntax
 
 ```sql
-ST_ASTEXT( <geo>)
+ST_AREA_SQUARE_KM( <geo>)
 ```
 
 ## Parameters
 
-| Parameters | Instructions |
-| -- |----------|
-| `<geo>` | The graph that needs to be converted |
+| Parameters | Instructions     |
+| -- |--------|
+| `<geo>` | The spherical position of the earth |
 
 ## Return Value
 
-The WKT representation of the geometry:
+ST_Area_Square_Km( <geo>):  the units returned are square kilometers
 
 ## Examples
 
 ```sql
-SELECT ST_AsText(ST_Point(24.7, 56.7));
+SELECT ST_Area_Square_Km(ST_Polygon("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"));
 ```
 
 ```text
-+---------------------------------+
-| st_astext(st_point(24.7, 56.7)) |
-+---------------------------------+
-| POINT (24.7 56.7)               |
-+---------------------------------+
++----------------------------------------------------------------------+
+| st_area_square_km(st_polygon('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')) |
++----------------------------------------------------------------------+
+|                                                   12364.036567076409 |
++----------------------------------------------------------------------+
 ```

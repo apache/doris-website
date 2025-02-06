@@ -35,7 +35,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_LineFromText( <wkt>)
+ST_LINEFROMTEXT( <wkt>)
 ```
 
 ## 参数
