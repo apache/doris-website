@@ -473,11 +473,11 @@
   },
   "sidebar.docs.category.Plugin": {
     "message": "插件",
-    "description": "The label for category Governance in sidebar docs"
+    "description": "The label for category Plugin in sidebar docs"
   },
   "sidebar.docs.category.Character Set": {
     "message": "字符集",
-    "description": "The label for category Plugin in sidebar docs"
+    "description": "The label for category Character Set in sidebar docs"
   },
   "sidebar.docs.category.Types": {
     "message": "类型",
