@@ -36,7 +36,7 @@ SHOW TABLET STORAGE FORMAT [VERBOSE]
 ```
 ## 可选参数
 
-** 1. `<VERBOSE>` **
+** 1. `VERBOSE` **
 
   展示更详细的信息
 
