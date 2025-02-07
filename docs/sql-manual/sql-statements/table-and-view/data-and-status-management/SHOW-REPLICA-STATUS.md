@@ -31,21 +31,21 @@ This statement is used to display the replica status information for a table or 
 ## Syntax
 
 ```sql
-SHOW REPLICA STATUS FROM [ <database_name>.]<table_name> [partition_list] 
+SHOW REPLICA STATUS FROM [ <database_name>.]<table_name> [<partition_list>] 
 [where_clause]
 ```
 Where:
 
 ```sql
 partition_list
-  : PARTITION (<partition_name1>[ , parition_name2 ][ ... ])
+: PARTITION (<partition_name>[ , ... ])
 ```
 
 Where:
 
 ```sql
 where_clause
-: WHERE <output_column_name = value>
+: WHERE <output_column_name> = <value>
 ```
 
 ## Required Parameters

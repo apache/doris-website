@@ -35,14 +35,21 @@ under the License.
 ## 语法
 
 ```sql
-SHOW REPLICA DISTRIBUTION FROM [ <database_name>.]<table_name> [partition_list]
+SHOW REPLICA DISTRIBUTION FROM [ <database_name>.]<table_name> [<partition_list>] 
+[where_clause]
 ```
 
 其中：
 
 ```sql
 partition_list
-  : PARTITION (<partition_name1>[ , parition_name2 ][ ... ])
+  : PARTITION (<partition_name>[ , ... ])
+```
+其中：
+
+```sql
+where_clause
+: WHERE <output_column_name> = <value>
 ```
 
 ## 必选参数

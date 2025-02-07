@@ -38,28 +38,23 @@ ADMIN SET REPLICA VERSION PROPERTIES ("<key>"="<value>" [,...])
 
 ## Required Parameters
 
-**1. `<tablet_id>`**
+** 1. `"<key>"="<value>"`**
 
-The ID of the tablet whose replica version needs to be modified.
-
-**2. `<backend_id>`**
-
-The ID of the BE node where the replica is located.
+| key          | value type | Notes                                                            |
+|--------------|------------|------------------------------------------------------------------|
+| `tablet_id`  | Int        | The ID of the tablet whose replica version needs to be modified. |
+| `backend_id` | Int        | The ID of the BE node where the replica is located.              |
 
 
 ## Optional Parameters
 
-**1. `<version>`**
+** 1. `"<key>"="<value>"`**
 
-Sets the version of the replica.
-
-**2. `<last_success_version>`**
-
-Sets the last successful version of the replica.
-
-**3. `<last_failed_version>`**
-
-Sets the last failed version of the replica.
+| key                    | value type | Notes                                            |
+|------------------------|------------|--------------------------------------------------|
+| `version`              | Int        | Sets the version of the replica.                 |
+| `last_success_version` | Int        | Sets the last successful version of the replica. |
+| `last_failed_version`  | Int        | Sets the last failed version of the replica.     |
 
 
 **Notes**

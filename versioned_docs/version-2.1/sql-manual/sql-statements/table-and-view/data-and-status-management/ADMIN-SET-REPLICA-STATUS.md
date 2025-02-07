@@ -34,7 +34,7 @@ This statement is used to set the status of a specified replica. Currently, it i
 
 ```sql
 ADMIN SET REPLICA STATUS 
-PROPERTIES ("<tablet_id>"="<value1>","<backend_id>"="<value2>","<status>"="<value3>")
+PROPERTIES ("tablet_id"="<tablet_id>","backend_id"="<backend_id>","status"="<status>")
 ```
 
 ## Required Parameters

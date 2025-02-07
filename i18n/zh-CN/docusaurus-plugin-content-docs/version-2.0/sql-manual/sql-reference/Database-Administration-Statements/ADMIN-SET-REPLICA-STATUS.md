@@ -32,7 +32,7 @@ under the License.
 
 ```sql
 ADMIN SET REPLICA STATUS 
-PROPERTIES ("<tablet_id>"="<value1>","<backend_id>"="<value2>","<status>"="<value3>")
+PROPERTIES ("tablet_id"="<tablet_id>","backend_id"="<backend_id>","status"="<status>")
 ```
 
 ## 必选参数

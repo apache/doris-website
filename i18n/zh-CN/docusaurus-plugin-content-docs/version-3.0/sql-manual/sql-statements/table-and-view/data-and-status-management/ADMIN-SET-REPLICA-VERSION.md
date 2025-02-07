@@ -36,28 +36,22 @@ ADMIN SET REPLICA VERSION PROPERTIES ("<key>"="<value>" [,...])
 
 ## 必选参数
 
-**1. `<tablet_id>`**
+** 1. `"<key>"="<value>"`**
 
-需要执行操作的 tablet ID。
-
-**2. `<backend_id>`**
-
-指定 tablet 副本所在的 BE 节点 ID
-
+| key          | value type | Notes                    |
+|--------------|------------|--------------------------|
+| `tablet_id`  | Int        | 需要执行操作的 tablet ID        |
+| `backend_id` | Int        | 指定 tablet 副本所在的 BE 节点 ID |
 
 ## 可选参数
 
-**1. `<version>`**
+** 1. `"<key>"="<value>"`**
 
-设置副本的版本。
-
-**2. `<last_success_version>`**
-
-设置副本的最大成功版本。
-
-**3. `<last_failed_version>`**
-
-设置副本的最大失败版本。
+| key                    | value type | Notes        |
+|------------------------|------------|--------------|
+| `version`              | Int        | 设置副本的版本。     |
+| `last_success_version` | Int        | 设置副本的最大成功版本。 |
+| `last_failed_version`  | Int        | 设置副本的最大失败版本。 |
 
 
 **注意**
