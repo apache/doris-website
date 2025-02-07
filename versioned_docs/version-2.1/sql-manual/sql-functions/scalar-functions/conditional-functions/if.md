@@ -31,8 +31,16 @@ Returns `valueTrue` when the condition is true, and returns `valueFalseOrNull` o
 ## Syntax
 
 ```sql
-IF(boolean condition, type valueTrue, type valueFalseOrNull)
+IF(<condition>, <value_true>, <value_false_or_null>)
 ```
+
+## Parameters
+
+| Parameter               | Description                                                  |
+|-------------------------|--------------------------------------------------------------|
+| `<condition>`           | The boolean condition to evaluate.                           |
+| `<value_true>`          | The value to return if `<condition>` evaluates to true.      |
+| `<value_false_or_null>` | The value to return if `<condition>` evaluates to false.     |
 
 ## Return Value
 

@@ -38,7 +38,7 @@ GREATEST(<expr1>, <expr2>, ..., <exprN>)
 
 | 参数   | 描述 |
 |------------|-------------|
-| `<expr1>, <expr2>, ..., <exprN>` | 需要比较的多个表达式，支持 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL` 类型。 |
+| `<expr>`  | 需要比较的多个表达式，支持 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL` 类型。 |
 
 ## 返回值
 

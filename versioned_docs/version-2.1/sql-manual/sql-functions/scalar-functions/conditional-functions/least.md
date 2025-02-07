@@ -30,14 +30,14 @@ Compares multiple expressions and returns the smallest value among them. If any 
 ## Syntax
 
 ```sql
-LEAST(<expr1>, <expr2>, ..., <exprN>)
+LEAST(<expr> [, ...])
 ```
 
 ## Parameters
 
 | Parameter  | Description |
 |------------|-------------|
-| `<expr1>, <expr2>, ..., <exprN>` | The expressions to be compared. Supported types include `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL`. |
+| `<expr>` | The expressions to be compared. Supported types include `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL`. |
 
 ## Return Value
 

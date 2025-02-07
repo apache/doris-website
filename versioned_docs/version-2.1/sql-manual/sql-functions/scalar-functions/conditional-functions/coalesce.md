@@ -31,14 +31,14 @@ Returns the first non-null expression from left to right in the parameter list. 
 ## Syntax
 
 ```sql
-COALESCE(expr1, expr2, ..., expr_n)
+COALESCE(<expr> [, ...])
 ```
 
 ## Parameters
 
 | Parameter      | Description                                                                   |
 | -------------- | ----------------------------------------------------------------------------- |
-| expr1 ~ expr_n | A sequence of expressions to evaluate. All expressions must be compatible data types. |
+| `<expr>` | A sequence of expressions to evaluate. All expressions must be compatible data types. |
 
 ## Return Value
 

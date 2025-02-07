@@ -30,14 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-LEAST(<expr1>, <expr2>, ..., <exprN>)
+LEAST(<expr> [, ...])
 ```
 
 ## 参数
 
 | 参数 | 描述 |
 |------------|-------------|
-| `<expr1>, <expr2>, ..., <exprN>` | 需要进行比较的表达式。支持的类型包括 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL`。 |
+| `<expr>` | 需要进行比较的表达式。支持的类型包括 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL`。 |
 
 ## 返回值
 

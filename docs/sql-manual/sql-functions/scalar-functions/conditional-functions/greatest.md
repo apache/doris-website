@@ -31,14 +31,14 @@ Compares multiple expressions and returns the greatest value among them. If any 
 ## Syntax
 
 ```sql
-GREATEST(<expr1>, <expr2>, ..., <exprN>)
+GREATEST(<expr> [, ...])
 ```
 
 ## Parameters
 
 | Parameter   | Description |
 |------------|-------------|
-| `<expr1>, <expr2>, ..., <exprN>` | A list of expressions to compare. Supports `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL` types. |
+| `<expr>`  | A list of expressions to compare. Supports `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL` types. |
 
 ## Return Value
 

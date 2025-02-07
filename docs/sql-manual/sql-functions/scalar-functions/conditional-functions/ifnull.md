@@ -30,7 +30,7 @@ Returns `<expr1>` if it is not `NULL`; otherwise, returns `<expr2>`.
 
 ## Alias
 
-- DSQRT
+- NVL
 
 ## Syntax
 
