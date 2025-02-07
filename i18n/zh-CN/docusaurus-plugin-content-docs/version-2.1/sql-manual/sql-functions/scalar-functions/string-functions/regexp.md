@@ -32,7 +32,9 @@ under the License.
 
 ## 语法
 
-`BOOLEAN regexp(VARCHAR str, VARCHAR pattern)`
+```sql
+REGEXP(<str>, <pattern>)
+```
 
 ## 参数
 

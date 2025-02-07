@@ -32,7 +32,9 @@ Perform regular matching on the string str, return true if it matches, return fa
 
 ## Syntax
 
-`BOOLEAN regexp(VARCHAR str, VARCHAR pattern)`
+```sql
+REGEXP(<str>, <pattern>)
+```
 
 ## Parameters
 
