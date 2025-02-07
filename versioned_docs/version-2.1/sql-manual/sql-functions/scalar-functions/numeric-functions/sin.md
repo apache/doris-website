@@ -22,36 +22,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## sin
+## Description
 
-### description
-#### Syntax
+Calculate the sine of the parameter
 
-`DOUBLE sin(DOUBLE x)`
-Returns the sine of `x`, where `x` is in radians
+## Syntax
 
-### example
-
-```
-mysql> select sin(0);
-+----------+
-| sin(0.0) |
-+----------+
-|        0 |
-+----------+
-mysql> select sin(1);
-+--------------------+
-| sin(1.0)           |
-+--------------------+
-| 0.8414709848078965 |
-+--------------------+
-mysql> select sin(0.5 * Pi());
-+-----------------+
-| sin(0.5 * pi()) |
-+-----------------+
-|               1 |
-+-----------------+
+```sql
+SIN(<a>)
 ```
 
-### keywords
-	SIN
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | floating point number, the radian value of the parameter to calculate |
+
+## Return Value
+
+The sine of the parameter `<a>`, expressed in radians.
+
+## Examples
+
+```sql
+select sin(1);
+```
+
+```text
++------------------------+
+| sin(cast(1 as DOUBLE)) |
++------------------------+
+|     0.8414709848078965 |
++------------------------+
+```
+
+```sql
+select sin(0);
+```
+
+```text
++------------------------+
+| sin(cast(0 as DOUBLE)) |
++------------------------+
+|                    0.0 |
++------------------------+
+```
+
+```sql
+select sin(Pi());
+```
+
+```text
++------------------------------------+
+| sin(pi())                          |
++------------------------------------+
+| 0.00000000000000012246467991473532 |
++------------------------------------+
+```
