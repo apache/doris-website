@@ -39,7 +39,7 @@ REFRESH MATERIALIZED VIEW <mv_name> <refresh_type>
 其中:
 ```sql
 refresh_type
-  : [ <partitionSpec> | COMPLETE | AUTO ]
+  : { <partitionSpec> | COMPLETE | AUTO }
 ```
 
 ```sql
