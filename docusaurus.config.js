@@ -1,11 +1,10 @@
 const themes = require('prism-react-renderer').themes;
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://doris.apache.org/images/logo.svg';
+const logoImg = '/images/logo.svg';
 
 function getDocsVersions() {
     const result = {};
@@ -88,8 +87,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
-
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
