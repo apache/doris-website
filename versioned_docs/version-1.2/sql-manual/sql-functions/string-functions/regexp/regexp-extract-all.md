@@ -43,6 +43,10 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 | `<str>` | The column need to do regular matching.|
 | `<pattern>` | Target pattern.|
 
+## Return value
+
+Value after extraction. It is `Array` type.
+
 ## Example
 
 ```sql

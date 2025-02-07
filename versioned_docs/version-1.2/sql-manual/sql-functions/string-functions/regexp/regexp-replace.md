@@ -44,6 +44,10 @@ REGEXP_REPLACE(<str>, <pattern>, <repl>)
 | `<pattern>` | Target pattern.|
 | `<repl>` | The string to replace the matched pattern.|
 
+## Return Value
+
+Result after doing replacement. It is `Varchar` type.
+
 ## Example
 
 ```sql

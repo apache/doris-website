@@ -46,6 +46,10 @@ REGEXP_EXTRACT(<str>, <pattern>, <pos>)
 | `<pattern>` | Target pattern.|
 | `<pos>` | The parameter used to specify the position in the string from which to start searching for the regular expression match. It is an integer value representing the character position in the string (starting from 1). `pos` must be specified. |
 
+## Return Value
+
+Matching part of the partern. It is `Varchar` type.
+
 ## Example
 
 ```sql
