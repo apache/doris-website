@@ -32,7 +32,9 @@ Regular matching of STR strings, replacing the part hitting pattern with repl, r
 
 ## Syntax
 
-`VARCHAR regexp_replace_one(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
+```sql
+REGEXP_REPLACE_ONE(<str>, <pattern>, <repl>)
+```
 
 ## Parameters
 

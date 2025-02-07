@@ -32,7 +32,9 @@ under the License.
 
 ## 语法
 
-`VARCHAR regexp_replace_one(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
+```sql
+REGEXP_REPLACE_ONE(<str>, <pattern>, <repl>)
+```
 
 ## 参数
 
