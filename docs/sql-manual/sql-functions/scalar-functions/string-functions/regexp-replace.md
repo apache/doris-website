@@ -32,7 +32,9 @@ Regular matching of STR strings, replacing the part hitting pattern with a new s
 
 ## Syntax
 
-`VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
+```sql
+REGEXP_REPLACE(<str>, <pattern>, <repl>)
+```
 
 ## Parameters
 
