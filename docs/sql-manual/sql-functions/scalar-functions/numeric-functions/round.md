@@ -22,73 +22,133 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round
+## Description
 
-### description
-#### Syntax
+Round x to d decimal places. The default value of d is 0.
 
-`T round(T x[, d])`
-Rounds the argument `x` to `d` decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
-2.5 will round up to 3. If you want to round down to 2, please use the round_bankers function.
+If d is negative, the |d| digits to the left of the decimal point will be set to 0.
 
-If `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
+If either x or d is null, return null.
 
-:::tip
-Another alias for this function is `dround`.
-:::
+If d is a column and the first argument is of the Decimal type, then the resulting Decimal will have the same number of decimal places as the input Decimal.
 
-### example
+## Alias
 
+- DROUND
+
+## Syntax
+
+```sql
+ROUND(x [ , d])
 ```
-mysql> select round(2.4);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<x>`  | The number to be rounded. |
+| `<d>`  | Precision, with a default value of 0. |
+
+## Return value
+
+Returns an integer or a floating-point number:
+
+- By default, when the parameter d = 0, it returns the integer obtained by rounding x.
+
+- If d is a negative number, it returns an integer with the first digit to the left of the decimal point being 0.
+
+- If both x and d are NULL, it returns NULL.
+
+- If d represents a column and x is of the Decimal type, it returns a floating-point number with the same precision.
+
+## Example
+
+```sql
+select round(2.4);
+```
+
+```text
 +------------+
 | round(2.4) |
 +------------+
 |          2 |
 +------------+
-mysql> select round(2.5);
+```
+
+```sql
+select round(2.5);
+```
+
+```text
 +------------+
 | round(2.5) |
 +------------+
 |          3 |
 +------------+
-mysql> select round(-3.4);
+```
+
+```sql
+select round(-3.4);
+```
+
+```text
 +-------------+
 | round(-3.4) |
 +-------------+
 |          -3 |
 +-------------+
-mysql> select round(-3.5);
+```
+
+```sql
+select round(-3.5);
+```
+
+```text
 +-------------+
 | round(-3.5) |
 +-------------+
 |          -4 |
 +-------------+
-mysql> select round(1667.2725, 2);
+```
+
+```sql
+select round(1667.2725, 2);
+```
+
+```text
 +---------------------+
 | round(1667.2725, 2) |
 +---------------------+
 |             1667.27 |
 +---------------------+
-mysql> select round(1667.2725, -2);
+```
+
+```sql
+select round(1667.2725, -2);
+```
+
+```text
 +----------------------+
 | round(1667.2725, -2) |
 +----------------------+
 |                 1700 |
 +----------------------+
-mysql> SELECT number
-    -> , round(number * 2.5, number - 1) AS r_decimal_column
-    -> , round(number * 2.5, 0) AS r_decimal_literal
-    -> , round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
-    -> , round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
+```
+
+```sql
+SELECT number
+, round(number * 2.5, number - 1) AS r_decimal_column
+, round(number * 2.5, 0) AS r_decimal_literal
+, round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
+, round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
+FROM test_enhanced_round
+WHERE rid = 1;
+```
+
+```text
 +--------+------------------+-------------------+-----------------+------------------+
 | number | r_decimal_column | r_decimal_literal | r_double_column | r_double_literal |
 +--------+------------------+-------------------+-----------------+------------------+
 |      1 |              3.0 |                 3 |               3 |                3 |
 +--------+------------------+-------------------+-----------------+------------------+
 ```
-
-### keywords
-	ROUND, DROUND

@@ -894,7 +894,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog1",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog10",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dpow",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",

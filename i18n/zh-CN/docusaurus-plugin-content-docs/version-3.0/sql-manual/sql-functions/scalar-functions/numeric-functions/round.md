@@ -22,73 +22,133 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## round
-
 ## 描述
-## 语法
 
-`T round(T x[, d])`
-将`x`四舍五入后保留d位小数，d默认为0。如果d为负数，则小数点左边d位为0。如果x或d为null，返回null。
-2.5会舍入到3，如果想要舍入到2的算法，请使用round_bankers函数。
+将`x`四舍五入后保留d位小数，d默认为0。
+
+如果d为负数，则小数点左边d位为0。
+
+如果x或d为null，返回null。
 
 如果 d 为一个列，并且第一个参数为 Decimal 类型，那么结果 Decimal 会跟入参 Decimal 具有相同的小数部分长度。
 
-:::tip
-该函数的另一个别名为 `dround`。
-:::
+## 别名
+
+- DROUND
+
+## 语法
+
+```sql
+ROUND(x [ , d])
+```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 待舍入的数字 |
+| `<d>` | 精度，默认为0 |
+
+## 返回值
+
+返回一个整型或者浮点数：
+
+- 默认情况，参数d = 0 , 返回 `x` 四舍五入后的整数。
+
+- d 为 负数 , 返回小数点左边第一位为0的整数。
+
+- x 和 d is NULL , 返回NULL。
+
+- d 为一个列时 , 且 x 为Decimal类型 , 返回相同精度的浮点数。
 
 ## 举例
 
+```sql
+select round(2.4);
 ```
-mysql> select round(2.4);
+
+```text
 +------------+
 | round(2.4) |
 +------------+
 |          2 |
 +------------+
-mysql> select round(2.5);
+```
+
+```sql
+select round(2.5);
+```
+
+```text
 +------------+
 | round(2.5) |
 +------------+
 |          3 |
 +------------+
-mysql> select round(-3.4);
+```
+
+```sql
+select round(-3.4);
+```
+
+```text
 +-------------+
 | round(-3.4) |
 +-------------+
 |          -3 |
 +-------------+
-mysql> select round(-3.5);
+```
+
+```sql
+select round(-3.5);
+```
+
+```text
 +-------------+
 | round(-3.5) |
 +-------------+
 |          -4 |
 +-------------+
-mysql> select round(1667.2725, 2);
+```
+
+```sql
+select round(1667.2725, 2);
+```
+
+```text
 +---------------------+
 | round(1667.2725, 2) |
 +---------------------+
 |             1667.27 |
 +---------------------+
-mysql> select round(1667.2725, -2);
+```
+
+```sql
+select round(1667.2725, -2);
+```
+
+```text
 +----------------------+
 | round(1667.2725, -2) |
 +----------------------+
 |                 1700 |
 +----------------------+
-mysql> SELECT number
-    -> , round(number * 2.5, number - 1) AS r_decimal_column
-    -> , round(number * 2.5, 0) AS r_decimal_literal
-    -> , round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
-    -> , round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
+```
+
+```sql
+SELECT number
+, round(number * 2.5, number - 1) AS r_decimal_column
+, round(number * 2.5, 0) AS r_decimal_literal
+, round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
+, round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
+FROM test_enhanced_round
+WHERE rid = 1;
+```
+
+```text
 +--------+------------------+-------------------+-----------------+------------------+
 | number | r_decimal_column | r_decimal_literal | r_double_column | r_double_literal |
 +--------+------------------+-------------------+-----------------+------------------+
 |      1 |              3.0 |                 3 |               3 |                3 |
 +--------+------------------+-------------------+-----------------+------------------+
 ```
-
-### keywords
-	ROUND, DROUND
