@@ -34,6 +34,10 @@ REGEXP_EXTRACT(<str>, <pattern>, <pos>)
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
+## 返回值
+
+匹配 `<pattern>` 的部分。类型是 `Varchar`。
+
 ## 举例
 
 ```sql

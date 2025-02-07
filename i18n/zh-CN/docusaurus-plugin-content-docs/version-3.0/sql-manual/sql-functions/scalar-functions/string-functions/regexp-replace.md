@@ -44,6 +44,10 @@ REGEXP_REPLACE(<str>, <pattern>, <repl>)
 | `<pattern>` | 目标模式。|
 | `<repl>` | 用于替换匹配模式的字符串。|
 
+## 返回值
+
+替换之后的结果。类型是 `Varchar`。
+
 ## 举例
 
 ```sql
