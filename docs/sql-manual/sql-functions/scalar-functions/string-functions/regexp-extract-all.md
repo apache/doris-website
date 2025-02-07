@@ -40,8 +40,8 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 
 | Parameter | Description |
 | -- | -- |
-| `str` | The column need to do regular matching.|
-| `pattern` | Target pattern.|
+| `<str>` | The column need to do regular matching.|
+| `<pattern>` | Target pattern.|
 
 ## Example
 

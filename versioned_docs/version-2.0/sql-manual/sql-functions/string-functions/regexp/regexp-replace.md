@@ -40,9 +40,9 @@ REGEXP_REPLACE(<str>, <pattern>, <repl>)
 
 | Parameter | Description |
 | -- | -- |
-| `str` | The column need to do regular matching.|
-| `pattern` | Target pattern.|
-| `repl` | The string to replace the matched pattern.|
+| `<str>` | The column need to do regular matching.|
+| `<pattern>` | Target pattern.|
+| `<repl>` | The string to replace the matched pattern.|
 
 ## Example
 

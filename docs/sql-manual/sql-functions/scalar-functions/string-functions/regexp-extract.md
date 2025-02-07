@@ -42,9 +42,9 @@ REGEXP_EXTRACT(<str>, <pattern>, <pos>)
 
 | Parameter | Description |
 | -- | -- |
-| `str` | The column need to do regular matching.|
-| `pattern` | Target pattern.|
-| `pos` | The parameter used to specify the position in the string from which to start searching for the regular expression match. It is an integer value representing the character position in the string (starting from 1). `pos` must be specified. |
+| `<str>` | The column need to do regular matching.|
+| `<pattern>` | Target pattern.|
+| `<pos>` | The parameter used to specify the position in the string from which to start searching for the regular expression match. It is an integer value representing the character position in the string (starting from 1). `pos` must be specified. |
 
 ## Example
 
