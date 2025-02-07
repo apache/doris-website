@@ -38,7 +38,7 @@ SHOW TABLET STORAGE FORMAT [VERBOSE]
 
 ## Optional Parameters
 
-- VERBOSE
+** 1. `<VERBOSE>` **
 
   Displays more detailed information.
 
