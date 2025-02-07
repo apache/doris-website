@@ -61,7 +61,7 @@ DELETE FROM table_name [table_alias]
     1. 条件中不包含分区列
     2. 分区列的 `op` 为 `not in`
 
-  - 当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
+  - 对于使用 delete predicate 的删除操作，当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
 
 ### 示例
 
@@ -209,4 +209,4 @@ mysql> show delete from test_db;
 
 ## 语法
 
-删除语法详见 [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) 语法手册。
+删除语法详见 [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) 语法手册。
