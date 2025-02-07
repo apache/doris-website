@@ -30,7 +30,7 @@ under the License.
 
 This statement is used to update the data. The UPDATE statement currently only supports the UNIQUE KEY model.
 
-The UPDATE operation currently only supports updating the Value column. The update of the Key column can refer to [Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#use-flinkcdc-to-update-key-column).
+The UPDATE operation currently only supports updating the Value column. The update of the Key column can refer to [Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#use-flink-cdc-to-update-key-column).
 
 #### Syntax
 

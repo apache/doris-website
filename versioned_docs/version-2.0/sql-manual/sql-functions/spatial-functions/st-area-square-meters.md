@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_AREA",
+    "title": "ST_AREA_SQUARE_METERS",
     "language": "en"
 }
 ---
@@ -28,12 +28,13 @@ under the License.
 
 Calculate the area of the region on the sphere of the Earth
 
+
 ## Syntax
 
 ```sql
-ST_Area_Square_Meters( <geo>)
-ST_Area_Square_Km( <geo>)
+ST_AREA_SQUARE_METERS( <geo>)
 ```
+
 ## Parameters
 
 | Parameters | Instructions     |
@@ -43,8 +44,6 @@ ST_Area_Square_Km( <geo>)
 ## Return Value
 
 ST_Area_Square_Meters( <geo>): the units returned are square meters
-
-ST_Area_Square_Km( <geo>):  the units returned are square kilometers
 
 ## Examples
 
@@ -60,17 +59,6 @@ SELECT ST_Area_Square_Meters(ST_Circle(0, 0, 1));
 +-------------------------------------------------+
 ```
 
-```sql
-SELECT ST_Area_Square_Km(ST_Polygon("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"));
-```
-
-```text
-+----------------------------------------------------------------------+
-| st_area_square_km(st_polygon('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')) |
-+----------------------------------------------------------------------+
-|                                                   12364.036567076409 |
-+----------------------------------------------------------------------+
-```
 
 ```sql
 SELECT ST_Area_Square_Meters(ST_Point(0, 1));
