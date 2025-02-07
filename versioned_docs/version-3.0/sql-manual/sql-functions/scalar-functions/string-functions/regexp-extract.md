@@ -34,7 +34,9 @@ The string STR is matched regularly and the POS matching part which conforms to 
 
 ## Syntax
 
-`VARCHAR regexp_extract (VARCHAR str, VARCHAR pattern, INTEGER pos)`
+```sql
+REGEXP_EXTRACT(<str>, <pattern>, <pos>)
+```
 
 ## Parameters
 
