@@ -32,7 +32,9 @@ under the License.
 
 ## 语法
 
-`VARCHAR regexp_extract(VARCHAR str, VARCHAR pattern, int pos)`
+```sql
+REGEXP_EXTRACT(<str>, <pattern>, <pos>)
+```
 
 ## 参数
 

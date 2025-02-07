@@ -26,7 +26,9 @@ under the License.
 ## 描述
 ## 语法
 
-`VARCHAR regexp_extract(VARCHAR str, VARCHAR pattern, int pos)`
+```sql
+REGEXP_EXTRACT(<str>, <pattern>, <pos>)
+```
 
 对字符串 str 进行正则匹配，抽取符合 pattern 的第 pos 个匹配部分。需要 pattern 完全匹配 str 中的某部分，这样才能返回 pattern 部分中需匹配部分。如果没有匹配，返回空字符串。
 
