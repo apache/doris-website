@@ -1,7 +1,7 @@
 ---
 {
     "title": "REGEXP_REPLACE_ONE",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,27 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-Regular matching of STR strings, replacing the part hitting pattern with repl, replacing only the first match.
+对字符串 STR 进行正则匹配, 将命中 pattern 的部分使用 repl 来进行替换，仅替换第一个匹配项。
 
-- Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+- 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-## Syntax
+## 语法
 
 ```sql
 REGEXP_REPLACE_ONE(<str>, <pattern>, <repl>)
 ```
 
-## Parameters
+## 参数
 
-| Parameter | Description |
+| 参数 | 描述 |
 | -- | -- |
-| `<str>` | The column need to do regular matching.|
-| `<pattern>` | Target pattern.|
-| `<repl>` | The string to replace the matched pattern.|
+| `<str>` | 需要进行正则匹配的列。|
+| `<pattern>` | 目标模式。|
+| `<repl>` | 用于替换匹配模式的字符串。|
 
-## Example
+## 举例
 
 ```sql
 mysql> SELECT regexp_replace_one('a b c', ' ', '-');
