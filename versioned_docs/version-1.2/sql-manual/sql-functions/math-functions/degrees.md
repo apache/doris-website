@@ -22,36 +22,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## degrees
+## Description
 
-### description
-#### Syntax
+Input a double-precision floating-point number and convert it from radians to degrees.
 
-`DOUBLE degrees(DOUBLE x)`
-Returns the degree of `x`, converted from radians to degrees.
+- When the parameter is NULL, return NULL.
 
-### example
+## Syntax
 
-```
-mysql> select degrees(0);
-+--------------+
-| degrees(0.0) |
-+--------------+
-|            0 |
-+--------------+
-mysql> select degrees(2);
-+--------------------+
-| degrees(2.0)       |
-+--------------------+
-| 114.59155902616465 |
-+--------------------+
-mysql> select degrees(Pi());
-+---------------+
-| degrees(pi()) |
-+---------------+
-|           180 |
-+---------------+
+```sql
+DEGREES(<a>)
 ```
 
-### keywords
-	DEGREES
+## Parameters
+
+| parameter | explain |
+| -- | -- |
+| `<a>` | The value that needs to be converted from radians to degrees. |
+
+## Return Value
+
+The angle of parameter a.
+
+- When the parameter is NULL, return NULL.
+
+## Examples
+
+```sql
+select degrees(3.14),degrees(1),degrees(-1),degrees(NULL)
+```
+
+```text
++-------------------------------+----------------------------+-----------------------------+---------------+
+| degrees(cast(3.14 as DOUBLE)) | degrees(cast(1 as DOUBLE)) | degrees(cast(-1 as DOUBLE)) | degrees(NULL) |
++-------------------------------+----------------------------+-----------------------------+---------------+
+|             179.9087476710785 |          57.29577951308232 |          -57.29577951308232 |          NULL |
++-------------------------------+----------------------------+-----------------------------+---------------+
+```

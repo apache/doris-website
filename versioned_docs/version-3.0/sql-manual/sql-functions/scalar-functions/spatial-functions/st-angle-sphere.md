@@ -31,7 +31,7 @@ Calculate the center Angle between two points on the Earth's surface in degrees.
 ## Syntax
 
 ```sql
-ST_Angle_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
+ST_ANGLE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## Parameters

@@ -38,7 +38,6 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
-                  node ./scripts/update_search_hash.js
                   node ./scripts/update_github_info.js
                   yarn build
                   touch build/.dummy
