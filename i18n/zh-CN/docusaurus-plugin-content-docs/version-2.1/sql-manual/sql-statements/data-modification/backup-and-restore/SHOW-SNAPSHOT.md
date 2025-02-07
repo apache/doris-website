@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW SNAPSHOT ON `<repo_name>`
+SHOW SNAPSHOT ON <repo_name>
 [WHERE SNAPSHOT = "<snapshot_name>" [AND TIMESTAMP = "<backup_timestamp>"]];
 ```
 
