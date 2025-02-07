@@ -32,7 +32,9 @@ Regularly matches a string `str` and extracts the first sub-pattern matching par
 
 ## Syntax
 
-`VARCHAR regexp_extract_all (VARCHAR str, VARCHAR pattern)`
+```sql
+REGEXP_EXTRACT_ALL(<str>, <pattern>)
+```
 
 ## Parameters
 
