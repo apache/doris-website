@@ -30,7 +30,7 @@ Returns the square root of a value, where the input value must be greater than o
 
 ## Aliases
 
-- NVL
+- DSQRT
 
 ## Syntax
 
