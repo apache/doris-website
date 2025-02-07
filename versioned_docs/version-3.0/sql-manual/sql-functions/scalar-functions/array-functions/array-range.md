@@ -54,7 +54,7 @@ ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 | `<start_datetime>` | Start date, datetimev2 type |
 | `<end_datetime>` | End date, datetimev2 type |
 | `<interval_step>` | Interval value, default is 1 |
-| `<UNIT>` | Interval unit, supports year/month/week/day/hour/minute/second, default is day |
+| `<unit>` | Interval unit, supports year/month/week/day/hour/minute/second, default is day |
 
 ## Return Value
 

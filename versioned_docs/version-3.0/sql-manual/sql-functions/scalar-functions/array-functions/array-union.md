@@ -43,7 +43,7 @@ ARRAY_UNION(<array>, <array> [, ... ])
 
 ## Return Value
 
-Returns an array containing all elements in the union of array1 and array2, excluding duplicates. If the input parameter is NULL, it returns NULL.
+Returns an array containing all elements in the union of all arrays, excluding duplicates. If the input parameter is NULL, it returns NULL.
 
 ## Example
 

@@ -54,7 +54,7 @@ ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 | `<start_datetime>` | 起始日期，为datetimev2类型 |
 | `<end_datetime>` | 结束日期，为datetimev2类型 |
 | `<interval_step>` | 间隔值，默认为 1 |
-| `<UNIT>` | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
+| `<unit>` | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
 
 ## 返回值
 

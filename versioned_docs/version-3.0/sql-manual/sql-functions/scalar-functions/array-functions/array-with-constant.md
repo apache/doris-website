@@ -25,7 +25,7 @@ under the License.
 
 ## Description
 
-Generates an array containing n repeated elements element
+Generates an array containing n repeated elements
 
 ## Syntax
 
@@ -42,7 +42,7 @@ ARRAY_WITH_CONSTANT(<n>, <element>)
 
 ## Return Value
 
-Returns an array containing n repeated elements of element. array_repeat has the same function as array_with_constant and is used to be compatible with the hive syntax format.
+Returns an array containing n repeated elements. array_repeat has the same function as array_with_constant and is used to be compatible with the hive syntax format.
 
 ## Example
 
