@@ -1,5 +1,4 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
@@ -487,7 +486,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;
