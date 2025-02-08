@@ -1875,7 +1875,7 @@
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-STATUS",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/DIAGNOSE-TABLET",
-                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/COPY-TABLET",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-COPY-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLETS-BELONG",
