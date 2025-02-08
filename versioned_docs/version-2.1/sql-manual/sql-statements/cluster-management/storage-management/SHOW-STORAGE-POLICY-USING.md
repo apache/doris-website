@@ -29,18 +29,25 @@ under the License.
 
 ## Description
 
-This command is used to show tables and partitions which is using storage policy
+View all tables and partitions associated with a specified storage policy.
+
+## Syntax
 
 ```sql
-SHOW STORAGE POLICY USING [FOR some_policy]
+SHOW STORAGE POLICY USING [FOR <some_policy>]
 ```
+## Optional Parameters
+| Parameter Name          | Description                                                         |
+|-------------------|--------------------------------------------------------------|
+| `<policy_name>` | Specifies the name of the storage policy to query. If provided, only the details of the specified storage policy will be displayed; if not provided, information for all storage policies will be shown. |
 
 ## Examples
 
-1. get all objects which are using storage policy
-
+1. View all objects with a storage policy enabled
    ```sql
-   mysql> show storage policy using;
+   show storage policy using;
+   ```
+   ```sql
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
    | PolicyName            | Database                                | Table                                  | Partitions |
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
@@ -51,11 +58,12 @@ SHOW STORAGE POLICY USING [FOR some_policy]
    | test_policy           | db2                                     | db2_test_1                             | ALL        |
    +-----------------------+-----------------------------------------+----------------------------------------+------------+
    ```
-
-2. get objects which are using the storage policy named test_storage_policy
+2. View objects that use the storage policy test_storage_policy
 
     ```sql
-    mysql> show storage policy using for test_storage_policy;
+    show storage policy using for test_storage_policy;
+    ```
+    ```sql
     +---------------------+-----------+---------------------------------+------------+
     | PolicyName          | Database  | Table                           | Partitions |
     +---------------------+-----------+---------------------------------+------------+
@@ -64,8 +72,3 @@ SHOW STORAGE POLICY USING [FOR some_policy]
     +---------------------+-----------+---------------------------------+------------+
    ```
 
-## Keywords
-
-    SHOW, STORAGE, POLICY, USING
-
-## Best Practice
