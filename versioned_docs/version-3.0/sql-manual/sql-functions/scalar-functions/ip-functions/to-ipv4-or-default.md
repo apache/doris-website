@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV4_OR_DEFAULT",
-"language": "en"
+    "title": "TO_IPV4_OR_DEFAULT",
+    "language": "en"
 }
 ---
 
@@ -22,40 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV4_OR_DEFAULT
+## Description
+This function like ipv4_string_to_num that takes a string form of IPv4 address and returns value of IPv4 type, which is binary equal to value returned by ipv4_string_to_num.
 
-TO_IPV4_OR_DEFAULT
-
-### Description
-
-#### Syntax
-
-`IPV4 TO_IPV4_OR_DEFAULT(STRING ipv4_str)`
-
-Same as to_ipv4, but if the IPv4 address has an invalid format, it returns 0.0.0.0 (0 as IPv4).
-
-#### Notice
-
-`If input is NULL, return 0.0.0.0 (0 as IPv4).`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select to_ipv4_or_default('.');
-+-------------------------+
-| to_ipv4_or_default('.') |
-+-------------------------+
-| 0.0.0.0                 |
-+-------------------------+
-
-mysql> select to_ipv4_or_default(NULL);
-+--------------------------+
-| to_ipv4_or_default(NULL) |
-+--------------------------+
-| 0.0.0.0                  |
-+--------------------------+
+TO_IPV4_OR_DEFAULT(<ipv4_str>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | An IPv4 address of type String |
 
-TO_IPV4_OR_DEFAULT, IP
+
+## Return Value
+Returns value of IPv4 type.
+- If the IPv4 address has an invalid format, returns 0.0.0.0 (0 as IPv4).
+
+
+## Example
+```sql
+SELECT to_ipv4_or_default('255.255.255.255'), to_ipv4_or_default('.'), to_ipv4_or_default(NULL);
+```
+```text
++---------------------------------------+-------------------------+--------------------------+
+| to_ipv4_or_default('255.255.255.255') | to_ipv4_or_default('.') | to_ipv4_or_default(NULL) |
++---------------------------------------+-------------------------+--------------------------+
+| 255.255.255.255                       | 0.0.0.0                 | 0.0.0.0                  |
++---------------------------------------+-------------------------+--------------------------+
+```

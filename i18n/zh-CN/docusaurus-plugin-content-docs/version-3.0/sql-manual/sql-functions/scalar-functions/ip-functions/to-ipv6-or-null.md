@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV6_OR_NULL",
-"language": "zh-CN"
+    "title": "TO_IPV6_OR_NULL",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,36 +22,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV6_OR_NULL
-
-TO_IPV6_OR_NULL
-
 ## 描述
+输入IPv6地址的字符串形式，并返回IPv6类型的值。
 
 ## 语法
-
-`IPV6 TO_IPV6_OR_NULL(STRING ipv6_str)`
-
-与to_ipv6函数类似，但如果IPv6地址的格式非法，则返回NULL。
-
-## 举例
-
 ```sql
-mysql> select to_ipv6_or_null('.');
-+----------------------+
-| to_ipv6_or_null('.') |
-+----------------------+
-| NULL                 |
-+----------------------+
-
-mysql> select to_ipv6_or_null(NULL);
-+-----------------------+
-| to_ipv6_or_null(NULL) |
-+-----------------------+
-| NULL                  |
-+-----------------------+
+TO_IPV6_OR_NULL(<ipv6_str>)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | 字符串类型的ipv6地址 |
 
-TO_IPV6_OR_NULL, IP
+## 返回值
+返回IPv6类型的值。
+- 如果IPv6地址的格式非法，则返回NULL
+
+## 举例
+```sql
+SELECT to_ipv6_or_null('.'), to_ipv6_or_null('2001:1b70:a1:610::b102:2');
+```
+```text
++----------------------+---------------------------------------------+
+| to_ipv6_or_null('.') | to_ipv6_or_null('2001:1b70:a1:610::b102:2') |
++----------------------+---------------------------------------------+
+| NULL                 | 2001:1b70:a1:610::b102:2                    |
++----------------------+---------------------------------------------+
+```
