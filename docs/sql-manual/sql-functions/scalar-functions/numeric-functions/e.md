@@ -22,15 +22,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Description
+## Description
 
 Returns the constant `e` value.
 
-#### Syntax
+## Syntax
 
 `E()`
 
-### Example
+## Example
 
 ```
 mysql> select e();
