@@ -74,4 +74,4 @@ The user executing this SQL command must have at least the following privileges:
   ```sql
   admin check tablet (10000, 10001) PROPERTIES("type" = "consistency");
   ```
-
+  
