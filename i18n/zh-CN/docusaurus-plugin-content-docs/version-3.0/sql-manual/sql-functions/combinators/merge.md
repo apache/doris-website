@@ -42,5 +42,5 @@ mysql [test]>select avg_merge(avg_state(1)) from d_table;
 |                       1 |
 +-------------------------+
 ```
-### keywords
+### Keywords
 AGG_STATE, MERGE

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 The aggregated intermediate results are aggregated and calculated to obtain the actual result.
 The type of the result is consistent with `AGGREGATE_FUNCTION`.
@@ -33,7 +33,7 @@ The type of the result is consistent with `AGGREGATE_FUNCTION`.
 
 `AGGREGATE_FUNCTION_MERGE(agg_state)`
 
-## example
+## Example
 ```
 mysql [test]>select avg_merge(avg_state(1)) from d_table;
 +-------------------------+
@@ -42,5 +42,5 @@ mysql [test]>select avg_merge(avg_state(1)) from d_table;
 |                       1 |
 +-------------------------+
 ```
-### keywords
+### Keywords
 AGG_STATE, MERGE
