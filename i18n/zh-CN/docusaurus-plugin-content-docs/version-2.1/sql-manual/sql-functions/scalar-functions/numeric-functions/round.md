@@ -39,7 +39,7 @@ under the License.
 ## 语法
 
 ```sql
-ROUND(x [ , d])
+ROUND(<x> [ , <d>])
 ```
 
 ## 参数

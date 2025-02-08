@@ -51,7 +51,7 @@ under the License.
 ## 语法
 
 ```sql
-ROUND_BANKERS(x [ , d])
+ROUND_BANKERS(<x> [ , <d>])
 ```
 
 ## 参数

@@ -29,7 +29,7 @@ under the License.
 ## 语法
 
 ```sql
-SIN(x)
+SIN(<x>)
 ```
 
 ## 参数

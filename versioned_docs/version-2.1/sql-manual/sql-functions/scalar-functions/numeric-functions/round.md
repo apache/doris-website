@@ -39,7 +39,7 @@ If d is a column and the first argument is of the Decimal type, then the resulti
 ## Syntax
 
 ```sql
-ROUND(x [ , d])
+ROUND(<x> [ , <d>])
 ```
 
 ## Parameters

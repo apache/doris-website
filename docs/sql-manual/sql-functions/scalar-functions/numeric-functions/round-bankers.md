@@ -51,7 +51,7 @@ For example:
 ## Syntax
 
 ```sql
-ROUND_BANKERS(x [ , d])
+ROUND_BANKERS(<x> [ , <d>])
 ```
 
 ## Parameters

@@ -29,7 +29,7 @@ Returns the sine of `x`, where `x` is in radians.
 ## Syntax
 
 ```sql
-SIN(x)
+SIN(<x>)
 ```
 
 
