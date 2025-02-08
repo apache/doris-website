@@ -17,7 +17,7 @@ export const USER_STORIES = [
             name: 'Li Zhe',
             title: 'Senior software engineer, JD.com',
         },
-        to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
+        to: 'blog/JD_OLAP',
         image: 'user-jd.jpg',
     },
     {

@@ -26,24 +26,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE-STORAGE-VAULT
-
 ## 描述
 
 该命令用于创建存储库。本文档的主题描述了创建 Doris 自管理存储库的语法。
 
+
+## 语法
+
 ```sql
-CREATE STORAGE VAULT [IF NOT EXISTS] vault
-[properties]
+CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 ```
 
-#### properties
+## 必选参数
 
-| 参数     | 是否必需 | 描述                     |
-|:-------|:-----|:-----------------------|
-| `type` | 必需   | 只允许两种类型的存储库:S3 和 HDFS。 |
+| 参数     | 描述                     |
+|-------|-----------------------|
+| `vault_name` |  存储库的名称。这是您要创建的新存储库的唯一标识符。 |
 
-##### S3 Vault
+## 可选参数
+| 参数   | 描述                                                         |
+|-------------------|--------------------------------------------------------------|
+| `[IF NOT EXISTS]` | 如果指定的存储库已经存在，则不会执行创建操作，并且不会抛出错误。这可以防止重复创建相同的存储库。 |
+| `PROPERTIES`      | 一组键值对，用来设置或更新存储库的具体属性。每个属性由键（`<key>`）和值（`<value>`）组成，并用等号 (`=`) 分隔。多个键值对之间用逗号 (`,`) 分隔。 |
+
+### S3 Vault
 
 | 参数              | 是否必需 | 描述                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
@@ -56,7 +62,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 | `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境)或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
 
-##### HDFS vault
+### HDFS vault
 
 | 参数                               | 是否必需 | 描述                                                    |
 |:---------------------------------|:-----|:------------------------------------------------------|
@@ -67,7 +73,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | `hadoop.kerberos.principal`      |可选| 您的 kerberos 主体的路径。      |
 | `hadoop.kerberos.keytab`         |可选| 您的 kerberos keytab 的路径。      |
 
-### 示例
+## 举例
 
 1. 创建 HDFS storage vault。
     ```sql
@@ -208,7 +214,3 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "provider" = "GCP"                                   -- required
     );
     ```
-
-### 关键词
-
-    CREATE, STORAGE VAULT

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Handling Messy Data",
+    "title": "Handling Data Issues",
     "language": "en-US"
 }
 ---
@@ -24,12 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-During data ingestion, discrepancies may arise between source and target column data types. Although the load process attempts to convert these inconsistent types, issues such as type mismatches, field length exceeding limits, or precision mismatches may occur, resulting in conversion failures.
 
-To address these exceptional cases, Doris provides two essential control parameters:
+When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches, but problems like wrong types, too long fields, or wrong precision can cause errors.
 
-- Strict Mode (strict_mode): Regulates whether to filter out rows with conversion failures
-- Maximum Filter Ratio (max_filter_ratio): Defines the maximum allowable ratio of filtered data to total data during load
+To deal with these problems, Doris has two key settings:
+
+- Strict Mode (strict_mode): Decides if rows with errors should be removed.
+- Max Filter Ratio (max_filter_ratio): Sets the highest allowed percentage of data that can be removed during loading.
+
+This makes it easier to handle data loading problems and keeps data management strong and simple.
 
 ## Strict Mode
 

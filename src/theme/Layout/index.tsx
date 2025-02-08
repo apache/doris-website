@@ -61,9 +61,14 @@ export default function Layout(props: Props): JSX.Element {
 
     useEffect(() => {
         if (hash) {
-            const targetElement = document.querySelector(hash);
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
+            try {
+                const decodeHash = decodeURIComponent(hash);
+                const targetElement = document.querySelector(decodeHash);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (err) {
+                console.error(err);
             }
         }
     }, [hash]);

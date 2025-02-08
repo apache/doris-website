@@ -24,11 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_type
+## Description
 
-### description
-
-It is used to determine the type of the field specified by json_path in JSON data. If the field does not exist, return NULL. If it exists, return one of the following types
+Used to determine the type of the field specified by `json_path` in the JSONB data. If the field does not exist, it returns NULL. If the field exists, it returns one of the following types:
 
 - object
 - array
@@ -40,17 +38,64 @@ It is used to determine the type of the field specified by json_path in JSON dat
 - double
 - string
 
-#### Syntax
+## Syntax
 
 ```sql
-STRING json_type(JSON j, VARCHAR json_path)
+JSON_TYPE( <json>, <json_path> )
 ```
 
-### example
+## Alias
 
-Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+- JSONB_TYPE
 
-### keywords
+## Required Parameters
 
-json_type
+
+| Parameter | Description |
+|------|------|
+| `<json>` | The JSON string to check the type of. |
+| `<json_path>` | JSON path, which specifies the location of the field in JSON. The path is usually given in $. At the beginning, use. to represent the hierarchical structure. |
+
+
+## Return Value
+Returns the type of the JSON string. Possible values include:
+- "NULL": Indicates that the value in the JSON document is null.
+- "BOOLEAN": Indicates that the value in the JSON document is of boolean type (true or false).
+- "NUMBER": Indicates that the value in the JSON document is a number.
+- "STRING": Indicates that the value in the JSON document is a string.
+- "OBJECT": Indicates that the value in the JSON document is a JSON object.
+- "ARRAY": Indicates that the value in the JSON document is a JSON array.
+
+## Usage Notes
+
+JSON_TYPE returns the type of the outermost value in the JSON document. If the JSON document contains multiple different types of values, it will return the type of the outermost value. For invalid JSON strings, JSON_TYPE returns NULL. Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+
+## Examples
+1. JSON is of string type:
+
+```sql
+SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
+```
+
+```sql
++-------------------------------------------------------------------+
+| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
++-------------------------------------------------------------------+
+| string                                                            |
++-------------------------------------------------------------------+
+```
+
+2. JSON is of number type:
+
+```sql
+SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
+```
+
+```sql
++------------------------------------------------------------------+
+| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
++------------------------------------------------------------------+
+| int                                                              |
++------------------------------------------------------------------+
+```
 
