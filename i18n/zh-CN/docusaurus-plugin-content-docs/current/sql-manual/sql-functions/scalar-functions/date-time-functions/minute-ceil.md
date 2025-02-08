@@ -70,4 +70,4 @@ SELECT MINUTE_CEIL("2023-07-13 22:28:18", 5);
 
 ## 最佳实践
 
-还可参阅 [date_ceil](./date_ceil)
+还可参阅 [date_ceil](./date-ceil)
