@@ -22,15 +22,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract_all
 ## 描述
-## 语法
 
-`VARCHAR regexp_extract_all(VARCHAR str, VARCHAR pattern)`
-
-对字符串 str 进行正则匹配，抽取符合 pattern 的第一个子模式匹配部分。需要 pattern 完全匹配 str 中的某部分，这样才能返回 pattern 部分中需匹配部分的字符串数组。如果没有匹配或者pattern没有子模式，返回空字符串。
+对字符串 str 进行正则匹配，抽取符合 pattern 的所有子模式匹配部分。需要 pattern 完全匹配 str 中的某部分，这样才能返回 pattern 部分中需匹配部分的字符串数组。如果没有匹配或者pattern没有子模式，返回空字符串。
 
 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
+
+## 语法
+
+`REGEXP_EXTRACT_ALL(<str>, <pattern>)`
+
+## 返回值
+
+所有匹配字符串组成的数组。
 
 ## 举例
 
@@ -63,6 +67,3 @@ mysql> select regexp_extract_all('这是一段中文This is a passage in English
 | ['这是一段中文']                                                                               |
 +------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP_EXTRACT_ALL,REGEXP,EXTRACT,ALL

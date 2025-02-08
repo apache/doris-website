@@ -124,7 +124,7 @@ Doris 支持包括动态分区、自动分区、自动分桶在内的高级数�
 
 <Tabs>
 <TabItem value="自动分区" label="自动分区" default>
-<p>
+<div>
 
 [自动分区](./auto-partitioning) 支持根据用户定义的规则在数据导入时自动创建对应分区，更为便捷。将上例用自动 Range 分区改写如下：
 
@@ -155,11 +155,11 @@ PROPERTIES
 
 如上建表，当数据导入时，Doris 将会自动创建对应分区，分区列为 `date`，粒度为月级别。`2018-12-01` 和 `2018-12-31` 将会落入同一个分区，而 `2018-11-12` 将会落入领一个分区。自动分区还支持 List 分区，更多用法请查看自动分区文档。
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="动态分区" label="动态分区">
-<p>
+<div>
 
 [动态分区](./dynamic-partitioning)是根据现实时间进行自动的分区创建与回收的管理方式，将上例用动态分区改写如下：
 
@@ -196,11 +196,11 @@ PROPERTIES
 
 动态分区支持分层存储、自定副本数等功能，详见动态分区文档。
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="自动分区+动态分区" label="自动分区+动态分区">
-<p>
+<div>
 
 :::tip
 该功能自 2.1.7 支持
@@ -241,11 +241,11 @@ PROPERTIES
 
 关于该功能的细节建议，详见[自动分区与动态分区联用](./auto-partitioning#与动态分区联用)。
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="自动分桶" label="自动分桶">
-<p>
+<div>
 
 当用户不确定合理的分桶数时，可以使用[自动分桶](./auto-bucket)由 Doris 完成估计，用户仅需提供估计的表数据量：
 
@@ -282,7 +282,7 @@ PROPERTIES
 
 需要注意的是，该方式不适用于表数据量特别大的情况。
 
-</p>
+</div>
 </TabItem>
 
 </Tabs>

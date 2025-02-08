@@ -31,11 +31,16 @@ under the License.
 ## 语法
 
 ```sql
-SET vault_name DEFAULT STORAGE VAULT
+SET <vault_name> DEFAULT STORAGE VAULT
 ```
 
-> 注意：
->
+## 必选参数
+
+| 参数名称          | 描述                                                         |
+|-------------------|--------------------------------------------------------------|
+| `<vault_name>`    | 存储库的名称。这是您要设置为默认存储库的唯一标识符。           |
+
+## 注意事项：
 > 1. 只有 ADMIN 用户可以设置默认存储库
 
 ## 示例
@@ -46,8 +51,3 @@ SET vault_name DEFAULT STORAGE VAULT
    SET s3_vault AS DEFAULT STORAGE VAULT;
    ```
 
-## 相关命令
-
-## 关键词
-
-    SET, DEFAULT, STORAGE, VAULT

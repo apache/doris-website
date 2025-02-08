@@ -33,7 +33,7 @@ The current value is only meaningful in the sphere set, X/Y corresponds to longi
 ## Syntax
 
 ```sql
-ST_Point( <x>, <y>)
+ST_POINT( <x>, <y>)
 ```
 ## Parameters
 

@@ -1,12 +1,10 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://doris.apache.org/images/logo.svg';
+const logoImg = '/images/logo.svg';
 
 function getDocsVersions() {
     const result = {};
@@ -61,30 +59,6 @@ const config = {
         },
     },
     scripts: ['/js/custom-script.js'],
-    headTags: [
-        {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.googleapis.com',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.gstatic.com',
-                crossorigin: 'anonymous',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap',
-                rel: 'stylesheet',
-            },
-        },
-    ],
     stylesheets: [
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
@@ -113,8 +87,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
-
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
@@ -511,7 +483,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;
