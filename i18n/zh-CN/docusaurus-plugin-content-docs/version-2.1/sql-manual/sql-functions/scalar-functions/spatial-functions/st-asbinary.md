@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_AsBinary( <geo>)
+ST_ASBINARY( <geo>)
 ```
 
 ## 参数

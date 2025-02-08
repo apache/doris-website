@@ -22,30 +22,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## asin
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE asin(DOUBLE x)`
 Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
 
-### example
+## Syntax
 
+```sql
+ASIN(<x>)
 ```
-mysql> select asin(0.5);
+
+## Parameters  
+
+| Parameter | Description |  
+| -- | -- |  
+| `<x>` | The value for which the asin value is to be calculated |  
+
+## Return Value  
+
+The asin value of parameter `x`. 
+
+## Example
+
+```sql
+select asin(0.5);
+```
+
+```text
 +---------------------+
 | asin(0.5)           |
 +---------------------+
 | 0.52359877559829893 |
 +---------------------+
-mysql> select asin(2);
+```
+
+```sql
+select asin(2);
+```
+
+```text
 +-----------+
 | asin(2.0) |
 +-----------+
 |       nan |
 +-----------+
 ```
-
-### keywords
-	ASIN

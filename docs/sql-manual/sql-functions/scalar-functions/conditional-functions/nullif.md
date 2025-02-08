@@ -24,38 +24,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## nullif
-### description
-#### Syntax
+## Description
 
-`nullif(expr1, expr2)`
+Returns `NULL` if the two input values are equal; otherwise, returns the first input value. This function is equivalent to the following `CASE WHEN` expression:
 
-
-If the two parameters are equal, null is returned. Otherwise, the value of the first parameter is returned. It has the same effect as the following `case when`
-
-```
+```sql
 CASE
-     WHEN expr1 = expr2 THEN NULL
-     ELSE expr1
+    WHEN <expr1> = <expr2> THEN NULL
+    ELSE <expr1>
 END
 ```
 
-### example
+## Syntax
 
+```sql
+NULLIF(<expr1>, <expr2>)
 ```
-mysql> select nullif(1,1);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<expr1>` | The first input value to compare. |
+| `<expr2>` | The second input value to compare against the first. |
+
+## Return Value
+
+- Returns `NULL` if `<expr1>` is equal to `<expr2>`.
+- Otherwise, returns the value of `<expr1>`.
+
+## Examples
+
+```sql
+SELECT NULLIF(1, 1);
+```
+
+```text
 +--------------+
-| nullif(1, 1) |
+| NULLIF(1, 1) |
 +--------------+
 |         NULL |
 +--------------+
+```
 
-mysql> select nullif(1,0);
+```sql
+SELECT NULLIF(1, 0);
+```
+
+```text
 +--------------+
-| nullif(1, 0) |
+| NULLIF(1, 0) |
 +--------------+
 |            1 |
 +--------------+
 ```
-### keywords
-NULLIF

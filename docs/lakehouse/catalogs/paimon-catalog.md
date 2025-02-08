@@ -83,7 +83,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   
 ### Supported Paimon Versions
 
-The currently dependent Paimon version is 0.8.1. Higher versions of Paimon tables are supported for reading.
+The currently dependent Paimon version is 1.0.0.
 
 ### Supported Paimon Formats
 

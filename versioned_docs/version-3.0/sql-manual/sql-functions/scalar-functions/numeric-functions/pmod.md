@@ -22,35 +22,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pmod
+## Description
 
-### description
-#### Syntax
+Returns the smallest positive solution of the modulo operation x mod y within the modular system, which is obtained by calculating (x % y + y) % y.
+
+## Syntax
 
 ```sql
-BIGINT PMOD(BIGINT x, BIGINT y)
-DOUBLE PMOD(DOUBLE x, DOUBLE y)
+PMOD(<x> , <y>)
 ```
-Returns the positive result of x mod y in the residue systems.
-Formally, return `(x%y+y)%y`.
 
-### example
+## Parameters
 
+| Parameter | Description |
+|-----------|------------|
+| `<x>` | Dividend |
+| `<y>` | Divisor  should not be 0 |
+
+## Return value
+
+Returns an integer or a floating-point number. Special cases:
+
+- If x = 0, returns 0.
+- If x is NULL or y is NULL, returns NULL.
+
+## Example
+
+```sql
+SELECT PMOD(13,5);
 ```
-MySQL [test]> SELECT PMOD(13,5);
+
+```text
 +-------------+
 | pmod(13, 5) |
 +-------------+
 |           3 |
 +-------------+
-
-MySQL [test]> SELECT PMOD(-13,5);
-+-------------+
-| pmod(-13, 5) |
-+-------------+
-|           2 |
-+-------------+
 ```
 
-### keywords
-	PMOD
+```sql
+SELECT PMOD(-13,5);
+```
+
+```text
++--------------+
+| pmod(-13, 5) |
++--------------+
+|            2 |
++--------------+
+```
+
+```sql
+SELECT PMOD(0,-12);
+```
+
+```text
++--------------+
+| pmod(0, -12) |
++--------------+
+|            0 |
++--------------+
+```
+
+```sql
+SELECT PMOD(0,null);
+```
+
+```text
++-------------------------------+
+| pmod(cast(0 as DOUBLE), NULL) |
++-------------------------------+
+|                          NULL |
++-------------------------------+
+```

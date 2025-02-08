@@ -24,24 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## 描述
 
 该语句用于创建外部数据目录（catalog）
 
-语法：
+## 语法
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
-	PROPERTIES ("key"="value", ...);
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
+	PROPERTIES ("<key>"="<value>" [, ... ]);
 ```
 
 * hms：Hive MetaStore
 * es：Elasticsearch
 * jdbc：数据库访问的标准接口 (JDBC), 当前支持 MySQL 和 PostgreSQL
+
+
+## 必选参数
+
+**1. `<catalog_name>`**
+
+需要创建 catalog 的名字
+
+**2. `"<key>"="<value>"`**
+
+需要创建 catalog 的参数
+
+## 可选参数
+
+**1. `<comment>`**
+
+需要创建 catalog 的注释
+
+## 权限控制
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                  |
+|:--------------|:-----------|:---------------------------|
+| CREATE_PRIV   | Catalog    | 需要有对应catalog的CREATE_PRIV权限 |
 
 ## 示例
 
@@ -168,10 +186,4 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
        "driver_class" = "com.oceanbase.jdbc.Driver"
 	);
     ```
-
-## 关键词
-
-CREATE, CATALOG
-
-### 最佳实践
 

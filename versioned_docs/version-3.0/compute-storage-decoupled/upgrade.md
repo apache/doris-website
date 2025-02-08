@@ -53,7 +53,7 @@ In principle, Doris supports upgrading from a lower version to a higher version 
 
 ### Upgrade Instructions
 
-1. Make sure that your Doris is started in cloud mode. If you are not sure about the current deployment mode of Doris, refer to the instructions in the [previous section](#Doris-Version-Description).
+1. Make sure that your Doris is started in cloud mode. If you are not sure about the current deployment mode of Doris, refer to the instructions in the [previous section](#doris-version-description).
    For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-management/upgrade) for upgrade steps.
 2. Make sure that your Doris data import tasks have a retry mechanism to avoid task failures due to node restarts during the upgrade process.
 3. Before upgrading, we recommend checking the status of all Doris components (MetaService, Recycler, Frontend and Backend) to ensure they are operating normally and without exception logs to avoid affecting the upgrade process.

@@ -22,39 +22,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This statement is used to diagnose the specified tablet. The results will show information about the tablet and some potential problems.
+This statement is used to diagnose the specified tablet. The result will display information about the tablet along with any potential issues.
 
-grammar:
 
-SHOW TABLET DIAGNOSE TABLET tablet_id
+## Syntax
 
-illustrate:
+```sql
+SHOW TABLET DIAGNOSIS <tablet_id>
+```
 
-The lines of information in the result are as follows:
-1. TabletExist:                         Whether the Tablet exists
-2. TabletId:                            Tablet ID
-3. Database:                            The DB to which the Tablet belongs and its ID
-4. Table:                               The Table to which Tablet belongs and its ID
-5. Partition:                           The Partition to which the Tablet belongs and its ID
-6. MaterializedIndex:                   The materialized view to which the Tablet belongs and its ID
-7. Replicas(ReplicaId -> BackendId):    Tablet replicas and their BE.
-8. ReplicasNum:                         Whether the number of replicas is correct.
-9. ReplicaBackendStatus:                Whether the BE node where the replica is located is normal.
-10. ReplicaVersionStatus:                Whether the version number of the replica is normal.
-11. ReplicaStatus:                       Whether the replica status is normal.
-12. ReplicaCompactionStatus:             Whether the replica Compaction status is normal.
+## Required Parameters
 
-## Example
+**1. `<tablet_id>`**
 
-1. Diagnose tablet 10001
+The ID of the tablet to be diagnosed.
 
-    ```sql
-    SHOW TABLET DIAGNOSE TABLET 10001;
-    ```
+## Return Value
 
-## Keywords
+| Column                           | DataType | Note                                                                                |
+|----------------------------------|----------|-------------------------------------------------------------------------------------|
+| TabletExist                      | String   | Indicates whether the tablet exists.                                                |
+| TabletId                         | String   | The ID of the tablet.                                                               |
+| Database                         | String   | The database the tablet belongs to, along with its ID.                              |
+| Table                            | String   | The table the tablet belongs to, along with its ID.                                 |
+| Partition                        | String   | The partition the tablet belongs to, along with its ID.                             |
+| MaterializedIndex                | String   | The materialized index the tablet belongs to, along with its ID.                    |
+| Replicas(ReplicaId -> BackendId) | String   | The replicas of the tablet and their respective BE nodes.                           |
+| ReplicasNum                      | String   | Indicates whether the number of replicas is correct.                                |
+| ReplicaBackendStatus             | String   | Indicates whether the BE node where the replica is located is functioning properly. |
+| ReplicaVersionStatus             | String   | Indicates whether the version number of the replica is correct.                     |
+| ReplicaStatus                    | String   | Indicates whether the replica status is normal.                                     |
+| ReplicaCompactionStatus          | String   | Indicates whether the compaction status of the replica is normal.                   |
 
-SHOW, DIAGNOSIS, TABLET
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege  | Object   | Notes                                                                                                                            |
+|:-----------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
+| Admin_priv | Database | Required to execute administrative operations on the database, including managing tables, partitions, and system-level commands. |
+
+## Examples
+
+```sql
+SHOW TABLET DIAGNOSIS 10145;
+```
+
+```text
++----------------------------------+------------------+------------+
+| Item                             | Info             | Suggestion |
++----------------------------------+------------------+------------+
+| TabletExist                      | Yes              |            |
+| TabletId                         | 10145            |            |
+| Database                         | test: 10103      |            |
+| Table                            | sell_user: 10143 |            |
+| Partition                        | sell_user: 10142 |            |
+| MaterializedIndex                | sell_user: 10144 |            |
+| Replicas(ReplicaId -> BackendId) | {"10146":10009}  |            |
+| ReplicasNum                      | OK               |            |
+| ReplicaBackendStatus             | OK               |            |
+| ReplicaVersionStatus             | OK               |            |
+| ReplicaStatus                    | OK               |            |
+| ReplicaCompactionStatus          | OK               |            |
++----------------------------------+------------------+------------+
+```

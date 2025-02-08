@@ -24,42 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## get_json_double
-### description
-#### Syntax
 
-`DOUBLE get_json_double(VARCHAR json_str, VARCHAR json_path)`
+## Description
 
+Function is used to extract the value of a field from a JSON document and convert it to the DOUBLE type. This function returns the value of the field on the specified path, or returns NULL if the value cannot be converted to type DOUBLE or the field pointed to by the path does not exist.
 
-Parse and get the floating-point content of the specified path in the JSON string.
-Where json_path must start with the $symbol and use. as the path splitter. If the path contains..., double quotation marks can be used to surround it.
-Use [] to denote array subscripts, starting at 0.
-The content of path cannot contain ",[and].
-If the json_string format is incorrect, or the json_path format is incorrect, or matches cannot be found, NULL is returned.
+## Syntax
 
-In addition, it is recommended to use the jsonb type and jsonb_extract_XXX function performs the same function.
-
-Exception handling is as follows:
-- if the field specified by json_path does not exist, return NULL
-- if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
-
-### example
-
-1. Get the value of key as "k1"
-
+```sql
+GET_JSON_DOUBLE( <json_str>, <json_path>)
 ```
-mysql> SELECT get_json_double('{"k1":1.3, "k2":"2"}', "$.k1");
+
+## Required Parameters
+
+| parameters| described|
+|------|------|
+| `<json_str>`| The JSON string from which to extract data is needed. |
+| `<json_path>`| JSON path, specifying the location of the field. Paths can be denoted in dot notation. |
+
+## Return Value
+
+- Returns the DOUBLE value of the field pointed to by the path.
+- Returns NULL if no corresponding field is found in the specified path, or the field value cannot be converted to type DOUBLE.
+
+## Usage Notes
+
+Parses and obtains the floating point content of the specified path within the json string.
+Where `<json_path>` `must start with the $symbol and use. As a path splitter. If the path contains. , you can use double quotes to enclose it.
+Use [ ] to represent the array index, starting from 0.
+The content of path cannot contain ", [and].
+Returns NULL if `<json_str>` is incorrectly formatted, or json_path is incorrectly formatted, or a match cannot be found.
+In addition, it is recommended to use the jsonb type and the jsonb_extract_XXX function to achieve the same functionality.
+Special circumstances will be handled as follows:
+- Returns NULL if the field specified by json_path does not exist in JSON
+- If the actual type of the field specified by json_path in JSON is inconsistent with the type specified by json_extract_t, the specified type t is returned if it can be losslessly converted to the specified type, and NULL is returned if it cannot.
+
+## Examples
+
+1. Get the value with key as "k1"
+
+```sql
+SELECT get_json_double('{"k1":1.3, "k2":"2"}', "$.k1");
+```
+
+```sql
 +-------------------------------------------------+
 | get_json_double('{"k1":1.3, "k2":"2"}', '$.k1') |
 +-------------------------------------------------+
 |                                             1.3 |
 +-------------------------------------------------+
 ```
+2. Gets the second element in the array with key "my.key"
 
-2. Get the second element of the array whose key is "my. key"
-
+```sql
+SELECT get_json_double('{"k1":"v1", "my.key":[1.1, 2.2, 3.3]}', '$. "my.key"[1]');
 ```
-mysql> SELECT get_json_double('{"k1":"v1", "my.key":[1.1, 2.2, 3.3]}', '$."my.key"[1]');
+
+```sql
 +---------------------------------------------------------------------------+
 | get_json_double('{"k1":"v1", "my.key":[1.1, 2.2, 3.3]}', '$."my.key"[1]') |
 +---------------------------------------------------------------------------+
@@ -67,14 +88,14 @@ mysql> SELECT get_json_double('{"k1":"v1", "my.key":[1.1, 2.2, 3.3]}', '$."my.ke
 +---------------------------------------------------------------------------+
 ```
 
-3. Get the first element in an array whose secondary path is k1. key - > K2
+3. Gets the first element in an array with secondary path k1.key -&gt; k2
+```sql
+SELECT get_json_double('{"k1.key":{"k2":[1.1, 2.2]}}', '$."k1.key".k2[0]');
 ```
-mysql> SELECT get_json_double('{"k1.key":{"k2":[1.1, 2.2]}}', '$."k1.key".k2[0]');
+```sql
 +---------------------------------------------------------------------+
 | get_json_double('{"k1.key":{"k2":[1.1, 2.2]}}', '$."k1.key".k2[0]') |
 +---------------------------------------------------------------------+
 |                                                                 1.1 |
 +---------------------------------------------------------------------+
 ```
-### keywords
-GET_JSON_DOUBLE,GET,JSON,DOUBLE

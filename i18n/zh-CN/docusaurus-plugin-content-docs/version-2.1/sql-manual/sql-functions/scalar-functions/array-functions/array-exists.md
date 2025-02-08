@@ -23,6 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 ## 描述
 使用一个可选 lambda 表达式作为输入参数，对其他的输入 ARRAY 参数的内部数据做对应表达式计算。当计算返回非 0 时，返回 1；否则返回 0。
 在 lambda 表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
@@ -45,6 +46,7 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 返回使用表达式计算后的数组，特殊情况：
 - 如果数组里面包含NULL或者本身为NULL，则返回NULL
 
+
 ## 举例
 
 ```sql
@@ -66,7 +68,6 @@ INSERT INTO array_test2 VALUES
 select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 ```
 ```text
-select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 +------+-----------------+-------------------------+-----------------------------------------------+
 | id   | c_array1        | c_array2                | array_exists([x] -> x(0) > 1, ARRAY(1, 2, 3)) |
 +------+-----------------+-------------------------+-----------------------------------------------+
@@ -80,6 +81,7 @@ select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 ```sql
 select c_array1, c_array2, array_exists(x->x%2=0,[1,2,3]) from array_test2 order by id;
 ```
+
 ```text
 +-----------------+-------------------------+---------------------------------------------------+
 | c_array1        | c_array2                | array_exists([x] -> x(0) % 2 = 0, ARRAY(1, 2, 3)) |
@@ -106,6 +108,7 @@ select c_array1, c_array2, array_exists(x->abs(x)-1,[1,2,3]) from array_test2 or
 ```sql
 select c_array1, c_array2, array_exists((x,y)->x>y,c_array1,c_array2) from array_test2 order by id;
 ```
+
 ```text
 +-----------------+-------------------------+-------------------------------------------------------------+
 | c_array1        | c_array2                | array_exists([x, y] -> x(0) > y(1), `c_array1`, `c_array2`) |
@@ -119,6 +122,7 @@ select c_array1, c_array2, array_exists((x,y)->x>y,c_array1,c_array2) from array
 ```sql
 select *, array_exists(c_array1) from array_test2 order by id;
 ```
+
 ```text
 +------+-----------------+-------------------------+--------------------------+
 | id   | c_array1        | c_array2                | array_exists(`c_array1`) |
@@ -129,3 +133,4 @@ select *, array_exists(c_array1) from array_test2 order by id;
 |    4 | NULL            | NULL                    | NULL                     |
 +------+-----------------+-------------------------+--------------------------+
 ```
+

@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,45 +24,73 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## greatest
-
 ## 描述
+
+比较多个表达式的大小，并返回其中的最大值。如果任意参数为 `NULL`，则返回 `NULL`。
+
 ## 语法
 
-`greatest(col_a, col_b, …, col_n)`  
-
-`column`支持以下类型：`TINYINT` `SMALLINT` `INT` `BIGINT` `LARGEINT` `FLOAT` `DOUBLE` `STRING` `DATETIME` `DECIMAL`
-
-比较`n`个`column`的大小返回其中的最大值.若`column`中有`NULL`，则返回`NULL`.
-
-## 举例
-
+```sql
+GREATEST(<expr1>, <expr2>, ..., <exprN>)
 ```
-mysql> select greatest(-1, 0, 5, 8);
+
+## 参数
+
+| 参数   | 描述 |
+|------------|-------------|
+| `<expr>`  | 需要比较的多个表达式，支持 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL` 类型。 |
+
+## 返回值
+
+- 返回给定表达式中的最大值。
+- 如果任意参数为 `NULL`，则返回 `NULL`。
+
+## 示例
+
+```sql
+SELECT GREATEST(-1, 0, 5, 8);
+```
+
+```text
 +-----------------------+
-| greatest(-1, 0, 5, 8) |
+| GREATEST(-1, 0, 5, 8) |
 +-----------------------+
 |                     8 |
 +-----------------------+
-mysql> select greatest(-1, 0, 5, NULL);
+```
+
+```sql
+SELECT GREATEST(-1, 0, 5, NULL);
+```
+
+```text
 +--------------------------+
-| greatest(-1, 0, 5, NULL) |
+| GREATEST(-1, 0, 5, NULL) |
 +--------------------------+
 | NULL                     |
 +--------------------------+
-mysql> select greatest(6.3, 4.29, 7.6876);
+```
+
+```sql
+SELECT GREATEST(6.3, 4.29, 7.6876);
+```
+
+```text
 +-----------------------------+
-| greatest(6.3, 4.29, 7.6876) |
+| GREATEST(6.3, 4.29, 7.6876) |
 +-----------------------------+
 |                      7.6876 |
 +-----------------------------+
-mysql> select greatest("2022-02-26 20:02:11","2020-01-23 20:02:11","2020-06-22 20:02:11");
+```
+
+```sql
+SELECT GREATEST('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11');
+```
+
+```text
 +-------------------------------------------------------------------------------+
-| greatest('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11') |
+| GREATEST('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11') |
 +-------------------------------------------------------------------------------+
 | 2022-02-26 20:02:11                                                           |
 +-------------------------------------------------------------------------------+
 ```
-
-### keywords
-	GREATEST

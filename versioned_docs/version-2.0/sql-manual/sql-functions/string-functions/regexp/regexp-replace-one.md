@@ -1,7 +1,7 @@
 ---
 {
     "title": "REGEXP_REPLACE_ONE",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,27 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_replace_one
-### description
-#### Syntax
+## 描述
 
-`VARCHAR regexp_replace_one(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
+对字符串 STR 进行正则匹配, 将命中 pattern 的部分使用 repl 来进行替换，仅替换第一个匹配项。
 
-Regular matching of STR strings, replacing the part hitting pattern with repl, replacing only the first match.
+- 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
 
-Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
-
-### example
+## 语法
 
 ```sql
-mysql> SELECT regexp_replace_one('a b c', " ", "-");
+REGEXP_REPLACE_ONE(<str>, <pattern>, <repl>)
+```
+
+## 参数
+
+| 参数 | 描述 |
+| -- | -- |
+| `<str>` | 需要进行正则匹配的列。|
+| `<pattern>` | 目标模式。|
+| `<repl>` | 用于替换匹配模式的字符串。|
+
+## 返回值
+
+替换之后的结果，类型是 `Varchar`。
+
+## 举例
+
+```sql
+mysql> SELECT regexp_replace_one('a b c', ' ', '-');
 +-----------------------------------+
 | regexp_replace_one('a b c', ' ', '-') |
 +-----------------------------------+
 | a-b c                             |
 +-----------------------------------+
 
-mysql> SELECT regexp_replace_one('a b b','(b)','<\\1>');
+mysql> SELECT regexp_replace_one('a b b', '(b)', '<\\1>');
 +----------------------------------------+
 | regexp_replace_one('a b b', '(b)', '<\1>') |
 +----------------------------------------+
@@ -58,6 +72,3 @@ mysql> select regexp_replace_one('这是一段中文This is a passage in English
 | 123是一段中文This is a passage in English 1234567                                              |
 +------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP_REPLACE_ONE,REGEXP,REPLACE,ONE

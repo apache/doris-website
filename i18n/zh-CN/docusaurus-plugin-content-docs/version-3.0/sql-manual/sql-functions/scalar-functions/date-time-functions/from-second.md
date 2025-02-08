@@ -24,50 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## from_second
 ## 描述
+函数将输入的 Unix 时间戳（以秒为单位）转换为 `DATETIME` 类型的日期时间值。
+
 ## 语法
 
-`DATETIME FROM_SECOND(BIGINT unix_timestamp)`
-`DATETIME FROM_MILLISECOND(BIGINT unix_timestamp)`
-`DATETIME FROM_MICROSECOND(BIGINT unix_timestamp)`
+```sql
+FROM_SECOND(<unix_timestamp>)
+```
 
-将时间戳转化为对应的 DATETIME，传入的是整型，返回的是DATETIME类型。若`unix_timestamp < 0` 或函数结果大于 `9999-12-31 23:59:59.999999`，则返回`NULL`。
+## 参数
+
+| 参数                 | 说明                                                 |
+|--------------------|----------------------------------------------------|
+| `<unix_timestamp>` | 必填，输入的 Unix 时间戳，表示从 1970-01-01 00:00:00 UTC 开始的秒数。 |
+
+## 返回值
+
+- 返回一个 DATETIME 类型的值，表示输入的 Unix 时间戳对应的日期时间。
+- 如果 `<unix_timestamp>` 为 NULL，函数返回 NULL。
+- 如果 `<unix_timestamp>` 超出有效范围，函数返回错误。
 
 ## 举例
 
-```
-mysql> set time_zone='Asia/Shanghai';
-
-mysql> select from_second(-1);
-+---------------------------+
-| from_second(-1)           |
-+---------------------------+
-| NULL                      |
-+---------------------------+
-
-mysql> select from_millisecond(12345678);
-+----------------------------+
-| from_millisecond(12345678) |
-+----------------------------+
-| 1970-01-01 11:25:45.678    |
-+----------------------------+
-
-mysql> select from_microsecond(253402271999999999);
-+--------------------------------------+
-| from_microsecond(253402271999999999) |
-+--------------------------------------+
-| 9999-12-31 23:59:59.999999           |
-+--------------------------------------+
-
-mysql> select from_microsecond(253402272000000000);
-+--------------------------------------+
-| from_microsecond(253402272000000000) |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
+```sql
+SELECT FROM_SECOND(1700000000);
 ```
 
-### keywords
-
-    FROM_SECOND,FROM,SECOND,MILLISECOND,MICROSECOND
+```text
++-------------------------+
+| from_second(1700000000) |
++-------------------------+
+| 2023-11-15 06:13:20     |
++-------------------------+
+```

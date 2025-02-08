@@ -36,9 +36,9 @@ NOT_NULL_OR_EMPTY (<str>)
 
 ## Parameters
 
-| Parameter | Description |
-| -- | -- |
-| `<str>` | The string to check |
+| Parameter | Description         |
+| --------- | ------------------- |
+| `<str>`   | The string to check |
 
 ## Return Value
 
@@ -46,11 +46,11 @@ Returns false if the string is an empty string or NULL, otherwise returns true.
 
 ## Examples
 
-```
+```sql
 select not_null_or_empty(null);
 ```
 
-```
+```text
 +-------------------------+
 | not_null_or_empty(NULL) |
 +-------------------------+

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Angle_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
+ST_ANGLE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## 参数

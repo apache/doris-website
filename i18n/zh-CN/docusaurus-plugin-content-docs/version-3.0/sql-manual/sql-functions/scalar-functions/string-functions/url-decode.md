@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_decode
 ## 描述
 
 将URL转换为解码字符串。
@@ -32,23 +31,30 @@ under the License.
 ## 语法
 
 ```sql
-VARCHAR url_decode(VARCHAR url)
+URL_DECODE( <str> ) 
 ```
 
-### Parameters
+## 必选参数
+| 参数 | 描述 |
+|------|------|
+| `<str>` | 待解码的字符串 |
 
-- url: 待解码的url。
+## 返回值
 
-## 举例
+解码后的值
+
+## 示例
+
+```sql
+
+select  URL_DECODE('Doris+Q%26A');
+```
+
+```sql
++---------------------------+
+| url_decode('Doris+Q%26A') |
++---------------------------+
+| Doris Q&A                 |
++---------------------------+
 
 ```
-mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
-+------------------------------------------------+
-| url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
-+------------------------------------------------+
-| https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
-+------------------------------------------------+
-```
-
-### keywords
-    URL DECODE

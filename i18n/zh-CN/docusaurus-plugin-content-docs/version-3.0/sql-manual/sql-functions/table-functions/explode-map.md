@@ -24,27 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_map
-
 ## 描述
 
-表函数，需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅仅支持新优化器。
+`explode_mpa` 函数接受一个 map (映射类型)，将 map（映射类型）展开成多个行，每行包含一个键值对。通常与 LATERAL VIEW 配合使用，可以支持多个 Lateral view。仅支持新优化器。
 
-将 map 列展开成多行。当 map 为NULL或者为空时，`explode_map_outer` 返回NULL。
-`explode_map` 和 `explode_map_outer` 均会返回 map 内部的NULL元素。
+`explode_map` 和 `explode_map_outer` 区别主要在于空值处理。
 
 ## 语法
 ```sql
-explode_map(expr)
-explode_map_outer(expr)
+EXPLODE_MAP(map<k,v>)
+EXPLODE_MAP_OUTER(map<k,v>)
 ```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `map<k,v>` | map类型 |
+
+## 返回值
+
+当 map 不为空或 NULL 时，`explode_map` 和 `explode_map_outer` 的返回值相同。
+
+当数据为空或 NULL 时：
+
+`explode_map` 只处理包含元素的 map。如果 map 是空的或为 NULL，explode_map 不会返回任何行。
+
+`explode_map_outer` 如果 map 是空的或为 NULL，会保留空 map 或 NULL 的记录，返回的行将包含 NULL 值。
 
 ## 举例
 
-```mysql> SET enable_nereids_planner=true
-mysql> SET enable_fallback_to_original_planner=false
+```sql
+SET enable_nereids_planner=true
+```
 
-mysql> CREATE TABLE IF NOT EXISTS `sdu`(
+```sql
+SET enable_fallback_to_original_planner=false
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS `sdu`(
                    `id` INT NULL,
                    `name` TEXT NULL,
                    `score` MAP<TEXT,INT> NULL
@@ -54,12 +73,19 @@ mysql> CREATE TABLE IF NOT EXISTS `sdu`(
                  DISTRIBUTED BY HASH(`id`) BUCKETS 1
                  PROPERTIES ("replication_allocation" = "tag.location.default: 1");
 Query OK, 0 rows affected (0.15 sec)
+```
 
-mysql> insert into sdu values (0, "zhangsan", {"Chinese":"80","Math":"60","English":"90"}), (1, "lisi", {"null":null}), (2, "wangwu", {"Chinese":"88","Math":"90","English":"96"}), (3, "lisi2", {null:null}), (4, "amory", NULL);
+```sql
+insert into sdu values (0, "zhangsan", {"Chinese":"80","Math":"60","English":"90"}), (1, "lisi", {"null":null}), (2, "wangwu", {"Chinese":"88","Math":"90","English":"96"}), (3, "lisi2", {null:null}), (4, "amory", NULL);
 Query OK, 5 rows affected (0.23 sec)
 {'label':'label_9b35d9d9d59147f5_bffb974881ed2133', 'status':'VISIBLE', 'txnId':'4005'}
+```
 
-mysql> select * from sdu order by id;
+```sql
+select * from sdu order by id;
+```
+
+```text
 +------+----------+-----------------------------------------+
 | id   | name     | score                                   |
 +------+----------+-----------------------------------------+
@@ -69,8 +95,13 @@ mysql> select * from sdu order by id;
 |    3 | lisi2    | {null:null}                             |
 |    4 | amory    | NULL                                    |
 +------+----------+-----------------------------------------+
+```
 
-mysql> select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
+```sql
+select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
+```
+
+```text
 +----------+---------+------+
 | name     | k       | v    |
 +----------+---------+------+
@@ -83,8 +114,13 @@ mysql> select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
 | wangwu   | English |   96 |
 | lisi2    | NULL    | NULL |
 +----------+---------+------+
+```
 
-mysql> select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,v;
+```sql
+select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,v;
+```
+
+```text
 +----------+---------+------+
 | name     | k       | v    |
 +----------+---------+------+
@@ -98,8 +134,13 @@ mysql> select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,
 | lisi2    | NULL    | NULL |
 | amory    | NULL    | NULL |
 +----------+---------+------+
+```
 
-mysql> select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp as k,v lateral view explode_map(score) tmp2 as k1,v1;
+```sql
+select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp as k,v lateral view explode_map(score) tmp2 as k1,v1;
+```
+
+```text
 +----------+---------+------+---------+------+
 | name     | k       | v    | k1      | v1   |
 +----------+---------+------+---------+------+
@@ -125,6 +166,3 @@ mysql> select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp
 | lisi2    | NULL    | NULL | NULL    | NULL |
 +----------+---------+------+---------+------+
 ```
-
-### keywords
-EXPLODE_MAP,EXPLODE_MAP_OUTER,MAP

@@ -1,13 +1,3 @@
-html[lang='zh-Hans-CN'] {
-    --ifm-font-family-base: 'MiSans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-family: 'MiSans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-html[lang='en-US'] {
-    --ifm-font-family-base: 'MiSans Latin', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-family: 'MiSans Latin', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 :root {
     --ifm-color-primary: #444fd9;
     --ifm-color-primary-dark: #2c39d4;

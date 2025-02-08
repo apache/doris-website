@@ -29,8 +29,9 @@ under the License.
 判断几何图形 shape1 是否完全能够包含几何图形 shape2
 
 ## 语法
+
 ```sql
-ST_Contains( <shape1>, <shape2>)
+ST_CONTAINS( <shape1>, <shape2>)
 ```
 
 ## 参数

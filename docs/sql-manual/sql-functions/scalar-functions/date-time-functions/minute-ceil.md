@@ -71,4 +71,4 @@ SELECT MINUTE_CEIL("2023-07-13 22:28:18", 5);
 
 ## Best Practices
 
-See also [date_ceil](./date_ceil)
+See also [date_ceil](./date-ceil)

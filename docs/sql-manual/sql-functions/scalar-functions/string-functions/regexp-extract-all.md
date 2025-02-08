@@ -24,17 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_extract_all
-### Description
-#### Syntax
+## Description
 
-`VARCHAR regexp_extract_all (VARCHAR str, VARCHAR pattern)`
+Regularly matches a string `str` and extracts the first sub-pattern matching part of `pattern`. The pattern needs to exactly match a part of `str` in order to return an array of strings for the part of the pattern that needs to be matched. If there is no match or the pattern has no sub-pattern, the empty string is returned.
 
-Regularly matches a string str and extracts the first sub-pattern matching part of pattern. The pattern needs to exactly match a part of str in order to return an array of strings for the part of the pattern that needs to be matched. If there is no match or the pattern has no sub-pattern, the empty string is returned.
+- Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
-Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+## Syntax
 
-### example
+```sql
+REGEXP_EXTRACT_ALL(<str>, <pattern>)
+```
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<str>` | The column need to do regular matching.|
+| `<pattern>` | Target pattern.|
+
+## Return value
+
+Value after extraction. It is `Array` type.
+
+## Example
 
 ```sql
 mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
@@ -65,6 +78,3 @@ mysql> select regexp_extract_all('这是一段中文This is a passage in English
 | ['这是一段中文']                                                                               |
 +------------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    REGEXP_EXTRACT_ALL,REGEXP,EXTRACT,ALL

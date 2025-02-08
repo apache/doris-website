@@ -24,31 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## trim
-### description
-#### Syntax
+## Description
 
-`VARCHAR trim(VARCHAR str[, VARCHAR rhs])`
+This command is used to delete Spaces or specified characters at both ends of the string. If no rhs parameter is specified, delete the Spaces that appear continuously at the beginning of the right and left parts of str. Otherwise, delete rhs
 
+## Syntax
 
-When the 'rhs' parameter is not present, remove the continuous spaces that appear from the starting and ending of the 'str' parameter. Otherwise, remove 'rhs'.
-
-### example
-
+```sql
+TRIM( <str> [ , <rhs>])
 ```
-mysql> SELECT trim('   ab d   ') str;
+
+## Required Parameters
+
+| Parameters | Description |
+|------|------|
+| `<str>` | Deletes the Spaces  at both ends of the string
+
+
+## Optional Parameters
+
+| Parameters | Description |
+|------|------|
+| `<rhs>` | removes the specified character |
+
+## Return Value
+
+Deletes Spaces at both ends or the string after a specified character
+
+
+## Example
+
+```sql
+SELECT trim('   ab d   ') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT trim('ababccaab','ab') str;
+```sql
+SELECT trim('ababccaab','ab') str;
+```
+
+```sql
 +------+
 | str  |
 +------+
-| cca  |
+| cc   |
 +------+
 ```
-### keywords
-    TRIM

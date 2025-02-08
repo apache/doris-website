@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,24 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-`ARRAY<T>` 表示由 T 类型元素组成的数组，不能作为 key 列使用。
+`ARRAY<T>` An array of T-type items, it cannot be used as a key column.
 
-- 2.0 之前仅支持在 Duplicate 模型的表中使用。
-- 从 2.0 版本开始支持在 Unique 模型的表中的非 key 列使用。
+- Before version 2.0, it was only supported in the Duplicate model table.
+- Starting from version 2.0, it is supported in the non-key columns of the Unique model table.
 
-T 支持的类型有：
+T-type could be any of:
 
 ```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL,
-DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
+BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
+DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-## CSV格式导入
+## CSV format import
 
-### 第 1 步：准备数据
+### Step 1: Prepare the data
 
-创建如下的 csv 文件：`test_array.csv`
-其中分隔符使用 `|` 而不是逗号，以便和 array 中的逗号区分。
+Create the following csv file: `test_array.csv`
+The separator is `|` instead of comma to distinguish it from the comma in array.
 
 ```
 1|[1,2,3,4,5]
@@ -50,7 +50,7 @@ DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 4|null
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE `array_test` (
@@ -64,7 +64,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -75,7 +75,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM array_test;
@@ -90,11 +90,11 @@ mysql> SELECT * FROM array_test;
 4 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON format import
 
-### 第 1 步：准备数据
+### Step 1: Prepare the data
 
-创建如下的 JSON 文件，`test_array.json`
+Create the following JSON file, `test_array.json`
 
 ```json
 [
@@ -105,7 +105,7 @@ mysql> SELECT * FROM array_test;
 ]
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE `array_test` (
@@ -119,7 +119,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -131,7 +131,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/array_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM array_test;

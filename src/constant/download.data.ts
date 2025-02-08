@@ -1970,16 +1970,16 @@ export const DOWNLOAD_PDFS = [
     {
         version: '3.0',
         filename: 'Apache Doris 中文手册（v3.0）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v3_0_4412376f6e.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v3_0_4412376f6e.pdf',
     },
     {
         version: '2.1',
         filename: 'Apache Doris 中文手册（v2.1）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_1_c8bc030188.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v2_1_c8bc030188.pdf',
     },
     {
         version: '2.0',
         filename: 'Apache Doris 中文手册（v2.0）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_0_0b89998444.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v2_0_0b89998444.pdf',
     },
 ];

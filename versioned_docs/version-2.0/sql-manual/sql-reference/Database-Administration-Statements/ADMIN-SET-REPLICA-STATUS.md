@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN-SET-REPLICA-STATUS",
+    "title": "ADMIN SET REPLICA STATUS",
     "language": "en"
 }
 ---
@@ -24,63 +24,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ADMIN-SET-REPLICA-STATUS
+## Description
 
-### Name
+This statement is used to set the status of a specified replica. Currently, it is only used for manually setting certain replica statuses to `BAD`, `DROP`, or `OK`, allowing the system to automatically repair these replicas.
 
-ADMIN SET REPLICA STATUS
-
-### Description
-
-This statement is used to set the state of the specified replica.
-
-This command is currently only used to manually set the status of certain replicas to BAD, DROP or OK, allowing the system to automatically repair these replicas
-
-grammar:
+## Syntax
 
 ```sql
-ADMIN SET REPLICA STATUS
-        PROPERTIES ("key" = "value", ...);
+ADMIN SET REPLICA STATUS 
+PROPERTIES ("tablet_id"="<tablet_id>","backend_id"="<backend_id>","status"="<status>")
 ```
 
- The following properties are currently supported:
+## Required Parameters
 
-1. "tablet_id": Required. Specify a Tablet Id.
-2. "backend_id": Required. Specify Backend Id.
-3. "status": Required. Specifies the state. Currently only "bad", "drop" or "ok" are supported
+**1. `<tablet_id>`**
 
-If the specified replica does not exist, or the status is already bad, it will be ignored.
+The ID of the tablet whose replica status needs to be set.
 
-> Note:
->
-> A replica set to Bad, it will not be able to read or write. In addition, sometimes the setting may not working, when be report tablet ok, fe will auto change its status to ok. This operation may delete the replica immediately, so please operate with caution.
->
-> A replica set to Drop, it can still be read and written. A healthy replica will be added to other machines first, and then this replica will be deleted. Compared with setting Bad, setting Drop is safer.
+**2. `<backend_id>`**
 
-### Example
+The ID of the BE node where the replica is located.
 
- 1. Set the replica status of tablet 10003 on BE 10001 to bad.
+**3. `<status>`**
 
-       ```sql
-    ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "bad");
-       ```
+Currently, only the values "drop", "bad", and "ok" are supported.
+If the specified replica does not exist or is already in a bad state, the operation will be ignored.
 
- 2. Set the replica status of tablet 10003 on BE 10001 to drop.
+**Notes**：
 
-       ```sql
-    ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "drop");
-       ```
+- Setting a replica to BAD status
+
+  A replica marked as BAD cannot be read or written. However, setting a replica to BAD may not always take effect. If the replica’s actual data is correct, and the BE reports the replica status as OK, the FE will automatically restore the replica back to OK. This operation may immediately delete the replica, so proceed with caution.
 
 
- 3. Set the replica status of tablet 10003 on BE 10001 to ok.
+- Setting a replica to DROP status
 
-   ```sql
-   ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
-   ```
+  A replica marked as DROP can still be read and written. The system will first add a healthy replica on another machine before deleting the DROP replica. Compared to BAD, setting a replica to DROP is a safer operation.
 
-### Keywords
 
-    ADMIN, SET, REPLICA, STATUS
+## Access Control Requirements
 
-### Best Practice
+The user executing this SQL command must have at least the following privileges:
 
+| Privilege  | Object   | Notes                                                                                                                            |
+|:-----------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
+| Admin_priv | Database | Required to execute administrative operations on the database, including managing tables, partitions, and system-level commands. |
+
+
+## Examples
+
+- Set the replica of tablet 10003 on BE 10001 to bad
+
+  ```sql
+  ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "bad");
+  ```
+
+- Set the replica of tablet 10003 on BE 10001 to drop
+
+  ```sql
+  ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "drop");
+  ```
+
+- Set the replica of tablet 10003 on BE 10001 to ok
+
+  ```sql
+  ADMIN SET REPLICA STATUS PROPERTIES("tablet_id" = "10003", "backend_id" = "10001", "status" = "ok");
+  ```

@@ -33,7 +33,7 @@ At present, the supported geometry is: Point, LineString, Polygon.
 ## Syntax
 
 ```sql
-ST_AsBinary( <geo>)
+ST_ASBINARY( <geo>)
 ```
 
 ## Parameters

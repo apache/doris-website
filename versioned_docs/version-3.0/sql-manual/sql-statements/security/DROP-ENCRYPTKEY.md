@@ -1,7 +1,7 @@
 ---
 {
-    "title": "DROP ENCRYPTKEY",
-    "language": "en"
+  "title": "DROP ENCRYPTKEY",
+  "language": "en"
 }
 ---
 
@@ -24,34 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
-
-grammar:
-
-```sql
-DROP ENCRYPTKEY key_name
-```
-
-Parameter Description:
-
-- `key_name`: The name of the key to delete, can include the name of the database. For example: `db1.my_key`.
 
 Delete a custom key. The name of the key is exactly the same to be deleted.
 
-Executing this command requires the user to have `ADMIN` privileges.
+## Syntax
+
+```sql
+DROP ENCRYPTKEY [IF EXISTS] <key_name>
+```
+
+## Required Parameters
+
+**1. `<key_name>`**
+
+> Specifies the name of the key to be deleted, which may include a database identifier.
+> Example: `db1.my_key`
+
+## Optional Parameters
+
+**1. `[IF EXISTS]`**
+
+> If specified, no error will be thrown when attempting to delete a non-existent key.
+
+## Access Control Requirements
+
+The user executing this SQL command must possess the following minimum privileges:
+
+| Privilege    | Object      | Notes                                                                                   |
+|:-------------|:------------|:----------------------------------------------------------------------------------------|
+| `ADMIN_PRIV` | User / Role | The user or role must hold the`ADMIN_PRIV` privilege to perform key deletion operations |
 
 ## Example
 
-1. Delete a key
+- Delete a key
 
-    ```sql
-    DROP ENCRYPTKEY my_key;
-    ```
+  ```sql
+  DROP ENCRYPTKEY my_key;
+  ```
+- Drop a key without throwing errors if it doesn't exist
 
-## Keywords
-
-     DROP, ENCRYPT, KEY
-
-## Best Practice
+  ```sql
+  DROP ENCRYPTKEY IF EXISTS testdb.my_key;
+  ```

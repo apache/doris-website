@@ -31,7 +31,7 @@ Calculate the spherical distance in meters between two points on the Earth. The 
 ## Syntax
 
 ```sql
-ST_Distance_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
+ST_DISTANCE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## Parameters

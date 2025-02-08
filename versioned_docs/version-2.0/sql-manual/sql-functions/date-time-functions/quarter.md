@@ -24,25 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## quarter
-### description
-#### Syntax
+## Description
+The function returns the quarter (1 to 4) of the given date. Each quarter includes three months:
+- Q1: January to March
+- Q2: April to June
+- Q3: July to September
+- Q4: October to December
 
-`INT quarter(DATETIME date)`
+## Syntax
 
-Returns the quarter to which the specified date belongs, as an INT
-
-### Example
-
-```
-mysql> select quarter('2022-09-22 17:00:00');
-+--------------------------------+
-| quarter('2022-09-22 17:00:00') |
-+--------------------------------+
-|                              3 |
-+--------------------------------+
+```sql
+QUARTER(<datetime>)
 ```
 
-### keywords
+## Parameters
 
-    quarter
+| Parameter    | Description                                              |
+|--------------|----------------------------------------------------------|
+| `<datetime>` | A valid DATE or DATETIME value to determine the quarter. |
+
+## Return Value
+- Returns an integer representing the quarter of the input date, ranging from 1 to 4.
+- If the input is NULL, the function returns NULL.
+- If the input is an invalid date (e.g., 0000-00-00), the function returns NULL.
+
+## Example
+
+```sql
+SELECT QUARTER('2025-01-16'),QUARTER('2025-01-16 01:11:10');
+```
+
+```text
++-----------------------------------------+--------------------------------------------------+
+| quarter(cast('2025-01-16' as DATETIME)) | quarter(cast('2025-01-16 01:11:10' as DATETIME)) |
++-----------------------------------------+--------------------------------------------------+
+|                                       1 |                                                1 |
++-----------------------------------------+--------------------------------------------------+
+```

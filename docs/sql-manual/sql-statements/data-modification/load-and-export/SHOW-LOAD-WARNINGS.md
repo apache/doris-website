@@ -26,35 +26,50 @@ under the License.
 
 ## Description
 
-If the import task fails and the error message is `ETL_QUALITY_UNSATISFIED`, it means that there is an import quality problem. If you want to see these import tasks with quality problems, change the statement to complete this operation.
+If an import task fails and the error message is `ETL_QUALITY_UNSATISFIED`, it indicates that there are import quality issues. This statement is used to view these import tasks with quality issues.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW LOAD WARNINGS
-[FROM db_name]
+[FROM <db_name>]
 [
-    WHERE
-    [LABEL[="your_label"]]
-    [LOAD_JOB_ID = ["job id"]]
+   WHERE
+   [LABEL  = [ "<your_label>" ]]
+   [LOAD_JOB_ID = ["<job_id>"]]
 ]
 ```
 
-1) If db_name is not specified, the current default db is used
-1) If LABEL = is used, it matches the specified label exactly
-1) If LOAD_JOB_ID is specified, match the specified JOB ID exactly
+## Optional Parameters
 
-## Example
+**1. `<db_name>`**
 
-1. Display the data with quality problems in the import task of the specified db, and specify the label as "load_demo_20210112"
+> If `db_name` is not specified, the current default database will be used.
 
-    ```sql
-    SHOW LOAD WARNINGS FROM demo WHERE LABEL = "load_demo_20210112"
-    ```
+**2. `<your_label>`**
 
-## Keywords
+> If `LABEL = <your_label>` is used, it will precisely match the specified label.
 
-    SHOW, LOAD, WARNINGS
+**3. `<job_id>`**
 
-## Best Practice
+> If `LOAD_JOB_ID = <job_id>` is specified, it will precisely match the specified JOB_ID.
 
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes |
+| :---------------- | :------------- | :---------------------------- |
+| LOAD_PRIV | Database | Import permissions for the database tables are required. |
+
+## Return Value
+
+Returns the data with quality issues in the import tasks of the specified database.
+
+## Examples
+
+- Display the data with quality issues in the import tasks of the specified database, where the label is specified as "load_demo_20210112".
+
+```sql
+SHOW LOAD WARNINGS FROM demo WHERE LABEL = "load_demo_20210112" 
+```

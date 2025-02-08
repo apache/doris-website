@@ -108,9 +108,19 @@ export default function Archive() {
                     </Translate>
                     <br />
                     <br />
-                    <Translate id="archive-tips-2">
-                        Please note that archived documents no longer receive updates; therefore, Doris encourages you
-                        to use the latest version.
+                    <Translate
+                        id="archive-tips-2"
+                        values={{
+                            latestVersion: (
+                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.0/gettingStarted/what-is-apache-doris`}>
+                                    <Translate id="archive.latest.version">latest version</Translate>
+                                </Link>
+                            ),
+                        }}
+                    >
+                        {
+                            'Please note that archived documents no longer receive updates; therefore, Doris encourages you to use the {latestVersion}.'
+                        }
                     </Translate>
                 </p>
                 <div className="preview-item-content">

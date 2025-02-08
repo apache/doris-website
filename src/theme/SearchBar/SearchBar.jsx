@@ -6,7 +6,7 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
 import { ReactContextError, useDocsPreferredVersion } from '@docusaurus/theme-common';
 import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
-import { fetchIndexesByWorker, searchByWorker } from './searchByWorker';
+import { fetchIndexesByWorker, searchByWorker } from '@easyops-cn/docusaurus-search-local/dist/client/client/theme/searchByWorker'
 import { SuggestionTemplate } from './SuggestionTemplate';
 import { EmptyTemplate } from './EmptyTemplate';
 import {
@@ -27,6 +27,7 @@ import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { DataContext } from '../Layout';
+
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;

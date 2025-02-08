@@ -22,31 +22,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## atan2
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE atan2(DOUBLE y, DOUBLE x)`
 Returns the arc tangent of 'y' / 'x'.
 
-### example
+## Syntax
 
+```sql
+ATAN2(<y>, <x>)
 ```
-mysql> select atan2(0.1, 0.2);
+
+## Parameters  
+
+| Parameter | Description |  
+| -- | -- |  
+| `<x>` | The value representing the horizontal distance (coordinate) from the origin (0,0) along the x-axis. |  
+| `<y>` | The value representing the vertical distance (coordinate) from the origin (0,0) along the y-axis. |  
+
+## Return Value  
+
+The atan2 value of parameter `y` / `x`. 
+
+## Example
+
+```sql
+select atan2(0.1, 0.2);
+```
+
+```text
 +---------------------+
 | atan2(0.1, 0.2)     |
 +---------------------+
 | 0.46364760900080609 |
 +---------------------+
+```
 
-mysql> select atan2(1.0, 1.0);
+```sql
+select atan2(1.0, 1.0);
+```
+
+```text
 +---------------------+
 | atan2(1.0, 1.0)     |
 +---------------------+
 | 0.78539816339744828 |
 +---------------------+
 ```
-
-### keywords
-	ATAN2

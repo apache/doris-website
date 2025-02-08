@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOMETRYFROMWKB,ST_GEOMFROMWKB",
+    "title": "ST_GEOMETRYFROMWKB",
     "language": "en"
 }
 ---
@@ -28,10 +28,14 @@ under the License.
 
 Converts a standard figure WKB (Well-known binary) to the corresponding memory geometry
 
+## Alias
+
+- ST_GEOMFROMWKB
+
 ## Syntax
 
 ```sql
-ST_GeometryFromWKB( <wkb>)
+ST_GEOMETRYFROMWKB( <wkb>)
 ```
 ## Parameters
 

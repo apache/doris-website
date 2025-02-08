@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-`not_null_or_empty` 函数用于判断给定的值是否为非 NULL 且非空。如果输入值不为 NULL 且不为空，则返回 true，否则返回 false。
+`not_null_or_empty` 函数用于判断给定的值是否为非 NULL 且非空。如果输入值不为 NULL 且不为空，则返回 true；否则返回 false。
 
 ## 语法
 
@@ -36,13 +36,13 @@ NOT_NULL_OR_EMPTY (<str>)
 
 ## 参数
 
-| 参数 | 说明 |
-| -- | -- |
+| 参数    | 说明       |
+| ------- | ---------- |
 | `<str>` | 字符串类型 |
 
 ## 返回值
 
-如果字符串为空字符串或者NULL，返回false。否则，返回true。
+如果字符串为空字符串或者 NULL，返回 false；否则返回 true。
 
 ## 举例
 
@@ -70,7 +70,7 @@ select not_null_or_empty("");
 +-----------------------+
 ```
 
-```
+```sql
 select not_null_or_empty("a");
 ```
 

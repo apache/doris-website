@@ -83,7 +83,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 Paimon 版本
 
-当前依赖的 Paimon 版本为 0.8.1。支持读取更高版本的 Paimon 表。
+当前依赖的 Paimon 版本为 1.0.0。
 
 ### 支持的 Paimon 格式
 

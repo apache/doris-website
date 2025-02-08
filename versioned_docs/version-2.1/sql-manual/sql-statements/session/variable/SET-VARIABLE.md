@@ -29,38 +29,61 @@ under the License.
 
 This statement is mainly used to modify Doris system variables. These system variables can be modified at the global and session level, and some can also be modified dynamically. You can also view these system variables with `SHOW VARIABLE`.
 
-grammar:
+## Syntax
 
 ```sql
-SET variable_assignment [, variable_assignment] ...
+SET variable_assignment [, variable_assignment] [ ... ]
 ```
 
-illustrate:
+Where:
+```sql
+variable_assignment
+  : <user_var_name> = <expr>
+  | [ <effective_scope> ] <system_var_name> = <expr>
+```
 
-1. variable_assignment:
-         user_var_name = expr
-       | [GLOBAL | SESSION] system_var_name = expr
+## Required Parameters
+**1. `<user_var_name>`**
+> Specifies the variable of user level, for example : @@your_variable_name, variable name starts with `@@`
 
-> Note:
->
-> 1. Only ADMIN users can set variables to take effect globally
-> 2. The globally effective variable affects the current session and new sessions thereafter, but does not affect other sessions that currently exist.
+**2. `<system_var_name>`**
+> Specifies the variable of system level, for example : exec_mem_limit and so on
 
-## Examples
+## Optional Parameters
+**1. `<effective_scope>`**
 
-1. Set the time zone to Dongba District
+> Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
+
+## Access Control Requirements
+Users executing this SQL command must have at least the following privileges:
+
+| Privilege  | Object | Notes                                        |
+| :--------- | :----- | :------------------------------------------- |
+| ADMIN_PRIV | Session  | set global variables need admin privilege |
+
+
+## Usage Notes
+
+- Only ADMIN users can set variables to take effect globally
+- The globally effective variable affects the current session and new sessions thereafter, but does not affect other sessions that currently exist.
+
+## Example
+
+- Set the time zone to East Eighth District
 
    ```
    SET time_zone = "Asia/Shanghai";
    ```
 
-2. Set the global execution memory size
+
+- Set the global execution memory size
 
    ```
    SET GLOBAL exec_mem_limit = 137438953472
    ```
+- Set a user variable
 
-## Keywords
-
-    SET, VARIABLE
+   ```
+   SET @@your_variable_name = your_variable_value;
+   ```
 

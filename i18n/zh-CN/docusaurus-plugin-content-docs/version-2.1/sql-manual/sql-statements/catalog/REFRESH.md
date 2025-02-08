@@ -24,25 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
 该语句用于刷新指定 Catalog/Database/Table 的元数据。
 
-语法：
+## 语法
 
 ```sql
-REFRESH CATALOG catalog_name;
-REFRESH DATABASE [catalog_name.]database_name;
-REFRESH TABLE [catalog_name.][database_name.]table_name;
+REFRESH CATALOG <catalog_name>;
+REFRESH DATABASE [<catalog_name>.]<database_name>;
+REFRESH TABLE [[<catalog_name>.]<database_name>.]<table_name>;
 ```
 
-刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。
+## 必选参数
 
-包括 Partition Cache、Schema Cache、File Cache 等。
+**1. `<catalog_name>`**
 
+需要刷新的 catalog 的名字
+
+**2. `[<catalog_name>.]<database_name>`**
+
+需要刷新的 catalog 里面 database 的名字
+
+**3. `[[<catalog_name>.]<database_name>.]<table_name>`**
+
+需要刷新的 catalog 里面 table 的名字
+
+
+## 权限控制
+| 权限（Privilege）                                                                                | 对象（Object） | 说明（Notes）      |
+|:---------------------------------------------------------------------------------------------|:-----------|:---------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog    | 需要有上述权限中的一种就可以 |
+
+
+## 注意事项
+刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。 包括 Partition Cache、Schema Cache、File Cache 等。
 
 ## 示例
 
@@ -66,10 +82,3 @@ REFRESH TABLE [catalog_name.][database_name.]table_name;
     REFRESH TABLE db.table1;
     REFRESH TABLE table1;
     ```
-
-## 关键词
-
-REFRESH, CATALOG, DATABASE, TABLE
-
-## 最佳实践
-

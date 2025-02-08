@@ -22,30 +22,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## atan
-
 ## 描述
+返回`x`的反正切值，`x`为弧度值.
+
 ## 语法
 
-`DOUBLE atan(DOUBLE x)`
-返回`x`的反正切值，`x`为弧度值.
+```sql
+ATAN(<x>)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 需要被计算反正切的值 |
+
+## 返回值
+
+参数 x 的反正切值
 
 ## 举例
 
+```sql
+select atan(0);
 ```
-mysql> select atan(0);
+
+```text
 +-----------+
 | atan(0.0) |
 +-----------+
 |         0 |
 +-----------+
-mysql> select atan(2);
+```
+
+```sql
+select atan(2);
+```
+
+```text
 +--------------------+
 | atan(2.0)          |
 +--------------------+
 | 1.1071487177940904 |
 +--------------------+
 ```
-
-### keywords
-	ATAN

@@ -27,22 +27,32 @@ under the License.
 
 ## Description
 
-The TRIM_IN function removes specified characters from both ends of a string. When no character set is specified, it removes leading and trailing spaces by default. When a character set is specified, it removes all specified characters from both ends (regardless of their order in the set).
-The key feature of TRIM_IN is that it removes any combination of characters from the specified set, while the TRIM function removes characters based on exact string matching.
+
+When there is no `rhs` parameter, this function removes the leading and trailing spaces from the `str` string. When the `rhs` parameter is provided, it removes any characters from both ends of the string that are found in the `rhs` character set (order does not matter).
+
 
 ## Syntax
 
 ```sql
-TRIM_IN(<str>[, <rhs>])
-```
 
-## Parameters
-| Parameter | Description                                                            |
-| --------- | ---------------------------------------------------------------------- |
-| `<str>` | The string to be processed. Type: VARCHAR                              |
-| `<rhs>` | Optional parameter, the set of characters to be removed. Type: VARCHAR |
+TRIM_IN( <str> [ , <rhs>])
+```
+## Required Parameters
+
+| Parameters | Description |
+|------|------|
+| `<str>` | Delete spaces at both ends of the string |
+
+
+## Optional Parameters
+
+| Parameters | Description |
+|------|------|
+| `<rhs>` | Remove the specified character |
 
 ## Return Value
+Delete spaces at both ends or the string after the specified character
+
 
 Returns VARCHAR type, representing the processed string.
 
@@ -55,37 +65,31 @@ Special cases:
 
 1. Remove spaces from both ends:
 ```sql
-SELECT trim_in(' hello ');
+
+SELECT trim_in('   ab d   ') str;
 ```
-```text
+
+```sql
+
 +------+
 | str  |
 +------+
-| hello|
+|  ab d|
 +------+
 ```
 
-2. Remove specified character set:
+
 ```sql
--- TRIM_IN removes any 'c', 'd', or 'e' characters from both ends
-SELECT trim_in('abcd', 'cde');
+SELECT trim_in('ababccaab','ab') str;
 ```
-```text
+
+```sql
+
 +------+
 | str  |
 +------+
-| ab   |
+| cc   |
 +------+
-```
 
-3. Comparison with TRIM function
-```sql
-SELECT trim_in('abcd', 'cde'),trim('abcd', 'cde');
-```
-```text
-+------------------------+---------------------+
-| trim_in('abcd', 'cde') | trim('abcd', 'cde') |
-+------------------------+---------------------+
-| ab                     | abcd                |
-+------------------------+---------------------+
+
 ```

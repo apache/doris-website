@@ -24,37 +24,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## null_or_empty
 ## 描述
+
+`null_or_empty` 函数用于判断给定的值是否为 NULL 或空。如果输入值为 NULL 或空字符串，则返回 true，否则返回 false。
+
 ## 语法
 
-`BOOLEAN NULL_OR_EMPTY (VARCHAR str)`
-
-如果字符串为空字符串或者NULL，返回true。否则，返回false。
-
-## 举例
-
+```sql
+NULL_OR_EMPTY (<str>)
 ```
-MySQL [(none)]> select null_or_empty(null);
+
+## 参数
+
+| 参数    | 说明       |
+| ------- | ---------- |
+| `<str>` | 字符串类型 |
+
+## 返回值
+
+如果字符串为空字符串或者 NULL，返回 true；否则返回 false。
+
+## 示例
+
+```sql
+select null_or_empty(null);
+```
+
+```text
 +---------------------+
 | null_or_empty(NULL) |
 +---------------------+
 |                   1 |
 +---------------------+
+```
 
-MySQL [(none)]> select null_or_empty("");
+```sql
+select null_or_empty("");
+```
+
+```text
 +-------------------+
 | null_or_empty('') |
 +-------------------+
 |                 1 |
 +-------------------+
+```
 
-MySQL [(none)]> select null_or_empty("a");
+```sql
+select null_or_empty("a");
+```
+
+```text
 +--------------------+
 | null_or_empty('a') |
 +--------------------+
 |                  0 |
 +--------------------+
 ```
-### keywords
-    NULL_OR_EMPTY

@@ -24,18 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
 This statement is used to create an external catalog
 
-Syntax:
+## Syntax
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
-	PROPERTIES ("key"="value", ...);
+CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
+	PROPERTIES ("<key>"="<value>" [, ... ]);
 ```
+
+## Required Parameters
+
+**1. `<catalog_name>`**
+The name of the catalog to be created.
+
+**2. `"<key>"="<value>"`**
+The parameters for creating the catalog.
+
+## Optional Parameters
+
+**1. `<comment>`**
+The comment for the catalog to be created.
+
+## Access Control Requirements
+| Privilege   | Object  | Notes                                                                 |
+|:------------|:--------|:----------------------------------------------------------------------|
+| CREATE_PRIV | Catalog | The CREATE_PRIV permission for the corresponding catalog is required. |
 
 ## Examples
 
@@ -163,9 +179,4 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name [comment]
 	);
     ```
 
-## Keywords
-
-CREATE, CATALOG
-
-## Best Practice
 

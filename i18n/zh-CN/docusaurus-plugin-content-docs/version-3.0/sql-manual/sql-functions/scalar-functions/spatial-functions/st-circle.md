@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Circle( <center_lng>, <center_lat>, <radius>)
+ST_CIRCLE( <center_lng>, <center_lat>, <radius>)
 ```
 ## 参数
 

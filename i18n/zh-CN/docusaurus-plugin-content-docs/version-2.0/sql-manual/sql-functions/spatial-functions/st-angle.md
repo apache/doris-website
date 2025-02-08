@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Angle( <point1>, <point2>, <point3>)
+ST_ANGLE( <point1>, <point2>, <point3>)
 ```
 
 ## 参数

@@ -24,21 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## if
-### description
-#### Syntax
+## Description
 
-`if(boolean condition, type valueTrue, type valueFalseOrNull)`
+Returns `valueTrue` when the condition is true, and returns `valueFalseOrNull` otherwise. The return type is determined by the result of the `valueTrue`/`valueFalseOrNull` expression.
 
+## Syntax
 
-Returns valueTrue when condition is true, returns valueFalseOrNull otherwise. 
-
-The return type is the type of the result of the valueTrue/valueFalseOrNull expression
-
-### example
-
+```sql
+IF(<condition>, <value_true>, <value_false_or_null>)
 ```
-mysql> select  user_id, if(user_id = 1, "true", "false") test_if from test;
+
+## Parameters
+
+| Parameter               | Description                                                  |
+|-------------------------|--------------------------------------------------------------|
+| `<condition>`           | The boolean condition to evaluate.                           |
+| `<value_true>`          | The value to return if `<condition>` evaluates to true.      |
+| `<value_false_or_null>` | The value to return if `<condition>` evaluates to false.     |
+
+## Return Value
+
+The result of the IF expression:
+- Returns `valueTrue` when the condition is true.
+- Returns `valueFalseOrNull` when the condition is false.
+
+## Examples
+
+```sql
+SELECT user_id, IF(user_id = 1, 'true', 'false') AS test_if FROM test;
+```
+
+```text
 +---------+---------+
 | user_id | test_if |
 +---------+---------+
@@ -46,5 +62,3 @@ mysql> select  user_id, if(user_id = 1, "true", "false") test_if from test;
 | 2       | false   |
 +---------+---------+
 ```
-### keywords
-IF

@@ -24,42 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## timediff
-### Description
-#### Syntax
+## Description
+The `TIMEDIFF` function calculates the difference between two datetime values. This function accepts two arguments and returns the difference as a `TIME` type.
 
-`TIME TIMEDIFF (DATETIME expr1, DATETIME expr2)`
+## Syntax
 
-
-TIMEDIFF returns the difference between two DATETIMEs
-
-The TIMEDIFF function returns the result of expr1 - expr2 expressed as a time value, with a return value of TIME type
-
-The results are limited to TIME values ranging from - 838:59:59 to 838:59:59.
-
-#### example
-
+```sql
+TIMEDIFF(<end_datetime>, <start_datetime>)
 ```
-mysql> SELECT TIMEDIFF(now(),utc_timestamp());
-+----------------------------------+
-| timediff(now(), utc_timestamp()) |
-+----------------------------------+
-| 08:00:00                         |
-+----------------------------------+
 
-mysql> SELECT TIMEDIFF('2019-07-11 16:59:30','2019-07-11 16:59:21');
-+--------------------------------------------------------+
-| timediff('2019-07-11 16:59:30', '2019-07-11 16:59:21') |
-+--------------------------------------------------------+
-| 00:00:09                                               |
-+--------------------------------------------------------+
 
-mysql> SELECT TIMEDIFF('2019-01-01 00:00:00', NULL);
-+---------------------------------------+
-| timediff('2019-01-01 00:00:00', NULL) |
-+---------------------------------------+
-| NULL                                  |
-+---------------------------------------+
+## Parameters
+
+| Parameter          | Description                  |
+|--------------------|------------------------------|
+| `<end_datetime>`   | The ending datetime value.   |
+| `<start_datetime>` | The starting datetime value. |
+
+## Return Value
+Returns a `TIME` type value representing the difference between the two inputs:
+- If `<end_datetime>` is later than `<start_datetime>`, it returns a positive time difference.
+- If `<end_datetime>` is earlier than `<start_datetime>`, it returns a negative time difference.
+- If `<end_datetime>` and `<start_datetime>` are equal, it returns `00:00:00`.
+- If `<end_datetime>` or `<start_datetime>` is `NULL`, the function returns `NULL`.
+- If `<end_datetime>` or `<start_datetime>` is an invalid datetime value (e.g., `0000-00-00 00:00:00`), the function returns `NULL`.
+
+## Example
+
+```sql
+SELECT TIMEDIFF('2024-07-20 16:59:30','2024-07-11 16:35:21');
 ```
-### keywords
-    TIMEDIFF
+
+```text
++------------------------------------------------------------------------------------------------------+
+| timediff(cast('2024-07-20 16:59:30' as DATETIMEV2(0)), cast('2024-07-11 16:35:21' as DATETIMEV2(0))) |
++------------------------------------------------------------------------------------------------------+
+| 216:24:09                                                                                            |
++------------------------------------------------------------------------------------------------------+
+```

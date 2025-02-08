@@ -24,58 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Str_to_date
-### Description
-#### Syntax
+## Description
 
-`DATETIME STR TWO DATES (VARCHAR STR, VARCHAR format)`
+The function converts the input datetime string into a DATETIME value based on the specified format.
 
-Convert `str` to `DATETIME` in the manner specified by `format`. If `str` cannot be parsed in the format specified by `format`, the result is unspecified.
-
-All formats in [date_format](./date-format) are supported. 
-
-> Since Doris 2.0.5:
->
-> Support auto completing the remainder of date part for '%Y' and '%Y-%m'.
-
-### Example
+## Syntax
 
 ```sql
-mysql> select str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s');
-+---------------------------------------------------------+
-| str_to_date('2014-12-21 12:34:56', '%Y-%m-%d %H:%i:%s') |
-+---------------------------------------------------------+
-| 2014-12-21 12:34:56                                     |
-+---------------------------------------------------------+
-
-mysql> select str_to_date('2014-12-21 12:34%3A56', '%Y-%m-%d %H:%i%%3A%s');
-+--------------------------------------------------------------+
-| str_to_date('2014-12-21 12:34%3A56', '%Y-%m-%d %H:%i%%3A%s') |
-+--------------------------------------------------------------+
-| 2014-12-21 12:34:56                                          |
-+--------------------------------------------------------------+
-
-mysql> select str_to_date('200442 Monday', '%X%V %W');
-+-----------------------------------------+
-| str_to_date('200442 Monday', '%X%V %W') |
-+-----------------------------------------+
-| 2004-10-18                              |
-+-----------------------------------------+
-
-mysql> select str_to_date("2020-09-01", "%Y-%m-%d %H:%i:%s");
-+------------------------------------------------+
-| str_to_date('2020-09-01', '%Y-%m-%d %H:%i:%s') |
-+------------------------------------------------+
-| 2020-09-01 00:00:00                            |
-+------------------------------------------------+
-
-mysql> select str_to_date('2023','%Y');
-+---------------------------+
-| str_to_date('2023', '%Y') |
-+---------------------------+
-| 2023-01-01                |
-+---------------------------+
+STR_TO_DATE(<datetime_str>, <format>)
 ```
-### keywords
+## Parameters
 
-    STR_TO_DATE,STR,TO,DATE
+| Parameter        | Description                                                                                                      |
+|------------------|------------------------------------------------------------------------------------------------------------------|
+| `<datetime_str>` | Required. The input datetime string to be converted.                                                             |
+| `<format>`       | Required. The format string specifying the datetime structure, such as %Y-%m-%d %H:%i:%s or yyyy-MM-dd HH:mm:ss. |
+
+## Return Value
+
+- Returns a DATETIME value representing the converted datetime.
+- If the input `<datetime_str>` or `<format>` is invalid, the function returns NULL.
+
+## Example
+
+Convert common datetime strings to DATETIME
+
+```sql
+SELECT STR_TO_DATE('2025-01-23 12:34:56', '%Y-%m-%d %H:%i:%s'),STR_TO_DATE('2025-01-23 12:34:56', 'yyyy-MM-dd HH:mm:ss');
+```
+
+```text
++---------------------------------------------------------+-----------------------------------------------------------+
+| str_to_date('2025-01-23 12:34:56', '%Y-%m-%d %H:%i:%s') | str_to_date('2025-01-23 12:34:56', 'yyyy-MM-dd HH:mm:ss') |
++---------------------------------------------------------+-----------------------------------------------------------+
+| 2025-01-23 12:34:56.000000                              | 2025-01-23 12:34:56.000000                                |
++---------------------------------------------------------+-----------------------------------------------------------+
+```
+
+Others
+
+```sql
+select STR_TO_DATE('200442 Monday', '%X%V %W'),STR_TO_DATE('2023','%Y');
+```
+
+```text
++-----------------------------------------+---------------------------+
+| str_to_date('200442 Monday', '%X%V %W') | str_to_date('2023', '%Y') |
++-----------------------------------------+---------------------------+
+| 2004-10-18                              | 2023-01-01                |
++-----------------------------------------+---------------------------+
+```
