@@ -22,31 +22,55 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cosh
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE cosh(DOUBLE x)`
 Returns the hyperbolic cosine of `x`.
 
-### example
+## Syntax
 
+`COSH(<x>)`
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<x>` | The value for which the hyperbolic cosine is to be calculated  |
+
+## Return Value
+
+The hyperbolic cosine of parameter `x`
+
+## Examples
+
+```sql
+select cosh(0);
 ```
-mysql> select cosh(0);
-+---------+
-| cosh(0) |
-+---------+
-|       1 |
-+---------+
-
-mysql> select cosh(1);
-+---------------------+
-| cosh(1)             |
-+---------------------+
-| 1.5430806348152437  |
-+---------------------+
+```text
++-------------------------+
+| cosh(cast(0 as DOUBLE)) |
++-------------------------+
+|                     1.0 |
++-------------------------+
 ```
 
-### keywords
-	COSH
+```sql
+select cosh(1);
+```
+```text
++-------------------------+
+| cosh(cast(1 as DOUBLE)) |
++-------------------------+
+|       1.543080634815244 |
++-------------------------+
+```
+
+```sql
+select cosh(-1);
+```
+```text
++--------------------------+
+| cosh(cast(-1 as DOUBLE)) |
++--------------------------+
+|        1.543080634815244 |
++--------------------------+
+```

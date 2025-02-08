@@ -899,8 +899,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",
