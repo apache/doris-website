@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
+
 ## 描述
 
 该语句用于设置指定副本的状态,目前仅用于手动将某些副本状态设置为 `BAD`、`DROP` 和 `OK`，从而使得系统能够自动修复这些副本。
@@ -57,7 +59,7 @@ PROPERTIES ("tablet_id"="<tablet_id>","backend_id"="<backend_id>","status"="<sta
 
 
 - 设置为 Drop 状态的副本
-
+  
   它仍然可以读写。会在其他机器先增加一个健康副本，再删除该副本。相比设置 Bad，设置 Drop 的操作是安全的。
 
 ## 权限控制

@@ -41,7 +41,7 @@ SHOW REPLICA STATUS FROM [ <database_name>.]<table_name> [<partition_list>]
 
 ```sql
 partition_list
-  : PARTITION (<partition_name>[ , ... ])
+: PARTITION (<partition_name>[ , ... ])
 ```
 
 其中：
@@ -56,11 +56,11 @@ where_clause
 **1. `<table_name>`**
 
 > 指定表的标识符（即名称），在其所在的数据库（Database）中必须唯一。
-> 
+>
 > 标识符必须以字母字符（如果开启 unicode 名字支持，则可以是任意语言文字的字符）开头，并且不能包含空格或特殊字符，除非整个标识符字符串用反引号括起来（例如My Object）。
-> 
+>
 > 标识符不能使用保留关键字。
-> 
+>
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
 
@@ -69,11 +69,11 @@ where_clause
 **1. `<db_name>`**
 
 > 指定数据库的标识符（即名称），在其所在的集群（Cluster）中必须唯一。
-> 
+>
 > 标识符必须以字母字符（如果开启 unicode 名字支持，则可以是任意语言文字的字符）开头，并且不能包含空格或特殊字符，除非整个标识符字符串用反引号括起来（例如My Object）。
-> 
+>
 > 标识符不能使用保留关键字。
-> 
+>
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
 **2. `<partition_list>`**
@@ -91,7 +91,7 @@ where_clause
 > 指定输出过滤条件，output_column_name 必须在输出的字段列表中。
 >
 > 当 `output_column_name` 为 `STATUS` 时
-> 
+>
 > `value` 可选值如下
 >   - OK:             replica 处于健康状态
 >   - DEAD:           replica 所在 Backend 不可用

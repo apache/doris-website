@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW REPLICA STATUS",
-    "language": "en"
+  "title": "SHOW REPLICA STATUS",
+  "language": "en"
 }
 ---
 
@@ -38,7 +38,7 @@ Where:
 
 ```sql
 partition_list
-: PARTITION (<partition_name>[ , ... ])
+  : PARTITION (<partition_name>[ , ... ])
 ```
 
 Where:
@@ -53,11 +53,11 @@ where_clause
 **1. `<table_name>`**
 
 > The identifier (i.e., name) of the table, which must be unique within the database (Database).
-> 
+>
 > The identifier must start with a letter character (or any character from supported languages if Unicode name support is enabled), and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., My Object).
-> 
+>
 > Identifiers cannot use reserved keywords.
-> 
+>
 > For more details, refer to the identifier requirements and reserved keywords.
 
 
@@ -76,17 +76,17 @@ where_clause
 **2. `<partition_list>`**
 
 > A comma-separated list of partition identifiers (i.e., names), which must be unique within the table (Table).
-> 
+>
 > The identifier must start with a letter character (or any character from supported languages if Unicode name support is enabled), and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., My Object).
-> 
+>
 > Identifiers cannot use reserved keywords.
-> 
+>
 > For more details, refer to the identifier requirements and reserved keywords.
 
 **3. `WHERE <output_column_name> = <value>`**
 
 > Specifies the filtering condition for the output. The output_column_name must be part of the output field list.
-> 
+>
 > When output_column_name is STATUS, the value can be one of the following:
 >
 > - DEAD:           The backend where the replica resides is unavailable.
@@ -111,7 +111,6 @@ where_clause
 | IsUserDrop         | Boolean  | Indicates if the replica has been marked for user-driven deletion.        |
 | State              | String   | The current state of the replica (e.g., NORMAL).                          |
 | Status             | String   | The health status of the replica (e.g., OK).                              |
-
 
 ## Access Control Requirements
 
@@ -140,7 +139,7 @@ The user executing this SQL command must have at least the following privileges:
   | 10151    | 10152     | 10009     | 14      | -1                | 14                 | 14               | 182881783  | 1          | false | false      | NORMAL | OK     |
   +----------+-----------+-----------+---------+-------------------+--------------------+------------------+------------+------------+-------+------------+--------+--------+
   ```
-  
+
 - Display the replicas of specific partitions with a VERSION_ERROR status
 
   ```sql
