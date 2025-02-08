@@ -27,11 +27,13 @@ under the License.
 ## UNION
 
 ### description
+
+Aggregate multiple aggregation intermediate results into one.
+The type of the result is agg_state, and the function signature is consistent with the input parameter.
+
 #### Syntax
 
 `AGGREGATE_FUNCTION_UNION(agg_state)`
-Aggregate multiple aggregation intermediate results into one.
-The type of the result is agg_state, and the function signature is consistent with the input parameter.
 
 ### example
 ```

@@ -27,11 +27,13 @@ under the License.
 ## UNION
 
 ## 描述
+
+将多个聚合中间结果聚合为一个。
+结果的类型为agg_state，函数签名与入参一致。
+
 ## 语法
 
 `AGGREGATE_FUNCTION_UNION(agg_state)`
-将多个聚合中间结果聚合为一个。
-结果的类型为agg_state，函数签名与入参一致。
 
 ## 举例
 ```

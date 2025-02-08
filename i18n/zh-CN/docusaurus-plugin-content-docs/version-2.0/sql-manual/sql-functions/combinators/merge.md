@@ -27,11 +27,13 @@ under the License.
 ## MERGE
 
 ## 描述
+
+将聚合中间结果进行聚合并计算获得实际结果。
+结果的类型与`AGGREGATE_FUNCTION`一致。
+
 ## 语法
 
 `AGGREGATE_FUNCTION_MERGE(agg_state)`
-将聚合中间结果进行聚合并计算获得实际结果。
-结果的类型与`AGGREGATE_FUNCTION`一致。
 
 ## 举例
 ```
