@@ -86,7 +86,7 @@ where_clause
 >
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-**3. `<WHERE output_column_name = value>`**
+**3. `WHERE <output_column_name> = <value>`**
 
 > 指定输出过滤条件，output_column_name 必须在输出的字段列表中。
 >

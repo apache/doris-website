@@ -83,7 +83,7 @@ where_clause
 > 
 > For more details, refer to the identifier requirements and reserved keywords.
 
-**3. `<WHERE output_column_name = value>`**
+**3. `WHERE <output_column_name> = <value>`**
 
 > Specifies the filtering condition for the output. The output_column_name must be part of the output field list.
 > 
