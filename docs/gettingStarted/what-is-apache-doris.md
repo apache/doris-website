@@ -57,7 +57,7 @@ Apache Doris is widely used in the following scenarios:
   
   - **Real-time Data Processing**: Doris combines real-time data streams and batch data processing capabilities to meet the needs of high concurrency and low-latency complex business requirements.
 
-- **Semi-structured Data Analysis**:
+- **SQL-based Observability**:
 
   - **Log and Event Analysis**: Doris enables real-time or batch analysis of logs and events in distributed systems, helping to identify issues and optimize performance.
 
