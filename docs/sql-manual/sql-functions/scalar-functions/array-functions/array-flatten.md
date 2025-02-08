@@ -24,21 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_flatten
-
-array_flatten
-
-### description
-
-#### Syntax
-
-```sql
-ARRAY<T> array_flatten(ARRAY<ARRAY<T>> array1)
-```
+## description
 
 Flatten a multidimensional array into one dimension.
 
-### example
+## Syntax
+
+```sql
+array_flatten(<a>)
+```
+
+## Parameters
+
+| Parameter | Description | 
+| --- | --- |
+| `<a>` | ARRAY array |
+
+## Return Value
+
+Returns the flattened array
+
+## example
 
 ```sql
 mysql> select array_flatten([[1,2,3],[4,5]]);
@@ -57,7 +63,3 @@ mysql> select array_flatten([[[[[[1,2,3,4,5],[6,7],[8,9],[10,11],[12]],[[13]]],[
 +-------------------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-
-### keywords
-
-ARRAY,ARRAY_FLATTEN
