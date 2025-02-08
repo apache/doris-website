@@ -53,7 +53,7 @@ Apache Doris is widely used in the following scenarios:
 
   - **Lakehouse Query Acceleration**: Doris accelerates lakehouse data queries with its efficient query engine.
   
-  - **Multi-source Federated Analytics**: Doris supports federated queries across multiple data sources, simplifying architecture and eliminating data silos.
+  - **Federated Analytics**: Doris supports federated queries across multiple data sources, simplifying architecture and eliminating data silos.
   
   - **Real-time Data Processing**: Doris combines real-time data streams and batch data processing capabilities to meet the needs of high concurrency and low-latency complex business requirements.
 
