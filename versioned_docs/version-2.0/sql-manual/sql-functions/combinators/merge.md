@@ -24,18 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MERGE
-
-### description
+## description
 
 The aggregated intermediate results are aggregated and calculated to obtain the actual result.
 The type of the result is consistent with `AGGREGATE_FUNCTION`.
 
-#### Syntax
+## Syntax
 
 `AGGREGATE_FUNCTION_MERGE(agg_state)`
 
-### example
+## example
 ```
 mysql [test]>select avg_merge(avg_state(1)) from d_table;
 +-------------------------+

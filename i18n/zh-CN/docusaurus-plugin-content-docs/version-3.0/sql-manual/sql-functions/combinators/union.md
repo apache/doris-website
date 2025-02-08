@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## UNION
-
 ## 描述
 
 将多个聚合中间结果聚合为一个。

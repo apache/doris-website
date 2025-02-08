@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## STATE
-
 ## 描述
 
 返回聚合函数的中间结果，可以用于后续的聚合或者通过merge组合器获得实际计算结果，也可以直接写入agg_state类型的表保存下来。

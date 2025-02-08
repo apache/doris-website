@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## MERGE
-
 ## 描述
 
 将聚合中间结果进行聚合并计算获得实际结果。

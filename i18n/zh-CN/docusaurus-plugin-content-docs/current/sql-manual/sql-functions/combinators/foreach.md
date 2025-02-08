@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## FOREACH
-
 ## 描述
 将表的聚合函数转换为聚合相应数组项并返回结果数组的数组的聚合函数。 例如, `sum_foreach` 对于数组 [1, 2], [3, 4, 5]和[6, 7]返回结果 [10, 13, 5] 之后将相应的数组项添加在一起。
 
