@@ -47,7 +47,7 @@ Apache Doris is widely used in the following scenarios:
   
   - **AD Hoc Analysis**: Doris offers multidimensional data analysis capabilities, enabling rapid business intelligence analysis and ad hoc queries to help users quickly uncover insights from complex data.
   
-  - **User Behavior and Image Analysis**: Doris can analyze user behavior such as participation, retention, and conversion, while also supporting scenarios like population insights and crowd selection for image analysis.
+  - **User Profiling and Behavior Analysis**: Doris can analyze user behavior such as participation, retention, and conversion, while also supporting scenarios like population insights and crowd selection for behavior analysis.
 
 - **Lakehouse Analytics**:
 
