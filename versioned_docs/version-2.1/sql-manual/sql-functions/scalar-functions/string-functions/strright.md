@@ -25,43 +25,81 @@ under the License.
 -->
 
 
-## strright
-### Description
-#### Syntax
+## Description
 
-`VARCHAR strright (VARCHAR str, INT len)`
+The STRRIGHT function returns a specified number of characters from the right side of a string. The length is measured in UTF8 characters.
 
+## Alias
 
-It returns the right part of a string of specified length, length is char length not the byte size. Another alias for this function is `right`.
-If the parameters contain a NULL value, the function will always return NULL. If the integer parameter is negative, the function will retrieve the portion of the string starting from the left and moving to the right, beginning at the absolute value of len.
+RIGHT
 
-### example
+## Syntax
 
+```sql
+STRRIGHT(<str>, <len>)
 ```
-mysql> select strright("Hello doris",5);
-+-------------------------+
+
+## Parameters
+| Parameter | Description                                   |
+| --------- | --------------------------------------------- |
+| `<str>` | The string to extract from. Type: VARCHAR     |
+| `<len>` | The number of characters to return. Type: INT |
+
+## Return Value
+
+Returns VARCHAR type, representing the extracted substring.
+
+Special cases:
+- Returns NULL if any argument is NULL
+- If len is negative, returns the substring starting from the abs(len)th character from the right
+- Returns the entire string if len is greater than the string length
+
+## Examples
+
+1. Basic usage
+```sql
+SELECT strright('Hello doris', 5);
+```
+```text
++----------------------------+
 | strright('Hello doris', 5) |
-+-------------------------+
-| doris                   |
-+-------------------------+
-mysql> select strright("Hello doris",-7);
-+--------------------------+
-| strright('Hello doris', -7) |
-+--------------------------+
-| doris                    |
-+--------------------------+
-mysql> select strright("Hello doris",NULL);
 +----------------------------+
-| strright('Hello doris', NULL) |
+| doris                      |
 +----------------------------+
-| NULL                       |
-+----------------------------+
-mysql> select strright(NULL,5);
-+----------------+
-| strright(NULL, 5) |
-+----------------+
-| NULL           |
-+----------------+
 ```
-### keywords
-    STRRIGHT, RIGHT
+
+2. Handling negative length
+```sql
+SELECT strright('Hello doris', -7);
+```
+```text
++-----------------------------+
+| strright('Hello doris', -7) |
++-----------------------------+
+| doris                       |
++-----------------------------+
+```
+
+3. Handling NULL parameter
+```sql
+SELECT strright('Hello doris', NULL);
+```
+```text
++-------------------------------+
+| strright('Hello doris', NULL) |
++-------------------------------+
+| NULL                          |
++-------------------------------+
+```
+
+4. Handling NULL string
+```sql
+SELECT strright(NULL, 5);
+```
+```text
++-------------------+
+| strright(NULL, 5) |
++-------------------+
+| NULL              |
++-------------------+
+```

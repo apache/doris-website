@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV6_OR_DEFAULT",
-"language": "zh-CN"
+    "title": "TO_IPV6_OR_DEFAULT",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,40 +22,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV6_OR_DEFAULT
-
-TO_IPV6_OR_DEFAULT
-
 ## 描述
+输入IPv6地址的字符串形式，并返回IPv6类型的值。
 
 ## 语法
-
-`IPV6 TO_IPV6_OR_DEFAULT(STRING ipv6_str)`
-
-与to_ipv6函数类似，但如果IPv6地址的格式非法，则返回::。
-
-### 注意事项
-
-入参 `ipv6_str` 如果为 `NULL`，则返回 `::`。
-
-## 举例
-
 ```sql
-mysql> select to_ipv6_or_default('.');
-+-------------------------+
-| to_ipv6_or_default('.') |
-+-------------------------+
-| ::                      |
-+-------------------------+
-
-mysql> select to_ipv6_or_default(NULL);
-+--------------------------+
-| to_ipv6_or_default(NULL) |
-+--------------------------+
-| ::                       |
-+--------------------------+
+TO_IPV6_OR_DEFAULT(<ipv6_str>)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | 字符串类型的ipv6地址 |
 
-TO_IPV6_OR_DEFAULT, IP
+## 返回值
+返回IPv6类型的值。
+- 如果IPv6地址的格式非法，则返回`::`
+
+## 举例
+```sql
+SELECT to_ipv6_or_default('.'), to_ipv6_or_default('2001:1b70:a1:610::b102:2');
+```
+```text
++-------------------------+------------------------------------------------+
+| to_ipv6_or_default('.') | to_ipv6_or_default('2001:1b70:a1:610::b102:2') |
++-------------------------+------------------------------------------------+
+| ::                      | 2001:1b70:a1:610::b102:2                       |
++-------------------------+------------------------------------------------+
+```

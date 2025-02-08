@@ -1,6 +1,6 @@
 ---
 {
-    "title": "database",
+    "title": "DATABASE",
     "language": "en"
 }
 ---
@@ -21,3 +21,42 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+
+## Description
+
+Get the database of the current sql client connection.
+
+## Alias
+
+- SCHEMA
+
+## Syntax
+
+```sql
+DATABASE()
+```
+or
+
+```sql
+SCHEMA()
+```
+
+## Return Value
+
+The name of the database connected to the current sql client.
+
+## Examples
+
+```sql
+select database(),schema();
+```
+
+```text
++------------+------------+
+| database() | database() |
++------------+------------+
+| test       | test       |
++------------+------------+
+```
+

@@ -65,3 +65,21 @@ This document introduces the support for reading and writing text file formats i
 
   Import functionality supports JSON formats. See the import documentation for details.
 
+## Character Set
+
+Currently, Doris only supports the UTF-8 character set encoding. However, some data, such as the data in Hive Text-formatted tables, may contain content encoded in non-UTF-8 encoding, which will cause reading failures and result in the following error:
+
+```text
+Only support csv data in utf8 codec
+```
+
+In this case, you can set the session variable as follows:
+
+```text
+SET enable_text_validate_utf8 = false
+```
+
+This will ignore the UTF-8 encoding check, allowing you to read this content. Note that this parameter is only used to skip the check, and non-UTF-8 encoded content will still be displayed as garbled text.
+
+This parameter has been supported since version 3.0.4.
+

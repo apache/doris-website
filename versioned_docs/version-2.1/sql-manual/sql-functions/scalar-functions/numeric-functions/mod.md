@@ -22,34 +22,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## mod
+## Description
 
-### description
-#### Syntax
+Find the remainder of a divided by b for the integer type. For the floating-point type, please use the fmod function.
 
-`mod(col_a, col_b)`  
+## Syntax
 
-`column` support type：`TINYINT` `SMALLINT` `INT` `BIGINT` `LARGEINT` `FLOAT` `DOUBLE` `DECIMAL`
-
-Find the remainder of a/b. For floating-point types, use the fmod function.
-
-### example
-
-```
-mysql> select mod(10, 3);
-+------------+
-| mod(10, 3) |
-+------------+
-|          1 |
-+------------+
-
-mysql> select fmod(10.1, 3.2);
-+-----------------+
-| fmod(10.1, 3.2) |
-+-----------------+
-|      0.50000024 |
-+-----------------+
+```sql
+MOD(<col_a> , <col_b>)
 ```
 
-### keywords
-	MOD，FMOD
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<col_a>`   | Dividend |
+| `<col_b>`   | Divisor should not be 0 |
+
+## Return value
+
+Return an integer type. Special cases:
+
+If col_a IS NULL or col_b IS NULL, return NULL.
+
+## Example
+
+```sql
+select mod(10, 3);
+```
+
+```text
++----------+
+| (10 % 3) |
++----------+
+|        1 |
++----------+
+```
+
+```sql
+select mod(10, 0);
+```
+
+```text
++----------+
+| (10 % 0) |
++----------+
+|     NULL |
++----------+
+```

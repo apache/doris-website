@@ -339,7 +339,7 @@ MySQL [test]> desc advertiser_view_record;
 
 	For this kind of UV-seeking scene, we can create a materialized view with `bitmap_union` to achieve a precise deduplication effect in advance.
 
-	In Doris, the result of `count(distinct)` aggregation is exactly the same as the result of `bitmap_union_count` aggregation. And `bitmap_union_count` is equal to the result of `bitmap_union` to calculate count, so if the query ** involves `count(distinct)`, you can speed up the query by creating a materialized view with `bitmap_union` aggregation.**
+	In Doris, the result of `count(distinct)` aggregation is exactly the same as the result of `bitmap_union_count` aggregation. And `bitmap_union_count` is equal to the result of `bitmap_union` to calculate count, so if the query **involves `count(distinct)`, you can speed up the query by creating a materialized view with `bitmap_union` aggregation.** 
 
 	For this case, you can create a materialized view that accurately deduplicate `user_id` based on advertising and channel grouping.
 

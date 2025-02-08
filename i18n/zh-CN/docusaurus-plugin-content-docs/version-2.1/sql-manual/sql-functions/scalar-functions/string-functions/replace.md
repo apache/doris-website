@@ -24,23 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## replace
 ## 描述
+
+REPLACE 函数用于将字符串中的一部分字符替换为其他字符。
+
 ## 语法
 
-`VARCHAR REPLACE (VARCHAR str, VARCHAR old, VARCHAR new)`
+```sql
+REPLACE ( <str>, <old>, <new> )
+```
 
-将str字符串中的old子串全部替换为new串
+## 参数
+
+| 参数      | 说明                                      |
+|---------|-----------------------------------------|
+| `<str>` | 需要被替换的字符串                               |
+| `<old>` | 需要被替换掉的子字符串，如果`<old>`不在`<str>`中，则不会进行替换 |
+| `<new>` | 用于替换 `old` 的新子字符串                       |
+
+## 返回值
+
+返回替换掉子字符串后的新字符串。特殊情况：
+
+- 任意参数中有一个为 NULL，则返回 NULL
 
 ## 举例
 
+```sql
+SELECT replace('hello world', 'world', 'universe');
 ```
-mysql> select replace("http://www.baidu.com:9090", "9090", "");
-+------------------------------------------------------+
-| replace('http://www.baidu.com:9090', '9090', '') |
-+------------------------------------------------------+
-| http://www.baidu.com:                                |
-+------------------------------------------------------+
+
+```text
++---------------------------------------------+
+| replace('hello world', 'world', 'universe') |
++---------------------------------------------+
+| hello universe                              |
++---------------------------------------------+
 ```
-### keywords
-    REPLACE

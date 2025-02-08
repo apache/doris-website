@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_PERCENT_RANK",
+    "title": "PERCENT_RANK",
     "language": "zh-CN"
 }
 ---
@@ -11,41 +11,26 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION PERCENT_RANK
 ## 描述
 
-PERCENT_RANK()是一个窗口函数，用于计算分区或结果集中行的百分位数排名。
+PERCENT_RANK() 是一个窗口函数，用于计算分区或结果集中行的相对排名，返回值范围从 0.0 到 1.0。对于给定的行，其计算公式为：(rank - 1) / (total_rows - 1)，其中 rank 是当前行的排名，total_rows 是分区中的总行数。
 
-下面展示了PERCENT_RANK()函数的语法：
-
-```sql
-PERCENT_RANK() OVER (
-  PARTITION BY partition_expression 
-  ORDER BY 
-    sort_expression [ASC | DESC]
-)
-```
-
-PERCENT_RANK()函数返回一个范围从0.0到1.0的小数。
-
-对于指定行，PERCENT_RANK()计算公式如下：
+## 语法
 
 ```sql
-(rank - 1) / (total_rows - 1)
+PERCENT_RANK()
 ```
 
-在此公式中，rank是指定行的排名，total_rows是正在评估的行数。
+## 返回值
 
-对于分区或结果集中的第一行，PERCENT_RANK()函数始终返回零。对于重复的列值，PERCENT_RANK()函数将返回相同的值。
-
-与其他窗口函数类似，PARTITION BY子句将行分配到分区中，并且ORDER BY子句指定每个分区中行的排序逻辑。PERCENT_RANK()函数是针对每个有序分区独立计算的。
-
-PERCENT_RANK()是一个顺序敏感的函数，因此，您应该始终需要使用ORDER BY子句。
+返回 DOUBLE 类型的数值，范围从 0.0 到 1.0：
+- 对于分区内的第一行，始终返回 0
+- 对于分区内的最后一行，始终返回 1
+- 对于相同的值，返回相同的百分比排名
 
 ## 举例
 
 ```sql
-// create table
 CREATE TABLE test_percent_rank (
     productLine VARCHAR,
     orderYear INT,
@@ -56,8 +41,9 @@ DISTRIBUTED BY HASH(`orderYear`) BUCKETS 4
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1"
 );
+```
 
-// insert data into table
+```sql
 INSERT INTO test_percent_rank (productLine, orderYear, orderValue, percentile_rank) VALUES
 ('Motorcycles', 2003, 2440.50, 0.00),
 ('Trains', 2003, 2770.95, 0.17),
@@ -79,8 +65,9 @@ INSERT INTO test_percent_rank (productLine, orderYear, orderValue, percentile_ra
 ('Vintage Cars', 2005, 5346.50, 0.67),
 ('Classic Cars', 2005, 5971.35, 0.83),
 ('Trucks and Buses', 2005, 6295.03, 1.00);
+```
 
-// query
+```sql
 SELECT
     productLine,
     orderYear,
@@ -95,8 +82,9 @@ FROM
     test_percent_rank
 ORDER BY
     orderYear;
+```
 
-// result
+```text
 +------------------+-----------+------------+-----------------+
 | productLine      | orderYear | orderValue | percentile_rank |
 +------------------+-----------+------------+-----------------+
@@ -122,7 +110,3 @@ ORDER BY
 | Trucks and Buses |      2005 |    6295.03 |               1 |
 +------------------+-----------+------------+-----------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,PERCENT_RANK

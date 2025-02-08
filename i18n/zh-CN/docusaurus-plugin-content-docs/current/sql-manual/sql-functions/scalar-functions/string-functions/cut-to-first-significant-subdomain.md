@@ -25,38 +25,63 @@ under the License.
 -->
 
 
-## 说明
+## 描述
+
+CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN 函数用于从 URL 中提取域名的有效部分，包含顶级域名直至"第一个有效子域"。如果输入的 URL 不合法，则返回空字符串。
 
 ## 语法
 
-`VARCHAR  cut_to_first_significant_subdomain(VARCHAR url)`
-
-在 URL 中提取出域中包含顶级子域直至“第一个有效子域”的部分, 若不合法时，则会返回空字符串
-
 ```sql
-mysql [(none)]>select cut_to_first_significant_subdomain("www.baidu.com");
-+-----------------------------------------------------+
-| cut_to_first_significant_subdomain('www.baidu.com') |
-+-----------------------------------------------------+
-| baidu.com                                           |
-+-----------------------------------------------------+
-
-mysql [(none)]>select cut_to_first_significant_subdomain("www.google.com.cn");
-+---------------------------------------------------------+
-| cut_to_first_significant_subdomain('www.google.com.cn') |
-+---------------------------------------------------------+
-| google.com.cn                                           |
-+---------------------------------------------------------+
-
-mysql [(none)]>select cut_to_first_significant_subdomain("wwwwwwww");
-+------------------------------------------------+
-| cut_to_first_significant_subdomain('wwwwwwww') |
-+------------------------------------------------+
-|                                                |
-+------------------------------------------------+
-
+CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN(<url>)
 ```
 
-## 关键词
+## 参数
+| 参数 | 说明                                 |
+| ---- | ------------------------------------ |
+| `<url>` | 需要处理的 URL 字符串。类型：VARCHAR |
 
-CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN
+## 返回值
+
+返回 VARCHAR 类型，表示提取出的域名部分。
+
+特殊情况：
+- 如果 url 为 NULL，返回 NULL
+- 如果 url 不是有效的域名格式，返回空字符串
+
+## 示例
+
+1. 基本域名处理
+```sql
+SELECT cut_to_first_significant_subdomain('www.baidu.com');
+```
+```text
++-----------------------------------------------------+
+| cut_to_first_significant_subdomain('www.baidu.com')  |
++-----------------------------------------------------+
+| baidu.com                                            |
++-----------------------------------------------------+
+```
+
+2. 多级域名处理
+```sql
+SELECT cut_to_first_significant_subdomain('www.google.com.cn');
+```
+```text
++---------------------------------------------------------+
+| cut_to_first_significant_subdomain('www.google.com.cn')   |
++---------------------------------------------------------+
+| google.com.cn                                             |
++---------------------------------------------------------+
+```
+
+3. 无效域名处理
+```sql
+SELECT cut_to_first_significant_subdomain('wwwwwwww');
+```
+```text
++------------------------------------------------+
+| cut_to_first_significant_subdomain('wwwwwwww')  |
++------------------------------------------------+
+|                                                 |
++------------------------------------------------+
+```

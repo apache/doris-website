@@ -22,54 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## struct()
-
-struct()
-
-### description
-
-#### Syntax
-
-`STRUCT<T1, T2, T3, ...> struct(T1, T2, T3, ...)`
+## Description
 
 construct an struct with variadic elements and return it, Tn could be column or literal
 
-### example
+## Syntax
 
-```
-mysql> select struct(1, 'a', "abc");
-+-----------------------+
-| struct(1, 'a', 'abc') |
-+-----------------------+
-| {1, 'a', 'abc'}       |
-+-----------------------+
-1 row in set (0.03 sec)
-
-mysql> select struct(null, 1, null);
-+-----------------------+
-| struct(NULL, 1, NULL) |
-+-----------------------+
-| {NULL, 1, NULL}       |
-+-----------------------+
-1 row in set (0.02 sec)
-
-mysql> select struct(cast('2023-03-16' as datetime));
-+----------------------------------------+
-| struct(CAST('2023-03-16' AS DATETIME)) |
-+----------------------------------------+
-| {2023-03-16 00:00:00}                  |
-+----------------------------------------+
-1 row in set (0.01 sec)
-
-mysql> select struct(k1, k2, null) from test_tb;
-+--------------------------+
-| struct(`k1`, `k2`, NULL) |
-+--------------------------+
-| {1, 'a', NULL}           |
-+--------------------------+
-1 row in set (0.04 sec)
+```sql
+STRUCT( <expr1> [ , <expr2> ... ] )
 ```
 
-### keywords
+## Parameters
 
-STRUCT,CONSTRUCTOR
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | Construct the input content for the struct |
+
+## Return Value
+
+construct an struct with variadic elements and return it, Tn could be column or literal
+
+## Example
+
+```sql
+select struct(1, 'a', "abc"),struct(null, 1, null),struct(cast('2023-03-16' as datetime));
+```
+
+```text
++--------------------------------------+--------------------------------------+---------------------------------------------+
+| struct(1, 'a', 'abc')                | struct(NULL, 1, NULL)                | struct(cast('2023-03-16' as DATETIMEV2(0))) |
++--------------------------------------+--------------------------------------+---------------------------------------------+
+| {"col1":1, "col2":"a", "col3":"abc"} | {"col1":null, "col2":1, "col3":null} | {"col1":"2023-03-16 00:00:00"}              |
++--------------------------------------+--------------------------------------+---------------------------------------------+
+```

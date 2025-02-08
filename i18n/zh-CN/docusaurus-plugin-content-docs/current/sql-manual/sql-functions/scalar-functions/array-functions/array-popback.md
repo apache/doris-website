@@ -22,29 +22,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_popback
-
-array_popback
-
 ## 描述
-
-## 语法
-
-`ARRAY<T> array_popback(ARRAY<T> arr)`
 
 返回移除最后一个元素后的数组，如果输入参数为NULL，则返回NULL
 
+## 语法
+```sql
+ARRAY_POPBACK(<arr>)
+```
+
+## 参数
+
+| 参数 | 说明 | 
+| --- | --- |
+| `<arr>` | ARRAY数组 |
+
+## 返回值
+
+返回移除最后一个元素后的数组。特殊情况：
+- 如果输入参数为 NULL，则返回 NULL
+
 ## 举例
 
+```sql
+select array_popback(['test', NULL, 'value']);
 ```
-mysql> select array_popback(['test', NULL, 'value']);
+
+```text
 +-----------------------------------------------------+
 | array_popback(ARRAY('test', NULL, 'value'))         |
 +-----------------------------------------------------+
-| [test, NULL]                                        |
+| ["test", NULL]                                        |
 +-----------------------------------------------------+
 ```
-
-### keywords
-
-ARRAY,POPBACK,ARRAY_POPBACK

@@ -169,9 +169,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_497" />
                         </filter>
@@ -200,9 +200,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14560" />
                         </filter>
@@ -259,9 +259,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14564" />
                         </filter>
@@ -298,9 +298,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_513" />
                         </filter>
@@ -313,7 +313,7 @@ export default function Home(): JSX.Element {
             title: <Translate id="community.title.c5">LinkedIn</Translate>,
             img: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="61" height="60" viewBox="0 0 61 60" fill="none">
-                    <g clip-path="url(#clip0_1665_520)">
+                    <g clipPath="url(#clip0_1665_520)">
                         <g opacity="0.6" filter="url(#filter0_f_1665_520)">
                             <ellipse cx="30.5" cy="47" rx="11" ry="3" fill="#1460D4" />
                         </g>
@@ -331,9 +331,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_520" />
                         </filter>
@@ -369,9 +369,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_524" />
                         </filter>

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_ASTEXT,ST_ASWKT",
+    "title": "ST_ASTEXT",
     "language": "zh-CN"
 }
 ---
@@ -28,10 +28,14 @@ under the License.
 
 将一个几何图形转化为 WKT（Well Known Text）的表示形式
 
+## 别名
+
+- ST_ASWKT
+
 ## 语法
 
 ```sql
-ST_AsText( <geo>)
+ST_ASTEXT( <geo>)
 ```
 
 # 参数

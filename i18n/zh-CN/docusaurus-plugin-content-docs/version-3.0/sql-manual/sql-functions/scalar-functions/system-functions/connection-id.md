@@ -1,7 +1,7 @@
 ---
 {
-    "title": "connection_id",
-    "language": "en"
+    "title": "CONNECTION_ID",
+    "language": "zh-CN"
 }
 ---
 
@@ -21,3 +21,33 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+## 描述
+
+获取当前 sql 客户端的连接编号。
+
+## 语法
+
+```sql
+CONNECTION_ID()
+```
+
+## 返回值
+
+当前 sql 客户端的连接编号。
+
+## 举例
+
+```sql
+select connection_id();
+```
+
+```text
++-----------------+
+| connection_id() |
++-----------------+
+|             549 |
++-----------------+
+```
+
+

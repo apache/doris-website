@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_DENSE_RANK",
+    "title": "DENSE_RANK",
     "language": "zh-CN"
 }
 ---
@@ -11,35 +11,38 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION DENSE_RANK
 ## 描述
 
-DENSE_RANK() 函数用来表示排名，与RANK()不同的是，DENSE_RANK() 不会出现空缺数字。比如，如果出现了两个并列的1，DENSE_RANK() 的第三个数仍然是2，而RANK()的第三个数是3。
+DENSE_RANK() 是一种窗口函数，用于计算分组内值的排名，与 RANK() 不同的是，DENSE_RANK() 返回的排名是连续的，不会出现空缺数字。排名值从 1 开始按顺序递增，如果出现相同的值，它们将具有相同的排名。
+
+## 语法
 
 ```sql
-DENSE_RANK() OVER(partition_by_clause order_by_clause)
+DENSE_RANK()
 ```
+
+## 返回值
+
+返回 BIGINT 类型的排名值，从 1 开始。
 
 ## 举例
 
-按照 property 列分组对x列排名：
-
 ```sql
- select x, y, dense_rank() over(partition by x order by y) as rank from int_t;
- 
- | x  | y    | rank     |
- |----|------|----------|
- | 1  | 1    | 1        |
- | 1  | 2    | 2        |
- | 1  | 2    | 2        |
- | 2  | 1    | 1        |
- | 2  | 2    | 2        |
- | 2  | 3    | 3        |
- | 3  | 1    | 1        |
- | 3  | 1    | 1        |
- | 3  | 2    | 2        |
+select x, y, dense_rank() over(partition by x order by y) as rank from int_t;
 ```
 
-### keywords
-
-    WINDOW,FUNCTION,DENSE_RANK
+```text
++-----+-----+------+
+| x   | y   | rank |
+| --- | --- | ---- |
+| 1   | 1   | 1    |
+| 1   | 2   | 2    |
+| 1   | 2   | 2    | -- 相同值具有相同排名 |
+| 2   | 1   | 1    |
+| 2   | 2   | 2    |
+| 2   | 3   | 3    | -- 排名连续，没有空缺 |
+| 3   | 1   | 1    |
+| 3   | 1   | 1    |
+| 3   | 2   | 2    |
++-----+-----+------+
+```

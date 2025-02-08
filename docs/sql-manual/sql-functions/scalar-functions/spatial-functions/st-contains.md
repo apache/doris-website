@@ -31,7 +31,7 @@ Determines whether the geometry shape1 is fully capable of containing the geomet
 ## Syntax
 
 ```sql
-ST_Contains( <shape1>, <shape2>)
+ST_CONTAINS( <shape1>, <shape2>)
 ```
 
 ## Parameters

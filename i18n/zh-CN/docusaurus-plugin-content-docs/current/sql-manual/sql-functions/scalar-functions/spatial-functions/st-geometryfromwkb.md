@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOMETRYFROMWKB,ST_GEOMFROMWKB",
+    "title": "ST_GEOMETRYFROMWKB",
     "language": "zh-CN"
 }
 ---
@@ -28,10 +28,14 @@ under the License.
 
 将一个标准图形 WKB（Well-known binary）转化为对应的内存的几何形式
 
+## 别名
+
+- ST_GEOMFROMWKB
+
 ## 语法
 
 ```sql
-ST_GeometryFromWKB( <WKB>)
+ST_GEOMETRYFROMWKB( <WKB>)
 ```
 ## 参数
 
