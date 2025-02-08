@@ -36,7 +36,7 @@ NEGATIVE(<x>)
 
 | Parameter | Description |
 |-----------|------------|
-| `<Number>`   | The independent variable supports the types `BIGINT, DOUBLE, and DECIMAL` |
+| `<x>`   | The independent variable supports the types `BIGINT, DOUBLE, and DECIMAL` |
 
 ## Return value
 
