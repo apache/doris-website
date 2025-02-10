@@ -117,7 +117,7 @@ AS
 SELECT * FROM lineitem;
 ```
 
-如下，尽量增量刷新(`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
+如下，尽量增量刷新 (`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_7
@@ -221,11 +221,11 @@ INSERT INTO partsupp VALUES
 (2, 3, 10, 11.01, 'supply3');
 ```
 
-#### 示例1
+#### 示例 1
 
 如下，刷新时机是创建完立即刷新 `BUILD IMMEDIATE`，刷新方式尽量增量刷新 `REFRESH AUTO`，
 只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区。
-触发方式是手动 `ON MANUAL`。 对于非分区全量物化视图，只有一个分区，如果基表数据发生变化，意味着要全量刷新。
+触发方式是手动 `ON MANUAL`。对于非分区全量物化视图，只有一个分区，如果基表数据发生变化，意味着要全量刷新。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_1_0
@@ -243,7 +243,7 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### 示例2
+#### 示例 2
 如下，刷新时机是延迟刷新 `BUILD DEFERRED`，刷新方式是全量刷新 `REFRESH COMPLETE`，
 触发时机是定时刷新 `ON SCHEDULE`，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。
 如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建 完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00`
@@ -268,7 +268,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### 示例3
+#### 示例 3
 
 如下，刷新时机是创建完立即刷新 `BUILD IMMEDIATE`，刷新方式是全量刷新 `REFRESH COMPLETE`，
 触发方式是触发刷新 `ON COMMIT`，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新。
@@ -807,7 +807,7 @@ l_suppkey;
 | bitmap_union                                          | bitmap_union                             | bitmap_union       |
 | bitmap_union_count                                    | bitmap_union                             | bitmap_union_count |
 | hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg                 | hll_union_agg      |
-| any_value                                             | any_value 或者 select 后有any_value使用的列      | any_value      |
+| any_value                                             | any_value 或者 select 后有 any_value 使用的列      | any_value      |
 
 :::tip 提示
 从 2.1.1 版本支持 `bitmap_union`，`bitmap_union_count`，`hll_union_agg`, `approx_count_distinct`, `hll_cardinality`。
@@ -1316,11 +1316,11 @@ show partitions from mv11;
 | SET enable_materialized_view_union_rewrite = true;                           | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许。如果发现命中物化视图时数据错误，可以把此开关关闭。                                                 |
 | SET enable_materialized_view_nest_rewrite = true;                            | 是否允许嵌套改写，默认不允许。如果查询 SQL 很复杂，需要构建嵌套物化视图才可以命中，那么需要打开此开关。                                                                          |
 | SET materialized_view_relation_mapping_max_count = 8;                        | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8。如果发现透明改写时间很长，可以把这个值调低 |
-| SET enable_dml_materialized_view_rewrite = true;                             | DML 时, 是否开启基于结构信息的物化视图透明改写，默认开启                                                                                                 |
+| SET enable_dml_materialized_view_rewrite = true;                             | DML 时，是否开启基于结构信息的物化视图透明改写，默认开启                                                                                                 |
 | SET enable_dml_materialized_view_rewrite_when_base_table_unawareness = true; | DML 时，当物化视图存在无法实时感知数据的外表时，是否开启基于结构信息的物化视图透明改写，默认关闭                                                                              |
 
 #### fe.conf 配置
-- **job_mtmv_task_consumer_thread_num：** 此参数控制同时运行的物化视图刷新任务数量，默认是10,超过这个数量的任务将处于pending状态
+- **job_mtmv_task_consumer_thread_num：** 此参数控制同时运行的物化视图刷新任务数量，默认是 10，超过这个数量的任务将处于 pending 状态
   修改这个参数需要重启 fe 才可以生效。
 
 
