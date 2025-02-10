@@ -80,8 +80,7 @@
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
-                                "table-design/data-partitioning/manual-bucketing",
-                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/data-bucketing",
                                 "table-design/data-partitioning/common-issues"
                             ]
                         },
@@ -907,8 +906,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",

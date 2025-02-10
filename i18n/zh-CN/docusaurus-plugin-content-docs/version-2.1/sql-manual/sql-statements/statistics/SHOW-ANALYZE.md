@@ -24,83 +24,99 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
-通过 `SHOW ANALYZE` 来查看统计信息收集作业的信息。
+该语句用来查看统计信息收集作业的状态。
 
-语法如下：
+## 语法
 
-```sql
-SHOW [AUTO] ANALYZE < table_name | job_id >
-    [ WHERE [ STATE = [ "PENDING" | "RUNNING" | "FINISHED" | "FAILED" ] ] ];
+```SQL
+SHOW [AUTO] ANALYZE [ <table_name> | <job_id> ]
+    [ WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"} ];
 ```
 
-- AUTO：仅仅展示自动收集历史作业信息。需要注意的是默认只保存过去 20000 个执行完毕的自动收集作业的状态。
-- table_name：表名，指定后可查看该表对应的统计作业信息。可以是  `db_name.table_name`  形式。不指定时返回所有统计作业信息。
-- job_id：统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定 id 时此命令返回所有统计作业信息。
+## 必选参数
 
-输出：
+**无**
 
-| 列名                   | 说明         |
-| :--------------------- | :----------- |
-| `job_id`               | 统计作业 ID  |
-| `catalog_name`         | catalog 名称 |
-| `db_name`              | 数据库名称   |
-| `tbl_name`             | 表名称       |
-| `col_name`             | 列名称列表       |
-| `job_type`             | 作业类型     |
-| `analysis_type`        | 统计类型     |
-| `message`              | 作业信息     |
-| `last_exec_time_in_ms` | 上次执行时间 |
-| `state`                | 作业状态     |
-| `schedule_type`        | 调度方式     |
+## 可选参数
 
-下面是一个例子：
+**1. `AUTO `**
+
+> 展示自动作业信息。如不指定，默认显示手动作业信息。
+
+**2. `<table_name>`**
+
+> 表名。指定后可查看该表对应的作业信息。不指定时默认返回所有表的作业信息。
+
+**3. `<job_id>`**
+
+> 统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定 id 时此命令返回所有作业信息。
+
+**4. `WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"}`**
+
+> 作业状态过滤条件。如不指定，默认显示所有状态的作业信息。
+
+## 返回值
+
+| 列名 | 说明           |
+| -- |--------------|
+| job_id | 收集作业的唯一ID           |
+| catalog_name |   Catalog名           |
+| db_name | 数据库名           |
+| tbl_name | 表名         |
+| col_name | 收集的列列表           |
+| job_type |   作业类型           |
+| analysis_type |  分析类型           |
+| message | 错误信息         |
+| last_exec_time_in_ms | 上次收集完成时间           |
+| state |   作业状态          |
+| progress | 作业进度           |
+| schedule_type | 调度类型         |
+| start_time | 作业开始时间          |
+| end_time |   作业结束时间           |
+| priority | 作业优先级           |
+| enable_partition | 是否开启分区收集         |
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                                    |
+|:--------------| :------------- |:------------------------------------------------|
+| SELECT_PRIV   | 表（Table）    | 当执行 SHOW 时，需要拥有被查询的表的 SELECT_PRIV 权限 |
+
+## 举例
+
+1. 通过表名展示作业
 
 ```sql
-mysql> show analyze 245073\G;
-*************************** 1. row ***************************
-              job_id: 245073
-        catalog_name: internal
-             db_name: default_cluster:tpch
-            tbl_name: lineitem
-            col_name: [l_returnflag,l_receiptdate,l_tax,l_shipmode,l_suppkey,l_shipdate,l_commitdate,l_partkey,l_orderkey,l_quantity,l_linestatus,l_comment,l_extendedprice,l_linenumber,l_discount,l_shipinstruct]
-            job_type: MANUAL
-       analysis_type: FUNDAMENTALS
-             message: 
-last_exec_time_in_ms: 2023-11-07 11:00:52
-               state: FINISHED
-            progress: 16 Finished  |  0 Failed  |  0 In Progress  |  16 Total
-       schedule_type: ONCE
+SHOW ANALYZE test1 WHERE STATE="FINISHED";
 ```
 
-<br/>
+```text
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| job_id        | catalog_name | db_name | tbl_name | col_name              | job_type | analysis_type | message | last_exec_time_in_ms | state    | progress                                              | schedule_type | start_time          | end_time            | priority | enable_partition |
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| 1737454119144 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-01-21 18:10:11  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-01-21 18:10:10 | 2025-01-21 18:10:11 | MANUAL   | false            |
+| 1738725887879 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 11:26:15  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-02-05 11:26:15 | 2025-02-05 11:26:15 | MANUAL   | false            |
+| 1738725887890 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:09  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-02-05 12:17:08 | 2025-02-05 12:17:09 | MANUAL   | false            |
+| 1738725887895 | internal     | test    | test1    | [test1:id]            | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:24  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:23 | 2025-02-05 12:17:24 | MANUAL   | false            |
+| 1738725887903 | internal     | test    | test1    | [test1:id]            | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:42  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:41 | 2025-02-05 12:17:42 | MANUAL   | false            |
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+```
 
-每个收集作业中可以包含一到多个任务，每个任务对应一列的收集。用户可通过如下命令查看具体每列的统计信息收集完成情况。
-
-语法：
+2. 通过作业 ID 展示作业
 
 ```sql
-SHOW ANALYZE TASK STATUS [job_id]
+show analyze 1738725887903;
 ```
 
-下面是一个例子：
-
-```sql
-mysql> show analyze task status 20038 ;
-+---------+----------+---------+----------------------+----------+
-| task_id | col_name | message | last_exec_time_in_ms | state    |
-+---------+----------+---------+----------------------+----------+
-| 20039   | col4     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20040   | col2     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20041   | col3     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20042   | col1     |         | 2023-06-01 17:22:15  | FINISHED |
-+---------+----------+---------+----------------------+----------+
-
-
+```text
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| job_id        | catalog_name | db_name | tbl_name | col_name   | job_type | analysis_type | message | last_exec_time_in_ms | state    | progress                                              | schedule_type | start_time          | end_time            | priority | enable_partition |
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| 1738725887903 | internal     | test    | test1    | [test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:42  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:41 | 2025-02-05 12:17:42 | MANUAL   | false            |
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
 ```
 
-## 关键词
-
-SHOW, ANALYZE

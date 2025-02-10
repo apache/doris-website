@@ -24,76 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_range
 
-array_range
+## Description
 
-### description
+1. Generate int array
+2. Generate date and time array
 
-#### Syntax
+## Aliases
+
+- SEQUENCE
+
+## Syntax
 
 ```sql
-ARRAY<Int> array_range(Int end)
-ARRAY<Int> array_range(Int start, Int end)
-ARRAY<Int> array_range(Int start, Int end, Int step)
-ARRAY<Datetime> array_range(Datetime start_datetime, Datetime end_datetime)
-ARRAY<Datetime> array_range(Datetime start_datetime, Datetime end_datetime, INTERVAL Int interval_step UNIT)
-```
-1. To generate array of int:
-The parameters are all positive integers. 
-start default value is 0, and step default value is 1.
-Return the array which numbers from start to end - 1 by step.
-
-2. To generate array of datetime:
-At least taking two parameters. 
-The first two parameters are all datetimev2, the third is positive integer.
-If the third part is missing, `INTERVAL 1 DAY` will be default value.
-UNIT supports YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND.
-Return the array of datetimev2 between start_datetime and closest to end_datetime by interval_step UNIT.
-
-### notice
-
-`if the 3rd parameter step/interval_step is negative or zero, the function will return NULL`
-
-### example
-
-```
-mysql> select array_range(10);
-+--------------------------------+
-| array_range(10)                |
-+--------------------------------+
-| [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] |
-+--------------------------------+
-
-mysql> select array_range(10,20);
-+------------------------------------------+
-| array_range(10, 20)                      |
-+------------------------------------------+
-| [10, 11, 12, 13, 14, 15, 16, 17, 18, 19] |
-+------------------------------------------+
-
-mysql> select array_range(0,20,2);
-+-------------------------------------+
-| array_range(0, 20, 2)               |
-+-------------------------------------+
-| [0, 2, 4, 6, 8, 10, 12, 14, 16, 18] |
-+-------------------------------------+
-
-mysql> select array_range(cast('2022-05-15 12:00:00' as datetimev2(0)), cast('2022-05-17 12:00:00' as datetimev2(0))) AS array_range_default;
-+------------------------------------------------+
-| array_range_default                            |
-+------------------------------------------------+
-| ["2022-05-15 12:00:00", "2022-05-16 12:00:00"] |
-+------------------------------------------------+
-
-mysql> select array_range(cast('2019-05-15 12:00:00' as datetimev2(0)), cast('2022-05-17 12:00:00' as datetimev2(0)), interval 2 year) as array_range_2_year;
-+------------------------------------------------+
-| array_range_2_year                             |
-+------------------------------------------------+
-| ["2019-05-15 12:00:00", "2021-05-15 12:00:00"] |
-+------------------------------------------------+
+ARRAY_RANGE(<end>)
+ARRAY_RANGE(<start>, <end>)
+ARRAY_RANGE(<start>, <end>, <step>)
+ARRAY_RANGE(<start_datetime>, <end_datetime>)
+ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 ```
 
-### keywords
+## Parameters
 
-ARRAY, RANGE, ARRAY_RANGE
+| Parameter | Description |
+|--|--|
+| `<start>` | The starting value is a positive integer, the default value is 0 |
+| `<end>` | End value, a positive integer |
+| `<step>` | Step size, a positive integer, default is 1 |
+| `<start_datetime>` | Start date, datetimev2 type |
+| `<end_datetime>` | End date, datetimev2 type |
+| `<interval_step>` | Interval value, default is 1 |
+| `<unit>` | Interval unit, supports year/month/week/day/hour/minute/second, default is day |
+
+## Return Value
+
+1. Returns an array from start to end - 1, with a step length of step. If the third parameter step is negative or zero, the function result will be NULL
+2. Returns an array of datetimev2 between start_datetime and the closest end_datetime (calculated by Interval_step UNIT). If the third argument interval_step is negative or zero, the function result will be NULL
+
+## Example
+
+```sql
+SELECT ARRAY_RANGE(0,20,2),ARRAY_RANGE(cast('2019-05-15 12:00:00' as datetimev2(0)), cast('2022-05-17 12:00:00' as datetimev2(0)), interval 2 year);
+```
+
+```text
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
+| array_range(0, 20, 2)               | array_range_year_unit(cast('2019-05-15 12:00:00' as DATETIMEV2(0)), cast('2022-05-17 12:00:00' as DATETIMEV2(0)), 2) |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
+| [0, 2, 4, 6, 8, 10, 12, 14, 16, 18] | ["2019-05-15 12:00:00", "2021-05-15 12:00:00"]                                                                       |
++-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
+```

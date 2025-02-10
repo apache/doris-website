@@ -1,7 +1,7 @@
 ---
 {
-"title": "IPV4_TO_IPV6",
-"language": "zh-CN"
+    "title": "IPV4_TO_IPV6",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,32 +22,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IPV4_TO_IPV6
-
-IPV4_TO_IPV6
-
 ## 描述
-
-## 语法
-
-`IPV6 IPV4_TO_IPV6(IPV4 ipv4)`
-
-
 接受一个类型为 IPv4 的地址，返回相应 IPv6 的形式。
 
-
-## 举例
-
+## 语法
 ```sql
-mysql [(none)]>select ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1')));
-+----------------------+
-| '::ffff:192.168.0.1' |
-+----------------------+
-| ::ffff:192.168.0.1   |
-+----------------------+
-1 row in set (0.02 sec)
+IPV4_TO_IPV6(<ipv4>)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4>`      | ipv4类型的地址 |
 
-IPV4_TO_IPV6, IP
+## 返回值
+返回转化后的ipv6地址
+
+## 举例
+```sql
+select ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1')));
+```
+```text
++----------------------------------------------------------+
+| ipv6_num_to_string(ipv4_to_ipv6(to_ipv4('192.168.0.1'))) |
++----------------------------------------------------------+
+| ::ffff:192.168.0.1                                       |
++----------------------------------------------------------+
+```
