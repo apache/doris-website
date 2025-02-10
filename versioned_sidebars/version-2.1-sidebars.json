@@ -476,7 +476,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Disater Recovery",
+                    "label": "Managing Disaster Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
