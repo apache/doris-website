@@ -56,10 +56,10 @@ under the License.
 
    | 参数             | 描述                             | 类型                           | 示例                                                         | 注意事项                                                     |
    | ---------------- | -------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-   | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | - 运行脚本前确保目录已创建- 生产环境建议使用 SSD 和独立目录  |
-   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | - 生产集群至少应有 3 个 IP 地址- 第一个 IP 地址将用作协调器- 为高可用性，将机器放置在不同机架上 |
+   | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | - 运行脚本前确保目录已创建 - 生产环境建议使用 SSD 和独立目录  |
+   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | - 生产集群至少应有 3 个 IP 地址 - 第一个 IP 地址将用作协调器 - 为高可用性，将机器放置在不同机架上 |
    | FDB_HOME         | 定义 FoundationDB 主目录         | 绝对路径                       | /fdbhome                                                     | - 默认路径为 /fdbhome- 确保此路径是绝对路径                  |
-   | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | - 每个集群的 ID 必须唯一- 可使用 mktemp -u XXXXXXXX 生成     |
+   | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | - 每个集群的 ID 必须唯一 - 可使用 mktemp -u XXXXXXXX 生成     |
    | FDB_CLUSTER_DESC | 定义 FDB 集群的描述              | 字符串                         | dorisfdb                                                     | - 建议更改为对部署有意义的内容                               |
 
    可以选择指定以下自定义配置：
@@ -141,7 +141,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    fdb_cluster = xxx:yyy@127.0.0.1:4500
    ```
 
-   注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致 （如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值）。
+   注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致（如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值）。
 
    示例，文件的最后一行就是要填到 doris_cloud.conf 里 fdb_cluster 字段的值：
 
@@ -164,7 +164,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
    bin/start.sh --daemon
    ```
 
-   启动脚本返回值为 0 表示启动成功， 否则启动失败。 启动成功同时标准输出的最后一行文本信息为 "doris_cloud start successfully"。
+   启动脚本返回值为 0 表示启动成功，否则启动失败。启动成功同时标准输出的最后一行文本信息为 "doris_cloud start successfully"。
 
    停止命令如下：
 
@@ -222,7 +222,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
    - `meta_service_endpoint`
      - 描述：Meta Service 的地址和端口
      - 格式：`IP地址:端口号`
-     - 示例：`127.0.0.1:5000`， 可以用逗号分割配置多个 meta service。
+     - 示例：`127.0.0.1:5000`，可以用逗号分割配置多个 meta service。
 
 2. 启动 FE Master 节点
 
@@ -245,7 +245,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 将 `host:port` 替换为 FE 节点的实际地址和编辑日志端口。更多信息请参见 [ADD FOLLOWER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) 和 [ADD OBSERVER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER)。
 
-生产环境中，请确保在 FOLLOWER 角色中的前端 （FE） 节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
+生产环境中，请确保在 FOLLOWER 角色中的前端（FE）节点总数，包括第一个 FE，保持为奇数。一般来说，三个 FOLLOWER 就足够了。观察者角色的前端节点可以是任意数量。
 
 ## 第 7 步：添加 BE 节点
 
@@ -259,7 +259,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
       - 格式：cloud 表示存算分离模式，其它存算一体模式
       - 示例：cloud
     - file_cache_path
-      - 描述： 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。path 指定磁盘路径，total_size 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+      - 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。path 指定磁盘路径，total_size 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
       - 格式： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
       - 示例： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
       - 默认： [{"path":"${DORIS_HOME}/file_cache"}]
@@ -300,11 +300,11 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 ## 第 8 步：添加 Storage Vault
 
-Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。可以将一个 Storage Vault 设置为默认 Storage Vault ，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
+Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault。可以将一个 Storage Vault 设置为默认 Storage Vault，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
 1. 创建 HDFS Storage Vault
 
-   要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
+   要使用 SQL 创建 Storage Vault，请使用 MySQL 客户端连接到您的 Doris 集群
 
    ```sql
    CREATE STORAGE VAULT IF_NOT_EXISTS hdfs_vault
@@ -316,10 +316,10 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
 
 2. 创建 S3 Storage Vault
 
-   要使用兼容 S3 的对象存储创建 Storage Vault ，请按照以下步骤操作：
+   要使用兼容 S3 的对象存储创建 Storage Vault，请按照以下步骤操作：
 
    - 使用 MySQL 客户端连接到您的 Doris 集群。
-   - 执行以下 SQL 命令来创建 S3 Storage Vault ：
+   - 执行以下 SQL 命令来创建 S3 Storage Vault：
 
    ```sql
    CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
@@ -335,11 +335,11 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    );
    ```
 
-   要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT)。
+   要在其他对象存储上创建 Storage Vault，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT)。
 
 3. 设置默认 Storage Vault
 
-   使用如下 SQL 语句设置一个默认 Storage Vault 。
+   使用如下 SQL 语句设置一个默认 Storage Vault。
 
    ```sql
    SET <storage_vault_name> AS DEFAULT STORAGE VAULT
