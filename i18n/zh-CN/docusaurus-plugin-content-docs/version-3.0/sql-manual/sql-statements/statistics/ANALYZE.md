@@ -24,38 +24,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
-该语句用于收集各列的统计信息。
+该语句用于收集统计信息。可以针对表（可以指定具体列）或整个数据库进行列统计信息的收集。
+
+## 语法
 
 ```sql
-ANALYZE < TABLE | DATABASE table_name | db_name > 
-    [ (column_name [, ...]) ]
-    [ [ WITH SYNC ] [ WITH SAMPLE PERCENT | ROWS ] ];
+ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
+    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
 ```
 
-- table_name: 指定的目标表。可以是  `db_name.table_name`  形式。
-- column_name: 指定的目标列。必须是  `table_name`  中存在的列，多个列名称用逗号分隔。
-- sync：同步收集统计信息。收集完后返回。若不指定则异步执行并返回 JOB ID。
-- sample percent | rows：抽样收集统计信息。可以指定抽样比例或者抽样行数。
+## 必选参数
 
-## 示例
+**1. `<table_name>`**
 
-对一张表按照 10% 的比例采样收集统计数据：
+> 指定的目标表。该参数与`<database_name>`参数必须且只能指定其中之一。
+
+**2. `<database_name>`**
+
+> 指定的目标数据库。该参数与`<table_name>`参数必须且只能指定其中之一。
+
+## 可选参数
+
+**1. `<column_name>`**
+
+> 指定表的目标列。必须是  `table_name`  中存在的列，多个列名称用逗号分隔。
+
+**2. `WITH SYNC`**
+
+> 指定同步执行该ANALYZE语句。不指定时默认后台异步执行。
+
+**3. `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`**
+
+> 指定使用抽样方式收集。当不指定时，默认为全量收集。<sample_rate> 为抽样参数，在PERCENT采样时指定抽样百分比，ROWS采样时指定抽样行数。
+
+## 返回值
+
+| 列名 | 说明           |
+| -- |--------------|
+| Job_Id | 收集作业的唯一ID           |
+| Catalog_Name |   Catalog名           |
+| DB_Name | 数据库名           |
+| Columns | 收集的列列表         |
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                                    |
+|:--------------| :------------- |:------------------------------------------------|
+| SELECT_PRIV   | 表（Table）    | 当执行 ANALYZE 时，需要拥有被查询的表的 SELECT_PRIV 权限 |
+
+## 举例
+
+1. 对lineitem表按照 10% 的比例采样收集统计数据：
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
 ```
 
-对一张表按采样 10 万行收集统计数据
+2. 对lineitem表按采样 10 万行收集统计数据
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ```
 
-## 关键词
-
-ANALYZE
