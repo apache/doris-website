@@ -41,7 +41,7 @@ JSON_OBJECT (<key>, <value>[,<key>, <value>, ...])
 | `<key>`   | 指定生成的 json object 的 Key-Value 中的 Key 值   |
 | `<value>` | 指定生成的 json object 的 Key-Value 中的 Value 值 |
 
-## 用法注意
+## 注意事项
 
 - 按照惯例，参数列表由交替的键和值组成。
 - Key 按照JSON 定义强制转换为文本。
