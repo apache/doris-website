@@ -153,7 +153,7 @@ DataX 官方提供了安装包，已经包含了 DataX 可直接下载使用，�
 
 #### 1.Stream 读取数据后导入至 Doris
 
-该示例插件的使用说明请参阅 [这里](https://github.com/apache/incubator-doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md)
+该示例插件的使用说明请参阅 [这里](https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md)
 
 #### 2.Mysql 读取数据后导入至 Doris
 

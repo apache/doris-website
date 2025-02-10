@@ -24,32 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HISTOGRAM
-### description
-#### Syntax
+## Description
 
-`histogram(expr[, INT num_buckets])`
+The histogram function is used to describe the distribution of the data. It uses an "equal height" bucking strategy, and divides the data into buckets according to the value of the data. It describes each bucket with some simple data, such as the number of values that fall in the bucket. 
 
-The histogram function is used to describe the distribution of the data. It uses an "equal height" bucking strategy, and divides the data into buckets according to the value of the data. It describes each bucket with some simple data, such as the number of values that fall in the bucket. It is mainly used by the optimizer to estimate the range query.
+## Alias
 
-The result of the function returns an empty or Json string.
+HIST
 
-Parameter description：
-- num_buckets：Optional. Limit the number of histogram buckets. The default value is 128.
+## Syntax
 
-Alias function: `hist(expr[, INT num_buckets])`
-
-### example
-
+```sql
+HISTOGRAM(<expr>[, <num_buckets>])
 ```
-MySQL [test]> SELECT histogram(c_float) FROM histogram_test;
+
+## Parameters
+
+| Parameters | Description |
+| -- | -- |
+| `expr` | The expression that needs to be obtained. |
+| `num_buckets` | Optional. Limit the number of histogram buckets. The default value is 128.|
+
+
+## Return Value
+
+Returns a value of JSON type after histogram estimation. Special cases:
+- When the parameter <expr> is NULL, it returns NULL.
+
+## Example
+
+```sql
+SELECT histogram(c_float) FROM histogram_test;
+```
+
+```text
 +-------------------------------------------------------------------------------------------------------------------------------------+
 | histogram(`c_float`)                                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------------------+
 | {"num_buckets":3,"buckets":[{"lower":"0.1","upper":"0.1","count":1,"pre_sum":0,"ndv":1},...]} |
 +-------------------------------------------------------------------------------------------------------------------------------------+
+```
 
-MySQL [test]> SELECT histogram(c_string, 2) FROM histogram_test;
+```sql
+SELECT histogram(c_string, 2) FROM histogram_test;
+```
+
+```text
 +-------------------------------------------------------------------------------------------------------------------------------------+
 | histogram(`c_string`)                                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------------------+
@@ -59,7 +79,7 @@ MySQL [test]> SELECT histogram(c_string, 2) FROM histogram_test;
 
 Query result description：
 
-```
+```json
 {
     "num_buckets": 3, 
     "buckets": [
@@ -88,6 +108,7 @@ Query result description：
 }
 ```
 
+```text
 Field description：
 - num_buckets：The number of buckets
 - buckets：All buckets
@@ -98,7 +119,4 @@ Field description：
     - ndv：The number of different values in the bucket
 
 > Total number of histogram elements = number of elements in the last bucket(count) + total number of elements in the previous bucket(pre_sum).
-
-### keywords
-
-HISTOGRAM, HIST
+```

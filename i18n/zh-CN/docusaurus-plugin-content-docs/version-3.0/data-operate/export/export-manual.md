@@ -124,7 +124,7 @@ OutfileInfo: [
     {
       "fileNumber": "1",
       "totalRows": "6001215",
-      "fileSize": "747503989bytes",
+      "fileSize": "747503989",
       "url": "s3://bucket/export/export_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
@@ -362,14 +362,41 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 示例：将 tbl 表中的所有数据导出到本地文件系统，设置导出作业的文件格式为 csv（默认格式），并设置列分割符为`,`。
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE db.tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。
+
+如在这个示例中，最终会在 BE 节点的 `/path/to/` 下生产一组类似 `result_7052bac522d840f5-972079771289e392_0.csv` 的文件。
+
+具体的 BE 节点 IP 可以在 `SHOW EXPORT` 结果中的 `OutfileInfo` 列查看，如：
+
+```
+[
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.136/path/to/result_7052bac522d840f5-972079771289e392_*"
+        }
+    ], 
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.137/path/to/result_22aba7ec933b4922-ba81e5eca12bf0c2_*"
+        }
+    ]
+]
+```
+
 :::caution
-此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
+此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
 :::
 

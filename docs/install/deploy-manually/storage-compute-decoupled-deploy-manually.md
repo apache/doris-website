@@ -1,6 +1,6 @@
 ---
 {
-    "title": "deploy storage compute decoupled manually",
+    "title": "Deploy Storage Compute Decoupled Manually",
     "language": "en"
 }
 ---
@@ -244,7 +244,7 @@ Other nodes should also modify their configuration files and start following the
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-Replace `host:port` with the actual address of the FE node and edit the log port. For more information, see [ADD FOLLOWER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) and [ADD OBSERVER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER).
+Replace `host:port` with the actual address of the FE node and edit the log port. For more information, see [ADD FOLLOWER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER) and [ADD OBSERVER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER).
 
 In a production environment, make sure the total number of FE nodes in the FOLLOWER role, including the first FE, remains odd. Typically, three FOLLOWER nodes are sufficient. The number of FE nodes in the OBSERVER role can be arbitrary.
 
@@ -255,8 +255,16 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
 1. Configure `be.conf`
 
    In the `be.conf` file, you need to configure the following key parameters:
+   - deploy_mode
+     - Description: Specifies the startup mode of doris
+     - Format: cloud indicates separation of storage and computing mode, others indicate integration of storage and computing mode
+     - Example: cloud
+   - file_cache_path
+     - Description: Disk path and other parameters used for file caching, represented in array form, each disk is an item. path specifies the disk path, total_size limits the cache size; -1 or 0 will use the entire disk space.
+     - Format: [{"path":"/path/to/file_cache", "total_size":21474836480}, {"path":"/path/to/file_cache2", "total_size":21474836480}]
+     - Example: [{"path":"/path/to/file_cache", "total_size":21474836480}, {"path":"/path/to/file_cache2", "total_size":21474836480}] - Default: [{"path":"${DORIS_HOME}/file_cache"}]
 
-2. Start the BE process
+3. Start the BE process
 
    Use the following command to start the Backend:
 
@@ -264,7 +272,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
    bin/start_be.sh --daemon
    ```
 
-3. Add BE to the cluster:
+4. Add BE to the cluster:
 
    Connect to any Frontend using MySQL client and execute:
 
@@ -276,9 +284,9 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
 
    You can use PROPERTIES to specify the compute group where the BE is located.
 
-   For more detailed usage, refer to [ADD BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND).
+   For more detailed usage, refer to [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND).
 
-4. Verify BE status
+5. Verify BE status
 
    Check the Backend log files (`be.log`) to ensure it has successfully started and joined the cluster.
 
@@ -327,7 +335,7 @@ Storage Vault is an important component in Doris' separation of storage and comp
    );
    ```
 
-   To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT).
+   To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 3. Set Default Storage Vault
 

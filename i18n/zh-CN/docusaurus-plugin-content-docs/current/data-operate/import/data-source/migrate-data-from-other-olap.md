@@ -40,10 +40,6 @@ under the License.
     X2Doris 专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集 `自动建 Doris 表` 和 `数据迁移` 为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
 
 :::info NOTE
-这些第三方提供的工具并非由 Apache Doris 维护或认可，这些工作由 Committers 和 Doris PMC 监督。使用这些资源和服务完全由您自行决定，社区不负责验证这些工具的许可或有效性。
-:::
-
-:::info NOTE
 如果有其他迁移工具可以加入此列表，可以联系 dev@doris.apache.org
 :::
 
@@ -55,20 +51,13 @@ under the License.
 
 基于 X2Doris 用户可以构建从其他 OLAP 系统到 Apache Doris 的整库迁移链路，并可以实现不同 Doris 集群间的数据备份和恢复。
 
-![X2Doris 核心特性](/images/x2doris.jpg)
-
 ### 自动建表
 
 数据迁移中最大的痛点，首当其冲的是如何将待迁移的源表在 Apache Doris 中创建对应的目标表。在实际业务场景中，存储在 Hive 中动辄上千张表，让用户手动创建目标表并转换对应的 DDL 语句效率显得过于低下，不具备实际操作可能性。
 
 X2Doris 为此场景做了适配，在此以 Hive 表迁移为例。在迁移 Hive 表的时候，X2Doris 会在 Apache Doris 中自动创建 Duplicate Key 模型表（也可手动修改）并读取 Hive 表的元数据信息，通过字段名和字段类型自动识别分区字段，如果识别到分区则会提示进行分区映射，最后会直接生成对应的 Doris 目标表 DDL。
 
-
-![自动建表](/images/x2doris-create-table.png)
-
 在上游数据源为 Doris/StarRocks 时，X2Doris 会自动根据源表信息解析出表模型，自动根据源表字段类型映射对应的目标字段类型，针对上游的 Properties 参数也会识别处理，转换成对应目标表的属性参数。除此以外，X2Doris 还对复杂类型进行了增强，实现了对 Array、Map、Bitmap 类型的数据迁移。
-
-![自动建表](/images/x2doris-create-table-2.png)
 
 ### 极速稳定
 

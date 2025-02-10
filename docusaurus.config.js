@@ -1,12 +1,10 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
+const logoImg = '/images/logo.svg';
 
 function getDocsVersions() {
     const result = {};
@@ -61,30 +59,6 @@ const config = {
         },
     },
     scripts: ['/js/custom-script.js'],
-    headTags: [
-        {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.googleapis.com',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.gstatic.com',
-                crossorigin: 'anonymous',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap',
-                rel: 'stylesheet',
-            },
-        },
-    ],
     stylesheets: [
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
@@ -113,8 +87,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
-
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
@@ -180,13 +152,10 @@ const config = {
                     blogSidebarCount: 0,
                     showReadingTime: false,
                     onUntruncatedBlogPosts: 'ignore',
+                    onInlineAuthors: 'ignore',
                 },
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
-                },
-                gtag: {
-                    trackingID: 'G-DT7W9E9722',
-                    anonymizeIP: true,
                 },
                 sitemap: {
                     changefreq: 'weekly',
@@ -234,7 +203,7 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'apache_doris_meetup_singapore',
+                id: 'support_us',
                 content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
                 <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
                     </a>`,
@@ -319,6 +288,12 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: '归档文档',
+                                to: `/zh-CN/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },
@@ -341,6 +316,12 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },
@@ -502,7 +483,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;

@@ -24,90 +24,109 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to display the execution of the specified import task
+This statement is used to display the execution status of the specified import task.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW LOAD
-[FROM db_name]
+[FROM <db_name>]
 [
    WHERE
-   [LABEL [ = "your_label" | LIKE "label_matcher"]]
-   [STATE = ["PENDING"|"ETL"|"LOADING"|"FINISHED"|"CANCELLED"|]]
+   [LABEL  = [ "<your_label>" | LIKE "<label_matcher>"]]
+   [ STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " } ]
 ]
-[ORDER BY...]
-[LIMIT limit][OFFSET offset];
+[ORDER BY { <col_name> | <expr> | <position> }]
+[LIMIT <limit>[OFFSET <offset>]];
 ```
 
-illustrate:
+## Optional Parameters
 
-1. If db_name is not specified, the current default db is used
+**1. `<db_name>`**
 
-2. If LABEL LIKE is used, it will match import tasks whose label contains label_matcher
+> If `db_name` is not specified, the current default database will be used.
 
-3. If LABEL = is used, it will match the specified label exactly
+**2. `<label_matcher>`**
 
-4. If STATE is specified, matches the LOAD state
+> When using `LABEL LIKE = "<label_matcher>"`, it will match import tasks whose labels contain `label_matcher`.
 
-5. You can use ORDER BY to sort on any combination of columns
+**3. `<your_label>`**
 
-6. If LIMIT is specified, limit matching records are displayed. Otherwise show all
+> When using `LABEL = "<your_label>"`, it will precisely match the specified label.
 
-7. If OFFSET is specified, the query results are displayed starting at offset offset. By default the offset is 0.
+**4. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
 
-8. If you are using broker/mini load, the connections in the URL column can be viewed using the following command:
+> Specifying `PENDING` means matching jobs with the `LOAD = "PENDING"` status. The same applies to other status keywords.
 
-   ```sql
-   SHOW LOAD WARNINGS ON 'url'
-   ```
+**5. `<col_name>`**
 
-## Example
+> Specify the column name in the result set for sorting.
 
-1. Show all import tasks for default db
+**6. `<expr>`**
 
-   ```sql
-   SHOW LOAD;
-   ```
+> Use an expression for sorting.
 
-2. Display the import tasks of the specified db, the label contains the string "2014_01_02", and display the oldest 10
+**7. `<position>`**
 
-   ```sql
-   SHOW LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
-   ```
+> Sort by the position of the column in the `SELECT` list (starting from 1).
 
-3. Display the import tasks of the specified db, specify the label as "load_example_db_20140102" and sort by LoadStartTime in descending order
+**8. `<limit>`**
 
-   ```sql
-   SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" ORDER BY LoadStartTime DESC;
-   ```
+> If `LIMIT` is specified, it will display `limit` matching records. Otherwise, all records will be displayed.
 
-4. Display the import task of the specified db, specify the label as "load_example_db_20140102", the state as "loading", and sort by LoadStartTime in descending order
+**9. `<offset>`**
 
-   ```sql
-   SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" AND STATE = "loading" ORDER BY LoadStartTime DESC;
-   ```
+> Specify to start displaying query results from the offset `offset`. By default, the offset is 0.
 
-5. Display the import tasks of the specified db and sort them in descending order by LoadStartTime, and display 10 query results starting from offset 5
+## Access Control Requirements
 
-   ```sql
-   SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 5,10;
-   SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 10 offset 5;
-   ```
+Users executing this SQL command must have at least the following permissions:
 
-6. Small batch import is a command to check the import status
+| Privilege | Object | Notes |
+| :---------------- | :------------- | :---------------------------- |
+| LOAD_PRIV | Database | Import permissions for the database tables are required. |
 
-   ```
-   curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
-   ```
+## Return Value
 
-## Keywords
+Returns the detailed status of the specified import task.
 
-    SHOW, LOAD
+## Examples
 
-## Best Practice
+1. Display all import tasks in the default database.
 
+    ```sql
+    SHOW LOAD;
+    ```
+
+2. Display import tasks in the specified database where the label contains the string "2014_01_02", and show the oldest 10 tasks.
+
+    ```sql
+    SHOW LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
+    ```
+
+3. Display import tasks in the specified database with the specified label "load_example_db_20140102" and sort them in descending order by `LoadStartTime`.
+
+    ```sql
+    SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" ORDER BY LoadStartTime DESC;
+    ```
+
+4. Display import tasks in the specified database with the specified label "load_example_db_20140102", the state "loading", and sort them in descending order by `LoadStartTime`.
+
+    ```sql
+    SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" AND STATE = "loading" ORDER BY LoadStartTime DESC;
+    ```
+
+5. Display import tasks in the specified database, sort them in descending order by `LoadStartTime`, and start displaying 10 query results from offset 5.
+
+    ```sql
+    SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 5,10;
+    SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 10 offset 5;
+    ```
+
+6. Command to check the import status during small - batch imports.
+
+    ```text
+    curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
+    ```

@@ -26,7 +26,7 @@ under the License.
 
 ## 索引原理
 
-NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
+n-gram 分词是将一句话或一段文字拆分成多个相邻的词组的分词方法。NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
 
 与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少IO加速查询。
 
@@ -64,7 +64,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 
 **3. `PROPERTIES` 是可选的，用于指定 NGram BloomFilter 索引的额外属性，目前支持的属性如下：**
 
-- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'an ngram example' 在 N = 3 的时候分成 'an ', 'n n', ' ng', 'ngr', 'gra', 'ram' 6 个词。
+- gram_size：NGram 中的 N，指定 N 个连续字符分词一个词，比如 'This is a simple ngram example' 在 N = 3 的时候分成 'This is a', 'is a simple', 'a simple ngram', 'simple ngram example' 4 个词。
 
 - bf_size：BloomFilter 的大小，单位是 Bit。bf_size 决定每个数据块对应的索引大小，这个值越大占用存储空间越大，同时 Hash 碰撞的概率也越低。
 

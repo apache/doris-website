@@ -1,7 +1,7 @@
 ---
 {
-    "title": "COLLECT_LIST",
-    "language": "zh-CN"
+"title": "COLLECT_LIST",
+"language": "zh-CN"
 }
 ---
 
@@ -24,18 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
+
+聚合函数，用于将某一列的所有值聚集成一个数组
+
+## 别名
+
+- GROUP_ARRAY
 
 ## 语法
 
-`ARRAY<T> collect_list(expr[,max_size])`
+```text
+COLLECT_LIST(<expr> [,<max_size>])
+```
 
-返回一个包含 expr 中所有元素 (不包括 NULL) 的数组，可选参数`max_size`，通过设置该参数能够将结果数组的大小限制为 `max_size` 个元素。
-得到的结果数组中不包含 NULL 元素，数组中的元素顺序不固定。该函数具有别名`group_array`。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<expr>` | 要聚合的列或表达式 |
+| `<max_size>` | 可选参数，通过设置该参数能够将结果数组的大小限制为 max_size 个元素 |
+
+## 返回值
+
+返回类型是 ARRAY，该数组包含所有值。特殊情况：
+
+- 如果值为NULL，则会过滤
 
 ## 举例
 
+```sql
+select k1,k2,k3 from collect_list_test order by k1;
 ```
-mysql> select k1,k2,k3 from collect_list_test order by k1;
+
+```text
 +------+------------+-------+
 | k1   | k2         | k3    |
 +------+------------+-------+
@@ -47,15 +69,25 @@ mysql> select k1,k2,k3 from collect_list_test order by k1;
 |    4 | 2023-01-02 | sql   |
 |    4 | 2023-01-03 | sql   |
 +------+------------+-------+
+```
 
-mysql> select collect_list(k1),collect_list(k1,3) from collect_list_test;
+```sql
+select collect_list(k1),collect_list(k1,3) from collect_list_test;
+```
+
+```text
 +-------------------------+--------------------------+
 | collect_list(`k1`)      | collect_list(`k1`,3)     |
 +-------------------------+--------------------------+
 | [1,2,2,3,3,4,4]         | [1,2,2]                  |
 +-------------------------+--------------------------+
+```
 
-mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
+```sql
+select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
+```
+
+```text
 +------+-------------------------+--------------------------+
 | k1   | collect_list(`k2`)      | collect_list(`k3`,1)     |
 +------+-------------------------+--------------------------+
@@ -64,6 +96,5 @@ mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test grou
 |    3 | [2023-01-02]            | [world]                  |
 |    4 | [2023-01-02,2023-01-03] | [sql]                    |
 +------+-------------------------+--------------------------+
-
 ```
 

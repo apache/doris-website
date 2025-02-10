@@ -24,33 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The main topic is how to use the UPDATE command to update data in Doris. The UPDATE command can only be executed on tables in the Unique data model.
+This document explains how to use the `UPDATE` command to modify data in Doris. The `UPDATE` command is only applicable to tables with a Unique data model.
 
-## Use Cases
+## Applicable Scenarios
 
-- Modify the values of rows that meet certain conditions.
+- Small-scale data updates: Ideal for scenarios where a small amount of data needs to be corrected, such as fixing erroneous fields in certain records or updating the status of specific fields (e.g., order status updates).
 
-- Suitable for updating a small amount of data that is not frequently updated.
+- ETL batch processing of certain fields: Suitable for large-scale updates of a specific field, commonly seen in ETL processing scenarios. Note: Large-scale data updates should be infrequent.
 
-## Basic Principles
+## How It Works
 
-By utilizing the filtering logic of the query engine's WHERE clause, the UPDATE command selects the rows that need to be updated from the target table. Then, using the built-in logic of the Value column in the Unique model, the old data is replaced with the new data, and the updated rows are reinserted into the table, thus achieving row-level updates.
+The query engine uses its own filtering logic to identify the rows that need to be updated. Then, using the Unique model's Value column logic, it replaces old data with new data. The rows to be updated are modified and reinserted into the table to achieve row-level updates.
 
 ### Synchronization
 
-The UPDATE syntax in Doris is synchronous, meaning that when an UPDATE statement is executed successfully, the update operation is completed, and the data is immediately visible.
+The `UPDATE` syntax in Doris is synchronous, meaning that once the `UPDATE` statement is successfully executed, the update operation is completed and the data is immediately visible.
 
 ### Performance
 
-The performance of the UPDATE statement depends on the number of rows to be updated and the efficiency of the condition retrieval.
+The performance of the `UPDATE` statement is closely related to the number of rows to be updated and the efficiency of the query conditions.
 
-- Number of rows to be updated: The more rows that need to be updated, the slower the UPDATE statement will be. The UPDATE command is suitable for scenarios where occasional updates are required, such as modifying values for individual rows. It is not suitable for bulk data modifications.
+- Number of rows to be updated: The more rows that need updating, the slower the `UPDATE` statement will be. For small-scale updates, Doris supports a frequency similar to `INSERT INTO` statements. For large-scale updates, due to the long execution time, it is only suitable for infrequent calls.
 
-- Efficiency of condition retrieval: The UPDATE operation reads the rows that satisfy the condition first. Therefore, if the condition retrieval is efficient, the UPDATE operation will be faster. It is recommended to have the condition column indexed or utilize partitioning and bucketing pruning to quickly locate the rows to be updated, thus improving the update efficiency. It is strongly advised not to include the value column in the condition column.
+- Efficiency of query conditions: The `UPDATE` implementation first reads the rows that meet the query conditions. Therefore, if the query conditions are efficient, the `UPDATE` speed will be fast. It is best if the condition columns can hit the index or partition bucket pruning, so Doris does not need to scan the entire table and can quickly locate the rows that need updating, thereby improving update efficiency. It is strongly recommended not to include value columns in the condition columns.
 
-## Example
+## Usage Example
 
-Assuming in a financial risk control scenario, there is a transaction details table with the following structure:
+Assume there is a transaction details table with the following structure in a financial risk control scenario:
 
 ```sql
 CREATE TABLE transaction_details (
@@ -70,7 +70,7 @@ UNIQUE KEY(transaction_id)
 DISTRIBUTED BY HASH(transaction_id) BUCKETS 16
 PROPERTIES (
   "replication_num" = "3",               -- Number of replicas, default is 3
-  "enable_unique_key_merge_on_write" = "true"  -- Enable MOW mode, support merge update
+  "enable_unique_key_merge_on_write" = "true"  -- Enable MOW mode, support merge updates
 );
 ```
 
@@ -88,20 +88,20 @@ The following transaction data exists:
 +----------------+---------+------------------+---------------------+--------------------+--------------------+--------------------+----------------------+--------------------------+---------------------+------------+
 ```
 
-Update the risk level of all transactions on a daily basis according to the following risk control rules:
-1. If there is a dispute history, the risk is high.
-2. If in a high-risk region, the risk is high.
-3. If the transaction amount is abnormal (more than 5 times the daily average), the risk is high.
+Update the risk level of all daily transaction records according to the following risk control rules:
+1. Transactions with a dispute history have a risk level of high.
+2. Transactions in high-risk regions have a risk level of high.
+3. Transactions with abnormal amounts (exceeding 5 times the daily average) have a risk level of high.
 4. Frequent transactions in the last 7 days:
-  a. If the number of transactions > 50, the risk is high.
-  b. If the number of transactions is between 20 and 50, the risk is medium.
-5. Transactions during non-working hours (2 AM to 4 AM), the risk is medium.
-6. The default risk is low.
+  a. Transactions > 50 times have a risk level of high.
+  b. Transactions between 20 and 50 times have a risk level of medium.
+5. Transactions during non-working hours (2 AM to 4 AM) have a risk level of medium.
+6. The default risk level is low.
 
 ```sql
 UPDATE transaction_details
 SET risk_level = CASE
-  -- Transactions with dispute history or in high-risk regions
+  -- Transactions with a dispute history or in high-risk regions
   WHEN has_dispute_history = TRUE THEN 'high'
   WHEN transaction_region IN ('high_risk_region1', 'high_risk_region2') THEN 'high'
 
@@ -115,13 +115,13 @@ SET risk_level = CASE
   -- Transactions during non-working hours
   WHEN HOUR(transaction_time) BETWEEN 2 AND 4 THEN 'medium'
 
-  -- Default risk
+  -- Default risk level
   ELSE 'low'
 END
 WHERE transaction_date = '2024-11-24';
 ```
 
-The updated data is:
+The updated data is as follows:
 
 ```sql
 +----------------+---------+------------------+---------------------+--------------------+--------------------+--------------------+----------------------+--------------------------+---------------------+------------+
@@ -135,6 +135,6 @@ The updated data is:
 +----------------+---------+------------------+---------------------+--------------------+--------------------+--------------------+----------------------+--------------------------+---------------------+------------+
 ```
 
-## More Details
+## More Help
 
-For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/data-modification/DML/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.
+For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/data-modification/DML/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more help.

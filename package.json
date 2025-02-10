@@ -46,10 +46,7 @@
     },
     "devDependencies": {
         "@docusaurus/module-type-aliases": "3.6.3",
-        "@rollup/plugin-commonjs": "^28.0.1",
-        "@rollup/plugin-node-resolve": "^15.3.0",
         "@tsconfig/docusaurus": "2.0.3",
-        "rollup": "^2.79.2",
         "typescript": "^5.2.2"
     },
     "resolutions": {

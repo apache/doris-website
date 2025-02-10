@@ -1,0 +1,70 @@
+{
+    "archive.layout.title": {
+        "message": "Apache Doris - 归档文档中心",
+        "description": "Apache Doris - Archive Document Center"
+    },
+    "archive.layout.description": {
+        "message": "收录Apache doris归档文档",
+        "description": "Collection of Apache doris archive documents"
+    },
+    "archive.page.title": {
+        "message": "归档文档中心",
+        "description": "The label for archived docs page title"
+    },
+    "archive.admonition.1": {
+        "message": "此为 Apache Doris 归档文档，已归档文档不再提供任何更新。",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.admonition.2": {
+        "message": "建议使用",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.page.2": {
+        "message": "建议使用 {stableLink}或{latestLink}。",
+        "description": "The label for admonition in archived docs page"
+    },
+    "archive.admonition.stable": {
+        "message": "版本（2.1）",
+        "description": "stable version"
+    },
+    "archive.admonition.latest": {
+        "message": "版本（3.0）",
+        "description": "latest version"
+    },
+    "archive.admonition.and": {
+        "message": "或",
+        "description": "and"
+    },
+    "archive.page.version": {
+        "message": "版本：1.2",
+        "description": "Archive Version"
+    },
+    "archive.preview.v12": {
+        "message": "归档文档链接：{previewLink}",
+        "description": "Archive preview link"
+    },
+    "archive.preview.link": {
+        "message": "Apache Doris v1.2 中文文档",
+        "description": "Archive preview link"
+    },
+    "archive.preview.date": {
+        "message": "归档日期：{date}",
+        "description": "Archive date"
+    },
+    "archive-tips-1": {
+        "message": "本页将归档 Apache Doris 暂停维护版本的所有文档，并提供 PDF 格式供用户下载。",
+        "description": "Archive tips"
+    },
+    "archive-tips-2": {
+        "message": "请注意，归档文档将不再进行任何更新，建议用户使用{latestVersion}。",
+        "description": "Archive tips"
+    },
+    "archive-download-text": {
+        "message": "下载 PDF",
+        "description": "archive download text"
+    },
+    "archive.latest.version": {
+        "message": "最新版本",
+        "description": "archive latest version"
+    }
+}

@@ -705,6 +705,10 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 ### TopSQL
 
+:::tip
+自2.1.1版本之后，active_queries()已经废弃，TopSQl主要通过Doris内置的系统表实现，参考文档 [工作负载诊断与分析](../../admin-manual/workload-management/analysis-diagnosis.md)
+:::
+
 当集群出现预期外的大查询导致集群整体负载上升、查询可用性下降时，用户难以快速找到这些大查询并进行相应的降级操作。因此在 Apache Doris 2.1 版本中我们支持了运行时查看 SQL 资源用量的功能，具体指标如下：
 
 ```SQL
@@ -858,7 +862,7 @@ JOB e_daily
 
 :::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
 
 :::
 

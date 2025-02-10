@@ -30,7 +30,7 @@ under the License.
 
 `Export` 是一个异步执行的命令，命令执行成功后，立即返回结果，用户可以通过`Show Export` 命令查看该 Export 任务的详细信息。
 
-有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
@@ -103,7 +103,7 @@ PROPERTIES (
 ```
 
 ### 查看导出作业
-提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
+提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) 命令查询导出作业状态，结果举例如下：
 
 ```sql
 mysql> show export\G
@@ -124,7 +124,7 @@ OutfileInfo: [
     {
       "fileNumber": "1",
       "totalRows": "6001215",
-      "fileSize": "747503989bytes",
+      "fileSize": "747503989",
       "url": "s3://bucket/export/export_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
@@ -132,11 +132,11 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md)：
+有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT)：
 
 ### 取消导出作业
 
-提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
+提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) 命令取消导出作业。取消命令举例如下：
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
@@ -362,14 +362,41 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 示例：将 tbl 表中的所有数据导出到本地文件系统，设置导出作业的文件格式为 csv（默认格式），并设置列分割符为`,`。
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE db.tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。
+
+如在这个示例中，最终会在 BE 节点的 `/path/to/` 下生产一组类似 `result_7052bac522d840f5-972079771289e392_0.csv` 的文件。
+
+具体的 BE 节点 IP 可以在 `SHOW EXPORT` 结果中的 `OutfileInfo` 列查看，如：
+
+```
+[
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.136/path/to/result_7052bac522d840f5-972079771289e392_*"
+        }
+    ], 
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.137/path/to/result_22aba7ec933b4922-ba81e5eca12bf0c2_*"
+        }
+    ]
+]
+```
+
 :::caution
-此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
+此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
 :::
 

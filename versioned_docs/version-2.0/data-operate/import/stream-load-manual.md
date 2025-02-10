@@ -386,48 +386,6 @@ The return result parameters are explained in the following table:
 
 Users can access the ErrorURL to review data that failed to import due to issues with data quality. By executing the command `curl "<ErrorURL>"`, users can directly retrieve information about the erroneous data.
 
-## Application of Table Value Function in Stream Load - http_stream Mode
-
-Leveraging the recently introduced functionality of Table Value Function (TVF) in Doris, Stream Load now allows the expression of import parameters through SQL statements. Specifically, a TVF named `http_stream` has been dedicated for Stream Load operations.
-
-:::tip
-
-When performing Stream Load using the TVF `http_stream`, the Rest API URL differs from the standard URL used for regular Stream Load imports.
-
-- Standard Stream Load URL:
-  `http://fe_host:http_port/api/{db}/{table}/_stream_load`
-- URL for Stream Load using TVF `http_stream`:
-  `http://fe_host:http_port/api/_http_stream`
-
-:::
-
-Using curl for Stream Load in http_stream Mode:
-
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-Adding a SQL parameter in the header to replace the previous parameters such as `column_separator`, `line_delimiter`, `where`, `columns`, etc., makes it very convenient to use.
-
-Example of load SQL:
-
-```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-```
-
-http_stream parameter:
-
-- "column_separator" = ","
-
-- "format" = "CSV"
-- ...
-
-For example:
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
-
 ## Load example
 
 ### Setting load timeout and maximum size
@@ -1278,32 +1236,6 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
    Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-
-
-### Use stream load with SQL
-
-You can add a `sql` parameter to the `Header` to replace the `column_separator`, `line_delimiter`, `where`, `columns` in the previous parameter, which is convenient to use.
-
-```
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-
-
-# -- load_sql
-# insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-
-# http_stream
-# (
-#     "column_separator" = ",",
-#     "format" = "CSV",
-#     ...
-# )
-```
-
-Examples：
-
-```
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream("format" = "CSV", "column_separator" = "," ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ### Return results
 

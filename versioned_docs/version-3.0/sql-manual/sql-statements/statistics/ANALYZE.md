@@ -27,33 +27,66 @@ under the License.
 
 ## Description
 
-This statement is used to collect statistical information for various columns.
+This statement is used to collect column statistics. Statistics of columns can be collected for a table (specific columns can be specified) or for the entire database.
+
+## Syntax
 
 ```sql
-ANALYZE < TABLE | DATABASE table_name | db_name > 
-    [ (column_name [, ...]) ]
-    [ [ WITH SYNC ] [ WITH SAMPLE PERCENT | ROWS ] ];
+ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
+    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
 ```
 
-- `table_name`: The specified target table. It can be in the format `db_name.table_name`.
-- `column_name`: The specified target column. It must be an existing column in `table_name`. You can specify multiple column names separated by commas.
-- `sync`: Collect statistics synchronously. Returns after collection. If not specified, it executes asynchronously and returns a JOB ID.
-- `sample percent | rows`: Collect statistics with sampling. You can specify a sampling percentage or a number of sampling rows.
+## Required Parameters
 
-## Example
+**1. `<table_name>`**
 
-Collect statistical data for a table with a 10% sampling rate:
+> The specified target table. This parameter and the <database_name> parameter must have and can only have one of them specified.
+
+**2. `<database_name>`**
+
+> The specified target database. This parameter and the <table_name> parameter must have and can only have one of them specified.
+
+## Optional Parameters
+
+**1. `<column_name>`**
+
+> The specified target column. It must be an existing column in `table_name`. You can specify multiple column names separated by commas.
+
+**2. `WITH SYNC`**
+
+> Collect statistics synchronously. Returns after collection. If not specified, it executes asynchronously.
+
+**3. `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`**
+
+> Specify to use the sampling method for collection. When not specified, full collection is the default. <sample_rate> is the sampling parameter. When using PERCENT sampling, it specifies the sampling percentage; when using ROWS sampling, it specifies the number of sampled rows.
+
+## Return Value
+
+| Column | Note           |
+| -- |--------------|
+| Job_Id | Unique Job Id           |
+| Catalog_Name |   Catalog name           |
+| DB_Name | database name           |
+| Columns | column name list        |
+
+## Access Control Requirements
+
+The user who executes this SQL must have at least the following permissions:
+
+| Privilege | Object | Notes                                    |
+|:--------------| :------------- |:------------------------------------------------|
+| SELECT_PRIV   | Table    | When executing ANALYZE, the SELECT_PRIV privilege for the queried table is required. |
+
+## Examples
+
+1. Collect statistics by sampling 10% of table lineitem.
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
 ```
 
-Collect statistical data for a table with a sample of 100,000 rows:
+2. Collect statistics by sampling 100,000 rows from table lineitem.
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
-```
 
-## Keywords
-
-ANALYZE

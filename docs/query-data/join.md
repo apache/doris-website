@@ -28,7 +28,7 @@ In relational databases, data is distributed across multiple tables, which are i
 
 ## JOIN types supported by Doris
 
-- **INNER JOIN**: Comparing each row of the left table with all rows of the right table based on the JOIN condition, returning matching rows from both tables. For more details, refer to the syntax definition for JOIN queries in [SELECT](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/).
+- **INNER JOIN**: Comparing each row of the left table with all rows of the right table based on the JOIN condition, returning matching rows from both tables. For more details, refer to the syntax definition for JOIN queries in [SELECT](../sql-manual/sql-statements/data-query/SELECT).
 
 - **LEFT JOIN**: Building on the result set of an INNER JOIN, if a row from the left table does not have a match in the right table, all rows from the left table are returned, with corresponding columns from the right table shown as NULL.
 

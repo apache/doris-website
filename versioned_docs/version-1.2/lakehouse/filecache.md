@@ -57,13 +57,13 @@ SET GLOBAL enable_file_cache = true;
 ### Configurations for BE
 Add settings to the BE node's configuration file `conf/be.conf`, and restart the BE node for the configuration to take effect.
 
-|  Parameter   | Description  |
-|  ---  | ---  |
-| `enable_file_cache`  | Whether to enable File Cache, default false |
+|  Parameter                         | Description                                                          |
+|  --------------------------------- | -------------------------------------------------------------------- |
+| `enable_file_cache`                | Whether to enable File Cache, default false |
 | `file_cache_max_file_segment_size` | Max size of a single cached block, default 4MB, should greater than 4096 |
-| `file_cache_path` | Parameters about cache path, json format, for exmaple: `[{"path": "/path/to/file_cache1", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache2", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache3", "total_size":53687091200,"query_limit": "10737418240"}]`. `path` is the path to save cached data; `total_size` is the max size of cached data; `query_limit` is the max size of cached data for a single query. |
-| `enable_file_cache_query_limit` | Whether to limit the cache size used by a single query, default false |
-| `clear_file_cache` | Whether to delete the previous cache data when the BE restarts, default false |
+| `file_cache_path`                  | Parameters about cache path, json format, for exmaple: `[{"path": "/path/to/file_cache1", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache2", "total_size":53687091200,"query_limit": "10737418240"},{"path": "/path/to/file_cache3", "total_size":53687091200,"query_limit": "10737418240"}]`. `path` is the path to save cached data; `total_size` is the max size of cached data; `query_limit` is the max size of cached data for a single query. |
+| `enable_file_cache_query_limit`    | Whether to limit the cache size used by a single query, default false |
+| `clear_file_cache`                 | Whether to delete the previous cache data when the BE restarts, default false |
 
 ## Check whether a query hits cache
 

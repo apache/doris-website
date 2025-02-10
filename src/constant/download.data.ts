@@ -31,7 +31,7 @@ export enum ToolsEnum {
 export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
     Latest = '3.0.3',
-    Prev = '2.1.7',
+    Prev = '2.1.8',
     Earlier = '2.0.15',
 }
 export enum DownloadTypeEnum {
@@ -74,36 +74,36 @@ export const DORIS_VERSIONS: Option[] = [
         ],
     },
     {
-        label: '2.1.7',
-        value: '2.1.7',
+        label: '2.1.8',
+        value: '2.1.8',
         majorVersion: '2.1',
         children: [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                gz: `${ORIGIN}apache-doris-2.1.7-bin-x64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.7-bin-x64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.7-bin-x64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.7/',
-                version: '2.1.7-rc03',
+                gz: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                version: '2.1.8-rc01',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                gz: `${ORIGIN}apache-doris-2.1.7-bin-x64-noavx2.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.7-bin-x64-noavx2.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.7-bin-x64-noavx2.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.7/',
-                version: '2.1.7-rc03',
+                gz: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                version: '2.1.8-rc01',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                gz: `${ORIGIN}apache-doris-2.1.7-bin-arm64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.7-bin-arm64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.7-bin-arm64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.7/',
-                version: '2.1.7-rc03',
+                gz: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                version: '2.1.8-rc01',
             },
         ],
     },
@@ -292,6 +292,40 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '2.1',
         value: '2.1',
         children: [
+            {
+                label: '2.1.8',
+                value: '2.1.8',
+                majorVersion: '2.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.8-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                        version: '2.1.8-rc01',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.8-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                        version: '2.1.8-rc01',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.8-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.8/',
+                        version: '2.1.8-rc01',
+                    },
+                ],
+            },
             {
                 label: '2.1.7',
                 value: '2.1.7',
@@ -1923,7 +1957,7 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on Kubernetes',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
-        link: 'https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env',
+        link: 'https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-doris-operator',
     },
     {
         title: 'Doris on AWS',
@@ -1936,16 +1970,16 @@ export const DOWNLOAD_PDFS = [
     {
         version: '3.0',
         filename: 'Apache Doris 中文手册（v3.0）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v3_0_4412376f6e.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v3_0_4412376f6e.pdf',
     },
     {
         version: '2.1',
         filename: 'Apache Doris 中文手册（v2.1）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_1_c8bc030188.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v2_1_c8bc030188.pdf',
     },
     {
         version: '2.0',
         filename: 'Apache Doris 中文手册（v2.0）.pdf',
-        link: 'https://cdn.selectdb.com/static/Apache_Doris_v2_0_0b89998444.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v2_0_0b89998444.pdf',
     },
 ];

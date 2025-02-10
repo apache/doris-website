@@ -41,7 +41,7 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 
 Apache Doris 被广泛应用在以下场景中：
 
-- 报表服务与即席查询：Doris 提供多维数据分析能力，为企业内部的报表、面相分析是的即系报表查询，面相用户的高并发报表提供稳定高性能服务支撑；
+- 报表服务与即席查询：Doris 提供多维数据分析能力，为企业内部的报表、面向分析的即席报表查询和面向用户的高并发报表提供稳定高性能服务支撑；
   
 - 实时数仓分析：Doris 可以应用于实时数据处理与分析场景，提供秒级同步 TP 数据库的数据变更及亚秒级数据查询能力，服务于实时大屏、实时风控、实时订单分析、实时广告主报表等场景；
   
@@ -83,7 +83,7 @@ FE 与 BE 进程都是可以横向扩展的，单集群可以支持到数百台�
   
 - 存储层：存储层可以使用 S3、HDFS、OSS、COS、OBS、Minio、Ceph 等共享存储存放 Doris 的数据文件，包含包括 Segment 文件、反向索引的索引文件等。
 
-![存算分离整体架构和技术特点](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.png)
+![存算分离整体架构和技术特点](/images/getting-started/apache-doris-technical-compute-storage-decouple-overview.jpg)
 
 ## Apache Doris 的核心特性
 

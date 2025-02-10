@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-在导入数据时，Doris 会为在自增列上没有指定值的数据行分配一个表内唯一的值。
-
----
+在 Doris 中，自增列（Auto Increment Column）是一种自动生成唯一数字值的功能，常用于为每一行数据生成唯一的标识符，如主键。每当插入新记录时，自增列会自动分配一个递增的值，避免了手动指定数字的繁琐操作。使用 Doris 自增列，可以确保数据的唯一性和一致性，简化数据插入过程，减少人为错误，并提高数据管理的效率。这使得自增列成为处理需要唯一标识的场景（如用户 ID 等）时的理想选择。
 
 ## 功能
 
@@ -44,8 +40,6 @@ under the License.
   :::caution 重要
   用户提供的非空值可能会破坏自增列的唯一性。
   :::
-  
----
 
 ### 唯一性
 
@@ -53,8 +47,6 @@ Doris保证自增列中生成的值具有**表级唯一性**。但是：
 
 - **保证唯一性**：这仅适用于系统生成的值。
 - **用户提供的值**：Doris不会验证或强制执行用户在自增列中指定的值的唯一性。这可能导致重复条目。
-
----
 
 ### 聚集性
 
@@ -69,7 +61,7 @@ Doris生成的自增值通常是**密集的**，但有一些考虑：
 
 ## 语法
 
-要使用自增列，需要在建表[CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为 1。
+要使用自增列，需要在建表[CREATE-TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为 1。
 
 ### 示例
 

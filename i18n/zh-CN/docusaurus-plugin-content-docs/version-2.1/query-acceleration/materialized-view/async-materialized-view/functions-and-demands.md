@@ -80,6 +80,12 @@ CREATE MATERIALIZED VIEW
 REFRESH MATERIALIZED VIEW mvName AUTO;
 ```
 
+:::tip 提示
+如果物化视图定义 SQL 使用的基表是 JDBC 表，Doris 无法感知表数据变化，刷新物化视图时需要指定 COMPLETE。
+如果指定了 AUTO，会导致基表有数据，但是刷新后物化视图没数据。
+刷新物化视图时，目前 Doris 只能感知内表和 Hive 数据源表数据变化，其他数据源逐步支持中。
+:::
+
 不校验基表的分区数据自上次刷新后是否有变化，直接刷新物化视图的所有分区。
 
 ```sql
@@ -251,8 +257,7 @@ STARTS 的时间要晚于当前的时间
 CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
-ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
-PROPERTIES ('replication_num' = '1')   
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'    
 AS   
 SELECT   
 l_linestatus,   
@@ -272,8 +277,7 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
-ON COMMIT
-PROPERTIES ('replication_num' = '1')   
+ON COMMIT 
 AS   
 SELECT   
 l_linestatus,   
@@ -408,7 +412,6 @@ BUILD DEFERRED REFRESH AUTO ON MANUAL
 partition by(`k2`)
 DISTRIBUTED BY RANDOM BUCKETS 2
 PROPERTIES (
-'partition_sync_limit'='1',
 'partition_sync_time_unit'='DAY'
 )
 AS
@@ -874,7 +877,7 @@ as
 select l_shipdate, o_orderdate, l_partkey,
        l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
     l_shipdate,
     o_orderdate,
@@ -894,7 +897,7 @@ insert into lineitem values
 ```sql
 select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
     l_shipdate,
     o_orderdate,
@@ -912,7 +915,7 @@ FROM mv7
 union all
 select t1.l_shipdate, o_orderdate, t1.l_partkey, t1.l_suppkey, sum(o_totalprice) as sum_total
 from (select * from lineitem where l_shipdate = '2023-10-21') t1
-         left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
+left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
 group by
     t1.l_shipdate,
     o_orderdate,
@@ -962,7 +965,6 @@ inner join orders on lineitem.l_orderkey = orders.o_orderkey;
 CREATE MATERIALIZED VIEW mv8_0
 BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1') 
 AS
 select
 l_linenumber,
@@ -995,6 +997,40 @@ where o_orderstatus = 'o'
 1. 嵌套物化视图的层数越多，透明改写的耗时会相应增加。建议嵌套物化视图层数不要超过 3 层。
 
 2. 嵌套物化视图透明改写默认关闭，开启方式见下面的相关设置。
+
+### 聚合查询使用非聚合物化视图改写
+
+:::tip 提示
+从 2.1.5 版本开始支持嵌套物化视图改写。
+:::
+
+如果查询是聚合查询，物化视图不包含聚合，但是物化视图可以提供查询使用的所有列，那么也可以改写，比如查询先是 join
+连接，之后是 group by 聚合，命中包含 join 连接的物化视图，那么也是有收益的。
+
+
+```sql
+CREATE MATERIALIZED VIEW mv10_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select l_shipdate, o_orderdate, l_partkey,
+       l_suppkey, o_totalprice
+from lineitem
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate;
+```
+
+如下查询可以命中 mv10_0 的物化视图，节省了 `lineitem join orders` 连接的计算
+```sql
+select l_shipdate, o_orderdate, l_partkey,
+       l_suppkey, sum(o_totalprice) as sum_total
+from lineitem
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+group by
+    l_shipdate,
+    o_orderdate,
+    l_partkey,
+    l_suppkey;
+```
 
 ### Explain 查询透明改写情况
 
@@ -1047,12 +1083,45 @@ explain memo plan <query_sql>
 - 暂停/恢复/取消/刷新物化视图：需要具有物化视图的创建权限。
 
 ### 物化视图修改
+
+#### 修改物化视图属性
 ```sql
 ALTER MATERIALIZED VIEW mv_1
 SET(
   "grace_period" = "10"
 );
 ```
+
+详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+
+#### 物化视图重命名，即物化视图原子替换
+
+```sql
+
+CREATE MATERIALIZED VIEW mv9_0
+BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1') 
+AS
+select
+  l_linenumber,
+  o_custkey,
+  o_orderkey,
+  o_orderstatus,
+  l_partkey,
+  l_suppkey,
+  l_orderkey
+from lineitem
+inner join orders on lineitem.l_orderkey = orders.o_orderkey;
+```
+
+使用 mv9_0 的物化视图替换 mv7，并且删除 mv7。
+```sql
+ALTER MATERIALIZED VIEW mv7
+REPLACE WITH MATERIALIZED VIEW mv9_0
+PROPERTIES('swap' = 'false');
+```
+
 详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 
@@ -1061,7 +1130,7 @@ SET(
 DROP MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW)
+详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 
 ### 查看物化视图创建语句
@@ -1069,7 +1138,7 @@ DROP MATERIALIZED VIEW mv_1;
 SHOW CREATE MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW/)
+详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 :::tip 提示
 从 2.1.5 版本开始支持。
@@ -1077,19 +1146,17 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW)
 
 ### 取消物化视图刷新任务
 
-详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK)
+详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
-### 元数据查询
-
-#### 查询物化视图信息
+### 查询物化视图信息
 
 ```sql
 SELECT * 
@@ -1129,7 +1196,7 @@ SyncWithBaseTables: 1
 
 - **SchemaChangeDetail：** 表示 SCHEMA_CHANGE 发生的原因。
 
-- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查看物化视图 Task 状态](#查看物化视图-task-状态)。
+- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查询刷新任务 TASK 信息](### 查询刷新任务 TASK 信息)。
 
 - **SyncWithBaseTables：** 是否和基表数据同步。1 为同步，0 为不同步。如果不同步，可通过 `show partitions` 进一步判断哪个分区不同步。`show partitions` 见下文分区物化视图查看 SyncWithBaseTables 状态方法。
 
@@ -1140,10 +1207,10 @@ SyncWithBaseTables: 1
 - **不可用、状态不正常：** 指的是物化视图不能用于透明改写的简称。尽管如此，该物化视图还是可以直查的。
 
 
-详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
+详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
 
-#### 查询刷新任务 TASK 信息
+### 查询刷新任务 TASK 信息
 
 每个物化视图有一个 Job，每次刷新会有一个新的 Task，Job 和 Task 是 1:n 的关系。
 根据物化视图名称查看物化视图的 Task 状态，运行如下语句，可以查看刷新任务的状态和进度：
@@ -1200,7 +1267,7 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
   详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
 
 
-#### 查询物化视图对应的 JOB
+### 查询物化视图对应的 JOB
 
 ```sql
 SELECT * 
@@ -1211,7 +1278,7 @@ WHERE Name="inner_mtmv_75043";
 详情参考 [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
 
-#### 查询物化视图的分区信息：
+### 查询物化视图的分区信息：
 
 分区物化视图查看 SyncWithBaseTables 状态方法
 
@@ -1230,12 +1297,12 @@ show partitions from mv11;
 
 主要查看 `SyncWithBaseTables` 字段是否为 true。false 表示此分区不可用于透明改写。
 
-详情参考 [SHOW PARTITIONS](../../../sql-manual/sql-statements/Show-Statements/SHOW-PARTITIONS)
+详情参考 [SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
 
-#### 查看物化视图表结构
+### 查看物化视图表结构
 
-详情参考 [DESCRIBE](../../../sql-manual/sql-statements/Utility-Statements/DESCRIBE)
+详情参考 [DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 
 ### 相关配置
 #### Session Variables 开关

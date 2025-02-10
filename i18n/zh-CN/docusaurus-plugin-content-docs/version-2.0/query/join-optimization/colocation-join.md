@@ -28,7 +28,7 @@ under the License.
 
 Colocation Join 是在 Doris 0.9 版本中引入的新功能。旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。
 
-最初的设计、实现和效果可以参阅 [ISSUE 245](https://github.com/apache/incubator-doris/issues/245)。
+最初的设计、实现和效果可以参阅 [ISSUE 245](https://github.com/apache/doris/issues/245)。
 
 Colocation Join 功能经过一次改版，设计和使用方式和最初设计稍有不同。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。  
 
