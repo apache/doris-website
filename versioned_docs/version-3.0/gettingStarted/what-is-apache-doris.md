@@ -27,19 +27,19 @@ under the License.
 
 ## What's Apache Doris
 
-Apache Doris is an MPP-based real-time data warehouse known for its high query speed. For queries on large datasets, it returns results in sub-seconds. It supports both high-concurrent point queries and high-throughput complex analysis. It can be used for report analysis, ad-hoc queries, unified data warehouse, and data lake query acceleration. Based on Apache Doris, users can build applications for user behavior analysis, A/B testing platform, log analysis, user profile analysis, and e-commerce order analysis.
+Apache Doris is a real-time, MPP-based data warehouse known for its high-speed query performance. It provides sub-second query response times on large datasets. It supports both high-concurrency point queries and high-throughput complex analyses. It can be used for report analysis, ad-hoc queries, unified data warehouse, and data lake query acceleration. Apache Doris enables applications for user behavior analysis, A/B testing, log analysis, user profiling, and e-commerce order analysis.
 
-Apache Doris, formerly known as Palo, was initially created to support Baidu's ad reporting business. It was officially open-sourced in 2017 and donated by Baidu to the Apache Software Foundation in July 2018, where it was operated by members of the incubator project management committee under the guidance of Apache mentors. In June 2022, Apache Doris graduated from the Apache incubator as a Top-Level Project. By 2024, the Apache Doris community has gathered more than 600 contributors from hundreds of companies in different industries, with over 120 monthly active contributors.
+Apache Doris was originally developed to support Baidu's ad reporting business. It was open-sourced in 2017 and contributed to the Apache Software Foundation in 2018, where it was managed by the incubator project committee under Apache mentors. In June 2022, Apache Doris graduated from the Apache incubator as a Top-Level Project. By 2024, the Apache Doris community has gathered more than 600 contributors from hundreds of companies in different industries, with over 120 monthly active contributors.
 
-Apache Doris has a wide user base. It has been used in production environments of over 4000 companies worldwide, including giants such as TikTok, Baidu, Cisco, Tencent, and NetEase. It is also widely used across industries from finance, retailing, and telecommunications to energy, manufacturing, medical care, etc.
+By 2024, Apache Doris has gained over 600 contributors from diverse industries, with over 120 active contributors each month. It is used in production by over 4,000 companies globally, including TikTok, Baidu, Cisco, Tencent, and NetEase. It is widely adopted across industries such as finance, retail, telecommunications, energy, manufacturing, and healthcare.
 
 ## Usage Scenarios
 
-As shown in the figure below, after various data integrations and processing, data sources are typically ingested into the real-time data warehouse Doris and offline lakehouses (such as Hive, Iceberg, and Hudi). These are widely used in OLAP analysis scenarios.
+Data sources are typically ingested into Doris, a real-time data warehouse, and offline lakehouses (e.g., Hive, Iceberg, Hudi) after integration and processing. These are commonly used in OLAP scenarios.
 
 ![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.png)
 
-Apache Doris is widely used in the following scenarios:
+Apache Doris is commonly used in the following scenarios:
 
 - **Real-time Data Analysis**:
 
@@ -53,7 +53,7 @@ Apache Doris is widely used in the following scenarios:
 
   - **Lakehouse Query Acceleration**: Doris accelerates lakehouse data queries with its efficient query engine.
   
-  - **Federated Analytics**: Doris supports federated queries across multiple data sources, simplifying architecture and eliminating data silos.
+  - **Federated Analytics**: Doris supports federated queries across multiple data sources, simplifying architecture and breaking down data silos.
   
   - **Real-time Data Processing**: Doris combines real-time data streams and batch data processing capabilities to meet the needs of high concurrency and low-latency complex business requirements.
 
@@ -68,7 +68,7 @@ Apache Doris uses the MySQL protocol, is highly compatible with MySQL syntax, an
 
 ### Storage-Compute Integrated Architecture
 
-The storage-compute integrated architecture of Apache Doris is streamlined and easy to maintain. As shown in the figure below, it consists of only two types of processes:
+The storage-compute integrated architecture is simple and easy to maintain. As shown in the figure below, it consists of only two types of processes:
 
 - **Frontend (FE):** Primarily responsible for handling user requests, query parsing and planning, metadata management, and node management tasks.
 
@@ -84,8 +84,7 @@ In a production environment, multiple FE nodes can be deployed for disaster reco
 | Follower  | The Follower node is responsible for reading metadata. If the Master node fails, a Follower node can be selected as the new Master. |
 | Observer  | The Observer node is responsible for reading metadata and is mainly used to increase query concurrency. It does not participate in cluster leadership elections. |
 
-Both FE and BE processes are horizontally scalable, enabling a single cluster to support hundreds of machines and tens of petabytes of storage capacity. The FE and BE processes use a consistency protocol to ensure high availability of services and high reliability of data. The storage-compute integrated architecture is highly integrated, significantly reducing the operational complexity of distributed systems.
-
+Both FE and BE processes are horizontally scalable, enabling a single cluster to support hundreds of machines and tens of petabytes of storage capacity. The FE and BE processes use a consistency protocol to ensure high availability of services and high reliability of data. The storage-compute integrated architecture reduces the operational complexity of distributed systems.
 
 ### Compute-Storage Decoupled
 Starting from version 3.0, a compute-storage decoupled deployment architecture can be chosen. The compute-storage decoupled version of Apache Doris utilizes a unified shared storage layer as the data storage space. By separating storage and computation, users can independently scale storage capacity and computing resources, thereby achieving optimal performance and cost efficiency. As shown in the figure below, the compute-storage decoupled architecture is divided into three layers:
@@ -106,7 +105,7 @@ Starting from version 3.0, a compute-storage decoupled deployment architecture c
 
 - Real-Time Data Warehouse: Based on Apache Doris, a real-time data warehouse service can be built. Apache Doris offers second-level data ingestion capabilities, capturing incremental changes from upstream online transactional databases into Doris within seconds. Leveraging vectorized engines, MPP architecture, and Pipeline execution engines, Doris provides sub-second data query capabilities, thereby constructing a high-performance, low-latency real-time data warehouse platform.
 
-- Unified Lakehouse: Apache Doris can build a unified lakehouse architecture based on external data sources such as data lakes or relational databases. The Doris unified lakehouse solution enables seamless integration and free data flow between data lakes and data warehouses, helping users directly utilize data warehouse capabilities to solve data analysis problems in data lakes while fully leveraging data lake data management capabilities to enhance data value.
+- Unified Lakehouse: Doris can build a unified lakehouse architecture using external data sources like data lakes or relational databases. The Doris unified lakehouse solution enables seamless integration and free data flow between data lakes and data warehouses, helping users directly utilize data warehouse capabilities to solve data analysis problems in data lakes while fully leveraging data lake data management capabilities to enhance data value.
 
 - Flexible Modeling: Apache Doris offers various modeling approaches, such as wide table models, pre-aggregation models, star/snowflake schemas, etc. During data import, data can be flattened into wide tables and written into Doris through compute engines like Flink or Spark, or data can be directly imported into Doris, performing data modeling operations through views, materialized views, or real-time multi-table joins.
 
