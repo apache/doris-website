@@ -291,7 +291,7 @@ mysql> select * from partitions("catalog"="internal","database"="optest","table"
 
 这样每个分区的 ID 和取值就可以精准地被筛选出，用于后续针对分区的具体操作（例如 `insert overwrite partition`）。
 
-详细语法说明请见：[auto_partition_name函数文档](../../sql-manual/sql-functions/string-functions/auto-partition-name)，[partitions表函数文档](../../sql-manual/sql-functions/table-valued-functions/partitions)。
+详细语法说明请见：[auto_partition_name 函数文档](../../sql-manual/sql-functions/string-functions/auto-partition-name)，[partitions 表函数文档](../../sql-manual/sql-functions/table-valued-functions/partitions)。
 
 ## 注意事项
 
