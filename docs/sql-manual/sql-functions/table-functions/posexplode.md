@@ -26,33 +26,51 @@ under the License.
 
 ## Description
 
-The table function is used in conjunction with Lateral View and can support multiple Lateral Views. It only supports the new optimizer.
+The `posexplode` table function expands an array column into multiple rows and adds a column indicating the position of each element, returning a struct type. It must be used with LATERAL VIEW and supports multiple LATERAL VIEWs. Only supported with the new optimizer.
 
-It expands an array column into multiple rows and adds a column indicating the position, returning a struct type. When the array is NULL or empty, posexplode_outer returns NULL. Both posexplode and posexplode_outer will return NULL elements within the array.
+`posexplode_outer` is similar to `posexplode`, except for the handling of NULL values.
 
 ## Syntax
+
 ```sql
-posexplode(array)
-posexplode_outer(array)
+POSEXPLODE(<arr>)
+POSEXPLODE_OUTER(<arr>)
 ```
 
-### Example
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<arr>` | An array that is to be expanded |
+
+## Return Value
+
+When the array is NULL or empty, posexplode_outer returns NULL.
+Both `posexplode` and `posexplode_outer` include NULL elements inside the array.
+
+## Examples
+
+``` sql
+CREATE TABLE IF NOT EXISTS `table_test`(
+            `id` INT NULL,
+            `name` TEXT NULL,
+            `score` array<string> NULL
+          ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    COMMENT 'OLAP'
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+```
 
 ```sql
-    CREATE TABLE IF NOT EXISTS `table_test`(
-                `id` INT NULL,
-                `name` TEXT NULL,
-                `score` array<string> NULL
-              ) ENGINE=OLAP
-        DUPLICATE KEY(`id`)
-        COMMENT 'OLAP'
-        DISTRIBUTED BY HASH(`id`) BUCKETS 1
-        PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+```
 
-mysql> insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+```sql
+select * from table_test order by id;
+```
 
-
-mysql [test_query_qa]>select * from table_test order by id;
+```text
 +------+----------+--------------------------------+
 | id   | name     | score                          |
 +------+----------+--------------------------------+
@@ -62,8 +80,13 @@ mysql [test_query_qa]>select * from table_test order by id;
 |    3 | lisi2    | [null]                         |
 |    4 | amory    | NULL                           |
 +------+----------+--------------------------------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```sql
+select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
@@ -76,8 +99,13 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 |    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
 |    3 | lisi2    | [null]                         |    0 | NULL    |
 +------+----------+--------------------------------+------+---------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```sql
+select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
@@ -92,6 +120,3 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 |    4 | amory    | NULL                           | NULL | NULL    |
 +------+----------+--------------------------------+------+---------+
 ```
-
-### Keywords
-POSEXPLODE,POSEXPLODE_OUTER

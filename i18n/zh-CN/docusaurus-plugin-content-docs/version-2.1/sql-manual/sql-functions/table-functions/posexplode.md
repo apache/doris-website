@@ -1,7 +1,7 @@
 ---
 {
-"title": "posexplode_outer",
-"language": "en"
+"title": "POSEXPLODE",
+"language": "zh-CN"
 }
 ---
 
@@ -24,35 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-The table function is used in conjunction with Lateral View and can support multiple Lateral Views. It only supports the new optimizer.
+`posexplode`  表函数，将 array 列展开成多行, 并且增加一列标明位置的列，组成 struct类型返回。需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅支持新优化器。
 
-It expands an array column into multiple rows and adds a column indicating the position, returning a struct type. When the array is NULL or empty, posexplode_outer returns NULL. Both posexplode and posexplode_outer will return NULL elements within the array.
+`posexplode_outer` 和 `posexplode` 类似，只是对于 NULL 值的处理不同。
 
-## Syntax
+## 语法
 ```sql
-posexplode(array)
-posexplode_outer(array)
+POSEXPLODE(<arr>)
+POSEXPLODE_OUTER(<arr>)
 ```
 
-### Example
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<arr>` | 待展开的 array 数组 |
+
+
+## 返回值
+
+当 array 为 NULL 或者为空时，`posexplode_outer` 返回NULL。 `posexplode` 和 `posexplode_outer` 均会返回 array 内部的NULL元素。
+
+## 举例
+
+``` sql
+CREATE TABLE IF NOT EXISTS `table_test`(
+            `id` INT NULL,
+            `name` TEXT NULL,
+            `score` array<string> NULL
+          ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    COMMENT 'OLAP'
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+```
 
 ```sql
-    CREATE TABLE IF NOT EXISTS `table_test`(
-                `id` INT NULL,
-                `name` TEXT NULL,
-                `score` array<string> NULL
-              ) ENGINE=OLAP
-        DUPLICATE KEY(`id`)
-        COMMENT 'OLAP'
-        DISTRIBUTED BY HASH(`id`) BUCKETS 1
-        PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+```
 
-mysql> insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
+```sql
+select * from table_test order by id;
+```
 
-
-mysql [test_query_qa]>select * from table_test order by id;
+```text
 +------+----------+--------------------------------+
 | id   | name     | score                          |
 +------+----------+--------------------------------+
@@ -62,8 +79,13 @@ mysql [test_query_qa]>select * from table_test order by id;
 |    3 | lisi2    | [null]                         |
 |    4 | amory    | NULL                           |
 +------+----------+--------------------------------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```sql
+select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
@@ -76,8 +98,13 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 |    2 | wangwu   | ["88a", "90b", "96c"]          |    2 | 96c     |
 |    3 | lisi2    | [null]                         |    0 | NULL    |
 +------+----------+--------------------------------+------+---------+
+```
 
-mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```sql
+select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
+```
+
+```text
 +------+----------+--------------------------------+------+---------+
 | id   | name     | score                          | k    | v       |
 +------+----------+--------------------------------+------+---------+
@@ -92,6 +119,3 @@ mysql [test_query_qa]>select id,name,score, k,v from table_test lateral view pos
 |    4 | amory    | NULL                           | NULL | NULL    |
 +------+----------+--------------------------------+------+---------+
 ```
-
-### Keywords
-POSEXPLODE,POSEXPLODE_OUTER
