@@ -521,7 +521,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Disater Recovery",
+                    "label": "Managing Disaster Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
@@ -1644,7 +1644,6 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -1985,7 +1984,6 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING",
                                         "sql-manual/sql-statements/cluster-management/storage-management/WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB",
@@ -2059,8 +2057,7 @@
                             "type": "category",
                             "label": "Info System and Help",
                             "items": [
-                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
-                                "sql-manual/sql-statements/system-info-and-help/HELP"
+                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC"
                             ]
                         }
                     ]
