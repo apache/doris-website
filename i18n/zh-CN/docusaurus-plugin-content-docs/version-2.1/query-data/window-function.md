@@ -700,7 +700,7 @@ PROPERTIES (
 );
 ```
 
-在终端执行如下命令，下载数据到本地，并使用Stream Load的方式加载数据：
+在终端执行如下命令，下载数据到本地，并使用 Stream Load 的方式加载数据：
 
 ```shell
 curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -

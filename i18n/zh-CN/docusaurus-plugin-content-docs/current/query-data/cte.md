@@ -58,7 +58,7 @@ SELECT b, d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 ```
 
-### 递归 CTE （Doris 不支持）
+### 递归 CTE（Doris 不支持）
 
 ```sql
 WITH r_cte AS (
