@@ -272,11 +272,3 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ```
 
-
-
-
-
-
-
-
-
