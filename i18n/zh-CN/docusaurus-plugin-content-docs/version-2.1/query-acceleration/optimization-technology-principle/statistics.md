@@ -171,7 +171,7 @@ ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); /
 
 **4. 对于 JDBC 表**
 
-系统会调用 JDBC 后端对应数据库的行数获取语句来获取表的行数。只有在后端数据库收集了表的行数信息的情况下，才可以获取到。 当前支持获取 MySQL, Oracle, Postgresql 和 SQLServer表的行数。
+系统会调用 JDBC 后端对应数据库的行数获取语句来获取表的行数。只有在后端数据库收集了表的行数信息的情况下，才可以获取到。当前支持获取 MySQL, Oracle, Postgresql 和 SQLServer 表的行数。
 
 **5. 对于其他外表**
 

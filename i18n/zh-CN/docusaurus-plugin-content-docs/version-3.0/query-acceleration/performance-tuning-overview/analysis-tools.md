@@ -38,7 +38,7 @@ under the License.
 
 Doris 提供了 Explain 工具，可以方便的展示一个 SQL 的执行计划的详细信息。通过对 Explain 输出的计划进行分析，可以帮助使用者快速定位计划层面的瓶颈，从而针对不同的情况进行计划层面的调优。
 
-Doris 提供了多种不同粒度的 Explain 工具，如 Explain Verbose、Explain All Plan、Explain Memo Plan、Explain Shape Plan，分别用于展示最终物理计划、各阶段逻辑计划、基于成本优化过程的计划、计划形态等。详细信息请参考执行计划 Explain ，了解各种 Explain 的使用方法和输出信息的解释。
+Doris 提供了多种不同粒度的 Explain 工具，如 Explain Verbose、Explain All Plan、Explain Memo Plan、Explain Shape Plan，分别用于展示最终物理计划、各阶段逻辑计划、基于成本优化过程的计划、计划形态等。详细信息请参考执行计划 Explain，了解各种 Explain 的使用方法和输出信息的解释。
 
 通过分析 Explain 的输出，业务人员和 DBA 就可以快速定位当前计划的性能瓶颈。例如，通过分析执行计划发现 Filter 没有下推到基表，导致没有提前过滤数据，使得参与计算的数据量过多，从而导致性能问题。又如，两表的 Inner 等值连接中，连接条件一侧的过滤条件没有推导到另外一侧，导致没有对另一侧的表数据进行提前过滤，也可能导致性能不优。此类性能瓶颈都可以通过分析 Explain 的输出来定位和解决。
 
