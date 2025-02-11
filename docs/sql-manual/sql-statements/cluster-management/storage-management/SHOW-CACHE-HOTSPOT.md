@@ -28,10 +28,14 @@ under the License.
 
 This statement is used to display the hotspot information of file cache.
 
+:::info note
+Before version 3.0.4, the `SHOW CACHE HOTSPOT` statement can be used to query cache hotness information statistics. Starting from version 3.0.4, the `SHOW CACHE HOTSPOT` statement is no longer supported for querying cache hotness information statistics. Please directly query the system table `__internal_schema.cloud_cache_hotspot`. For specific usage, please refer to [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md).
+:::
+
 ## Syntax
 
 ```sql
-   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+   SHOW CACHE HOTSPOT '/[compute_group_name/db.table_name]';
 ```
 
 ## Parameters
