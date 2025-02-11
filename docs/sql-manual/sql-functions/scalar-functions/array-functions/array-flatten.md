@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## description
+## Description
 
 Flatten a multidimensional array into one dimension.
 
@@ -44,7 +44,7 @@ array_flatten(<a>)
 
 Returns the flattened array
 
-## example
+## Example
 
 ```sql
 mysql> select array_flatten([[1,2,3],[4,5]]);
