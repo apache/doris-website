@@ -22,86 +22,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## split_by_string 
+## Description
 
-### description
+Split the input string into a string array according to the specified string.
 
-#### Syntax
+## Syntax
 
-`ARRAY<STRING> split_by_string(STRING s, STRING separator)`
-
-Splits a string into substrings separated by a string. It uses a constant string separator of multiple characters as the separator. If the string separator is empty, it will split the string s into an array of single characters.
-
-#### Arguments
-
-`separator` — The separator. Type: `String`
-
-`s` — The string to split. Type: `String`
-
-#### Returned value(s)
-
-Returns an array of selected substrings. Empty substrings may be selected when:
-
-A non-empty separator occurs at the beginning or end of the string;
-
-There are multiple consecutive separators;
-
-The original string s is empty.
-
-Type: `Array(String)`
-
-### example
-
+```sql
+SPLIT_BY_STRING ( <str>, <separator> )
 ```
-select split_by_string('a1b1c1d','1');
-+---------------------------------+
-| split_by_string('a1b1c1d', '1') |
-+---------------------------------+
-| ['a', 'b', 'c', 'd']            |
-+---------------------------------+
 
-select split_by_string(',,a,b,c,',',');
-+----------------------------------+
-| split_by_string(',,a,b,c,', ',') |
-+----------------------------------+
-| ['', '', 'a', 'b', 'c', '']      |
-+----------------------------------+
+## Parameters
 
-SELECT split_by_string(NULL,',');
-+----------------------------+
-| split_by_string(NULL, ',') |
-+----------------------------+
-| NULL                       |
-+----------------------------+
+| Parameter     | Description                    |
+|---------------|--------------------------------|
+| `<str>`       | The string to be split.        |
+| `<separator>` | The string used for splitting. |
 
-select split_by_string('a,b,c,abcde',',');
-+-------------------------------------+
-| split_by_string('a,b,c,abcde', ',') |
-+-------------------------------------+
-| ['a', 'b', 'c', 'abcde']            |
-+-------------------------------------+
+## Return Value
 
-select split_by_string('1,,2,3,,4,5,,abcde', ',,');
-+---------------------------------------------+
-| split_by_string('1,,2,3,,4,5,,abcde', ',,') |
-+---------------------------------------------+
-| ['1', '2,3', '4,5', 'abcde']                |
-+---------------------------------------------+
+Returns a string array split according to the specified string. Special cases:
 
-select split_by_string(',,,,',',,');
-+-------------------------------+
-| split_by_string(',,,,', ',,') |
-+-------------------------------+
-| ['', '', '']                  |
-+-------------------------------+
+- If any of the parameters is NULL, NULL is returned.
+- When `<separator>` is an empty string, `<str>` will be split to byte sequence.
 
-select split_by_string(',,a,,b,,c,,',',,');
-+--------------------------------------+
-| split_by_string(',,a,,b,,c,,', ',,') |
-+--------------------------------------+
-| ['', 'a', 'b', 'c', '']              |
-+--------------------------------------+
+## Examples
+
+```sql
+SELECT split_by_string('hello','l');
 ```
-### keywords
 
-SPLIT_BY_STRING,SPLIT
+```text
++-------------------------------+
+| split_by_string('hello', 'l') |
++-------------------------------+
+| ["he", "", "o"]               |
++-------------------------------+
+```
+
+```sql
+SELECT split_by_string('hello','');
+```
+
+```text
++------------------------------+
+| split_by_string('hello', '') |
++------------------------------+
+| ["h", "e", "l", "l", "o"]    |
++------------------------------+
+```

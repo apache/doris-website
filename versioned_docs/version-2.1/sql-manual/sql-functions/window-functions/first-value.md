@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_FIRST_VALUE",
+    "title": "FIRST_VALUE",
     "language": "en"
 }
 ---
@@ -11,64 +11,70 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION FIRST_VALUE
-### description
+## Description
 
-FIRST_VALUE() returns the first value in the window's range , ignore_null determines whether to ignore null values , the ignore_null of default value is false .
+FIRST_VALUE() is a window function that returns the first value in an ordered set of values within a window partition. The handling of null values can be controlled using the IGNORE NULLS options.
 
-```sql
-FIRST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
-```
-
-### example
-
-
-We have the following data
+## Syntax
 
 ```sql
- select id, myday, time_col, state from t;
- 
- | id   | myday | time_col    | state |
- |------|-------|-------------|-------|
- |    3 |    21 | 04-21-13    |     3 |
- |    7 |    22 | 04-22-10-24 |  NULL |
- |    8 |    22 | 04-22-10-25 |     9 |
- |   10 |    23 | 04-23-12    |    10 |
- |    4 |    22 | 04-22-10-21 |  NULL |
- |    9 |    23 | 04-23-11    |  NULL |
- |    1 |    21 | 04-21-11    |  NULL |
- |    5 |    22 | 04-22-10-22 |  NULL |
- |   12 |    24 | 02-24-10-21 |  NULL |
- |    2 |    21 | 04-21-12    |     2 |
- |    6 |    22 | 04-22-10-23 |     5 |
- |   11 |    23 | 04-23-13    |  NULL |
+FIRST_VALUE(<expr>, <ignore_null>)
 ```
 
-Use FIRST_VALUE() to group by myday and return the value of the first state in each group:
+## Parameters
+| Parameter           | Description                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| expr                | The expression from which to get the first value                                                                    |
+| ignore_null         | Optional. When set, null values are ignored, returning the first non-null value                                     |
+
+## Return Value
+
+Returns the same data type as the input expression.
+
+## Examples
 
 ```sql
-select * , 
-first_value(`state`, 1) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null,
-first_value(`state`, 0) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as not_ignore_null,
-first_value(`state`) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null_default
-from t order by `id`, `myday`, `time_col`;
-
-| id   | myday | time_col    | state | ignore_null | not_ignore_null | ignore_null_default |
-|------|-------|-------------|-------|-------------|-----------------|---------------------|
-|    1 |    21 | 04-21-11    |  NULL |           2 |            NULL |                NULL |
-|    2 |    21 | 04-21-12    |     2 |           2 |            NULL |                NULL |
-|    3 |    21 | 04-21-13    |     3 |           2 |               2 |                   2 |
-|    4 |    22 | 04-22-10-21 |  NULL |        NULL |            NULL |                NULL |
-|    5 |    22 | 04-22-10-22 |  NULL |           5 |            NULL |                NULL |
-|    6 |    22 | 04-22-10-23 |     5 |           5 |            NULL |                NULL |
-|    7 |    22 | 04-22-10-24 |  NULL |           5 |               5 |                   5 |
-|    8 |    22 | 04-22-10-25 |     9 |           9 |            NULL |                NULL |
-|    9 |    23 | 04-23-11    |  NULL |          10 |            NULL |                NULL |
-|   10 |    23 | 04-23-12    |    10 |          10 |            NULL |                NULL |
-|   11 |    23 | 04-23-13    |  NULL |          10 |              10 |                  10 |
-|   12 |    24 | 02-24-10-21 |  NULL |        NULL |            NULL |                NULL |
+WITH example_data AS (
+    SELECT 1 as column1, NULL as column2, 'A' as group_name
+    UNION ALL
+    SELECT 1, 10, 'A'
+    UNION ALL
+    SELECT 1, NULL, 'A'
+    UNION ALL
+    SELECT 1, 20, 'A'
+    UNION ALL
+    SELECT 2, NULL, 'B'
+    UNION ALL
+    SELECT 2, 30, 'B'
+    UNION ALL
+    SELECT 2, 40, 'B'
+)
+SELECT 
+    group_name,
+    column1,
+    column2,
+    FIRST_VALUE(column2) OVER (
+        PARTITION BY column1 
+        ORDER BY column2 NULLS LAST
+    ) AS first_value_default,
+    FIRST_VALUE(column2, true) OVER (
+        PARTITION BY column1 
+        ORDER BY column2
+    ) AS first_value_ignore_null
+FROM example_data
+ORDER BY column1, column2;
 ```
 
-### keywords
-
-    WINDOW,FUNCTION,FIRST_VALUE
+```text
++------------+---------+---------+---------------------+-------------------------+
+| group_name | column1 | column2 | first_value_default | first_value_ignore_null |
++------------+---------+---------+---------------------+-------------------------+
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |      10 |                  10 |                      10 |
+| A          |       1 |      20 |                  10 |                      10 |
+| B          |       2 |    NULL |                  30 |                    NULL |
+| B          |       2 |      30 |                  30 |                      30 |
+| B          |       2 |      40 |                  30 |                      30 |
++------------+---------+---------+---------------------+-------------------------+
+```

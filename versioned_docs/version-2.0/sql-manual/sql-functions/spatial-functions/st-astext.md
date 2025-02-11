@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_ASTEXT,ST_ASWKT",
+    "title": "ST_ASTEXT",
     "language": "en"
 }
 ---
@@ -28,10 +28,14 @@ under the License.
 
 Convert a geometric figure to a representation of WKT (Well Known Text)
 
+## Alias
+
+- ST_ASWKT
+
 ## Syntax
 
 ```sql
-ST_AsText( <geo>)
+ST_ASTEXT( <geo>)
 ```
 
 ## Parameters

@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV6_STRING",
-"language": "zh-CN"
+    "title": "IS_IPV6_STRING",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,29 +22,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV6_STRING
-
-IS_IPV6_STRING
-
 ## 描述
-
-## 语法
-
-`BOOLEAN IS_IPV6_STRING(STRING ipv6_str)`
-
 接收一个表示形式为字符串的IPv6地址作为参数，如果为格式正确且合法的IPv6地址，返回true；反之，返回false。
 
-## 举例
-
+## 语法
 ```sql
-mysql> select is_ipv6_string(NULL);
-+----------------------+
-| is_ipv6_string(NULL) |
-+----------------------+
-|                 NULL |
-+----------------------+
+IS_IPV6_STRING(<ipv6_str>)
+```
 
-mysql> CREATE TABLE `test_is_ipv6_string` (
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | 字符串类型的ipv6地址 |
+
+## 返回值
+如果为格式正确且合法的IPv6地址，返回1 (true)；反之，返回0 (false)。
+- 如果输入为NULL, 则返回NULL
+
+## 举例
+```sql
+CREATE TABLE `test_is_ipv6_string` (
       `id` int,
       `ip_v6` string
     ) ENGINE=OLAP
@@ -53,20 +50,18 @@ mysql> CREATE TABLE `test_is_ipv6_string` (
     "replication_allocation" = "tag.location.default: 1"
     );
     
-mysql> insert into test_is_ipv6_string values(0, NULL), (1, '::'), (2, ''), (3, '2001:1b70:a1:610::b102:2'), (4, 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg');
+insert into test_is_ipv6_string values(0, NULL), (1, '::'), (2, ''), (3, '2001:1b70:a1:610::b102:2'), (4, 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg');
 
-mysql> select id, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
-+------+-----------------------+
-| id   | is_ipv6_string(ip_v6) |
-+------+-----------------------+
-|    0 |                  NULL |
-|    1 |                     1 |
-|    2 |                     0 |
-|    3 |                     1 |
-|    4 |                     0 |
-+------+-----------------------+
+select id, ip_v6, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
 ```
-
-### Keywords
-
-IS_IPV6_STRING, IP
+```text
++------+------------------------------------------+-----------------------+
+| id   | ip_v6                                    | is_ipv6_string(ip_v6) |
++------+------------------------------------------+-----------------------+
+|    0 | NULL                                     |                  NULL |
+|    1 | ::                                       |                     1 |
+|    2 |                                          |                     0 |
+|    3 | 2001:1b70:a1:610::b102:2                 |                     1 |
+|    4 | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg |                     0 |
++------+------------------------------------------+-----------------------+
+```

@@ -24,24 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## coalesce
-### description
-#### Syntax
+## Description
 
-`coalesce(expr1, expr2, ...., expr_n)`
+Returns the first non-null expression from left to right in the parameter list. If all arguments are NULL, returns NULL.
 
+## Syntax
 
-Returns the first non empty expression in the parameter (from left to right)
-
-### example
-
+```sql
+COALESCE(<expr> [, ...])
 ```
-mysql> select coalesce(NULL, '1111', '0000');
+
+## Parameters
+
+| Parameter      | Description                                                                   |
+| -------------- | ----------------------------------------------------------------------------- |
+| `<expr>` | A sequence of expressions to evaluate. All expressions must be compatible data types. |
+
+## Return Value
+
+The first non-null expression in the parameter list. Returns NULL if all arguments are NULL.
+
+## Examples
+
+```sql
+SELECT COALESCE(NULL, '1111', '0000');
+```
+
+```text
 +--------------------------------+
 | coalesce(NULL, '1111', '0000') |
 +--------------------------------+
 | 1111                           |
 +--------------------------------+
 ```
-### keywords
-COALESCE

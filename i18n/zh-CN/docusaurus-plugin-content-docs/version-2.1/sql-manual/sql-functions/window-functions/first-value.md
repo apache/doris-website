@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_FIRST_VALUE",
+    "title": "FIRST_VALUE",
     "language": "zh-CN"
 }
 ---
@@ -11,64 +11,70 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION FIRST_VALUE
 ## 描述
 
-FIRST_VALUE() 返回窗口范围内的第一个值， ignore_null 决定是否忽略 null 值，参数 ignore_null 默认值为 false 。
+FIRST_VALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第一个值。可以通过 IGNORE NULLS 选项来控制是否忽略空值。
+
+## 语法
 
 ```sql
-FIRST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
+FIRST_VALUE(<expr>[, <ignore_null>])
 ```
+
+## 参数
+| 参数                | 说明                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| expr                | 需要获取第一个值的表达式                                                                |
+| ignore_null         | 可选。参数 ignore_null 默认值为 false, 设置后会忽略空值                                              |
+
+## 返回值
+
+返回与输入表达式相同的数据类型。
 
 ## 举例
 
-
-我们有如下数据
-
 ```sql
- select id, myday, time_col, state from t;
- 
- | id   | myday | time_col    | state |
- |------|-------|-------------|-------|
- |    3 |    21 | 04-21-13    |     3 |
- |    7 |    22 | 04-22-10-24 |  NULL |
- |    8 |    22 | 04-22-10-25 |     9 |
- |   10 |    23 | 04-23-12    |    10 |
- |    4 |    22 | 04-22-10-21 |  NULL |
- |    9 |    23 | 04-23-11    |  NULL |
- |    1 |    21 | 04-21-11    |  NULL |
- |    5 |    22 | 04-22-10-22 |  NULL |
- |   12 |    24 | 02-24-10-21 |  NULL |
- |    2 |    21 | 04-21-12    |     2 |
- |    6 |    22 | 04-22-10-23 |     5 |
- |   11 |    23 | 04-23-13    |  NULL |
+WITH example_data AS (
+    SELECT 1 as column1, NULL as column2, 'A' as group_name
+    UNION ALL
+    SELECT 1, 10, 'A'
+    UNION ALL
+    SELECT 1, NULL, 'A'
+    UNION ALL
+    SELECT 1, 20, 'A'
+    UNION ALL
+    SELECT 2, NULL, 'B'
+    UNION ALL
+    SELECT 2, 30, 'B'
+    UNION ALL
+    SELECT 2, 40, 'B'
+)
+SELECT 
+    group_name,
+    column1,
+    column2,
+    FIRST_VALUE(column2) OVER (
+        PARTITION BY column1 
+        ORDER BY column2 NULLS LAST
+    ) AS first_value_default,
+    FIRST_VALUE(column2, true) OVER (
+        PARTITION BY column1 
+        ORDER BY column2
+    ) AS first_value_ignore_null
+FROM example_data
+ORDER BY column1, column2;
 ```
 
-使用 FIRST_VALUE()，根据 myday 分组，返回每个分组中第一个 state 的值：
-
-```sql
-select * , 
-first_value(`state`, 1) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null,
-first_value(`state`, 0) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as not_ignore_null,
-first_value(`state`) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null_default
-from t order by `id`, `myday`, `time_col`;
-
-| id   | myday | time_col    | state | ignore_null | not_ignore_null | ignore_null_default |
-|------|-------|-------------|-------|-------------|-----------------|---------------------|
-|    1 |    21 | 04-21-11    |  NULL |           2 |            NULL |                NULL |
-|    2 |    21 | 04-21-12    |     2 |           2 |            NULL |                NULL |
-|    3 |    21 | 04-21-13    |     3 |           2 |               2 |                   2 |
-|    4 |    22 | 04-22-10-21 |  NULL |        NULL |            NULL |                NULL |
-|    5 |    22 | 04-22-10-22 |  NULL |           5 |            NULL |                NULL |
-|    6 |    22 | 04-22-10-23 |     5 |           5 |            NULL |                NULL |
-|    7 |    22 | 04-22-10-24 |  NULL |           5 |               5 |                   5 |
-|    8 |    22 | 04-22-10-25 |     9 |           9 |            NULL |                NULL |
-|    9 |    23 | 04-23-11    |  NULL |          10 |            NULL |                NULL |
-|   10 |    23 | 04-23-12    |    10 |          10 |            NULL |                NULL |
-|   11 |    23 | 04-23-13    |  NULL |          10 |              10 |                  10 |
-|   12 |    24 | 02-24-10-21 |  NULL |        NULL |            NULL |                NULL |
+```text
++------------+---------+---------+---------------------+-------------------------+
+| group_name | column1 | column2 | first_value_default | first_value_ignore_null |
++------------+---------+---------+---------------------+-------------------------+
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |    NULL |                  10 |                    NULL |
+| A          |       1 |      10 |                  10 |                      10 |
+| A          |       1 |      20 |                  10 |                      10 |
+| B          |       2 |    NULL |                  30 |                    NULL |
+| B          |       2 |      30 |                  30 |                      30 |
+| B          |       2 |      40 |                  30 |                      30 |
++------------+---------+---------+---------------------+-------------------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,FIRST_VALUE

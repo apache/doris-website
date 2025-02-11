@@ -22,24 +22,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Pi
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE Pi()`
 Returns the constant `Pi` value.
 
-### example
+## Syntax
 
-```
-mysql> select Pi();
-+--------------------+
-| pi()               |
-+--------------------+
-| 3.1415926535897931 |
-+--------------------+
+```sql
+PI()
 ```
 
-### keywords
-	PI
+## Return value
+
+Returns a constant Pi of type floating-point number.
+
+## Example
+
+```sql
+select Pi();
+```
+
+```text
++-------------------+
+| pi()              |
++-------------------+
+| 3.141592653589793 |
++-------------------+
+```

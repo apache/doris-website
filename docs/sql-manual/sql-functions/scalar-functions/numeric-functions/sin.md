@@ -24,40 +24,25 @@ under the License.
 
 ## Description
 
-Returns the sine of `x`, where `x` is in radians.
+Calculate the sine of the parameter
 
 ## Syntax
 
 ```sql
-SIN(<x>)
+SIN(<a>)
 ```
-
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|------------|
-| `<x>`   | radian value |
+| -- | -- |
+| `<a>` | floating point number, the radian value of the parameter to calculate |
 
-## Return value
+## Return Value
 
-Returns a floating-point number. Special cases:
+The sine of the parameter `<a>`, expressed in radians.
 
-- If x is NULL, returns NULL.
-
-## Example
-
-```sql
-select sin(0);
-```
-
-```text
-+------------------------+
-| sin(cast(0 as DOUBLE)) |
-+------------------------+
-|                    0.0 |
-+------------------------+
-```
+## Examples
 
 ```sql
 select sin(1);
@@ -72,13 +57,25 @@ select sin(1);
 ```
 
 ```sql
-select sin(0.5 * Pi());
+select sin(0);
 ```
 
 ```text
-+-----------------------------------+
-| sin((cast(0.5 as DOUBLE) * pi())) |
-+-----------------------------------+
-|                               1.0 |
-+-----------------------------------+
++------------------------+
+| sin(cast(0 as DOUBLE)) |
++------------------------+
+|                    0.0 |
++------------------------+
+```
+
+```sql
+select sin(Pi());
+```
+
+```text
++------------------------------------+
+| sin(pi())                          |
++------------------------------------+
+| 0.00000000000000012246467991473532 |
++------------------------------------+
 ```

@@ -24,40 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unhex
-### description
-#### Syntax
+## Description
 
-`VARCHAR unhex(VARCHAR str)`
+The `unhex` function is used to convert a hexadecimal string back into the original string. It converts every two hexadecimal characters into one byte.
 
-Enter a string, if the length of the string is 0 or an odd number, an empty string is returned;
-If the string contains characters other than `[0-9], [a-f], [A-F]`, an empty string is returned;
-In other cases, every two characters are a group of characters converted into hexadecimal, and then spliced into a string for output.
+## Syntax
 
-
-### example
-
+```sql
+UNHEX(<str>)
 ```
-mysql> select unhex('@');
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<str>` | The hexadecimal character string |
+
+## Return Value
+
+If the input string has a length of 0 or is odd, it returns an empty string. If the string contains characters other than [0-9], [a-f], or [A-F], it returns an empty string. In other cases, every two characters are converted to their hexadecimal representation and concatenated into a string for output.
+
+## Examples
+
+```sql
+select unhex('@');
+```
+
+```text
 +------------+
 | unhex('@') |
 +------------+
 |            |
 +------------+
+```
 
-mysql> select unhex('41');
+
+```sql
+select unhex('41');
+```
+
+```text
 +-------------+
 | unhex('41') |
 +-------------+
 | A           |
 +-------------+
+```
 
-mysql> select unhex('4142');
+```sql
+select unhex('4142');
+```
+
+```text
 +---------------+
 | unhex('4142') |
 +---------------+
 | AB            |
 +---------------+
 ```
-### keywords
-    UNHEX

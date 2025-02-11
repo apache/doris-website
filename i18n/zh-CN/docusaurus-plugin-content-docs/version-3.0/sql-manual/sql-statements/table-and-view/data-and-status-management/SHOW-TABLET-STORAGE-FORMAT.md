@@ -27,36 +27,67 @@ under the License.
 
 ## 描述
 
-该语句用于显示 Backend 上的存储格式信息（仅管理员使用）
+该语句用于显示 Backend 上的存储格式信息
 
 ### 语法
 
+```sql
 SHOW TABLET STORAGE FORMAT [VERBOSE]
+```
+## 可选参数
+
+** 1. `VERBOSE` **
+
+  展示更详细的信息
+
+## 返回值
+
+| 列名            | 类型     | 说明                                  |
+|---------------|--------|-------------------------------------|
+| BackendId     | Int    | BE（Backend）节点的ID，表示该tablet的副本所在的节点。 |
+| V1Count       | Int    | V1 版本 tablet 数量。                    |
+| V2Count       | Int    | V2 版本 tablet 数量。                    |
+| TabletId      | Int    | tablet的唯一标识符，用于标识具体的tablet。         |
+| StorageFormat | String | tablet的版本 V1或V2                     |
+
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少拥有以下权限：
+
+| 权限         | 对象       | 说明                                 |
+|:-----------|:---------|:-----------------------------------|
+| Admin_priv | Database | 执行数据库管理操作所需的权限，包括管理表、分区以及系统级命令等操作。 |
 
 ## 示例
 
-    ```sql
-    MySQL [(none)]> show tablet storage format;
-    +-----------+---------+---------+
-    | BackendId | V1Count | V2Count |
-    +-----------+---------+---------+
-    | 10002     | 0       | 2867    |
-    +-----------+---------+---------+
-    1 row in set (0.003 sec)
+- 执行未添加 `verbose` 参数的语句
 
-    MySQL [test_query_qa]> show tablet storage format verbose;
-    +-----------+----------+---------------+
-    | BackendId | TabletId | StorageFormat |
-    +-----------+----------+---------------+
-    | 10002     | 39227    | V2            |
-    | 10002     | 39221    | V2            |
-    | 10002     | 39215    | V2            |
-    | 10002     | 39199    | V2            |
-    +-----------+----------+---------------+
-    4 rows in set (0.034 sec)
-    ```
+  ```sql
+  show tablet storage format;
+  ```
 
-### 关键字
+  ```text
+  +-----------+---------+---------+
+  | BackendId | V1Count | V2Count |
+  +-----------+---------+---------+
+  | 10002     | 0       | 2867    |
+  +-----------+---------+---------+
+  ```
 
-SHOW, TABLET, STORAGE, FORMAT
+- 执行添加 verbose 参数的语句
 
+  ```sql
+  show tablet storage format verbose;
+  ```
+
+  ```text
+  +-----------+----------+---------------+
+  | BackendId | TabletId | StorageFormat |
+  +-----------+----------+---------------+
+  | 10002     | 39227    | V2            |
+  | 10002     | 39221    | V2            |
+  | 10002     | 39215    | V2            |
+  | 10002     | 39199    | V2            |
+  +-----------+----------+---------------+
+  ```

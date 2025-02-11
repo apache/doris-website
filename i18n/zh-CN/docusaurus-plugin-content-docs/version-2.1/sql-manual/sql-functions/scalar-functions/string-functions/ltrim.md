@@ -24,31 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ltrim
 ## 描述
+
+LTRIM 函数用于去除字符串左侧（开头部分）连续出现空格或指定字符。
+
 ## 语法
- 
-`VARCHAR ltrim(VARCHAR str[, VARCHAR rhs])`
 
+```sql
+LTRIM( <str> [, <trim_chars> ] )
+```
 
-当没有rhs参数时，将参数 str 中从左侧部分开始部分连续出现的空格去掉，否则去掉rhs
+## 参数
+
+| 参数             | 说明                                                                                             |
+|----------------|------------------------------------------------------------------------------------------------|
+| `<str>`        | 需要被修剪的字符串                                                                                      |
+| `<trim_chars>` | 可选参数。如果提供了该参数，LTRIM 函数将去除`<str>`左侧出现的`<trim_chars>`中的所有字符。如果未提供此参数，LTRIM 函数将仅去除`<str>`左侧的空格字符。 |
+
+## 返回值
+
+返回`<str>`左侧去除`<trim_chars>`后的字符串。特殊情况：
+
+- 任意两个参数中有一个为 NULL，则返回 NULL
 
 ## 举例
 
+```sql
+SELECT ltrim('   ab d') str;
 ```
-mysql> SELECT ltrim('   ab d') str;
+
+```text
 +------+
 | str  |
 +------+
 | ab d |
 +------+
+```
 
-mysql> SELECT ltrim('ababccaab','ab') str;
+```sql
+SELECT ltrim('ababccaab','ab') str;
+```
+
+```text
 +-------+
 | str   |
 +-------+
 | ccaab |
 +-------+
 ```
-### keywords
-    LTRIM

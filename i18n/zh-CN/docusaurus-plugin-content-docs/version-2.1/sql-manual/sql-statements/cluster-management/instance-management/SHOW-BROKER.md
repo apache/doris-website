@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW BROKER",
-    "language": "zh-CN"
+  "title": "SHOW BROKER",
+  "language": "zh-CN"
 }
 ---
 
@@ -29,26 +29,39 @@ under the License.
 
 ## 描述
 
-该语句用于查看当前存在的 broker
+该语句用于查看当前存在的 broker 进程状态。
 
-语法：
+## 语法：
 
 ```sql
 SHOW BROKER;
 ```
 
-说明：
 
-1. LastStartTime 表示最近一次 BE 启动时间。
-2. LastHeartbeat 表示最近一次心跳。
-3. Alive 表示节点是否存活。
-4. ErrMsg 用于显示心跳失败时的错误信息。
+## 输出字段
+| 列名             | 类型      | 说明                   |
+|----------------|---------|----------------------|
+| Name           | varchar | Broker 进程名称          |
+| Host           | varchar | Broker 进程所在节点 IP     |
+| Port           | varchar | Broker 进程所在节点 Port   |
+| Alive          | varchar | Broker 进程状态          |
+| LastStartTime  | varchar | Broker 进程上次启动时间      |
+| LastUpdateTime | varchar | Broker 进程上次更新时间      |
+| ErrMsg         | varchar | Broker 进程上次启动失败的错误信息 |
+
+
+## 权限控制
+执行该语句的用户需要具备 `ADMIN/OPERATOR` 的权限
 
 ## 示例
-
-## 关键词
-
-    SHOW, BROKER
-
-## 最佳实践
-
+1. 查看当前存在的 broker 进程状态
+    ```sql
+    show broker;
+    ```
+    ```text
+    +-------------+------------+------+-------+---------------------+---------------------+--------+
+    | Name        | Host       | Port | Alive | LastStartTime       | LastUpdateTime      | ErrMsg |
+    +-------------+------------+------+-------+---------------------+---------------------+--------+
+    | broker_test | 10.10.10.1 | 8196 | true  | 2025-01-21 11:30:10 | 2025-01-21 11:31:40 |        |
+    +-------------+------------+------+-------+---------------------+---------------------+--------+
+    ```

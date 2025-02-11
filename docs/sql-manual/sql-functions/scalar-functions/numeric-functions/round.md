@@ -24,44 +24,31 @@ under the License.
 
 ## Description
 
-Round x to d decimal places. The default value of d is 0.
+Rounds the number `x` to the specified number of digits.
+- If `d` is not specified, `x` is rounded to the nearest integer.
+- If `d` is negative, the result is rounded to the left of the decimal point by `d` places.
+- If `x` or `d` is `null`, returns `null`.
+- If `d` is a column and the first argument is of type `Decimal`, the resulting `Decimal` will have the same number of decimal places as the input `Decimal`.
 
-If d is negative, the |d| digits to the left of the decimal point will be set to 0.
-
-If either x or d is null, return null.
-
-If d is a column and the first argument is of the Decimal type, then the resulting Decimal will have the same number of decimal places as the input Decimal.
 
 ## Alias
 
-- DROUND
+- `DROUND`
 
 ## Syntax
 
 ```sql
-ROUND(<x> [ , <d>])
+ROUND(<x> [ , <d> ])
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|------------|
-| `<x>`  | The number to be rounded. |
-| `<d>`  | Precision, with a default value of 0. |
+| -- | -- |
+| `<x>` | The number to be rounded |
+| `<d>` | Optional, the number of decimal places to round to |
 
-## Return value
-
-Returns an integer or a floating-point number:
-
-- By default, when the parameter d = 0, it returns the integer obtained by rounding x.
-
-- If d is a negative number, it returns an integer with the first digit to the left of the decimal point being 0.
-
-- If both x and d are NULL, it returns NULL.
-
-- If d represents a column and x is of the Decimal type, it returns a floating-point number with the same precision.
-
-## Example
+## Examples
 
 ```sql
 select round(2.4);
@@ -136,19 +123,30 @@ select round(1667.2725, -2);
 ```
 
 ```sql
-SELECT number
-, round(number * 2.5, number - 1) AS r_decimal_column
-, round(number * 2.5, 0) AS r_decimal_literal
-, round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
-, round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
-FROM test_enhanced_round
-WHERE rid = 1;
+CREATE TABLE test_enhanced_round (
+    rid int, flo float, dou double,
+    dec90 decimal(9, 0), dec91 decimal(9, 1), dec99 decimal(9, 9),
+    dec100 decimal(10,0), dec109 decimal(10,9), dec1010 decimal(10,10),
+    number int DEFAULT 1)
+DISTRIBUTED BY HASH(rid)
+PROPERTIES("replication_num" = "1" );
+
+INSERT INTO test_enhanced_round
+VALUES
+(1, 12345.123, 123456789.123456789,
+    123456789, 12345678.1, 0.123456789,
+    123456789.1, 1.123456789, 0.123456789, 1);
+
+SELECT number, dec90, round(dec90, number), dec91, round(dec91, number), dec99, round(dec99, number) FROM test_enhanced_round order by rid;
 ```
 
 ```text
-+--------+------------------+-------------------+-----------------+------------------+
-| number | r_decimal_column | r_decimal_literal | r_double_column | r_double_literal |
-+--------+------------------+-------------------+-----------------+------------------+
-|      1 |              3.0 |                 3 |               3 |                3 |
-+--------+------------------+-------------------+-----------------+------------------+
++--------+-----------+----------------------+------------+----------------------+-------------+----------------------+
+| number | dec90     | round(dec90, number) | dec91      | round(dec91, number) | dec99       | round(dec99, number) |
++--------+-----------+----------------------+------------+----------------------+-------------+----------------------+
+|      1 | 123456789 |            123456789 | 12345678.1 |           12345678.1 | 0.123456789 |          0.100000000 |
++--------+-----------+----------------------+------------+----------------------+-------------+----------------------+
 ```
+
+## Usage Note
+2.5 will round to 3. If you want to round to 2, use the `round_bankers` function.

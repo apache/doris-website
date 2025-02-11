@@ -22,36 +22,60 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## cbrt
+## Description
 
-### description
-#### Syntax
+Calculate the cube root of the parameter
 
-`DOUBLE cbrt(DOUBLE x)`
-Returns the cube root of x.
+## Syntax
 
-### example
-
-```
-mysql> select cbrt(8);
-+-----------+
-| cbrt(8.0) |
-+-----------+
-|         2 |
-+-----------+
-mysql> select cbrt(2.0);
-+--------------------+
-| cbrt(2.0)          |
-+--------------------+
-| 1.2599210498948734 |
-+--------------------+
-mysql> select cbrt(-1000.0);
-+---------------+
-| cbrt(-1000.0) |
-+---------------+
-|           -10 |
-+---------------+
+```sql
+CBRT(<a>)
 ```
 
-### keywords
-	CBRT
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | Floating point parameter |
+
+## Return Value
+
+Cubic root of parameter `<a>`, a floating point number.
+
+## Examples
+
+```sql
+select cbrt(0);
+```
+
+```text
++-------------------------+
+| cbrt(cast(0 as DOUBLE)) |
++-------------------------+
+|                     0.0 |
++-------------------------+
+```
+
+```sql
+select cbrt(-111);
+```
+
+```text
++----------------------------+
+| cbrt(cast(-111 as DOUBLE)) |
++----------------------------+
+|         -4.805895533705333 |
++----------------------------+
+```
+
+```sql
+select cbrt(1234);
+```
+
+```text
++----------------------------+
+| cbrt(cast(1234 as DOUBLE)) |
++----------------------------+
+|         10.726014668827325 |
++----------------------------+
+```
