@@ -24,59 +24,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## reverse
-### description
-#### Syntax
+## Description
+
+The REVERSE function is used to reverse the order of characters in a string or the order of elements in an array.
+
+## Syntax
 
 ```sql
-VARCHAR reverse(VARCHAR str)
-ARRAY<T> reverse(ARRAY<T> arr)
+REVERSE( <seq> )
 ```
 
-The REVERSE() function reverses a string or array and returns the result.
+## Parameters
 
-### example
+| Parameter | Description             |
+|-----------|----------------|
+| `<seq>`   | The string or array whose order needs to be reversed. |
 
+## Return Value
+
+Returns the string or array with the reversed order. Special cases:
+
+- If any Parameter is NULL, NULL will be returned.
+
+## Examples
+
+```sql
+SELECT reverse('hello');
 ```
-mysql> SELECT REVERSE('hello');
+
+```text
 +------------------+
 | REVERSE('hello') |
 +------------------+
 | olleh            |
 +------------------+
-1 row in set (0.00 sec)
-
-mysql> SELECT REVERSE('你好');
-+------------------+
-| REVERSE('你好')   |
-+------------------+
-| 好你              |
-+------------------+
-1 row in set (0.00 sec)
-
-mysql> select k1, k2, reverse(k2) from array_test order by k1;
-+------+-----------------------------+-----------------------------+
-| k1   | k2                          | reverse(`k2`)               |
-+------+-----------------------------+-----------------------------+
-|  1   | [1, 2, 3, 4, 5]             | [5, 4, 3, 2, 1]             |
-|  2   | [6, 7, 8]                   | [8, 7, 6]                   |
-|  3   | []                          | []                          |
-|  4   | NULL                        | NULL                        |
-|  5   | [1, 2, 3, 4, 5, 4, 3, 2, 1] | [1, 2, 3, 4, 5, 4, 3, 2, 1] |
-|  6   | [1, 2, 3, NULL]             | [NULL, 3, 2, 1]             |
-|  7   | [4, 5, 6, NULL, NULL]       | [NULL, NULL, 6, 5, 4]       |
-+------+-----------------------------+-----------------------------+
-
-mysql> select k1, k2, reverse(k2) from array_test01 order by k1;
-+------+-----------------------------------+-----------------------------------+
-| k1   | k2                                | reverse(`k2`)                     |
-+------+-----------------------------------+-----------------------------------+
-|  1   | ['a', 'b', 'c', 'd']              | ['d', 'c', 'b', 'a']              |
-|  2   | ['e', 'f', 'g', 'h']              | ['h', 'g', 'f', 'e']              |
-|  3   | [NULL, 'a', NULL, 'b', NULL, 'c'] | ['c', NULL, 'b', NULL, 'a', NULL] |
-|  4   | ['d', 'e', NULL, ' ']             | [' ', NULL, 'e', 'd']             |
-|  5   | [' ', NULL, 'f', 'g']             | ['g', 'f', NULL, ' ']             |
-+------+-----------------------------------+-----------------------------------+
 ```
-### keywords
-    REVERSE, ARRAY
+
+```sql
+SELECT reverse(['hello', 'world']);
+```
+
+```text
++-----------------------------+
+| reverse(['hello', 'world']) |
++-----------------------------+
+| ["world", "hello"]          |
++-----------------------------+
+```

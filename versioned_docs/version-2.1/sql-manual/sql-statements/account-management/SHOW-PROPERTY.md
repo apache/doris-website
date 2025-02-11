@@ -7,108 +7,137 @@
 
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements. See the NOTICE file
+or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
-regarding copyright ownership. The ASF licenses this file
+regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at
+with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
+KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-This statement is used to view the attributes of the user
+This statement is used to view the attributes of the user.
 
-```
-SHOW PROPERTY [FOR user] [LIKE key]
-SHOW ALL PROPERTIES [LIKE key]
-```
-
-* `user`
-
-    View the attributes of the specified user. If not specified, check the current user's.
-
-* `LIKE`
-
-    Fuzzy matching can be done by attribute name.
-
-* `ALL`
-
-  View the properties of all users (supported since version 2.0.3)
-
-Return result description:
+## Syntax
 
 ```sql
-mysql> show property like'%connection%';
-+----------------------+-------+
-| Key                  | Value |
-+----------------------+-------+
-| max_user_connections | 100   |
-+----------------------+-------+
-1 row in set (0.01 sec)
+SHOW {ALL PROPERTIES | PROPERTY [FOR <user_name>]} [LIKE <key>]
 ```
 
-* `Key`
+## Optional Parameters
+**1. `[ALL PROPERTIES]`**
 
-    Property name.
+   Whether to view all user attributes.
 
-* `Value`
+**2. `<user_name>`**
 
-    Attribute value.
+   View the attributes of the specified user. If not specified, check the current user's.
 
+**3. `<key>`**
 
-```sql
-mysql> show all properties like "%connection%";
-+-------------------+--------------------------------------+
-| User              | Properties                           |
-+-------------------+--------------------------------------+
-| root              | {"max_user_connections": "100"}      |
-| admin             | {"max_user_connections": "100"}      |
-| default_cluster:a | {"max_user_connections": "1000"}     |
-+-------------------+--------------------------------------+
-```
+   Fuzzy matching can be done by attribute name.
 
-* `User`
+## Return Value
+- If the statement uses `PROPERTY`
 
-  username.
+   | Column | Description |
+   | -- | -- |
+   | Key | Attribute name |
+   | Value | Attribute value |
 
-* `Properties`
+- If the statement uses `PROPERTIES`
 
-  Key: value corresponding to each property of the user.
+   | Column | Description |
+   | -- | -- |
+   | User | User name |
+   | Properties | Corresponding user each `property` `key:value` |
+
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following privileges:
+
+| Privilege | Object | Notes                 |
+| :---------------- | :------------- | :---------------------------- |
+| GRANT_PRIV        | User or Role    | User or role has `GRANT_PRIV` permission to view all user properties, `SHOW PROPERTY` does not require `GRANT_PRIV` permission to view the current user's properties |
+
+## Usage Notes
+-  `SHOW ALL PROPERTIES` can be used to view all users' properties.
+- If the `user_name` is specified, view the attributes of the specified user.
+- If the `user_name` is not specified, view the attributes of the current user.
+- `SHOW PROPERTY` does not require `GRANT_PRIV` permission to view the current user's properties.
 
 ## Examples
 
-1. View the attributes of the jack user
-
-    ```sql
-    SHOW PROPERTY FOR'jack';
-    ```
-
-2. View the attribute of jack user connection limit
-
-    ```sql
-    SHOW PROPERTY FOR'jack' LIKE'%connection%';
-    ```
-
-3. View all users importing cluster related properties
+- View the attributes of the jack user
 
    ```sql
-   SHOW ALL PROPERTIES LIKE '%load_cluster%'
+   SHOW PROPERTY FOR 'jack';
+   ```
+   ```text
+   +-------------------------------------+--------+
+   | Key                                 | Value  |
+   +-------------------------------------+--------+
+   | cpu_resource_limit                  | -1     |
+   | default_load_cluster                |        |
+   | default_workload_group              | normal |
+   | exec_mem_limit                      | -1     |
+   | insert_timeout                      | -1     |
+   | max_query_instances                 | 3000   |
+   | max_user_connections                | 1000   |
+   | parallel_fragment_exec_instance_num | -1     |
+   | query_timeout                       | -1     |
+   | resource_tags                       |        |
+   | sql_block_rules                     |        |
+   +-------------------------------------+--------+
    ```
 
-## Keywords
+- View the limit-related properties of the user jack
 
-    SHOW, PROPERTY, ALL
+   ```sql
+   SHOW PROPERTY FOR 'jack' LIKE '%limit%';
+   ```
 
-## Best Practice
+   ```text
+   +--------------------+-------+
+   | Key                | Value |
+   +--------------------+-------+
+   | cpu_resource_limit | -1    |
+   | exec_mem_limit     | -1    |
+   +--------------------+-------+
+   ```
+
+- View all users limit related properties
+
+   ```sql
+   SHOW ALL PROPERTIES LIKE '%limit%';
+   ```
+
+   ```text
+   +-------+------------------------------------------------------------+
+   | User  | Properties                                                 |
+   +-------+------------------------------------------------------------+
+   | root  | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   | admin | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   | jack  | {
+     "cpu_resource_limit": "-1",
+     "exec_mem_limit": "-1"
+   } |
+   +-------+------------------------------------------------------------+
+   ```
+

@@ -24,49 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 描述
 
-### 描述
+该语句用来查看表的统计信息收集概况。
 
-通过 `SHOW TABLE STATS` 查看表的统计信息收集概况。
-
-语法如下：
+## 语法
 
 ```SQL
-SHOW TABLE STATS table_name;
+SHOW TABLE STATS <table_name>;
 ```
 
-其中：
+## 必选参数
 
-- table_name: 目标表表名。可以是  `db_name.table_name`  形式。
+**1. `<table_name>`**
 
-输出：
+> 目标表名
 
-| 列名                | 说明                   |
-| :------------------ | :--------------------- |
-|`updated_rows`|自上次 ANALYZE 以来该表的更新行数|
-|`query_times`|保留列，后续版本用以记录该表查询次数|
-|`row_count`| 行数（不反映命令执行时的准确行数）|
-|`updated_time`| 上次更新时间|
-|`columns`| 收集过统计信息的列|
-|`trigger`|触发方式|
+## 可选参数
 
-下面是一个例子：
+**无**
+
+## 返回值
+
+| 列名 | 说明           |
+| -- |--------------|
+| updated_rows | 表当前更新行数           |
+| query_times |   表被查询次数           |
+| row_count | 表当前的总行数           |
+| updated_time | 表上次更新时间         |
+| columns | 收集过的列列表           |
+| trigger |   收集触发方式           |
+| new_partition |  是否有新分区首次导入数据           |
+| user_inject | 用户是否手动注入了统计信息         |
+| enable_auto_analyze | 这张表是否参与统计信息自动收集          |
+| last_analyze_time |   上次收集时间          |
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                                    |
+|:--------------| :------------- |:------------------------------------------------|
+| SELECT_PRIV   | 表（Table）    | 当执行 SHOW 时，需要拥有被查询的表的 SELECT_PRIV 权限 |
+
+## 举例
+
+1. 展示表test1的统计信息概况
 
 ```sql
-mysql> show table stats lineitem \G;
-*************************** 1. row ***************************
-updated_rows: 0
- query_times: 0
-   row_count: 6001215
-updated_time: 2023-11-07
-     columns: [l_returnflag, l_receiptdate, l_tax, l_shipmode, l_suppkey, l_shipdate, l_commitdate, l_partkey, l_orderkey, l_quantity, l_linestatus, l_comment, l_extendedprice, l_linenumber, l_discount, l_shipinstruct]
-     trigger: MANUAL
+SHOW TABLE STATS test1;
 ```
 
-<br/>
-
-<br/>
-
-### 关键词
-
-SHOW, TABLE, STATS
+```text
++--------------+-------------+-----------+---------------------+------------------------+---------+---------------+-------------+---------------------+---------------------+
+| updated_rows | query_times | row_count | updated_time        | columns                | trigger | new_partition | user_inject | enable_auto_analyze | last_analyze_time   |
++--------------+-------------+-----------+---------------------+------------------------+---------+---------------+-------------+---------------------+---------------------+
+| 0            | 0           | 100000    | 2025-01-17 16:46:31 | [test1:name, test1:id] | MANUAL  | false         | false       | true                | 2025-02-05 12:17:41 |
++--------------+-------------+-----------+---------------------+------------------------+---------+---------------+-------------+---------------------+---------------------+
+```

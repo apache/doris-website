@@ -44,7 +44,7 @@ ORTHOGONAL_BITMAP_UNION_COUNT(<bitmap_column>, <column_to_filter>, <filter_value
 
 ## Return Value
 
-Returns a set of BITMAP type.
+Returns a value of type BIGINT.
 
 ## Example
 

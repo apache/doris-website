@@ -7,7 +7,7 @@
     'author': 'Justin Trollip',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/ortege-1.jpg'
 }
 

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "AVG_WEIGHTED",
-    "language": "zh-CN"
+"title": "AVG_WEIGHTED",
+"language": "zh-CN"
 }
 ---
 
@@ -24,27 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## AVG_WEIGHTED
 ## 描述
+
+计算加权算术平均值, 即返回结果为: 所有对应数值和权重的乘积相累加，除总的权重和。 如果所有的权重和等于0, 将返回NaN。
+
 ## 语法
 
-` double avg_weighted(x, weight)`
+```sql
+AVG_WEIGHTED(<x>, <weight>)
+```
 
-计算加权算术平均值, 即返回结果为: 所有对应数值和权重的乘积相累加，除总的权重和。
-如果所有的权重和等于0, 将返回NaN。
+## 参数
 
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 是需要计算平均值的数值表达式，可以是一个列名、常量或复杂的数值表达式 |
+| `<weight>` | 是一个数值表达式，通常可以是一个列名、常量或其他数值计算结果 |
+
+## 返回值
+
+所有对应数值和权重的乘积相累加，除总的权重和，如果所有的权重和等于0, 将返回NaN。
 
 ## 举例
 
+```sql
+select k1,k2 from test_doris_avg_weighted;
 ```
-mysql> select avg_weighted(k2,k1) from baseall;
-+--------------------------+
-| avg_weighted(`k2`, `k1`) |
-+--------------------------+
-|                  495.675 |
-+--------------------------+
-1 row in set (0.02 sec)
 
+```text
++------+------+
+| k1   | k2   |
++------+------+
+|   10 |  100 |
+|   20 |  200 |
+|   30 |  300 |
+|   40 |  400 |
++------+------+
 ```
-### keywords
-AVG_WEIGHTED
+
+```sql
+select avg_weighted(k2,k1) from test_doris_avg_weighted;
+```
+
+```text
++--------------------------------------+
+| avg_weighted(k2, cast(k1 as DOUBLE)) |
++--------------------------------------+
+|                                  300 |
++--------------------------------------+
+```

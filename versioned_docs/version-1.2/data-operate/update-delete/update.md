@@ -125,7 +125,7 @@ Since the table order is a UNIQUE model, the rows with the same Key, after which
   | 1 | 100 | Pending shipments |
 
 ## Update primary key column
-Currently, the Update operation only supports updating the Value column, and the update of the Key column can refer to [Using FlinkCDC to update key column](../../ecosystem/flink-doris-connector.md#Use-FlinkCDC-to-update-Key-column)
+Currently, the Update operation only supports updating the Value column, and the update of the Key column can refer to [Using FlinkCDC to update key column](../../ecosystem/flink-doris-connector.md#use-flink-cdc-to-update-key-column)
 
 ## More Help
 

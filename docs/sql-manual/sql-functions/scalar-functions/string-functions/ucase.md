@@ -24,14 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ucase
-### description
-#### Syntax
+## Description
 
-`VARCHAR ucase(VARCHAR str)`
+Used to convert a string to uppercase letters
+## Alias
 
+- UPPER
 
-Convert all strings in parameters to uppercase. Another alias for this function is [upper](./upper.md).
+## Syntax
 
-### keywords
-    UCASE
+```sql
+UCASE( <str> )
+```
+
+## Required Parameters
+| Parameters | Description |
+|------|------|
+| `<str>` | The string to convert to uppercase
+
+## Return Value
+
+The value after converting the uppercase
+
+## Example
+
+```sql
+SELECT ucase("aBc123");
+```
+```sql
++-----------------+
+| ucase('aBc123') |
++-----------------+
+| ABC123          |
++-----------------+
+```

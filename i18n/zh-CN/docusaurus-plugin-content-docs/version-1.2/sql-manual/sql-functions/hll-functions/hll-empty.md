@@ -24,22 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## HLL_EMPTY
 ## 描述
+
+`HLL_EMPTY` 用于返回一个 HLL（HyperLogLog）类型的空值，表示一个没有任何元素的数据集合。
+
 ## 语法
 
-`HLL_EMPTY(value)`
+```sql
+HLL_EMPTY()
+```
 
-HLL_EMPTY 返回一个 hll 类型的空值。
+## 返回值
+
+返回一个 HLL 类型的空值，表示一个没有任何元素的数据集合。
 
 ## 举例
+
+```sql
+select hll_cardinality(hll_empty());
 ```
-MySQL > select hll_cardinality(hll_empty());
+
+```text
 +------------------------------+
 | hll_cardinality(hll_empty()) |
 +------------------------------+
 |                            0 |
 +------------------------------+
 ```
-### keywords
-HLL,HLL_EMPTY

@@ -59,8 +59,9 @@ export function UserCaseCarousel() {
                                 <div className=" pt-3 pr-3">{content}</div>
 
                                 <div className="flex mt-3 gap-2">
-                                    {links.map(({ content, to }) => (
+                                    {links.map(({ content, to },idx) => (
                                         <LinkWithArrow
+                                            key={idx}
                                             style={{ fontSize: '10px', lineHeight: '17px' }}
                                             className="text-start"
                                             to={to}
@@ -101,8 +102,8 @@ export function UserCaseCarousel() {
                                 <div>{content}</div>
 
                                 <div className="flex mt-14 gap-10">
-                                    {links.map(({ content, to }) => (
-                                        <LinkWithArrow className="text-start" to={to} text={content} />
+                                    {links.map(({ content, to },idx) => (
+                                        <LinkWithArrow key={idx} className="text-start" to={to} text={content} />
                                     ))}
                                 </div>
                             </div>

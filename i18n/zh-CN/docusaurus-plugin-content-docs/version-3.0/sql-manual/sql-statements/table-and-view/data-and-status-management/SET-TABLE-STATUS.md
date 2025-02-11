@@ -24,59 +24,86 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## 描述
 
-该语句用于设置指定表的状态，仅支持 OLAP 表。
+`SET TABLE STATUS` 语句用于手动设置 OLAP 表的状态。该语句具有以下功能：
 
-该命令目前仅用于手动将 OLAP 表状态设置为指定状态，从而使得某些由于表状态被阻碍的任务能够继续运行。
+- 仅支持 OLAP 表的状态设置
+- 可以将表状态修改为指定的目标状态
+- 用于解除因表状态导致的任务阻塞
 
-语法：
+**支持的状态**：
+
+| 状态 | 说明 |
+|------|------|
+| NORMAL | 表示表处于正常状态 |
+| ROLLUP | 表示表正在进行 ROLLUP 操作 |
+| SCHEMA_CHANGE | 表示表正在进行 Schema 变更 |
+| BACKUP | 表示表正在进行备份 |
+| RESTORE | 表示表正在进行恢复 |
+| WAITING_STABLE | 表示表正在等待稳定状态 |
+
+## 语法
 
 ```sql
-ADMIN SET TABLE table_name STATUS
-        PROPERTIES ("key" = "value", ...);
+ADMIN SET TABLE <table_name> STATUS PROPERTIES ("<key>" = "<value>" [, ...]);
 ```
 
-目前支持以下属性：
+其中：
 
-1. "state"：必需。指定一个目标状态，将会修改 OLAP 表的状态至此状态。
+```sql
+<key>
+  : "state"
 
-> 当前可修改的目标状态包括：
-> 
-> 1. NORMAL
-> 2. ROLLUP
-> 3. SCHEMA_CHANGE
-> 4. BACKUP
-> 5. RESTORE
-> 6. WAITING_STABLE
-> 
-> 如果表的状态已经是指定的状态，则会被忽略。
+<value>
+  : "NORMAL"
+  | "ROLLUP"
+  | "SCHEMA_CHANGE"
+  | "BACKUP"
+  | "RESTORE"
+  | "WAITING_STABLE"
+```
 
-**注意：此命令一般只用于紧急故障修复，请谨慎操作。**
+## 必选参数
+
+**1. `<table_name>`**
+
+> 指定要设置状态的表名。
+>
+> 表名在其所在的数据库中必须唯一。
+
+**2. `PROPERTIES ("state" = "<value>")`**
+
+> 指定表的目标状态。
+>
+> 必须设置 "state" 属性，且值必须是支持的状态之一。
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                           |
+| :---------------- | :------------- | :-------------------------------------- |
+| ADMIN             | 系统          | 用户必须拥有 ADMIN 权限才能执行该命令    |
+
+## 注意事项
+
+- 此命令仅用于紧急故障修复，请谨慎操作
+- 仅支持 OLAP 表，不支持其他类型的表
+- 如果表已经处于目标状态，该命令将被忽略
+- 不当的状态设置可能会导致系统异常，建议在技术支持指导下使用
+- 修改状态后，建议及时观察系统运行情况
 
 ## 示例
 
-1. 设置表 tbl1 的状态为 NORMAL。
+- 将表状态设置为 NORMAL：
 
-```sql
-admin set table tbl1 status properties("state" = "NORMAL");
-```
+    ```sql
+    ADMIN SET TABLE tbl1 STATUS PROPERTIES("state" = "NORMAL");
+    ```
 
-2. 设置表 tbl2 的状态为 SCHEMA_CHANGE。
+- 将表状态设置为 SCHEMA_CHANGE：
 
-```sql
-admin set table test_set_table_status status properties("state" = "SCHEMA_CHANGE");
-```
-
-## 关键词
-
-    ADMIN, SET, TABLE, STATUS
-
-### 最佳实践
-
-
-
+    ```sql
+    ADMIN SET TABLE tbl2 STATUS PROPERTIES("state" = "SCHEMA_CHANGE");
+    ```

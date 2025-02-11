@@ -41,28 +41,27 @@ under the License.
    SHOW CACHE HOTSPOT '/[<compute_group_name>/<db.table_name>]';
 ```
 
-## 参数
+## 可选参数
 
-* compute_group_name : 计算组的名称。
-* table_name : 表的名称。
-
+| 参数名称                  | 描述                                                         |
+|---------------------------|--------------------------------------------------------------|
+| <`compute_group_name`>        | 计算组的名称。                                               |
+| <`table_name`>                | 表的名称。                                                   |
 ## 示例
 
-1. 查看某个表的创建语句
+1. 显示整个系统的缓存热点信息
 
-    ```sql
-    SHOW CACHE HOTSPOT '/';
-    ```
+```sql
+SHOW CACHE HOTSPOT '/';
+```
 
-## 相关命令
+2. 显示特定计算组 my_compute_group 的缓存热点信息
 
- - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+```sql
+SHOW CACHE HOTSPOT '/my_compute_group/';
+```
 
 ## 参考
 
  - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
-
-## 关键词
-
-    SHOW, CACHE, HOTSPOT
-
+ - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)

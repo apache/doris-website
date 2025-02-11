@@ -24,13 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_insert
+## Description
+The JSON_INSERT function is used to insert data into JSON and return the result.
 
-### Description
-#### Syntax
 
-`VARCHAR json_insert(VARCHAR json_str, VARCHAR path, VARCHAR val[, VARCHAR path, VARCHAR val] ...)`
+## Syntax
+```sql
+JSON_INSERT (<json_str>, <path>,  <val>[, <path>,  <val>, ...])
+```
 
+## Parameters
+| Parameter          | Description                                                                                                                             |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `<json_str>` | The JSON object to be inserted. It can be a JSON object with elements of any type, including NULL. If no elements are specified, an empty array is returned. If json_str is not a valid JSON or any path parameter is not a valid path expression or contains a * wildcard, an error is returned. |
+| `<path>` | The JSON path to be inserted. If it is NULL, then return NULL.                                                                                             |
+| `<val>`        | The value to be inserted into the JSON. If it is NULL, then a NULL value will be inserted at the corresponding position.                                                                           |
 
 `json_insert` function inserts data in a JSON and returns the result.Returns NULL if `json_str` or `path` is NULL. Otherwise, an error occurs if the `json_str` argument is not a valid JSON or any path argument is not a valid path expression or contains a * wildcard.
 
@@ -44,30 +52,48 @@ A path-value pair for a nonexisting path in the json adds the value to the json 
 
 Otherwise, a path-value pair for a nonexisting path in the json is ignored and has no effect.
 
-### example
+## Return Values
+Returns a JSON value.
 
+### Examples
+
+```sql
+select json_insert(null, null, null);
 ```
-MySQL> select json_insert(null, null, null);
+```text
 +---------------------------------+
 | json_insert(NULL, NULL, 'NULL') |
 +---------------------------------+
 | NULL                            |
 +---------------------------------+
-
-MySQL> select json_insert('{"k": 1}', "$.k", 2);
+```
+```sql
+select json_insert('{"k": 1}', "$.k", 2);
+```
+```text
 +---------------------------------------+
 | json_insert('{\"k\": 1}', '$.k', '2') |
 +---------------------------------------+
 | {"k":1}                               |
 +---------------------------------------+
-
-MySQL> select json_insert('{"k": 1}', "$.j", 2);
+```
+```sql
+select json_insert('{"k": 1}', "$.j", 2);
+```
+```text
 +---------------------------------------+
 | json_insert('{\"k\": 1}', '$.j', '2') |
 +---------------------------------------+
 | {"k":1,"j":2}                         |
 +---------------------------------------+
 ```
-
-### keywords
-JSON, json_insert
+```sql
+select json_insert('{"k": 1}', "$.j", null);
+```
+```text
++-----------------------------------------------+
+| json_insert('{"k": 1}', '$.j', 'NULL', '660') |
++-----------------------------------------------+
+| {"k":1,"j":null}                              |
++-----------------------------------------------+
+```

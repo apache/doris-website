@@ -7,7 +7,7 @@ import { translate } from "@docusaurus/Translate";
 import { usePluralForm } from "@docusaurus/theme-common";
 import clsx from "clsx";
 import useSearchQuery from "../../hooks/use-search-query";
-import { fetchIndexesByWorker, searchByWorker } from "../SearchBar/searchByWorker";
+import { fetchIndexesByWorker, searchByWorker } from '@easyops-cn/docusaurus-search-local/dist/client/client/theme/searchByWorker'
 import { SearchDocumentType, } from "../../../shared/interfaces";
 import { highlight } from "../../utils/highlight";
 import { highlightStemmed } from "../../utils/highlightStemmed";

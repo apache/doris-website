@@ -1,6 +1,6 @@
 ---
 {
-    "title": "second_floor",
+    "title": "SECOND_FLOOR",
     "language": "en"
 }
 ---
@@ -24,39 +24,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## second_floor
-### description
-#### Syntax
+## Description
+The function aligns the input datetime value upwards to the nearest second boundary based on the specified period and returns the aligned datetime value.
+
+## Syntax
 
 ```sql
-DATETIME SECOND_FLOOR(DATETIME datetime)
-DATETIME SECOND_FLOOR(DATETIME datetime, DATETIME origin)
-DATETIME SECOND_FLOOR(DATETIME datetime, INT period)
-DATETIME SECOND_FLOOR(DATETIME datetime, INT period, DATETIME origin)
+SECOND_FLOOR(<datetime>[, <period>][, <origin_datetime>])
 ```
+## Parameters
 
-Convert the date to the nearest rounding down time of the specified time interval period.
+| Parameter           | Description                                                                                                               |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `<datetime>`        | Required. The input datetime value. Supports the DATETIME type.                                                           |
+| `<period>`          | Optional. Specifies the number of seconds in each period. Supports positive integers (INT). Defaults to 1 second.         |
+| `<origin_datetime>` | Optional. The starting point for alignment. Supports the DATETIME type. Defaults to 0001-01-01T00:00:00 if not specified. |
 
-- datetime: a valid date expression.
-- period: specifies how many seconds each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
+## Return Value
+- Returns a datetime value representing the input datetime aligned upwards to the nearest specified second boundary.
+- If `<datetime>` is NULL, the function returns NULL.
+- If `<datetime>` is an invalid date (e.g., 0000-00-00T00:00:00), the function returns NULL.
 
-### example
-
+## Example
+Only specifying `<datetime>`
+```sql
+SELECT SECOND_FLOOR('2025-01-23 12:34:56');
 ```
-mysql> select second_floor("2023-07-13 22:28:18", 5);
-+---------------------------------------------------------------+
-| second_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
-+---------------------------------------------------------------+
-| 2023-07-13 22:28:15                                           |
-+---------------------------------------------------------------+
-1 row in set (0.10 sec)
+```text
++------------------------------------------------------------+
+| second_floor(cast('2025-01-23 12:34:56' as DATETIMEV2(0))) |
++------------------------------------------------------------+
+| 2025-01-23 12:34:56                                        |
++------------------------------------------------------------+
 ```
-
-### keywords
-
-    SECOND_FLOOR, SECOND, FLOOR
-
-### Best Practice
-
-See also [date_floor](./date_floor)
+Specifying `<datetime>` and `<origin_datetime>`
+```sql
+SELECT SECOND_FLOOR('2025-01-23 12:34:56', '2025-01-01 00:00:00');
+```
+```text
++----------------------------------------------------------------------------------------------------------+
+| second_floor(cast('2025-01-23 12:34:56' as DATETIMEV2(0)), cast('2025-01-01 00:00:00' as DATETIMEV2(0))) |
++----------------------------------------------------------------------------------------------------------+
+| 2025-01-23 12:34:56                                                                                      |
++----------------------------------------------------------------------------------------------------------+
+```
+Specifying `<datetime>` and `<period>`
+```sql
+SELECT SECOND_FLOOR('2025-01-23 12:34:56', 5)
+```
+```text
++---------------------------------------------------------------+
+| second_floor(cast('2025-01-23 12:34:56' as DATETIMEV2(0)), 5) |
++---------------------------------------------------------------+
+| 2025-01-23 12:34:55                                           |
++---------------------------------------------------------------+
+```
+Specifying `<datetime>`，`<period>` and `<origin_datetime>`
+```sql
+SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2025-01-23 12:00:00');
+```
+```text
++--------------------------------------------------------------------------------------------------------------+
+| second_floor(cast('2025-01-23 12:34:56' as DATETIMEV2(0)), 10, cast('2025-01-23 12:00:00' as DATETIMEV2(0))) |
++--------------------------------------------------------------------------------------------------------------+
+| 2025-01-23 12:34:50                                                                                          |
++--------------------------------------------------------------------------------------------------------------+
+```

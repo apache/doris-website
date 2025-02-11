@@ -24,29 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## uuid
+## Description
 
-uuid
+Used to return a randomly generated UUID string.
 
-### description
-#### Syntax
+## Syntax
 
-`VARCHAR uuid()`
-
-return a random uuid string
-
-
-### example
-
+```sql
+UUID()
 ```
-mysql> select uuid();
+## Return Value
+Returns a randomly generated UUID string.
+
+## Examples
+
+```sql
+select UUID();
+```
+
+```sql
 +--------------------------------------+
-| uuid()                               |
+| UUID()                               |
 +--------------------------------------+
 | 29077778-fc5e-4603-8368-6b5f8fd55c24 |
 +--------------------------------------+
 
 ```
-
-### keywords
-    UUID
