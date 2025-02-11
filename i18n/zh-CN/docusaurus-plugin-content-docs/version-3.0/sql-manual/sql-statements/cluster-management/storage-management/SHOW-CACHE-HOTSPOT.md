@@ -38,7 +38,7 @@ under the License.
 ## 语法
 
 ```sql
-   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+   SHOW CACHE HOTSPOT '/[<compute_group_name>/<db.table_name>]';
 ```
 
 ## 参数

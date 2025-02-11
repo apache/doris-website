@@ -36,7 +36,7 @@ Before version 3.0.4, the `SHOW CACHE HOTSPOT` statement can be used to query ca
 ## Syntax
 
 ```sql
-   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+   SHOW CACHE HOTSPOT '/[<compute_group_name>/<table_name>]';
 ```
 
 ## Parameters
