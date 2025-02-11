@@ -29,11 +29,14 @@ under the License.
 
 Quick deployment **is only suitable for local development**. Do not use this deployment method in production environments:
 
-1. When deploying quickly using Docker, data will be released when the Docker instance is destroyed.
+1. Since the Doris 2.1.8 version, the Doris service can be started using the Docker Compose script.
 
-2. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
+2. When deploying quickly using Docker, data will be released when the Docker instance is destroyed.
 
-3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
+3. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
+
+4. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
+   
 :::
 
 ## Local Quick Deployment
