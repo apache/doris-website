@@ -34,7 +34,7 @@ Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行�
 解压下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
 ```shell
-# FE_IP 为 FE 的监听地址， FE_QUERY_PORT 为 FE 的 MYSQL 协议服务的端口，在 fe.conf 中对应 query_port, 默认为 9030.
+# FE_IP 为 FE 的监听地址，FE_QUERY_PORT 为 FE 的 MYSQL 协议服务的端口，在 fe.conf 中对应 query_port, 默认为 9030.
 mysql -h FE_IP -P FE_QUERY_PORT -u USER_NAME 
 ```
 

@@ -48,7 +48,7 @@ pip install adbc_driver_manager
 pip install adbc_driver_flightsql
 ```
 
-在代码中import 以下模块/库来使用已安装的 Library：
+在代码中 import 以下模块/库来使用已安装的 Library：
 
 ```Python
 import adbc_driver_manager
@@ -62,10 +62,10 @@ import adbc_driver_flightsql.dbapi as flight_sql
 
 ### 连接 Doris
 
-创建与 Doris Arrow Flight SQL 服务交互的客户端。需提供 Doris FE 的 Host、Arrow Flight Port 、登陆用户名以及密码，并进行以下配置。
+创建与 Doris Arrow Flight SQL 服务交互的客户端。需提供 Doris FE 的 Host、Arrow Flight Port、登陆用户名以及密码，并进行以下配置。
 修改 Doris FE 和 BE 的配置参数：
 
-- 修改fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
+- 修改 fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
 - 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 9091。
 
 `注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 不相同`
@@ -116,7 +116,7 @@ cursor.execute("show create table arrow_flight_sql_test;")
 print(cursor.fetchallarrow().to_pandas())
 ```
 
-如果 StatusResult 返回 0 ，则说明 Query 执行成功（这样设计的原因是为了兼容 JDBC）。
+如果 StatusResult 返回 0，则说明 Query 执行成功（这样设计的原因是为了兼容 JDBC）。
 
 ```
   StatusResult
@@ -303,7 +303,7 @@ $ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core
 
 否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` 或者 `ava.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
 
-如果您在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，参照下面的图片:
+如果您在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，参照下面的图片：
 
 ![IntelliJ IDEA](https://github.com/user-attachments/assets/7439ee6d-9013-40bf-89af-0365925d3fdb)
 
@@ -459,7 +459,7 @@ try (
 
 4. 当读取数据量非常大时，使用 Arrow Flight SQL 将比 `jdbc:mysql://` 使用更少的内存，所以如果你受内存不足困扰，同样可以尝试下 Arrow Flight SQL。
 
-5. 除了上述三种连接方式，还可以使用原生的 FlightClient 连接 Arrow Flight Server，可以更加灵活的并行读取多个 Endpoints。Flight AdbcDriver也是基于 FlightClient 创建的链接，相较于直接使用 FlightClient 更简单。
+5. 除了上述三种连接方式，还可以使用原生的 FlightClient 连接 Arrow Flight Server，可以更加灵活的并行读取多个 Endpoints。Flight AdbcDriver 也是基于 FlightClient 创建的链接，相较于直接使用 FlightClient 更简单。
 
 ## 与其他大数据组件交互
 
@@ -467,7 +467,7 @@ try (
 
 Arrow Flight 官方目前没有支持 Spark 和 Flink 的计划（见 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)），[Doris Spark Connector](https://github.com/apache/doris-spark-connector) 和 [Doris Flink Connector](https://github.com/apache/doris-flink-connector) 目前还不支持通过 Arrow Flight SQL 访问 Doris。其中 Doris Flink Connector 支持 Arrow Flight SQL 正在开发中，预期能提升数倍读取性能。
 
-社区之前参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector)，在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) 和 [Dremio-Flight-Connector](https://github.com/dremio-hub/dremio-flight-connector) 自行实现。
+社区之前参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector)，在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为 Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) 和 [Dremio-Flight-Connector](https://github.com/dremio-hub/dremio-flight-connector) 自行实现。
 
 ## FAQ
 
@@ -477,18 +477,18 @@ Arrow Flight 官方目前没有支持 Spark 和 Flink 的计划（见 [GitHub Is
 
 kylinv10 SP2 和 SP3 的 Linux 内核版本最高只有 4.19.90-24.4.v2101.ky10.aarch64，无法继续升级内核版本，只能在 kylinv10 上重新编译 Doris BE，如果使用新版本 ldb_toolchain 编译 Doris  BE 后问题依然存在，可以尝试使用低版本 ldb_toolchain v0.17 编译，如果你的 ARM 环境无法连外网，华为云提供 ARM + kylinv10，阿里云提供 x86 + kylinv10
 
-2. 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBCDriver 不支持 prepared statement 传递参数，类似`select * from xxx where id=?`，将报错 `parameter ordinal 1 out of range`，这是 Arrow Flight SQL 的一个BUG（[GitHub Issue](https://github.com/apache/arrow/issues/40118)）
+2. 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBCDriver 不支持 prepared statement 传递参数，类似`select * from xxx where id=?`，将报错 `parameter ordinal 1 out of range`，这是 Arrow Flight SQL 的一个 BUG（[GitHub Issue](https://github.com/apache/arrow/issues/40118)）
 
-3. 修改 `jdbc:arrow-flight-sql` 每次读取的批次大小，在某些场景下可以提升性能，通过修改`org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader`文件中`makeJdbcConfig`方法中的 `setTargetBatchSize`，默认是1024，然后将修改后的文件保存到本地同名路径目录下，从而覆盖原文件生效。
+3. 修改 `jdbc:arrow-flight-sql` 每次读取的批次大小，在某些场景下可以提升性能，通过修改`org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader`文件中`makeJdbcConfig`方法中的 `setTargetBatchSize`，默认是 1024，然后将修改后的文件保存到本地同名路径目录下，从而覆盖原文件生效。
 
-4. ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 还不支持并行读取，没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的AdbcStatement实际是JdbcStatement，executeQuery后将行存格式的 JDBC ResultSet 又重新转成的Arrow列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
+4. ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 还不支持并行读取，没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的 AdbcStatement 实际是 JdbcStatement，executeQuery 后将行存格式的 JDBC ResultSet 又重新转成的 Arrow 列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
 
-5. 截止Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` 中指定连接`test` database无效，只能手动执行SQL `use database`。
+5. 截止 Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` 中指定连接`test` database 无效，只能手动执行 SQL `use database`。
 
-6. Doris 2.1.4 version 存在一个Bug，读取大数据量时有几率报错，在 [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827) 这个pr修复，升级 Doris 2.1.5 version 可以解决。问题详情见：[Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
+6. Doris 2.1.4 version 存在一个 Bug，读取大数据量时有几率报错，在 [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827) 这个 pr 修复，升级 Doris 2.1.5 version 可以解决。问题详情见：[Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
 
 7. `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant` 使用 Python 时忽略这个 Warning，这是 Python ADBC Client 的问题，这不会影响查询。
 
 8. Python 报错 `grpc: received message larger than max (20748753 vs. 16777216)`，参考 [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) 在 Database Option 中增加 `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value`.
 
-9. Doris version 2.1.7 版本之前，报错 `Reach limit of connections`，这是因为没有限制单个用户的 Arrow Flight 连接数小于 `UserProperty` 中的 `max_user_connections`，默认100，可以通过 `SET PROPERTY FOR 'Billie' 'max_user_connections' = '1000';` 修改 Billie 用户的当前最大连接数到 100，或者在 `fe.conf` 中增加 `arrow_flight_token_cache_size=50` 来限制整体的 Arrow Flight 连接数。Doris version 2.1.7 版本之前 Arrow Flight 连接默认 3天 超时断开，只强制连接数小于 `qe_max_connection/2`，超过时依据lru淘汰，`qe_max_connection` 是fe所有用户的总连接数，默认1024。具体可以看 `arrow_flight_token_cache_size` 这个conf的介绍。在 [Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127) 修复，问题详情见：[Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie-shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
+9. Doris version 2.1.7 版本之前，报错 `Reach limit of connections`，这是因为没有限制单个用户的 Arrow Flight 连接数小于 `UserProperty` 中的 `max_user_connections`，默认 100，可以通过 `SET PROPERTY FOR 'Billie' 'max_user_connections' = '1000';` 修改 Billie 用户的当前最大连接数到 100，或者在 `fe.conf` 中增加 `arrow_flight_token_cache_size=50` 来限制整体的 Arrow Flight 连接数。Doris version 2.1.7 版本之前 Arrow Flight 连接默认 3 天 超时断开，只强制连接数小于 `qe_max_connection/2`，超过时依据 lru 淘汰，`qe_max_connection` 是 fe 所有用户的总连接数，默认 1024。具体可以看 `arrow_flight_token_cache_size` 这个 conf 的介绍。在 [Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127) 修复，问题详情见：[Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie-shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
