@@ -58,8 +58,8 @@ ROUND_BANKERS(<x> [ , <d>])
 
 | Parameter | Description |
 |-----------|------------|
-| `<x>`  | The number to be rounded. |
-| `<d>`  | Precision, with a default value of 0. |
+| `<x>` | The number to be rounded |
+| `<d>` | Optional, the number of decimal places to round to, with a default value of 0. |
 
 ## Return value
 
