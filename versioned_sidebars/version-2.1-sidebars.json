@@ -790,8 +790,7 @@
                         "ecosystem/logstash",
                         "ecosystem/beats",
                         "ecosystem/automq-load",
-                        "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf"
+                        "ecosystem/hive-bitmap-udf"
                     ]
                 }
             ]
