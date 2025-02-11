@@ -32,7 +32,7 @@ Stream Load 是通过 HTTP 协议将本地文件或数据流导入到 Doris 中�
 
 - **streamloader**
 
-Streamloader工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多文件，多并发导入的功能，降低大数据量导入的耗时。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
+Streamloader 工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于 Stream Load 实现，可以提供多文件，多并发导入的功能，降低大数据量导入的耗时。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
 
 - **MySQL Load**
 
@@ -151,7 +151,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### 第 3 步：使用 stream loader工具导入数据
+### 第 3 步：使用 stream loader 工具导入数据
 
 ```Bash
 doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamloader"
@@ -186,7 +186,7 @@ mysql> select count(*) from testdb.test_streamloader;
 +----------+
 ```
 
-## 使用MySQL Load从本地数据导入
+## 使用 MySQL Load 从本地数据导入
 
 ### 第 1 步：准备数据
 
@@ -238,7 +238,7 @@ LINES TERMINATED BY '\n';
 
 ### 第 4 步：检查导入数据
 
-MySQL Load 是一种同步的导入方式，导入后结果会在命令行中返回给用户。如果导入执行失败, 会展示具体的报错信息。
+MySQL Load 是一种同步的导入方式，导入后结果会在命令行中返回给用户。如果导入执行失败，会展示具体的报错信息。
 
 如下是导入成功的结果显示，会返回导入的行数：
 

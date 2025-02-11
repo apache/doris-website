@@ -36,7 +36,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL,
 DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-## CSV格式导入
+## CSV 格式导入
 
 ### 第 1 步：准备数据
 
@@ -90,7 +90,7 @@ mysql> SELECT * FROM array_test;
 4 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON 格式导入
 
 ### 第 1 步：准备数据
 

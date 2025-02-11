@@ -396,7 +396,7 @@ job_properties 子句具体参数选项如下：
 | 参数                      | 说明                                                         |
 | ------------------------- | ------------------------------------------------------------ |
 | desired_concurrent_number | <p>默认值：5 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 parititon 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
-| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于 0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 20000000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 1G。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |

@@ -103,7 +103,7 @@ Doris 支持以下三种 JSON 格式：
 | json paths | 无 | jsonpaths | properties.jsonpaths | properties.jsonpaths | jsonpaths |
 | json root | 无 | json_root | properties.json_root | properties.json_root | json_root |
 | strip outer array | false | strip_outer_array | properties.strip_outer_array | properties.strip_outer_array | strip_outer_array |
-| read json by line | false | read_json_by_line | 不支持配置，都为true | 不支持 | read_json_by_line, 默认为true |
+| read json by line | false | read_json_by_line | 不支持配置，都为 true | 不支持 | read_json_by_line, 默认为 true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | 不支持 | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
 
@@ -198,7 +198,7 @@ Doris 支持以下三种 JSON 格式：
     "id": "12345678901234567890",
     "price": "99999999.999999"
   }
-  -- 设置 num_as_string=true， price 字段将以字符串形式解析
+  -- 设置 num_as_string=true，price 字段将以字符串形式解析
   
   ```
 
