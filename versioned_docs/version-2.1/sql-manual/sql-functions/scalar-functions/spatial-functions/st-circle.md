@@ -31,7 +31,7 @@ Convert a WKT (Well Known Text) to a circle on the sphere of the Earth.
 ## Syntax
 
 ```sql
-ST_Circle( <center_lng>, <center_lat>, <radius>)
+ST_CIRCLE( <center_lng>, <center_lat>, <radius>)
 ```
 
 ## Parameters

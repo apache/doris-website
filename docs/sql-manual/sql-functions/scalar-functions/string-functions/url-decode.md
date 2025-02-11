@@ -1,6 +1,6 @@
 ---
 {
-    "title": "url_decode",
+    "title": "URL_DECODE",
     "language": "en"
 }
 ---
@@ -24,31 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## url_decode
-### description
+
+## Description
 
 Converts an url to a decode string.
 
-#### Syntax
+## Syntax
 
 ```sql
-VARCHAR url_decode(VARCHAR url)
+URL_DECODE( <str> )
 ```
 
-### Parameters
+## Required Parameters
+| Parameters | Description |
+|------|------|
+| `<str>` | the string to decode. If url is not a string type. |
 
-- url: the string to decode. If url is not a string type.
+##  Return Value
 
-### example
+The decoded value
 
+##  Example
+
+```sql
+select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 ```
-mysql> mysql> select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
+```sql
 +------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
 +------------------------------------------------+
 | https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
 +------------------------------------------------+
 ```
-
-### keywords
-    URL DECODE

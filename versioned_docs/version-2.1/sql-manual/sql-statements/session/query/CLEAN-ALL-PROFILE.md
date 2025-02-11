@@ -24,29 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-For manual cleanup all of historical query or load profile.
+This command is used to manually clear all historical query or load profiles.
 
-Syntax:
+## Syntax
 
 ```sql
-CLEAN ALL PROFILE;
+CLEAN ALL PROFILE
 ```
+
+## Access Control Requirements
+
+The user who executes this SQL command must have at least the following permissions:
+
+| Privilege    | Object    | Notes                                                |
+|:--------------|:-----------|:-----------------------------------------------------|
+| GRANT_PRIV         | DATABASE   | GRANT permission is required for the CLEAN statement |
 
 ## Examples
 
-1. Clean all profile
-
-	```sql
-	CLEAN ALL PROFILE;
-	```
-
-## Keywords
-
-    CLEAN, PROFILE
-
-## Best Practice
-
+```sql
+CLEAN ALL PROFILE
+```

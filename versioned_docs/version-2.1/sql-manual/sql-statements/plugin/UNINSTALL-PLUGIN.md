@@ -25,33 +25,37 @@ under the License.
 -->
 
 
-
-
 ## Description
 
 This statement is used to uninstall a plugin.
 
-grammar:
+## Syntax：
 
 ```sql
-UNINSTALL PLUGIN plugin_name;
+UNINSTALL PLUGIN <plugin_name>;
 ```
 
-  plugin_name can be viewed with the `SHOW PLUGINS;` command.
+## Required parameters
 
-Only non-builtin plugins can be uninstalled.
+** 1. `<plugin_name>`**
+>  The name of the uninstalled plugin
 
-## Examples
+## Permission Control
 
-1. Uninstall a plugin:
+The user executing this SQL command must have at least the following permissions:
+
+| Permissions         | Object   | Notes            |
+|:-----------|:-----|:--------------|
+| ADMIN_PRIV | The entire cluster | Requires administrative privileges for the entire cluster |
+
+## Precautions
+
+Only non-builtin plugins can be uninstalled
+
+## Example
+
+- To uninstall a plugin:
 
     ```sql
     UNINSTALL PLUGIN auditdemo;
     ```
-
-## Keywords
-
-    UNINSTALL, PLUGIN
-
-## Best Practice
-

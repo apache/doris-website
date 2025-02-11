@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WINDOW_FUNCTION_LEAD",
+    "title": "LEAD",
     "language": "zh-CN"
 }
 ---
@@ -11,18 +11,30 @@
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
 
-## WINDOW FUNCTION LEAD
 ## 描述
 
-LEAD() 方法用来计算当前行向后数若干行的值。
+LEAD() 是一个窗口函数，用于访问当前行之后的行数据，而无需进行自连接。它可以获取分区内当前行之后第 N 行的值。
+
+## 语法
 
 ```sql
-LEAD(expr, offset, default) OVER (partition_by_clause order_by_clause)
+LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 ```
+
+## 参数
+| 参数                | 说明                                                                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| expr                | 需要获取值的表达式                                                                                                |
+| offset              | 可选。向后偏移的行数。默认值为 1。设置为负数时效果等同于使用 LAG 函数。当指定 IGNORE NULLS 时，最大值为 1,000,000 |
+| default             | 可选。当偏移超出窗口范围时返回的默认值。默认为 NULL                                                               |
+
+## 返回值
+
+返回与输入表达式相同的数据类型。
 
 ## 举例
 
-计算第二天的收盘价对比当天收盘价的走势，即第二天收盘价比当天高还是低。
+计算每个销售员当前销售额与下一天销售额的差值：
 
 ```sql
 select stock_symbol, closing_date, closing_price,    
@@ -34,9 +46,12 @@ when false then "flat or lower"
 end as "trending"   
 from stock_ticker    
 order by closing_date;
+```
 
+```text
++--------------+---------------------+---------------+---------------+
 | stock_symbol | closing_date        | closing_price | trending      |
-|--------------|---------------------|---------------|---------------|
+| ------------ | ------------------- | ------------- | ------------- |
 | JDR          | 2014-09-13 00:00:00 | 12.86         | higher        |
 | JDR          | 2014-09-14 00:00:00 | 12.89         | higher        |
 | JDR          | 2014-09-15 00:00:00 | 12.94         | flat or lower |
@@ -44,8 +59,5 @@ order by closing_date;
 | JDR          | 2014-09-17 00:00:00 | 14.03         | higher        |
 | JDR          | 2014-09-18 00:00:00 | 14.75         | flat or lower |
 | JDR          | 2014-09-19 00:00:00 | 13.98         | flat or lower |
++--------------+---------------------+---------------+---------------+
 ```
-
-### keywords
-
-    WINDOW,FUNCTION,LEAD

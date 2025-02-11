@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CREATE ENCRYPTKEY",
-    "language": "en"
+   "title": "CREATE ENCRYPTKEY",
+   "language": "en"
 }
 ---
 
@@ -24,59 +24,80 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-This statement creates a custom key. Executing this command requires the user to have `ADMIN` privileges.
+This statement creates a custom key.
 
-grammar:
+## Syntax
 
 ```sql
-CREATE ENCRYPTKEY key_name AS "key_string"
+CREATE ENCRYPTKEY <key_name> AS "<key_string>"
 ```
 
-illustrate:
+## Required Parameters
 
-`key_name`: The name of the key to be created, may contain the name of the database. For example: `db1.my_key`.
+**1. `<key_name>`**
 
-`key_string`: The string to create the key with.
+> Specifies the name of the key to be created, which may include a database identifier.  
+> Example: `db1.my_key`
 
-If `key_name` contains the database name, then the custom key will be created in the corresponding database, otherwise this function will create the database in the current session. The name of the new key cannot be the same as the existing key in the corresponding database, otherwise the creation will fail.
+**2. `<key_string>`**
 
-## Examples
+> Defines the key material string for cryptographic operations.
+>
+> **Behavior Notes**:
+> - When the `<key_name>` contains a database identifier, the key will be created in the specified database
+> - If no database is specified in `<key_name>`, the current session's database will be used
+> - Key creation will fail if duplicate key names exist in the target database
 
-1. Create a custom key
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege    | Object      | Notes                                                                                 |
+|:-------------|:------------|:--------------------------------------------------------------------------------------|
+| `ADMIN_PRIV` | User / Role | Must hold the `ADMIN_PRIV` privilege on the target user or role to create custom keys |
+
+## Example
+
+- Create a custom key
 
    ```sql
    CREATE ENCRYPTKEY my_key AS "ABCD123456789";
    ```
 
-2. Use a custom key
-
-   To use a custom key, you need to add the keyword `KEY`/`key` before the key, separated from the `key_name` space.
+- Create a custom key in the testdb database
 
    ```sql
-   mysql> SELECT HEX(AES_ENCRYPT("Doris is Great", KEY my_key));
+   CREATE ENCRYPTKEY testdb.test_key AS "ABCD123456789";
+   ```
+
+- Use a custom key to encrypt data
+
+  :::tip
+  When using custom keys, you must prefix the key name with `KEY`/`key` followed by a space.
+  :::
+
+   ```sql
+   SELECT HEX(AES_ENCRYPT("Doris is Great", KEY my_key));
+   ```
+   ```text
    +------------------------------------------------+
    | hex(aes_encrypt('Doris is Great', key my_key)) |
    +------------------------------------------------+
-   | D26DB38579D6A343350EDDC6F2AD47C6 |
+   | D26DB38579D6A343350EDDC6F2AD47C6               |
    +------------------------------------------------+
-   1 row in set (0.02 sec)
-   
-   mysql> SELECT AES_DECRYPT(UNHEX('D26DB38579D6A343350EDDC6F2AD47C6'), KEY my_key);
-   +------------------------------------------------- -------------------+
-   | aes_decrypt(unhex('D26DB38579D6A343350EDDC6F2AD47C6'), key my_key) |
-   +------------------------------------------------- -------------------+
-   | Doris is Great |
-   +------------------------------------------------- -------------------+
-   1 row in set (0.01 sec)
    ```
 
-## Keywords
+- Use a custom key to decrypt data
 
-    CREATE, ENCRYPTKEY
-
-## Best Practice
+   ```sql
+   SELECT AES_DECRYPT(UNHEX('D26DB38579D6A343350EDDC6F2AD47C6'), KEY my_key);
+   ```
+   ```text
+   +------------------------------------------------- -------------------+
+   | aes_decrypt(unhex('D26DB38579D6A343350EDDC6F2AD47C6'), key my_key)  |
+   +------------------------------------------------- -------------------+
+   | Doris is Great                                                      |
+   +------------------------------------------------- -------------------+
+   ```

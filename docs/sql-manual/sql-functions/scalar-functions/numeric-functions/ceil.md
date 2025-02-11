@@ -22,66 +22,102 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## ceil
+## Description
 
-### description
-#### Syntax
+Round up floating-point and fixed-point decimals to a specific number of places and return the rounded floating-point or fixed-point number.
 
-`T ceil(T x[, d])`
+## Syntax
 
-If not specified `d`: returns the smallest integer value less than or equal to `x`, which is **the most common usage**.
-Otherwise, returns the smallest round number that is less than or equal to `x` and flowing the rules:
-
-If `d` is specified as literal:  
-`d` = 0: just like without `d`
-`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
-
-Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
-
-:::tip
-The other alias for this function are `dceil` and `ceiling`.
-:::
-
-### example
-
+```sql
+CEIL(<a>[, <d>])
 ```
-mysql> select ceil(1);
-+-----------+
-| ceil(1.0) |
-+-----------+
-|         1 |
-+-----------+
-mysql> select ceil(2.4);
-+-----------+
-| ceil(2.4) |
-+-----------+
-|         3 |
-+-----------+
-mysql> select ceil(-10.3);
-+-------------+
-| ceil(-10.3) |
-+-------------+
-|         -10 |
-+-------------+
-mysql> select ceil(123.45, 1), ceil(123.45), ceil(123.45, 0), ceil(123.45, -1);
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | Floating-point (Double) or fixed-point (Decimal) parameter indicating the parameter to be rounded |
+| `<d>` | Optional, integer, indicates rounding to the target number of digits, a positive number means rounding to the next decimal point, a negative number means rounding to the next decimal point, and `0` indicates rounding to an integer. When not filled, it is equivalent to `<d> = 0`. |
+
+## Return Value
+
+Returns the smallest rounded number greater than or equal to `<a>` according to the following rules.
+
+Round to `1/(10^d)` digit, i.e., make the result divisible by `1/(10^d)`. If `1/(10^d)` is not exact, the rounding digit is the nearest number of the corresponding data type.
+
+For an entry `<a>` of type Decimal, assuming it is of type `Decimal(p, s)`, the return value is:
+
+- `Decimal(p, 0)`，if `<d> <= 0`
+- `Decimal(p, <d>)`，if `0 < <d> <= s`
+- `Decimal(p, s)`，if `<d> > s`
+
+## Alias
+
+- DCEIL
+- CEILING
+
+## Examples
+
+```sql
+select ceil(123.456);
+```
+
+```text
++---------------+
+| ceil(123.456) |
++---------------+
+|           124 |
++---------------+
+```
+
+```sql
+select ceil(123.456, 2);
+```
+
+```text
++------------------+
+| ceil(123.456, 2) |
++------------------+
+|           123.46 |
++------------------+
+```
+
+```sql
+select ceil(123.456, -2);
+```
+
+```text
++-------------------+
+| ceil(123.456, -2) |
++-------------------+
+|               200 |
++-------------------+
+```
+
+```sql
+select ceil(123.45, 1), ceil(123.45), ceil(123.45, 0), ceil(123.45, -1);
+```
+
+```text
 +-----------------+--------------+-----------------+------------------+
 | ceil(123.45, 1) | ceil(123.45) | ceil(123.45, 0) | ceil(123.45, -1) |
 +-----------------+--------------+-----------------+------------------+
 |           123.5 |          124 |             124 |              130 |
 +-----------------+--------------+-----------------+------------------+
-mysql> SELECT number
-    -> , ceil(number * 2.5, number - 1) AS c_decimal_column
-    -> , ceil(number * 2.5, 0) AS c_decimal_literal
-    -> , ceil(cast(number * 2.5 AS DOUBLE), number - 1) AS c_double_column
-    -> , ceil(cast(number * 2.5 AS DOUBLE), 0) AS c_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
-+--------+------------------+-------------------+-----------------+------------------+
-| number | c_decimal_column | c_decimal_literal | c_double_column | c_double_literal |
-+--------+------------------+-------------------+-----------------+------------------+
-|      1 |              3.0 |                 3 |               3 |                3 |
-+--------+------------------+-------------------+-----------------+------------------+
 ```
 
-### keywords
-	CEIL, DCEIL, CEILING
+```sql
+select ceil(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers("number"="5") )t;
+```
+
+```text
++------------+
+| ceil(x, 2) |
++------------+
+|     123.46 |
+|     123.46 |
+|     123.46 |
+|     123.46 |
+|     123.46 |
++------------+
+```

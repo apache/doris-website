@@ -24,34 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This statement is used to show the process of converting light schema change process. should enable config `enable_convert_light_weight_schema_change`.
+Used to view the conversion process of non-light schema change OLAP tables to light schema change tables.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [FROM db]
+SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS [ FROM <db_name> ]
 ```
 
-## Example
+## Optional parameters
 
-1. View the converting process in db named test 
+**1. `<db_name>`**
+> The name of the database to be queried can be specified in the FROM clause.
 
-    ```sql
-     SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS FROM test;
-    ```
+## Access Control Requirements
 
-2. View the converting process globally
+The user who executes this SQL command must have at least the following permissions:
 
-    ```sql
-    SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS;
-    ```
+| Privilege | Object | Notes |
+|:--------------|:-----------|:------------------------|
+| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
 
+## Usage Notes
 
-## Keywords
+- To execute this statement, you need to enable the configuration `enable_convert_light_weight_schema_change`.
 
-    SHOW, CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS
+## Examples
 
-## Best Practice
+- View the conversion on database test
+
+  ```sql
+  SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS FROM test;
+  ```
+
+- View global conversion status
+
+  ```sql
+  SHOW CONVERT_LIGHT_SCHEMA_CHANGE_PROCESS;
+  ```
