@@ -41,7 +41,7 @@ TPC-DS 的设计目标是模拟现实世界中的复杂决策支持工作负载�
 | 硬件   | 配置说明                                     |
 |------|------------------------------------------|
 | 机器数量 | 4 台阿里云主机（1 个 FE，3 个 BE）                  |
-| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32核 |
+| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32 核 |
 | 内存   | 128G                                     |
 | 磁盘   | 阿里云 ESSD (PL0)                           |
 
