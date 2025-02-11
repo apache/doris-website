@@ -212,9 +212,8 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 2. Timeout time
 
+   The timeout for an INSERT operation is governed by max(insert_timeout, query_timeout). Both are environment variables, with insert_timeout defaulting to 4 hours and query_timeout defaulting to 5 minutes. If the operation exceeds the timeout, the job will be canceled. The introduction of insert_timeout is to ensure that INSERT statements have a longer default timeout, allowing import tasks to be unaffected by the shorter default timeout typically applied to regular queries.
     
-   The timeout for INSERT operations is controlled by [session variable](../../../../advanced/variables.md) `insert_timeout`. The default is 4 hours. If it times out, the job will be canceled.
-
 3. Label and atomicity
 
    The INSERT operation also guarantees the atomicity of imports, see the [Import Transactions and Atomicity](../../../../data-operate/import/import-scenes/load-atomicity.md) documentation.
