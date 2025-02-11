@@ -187,9 +187,9 @@ CREATE CATALOG `paimon_dlf` PROPERTIES (
 | DecimalType(precision, scale)         | Decimal(precision, scale) |           |
 | TimestampType,LocalZonedTimestampType | DateTime                  |           |
 | DateType                              | Date                      |           |
-| ArrayType                             | Array                     | 支持Array嵌套 |
-| MapType                               | Map                       | 支持Map嵌套   |
-| RowType                               | Struct                    | 支持Struct嵌套（2.0.10 和 2.1.3 版本开始支持）|
+| ArrayType                             | Array                     | 支持 Array 嵌套 |
+| MapType                               | Map                       | 支持 Map 嵌套   |
+| RowType                               | Struct                    | 支持 Struct 嵌套（2.0.10 和 2.1.3 版本开始支持）|
 
 ## 常见问题
 

@@ -225,7 +225,7 @@ set global enable_fallback_to_original_planner = false;
 
     - ORC（默认）
     - Parquet
-    - Text （自 2.1.7 和 3.0.3 版本开始支持）
+    - Text（自 2.1.7 和 3.0.3 版本开始支持）
 
         Text 格式还支持以下表属性：
 
@@ -324,7 +324,7 @@ AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 
 当前 Apache Doris 支持使用多个插入语句进行并发写入。不过需要注意的是，用户需要控制并发写入不产生可能冲突的情况。
 
-因为普通非事务 Hive 表缺少完备的事务机制。通过上文介绍的 Apache Doris 事务机制我们知道目前 Apache Doris 中的实现只能是尽力而为地减少可能不一致的时间窗口，而无法保证真正的 ACID。因此在 Apache Doris 中进行并发写入Hive 表可能会导致数据一致性问题。
+因为普通非事务 Hive 表缺少完备的事务机制。通过上文介绍的 Apache Doris 事务机制我们知道目前 Apache Doris 中的实现只能是尽力而为地减少可能不一致的时间窗口，而无法保证真正的 ACID。因此在 Apache Doris 中进行并发写入 Hive 表可能会导致数据一致性问题。
 
 1. `INSERT` 并发操作
 

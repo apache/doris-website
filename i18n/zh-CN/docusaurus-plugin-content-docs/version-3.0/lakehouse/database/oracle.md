@@ -73,11 +73,11 @@ CREATE CATALOG oracle PROPERTIES (
 
 | Oracle Type                       | Apache Doris Type                           | Comment                                                                                                                                         |
 |-----------------------------------|--------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| number(p) / number(p,0)           | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | Doris会根据p的大小来选择对应的类型：`p < 3` -> `TINYINT`; `p < 5` -> `SMALLINT`; `p < 10` -> `INT`; `p < 19` -> `BIGINT`; `p > 19` -> `LARGEINT` |
+| number(p) / number(p,0)           | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | Doris 会根据 p 的大小来选择对应的类型：`p < 3` -> `TINYINT`; `p < 5` -> `SMALLINT`; `p < 10` -> `INT`; `p < 19` -> `BIGINT`; `p > 19` -> `LARGEINT` |
 | number(p,s), [ if(s>0 && p>s) ]   | DECIMAL(p,s)                         |                                                                                                                                                 |
 | number(p,s), [ if(s>0 && p < s) ] | DECIMAL(s,s)                         |                                                                                                                                                 |
-| number(p,s), [ if(s<0) ]          | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | s<0的情况下, Doris会将p设置为 p+\|s\|, 并进行和number(p) / number(p,0)一样的映射                                                                |
-| number                            |                                      | Doris目前不支持未指定p和s的oracle类型                                                                                                           |
+| number(p,s), [ if(s<0) ]          | TINYINT/SMALLINT/INT/BIGINT/LARGEINT | s<0 的情况下，Doris 会将 p 设置为 p+\|s\|，并进行和 number(p) / number(p,0) 一样的映射                                                                |
+| number                            |                                      | Doris 目前不支持未指定 p 和 s 的 oracle 类型                                                                                                           |
 | decimal                           | DECIMAL                              |                                                                                                                                                 |
 | float/real                        | DOUBLE                               |                                                                                                                                                 |
 | DATE                              | DATETIME                             |                                                                                                                                                 |
@@ -93,7 +93,7 @@ CREATE CATALOG oracle PROPERTIES (
 
 1. 当执行类似于 `where dt = '2022-01-01'` 这样的查询时，Apache Doris 能够将这些过滤条件下推到外部数据源，从而直接在数据源层面排除不符合条件的数据，减少了不必要的数据获取和传输。这大大提高了查询性能，同时也降低了对外部数据源的负载。
 
-2. 当变量 `enable_ext_func_pred_pushdown` 设置为true，会将 where 之后的函数条件也下推到外部数据源。
+2. 当变量 `enable_ext_func_pred_pushdown` 设置为 true，会将 where 之后的函数条件也下推到外部数据源。
 
    目前支持下推到 Oracle 的函数有：
 
@@ -113,7 +113,7 @@ Apache Doris 会在下发到 Oracle 的查询语句中，自动在字段名与�
 
 1. 创建或查询 Oracle Catalog 时出现 `ONS configuration failed`
 
-   在 be.conf 的 JAVA_OPTS 增加 -Doracle.jdbc.fanEnabled=false 并且升级driver到 https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc8/19.23.0.0/ojdbc8-19.23.0.0.jar
+   在 be.conf 的 JAVA_OPTS 增加 -Doracle.jdbc.fanEnabled=false 并且升级 driver 到 https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc8/19.23.0.0/ojdbc8-19.23.0.0.jar
 
 2. 创建或查询 Oracle Catalog 时出现 `Non supported character set (add orai18n.jar in your classpath): ZHS16GBK` 异常
 
