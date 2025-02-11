@@ -36,63 +36,6 @@ Quick deployment **is only suitable for local development**. Do not use this dep
 3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
 :::
 
-## Use Docker for Quick Deployment
-
-### Step 1: Create the docker-compose.yaml File
-
-Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `2.1.7`.
-
-```text
-version: "3"
-services:
-  fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: fe
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - FE_ID=1
-    network_mode: host
-  be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: be
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - BE_ADDR=127.0.0.1:9050
-    depends_on:
-      - fe
-    network_mode: host
-```
-
-### Step 2：Start Cluster
-
-Start the cluster using the docker-compose command.
-
-```shell
-docker-compose -f ./docker-compose.yaml up -d
-```
-
-### Step 3: Connect to the cluster using MySQL client and check the cluster status
-
-```sql
-## Check the FE status to ensure that both the Join and Alive columns are true.
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
-+-----------+------+-------+
-| host      | join | alive |
-+-----------+------+-------+
-| 127.0.0.1 | true | true  |
-+-----------+------+-------+
-
-## Check the BE status to ensure that the Alive column is true.
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
-+-----------+-------+
-| host      | alive |
-+-----------+-------+
-| 127.0.0.1 |     1 |
-+-----------+-------+
-
-```
-
-
 
 ## Local Quick Deployment
 
@@ -275,6 +218,61 @@ Download the corresponding binary installation package from the Apache Doris web
    4 rows in set (0.10 sec)
    ```
 
+## Use Docker for Quick Deployment
+
+### Step 1: Create the docker-compose.yaml File
+
+Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `2.1.7`.
+
+```text
+version: "3"
+services:
+  fe:
+    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: fe
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
+    network_mode: host
+  be:
+    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: be
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
+    depends_on:
+      - fe
+    network_mode: host
+```
+
+### Step 2：Start Cluster
+
+Start the cluster using the docker-compose command.
+
+```shell
+docker-compose -f ./docker-compose.yaml up -d
+```
+
+### Step 3: Connect to the cluster using MySQL client and check the cluster status
+
+```sql
+## Check the FE status to ensure that both the Join and Alive columns are true.
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
++-----------+------+-------+
+| host      | join | alive |
++-----------+------+-------+
+| 127.0.0.1 | true | true  |
++-----------+------+-------+
+
+## Check the BE status to ensure that the Alive column is true.
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
++-----------+-------+
+| host      | alive |
++-----------+-------+
+| 127.0.0.1 |     1 |
++-----------+-------+
+
+```
 
 
 
