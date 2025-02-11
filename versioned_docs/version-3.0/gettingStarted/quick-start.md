@@ -63,7 +63,7 @@ services:
     network_mode: host
 ```
 
-### Step 2：Start Cluster
+### Step 2: Start Cluster
 
 Start the cluster using the docker-compose command.
 
