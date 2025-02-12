@@ -24,29 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
-通过 `job_name`恢复一个当前数据库已被暂停的常驻数据同步作业，作业将从上一次被暂停前最新的位置继续同步数据。
+通过 `job_name` 恢复当前数据库中已暂停的常驻数据同步作业。恢复后，作业将从上一次暂停前保存的最新位置继续同步数据。
 
-语法：
+## 语法
 
 ```sql
 RESUME SYNC JOB [db.]job_name
 ```
 
+## 必选参数
+
+**1. `job_name`**
+
+> 指定要恢复的数据同步作业的名称。  
+> 如果命令中使用了 `[db.]` 前缀，则表示该作业所在的数据库；否则，使用当前数据库。
+
 ## 示例
 
-1. 恢复名称为 `job_name` 的数据同步作业
+1. 恢复名称为 `job_name` 的数据同步作业。
 
    ```sql
    RESUME SYNC JOB `job_name`;
    ```
-
-## 关键词
-
-    RESUME, SYNC, LOAD
-
-## 最佳实践
-

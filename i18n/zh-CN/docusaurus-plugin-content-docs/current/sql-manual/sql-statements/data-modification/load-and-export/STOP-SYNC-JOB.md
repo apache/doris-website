@@ -24,14 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
-通过 `job_name` 停止一个数据库内非停止状态的常驻数据同步作业。
+此语句通过 `job_name` 停止一个数据库内非停止状态的常驻数据同步作业。
 
-语法：
+## 语法
 
 ```sql
 STOP SYNC JOB [db.]job_name
@@ -41,13 +38,6 @@ STOP SYNC JOB [db.]job_name
 
 1. 停止名称为 `job_name` 的数据同步作业
 
-	```sql
-	STOP SYNC JOB `job_name`;
-	```
-
-## 关键词
-
-    STOP, SYNC, JOB
-
-### 最佳实践
-
+   ```sql
+   STOP SYNC JOB `job_name`;
+   ```

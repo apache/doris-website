@@ -24,29 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## Description
 
-Resume a resident data synchronization job whose current database has been suspended by `job_name`, and the job will continue to synchronize data from the latest position before the last suspension.
+Resume a resident data synchronization job that has been suspended in a database by its `job_name`. Once resumed, the job continues to synchronize data starting from the latest position before the suspension.
 
-grammar:
+## Syntax
 
 ```sql
 RESUME SYNC JOB [db.]job_name
 ```
 
-## Example
+## Required Parameters
 
-1. Resume the data synchronization job named `job_name`
+**1. `job_name`**
 
-    ```sql
-    RESUME SYNC JOB `job_name`;
-    ```
+> Specifies the name of the data synchronization job to be resumed.  
+> If a database is specified with the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
 
-## Keywords
+## Examples
 
-    RESUME, SYNC, LOAD
+1. Resume the data synchronization job named `job_name`.
 
-## Best Practice
-
+   ```sql
+   RESUME SYNC JOB `job_name`;
+   ```
