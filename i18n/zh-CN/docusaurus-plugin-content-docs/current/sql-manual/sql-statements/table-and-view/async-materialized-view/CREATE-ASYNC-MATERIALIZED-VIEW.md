@@ -25,228 +25,234 @@ under the License.
 -->
 
 
-
 ## 描述
 
-该语句用于创建异步物化视图。
+创建异步物化视图语句，列名和列类型是通过物化视图 SQL 语句推导出来的，可以自定义列名，不可以定义列类型。
 
-#### 语法
-
-```sql
-CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
-        (LEFT_PAREN cols=simpleColumnDefs RIGHT_PAREN)? buildMode?
-        (REFRESH refreshMethod? refreshTrigger?)?
-        ((DUPLICATE)? KEY keys=identifierList)?
-        (COMMENT STRING_LITERAL)?
-        (PARTITION BY LEFT_PAREN mvPartition RIGHT_PAREN)?
-        (DISTRIBUTED BY (HASH hashKeys=identifierList | RANDOM) (BUCKETS (INTEGER_VALUE | AUTO))?)?
-        PropertyClause?
-        AS query
-```
-
-#### 说明
-
-`simpleColumnDefs`
-
-用来定义物化视图 Column 信息，如果不定义，将自动推导。
+## 语法
 
 ```sql
-simpleColumnDefs
-: cols+=simpleColumnDef (COMMA cols+=simpleColumnDef)*
-    ;
-
-simpleColumnDef
-: colName=identifier (COMMENT comment=STRING_LITERAL)?
-    ;
+CREATE MATERIALIZED VIEW 
+[ IF NOT EXISTS ] <materialized_view_name>
+    [ (<columns_definition>) ] 
+    [ BUILD <build_mode> ]
+    [ REFRESH <refresh_method> [<refresh_trigger>]]
+    [ [DUPLICATE] KEY (<key_cols>) ]
+    [ COMMENT '<table_comment>' ]
+    [ PARTITION BY (
+        { <partition_col> 
+            | DATE_TRUNC(<partition_col>, <partition_unit>) }
+        )]
+    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }
+        [ BUCKETS { <bucket_count> | AUTO } ]
+    ]               
+    [ PROPERTIES (
+          -- Table property
+          <table_property>
+          -- Additional table properties
+          [ , ... ]) 
+    ]
+    AS <query>
 ```
 
-例如：定义两列 aa 和 bb，其中 aa 的注释为"name"
-```sql
-CREATE MATERIALIZED VIEW mv1
-(aa comment "name",bb)
-```
-
-`buildMode`
-
-用来定义物化视图是否创建完成立即刷新，默认 IMMEDIATE
-
-IMMEDIATE：立即刷新
-
-DEFERRED：延迟刷新
-
-```sql
-buildMode
-: BUILD (IMMEDIATE | DEFERRED)
-;
-```
-
-例如：指定物化视图立即刷新
+其中：
 
 ```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD IMMEDIATE
+columns_definition
+  : -- Column definition
+    <col_name> 
+      [ COMMENT '<col_comment>' ]
+refresh_trigger
+  : ON MANUAL
+  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']
+  | ON COMMIT
 ```
 
-`refreshMethod`
+## 必选参数
 
-用来定义物化视图刷新方式，默认 AUTO
+**1. <materialized_view_name>**
 
-COMPLETE：全量刷新
+> 指定表的标识符（即名称）；在创建表的数据库（Database）中必须唯一。
+>
+> 标识符必须以字母字符（如果开启 unicode 名字支持，则可以是任意语言文字的字符）开头，并且不能包含空格或特殊字符，除非整个标识符字符串用反引号括起来（例如`My Object`）。
+>
+> 标识符不能使用保留关键字。
+>
+> 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-AUTO：尽量增量刷新，如果不能分区增量刷新，就全量刷新
+**2. <query>**
 
-物化视图的 SQL 定义和分区字段需要满足如下条件，才可以进行分区增量更新：
+> 在创建物化视图 中为必选参数。指定填充数据的 SELECT 语句。
 
-- 物化视图使用的 Base Table 中至少有一个是分区表。
-- 物化视图使用的 Base Table 分区表，必须使用 List 或者 Range 分区策略。
-- 物化视图定义 SQL 中 Partition By 分区列只能有一个分区字段。
-- 物化视图的 SQL 中 Partition By 的分区列，要在 Select 后。
-- 物化视图定义 SQL，如果使用了 Group By，分区列的字段一定要在 Group By 后。
-- 物化视图定义 SQL，如果使用了 Window 函数，分区列的字段一定要在 Partition By 后。
-- 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
-- 物化视图使用 Join 的 NULL 产生端的字段作为分区字段，不能分区增量更新，例如对于 LEFT OUTER JOIN 分区字段需要在左侧，在右侧则不行。
+## 可选参数
 
+**1. <key_cols>**
 
-```sql
-refreshMethod
-: COMPLETE | AUTO
-;
-```
+> 表的 key 列。Doris 中 Key 列必须是表的前 K 个列。关于 Key 的限制，以及如何选择 Key 列，请参阅“数据模型”章节中的各个小节。
 
-例如：指定物化视图全量刷新
-```sql
-CREATE MATERIALIZED VIEW mv1
-REFRESH COMPLETE
-```
+**2. <build_mode>**
 
-`refreshTrigger`
+> 刷新时机：物化视图创建完成是否立即刷新
+>
+> IMMEDIATE：立即刷新，默认 IMMEDIATE
+>
+> DEFERRED：延迟刷新
 
-物化视图刷新数据的触发方式，默认 MANUAL
+**3. <refresh_method>**
 
-MANUAL：手动刷新
+> 刷新方式
+>
+> COMPLETE：刷新所有分区
+>
+> AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区
 
-SCHEDULE：定时刷新
+**4. <refresh_trigger>**
 
-COMMIT：触发式刷新，基表数据变更时，自动生成刷新物化视图的任务
+> 触发方式
+>
+> MANUAL：手动刷新
+>
+> ON SCHEDULE：定时刷新
+>
+> ON COMMIT：触发式刷新，基表数据变更，触发物化视图刷新
 
-```sql
-refreshTrigger
-: ON MANUAL
-| ON SCHEDULE refreshSchedule
-| ON COMMIT
-;
-    
-refreshSchedule
-: EVERY INTEGER_VALUE mvRefreshUnit (STARTS STRING_LITERAL)?
-;
-    
-mvRefreshUnit
-: MINUTE | HOUR | DAY | WEEK
-;    
-```
+**5. <refresh_unit>**
 
-例如：每 2 小时执行一次，从 2023-12-13 21:07:09 开始
-```sql
-CREATE MATERIALIZED VIEW mv1
-REFRESH ON SCHEDULE EVERY 2 HOUR STARTS "2023-12-13 21:07:09"
-```
+> 周期刷新时间单位，目前支持 MINUTE，HOUR，DAY，WEEK
 
-`key`
-物化视图为 Duplicate Key 模型，因此指定的列为排序列
+**6. <partition_col>**
 
-```sql
-identifierList
-: LEFT_PAREN identifierSeq RIGHT_PAREN
-    ;
+> 如果不指定 PARTITION BY，默认只有一个分区。
+>
+> 如果指定分区字段，会自动推导出字段来自哪个基表并同步基表（当前支持内表和 Hive 表），如果是内表，只允许有一个分区字段。
+>
+> 物化视图也可以通过分区上卷的方式减少物化视图的分区数量，目前分区上卷函数支持 `date_trunc`
 
-identifierSeq
-: ident+=errorCapturingIdentifier (COMMA ident+=errorCapturingIdentifier)*
-;
-```
+**7. <partition_unit>**
 
-例如：指定 k1，k2 为排序列
-```sql
-CREATE MATERIALIZED VIEW mv1
-KEY(k1,k2)
-```
+> 分区上卷的聚合粒度，目前支持 HOUR，DAY，WEEK，QUARTER，MONTH，YEAR
 
-`partition`
-物化视图有两种分区方式，如果不指定分区，默认只有一个分区，如果指定分区字段，会自动推导出字段来自哪个基表并同步基表 (当前支持 `OlapTable` 和 `hive`) 的所有分区（限制条件：基表如果是 `OlapTable`，那么只能有一个分区字段）。
+**8. <start_time>**
 
-例如：基表是 Range 分区，分区字段为 `create_time` 并按天分区，创建物化视图时指定 `partition by(ct) as select create_time as ct from t1`，那么物化视图也会是 Range 分区，分区字段为 `ct`，并且按天分区。
+> 调度开始时间需要比当前时间大，需要是未来的某个时间
 
-物化视图也可以通过分区上卷的方式减少物化视图的分区数量，目前分区上卷函数支持 `date_trunc`,上卷的单位支持 `year`, `month`, `day`
+**9. <table_property>**
 
-分区字段的选择和物化视图的定义需要满足分区增量更新的条件，物化视图才可以创建成功，否则会报错 `Unable to find a suitable base table for partitioning`
+内表使用的属性，物化视图基本都可以使用，还有一些是物化视图特有的属性，列举如下
 
-```sql
-mvPartition
-    : partitionKey = identifier
-    | partitionExpr = functionCallExpression
-    ;
-```
+| 属性名                           | 作用                                                         |
+| :------------------------------- | :----------------------------------------------------------- |
+| grace_period                     | 查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 10:15:00，系统当前时间为  10:15:08，那么该分区不会被透明改写。但是如果 `grace_period`  = 10，该分区就会被用于透明改写 |
+| excluded_trigger_tables          | 数据刷新时忽略的表名，逗号分割。例如`table1,table2`          |
+| refresh_partition_num            | 单次 insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 Insert 语句顺序执行。遇到失败的 Insert 语句，整个任务将停止执行。物化视图保证单个 Insert 语句的事务性，失败的 Insert 语句不会影响到已经刷新成功的分区 |
+| workload_group                   | 物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/admin-manual/workload-group.md) 文档。 |
+| partition_sync_limit             | 当基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 `partition_sync_time_unit` 一起使用。例如设置为 2，`partition_sync_time_unit` 设置为 `MONTH`，代表仅同步基表近 2 个月的分区和数据。最小值为 `1`。随着时间的变化物化视图每次刷新时都会自动增删分区，例如物化视图现在有 2,3 两个月的数据，下个月的时候，会自动删除 2 月的数据，增加 4 月的数据。 |
+| partition_sync_time_unit         | 分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）           |
+| partition_date_format            | 当基表的分区字段为字符串时，如果想使用 `partition_sync_limit`的能力，可以设置日期的格式，将按照 `partition_date_format`的设置解析分区时间 |
+| enable_nondeterministic_function | 物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random() 等，如果 是 true, 允许包含，否则不允许包含，默认不允许包含。 |
+| use_for_rewrite                  | 标识此物化视图是否参与到透明改写中，如果为 false，不参与到透明改写，默认是 true。数据建模场景中，如果物化视图只是用于直查，物化视图可以设置此属性，从而不参与透明改写，提高查询响应速度。 |
 
-例如基表按天分区，物化视图同样按天分区
-```sql
-partition by (`k2`)
-```
+## 权限控制
 
-例如基表按天分区，物化视图按月分区
-```sql
-partition by (date_trunc(`k2`,'month'))
-```
+执行此 SQL 命令的用户必须至少具有以下权限：
 
-#### Property
-物化视图既可以指定 Table 的 Property，也可以指定物化视图特有的 Property。
+| 权限   | 对象             | 说明                                           |
+| :---------------- | :------------------------ | :------------------------------------------------------ |
+| CREATE_PRIV       | 数据库        |                                                         |
+| SELECT_PRIV       | 表 , 视图 | 需要拥有<query> 中被查询的表或者视图的 SELECT_PRIV 权限 |
 
-物化视图特有的 Property 包括：
+## 注意事项
 
-`grace_period`：查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 1，系统当前时间为 2，那么该分区不会被透明改写。但是如果 `grace_period` 大于等于 1，该分区就会被用于透明改写。
+- 物化视图  DML, DDL 限制
 
-`excluded_trigger_tables`：数据刷新时忽略的表名，逗号分割。例如`table1,table2`
+    物化视图不支持修改列类型，新增，删除列等 schema change 操作，原因是列是通过物化视图定义 SQL 推导出来的。
 
-`refresh_partition_num`：单次 Insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 Insert 语句顺序执行。遇到失败的 Insert 语句，整个任务将停止执行。物化视图保证单个 Insert 语句的事务性，失败的 Insert 语句不会影响到已经刷新成功的分区。
+    物化视图不支持手动 insert into 或者 insert overwrite 数据。
 
-`workload_group`：物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [Workload Group](../../../../admin-manual/workload-group.md) 文档。
+- 分区物化视图创建条件
 
-`partition_sync_limit`：当基表的分区字段为时间时（如果是字符串类型的时间，可以设置 `partition_date_format`），可以用此属性配置同步基表的分区范围，配合 `partition_sync_time_unit` 一起使用。
-例如设置为 2，`partition_sync_time_unit` 设置为 `MONTH`，代表仅同步基表近 2 个月的分区和数据。最小值为 `1`。
-随着时间的变化物化视图每次刷新时都会自动增删分区，例如物化视图现在有 2,3 两个月的数据，下个月的时候，会自动删除 2 月的数据，增加 4 月的数据。
+    > 物化视图的 SQL 定义和分区字段需要满足如下条件，才可以进行分区增量更新：
+    >
+    > 1. 物化视图使用的 Base Table 中至少有一个是分区表。
+    > 2. 物化视图使用的 Base Table 分区表，必须使用 List 或者 Range 分区策略。
+    > 3. 物化视图定义 SQL 中 Partition By 分区列只能有一个分区字段。
+    > 4. 物化视图的 SQL 中 Partition By 的分区列，要在 Select 后。
+    > 5. 物化视图定义 SQL，如果使用了 Group By，分区列的字段一定要在 Group By 后。
+    > 6. 物化视图定义 SQL，如果使用了 Window 函数，分区列的字段一定要在 Partition By 后。
+    > 7. 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
+    > 8. 物化视图使用 Join 的 NULL 产生端的字段作为分区字段，不能分区增量更新，例如对于 LEFT OUTER JOIN 分区字段需要在左侧，在右侧则不行。
 
-`partition_sync_time_unit`：时间单位，支持 DAY/MONTH/YEAR（默认DAY）
+## 示例
 
-`partition_date_format`：分区字段的时间格式，例如"%Y-%m-%d"
+1. 全量物化视图
 
-`enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random() 等，如果
-是 true, 允许包含，否则不允许包含，默认不允许包含。
+    ```sql
+    CREATE MATERIALIZED VIEW complete_mv (
+    orderdate COMMENT '订单日期', 
+    orderkey COMMENT '订单键', 
+    partkey COMMENT '部件键'
+    ) 
+    BUILD IMMEDIATE 
+    REFRESH AUTO 
+    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    DISTRIBUTED BY HASH (orderkey) BUCKETS 2 
+    PROPERTIES 
+    ("replication_num" = "1") 
+    AS 
+    SELECT 
+    o_orderdate, 
+    l_orderkey, 
+    l_partkey 
+    FROM 
+    orders 
+    LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    LEFT JOIN partsupp ON ps_partkey = l_partkey 
+    and l_suppkey = ps_suppkey;
+    ```
 
-`query`：创建物化视图的查询语句，其结果即为物化视图中的数据
+2. 分区物化视图
 
+    如下所示，如果指定分区字段，会自动推导出字段来自哪个基表并同步基表分区。基表按照天分区，分区字段是 o_orderdate，分区类型是 RANGE。物化视图按月分区，使用 DATE_TRUNC 函数对基表分区按月进行上卷。
 
-### 示例
-
-1. 创建一个立即刷新，之后每周刷新一次的物化视图 `mv1`，数据源为 Hive Catalog
-
-   ```sql
-   CREATE MATERIALIZED VIEW mv1 BUILD IMMEDIATE REFRESH COMPLETE ON SCHEDULE EVERY 1 WEEK
-    DISTRIBUTED BY RANDOM BUCKETS 2
+    ```sql
+    CREATE TABLE IF NOT EXISTS orders  (
+    o_orderkey       integer not null,
+    o_custkey        integer not null,
+    o_orderstatus    char(1) not null,
+    o_totalprice     decimalv3(15,2) not null,
+    o_orderdate      date not null,
+    o_orderpriority  char(15) not null,  
+    o_clerk          char(15) not null, 
+    o_shippriority   integer not null,
+    o_comment        varchar(79) not null
+    )
+    DUPLICATE KEY(o_orderkey, o_custkey)
+    PARTITION BY RANGE(o_orderdate)(
+    FROM ('2023-10-16') TO ('2023-11-30') INTERVAL 1 DAY
+    )
+    DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
     PROPERTIES (
     "replication_num" = "1"
-    )
-    AS SELECT * FROM hive_catalog.db1.user;
-   ```
-
-2. 创建一个多表 Join 的物化视图
-
-   ```sql
-   CREATE MATERIALIZED VIEW mv1 BUILD IMMEDIATE REFRESH COMPLETE ON SCHEDULE EVERY 1 WEEK
-    DISTRIBUTED BY RANDOM BUCKETS 2
-    PROPERTIES (
-    "replication_num" = "1"
-    )
-    AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
-   ```
-
-## 关键词
-
-    CREATE, ASYNC, MATERIALIZED, VIEW
+    );
+    ```
+    
+    ```sql
+    CREATE MATERIALIZED VIEW partition_mv
+    BUILD IMMEDIATE 
+    REFRESH AUTO 
+    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
+    DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
+    PROPERTIES 
+    ("replication_num" = "1") 
+    AS 
+    SELECT 
+    o_orderdate, 
+    l_orderkey, 
+    l_partkey 
+    FROM 
+    orders 
+    LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    LEFT JOIN partsupp ON ps_partkey = l_partkey 
+    and l_suppkey = ps_suppkey;
+    ```
