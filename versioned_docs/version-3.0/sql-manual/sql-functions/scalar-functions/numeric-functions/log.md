@@ -24,7 +24,7 @@ under the License.
 
 ## Description
 
-Returns the logarithm of `x` based on base `b`.
+Returns the logarithm of `x` based on base `a`.
 
 ## Syntax
 
