@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-
 ## 描述
 
 此语句用于创建一个自定义函数。
@@ -34,12 +33,12 @@ under the License.
 
 ```sql
 CREATE [ GLOBAL ] 
-    [ AGGREGATE ] [ TABLES ] [ ALIAS ] FUNCTION <function_name>
+    [{AGGREGATE | TABLES | ALIAS }] FUNCTION <function_name>
     (arg_type [, ...])
-    [ RETURNS ret_type ]
-    [ INTERMEDIATE inter_type ]
-    [ WITH PARAMETER(param [,...]) AS origin_function ]
-    [ PROPERTIES ("key" = "value" [, ...]) ]
+    [ RETURNS <ret_type> ]
+    [ INTERMEDIATE <inter_type> ]
+    [ WITH PARAMETER(<param> [,...]) AS <origin_function> ]
+    [ PROPERTIES ("<key>" = "<value>" [, ...]) ]
 ```
 
 ## 必选参数
@@ -58,19 +57,19 @@ CREATE [ GLOBAL ]
 
 ## 可选参数
 
-**1. `<GLOBAL>`**
+**1. `GLOBAL`**
 
 > 如果有此项，表示的是创建的函数是全局范围内生效。
 
-**2. `<AGGREGATE>`**
+**2. `AGGREGATE`**
 
 > 如果有此项，表示的是创建的函数是一个聚合函数。
 
-**3. `<TABLES>`**
+**3. `TABLES`**
 
 > 如果有此项，表示的是创建的函数是一个表函数。
 
-**4. `<ALIAS>`**
+**4. `ALIAS`**
 
 > 如果有此项，表示的是创建的函数是一个别名函数。
 
@@ -97,7 +96,7 @@ CREATE [ GLOBAL ]
 
 ## 权限控制
 
-执行此命令需要用户拥有 `ADMIN` 权限。
+执行此命令需要用户拥有 `ADMIN_PRIV` 权限。
 
 ## 示例
 
@@ -105,12 +104,12 @@ CREATE [ GLOBAL ]
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
-        "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
-        "symbol"="org.apache.doris.udf.AddOne",
-        "always_nullable"="true",
-        "type"="JAVA_UDF"
-    );
-    ```
+       "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
+       "symbol"="org.apache.doris.udf.AddOne",
+       "always_nullable"="true",
+       "type"="JAVA_UDF"
+   );
+   ```
 
 2. 创建一个自定义 UDAF 函数
 
@@ -137,7 +136,7 @@ CREATE [ GLOBAL ]
 4. 创建一个自定义别名函数，更多信息可以查看[别名函数](../../../query-data/udf/alias-function)
 
     ```sql
-    CREATE ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id)  AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
+    CREATE ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
     ```
 
 5. 创建一个全局自定义别名函数

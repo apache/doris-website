@@ -33,12 +33,12 @@ This statement is used to create a custom function.
 
 ```sql
 CREATE [ GLOBAL ] 
-    [ AGGREGATE ] [ TABLES ] [ ALIAS ] FUNCTION <function_name>
+    [{AGGREGATE | TABLES | ALIAS }] FUNCTION <function_name>
     (arg_type [, ...])
-    [ RETURNS ret_type ]
-    [ INTERMEDIATE inter_type ]
-    [ WITH PARAMETER(param [,...]) AS origin_function ]
-    [ PROPERTIES ("key" = "value" [, ...]) ]
+    [ RETURNS <ret_type> ]
+    [ INTERMEDIATE <inter_type> ]
+    [ WITH PARAMETER(<param> [,...]) AS <origin_function> ]
+    [ PROPERTIES ("<key>" = "<value>" [, ...]) ]
 ```
 
 ## Required Parameters
@@ -57,19 +57,19 @@ CREATE [ GLOBAL ]
 
 ## Optional Parameters
 
-**1. `<GLOBAL>`**
+**1. `GLOBAL`**
 
 > If specified, the created function is effective globally.
 
-**2. `<AGGREGATE>`**
+**2. `AGGREGATE`**
 
 > If specified, the created function is an aggregate function.
 
-**3. `<TABLES>`**
+**3. `TABLES`**
 
 > If specified, the created function is a table function.
 
-**4. `<ALIAS>`**
+**4. `ALIAS`**
 
 > If specified, the created function is an alias function.
 
@@ -96,7 +96,7 @@ CREATE [ GLOBAL ]
 
 ## Access Control Requirements
 
-To execute this command, the user must have `ADMIN` privileges.
+To execute this command, the user must have `ADMIN_PRIV` privileges.
 
 ## Example
 
