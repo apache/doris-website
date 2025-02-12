@@ -25,13 +25,13 @@ under the License.
 
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为四步：
 
-1. **部署 FE Master 节点：**部署第一个 FE 节点作为 Master 节点；
+1. **部署 FE Master 节点**：部署第一个 FE 节点作为 Master 节点；
   
-2. **部署 FE 集群：**部署 FE 集群，添加 Follower 或 Observer FE 节点；
+2. **部署 FE 集群**：部署 FE 集群，添加 Follower 或 Observer FE 节点；
   
-3. **部署 BE 节点：**向 FE 集群中注册 BE 节点；
+3. **部署 BE 节点**：向 FE 集群中注册 BE 节点；
 
-4. **验证集群正确性：**部署完成后连接并验证集群正确性。
+4. **验证集群正确性**：部署完成后连接并验证集群正确性。
 
 在开始部署操作前，可以[下载](https://doris.apache.org/download)相应的 Doris 版本。
 
