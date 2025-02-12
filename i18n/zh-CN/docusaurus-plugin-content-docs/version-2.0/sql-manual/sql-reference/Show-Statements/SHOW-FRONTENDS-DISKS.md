@@ -1,6 +1,6 @@
 ---
 {
-"title": "SHOW-FRONTENDS-DISKS",
+"title": "SHOW FRONTENDS DISKS",
 "language": "zh-CN"
 }
 ---

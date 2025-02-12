@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PARTITION-ID",
+    "title": "SHOW PARTITION ID",
     "language": "en"
 }
 ---
