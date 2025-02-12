@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CREATE MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "title": "CREATE SYNC MATERIALIZED VIEW",
+    "language": "en"
 }
 ---
 
@@ -27,205 +27,101 @@ under the License.
 
 ## Description
 
-该语句用于创建物化视图。
+Statement for creating a synchronized materialized view.
 
-该操作为异步操作，提交成功后，需通过 [SHOW ALTER TABLE MATERIALIZED VIEW](./SHOW-ALTER-TABLE-MATERIALIZED-VIEW) 查看作业进度。在显示 FINISHED 后既可通过 `desc [table_name] all` 命令来查看物化视图的 schema 了。
-
-语法：
+## Syntax
 
 ```sql
-CREATE MATERIALIZED VIEW < MV name > as < query >
-[PROPERTIES ("key" = "value")]
+CREATE MATERIALIZED VIEW <materialized_view_name> AS <query>            
 ```
 
-说明：
-
-- `MV name`：物化视图的名称，必填项。相同表的物化视图名称不可重复。
-
-- `query`：用于构建物化视图的查询语句，查询语句的结果既物化视图的数据。目前支持的 query 格式为：
-
-  ```sql
-  SELECT select_expr[, select_expr ...]
-  FROM [Base view name]
-  GROUP BY column_name[, column_name ...]
-  ORDER BY column_name[, column_name ...]
-  ```
-
-  语法和查询语句语法一致。
-
-  - `select_expr`：物化视图的 schema 中所有的列。  
-    - 至少包含一个单列。 
-  - `base view name`：物化视图的原始表名，必填项。  
-    - 必须是单表，且非子查询
-  - `group by`：物化视图的分组列，选填项。 
-    - 不填则数据不进行分组。
-  - `order by`：物化视图的排序列，选填项。  
-    - 排序列的声明顺序必须和 select_expr 中列声明顺序一致。  
-    - 如果不声明 order by，则根据规则自动补充排序列。如果物化视图是聚合类型，则所有的分组列自动补充为排序列。如果物化视图是非聚合类型，则前 36 个字节自动补充为排序列。
-    - 如果自动补充的排序个数小于 3 个，则前三个作为排序列。如果 query 中包含分组列的话，则排序列必须和分组列一致。
-
-- properties
-
-  声明物化视图的一些配置，选填项。
-
-  ```text
-  PROPERTIES ("key" = "value", "key" = "value" ...)
-  ```
-
-  以下几个配置，均可声明在此处：
-
-  ```text
-   short_key: 排序列的个数。
-   timeout: 物化视图构建的超时时间。
-  ```
-
-## Examples
-
-Base 表结构为
+Where
 
 ```sql
-mysql> desc duplicate_table;
-+-------+--------+------+------+---------+-------+
-| Field | Type   | Null | Key  | Default | Extra |
-+-------+--------+------+------+---------+-------+
-| k1    | INT    | Yes  | true | N/A     |       |
-| k2    | INT    | Yes  | true | N/A     |       |
-| k3    | BIGINT | Yes  | true | N/A     |       |
-| k4    | BIGINT | Yes  | true | N/A     |       |
-+-------+--------+------+------+---------+-------+
+query
+    :
+    SELECT <select_expr> select_expr[, select_expr ...]
+    FROM <base_table>
+    GROUP BY <column_name>[, <column_name> ...]
+    ORDER BY <column_name>[, <column_name> ...]
 ```
+
+## Required Parameters
+
+**1. <materialized_view_name>**
+
+> Specifies the identifier (i.e., name) of the materialized view. Since a synchronized materialized view is created based on a table, the name must be unique within the same table.
+>
+> The identifier must start with a letter character (if Unicode name support is enabled, it can be any character from any language) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., `My Object`).
+>
+> The identifier cannot be a reserved keyword.
+>
+> For more details, refer to the requirements for identifiers and reserved keywords.
+
+**2. <query>**
+
+> The query statement used to construct the materialized view, the result of which constitutes the data of the materialized view. The currently supported query format is:
+>
+> The syntax is consistent with the query statement syntax.
+>
+> - `select_expr`: All columns in the schema of the materialized view.
+>   - Must include at least one single column.
+> - `base_table`: The name of the base table for the materialized view, a required item.
+>   - Must be a single table, not a subquery.
+> - `group by`: The grouping columns of the materialized view, an optional item.
+>   - If not specified, the data will not be grouped.
+> - `order by`: The sorting columns of the materialized view, an optional item.
+>   - The declaration order of the sorting columns must be consistent with the order of columns declared in `select_expr`.
+>   - If `order by` is not declared, sorting columns will be automatically supplemented according to the rules. If the materialized view is of the aggregate type, all grouping columns will be automatically added as sorting columns. If the materialized view is of the non-aggregate type, the first 36 bytes will be automatically added as sorting columns.
+>   - If the number of automatically supplemented sorting columns is less than 3, the first three will be used as sorting columns. If the query contains grouping columns, the sorting columns must be consistent with the grouping columns.
+
+## Access Control Requirements
+
+| Privilege  | Object | Notes                                                        |
+| ---------- | ------ | ------------------------------------------------------------ |
+| ALTER_PRIV | Table  | Requires ALTER_PRIV permission on the base table of the current materialized view |
+
+## Notes
+
+- Synchronized materialized views only support SELECT statements for a single table, supporting WHERE, GROUP BY, ORDER BY clauses, but not JOIN, HAVING, LIMIT clauses, or LATERAL VIEW.
+- The SELECT list cannot contain auto-increment columns, constants, duplicate expressions, or window functions.
+- If the SELECT list contains aggregate functions, the aggregate functions must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no other non-aggregate function expressions can follow the aggregate functions (for example, `SELECT x, sum(a)` is acceptable, but `SELECT sum(a), x` is not).
+- Too many materialized views on a single table can affect the efficiency of data import: when importing data, the data of the materialized views and the Base table are updated synchronously. If there are too many materialized views on a table, it may slow down the import speed, similar to importing data into multiple tables simultaneously in a single import operation.
+- When a materialized view targets the Unique Key data model, it can only change the order of columns and cannot perform aggregation. Therefore, on the Unique Key model, data cannot be coarsely aggregated by creating materialized views.
+
+## Example
+
 ```sql
-create table duplicate_table(
-	k1 int null,
-	k2 int null,
-	k3 bigint null,
-	k4 bigint null
-)
-duplicate key (k1,k2,k3,k4)
-distributed BY hash(k4) buckets 3
-properties("replication_num" = "1");
+desc lineitem;
++-----------------+---------------+------+-------+---------+-------+
+| Field           | Type          | Null | Key   | Default | Extra |
++-----------------+---------------+------+-------+---------+-------+
+| l_orderkey      | int           | No   | true  | NULL    |       |
+| l_partkey       | int           | No   | true  | NULL    |       |
+| l_suppkey       | int           | No   | true  | NULL    |       |
+| l_linenumber    | int           | No   | true  | NULL    |       |
+| l_quantity      | decimal(15,2) | No   | false | NULL    | NONE  |
+| l_extendedprice | decimal(15,2) | No   | false | NULL    | NONE  |
+| l_discount      | decimal(15,2) | No   | false | NULL    | NONE  |
+| l_tax           | decimal(15,2) | No   | false | NULL    | NONE  |
+| l_returnflag    | char(1)       | No   | false | NULL    | NONE  |
+| l_linestatus    | char(1)       | No   | false | NULL    | NONE  |
+| l_shipdate      | date          | No   | false | NULL    | NONE  |
+| l_commitdate    | date          | No   | false | NULL    | NONE  |
+| l_receiptdate   | date          | No   | false | NULL    | NONE  |
+| l_shipinstruct  | char(25)      | No   | false | NULL    | NONE  |
+| l_shipmode      | char(10)      | No   | false | NULL    | NONE  |
+| l_comment       | varchar(44)   | No   | false | NULL    | NONE  |
++-----------------+---------------+------+-------+---------+-------+
+CREATE MATERIALIZED VIEW sync_agg_mv AS
+SELECT 
+  l_shipdate,
+  l_partkey,
+  count(*),
+  sum(l_discount)
+FROM
+  lineitem
+GROUP BY
+  l_shipdate,
+  l_partkey;
 ```
-注意：如果物化视图包含了 base 表的分区列和分桶列，那么这些列必须作为物化视图中的 key 列
-
-1. 创建一个仅包含原始表（k1, k2）列的物化视图
-
-   ```sql
-   create materialized view k1_k2 as
-   select k2, k1 from duplicate_table;
-   ```
-
-   物化视图的 schema 如下图，物化视图仅包含两列 k1, k2 且不带任何聚合
-
-   ```text
-   +-----------------+-------+--------+------+------+---------+-------+
-   | IndexName       | Field | Type   | Null | Key  | Default | Extra |
-   +-----------------+-------+--------+------+------+---------+-------+
-   | k2_k1           | k2    | INT    | Yes  | true | N/A     |       |
-   |                 | k1    | INT    | Yes  | true | N/A     |       |
-   +-----------------+-------+--------+------+------+---------+-------+
-   ```
-
-2. 创建一个以 k2 为排序列的物化视图
-
-   ```sql
-   create materialized view k2_order as
-   select k2, k1 from duplicate_table order by k2;
-   ```
-
-   物化视图的 schema 如下图，物化视图仅包含两列 k2, k1，其中 k2 列为排序列，不带任何聚合。
-
-   ```text
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | IndexName       | Field | Type   | Null | Key   | Default | Extra |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | k2_order        | k2    | INT    | Yes  | true  | N/A     |       |
-   |                 | k1    | INT    | Yes  | false | N/A     | NONE  |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   ```
-
-3. 创建一个以 k1, k2 分组，k3 列为 SUM 聚合的物化视图
-
-   ```sql
-   create materialized view k1_k2_sumk3 as
-   select k1, k2, sum(k3) from duplicate_table group by k1, k2;
-   ```
-
-   物化视图的 schema 如下图，物化视图包含两列 k1, k2，sum(k3) 其中 k1, k2 为分组列，sum(k3) 为根据 k1, k2 分组后的 k3 列的求和值。
-
-   由于物化视图没有声明排序列，且物化视图带聚合数据，系统默认补充分组列 k1, k2 为排序列。
-
-   ```text
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | IndexName       | Field | Type   | Null | Key   | Default | Extra |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | k1_k2_sumk3     | k1    | INT    | Yes  | true  | N/A     |       |
-   |                 | k2    | INT    | Yes  | true  | N/A     |       |
-   |                 | k3    | BIGINT | Yes  | false | N/A     | SUM   |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   ```
-
-4. 创建一个去除重复行的物化视图
-
-   ```sql
-   create materialized view deduplicate as
-   select k1, k2, k3, k4 from duplicate_table group by k1, k2, k3, k4;
-   ```
-
-   物化视图 schema 如下图，物化视图包含 k1, k2, k3, k4 列，且不存在重复行。
-
-   ```text
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | IndexName       | Field | Type   | Null | Key   | Default | Extra |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   | deduplicate     | k1    | INT    | Yes  | true  | N/A     |       |
-   |                 | k2    | INT    | Yes  | true  | N/A     |       |
-   |                 | k3    | BIGINT | Yes  | true  | N/A     |       |
-   |                 | k4    | BIGINT | Yes  | true  | N/A     |       |
-   +-----------------+-------+--------+------+-------+---------+-------+
-   ```
-
-5. 创建一个不声明排序列的非聚合型物化视图
-
-   all_type_table 的 schema 如下
-
-   ```
-   +-------+--------------+------+-------+---------+-------+
-   | Field | Type         | Null | Key   | Default | Extra |
-   +-------+--------------+------+-------+---------+-------+
-   | k1    | TINYINT      | Yes  | true  | N/A     |       |
-   | k2    | SMALLINT     | Yes  | true  | N/A     |       |
-   | k3    | INT          | Yes  | true  | N/A     |       |
-   | k4    | BIGINT       | Yes  | true  | N/A     |       |
-   | k5    | DECIMAL(9,0) | Yes  | true  | N/A     |       |
-   | k6    | DOUBLE       | Yes  | false | N/A     | NONE  |
-   | k7    | VARCHAR(20)  | Yes  | false | N/A     | NONE  |
-   +-------+--------------+------+-------+---------+-------+
-   ```
-
-   物化视图包含 k3, k4, k5, k6, k7 列，且不声明排序列，则创建语句如下：
-
-   ```sql
-   create materialized view mv_1 as
-   select k3, k4, k5, k6, k7 from all_type_table;
-   ```
-
-   系统默认补充的排序列为 k3, k4, k5 三列。这三列类型的字节数之和为 4(INT) + 8(BIGINT) + 16(DECIMAL) = 28 < 36。所以补充的是这三列作为排序列。物化视图的 schema 如下，可以看到其中 k3, k4, k5 列的 key 字段为 true，也就是排序列。k6, k7 列的 key 字段为 false，也就是非排序列。
-
-   ```sql
-   +----------------+-------+--------------+------+-------+---------+-------+
-   | IndexName      | Field | Type         | Null | Key   | Default | Extra |
-   +----------------+-------+--------------+------+-------+---------+-------+
-   | mv_1           | k3    | INT          | Yes  | true  | N/A     |       |
-   |                | k4    | BIGINT       | Yes  | true  | N/A     |       |
-   |                | k5    | DECIMAL(9,0) | Yes  | true  | N/A     |       |
-   |                | k6    | DOUBLE       | Yes  | false | N/A     | NONE  |
-   |                | k7    | VARCHAR(20)  | Yes  | false | N/A     | NONE  |
-   +----------------+-------+--------------+------+-------+---------+-------+
-   ```
-
-## Keywords
-
-    CREATE, MATERIALIZED, VIEW
-
-## Best Practice
-
