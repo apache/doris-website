@@ -31,7 +31,7 @@ This statement is used to find the corresponding database name, table name, and 
 ## Syntax
 
 ```sql
-    SHOW PARTITION <partition_id>
+SHOW PARTITION <partition_id>
 ```
 
 ## Required Parameters

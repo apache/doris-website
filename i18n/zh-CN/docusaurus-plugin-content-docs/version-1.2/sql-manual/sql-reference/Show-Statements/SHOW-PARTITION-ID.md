@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-    SHOW PARTITION <partition_id>
+SHOW PARTITION <partition_id>
 ```
 
 ## 必选参数
