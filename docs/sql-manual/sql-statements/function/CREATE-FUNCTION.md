@@ -69,7 +69,7 @@ CREATE [ GLOBAL ]
 
 > If specified, the created function is a table function.
 
-**4. `<ALIAS>`**
+**4. `ALIAS`**
 
 > If specified, the created function is an alias function.
 
