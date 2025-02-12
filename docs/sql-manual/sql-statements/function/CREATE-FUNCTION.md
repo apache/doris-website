@@ -61,7 +61,7 @@ CREATE [ GLOBAL ]
 
 > If specified, the created function is effective globally.
 
-**2. `<AGGREGATE>`**
+**2. `AGGREGATE`**
 
 > If specified, the created function is an aggregate function.
 
