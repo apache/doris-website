@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CREATE MATERIALIZED VIEW",
+    "title": "CREATE SYNC MATERIALIZED VIEW",
     "language": "en"
 }
 ---
