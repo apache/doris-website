@@ -41,7 +41,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 
 ## Required Parameters
 
-**1. <index_name>**
+**1. `<index_name>`**
 
 > Specifies the identifier (i.e., name) of the index, which must be unique within its table.
 >

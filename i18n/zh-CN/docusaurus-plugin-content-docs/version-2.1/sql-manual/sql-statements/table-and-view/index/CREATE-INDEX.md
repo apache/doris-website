@@ -44,7 +44,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 
 ## 必选参数（Required Parameters）
 
-**1. <index_name>**
+**1. `<index_name>`**
 
 > 指定索引的标识符（即名称），在其所在的表（Table）中必须唯一。
 >
