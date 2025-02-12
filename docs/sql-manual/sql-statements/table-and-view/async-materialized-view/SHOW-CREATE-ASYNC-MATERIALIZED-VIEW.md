@@ -24,33 +24,46 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This statement is used to display the creation statement of asynchronous materialized views.
+View the materialized view creation statement.
 
-grammar：
+## Syntax
+
+
 
 ```sql
-SHOW CREATE MATERIALIZED VIEW [DBNAME.]MV_NAME
+SHOW CREATE MATERIALIZED VIEW <materialized_view_name>
 ```
 
-illustrate：
+## Required Parameters
 
-1. `DBNAMNE` : 数据库名称
-2. `MV_NAME` : 异步物化视图的名称
+**1. <materialized_view_name>**
+
+> The name of the materialized view.
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes                                                        |
+| --------- | ------ | ------------------------------------------------------------ |
+| SHOW_PRIV | Table  | Requires SHOW_PRIV permission on the current materialized view |
 
 ## Example
 
-1. View the creation statement of mv1
+1. View the creation statement of an asynchronous materialized view
+
+   
 
    ```sql
-   SHOW CREATE MATERIALIZED VIEW mv1;
+   SHOW CREATE MATERIALIZED VIEW partition_mv;
    ```
 
-## Keywords
+2. View the creation statement of a synchronized materialized view
 
-    SHOW, CREATE, MATERIALIZED, VIEW, ASYNC
+   
 
-## Best Practice
-
+   ```sql
+   SHOW CREATE MATERIALIZED VIEW sync_agg_mv on lineitem;
+   ```

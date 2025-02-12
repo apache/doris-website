@@ -27,30 +27,38 @@ under the License.
 
 ## 描述
 
-该语句用于展示异步物化视图的创建语句。
+查看物化视图创建语句。
 
-语法：
+## 语法
 
 ```sql
-SHOW CREATE MATERIALIZED VIEW [DBNAME.]MV_NAME
+SHOW CREATE MATERIALIZED VIEW <materialized_view_name>
 ```
 
-说明：
+## 必选参数
 
-1. `DBNAMNE` : 数据库名称
-2. `MV_NAME` : 异步物化视图的名称
+**1. <materialized_view_new_name>**
+
+> 物化视图名称
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege） | 对象（Object） | 说明（Notes）                         |
+| :---------------- | :------------- | :------------------------------------ |
+| SHOW_PRIV         | 表（Table）    | 需要拥有当前物化视图的 SHOW_PRIV 权限 |
 
 ## 示例
 
-1. 查看 mv1 的创建语句
+1. 查看异步物化视图创建语句
 
-   ```sql
-   SHOW CREATE MATERIALIZED VIEW mv1;
-   ```
+    ```sql
+    SHOW CREATE MATERIALIZED VIEW partition_mv;
+    ```
 
-## 关键词
+2. 查看同步物化视图创建语句
 
-    SHOW, CREATE, MATERIALIZED, VIEW, ASYNC
-
-## 最佳实践
-
+    ```sql
+    SHOW CREATE MATERIALIZED VIEW sync_agg_mv on lineitem;
+    ```
