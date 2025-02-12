@@ -149,7 +149,7 @@ SELECT * FROM lineitem;
 如果基表的数据频繁变更，不太适合使用此种触发方式，因为会频繁构建物化刷新任务，消耗过多资源。
 :::
 
-详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW)
+详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 
 #### 示例如下
@@ -477,7 +477,7 @@ SELECT * FROM t1;
 
 此外，如果分区字段为字符串类型，可以通过设置物化视图的 `partition_date_format` 属性来指定日期格式，例如 `'%Y-%m-%d'`。
 
-详情参考 [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
+详情参考 [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ### SQL 定义
 
@@ -1107,7 +1107,7 @@ PROPERTIES('swap' = 'false');
 DROP MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
+详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 
 ### 查看物化视图创建语句
@@ -1115,20 +1115,20 @@ DROP MATERIALIZED VIEW mv_1;
 SHOW CREATE MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
+详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW)
 
 ### 取消物化视图刷新任务
 
-详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
+详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 
 ### 查询物化视图信息

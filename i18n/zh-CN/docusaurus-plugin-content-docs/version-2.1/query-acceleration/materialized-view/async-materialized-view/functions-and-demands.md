@@ -1130,7 +1130,7 @@ PROPERTIES('swap' = 'false');
 DROP MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
+详情参考 [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 
 ### 查看物化视图创建语句
@@ -1138,7 +1138,7 @@ DROP MATERIALIZED VIEW mv_1;
 SHOW CREATE MATERIALIZED VIEW mv_1;
 ```
 
-详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
+详情参考 [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 :::tip 提示
 从 2.1.5 版本开始支持。
@@ -1146,15 +1146,15 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW)
 
 ### 取消物化视图刷新任务
 
-详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
+详情参考 [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 ### 查询物化视图信息
 

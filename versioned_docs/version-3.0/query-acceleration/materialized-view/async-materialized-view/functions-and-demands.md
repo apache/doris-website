@@ -1106,21 +1106,21 @@ SET(
 );
 ```
 
-For more details, see [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
+For more details, see [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 ### Dropping Materialized Views
 ```sql
 DROP MATERIALIZED VIEW mv_1;
 ```
 
-For more details, see [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
+For more details, see [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 ### Viewing Materialized View Creation Statement
 ```sql
 SHOW CREATE MATERIALIZED VIEW mv_1;
 ```
 
-For more details, see [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
+For more details, see [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 :::tip Note
 Supported starting from version 2.1.5.
@@ -1128,15 +1128,15 @@ Supported starting from version 2.1.5.
 
 ### Pausing Materialized Views
 
-For more details, see [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW-JOB)
+For more details, see [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB)
 
 ### Resuming Materialized Views
 
-For more details, see [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW-JOB)
+For more details, see [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB)
 
 ### Canceling Materialized View Refresh Tasks
 
-For more details, see [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
+For more details, see [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 
 ### Querying Materialized View Information
