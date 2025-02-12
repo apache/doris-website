@@ -82,7 +82,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
     PROPERTIES (
         "type" = "hdfs",                                     -- required
         "fs.defaultFS" = "hdfs://127.0.0.1:8020",            -- required
-        "path_prefix" = "big/data",                          -- optional,  一般按照业务名称填写
+        "path_prefix" = "big/data",                          -- optional,  generally fill in according to the business name
         "hadoop.username" = "user"                           -- optional
         "hadoop.security.authentication" = "kerberos"        -- optional
         "hadoop.kerberos.principal" = "hadoop/127.0.0.1@XXX" -- optional
@@ -102,7 +102,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "oss_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your OSS bucket name
         "provider" = "OSS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OSS 建议设置false
+        "use_path_style" = "false"                           -- optional,  OSS recommended to set false
     );
     ```
 
@@ -118,7 +118,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "cos_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
         "provider" = "COS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  COS 建议设置false
+        "use_path_style" = "false"                           -- optional,  COS recommended to set false
     );
     ```
 
@@ -134,7 +134,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "obs_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
         "provider" = "OBS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OBS 建议设置false
+        "use_path_style" = "false"                           -- optional,  OBS recommended to set false
     );
     ```
 
@@ -150,7 +150,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "bos_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your BOS bucket name
         "provider" = "BOS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  BOS 建议设置false
+        "use_path_style" = "false"                           -- optional,  BOS recommended to set false
     );
     ```
 
@@ -166,7 +166,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "s3_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                             -- required,  Your s3 bucket name
         "provider" = "S3",                                  -- required
-        "use_path_style" = "false"                          -- optional,  S3 建议设置false
+        "use_path_style" = "false"                          -- optional,  S3 recommended to set false
     );
     ```
 
@@ -182,7 +182,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.root.path" = "minio_demo_vault_prefix",        -- required
         "s3.bucket" = "xxxxxx",                            -- required,  Your minio bucket name
         "provider" = "S3",                                 -- required
-        "use_path_style" = "true"                          -- required,  minio 建议设置true
+        "use_path_style" = "true"                          -- required,  minio recommended to set false
     );
    ```
 

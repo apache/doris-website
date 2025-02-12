@@ -1,6 +1,6 @@
 ---
 {
-"title": "ALTER STORAGE POLICY",
+"title": "ALTER-STORAGE-POLICY",
 "language": "en"
 }
 ---
@@ -40,7 +40,7 @@ ALTER STORAGE POLICY  '<policy_name>' PROPERTIE ("<key>"="<value>"[, ... ]);
 
 ## Optional Parameters
 
-| 参数名称          | 描述                                                         |
+| Parameter Name           | Description                                                         |
 |-------------------|--------------------------------------------------------------|
 | `retention_days`  | Data retention period. Defines the duration for which the data is kept in storage. Data exceeding this period will be automatically deleted. |
 | `redundancy_level`| Redundancy level. Defines the number of data replicas to ensure high availability and fault tolerance. For example, a value of 2 means each data block has two replicas. |
