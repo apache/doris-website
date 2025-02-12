@@ -96,7 +96,7 @@ CREATE [ GLOBAL ]
 
 ## Access Control Requirements
 
-To execute this command, the user must have `ADMIN` privileges.
+To execute this command, the user must have `ADMIN_PRIV` privileges.
 
 ## Example
 
