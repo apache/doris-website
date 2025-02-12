@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW CREATE MATERIALIZED VIEW",
+    "title": "SHOW CREATE SYNC MATERIALIZED VIEW",
     "language": "en"
 }
 ---
@@ -27,43 +27,48 @@ under the License.
 
 ## Description
 
-This statement is used to query statements that create materialized views.
+View the materialized view creation statement.
 
-grammar：
+## Syntax
+
+
 
 ```sql
-SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
+SHOW CREATE MATERIALIZED VIEW <materialized_view_name> ON <table_name>
 ```
 
-1. mv_name:
-   Materialized view name. required.
+## Required Parameters
 
-2. table_name:
-   The table name of materialized view. required.
+**1. <materialized_view_name>**
+
+> The name of the materialized view.
+
+**2. <table_name>**
+
+> The table to which the materialized view belongs.
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following permissions:
+
+| Privilege | Object | Notes                                                        |
+| --------- | ------ | ------------------------------------------------------------ |
+| SHOW_PRIV | Table  | Requires SHOW_PRIV permission on the current materialized view |
 
 ## Examples
 
-Create materialized view
+1. View the creation statement of an asynchronous materialized view
 
-```sql
-create materialized view id_col1 as select id,col1 from table3;
-```
+   
 
-Return after query
+   ```sql
+   SHOW CREATE MATERIALIZED VIEW partition_mv;
+   ```
 
-```sql
-mysql> show create materialized view id_col1 on table3;
-+-----------+----------+----------------------------------------------------------------+
-| TableName | ViewName | CreateStmt                                                     |
-+-----------+----------+----------------------------------------------------------------+
-| table3    | id_col1  | create materialized view id_col1 as select id,col1 from table3 |
-+-----------+----------+----------------------------------------------------------------+
-1 row in set (0.00 sec)
-```
+2. View the creation statement of a synchronized materialized view
 
-## Keywords
+   
 
-    SHOW, MATERIALIZED, VIEW
-
-## Best Practice
-
+   ```sql
+   SHOW CREATE MATERIALIZED VIEW sync_agg_mv on lineitem;
+   ```

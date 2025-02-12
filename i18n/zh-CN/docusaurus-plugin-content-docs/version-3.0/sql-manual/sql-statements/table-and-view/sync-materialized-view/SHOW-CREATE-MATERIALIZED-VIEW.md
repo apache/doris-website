@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW CREATE MATERIALIZED VIEW",
+    "title": "SHOW CREATE SYNC MATERIALIZED VIEW",
     "language": "zh-CN"
 }
 ---
@@ -28,43 +28,42 @@ under the License.
 
 ## 描述
 
-该语句用于查询创建物化视图的语句。
+查看物化视图创建语句。
 
-语法：
-
-```sql
-SHOW CREATE MATERIALIZED VIEW mv_name ON table_name
-```
-
-1. mv_name:
-        物化视图的名称。必填项。
-
-2. table_name:
-        物化视图所属的表名。必填项。
-
-## 示例
-
-创建物化视图的语句为
+## 语法
 
 ```sql
-create materialized view id_col1 as select id,col1 from table3;
+SHOW CREATE MATERIALIZED VIEW <materialized_view_name> ON <table_name>
 ```
 
-查询后返回
+## 必选参数
 
-```sql
-mysql> show create materialized view id_col1 on table3;
-+-----------+----------+----------------------------------------------------------------+
-| TableName | ViewName | CreateStmt                                                     |
-+-----------+----------+----------------------------------------------------------------+
-| table3    | id_col1  | create materialized view id_col1 as select id,col1 from table3 |
-+-----------+----------+----------------------------------------------------------------+
-1 row in set (0.00 sec)
-```
+**1. <materialized_view_new_name>**
 
-## 关键词
+> 物化视图名称
 
-    SHOW, MATERIALIZED, VIEW
+**2. <table_name>**
 
-### 最佳实践
+> 物化视图所属的表
 
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限 | 对象  | 说明                          |
+| :---------------- | :------------- | :------------------------------------ |
+| SHOW_PRIV         | 表     | 需要拥有当前物化视图的 SHOW_PRIV 权限 |
+
+## 示例（Examples）
+
+1. 查看异步物化视图创建语句
+
+    ```sql
+    SHOW CREATE MATERIALIZED VIEW partition_mv;
+    ```
+
+2. 查看同步物化视图创建语句
+
+    ```sql
+    SHOW CREATE MATERIALIZED VIEW sync_agg_mv on lineitem;
+    ```
