@@ -3,8 +3,6 @@
     "title": "SHOW SYNC JOB",
     "language": "en"
 }
-
-
 ---
 
 <!--
@@ -26,12 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-This command is used to currently display the status of resident data synchronization jobs in all databases.
+This statement displays the status of resident data synchronization jobs in all databases.
 
-grammar:
+## Syntax
 
 ```sql
 SHOW SYNC JOB [FROM db_name]
@@ -45,15 +42,8 @@ SHOW SYNC JOB [FROM db_name]
     SHOW SYNC JOB;
     ```
 
-2. Display the status of all data synchronization jobs under the database `test_db`.
+2. Display the status of all data synchronization jobs in the `test_db` database.
 
     ```sql
     SHOW SYNC JOB FROM `test_db`;
     ```
-
-## Keywords
-
-    SHOW, SYNC, JOB
-
-## Best Practice
-
