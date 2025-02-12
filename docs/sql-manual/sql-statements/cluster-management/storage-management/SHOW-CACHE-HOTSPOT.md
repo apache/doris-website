@@ -26,36 +26,34 @@ under the License.
 
 ## Description
 
-This statement is used to display the hotspot information of file cache.
+This statement is used to display hot spot information for file caches.
 
 ## Syntax
 
 ```sql
-   SHOW CACHE HOTSPOT '/[compute_group_name/table_name]';
+   SHOW CACHE HOTSPOT '/[<compute_group_name>/<table_name>]';
 ```
 
 ## Parameters
 
-1. compute_group_name : Name of compute group.
-2. table_name : Name of table.
+| Parameter Name	                  | Description                                                         |
+|---------------------------|--------------------------------------------------------------|
+| <compute_group_name>        | The name of the compute group.                                               |
+| <table_name>                | The name of the table.                                                   |
+## Examples
 
-## Example
+1. Display cache hot spot information for the entire system:
 
-1. View the table creation statement of a table
+```sql
+SHOW CACHE HOTSPOT '/';
+```
 
-    ```sql
-    SHOW CACHE HOTSPOT '/';
-    ```
+2. Display cache hot spot information for a specific compute group my_compute_group:
 
-## Related Commands
-
- - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+```sql
+SHOW CACHE HOTSPOT '/my_compute_group/';
+```
 
 ## References
-
- - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
-
-## Keywords
-
-    SHOW, CACHE, HOTSPOT
-
+- [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+- [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
