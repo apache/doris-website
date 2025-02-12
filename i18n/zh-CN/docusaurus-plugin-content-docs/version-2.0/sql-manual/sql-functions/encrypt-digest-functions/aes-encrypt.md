@@ -40,6 +40,10 @@ VARCHAR AES_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHA
 - `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
 - `encryption_mode` 为加密算法，可选值见于变量。
 
+:::warning
+两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行加密。因此不推荐调用。
+:::
+
 ### 注意事项
 
 AES_ENCRYPT 函数对于传入的密钥，并不是直接使用，而是会进一步做处理，具体步骤如下：
