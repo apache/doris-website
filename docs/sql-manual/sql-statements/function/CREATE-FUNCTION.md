@@ -57,7 +57,7 @@ CREATE [ GLOBAL ]
 
 ## Optional Parameters
 
-**1. `<GLOBAL>`**
+**1. `GLOBAL`**
 
 > If specified, the created function is effective globally.
 
