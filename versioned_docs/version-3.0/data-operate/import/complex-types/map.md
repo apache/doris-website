@@ -1,7 +1,7 @@
 ---
 {
     "title": "MAP",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,23 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-`MAP<K, V>` 表示由K, V类型元素组成的 map，不能作为 key 列使用。
+`MAP<K, V>` A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
 
-- 目前支持在 Duplicate，Unique 模型的表中使用。
-
-K, V 支持的类型有：
+K,V could be any of:
 
 ```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3,
-DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
+BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
+DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-## CSV格式导入
+## CSV format import
 
-### 第 1 步：准备数据
+### Step 1: Prepare the data
 
-创建如下的 csv 文件：`test_map.csv`
-其中分隔符使用 `|` 而不是逗号，以便和 map 中的逗号区分。
+Create the following csv file: `test_map.csv`
+The separator is `|` instead of comma to distinguish it from the comma in map.
 
 ```
 1|{"Emily":101,"age":25}
@@ -49,7 +47,7 @@ DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 4|null
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE map_test (
@@ -63,7 +61,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -74,7 +72,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM map_test;
@@ -89,11 +87,11 @@ mysql> SELECT * FROM map_test;
 4 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON format import
 
-### 第 1 步：准备数据
+### Step 1: Prepare the data
 
-创建如下的 JSON 文件，`test_map.json`
+Create the following JSON file, `test_map.json`
 
 ```json
 [
@@ -104,7 +102,7 @@ mysql> SELECT * FROM map_test;
 ]
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE map_test (
@@ -118,7 +116,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -130,7 +128,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/map_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM map_test;

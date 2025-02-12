@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV4",
-"language": "en"
+    "title": "TO_IPV4",
+    "language": "en"
 }
 ---
 
@@ -22,35 +22,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV4
 
-TO_IPV4
+## Description
+This function like ipv4_string_to_num that takes a string form of IPv4 address and returns value of IPv4 type, which is binary equal to value returned by ipv4_string_to_num.
 
-### Description
-
-#### Syntax
-
-`IPV4 TO_IPV4(STRING ipv4_str)`
-
-This function like ipv4_string_to_num that takes a string form of IPv4 address and returns value of IPv4 type,
-which is binary equal to value returned by ipv4_string_to_num.
-If the IPv4 address has an invalid format, throw an exception.
-
-#### Notice
-
-`Input cannot be NULL. If it is NULL, an exception will be thrown.`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select to_ipv4('255.255.255.255');
+TO_IPV4(<ipv4_str>)
+```
+
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | An IPv4 address of type String |
+
+
+## Return Value
+Returns value of IPv4 type, which is binary equal to value returned by ipv4_string_to_num.
+- If the IPv4 address has an invalid format, throw an exception
+
+
+## Example
+```sql
+SELECT to_ipv4('255.255.255.255');
+```
+```text
 +----------------------------+
 | to_ipv4('255.255.255.255') |
 +----------------------------+
 | 255.255.255.255            |
 +----------------------------+
 ```
-
-### Keywords
-
-TO_IPV4, IP

@@ -40,7 +40,7 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 |---|---|
 | `<lambda>` | A lambda expression that can execute valid scalar functions but does not support aggregate functions. |  
 | `<arr1>` | Needed be computed array arr1 |  
-| `<arr2>` | Needed be computed array arr2 |    
+| `<arr2>` | Needed be computed array arr2 |  
 
 ## Return Value
 Returns the array computed using the expression. Special cases:
@@ -67,7 +67,6 @@ INSERT INTO array_test2 VALUES
 select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 ```
 ```text
-select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 +------+-----------------+-------------------------+-----------------------------------------------+
 | id   | c_array1        | c_array2                | array_exists([x] -> x(0) > 1, ARRAY(1, 2, 3)) |
 +------+-----------------+-------------------------+-----------------------------------------------+
@@ -80,6 +79,7 @@ select *, array_exists(x->x>1,[1,2,3]) from array_test2 order by id;
 ```sql
 select c_array1, c_array2, array_exists(x->x%2=0,[1,2,3]) from array_test2 order by id;
 ```
+
 ```text
 +-----------------+-------------------------+---------------------------------------------------+
 | c_array1        | c_array2                | array_exists([x] -> x(0) % 2 = 0, ARRAY(1, 2, 3)) |
@@ -106,6 +106,7 @@ select c_array1, c_array2, array_exists(x->abs(x)-1,[1,2,3]) from array_test2 or
 ```sql
 select c_array1, c_array2, array_exists((x,y)->x>y,c_array1,c_array2) from array_test2 order by id;
 ```
+
 ```text
 +-----------------+-------------------------+-------------------------------------------------------------+
 | c_array1        | c_array2                | array_exists([x, y] -> x(0) > y(1), `c_array1`, `c_array2`) |
@@ -119,6 +120,7 @@ select c_array1, c_array2, array_exists((x,y)->x>y,c_array1,c_array2) from array
 ```sql
 select *, array_exists(c_array1) from array_test2 order by id;
 ```
+
 ```text
 +------+-----------------+-------------------------+--------------------------+
 | id   | c_array1        | c_array2                | array_exists(`c_array1`) |

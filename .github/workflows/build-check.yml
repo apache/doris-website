@@ -67,8 +67,5 @@ jobs:
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
-                  yarn
-                  node ./scripts/update_search_hash.js
-                  yarn build
-
+                  yarn && yarn build
                   rm -rf build

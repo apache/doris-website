@@ -39,6 +39,10 @@ VARCHAR AES_DECRYPT(VARCHAR str, VARCHAR key_str [, VARCHAR init_vector [, VARCH
 - `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
 - `encryption_mode` is the encryption algorithm, optionally available in variable.
 
+:::warning
+Function with two arguments will ignore session variable `block_encryption_mode` and always use `AES_128_ECB` to do decryption. So it's not recommended to use it.
+:::
+
 ### Example
 
 ```sql
@@ -46,7 +50,7 @@ set block_encryption_mode='';
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
 ```
 
-```
+```text
 +--------------------------------------------------------------------------------+
 | aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='), '***', '', 'AES_128_ECB') |
 +--------------------------------------------------------------------------------+
@@ -59,7 +63,7 @@ set block_encryption_mode="AES_256_CBC";
 select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B830D21A390C3');
 ```
 
-```
+```text
 +--------------------------------------------------------------------------------+
 | aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='), '***', '', 'AES_256_CBC') |
 +--------------------------------------------------------------------------------+
@@ -71,7 +75,7 @@ select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B
 select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
 ```
 
-```
+```text
 +------------------------------------------------------------------------------------------+
 | aes_decrypt(from_base64('tsmK1HzbpnEdR2//WhO+MA=='), '***', '0123456789', 'AES_256_CBC') |
 +------------------------------------------------------------------------------------------+

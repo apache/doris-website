@@ -1,7 +1,7 @@
 ---
 {
-    "title": "DROP FILE",
-    "language": "en"
+  "title": "DROP FILE",
+  "language": "en"
 }
 ---
 
@@ -24,35 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 This statement is used to delete an uploaded file.
 
-grammar:
+## grammar:
 
 ```sql
-DROP FILE "file_name" [FROM database]
-[properties]
+DROP FILE "<file_name>" [ { FROM | IN } <database>] PROPERTIES ("<key>"="<value>" [ , ... ])
 ```
 
-illustrate:
+## Required Parameters
 
-- file_name: file name.
-- database: a db to which the file belongs, if not specified, the db of the current session is used.
-- properties supports the following parameters:
-   - `catalog`: Required. The category the file belongs to.
+**1. `<file_name>`**
+
+> Custom file name.
+
+**2. `<key>`**
+
+> File attribute key.
+> - **catalog**: Required. Classification category of the file.
+
+**3. `<value>`**
+
+> File attribute value.
+
+## Optional Parameters
+
+**1. `<database>`**
+
+> Specifies the database to which the file belongs. Uses the current session's database if not specified.
+
+## Access Control Requirements
+
+The user executing this SQL command must possess the following minimum privileges:
+
+| Privilege    | Object      | Notes                                                                           |
+|:-------------|:------------|:--------------------------------------------------------------------------------|
+| `ADMIN_PRIV` | User / Role | The user or role must hold the `ADMIN_PRIV` privilege to execute this operation |
 
 ## Example
 
-1. Delete the file ca.pem
+- Delete the file ca.pem
 
-     ```sql
-     DROP FILE "ca.pem" properties("catalog" = "kafka");
-     ```
+    ```sql
+    DROP FILE "ca.pem" properties("catalog" = "kafka");
+    ```
+- Delete file `client.key` categorized under `my_catalog`
 
-## Keywords
+  ```sql
+  DROP FILE "client.key"
+  IN my_database
+  ```
 
-     DROP, FILE
+- Delete file `client_1.key` categorized under `my_catalog`
 
-## Best Practice
+  ```sql
+  DROP FILE "client_1.key"
+  FROM my_database
+  ```

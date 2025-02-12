@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV4_OR_DEFAULT",
-"language": "zh-CN"
+    "title": "TO_IPV4_OR_DEFAULT",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,40 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV4_OR_DEFAULT
-
-TO_IPV4_OR_DEFAULT
 
 ## 描述
+输入IPv4地址的字符串形式，并返回IPv4类型的值。
 
 ## 语法
-
-`IPV4 TO_IPV4_OR_DEFAULT(STRING ipv4_str)`
-
-与to_ipv4函数类似，但如果IPv4地址的格式非法，则返回0.0.0.0。
-
-### 注意事项
-
-入参如果为 `NULL`，则返回 `0.0.0.0。`
-
-## 举例
-
 ```sql
-mysql> select to_ipv4_or_default('.');
-+-------------------------+
-| to_ipv4_or_default('.') |
-+-------------------------+
-| 0.0.0.0                 |
-+-------------------------+
-
-mysql> select to_ipv4_or_default(NULL);
-+--------------------------+
-| to_ipv4_or_default(NULL) |
-+--------------------------+
-| 0.0.0.0                  |
-+--------------------------+
+TO_IPV4_OR_DEFAULT(<ipv4_str>)
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_str>`      | 字符串类型的ipv4地址 |
 
-TO_IPV4_OR_DEFAULT, IP
+
+## 返回值
+返回IPv4类型的值。
+- 如果IPv4地址的格式非法，则返回0.0.0.0
+
+## 举例
+```sql
+SELECT to_ipv4_or_default('255.255.255.255'), to_ipv4_or_default('.'), to_ipv4_or_default(NULL);
+```
+```text
++---------------------------------------+-------------------------+--------------------------+
+| to_ipv4_or_default('255.255.255.255') | to_ipv4_or_default('.') | to_ipv4_or_default(NULL) |
++---------------------------------------+-------------------------+--------------------------+
+| 255.255.255.255                       | 0.0.0.0                 | 0.0.0.0                  |
++---------------------------------------+-------------------------+--------------------------+
+```

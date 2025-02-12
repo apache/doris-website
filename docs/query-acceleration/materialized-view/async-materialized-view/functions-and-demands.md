@@ -80,6 +80,15 @@ Check for base table partition data changes since last refresh and refresh only 
 REFRESH MATERIALIZED VIEW mvName AUTO;
 ```
 
+:::tip
+If the base table used in the SQL definition of the materialized view is a JDBC table, 
+Doris cannot perceive changes in the table data. When refreshing the materialized view, 
+it is necessary to specify COMPLETE. If AUTO is specified, it may result in the base table 
+having data, but the materialized view being empty after the refresh. Currently, 
+when refreshing the materialized view, Doris can only perceive data changes in internal 
+tables and Hive data source tables; support for other data sources is being gradually implemented.
+:::
+
 Refresh all materialized view partitions without checking for base table changes:
 
 ```sql
@@ -253,7 +262,6 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
-PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
 l_linestatus,   
@@ -273,7 +281,6 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
-PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
 l_linestatus,   
@@ -867,7 +874,7 @@ as
 select l_shipdate, o_orderdate, l_partkey,
        l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
     l_shipdate,
     o_orderdate,
@@ -887,7 +894,7 @@ insert into lineitem values
 ```sql
 select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
     l_shipdate,
     o_orderdate,
@@ -905,7 +912,7 @@ FROM mv7
 union all
 select t1.l_shipdate, o_orderdate, t1.l_partkey, t1.l_suppkey, sum(o_totalprice) as sum_total
 from (select * from lineitem where l_shipdate = '2023-10-21') t1
-         left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
+left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
 group by
     t1.l_shipdate,
     o_orderdate,
@@ -946,7 +953,6 @@ inner join orders on lineitem.l_orderkey = orders.o_orderkey;
 CREATE MATERIALIZED VIEW mv8_0
 BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES ('replication_num' = '1') 
 AS
 select
 l_linenumber,
@@ -981,6 +987,39 @@ Note:
 1. The more layers of nested materialized views, the longer transparent rewriting will take. It is recommended that nested materialized views do not exceed 3 layers.
 
 2. Nested materialized view transparent rewriting is disabled by default. See the related settings below for how to enable it.
+
+
+### Aggregate Query Using Non-Aggregate Materialized View Rewrite
+If the query is an aggregate query and the materialized view does not contain aggregates, 
+but the materialized view can provide all the columns used in the query, then it can also be rewritten. 
+For example, if the query first performs a join and then a group by aggregation, 
+hitting a materialized view that includes the join will also yield benefits.
+
+```sql
+CREATE MATERIALIZED VIEW mv10_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select l_shipdate, o_orderdate, l_partkey,
+       l_suppkey, o_totalprice
+from lineitem
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate;
+```
+
+The following query can hit the mv10_0 materialized view, saving the computation of the 
+lineitem join orders join:
+
+```sql
+select l_shipdate, o_orderdate, l_partkey,
+       l_suppkey, sum(o_totalprice) as sum_total
+from lineitem
+left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+group by
+    l_shipdate,
+    o_orderdate,
+    l_partkey,
+    l_suppkey;
+```
 
 ### Explain Query Transparent Rewriting Status
 
@@ -1032,6 +1071,9 @@ explain memo plan <query_sql>
 - Pausing/resuming/canceling/refreshing materialized views: Requires materialized view creation permission
 
 ### Modifying Materialized Views
+
+#### Modifying Materialized View Properties
+
 ```sql
 ALTER MATERIALIZED VIEW mv_1
 SET(
@@ -1039,6 +1081,33 @@ SET(
 );
 ```
 For more details, see [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
+
+#### Materialized View Renaming, i.e., Atomic Replacement of Materialized Views
+```sql
+CREATE MATERIALIZED VIEW mv9_0
+BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1') 
+AS
+select
+  l_linenumber,
+  o_custkey,
+  o_orderkey,
+  o_orderstatus,
+  l_partkey,
+  l_suppkey,
+  l_orderkey
+from lineitem
+inner join orders on lineitem.l_orderkey = orders.o_orderkey;
+```
+Replace the materialized view mv7 with mv9_0 and delete mv7:
+
+```sql
+ALTER MATERIALIZED VIEW mv7
+REPLACE WITH MATERIALIZED VIEW mv9_0
+PROPERTIES('swap' = 'false');
+```
+
 
 ### Dropping Materialized Views
 ```sql
@@ -1066,9 +1135,8 @@ For more details, see [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-stateme
 
 For more details, see [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
-### Metadata Queries
 
-#### Querying Materialized View Information
+### Querying Materialized View Information
 
 ```sql
 SELECT * 
@@ -1106,7 +1174,7 @@ SyncWithBaseTables: 1
 
 - **SchemaChangeDetail:** Explains the reason for SCHEMA_CHANGE.
 
-- **RefreshState:** Status of the last refresh task. If FAIL, indicates execution failed - use the `tasks()` command to identify the cause. See [Viewing Materialized View Task Status](#viewing-materialized-view-task-status) section.
+- **RefreshState:** Status of the last refresh task. If FAIL, indicates execution failed - use the `tasks()` command to identify the cause. See [Viewing Materialized View Task Status](### Querying Refresh Task Information) section.
 
 - **SyncWithBaseTables:** Whether synchronized with base tables. 1 means synchronized, 0 means not synchronized. If not synchronized, use `show partitions` to check which partitions are out of sync. See the section below on checking SyncWithBaseTables status for partitioned materialized views.
 
@@ -1115,18 +1183,20 @@ For transparent rewriting, materialized views typically have two states:
 - **Normal:** The materialized view is available for transparent rewriting.
 - **Unavailable/Abnormal:** The materialized view cannot be used for transparent rewriting. However, it can still be queried directly.
 
-For more details, see [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)
+For more details, see [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
-#### Querying Refresh Task Information
+### Querying Refresh Task Information
 
 Each materialized view has one Job, and each refresh creates a new Task, with a 1:n relationship between Jobs and Tasks.
 To view a materialized view's Task status by name, run the following query to check refresh task status and progress:
 
 ```sql
-SELECT * 
+SELECT *
 FROM tasks("type"="mv")
-WHERE mvName = 'mv_name'
-ORDER BY CreateTime DESC \G
+WHERE
+  MvDatabaseName = 'mv_db_name' and
+  mvName = 'mv_name'
+ORDER BY  CreateTime DESC \G
 ```
 
 Example output:
@@ -1173,7 +1243,7 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 
 For more details, see [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
 
-#### Querying Materialized View Jobs
+### Querying Materialized View Jobs
 
 ```sql
 SELECT * 
@@ -1183,7 +1253,7 @@ WHERE Name="inner_mtmv_75043";
 
 For more details, see [JOBS](../../../sql-manual/sql-functions/table-valued-functions/jobs)
 
-#### Querying Materialized View Partition Information
+### Querying Materialized View Partition Information
 
 Checking SyncWithBaseTables Status for Partitioned Materialized Views
 
@@ -1204,7 +1274,7 @@ Check the `SyncWithBaseTables` field - false indicates the partition is not avai
 
 For more details, see [SHOW PARTITIONS](../../../sql-manual/sql-statements/table-and-view/table/SHOW-PARTITIONS)
 
-#### Viewing Materialized View Table Structure
+### Viewing Materialized View Table Structure
 
 For more details, see [DESCRIBE](../../../sql-manual/sql-statements/table-and-view/table/DESC-TABLE)
 

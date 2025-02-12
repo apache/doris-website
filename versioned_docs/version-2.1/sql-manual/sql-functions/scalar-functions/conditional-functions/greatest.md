@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,45 +24,73 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## greatest
+## Description
 
-### description
-#### Syntax
+Compares multiple expressions and returns the greatest value among them. If any argument is `NULL`, the function returns `NULL`.
 
-`greatest(col_a, col_b, …, col_n)`  
+## Syntax
 
-`column` supports the following types: `TINYINT` `SMALLINT` `INT` `BIGINT` `LARGEINT` `FLOAT` `DOUBLE` `STRING` `DATETIME` `DECIMAL`
-
-Compares the size of `n columns` and returns the largest among them. If there is `NULL` in `column`, it returns `NULL`.
-
-### example
-
+```sql
+GREATEST(<expr> [, ...])
 ```
-mysql> select greatest(-1, 0, 5, 8);
+
+## Parameters
+
+| Parameter   | Description |
+|------------|-------------|
+| `<expr>`  | A list of expressions to compare. Supports `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL` types. |
+
+## Return Value
+
+- Returns the largest value among the given expressions.
+- If any argument is `NULL`, returns `NULL`.
+
+## Examples
+
+```sql
+SELECT GREATEST(-1, 0, 5, 8);
+```
+
+```text
 +-----------------------+
-| greatest(-1, 0, 5, 8) |
+| GREATEST(-1, 0, 5, 8) |
 +-----------------------+
 |                     8 |
 +-----------------------+
-mysql> select greatest(-1, 0, 5, NULL);
+```
+
+```sql
+SELECT GREATEST(-1, 0, 5, NULL);
+```
+
+```text
 +--------------------------+
-| greatest(-1, 0, 5, NULL) |
+| GREATEST(-1, 0, 5, NULL) |
 +--------------------------+
 | NULL                     |
 +--------------------------+
-mysql> select greatest(6.3, 4.29, 7.6876);
+```
+
+```sql
+SELECT GREATEST(6.3, 4.29, 7.6876);
+```
+
+```text
 +-----------------------------+
-| greatest(6.3, 4.29, 7.6876) |
+| GREATEST(6.3, 4.29, 7.6876) |
 +-----------------------------+
 |                      7.6876 |
 +-----------------------------+
-mysql> select greatest("2022-02-26 20:02:11","2020-01-23 20:02:11","2020-06-22 20:02:11");
+```
+
+```sql
+SELECT GREATEST('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11');
+```
+
+```text
 +-------------------------------------------------------------------------------+
-| greatest('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11') |
+| GREATEST('2022-02-26 20:02:11', '2020-01-23 20:02:11', '2020-06-22 20:02:11') |
 +-------------------------------------------------------------------------------+
 | 2022-02-26 20:02:11                                                           |
 +-------------------------------------------------------------------------------+
 ```
-
-### keywords
-	GREATEST

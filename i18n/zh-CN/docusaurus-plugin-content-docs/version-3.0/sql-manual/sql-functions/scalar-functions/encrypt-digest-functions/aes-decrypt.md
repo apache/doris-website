@@ -26,6 +26,12 @@ under the License.
 
 AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。
 
+:::warning
+截止 3.0.2，两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行解密。因此不推荐调用。
+
+3.0.3 起，该行为恢复正常。
+:::
+
 ## 语法
 
 ```sql
@@ -47,12 +53,12 @@ AES_DECRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 
 如果解密失败: 返回 NULL。
 
-
 ## 示例
 
 ### 解密成功
 
 使用默认算法
+
 ```sql
 set block_encryption_mode='';
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -67,6 +73,7 @@ select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B
 ```
 
 使用AES_256_CBC算法
+
 ```sql
 set block_encryption_mode="AES_256_CBC";
 select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -81,6 +88,7 @@ select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B
 ```
 
 使用AES_256_CBC算法并设置初始向量
+
 ```sql
 select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');
 ```

@@ -80,8 +80,7 @@
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
-                                "table-design/data-partitioning/manual-bucketing",
-                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/data-bucketing",
                                 "table-design/data-partitioning/common-issues"
                             ]
                         },
@@ -477,7 +476,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Disater Recovery",
+                    "label": "Managing Disaster Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
@@ -791,8 +790,7 @@
                         "ecosystem/logstash",
                         "ecosystem/beats",
                         "ecosystem/automq-load",
-                        "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf"
+                        "ecosystem/hive-bitmap-udf"
                     ]
                 }
             ]
@@ -907,10 +905,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dfloor",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dlog10",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",
@@ -981,7 +975,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/left",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
@@ -1127,6 +1120,8 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-point",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",
@@ -1519,17 +1514,11 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
                                 "sql-manual/sql-functions/table-functions/explode-variant-array",
                                 "sql-manual/sql-functions/table-functions/explode",
-                                "sql-manual/sql-functions/table-functions/posexplode-outer",
-                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
-                                "sql-manual/sql-functions/table-functions/explode-json-object-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
-                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/explode-split-outer",
-                                "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                                "sql-manual/sql-functions/table-functions/explode-numbers"
                             ]
                         },
                         {
@@ -1593,7 +1582,6 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-PROFILE",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -1820,14 +1808,14 @@
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-STATUS",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/DIAGNOSE-TABLET",
-                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/COPY-TABLET",
-                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/CHECK-TABLET",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-COPY-TABLET",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLETS-BELONG",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-DIAGNOSIS",
-                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-REPLICA-STATUS",
-                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-REPLICA-VERSION",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS",
+                                        "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-VERSION",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-DISTRIBUTION",
                                         "sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH",
@@ -1921,8 +1909,7 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING"
+                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY"
                                     ]
                                 }
                             ]
@@ -1992,8 +1979,7 @@
                             "type": "category",
                             "label": "Info System and Help",
                             "items": [
-                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
-                                "sql-manual/sql-statements/system-info-and-help/HELP"
+                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC"
                             ]
                         }
                     ]

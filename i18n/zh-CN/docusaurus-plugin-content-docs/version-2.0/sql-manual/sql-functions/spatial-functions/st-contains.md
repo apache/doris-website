@@ -30,7 +30,7 @@ under the License.
 
 ## 语法
 ```sql
-ST_Contains( <shape1>, <shape2>)
+ST_CONTAINS( <shape1>, <shape2>)
 ```
 
 ## 参数

@@ -1,7 +1,7 @@
 ---
 {
-"title": "TO_IPV6_OR_NULL",
-"language": "en"
+    "title": "TO_IPV6_OR_NULL",
+    "language": "en"
 }
 ---
 
@@ -22,40 +22,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## TO_IPV6_OR_NULL
+## Description
+Convert a string form of IPv6 address to IPv6 type.
 
-TO_IPV6_OR_NULL
-
-### Description
-
-#### Syntax
-
-`IPV6 TO_IPV6_OR_NULL(STRING ipv6_str)`
-
-Same as to_ipv6, but if the IPv6 address has an invalid format, it returns NULL.
-
-#### Notice
-
-`If input is NULL, return NULL.`
-
-### Example
-
+## Syntax
 ```sql
-mysql> select to_ipv6_or_null('.');
-+----------------------+
-| to_ipv6_or_null('.') |
-+----------------------+
-| NULL                 |
-+----------------------+
-
-mysql> select to_ipv6_or_null(NULL);
-+-----------------------+
-| to_ipv6_or_null(NULL) |
-+-----------------------+
-| NULL                  |
-+-----------------------+
+TO_IPV6_OR_NULL(<ipv6_str>)
 ```
 
-### Keywords
+## Parameters
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv6_str>`      | An IPv6 address of type String |
 
-TO_IPV6_OR_NULL, IP
+
+## Return Value
+Returns value of IPv6 type.
+- If the IPv6 address has an invalid format, returns NULL.
+
+
+## Example
+```sql
+SELECT to_ipv6_or_null('.'), to_ipv6_or_null('2001:1b70:a1:610::b102:2');
+```
+```text
++----------------------+---------------------------------------------+
+| to_ipv6_or_null('.') | to_ipv6_or_null('2001:1b70:a1:610::b102:2') |
++----------------------+---------------------------------------------+
+| NULL                 | 2001:1b70:a1:610::b102:2                    |
++----------------------+---------------------------------------------+
+```

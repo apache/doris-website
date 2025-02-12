@@ -25,6 +25,7 @@ under the License.
 -->
 
 ## Description
+
 The function calculates the time difference between two datetime values and returns the difference in seconds.
 
 ## Syntax
@@ -32,6 +33,7 @@ The function calculates the time difference between two datetime values and retu
 ```sql
 SECONDS_DIFF(<end_datetime>, <start_datetime>)
 ```
+
 ## Parameters
 
 | Parameter          | Description                                                                 |
