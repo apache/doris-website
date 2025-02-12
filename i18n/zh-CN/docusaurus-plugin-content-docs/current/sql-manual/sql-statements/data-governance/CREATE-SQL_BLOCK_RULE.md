@@ -53,29 +53,29 @@ PROPERTIES (
 **2. `<property>`**
 
 > 规则的属性，可以分为三类：执行 SQL 类，扫描限制类和开关类。
-
+>
 > 执行 SQL 类和扫描限制类是互斥的，也就是说一个 SQL_BLOCK_RULE 只能限制其中一种。
-
-### 执行 SQL 类：
-
-包含两种，分别代表正则匹配和精准匹配，两种只能选择其中一个。
-
-- sql：匹配规则 (基于正则匹配，特殊字符需要转译，如`select *`使用`select \\*`)，用户在执行 sql 时，系统会把这里设置的 sql 作为正则对用户提交的 sql 进行匹配，如果能匹配上，会阻止 sql 的运行。
-
-- sqlHash: sql 的 md5 摘要值，这里主要是配合慢日志来使用，用户无需自己计算摘要值，例如慢日志中发现某个 sql 执行的很慢，可以在`fe.audit.log`复制`SqlHash`，创建 SQL_BLOCK_RULE 限制这个 sql 运行。
-
-### 扫描限制类
-
-用户发起查询的时候，查询优化器会计算出每张表需要扫描的 partition 数，tablet 数 和扫描的数据行数。以下属性分别对这三个数字进行限制，可以同时设置，也可以只限制部分
-
-- partition_num: 一个表将扫描的最大 partition 数量
-- tablet_num: 一个表将扫描的最大 tablet 数量
-- cardinality: 一个表将扫描的数据行数
-
-### 开关类
-
-- global：是否全局 (所有用户) 生效，默认为 false。不设置为 true 的话，需要通过 set property 对某个用户生效
-- enable：是否开启阻止规则，默认为 true
+>
+> **执行 SQL 类：**
+>
+>包含两种，分别代表正则匹配和精准匹配，两种只能选择其中一个。
+>
+> - sql：匹配规则 (基于正则匹配，特殊字符需要转译，如`select *`使用`select \\*`)，用户在执行 sql 时，系统会把这里设置的 sql 作为正则对用户提交的 sql 进行匹配，如果能匹配上，会阻止 sql 的运行。
+>
+> - sqlHash: sql 的 md5 摘要值，这里主要是配合慢日志来使用，用户无需自己计算摘要值，例如慢日志中发现某个 sql 执行的很慢，可以在`fe.audit.log`复制`SqlHash`，创建 SQL_BLOCK_RULE 限制这个 sql 运行。
+>
+> **扫描限制类**
+>
+> 用户发起查询的时候，查询优化器会计算出每张表需要扫描的 partition 数，tablet 数 和扫描的数据行数。以下属性分别对这三个数字进行限制，可以同时设置，也可以只限制部分
+> 
+> - partition_num: 一个表将扫描的最大 partition 数量
+> - tablet_num: 一个表将扫描的最大 tablet 数量
+> - cardinality: 一个表将扫描的数据行数
+>
+> **开关类**
+>
+> - global：是否全局 (所有用户) 生效，默认为 false。不设置为 true 的话，需要通过 set property 对某个用户生效
+> - enable：是否开启阻止规则，默认为 true
 
 ## 权限控制
 

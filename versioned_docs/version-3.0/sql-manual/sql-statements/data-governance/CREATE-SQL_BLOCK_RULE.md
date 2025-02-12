@@ -49,31 +49,32 @@ PROPERTIES (
 
 > The name of the rule.
 
+
 **2. `<property>`**
 
 > The properties of the rule can be divided into three categories: SQL execution, scan limitation, and switch.
-
+>
 > The SQL execution and scan limitation categories are mutually exclusive, meaning that an SQL block rule can only restrict one of them.
+>
+>
+> **SQL Execution Category**
+>
+> There are two types, representing regular expression matching and exact matching, respectively. Only one of them can be chosen.
+>
+> - sql: The matching rule (based on regular expression matching, special characters need to be escaped, for example, `select *` should be written as `select \\*`). When a user executes an SQL statement, the system will use the SQL set here as a regular expression to match the SQL submitted by the user. If it matches, the execution of the SQL will be blocked.
+> - sqlHash: The MD5 hash value of the SQL. This is mainly used in conjunction with slow logs. Users do not need to calculate the hash value themselves. For example, if a slow log shows that a particular SQL is running slowly, you can copy the `SqlHash` from `fe.audit.log` and create an SQL_BLOCK_RULE to restrict the execution of this SQL.
+>
+> **Scan Limitation Category**
+> When a user initiates a query, the query optimizer will calculate the number of partitions, tablets, and rows of data that need to be scanned for each table. The following properties can be used to limit these three numbers, either all at once or just some of them.
+> - partition_num: The maximum number of partitions that a table will scan.
+> - tablet_num: The maximum number of tablets that a table will scan.
+> - cardinality: The number of rows of data that a table will scan.
+>
+> **Switch Category**
+>
+> - global: Whether the rule is effective for all users. The default is false. If it is not set to true, the rule needs to be applied to a specific user through the `set property` command.
+> - enable: Whether the blocking rule is enabled. The default is true.
 
-### SQL Execution Category:
-
-There are two types, representing regular expression matching and exact matching, respectively. Only one of them can be chosen.
-
-- sql: The matching rule (based on regular expression matching, special characters need to be escaped, for example, `select *` should be written as `select \\*`). When a user executes an SQL statement, the system will use the SQL set here as a regular expression to match the SQL submitted by the user. If it matches, the execution of the SQL will be blocked.
-- sqlHash: The MD5 hash value of the SQL. This is mainly used in conjunction with slow logs. Users do not need to calculate the hash value themselves. For example, if a slow log shows that a particular SQL is running slowly, you can copy the `SqlHash` from `fe.audit.log` and create an SQL_BLOCK_RULE to restrict the execution of this SQL.
-
-### Scan Limitation Category
-
-When a user initiates a query, the query optimizer will calculate the number of partitions, tablets, and rows of data that need to be scanned for each table. The following properties can be used to limit these three numbers, either all at once or just some of them.
-
-- partition_num: The maximum number of partitions that a table will scan.
-- tablet_num: The maximum number of tablets that a table will scan.
-- cardinality: The number of rows of data that a table will scan.
-
-### Switch Category
-
-- global: Whether the rule is effective for all users. The default is false. If it is not set to true, the rule needs to be applied to a specific user through the `set property` command.
-- enable: Whether the blocking rule is enabled. The default is true.
 
 ## Access Control Requirements
 
