@@ -26,88 +26,40 @@ under the License.
 
 ## Description
 
-This statement is used to drop a materialized view. Synchronous syntax
+Drop a synchronized materialized view.
 
-grammar:
+## Syntax
+
 
 ```sql
-DROP MATERIALIZED VIEW [IF EXISTS] mv_name ON table_name;
+DROP MATERIALIZED VIEW 
+[ IF EXISTS ] <materialized_view_name>
+ON <table_name>
 ```
 
+## Required Parameters
 
-1. IF EXISTS:
-        Do not throw an error if the materialized view does not exist. If this keyword is not declared, an error will be reported if the materialized view does not exist.
+**1. <materialized_view_name>**
 
-2. mv_name:
-        The name of the materialized view to delete. Required.
+> The name of the materialized view to be dropped.
 
-3. table_name:
-        The name of the table to which the materialized view to be deleted belongs. Required.
+**2. <table_name>**
+
+> The table to which the materialized view belongs.
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following permissions:
+
+| Privilege  | Object | Notes                                                        |
+| ---------- | ------ | ------------------------------------------------------------ |
+| ALTER_PRIV | Table  | Requires ALTER_PRIV permission on the table to which the materialized view to be deleted belongs |
 
 ## Example
 
-The table structure is
+Drop the synchronized materialized view `sync_agg_mv` on the `lineitem` table
+
 
 ```sql
-mysql> desc all_type_table all;
-+----------------+-------+----------+------+------ -+---------+-------+
-| IndexName | Field | Type | Null | Key | Default | Extra |
-+----------------+-------+----------+------+------ -+---------+-------+
-| all_type_table | k1 | TINYINT | Yes | true | N/A | |
-| | k2 | SMALLINT | Yes | false | N/A | NONE |
-| | k3 | INT | Yes | false | N/A | NONE |
-| | k4 | BIGINT | Yes | false | N/A | NONE |
-| | k5 | LARGEINT | Yes | false | N/A | NONE |
-| | k6 | FLOAT | Yes | false | N/A | NONE |
-| | k7 | DOUBLE | Yes | false | N/A | NONE |
-| | | | | | | | |
-| k1_sumk2 | k1 | TINYINT | Yes | true | N/A | |
-| | k2 | SMALLINT | Yes | false | N/A | SUM |
-+----------------+-------+----------+------+------ -+---------+-------+
+DROP MATERIALIZED VIEW sync_agg_mv on lineitem;
 ```
-
-1. Drop the materialized view named k1_sumk2 of the table all_type_table
-
-   ```sql
-   drop materialized view k1_sumk2 on all_type_table;
-   ```
-
-   The table structure after the materialized view is deleted
-
-   ```text
-   +----------------+-------+----------+------+------ -+---------+-------+
-   | IndexName | Field | Type | Null | Key | Default | Extra |
-   +----------------+-------+----------+------+------ -+---------+-------+
-   | all_type_table | k1 | TINYINT | Yes | true | N/A | |
-   | | k2 | SMALLINT | Yes | false | N/A | NONE |
-   | | k3 | INT | Yes | false | N/A | NONE |
-   | | k4 | BIGINT | Yes | false | N/A | NONE |
-   | | k5 | LARGEINT | Yes | false | N/A | NONE |
-   | | k6 | FLOAT | Yes | false | N/A | NONE |
-   | | k7 | DOUBLE | Yes | false | N/A | NONE |
-   +----------------+-------+----------+------+------ -+---------+-------+
-   ```
-
-2. Drop a non-existent materialized view in the table all_type_table
-
-   ```sql
-   drop materialized view k1_k2 on all_type_table;
-   ERROR 1064 (HY000): errCode = 2, detailMessage = Materialized view [k1_k2] does not exist in table [all_type_table]
-   ```
-
-   The delete request reports an error directly
-
-3. Delete the materialized view k1_k2 in the table all_type_table, if it does not exist, no error will be reported.
-
-   ```sql
-   drop materialized view if exists k1_k2 on all_type_table;
-   Query OK, 0 rows affected (0.00 sec)
-   ```
-
-    If it exists, delete it, if it does not exist, no error is reported.
-
-## Keywords
-
-    DROP, MATERIALIZED, VIEW
-
-## Best Practice
