@@ -43,7 +43,7 @@ LOG(<b>,<x>)
 
 返回一个浮点数。特殊情况：
 
-- 当a为NULL 或 x为NULL时，返回`NULL`
+- 当b为NULL 或 x为NULL时，返回`NULL`
 
 ## 举例
 

@@ -43,7 +43,7 @@ LOG(<b>,<x>)
 
 Return a float point number. Special cases:
 
-- If a IS NULL or x IS NULL, return NULL
+- If b IS NULL or x IS NULL, return NULL
 
 ## Example
 
