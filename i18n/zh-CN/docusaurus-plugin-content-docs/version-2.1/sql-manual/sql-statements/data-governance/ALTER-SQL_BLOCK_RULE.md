@@ -51,7 +51,7 @@ PROPERTIES (
 
 **<property>**
 
-具体见 CREATE SQL_BLOCK_RULE 的介绍
+具体见[CREATE SQL_BLOCK_RULE](../data-governance/CREATE-SQL_BLOCK_RULE.md) 的介绍
 
 ## 权限控制
 
