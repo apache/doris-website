@@ -41,6 +41,10 @@ VARCHAR SM4_DECRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHA
 - `init_vector` 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量；
 - `encryption_mode` 为加密算法，可选值见于变量。
 
+:::warning
+两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `SM4_128_ECB` 算法进行解密。这与 1.2 版本行为不同，升降级时必须注意。
+:::
+
 ### 示例
 
 ```sql

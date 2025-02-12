@@ -22,36 +22,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## log2
+## Description
 
-### description
-#### Syntax
-
-`DOUBLE log2(DOUBLE x)`
 Returns the natural logarithm of `x` to base `2`.
 
-### example
+## Syntax
 
-```
-mysql> select log2(1);
-+-----------+
-| log2(1.0) |
-+-----------+
-|         0 |
-+-----------+
-mysql> select log2(2);
-+-----------+
-| log2(2.0) |
-+-----------+
-|         1 |
-+-----------+
-mysql> select log2(10);
-+--------------------+
-| log2(10.0)         |
-+--------------------+
-| 3.3219280948873622 |
-+--------------------+
+```sql
+LOG2(<x>)
 ```
 
-### keywords
-	LOG2
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<x>`   | Antilogarithm should be greater than 0 |
+
+## Return value
+
+Returns a floating-point number.
+
+- If x IS NULL: return `NULL`
+
+## Example
+
+```sql
+select log2(1);
+```
+
+```text
++-------------------------+
+| log2(cast(1 as DOUBLE)) |
++-------------------------+
+|                     0.0 |
++-------------------------+
+```
+
+```sql
+select log2(2);
+```
+
+```text
++-------------------------+
+| log2(cast(2 as DOUBLE)) |
++-------------------------+
+|                     1.0 |
++-------------------------+
+```
+
+```sql
+select log2(10);
+```
+
+```text
++--------------------------+
+| log2(cast(10 as DOUBLE)) |
++--------------------------+
+|       3.3219280948873626 |
++--------------------------+
+```
