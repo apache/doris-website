@@ -25,6 +25,7 @@ under the License.
 -->
 
 
+
 ## 描述
 
 该语句用于创建 SQL 阻止规则
@@ -45,11 +46,11 @@ PROPERTIES (
 
 ## 必选参数
 
-**<rule_name>**
+**1. `<rule_name>`**
 
 > 规则的名字
 
-**<property>**
+**2. `<property>`**
 
 > 规则的属性，可以分为三类：执行 SQL 类，扫描限制类和开关类。
 
@@ -80,9 +81,9 @@ PROPERTIES (
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes） |
+| 权限 | 对象 | 说明 |
 | :---------------- | :------------- | :------------ |
-| *ADMIN_PRIV*      | 全局           |               |
+| ADMIN_PRIV      | 全局           |               |
 
 ## 示例
 

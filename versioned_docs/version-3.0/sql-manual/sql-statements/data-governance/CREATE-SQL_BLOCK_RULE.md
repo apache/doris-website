@@ -45,11 +45,11 @@ PROPERTIES (
 
 ## Required Parameters
 
-**<rule_name>**
+**1. `<rule_name>`**
 
 > The name of the rule.
 
-**<property>**
+**2. `<property>`**
 
 > The properties of the rule can be divided into three categories: SQL execution, scan limitation, and switch.
 
@@ -75,13 +75,13 @@ When a user initiates a query, the query optimizer will calculate the number of 
 - global: Whether the rule is effective for all users. The default is false. If it is not set to true, the rule needs to be applied to a specific user through the `set property` command.
 - enable: Whether the blocking rule is enabled. The default is true.
 
-## Permissions
+## Access Control Requirements
 
 The user executing this SQL command must have at least the following permissions:
 
 | Privilege    | Object | Notes |
 | ------------ | ------ | ----- |
-| *ADMIN_PRIV* | Global |       |
+| ADMIN_PRIV | Global |       |
 
 ## Example
 
