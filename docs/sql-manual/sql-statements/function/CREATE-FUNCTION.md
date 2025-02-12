@@ -33,7 +33,7 @@ This statement is used to create a custom function.
 
 ```sql
 CREATE [ GLOBAL ] 
-    [ AGGREGATE ] [ TABLES ] [ ALIAS ] FUNCTION <function_name>
+    [{AGGREGATE | TABLES | ALIAS }] FUNCTION <function_name>
     (arg_type [, ...])
     [ RETURNS ret_type ]
     [ INTERMEDIATE inter_type ]
