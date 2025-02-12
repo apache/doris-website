@@ -34,7 +34,7 @@ under the License.
 ```sql
 CREATE [ GLOBAL ] 
     [{AGGREGATE | TABLES | ALIAS }] FUNCTION <function_name>
-    (arg_type [, ...])
+    (<arg_type> [, ...])
     [ RETURNS <ret_type> ]
     [ INTERMEDIATE <inter_type> ]
     [ WITH PARAMETER(<param> [,...]) AS <origin_function> ]
