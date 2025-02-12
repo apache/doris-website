@@ -46,21 +46,21 @@ PROPERTIES (
 
 ## Required Parameters
 
-**<rule_name>**
+**1. `<rule_name>`**
 
 > The name of the rule.
 
-**<property>**
+**2. `<property>`**
 
 See the introduction of [CREATE SQL_BLOCK_RULE](../data-governance/CREATE-SQL_BLOCK_RULE.md) for details.
 
-## Permissions
+## Access Control Requirements
 
 The user executing this SQL command must have at least the following permissions:
 
-| Permission   | Object | Description |
+| Privilege   | Object | Notes |
 | ------------ | ------ | ----------- |
-| *ADMIN_PRIV* | Global |             |
+| ADMIN_PRIV | Global |             |
 
 ## Example
 
