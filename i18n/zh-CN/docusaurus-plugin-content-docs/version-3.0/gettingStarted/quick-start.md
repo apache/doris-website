@@ -29,70 +29,15 @@ under the License.
 
 快速部署**仅适用于本地开发**。请勿将该种部署方式用于生产环境：
 
-1. 使用 Docker 方式快速部署，当 Docker 实例销毁时，相应的数据也会释放。
+1. 自 Doris 2.1.8 版本后可以使用 Docker Compose 脚本启动 Doris 服务。
+  
+2. 使用 Docker 方式快速部署，当 Docker 实例销毁时，相应的数据也会释放。
 
-2. 通过手动部署单副本 Doris 实例，不具有数据多副本存储能力，单台机器宕机可能会造成数据丢失。
+3. 通过手动部署单副本 Doris 实例，不具有数据多副本存储能力，单台机器宕机可能会造成数据丢失。
 
-3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
+4. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
+
 :::
-
-## 使用 Docker 快速部署
-
-### 第 1 步：创建 docker-compose.yaml 文件
-
-复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.1`。
-
-```text
-version: "3"
-services:
-  fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: fe
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - FE_ID=1
-    network_mode: host
-  be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: be
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - BE_ADDR=127.0.0.1:9050
-    depends_on:
-      - fe
-    network_mode: host
-```
-
-### 第 2 步：启动集群
-
-使用 docker-compose 命令启动集群
-
-```shell
-docker-compose -f ./docker-compose.yaml up -d
-```
-
-### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
-
-```sql
-## 检查 FE 状态，确定 Join 与 Alive 列都为 true
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
-+-----------+------+-------+
-| host      | join | alive |
-+-----------+------+-------+
-| 127.0.0.1 | true | true  |
-+-----------+------+-------+
-
-## 检查 BE 状态，确定 Alive 列为 true
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
-+-----------+-------+
-| host      | alive |
-+-----------+-------+
-| 127.0.0.1 |     1 |
-+-----------+-------+
-
-```
-
-
 
 ## 本地快速部署
 
@@ -273,7 +218,61 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    4 rows in set (0.10 sec)
    ```
 
+## 使用 Docker 快速部署
 
+### 第 1 步：创建 docker-compose.yaml 文件
+
+复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.1`。
+
+```text
+version: "3"
+services:
+  fe:
+    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: fe
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - FE_ID=1
+    network_mode: host
+  be:
+    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    hostname: be
+    environment:
+     - FE_SERVERS=fe1:127.0.0.1:9010
+     - BE_ADDR=127.0.0.1:9050
+    depends_on:
+      - fe
+    network_mode: host
+```
+
+### 第 2 步：启动集群
+
+使用 docker-compose 命令启动集群
+
+```shell
+docker-compose -f ./docker-compose.yaml up -d
+```
+
+### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
+
+```sql
+## 检查 FE 状态，确定 Join 与 Alive 列都为 true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
++-----------+------+-------+
+| host      | join | alive |
++-----------+------+-------+
+| 127.0.0.1 | true | true  |
++-----------+------+-------+
+
+## 检查 BE 状态，确定 Alive 列为 true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
++-----------+-------+
+| host      | alive |
++-----------+-------+
+| 127.0.0.1 |     1 |
++-----------+-------+
+
+```
 
 
 
