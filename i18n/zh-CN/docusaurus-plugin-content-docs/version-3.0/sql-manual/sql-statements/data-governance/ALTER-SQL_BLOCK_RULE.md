@@ -43,11 +43,11 @@ PROPERTIES (
 
 ## 必选参数
 
-**<rule_name>**
+**1. `<rule_name>`**
 
 > 规则的名字
 
-**<property>**
+**2. `<property>`**
 
 具体见[CREATE SQL_BLOCK_RULE](../data-governance/CREATE-SQL_BLOCK_RULE.md) 的介绍
 
@@ -57,7 +57,7 @@ PROPERTIES (
 
 | 权限 | 对象  | 说明 |
 | :---------------- | :------------- | :------------ |
-| *ADMIN_PRIV*      | 全局           |               |
+| ADMIN_PRIV      | 全局           |               |
 
 ## 示例
 
