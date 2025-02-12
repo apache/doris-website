@@ -25,15 +25,17 @@ under the License.
 
 After completing preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections, you can begin deploying the cluster. Deploying the cluster is divided into four steps:
 
-1. Deploy FE Master Node: Deploy the first FE node as the Master node;
+1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    
-2. Deploy FE Cluster: Deploy the FE cluster by adding Follower or Observer FE nodes;
+2. **Deploy FE Cluster**: Deploy the FE cluster by adding Follower or Observer FE nodes;
    
-3. eploy BE Nodes: Register BE nodes to the FE cluster;
+3. **Deploy BE Nodes**: Register BE nodes to the FE cluster;
    
-4. Verify Cluster Correctness: After deployment, connect to and verify the cluster's correctness.
+4. **Verify Cluster Correctness**: After deployment, connect to and verify the cluster's correctness.
 
 ## Step 1: Deploy FE Master Node
+
+
 
 1. Create Metadata Path
 
