@@ -243,9 +243,9 @@
     "message": "集群管理",
     "description": "The label for category Managing Cluster in sidebar docs"
   },
-  "sidebar.docs.category.Managing Disater Recovery": {
+  "sidebar.docs.category.Managing Disaster Recovery": {
     "message": "容灾管理",
-    "description": "The label for category Managing Disater Recovery in sidebar docs"
+    "description": "The label for category Managing Disaster Recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
