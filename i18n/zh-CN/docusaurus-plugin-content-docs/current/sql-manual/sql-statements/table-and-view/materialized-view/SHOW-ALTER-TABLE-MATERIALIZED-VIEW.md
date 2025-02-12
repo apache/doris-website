@@ -35,9 +35,9 @@ under the License.
 ```sql
 SHOW ALTER TABLE MATERIALIZED VIEW
 [FROM <database>]
-[WHERE]
-[ORDER BY]
-[LIMIT OFFSET]
+[<where_clause>]
+[ORDER BY <order_by_key> [, ...]]
+[LIMIT <limit_rows> [ OFFSET <offset_rows>]
 ```
 
 ## 可选参数
@@ -46,7 +46,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > 查看指定数据库下的作业。如不指定，使用当前数据库。
 
-**2. `WHERE`**
+**2. `where_clause`**
 
 > 可以对结果列进行筛选，目前仅支持对以下列进行筛选：
   - TableName：仅支持等值筛选。

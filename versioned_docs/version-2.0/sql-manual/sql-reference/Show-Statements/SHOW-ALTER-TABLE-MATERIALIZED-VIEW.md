@@ -35,9 +35,9 @@ This command is used to check the execution status of the materialized view crea
 ```sql
 SHOW ALTER TABLE MATERIALIZED VIEW
 [FROM <database>]
-[WHERE]
-[ORDER BY]
-[LIMIT OFFSET]
+[<where_clause>]
+[ORDER BY <order_by_key> [, ...]]
+[LIMIT <limit_rows> [ OFFSET <offset_rows>]
 ```
 
 ## Optional Parameters
@@ -46,7 +46,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > View jobs under the specified database. If not specified, the current database will be used.
 
-**2. `WHERE`**
+**2. `where_clause`**
 
 > You can filter the result columns, and currently, only the following columns are supported for filtering:
 - TableName: Only supports equality filtering.
