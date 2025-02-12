@@ -65,7 +65,7 @@ CREATE [ GLOBAL ]
 
 > If specified, the created function is an aggregate function.
 
-**3. `<TABLES>`**
+**3. `TABLES`**
 
 > If specified, the created function is a table function.
 
