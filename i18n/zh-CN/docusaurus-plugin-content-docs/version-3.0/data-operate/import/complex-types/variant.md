@@ -62,7 +62,7 @@ properties("replication_num" = "1");
 
 ### 第 3 步：导入数据
 
-以stream load为例，使用以下命令导入数据：
+以 stream load 为例，使用以下命令导入数据：
 
 ```SQL
 curl --location-trusted -u root:  -T test_variant.csv -H "column_separator:|" http://127.0.0.1:8030/api/testdb/test_variant/_stream_load
@@ -140,7 +140,7 @@ DISTRIBUTED BY HASH(id) BUCKETS 10;
 
 ### 第 3 步：导入数据
 
-以stream load为例，使用以下命令导入数据：
+以 stream load 为例，使用以下命令导入数据：
 
 ```SQL
 curl --location-trusted -u root:  -T test_variant.json -H "format:json"  http://127.0.0.1:8030/api/testdb/test_variant/_stream_load
