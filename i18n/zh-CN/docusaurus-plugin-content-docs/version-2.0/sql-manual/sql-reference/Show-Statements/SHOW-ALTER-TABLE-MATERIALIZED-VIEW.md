@@ -37,7 +37,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 [FROM <database>]
 [<where_clause>]
 [ORDER BY <order_by_key> [, ...]]
-[LIMIT <limit_rows> [ OFFSET <offset_rows>]
+[LIMIT <limit_rows> [ OFFSET <offset_rows>]]
 ```
 
 ## 可选参数
@@ -46,7 +46,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > 查看指定数据库下的作业。如不指定，使用当前数据库。
 
-**2. `where_clause`**
+**2. `<where_clause>`**
 
 > 可以对结果列进行筛选，目前仅支持对以下列进行筛选：
 - TableName：仅支持等值筛选。
@@ -57,9 +57,9 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > 可以对结果集按任意列进行排序。
 
-**4. `LIMIT`**
+**4. `LIMIT <limit_rows> [ OFFSET <offset_rows>]`**
 
-> 配合 ORDER BY 进行翻页查询。
+> 翻页查询。
 
 ## 返回值
 
