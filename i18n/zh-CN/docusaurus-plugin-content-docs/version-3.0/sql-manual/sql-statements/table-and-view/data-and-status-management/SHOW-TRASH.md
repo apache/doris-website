@@ -34,7 +34,7 @@ under the License.
 ## 语法：
 
 ```sql
-SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
+SHOW TRASH [ON ("<be_host>:<be_heartbeat_port>" [, ...])];
 ```
 
 ## 可选参数

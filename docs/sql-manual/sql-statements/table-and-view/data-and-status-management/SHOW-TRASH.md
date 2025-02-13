@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW TRASH",
-    "language": "en"
+  "title": "SHOW TRASH",
+  "language": "en"
 }
 
 ---
@@ -34,7 +34,7 @@ This statement is used to view the space occupied by garbage data in backend.
 ## Syntax
 
 ```sql
-SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
+SHOW TRASH [ON ("<be_host>:<be_heartbeat_port>" [, ...])];
 ```
 
 ## Optional Parameters

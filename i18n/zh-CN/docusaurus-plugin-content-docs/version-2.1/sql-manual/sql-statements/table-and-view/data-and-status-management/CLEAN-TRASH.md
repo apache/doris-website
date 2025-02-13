@@ -32,7 +32,7 @@ under the License.
 ## 语法
 
 ```sql
-ADMIN CLEAN TRASH [ON ("BackendHost1:BackendHeartBeatPort1", "BackendHost2:BackendHeartBeatPort2", ...)];
+ADMIN CLEAN TRASH [ON ("<be_host>:<be_heartbeat_port>" [, ...])];
 ```
 
 ## 可选参数
