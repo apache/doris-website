@@ -1,6 +1,6 @@
 ---
 {
-"title": "Deploy on Kubernetes",
+"title": "Deploy Doris Cluster",
 "language": "en"
 }
 ---

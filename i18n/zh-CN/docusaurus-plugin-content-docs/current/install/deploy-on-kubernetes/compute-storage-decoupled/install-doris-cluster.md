@@ -1,6 +1,6 @@
 ---
 {
-"title": "部署存算分离集群",
+"title": "部署存算分离 Doris 集群",
 "language": "zh-CN"
 }
 ---
