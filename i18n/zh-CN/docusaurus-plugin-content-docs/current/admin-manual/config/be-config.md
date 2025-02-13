@@ -42,7 +42,7 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 1. 通过 BE 前端页面查看
 
-    在浏览器中打开 BE 前端页面: `http://be_host:be_webserver_port/varz`
+    在浏览器中打开 BE 前端页面：`http://be_host:be_webserver_port/varz`
 
 2. 通过命令行查看
 
@@ -1345,15 +1345,15 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `deploy_mode`
 
-* 默认值: ""
+* 默认值：""
 
-* 描述: BE 运行的模式。`cloud` 表示算分离模式。
+* 描述：BE 运行的模式。`cloud` 表示算分离模式。
 
 #### `meta_service_endpoint`
 
-* 默认值: ""
+* 默认值：""
 
-* 描述: Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
+* 描述：Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
 
 #### `enable_file_cache`
 

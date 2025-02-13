@@ -22,66 +22,101 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## floor
+## Description
 
-### description
-#### Syntax
+Round down floating-point and fixed-point decimals to a specific number of digits and return the rounded floating-point or fixed-point number.
 
-`T floor(T x[, d])`
+## Syntax
 
-If not specified `d`: returns the largest integer value less than or equal to `x`, which is **the most common usage**.
-Otherwise, returns the largest round number that is less than or equal to `x` and flowing the rules:
-
-If `d` is specified as literal:  
-`d` = 0: just like without `d`
-`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
-
-Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
-
-:::tip
-Another alias for this function is `dfloor`.
-:::
-
-### example
-
+```sql
+FLOOR(<a>[, <d>])
 ```
-mysql> select floor(1);
-+------------+
-| floor(1.0) |
-+------------+
-|          1 |
-+------------+
-mysql> select floor(2.4);
-+------------+
-| floor(2.4) |
-+------------+
-|          2 |
-+------------+
-mysql> select floor(-10.3);
-+--------------+
-| floor(-10.3) |
-+--------------+
-|          -11 |
-+--------------+
-mysql> select floor(123.45, 1), floor(123.45), floor(123.45, 0), floor(123.45, -1);
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | Floating-point (Double) or fixed-point (Decimal) parameter indicating the parameter to be rounded |
+| `<d>` | Optional, integer, indicates rounding to the target number of digits, a positive number means rounding to the next decimal point, a negative number means rounding to the next decimal point, and `0` indicates rounding to an integer. When not filled, it is equivalent to `<d> = 0`. |
+
+## Return Value
+
+Returns the largest rounded number less than or equal to `<a>` according to the following rules.
+
+Round to `1/(10^d)` digit, i.e., make the result divisible by `1/(10^d)`. If `1/(10^d)` is not exact, the rounding digit is the nearest number of the corresponding data type.
+
+For an entry `<a>` of type Decimal, assuming it is of type `Decimal(p, s)`, the return value is:
+
+- `Decimal(p, 0)`，if `<d> <= 0`
+- `Decimal(p, <d>)`，if `0 < <d> <= s`
+- `Decimal(p, s)`，if `<d> > s`
+
+## Alias
+
+- DFLOOR
+
+## Examples
+
+```sql
+select floor(123.456);
+```
+
+```text
++----------------+
+| floor(123.456) |
++----------------+
+|            123 |
++----------------+
+```
+
+```sql
+select floor(123.456, 2);
+```
+
+```text
++-------------------+
+| floor(123.456, 2) |
++-------------------+
+|            123.45 |
++-------------------+
+```
+
+```sql
+select floor(123.456, -2);
+```
+
+```text
++--------------------+
+| floor(123.456, -2) |
++--------------------+
+|                100 |
++--------------------+
+```
+
+```sql
+select floor(123.45, 1), floor(123.45), floor(123.45, 0), floor(123.45, -1);
+```
+
+```text
 +------------------+---------------+------------------+-------------------+
 | floor(123.45, 1) | floor(123.45) | floor(123.45, 0) | floor(123.45, -1) |
 +------------------+---------------+------------------+-------------------+
 |            123.4 |           123 |              123 |               120 |
 +------------------+---------------+------------------+-------------------+
-mysql> SELECT number
-    -> , floor(number * 2.5, number - 1) AS f_decimal_column
-    -> , floor(number * 2.5, 0) AS f_decimal_literal
-    -> , floor(cast(number * 2.5 AS DOUBLE), number - 1) AS f_double_column
-    -> , floor(cast(number * 2.5 AS DOUBLE), 0) AS f_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
-+--------+------------------+-------------------+-----------------+------------------+
-| number | f_decimal_column | f_decimal_literal | f_double_column | f_double_literal |
-+--------+------------------+-------------------+-----------------+------------------+
-|      1 |              2.0 |                 2 |               2 |                2 |
-+--------+------------------+-------------------+-----------------+------------------+
 ```
 
-### keywords
-	FLOOR, DFLOOR
+```sql
+select floor(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers("number"="5") )t;
+```
+
+```text
++-------------+
+| floor(x, 2) |
++-------------+
+|      123.45 |
+|      123.45 |
+|      123.45 |
+|      123.45 |
+|      123.45 |
++-------------+
+```

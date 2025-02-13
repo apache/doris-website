@@ -24,18 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## FOREACH
+## Description
 
-### description
-#### Syntax
-
-`AGGREGATE_FUNCTION_FOREACH(arg...)`
 Converts an aggregate function for tables into an aggregate function for arrays that aggregates the corresponding array items and returns an array of results. For example, sum_foreach for the arrays [1, 2], [3, 4, 5]and[6, 7]returns the result [10, 13, 5] after adding together the corresponding array items.
 
+## Syntax
 
+`AGGREGATE_FUNCTION_FOREACH(arg...)`
 
-
-### example
+## Example
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
@@ -76,5 +73,5 @@ mysql [test]>select map_agg_foreach(a,a) from db;
 | [{1:1, 20:20, 100:100}, {2:2}, {3:3}] |
 +---------------------------------------+
 ```
-### keywords
+### Keywords
 FOREACH

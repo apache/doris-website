@@ -22,41 +22,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## conv
+## Description
 
-### description
-#### Syntax
+Do radix conversion for input parameter.
+
+## Syntax
 
 ```sql
-VARCHAR CONV(VARCHAR input, TINYINT from_base, TINYINT to_base)
-VARCHAR CONV(BIGINT input, TINYINT from_base, TINYINT to_base)
+CONV(<input>, <from_base>, <to_base>)
 ```
-Convert the input number to the target base. The input base range should be within `[2,36]`. 
 
-### example
+## Parameters
 
+| Parameter | Description |
+| -- | -- |
+| `<input>` | Parameters to be converted, either as strings or integers |
+| `<from_base>` | Numeric, the source base, within `[2,36]`. |
+| `<to_base>` | Numeric, the target base, within `[2,36]`. |
+
+## Return Value
+
+The number under the converted target binary `<to_base>` is returned as a string.
+
+## Examples
+
+```sql
+SELECT CONV(15,10,2);
 ```
-MySQL [test]> SELECT CONV(15,10,2);
+
+```text
 +-----------------+
 | conv(15, 10, 2) |
 +-----------------+
 | 1111            |
 +-----------------+
+```
 
-MySQL [test]> SELECT CONV('ff',16,10);
+```sql
+SELECT CONV('ff',16,10);
+```
+
+```text
 +--------------------+
 | conv('ff', 16, 10) |
 +--------------------+
 | 255                |
 +--------------------+
+```
 
-MySQL [test]> SELECT CONV(230,10,16);
+```sql
+SELECT CONV(230,10,16);
+```
+
+```text
 +-------------------+
 | conv(230, 10, 16) |
 +-------------------+
 | E6                |
 +-------------------+
 ```
-
-### keywords
-	CONV

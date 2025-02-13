@@ -1,7 +1,7 @@
 ---
 {
-"title": "IS_IPV4_MAPPED",
-"language": "zh-CN"
+    "title": "IS_IPV4_MAPPED",
+    "language": "zh-CN"
 }
 ---
 
@@ -22,44 +22,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## IS_IPV4_MAPPED
-
-IS_IPV4_MAPPED
-
 ## 描述
+该函数采用以数字形式表示的二进制字符串形式的lPv6地址，由INET6_ATON返回。INET6_ATON是IPV6_STRING_TO_NUM_OR_NULL的别名
+- IPv4映射地址的格式为`::ffff:ipv4_address`
 
 ## 语法
-
-`VARCHAR IS_IPV4_MAPPED(INET6_ATON(VARCHAR ipv4_addr))`
-
-该函数采用以数字形式表示的二进制字符串形式的lPv6地址，由INET6_ATON返回。
-如果参数是有效的IPv4映射IPv6地址，则返回1，否则返回0，除非expr为 NULL，在这种情况下该函数返回NULL。
-IPv4映射地址的格式为::ffff:ipv4_address
-
-### 注意事项
-
-当源输入没有`'::ffff:'`前缀时，但如果它仍然是有效的 ipv4 地址，则该结果也将为 `1`，因为 `INET6_ATON()` 会自动为有效的 ipv4 地址添加前缀。
-
-## 举例
-
 ```sql
-mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         1 |
-+-----------+
-1 row in set (0.02 sec)
-
-mysql> SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) AS is_result;
-+-----------+
-| is_result |
-+-----------+
-|         0 |
-+-----------+
-1 row in set (0.03 sec)
+IS_IPV4_MAPPED(INET6_ATON(<ipv4_addr>))
 ```
 
-### Keywords
+## 参数
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<ipv4_addr>`      | 兼容ipv4的地址， 例如 '::ipv4_address'   |
 
-IS_IPV4_MAPPED, IP
+
+## 返回值
+如果参数是有效的IPv4映射IPv6地址，则返回1，否则返回0，
+- 如果输入为NULL, 则返回NULL
+
+
+## 举例
+```sql
+SELECT IS_IPV4_MAPPED(INET6_ATON('::ffff:10.0.5.9')) AS re1, IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) AS re2;
+```
+```text
++------+------+
+| re1  | re2  |
++------+------+
+|    1 |    0 |
++------+------+
+```

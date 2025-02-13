@@ -21,10 +21,10 @@ export const NEWSLETTER_DATA = [
     },
     {
         tags: ['Best Practice'],
-        title: "Real-time data warehouse in TikTok based on Apache Doris",
-        content: `We are excited to invite the data platform team of TikTok to talk about how they use Apache Doris in their real-time data architecture and how they benefit from it, which could serve as a model for effective real-time data warehousing.`,
-        to: '/blog/real-time-data-warehouse-in-TikTok-based-on-doris',
-        image: 'real-time-data-warehouse-in-tiktok-based-on-apache-doris.png',
+        title: "Scaling Bitcoin data to billions of records with Apache Doris: our journey to auto-partitioning",
+        content: `To power lightning-fast queries and ensure the Deep Dive dashboards deliver real-time insights, Ortege relies on Apache Doris. A crucial feature they embrace is Auto Partition.`,
+        to: '/blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records',
+        image: 'ortege-1.jpg',
     },
 
 

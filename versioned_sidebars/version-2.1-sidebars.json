@@ -80,8 +80,7 @@
                                 "table-design/data-partitioning/manual-partitioning",
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
-                                "table-design/data-partitioning/manual-bucketing",
-                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/data-bucketing",
                                 "table-design/data-partitioning/common-issues"
                             ]
                         },
@@ -477,7 +476,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Managing Disater Recovery",
+                    "label": "Managing Disaster Recovery",
                     "items": [
                         "admin-manual/data-admin/overview",
                         {
@@ -791,8 +790,7 @@
                         "ecosystem/logstash",
                         "ecosystem/beats",
                         "ecosystem/automq-load",
-                        "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf"
+                        "ecosystem/hive-bitmap-udf"
                     ]
                 }
             ]
@@ -907,8 +905,6 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dround",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/dsqrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",
@@ -979,7 +975,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/left",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
@@ -1586,7 +1581,7 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",                                        
+                                        "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -1785,18 +1780,25 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Materialized View",
+                                    "label": "Synchronous Materialized View",
                                     "items": [
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Asynchronous Materialized View",
+                                    "items": [
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB"
                                     ]
                                 },
                                 {
@@ -1914,8 +1916,7 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING"
+                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY"
                                     ]
                                 }
                             ]
@@ -1985,8 +1986,7 @@
                             "type": "category",
                             "label": "Info System and Help",
                             "items": [
-                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
-                                "sql-manual/sql-statements/system-info-and-help/HELP"
+                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC"
                             ]
                         }
                     ]

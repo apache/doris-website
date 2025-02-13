@@ -24,9 +24,7 @@ under the License.
 
 ## Description
 
-Returns the square root of a value, where the input value must be greater than or equal to 0. Special cases:
-
-- If the parameter is less than 0, returns NULL.
+Returns the square root of a value, where the input value must be greater than or equal to 0.
 
 ## Aliases
 
@@ -46,20 +44,17 @@ SQRT(<a>)
 
 ## Return Value
 
-The square root of parameter a. Special cases:
+The square root of parameter a.
 
-- If the parameter is less than 0, returns NULL
-
-## Example
+## Examples
 
 ```sql
-select sqrt(9),sqrt(2),sqrt(-1)
+select sqrt(9),sqrt(2)
 ```
-
 ```text
-+-------------------------+-------------------------+--------------------------+
-| sqrt(cast(9 as DOUBLE)) | sqrt(cast(2 as DOUBLE)) | sqrt(cast(-1 as DOUBLE)) |
-+-------------------------+-------------------------+--------------------------+
-|                       3 |      1.4142135623730951 |                     NULL |
-+-------------------------+-------------------------+--------------------------+
++-------------------------+-------------------------+
+| sqrt(cast(9 as DOUBLE)) | sqrt(cast(2 as DOUBLE)) |
++-------------------------+-------------------------+
+|                     3.0 |      1.4142135623730951 |
++-------------------------+-------------------------+
 ```

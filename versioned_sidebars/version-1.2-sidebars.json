@@ -1204,7 +1204,6 @@
                 "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",
-                "ecosystem/hive-hll-udf",
                 {
                     "type": "category",
                     "label": "BI",
