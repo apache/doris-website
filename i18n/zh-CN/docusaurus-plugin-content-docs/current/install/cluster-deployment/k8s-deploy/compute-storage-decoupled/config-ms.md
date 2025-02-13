@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-MetaService 是 Doris 存算分离组件，提供元数据管理和查询服务。MetaService 服务属于无状态服务，通常采用主备模式部署。下面文档详细介绍了如何在 `DorisDisaggregatedCluster` 中配置 MetaService 。 
+MetaService 是 Doris 存算分离组件，提供元数据管理和查询服务。MetaService 服务属于无状态服务，通常采用主备模式部署。下面文档详细介绍了如何在 `DorisDisaggregatedCluster` 中配置 MetaService。 
 
 ## 配置镜像
 在部署样例中，MetaService 配置的镜像可能不是最新版本镜像。自定义镜像时，请按照如下格式配置：
@@ -34,7 +34,7 @@ spec:
     image: ${msImage}
 ```
 
-其中 `${msImage}` 为想要部署的 MetaService 的镜像。 在 DockerHub 中提供了 Doris 官方制作的 [MetaService 镜像](https://hub.docker.com/repository/docker/selectdb/doris.ms-ubuntu/general)。
+其中 `${msImage}` 为想要部署的 MetaService 的镜像。在 DockerHub 中提供了 Doris 官方制作的 [MetaService 镜像](https://hub.docker.com/repository/docker/selectdb/doris.ms-ubuntu/general)。
 
 ## 配置资源
 限制 MetaService 可使用的资源为 4c 4Gi 的配置如下：
@@ -75,7 +75,7 @@ spec:
   ${fdbEndpoint} 为可访问 FoundationDB 的访问地址信息，物理机部署情况下查找请参考 FoundationDB 关于 [cluster-file 的相关介绍](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file)。
 
 ## 自定义启动配置
-K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动配置可通过 ConfigMap 挂载文件的方式实现。在自定义启动配置时，Doris Operator 对于存算分离组件之间相互感知的配置进行了自动化处理，在自定义 MetaService 启动配置时, 无需填写 FoundationDB 有关的配置。
+K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动配置可通过 ConfigMap 挂载文件的方式实现。在自定义启动配置时，Doris Operator 对于存算分离组件之间相互感知的配置进行了自动化处理，在自定义 MetaService 启动配置时，无需填写 FoundationDB 有关的配置。
 1. 自定义包含启动配置的 ConfigMap，样例如下：
   ```yaml
   apiVersion: v1
@@ -116,4 +116,4 @@ K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动�
       - name: doris-metaservice
         mountPath: /etc/doris
   ```
-  以上一步构建的 ConfigMap 为例，更新需要部署的 [DorisDisaggregatedCluster 资源](install-quickstart.md#第3步部署存算分离集群)。MetaService 服务使用的启动配置文件名称为 `doris_cloud.conf`，ConfigMap 中启动信息对应的 key 必须是 `doris_cloud.conf`。 包含启动配置的 ConfigMap 的挂载点必须为 `/etc/doris` ，即 `mountPath` 为 `/etc/doris`。
+  以上一步构建的 ConfigMap 为例，更新需要部署的 [DorisDisaggregatedCluster 资源](install-quickstart.md#第3步部署存算分离集群)。MetaService 服务使用的启动配置文件名称为 `doris_cloud.conf`，ConfigMap 中启动信息对应的 key 必须是 `doris_cloud.conf`。包含启动配置的 ConfigMap 的挂载点必须为 `/etc/doris` ，即 `mountPath` 为 `/etc/doris`。

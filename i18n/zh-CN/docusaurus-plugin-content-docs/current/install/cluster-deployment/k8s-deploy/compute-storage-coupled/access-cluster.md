@@ -24,7 +24,7 @@ under the License.
 
 Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有三种对外暴漏模式 `ClusterIP` 、 `NodePort` 、 `LoadBalancer`。
 ## ClusterIP 模式
-Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在Kubernetes 内部的。
+Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的。
 首次部署后，通过 MySQL 协议，使用 root 用户无密码的模式访问部署如下。
 ### 第 1 步：获取 Service
 部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
@@ -69,7 +69,7 @@ doriscluster-sample-be-internal   ClusterIP   None             <none>        905
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 ### 第 2 步：访问 Doris
-以 mysql 连接为例， Doris 的 Query Port 默认端口 9030，在上述示例中，端口  9030 被映射到本地端口 31545 。要访问 Doris 集群，需要获取到集群的节点 IP 地址，可以使用以下命令查看：
+以 mysql 连接为例，Doris 的 Query Port 默认端口 9030，在上述示例中，端口  9030 被映射到本地端口 31545。要访问 Doris 集群，需要获取到集群的节点 IP 地址，可以使用以下命令查看：
 ```shell
 kubectl get nodes -owide
 ```
@@ -83,7 +83,7 @@ r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        Ce
 r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 ```
 
-在 NodePort 模式下，可以通过任意 node 节点的 IP 地址与映射的宿主机端口方位 Kubernetes 集群内的服务。在本例中，可以使用的 node 节点 IP 包括 192.168.88.61、192.168.88.62、192.168.88.63 。以下示例展示了如何使用节点 192.168.88.62 和 `query port` 映射的宿主机端口 31545 连接 Doris ：
+在 NodePort 模式下，可以通过任意 node 节点的 IP 地址与映射的宿主机端口方位 Kubernetes 集群内的服务。在本例中，可以使用的 node 节点 IP 包括 192.168.88.61、192.168.88.62、192.168.88.63。以下示例展示了如何使用节点 192.168.88.62 和 `query port` 映射的宿主机端口 31545 连接 Doris：
 
 ```shell
 mysql -h 192.168.88.62 -P 31545 -uroot

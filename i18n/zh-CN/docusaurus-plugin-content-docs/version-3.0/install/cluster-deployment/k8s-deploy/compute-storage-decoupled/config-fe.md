@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-FE 在存算分离模式下主要负责 SQL 解析相关工作，也负责跟元数据管理组件 MetaService 交互。FE 支持分布式模式部署，默认情况下使用 master-observer 模式部署。 Doris Operator 支持 Doris 3.0.2 及以上的版本在 Kubernetes 上部署存算分离模式。
+FE 在存算分离模式下主要负责 SQL 解析相关工作，也负责跟元数据管理组件 MetaService 交互。FE 支持分布式模式部署，默认情况下使用 master-observer 模式部署。Doris Operator 支持 Doris 3.0.2 及以上的版本在 Kubernetes 上部署存算分离模式。
 
 ## 配置资源
 
@@ -58,7 +58,7 @@ spec:
           requests:
             storage: ${storageSize}
 ```
-其中，`${storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass；${storageSize} 表示希望使用申请的存储容量大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如： 100Gi。
+其中，`${storageClassName}` 为需要使用的 StorageClass 的名称，如果不填写将使用集群默认的 StorageClass；${storageSize} 表示希望使用申请的存储容量大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 ## 自定义配置文件
 Doris Operator 使用 Kubernetes 的 ConfigMap 挂载启动配置。
@@ -100,7 +100,7 @@ Doris Operator 使用 Kubernetes 的 ConfigMap 挂载启动配置。
   ```
   其中，${namespace} 为 `DorisDisaggregatedCluster` 所在的命名空间，${feConfigMapName} 为包含上述配置的文件名。
 
-3. 更新 [`DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)来使用上述 ConfigMap, 示例如下:
+3. 更新 [`DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)来使用上述 ConfigMap, 示例如下：
   ```yaml
   spec:
     feSpec:
