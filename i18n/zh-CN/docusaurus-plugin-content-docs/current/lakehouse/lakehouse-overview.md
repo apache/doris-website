@@ -26,7 +26,7 @@ under the License.
 
 **湖仓一体是将数据湖和数据仓库的优势相结合的现代化大数据解决方案**。其融合了数据湖的低成本、高扩展性与数据仓库的高性能、强数据治理能力，从而实现对大数据时代各类数据的高效、安全、质量可控的存储和处理分析。同时通过标准化的数据格式和元数据管理，统一了实时、历史数据，批处理和流处理，正在逐步成为企业大数据解决方案新的标准。
 
-## 湖仓一体解决方案
+## Doris 湖仓一体解决方案
 
 Doris 通过可扩展的连接器框架、存算分离架构、高性能的数据处理引擎和数据生态开放性，为用户提供了优秀的湖仓一体解决方案。
 
@@ -34,13 +34,13 @@ Doris 通过可扩展的连接器框架、存算分离架构、高性能的数�
 
 ### 灵活的数据接入
 
-Doris 通过可扩展的连接器框架，支持主流数据系统和数据格式接入，并提供基于 SQL 的统一数据分析能力，用户能够在不改变现有数据架构的情况下，轻松实现跨平台的数据查询与分析。具体可参阅 [数据目录概述](./catalog-overview.md)
+Doris 通过可扩展的连接器框架，支持主流数据系统和数据格式接入，并提供基于 SQL 的统一数据分析能力，用户能够在不移动现有数据的情况下，轻松实现跨平台的数据查询与分析。具体可参阅 [数据目录概述](./catalog-overview.md)
 
 ### 数据源连接器
 
-无论是 Hive、Iceberg、Hudi、Paimon，还是支持 JDBC 协议的数据库系统，Doris 均能轻松连接并高效提取数据。
+无论是 Hive、Iceberg、Hudi、Paimon，还是支持 JDBC 协议的数据库系统，Doris 均能轻松连接并高效访问数据。
 
-对于湖仓系统，Doris 可从元数据服务，如 Hive Metastore，AWS Glue、Unity Catalog 中获取数据表的结构和分布信息，进行合理的查询规划，并利用 MPP 架构扫描和计算分布式数据。
+对于湖仓系统，Doris 可从元数据服务，如 Hive Metastore，AWS Glue、Unity Catalog 中获取数据表的结构和分布信息，进行合理的查询规划，并利用 MPP 架构进行分布式计算。
 
 具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog.md)
 
@@ -50,11 +50,11 @@ Doris 提供良好的扩展性框架，帮助开发人员快速对接企业内�
 
 Doris 定义了标准的数据目录（Catalog）、数据库（Database）、数据表（Table）三个层级，开发人员可以方便的映射到所需对接的数据源层级。Doris 同时提供标准的元数据服务和数据读取服务的接口，开发人员只需按照接口定义实现对应的访问逻辑，即可完成数据源的对接。
 
-Doris 兼容 Trino Connector 插件，可直接将 Trino 插件包部署到 Doris 集群，经过少量配置即可访问对应的数据源。Doris 目前已经完成了 [Kudu](./catalogs/kudu-catalog.md)、[BigQuery](./catalogs/bigquery-catalog.md)、[Delta Lake](./catalogs/delta-lake-catalog.md) 等数据源的对接。
+Doris 兼容 Trino Connector 插件，可直接将 Trino 插件包部署到 Doris 集群，经过少量配置即可访问对应的数据源。Doris 目前已经完成了 [Kudu](./catalogs/kudu-catalog.md)、[BigQuery](./catalogs/bigquery-catalog.md)、[Delta Lake](./catalogs/delta-lake-catalog.md) 等数据源的对接。也可以 [自行适配新的插件](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide)。
 
 #### 便捷的跨源数据处理
 
-Doris 支持在运行时直接创建多个数据源连接器，可使用 SQL 对这些数据源进行联邦查询。比如用户可以将 Hive 中的事实表数据与 MySQL 中的维度表数据进行关联查询：
+Doris 支持在运行时直接创建多个数据源连接器，并使用 SQL 对这些数据源进行联邦查询。比如用户可以将 Hive 中的事实表数据与 MySQL 中的维度表数据进行关联查询：
 
 ```sql
 SELECT h.id, m.name
@@ -129,7 +129,7 @@ Doris 不仅支持开放湖表格式的访问，其自身存储的数据同样�
 
 ## 湖仓一体最佳实践
 
-Doris 在湖仓一体方案中，主要用于湖仓查询加速、多数据源联邦分析和湖仓数据处理。
+Doris 在湖仓一体方案中，主要用于 **湖仓查询加速**、**多源联邦分析** 和 **湖仓数据处理**。
 
 ### 湖仓查询加速
 

@@ -26,7 +26,7 @@ under the License.
 
 **The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses**. It integrates the low cost and high scalability of data lakes with the high performance and strong data governance capabilities of data warehouses, enabling efficient, secure, and quality-controlled storage and processing analysis of various data in the big data era. Through standardized data formats and metadata management, it unifies real-time and historical data, batch processing, and stream processing, gradually becoming the new standard for enterprise big data solutions.
 
-## Lakehouse Solution
+## Doris Lakehouse Solution
 
 Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage separation architecture, a high-performance data processing engine, and data ecosystem openness.
 
@@ -34,27 +34,27 @@ Doris provides an excellent lakehouse solution for users through an extensible c
 
 ### Flexible Data Access
 
-Doris supports mainstream data systems and data formats through an extensible connector framework and provides unified data analysis capabilities based on SQL, allowing users to easily achieve cross-platform data query and analysis without changing the existing data architecture. For details, refer to [Catalog Overview](./catalog-overview.md)
+Doris supports mainstream data systems and data format access through an extensible connector framework and provides unified data analysis capabilities based on SQL, allowing users to easily perform cross-platform data queries and analysis without moving existing data. For details, refer to [Catalog Overview](./catalog-overview.md)
 
 ### Data Source Connectors
 
-Whether it's Hive, Iceberg, Hudi, Paimon, or database systems supporting the JDBC protocol, Doris can easily connect and efficiently extract data.
+Whether it's Hive, Iceberg, Hudi, Paimon, or database systems supporting the JDBC protocol, Doris can easily connect and efficiently access data.
 
-For lakehouse systems, Doris can obtain the structure and distribution information of data tables from metadata services such as Hive Metastore, AWS Glue, and Unity Catalog, perform reasonable query planning, and utilize the MPP architecture to scan and compute distributed data.
+For lakehouse systems, Doris can obtain the structure and distribution information of data tables from metadata services such as Hive Metastore, AWS Glue, and Unity Catalog, perform reasonable query planning, and utilize the MPP architecture for distributed computing.
 
-For details, refer to the documentation of each data catalog, such as [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.md)
 
 #### Extensible Connector Framework
 
-Doris provides a good extensibility framework to help developers quickly connect to unique internal data sources of enterprises, achieving rapid data interconnection.
+Doris provides a good extensibility framework to help developers quickly connect to unique data sources within enterprises, achieving fast data interoperability.
 
 Doris defines three levels of standard data catalogs (Catalog), databases (Database), and data tables (Table), allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata services and data reading services, and developers only need to implement the corresponding access logic according to the interface definitions to complete the data source connection.
 
-Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has currently completed the connection to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md).
+Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide).
 
 #### Convenient Cross-Source Data Processing
 
-Doris supports creating multiple data source connectors at runtime and can use SQL for federated queries on these data sources. For example, users can associate query fact table data in Hive with dimension table data in MySQL:
+Doris supports creating multiple data source connectors at runtime and using SQL to perform federated queries on these data sources. For example, users can associate query fact table data in Hive with dimension table data in MySQL:
 
 ```sql
 SELECT h.id, m.name
@@ -62,7 +62,7 @@ FROM hive.db.hive_table h JOIN mysql.db.mysql_table m
 ON h.id = m.id;
 ```
 
-Combined with Doris's built-in [Job Scheduler](../admin-manual/workload-management/job-scheduler.md) capability, scheduled tasks can be created to further simplify system complexity. For example, users can set the result of the above query as a routine task executed every hour and write each result into an Iceberg table:
+Combined with Doris's built-in [job scheduling](../admin-manual/workload-management/job-scheduler.md) capabilities, you can also create scheduled tasks to further simplify system complexity. For example, users can set the result of the above query as a routine task executed every hour and write each result into an Iceberg table:
 
 ```sql
 CREATE JOB schedule_load
@@ -79,7 +79,7 @@ As an analytical data warehouse, Doris has made numerous optimizations in lakeho
 
 * Execution Engine
 
-    The Doris execution engine is based on the MPP execution framework and Pipeline data processing model, capable of quickly processing massive data in a multi-machine, multi-core distributed environment. Thanks to fully vectorized execution operators, Doris leads in computing performance in standard evaluation datasets like TPC-DS.
+    The Doris execution engine is based on the MPP execution framework and Pipeline data processing model, capable of quickly processing massive data in a multi-machine, multi-core distributed environment. Thanks to fully vectorized execution operators, Doris leads in computing performance in standard benchmark datasets like TPC-DS.
 
 * Query Optimizer
 
@@ -87,11 +87,11 @@ As an analytical data warehouse, Doris has made numerous optimizations in lakeho
 
 * Cache Acceleration and IO Optimization
 
-    Access to external data sources is usually network access, which can have high latency and poor stability. Apache Doris provides rich caching mechanisms and has made numerous optimizations in cache types, timeliness, and strategies, fully utilizing memory and local high-speed disks to enhance the analysis performance of hot data. Additionally, Doris has made targeted optimizations for network IO characteristics of high throughput, low IOPS, and high latency, providing external data source access performance comparable to local data.
+    Access to external data sources is usually network access, which can have high latency and poor stability. Apache Doris provides rich caching mechanisms and has made numerous optimizations in cache types, timeliness, and strategies, fully utilizing memory and local high-speed disks to enhance the analysis performance of hot data. Additionally, Doris has made targeted optimizations for network IO characteristics such as high throughput, low IOPS, and high latency, providing external data source access performance comparable to local data.
 
 * Materialized Views and Transparent Acceleration
 
-    Doris offers rich materialized view update strategies, supporting full and partition-level incremental refresh to reduce construction costs and improve timeliness. Besides manual refresh, Doris also supports scheduled and data-driven refresh, further reducing maintenance costs and improving data consistency. Materialized views also have transparent acceleration capabilities, where the query optimizer can automatically route to appropriate materialized views for seamless query acceleration. Additionally, Doris's materialized views use high-performance storage formats, providing efficient data access capabilities through column storage, compression, and intelligent indexing technologies, serving as an alternative to data caching and improving query efficiency.
+    Doris provides rich materialized view update strategies, supporting full and partition-level incremental refresh to reduce construction costs and improve timeliness. In addition to manual refresh, Doris also supports scheduled refresh and data-driven refresh, further reducing maintenance costs and improving data consistency. Materialized views also have transparent acceleration capabilities, allowing the query optimizer to automatically route to appropriate materialized views for seamless query acceleration. Additionally, Doris's materialized views use high-performance storage formats, providing efficient data access capabilities through column storage, compression, and intelligent indexing technologies, serving as an alternative to data caching and improving query efficiency.
 
 As shown below, on a 1TB TPCDS standard test set based on the Iceberg table format, Doris's overall execution of 99 queries is only 1/3 of Trino's.
 
@@ -103,9 +103,9 @@ In actual user scenarios, Doris reduces average query latency by 20% and 95th pe
 
 ### Convenient Business Migration
 
-In the process of integrating multiple data sources and achieving lakehouse transformation, migrating business SQL queries to Doris is a challenge due to differences in SQL dialects' syntax and function support across different systems. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
+In the process of integrating multiple data sources and achieving lakehouse transformation, migrating business SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
 
-To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing users' migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, with compatibility rates reaching over 99% in some actual user scenarios.
+To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility rate of over 99% in some actual user scenarios.
 
 ### Modern Deployment Architecture
 
@@ -115,21 +115,21 @@ Since version 3.0, Doris supports a cloud-native [compute-storage separation arc
 
 The above diagram shows the system architecture of Doris's compute-storage separation, decoupling compute and storage. Compute nodes no longer store primary data, and the underlying shared storage layer (HDFS and object storage) serves as the unified primary data storage space, supporting independent scaling of compute and storage resources. The compute-storage separation architecture brings significant advantages to the lakehouse solution:
 
-* **Low-Cost Storage**: Storage and compute resources can be independently scaled, allowing enterprises to increase storage capacity without increasing compute resources. Additionally, by using cloud object storage, enterprises can enjoy lower storage costs and higher availability, while still using local high-speed disks for caching relatively low-ratio hot data.
+* **Low-Cost Storage**: Storage and compute resources can be independently scaled, allowing enterprises to increase storage capacity without increasing compute resources. Additionally, by using cloud object storage, enterprises can enjoy lower storage costs and higher availability, while still using local high-speed disks for caching relatively low-proportion hot data.
 
-* **Single Source of Truth**: All data is stored in a unified storage layer, with the same data accessible and processable by different compute clusters, ensuring data consistency and integrity while reducing the complexity of data synchronization and duplicate storage.
+* **Single Source of Truth**: All data is stored in a unified storage layer, allowing the same data to be accessed and processed by different compute clusters, ensuring data consistency and integrity, and reducing the complexity of data synchronization and duplicate storage.
 
-* **Load Diversity**: Compute resources can be dynamically allocated based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
+* **Load Diversity**: Enterprises can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
 
 ### Openness
 
-Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), featuring the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
+Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
 
 Compared to open file formats, the open storage API abstracts the specific implementation of the underlying file format, allowing Doris to accelerate data access through advanced features in its storage format, such as rich indexing mechanisms. Additionally, upper-layer compute engines do not need to adapt to changes or new features in the underlying storage format, allowing all supported compute engines to simultaneously benefit from new features.
 
 ## Lakehouse Best Practices
 
-In the lakehouse solution, Doris is mainly used for lakehouse query acceleration, multi-data source federated analysis, and lakehouse data processing.
+In the lakehouse solution, Doris is mainly used for **lakehouse query acceleration**, **multi-source federated analysis**, and **lakehouse data processing**.
 
 ### Lakehouse Query Acceleration
 
@@ -139,13 +139,13 @@ In this scenario, Doris acts as a **compute engine**, accelerating query analysi
 
 #### Cache Acceleration
 
-For lakehouse systems like Hive and Iceberg, users can configure local disk caching. Local disk caching automatically stores query-designed data files in local cache directories and manages cache eviction using the LRU strategy. For details, refer to the [Data Cache](./data-cache.md) documentation.
+For lakehouse systems like Hive and Iceberg, users can configure local disk caching. Local disk caching automatically stores query-designed data files in local cache directories and manages cache eviction using the LRU strategy. For details, refer to the [Data Cache](./data-cache.md) document.
 
 #### Materialized Views and Transparent Rewrite
 
 Doris supports creating materialized views for external data sources. Materialized views store pre-computed results as Doris internal table formats based on SQL definition statements. Additionally, Doris's query optimizer supports a transparent rewrite algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern. This algorithm can analyze the structure information of SQL, automatically find suitable materialized views for transparent rewrite, and select the optimal materialized view to respond to query SQL.
 
-This feature can significantly improve query performance by reducing runtime computation. It also allows access to data in materialized views through transparent rewrite without business awareness. For details, refer to the [Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview.md) documentation.
+This feature can significantly improve query performance by reducing runtime computation. It also allows access to data in materialized views through transparent rewrite without business awareness. For details, refer to the [Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview.md) document.
 
 ### Multi-Source Federated Analysis
 
