@@ -121,6 +121,8 @@ The above diagram shows the system architecture of Doris's compute-storage separ
 
 * **Workload Diversity**: Users can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
 
+In addition, under the storage-computing coupled architecture, [elastic computing nodes](./compute-node.md) can still be used to provide elastic computing capabilities in lake warehouse data query scenarios.
+
 ### Openness
 
 Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
