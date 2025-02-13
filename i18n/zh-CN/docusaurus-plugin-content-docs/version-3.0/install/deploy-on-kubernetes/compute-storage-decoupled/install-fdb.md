@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库。 Doris 存算分离模式使用 FoundationDB 作为元数据存储，通过 meta-service 组件来管理 FoundationDB 中的元数据。 Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
+[FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库。Doris 存算分离模式使用 FoundationDB 作为元数据存储，通过 meta-service 组件来管理 FoundationDB 中的元数据。Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
 - 在虚机（包括物理机）上直接部署。虚机部署请参考 Doris 存算分离官方文档[部署前准备部分](../../../../compute-storage-decoupled/before-deployment.md)搭建 FoundationDB 集群。部署前请确保 FoundationDB 有被 Doris 部署的 Kubernetes 集群访问的能力。  
-- 在 Kubernetes 上部署 FoundationDB。 FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。  
+- 在 Kubernetes 上部署 FoundationDB。FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。  
 
 ## 在 Kubernetes 上部署 FoundationDB
 在 Kubernetes 上部署 FoundationDB 分为 4 步：
@@ -83,7 +83,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
    ```shell
    kubectl apply -f fdb-operator.yaml
    ```
-  
+
    预期结果：
   
    ```shell
@@ -145,7 +145,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 :::tip 提示
 - 私有环境下，FoundationDB 推到私有仓库时，tag 必须与官方保持一致，比如：7.1.38。
-- 部署 FoundationDB 时, FoundationDBCluster 资源，`.spec.version` 必须配置。
+- 部署 FoundationDB 时，FoundationDBCluster 资源，`.spec.version` 必须配置。
 - FoundationDB 基于 fdb-kubernetes-operator 部署，要求 Kubernetes 集群至少有三台宿主机才可满足生产环境高可用要求。  
 :::
 

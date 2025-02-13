@@ -49,7 +49,7 @@ SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 ```
 
-原始 SQL 的计划如下，可见 t1 连接 t2 使用了 hash distribute即`DistributionSpecHash`的方式。
+原始 SQL 的计划如下，可见 t1 连接 t2 使用了 hash distribute 即`DistributionSpecHash`的方式。
 
 ```sql
 +----------------------------------------------------------------------------------+  
@@ -75,7 +75,7 @@ EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
 ```
 
-可见 t1 连接 t2 的分发方式改为了 broadcast即`DistributionSpecReplicated`的方式。
+可见 t1 连接 t2 的分发方式改为了 broadcast 即`DistributionSpecReplicated`的方式。
 
 ```sql
 +----------------------------------------------------------------------------------+  

@@ -82,7 +82,7 @@ PROPERTIES (
 SHOW STORAGE VAULTS
 ```
 
-返回结果包含 4 列，分别为 Storage Vault 名称、 Storage Vault  ID、属性以及是否为默认 Storage Vault 。
+返回结果包含 4 列，分别为 Storage Vault 名称、Storage Vault  ID、属性以及是否为默认 Storage Vault。
 
 ### 设置默认 Storage Vault 
 
@@ -94,7 +94,7 @@ SET <vault_name> AS DEFAULT STORAGE VAULT
 
 ## 建表时指定 Storage Vault 
 
-建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault 。
+建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault。
 
 **示例**
 
@@ -120,13 +120,13 @@ PROPERTIES (
 
 用于更新 Storage Vault 配置的可修改属性。
 
-S3 Storage Vault 允许修改的属性:
+S3 Storage Vault 允许修改的属性：
 - `VAULT_NAME`
 - `s3.access_key`
 - `s3.secret_key`
 - `use_path_style`
 
-HDFS Storage Vault 禁止修改的属性:
+HDFS Storage Vault 禁止修改的属性：
 - `path_prefix`
 - `fs.defaultFS`
 
@@ -173,7 +173,7 @@ GRANT
 仅 Admin 用户有权限执行 `GRANT` 语句，该语句用于向 User / Role 授予指定 Storage Vault 的权限。拥有某个 Storage Vault 的 `USAGE_PRIV` 权限的 User / Role 可进行以下操作：
 
 - 通过 `SHOW STORAGE VAULTS` 查看该 Storage Vault 的信息；
-- 建表时在 `PROPERTIES` 中指定使用该 Storage Vault 。
+- 建表时在 `PROPERTIES` 中指定使用该 Storage Vault。
 
 ### 撤销
 

@@ -38,9 +38,9 @@ MemTrackerLimiter Label=query, Type=overview, Limit=-1.00 B(-1 B), Used=83.32 MB
 
 首先定位大内存查询的 QueryID，在 BE web 页面 `http://{be_host}:{be_web_server_port}/mem_tracker?type=query` 中按照 `Current Consumption` 排序可以看到实时的大内存查询，在 `label` 中可以找到 QueryID。
 
-当报错进程内存超限或可用内存不足时，在 `be.INFO` 日志中 `Memory Tracker Summary` 下半部分包含内存使用 TOP 10 的任务（查询/导入/Compaction等）的 Memory Tracker，格式为 `MemTrackerLimiter Label=Query#Id=xxx, Type=query`，通常在 TOP 10 的任务中就能定位到大内存查询的 QueryID。
+当报错进程内存超限或可用内存不足时，在 `be.INFO` 日志中 `Memory Tracker Summary` 下半部分包含内存使用 TOP 10 的任务（查询/导入/Compaction 等）的 Memory Tracker，格式为 `MemTrackerLimiter Label=Query#Id=xxx, Type=query`，通常在 TOP 10 的任务中就能定位到大内存查询的 QueryID。
 
-历史查询的内存统计结果可以查看`fe/log/fe.audit.log`中每个查询的`peakMemoryBytes`，或者在`be/log/be.INFO`中搜索`Deregister query/load memory tracker, queryId`查看单个BE上每个查询的内存峰值。
+历史查询的内存统计结果可以查看`fe/log/fe.audit.log`中每个查询的`peakMemoryBytes`，或者在`be/log/be.INFO`中搜索`Deregister query/load memory tracker, queryId`查看单个 BE 上每个查询的内存峰值。
 
 ## 使用 Query Profile 分析查询内存使用
 
@@ -48,7 +48,7 @@ MemTrackerLimiter Label=query, Type=overview, Limit=-1.00 B(-1 B), Used=83.32 MB
 
 1. 定位使用大量内存的 Operator 或内存数据结构
 
-Query Profile 分为两部分:
+Query Profile 分为两部分：
 
 - `MergedProfile` 
 
