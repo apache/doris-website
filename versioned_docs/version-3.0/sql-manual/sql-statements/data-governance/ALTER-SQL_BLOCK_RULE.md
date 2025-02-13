@@ -25,8 +25,6 @@ under the License.
 -->
 
 
-
-
 ## Description
 
 This statement is used to modify an SQL block rule.
