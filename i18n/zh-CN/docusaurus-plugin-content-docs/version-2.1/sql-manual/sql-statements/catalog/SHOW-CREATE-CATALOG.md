@@ -23,34 +23,48 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
-
 ## 描述
 
 该语句查看 Doris 数据目录的创建语句。
 
-语法：
+## 语法
 
 ```sql
-SHOW CREATE CATALOG catalog_name;
+SHOW CREATE CATALOG <catalog_name>;
 ```
 
-说明：
+## 必选参数
 
-- `catalog_name`: 为 Doris 中存在的数据目录的名称。
+**1. `<catalog_name>`**
+
+需要查看创建语句的 catalog 的名字
+
+## 权限控制
+| 权限（Privilege）                                                                                | 对象（Object） | 说明（Notes）      |
+|:---------------------------------------------------------------------------------------------|:-----------|:---------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog    | 需要有上述权限中的一种就可以 |
+
 
 ## 示例
 
-1. 查看 Doris 中 hive 数据目录的创建语句
+1. 查看 Doris 中 oracle 数据目录的创建语句
 
    ```sql
-   SHOW CREATE CATALOG hive;
+   SHOW CREATE CATALOG oracle;
    ```
-
-## 关键词
-
-    SHOW, CREATE, CATALOG
-
-## 最佳实践
-
+   ```sql
+   +---------+----------------------------------------------------------------------------------------------------------------------+
+    | Catalog | CreateCatalog                                                                                                        |
+    +---------+----------------------------------------------------------------------------------------------------------------------+
+    | oracle  |
+    CREATE CATALOG `oracle` PROPERTIES (
+    "user" = "XXX",
+    "type" = "jdbc",
+    "password" = "*XXX",
+    "jdbc_url" = "XXX",
+    "driver_url" = "XXX",
+    "driver_class" = "oracle.jdbc.driver.OracleDriver",
+    "checksum" = "XXX"
+    ); |
+    +---------+----------------------------------------------------------------------------------------------------------------------+
+   ```

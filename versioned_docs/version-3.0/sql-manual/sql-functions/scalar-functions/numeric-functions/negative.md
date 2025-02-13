@@ -22,28 +22,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## negative
+## Description
 
-### description
-#### Syntax
+Returns the negative value of the parameter x.
+
+## Syntax
 
 ```sql
-BIGINT negative(BIGINT x)
-DOUBLE negative(DOUBLE x)
-DECIMAL negative(DECIMAL x)
+NEGATIVE(<x>)
 ```
-Return `-x`.
 
-### example
+## Parameters
 
+| Parameter | Description |
+|-----------|------------|
+| `<x>`   | The independent variable supports the types `BIGINT, DOUBLE, and DECIMAL` |
+
+## Return value
+
+Returns an integer or a floating-point number. Special cases:
+
+- If the parameter is NULL, return NULL.
+- If the parameter is 0, return 0.
+
+## Example
+
+```sql
+SELECT negative(-10);
 ```
-mysql> SELECT negative(-10);
+
+```text
 +---------------+
 | negative(-10) |
 +---------------+
 |            10 |
 +---------------+
-mysql> SELECT negative(12);
+```
+
+```sql
+SELECT negative(12);
+```
+
+```text
 +--------------+
 | negative(12) |
 +--------------+
@@ -51,5 +71,26 @@ mysql> SELECT negative(12);
 +--------------+
 ```
 
-### keywords
-	NEGATIVE
+```sql
+SELECT negative(0);
+```
+
+```text
++-------------+
+| negative(0) |
++-------------+
+|           0 |
++-------------+
+```
+
+```sql
+SELECT negative(null);
+```
+
+```text
++----------------+
+| negative(NULL) |
++----------------+
+|           NULL |
++----------------+
+```

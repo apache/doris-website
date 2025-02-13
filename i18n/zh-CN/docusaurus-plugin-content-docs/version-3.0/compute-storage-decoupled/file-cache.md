@@ -82,11 +82,113 @@ Compute Group 扩缩容时，为了避免 Cache 波动，Doris 会首先对受�
 
 ### 热点信息
 
-Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表，您可以通过 `SHOW CACHE HOTSPOT '/'` 命令查看热点信息。
+Doris 每 10 分钟收集各个计算组的缓存热点信息到内部系统表，您可以通过查询语句查看热点信息。
+用户可以根据这些信息更好地规划缓存的使用。
+
+:::info 备注
+在 3.0.4 版本之前，可以使用 `SHOW CACHE HOTSPOT` 语句进行缓存热度信息统计查询。从 3.0.4 版本开始，不再支持使用 `SHOW CACHE HOTSPOT` 语句进行缓存热度信息统计查询。请直接访问系统表 `__internal_schema.cloud_cache_hotspot` 进行查询。
+:::
+
+用户通常关注计算组和库表两个维度的缓存使用情况。以下提供了一些常用的查询语句以及示例。
+
+#### 查看当前所有计算组中最频繁访问的表
+
+```sql
+-- 等价于 3.0.4 版本前的 SHOW CACHE HOTSPOT "/"
+WITH t1 AS (
+  SELECT
+    cluster_id,
+    cluster_name,
+    table_id,
+    table_name,
+    insert_day,
+    SUM(query_per_day) AS query_per_day_total,
+    SUM(query_per_week) AS query_per_week_total
+  FROM __internal_schema.cloud_cache_hotspot
+  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+  cluster_id AS ComputeGroupId,
+  cluster_name AS ComputeGroupName,
+  table_id AS TableId,
+  table_name AS TableName
+FROM (
+  SELECT
+    ROW_NUMBER() OVER (
+      PARTITION BY cluster_id
+      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+    ) AS dr2,
+    *
+  FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+#### 查看某个计算组下的所有表中最频繁访问的表
+
+查看计算组 `compute_group_name0` 下的所有表中最频繁访问的表
+
+注意：将其中的 `cluster_name = "compute_group_name0"` 条件替换为实际的计算组名称。
+
+```sql
+-- 等价于 3.0.4 版本前的 SHOW CACHE HOTSPOT '/compute_group_name0';
+WITH t1 AS (
+  SELECT
+    cluster_id,
+    cluster_name,
+    table_id,
+    table_name,
+    insert_day,
+    SUM(query_per_day) AS query_per_day_total,
+    SUM(query_per_week) AS query_per_week_total
+  FROM __internal_schema.cloud_cache_hotspot
+  WHERE cluster_name = "compute_group_name0" -- 替换为实际的计算组名称，例如 "default_compute_group"
+  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+  cluster_id AS ComputeGroupId,
+  cluster_name AS ComputeGroupName,
+  table_id AS TableId,
+  table_name AS TableName
+FROM (
+  SELECT
+    ROW_NUMBER() OVER (
+      PARTITION BY cluster_id
+      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+    ) AS dr2,
+    *
+  FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+#### 查看具体计算组以及表缓存的访问最频繁的分区
+
+查看计算组 `compute_group_name0` 下，表 `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` 的最频繁的分区.
+
+注意：将其中的 `cluster_name = "compute_group_name0"` 和 `table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer"` 条件替换为实际的计算组名称和库表名称。
+
+```sql
+-- 等价于 3.0.4 版本前的 SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
+SELECT
+  partition_id AS PartitionId,
+  partition_name AS PartitionName
+FROM __internal_schema.cloud_cache_hotspot
+WHERE
+  cluster_name = "compute_group_name0" -- 替换为实际的计算组名称，例如 "default_compute_group"
+  AND table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer" -- 替换为实际的库表名称，例如 "db1.t1"
+GROUP BY
+  cluster_id,
+  cluster_name,
+  table_id,
+  table_name,
+  partition_id,
+  partition_name;
+```
 
 ### Cache 空间以及命中率
 
-Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
+Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars` ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
 
 上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
 去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
@@ -174,9 +276,7 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 
 ### 缓存预热
 
-目前支持三种缓存预热模式：
-
-- 将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
+- 计算组间预热, 将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
 
 当执行以下 SQL 时，`compute_group_name1` 计算组会获取 `compute_group_name0` 计算组的访问信息，来尽可能还原出与 `compute_group_name0` 计算组一致的缓存。
 
@@ -184,31 +284,13 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 ```
 
-查看当前所有计算组中最频繁访问的表。
-
-```sql
-SHOW CACHE HOTSPOT '/';
-```
-
-查看 `compute_group_name0` 下的所有表中最频繁访问的 Partition。
-
-```sql
-SHOW CACHE HOTSPOT '/compute_group_name0';
-```
-
-查看 `compute_group_name0` 下，表`regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` 的访问信息。
-
-```sql
-SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
-```
-
-- 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
+- 表数据预热, 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
+- 分区数据预热, 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1

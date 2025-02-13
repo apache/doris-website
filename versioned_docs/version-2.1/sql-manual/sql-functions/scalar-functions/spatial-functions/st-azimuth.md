@@ -31,7 +31,7 @@ Enter two points and return the azimuth of the line segment formed by points 1 a
 ## Syntax
 
 ```sql
-ST_Azimuth( <point1>, <point2>)
+ST_AZIMUTH( <point1>, <point2>)
 ```
 
 ## Parameters

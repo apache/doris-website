@@ -41,38 +41,51 @@ As shown in the figure below, after various data integrations and processing, da
 
 Apache Doris is widely used in the following scenarios:
 
-- Reporting Services and Ad-Hoc Queries: Doris provides multidimensional data analysis capabilities, supporting internal enterprise reports and ad-hoc report queries. It offers stable and high-performance service support for high-concurrency report access by users.
+- **Real-time Data Analysis**:
 
-- Real-Time Data Warehouse Analysis: Doris can be applied to real-time data processing and analysis scenarios, providing second-level synchronization of data changes from TP databases and sub-second data query capabilities. It serves scenarios such as real-time dashboards, real-time risk control, real-time order analysis, and real-time advertiser reports.
-
-- Unified Lakehouse Analysis: Doris’s external table federated analysis accesses data stored in offline lakehouses like Hive, Iceberg, and Hudi. This approach significantly enhances query performance without the need for data duplication.
-
-- User Profiling and Behavior Analysis: Utilizing Doris’s built-in behavior analysis functions and bitmap types supports user behavior analysis and profiling scenarios. It provides efficient query and real-time analysis capabilities, helping enterprises quickly gain user insights, optimize user experiences, and make informed business decisions.
-
-- Log Search and Analysis: Doris supports inverted indexing and full-text search, effectively meeting log search and analysis requirements. Leveraging its efficient query and storage engines, Doris offers a cost-performance advantage of up to tenfold compared to traditional log search and analysis solutions.
-
-## Technical overview
-
-Apache Doris adopts the MySQL protocol and is highly compatible with MySQL syntax, supporting standard SQL. Users can access Apache Doris through various client tools and seamlessly integrate it with BI tools. When deploying Apache Doris, users can choose between a compute-storage integrated architecture or a compute-storage separated architecture based on their hardware environment and business requirements.
-
-### Compute-storage decoupled
-Apache Doris has a simple and neat architecture with only two types of processes:
-
-- Frontend(FE): Mainly responsible for handling user request access, query parsing and planning, metadata management, and node management-related tasks.
+  - **Real-time Reporting and Decision-making**: Doris provides real-time updated reports and dashboards for both internal and external enterprise use, supporting real-time decision-making in automated processes.
   
-- Backend(BE): Mainly responsible for data storage and the execution of query plans. Data is partitioned into shards and stored with multiple replicas in the BE.
+  - **AD Hoc Analysis**: Doris offers multidimensional data analysis capabilities, enabling rapid business intelligence analysis and ad hoc queries to help users quickly uncover insights from complex data.
+  
+  - **User Profiling and Behavior Analysis**: Doris can analyze user behavior such as participation, retention, and conversion, while also supporting scenarios like population insights and crowd selection for behavior analysis.
+
+- **Lakehouse Analytics**:
+
+  - **Lakehouse Query Acceleration**: Doris accelerates lakehouse data queries with its efficient query engine.
+  
+  - **Federated Analytics**: Doris supports federated queries across multiple data sources, simplifying architecture and eliminating data silos.
+  
+  - **Real-time Data Processing**: Doris combines real-time data streams and batch data processing capabilities to meet the needs of high concurrency and low-latency complex business requirements.
+
+- **SQL-based Observability**:
+
+  - **Log and Event Analysis**: Doris enables real-time or batch analysis of logs and events in distributed systems, helping to identify issues and optimize performance.
+
+
+## Overall Architecture
+
+Apache Doris uses the MySQL protocol, is highly compatible with MySQL syntax, and supports standard SQL. Users can access Apache Doris through various client tools, and it seamlessly integrates with BI tools. When deploying Apache Doris, you can choose between a storage-compute integrated architecture or a storage-compute separated architecture based on hardware environments and business needs.
+
+### Storage-Compute Integrated Architecture
+
+The storage-compute integrated architecture of Apache Doris is streamlined and easy to maintain. As shown in the figure below, it consists of only two types of processes:
+
+- **Frontend (FE):** Primarily responsible for handling user requests, query parsing and planning, metadata management, and node management tasks.
+
+- **Backend (BE):** Primarily responsible for data storage and query execution. Data is partitioned into shards and stored with multiple replicas across BE nodes.
 
 ![Overall Architecture and Technical Features](/images/getting-started/apache-doris-technical-overview.png)
 
-In a production environment, multiple FE nodes can be deployed for disaster recovery and backup, with each FE maintaining a full copy of the metadata. The FE has three roles:
+In a production environment, multiple FE nodes can be deployed for disaster recovery. Each FE node maintains a full copy of the metadata. The FE nodes are divided into three roles:
 
-  | Role     | Function                                                         |
-  | -------- | ------------------------------------------------------------ |
-  | Master   | The FE Master node is responsible for reading and writing metadata. When the Master metadata undergoes changes, it synchronizes these changes to Follower or Observer nodes using the BDB JE protocol. |
-  | Follower | Follower nodes are responsible for reading metadata. In the event of a Master node failure, a Follower node can be selected as the new Master node. |
-  | Observer | Observer nodes are responsible for reading metadata, primarily to enhance the cluster's query concurrency and performance. They do not participate in the cluster's leader election. |
+| Role      | Function                                                     |
+| --------- | ------------------------------------------------------------ |
+| Master    | The FE Master node is responsible for metadata read and write operations. When metadata changes occur in the Master, they are synchronized to Follower or Observer nodes via the BDB JE protocol. |
+| Follower  | The Follower node is responsible for reading metadata. If the Master node fails, a Follower node can be selected as the new Master. |
+| Observer  | The Observer node is responsible for reading metadata and is mainly used to increase query concurrency. It does not participate in cluster leadership elections. |
 
-Both FE and BE processes are horizontally scalable, allowing a single cluster to support hundreds of machines and tens of petabytes of storage capacity. FE and BE processes ensure high availability and data reliability through consistency protocols. The compute-storage integrated architecture is highly consolidated, significantly reducing the operational costs of distributed systems.
+Both FE and BE processes are horizontally scalable, enabling a single cluster to support hundreds of machines and tens of petabytes of storage capacity. The FE and BE processes use a consistency protocol to ensure high availability of services and high reliability of data. The storage-compute integrated architecture is highly integrated, significantly reducing the operational complexity of distributed systems.
+
 
 ### Compute-Storage Decoupled
 Starting from version 3.0, a compute-storage decoupled deployment architecture can be chosen. The compute-storage decoupled version of Apache Doris utilizes a unified shared storage layer as the data storage space. By separating storage and computation, users can independently scale storage capacity and computing resources, thereby achieving optimal performance and cost efficiency. As shown in the figure below, the compute-storage decoupled architecture is divided into three layers:
@@ -119,15 +132,15 @@ Apache Doris supports various index structures to minimize data scans:
 
 - Inverted Index: This enables fast searching for any field.
 
-- Apache Doris supports a variety of data models and has optimized them for different scenarios:
+Apache Doris supports a variety of data models and has optimized them for different scenarios:
 
-Aggregate Key Model: merges the value columns with the same keys and improves performance by pre-aggregation
+- **Detail Model (Duplicate Key Model):** A detail data model designed to meet the detailed storage requirements of fact tables.
 
-- Unique Key Model: ensures uniqueness of keys and overwrites data with the same key to achieve row-level data updates
+- **Primary Key Model (Unique Key Model):** Ensures unique keys; data with the same key is overwritten, enabling row-level data updates.
 
-- Duplicate Key Model: stores data as it is without aggregation, capable of detailed storage of fact tables
+- **Aggregate Model (Aggregate Key Model):** Merges value columns with the same key, significantly improving performance through pre-aggregation.
 
-- Apache Doris also supports strongly consistent materialized views. Materialized views are automatically selected and updated within the system without manual efforts, which reduces maintenance costs for users.
+Apache Doris also supports strongly consistent single-table materialized views and asynchronously refreshed multi-table materialized views. Single-table materialized views are automatically refreshed and maintained by the system, requiring no manual intervention from users. Multi-table materialized views can be refreshed periodically using in-cluster scheduling or external scheduling tools, reducing the complexity of data modeling.
 
 ### Query engine
 
@@ -141,5 +154,9 @@ The query engine of Apache Doris is fully vectorized, with all memory structures
 
 Apache Doris uses adaptive query execution technology to dynamically adjust the execution plan based on runtime statistics. For example, it can generate a runtime filter and push it to the probe side. Specifically, it pushes the filters to the lowest-level scan node on the probe side, which largely reduces the data amount to be processed and increases join performance. The runtime filter of Apache Doris supports In/Min/Max/Bloom Filter.
 
-The query optimizer of Apache Doris is a combination of CBO and RBO. RBO supports constant folding, subquery rewriting, and predicate pushdown while CBO supports join reorder. The Apache Doris CBO is under continuous optimization for more accurate statistics collection and inference as well as a more accurate cost model.
+![pip_exec_3](/images/pip_exec_3.png)
+
+Apache Doris uses a Pipeline execution engine that breaks down queries into multiple sub-tasks for parallel execution, fully leveraging multi-core CPU capabilities. It simultaneously addresses the thread explosion problem by limiting the number of query threads. The Pipeline execution engine reduces data copying and sharing, optimizes sorting and aggregation operations, thereby significantly improving query efficiency and throughput.
+
+In terms of the optimizer, Apache Doris employs a combined optimization strategy of CBO (Cost-Based Optimizer), RBO (Rule-Based Optimizer), and HBO (History-Based Optimizer). RBO supports constant folding, subquery rewriting, predicate pushdown, and more. CBO supports join reordering and other optimizations. HBO recommends the optimal execution plan based on historical query information. These multiple optimization measures ensure that Doris can enumerate high-performance query plans across various types of queries.
 

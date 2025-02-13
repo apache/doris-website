@@ -97,7 +97,7 @@ datadir="/var/lib/proxysql"         #数据目录
 admin_variables=
 {
         admin_credentials="admin:admin"  #连接管理端的用户名与密码
-        mysql_ifaces="0.0.0.0:6032"    #管理端口，用来连接proxysql的管理数据库
+        mysql_ifaces="0.0.0.0:6032"    #管理端口，用来连接 proxysql 的管理数据库
 }
 mysql_variables=
 {
@@ -107,10 +107,10 @@ mysql_variables=
         default_query_timeout=36000000
         have_compress=true
         poll_timeout=2000
-        interfaces="0.0.0.0:6033"    #指定转发端口，用于连接后端mysql数据库的，相当于代理作用
+        interfaces="0.0.0.0:6033"    #指定转发端口，用于连接后端 mysql 数据库的，相当于代理作用
         default_schema="information_schema"
         stacksize=1048576
-        server_version="5.5.30"        #指定后端mysql的版本
+        server_version="5.5.30"        #指定后端 mysql 的版本
         connect_timeout_server=3000
         monitor_username="monitor"
         monitor_password="monitor"
@@ -543,7 +543,7 @@ stream {
   upstream mysqld {
       hash $remote_addr consistent;
       server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      ##注意这里如果是多个FE，加载这里就行了
+      ##注意这里如果是多个 FE，加载这里就行了
   }
   ###这里是配置代理的端口，超时时间等
   server {
@@ -677,7 +677,7 @@ mysql> show databases;
 
 
 ## Haproxy 方式
-HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供高可用性、负载均衡，以及基于TCP和HTTP的应用程序代理。
+HAProxy 是一个使用 C 语言编写的自由及开放源代码软件，其提供高可用性、负载均衡，以及基于 TCP 和 HTTP 的应用程序代理。
 
 ### 安装
 1. 下载 HAProxy
@@ -722,7 +722,7 @@ HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供
 
    - -c 2 使用兼容模式，默认是 -c 5。 -r 开启远程日志
 
-   - -m 0 标记时间戳。单位是分钟，为0时，表示禁用该功能
+   - -m 0 标记时间戳。单位是分钟，为 0 时，表示禁用该功能
 
 3. 使修改生效
 
@@ -754,7 +754,7 @@ HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供
    # 应用全局的日志配置
    log global
    mode http
-   retries 3          # 健康检查。3次连接失败就认为服务器不可用，主要通过后面的check检查
+   retries 3          # 健康检查。3 次连接失败就认为服务器不可用，主要通过后面的 check 检查
    option redispatch  # 服务不可用后重定向到其他健康服务器
    # 超时配置
    timeout connect 5000
@@ -774,8 +774,8 @@ HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供
    server fe-2 172.16.0.4:9030 weight 1 check inter 3000 rise 2 fall 3
    server fe-3 172.16.0.6:9030 weight 1 check inter 3000 rise 2 fall 3
    
-   listen http_front              # haproxy的客户页面
-   bind *:8888                    # HAProxy WEB 的IP地址
+   listen http_front              # haproxy 的客户页面
+   bind *:8888                    # HAProxy WEB 的 IP 地址
    mode http
    log 127.0.0.1 local0 err
    option httplog

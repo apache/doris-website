@@ -43,7 +43,7 @@ clusterrolebinding.rbac.authorization.k8s.io/doris-operator-rolebinding created
 serviceaccount/doris-operator created
 deployment.apps/doris-operator created
 ```
-## 第 3 步： 检查 Doris Operator 状态
+## 第 3 步：检查 Doris Operator 状态
 通过以下命令检查 Doris Operator 的部署状态：
 ```shell
 kubectl get pods -n doris
