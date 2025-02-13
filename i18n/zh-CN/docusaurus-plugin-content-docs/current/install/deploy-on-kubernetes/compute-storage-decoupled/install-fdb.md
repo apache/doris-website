@@ -60,39 +60,40 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 1. 下载部署样例
 
-- 从 fdb-kubernetes-operator 官方仓库下载
+   - 从 fdb-kubernetes-operator 官方仓库下载
 
-  fdb-kuberentes-operator 默认情况下使用 IP 模式部署 FoundationDB Cluster，可以下载 [fdb-kubernetes-operator 默认部署](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) yaml。如果使用 FQDN 部署模式，请按照官方文档[使用 DNS 部分](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns)进行定制化使用域名模式。
+     fdb-kuberentes-operator 默认情况下使用 IP 模式部署 FoundationDB Cluster，可以下载 YAML 文件 [fdb-kubernetes-operator 默认部署](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml)。如果使用 FQDN 部署模式，请按照官方文档[使用 DNS 部分](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns)进行定制化使用域名模式。
 
-  ```shell
-  wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml
-  ```
+     ```shell
+     wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml
+     ```
 
-- 从 doris-operator 仓库下载
+   - 从 doris-operator 仓库下载
+   
+     doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster 。
 
-  doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster 。
-
-  ```shell
-  wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
-  ```
+     ```shell
+     wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
+     ```
 
 2. 部署 fdb-kubernetes-operator 服务
 
-  定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator ：
-  ```shell
-  kubectl apply -f fdb-operator.yaml
-  ```
+   定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator：
+
+   ```shell
+   kubectl apply -f fdb-operator.yaml
+   ```
   
-  预期结果：
+   预期结果：
   
-  ```shell
-  serviceaccount/fdb-kubernetes-operator-controller-manager created
-  clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrole created
-  clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-role created
-  rolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-rolebinding created
-  clusterrolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrolebinding created
-  deployment.apps/fdb-kubernetes-operator-controller-manager created
-  ```
+   ```shell
+   serviceaccount/fdb-kubernetes-operator-controller-manager created
+   clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrole created
+   clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-role created
+   rolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-rolebinding created
+   clusterrolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrolebinding created
+   deployment.apps/fdb-kubernetes-operator-controller-manager created
+   ```
 
 ### 第 3 步：部署 FoundationDB 集群
 
@@ -100,45 +101,47 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 1. 下载部署样例
 
-  从 FoundationDB 官方下载 IP 模式部署样例：
+   从 FoundationDB 官方下载 IP 模式部署样例：
   
-  ```shell
-  wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/cluster.yaml
-  ```
+   ```shell
+   wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/cluster.yaml
+   ```
 
 2. 定制化部署样例
 
-- 环境可访问 dockerhub
+   - 环境可访问 dockerhub
 
-  根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true，配置如下：  
-  doris-operator 的官方仓库中提供了使用 [FQDN 部署 FoundationDB 的部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml)可直接下载使用。  
+     根据官网提供的[用户手册](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md)定制化部署终态。如果使用 FQDN 部署，请将 `routing.useDNSInClusterFile` 字段设置为 true，配置如下：  
+     doris-operator 的官方仓库中提供了使用 [FQDN 部署 FoundationDB 的部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml)可直接下载使用。  
 
-  ```yaml
-  spec:
-    routing:
-    useDNSInClusterFile: true
-  ```
+     ```yaml
+     spec:
+       routing:
+       useDNSInClusterFile: true
+     ```
 
-- 私网环境  
+   - 私网环境
 
-  在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
-  部署 FoundationDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
-  推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
+     在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
 
-  可参考如下配置添加私有仓库镜像配置：  
+     部署 FoundationDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
+  
+     推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
 
-  ```yaml
-  spec:
-    mainContainer:
-      imageConfigs:
-      - baseImage: foundationdb/foundationdb
-        tag: 7.1.38
-    sidecarContainer:
-      imageConfigs:
-      - baseImage: foundationdb/foundationdb-kubernetes-sidecar
-        tag: 7.1.36-1
-    version: 7.1.38
-  ```
+     可参考如下配置添加私有仓库镜像配置：  
+
+     ```yaml
+     spec:
+       mainContainer:
+         imageConfigs:
+         - baseImage: foundationdb/foundationdb
+           tag: 7.1.38
+       sidecarContainer:
+         imageConfigs:
+         - baseImage: foundationdb/foundationdb-kubernetes-sidecar
+           tag: 7.1.36-1
+       version: 7.1.38
+     ```
 
 :::tip 提示
 - 私有环境下，FoundationDB 推到私有仓库时，tag 必须与官方保持一致，比如：7.1.38。

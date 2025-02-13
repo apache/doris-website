@@ -233,7 +233,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 
    第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
-## 第 6 步：注册并添加 FE Follower/Observer 节点
+## 第 6 步：注册 FE Follower/Observer 节点
 
 其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
