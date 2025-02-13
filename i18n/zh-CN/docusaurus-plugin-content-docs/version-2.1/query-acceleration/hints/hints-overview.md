@@ -31,10 +31,10 @@ under the License.
 
 ## Hint 分类
 
-doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，distribute hint等几种：
+doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，distribute hint 等几种：
 
 - [Leading Hint](leading-hint.md)：用于指定 join order 为 leading 中提供的 order 顺序；
-- [Ordered Hint](leading-hint.md)：一种特定的leading hint, 用于指定 join order 为原始文本序；
+- [Ordered Hint](leading-hint.md)：一种特定的 leading hint, 用于指定 join order 为原始文本序；
 - [Distribute Hint](distribute-hint.md)：用于指定 join 的数据分发方式为 shuffle 还是 broadcast。
 
 ## Hint 示例
@@ -104,4 +104,4 @@ Hint Log 分为三个状态：
 
 ## 总结
 
-Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的运维能力。
+Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint 等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的运维能力。

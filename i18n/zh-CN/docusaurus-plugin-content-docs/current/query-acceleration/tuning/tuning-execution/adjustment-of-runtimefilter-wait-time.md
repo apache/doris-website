@@ -68,7 +68,7 @@ OLAP_SCAN_OPERATOR (id=22. nereids_id=1764. table name = test_doris(test_doris))
                  - Info: [IsPushDown = false, RuntimeFilterState = NOT_READY, HasRemoteTarget = true, HasLocalTarget = false, Ignored = false]
 ```
 
-从 Profile 中可以看到：`WaitForRuntimeFilter: 1000ms`。这里RuntimeFilter 等待了 1000ms，但是这个 ScanOperator 并没有等到对应的 RuntimeFilter，`RuntimeFilterState = NOT_READY`。
+从 Profile 中可以看到：`WaitForRuntimeFilter: 1000ms`。这里 RuntimeFilter 等待了 1000ms，但是这个 ScanOperator 并没有等到对应的 RuntimeFilter，`RuntimeFilterState = NOT_READY`。
 
 ```SQL
  RuntimeFilter: (id = 6, type = minmax):

@@ -35,7 +35,7 @@ Bitmap 是一种高效的位图索引技术，它通过 bit 位来表示对应�
 
 ## Count Distinct 的实现
 
-传统的精确去重依赖`count distinct`实现，表原始数据如下，假设要name列进行精确去重
+传统的精确去重依赖`count distinct`实现，表原始数据如下，假设要 name 列进行精确去重
 
 | id   | name |
 | ---- | ---- |
@@ -46,7 +46,7 @@ Bitmap 是一种高效的位图索引技术，它通过 bit 位来表示对应�
 | 5    | bob  |
 | 6    | alex |
 
-Doris在计算时`select count(distinct name) from t`。会按照下图进行计算，先根据name列group by，计算一阶段去重，shuffle之后二阶段进行去重，最终计算count
+Doris 在计算时`select count(distinct name) from t`。会按照下图进行计算，先根据 name 列 group by，计算一阶段去重，shuffle 之后二阶段进行去重，最终计算 count
 
 ```SQL
         Scan                              1st Group By                       2nd Group By                     Count 
@@ -69,7 +69,7 @@ Doris在计算时`select count(distinct name) from t`。会按照下图进行计
   +-----+---------+                   +------------+
 ```
 
-由于Count Distinct需要保存计算明细数据，并且需要进行shuffle，当数据量增大时，查询也会越来越慢。用Bitmap来精确去重，可以解决count distinct 在大量数据场景下的性能问题。
+由于 Count Distinct 需要保存计算明细数据，并且需要进行 shuffle，当数据量增大时，查询也会越来越慢。用 Bitmap 来精确去重，可以解决 count distinct 在大量数据场景下的性能问题。
 
 ## 使用场景
 
@@ -78,7 +78,7 @@ Doris在计算时`select count(distinct name) from t`。会按照下图进行计
 - 查询加速：Bitmap 利用位运算进行查询计算，性能表现良好
 - 压缩存储：由于将明细数据压缩为了一个 bit 位，Bitmap 类型无论在磁盘还是内存上，资源消耗都远远低于明细数据
 
-但 Bitmap 只能对 TINYINT，SMALLINT，INT 和 BIGINT 类型的数据进行精确去重。如想要使用 Bitmap 对其他类型的数据精确去重，则需要额外构建全局字典。Doris使用了RoaringBitmap实现了Bimap的精确去重，原理和细节可以参考[RoaringBitmap](https://roaringbitmap.org/)。
+但 Bitmap 只能对 TINYINT，SMALLINT，INT 和 BIGINT 类型的数据进行精确去重。如想要使用 Bitmap 对其他类型的数据精确去重，则需要额外构建全局字典。Doris 使用了 RoaringBitmap 实现了 Bimap 的精确去重，原理和细节可以参考[RoaringBitmap](https://roaringbitmap.org/)。
 
 ## 使用 BITMAP 进行精确去重
 
@@ -104,7 +104,7 @@ distributed by hash(id) buckets 10;
 
 ### 导入数据
 
-示例数据如下（test_bitmap.csv），可以通过 Stream Load导入。
+示例数据如下（test_bitmap.csv），可以通过 Stream Load 导入。
 
 ```SQL
 2022-05-05,10001,测试 01,北京,windows 
