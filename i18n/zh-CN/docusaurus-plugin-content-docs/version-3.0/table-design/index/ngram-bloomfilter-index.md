@@ -28,7 +28,7 @@ under the License.
 
 n-gram 分词是将一句话或一段文字拆分成多个相邻的词组的分词方法。NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
 
-与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少IO加速查询。
+与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少 IO 加速查询。
 
 ## 使用场景
 
@@ -103,7 +103,7 @@ NGram BloomFilter 索引用于加速 LIKE 查询，比如：
 SELECT count() FROM table1 WHERE message LIKE '%error%';
 ```
 
-可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括NGram）的加速效果。
+可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括 NGram）的加速效果。
 - RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
 - BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
 
@@ -187,7 +187,7 @@ mysql> SELECT COUNT() FROM amazon_reviews;
 
 ### 查询
 
-**首先在没有索引的时候运行查询，WHERE 条件中有 LIKE，耗时7.60s**
+**首先在没有索引的时候运行查询，WHERE 条件中有 LIKE，耗时 7.60s**
 
 ```
 SELECT
@@ -221,7 +221,7 @@ LIMIT 5;
 ```
 
 
-**然后添加 NGram BloomFilter 索引，再次运行相同的查询耗时0.93s，性能提升了8倍**
+**然后添加 NGram BloomFilter 索引，再次运行相同的查询耗时 0.93s，性能提升了 8 倍**
 
 ```
 ALTER TABLE amazon_reviews ADD INDEX review_body_ngram_idx(review_body) USING NGRAM_BF PROPERTIES("gram_size"="10", "bf_size"="10240");
