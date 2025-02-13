@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SIGN",
+    "title": "COMPRESS",
     "language": "zh-CN"
 }
 ---
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,79 +25,49 @@ under the License.
 -->
 
 ## 描述
-
-返回`x`的符号。负数，零或正数分别对应-1，0或1。
+COMPRESS 函数用于将字符串或值压缩成二进制数据，压缩后的数据可通过 `UNCOMPRESS` 函数解压还原。
 
 ## 语法
 
 ```sql
-SIGN(x)
+COMPRESS(<uncompressed_str>)
 ```
 
 ## 参数
 
-| 参数 | 说明 |
-| -- | -- |
-| `<x>` | 自变量 |
+| 参数                | 说明            |
+|--------------------|---------------|
+| `<uncompressed_str>` | 未压缩的原串, 参数类型是varchar或者string   |
 
 ## 返回值
 
-返回一个整型：
+返回串与输入的 `uncompressed_str` 类型一致  
 
-- 当 x > 0 时，返回 1，代表整数。
+返回串是不可读的压缩字节流。  
 
-- 当 x = 0 时，返回 0，代表零。
-
-- 当 x < 0 时，返回 -1，代表负数。
-
-- 当 x is NULL时，返回 NULL。
+特殊情况：
+- `uncompressed_str` 输入为 empty string(`''`) 时，返回 empty string(`''`)
 
 ## 举例
 
-```sql
-select sign(3);
+``` sql
+select uncompress(compress('abc'));
 ```
-
-```text
-+-------------------------+
-| sign(cast(3 as DOUBLE)) |
-+-------------------------+
-|                       1 |
-+-------------------------+
-```
-
-```sql
-select sign(0);
-```
-
-```text
-+-------------------------+
-| sign(cast(0 as DOUBLE)) |
-+-------------------------+
-|                       0 |
-+-------------------------+
-```
-
-```sql
-select sign(-10.0);
-```
-
-```text
+```text 
 +-----------------------------+
-| sign(cast(-10.0 as DOUBLE)) |
+| uncompress(compress('abc')) |
 +-----------------------------+
-|                          -1 |
+| abc                         |
 +-----------------------------+
 ```
 
 ```sql
-select sign(null);
+select compress('');
 ```
-
-```text
-+------------+
-| sign(NULL) |
-+------------+
-|       NULL |
-+------------+
+```text 
++--------------+
+| compress('') |
++--------------+
+|              |
++--------------+
 ```

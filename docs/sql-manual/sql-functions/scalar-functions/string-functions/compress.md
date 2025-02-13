@@ -1,6 +1,6 @@
 ---
 {
-    "title": "POSITIVE",
+    "title": "COMPRESS",
     "language": "en"
 }
 ---
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,73 +25,49 @@ under the License.
 -->
 
 ## Description
-
-Returns the value itself.
+The COMPRESS function is used to compress strings or values into binary data. The compressed data can be decompressed using the UNCOMPRESS function.
 
 ## Syntax
 
 ```sql
-POSITIVE(<x>)
+COMPRESS(<uncompressed_str>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-|-----------|------------|
-| `<x>`   | The value that needs to be returned. |
+| Parameters                | Description            |
+|--------------------|---------------|
+| `<uncompressed_str>` | Uncompressed raw string, parameter type is varchar or string   |
 
-## Return value
 
-Returns an integer or a floating-point number. Special cases:
+## Return Value
 
-- If the parameter is NULL, return NULL.
+The return string is of the same type as the input `uncompressed_str`  
+
+The return string is an unreadable compressed byte stream.  
+Special cases:
+- `uncompressed_str` Return empty string(`''`) when the input is empty string(`''`)
 
 ## Example
 
-```sql
-SELECT positive(-10);
+``` sql
+select uncompress(compress('abc'));
 ```
-
-```text
-+---------------+
-| positive(-10) |
-+---------------+
-|           -10 |
-+---------------+
-```
-
-```sql
-SELECT positive(10.111);
-```
-
-```text
-+------------------+
-| positive(10.111) |
-+------------------+
-|           10.111 |
-+------------------+
+```text 
++-----------------------------+
+| uncompress(compress('abc')) |
++-----------------------------+
+| abc                         |
++-----------------------------+
 ```
 
 ```sql
-SELECT positive(12);
+select compress('');
 ```
-
-```text
+```text 
 +--------------+
-| positive(12) |
+| compress('') |
 +--------------+
-|           12 |
+|              |
 +--------------+
-```
-
-```sql
-SELECT positive(null);
-```
-
-```text
-+----------------+
-| positive(NULL) |
-+----------------+
-|           NULL |
-+----------------+
 ```
