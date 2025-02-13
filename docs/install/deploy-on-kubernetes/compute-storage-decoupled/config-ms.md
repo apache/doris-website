@@ -64,27 +64,31 @@ spec:
 Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
 
 ## Configure FDB
-- Use ConfigMap  
+- Use ConfigMap
+
   The FDB cluster is built on the same K8s cluster and can obtain its namespace and configmap. Use the following configuration:
-```yaml
-spec:
+
+  ```yaml
+  spec:
   metaService:
     image: {msImage}
     fdb:
       configMapNamespaceName:
         name: {foundationdbConfigmap}
         namespace: {namespace}
-```
+  ```
+
 - Directly Endpoint
+
   The FDB is deployed on a physical machine, Please configure the FDB endpoint (FDB access string) for the metaService. The configuration is as follows:
 
-```yaml
-spec:
-  metaService:
-    image: {msImage}
-    fdb:
-      address: {fdb_endpoint}
-```
+  ```yaml
+  spec:
+    metaService:
+      image: {msImage}
+      fdb:
+        address: {fdb_endpoint}
+  ```
 
 ## Customized configuration file
 

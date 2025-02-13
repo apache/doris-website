@@ -58,7 +58,7 @@
                                         "install/deploy-on-kubernetes/compute-storage-decoupled/config-ms",
                                         "install/deploy-on-kubernetes/compute-storage-decoupled/config-fe",
                                         "install/deploy-on-kubernetes/compute-storage-decoupled/config-cg",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-quickstart"
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-doris-cluster"
                                     ]
                                 }
                             ]

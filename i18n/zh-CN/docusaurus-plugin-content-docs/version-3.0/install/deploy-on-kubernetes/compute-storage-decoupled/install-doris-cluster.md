@@ -96,7 +96,7 @@ under the License.
 存算分离集群搭建完毕后，需要通过客户端执行相应的 `CREATE STORAGE VAULT` SQL 语句创建存储后端来实现数据的持久化。
 可以进入 FE 容器内部使用 MySQL Client 连接 Doris 进行创建操作。
 
-1. 获取 Service  
+1. 获取 Service
   在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
   
   ```shell
@@ -114,18 +114,18 @@ under the License.
   test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
   ```
 
-2. MySQL 客户端访问  
+2. MySQL 客户端访问
   使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
   ```shell
   kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
   ```
   在集群内的容器中，可以使用 fe 服务名访问 Doris 集群：
   ```shell
-  mysql -uroot -P9030 -h test-disaggregated-cluster-fe  
+  mysql -uroot -P9030 -h test-disaggregated-cluster-fe
   ```
 
-3. 创建存储后端  
-  使用提供 S3 协议对象存储作为存储后端，创建示例如下：  
+3. 创建存储后端
+  使用提供 S3 协议对象存储作为存储后端，创建示例如下：
   a. 创建 S3 Storage Vault
   ```mysql
   CREATE STORAGE VAULT IF NOT EXISTS s3_vault
@@ -134,9 +134,9 @@ under the License.
           "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", 
           "s3.region" = "bj",       
           "s3.bucket" = "bucket",        
-          "s3.root.path" = "big/data/prefix",   
-          "s3.access_key" = "ak",         
-          "s3.secret_key" = "sk",             
+          "s3.root.path" = "big/data/prefix",
+          "s3.access_key" = "your-ak",
+          "s3.secret_key" = "your-sk",
           "provider" = "OSS" 
       );
   ```
