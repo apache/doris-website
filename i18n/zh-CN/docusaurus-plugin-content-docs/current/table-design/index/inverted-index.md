@@ -326,7 +326,7 @@ SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
 ```
 
-### 通过profile分析索引加速效果
+### 通过 profile 分析索引加速效果
 
 倒排查询加速可以通过 session 变量 `enable_inverted_index_query` 开关，默认是 true 打开，有时为了验证索引加速效果可以设置为 false 关闭。
 
