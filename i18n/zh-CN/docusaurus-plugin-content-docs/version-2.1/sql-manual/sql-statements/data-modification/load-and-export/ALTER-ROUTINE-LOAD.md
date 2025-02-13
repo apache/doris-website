@@ -33,21 +33,23 @@ under the License.
 ## 语法
 
 ```sql
-ALTER ROUTINE LOAD FOR [<db.>]<job_name>
+ALTER ROUTINE LOAD FOR [<db>.]<job_name>
 [<job_properties>]
-FROM <data_source>
+FROM [<data_source>]
 [<data_source_properties>]
 ```
 
 ## 必选参数
 
-**1. `[db.]job_name`**
+**1. `[<db>.]<job_name>`**
 
 > 指定要修改的作业名称。标识符必须以字母字符开头，并且不能包含空格或特殊字符，除非整个标识符字符串用反引号括起来。
 >
 > 标识符不能使用保留关键字。有关更多详细信息，请参阅标识符要求和保留关键字。
 
-**2. `job_properties`**
+## 可选参数
+
+**1. `<job_properties>`**
 
 > 指定需要修改的作业参数。目前支持修改的参数包括：
 > 
@@ -66,13 +68,7 @@ FROM <data_source>
 > - partial_columns
 > - max_filter_ratio
 
-**3. `data_source`**
-
-> 数据源的类型。当前支持：
-> 
-> - KAFKA
-
-**4. `data_source_properties`**
+**2. `<data_source_properties>`**
 
 > 数据源的相关属性。目前支持：
 > 
@@ -81,6 +77,12 @@ FROM <data_source>
 > - kafka_broker_list
 > - kafka_topic
 > - 自定义 property，如 property.group.id
+
+**3. `<data_source>`**
+
+> 数据源的类型。当前支持：
+> 
+> - KAFKA
 
 ## 权限控制
 

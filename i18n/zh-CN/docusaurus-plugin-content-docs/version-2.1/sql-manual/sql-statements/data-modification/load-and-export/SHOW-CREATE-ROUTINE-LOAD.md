@@ -36,12 +36,12 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [<ALL>] CREATE ROUTINE LOAD for <load_name>;
+SHOW [ALL] CREATE ROUTINE LOAD for <load_name>;
 ```
 
 ## 必选参数
 
-**1. `load_name`**
+**1. `<load_name>`**
 
 > 例行导入作业名称
 

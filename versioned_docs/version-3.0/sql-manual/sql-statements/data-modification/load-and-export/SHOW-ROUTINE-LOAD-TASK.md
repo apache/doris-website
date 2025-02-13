@@ -33,13 +33,12 @@ This syntax is used to view the currently running subtasks of a specified Routin
 ## Syntax
 
 ```sql
-SHOW ROUTINE LOAD TASK
-WHERE JobName = <job_name>;
+SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > The name of the routine load job to view.
 

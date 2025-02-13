@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW [<ALL>] ROUTINE LOAD [FOR <jobName>];
+SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 ```
 
 ## 可选参数
@@ -40,7 +40,7 @@ SHOW [<ALL>] ROUTINE LOAD [FOR <jobName>];
 
 > 可选参数。如果指定，则会显示所有作业（包括已停止或取消的作业）。否则只显示当前正在运行的作业。
 
-**2. `[FOR jobName]`**
+**2. `[FOR <jobName>]`**
 
 > 可选参数。指定要查看的作业名称。如果不指定，则显示当前数据库下的所有作业。
 >

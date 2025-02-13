@@ -33,12 +33,12 @@ This syntax is used to restart one or all paused Routine Load jobs. The restarte
 ## Syntax
 
 ```sql
-RESUME [<ALL>] ROUTINE LOAD FOR <job_name>
+RESUME [ALL] ROUTINE LOAD FOR <job_name>
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the job to restart. If ALL is specified, job_name is not required.
 

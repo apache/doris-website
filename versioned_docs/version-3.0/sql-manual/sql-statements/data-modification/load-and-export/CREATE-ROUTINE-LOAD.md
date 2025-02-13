@@ -34,27 +34,27 @@ Currently, it only supports importing CSV or Json format data from Kafka through
 ## Syntax
 
 ```sql
-CREATE ROUTINE LOAD [<db.>]<job_name> [ON <tbl_name>]
+CREATE ROUTINE LOAD [<db>.]<job_name> [ON <tbl_name>]
 [<merge_type>]
 [<load_properties>]
 [<job_properties>]
 FROM <data_source> [<data_source_properties>]
-[<COMMENT "comment">]
+[COMMENT "<comment>"]
 ```
 
 ## Required Parameters
 
-**1. `[db.]job_name`**
+**1. `[<db>.]<job_name>`**
 
 > The name of the import job. Within the same database, only one job with the same name can be running.
 
-**2. `FROM data_source`**
+**2. `FROM <data_source>`**
 
 > The type of data source. Currently supports: KAFKA
 
-**3. `data_source_properties`**
+**3. `<data_source_properties>`**
 
-> 1. `kafka_broker_list`
+> 1. `<kafka_broker_list>`
 >
 >    Kafka broker connection information. Format is ip:host. Multiple brokers are separated by commas.
 >    
@@ -62,7 +62,7 @@ FROM <data_source> [<data_source_properties>]
 >    "kafka_broker_list" = "broker1:9092,broker2:9092"
 >    ```
 >
-> 2. `kafka_topic`
+> 2. `<kafka_topic>`
 >
 >    Specifies the Kafka topic to subscribe to.
 >    ```text
@@ -71,7 +71,7 @@ FROM <data_source> [<data_source_properties>]
 
 ## Optional Parameters
 
-**1. `tbl_name`**
+**1. `<tbl_name>`**
 
 > Specifies the name of the table to import into. This is an optional parameter. If not specified, the dynamic table method is used, which requires the data in Kafka to contain table name information.
 >
@@ -82,7 +82,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > Tips: Dynamic tables do not support the `columns_mapping` parameter. If your table structure matches the table structure in Doris and there is a large amount of table information to import, this method will be the best choice.
 
-**2. `merge_type`**
+**2. `<merge_type>`**
 
 > Data merge type. Default is APPEND, which means the imported data are ordinary append write operations. MERGE and DELETE types are only available for Unique Key model tables. The MERGE type needs to be used with the [DELETE ON] statement to mark the Delete Flag column. The DELETE type means that all imported data are deleted data.
 >
@@ -102,13 +102,13 @@ FROM <data_source> [<data_source_properties>]
 > [ORDER BY]
 > ```
 >
-> 1. `column_separator`
+> 1. `<column_separator>`
 >
 >    Specifies the column separator, defaults to `\t`
 >
 >    `COLUMNS TERMINATED BY ","`
 >
-> 2. `columns_mapping`
+> 2. `<columns_mapping>`
 >
 >    Used to specify the mapping relationship between file columns and table columns, as well as various column transformations. For a detailed introduction to this part, you can refer to the [Column Mapping, Transformation and Filtering] document.
 >
@@ -116,7 +116,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Tips: Dynamic tables do not support this parameter.
 >
-> 3. `preceding_filter`
+> 3. `<preceding_filter>`
 >
 >    Filter raw data. For detailed information about this part, please refer to the [Column Mapping, Transformation and Filtering] document.
 >
@@ -124,7 +124,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Tips: Dynamic tables do not support this parameter.
 >
-> 4. `where_predicates`
+> 4. `<where_predicates>`
 >
 >    Filter imported data based on conditions. For detailed information about this part, please refer to the [Column Mapping, Transformation and Filtering] document.
 >
@@ -132,7 +132,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Tips: When using dynamic multiple tables, please note that this parameter should match the columns of each dynamic table, otherwise the import will fail. When using dynamic multiple tables, we only recommend using this parameter for common public columns.
 >
-> 5. `partitions`
+> 5. `<partitions>`
 >
 >    Specify which partitions of the destination table to import into. If not specified, data will be automatically imported into the corresponding partitions.
 >
@@ -140,7 +140,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Tips: When using dynamic multiple tables, please note that this parameter should match each dynamic table, otherwise the import will fail.
 >
-> 6. `DELETE ON`
+> 6. `<DELETE ON>`
 >
 >    Must be used with MERGE import mode, only applicable to Unique Key model tables. Used to specify the Delete Flag column and calculation relationship in the imported data.
 >
@@ -148,13 +148,13 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Tips: When using dynamic multiple tables, please note that this parameter should match each dynamic table, otherwise the import will fail.
 >
-> 7. `ORDER BY`
+> 7. `<ORDER BY>`
 >
 >    Only applicable to Unique Key model tables. Used to specify the Sequence Col column in the imported data. Mainly used to ensure data order during import.
 >
 >    Tips: When using dynamic multiple tables, please note that this parameter should match each dynamic table, otherwise the import will fail.
 
-**4. `job_properties`**
+**4. `<job_properties>`**
 
 > Used to specify general parameters for routine import jobs.
 >
@@ -167,7 +167,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > Currently, we support the following parameters:
 >
-> 1. `desired_concurrent_number`
+> 1. `<desired_concurrent_number>`
 >
 >     The desired concurrency. A routine import job will be divided into multiple subtasks for execution. This parameter specifies how many tasks can run simultaneously for a job. Must be greater than 0. Default is 5.
 >
@@ -175,7 +175,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    `"desired_concurrent_number" = "3"`
 >
-> 2. `max_batch_interval/max_batch_rows/max_batch_size`
+> 2. `<max_batch_interval>/<max_batch_rows>/<max_batch_size>`
 >
 >    These three parameters represent:
 >
@@ -191,7 +191,7 @@ FROM <data_source> [<data_source_properties>]
 >     "max_batch_size" = "209715200"
 >     ```
 >
-> 3. `max_error_number`
+> 3. `<max_error_number>`
 >
 >     Maximum number of error rows allowed within the sampling window. Must be greater than or equal to 0. Default is 0, meaning no error rows are allowed.
 >
@@ -199,7 +199,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >     Rows filtered by where conditions are not counted as error rows.
 >
-> 4. `strict_mode`
+> 4. `<strict_mode>`
 >
 >     Whether to enable strict mode, default is off. If enabled, when non-null original data's column type conversion results in NULL, it will be filtered. Specified as:
 >
@@ -237,55 +237,55 @@ FROM <data_source> [<data_source_properties>]
 >
 >     Note: Although 10 is a value exceeding the range, because its type meets decimal requirements, strict mode has no effect on it. 10 will eventually be filtered in other ETL processing flows, but won't be filtered by strict mode.
 >
-> 5. `timezone`
+> 5. `<timezone>`
 >
 >     Specifies the timezone used for the import job. Defaults to the Session's timezone parameter. This parameter affects all timezone-related function results involved in the import.
 >
 >     `"timezone" = "Asia/Shanghai"`
 >
-> 6. `format`
+> 6. `<format>`
 >
 >     Specifies the import data format, default is csv, json format is supported.
 >
 >     `"format" = "json"`
 >
-> 7. `jsonpaths`
+> 7. `<jsonpaths>`
 >
 >     When importing json format data, jsonpaths can be used to specify fields to extract from Json data.
 >
 >     `-H "jsonpaths: [\"$.k2\", \"$.k1\"]"`
 >
-> 8. `strip_outer_array`
+> 8. `<strip_outer_array>`
 >
 >     When importing json format data, strip_outer_array set to true indicates that Json data is presented as an array, where each element in the data will be treated as a row. Default value is false.
 >
 >     `-H "strip_outer_array: true"`
 >
-> 9. `json_root`
+> 9. `<json_root>`
 >
 >     When importing json format data, json_root can be used to specify the root node of Json data. Doris will parse elements extracted from the root node through json_root. Default is empty.
 >
 >     `-H "json_root: $.RECORDS"`
 >  
-> 10. `send_batch_parallelism`
+> 10. `<send_batch_parallelism>`
 >
 >     Integer type, used to set the parallelism of sending batch data. If the parallelism value exceeds `max_send_batch_parallelism_per_job` in BE configuration, the BE serving as the coordination point will use the value of `max_send_batch_parallelism_per_job`.
 >
 >     `"send_batch_parallelism" = "10"`
 >
-> 11. `load_to_single_tablet`
+> 11. `<load_to_single_tablet>`
 >
 >     Boolean type, true indicates support for a task to import data to only one tablet of the corresponding partition, default value is false. This parameter is only allowed to be set when importing data to olap tables with random bucketing.
 >
 >     `"load_to_single_tablet" = "true"`
 >
-> 12. `partial_columns`
+> 12. `<partial_columns>`
 >
 >     Boolean type, true indicates using partial column updates, default value is false. This parameter is only allowed to be set when the table model is Unique and uses Merge on Write. Dynamic multiple tables do not support this parameter.
 >
 >     `"partial_columns" = "true"`
 >
-> 13. `max_filter_ratio`
+> 13. `<max_filter_ratio>`
 >
 >     Maximum filter ratio allowed within the sampling window. Must be between greater than or equal to 0 and less than or equal to 1. Default value is 0.
 >
@@ -293,19 +293,19 @@ FROM <data_source> [<data_source_properties>]
 >
 >     Rows filtered by where conditions are not counted as error rows.
 >
-> 14. `enclose`
+> 14. `<enclose>`
 >
 >     Enclosure character. When csv data fields contain row or column separators, to prevent accidental truncation, a single-byte character can be specified as an enclosure for protection. For example, if the column separator is "," and the enclosure is "'", for data "a,'b,c'", "b,c" will be parsed as one field.
 >
 >     Note: When enclose is set to `"`, trim_double_quotes must be set to true.
 >
-> 15. `escape`
+> 15. `<escape>`
 >
 >     Escape character. Used to escape characters in csv fields that are the same as the enclosure character. For example, if the data is "a,'b,'c'", enclosure is "'", and you want "b,'c" to be parsed as one field, you need to specify a single-byte escape character, such as `\`, and modify the data to `a,'b,\'c'`.
 >
 **5. Optional properties in `data_source_properties`**
 
-> 1. `kafka_partitions/kafka_offsets`
+> 1. `<kafka_partitions>/<kafka_offsets>`
 >
 >     Specifies the kafka partitions to subscribe to and the starting offset for each partition. If a time is specified, consumption will start from the nearest offset greater than or equal to that time.
 >
@@ -329,7 +329,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    Note: Time format cannot be mixed with OFFSET format.
 >
-> 2. `property`
+> 2. `<property>`
 >
 >     Specifies custom kafka parameters. Functions the same as the "--property" parameter in kafka shell.
 >
@@ -344,7 +344,7 @@ FROM <data_source> [<data_source_properties>]
 >     "property.ssl.ca.location" = "FILE:ca.pem"
 >     ```
 >
->     1. When using SSL to connect to Kafka, the following parameters need to be specified:
+>     2.1 When using SSL to connect to Kafka, the following parameters need to be specified:
 >
 >        ```text
 >        "property.security.protocol" = "ssl",
@@ -368,11 +368,11 @@ FROM <data_source> [<data_source_properties>]
 >
 >        Used to specify the client's public key, private key, and private key password respectively.
 >
-> 2. Specify default starting offset for kafka partitions
+>     2.2 Specify default starting offset for kafka partitions
 >
->     If `kafka_partitions/kafka_offsets` is not specified, all partitions will be consumed by default.
+>     If `<kafka_partitions>/<kafka_offsets>` is not specified, all partitions will be consumed by default.
 >
->     In this case, `kafka_default_offsets` can be specified to set the starting offset. Default is `OFFSET_END`, meaning subscription starts from the end.
+>     In this case, `<kafka_default_offsets>` can be specified to set the starting offset. Default is `OFFSET_END`, meaning subscription starts from the end.
 >
 >     Example:
 >

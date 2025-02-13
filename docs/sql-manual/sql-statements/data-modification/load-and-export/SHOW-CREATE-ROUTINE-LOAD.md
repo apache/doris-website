@@ -36,12 +36,12 @@ The result shows the current consuming Kafka partitions and their corresponding 
 ## Syntax
 
 ```sql
-SHOW [<ALL>] CREATE ROUTINE LOAD for <load_name>;
+SHOW [ALL] CREATE ROUTINE LOAD for <load_name>;
 ```
 
 ## Required Parameters
 
-**1. `load_name`**
+**1. `<load_name>`**
 
 > The name of the routine load job
 

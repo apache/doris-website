@@ -31,12 +31,12 @@ under the License.
 ## 语法
 
 ```sql
-RESUME [<ALL>] ROUTINE LOAD FOR <job_name>
+RESUME [ALL] ROUTINE LOAD FOR <job_name>
 ```
 
 ## 必选参数
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > 指定要重启的作业名称。如果指定了 ALL，则无需指定 job_name。
 

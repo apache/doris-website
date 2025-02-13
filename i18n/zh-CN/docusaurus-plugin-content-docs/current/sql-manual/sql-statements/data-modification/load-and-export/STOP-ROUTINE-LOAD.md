@@ -36,12 +36,12 @@ STOP ROUTINE LOAD FOR <job_name>;
 
 ## 必选参数
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > 指定要停止的作业名称。可以是以下形式：
 >
-> - `job_name`: 停止当前数据库下指定名称的作业
-> - `db_name.job_name`: 停止指定数据库下指定名称的作业
+> - `<job_name>`: 停止当前数据库下指定名称的作业
+> - `<db_name>.<job_name>`: 停止指定数据库下指定名称的作业
 
 ## 权限控制
 

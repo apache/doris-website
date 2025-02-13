@@ -25,19 +25,19 @@ under the License.
 -->
 
 
-## Description## Description
+## Description
 
 This syntax is used to pause one or all Routine Load jobs. Paused jobs can be restarted using the RESUME command.
 
 ## Syntax
 
 ```sql
-PAUSE [<ALL>] ROUTINE LOAD FOR <job_name>
+PAUSE [ALL] ROUTINE LOAD FOR <job_name>
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the job to pause. If ALL is specified, job_name is not required.
 

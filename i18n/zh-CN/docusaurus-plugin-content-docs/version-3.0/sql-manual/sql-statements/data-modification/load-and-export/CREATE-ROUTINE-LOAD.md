@@ -38,27 +38,27 @@ under the License.
 ## 语法
 
 ```sql
-CREATE ROUTINE LOAD [<db.>]<job_name> [ON <tbl_name>]
+CREATE ROUTINE LOAD [<db>.]<job_name> [ON <tbl_name>]
 [<merge_type>]
 [<load_properties>]
 [<job_properties>]
 FROM <data_source> [<data_source_properties>]
-[<COMMENT "comment">]
+[COMMENT "<comment>"]
 ```
 
 ## 必选参数
 
-**1. `[db.]job_name`**
+**1. `[<db>.]<job_name>`**
 
 > 导入作业的名称，在同一个 database 内，相同名称只能有一个 job 在运行。
 
-**2. `FROM data_source`**
+**2. `FROM <data_source>`**
 
 > 数据源的类型。当前支持：KAFKA
 
-**3. `data_source_properties`**
+**3. `<data_source_properties>`**
 
-> 1. `kafka_broker_list`
+> 1. `<kafka_broker_list>`
 > 
 >    Kafka 的 broker 连接信息。格式为 ip:host。多个 broker 之间以逗号分隔。
 >    
@@ -66,7 +66,7 @@ FROM <data_source> [<data_source_properties>]
 >    "kafka_broker_list" = "broker1:9092,broker2:9092"
 >    ```
 
-> 2. `kafka_topic`
+> 2. `<kafka_topic>`
 > 
 >    指定要订阅的 Kafka 的 topic。
 >    ```text
@@ -75,7 +75,7 @@ FROM <data_source> [<data_source_properties>]
 
 ## 可选参数
 
-**1. `tbl_name`**
+**1. `<tbl_name>`**
 
 > 指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。
 > 
@@ -87,13 +87,13 @@ FROM <data_source> [<data_source_properties>]
 > tips: 动态表不支持 `columns_mapping` 参数。如果你的表结构和 Doris 中的表结构一致，且存在大量的表信息需要导入，那么这种方式将是不二选择。
 
 
-**2. `merge_type`**
+**2. `<merge_type>`**
 
 > 数据合并类型。默认为 APPEND，表示导入的数据都是普通的追加写操作。MERGE 和 DELETE 类型仅适用于 Unique Key 模型表。其中 MERGE 类型需要配合 [DELETE ON] 语句使用，以标注 Delete Flag 列。而 DELETE 类型则表示导入的所有数据皆为删除数据。
 >
 > tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表的类型，否则会导致导入失败。
 
-**3. `load_properties`**
+**3. `<load_properties>`**
 
 > 用于描述导入数据。组成如下：
 >
@@ -107,13 +107,13 @@ FROM <data_source> [<data_source_properties>]
 > [ORDER BY]
 > ```
 >
-> 1. `column_separator`
+> 1. `<column_separator>`
 >
 >    指定列分隔符，默认为 `\t`
 >
 >    `COLUMNS TERMINATED BY ","`
 
-> 2. `columns_mapping`
+> 2. `<columns_mapping>`
 >
 >    用于指定文件列和表中列的映射关系，以及各种列转换等。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
 >
@@ -121,7 +121,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    tips: 动态表不支持此参数。
 
-> 3. `preceding_filter`
+> 3. `<preceding_filter>`
 >
 >    过滤原始数据。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
 >
@@ -129,7 +129,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    tips: 动态表不支持此参数。  
 >
-> 4. `where_predicates`
+> 4. `<where_predicates>`
 >
 >    根据条件对导入的数据进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤] 文档。
 >
@@ -137,7 +137,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表的列，否则会导致导入失败。通常在使用动态多表的时候，我们仅建议通用公共列使用此参数。  
 
-> 5. `partitions`
+> 5. `<partitions>`
 >
 >    指定导入目的表的哪些 partition 中。如果不指定，则会自动导入到对应的 partition 中。
 >
@@ -145,7 +145,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
 
-> 6. `DELETE ON`
+> 6. `<DELETE ON>`
 >
 >    需配合 MEREGE 导入模式一起使用，仅针对 Unique Key 模型的表。用于指定导入数据中表示 Delete Flag 的列和计算关系。
 >
@@ -153,13 +153,13 @@ FROM <data_source> [<data_source_properties>]
 >
 >    tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
 
-> 7. `ORDER BY`
+> 7. `<ORDER BY>`
 >
 >    仅针对 Unique Key 模型的表。用于指定导入数据中表示 Sequence Col 的列。主要用于导入时保证数据顺序。
 >
 >    tips: 当使用动态多表的时候，请注意此参数应该符合每张动态表，否则会导致导入失败。
 
-**4. `job_properties`**
+**4. `<job_properties>`**
 
 > 用于指定例行导入作业的通用参数。
 >
@@ -172,7 +172,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > 目前我们支持以下参数：
 >
-> 1. `desired_concurrent_number`
+> 1. `<desired_concurrent_number>`
 >
 >     期望的并发度。一个例行导入作业会被分成多个子任务执行。这个参数指定一个作业最多有多少任务可以同时执行。必须大于 0。默认为 5。
 >
@@ -180,7 +180,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    `"desired_concurrent_number" = "3"`
 >
-> 2. `max_batch_interval/max_batch_rows/max_batch_size`
+> 2. `<max_batch_interval>/<max_batch_rows>/<max_batch_size>`
 >
 >    这三个参数分别表示：
 >
@@ -196,7 +196,7 @@ FROM <data_source> [<data_source_properties>]
 >     "max_batch_size" = "209715200"
 >     ```
 >
-> 3. `max_error_number`
+> 3. `<max_error_number>`
 >
 >     采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。
 >
@@ -204,7 +204,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >     被 where 条件过滤掉的行不算错误行。
 >
-> 4. `strict_mode`
+> 4. `<strict_mode>`
 >
 >     是否开启严格模式，默认为关闭。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。指定方式为：
 >
@@ -242,55 +242,55 @@ FROM <data_source> [<data_source_properties>]
 >
 >     注意：10 虽然是一个超过范围的值，但是因为其类型符合 decimal 的要求，所以 strict mode 对其不产生影响。10 最后会在其他 ETL 处理流程中被过滤。但不会被 strict mode 过滤。
 >
-> 5. `timezone`
+> 5. `<timezone>`
 >
 >     指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。
 >
 >     `"timezone" = "Asia/Shanghai"`
 >
-> 6. `format`
+> 6. `<format>`
 >
 >     指定导入数据格式，默认是 csv，支持 json 格式。
 >
 >     `"format" = "json"`
 >
-> 7. `jsonpaths`
+> 7. `<jsonpaths>`
 >
 >     当导入数据格式为 json 时，可以通过 jsonpaths 指定抽取 Json 数据中的字段。
 >
 >     `-H "jsonpaths: [\"$.k2\", \"$.k1\"]"`
 >
-> 8. `strip_outer_array`
+> 8. `<strip_outer_array>`
 >
 >     当导入数据格式为 json 时，strip_outer_array 为 true 表示 Json 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。
 >
 >     `-H "strip_outer_array: true"`
 >
-> 9. `json_root`
+> 9. `<json_root>`
 >
 >     当导入数据格式为 json 时，可以通过 json_root 指定 Json 数据的根节点。Doris 将通过 json_root 抽取根节点的元素进行解析。默认为空。
 >
 >     `-H "json_root: $.RECORDS"`
 >  
-> 10. `send_batch_parallelism`
+> 10. `<send_batch_parallelism>`
 >
 >     整型，用于设置发送批处理数据的并行度，如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 
 >
 >     `"send_batch_parallelism" = "10"`
 >
-> 11. `load_to_single_tablet`
+> 11. `<load_to_single_tablet>`
 >
 >     布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 >
 >     `"load_to_single_tablet" = "true"`
 >
-> 12. `partial_columns`
+> 12. `<partial_columns>`
 >
 >     布尔类型，为 true 表示使用部分列更新，默认值为 false，该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。
 >
 >     `"partial_columns" = "true"`
 >
-> 13. `max_filter_ratio`
+> 13. `<max_filter_ratio>`
 >
 >     采样窗口内，允许的最大过滤率。必须在大于等于0到小于等于1之间。默认值是 0。
 >
@@ -298,19 +298,19 @@ FROM <data_source> [<data_source_properties>]
 >
 >     被 where 条件过滤掉的行不算错误行。
 >
-> 14. `enclose`
+> 14. `<enclose>`
 >
 >     包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。
 >
 >     注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 >
-> 15. `escape`
+> 15. `<escape>`
 >
 >     转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 >
-**5. `data_source_properties` 中的可选属性**
+**5. `<data_source_properties>` 中的可选属性**
 
-> 1. `kafka_partitions/kafka_offsets`
+> 1. `<kafka_partitions>/<kafka_offsets>`
 >
 >     指定需要订阅的 kafka partition，以及对应的每个 partition 的起始 offset。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。
 >
@@ -334,7 +334,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >    注意，时间格式不能和 OFFSET 格式混用。
 >
-> 2. `property`
+> 2. `<property>`
 >
 >     指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。
 >
@@ -349,7 +349,7 @@ FROM <data_source> [<data_source_properties>]
 >     "property.ssl.ca.location" = "FILE:ca.pem"
 >     ```
 >
->     1. 使用 SSL 连接 Kafka 时，需要指定以下参数：
+>     2.1 使用 SSL 连接 Kafka 时，需要指定以下参数：
 >
 >        ```text
 >        "property.security.protocol" = "ssl",
@@ -373,7 +373,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >        分别用于指定 client 的 public key，private key 以及 private key 的密码。
 >
-> 2. 指定 kafka partition 的默认起始 offset
+>     2.2 指定 kafka partition 的默认起始 offset
 >
 >     如果没有指定 `kafka_partitions/kafka_offsets`，默认消费所有分区。
 >
@@ -385,7 +385,7 @@ FROM <data_source> [<data_source_properties>]
 >     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 >     ```
 
-**6. `COMMENT`**
+**6. `<COMMENT>`**
 
 >     例行导入任务的注释信息。
 

@@ -32,7 +32,7 @@ This statement is used to display the running status of Routine Load jobs. You c
 ## Syntax
 
 ```sql
-SHOW [<ALL>] ROUTINE LOAD [FOR <jobName>];
+SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 ```
 
 ## Optional Parameters
@@ -41,14 +41,14 @@ SHOW [<ALL>] ROUTINE LOAD [FOR <jobName>];
 
 > Optional parameter. If specified, all jobs (including stopped or cancelled jobs) will be displayed. Otherwise, only currently running jobs will be shown.
 
-**2. `[FOR jobName]`**
+**2. `[FOR <jobName>]`**
 
 > Optional parameter. Specifies the job name to view. If not specified, all jobs under the current database will be displayed.
 >
 > Supports the following formats:
 >
-> - `job_name`: Shows the job with the specified name in the current database
-> - `db_name.job_name`: Shows the job with the specified name in the specified database
+> - `<job_name>`: Shows the job with the specified name in the current database
+> - `<db_name>.<job_name>`: Shows the job with the specified name in the specified database
 
 ## Return Results
 

@@ -32,21 +32,23 @@ This syntax is used to modify an existing routine load job. Only jobs in PAUSED 
 ## Syntax
 
 ```sql
-ALTER ROUTINE LOAD FOR [<db.>]<job_name>
+ALTER ROUTINE LOAD FOR [<db>.]<job_name>
 [<job_properties>]
-FROM <data_source>
+FROM [<data_source>]
 [<data_source_properties>]
 ```
 
 ## Required Parameters
 
-**1. `[db.]job_name`**
+**1. `[<db>.]<job_name>`**
 
 > Specifies the name of the job to be modified. The identifier must begin with a letter character and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks.
 >
 > The identifier cannot use reserved keywords. For more details, please refer to identifier requirements and reserved keywords.
 
-**2. `job_properties`**
+## Optional Parameters
+
+**1. `<job_properties>`**
 
 > Specifies the job parameters to be modified. Currently supported parameters include:
 > 
@@ -65,21 +67,21 @@ FROM <data_source>
 > - partial_columns
 > - max_filter_ratio
 
-**3. `data_source`**
+**2. `<data_source_properties>`**
+
+> Properties related to the data source. Currently supports:
+> 
+> - `<kafka_partitions>`
+> - `<kafka_offsets>`
+> - `<kafka_broker_list>`
+> - `<kafka_topic>`
+> - Custom properties, such as `<property.group.id>`
+
+**3. `<data_source>`**
 
 > The type of data source. Currently supports:
 > 
 > - KAFKA
-
-**4. `data_source_properties`**
-
-> Properties related to the data source. Currently supports:
-> 
-> - kafka_partitions
-> - kafka_offsets
-> - kafka_broker_list
-> - kafka_topic
-> - Custom properties, such as property.group.id
 
 ## Privilege Control
 

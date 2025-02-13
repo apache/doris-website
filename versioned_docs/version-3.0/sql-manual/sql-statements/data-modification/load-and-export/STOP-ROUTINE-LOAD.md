@@ -38,12 +38,12 @@ STOP ROUTINE LOAD FOR <job_name>;
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the job to stop. It can be in the following formats:
 >
-> - `job_name`: Stop a job with the specified name in the current database
-> - `db_name.job_name`: Stop a job with the specified name in the specified database
+> - `<job_name>`: Stop a job with the specified name in the current database
+> - `<db_name>.<job_name>`: Stop a job with the specified name in the specified database
 
 ## Permission Control
 

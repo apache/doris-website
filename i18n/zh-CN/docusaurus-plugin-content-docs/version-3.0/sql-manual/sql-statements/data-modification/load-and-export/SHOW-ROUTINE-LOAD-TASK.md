@@ -31,13 +31,12 @@ under the License.
 ## 语法
 
 ```sql
-SHOW ROUTINE LOAD TASK
-WHERE JobName = <job_name>;
+SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 ```
 
 ## 必选参数
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > 要查看的例行导入作业名称。
 
