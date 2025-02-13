@@ -68,7 +68,7 @@ Based on the deployment definition provided by Doris Operator, users can customi
 - **Runtime debugging**:  
 
   One of the biggest challenges for Trouble Shorting with containerized services is how to debug at runtime. While pursuing availability and ease of use, Doris Operator also provides more convenient conditions for problem location. In the basic image of Doris, a variety of tools for problem location are pre-set. When you need to view the status in real time, you can enter the container through the exec command provided by kubectl and use the built-in tools for troubleshooting.
-  When the service cannot be started for unknown reasons, Doris Operator provides a Debug running mode. When a Pod is set to Debug startup mode, the container will automatically enter the running state. At this time, you can enter the container through the `exec` command, manually start the service and locate the problem. For details, please refer to [this document](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation.md#How-to-enter-the-container-when-the-pod-crashes)
+  When the service cannot be started for unknown reasons, Doris Operator provides a Debug running mode. When a Pod is set to Debug startup mode, the container will automatically enter the running state. At this time, you can enter the container through the `exec` command, manually start the service and locate the problem. For details, please refer to [this document](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md#How-to-enter-the-container-when-the-pod-crashes)
 
 ## Compatibility
 
@@ -92,14 +92,14 @@ Before deployment, you need to check the host system. Refer to [Operating System
 
 Before deploying Doris Operator on Kubernetes, you need to install Doris Operator CRD.
 
-* For detailed installation documents, please refer to: [Doris Operator Installation](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator.md)
+* For detailed installation documents, please refer to: [Doris Operator Installation](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator.md)
 
 ### Deploy Doris cluster
 
-* For cluster configuration documents, please refer to: [Doris Operator Cluster Configuration](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster.md)
-* For installation documents, please refer to: [Doris Cluster Installation](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster.md)
+* For cluster configuration documents, please refer to: [Doris Operator Cluster Configuration](../../install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster.md)
+* For installation documents, please refer to: [Doris Cluster Installation](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster.md)
 
 ### Cluster operation and maintenance
 
-* For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation.md)
-* For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster.md)
+* For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md)
+* For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/deploy-on-kubernetes/compute-storage-coupled/access-cluster.md)

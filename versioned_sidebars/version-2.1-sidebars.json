@@ -32,18 +32,18 @@
                             "type": "category",
                             "label": "Deploying on Kubernetes",
                             "items": [
-                                "install/cluster-deployment/k8s-deploy/install-doris-operator",
-                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/access-cluster",
-                                "install/cluster-deployment/k8s-deploy/cluster-operation"
+                                "install/deploy-on-kubernetes/install-doris-operator",
+                                "install/deploy-on-kubernetes/install-config-cluster",
+                                "install/deploy-on-kubernetes/install-doris-cluster",
+                                "install/deploy-on-kubernetes/access-cluster",
+                                "install/deploy-on-kubernetes/cluster-operation"
                             ]
                         },
                         {
                             "type": "category",
                             "label": "Deploying on Cloud",
                             "items": [
-                                "install/cluster-deployment/doris-on-aws"
+                                "install/deploy-on-cloud/doris-on-aws"
                             ]
                         }
                     ]
