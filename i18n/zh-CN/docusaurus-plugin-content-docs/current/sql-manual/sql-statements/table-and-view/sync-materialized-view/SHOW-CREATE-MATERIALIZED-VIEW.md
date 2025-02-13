@@ -36,11 +36,11 @@ SHOW CREATE MATERIALIZED VIEW <materialized_view_name> ON <table_name>
 
 ## 必选参数
 
-**1. <materialized_view_new_name>**
+**1. `<materialized_view_new_name>`**
 
 > 物化视图名称
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > 物化视图所属的表
 

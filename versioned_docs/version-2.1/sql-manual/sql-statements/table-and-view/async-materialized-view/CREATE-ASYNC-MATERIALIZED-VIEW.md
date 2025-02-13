@@ -82,17 +82,17 @@ refresh_trigger
 >
 > For more details, refer to the requirements for identifiers and reserved keywords.
 
-**2. <query>**
+**2. `<query>`**
 
 > A required parameter when creating a materialized view. Specifies the SELECT statement that populates the data.
 
 ## Optional Parameters
 
-**1. <key_cols>**
+**1. `<key_cols>`**
 
 > The key columns of the table. In Doris, key columns must be the first K columns of the table. For more information on key restrictions and how to choose key columns, refer to the respective sections in the "Data Model" chapter.
 
-**2. <build_mode>**
+**2. `<build_mode>`**
 
 > Refresh timing: whether the materialized view should be refreshed immediately after creation.
 >
@@ -100,7 +100,7 @@ refresh_trigger
 >
 > DEFERRED: Delayed refresh.
 
-**3. <refresh_method>**
+**3. `<refresh_method>`**
 
 > Refresh method:
 >
@@ -108,7 +108,7 @@ refresh_trigger
 >
 > AUTO: Try to refresh incrementally, only refreshing partitions that have changed since the last materialized view refresh. If incremental refresh is not possible, all partitions will be refreshed.
 
-**4. <refresh_trigger>**
+**4.`<refresh_trigger>`**
 
 > Trigger method:
 >
@@ -118,11 +118,11 @@ refresh_trigger
 >
 > ON COMMIT: Triggered refresh, where changes to the base table data trigger a refresh of the materialized view.
 
-**5. <refresh_unit>**
+**5. `<refresh_unit>`**
 
 > The time unit for periodic refreshes. Currently supported units are MINUTE, HOUR, DAY, and WEEK.
 
-**6. <partition_col>**
+**6. `<partition_col>`**
 
 > If PARTITION BY is not specified, there will be only one partition by default.
 >
@@ -130,15 +130,15 @@ refresh_trigger
 >
 > Materialized views can also reduce the number of partitions through partition roll-up. Currently, the partition roll-up function supports `date_trunc`.
 
-**7. <partition_unit>**
+**7. `<partition_unit>`**
 
 > The aggregation granularity for partition roll-up. Currently supported units are HOUR, DAY, WEEK, QUARTER, MONTH, and YEAR.
 
-**8. <start_time>**
+**8. `<start_time>`**
 
 > The scheduled start time must be in the future, i.e., later than the current time.
 
-**9. <table_property>**
+**9. `<table_property>`**
 
 Properties used by internal tables, most of which can be used by materialized views, along with some properties specific to materialized views, as listed below:
 

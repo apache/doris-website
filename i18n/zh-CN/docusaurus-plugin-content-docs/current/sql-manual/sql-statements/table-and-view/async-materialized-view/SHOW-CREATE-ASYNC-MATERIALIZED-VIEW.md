@@ -36,7 +36,7 @@ SHOW CREATE MATERIALIZED VIEW <materialized_view_name>
 
 ## 必选参数
 
-**1. <materialized_view_new_name>**
+**1. `<materialized_view_new_name>`**
 
 > 物化视图名称
 

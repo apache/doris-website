@@ -36,6 +36,7 @@ PAUSE MATERIALIZED VIEW JOB ON <mv_name>
 ```
 
 ## Required Parameters
+
 **1. `<mv_name>`**
 > Specifies the materialized view name.
 >

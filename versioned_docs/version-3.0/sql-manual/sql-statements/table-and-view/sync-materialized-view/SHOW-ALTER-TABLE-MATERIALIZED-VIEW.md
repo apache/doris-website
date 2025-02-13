@@ -40,7 +40,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW FROM <database>
 
 ## Required Parameters
 
-**1. <database>**
+**1. `<database>`**
 
 > The database to which the base table of the synchronized materialized view belongs.
 

@@ -39,7 +39,7 @@ CANCEL MATERIALIZED VIEW TASK <task_id> ON <mv_name>
 ## 必选参数
 **1. `<task_id>`**
 
-> 指定物化视图创建job的task id。
+> 指定物化视图创建 job 的 task id。
 
 
 **2. `<mv_name>`**
@@ -57,7 +57,7 @@ CANCEL MATERIALIZED VIEW TASK <task_id> ON <mv_name>
 
 | 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
 | :--------- | :----- | :------------------------------------------- |
-| ALTER_PRIV | 物化视图  | CANCEL 属于物化视图的ALTER操作 |
+| ALTER_PRIV | 物化视图  | CANCEL 属于物化视图的 ALTER 操作 |
 
 
 ## 示例

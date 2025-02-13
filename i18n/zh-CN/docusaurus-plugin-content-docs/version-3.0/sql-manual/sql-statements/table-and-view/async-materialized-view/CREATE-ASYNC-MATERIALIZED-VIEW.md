@@ -81,17 +81,17 @@ refresh_trigger
 >
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-**2. <query>**
+**2. `<query>`**
 
 > 在创建物化视图 中为必选参数。指定填充数据的 SELECT 语句。
 
 ## 可选参数
 
-**1. <key_cols>**
+**1. `<key_cols>`**
 
 > 表的 key 列。Doris 中 Key 列必须是表的前 K 个列。关于 Key 的限制，以及如何选择 Key 列，请参阅“数据模型”章节中的各个小节。
 
-**2. <build_mode>**
+**2. `<build_mode>`**
 
 > 刷新时机：物化视图创建完成是否立即刷新
 >
@@ -99,7 +99,7 @@ refresh_trigger
 >
 > DEFERRED：延迟刷新
 
-**3. <refresh_method>**
+**3. `<refresh_method>`**
 
 > 刷新方式
 >
@@ -107,7 +107,7 @@ refresh_trigger
 >
 > AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区
 
-**4. <refresh_trigger>**
+**4. `<refresh_trigger>`**
 
 > 触发方式
 >
@@ -117,11 +117,11 @@ refresh_trigger
 >
 > ON COMMIT：触发式刷新，基表数据变更，触发物化视图刷新
 
-**5. <refresh_unit>**
+**5. `<refresh_unit>`**
 
 > 周期刷新时间单位，目前支持 MINUTE，HOUR，DAY，WEEK
 
-**6. <partition_col>**
+**6. `<partition_col>`**
 
 > 如果不指定 PARTITION BY，默认只有一个分区。
 >
@@ -129,15 +129,15 @@ refresh_trigger
 >
 > 物化视图也可以通过分区上卷的方式减少物化视图的分区数量，目前分区上卷函数支持 `date_trunc`
 
-**7. <partition_unit>**
+**7. `<partition_unit>`**
 
 > 分区上卷的聚合粒度，目前支持 HOUR，DAY，WEEK，QUARTER，MONTH，YEAR
 
-**8. <start_time>**
+**8. `<start_time>`**
 
 > 调度开始时间需要比当前时间大，需要是未来的某个时间
 
-**9. <table_property>**
+**9. `<table_property>`**
 
 内表使用的属性，物化视图基本都可以使用，还有一些是物化视图特有的属性，列举如下
 

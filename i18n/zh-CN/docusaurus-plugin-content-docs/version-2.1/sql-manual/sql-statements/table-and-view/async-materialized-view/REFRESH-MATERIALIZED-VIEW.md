@@ -35,7 +35,7 @@ under the License.
 REFRESH MATERIALIZED VIEW <mv_name> <refresh_type>
 ```
 
-其中:
+其中：
 ```sql
 refresh_type
   : { <partitionSpec> | COMPLETE | AUTO }
@@ -73,7 +73,7 @@ partitionSpec
 
 | 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
 | :--------- | :----- | :------------------------------------------- |
-| ALTER_PRIV | 物化视图  | REFRESH 属于物化视图的ALTER操作 |
+| ALTER_PRIV | 物化视图  | REFRESH 属于物化视图的 ALTER 操作 |
 
 ## 注意事项
 - AUTO：会计算物化视图的哪些分区和基表不同步（目前，如果基表是外表，会被认为始终和物化视图同步，因此如果基表是外表，需要指定`COMPLETE`或指定要刷新的分区），然后刷新对应的分区

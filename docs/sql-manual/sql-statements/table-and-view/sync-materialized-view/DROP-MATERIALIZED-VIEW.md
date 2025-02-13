@@ -43,7 +43,7 @@ ON <table_name>
 
 > The name of the materialized view to be dropped.
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > The table to which the materialized view belongs.
 

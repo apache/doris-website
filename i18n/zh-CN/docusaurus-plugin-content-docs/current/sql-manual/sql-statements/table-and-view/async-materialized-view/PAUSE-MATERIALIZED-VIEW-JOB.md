@@ -56,10 +56,10 @@ PAUSE MATERIALIZED VIEW JOB ON <mv_name>
 
 | 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
 | :--------- | :----- | :------------------------------------------- |
-| ALTER_PRIV | 物化视图  | PAUSE 属于物化视图的ALTER操作 |
+| ALTER_PRIV | 物化视图  | PAUSE 属于物化视图的 ALTER 操作 |
 
 ## 注意事项
-- 当执行完PAUSE MATERIALIZED VIEW语句后，可以使用RESUME MATERIALIZED VIEW语句恢复暂停的任务
+- 当执行完 PAUSE MATERIALIZED VIEW 语句后，可以使用 RESUME MATERIALIZED VIEW 语句恢复暂停的任务
 
 
 ## 示例

@@ -40,11 +40,11 @@ ON <table_name>
 
 ## 必选参数
 
-**1. <materialized_view_new_name>**
+**1. `<materialized_view_new_name>`**
 
 > 目标要删除的物化视图名称
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > 物化视图所属的表
 

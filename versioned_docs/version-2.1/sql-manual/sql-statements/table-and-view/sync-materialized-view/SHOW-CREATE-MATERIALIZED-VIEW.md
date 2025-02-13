@@ -43,7 +43,7 @@ SHOW CREATE MATERIALIZED VIEW <materialized_view_name> ON <table_name>
 
 > The name of the materialized view.
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > The table to which the materialized view belongs.
 

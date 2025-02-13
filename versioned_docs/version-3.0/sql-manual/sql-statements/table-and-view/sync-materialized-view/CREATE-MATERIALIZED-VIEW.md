@@ -58,7 +58,7 @@ query
 >
 > For more details, refer to the requirements for identifiers and reserved keywords.
 
-**2. <query>**
+**2. `<query>`**
 
 > The query statement used to construct the materialized view, the result of which constitutes the data of the materialized view. The currently supported query format is:
 >

@@ -52,10 +52,10 @@ RESUME MATERIALIZED VIEW JOB ON <mv_name>
 
 | 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
 | :--------- | :----- | :------------------------------------------- |
-| ALTER_PRIV | 物化视图  | RESUME 属于物化视图的ALTER操作 |
+| ALTER_PRIV | 物化视图  | RESUME 属于物化视图的 ALTER 操作 |
 
 ## 注意事项
-- 该语句一般在PAUSE MATERIALIZED VIEW语句后执行
+- 该语句一般在 PAUSE MATERIALIZED VIEW 语句后执行
 
 
 ## 示例

@@ -39,7 +39,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW FROM <database>
 
 ## 必选参数
 
-**1. <database>**
+**1. `<database>`**
 
 > 同步物化视图的基表所属数据库
 

@@ -47,6 +47,7 @@ partitionSpec
 ```
 
 ## Required Parameters
+
 **1. `<mv_name>`**
 > Specifies the materialized view name.
 >
@@ -62,6 +63,7 @@ partitionSpec
 > The refresh type may be one of the partitionSpec, COMPLETE or AUTO.
 
 ## Optional Parameters
+
 **1. `<partition_name>`**
 > Specifies the partition name when refresh the partition
 >
