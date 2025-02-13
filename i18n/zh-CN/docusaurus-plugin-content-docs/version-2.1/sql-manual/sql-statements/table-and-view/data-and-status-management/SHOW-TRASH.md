@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW TRASH",
-    "language": "zh-CN"
+  "title": "SHOW TRASH",
+  "language": "zh-CN"
 }
 
 ---
@@ -37,12 +37,20 @@ under the License.
 SHOW TRASH [ON BackendHost:BackendHeartBeatPort];
 ```
 
-## 参数
+## 可选参数
 
-| 参数  | 说明                                      |
-| ----- |-----------------------------------------|
-| ON    | 指定需要查看的 backend。如果不加 ON，默认查看所有 backend。 |
+**1. `[ON ("<be_host>:<be_heartbeat_port>" [, ...])]`**
 
+指定需要查看的 backend。如果不加 ON，默认查看所有 backend。
+
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
+| :--------- | :----- | :------------------------------------------- |
+| ADMIN_PRIV 或 NODE_PRIV | 用户（User）或 角色（Role）  | 用户或者角色拥有 ADMIN_PRIV 或 NODE_PRIV 权限才能进行SHOW TRASH操作 |
 
 ## 示例
 
