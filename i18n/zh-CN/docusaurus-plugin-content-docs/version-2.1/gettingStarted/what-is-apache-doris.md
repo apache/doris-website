@@ -146,4 +146,4 @@ Apache Doris 采用了自适应查询执行（Adaptive Query Execution）技术�
 
 Apache Doris 使用 Pipeline 执行引擎，将查询拆分成多个子任务并行执行，充分释放多核 CPU 能力，同时通过限制查询线程数目解决线程膨胀问题。Pipeline 执行引擎减少数据拷贝与共享，优化排序与聚合操作，从而显著提高查询效率和吞吐量。
 
-在优化器方面，Apache Doris 使用 CBO 、 RBO、HBO 结合的优化策略，RBO 支持常量折叠、子查询改写、谓词下推等，CBO 支持 Join Reorder 等优化，HBO 等够基于历史的 Query 信息推荐最优的执行计划。多种优化措施保证 Doris 能够在各类 Query 中都能够枚举出性能优异的查询计划。
+在优化器方面，Apache Doris 使用 CBO、RBO、HBO 结合的优化策略，RBO 支持常量折叠、子查询改写、谓词下推等，CBO 支持 Join Reorder 等优化，HBO 等够基于历史的 Query 信息推荐最优的执行计划。多种优化措施保证 Doris 能够在各类 Query 中都能够枚举出性能优异的查询计划。
