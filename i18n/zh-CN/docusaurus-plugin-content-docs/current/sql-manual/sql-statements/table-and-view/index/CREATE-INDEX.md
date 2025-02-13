@@ -41,7 +41,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
              [COMMENT '<index_comment>']
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 **1. `<index_name>`**
 
@@ -53,7 +53,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 >
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > 指定表的标识符（即名称），在其所在的数据库（Database）中必须唯一。
 >
@@ -63,7 +63,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 >
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-**3. <column_name> [, ...]**
+**3. `<column_name> [, ...]`**
 
 > 指定在哪些列上创建索引（目前仅支持一个），列在其所在的（Table）中必须唯一。
 >
@@ -73,17 +73,17 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 >
 > 有关更多详细信息，请参阅标识符要求和保留关键字。
 
-## 可选参数（Optional Parameters）
+## 可选参数
 
-**1. USING {INVERTED | NGRAM_BF}**
+**1. `USING {INVERTED | NGRAM_BF}`**
 
 > 指定索引类型，目前支持两种：**INVERTED** 倒排索引，**NGRAM_BF** ngram bloomfilter 索引。
 
-**2. PROPERTIES ("<key>" = "<value>"[ ,  ...])**
+**2. `PROPERTIES ("<key>" = "<value>"[ ,  ...])`**
 
 > 指定索引的参数，使用通用的 PROPERTIES 格式，每个索引支持的参数及语义，请参考具体类型的索引文档。
 
-**3. COMMENT '<index_comment>'**
+**3. `COMMENT '<index_comment>'`**
 
 > 指定索引的注释，便于维护。
 
@@ -100,7 +100,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 - **INVERTED** 倒排索引创建后对新写入的数据立即生效，历史数据的索引需要进行 BUILD INDEX 操作。
 - **NGRAM_BF** NGram BloomFilter 索引创建后会在后台对所用数据进行 schema change 以完成索引构建，进度可以通过 SHOW ALTER TABLE COLUMN 查看进度
 
-## 示例（Examples）
+## 示例
 
 - 在 table1 上创建倒排索引 index1
 

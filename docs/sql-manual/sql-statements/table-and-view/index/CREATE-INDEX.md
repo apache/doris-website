@@ -52,7 +52,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 >
 > For more details, refer to the requirements for identifiers and reserved keywords.
 
-**2. <table_name>**
+**2. `<table_name>`**
 
 > Specifies the identifier (i.e., name) of the table, which must be unique within its database.
 >
@@ -62,7 +62,7 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 >
 > For more details, refer to the requirements for identifiers and reserved keywords.
 
-**3. <column_name> [, ...]**
+**3. `<column_name> [, ...]`**
 
 > Specifies the columns on which the index is created (currently only one column is supported), and the column must be unique within its table.
 >
@@ -74,15 +74,15 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 
 ## Optional Parameters
 
-**1. USING {INVERTED | NGRAM_BF}**
+**1. `USING {INVERTED | NGRAM_BF}`**
 
 > Specifies the index type. Currently, two types are supported: **INVERTED** (inverted index) and **NGRAM_BF** (ngram bloomfilter index).
 
-**2. PROPERTIES ("<key>" = "<value>"[ ,  ...])**
+**2. `PROPERTIES ("<key>" = "<value>"[ ,  ...])`**
 
 > Specifies the parameters of the index using the general PROPERTIES format. For the parameters and semantics supported by each index, refer to the documentation for the specific index type.
 
-**3. COMMENT '<index_comment>'**
+**3. `COMMENT '<index_comment>'`**
 
 > Specifies a comment for the index to facilitate maintenance.
 
