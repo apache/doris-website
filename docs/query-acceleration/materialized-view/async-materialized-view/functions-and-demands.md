@@ -156,7 +156,7 @@ SELECT FROM lineitem;
 Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
 :::
 
-For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW)
+For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 #### Examples
 Table Creation Statements
@@ -489,7 +489,7 @@ SELECT FROM t1;
 
 Additionally, if the partition field is of string type, the date format can be specified by setting the materialized view's `partition_date_format` property, for example, `'%Y-%m-%d'`.
 
-For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
+For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
 ### SQL Definition
 There are no restrictions on the SQL definition of asynchronous materialized views.
@@ -1080,7 +1080,7 @@ SET(
   "grace_period" = "10"
 );
 ```
-For more details, see [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
+For more details, see [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW)
 
 #### Materialized View Renaming, i.e., Atomic Replacement of Materialized Views
 ```sql
@@ -1114,26 +1114,26 @@ PROPERTIES('swap' = 'false');
 DROP MATERIALIZED VIEW mv_1;
 ```
 
-For more details, see [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
+For more details, see [DROP ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW)
 
 ### Viewing Materialized View Creation Statement
 ```sql
 SHOW CREATE MATERIALIZED VIEW mv_1;
 ```
 
-For more details, see [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
+For more details, see [SHOW CREATE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ### Pausing Materialized Views
 
-For more details, see [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW-JOB)
+For more details, see [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB)
 
 ### Resuming Materialized Views
 
-For more details, see [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW-JOB)
+For more details, see [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB)
 
 ### Canceling Materialized View Refresh Tasks
 
-For more details, see [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
+For more details, see [CANCEL MATERIALIZED VIEW TASK](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK)
 
 
 ### Querying Materialized View Information
