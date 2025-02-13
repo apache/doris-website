@@ -37,7 +37,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 [FROM <database>]
 [<where_clause>]
 [ORDER BY <order_by_key> [, ...]]
-[LIMIT <limit_rows> [ OFFSET <offset_rows>]
+[LIMIT <limit_rows> [ OFFSET <offset_rows>]]
 ```
 
 ## Optional Parameters
@@ -46,7 +46,7 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > View jobs under the specified database. If not specified, the current database will be used.
 
-**2. `where_clause`**
+**2. `<where_clause>`**
 
 > You can filter the result columns, and currently, only the following columns are supported for filtering:
 - TableName: Only supports equality filtering.
@@ -57,9 +57,9 @@ SHOW ALTER TABLE MATERIALIZED VIEW
 
 > You can sort the result set by any column.
 
-**4. `LIMIT`**
+**4. `LIMIT <limit_rows> [ OFFSET <offset_rows>]`**
 
-> Use ORDER BY for pagination queries.
+> For pagination queries.
 
 ## Return Value
 
