@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-**The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses**. It integrates the low cost and high scalability of data lakes with the high performance and strong data governance capabilities of data warehouses, enabling efficient, secure, and quality-controlled storage and processing analysis of various data in the big data era. Through standardized data formats and metadata management, it unifies real-time and historical data, batch processing, and stream processing, gradually becoming the new standard for enterprise big data solutions.
+**The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses**. It integrates the low cost and high scalability of data lakes with the high performance and strong data governance capabilities of data warehouses, enabling efficient, secure, and quality-controlled storage and processing analysis of various data in the big data era. Through standardized open data formats and metadata management, it unifies **real-time** and **historical** data, **batch processing**, and **stream processing**, gradually becoming the new standard for enterprise big data solutions.
 
 ## Doris Lakehouse Solution
 
-Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage separation architecture, a high-performance data processing engine, and data ecosystem openness.
+Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
 ![doris-lakehouse-arch](/images/lakehouse/lakehouse-arch-1.png)
 
@@ -48,13 +48,13 @@ For details, refer to each catalog document, such as [Iceberg Catalog](./catalog
 
 Doris provides a good extensibility framework to help developers quickly connect to unique data sources within enterprises, achieving fast data interoperability.
 
-Doris defines three levels of standard data catalogs (Catalog), databases (Database), and data tables (Table), allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata services and data reading services, and developers only need to implement the corresponding access logic according to the interface definitions to complete the data source connection.
+Doris defines three levels of standard Catalog, Database, and Table, allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata service and storage service accessing, and developers only need to implement the corresponding interface to complete the data source connection.
 
 Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide).
 
 #### Convenient Cross-Source Data Processing
 
-Doris supports creating multiple data source connectors at runtime and using SQL to perform federated queries on these data sources. For example, users can associate query fact table data in Hive with dimension table data in MySQL:
+Doris supports creating multiple data catalogs at runtime and using SQL to perform federated queries on these data sources. For example, users can associate query fact table data in Hive with dimension table data in MySQL:
 
 ```sql
 SELECT h.id, m.name
@@ -85,7 +85,7 @@ As an analytical data warehouse, Doris has made numerous optimizations in lakeho
 
     Doris can automatically optimize and process complex SQL requests through the query optimizer. The query optimizer deeply optimizes various complex SQL operators such as multi-table joins, aggregation, sorting, and pagination, fully utilizing cost models and relational algebra transformations to automatically obtain better or optimal logical and physical execution plans, greatly reducing the difficulty of writing SQL and improving usability and performance.
 
-* Cache Acceleration and IO Optimization
+* Data Cache and IO Optimization
 
     Access to external data sources is usually network access, which can have high latency and poor stability. Apache Doris provides rich caching mechanisms and has made numerous optimizations in cache types, timeliness, and strategies, fully utilizing memory and local high-speed disks to enhance the analysis performance of hot data. Additionally, Doris has made targeted optimizations for network IO characteristics such as high throughput, low IOPS, and high latency, providing external data source access performance comparable to local data.
 
@@ -101,11 +101,11 @@ In actual user scenarios, Doris reduces average query latency by 20% and 95th pe
 
 ![doris-performance](/images/lakehouse/performance.png)
 
-### Convenient Business Migration
+### Convenient Service Migration
 
-In the process of integrating multiple data sources and achieving lakehouse transformation, migrating business SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
+In the process of integrating multiple data sources and achieving lakehouse transformation, migrating SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
 
-To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility rate of over 99% in some actual user scenarios.
+To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility of over 99% in some actual user scenarios.
 
 ### Modern Deployment Architecture
 
@@ -119,7 +119,7 @@ The above diagram shows the system architecture of Doris's compute-storage separ
 
 * **Single Source of Truth**: All data is stored in a unified storage layer, allowing the same data to be accessed and processed by different compute clusters, ensuring data consistency and integrity, and reducing the complexity of data synchronization and duplicate storage.
 
-* **Load Diversity**: Enterprises can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
+* **Workload Diversity**: Users can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
 
 ### Openness
 
@@ -161,13 +161,13 @@ In this scenario, **Doris acts as a data processing engine**, processing lakehou
 
 ![data-management](/images/lakehouse/data-management.png)
 
-#### Scheduled Task Scheduling
+#### Task Scheduling
 
 Doris introduces the Job Scheduler feature, enabling efficient and flexible task scheduling, reducing dependency on external systems. Combined with data source connectors, users can achieve periodic processing and storage of external data. For details, refer to the [Job Scheduler](../admin-manual/workload-management/job-scheduler.md).
 
-#### Layered Data Processing
+#### Data Modeling
 
-Enterprises typically use data lakes to store raw data and perform layered data processing on this basis, making different layers of data available to different business needs. Doris's materialized view feature supports creating materialized views for external data sources and supports further processing based on materialized views, reducing system complexity and improving data processing efficiency.
+User typically use data lakes to store raw data and perform layered data processing on this basis, making different layers of data available to different business needs. Doris's materialized view feature supports creating materialized views for external data sources and supports further processing based on materialized views, reducing system complexity and improving data processing efficiency.
 
 #### Data Write-Back
 
