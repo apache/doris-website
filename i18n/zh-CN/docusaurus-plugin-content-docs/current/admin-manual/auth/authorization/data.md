@@ -46,7 +46,7 @@ CREATE ROW POLICY test_row_policy_1 ON test.table1
 AS RESTRICTIVE TO test USING (c1 = 'a');
 ```
 ## 列权限
-使用 Doris 中的列权限， 您可以对表进行精细访问控制。您可以只授予一个表中特定列的权限，来决定哪些用户或角色可以访问表的特定列
+使用 Doris 中的列权限，您可以对表进行精细访问控制。您可以只授予一个表中特定列的权限，来决定哪些用户或角色可以访问表的特定列
 
 目前列权限仅支持 Select_priv
 
@@ -56,7 +56,7 @@ AS RESTRICTIVE TO test USING (c1 = 'a');
 
 ### 列权限示例
 
-1. 授权user1 查询 tbl 表的列: col1，col2.
+1. 授权 user1 查询 tbl 表的列：col1，col2.
 ```sql
 GRANT Select_priv(col1,col2) ON ctl.db.tbl TO user1
 ```

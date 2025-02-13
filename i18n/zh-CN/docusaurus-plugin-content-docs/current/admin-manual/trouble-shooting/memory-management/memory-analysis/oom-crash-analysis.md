@@ -38,7 +38,7 @@ under the License.
 
 触发 OOM Killer 时意味着进程可用内存不足，参考 [内存日志分析](./memory-log-analysis.md) 在 `be/log/be.INFO` 触发 OOM Killer 时间点自下而上找到最后一次打印的 `Memory Tracker Summary` 关键词并分析 BE 进程的主要内存位置。
 
-> `less be/log/be.INFO` 打开文件后，首先跳转到触发 OOM Killer 对应时间的日志，以上面 `dmesg -T` 的结果为例，输入 `/20240718 15:03:59` 后回车搜索对应时间，如果搜不到，可能是触发 OOM Killer 的时间有些偏差，可以搜索 `/20240718 15:03:`。 日志跳转到对应时间后，输入 `/Memory Tracker Summary` 后回车搜素关键词，默认会在日志向下搜索，如果搜索不到或时间对应不上，需要 `shift + n` 先上搜索，找到最后一次打印的 `Memory Tracker Summary` 以及同时打印的 `Process Memory Summary` 内存日志。
+> `less be/log/be.INFO` 打开文件后，首先跳转到触发 OOM Killer 对应时间的日志，以上面 `dmesg -T` 的结果为例，输入 `/20240718 15:03:59` 后回车搜索对应时间，如果搜不到，可能是触发 OOM Killer 的时间有些偏差，可以搜索 `/20240718 15:03:`。日志跳转到对应时间后，输入 `/Memory Tracker Summary` 后回车搜素关键词，默认会在日志向下搜索，如果搜索不到或时间对应不上，需要 `shift + n` 先上搜索，找到最后一次打印的 `Memory Tracker Summary` 以及同时打印的 `Process Memory Summary` 内存日志。
 
 ## 集群内存压力过大导致触发 OOM Killer
 
@@ -46,7 +46,7 @@ under the License.
 
 > Doris 2.1 之前 Memory GC 还不完善，内存持续紧张时往往更容易触发 OOM Killer。
 
-- 对 `Memory Tracker Summary` 的分析发现查询和其他任务、各个Cache、元数据等内存使用都合理。
+- 对 `Memory Tracker Summary` 的分析发现查询和其他任务、各个 Cache、元数据等内存使用都合理。
 
 - 对应时间段的 BE 进程内存监控显示长时间维持在较高的内存使用率，不存在内存泄漏的迹象
 

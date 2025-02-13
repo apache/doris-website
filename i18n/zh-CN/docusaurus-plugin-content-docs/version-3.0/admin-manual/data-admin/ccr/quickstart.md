@@ -48,7 +48,7 @@ cd bin && sh start_syncer.sh --daemon
 sh stop_syncer.sh
 ```
 
-## 第三步. 打开源集群中同步库/表的 Binlog
+## 第三步。打开源集群中同步库/表的 Binlog
 
 ```shell
 -- 如果是整库同步，可以执行如下脚本，使得该库下面所有的表都要打开 binlog.enable
@@ -58,7 +58,7 @@ sh stop_syncer.sh
 ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 ```
 
-## 第四步. 向 Syncer 发起同步任务
+## 第四步。向 Syncer 发起同步任务
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{

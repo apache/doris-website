@@ -26,7 +26,7 @@ under the License.
 
 有关备份的概念，请参阅[备份与恢复](./overview.md)。本指南提供了创建 Repository 和备份数据的操作步骤。
 
-## 第 1 步. 创建 Repository
+## 第 1 步。创建 Repository
 
 <!--
 suites/backup_restore/test_create_and_drop_repository.groovy
@@ -36,7 +36,7 @@ suites/backup_restore/test_create_and_drop_repository.groovy
 
 ### 方法 1: 在 S3 上创建 Repository
 
-要在 S3 存储上创建 Repository ，请使用以下 SQL 命令：
+要在 S3 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -52,13 +52,13 @@ PROPERTIES
 ```
 
 - 将 bucket_name 替换为您的 S3 存储桶名称。
-- 提供适当的 endpoint、access key、 secret key 和 region 以进行 S3 设置。
+- 提供适当的 endpoint、access key、secret key 和 region 以进行 S3 设置。
 
 ### 方法 2: 在 Azure 上创建 Repository
 
 **自 Doris 3.0.4 版本起支持**
 
-要在 Azure 存储上创建 Repository ，请使用以下 SQL 命令：
+要在 Azure 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `azure_repo`
@@ -81,7 +81,7 @@ PROPERTIES
 
 ### 方法 3: 在 GCP 上创建 Repository
 
-要在 Google Cloud Platform (GCP) 存储上创建 Repository ，请使用以下 SQL 命令：
+要在 Google Cloud Platform (GCP) 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `gcp_repo`
@@ -102,7 +102,7 @@ PROPERTIES
 
 ### 方法 4: 在 OSS（阿里云对象存储服务）上创建 Repository
 
-要在 OSS 上创建 Repository ，请使用以下 SQL 命令：
+要在 OSS 上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `oss_repo`
@@ -121,7 +121,7 @@ PROPERTIES
 
 ### 方法 5: 在 MinIO 上创建 Repository
 
-要在 MinIO 存储上创建 Repository ，请使用以下 SQL 命令：
+要在 MinIO 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -138,13 +138,13 @@ PROPERTIES
 ```
 
 - 将 bucket_name 替换为您的 MinIO 存储桶名称。
-- 提供您的 MinIO endpoint、access key和 secret key。
+- 提供您的 MinIO endpoint、access key 和 secret key。
 - `s3.region` 只是一个虚假的 region，任意指定一个即可，但是必须要指定。
 - 如果您不启用 Virtual Host-style，则 'use_path_style' 必须为 true。
 
 ### 方法 6: 在 HDFS 上创建 Repository
 
-要在 HDFS 存储上创建 Repository ，请使用以下 SQL 命令：
+要在 HDFS 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -160,7 +160,7 @@ PROPERTIES
 - 将 prefix_path 替换为真实路径。
 - 提供您的 hdfs endpoint 和用户名。
 
-## 第 2 步. 备份
+## 第 2 步。备份
 
 请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
 
@@ -168,7 +168,7 @@ PROPERTIES
 
 ### 方法 1: 备份当前数据库
 
-以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_20241225`。
+以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository，并使用快照 Label `exampledb_20241225`。
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
@@ -177,7 +177,7 @@ TO example_repo;
 
 ### 方法 2: 备份指定数据库
 
-以下 SQL 语句将名为 destdb 的数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `destdb_20241225`。
+以下 SQL 语句将名为 destdb 的数据库备份到名为 `example_repo` 的 Repository，并使用快照 Label `destdb_20241225`。
 
 ```sql
 BACKUP SNAPSHOT destdb.`destdb_20241225`
@@ -186,7 +186,7 @@ TO example_repo;
 
 ### 方法 3: 备份指定表
 
-以下 SQL 语句将两个表备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_tbl_tbl1_20241225`。
+以下 SQL 语句将两个表备份到名为 `example_repo` 的 Repository，并使用快照 Label `exampledb_tbl_tbl1_20241225`。
 
 ```sql
 BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
@@ -196,7 +196,7 @@ ON (example_tbl, example_tbl1);
 
 ### 方法 4: 备份指定分区
 
-以下 SQL 语句将名为 `example_tbl2` 的表和名为 `p1` 和 `p2` 的两个分区备份到名为 `example_repo` 的 Repository ，并使用快照 Label `example_tbl_p1_p2_tbl1_20241225`。
+以下 SQL 语句将名为 `example_tbl2` 的表和名为 `p1` 和 `p2` 的两个分区备份到名为 `example_repo` 的 Repository，并使用快照 Label `example_tbl_p1_p2_tbl1_20241225`。
 
 ```sql
 BACKUP SNAPSHOT example_tbl_p1_p2_tbl1_20241225
@@ -210,7 +210,7 @@ ON
 
 ### 方法 5: 备份当前数据库，排除某些表
 
-以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository ，并使用快照 Label `exampledb_20241225`，排除两个名为 `example_tbl` 和 `example_tbl1` 的表。
+以下 SQL 语句将当前数据库备份到名为 `example_repo` 的 Repository，并使用快照 Label `exampledb_20241225`，排除两个名为 `example_tbl` 和 `example_tbl1` 的表。
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
@@ -222,7 +222,7 @@ EXCLUDE
 );
 ```
 
-## 第 3 步. 查看最近备份作业的执行情况
+## 第 3 步。查看最近备份作业的执行情况
 
 以下 SQL 语句可用于查看最近备份作业的执行情况。
 
@@ -246,7 +246,7 @@ mysql> show BACKUP\G;
    1 row in set (0.01 sec)
 ```
 
-## 第 4 步. 查看 Repository 中的现有备份
+## 第 4 步。查看 Repository 中的现有备份
 
 以下 SQL 语句可用于查看名为 `example_repo` 的 Repository 中的现有备份，其中 Snapshot 列是快照 Label，Timestamp 是时间戳。
 
@@ -260,7 +260,7 @@ mysql> SHOW SNAPSHOT ON example_repo;
 1 row in set (0.15 sec)
 ```
 
-## 第 5 步. 取消备份（如有需要）
+## 第 5 步。取消备份（如有需要）
 
 可以使用 `CANCEL BACKUP FROM db_name;` 取消一个数据库中的备份任务。更具体的用法可以参考[取消备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md)。
 

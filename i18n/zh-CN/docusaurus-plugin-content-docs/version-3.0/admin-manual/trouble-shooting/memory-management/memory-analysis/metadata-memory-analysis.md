@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris BE 在内存中的元数据（Metadata）包括 `Tablet`、`Rowset`、`Segment`、`TabletSchema`、`ColumnReader`、`PrimaryKeyIndex`、`BloomFilterIndex` 等数据结构，有关 Doris BE 元数据的更多介绍参考文档 [Doris存储结构设计解析](https://blog.csdn.net/ucanuup_/article/details/115004829)。
+Doris BE 在内存中的元数据（Metadata）包括 `Tablet`、`Rowset`、`Segment`、`TabletSchema`、`ColumnReader`、`PrimaryKeyIndex`、`BloomFilterIndex` 等数据结构，有关 Doris BE 元数据的更多介绍参考文档 [Doris 存储结构设计解析](https://blog.csdn.net/ucanuup_/article/details/115004829)。
 
 ## Metadata 查看方法
 

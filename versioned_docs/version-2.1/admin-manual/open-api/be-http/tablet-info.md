@@ -37,7 +37,7 @@ View Tablet Info, including ID and schema hash.
 ## Query parameters
 
 * `limit`
-    Number of tablets output，Optional with default 1000. Take `all` to output all tablets.
+    Number of tablets output, Optional with default 1000. Take `all` to output all tablets.
 
 ## Request body
 

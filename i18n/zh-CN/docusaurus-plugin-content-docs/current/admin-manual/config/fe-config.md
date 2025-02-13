@@ -371,7 +371,7 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 #### `enable_cooldown_replica_affinity`
 
-用户可以选择是否首先使用冷却副本进行扫描,默认为true
+用户可以选择是否首先使用冷却副本进行扫描，默认为 true
 
 默认值：true
 
@@ -2556,7 +2556,7 @@ SmallFileMgr 中存储的最大文件数
 
 是否为 Master FE 节点独有的配置项：true
 
-备份过程中，一个 upload 任务上传的快照数量上限，默认值为10个。
+备份过程中，一个 upload 任务上传的快照数量上限，默认值为 10 个。
 
 #### `restore_download_snapshot_batch_size`
 
@@ -2566,7 +2566,7 @@ SmallFileMgr 中存储的最大文件数
 
 是否为 Master FE 节点独有的配置项：true
 
-恢复过程中，一个 download 任务下载的快照数量上限，默认值为10个。
+恢复过程中，一个 download 任务下载的快照数量上限，默认值为 10 个。
 
 #### `max_backup_restore_job_num_per_db`
 
@@ -2758,7 +2758,7 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 
 默认值： ""
 
-描述：FE 运行的模式。`cloud` 表示解耦的存储-计算模式。
+描述：FE 运行的模式。`cloud` 表示解耦的存储 - 计算模式。
 
 #### `meta_service_endpoint`
 

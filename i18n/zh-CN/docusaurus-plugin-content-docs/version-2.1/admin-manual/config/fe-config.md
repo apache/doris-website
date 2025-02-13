@@ -1222,7 +1222,7 @@ broker scanner 的最大并发数。
 
 是否为 Master FE 节点独有的配置项：true
 
-每个 BE 的最大并发例 Routine Load 任务数。这是为了限制发送到 BE 的 Routine Load 任务的数量，并且它也应该小于 BE config `max_routine_load_thread_pool_size`（默认 1024），这是 BE 上的 Routine Load 任务线程池大小。在2.1版本中，该默认值从2.1.4版本开始为1024。在此之前默认值是5。
+每个 BE 的最大并发例 Routine Load 任务数。这是为了限制发送到 BE 的 Routine Load 任务的数量，并且它也应该小于 BE config `max_routine_load_thread_pool_size`（默认 1024），这是 BE 上的 Routine Load 任务线程池大小。在 2.1 版本中，该默认值从 2.1.4 版本开始为 1024。在此之前默认值是 5。
 
 #### `max_routine_load_task_concurrent_num`
 
@@ -1232,7 +1232,7 @@ broker scanner 的最大并发数。
 
 是否为 Master FE 节点独有的配置项：true
 
-单个 Routine Load 作业的最大并发任务数。在2.1版本中，该默认值从2.1.4版本开始为256。在此之前默认值是5。
+单个 Routine Load 作业的最大并发任务数。在 2.1 版本中，该默认值从 2.1.4 版本开始为 256。在此之前默认值是 5。
 
 #### `max_routine_load_job_num`
 
@@ -1517,9 +1517,9 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 #### `label_regex_length`
 
-默认值: 128 (字符)
+默认值：128 (字符)
 
-导入 label 的最大字符长度，默认128个字符。
+导入 label 的最大字符长度，默认 128 个字符。
 
 #### `transaction_clean_interval_second`
 

@@ -32,7 +32,7 @@ under the License.
 SHOW PROCESSLIST;
 ```
 
-可以显示当前FE 所有的连接，以及每个连接上正在运行的Query 的列表，例如：
+可以显示当前 FE 所有的连接，以及每个连接上正在运行的 Query 的列表，例如：
 
 ```sql
 SHOW PROCESSLIST;
@@ -49,8 +49,8 @@ SHOW PROCESSLIST;
 ```
 
 
-- Id 是连接的唯一标识，也可以称为processlist_id；
-- QueryId 是Query的唯一标识。  
+- Id 是连接的唯一标识，也可以称为 processlist_id；
+- QueryId 是 Query 的唯一标识。  
 
 
 
@@ -62,21 +62,21 @@ SHOW PROCESSLIST;
 KILL QUERY query_id | processlist_id
 ```
 
-用于Kill 某一个指定的Query，或者某一个连接上正在运行的Query，例如：
+用于 Kill 某一个指定的 Query，或者某一个连接上正在运行的 Query，例如：
 
 ```sql
 kill query 55;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-表示Kill 连接Id=55 上正在运行的Query，但是连接仍然有效。
+表示 Kill 连接 Id=55 上正在运行的 Query，但是连接仍然有效。
 
 ```sql
 kill query 'f02603dc163a4da3-beebbb5d1ced760c';
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-表示Kill QueryId=f02603dc163a4da3-beebbb5d1ced760c 的Query，与之前的processlist_id=55 实际是同一个Query。
+表示 Kill QueryId=f02603dc163a4da3-beebbb5d1ced760c 的 Query，与之前的 processlist_id=55 实际是同一个 Query。
 
 ## Kill 连接
 
@@ -93,4 +93,4 @@ kill CONNECTION 55;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-表示断开Id=55 这个连接，这个连接上正在执行的Query也会被Cancel。
+表示断开 Id=55 这个连接，这个连接上正在执行的 Query 也会被 Cancel。

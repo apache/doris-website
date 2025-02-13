@@ -25,12 +25,12 @@ under the License.
 -->
 
 Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
-使用ranger后，会通过在 Ranger 侧配置权限代替在 Doris 中执行 Grant语句授权。
-Ranger的安装和配置见下文：安装和配置 Doris Ranger 插件
+使用 ranger 后，会通过在 Ranger 侧配置权限代替在 Doris 中执行 Grant 语句授权。
+Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 ## Ranger 示例
 ### 更改 Doris 配置
-1. 在 fe/conf/fe.conf 文件中配置鉴权方式为ranger access_controller_type=ranger-doris
+1. 在 fe/conf/fe.conf 文件中配置鉴权方式为 ranger access_controller_type=ranger-doris
 2. 在 fe/conf/ranger-doris-security.xml 文件中配置 ranger 基本信息
 3. 启动集群
 ### 权限示例
@@ -99,7 +99,7 @@ Ranger的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。
 ## 常见问题
-1. ranger访问失败，怎么查看日志
+1. ranger 访问失败，怎么查看日志
    在所有 FE 的 conf 目录创建 log4j.properties 文件，内容如下：
 
     ```

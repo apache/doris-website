@@ -70,7 +70,7 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 
 ### server 端配置
 
-在 `fe/conf/fe.conf` 文件中配置认证方式为ldap `authentication_type=ldap`。
+在 `fe/conf/fe.conf` 文件中配置认证方式为 ldap `authentication_type=ldap`。
 
 在 `fe/conf/ldap.conf` 文件中配置 LDAP 基本信息，
 

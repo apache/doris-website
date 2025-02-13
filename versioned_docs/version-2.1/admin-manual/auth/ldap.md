@@ -60,7 +60,7 @@ In LDAP, data is organized in a tree structure.
 - cn(common name):name
 - group: Group, which can be understood as the role of Doris
 - user: User, equivalent to Doris' user
-- objectClass：It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
+- objectClass: It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
 
 ## Enable LDAP Authentication
 ### Server-side Configuration
@@ -70,7 +70,7 @@ You need to configure the LDAP basic information in the fe/conf/ldap.conf file,
 
 and the LDAP administrator password needs to be set using sql statements.
 
-#### Configure the fe/conf/ldap.conf file：
+#### Configure the fe/conf/ldap.conf file:
 * ldap_host = 127.0.0.1  
   LDAP service ip.
   
