@@ -64,6 +64,6 @@ create catalog lakesoul properties (
 | Decimal(precision, scale) | 支持           |
 | DateTime                  | 支持           |
 | Date                      | 支持           |
-| Array                     | 支持Array嵌套   |
-| Map                       | 支持Map嵌套     |
-| Struct                    | 支持Struct嵌套  |
+| Array                     | 支持 Array 嵌套   |
+| Map                       | 支持 Map 嵌套     |
+| Struct                    | 支持 Struct 嵌套  |

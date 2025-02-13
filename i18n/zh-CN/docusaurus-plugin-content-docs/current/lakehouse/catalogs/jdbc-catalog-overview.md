@@ -269,7 +269,7 @@ Doris 本身只可以配置【表名】大小写的规则。而 JDBC Catalog 需
 
 > 注：若 `lower_case_meta_names = true`，则此时不会参考 `lower_case_table_names`，一律将库名、表名、列名都转换为小写。
 
-根据 `lower_case_meta_names`（true/false） 和 `lower_case_table_names`（0/1/2）的不同组合，库名、表名、列名在 **存储时** 和 **查询时** 的表现方式如下表所示（“原始”表示保持外部数据源的大小写，“小写”表示自动转换为小写，“任意大小写”表示查询时可随意使用大小写）：
+根据 `lower_case_meta_names`（true/false）和 `lower_case_table_names`（0/1/2）的不同组合，库名、表名、列名在 **存储时** 和 **查询时** 的表现方式如下表所示（“原始”表示保持外部数据源的大小写，“小写”表示自动转换为小写，“任意大小写”表示查询时可随意使用大小写）：
 
 | `lower_case_table_names` & `lower_case_meta_names` |  Database 显示名称 | Table 显示名称 | Column 显示名称 | Database 查询名称 | Table 查询名称 | Column 查询名称 |
 | -------------------------------------------------- | --------------- | ------------ | ------------- | --------------- | ------------ | ------------- |
