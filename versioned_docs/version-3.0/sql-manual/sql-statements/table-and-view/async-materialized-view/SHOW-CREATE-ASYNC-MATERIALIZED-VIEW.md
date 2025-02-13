@@ -39,7 +39,7 @@ SHOW CREATE MATERIALIZED VIEW <materialized_view_name>
 
 ## Required Parameters
 
-**1. <materialized_view_name>**
+**1. `<materialized_view_name>`**
 
 > The name of the materialized view.
 

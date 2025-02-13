@@ -48,7 +48,7 @@ query
 
 ## Required Parameters
 
-**1. <materialized_view_name>**
+**1. `<materialized_view_name>`**
 
 > Specifies the identifier (i.e., name) of the materialized view. Since a synchronized materialized view is created based on a table, the name must be unique within the same table.
 >
@@ -91,8 +91,12 @@ query
 
 ## Example
 
+
 ```sql
 desc lineitem;
+```
+
+```text
 +-----------------+---------------+------+-------+---------+-------+
 | Field           | Type          | Null | Key   | Default | Extra |
 +-----------------+---------------+------+-------+---------+-------+
@@ -113,6 +117,9 @@ desc lineitem;
 | l_shipmode      | char(10)      | No   | false | NULL    | NONE  |
 | l_comment       | varchar(44)   | No   | false | NULL    | NONE  |
 +-----------------+---------------+------+-------+---------+-------+
+```
+
+```sql
 CREATE MATERIALIZED VIEW sync_agg_mv AS
 SELECT 
   l_shipdate,

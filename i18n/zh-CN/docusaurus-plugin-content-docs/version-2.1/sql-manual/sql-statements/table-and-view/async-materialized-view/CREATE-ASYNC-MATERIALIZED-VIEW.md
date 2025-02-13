@@ -72,7 +72,7 @@ refresh_trigger
 
 ## 必选参数
 
-**1. <materialized_view_name>**
+**1. `<materialized_view_name>`**
 
 > 指定表的标识符（即名称）；在创建表的数据库（Database）中必须唯一。
 >

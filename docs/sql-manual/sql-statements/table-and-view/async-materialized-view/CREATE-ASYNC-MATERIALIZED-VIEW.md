@@ -71,7 +71,7 @@ refresh_trigger
 
 ## Required Parameters
 
-**1. <materialized_view_name>**
+**1. `<materialized_view_name>`**
 
 > Specifies the identifier (i.e., name) of the materialized view; it must be unique within the database where the table is created.
 >
@@ -160,7 +160,7 @@ The user executing this SQL command must have at least the following permissions
 | Privilege   | Object      | Notes                                                        |
 | ----------- | ----------- | ------------------------------------------------------------ |
 | CREATE_PRIV | Database    |                                                              |
-| SELECT_PRIV | Table, View | Requires SELECT_PRIV permission on the tables or views queried in <query> |
+| SELECT_PRIV | Table, View | Requires SELECT_PRIV permission on the tables or views queried in `<query>` |
 
 ## Notes
 

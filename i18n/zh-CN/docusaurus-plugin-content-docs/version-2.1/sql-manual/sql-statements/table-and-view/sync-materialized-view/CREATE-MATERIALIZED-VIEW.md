@@ -48,7 +48,7 @@ query
 
 ## 必选参数
 
-**1. <materialized_view_name>**
+**1. `<materialized_view_name>`**
 
 > 指定表的标识符（即名称）；同步物化视图基于表创建，所以名称需要在相同表中必须唯一。
 >
@@ -91,8 +91,12 @@ query
 
 ## 示例
 
+
 ```sql
 desc lineitem;
+```
+
+```text
 +-----------------+---------------+------+-------+---------+-------+
 | Field           | Type          | Null | Key   | Default | Extra |
 +-----------------+---------------+------+-------+---------+-------+
@@ -113,6 +117,9 @@ desc lineitem;
 | l_shipmode      | char(10)      | No   | false | NULL    | NONE  |
 | l_comment       | varchar(44)   | No   | false | NULL    | NONE  |
 +-----------------+---------------+------+-------+---------+-------+
+```
+
+```sql
 CREATE MATERIALIZED VIEW sync_agg_mv AS
 SELECT 
   l_shipdate,
