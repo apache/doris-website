@@ -24,83 +24,99 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## Description
 
-Use `SHOW ANALYZE` to view information about statistics collection jobs.
+This statement is used to view the status of the statistics collection job.
 
-Syntax:
+## Syntax
 
 ```SQL
-SHOW [AUTO] ANALYZE < table_name | job_id >
-    [ WHERE [ STATE = [ "PENDING" | "RUNNING" | "FINISHED" | "FAILED" ] ] ];
+SHOW [AUTO] ANALYZE [ <table_name> | <job_id> ]
+    [ WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"} ];
 ```
 
-- AUTO: Show historical information for automatic collection jobs only. Note that, by default, the status of only the last 20,000 completed automatic collection jobs is retained.
-- table_name: Table name, specify to view statistics job information for that table. It can be in the format `db_name.table_name`. When not specified, it returns information for all statistics jobs.
-- job_id: Job ID for statistics collection, obtained when executing `ANALYZE`. When not specified, this command returns information for all statistics jobs.
+## Required Parameters
 
-Output:
+**None**
 
-| Column Name           | Description      |
-| :--------------------- | :--------------- |
-| `job_id`               | Job ID           |
-| `catalog_name`         | Catalog Name     |
-| `db_name`              | Database Name    |
-| `tbl_name`             | Table Name       |
-| `col_name`             | Column Name List |
-| `job_type`             | Job Type         |
-| `analysis_type`        | Analysis Type    |
-| `message`              | Job Information  |
-| `last_exec_time_in_ms` | Last Execution Time |
-| `state`                | Job Status       |
-| `schedule_type`        | Scheduling Method |
+## Optional Parameters
 
-Here's an example:
+**1. `AUTO`**
+
+> Show information about automatic jobs. If not specified, information about manual jobs will be displayed by default.
+
+**2. `<table_name>`**
+
+> Table name. After specifying it, you can view the job information corresponding to this table. When not specified, the job information of all tables will be returned by default.
+
+**3. `<job_id>`**
+
+> Statistics Job ID，Obtained when performing asynchronous collection with ANALYZE. When the ID is not specified, this command returns information about all jobs.
+
+**4. `WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"}`**
+
+> Filter conditions of job state. If not specified, information about jobs in all states will be displayed by default.
+
+## Return Value
+
+| Column | Note           |
+| -- |--------------|
+| job_id | Unique statistics job id           |
+| catalog_name |   Catalog name         |
+| db_name | database name           |
+| tbl_name | table name         |
+| col_name | column name list           |
+| job_type |   job type           |
+| analysis_type |  analysis type           |
+| message | error message         |
+| last_exec_time_in_ms | last analyze time           |
+| state |   job state          |
+| progress | job progress           |
+| schedule_type | schedule type         |
+| start_time | job start time          |
+| end_time |   job end time           |
+| priority | job priority           |
+| enable_partition | enable partition collection flag         |
+
+## Access Control Requirements
+
+The user who executes this SQL must have at least the following permissions:
+
+| Privilege | Object | Notes                                    |
+|:--------------| :------------- |:------------------------------------------------|
+| SELECT_PRIV   | Table    | When executing SHOW, the SELECT_PRIV privilege for the queried table is required. |
+
+## Examples
+
+1. Show jobs by table name.
 
 ```sql
-mysql> show analyze 245073\G;
-*************************** 1. row ***************************
-              job_id: 245073
-        catalog_name: internal
-             db_name: default_cluster:tpch
-            tbl_name: lineitem
-            col_name: [l_returnflag,l_receiptdate,l_tax,l_shipmode,l_suppkey,l_shipdate,l_commitdate,l_partkey,l_orderkey,l_quantity,l_linestatus,l_comment,l_extendedprice,l_linenumber,l_discount,l_shipinstruct]
-            job_type: MANUAL
-       analysis_type: FUNDAMENTALS
-             message: 
-last_exec_time_in_ms: 2023-11-07 11:00:52
-               state: FINISHED
-            progress: 16 Finished  |  0 Failed  |  0 In Progress  |  16 Total
-       schedule_type: ONCE
+SHOW ANALYZE test1 WHERE STATE="FINISHED";
 ```
 
-<br/>
+```text
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| job_id        | catalog_name | db_name | tbl_name | col_name              | job_type | analysis_type | message | last_exec_time_in_ms | state    | progress                                              | schedule_type | start_time          | end_time            | priority | enable_partition |
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| 1737454119144 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-01-21 18:10:11  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-01-21 18:10:10 | 2025-01-21 18:10:11 | MANUAL   | false            |
+| 1738725887879 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 11:26:15  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-02-05 11:26:15 | 2025-02-05 11:26:15 | MANUAL   | false            |
+| 1738725887890 | internal     | test    | test1    | [test1:name,test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:09  | FINISHED | 2 Finished  |  0 Failed  |  0 In Progress  |  2 Total | ONCE          | 2025-02-05 12:17:08 | 2025-02-05 12:17:09 | MANUAL   | false            |
+| 1738725887895 | internal     | test    | test1    | [test1:id]            | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:24  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:23 | 2025-02-05 12:17:24 | MANUAL   | false            |
+| 1738725887903 | internal     | test    | test1    | [test1:id]            | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:42  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:41 | 2025-02-05 12:17:42 | MANUAL   | false            |
++---------------+--------------+---------+----------+-----------------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+```
 
-Each collection job can contain one or more tasks, with each task corresponding to the collection of a column. Users can use the following command to view the completion status of statistics collection for each column.
-
-Syntax:
+2. Show job by job id.
 
 ```sql
-SHOW ANALYZE TASK STATUS [job_id]
+show analyze 1738725887903;
 ```
 
-Here's an example:
-
-```
-mysql> show analyze task status 20038 ;
-+---------+----------+---------+----------------------+----------+
-| task_id | col_name | message | last_exec_time_in_ms | state    |
-+---------+----------+---------+----------------------+----------+
-| 20039   | col4     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20040   | col2     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20041   | col3     |         | 2023-06-01 17:22:15  | FINISHED |
-| 20042   | col1     |         | 2023-06-01 17:22:15  | FINISHED |
-+---------+----------+---------+----------------------+----------+
+```text
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| job_id        | catalog_name | db_name | tbl_name | col_name   | job_type | analysis_type | message | last_exec_time_in_ms | state    | progress                                              | schedule_type | start_time          | end_time            | priority | enable_partition |
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
+| 1738725887903 | internal     | test    | test1    | [test1:id] | MANUAL   | FUNDAMENTALS  |         | 2025-02-05 12:17:42  | FINISHED | 1 Finished  |  0 Failed  |  0 In Progress  |  1 Total | ONCE          | 2025-02-05 12:17:41 | 2025-02-05 12:17:42 | MANUAL   | false            |
++---------------+--------------+---------+----------+------------+----------+---------------+---------+----------------------+----------+-------------------------------------------------------+---------------+---------------------+---------------------+----------+------------------+
 ```
 
-## Keywords
-
-SHOW, ANALYZE

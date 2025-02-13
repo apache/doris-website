@@ -31,7 +31,7 @@ under the License.
 
 ## 1. 获取快照的备份时间戳
 
-以下SQL语句可用于查看名为`example_repo`的 Repository 中的现有备份。
+以下 SQL 语句可用于查看名为`example_repo`的 Repository 中的现有备份。
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
@@ -47,7 +47,7 @@ under the License.
 
 ### Option 1：恢复快照到当前数据库
 
-以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到当前数据库。
+以下 SQL 语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到当前数据库。
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -60,7 +60,7 @@ PROPERTIES
 
 ### Option 2：恢复快照到指定数据库
 
-以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
+以下 SQL 语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
 
 ```sql
 RESTORE SNAPSHOT destdb.`restore_label1`
@@ -87,7 +87,7 @@ PROPERTIES
 
 ### Option 4：从快照恢复分区和表
 
-从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区p1和p2，以及表`backup_tbl2`到当前数据库`example_db1`，并将其重命名为`new_tbl`，快照标签为时间版本为`"2018-05-04-17-11-01"`。
+从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区 p1 和 p2，以及表`backup_tbl2`到当前数据库`example_db1`，并将其重命名为`new_tbl`，快照标签为时间版本为`"2018-05-04-17-11-01"`。
 
    ```sql
    RESTORE SNAPSHOT `restore_label1`

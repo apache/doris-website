@@ -28,7 +28,7 @@ under the License.
 
 ## 概述
 
-Doris是一个MPP数据库，依赖数据shuffle进行并行的计算加速。但是实际生产场景经常会遇到因为数据倾斜导致查询并行的单线程的执行瓶颈。下节介绍如何发现这类问题，并提供一些通用的解决方法。
+Doris 是一个 MPP 数据库，依赖数据 shuffle 进行并行的计算加速。但是实际生产场景经常会遇到因为数据倾斜导致查询并行的单线程的执行瓶颈。下节介绍如何发现这类问题，并提供一些通用的解决方法。
 
 ## 案例 1：Bucket 数据倾斜导致 shuffle 方式不优
 
@@ -59,16 +59,16 @@ HASH_JOIN_OPERATOR  (id=27):
       -  RowsProduced:  sum  28.8K  (28800),  avg  200,  max  200,  min  200 
 ```
 
-从上面的Join的Profile上max指标上来看，执行时间和ProbeRows的有明显的倾斜情况。
+从上面的 Join 的 Profile 上 max 指标上来看，执行时间和 ProbeRows 的有明显的倾斜情况。
 
 ```Bash
 ExecTime:  avg  166.206ms,  max  10s947.344ms,  min  8.845ms 
 ProbeRows:  sum  23.884018M  (23884018),  avg  165.861K  (165861),  max  219.346276M  (219346276),  min  1984  (1984) 
 ```
 
-然而，由于数据基于join key shuffle之后分布不均，会导致其中一个线程处理了2亿行数据，而另一个线程只处理了 几千行数据。
+然而，由于数据基于 join key shuffle 之后分布不均，会导致其中一个线程处理了 2 亿行数据，而另一个线程只处理了 几千行数据。
 
-上述 case 在理想情况下，每个线程各处理的数据是接近的。但因为Join列数据倾斜的问题，可能会导致大量的计算工作由一个线程完成的。为了解决这个性能瓶颈，可以参考“使用 Hint 控制 Join Shuffle 方式”章节中提到的调优技巧，指定 broadcast join hint 如下，让左表不进行数据的shuffle，这样就可以有效避免因为Join列数据倾斜导致的性能瓶颈。
+上述 case 在理想情况下，每个线程各处理的数据是接近的。但因为 Join 列数据倾斜的问题，可能会导致大量的计算工作由一个线程完成的。为了解决这个性能瓶颈，可以参考“使用 Hint 控制 Join Shuffle 方式”章节中提到的调优技巧，指定 broadcast join hint 如下，让左表不进行数据的 shuffle，这样就可以有效避免因为 Join 列数据倾斜导致的性能瓶颈。
 
 ```SQL
 SELECT COUNT(*) FROM orders o JOIN [broadcast] customer c ON o.customer_number = c.customer_number;

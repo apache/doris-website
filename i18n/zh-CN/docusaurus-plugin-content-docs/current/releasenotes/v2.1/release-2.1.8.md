@@ -35,7 +35,7 @@ under the License.
 
 - 添加环境变量 `SKIP_CHECK_ULIMIT` 以跳过 BE 进程内关于 ulimit 值校验检查，仅适用于 Docker 快速启动场景中应用。[#45267](https://github.com/apache/doris/pull/45267)
 - 添加 `enable_cooldown_replica_affinity session` 变量控制冷热分层下查询选用副本亲和性
-- FE 添加配置` restore_job_compressed_serialization` 和 `backup_job_compressed_serialization` 用于解决 db tablet 数量非常大情况下备份和恢复操作时 FE OOM 的问题，打开之后无法降级
+- FE 添加配置` restore_job_compressed_serialization` 和 `backup_job_compressed_serialization` 用于解决 db tablet 数量非常大情况下备份和恢复操作时 FE OOM 的问题，默认关闭，打开之后无法降级
 
 ## 新功能
 
@@ -195,4 +195,4 @@ under the License.
 
 ### Others
 
-- 修复 BE 端开启 `enable_jvm_monitor=true` 后可能导致的内存泄露问题。[#44311](
+- 修复 BE 端开启 `enable_jvm_monitor=true` 后可能导致的内存泄露问题。[#44311](https://github.com/apache/doris/pull/44311)

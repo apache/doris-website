@@ -22,28 +22,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## positive
+## Description
 
-### description
-#### Syntax
+Returns the value itself.
+
+## Syntax
 
 ```sql
-BIGINT positive(BIGINT x)
-DOUBLE positive(DOUBLE x)
-DECIMAL positive(DECIMAL x)
+POSITIVE(<x>)
 ```
-Return `x`.
 
-### example
+## Parameters
 
+| Parameter | Description |
+|-----------|------------|
+| `<x>`   | The value that needs to be returned. |
+
+## Return value
+
+Returns an integer or a floating-point number. Special cases:
+
+- If the parameter is NULL, return NULL.
+
+## Example
+
+```sql
+SELECT positive(-10);
 ```
-mysql> SELECT positive(-10);
+
+```text
 +---------------+
 | positive(-10) |
 +---------------+
 |           -10 |
 +---------------+
-mysql> SELECT positive(12);
+```
+
+```sql
+SELECT positive(10.111);
+```
+
+```text
++------------------+
+| positive(10.111) |
++------------------+
+|           10.111 |
++------------------+
+```
+
+```sql
+SELECT positive(12);
+```
+
+```text
 +--------------+
 | positive(12) |
 +--------------+
@@ -51,5 +82,14 @@ mysql> SELECT positive(12);
 +--------------+
 ```
 
-### keywords
-	POSITIVE
+```sql
+SELECT positive(null);
+```
+
+```text
++----------------+
+| positive(NULL) |
++----------------+
+|           NULL |
++----------------+
+```

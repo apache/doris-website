@@ -1,6 +1,6 @@
 ---
 {
-"title": "HLL近似去重",
+"title": "HLL 近似去重",
 "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# HLL近似去重
+# HLL 近似去重
 
 ## 使用场景
 
@@ -49,7 +49,7 @@ under the License.
 
 最终结合极大似然估算的方法，发现在 n 和 k_max 中存在估算关联：n = 2 ^ k_max。**当我们只记录了 k_max 时，即可估算总共有多少条数据，也就是基数。**
 
-## 使用HLL进行近似去重
+## 使用 HLL 进行近似去重
 
 ### 创建表
 
@@ -76,7 +76,7 @@ PROPERTIES(
 
 ### 导入数据
 
-示例数据如下（test_hll.csv)，这里通过 Stream Load导入
+示例数据如下（test_hll.csv)，这里通过 Stream Load 导入
 
 ```SQL
 2022-05-05,10001,测试 01,北京,windows 

@@ -33,7 +33,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Point( <x>, <y>)
+ST_POINT( <x>, <y>)
 ```
 ## 参数
 

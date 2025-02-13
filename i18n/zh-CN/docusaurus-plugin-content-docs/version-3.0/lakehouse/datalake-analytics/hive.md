@@ -114,7 +114,7 @@ CREATE CATALOG hive PROPERTIES (
 Doris 2.0.13 / 2.1.5 后支持该功能
 :::
 
-腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用HMS管理元数据，因此可用 Hive catalog 进行联邦分析。
+腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用 HMS 管理元数据，因此可用 Hive catalog 进行联邦分析。
 DLC 可基于 lakefs 或 cosn 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
 ```sql
 CREATE CATALOG dlc PROPERTIES (
@@ -627,4 +627,4 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
     `set read_csv_empty_line_as_null = true;`
 
-    该变量默认为 false，表示忽略空行。如果设置为 true，这空行会读取为“所有列都是 null” 的行并返回，这种行为和部分 Hadoop 生态中查询引擎的行为一致。
+    该变量默认为 false，表示忽略空行。如果设置为 true，这空行会读取为“所有列都是 null”的行并返回，这种行为和部分 Hadoop 生态中查询引擎的行为一致。

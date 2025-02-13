@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库。 Doris 存算分离模式使用 FoundationDB 作为元数据存储，通过 meta-service 组件来管理 FoundationDB 中的元数据。 Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
+[FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库。Doris 存算分离模式使用 FoundationDB 作为元数据存储，通过 meta-service 组件来管理 FoundationDB 中的元数据。Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
 - 在虚机（包括物理机）上直接部署。虚机部署请参考 Doris 存算分离官方文档[部署前准备部分](../../../../compute-storage-decoupled/before-deployment.md)搭建 FoundationDB 集群。部署前请确保 FoundationDB 有被 Doris 部署的 Kubernetes 集群访问的能力。  
-- 在 Kubernetes 上部署 FoundationDB。 FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。  
+- 在 Kubernetes 上部署 FoundationDB。FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。  
 
 ## 在 Kubernetes 上部署 FoundationDB
 在 Kubernetes 上部署 FoundationDB 分为 4 步：
@@ -70,7 +70,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 - 从 doris-operator 仓库下载
 
-  doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster 。
+  doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster。
 
   ```shell
   wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
@@ -78,7 +78,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 2. 部署 fdb-kubernetes-operator 服务
 
-  定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator ：
+  定制化 `fdb-kubernetes-operator` 的部署 yaml 后，使用如下命令部署 fdb-kubernetes-operator：
   ```shell
   kubectl apply -f fdb-operator.yaml
   ```
@@ -121,7 +121,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 - 私网环境  
 
-  在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
+  在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
   部署 FoundationDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
   推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
 
@@ -142,7 +142,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
 :::tip 提示
 - 私有环境下，FoundationDB 推到私有仓库时，tag 必须与官方保持一致，比如：7.1.38。
-- 部署 FoundationDB 时, FoundationDBCluster 资源，`.spec.version` 必须配置。
+- 部署 FoundationDB 时，FoundationDBCluster 资源，`.spec.version` 必须配置。
 - FoundationDB 基于 fdb-kubernetes-operator 部署，要求 Kubernetes 集群至少有三台宿主机才可满足生产环境高可用要求。  
 :::
 

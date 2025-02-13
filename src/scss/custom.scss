@@ -20,6 +20,16 @@
 @include meta.load-css('components/toc.scss');
 @include meta.load-css('common');
 
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf');
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSansSC-VariableFont_wght.ttf');
+}
+
 @layer utilities {
     .transition-slide {
         @apply inline-block transform transition-transform duration-300 hover:translate-x-1 group-hover:translate-x-1;
@@ -53,7 +63,7 @@ html[lang='en-US'] {
 // }
 .markdown :where(p, h1, h2, h3, h4, h5, h6, li, blockquote) {
     font-family: var(--font-family-base);
-    color: #1F1F26;
+    color: #1f1f26;
 }
 
 body {

@@ -24,96 +24,94 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 ## 描述
 
 该语句用于展示指定的导出任务的执行情况
 
-语法：
+## 语法
 
 ```sql
 SHOW EXPORT
-[FROM db_name]
+[ FROM <db_name> ]
   [
     WHERE
-      [ID = your_job_id]
-      [STATE = ["PENDING"|"EXPORTING"|"FINISHED"|"CANCELLED"]]
-      [LABEL = your_label]
+      [ ID = <job_id> ]
+      [ STATE = { "PENDING" | "EXPORTING" | "FINISHED" | "CANCELLED" } ]
+      [ LABEL = <label> ]
    ]
-[ORDER BY ...]
-[LIMIT limit];
+[ ORDER BY <column_name> [ ASC | DESC ] [, column_name [ ASC | DESC ] ... ] ]
+[ LIMIT <limit> ];
 ```
-说明：
-    1. 如果不指定 db_name，使用当前默认 db
-    2. 如果指定了 STATE，则匹配 EXPORT 状态
-    3. 可以使用 ORDER BY 对任意列组合进行排序
-    4. 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
 
-`show export` 命令返回的结果各个列的含义如下：
+## 可选参数
 
-* JobId：作业的唯一 ID
-* Label：该导出作业的标签，如果 Export 没有指定，则系统会默认生成一个。
-* State：作业状态：
-  * PENDING：作业待调度
-  * EXPORTING：数据导出中
-  * FINISHED：作业成功
-  * CANCELLED：作业失败
-* Progress：作业进度。该进度以查询计划为单位。假设一共 10 个线程，当前已完成 3 个，则进度为 30%。
-* TaskInfo：以 Json 格式展示的作业信息：
-  * db：数据库名
-  * tbl：表名
-  * partitions：指定导出的分区。`空`列表 表示所有分区。
-  * column\_separator：导出文件的列分隔符。
-  * line\_delimiter：导出文件的行分隔符。
-  * tablet num：涉及的总 Tablet 数量。
-  * broker：使用的 broker 的名称。
-  * coord num：查询计划的个数。
-  * max\_file\_size：一个导出文件的最大大小。
-  * delete\_existing\_files：是否删除导出目录下已存在的文件及目录。
-  * columns：指定需要导出的列名，空值代表导出所有列。
-  * format：导出的文件格式
-* Path：远端存储上的导出路径。
-* CreateTime/StartTime/FinishTime：作业的创建时间、开始调度时间和结束时间。
-* Timeout：作业超时时间。单位是秒。该时间从 CreateTime 开始计算。
-* ErrorMsg：如果作业出现错误，这里会显示错误原因。
-* OutfileInfo：如果作业导出成功，这里会显示具体的`SELECT INTO OUTFILE`结果信息。
+**1. `<db_name>`**：可选参数，如果不指定，使用当前默认数据库。
+
+**2. `<job_id>`**：可选参数，用于指定要展示的导出作业 ID。
+
+**3. `<label>`**：可选参数，用于指定要展示的导出作业的标签。
+
+**4. `<column_name>`**：可选参数，用于指定排序的列名。
+
+**5. `<limit>`**：可选参数，如果指定了该参数，则仅显示指定条数的匹配记录；如果未指定，则显示全部记录。
+
+
+## 返回值
+
+| 列名          | 类型     | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|-------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| JobId       | string | 作业的唯一 ID                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Label       | string | 该导出作业的标签，如果 Export 没有指定，则系统会默认生成一个。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| State       | string | 作业状态：<br> - `PENDING`：作业待调度<br> - `EXPORTING`：数据导出中<br> - `FINISHED`：作业成功<br> - `CANCELLED`：作业失败                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Progress    | string | 作业进度。该进度以查询计划为单位。假设一共 10 个线程，当前已完成 3 个，则进度为 30%。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| TaskInfo    | json   | 以 Json 格式展示的作业信息：<br> - db：数据库名<br> - tbl：表名<br> - partitions：指定导出的分区，`空` 列表表示所有分区<br> - column_separator：导出文件的列分隔符<br> - line_delimiter：导出文件的行分隔符<br> - tablet num：涉及的总 Tablet 数量<br> - broker：使用的 broker 的名称<br> - coord num：查询计划的个数<br> - max_file_size：一个导出文件的最大大小<br> - delete_existing_files：是否删除导出目录下已存在的文件及目录<br> - columns：指定需要导出的列名，空值代表导出所有列<br> - format：导出的文件格式                                                                                                                                                                                                                                |
+| Path        | string | 远端存储上的导出路径                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| CreateTime  | string | 作业的创建时间                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| StartTime   | string | 作业开始调度时间                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| FinishTime  | string | 作业结束时间                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Timeout     | int    | 作业超时时间（单位：秒）。该时间从 CreateTime 开始计算。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ErrorMsg    | string | 如果作业出现错误，这里会显示错误原因                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| OutfileInfo | string | 如果作业导出成功，这里会显示具体的 `SELECT INTO OUTFILE` 结果信息                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限          | 对象          | 说明            |
+|:------------|:------------|:--------------|
+| SELECT_PRIV | 库（Database） | 需要对数据库、表的读权限。 |
+
 
 ## 示例
 
-1. 展示默认 db 的所有导出任务
+- 展示默认 db 的所有导出任务
    
     ```sql
     SHOW EXPORT;
     ```
-    
-2. 展示指定 db 的导出任务，按 StartTime 降序排序
+
+- 展示指定 db 的导出任务，按 StartTime 降序排序
    
     ```sql
      SHOW EXPORT FROM example_db ORDER BY StartTime DESC;
     ```
-    
-3. 展示指定 db 的导出任务，state 为 "exporting", 并按 StartTime 降序排序
+
+- 展示指定 db 的导出任务，state 为 "exporting", 并按 StartTime 降序排序
    
     ```sql
     SHOW EXPORT FROM example_db WHERE STATE = "exporting" ORDER BY StartTime DESC;
     ```
-    
-4. 展示指定 db，指定 job_id 的导出任务
+
+- 展示指定 db，指定 job_id 的导出任务
    
     ```sql
       SHOW EXPORT FROM example_db WHERE ID = job_id;
     ```
-    
-5. 展示指定 db，指定 label 的导出任务
+
+- 展示指定 db，指定 label 的导出任务
    
     ```sql
      SHOW EXPORT FROM example_db WHERE LABEL = "mylabel";
     ```
 
-## 关键词
-
-    SHOW, EXPORT
-
-## 最佳实践
 

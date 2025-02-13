@@ -75,7 +75,7 @@ CREATE CATALOG saphana PROPERTIES (
 | INTERGER      | INT            |                                               |
 | BIGINT        | BIGINT         |                                               |
 | SMALLDECIMAL  | DECIMAL        |                                               |
-| DECIMAL       | DECIMAL/STRING | 将根据Doris DECIMAL字段的（precision, scale）选择用何种类型  |
+| DECIMAL       | DECIMAL/STRING | 将根据 Doris DECIMAL 字段的（precision, scale）选择用何种类型  |
 | REAL          | FLOAT          |                                               |
 | DOUBLE        | DOUBLE         |                                               |
 | DATE          | DATE           |                                               |

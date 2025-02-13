@@ -27,15 +27,15 @@ under the License.
 ### 用户
 在 Doris 中，一个 user_identity 唯一标识一个用户。user_identity 由两部分组成，user_name 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，即表示该用户可以从任意 host 连接到 Doris。
 #### 用户属性
-用户属性直接附属于 user_name，而不是user_identity，即user@'192.%' 和 user@['domain'] 都拥有同一组用户属性。该属性属于 user，而不是 user@'192.%' 或 user@['domain']。
+用户属性直接附属于 user_name，而不是 user_identity，即 user@'192.%' 和 user@['domain'] 都拥有同一组用户属性。该属性属于 user，而不是 user@'192.%' 或 user@['domain']。
 
 用户属性包括但不限于：用户最大连接数、导入集群配置等等。
 #### 内置用户
-内置用户是 Doris 默认创建的用户，并默认拥有一定的权限，包括 root 和 admin。初始密码都为空，fe启动后，可以通过修改密码命令进行修改。不支持删除默认用户。
+内置用户是 Doris 默认创建的用户，并默认拥有一定的权限，包括 root 和 admin。初始密码都为空，fe 启动后，可以通过修改密码命令进行修改。不支持删除默认用户。
 - root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
 - admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
 ### 密码
-用户登录的凭据， 管理员创建用户时设置， 也可以创建后由用户自己更改密码
+用户登录的凭据，管理员创建用户时设置，也可以创建后由用户自己更改密码
 #### 密码策略
 Doris 支持以下密码策略，可以帮助用户更好的进行密码管理。
 - PASSWORD_HISTORY
@@ -72,9 +72,9 @@ Doris 本身不支持黑名单，只有白名单功能，但我们可以通过�
 ## 其它说明
   1. 登录时 user_identity 优先级选择问题
 
-     如上文介绍，user_identity 由 user_name 和 host 组成，但是用户登录的时候，只需要输入 user_name，所以有 Doris 来根据客户端的 ip 进行匹配相应的 host ，从而决定使用哪个 user_identity 登陆。
+     如上文介绍，user_identity 由 user_name 和 host 组成，但是用户登录的时候，只需要输入 user_name，所以有 Doris 来根据客户端的 ip 进行匹配相应的 host，从而决定使用哪个 user_identity 登陆。
 
-     如果 根据 客户端 ip 只能匹配到一个 user_identity， 那么毫无疑问会匹配到这个 user_identity，但是当能够匹配到多个 user_identity 时，就会有如下的优先级问题。
+     如果 根据 客户端 ip 只能匹配到一个 user_identity，那么毫无疑问会匹配到这个 user_identity，但是当能够匹配到多个 user_identity 时，就会有如下的优先级问题。
       1. 域名与 ip 的优先级：
          假设创建了如下用户：
          ```sql
