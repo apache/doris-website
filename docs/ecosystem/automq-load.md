@@ -13,7 +13,7 @@ This article will explain how to use Apache Doris Routine Load to import data fr
 ## Environment Preparation
 ### Prepare Apache Doris and Test Data
 
-Ensure that a working Apache Doris cluster is already set up. For demonstration purposes, we have deployed a test Apache Doris environment on Linux following the [Deploying with Docker](https://doris.apache.org/docs/install/cluster-deployment/run-docker-cluster) document.
+Ensure that a working Apache Doris cluster is already set up. For demonstration purposes, we have deployed a test Apache Doris environment on Linux following the [Quick Started](../gettingStarted/quick-start) document.
 Create databases and test tables:
 ```
 create database automq_db;
