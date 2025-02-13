@@ -28,102 +28,131 @@ under the License.
 
 ## Description
 
-This statement creates a custom function. Executing this command requires the user to have `ADMIN` privileges.
+This statement is used to create a custom function.
 
-If `function_name` contains the database name, then the custom function will be created in the corresponding database, otherwise the function will be created in the database where the current session is located. The name and parameters of the new function cannot be the same as the existing functions in the current namespace, otherwise the creation will fail. But only with the same name and different parameters can be created successfully.
+## Syntax
 
-grammar:
 
 ```sql
-CREATE [GLOBAL] [AGGREGATE] [ALIAS] FUNCTION function_name
-    (arg_type [, ...])
-    [RETURNS ret_type]
-    [INTERMEDIATE inter_type]
-    [WITH PARAMETER(param [,...]) AS origin_function]
-    [PROPERTIES ("key" = "value" [, ...]) ]
+CREATE [ GLOBAL ] 
+    [{AGGREGATE | TABLES | ALIAS }] FUNCTION <function_name>
+    (<arg_type> [, ...])
+    [ RETURNS <ret_type> ]
+    [ INTERMEDIATE <inter_type> ]
+    [ WITH PARAMETER(<param> [,...]) AS <origin_function> ]
+    [ PROPERTIES ("<key>" = "<value>" [, ...]) ]
 ```
 
-Parameter Description:
+## Required Parameters
 
-- `GLOBAL`: If there is this item, it means that the created function is a global function.
+**1. `<function_name>`**
 
-- `AGGREGATE`: If there is this item, it means that the created function is an aggregate function.
+> If `function_name` includes a database name, such as `db1.my_func`, the custom function will be created in the corresponding database. Otherwise, the function will be created in the database of the current session. The name and parameters of the new function must not be identical to an existing function in the current namespace; otherwise, the creation will fail.
 
+**2. `<arg_type>`**
 
-- `ALIAS`: If there is this item, it means that the created function is an alias function.
+> The input parameter type of the function. For variable-length parameters, use `, ...` to indicate them. If it is a variable-length type, the type of the variable-length parameters must be consistent with the type of the last non-variable-length parameter.
 
+**3. `<ret_type>`**
 
- If the above two items are absent, it means that the created function is a scalar function
+> The return parameter type of the function. This is a required parameter for creating a new function. If creating an alias for an existing function, this parameter is not necessary.
 
-- `function_name`: The name of the function to be created, which can include the name of the database. For example: `db1.my_func`.
+## Optional Parameters
 
+**1. `GLOBAL`**
 
-- `arg_type`: The parameter type of the function, which is the same as the type defined when creating the table. Variable-length parameters can be represented by `, ...`. If it is a variable-length type, the type of the variable-length parameter is the same as that of the last non-variable-length parameter.
+> If specified, the created function is effective globally.
 
-  **NOTE**: `ALIAS FUNCTION` does not support variable-length arguments and must have at least one argument.
+**2. `AGGREGATE`**
 
-- `ret_type`: Required for creating new functions. If you are aliasing an existing function, you do not need to fill in this parameter.
+> If specified, the created function is an aggregate function.
 
+**3. `TABLES`**
 
-- `inter_type`: The data type used to represent the intermediate stage of the aggregation function.
+> If specified, the created function is a table function.
 
+**4. `ALIAS`**
 
-- `param`: used to represent the parameter of the alias function, including at least one.
+> If specified, the created function is an alias function.
 
+> If none of the above parameters representing the function type is selected, it indicates that the created function is a scalar function.
 
-- `origin_function`: used to represent the original function corresponding to the alias function.
+**5. `<inter_type>`**
 
+> Used to indicate the data type during the intermediate stage of an aggregate function.
 
-- `properties`: Used to set function-related properties, the properties that can be set include:
+**6. `<param>`**
 
-    - `file`: Indicates the jar package containing the user UDF. In a multi-machine environment, you can also use http to download the jar package. This parameter is mandatory.
+> Used to indicate the parameters of an alias function, with at least one parameter required.
 
-    - `symbol`: Indicates the name of the class containing the UDF class. This parameter must be set
+**7. `<origin_function>`**
 
-    - `type`: Indicates the UDF call type, the default is Native, and JAVA_UDF is passed when using Java UDF.
+> Used to indicate the original function corresponding to the alias function.
 
-    - `always_nullable`: Indicates whether NULL values may appear in the UDF return result, is an optional parameter, and the default value is true.
+**8. `<properties>`**
 
+> - `file`: Indicates the JAR package containing the user-defined function (UDF). In a multi-machine environment, it can also be downloaded via HTTP. This parameter is mandatory.
+> - `symbol`: Indicates the class name containing the UDF class. This parameter is mandatory.
+> - `type`: Indicates the UDF call type. The default is Native. Use JAVA_UDF when using a Java UDF.
+> - `always_nullable`: Indicates whether the UDF result may contain NULL values. This is an optional parameter with a default value of true.
 
-## Examples
+## Access Control Requirements
 
-1. Create a custom UDF function
+To execute this command, the user must have `ADMIN_PRIV` privileges.
 
-    ```sql
-    CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
-        "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
-        "symbol"="org.apache.doris.udf.AddOne",
-        "always_nullable"="true",
-        "type"="JAVA_UDF"
-    );
-    ```
+## Example
 
+1. Create a custom UDF function. For more details, refer to [JAVA-UDF](../../../query-data/udf/java-user-defined-function).
 
-2. Create a custom UDAF function
+   
 
-    ```sql
-    CREATE AGGREGATE FUNCTION simple_sum(INT) RETURNS INT PROPERTIES (
-        "file"="file:///pathTo/java-udaf.jar",
-        "symbol"="org.apache.doris.udf.demo.SimpleDemo",
-        "always_nullable"="true",
-        "type"="JAVA_UDF"
-    );
-    ```
+   ```sql
+   CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
+       "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
+       "symbol"="org.apache.doris.udf.AddOne",
+       "always_nullable"="true",
+       "type"="JAVA_UDF"
+   );
+   ```
 
-3. Create a custom alias function
+2. Create a custom UDAF function.
 
-    ```sql
-    CREATE ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
-    ```
+   
 
-4. Create a global custom alias function
+   ```sql
+   CREATE AGGREGATE FUNCTION simple_sum(INT) RETURNS INT PROPERTIES (
+       "file"="file:///pathTo/java-udaf.jar",
+       "symbol"="org.apache.doris.udf.demo.SimpleDemo",
+       "always_nullable"="true",
+       "type"="JAVA_UDF"
+   );
+   ```
 
-    ```sql
-    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
-    ```
+3. Create a custom UDTF function.
 
-## Keywords
+   
 
-    CREATE, FUNCTION
+   ```sql
+   CREATE TABLES FUNCTION java_udtf(string, string) RETURNS array<string> PROPERTIES (
+       "file"="file:///pathTo/java-udaf.jar",
+       "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+       "always_nullable"="true",
+       "type"="JAVA_UDF"
+   );
+   ```
 
-## Best Practice
+4. Create a custom alias function. For more information, refer to [Alias Function](../../../query-data/udf/alias-function).
+
+   
+
+   ```sql
+   CREATE ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
+   ```
+
+5. Create a global custom alias function.
+
+   
+
+   ```sql
+   CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
+   ```
