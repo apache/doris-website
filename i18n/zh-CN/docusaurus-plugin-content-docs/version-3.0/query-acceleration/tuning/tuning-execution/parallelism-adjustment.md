@@ -80,7 +80,7 @@ from  t1 left join  t2 on t1.key = t2.key;
                 - RowsProduced: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
 ```
 
-这里主要的时间耗时：`ExecTime: avg 26sec153ms, max 26sec261ms, min 26sec33ms`都发生在 Join 算子上，同时处理的数据总量：`ProbeRows: sum 1.4662330332B`有14亿，这是一个典型的 CPU 密集的运算情况。观察机器监控，发现 CPU 资源没有打满，CPU 利用率为 60%，此时可以考虑调高并行度来进一步利用空闲的 CPU 资源进行加速。
+这里主要的时间耗时：`ExecTime: avg 26sec153ms, max 26sec261ms, min 26sec33ms`都发生在 Join 算子上，同时处理的数据总量：`ProbeRows: sum 1.4662330332B`有 14 亿，这是一个典型的 CPU 密集的运算情况。观察机器监控，发现 CPU 资源没有打满，CPU 利用率为 60%，此时可以考虑调高并行度来进一步利用空闲的 CPU 资源进行加速。
 
 设置并行度如下：
 
@@ -88,7 +88,7 @@ from  t1 left join  t2 on t1.key = t2.key;
 set parallel_pipeline_task_num = 16;
 ```
 
-查询耗时从 28s 降低到 19s，cpu 利用率从 60%上升到 90%。
+查询耗时从 28s 降低到 19s，cpu 利用率从 60% 上升到 90%。
 
 ## 总结
 

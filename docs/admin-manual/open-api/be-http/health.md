@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-Provided for the monitoring service to Check whether the BE is alive，Be will respond if alive.
+Provided for the monitoring service to Check whether the BE is alive, Be will respond if alive.
 
 ## Query parameters
 

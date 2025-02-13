@@ -104,7 +104,7 @@ dynamic_partition.end = 3
     SHOW PARTITIONS FROM tiered_table;
 ```
 
-可以看见 7 个分区, 5 个使用 SSD, 其它的 2 个使用 HDD。
+可以看见 7 个分区，5 个使用 SSD, 其它的 2 个使用 HDD。
 
 ```Plain
   p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
