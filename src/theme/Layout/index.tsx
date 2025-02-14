@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
+import React, { useEffect, createContext, useState, useRef, JSX } from 'react';
 import { useLocation } from '@docusaurus/router';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
