@@ -224,7 +224,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | Accelerate the recycling of trash files.                     |
 
 
-For more information, refer to [BE Configuration](../../admin-manual/config/be-config.md).
+For more information, refer to [BE Configuration](./admin-manual/config/be-config).
 
 ### Step 4: Create tables
 
