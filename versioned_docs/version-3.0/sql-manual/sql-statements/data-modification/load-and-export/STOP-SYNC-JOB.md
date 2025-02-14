@@ -24,28 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Stop a non-stop resident data synchronization job in a database by `job_name`.
+Stop a running resident data synchronization job in a database by specifying its `job_name`. Once stopped, the job will cease synchronizing data and release its occupied resources.
 
-grammar:
+## Syntax
 
 ```sql
 STOP SYNC JOB [db.]job_name
 ```
 
+## Required Parameters
+
+**1. `job_name`**
+
+> Specifies the name of the data synchronization job to be stopped.  
+> If a database is specified with the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
+
 ## Example
 
-1. Stop the data sync job named `job_name`
+1. Stop the data synchronization job named `job_name`.
 
-    ```sql
-    STOP SYNC JOB `job_name`;
-    ```
-
-## Keywords
-
-    STOP, SYNC, JOB
-
-## Best Practice
-
+   ```sql
+   STOP SYNC JOB `job_name`;
+   ```
