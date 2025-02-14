@@ -171,7 +171,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](../../admin-manual/config/fe-config)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](./admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
@@ -366,7 +366,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../../ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
 
 **对接 Filebeat**
 
@@ -442,7 +442,7 @@ chmod +x filebeat-doris-1.0.0
 ./filebeat-doris-1.0.0 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../../ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
 
 **对接 Kafka**
 

@@ -194,7 +194,7 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | `autobucket_min_buckets = 10`                                | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
 
-For more information, refer to [FE Configuration](../../admin-manual/config/fe-config.md).
+For more information, refer to [FE Configuration](./admin-manual/config/fe-config).
 
 **Optimize BE configurations**
 
