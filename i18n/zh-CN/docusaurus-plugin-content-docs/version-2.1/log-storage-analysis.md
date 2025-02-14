@@ -366,7 +366,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
 
 **对接 Filebeat**
 
