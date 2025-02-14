@@ -30,7 +30,7 @@ under the License.
 
 Logstash is a log ETL framework (collect, preprocess, send to storage systems) that supports custom output plugins to write data into storage systems. The Logstash Doris output plugin is a plugin for outputting data to Doris.
 
-The Logstash Doris output plugin calls the [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP interface to write data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
+The Logstash Doris output plugin calls the [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP interface to write data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
 
 Using the Logstash Doris output plugin mainly involves three steps:
 1. Install the plugin into Logstash
