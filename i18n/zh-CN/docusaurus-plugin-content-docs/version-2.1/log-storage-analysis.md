@@ -171,7 +171,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](../../admin-manual/config/fe-config)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](./admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
@@ -199,7 +199,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
-更多关于 BE 配置项的信息，可参考 [BE 配置项](../../admin-manual/config/be-config)。
+更多关于 BE 配置项的信息，可参考 [BE 配置项](./admin-manual/config/be-config)。
 
 ### 第 4 步：建表
 
