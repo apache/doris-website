@@ -66,7 +66,7 @@ If the difference between `Label=process resident memory` Memory Tracker and `La
 
 ### Query Cancel stuck
 
-Locate the time point of OOM Killer in the `be/log/be.INFO` log, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses a large amount of memory in the `Memory Tracker Summary`, execute `grep {queryID} be/log/be.INFO` to confirm whether there is a log with the keyword `Cancel`. The corresponding time point is the time when the query was canceled. If the query has been canceled, and the time point when the query was canceled is a long time away from the time point when the OOM Killer was triggered, refer to the analysis of [Query Cancel process stuck] in [Memory Problem FAQ](./memory-issue-faq.md). For analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
+Locate the time point of OOM Killer in the `be/log/be.INFO` log, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses a large amount of memory in the `Memory Tracker Summary`, execute `grep {queryID} be/log/be.INFO` to confirm whether there is a log with the keyword `Cancel`. The corresponding time point is the time when the query was canceled. If the query has been canceled, and the time point when the query was canceled is a long time away from the time point when the OOM Killer was triggered, refer to the analysis of [Query Cancel process stuck] in [Memory Problem FAQ](../../../trouble-shooting/memory-management/memory-issue-faq). For analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
 
 ### Jemalloc Metadata has a large memory footprint
 
