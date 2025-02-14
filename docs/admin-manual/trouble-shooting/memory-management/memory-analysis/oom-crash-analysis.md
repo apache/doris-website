@@ -52,7 +52,7 @@ If the following phenomenon is met, it can be considered that the cluster memory
 
 - Locate the memory log before the OOM Killer time point in `be/log/be.INFO`, search the `GC` keyword from bottom to top, and find that the BE process frequently executes memory GC.
 
-At this time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./../memory-feature/memory-control-strategy.md).
+At this time, refer to [BE Configuration Items](../../../config/be-config) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./../memory-feature/memory-control-strategy.md).
 
 In addition, other parameters can be adjusted to control memory status refresh and GC, including `memory_gc_sleep_time_ms`, `soft_mem_limit_frac`, `memory_maintenance_sleep_time_ms`, `process_minor_gc_size`, `process_full_gc_size`, `enable_query_memory_overcommit`, `thread_wait_gc_max_milliseconds`, etc.
 
