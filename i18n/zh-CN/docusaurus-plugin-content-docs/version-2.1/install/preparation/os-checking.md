@@ -42,7 +42,7 @@ under the License.
   
 - 确定部署集群机器安装 NTP 服务
 
-## 确保关闭 swap 分区
+## 关闭 swap 分区
 
 在部署 Doris 时，建议关闭 swap 分区。swap 分区是内核发现内存紧张时，会按照自己的策略将部分内存数据移动到配置的 swap 分区，由于内核策略不能充分了解应用的行为，会对 Doris 性能造成较大影响。所以建议关闭。
 
@@ -65,7 +65,7 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 /dev/sda3              /home         ext4      defaults,noatime      0      2
 ```
 
-## 确保系统关闭透明大页
+## 关闭系统透明大页
 
 在高负载低延迟的场景中，建议关闭操作系统透明大页（Transparent Huge Pages, THP），避免其带来的性能波动和内存碎片问题，确保 Doris 能够稳定高效地使用内存。
 
@@ -86,7 +86,7 @@ EOF
 chmod +x /etc/rc.d/rc.local
 ```
 
-## 确保系统有足够大的虚拟内存区域
+## 增加虚拟内存区域
 
 为了保证 Doris 有足够的内存映射区域来处理大量数据，需要修改 VMA（虚拟内存区域）。如果没有足够的内存映射区域，Doris 在启动或运行时可能会遇到 `Too many open files` 或类似的错误。
 
@@ -101,7 +101,7 @@ EOF
 sysctl -p
 ```
 
-## 确保 CPU 不使用省电模式
+## 禁用 CPU 省电模式
 
 在部署 Doris 时检修关闭 CPU 的省电模式，以确保 Doris 在高负载时提供稳定的高性能，避免由于 CPU 频率降低导致的性能波动、响应延迟和系统瓶颈，提高 Doris 的可靠性和吞吐量。如果您的 CPU 不支持 Scaling Governor，可以跳过此项配置。
 
@@ -111,7 +111,7 @@ sysctl -p
 echo 'performance' | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-## 确保网络连接溢出时自动重置新连接
+## 网络连接溢出时自动重置新连接
 
 在部署 Doris 时，需要确保在 TCP 连接的发送缓冲区溢出时，连接会被立即中断，以防止 Doris 在高负载或高并发情况下出现缓冲区阻塞，避免连接被长时间挂起，从而提高系统的响应性和稳定性。
 
@@ -126,7 +126,7 @@ EOF
 sysctl -p
 ```
 
-## 确保 Doris 相关端口畅通或关闭系统防火墙
+## 相关端口畅通
 
 如果发现端口不通，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
 
@@ -135,7 +135,7 @@ sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 ```
 
-## 确保系统有足够大的打开文件句柄数
+## 增加系统的最大文件句柄数
 
 Doris 由于依赖大量文件来管理表数据，所以需要将系统对程序打开文件数的限制调高。
 
@@ -147,7 +147,7 @@ vi /etc/security/limits.conf
 * hard nofile 1000000
 ```
 
-## 确定部署集群机器安装 NTP 服务
+## 安装并配置 NTP 服务
 
 Doris 的元数据要求时间精度要小于 5000ms，所以所有集群所有机器要进行时钟同步，避免因为时钟问题引发的元数据不一致导致服务出现异常。
 

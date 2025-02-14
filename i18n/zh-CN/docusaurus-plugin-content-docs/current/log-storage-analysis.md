@@ -152,7 +152,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 ### 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../../install/cluster-deployment/standard-deployment)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](./install/deploy-manually/storage-compute-coupled-deploy-manually)。
 
 ### 第 3 步：优化 FE 和 BE 配置
 

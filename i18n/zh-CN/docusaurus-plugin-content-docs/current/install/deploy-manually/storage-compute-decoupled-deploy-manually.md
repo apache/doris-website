@@ -24,21 +24,21 @@ under the License.
 -->
 
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为八步：
-1. 准备 FoundationDB 集群：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
+1. **准备 FoundationDB 集群**：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
    
-3. 部署 S3 或 HDFS 服务：可以使用已有的共享存储，或新建共享存储；
+3. **部署 S3 或 HDFS 服务**：可以使用已有的共享存储，或新建共享存储；
    
-4. 部署 Meta Service：为 Doris 集群部署 Meta Service 服务；
+4. **部署 Meta Service**：为 Doris 集群部署 Meta Service 服务；
    
-5. 部署数据回收进程：为 Doris 集群独立部署数据回收进程，可选操作；
+5. **部署数据回收进程**：为 Doris 集群独立部署数据回收进程，可选操作；
    
-6. 启动 FE Master 节点：启动第一个 FE 节点作为 Master FE 节点；
+6. **启动 FE Master 节点**：启动第一个 FE 节点作为 Master FE 节点；
    
-7. 创建 FE Master 集群：添加 FE Follower/Observer 节点组成 FE 集群；
+7. **创建 FE Master 集群**：添加 FE Follower/Observer 节点组成 FE 集群；
    
-8. 添加 BE 节点：向集群中添加并注册 BE 节点；
+8. **添加 BE 节点**：向集群中添加并注册 BE 节点；
    
-9. 添加 Storage Vault：使用共享存储创建一个或多个 Storage Vault。
+9. **添加 Storage Vault**：使用共享存储创建一个或多个 Storage Vault。
 
 在开始部署操作前，可以[下载](https://doris.apache.org/download)相应的 Doris 版本。
 
@@ -48,7 +48,7 @@ under the License.
 
 1. 机器要求
 
-   通常，至少需要 3 台配备 SSD 的机器来形成具有双数据副本并允许单机故障的 FoundationDB 集群。如果在测试/开发环境中，可以使用单台机器搭建 FoundationDB。
+   通常，至少需要三台配备 SSD 的机器来组成具有双副本、单机故障容忍的 FoundationDB 集群。如果是测试/开发环境，单台机器也能搭建 FoundationDB。
 
 2. 配置 `fdb_vars.sh` 脚本
 
@@ -56,11 +56,13 @@ under the License.
 
    | 参数             | 描述                             | 类型                           | 示例                                                         | 注意事项                                                     |
    | ---------------- | -------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-   | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | - 运行脚本前确保目录已创建 - 生产环境建议使用 SSD 和独立目录  |
-   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | - 生产集群至少应有 3 个 IP 地址 - 第一个 IP 地址将用作协调器 - 为高可用性，将机器放置在不同机架上 |
-   | FDB_HOME         | 定义 FoundationDB 主目录         | 绝对路径                       | /fdbhome                                                     | - 默认路径为 /fdbhome- 确保此路径是绝对路径                  |
-   | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | - 每个集群的 ID 必须唯一 - 可使用 mktemp -u XXXXXXXX 生成     |
-   | FDB_CLUSTER_DESC | 定义 FDB 集群的描述              | 字符串                         | dorisfdb                                                     | - 建议更改为对部署有意义的内容                               |
+
+   | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | 运行脚本前确保目录已创建，确保目录已创建，生产环境建议使用 SSD 和独立目录  |
+   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | 生产集群至少应有 3 个 IP 地址，第一个 IP 地址将用作协调器- 为高可用性，将机器放置在不同机架上 |
+   | FDB_HOME         | 定义 FoundationDB 主目录         | 绝对路径                       | /fdbhome                                                     | 默认路径为 /fdbhome，确保此路径是绝对路径                  |
+   | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | 每个集群的 ID 必须唯一，可使用 mktemp -u XXXXXXXX 生成     |
+   | FDB_CLUSTER_DESC | 定义 FDB 集群的描述              | 字符串                         | dorisfdb                                                     | 建议更改为对部署有意义的内容                               |
+
 
    可以选择指定以下自定义配置：
 
@@ -77,8 +79,6 @@ under the License.
    ./fdb_ctl.sh deploy
    ```
 
-   此命令启动 FDB 集群的部署过程。
-
 4. 启动 FDB 服务
 
    FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
@@ -86,11 +86,12 @@ under the License.
    ```bash
    ./fdb_ctl.sh start
    ```
-   此命令启动 FDB 服务，使集群工作并获取 FDB 集群连接字符串，后续可以用于配置 MetaService。
+   
+   以上命令启动 FDB 服务，使集群工作并获取 FDB 集群连接字符串，后续可以用于配置 MetaService。
 
 ## 第 2 步：安装 S3 或 HDFS 服务（可选）
 
-Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上面，如果您已经有相关服务，直接使用即可。
+Doris 的存算分离模式依赖于 S3 或 HDFS 服务来存储数据，如果您已经有相关服务，直接使用即可。
 如果没有，本文档提供 MinIO 的简单部署教程：
 
 1. 在 MinIO 的[下载页面](https://min.io/download?license=agpl&platform=linux)选择合适的版本以及操作系统，下载对应的 Server 以及 Client 的二进制包或安装包。
@@ -178,7 +179,7 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
 
 ::info 信息
 
-Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果你想独立部署，可以参考这一节。
+Meta Service 本身具备了元数据管理和回收功能，这两个功能可以独立部署，如果需要独立部署数据回收功能，可参考以下步骤。
 
 :::
 
@@ -226,7 +227,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 
 2. 启动 FE Master 节点
 
-   启动命令示例：
+   启动命令：
 
    ```bash
    bin/start_fe.sh --daemon
@@ -234,7 +235,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 
    第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
-## 第 6 步：注册并添加 FE Follower/Observer 节点
+## 第 6 步：注册 FE Follower/Observer 节点
 
 其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
@@ -274,7 +275,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 4. 将 BE 添加到集群：
 
-   使用 MySQL 客户端连接到任意 Frontend，并执行：
+   使用 MySQL 客户端连接到任意 FE 节点：
 
    ```sql
    ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
