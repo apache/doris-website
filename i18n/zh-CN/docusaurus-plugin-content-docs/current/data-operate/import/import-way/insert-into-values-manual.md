@@ -40,7 +40,7 @@ INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSE
 
 INSERT INTO VALUES 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO VALUES 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-statements/data-modification/DML/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT)。
 
 ### 前置检查
 

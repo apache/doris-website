@@ -38,7 +38,7 @@ Doris 内部会计算物化视图和基表的分区对应关系，并且记录�
 
 ### Q2：物化视图占用资源过多，影响其他业务怎么办？
 
-可以通过物化视图的属性指定 [workload_group](../../../admin-manual/resource-admin/workload-group) 来控制物化视图刷新任务的资源。
+可以通过物化视图的属性指定 [workload_group](../../../admin-manual/workload-management/workload-group) 来控制物化视图刷新任务的资源。
 
 使用时需要注意，如果内存设置的太小，单个分区刷新又需要的内存较多，任务会刷新失败。需要根据业务情况进行权衡。
 

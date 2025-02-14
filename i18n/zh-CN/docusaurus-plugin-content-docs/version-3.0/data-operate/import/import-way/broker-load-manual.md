@@ -27,7 +27,7 @@ under the License.
 Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
 Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，且数据量比较大的场景。 
-从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file-analysis) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
 在 Doris 早期版本中，S3 Load 和 HDFS Load 都是通过 `WITH BROKER` 连接到具体的 Broker 进程实现的。
 随着版本的更新，S3 Load 和 HDFS Load 作为最常用的导入方式得到了优化，现在它们不再依赖额外的 Broker 进程，但仍然使用与 Broker Load 类似的语法。

@@ -52,7 +52,7 @@ under the License.
 
 - 定位 `be/log/be.INFO` 中 OOM Killer 时间点前的内存日志，自下而上搜索 `GC` 关键字，发现 BE 进程频繁执行内存 GC。
 
-此时参考 [BE 配置项](../../../admin-manual/config/be-config.md) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
+此时参考 [BE 配置项](../../../config/be-config) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
 
 此外还可以调节其他参数控制内存状态刷新和 GC，包括 `memory_gc_sleep_time_ms`，`soft_mem_limit_frac`，`memory_maintenance_sleep_time_ms`，`process_minor_gc_size`，`process_full_gc_size`，`enable_query_memory_overcommit`，`thread_wait_gc_max_milliseconds` 等。
 
@@ -66,7 +66,7 @@ under the License.
 
 ### Query Cancel 过程中卡住
 
-再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](./memory-issue-faq.md) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
+再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ### Jemalloc Metadata 内存占用大
 

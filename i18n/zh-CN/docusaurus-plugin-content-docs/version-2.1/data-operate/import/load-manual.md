@@ -45,12 +45,12 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 - **批量导入**：将数据从外部存储系统（如对象存储、HDFS、本地文件、NAS）批量加载到 Doris 表中，适用于非实时数据导入的需求。
     - 可以使用 [Broker Load](./import-way/broker-load-manual.md) 将对象存储和 HDFS 中的文件写入到 Doris 中。
 
-    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
+    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 
     - 可以使用 [Stream Load](./import-way/stream-load-manual) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
 
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
-    - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
+    - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 
     - 可以使用 [X2Doris](data-source/migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
 

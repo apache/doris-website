@@ -44,7 +44,7 @@ The memory statistics of historical queries can be viewed in `peakMemoryBytes` o
 
 ## Use Query Profile to analyze query memory usage
 
-Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../../query/query-analysis/query-profile.md). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
+Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
 
 1. Locate Operators or memory data structures that use a lot of memory
 

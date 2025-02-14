@@ -81,7 +81,7 @@ local(
     - `line_delimiter`：(选填) 行分割符，默认为`\n`。
     - `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。 默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
 
-- 以下参数适用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
+- 以下参数适用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/file-format/json)
 
     - `read_json_by_line`： (选填) 默认为 `"true"`
     - `strip_outer_array`： (选填) 默认为 `"false"`
