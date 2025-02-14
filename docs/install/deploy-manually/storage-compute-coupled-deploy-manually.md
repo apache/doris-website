@@ -25,13 +25,13 @@ under the License.
 
 After completing preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections, you can begin deploying the cluster. Deploying the cluster is divided into four steps:
 
-1. Deploy FE Master Node: Deploy the first FE node as the Master node;
+1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    
-2. Deploy FE Cluster: Deploy the FE cluster by adding Follower or Observer FE nodes;
+2. **Deploy FE Cluster**: Deploy the FE cluster by adding Follower or Observer FE nodes;
    
-3. eploy BE Nodes: Register BE nodes to the FE cluster;
+3. **Deploy BE Nodes**: Register BE nodes to the FE cluster;
    
-4. Verify Cluster Correctness: After deployment, connect to and verify the cluster's correctness.
+4. **Verify Cluster Correctness**: After deployment, connect to and verify the cluster's correctness.
 
 ## Step 1: Deploy FE Master Node
 
@@ -39,8 +39,8 @@ After completing preliminary checks and planning, such as environment checks, cl
 
    When deploying FE, it is recommended to store metadata on a different hard drive from the BE node data storage.
 
-   When extracting the installation package, a doris-meta directory is included by default. It is recommended to create an independent metadata directory and create a symbolic link to doris-meta. In a production environment, it is strongly advised to specify a separate directory outside the Doris installation directory, preferably on a dedicated SSD. For testing and development environments, you can use the default configuration.
-
+   When extracting the installation package, a doris-meta directory is included by default. It is recommended to create a separate metadata directory and link it to the doris-meta directory. In production, it's highly advised to use a separate directory outside the Doris installation folder, preferably on an SSD. For testing and development environments, you can use the default configuration.
+   
    ```sql
    ## Use a separate disk for FE metadata
    mkdir -p <doris_meta_created>
@@ -49,7 +49,7 @@ After completing preliminary checks and planning, such as environment checks, cl
    ln -s <doris_meta_original> <doris_meta_created>
    ```
 
-2. Modify FE Configuration File
+3. Modify FE Configuration File
 
    The FE configuration file is located in the conf directory under the FE deployment path. Before starting the FE node, you need to modify conf/fe.conf.
 
@@ -78,16 +78,16 @@ After completing preliminary checks and planning, such as environment checks, cl
    | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment independent of the operating system for Doris.                |
    
-3. Start FE Process
+4. Start FE Process
 
    You can start the FE process using the following command:
    ```Shell
    bin/start_fe.sh --daemon
    ```
 
-   The FE process will start and run in the background. By default, logs are stored in the log/ directory. If the startup fails, you can check the log/fe.log or log/fe.out files for error information.
+   The FE process will start and run in the background. By default, logs are stored in the log/ directory. If the startup fails, you can check the log/fe.log or log/fe.out files for error details.
 
-4. Check FE Startup Status
+5. Check FE Startup Status
 
    You can connect to the Doris cluster using MySQL Client. The default user is root, and the password is empty.
 
@@ -103,7 +103,7 @@ After completing preliminary checks and planning, such as environment checks, cl
 
 ## Step 2: Deploy FE Cluster (Optional)
 
-In a production cluster, it is recommended to deploy at least 3 Follower nodes. After deploying the FE Master node, you should deploy two additional FE Follower nodes.
+In a production cluster, it is recommended to deploy at least 3 nodes. After deploying the FE Master node, you should deploy two additional FE Follower nodes.
 
 1. Create Metadata Directory
 
@@ -137,6 +137,7 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
 
    - When FE is deployed in high availability mode (1 Master, 2 Followers), we recommend adding Observer FE nodes to extend the FE read service capacity.
    :::
+
 4. Start FE Follower Node
 
    The FE Follower node can be started with the following command, which will automatically synchronize metadata.
@@ -145,17 +146,17 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
    bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
    ```
 
-   Here, helper_fe_ip refers to any live node in the current FE cluster. The --helper parameter is only used for the initial startup of FE to synchronize metadata. It is not required for subsequent restarts of the FE node.
+   Here, helper_fe_ip refers to any live node in the FE cluster. The --helper parameter is used only during the initial startup of FE to synchronize metadata; subsequent restarts do not require this parameter.
 
 5. Check Follower Node Status
 
-   The method to check the FE Follower node status is the same as checking the FE Master node status. After adding and registering the FE Follower node, you need to use the `show frontends` command to check the FE node status. Unlike the Master status, the `IsMaster` state should be false.
+   The method to check the FE Follower node status is the same as checking the FE Master node status. After adding the Follower node, use the show frontendscommand to check the FE node status. Unlike the Master, theIsMaster state should be false.
 
 ## Step 3: Deploy BE Node
 
 1. Create Data Directory
 
-   The BE process is responsible for data computation and storage. The data directory is by default located under `be/storage`. In a production environment, it is common to use a separate disk for data storage and place BE data on a different disk from the BE deployment files. BE supports distributing data across multiple disks to better utilize the I/O capabilities of multiple hard drives.
+   The BE process is responsible for data computation and storage. The data directory is by default located under `be/storage`. In a production environment, it is common to store BE data on a separate disk, placing the BE data and deployment files on different disks. BE supports distributing data across multiple disks to better utilize the I/O capabilities of multiple hard drives.
 
    ```Bash
    ## Create a BE data storage directory on each data disk
@@ -190,7 +191,7 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
 
 3. Register BE Node in Doris
 
-   Before starting a new BE node, you need to register the new BE node in the FE cluster:
+   Before starting the new BE node, you need to register it in the FE cluster:
 
    ```Bash
    ## connect a alive FE node
@@ -208,11 +209,11 @@ In a production cluster, it is recommended to deploy at least 3 Follower nodes. 
    bin/start_be.sh --daemon
    ```
 
-   The BE process starts and runs in the background. Logs are stored by default in the `log/` directory. If the startup fails, check the `log/be.log` or `log/be.out` files for error messages.
+   The BE process starts and runs in the background. Logs are stored by default in the `log/` directory. If the startup fails, check the `log/be.log` or `log/be.out` files for error information.
 
 5. Check BE Startup Status
 
-   After connecting to the Doris cluster, use the `show backends` command to check the BE node status.
+   After connecting to the Doris cluster, use the show backends command to check the BE node status.
 
    ```Bash
    ## connect a alive FE node

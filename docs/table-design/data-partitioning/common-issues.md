@@ -40,7 +40,7 @@ under the License.
    - In the fe.log, search for the `Failed to create partition` log entry at the corresponding timestamp. In this log entry, you may find a series of number pairs similar to `{10001-10010}`. The first number in the pair represents the Backend ID, and the second number represents the Tablet ID. For example, this number pair indicates that the creation of Tablet ID 10010 on Backend ID 10001 failed.  
    - Go to the be.INFO log of the corresponding Backend and search for Tablet ID-related logs within the corresponding time period to find error messages.  
    - Here are some common tablet creation failure errors, including but not limited to:  
-     - The BE did not receive the relevant task. In this case, you cannot find Tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../../install/cluster-deployment/standard-deployment) section to check the connectivity between FE and BE.  
+     - The BE did not receive the relevant task. In this case, you cannot find Tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../../install/deploy-manually/storage-compute-coupled-deploy-manually) section to check the connectivity between FE and BE.  
      - Pre-allocated memory failure. This may be because the byte length of a row in the table exceeds 100KB.  
      - `Too many open files`. The number of open file handles exceeds the Linux system limit. You need to modify the handle limit of the Linux system.  
 

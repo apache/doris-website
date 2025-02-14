@@ -64,7 +64,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 5. 每个 FE 节点的 fe.conf 设置 `enable_fqdn_mode = true`。
 
-6. 参考[手动部署](../../install/cluster-deployment/standard-deployment)
+6. 参考[手动部署](../../install/deploy-manually/storage-compute-coupled-deploy-manually)
 
 7. 按需在六台机器上选择几台机器部署 broker，执行`ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`。
 
@@ -72,7 +72,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 Pod 意外重启后，K8s 不能保证 Pod 的 IP 不发生变化，但是能保证域名不变，基于这一特性，Doris 开启 FQDN 时，能保证 Pod 意外重启后，还能正常提供服务。
 
-K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/cluster-deployment/k8s-deploy/install-doris-cluster)
+K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/deploy-on-kubernetes/install-doris-cluster)
 
 ### 服务器变更 IP
 

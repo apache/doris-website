@@ -24,13 +24,14 @@ under the License.
 -->
 
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为四步：
-1. 部署 FE Master 节点：部署第一个 FE 节点作为 Master 节点；
-  
-2. 部署 FE 集群：部署 FE 集群，添加 Follower 或 Observer FE 节点；
-  
-3. 部署 BE 节点：向 FE 集群中注册 BE 节点；
 
-4. 验证集群正确性：部署完成后连接并验证集群正确性。
+1. **部署 FE Master 节点**：部署第一个 FE 节点作为 Master 节点；
+  
+2. **部署 FE 集群**：部署 FE 集群，添加 Follower 或 Observer FE 节点；
+  
+3. **部署 BE 节点**：向 FE 集群中注册 BE 节点；
+
+4. **验证集群正确性**：部署完成后连接并验证集群正确性。
 
 在开始部署操作前，可以[下载](https://doris.apache.org/download)相应的 Doris 版本。
 
@@ -40,7 +41,7 @@ under the License.
 
    在部署 FE 时，建议与 BE 节点数据存储在不同的硬盘上。
 
-   在解压安装包时，会默认附带 doris-meta 目录，建议可以创建独立的元数据目录并创建该目录到 `doris-meta` 的软连接。生产环境强烈建议单独指定目录不要放在 Doris 安装目录下，最好是单独的 SSD 硬盘，测试开发环境可以使用默认配置。
+   在解压安装包时，会默认附带 doris-meta 目录，建议为元数据创建独立目录，并将其软连接到默认的 `doris-meta` 目录。生产环境中应使用单独的 SSD 硬盘，不建议将其放在 Doris 安装目录下；开发和测试环境可以使用默认配置。
 
    ```SQL
    ## Use a separate disk for FE metadata
@@ -54,7 +55,7 @@ under the License.
 
    FE 的配置文件在 FE 部署路径下的 conf 目录中，启动 FE 节点前需要修改 `conf/fe.conf`。
 
-    在部署 FE 节点前，建议修改以下参数：
+    在部署 FE 节点之前，建议调整以下配置：
 
    ```Bash
    ## modify Java Heap
@@ -87,11 +88,11 @@ under the License.
    bin/start_fe.sh --daemon
    ```
 
-   FE 进程启动进入后台执行。日志默认存放在 `log/` 目录下。如启动失败，可以通过查看 `log/fe.log` 或者 log/fe.out 查看错误信息。
+   FE 进程会在后台启动，日志默认保存在 `log/` 目录。如果启动失败，可通过查看 `log/fe.log` 或 `log/fe.out` 文件获取错误信息。
 
 4. 检查 FE 启动状态
 
-   通过 MySQL Client 可以链接 Doris 集群。初始化用户为 `root`，密码为空。
+   通过 MySQL 客户端连接 Doris 集群，初始化用户为 `root`，密码为空。
 
    ```SQL
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
@@ -107,7 +108,7 @@ under the License.
 
 ## 第 2 步：部署 FE 集群（可选）
 
-在生产集群中，建议至少部署 3 个 Follower 节点。在部署过 FE Master 节点后，需要再部署两个 FE Follower 节点。
+生产环境建议至少部署 3 个节点。在部署过 FE Master 节点后，需要再部署两个 FE Follower 节点。
 
 1. 创建元数据目录
 
@@ -149,17 +150,17 @@ under the License.
    bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
    ```
 
-   其中，helper_fe_ip 为当前 FE 集群中任一存活的节点。`--helper` 参数只应用于第一次启动 FE 时同步元数据，后续重启 FE 的操作不需要指定。
+   其中，helper_fe_ip 是 FE 集群中任何存活节点的 IP 地址。`--helper` 参数仅在第一次启动 FE 时需要，之后重启无需指定。
 
 5. 判断 Follower 节点状态
 
-   与判断 FE Master 节点状态的方式相同，添加注册 FE Follower 节点后需要通过 `show frontends` 命令查看 FE 节点状态。与 Master 状态不同，`IsMaster` 的状态应为 false。
+   与 FE Master 节点状态判断相同，添加 Follower 节点后，可通过 `show frontends` 命令查看节点状态，IsMaster 应为 false。
 
 ## 第 3 步：部署 BE 节点
 
 1. 创建数据目录
 
-   BE 进程应用于数据的计算与存储。数据目录默认放在 `be/storage` 下。在生产环境中，通常使用独立的硬盘来存储数据，将 BE 数据与 BE 的部署文件置于不同的硬盘中。BE 支持数据分布在多盘上以更好的利用多块硬盘的 I/O 能力。
+   BE 进程应用于数据的计算与存储。数据目录默认放在 `be/storage` 下。生产环境通常将 BE 数据与 BE 部署文件分别存储在不同的硬盘上。BE 支持数据分布在多盘上以更好的利用多块硬盘的 I/O 能力。
 
    ```Bash
    ## Create a BE data storage directory on each data disk
@@ -194,7 +195,7 @@ under the License.
 
 3. 在 Doris 中注册 BE 节点
 
-   在启动新的 BE 节点前，需要先在 FE 集群中注册新的 BE 节点：
+   在启动 BE 节点前，需要先在 FE 集群中注册该节点：
 
    ```Bash
    ## connect a alive FE node
@@ -212,11 +213,11 @@ under the License.
    bin/start_be.sh --daemon
    ```
 
-   BE 进程启动进入后台执行。日志默认存放在 `log/` 目录下。如果启动失败，请检查 `log/be.log` 或 `log/be.out` 文件以获取错误信息。
+   BE 进程在后台启动，日志默认保存在 `log/` 目录。如果启动失败，请检查 `log/be.log` 或 `log/be.out` 文件以获取错误信息。
 
 5. 查看 BE 启动状态
 
-   在链接到 Doris 集群后，通过 show backends 命令查看 BE 的状态。
+   连接 Doris 集群后，可通过 `show backends` 命令查看 BE 节点的状态。
 
    ```Bash
    ## connect a alive FE node
@@ -236,7 +237,7 @@ under the License.
 
 1. 登录数据库
 
-   通过 MySQL Client 登录 Doris 集群。
+   使用 MySQL 客户端登录 Doris 集群。
 
    ```Bash
    ## connect a alive fe node
@@ -246,16 +247,16 @@ under the License.
 2. 检查 Doris 安装信息
 
    通过 `show frontends` 与 `show backends` 可以查看数据库各实例的信息。
-
+   
    ```SQL
    -- check fe status
-   show frontends \G  
-        
-   -- check be status  
+   show frontends \G
+
+   -- check be status
    show backends \G
    ```
 
-3. 修改 Doris 集群密码
+4. 修改 Doris 集群密码
 
    在创建 Doris 集群时，系统会自动创建一个名为 `root` 的用户，并默认设置其密码为空。为了安全起见，建议在集群创建后立即为 `root` 用户设置一个新密码。
 
@@ -272,9 +273,9 @@ under the License.
    SET PASSWORD = PASSWORD('doris_new_passwd');
    ```
 
-4. 创建测试表并插入数据
+5. 创建测试表并插入数据
 
-   为了验证集群的正确性，可以在新创建的集群中创建一个测试表，并插入一些数据。
+   为了验证集群的正确性，可以在新创建的集群中创建一个测试表，并插入测试数据。
 
    ```SQL
    -- create a test database
@@ -292,7 +293,7 @@ under the License.
    DISTRIBUTED BY HASH(k1) BUCKETS 32;
    ```
 
-   Doris 兼容 MySQL 协议，可以使用 insert 语句插入数据。
+   Doris 兼容 MySQL 协议，可以使用 INSERT 语句插入数据。
 
    ```SQL
    -- insert data

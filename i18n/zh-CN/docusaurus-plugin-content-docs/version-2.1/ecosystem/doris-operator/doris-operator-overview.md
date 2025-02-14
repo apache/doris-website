@@ -68,7 +68,7 @@ Doris Operator 的设计基于二层调度器的原理。每个组件的第一�
 - **运行时调试**：  
 
   容器化服务对于 Trouble Shorting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过kubectl提供的exec命令进入容器，使用内置工具进行故障排查。
-  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/cluster-deployment/k8s-deploy/cluster-operation.md#服务-crash-情况下如何进入容器)
+  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/deploy-on-kubernetes/cluster-operation.md#服务-crash-情况下如何进入容器)
 
 ## 兼容性  
 
@@ -92,14 +92,14 @@ Doris Operator 开发按照标准的 K8s 规范进行，兼容所有标准 K8s �
 
 在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD 。
 
-* 详细安装文档可参考：[Doris Operator 安装](../../install/cluster-deployment/k8s-deploy/install-doris-operator.md)
+* 详细安装文档可参考：[Doris Operator 安装](../../install/deploy-on-kubernetes/install-doris-operator.md)
 
 ### 部署 Doris 集群
 
-* 集群配置文档可参考：[Doris Operator 集群配置](../../install/cluster-deployment/k8s-deploy/install-config-cluster.md)
-* 安装文档可参考：[Doris Cluster 安装](../../install/cluster-deployment/k8s-deploy/install-doris-cluster.md)
+* 集群配置文档可参考：[Doris Operator 集群配置](../../install/deploy-on-kubernetes/install-config-cluster.md)
+* 安装文档可参考：[Doris Cluster 安装](../../install/deploy-on-kubernetes/install-doris-cluster.md)
 
 ### 集群运维
 
-* 集群运维文档可参考：[Doris Operator 集群运维](../../install/cluster-deployment/k8s-deploy/cluster-operation.md)
-* 集群访问文档可参考：[Doris Operator 集群访问](../../install/cluster-deployment/k8s-deploy/access-cluster.md)
+* 集群运维文档可参考：[Doris Operator 集群运维](../../install/deploy-on-kubernetes/cluster-operation.md)
+* 集群访问文档可参考：[Doris Operator 集群访问](../../install/deploy-on-kubernetes/access-cluster.md)
