@@ -52,7 +52,7 @@ under the License.
 
 - 定位 `be/log/be.INFO` 中 OOM Killer 时间点前的内存日志，自下而上搜索 `GC` 关键字，发现 BE 进程频繁执行内存 GC。
 
-此时参考 [BE 配置项](../../../admin-manual/config/be-config.md) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
+此时参考 [BE 配置项](../../../config/be-config) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
 
 此外还可以调节其他参数控制内存状态刷新和 GC，包括 `memory_gc_sleep_time_ms`，`soft_mem_limit_frac`，`memory_maintenance_sleep_time_ms`，`process_minor_gc_size`，`process_full_gc_size`，`enable_query_memory_overcommit`，`thread_wait_gc_max_milliseconds` 等。
 
