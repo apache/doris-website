@@ -66,7 +66,7 @@ under the License.
 
 ### Query Cancel 过程中卡住
 
-再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](./memory-issue-faq.md) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
+再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ### Jemalloc Metadata 内存占用大
 
