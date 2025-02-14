@@ -276,7 +276,7 @@ Doris supports the creation of external tables. Once created, data from external
 
 With its Multi-Catalog feature, Doris supports connections to various mainstream data lakes and databases including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (Incubating), Elasticsearch, MySQL, Oracle, and SQL Server.
 
-For more information on Multi-Catalog, please refer to [Lakehouse overview](../../../lakehouse/lakehouse-overview/#multi-catalog).
+For more information on Multi-Catalog, please refer to [Lakehouse overview](../../../lakehouse/lakehouse-overview).
 
 The followings illustrate importing data from a Hive external table into a Doris internal table.
 
