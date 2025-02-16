@@ -44,11 +44,11 @@ This feature is supported from Doris 3.1 onwards
 
 S3 Table Bucket is the third type of Bucket launched by S3, on par with the previous General purpose bucket and Directory bucket.
 
-![AWS S3 Table Bucket](/images/lakehouse/s3-table-bucket.png)
+![AWS S3 Table Bucket](/images/Lakehouse/s3-table-bucket.png)
 
 Here we create a Table Bucket named doris-s3-table-bucket. After creation, we will get a Table Bucket represented by an ARN.
 
-![AWS S3 Table Bucket Create](/images/lakehouse/s3-table-bucket-create.png)
+![AWS S3 Table Bucket Create](/images/Lakehouse/s3-table-bucket-create.png)
 
 ## Create Iceberg Catalog
 
