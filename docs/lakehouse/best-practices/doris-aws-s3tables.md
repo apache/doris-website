@@ -1,7 +1,7 @@
 ---
 {
     "title": "Integration with AWS S3 Tables",
-    "language": "zh-CN"
+    "language": "en"
 }
 
 ---
