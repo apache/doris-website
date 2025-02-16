@@ -23,21 +23,21 @@ under the License.
 -->
 
 ## Description
-The `QUANTILE_PERCENT` function is used to calculate the quantile value for a given percentage. It takes two parameters: a quantile_state column and a constant floating-point number representing the percentage. The function returns a floating-point number that represents the quantile value at the given percentage position.
+`QUANTILE_PERCENT` 函数用于计算给定百分比的分位数值。它接受两个参数：一个 quantile_state 列和一个表示百分比的常量浮点数。该函数返回一个浮点数，表示给定百分比位置的分位数值。
 ## Syntax
 ```
 QUANTILE_PERCENT(<quantile_state>, <percent>)
 ```
 ## Parameters
 
-| Parameter | Description |
+| 参数 | 描述 |
 | -- | -- |
-| `<quantile_state>` | The target column.|
-| `<percent>` | Target percent.|
+| `<quantile_state>` | 目标列。|
+| `<percent>` | 目标百分比。|
 
 ## Return value
 
-A `Double` type to represent quantile.
+返回一个 `Double` 类型的分位数值。
 
 ## Example
 
