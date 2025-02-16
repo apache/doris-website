@@ -452,6 +452,7 @@
                                 "lakehouse/best-practices/doris-paimon",
                                 "lakehouse/best-practices/doris-iceberg",
                                 "lakehouse/best-practices/doris-lakesoul",
+                                "lakehouse/best-practices/doris-aws-s3tables",
                                 "lakehouse/best-practices/tpch",
                                 "lakehouse/best-practices/tpcds"
                             ]
