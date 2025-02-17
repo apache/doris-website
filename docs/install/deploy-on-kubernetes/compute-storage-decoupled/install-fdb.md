@@ -28,7 +28,7 @@ FoundationDB is a distributed database developed by Apple that provides strong c
 - Deploying FoundationDB directly on virtual machines (including physical machines).  
 - Using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.  
 
-For VM deployments, refer to the Doris [compute-storage decoupling documentation's Pre-deployment section](../../../../compute-storage-decoupled/before-deployment.md) to set up the FoundationDB cluster. Before deployment, ensure that FoundationDB can be accessed by the Doris Kubernetes cluster, i.e., the Kubernetes nodes should be on the same subnet as the machine where FoundationDB is deployed.  
+For VM deployments, refer to the Doris [compute-storage decoupling documentation's Pre-deployment section](../../../compute-storage-decoupled/before-deployment) to set up the FoundationDB cluster. Before deployment, ensure that FoundationDB can be accessed by the Doris Kubernetes cluster, i.e., the Kubernetes nodes should be on the same subnet as the machine where FoundationDB is deployed.  
 
 ## Deploy FoundationDB on Kubernetes
 The deployment of a FoundationDB cluster on Kubernetes involves four main steps:
