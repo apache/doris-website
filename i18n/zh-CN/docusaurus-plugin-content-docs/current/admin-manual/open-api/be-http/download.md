@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/_load_error_log?token={string}&file={string}`
 
-## Description
+## 描述
 
 下载 load 错误日志文件。
 
-## Query parameters
+## 请求参数
 
 * `file`
     文件路径
@@ -42,15 +42,15 @@ under the License.
 * `token`
     token         
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     文件
 
-## Examples
+## 示例
 
 
     ```shell

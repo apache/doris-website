@@ -26,16 +26,16 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/show_config`
 `POST /api/update_config?{key}={val}`
 
-## Description
+## 描述
 
 查询/更新 BE 的配置信息
 
-## Query parameters
+## 请求参数
 
 * `persist`
     是否持久化，选填，默认`false`。
@@ -46,11 +46,11 @@ under the License.
 * `val`
     配置项值。        
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
 ### 查询
 
@@ -88,7 +88,7 @@ under the License.
     }
 ]
 ```
-## Examples
+## 示例
 
 
 ```shell
