@@ -31,7 +31,7 @@ under the License.
 理想情况下，在 [Memory Limit Exceeded Analysis](./memory-limit-exceeded-analysis.md) 中我们定时检测操作系统剩余可用内存，并在内存不足时及时响应，如触发内存GC释放缓存或cancel内存超限的查询，但因为刷新进程内存统计和内存GC都具有一定的滞后性，同时我们很难完全catch所有大内存申请，在集群压力过大时仍有OOM风险。
 
 ## 解决方法
-参考 [BE 配置项](../../../admin-manual/config/be-config.md) 在`be.conf`中调小`mem_limit`，调大`max_sys_mem_available_low_water_mark_bytes`。
+参考 [BE 配置项](../../../config/be-config) 在`be.conf`中调小`mem_limit`，调大`max_sys_mem_available_low_water_mark_bytes`。
 
 ## 内存分析
 若希望进一步了解 OOM 前BE进程的内存使用位置，减少进程内存使用，可参考如下步骤分析。
@@ -75,7 +75,7 @@ Memory Tracker Summary:
 
 6. `type=load`导入内存使用多时。
 
-7. `type=global`内存使用多时，继续查看`Memory Tracker Summary`日志后半部分已经打出得`type=global`详细统计。当 DataPageCache、IndexPageCache、SegmentCache、ChunkAllocator、LastestSuccessChannelCache 等内存使用多时，参考 [BE 配置项](../../../admin-manual/config/be-config.md) 考虑修改cache的大小；当 Orphan 内存使用过多时，如下继续分析。
+7. `type=global`内存使用多时，继续查看`Memory Tracker Summary`日志后半部分已经打出得`type=global`详细统计。当 DataPageCache、IndexPageCache、SegmentCache、ChunkAllocator、LastestSuccessChannelCache 等内存使用多时，参考 [BE 配置项](../../../config/be-config) 考虑修改cache的大小；当 Orphan 内存使用过多时，如下继续分析。
   - 若`Parent Label=Orphan`的tracker统计值相加只占 Orphan 内存的小部分，则说明当前有大量内存没有准确统计，比如 brpc 过程的内存，此时可以考虑借助 heap profile [Memory Tracker](https://doris.apache.org/zh-CN/community/developer-guide/debug-tool) 中的方法进一步分析内存位置。
   - 若`Parent Label=Orphan`的tracker统计值相加占 Orphan 内存的大部分，当`Label=TabletManager`内存使用多时，进一步查看集群 Tablet 数量，若 Tablet 数量过多则考虑删除过时不会被使用的表或数据；当`Label=StorageEngine`内存使用过多时，进一步查看集群 Segment 文件个数，若 Segment 文件个数过多则考虑手动触发compaction；
 

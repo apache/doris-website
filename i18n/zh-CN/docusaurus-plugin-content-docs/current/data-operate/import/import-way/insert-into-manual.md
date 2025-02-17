@@ -103,9 +103,9 @@ MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
 3 rows in set (0.02 sec)
 ```
 
-6. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
+6. 可以使用 [JOB](../../../admin-manual/workload-management/job-scheduler) 异步执行 INSERT。
 
-7. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
+7. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/catalog-overview) 中的表。
 
 ### 查看导入作业
 

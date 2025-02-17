@@ -228,7 +228,7 @@ Cache-related metrics in the SQL profile are found under SegmentIterator, includ
 | RemoteIOUseTimer                 | Time taken to read from remote storage       |
 | WriteCacheIOUseTimer             | Time taken to write to the File Cache        |
 
-You can view query performance analysis through [Query Performance Analysis](../query-acceleration/tuning/query-profile).
+You can view query performance analysis through [Query Performance Analysis](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
 ## Usage
 

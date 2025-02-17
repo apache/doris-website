@@ -208,14 +208,14 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](../../table-design/data-partition/#range-%E5%88%86%E5%8C%BA) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../../table-design/data-partition) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 (./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [数据划分](../../table-design/data-partitioning/basic-concepts)。
+更多关于分区分桶的信息，可参考 [数据划分](./table-design/data-partitioning/basic-concepts.mdx)。
 
 **配置压缩参数**
 - 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
@@ -478,7 +478,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/import-way/routine-load-manual)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](./data-operate/import/import-way/routine-load-manual)。
 
 **使用自定义程序采集日志**
 

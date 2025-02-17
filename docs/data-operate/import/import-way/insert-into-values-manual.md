@@ -182,7 +182,7 @@ Query OK, 4 rows affected, 1 warning (0.04 sec)
 
 `Query OK` indicates successful execution. `4 rows affected` indicates that a total of 4 rows of data have been imported. `1 warnings` indicates the number of rows that were filtered out. 
 
-You can use the [SHOW LOAD](../../../sql-statements/data-modification/load-and-export/SHOW-LOAD.md) statement to view the filtered rows.
+You can use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) statement to view the filtered rows.
 
 The result of this statement will include a URL that can be used to query the error data. For more details, refer to the "View error rows" section below.
 
@@ -288,4 +288,4 @@ You can control whether INSERT INTO ignores error rows by configuring the enviro
 
 ## More help
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-statements/data-modification/DML/INSERT.md) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.

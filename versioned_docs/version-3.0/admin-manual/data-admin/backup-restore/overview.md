@@ -72,7 +72,7 @@ Doris provides support for backup and restore operations. These features allow u
    Backup or restore of **asynchronous materialized views (MTMV)** is not supported. These views are not considered in backup and restore operations.
 
 3. **Tables with Storage Policies Not Supported**:
-   Tables that use [**storage policies**](../../../table-desgin/tiered-storage/remote-storage.md) **do not support** backup and restore operations.
+   Tables that use [**storage policies**](../../../table-design/tiered-storage/remote-storage) **do not support** backup and restore operations.
 
 4. **Incremental Backup**:
    Currently, Doris only supports full backups. Incremental backups (only storing data changed since the last backup) are not supported; you can back up specific partitions to achieve incremental backup.
