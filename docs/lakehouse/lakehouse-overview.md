@@ -30,7 +30,7 @@ under the License.
 
 Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
-![doris-lakehouse-arch](/images/lakehouse/lakehouse-arch-1.png)
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.png)
 
 ### Flexible Data Access
 
@@ -95,11 +95,11 @@ As an analytical data warehouse, Doris has made numerous optimizations in lakeho
 
 As shown below, on a 1TB TPCDS standard test set based on the Iceberg table format, Doris's overall execution of 99 queries is only 1/3 of Trino's.
 
-![doris-tpcds](/images/lakehouse/tpcds1000.png)
+![doris-tpcds](/images/Lakehouse/tpcds1000.png)
 
 In actual user scenarios, Doris reduces average query latency by 20% and 95th percentile latency by 50% compared to Presto while using half the resources, significantly reducing resource costs while enhancing user experience.
 
-![doris-performance](/images/lakehouse/performance.png)
+![doris-performance](/images/Lakehouse/performance.png)
 
 ### Convenient Service Migration
 
@@ -111,7 +111,7 @@ To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-con
 
 Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../compute-storage-decoupled/overview.md). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
 
-![compute-storage-decouple](/images/lakehouse/compute-storage-decouple.png)
+![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
 
 The above diagram shows the system architecture of Doris's compute-storage separation, decoupling compute and storage. Compute nodes no longer store primary data, and the underlying shared storage layer (HDFS and object storage) serves as the unified primary data storage space, supporting independent scaling of compute and storage resources. The compute-storage separation architecture brings significant advantages to the lakehouse solution:
 
@@ -137,7 +137,7 @@ In the lakehouse solution, Doris is mainly used for **lakehouse query accelerati
 
 In this scenario, Doris acts as a **compute engine**, accelerating query analysis on lakehouse data.
 
-![query-acceleration](/images/lakehouse/query-acceleration.png)
+![query-acceleration](/images/Lakehouse/query-acceleration.png)
 
 #### Cache Acceleration
 
@@ -153,7 +153,7 @@ This feature can significantly improve query performance by reducing runtime com
 
 Doris can act as a **unified SQL query engine**, connecting different data sources for federated analysis, solving data silos.
 
-![federation-query](/images/lakehouse/federation-query.png)
+![federation-query](/images/Lakehouse/federation-query.png)
 
 Users can dynamically create multiple catalogs in Doris to connect different data sources. They can use SQL statements to perform arbitrary join queries on data from different data sources. For details, refer to the [Catalog Overview](catalog-overview.md).
 
@@ -161,7 +161,7 @@ Users can dynamically create multiple catalogs in Doris to connect different dat
 
 In this scenario, **Doris acts as a data processing engine**, processing lakehouse data.
 
-![data-management](/images/lakehouse/data-management.png)
+![data-management](/images/Lakehouse/data-management.png)
 
 #### Task Scheduling
 
