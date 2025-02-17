@@ -28,7 +28,7 @@ under the License.
 
 本文档主要用于记录 Doris 使用过程中关于数据正确性的常见问题。会不定期更新。
 
-表格中的“表出现重复key数据”均指在 merge-on-write Unique 表中出现重复key数据
+表格中的“表出现重复 key 数据”均指在 merge-on-write Unique 表中出现重复 key 数据。merge-on-write Unique 表上的重复 key 问题都可以通过[触发full compaction](../admin-manual/trouble-shooting/repairing-data)来进行修复，其他类型的正确性问题可能需要根据情况来确定修复方案，如有需要，请联系社区支持。
 
 |问题现象|发生条件|影响版本|Fix 版本|影响范围|Fix PR|
 |---|---|---|---|---|---|
