@@ -44,11 +44,11 @@ S3 Tables 的发布，进一步简化 Lakehouse 的架构，并为云原生的�
 
 S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General purpose bucket 以及 Directory bucket 平级。
 
-![AWS S3 Table Bucket](/images/lakehouse/s3-table-bucket.png)
+![AWS S3 Table Bucket](/images/Lakehouse/s3-table-bucket.png)
 
 这里我们创建一个名为 doris-s3-table-bucket 的 Table Bucket。创建后我们将得到一个 ARN 表示的 Table Bucket
 
-![AWS S3 Table Bucket Create](/images/lakehouse/s3-table-bucket-create.png)
+![AWS S3 Table Bucket Create](/images/Lakehouse/s3-table-bucket-create.png)
 
 ## 创建 Iceberg Catalog
 
