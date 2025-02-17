@@ -50,7 +50,7 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
 
 ![AWS S3 Table Bucket Create](/images/Lakehouse/s3-table-bucket-create.png)
 
-## 创建 Iceberg Catalog
+### 02 创建 Iceberg Catalog
 
 创建一个 `s3tables` 类型的 Iceberg Catalog
 
@@ -66,7 +66,7 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 );
 ```
 
-## 访问 S3Tables
+### 03 访问 S3Tables
 
 ```sql
 Doris > SWITCH iceberg_s3;
@@ -98,7 +98,7 @@ Doris > SELECT * FROM my_table;
 +------+------+-------+
 ```
 
-## 创建 S3Tables 表并写入数据
+### 04 创建 S3Tables 表并写入数据
 
 ```sql
 Doris > CREATE TABLE partition_table (
@@ -124,7 +124,7 @@ Doris > SELECT * FROM partition_table;
 +----------------------------+------+---------+-------+
 ```
 
-## Time Travel
+### 05 Time Travel
 
 我们可以再插入一批数据，然后使用 `iceberg_meta()` 函数查看 Iceberg 的 Snapshots：
 
@@ -179,7 +179,7 @@ Doris > SELECT * FROM partition_table FOR VERSION AS OF 6834769222601914216;
 +----------------------------+------+---------+-------+
 ```
 
-## 使用 EMR Spark 访问 S3 Tables
+### 06 使用 EMR Spark 访问 S3 Tables
 
 使用 Doris 写入的数据，也可以使用 Spark 进行访问：
 

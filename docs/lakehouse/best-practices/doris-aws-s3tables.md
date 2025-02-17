@@ -50,7 +50,7 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
 
 ![AWS S3 Table Bucket Create](/images/Lakehouse/s3-table-bucket-create.png)
 
-## Create Iceberg Catalog
+### 02 Create Iceberg Catalog
 
 Create an Iceberg Catalog of type `s3tables`
 
@@ -66,7 +66,7 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 );
 ```
 
-## Access S3Tables
+### 03 Access S3Tables
 
 ```sql
 Doris > SWITCH iceberg_s3;
@@ -98,7 +98,7 @@ Doris > SELECT * FROM my_table;
 +------+------+-------+
 ```
 
-## Create S3Tables Table and Write Data
+### 04 Create S3Tables Table and Write Data
 
 ```sql
 Doris > CREATE TABLE partition_table (
@@ -124,7 +124,7 @@ Doris > SELECT * FROM partition_table;
 +----------------------------+------+---------+-------+
 ```
 
-## Time Travel
+### 05 Time Travel
 
 We can insert another batch of data, then use the `iceberg_meta()` function to view Iceberg Snapshots:
 
@@ -179,7 +179,7 @@ Doris > SELECT * FROM partition_table FOR VERSION AS OF 6834769222601914216;
 +----------------------------+------+---------+-------+
 ```
 
-## Access S3 Tables Using EMR Spark
+### 06 Access S3 Tables Using EMR Spark
 
 Data written using Doris can also be accessed using Spark:
 
