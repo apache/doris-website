@@ -39,7 +39,7 @@ under the License.
 |表出现重复 key 数据|用户使用`ALTER TABLE tbl ENABLE FEATURE "SEQUENCE_LOAD" WITH ...`语句给一个不支持 sequence 列的 merge-on-write Unique 表添加了 sequence 列功能并且之后有新的导入|<2.0.15, <2.1.6|>=2.0.15, >=2.1.6||[#39958](https://github.com/apache/doris/pull/39958)|
 |使用部分列更新导入后，merge-on-write Unique 表中部分数据错乱|merge-on-write Unique 表上有并发的部分列更新导入，并且导入过程中有 BE 重启|<2.0.15, <2.1.6|>=2.0.15, >=2.1.6|部分列更新|[#38331](https://github.com/apache/doris/pull/38331)|
 |表出现重复 key 数据|merge-on-write Unique 表上有 sequence 列，表上存在单次数据量很大的导入，且触发了 segment compaction|<2.0.15, <2.1.6|>=2.0.15, >=2.1.6||[#38369](https://github.com/apache/doris/pull/38369)|
-|表出现重复 key 数据|存算一体模式下 merge-on-write Unique 表上有失败的 full clone|<2.0.13, <2.1.5|>=2.0.13, >=2.1.5|存算一体|[#37001](https://github.com/apache/doris/pull/37001)|
+|表出现重复 key 数据|存算一体模式下 merge-on-write Unique 表上有失败的 full clone|<2.0.13, <2.1.5|>=2.0.13, >=2.1.5||[#37001](https://github.com/apache/doris/pull/37001)|
 |merge-on-write Unique 表上多副本数据不一致|merge-on-write Unique 表上有过指定了`__DORIS_DELETE_SIGN__`列的部分列更新导入，且在导入的时候不同副本上 Base Compaction 进度不一致|<2.0.15, <2.1.5|>=2.0.15, >=2.1.5|部分列更新|[#36210](https://github.com/apache/doris/pull/36210)|
 |表出现重复 key 数据|merge-on-write Unique 表上有并发的部分列更新导入，并且导入过程中有 BE 重启|<2.0.11, <2.1.4|>=2.0.11, >=2.1.4|部分列更新|[#35739](https://github.com/apache/doris/pull/35739)|
 
