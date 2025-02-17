@@ -53,6 +53,7 @@ ROUND(<x> [ , <d> ])
 ```sql
 select round(2.4);
 ```
+
 ```text
 +------------+
 | round(2.4) |
@@ -64,6 +65,7 @@ select round(2.4);
 ```sql
 select round(2.5);
 ```
+
 ```text
 +------------+
 | round(2.5) |
@@ -75,6 +77,7 @@ select round(2.5);
 ```sql
 select round(-3.4);
 ```
+
 ```text
 +-------------+
 | round(-3.4) |
@@ -86,6 +89,7 @@ select round(-3.4);
 ```sql
 select round(-3.5);
 ```
+
 ```text
 +-------------+
 | round(-3.5) |
@@ -97,6 +101,7 @@ select round(-3.5);
 ```sql
 select round(1667.2725, 2);
 ```
+
 ```text
 +---------------------+
 | round(1667.2725, 2) |
@@ -108,6 +113,7 @@ select round(1667.2725, 2);
 ```sql
 select round(1667.2725, -2);
 ```
+
 ```text
 +----------------------+
 | round(1667.2725, -2) |

@@ -173,7 +173,7 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 
 	请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中【使用开放存储（按量付费）】的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
 
-3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域Endpoint对照表】来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据【各地域Endpoint对照表（阿里云VPC网络连接方式）】表中的【VPC网络Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域Endpoint对照表（阿里云经典网络连接方式）】表中的【经典网络Endpoint】列、或者选择【各地域Endpoint对照表（外网连接方式)】表中的【外网Endpoint列来配置 `mc.endpoint`。
+3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域 Endpoint 对照表】来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据【各地域 Endpoint 对照表（阿里云 VPC 网络连接方式）】表中的【VPC 网络 Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域 Endpoint 对照表（阿里云经典网络连接方式）】表中的【经典网络 Endpoint】列、或者选择【各地域 Endpoint 对照表（外网连接方式)】表中的【外网 Endpoint 列来配置 `mc.endpoint`。
 
 ### 自定义服务地址 (适用于 Doris 2.1.7 之前)
 

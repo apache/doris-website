@@ -45,24 +45,6 @@
         "image": "/images/user-logo/Commercial Distribution/Alibaba Cloud.jpg"
     },
     {
-        "story": "A global phenomenon, where users create and share short videos, showcasing their talent and connecting with a vibrant community. With Doris, the platform process data efficiently and enhance user experiences",
-        "name": "TikTok",
-        "category": "Media & Entertainment",
-        "logo": "TikTok",
-        "order": 5,
-        "to": null,
-        "image": "/images/user-logo/Media & Entertainment/TikTok.jpg"
-    },
-    {
-        "story": "Huawei is a leading global communications technology company that provides comprehensive digital solutions including 5G, cloud computing, and artificial intelligence. Huawei uses Apache Doris to process and analyze real-time data to improve business efficiency and competitiveness.",
-        "name": "Huawei",
-        "category": "Technology",
-        "logo": "Huawei",
-        "order": 6,
-        "to": null,
-        "image": "/images/user-logo/Technology/Huawei.jpg"
-    },
-    {
         "story": "Tencent is the largest internet company in the world and one of the highest grossing multimedia companies in the world. Tencent has multiple businesses using Apache Doris to perform real-time analysis on user behavior data, better supporting business analysis and decision-making.",
         "name": "Tencent",
         "category": "Technology",
@@ -108,33 +90,6 @@
         "image": "/images/user-logo/Technology/Baidu.jpg"
     },
     {
-        "story": "ByteDance is a technology company focusing on mobile information, social entertainment and social platforms. ByteDance uses Apache Doris to conduct real-time analysis and processing of real-time data streams to provide real-time business support",
-        "name": "ByteDance",
-        "category": "Technology",
-        "logo": "ByteDance",
-        "order": 12,
-        "to": null,
-        "image": "/images/user-logo/Technology/ByteDance.jpg"
-    },
-    {
-        "story": "The Bank of China is one of the largest commercial banks in China, using Apache Doris to enhance its business reporting analysis capabilities and improve the efficiency of business decision-making.",
-        "name": "Bank of China",
-        "category": "Finance",
-        "logo": "Bank of China",
-        "order": 13,
-        "to": null,
-        "image": "/images/user-logo/Finance/Bank of China.jpg"
-    },
-    {
-        "story": "Postal Savings Bank of China has built a real-time anti-fraud platform based on Apache Doris, which greatly improves the timeliness of data, and the query of business reports takes only a few seconds, reducing storage costs by 70%.",
-        "name": "Postal Savings Bank of China",
-        "category": "Finance",
-        "logo": "Postal Savings Bank of China",
-        "order": 14,
-        "to": null,
-        "image": "/images/user-logo/Finance/Postal Savings Bank of China.jpg"
-    },
-    {
         "story": "WeLab is one of the fastest-growing pan-Asian fintech platforms, with over 60 million individual users and over 700 enterprise customers. Apache Doris plays a crucial role in WeLab's real-time big data platform, effectively supporting important scenarios such as real-time self-service BI reporting and user behavior analysis.",
         "name": "WeLab",
         "category": "Finance",
@@ -151,42 +106,6 @@
         "order": 16,
         "to": null,
         "image": "/images/user-logo/Finance/FUSE.jpg"
-    },
-    {
-        "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
-        "name": "CITIC Securities",
-        "category": "Finance",
-        "logo": "CITIC Securities",
-        "order": 17,
-        "to": null,
-        "image": "/images/user-logo/Finance/Citic Securities.jpg"
-    },
-    {
-        "story": "One of the largest state-owned oil and gas companies in the world. Engaged in exploration, production, refining, and marketing, CNPC plays a pivotal role in China's energy industry.",
-        "name": "CNPC",
-        "category": "Telecom & Manufacturing",
-        "logo": "CNPC",
-        "order": 18,
-        "to": null,
-        "image": "/images/user-logo/Telecom & Manufacturing/CNPC.jpg"
-    },
-    {
-        "story": "China Mobile is the largest telecommunication company in China. With an extensive network coverage and a wide range of services, it provides mobile voice and data services to millions of customers in China.",
-        "name": "China Mobile",
-        "category": "Telecom & Manufacturing",
-        "logo": "China Mobile",
-        "order": 19,
-        "to": null,
-        "image": "/images/user-logo/Telecom & Manufacturing/China Mobile.jpg"
-    },
-    {
-        "story": "China Unicom, one of the world's biggest telecommunication service providers, uses Apache Doris for log analytics and ensures stable data digestion of 15 billion logs per day and queries on super large datasets to be executed within one second. ",
-        "name": "China Unicom",
-        "category": "Telecom & Manufacturing",
-        "logo": "China Unicom",
-        "order": 20,
-        "to": "https://doris.apache.org/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second",
-        "image": "/images/user-logo/Telecom & Manufacturing/China Unicom.jpg"
     },
     {
         "story": "Glodwind is a leading wind turbine manufacturer and renewable energy solutions provider, specializing in design, manufacturing and installation.",
@@ -891,15 +810,6 @@
         "image": "/images/user-logo/Telecom & Manufacturing/Envision Energy.jpg"
     },
     {
-        "story": "A leading provider of custom, end-to-end network, cloud and data center services for China, APAC and beyond.",
-        "name": "China Telecom",
-        "category": "Telecom & Manufacturing",
-        "logo": "China Telecom",
-        "order": 100,
-        "to": null,
-        "image": "/images/user-logo/Telecom & Manufacturing/China Telecom.jpg"
-    },
-    {
         "story": "CTYun is a cloud computing and infrastructure service provider. With a portfolio of cloud solutions, CTYun empowers businesses with secure, scalable, and reliable cloud computing capabilities",
         "name": "CTYun",
         "category": "Telecom & Manufacturing",
@@ -1080,7 +990,7 @@
         "image": "/images/user-logo/Media & Entertainment/IGOTGAMES.jpg"
     },
     {
-        "story": "Electronic Soul is one of the top leading game developers and publishers based in Asia， providing high-quality digital contents crossing Mobile, PC, and consoles.",
+        "story": "Electronic Soul is one of the top leading game developers and publishers based in Asia, providing high-quality digital contents crossing Mobile, PC, and consoles.",
         "name": "Electronic Soul",
         "category": "Media & Entertainment",
         "logo": "Electronic Soul",

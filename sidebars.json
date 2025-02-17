@@ -43,22 +43,22 @@
                                     "type": "category",
                                     "label": "Compute storage coupled",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
+                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator",
+                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster",
+                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster",
+                                        "install/deploy-on-kubernetes/compute-storage-coupled/access-cluster",
+                                        "install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation"
                                     ]
                                 },
                                 {
                                     "type": "category",
                                     "label": "Compute storage decoupled",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-fdb",
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-ms",
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-fe",
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-cg",
+                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-doris-cluster"
                                     ]
                                 }
                             ]
@@ -67,7 +67,7 @@
                             "type": "category",
                             "label": "Deploying on Cloud",
                             "items": [
-                                "install/cluster-deployment/doris-on-aws"
+                                "install/deploy-on-cloud/doris-on-aws"
                             ]
                         }
                     ]
@@ -945,11 +945,13 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ucase",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/uncompress",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/repeat",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/reverse",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/char",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/concat",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/compress",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/concat-ws",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/substring",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/count_substrings",
@@ -1806,18 +1808,25 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Materialized View",
+                                    "label": "Synchronous Materialized View",
                                     "items": [
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW-JOB",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Asynchronous Materialized View",
+                                    "items": [
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB"
                                     ]
                                 },
                                 {

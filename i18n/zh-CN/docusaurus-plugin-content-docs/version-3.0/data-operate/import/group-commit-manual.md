@@ -27,7 +27,7 @@ under the License.
 在高频小批量写入场景下，传统的导入方式存在以下问题：
 
 - 每个导入都会创建一个独立的事务，都需要经过 FE 解析 SQL 和生成执行计划，影响整体性能
-- 每个导入都会生成一个新的版本，导致版本数快速增长，增加了后台compaction的压力
+- 每个导入都会生成一个新的版本，导致版本数快速增长，增加了后台 compaction 的压力
 
 为了解决这些问题，Doris 引入了 Group Commit 机制。Group Commit 不是一种新的导入方式，而是对现有导入方式的优化扩展，主要针对：
 
@@ -52,7 +52,7 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
-    WAL的数量可以通过FE http接口查看，具体可见[这里](../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在BE的metrics中搜索关键词`wal`查看。
+    WAL 的数量可以通过 FE http 接口查看，具体可见[这里](../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在 BE 的 metrics 中搜索关键词`wal`查看。
 
 ## Group Commit 使用方式
 
@@ -135,7 +135,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
+注意：由于高频的 insert into 语句会打印大量的 audit log，对最终性能有一定影响，默认关闭了打印 prepared 语句的 audit log。可以通过设置 session variable 的方式控制是否打印 prepared 语句的 audit log。
 
 ```sql
 # 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
@@ -144,9 +144,9 @@ set enable_prepared_stmt_audit_log=true;
 
 关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./import-way/insert-into-manual.md)。
 
-### 使用Golang进行Group Commit
+### 使用 Golang 进行 Group Commit
 
-Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+Golang 的 prepared 语句支持有限，所以我们可以通过手动客户端攒批的方式提高 Group Commit 的性能，以下为一个示例程序。
 
 ```Golang
 package main
@@ -396,11 +396,11 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 ```
 
 **参数调整建议**:
-- 较短的间隔(如2秒):
+- 较短的间隔 (如 2 秒):
   - 优点：数据可见性延迟更低，适合对实时性要求较高的场景
-  - 缺点：提交次数增多，版本数增长更快，后台compaction压力更大
+  - 缺点：提交次数增多，版本数增长更快，后台 compaction 压力更大
 
-- 较长的间隔(如30秒):
+- 较长的间隔 (如 30 秒):
   - 优点：提交批次更大，版本数增长更慢，系统开销更小
   - 缺点：数据可见性延迟更高
 
@@ -416,15 +416,15 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
 
 **参数调整建议**:
-- 较小的阈值(如32MB):
+- 较小的阈值 (如 32MB):
   - 优点：内存占用更少，适合资源受限的环境
   - 缺点：提交批次较小，吞吐量可能受限
 
-- 较大的阈值(如256MB):
+- 较大的阈值 (如 256MB):
   - 优点：批量提交效率更高，系统吞吐量更大
   - 缺点：占用更多内存
 
-建议根据系统内存资源和数据可靠性要求来权衡。如果内存充足且追求更高吞吐，可以适当增加到128MB或更大。
+建议根据系统内存资源和数据可靠性要求来权衡。如果内存充足且追求更高吞吐，可以适当增加到 128MB 或更大。
 
 
 ## 相关系统配置
@@ -495,7 +495,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-3.0.1
 
 **数据集**
 
@@ -540,9 +540,9 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-3.0.1
 
-* 关闭打印parpared语句的audit log以提高性能
+* 关闭打印 parpared 语句的 audit log 以提高性能
 
 **数据集**
 
@@ -576,7 +576,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-3.0.1
 
 **数据集**
 
@@ -613,28 +613,28 @@ PROPERTIES (
 
 * [Jmeter](https://jmeter.apache.org/)
 
-需要设置的jmeter参数如下图所示
+需要设置的 jmeter 参数如下图所示
 
 ![jmeter1](/images/group-commit/jmeter1.jpg)
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
-1. 设置测试前的init语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启jdbc的prepared statement，完整的url为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
-3. 设置导入类型为prepared update statement。
+1. 设置测试前的 init 语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
+2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+3. 设置导入类型为 prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。
 
 **测试方法**
 
-* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1 行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为30，100，500并发。
+* 以下测试分为 30，100，500 并发。
 
-**30并发sync模式5个BE3副本性能测试**
+**30 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
@@ -642,14 +642,14 @@ PROPERTIES (
 |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
 
 
-**100并发sync模式5个BE3副本性能测试**
+**100 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
 |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
-**500并发sync模式5个BE3副本性能测试**
+**500 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
@@ -662,11 +662,11 @@ PROPERTIES (
 
 * 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
-* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了1台，3台，5台BE进行测试。
+* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了 1 台，3 台，5 台 BE 进行测试。
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 测试版本为Doris-3.0.1
+* 测试版本为 Doris-3.0.1
 
 **数据集**
 
@@ -705,29 +705,29 @@ PROPERTIES (
 
 **测试方法**
 
-* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过insert into写入1000行数据。
+* 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1000 行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为30，100，500并发。
+* 以下测试分为 30，100，500 并发。
 
-**30并发sync模式5个BE3副本性能测试**
+**30 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
 |enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
-**100并发sync模式5个BE3副本性能测试**
+**100 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
 |enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
-**500并发sync模式5个BE3副本性能测试**
+**500 并发 sync 模式 5 个 BE3 副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|

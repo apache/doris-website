@@ -42,12 +42,12 @@ Doris 开启 SSL 功能需要配置 CA 密钥证书和 Server 端密钥证书，
 1. 生成 CA、Server 端和 Client 端的密钥和证书
 
 ```shell
-# 生成CA certificate
+# 生成 CA certificate
 openssl genrsa 2048 > ca-key.pem
 openssl req -new -x509 -nodes -days 3600 \
         -key ca-key.pem -out ca.pem
 
-# 生成server certificate, 并用上述CA签名
+# 生成 server certificate, 并用上述 CA 签名
 # server-cert.pem = public key, server-key.pem = private key
 openssl req -newkey rsa:2048 -days 3600 \
         -nodes -keyout server-key.pem -out server-req.pem
@@ -55,7 +55,7 @@ openssl rsa -in server-key.pem -out server-key.pem
 openssl x509 -req -in server-req.pem -days 3600 \
         -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
 
-# 生成client certificate, 并用上述CA签名
+# 生成 client certificate, 并用上述 CA 签名
 # client-cert.pem = public key, client-key.pem = private key
 openssl req -newkey rsa:2048 -days 3600 \
         -nodes -keyout client-key.pem -out client-req.pem
@@ -73,10 +73,10 @@ openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 3. 将您的 CA 密钥和证书和 Sever 端密钥和证书分别合并到 PKCS#12 (P12) 包中。您也可以指定某个证书格式，默认 PKCS12，可以通过修改 conf/fe.conf 配置文件，添加参数 ssl_trust_store_type 指定证书格式
 
 ```shell
-# 打包CA密钥和证书
+# 打包 CA 密钥和证书
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 
-# 打包Server端密钥和证书
+# 打包 Server 端密钥和证书
 openssl pkcs12 -inkey server-key.pem -in server-cert.pem -export -out server_certificate.p12
 ```
 
