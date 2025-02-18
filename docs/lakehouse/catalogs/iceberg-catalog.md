@@ -267,6 +267,8 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 );
 ```
 
+Please refer to [Integration with AWS S3 Tables](../best-practices/doris-aws-s3tables.md)。
+
 ## Query Operations
 
 ### Basic Query

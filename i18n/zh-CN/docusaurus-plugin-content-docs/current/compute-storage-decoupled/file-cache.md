@@ -210,7 +210,7 @@ SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
 | RemoteIOUseTimer             | 读取远程存储的耗时     |
 | WriteCacheIOUseTimer         | 写 File Cache 的耗时     |
 
-您可以通过 [查询性能分析](../query-acceleration/tuning/query-profile) 查看查询性能分析。
+您可以通过 [查询性能分析](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile) 查看查询性能分析。
 
 ## 使用方法
 
@@ -253,7 +253,7 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 
 ### 缓存预热
 
-- 计算组间预热, 将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
+- 计算组间预热，将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
 
 当执行以下 SQL 时，`compute_group_name1` 计算组会获取 `compute_group_name0` 计算组的访问信息，来尽可能还原出与 `compute_group_name0` 计算组一致的缓存。
 
@@ -261,13 +261,13 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 ```
 
-- 表数据预热, 将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
+- 表数据预热，将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- 分区数据预热, 将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
+- 分区数据预热，将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1

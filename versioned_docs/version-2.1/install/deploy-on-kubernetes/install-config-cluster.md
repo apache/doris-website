@@ -101,7 +101,7 @@ The minimum required resources for FE and BE to start are 4 CPUs and 8Gi of memo
 :::
 
 ## Custom startup configuration
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config.md) and the [BE Configuration Document](../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../admin-manual/config/fe-config) and the [BE Configuration Document](../../admin-manual/config/be-config). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
 
 ### Custom FE startup configuration
 #### Step 1:  Create and deploy the FE ConfigMap
@@ -664,7 +664,7 @@ After deployment, please set the root password. Doris Operator will switch to us
 :::
 
 ### Setting the root user password after cluster deployment
-After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) to create a new user and grant Node_priv permission.
+After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv permission.
 
 #### Step 1: Create a user with Node_priv permission
 First, connect to the Doris database using the MySQL protocol, then create a new user with the required permissions:
@@ -681,7 +681,7 @@ Grant the Node_priv permission to the newly created user:
 GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 ${DB_ADMIN_USER}: The username you created in the previous step.  
-For more details on creating users, setting passwords, and granting permissions, refer to the [CREATE-USER](../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) section.
+For more details on creating users, setting passwords, and granting permissions, refer to the [CREATE-USER](../../sql-manual/sql-statements/account-management/CREATE-USER) section.
 
 #### step 3: Configure DorisCluster  
 - Using environment variables

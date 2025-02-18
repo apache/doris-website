@@ -107,6 +107,7 @@ Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Q
 
 Please first refer to the [official documentation](../install/deploy-manually/storage-compute-decoupled-deploy-manually) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
 
+
 ## 7. Data Preparation
 
 ### 7.1 Download and Install the SSB Data Generation Tool.
