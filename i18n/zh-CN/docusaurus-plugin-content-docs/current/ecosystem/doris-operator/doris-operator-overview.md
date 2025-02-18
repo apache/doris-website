@@ -67,7 +67,7 @@ Doris Operator 的设计基于二层调度器的原理。每个组件的第一�
 
 - **运行时调试**：  
 
-  容器化服务对于 Trouble Shorting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过kubectl提供的exec命令进入容器，使用内置工具进行故障排查。
+  容器化服务对于 Trouble Shooting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过kubectl提供的exec命令进入容器，使用内置工具进行故障排查。
   当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md#服务-crash-情况下如何进入容器)
 
 ## 兼容性  
