@@ -31,7 +31,7 @@ View tables and partitions associated with all/specified storage policies.
 ## Syntax
 
 ```sql
-SHOW STORAGE POLICY [ USING { FOR <storage_policy_name> } ]
+SHOW STORAGE POLICY [ USING [ FOR <storage_policy_name> ] ]
 ```
 
 ## Required Parameters

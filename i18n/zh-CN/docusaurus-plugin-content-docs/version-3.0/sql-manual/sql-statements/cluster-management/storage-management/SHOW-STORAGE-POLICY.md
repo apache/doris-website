@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-SHOW STORAGE POLICY [ USING { FOR <storage_policy_name>} ]
+SHOW STORAGE POLICY [ USING [ FOR <storage_policy_name> ] ]
 ```
 
 ## 必选参数（Required Parameters）
