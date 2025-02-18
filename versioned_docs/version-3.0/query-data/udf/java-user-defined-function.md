@@ -112,7 +112,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     }
     ```
 
-2. Register and create the Java-UDF function in Doris. For more details on the syntax, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. Register and create the Java-UDF function in Doris. For more details on the syntax, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -123,7 +123,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     );
     ```
 
-3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/Show-Statements/SHOW-FUNCTIONS.md) command.
+3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) command.
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -135,7 +135,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     +------+----------------------+
     ```
 
-4. If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION).
+4. If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION).
 
 Additionally, if your UDF requires loading large resource files or defining global static variables, you can refer to the method for loading static variables described later in this document.
 
@@ -325,7 +325,7 @@ public class MedianUDAF {
 </details>
 
 
-2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -378,7 +378,7 @@ UDTF is supported starting from Doris version 3.0.
     ```
 
 2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
-For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (

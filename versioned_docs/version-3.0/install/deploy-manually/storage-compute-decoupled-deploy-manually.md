@@ -335,7 +335,7 @@ Storage Vault is an important component in Doris' separation of storage and comp
    );
    ```
 
-   To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT).
+   To create a Storage Vault on other object storage, please refer to [Create Storage Vault](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 3. Set Default Storage Vault
 

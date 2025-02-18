@@ -94,7 +94,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 ```sql
 ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 ```
-For specific syntax, refer to [ALTER TABLE RENAME](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME.md).
+For specific syntax, refer to [ALTER TABLE RENAME](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME).
 
 ### Add a Column
 

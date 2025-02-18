@@ -76,7 +76,7 @@ HDFS(
 | `trim_double_quotes`                        | For CSV format imports, boolean type. Default is `false`. If `true`, removes the outermost double quotes from each field.                  |                                                                                     |
 | `skip_lines`                                | For CSV format imports, integer type. Default is 0. Skips the first few lines of the CSV file. This parameter is ignored if `csv_with_names` or `csv_with_names_and_types` is set. |                                                                                     |
 | `path_partition_keys`                       | Specify the partition column names carried in the file path, for example `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`, which will automatically read the corresponding column names and values from the path for import. |                                                                                     |
-| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
+| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
 
 ## Access Control Requirements
 

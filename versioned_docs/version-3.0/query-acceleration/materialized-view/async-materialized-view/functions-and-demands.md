@@ -488,7 +488,7 @@ SELECT FROM t1;
 
 Additionally, if the partition field is of string type, the date format can be specified by setting the materialized view's `partition_date_format` property, for example, `'%Y-%m-%d'`.
 
-For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW).
+For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
 ### SQL Definition
 There are no restrictions on the SQL definition of asynchronous materialized views.

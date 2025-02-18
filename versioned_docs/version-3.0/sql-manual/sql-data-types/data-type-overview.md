@@ -64,7 +64,7 @@ The precise fixed-point type [DECIMAL](../sql-data-types/numeric/DECIMAL.md), us
 
 Date types include DATE, TIME and DATETIME, DATE type only stores the date accurate to the day, DATETIME type stores the date and time, which can be accurate to microseconds. TIME type only stores the time, and **does not support the construction of the table storage for the time being, can only be used in the query process**.
 
-Do calculation for datetime types or converting them to numeric types, please use functions like [TIME_TO_SEC](../../sql-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/date-time-functions/unix-timestamp) . The result of directly converting them as numeric types as not guaranteed.
+Do calculation for datetime types or converting them to numeric types, please use functions like [TIME_TO_SEC](../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../sql-functions/scalar-functions/date-time-functions/unix-timestamp) . The result of directly converting them as numeric types as not guaranteed.
 
 For more information refer to [DATE](../sql-data-types/date-time/DATE), [TIME](../sql-data-types/date-time/TIME) and [DATETIME](../sql-data-types/date-time/DATETIME) documents.
 
@@ -75,18 +75,18 @@ For more information refer to [DATE](../sql-data-types/date-time/DATE), [TIME](.
 
 Doris supports both fixed-length and variable-length strings, including:
 
-- **[CHAR(M)](../sql-data-types/string/CHAR.md)**: A fixed-length string, where M is the byte length. The range for M is [1, 255].
+- **[CHAR(M)](./string-type/CHAR)**: A fixed-length string, where M is the byte length. The range for M is [1, 255].
 
-- **[VARCHAR(M)](../sql-data-types/string/VARCHAR.md)**: A variable-length string, where M is the maximum length. The range for M is [1, 65533].
+- **[VARCHAR(M)](./string-type/VARCHAR)**: A variable-length string, where M is the maximum length. The range for M is [1, 65533].
 
-- **[STRING](../sql-data-types/string/STRING.md)**: A variable-length string with a default maximum length of 1,048,576 bytes (1 MB). This maximum length can be increased up to 2,147,483,643 bytes (2 GB) by configuring the `string_type_length_soft_limit_bytes`setting.
+- **[STRING](./string-type/STRING)**: A variable-length string with a default maximum length of 1,048,576 bytes (1 MB). This maximum length can be increased up to 2,147,483,643 bytes (2 GB) by configuring the `string_type_length_soft_limit_bytes`setting.
 
 ## Semi-Structured Types
 
 
 Doris supports different semi-structured data types for JSON data processing, each tailored to different use cases. 
 
-- **[ARRAY](../sql-data-types/semi-structured/ARRAY.md)** / **[MAP](../sql-data-types/semi-structured/MAP.md)** / **[STRUCT](../semi-structured/STRUCT.md)**: They support nested data and fixed schema, making them well-suited for analytical workloads such as user behavior and profile analysis, as well as querying data lake formats like Parquet. Due to the fixed schema, there is no overhead for dynamic schema inference, resulting in high write and analysis performance.
+- **[ARRAY](../sql-data-types/semi-structured/ARRAY.md)** / **[MAP](../sql-data-types/semi-structured/MAP.md)** / **[STRUCT](./semi-structured/STRUCT)**: They support nested data and fixed schema, making them well-suited for analytical workloads such as user behavior and profile analysis, as well as querying data lake formats like Parquet. Due to the fixed schema, there is no overhead for dynamic schema inference, resulting in high write and analysis performance.
 
 - **[VARIANT](../sql-data-types/semi-structured/VARIANT.md)**: It supports nested data and flexible schema. It is well-suited for analytical workloads such as log, trace, and IoT data analysis. It can accommodate any legal JSON data, which will be automatically expanded into sub-columns in a columnar storage format. This approach enables high compression rate in storage and high performance in data aggregation, filtering, and sorting.
 

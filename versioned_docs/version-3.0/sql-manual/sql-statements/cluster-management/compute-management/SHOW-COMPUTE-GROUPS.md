@@ -49,8 +49,8 @@ This command returns a result set containing the following columns:
 ## Related Commands
 
 - [ALTER SYSTEM ADD BACKEND](../Administration-Statements/ALTER-SYSTEM-ADD-BACKEND.md)
-- [GRANT](../account-management/GRANT-TO.md)
-- [REVOKE](../account-management/REVOKE-FROM.md)
+- [GRANT](../../account-management/GRANT-TO)
+- [REVOKE](../../account-management/REVOKE-FROM)
 - [SET DEFAULT COMPUTE GROUP](../Administration-Statements/SET-DEFAULT-COMPUTE-GROUP.md)
 
 ## Keywords
