@@ -53,7 +53,7 @@ MV_INFOS("database"="<database>")
 | EnvInfo                 | TEXT    | 物化视图创建时的环境信息                                           |
 | MvProperties            | TEXT    | 物化视属性                                                         |
 | MvPartitionInfo         | TEXT    | 物化视图的分区信息                                                 |
-| SyncWithBaseTables      | BOOLEAN | 是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
+| SyncWithBaseTables      | BOOLEAN | 是否和base表数据同步，如需查看哪个分区不同步，请使用[SHOW PARTITIONS](../../sql-statements/table-and-view/table/SHOW-PARTITIONS) |
 
 
 ## 示例
