@@ -130,7 +130,7 @@ Download the corresponding binary installation package from the Apache Doris web
    vm.max_map_count = 2000000
    EOF
 
-   Take effect immediately
+   ## Take effect immediately
    sysctl -p
    ```
 
