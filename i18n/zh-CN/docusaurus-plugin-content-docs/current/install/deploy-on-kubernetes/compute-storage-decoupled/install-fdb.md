@@ -25,7 +25,7 @@ under the License.
 -->
 
 [FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库。Doris 存算分离模式使用 FoundationDB 作为元数据存储，通过 meta-service 组件来管理 FoundationDB 中的元数据。Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
-- 在虚机（包括物理机）上直接部署。虚机部署请参考 Doris 存算分离官方文档[部署前准备部分](../../../../compute-storage-decoupled/before-deployment.md)搭建 FoundationDB 集群。部署前请确保 FoundationDB 有被 Doris 部署的 Kubernetes 集群访问的能力。  
+- 在虚机（包括物理机）上直接部署。虚机部署请参考 Doris 存算分离官方文档[部署前准备部分](../../../compute-storage-decoupled/before-deployment)搭建 FoundationDB 集群。部署前请确保 FoundationDB 有被 Doris 部署的 Kubernetes 集群访问的能力。  
 - 在 Kubernetes 上部署 FoundationDB。FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。  
 
 ## 在 Kubernetes 上部署 FoundationDB
