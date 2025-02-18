@@ -89,7 +89,7 @@ Routine Load 的导入具体流程如下图展示：
 在 Kafka 中，有以下样本数据
 
 ```sql
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
