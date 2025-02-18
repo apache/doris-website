@@ -55,7 +55,7 @@ Apache Doris 同样对 Apache Hudi 数据表的读取能力进行了增强：
 
 本文将在 Docker 环境下，为读者介绍如何快速搭建 Apache Doris + Apache Hudi 的测试及演示环境，并对各功能操作进行演示，帮助读者快速入门。
 
-关于更多说明，请参阅 [Hudi Catalog](../../../lakehouse/datalake-analytics/hudi)
+关于更多说明，请参阅 [Hudi Catalog](../datalake-analytics/hudi)
 
 ## 使用指南
 

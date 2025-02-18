@@ -53,11 +53,11 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 
 ##### refreshMethod
 
-同[创建异步物化视图](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+同[创建异步物化视图](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ##### refreshTrigger
 
-同[创建异步物化视图](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+同[创建异步物化视图](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ##### SET
 

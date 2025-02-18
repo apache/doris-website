@@ -45,7 +45,7 @@ Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。�
 
 ### 操作示例
 
-在 Doris 中通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务，分为单表导入和多表导入。详细语法请参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。
+在 Doris 中通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务，分为单表导入和多表导入。详细语法请参考 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。
 
 #### 单表导入
 

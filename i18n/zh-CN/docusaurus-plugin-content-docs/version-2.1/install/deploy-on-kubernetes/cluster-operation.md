@@ -133,7 +133,7 @@ K8s 所有运维操作通过修改资源为最终状态，由 Operator 服务自
 
 ### 节点缩容
 
-关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
+关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
 
 - 表存在单副本情况下贸然下线 BE 节点，一定会有数据丢失，尽可能避免此操作。
 - FE Follower 节点尽量避免随意下线，可能带来元数据损坏影响服务。
@@ -147,7 +147,7 @@ Doris 集群整体升级需要先升级 BE，再升级 FE。Doris Operator 基�
 
 - 升级操作推荐在业务低峰期进行。
 - 滚动升级过程中，会导致连接到被关闭节点的连接失效，造成请求失败，对于这类业务，推荐在客户端添加重试能力。
-- 升级前可以阅读 [常规升级手册](../../../admin-manual/cluster-management/upgrade.md)，便于理解升级中的一些原理和注意事项。
+- 升级前可以阅读 [常规升级手册](../../admin-manual/cluster-management/upgrade)，便于理解升级中的一些原理和注意事项。
 - 升级前无法对数据和元数据的兼容性进行验证，因此集群升级一定要避免数据存在 单副本 情况 和 集群单 FE FOLLOWER 节点。
 - 升级过程中会有节点重启，所以可能会触发不必要的集群均衡和副本修复逻辑，先通过以下命令关闭
 ```
@@ -155,7 +155,7 @@ admin set frontend config("disable_balance" = "true");
 admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
-- Doris 升级请遵守不要跨两个及以上关键节点版本升级的原则，若要跨多个关键节点版本升级，先升级到最近的关键节点版本，随后再依次往后升级，若是非关键节点版本，则可忽略跳过。具体参考 [升级版本说明](../../../admin-manual/cluster-management/upgrade.md)
+- Doris 升级请遵守不要跨两个及以上关键节点版本升级的原则，若要跨多个关键节点版本升级，先升级到最近的关键节点版本，随后再依次往后升级，若是非关键节点版本，则可忽略跳过。具体参考 [升级版本说明](../../admin-manual/cluster-management/upgrade)
 
 ### 升级操作
 

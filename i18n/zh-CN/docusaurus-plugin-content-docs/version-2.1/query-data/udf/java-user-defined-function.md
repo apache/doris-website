@@ -105,7 +105,7 @@ insert into test_table values (6, 666.66, "d,e");
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -117,7 +117,7 @@ insert into test_table values (6, 666.66, "d,e");
     ```
 
 3. 用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
-    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/Show-Statements/SHOW-FUNCTIONS.md) 命令。
+    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) 命令。
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -129,7 +129,7 @@ insert into test_table values (6, 666.66, "d,e");
     +------+----------------------+
     ```
 
-4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION)
 
 另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 static 变量，可以参照文档下方的 static 变量加载方式。
 
@@ -316,7 +316,7 @@ public void destroy(State state) {
 </details>
 
 
-2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -369,7 +369,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
     ```
 
 2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上`_outer`后缀，其中带后缀`_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)。 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
