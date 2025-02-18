@@ -38,7 +38,7 @@ under the License.
 SHOW CATALOG RECYCLE BIN [WHERE NAME [= "name" | LIKE "name_matcher"]];
 ```
 
-有关更详细的语法和最佳实践，请参阅[SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN.md)命令手册，您还可以在 MySql 客户端命令行中输入`help SHOW CATALOG RECYCLE BIN`以获取更多帮助。
+有关更详细的语法和最佳实践，请参阅[SHOW-CATALOG-RECYCLE-BIN](../../sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN)命令手册，您还可以在 MySql 客户端命令行中输入`help SHOW CATALOG RECYCLE BIN`以获取更多帮助。
 
 ### 开始数据恢复
 
@@ -62,4 +62,4 @@ RECOVER TABLE example_db.example_tbl;
 RECOVER PARTITION p1 FROM example_tbl;
 ```
 
-有关 RECOVER 使用的更详细的语法和最佳实践，请参阅[RECOVER](../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER.md)命令手册，您还可以在 MySql 客户端命令行中输入`HELP RECOVER`以获取更多帮助。
+有关 RECOVER 使用的更详细的语法和最佳实践，请参阅[RECOVER](../../sql-manual/sql-statements/recycle/RECOVER)命令手册，您还可以在 MySql 客户端命令行中输入`HELP RECOVER`以获取更多帮助。

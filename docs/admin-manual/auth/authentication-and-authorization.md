@@ -115,7 +115,7 @@ Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 
 ### Permission Operations
 
-- Create user: [CREATE USER](../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md)
+- Create user: [CREATE USER](../../sql-manual/sql-statements/account-management/CREATE-USER)
 - Modify user: [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)
 - Delete user: [DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER.md)
 - Grant/Assign role: [GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)

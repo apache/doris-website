@@ -137,7 +137,7 @@ There are several merge types when loading data:
 
 The `Stream Load` syntax is to add a field for setting the delete sign column in the header's columns field, for example: `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`.
 
-For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../load/load-way/stream-load-manual.md).
+For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../import/import-way/stream-load-manual.md).
 
 ### Broker Load
 

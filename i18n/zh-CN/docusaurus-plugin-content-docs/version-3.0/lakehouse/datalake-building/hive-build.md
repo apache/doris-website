@@ -240,7 +240,7 @@ set global enable_fallback_to_original_planner = false;
 
     - Parquet：snappy（默认）、zstd、plain。（Plain 就是不采用压缩）
     - ORC：snappy、zlib（默认）、zstd、plain。（Plain 就是不采用压缩）
-    - Text：gzipm、defalte、bzip2、zstd、lz4、lzo、snappy、plain（默认）。（Plain 就是不采用压缩）
+    - Text：gzip、defalte、bzip2、zstd、lz4、lzo、snappy、plain（默认）。（Plain 就是不采用压缩）
 
 - 存储介质
 

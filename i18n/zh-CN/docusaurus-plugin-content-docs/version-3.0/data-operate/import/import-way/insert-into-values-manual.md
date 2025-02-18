@@ -222,7 +222,7 @@ Query OK, 5 rows affected (0.04 sec)
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过 [SHOW TRANSACTION](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION) 语句查看这批数据的可见状态。
+可以通过 [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION) 语句查看这批数据的可见状态。
 当返回结果中的 `TransactionStatus` 列变成 `VISIBLE` 时代表数据可见。
 
 ```sql

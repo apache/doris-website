@@ -25,7 +25,7 @@ under the License.
 -->
 ## Overview
 
-This table is solely used for compatibility with MySQL behavior and is always empty. It does not truly reflect the statistical information of the data within Doris. To view the statistical information collected by Doris, please refer to the [Statistics](../../../query-acceleration/statistics#manual-collection) section.
+This table is solely used for compatibility with MySQL behavior and is always empty. It does not truly reflect the statistical information of the data within Doris. To view the statistical information collected by Doris, please refer to the [Statistics](../../../query-acceleration/optimization-technology-principle/statistics#viewing-statistics) section.
 
 ## Database
 

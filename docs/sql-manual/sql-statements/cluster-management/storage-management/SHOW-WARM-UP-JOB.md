@@ -58,7 +58,7 @@ The commands are used to display warm-up jobs in Doris.
 
 ## References
 
- - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
+ - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
 
 ## Keywords
 
