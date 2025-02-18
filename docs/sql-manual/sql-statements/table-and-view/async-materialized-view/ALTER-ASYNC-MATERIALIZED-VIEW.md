@@ -50,11 +50,11 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 
 ##### refreshMethod
 
-Same as [creating asynchronous materialized views](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Same as [creating asynchronous materialized views](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ##### refreshTrigger
 
-Same as [creating asynchronous materialized views](../Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Same as [creating asynchronous materialized views](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
 ##### SET
 Modify properties unique to materialized views

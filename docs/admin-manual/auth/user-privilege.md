@@ -93,19 +93,19 @@ The default role cannot be deleted or assigned to others. When a user is deleted
 
 ## Supported operations
 
-1. Create users: [CREATE USER](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-USER.md)
-2. Alter users: [ALTER USER](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-USER.md)
-3. Delete users: [DROP USER](../../sql-manual/sql-reference/Account-Management-Statements/DROP-USER.md)
+1. Create users: [CREATE USER](../../sql-manual/sql-statements/account-management/CREATE-USER)
+2. Alter users: [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER)
+3. Delete users: [DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER)
 4. Authorization/Assign roles: [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md)
 5. Withdrawal/REVOKE roles: [REVOKE](../../sql-manual/sql-reference/Account-Management-Statements/REVOKE.md)
-6. Create role: [CREATE ROLE](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-ROLE.md)
-7. Delete roles: [DROP ROLE](../../sql-manual/sql-reference/Account-Management-Statements/DROP-ROLE.md)
-8. View current user privileges: [SHOW GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
-9. View all user privileges: [SHOW ALL GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
-10. View the created roles: [SHOW ROLES](../../sql-manual/sql-reference/Show-Statements/SHOW-ROLES.md)
-11. Set user properties: [SET PROPERTY](../../sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY.md)
-12. View user properties: [SHOW PROPERTY](../../sql-manual/sql-reference/Show-Statements/SHOW-PROPERTY.md)
-13. Change password :[SET PASSWORD](../../sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD.md)
+6. Create role: [CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE)
+7. Delete roles: [DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE)
+8. View current user privileges: [SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+9. View all user privileges: [SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+10. View the created roles: [SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES)
+11. Set user properties: [SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY)
+12. View user properties: [SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
+13. Change password :[SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD)
 
 For detailed help with the above commands, you can use help + command to get help after connecting Doris through the MySQL client. For example `HELP CREATE USER`.
 

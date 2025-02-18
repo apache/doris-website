@@ -27,7 +27,7 @@ under the License.
 
 1. Incomplete syntax error prompts may occur in longer table creation statements. Here are some possible syntax errors for manual troubleshooting:
 
-   - Syntax structure errors. Please carefully read [HELP CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)  and check the relevant syntax structure.
+   - Syntax structure errors. Please carefully read [HELP CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)  and check the relevant syntax structure.
    - Reserved words. When user-defined names encounter reserved words, they need to be enclosed in backticks ``. It is recommended to use this symbol for all custom names.
    - Chinese characters or full-width characters. Non-UTF8 encoded Chinese characters or hidden full-width characters (spaces, punctuation, etc.) can cause syntax errors. It is recommended to use a text editor that displays invisible characters for inspection.
 
@@ -53,4 +53,4 @@ under the License.
 
 ## More Help
 
-For more detailed information on data partitioning, you can refer to the [CREATE TABLE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) command manual or enter `HELP CREATE TABLE;` in the MySQL client to get more help information.
+For more detailed information on data partitioning, you can refer to the [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) command manual or enter `HELP CREATE TABLE;` in the MySQL client to get more help information.

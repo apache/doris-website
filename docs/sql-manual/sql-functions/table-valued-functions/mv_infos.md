@@ -53,7 +53,7 @@ MV_INFOS("database"="<database>")
 | EnvInfo                | TEXT    | Environment information when the materialized view was created       |
 | MvProperties           | TEXT    | Materialized view properties                                         |
 | MvPartitionInfo        | TEXT    | Partition information of the materialized view                       |
-| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
+| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../../sql-statements/table-and-view/table/SHOW-PARTITIONS) |
 
 ## Examples
 

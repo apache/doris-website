@@ -76,7 +76,7 @@ Doris itself does not support a blacklist, only a whitelist function, but we can
 - Modify User: [ALTER USER](../../../sql-manual/sql-statements/account-management/ALTER-USER)
 - Change Password: [SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD)
 - Delete User: [DROP USER](../../../sql-manual/sql-statements/account-management/DROP-USER)
-- Set User Attributes: [SET PROPERTY](../../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
+- Set User Attributes: [SET PROPERTY](../../../sql-manual/sql-statements/account-management/SET-PROPERTY)
 - View User Attributes: [SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 
 ## Other Explanations

@@ -116,7 +116,7 @@ Doris has several unique data types. Here are the details:
 
   The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
-  AGG_STATE can only be used in combination with [STATE](../../sql-manual/sql-functions/combinators/state) / [MERGE](../../sql-manual/sql-functions/combinators/merge)/ [UNION](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
+  AGG_STATE can only be used in combination with [STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge)/ [UNION](../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
 
 ## Syntax
 
