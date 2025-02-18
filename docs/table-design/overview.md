@@ -26,11 +26,11 @@ under the License.
 
 ## Creating tables
 
-Users can use the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) statement to create a table in Doris. You can also use the [LIKE](./sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) or [AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) clause to derive the table definition from another table.
+Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. You can also use the [LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) or [AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) clause to derive the table definition from another table.
 
 ## Table name
 
-In Doris, table names are case-sensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-insensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md).
+In Doris, table names are case-sensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-insensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE).
 
 ## Table property
 
