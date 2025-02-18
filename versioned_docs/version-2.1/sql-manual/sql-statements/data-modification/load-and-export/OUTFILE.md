@@ -214,7 +214,7 @@ This command is a synchronous command, so it is possible that the task connectio
 
 ### Concurrent Export
 
-Setting the session variable `set enable_parallel_outfile = true;` enables concurrent export using outfile. For detailed usage, see [Export Query Result](../../../data-operate/export/outfile.md).
+Setting the session variable `set enable_parallel_outfile = true;` enables concurrent export using outfile. For detailed usage, see [Export Query Result](../../../../data-operate/export/outfile).
 
 
 ## Examples
