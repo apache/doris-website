@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS example_tbl_agg
     cost                BIGINT      SUM DEFAULT "0",
     max_dwell           INT         MAX DEFAULT "0",
 )
-AGGREGATE KEY(user_id, date, city)
+AGGREGATE KEY(user_id, load_dt, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
