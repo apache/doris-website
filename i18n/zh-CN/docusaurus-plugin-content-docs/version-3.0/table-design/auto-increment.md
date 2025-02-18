@@ -61,7 +61,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 ## 语法
 
-要使用自增列，需要在建表[CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为 1。
+要使用自增列，需要在建表[CREATE-TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为 1。
 
 ### 示例
 

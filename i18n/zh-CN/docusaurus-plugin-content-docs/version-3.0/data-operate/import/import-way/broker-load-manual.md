@@ -76,7 +76,7 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 ## 快速上手
 
-本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD)。
+本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
 
 ### 前置检查
 
