@@ -99,7 +99,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 :::info 环境建议：
 
-*   **操作系统：** 推荐使用 CentOS 7.1 或 Ubuntu 16.04 以上版本的 AMD/ARM 主流 Linux 环境。更多运行环境要求请参考[安装部署文档](link-to-install-doc)。
+*   **操作系统：** 推荐使用 CentOS 7.1 或 Ubuntu 16.04 以上版本的 AMD/ARM 主流 Linux 环境。
 
 *   **Java 环境：** 建议使用 Java 8 运行环境。如果是非 Oracle JDK 商业授权用户，请使用免费的 Oracle JDK 8u300 以后版本 ([立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
 
