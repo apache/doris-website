@@ -79,7 +79,7 @@ Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, wh
 ## Quick start
 
 This section shows a demo for S3 Load.
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) in the SQL manual.
 
 ### Prerequisite check
 

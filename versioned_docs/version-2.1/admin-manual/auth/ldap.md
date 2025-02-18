@@ -224,7 +224,7 @@ If jack also belongs to the LDAP groups doris_qa, doris_pm; Doris exists roles: 
 > If you want user2 to belong to group2, you need to add user2 to the member attribute of group2
 
 ### LDAP information cache
-To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](... /... /sql-manual/sql-reference/Utility-Statements/REFRESH-LDAP.md).
+To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ## Limitations of LDAP authentication
 
