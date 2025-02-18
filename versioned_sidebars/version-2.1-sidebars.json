@@ -804,7 +804,8 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
-                "faq/bi-faq"
+                "faq/bi-faq",
+                "faq/correctness-faq"
             ]
         },
         {
