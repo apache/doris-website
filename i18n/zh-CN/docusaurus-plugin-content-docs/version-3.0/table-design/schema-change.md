@@ -94,7 +94,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 ```sql
 ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 ```
-具体语法参考[ALTER TABLE RENAME](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME.md)。
+具体语法参考[ALTER TABLE RENAME](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME)。
 
 ### 添加一列
 

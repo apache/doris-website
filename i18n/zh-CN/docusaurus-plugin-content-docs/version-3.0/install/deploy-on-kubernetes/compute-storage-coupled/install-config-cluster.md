@@ -101,7 +101,7 @@ spec:
 :::
 
 ## 定制化启动配置
-在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../../admin-manual/config/fe-config.md)和 [BE 配置文档](../../../../admin-manual/config/be-config.md)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
+在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config)和 [BE 配置文档](../../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
 
 ### FE 定制化启动配置
 #### 第 1 步：配置并部署 ConfigMap  
@@ -690,7 +690,7 @@ func main() {
 
 ### 集群部署后设置 root 用户密码
 
-Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
+Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
 
 #### 第 1 步：新建拥有 Node_priv 权限用户
 
@@ -711,7 +711,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 
 其中，${DB_ADMIN_USER} 为新创建的用户名。  
-新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md) 部分。
+新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/account-management/CREATE-USER) 部分。
 
 #### 第 3 步：配置 DorisCluster 资源
 

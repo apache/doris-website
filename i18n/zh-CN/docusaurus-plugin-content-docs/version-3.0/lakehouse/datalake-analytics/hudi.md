@@ -80,7 +80,7 @@ Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java S
 |      numNodes=6                                                              |
 |      hudiNativeReadSplits=717/810                                            |
 ```
-用户可以通过 [profile](../../admin-manual/fe/profile-action) 查看 Java SDK 的性能，例如：
+用户可以通过 [profile](../../admin-manual/open-api/fe-http/profile-action) 查看 Java SDK 的性能，例如：
 ```
 -  HudiJniScanner:  0ns
   -  FillBlockTime:  31.29ms

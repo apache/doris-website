@@ -31,7 +31,7 @@ under the License.
 4. 创建存储后端。
 
 ## 第 1 步：部署前准备
-在 Kubernetes 上部署存算分离集群需要提前部署好 FoundationDB。如果使用虚机部署，需要确保虚机能够被 Kubernetes 集群上的服务访问。FoundationDB 在虚机上部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../../compute-storage-decoupled/before-deployment.md)。在 Kubernetes 上部署请参考[在 Kubernetes 上部署 FoundationDB](install-fdb.md)。
+在 Kubernetes 上部署存算分离集群需要提前部署好 FoundationDB。如果使用虚机部署，需要确保虚机能够被 Kubernetes 集群上的服务访问。FoundationDB 在虚机上部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../compute-storage-decoupled/before-deployment)。在 Kubernetes 上部署请参考[在 Kubernetes 上部署 FoundationDB](install-fdb.md)。
 
 ## 第 2 步：部署 Operator
 1. 下发资源定义  
@@ -147,6 +147,6 @@ under the License.
   ```
   
 :::tip 提示  
-在本文展示的创建命令中，配置信息都是虚构信息不能用于真实场景，请参照[管理 Storage Vault 章节](../../../../compute-storage-decoupled/managing-storage-vault.md)创建可用存储后端。  
+在本文展示的创建命令中，配置信息都是虚构信息不能用于真实场景，请参照[管理 Storage Vault 章节](../../../compute-storage-decoupled/managing-storage-vault)创建可用存储后端。  
 :::
 
