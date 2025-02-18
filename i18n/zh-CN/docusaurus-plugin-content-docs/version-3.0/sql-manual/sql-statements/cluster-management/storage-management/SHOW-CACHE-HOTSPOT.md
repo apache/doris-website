@@ -32,7 +32,7 @@ under the License.
 在3.0.4版本之前可以使用`SHOW CACHE HOTSPOT`语句进行缓存热度信息统计查询,
 从3.0.4版本开始不再支持使用 `SHOW CACHE HOTSPOT` 语句进行缓存热度信息统计查询,
 请直接访问系统表 `__internal_schema.cloud_cache_hotspot` 进行查询.
-具体用法请参考 [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
+具体用法请参考 [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
 :::
 
 ## 语法
@@ -63,5 +63,5 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 
 ## 参考
 
- - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
+ - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
  - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)

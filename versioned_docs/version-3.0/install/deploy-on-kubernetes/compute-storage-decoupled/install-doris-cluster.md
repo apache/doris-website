@@ -31,7 +31,7 @@ The deployment of a compute-storage decoupled cluster on Kubernetes involves fou
 4. Creating the storage backend.
 
 ## Step 1: Pre-deployment preparation
-To deploy a compute-storage decoupled cluster on Kubernetes, you need to deploy FoundationDB in advance. If using virtual machines (VMs), ensure that the VMs can be accessed by services within the Kubernetes cluster. For deploying FoundationDB on VMs, refer to the "Pre-deployment Preparation" section of the [compute-storage decoupling deployment guide](../../../../compute-storage-decoupled/before-deployment.md). For deployment on Kubernetes, follow the instructions in the [FoundationDB on Kubernetes deployment guide](install-fdb.md).  
+To deploy a compute-storage decoupled cluster on Kubernetes, you need to deploy FoundationDB in advance. If using virtual machines (VMs), ensure that the VMs can be accessed by services within the Kubernetes cluster. For deploying FoundationDB on VMs, refer to the "Pre-deployment Preparation" section of the [compute-storage decoupling deployment guide](../../../compute-storage-decoupled/before-deployment). For deployment on Kubernetes, follow the instructions in the [FoundationDB on Kubernetes deployment guide](install-fdb.md).  
 
 ## Step 2: Deploy the operator
 
@@ -139,6 +139,6 @@ Once the compute-storage decoupled cluster is set up, you need to execute the ap
   ```
 
 :::tip Tip  
-The configuration details in the above commands are for illustrative purposes only and are not valid for real-world scenarios. Please refer to [the Managing Storage Vaults section](../../../../compute-storage-decoupled/managing-storage-vault.md) for instructions on creating a usable storage backend.  
+The configuration details in the above commands are for illustrative purposes only and are not valid for real-world scenarios. Please refer to [the Managing Storage Vaults section](../../../compute-storage-decoupled/managing-storage-vault) for instructions on creating a usable storage backend.  
 :::
 
