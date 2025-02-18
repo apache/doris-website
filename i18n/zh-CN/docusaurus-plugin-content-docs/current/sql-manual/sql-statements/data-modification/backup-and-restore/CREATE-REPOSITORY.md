@@ -75,7 +75,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 - 根据 S3、HDFS 的不同类型，PROPERTIES 有所不同，具体见示例。
 - ON LOCATION ,如果是 S3 , 这里后面跟的是 S3 的 Bucket Name。
 - 在做数据迁移操作时，需要在源集群和目的集群创建完全相同的仓库，以便目的集群可以通过这个仓库，查看到源集群备份的数据快照。
-- 任何用户都可以通过 [SHOW REPOSITORIES](../../Show-Statements/SHOW-REPOSITORIES.md) 命令查看已经创建的仓库。
+- 任何用户都可以通过 [SHOW REPOSITORIES](./SHOW-REPOSITORIES) 命令查看已经创建的仓库。
 
 
 ## 示例

@@ -61,7 +61,7 @@ under the License.
 
 日期类型包括 DATE、TIME 和 DATETIME，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。
 
-对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../../sql-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
+对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../sql-functions/scalar-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
 
 更多信息参考 [DATE](../../sql-manual/sql-data-types/date-time/DATE)、[TIME](../../sql-manual/sql-data-types/date-time/TIME) 和 [DATETIME](../../sql-manual/sql-data-types/date-time/DATETIME) 文档。
 
@@ -70,11 +70,11 @@ under the License.
 
 字符串类型支持定长和不定长，总共有以下 3 种：
 
-1. [CHAR(M)](../../sql-manual/sql-data-types/string/CHAR.md)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
+1. [CHAR(M)](./string-type/CHAR)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
 
-2. [VARCHAR(M)](../../sql-manual/sql-data-types/string/VARCHAR.md)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
+2. [VARCHAR(M)](./string-type/VARCHAR)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
 
-3. [STRING](../../sql-manual/sql-data-types/string/STRING.md)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
+3. [STRING](./string-type/STRING)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
 
 ## 半结构化类型
 

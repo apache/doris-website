@@ -70,7 +70,7 @@ DROP TABLE [IF EXISTS] [<db_name>.]<table_name> [FORCE];
 
 ## 注意事项
 
-- 执行 `DROP TABLE` 一段时间内，可以通过 RECOVER 语句恢复被删除的表。详见 [RECOVER](../../../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER) 语句。
+- 执行 `DROP TABLE` 一段时间内，可以通过 RECOVER 语句恢复被删除的表。详见 [RECOVER](../../recycle/RECOVER) 语句。
 - 如果执行 `DROP TABLE FORCE`，则系统不会检查该表是否存在未完成的事务，表将直接被删除并且不能被恢复，一般不建议执行此操作。
 
 ## 示例

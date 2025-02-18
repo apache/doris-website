@@ -470,7 +470,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/import-way/group-commit-manual)
+- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/group-commit-manual)
 
 :::
 
@@ -699,7 +699,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
-- 参考文档：[Workload Group](../../admin-manual/resource-admin/workload-group.md)
+- 参考文档：[Workload Group](../../admin-manual/workload-management/workload-group)
 
 :::
 
@@ -761,7 +761,7 @@ select QueryId,max(BePeakMemoryBytes) as be_peak_mem from active_queries() group
 目前主要展示的负载类型包括 Select 和`Insert Into……Select`，预计在 2.1 版本之上的三位迭代版本中会支持 Stream Load 和 Broker Load 的资源用量展示。
 
 :::note
-参考文档：[ACTIVE_QUERIES](../../sql-manual/sql-functions/table-functions/active_queries.md)
+参考文档：[ACTIVE_QUERIES](../../admin-manual/system-tables/information_schema/active_queries)
 :::
 
 

@@ -256,7 +256,7 @@ PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### 恢复导入作业
 
-可以通过 [RESUME ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) 命令恢复导入作业。
+可以通过 [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) 命令恢复导入作业。
 
 如通过以下命令可以恢复 testdb.example_routine_load_csv 导入作业：
 
@@ -283,7 +283,7 @@ FROM KAFKA(
 
 ### 取消导入作业
 
-可以通过 [STOP ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) 命令停止并删除 Routine Load 导入作业。删除后的导入作业无法被恢复，也无法通过 SHOW ROUTINE LOAD 命令查看。
+可以通过 [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) 命令停止并删除 Routine Load 导入作业。删除后的导入作业无法被恢复，也无法通过 SHOW ROUTINE LOAD 命令查看。
 
 可以通过以下命令停止并删除导入作业 testdb.example_routine_load_csv：
 
