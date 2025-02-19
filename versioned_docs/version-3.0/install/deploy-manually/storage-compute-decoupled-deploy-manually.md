@@ -244,7 +244,7 @@ Other nodes should also modify their configuration files and start following the
 ALTER SYSTEM ADD FOLLOWER "host:port";
 ```
 
-Replace `host:port` with the actual address of the FE node and edit the log port. For more information, see [ADD FOLLOWER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-FOLLOWER) and [ADD OBSERVER](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-OBSERVER).
+Replace `host:port` with the actual address of the FE node and edit the log port. For more information, see [ADD FOLLOWER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER) and [ADD OBSERVER](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER).
 
 In a production environment, make sure the total number of FE nodes in the FOLLOWER role, including the first FE, remains odd. Typically, three FOLLOWER nodes are sufficient. The number of FE nodes in the OBSERVER role can be arbitrary.
 
@@ -284,7 +284,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
 
    You can use PROPERTIES to specify the compute group where the BE is located.
 
-   For more detailed usage, refer to [ADD BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DROP-BACKEND).
+   For more detailed usage, refer to [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND).
 
 5. Verify BE status
 
