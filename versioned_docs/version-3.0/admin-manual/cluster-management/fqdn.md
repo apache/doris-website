@@ -63,7 +63,7 @@ After Doris supports FQDN, communication between nodes is entirely based on FQDN
 
 After an unexpected restart of the Pod, K8s cannot guarantee that the Pod's IP will not change, but it can ensure that the domain name remains unchanged. Based on this feature, when Doris enables FQDN, it can ensure that the Pod can still provide services normally after an unexpected restart.
 
-Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/deploy-on-kubernetes/install-operator)
+Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator)
 
 ### Server change IP
 

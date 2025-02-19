@@ -167,7 +167,9 @@ When all Pods are rebuilt and enter the Running state, the upgrade is complete.
 
 ### After the upgrade is completed
 #### Verify cluster node status
-Access Doris through `mysql-client` through the method provided in the [Access Doris Cluster](./install-config-cluster) document.
+
+Access Doris through `mysql-client` through the method provided in the [Access Doris Cluster](./access-cluster) document.
+
 Use SQL such as `show frontends` and `show backends` to view the version and status of each component.
 ```mysql
 mysql> show frontends\G;

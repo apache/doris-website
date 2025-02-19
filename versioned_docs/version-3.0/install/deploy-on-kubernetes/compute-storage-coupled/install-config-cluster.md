@@ -101,7 +101,8 @@ The minimum required resources for FE and BE to start are 4 CPUs and 8Gi of memo
 :::
 
 ## Custom startup configuration
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../admin-manual/config/be-config). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
+
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
 
 ### Custom FE startup configuration
 #### Step 1:  Create and deploy the FE ConfigMap
