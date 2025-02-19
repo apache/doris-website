@@ -27,16 +27,17 @@ under the License.
 
 :::caution Warning:
 
-Quick deployment **is only suitable for local development**. Do not use this deployment method in production environments:
+The following rapid deployment methods are intended solely for local development and testing, and should not be used in production environments. The reasons are as follows:
 
-1. When deploying quickly using Docker, data will be released when the Docker instance is destroyed.
+1. **Data Vulnerability**: Data can be easily lost when using Docker deployment, as data is lost upon container destruction. Manual deployment of single-replica instances lacks data redundancy and backup capabilities, meaning machine failures could result in data loss.
 
-2. Deploying a single-instance Doris manually does not have data replication capability, and a single machine failure may result in data loss.
+2. **Single-Replica Configuration**: The table creation statements in the examples are all single-replica. In a production environment, multi-replica storage should be used to ensure data reliability.
 
-3. The tables created in this example are single-instance. In production, please use multi-replica storage for data.
 :::
 
 ## Use Docker for Quick Deployment
+
+Starting from Doris version 2.1.8, Docker can be used for rapid deployment.
 
 ### Step 1: Create the docker-compose.yaml File
 
@@ -92,18 +93,16 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ```
 
-
-
 ## Local Quick Deployment
 
 :::info Environment Recommendations:
 
-* Choose a mainstream Linux environment on AMD/ARM, preferably CentOS 7.1 or Ubuntu 16.04 and above. For more supported environments, refer to the installation and deployment section.
+* **Operating System**: It is recommended to use AMD/ARM mainstream Linux environments such as CentOS 7.1 or Ubuntu 16.04 and above.
+  
+* **Java Environment**: It is advised to use the Java 8 runtime environment. For non-Oracle JDK commercial license users, please use the free Oracle JDK 8u300 or later versions.
 
-* Java 8 runtime environment (for non-Oracle JDK commercial license users, it is recommended to use the free Oracle JDK 8u300 or later versions, [Download Now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox)).
-
-* It is recommended to create a new Doris user on Linux. Avoid using the root user to prevent accidental system operation errors.
-
+* **User Permissions**: It is recommended to create a new Doris user on Linux and avoid using the root user for operations.
+  
 :::
 
 ### Step 1: Download the Binary Package
@@ -112,11 +111,9 @@ Download the corresponding binary installation package from the Apache Doris web
 
 ### Step 2: Modify the Environment Variables
 
-1. Modify the system's maximum open file descriptor limit
+1. **Modify the system's maximum open file descriptor limit**
 
    Use the following command to adjust the maximum file descriptor limit. After making this change, you need to restart the session to apply the configuration:
-
-
 
    ```sql
    vi /etc/security/limits.conf 
@@ -124,7 +121,7 @@ Download the corresponding binary installation package from the Apache Doris web
    * hard nofile 1000000
    ```
 
-2. Modify Virtual Memory Area
+2. **Modify Virtual Memory Area**
 
    Use the following command to permanently modify the virtual memory area to at least 2000000, and apply the change immediately:
 
@@ -133,13 +130,13 @@ Download the corresponding binary installation package from the Apache Doris web
    vm.max_map_count = 2000000
    EOF
 
-   Take effect immediately
+   ## Take effect immediately
    sysctl -p
    ```
 
 ### Step 3: Install FE
 
-1. Configure FE
+1. **Configure FE**
 
    Modify the following contents in the FE configuration file `apache-doris/fe/conf/fe.conf`:
 
@@ -151,15 +148,15 @@ Download the corresponding binary installation package from the Apache Doris web
    priority_networks=127.0.0.1/32
    ```
 
-2. Start FE
+2. **Start FE**
 
-   Run the FE process by executing the start_fe.sh script:
+   Run the FE process by executing the `start_fe.sh` script:
 
    ```sql
    apache-doris/fe/bin/start_fe.sh --daemon
    ```
 
-3. Check FE Status
+3. **Check FE Status**
 
    Connect to the cluster using MySQL client and check the cluster status:
 
@@ -175,7 +172,7 @@ Download the corresponding binary installation package from the Apache Doris web
 
 ### Step 4: Install BE
 
-1. Configure BE
+1. **Configure BE**
 
    Modify the following contents in the BE configuration file `apache-doris/be/conf/be.conf`:
 
@@ -187,7 +184,7 @@ Download the corresponding binary installation package from the Apache Doris web
    priority_networks=127.0.0.1/32
    ```
 
-2. Start BE
+2. **Start BE**
 
    Start the BE process with the following command:
 
@@ -195,7 +192,7 @@ Download the corresponding binary installation package from the Apache Doris web
    apache-doris/fe/bin/start_be.sh --daemon
    ```
 
-3. Register BE Node in the Cluster
+3. **Register BE Node in the Cluster**
 
    Connect to the cluster using MySQL client:
 
@@ -209,7 +206,7 @@ Download the corresponding binary installation package from the Apache Doris web
    ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
    ```
 
-4. Check BE Status
+4. **Check BE Status**
 
    Connect to the cluster using MySQL client and check the cluster status:
 
@@ -225,13 +222,13 @@ Download the corresponding binary installation package from the Apache Doris web
 
 ## Run Queries
 
-1. Connect to the cluster using MySQL client:
+1. **Connect to the cluster using MySQL client:**
 
    ```sql
    mysql -uroot -P9030 -h127.0.0.1
    ```
 
-2. Create database and test table:
+2. **Create database and test table:**
 
    ```sql
    create database demo;
@@ -248,7 +245,7 @@ Download the corresponding binary installation package from the Apache Doris web
    DISTRIBUTED BY HASH(k1) BUCKETS 1;
    ```
 
-3. Import test data:
+3. **Import test data:**
 
    Insert test data using the Insert Into statement
 
@@ -260,7 +257,7 @@ Download the corresponding binary installation package from the Apache Doris web
    (4,4.35,'d4',23);
    ```
 
-4. Execute the following SQL query in the MySQL client to view the imported data:
+4. **Execute the following SQL query in the MySQL client to view the imported data:**
 
    ```sql
    MySQL [demo]> select * from demo.mytable;

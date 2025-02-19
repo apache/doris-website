@@ -481,31 +481,29 @@
                         "admin-manual/auth/security-overview",
                         {
                             "type": "category",
-                            "label": "Authentication",
+                            "label": "Authentication and Authorization",
                             "items": [
-                                "admin-manual/auth/authentication/internal",
-                                "admin-manual/auth/authentication/federation"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Authorization",
-                            "items": [
-                                "admin-manual/auth/authorization/internal",
-                                "admin-manual/auth/authorization/ranger",
-                                "admin-manual/auth/authorization/data"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Data Transmission Encryption",
-                            "items": [
-                                "admin-manual/auth/certificate",
-                                "admin-manual/auth/fe-certificate"
+                                "admin-manual/auth/authentication-and-authorization",
+                                "admin-manual/auth/ldap",
+                                "admin-manual/auth/ranger"
                             ]
                         },
                         "admin-manual/audit-plugin",
-                        "admin-manual/auth/encryption-function"
+                        {
+                            "type": "category",
+                            "label": "Data Encryption",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Encryption in Transit",
+                                    "items": [
+                                        "admin-manual/auth/certificate",
+                                        "admin-manual/auth/fe-certificate"
+                                    ]
+                                },
+                                "admin-manual/auth/encryption-function"
+                            ]
+                        }
                     ]
                 }
             ]
