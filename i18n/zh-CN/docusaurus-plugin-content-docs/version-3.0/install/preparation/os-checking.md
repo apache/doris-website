@@ -130,7 +130,7 @@ sysctl -p
 
 如果发现端口不通，可以试着关闭防火墙，确认是否是本机防火墙造成。如果是防火墙造成，可以根据配置的 Doris 各组件端口打开相应的端口通信。
 
-```sql
+```bash
 sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 ```
@@ -141,7 +141,7 @@ Doris 由于依赖大量文件来管理表数据，所以需要将系统对程�
 
 通过以下命令可以调整最大文件句柄数。在调整后，需要重启会话以生效配置：
 
-```sql
+```bash
 vi /etc/security/limits.conf 
 * soft nofile 1000000
 * hard nofile 1000000
@@ -153,7 +153,7 @@ Doris 的元数据要求时间精度要小于 5000ms，所以所有集群所有�
 
 通常情况下，可以通过配置 NTP 服务保证各节点时钟同步。
 
-```sql
+```bash
 sudo systemctl start_ntpd.service
 sudo systemctl enable_ntpd.service
 ```

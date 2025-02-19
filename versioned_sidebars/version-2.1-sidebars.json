@@ -27,7 +27,7 @@
                                 "install/preparation/os-checking"
                             ]
                         },
-                        "install/deploy-manually/storage-compute-coupled-deploy-manually",
+                        "install/deploy-manually/integrated-storage-compute-deploy-manually",
                         {
                             "type": "category",
                             "label": "Deploying on Kubernetes",

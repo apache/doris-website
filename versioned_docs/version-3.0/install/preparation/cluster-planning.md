@@ -24,6 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Architecture Planning
+
+When deploying Doris, you can choose between the integrated storage-compute architecture or the decoupled storage-compute architecture based on your business needs:
+
+- [Integrated Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Integrated-Storage-Compute): The integrated storage-compute architecture is easy to deploy, performs excellently, and does not rely on external shared storage devices. It is suitable for business scenarios that do not require extreme elasticity in scaling.
+
+- [Decoupled Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Decoupled-Storage-Compute): The decoupled storage-compute architecture relies on shared storage and enables elastic scaling of computing resources. It is suitable for business scenarios that require dynamic adjustment of computing resources.
 
 ## Port Planning
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Storage Compute Coupled Manually",
+    "title": "Deploy Integrated Storage Compute Cluster Manually",
     "language": "en"
 }
 ---

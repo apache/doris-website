@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Storage Compute Coupled Manually",
+    "title": "Deploy Integrated Storage Compute Cluster Manually",
     "language": "en"
 }
 ---
@@ -34,6 +34,8 @@ After completing preliminary checks and planning, such as environment checks, cl
 4. **Verify Cluster Correctness**: After deployment, connect to and verify the cluster's correctness.
 
 ## Step 1: Deploy FE Master Node
+
+
 
 1. Create Metadata Path
 

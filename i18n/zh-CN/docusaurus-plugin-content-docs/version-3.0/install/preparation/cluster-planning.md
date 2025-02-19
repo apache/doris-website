@@ -24,6 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## 架构规划
+
+在部署 Doris 时，可以根据业务选择存算一体或存算分离架构：
+
+- [存算一体](../../gettingStarted/what-is-apache-doris.md#存算一体)：存算一体架构部署简单，性能优异，不依赖与外部的共享存储设备，适合不需要极致弹性扩缩容的业务场景；
+
+- [存算分离](../../gettingStarted/what-is-apache-doris.md#存算分离)：存算分离架构依赖于共享存储，实现了计算资源的弹性伸缩，适合需要动态调整计算资源的业务场景。
 
 ## 端口规划
 
