@@ -41,24 +41,24 @@
                             "items": [
                                 {
                                     "type": "category",
-                                    "label": "Compute storage coupled",
+                                    "label": "Integrated Compute Storage",
                                     "items": [
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/access-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation"
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/access-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation"
                                     ]
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Compute storage decoupled",
+                                    "label": "Separating Compute Storage",
                                     "items": [
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-fdb",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-ms",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-fe",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-cg",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-doris-cluster"
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster"
                                     ]
                                 }
                             ]

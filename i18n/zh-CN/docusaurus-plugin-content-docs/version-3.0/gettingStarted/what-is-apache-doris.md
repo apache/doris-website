@@ -73,7 +73,7 @@ Apache Doris 存算一体架构精简易于维护，如下图所示，只有两�
   
 - Backend（BE）：主要负责数据存储、查询计划的执行。数据会被切分成分片，在 BE 中多副本存储。
 
-![整体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
+![存算一体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
 
 在生产环境中可以部署多个 FE 节点做容灾备份，每个 FE 中都会维护全量的元数据副本。FE 分为三种角色：
 
