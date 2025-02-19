@@ -204,7 +204,7 @@ const config = {
             },
             announcementBar: {
                 id: 'support_us',
-                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
+                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">🌟 AWS × Apache Doris Meetup: Building a Global Big Data and AI Ecosystem 🔥 Register Now 🔥 
                 <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
                     </a>`,
                 backgroundColor: '#3C2FD4',
