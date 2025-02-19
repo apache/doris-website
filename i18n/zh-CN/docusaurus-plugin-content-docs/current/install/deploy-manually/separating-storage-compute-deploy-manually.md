@@ -24,6 +24,7 @@ under the License.
 -->
 
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为八步：
+
 1. **准备 FoundationDB 集群**：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
    
 3. **部署 S3 或 HDFS 服务**：可以使用已有的共享存储，或新建共享存储；
