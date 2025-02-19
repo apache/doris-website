@@ -235,6 +235,10 @@
     "message": "业务连续性与数据恢复",
     "description": "The label for category Business continuity & data recovery in sidebar docs"
   },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
     "description": "The label for category Managing Resource in sidebar docs"
