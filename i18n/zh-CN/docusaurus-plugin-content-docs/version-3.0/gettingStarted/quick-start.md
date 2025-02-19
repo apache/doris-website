@@ -1,6 +1,6 @@
 ---
 {
-    "title": "快速体验",
+    "title": "快速体验 Apache Doris",
     "language": "zh-CN"
 }
 
@@ -27,20 +27,21 @@ under the License.
 
 :::caution 警告：
 
-快速部署**仅适用于本地开发**。请勿将该种部署方式用于生产环境：
+以下快速部署方法**仅用于本地开发和测试**，**请勿用于生产环境**。原因如下：
 
-1. 使用 Docker 方式快速部署，当 Docker 实例销毁时，相应的数据也会释放。
+1. **数据易丢失：** Docker 部署在容器销毁时会丢失数据；手动部署单副本实例不具备数据冗余备份能力，机器宕机可能导致数据丢失。
 
-2. 通过手动部署单副本 Doris 实例，不具有数据多副本存储能力，单台机器宕机可能会造成数据丢失。
+2. **单副本配置：** 示例中的建表语句均为单副本，生产环境应使用多副本存储数据，以保证数据可靠性。
 
-3. 本示例中的建表均为单副本，在生产中请使用多副本存储数据。
 :::
 
 ## 使用 Docker 快速部署
 
+自 Doris 2.1.8 版本后，可以使用 Docker 进行快速部署。
+
 ### 第 1 步：创建 docker-compose.yaml 文件
 
-复制以下内容到 docker-compose.yaml，替换 DORIS_QUICK_START_VERSION 参数为指定版本，如 `3.0.1`。
+复制以下内容到 docker-compose.yaml 文件中，并将 DORIS_QUICK_START_VERSION 替换为指定的 Doris 版本，例如 3.0.1。
 
 ```text
 version: "3"
@@ -74,7 +75,7 @@ docker-compose -f ./docker-compose.yaml up -d
 ### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
 
 ```sql
-## 检查 FE 状态，确定 Join 与 Alive 列都为 true
+## 检查 FE 状态，确定 Join 与 Alive 列均为 true
 mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
 +-----------+------+-------+
 | host      | join | alive |
@@ -98,21 +99,21 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 :::info 环境建议：
 
-* 选择一个 AMD/ARM 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
+*   **操作系统：** 推荐使用 CentOS 7.1 或 Ubuntu 16.04 以上版本的 AMD/ARM 主流 Linux 环境。
 
-* Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u300 以后版本，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
+*   **Java 环境：** 建议使用 Java 8 运行环境。如果是非 Oracle JDK 商业授权用户，请使用免费的 OpenJDK 8u300 以后版本。
 
-* 建议在 Linux 上新建一个 Doris 用户。请避免使用 Root 用户，以防对操作系统误操作。
+*   **用户权限：** 建议在 Linux 上新建一个 Doris 用户，避免使用 root 用户进行操作。
 
 :::
 
 ### 第 1 步：下载二进制包
 
-从 Apache Doris 网站上[下载](https://doris.apache.org/zh-CN/download)相应的二进制安装包，并解压。
+从 Apache Doris 网站 [下载页面](https://doris.apache.org/zh-CN/download) 下载对应的 Doris 二进制安装包，并解压到指定目录。
 
 ### 第 2 步：修改环境变量
 
-1. 修改系统最大打开文件句柄数
+1. **修改系统最大打开文件句柄数**
 
    通过以下命令可以调整最大文件句柄数。在调整后，需要重启会话以生效配置：
 
@@ -122,7 +123,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    * hard nofile 1000000
    ```
 
-2. 修改虚拟内存区域
+2. **修改虚拟内存区域**
 
    通过以下命令可以永久修改虚拟内存区域至少为 2000000，并立即生效：
 
@@ -131,15 +132,15 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    vm.max_map_count = 2000000
    EOF
 
-   Take effect immediately
-   sysctl -p
+   ## Take effect immediately
+   sudo sysctl -p
    ```
 
 ### 第 3 步：安装 FE
 
-1. 配置 FE
+1. **配置 FE**
 
-   修改 FE 配置文件 `apache-doris/fe/conf/fe.conf` 的以下内容：
+   编辑 FE 配置文件 apache-doris/fe/conf/fe.conf，修改以下参数：
 
    ```sql
    ## 指定 Java 环境
@@ -149,20 +150,20 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    priority_networks=127.0.0.1/32
    ```
 
-2. 启动 FE
+2. **启动 FE**
 
-   通过 start\_fe.sh 脚本运行 FE 进程：
+   执行 start_fe.sh 脚本启动 FE 进程：
 
    ```sql
    apache-doris/fe/bin/start_fe.sh --daemon
    ```
 
-3. 检查 FE 状态
+3. **检查 FE 状态**
 
    使用 MySQL 客户端连接集群，并检查集群状态：
 
    ```sql
-   ## 检查 FE 状态，确定 Join 与 Alive 列都为 true
+   ## 检查 FE 状态，确定 Join 与 Alive 列均为 true
    mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
    +-----------------------------------------+-----------+-------------+----------+-----------+---------+----------+----------+-----------+------+-------+-------------------+---------------------+----------+--------+-------------------------+------------------+
    | Name                                    | Host      | EditLogPort | HttpPort | QueryPort | RpcPort | Role     | IsMaster | ClusterId | Join | Alive | ReplayedJournalId | LastHeartbeat       | IsHelper | ErrMsg | Version                 | CurrentConnected |
@@ -173,7 +174,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ### 第 4 步：安装 BE
 
-1. 配置 BE
+1. **配置 BE**
 
    修改 BE 配置文件 `apache-doris/be/conf/be.conf` 的以下内容：
 
@@ -185,7 +186,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    priority_networks=127.0.0.1/32
    ```
 
-2. 启动 BE
+2. **启动 BE**
 
    通过以下命令启动 BE 进程：
 
@@ -193,9 +194,9 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    apache-doris/fe/bin/start_be.sh --daemon
    ```
 
-3. 在集群中注册 BE 节点
+3. **在集群中注册 BE 节点**
 
-   使用 MySQL 客户端连接集群：
+   使用 MySQL 客户端连接 Doris：
 
    ```sql
    mysql -uroot -P9030 -h127.0.0.1
@@ -207,7 +208,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
    ```
 
-4. 检查 BE 状态
+4. **检查 BE 状态**
 
    使用 MySQL 客户端连接集群，并检查集群状态：
 
@@ -223,13 +224,13 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ## 运行查询
 
-1. 使用 MySQL 客户端连接集群
+1. **使用 MySQL 客户端连接集群**
 
    ```sql
    mysql -uroot -P9030 -h127.0.0.1
    ```
 
-2. 创建数据库与测试表
+2. **创建数据库与测试表**
 
    ```sql
    create database demo;
@@ -246,7 +247,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    DISTRIBUTED BY HASH(k1) BUCKETS 1;
    ```
 
-3. 导入测试数据
+3. **导入测试数据**
 
    使用 Insert Into 语句插入测试数据
 
@@ -258,7 +259,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    (4,4.35,'d4',23);
    ```
 
-4. 在 MySQL 客户端中执行以下 SQL 语句可以查看到已导入的数据：
+4. **在 MySQL 客户端中执行以下 SQL 语句可以查看到已导入的数据：**
 
    ```sql
    MySQL [demo]> select * from demo.mytable;
