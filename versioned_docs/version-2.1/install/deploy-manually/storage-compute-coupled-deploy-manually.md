@@ -186,7 +186,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | [priority_networks](../../admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
-   | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 16GB or more for production environments.   |
+   | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 2GB or more for production environments.   |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment that is independent of the operating system for Doris.               |
 
 3. Register BE Node in Doris
