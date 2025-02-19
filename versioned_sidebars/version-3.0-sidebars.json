@@ -458,16 +458,22 @@
                                 "admin-manual/auth/ranger"
                             ]
                         },
+                        "admin-manual/audit-plugin",
                         {
                             "type": "category",
-                            "label": "Data Transmission Encryption",
+                            "label": "Data Encryption",
                             "items": [
-                                "admin-manual/auth/certificate",
-                                "admin-manual/auth/fe-certificate"
+                                {
+                                    "type": "category",
+                                    "label": "Encryption in Transit",
+                                    "items": [
+                                        "admin-manual/auth/certificate",
+                                        "admin-manual/auth/fe-certificate"
+                                    ]
+                                },
+                                "admin-manual/auth/encryption-function"
                             ]
-                        },
-                        "admin-manual/audit-plugin",
-                        "admin-manual/auth/encryption-function"
+                        }
                     ]
                 }
             ]
