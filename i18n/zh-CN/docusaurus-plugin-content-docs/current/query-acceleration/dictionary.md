@@ -24,7 +24,9 @@ under the License.
 
 ## 概述
 
-字典表（Dictionary）是 Doris 提供的一种用于加速 JOIN 操作的特殊数据结构。它通过将常用的键值对预先加载到内存中，实现快速的查找操作，从而提升查询性能。字典表特别适用于需要频繁进行键值查找的场景。
+字典表(Dictionary) 是 Doris 提供的一种用于加速 JOIN 操作的特殊数据结构。它在普通表的基础上建立，将原表的对应列视为键值关系，将这些列的全部数据预先加载到内存中，实现快速的查找操作，从而提升查询性能。特别适用于需要频繁进行键值查找的场景。
+
+自然地，作为键值查找解决方案，字典表不容许重复 Key 的出现。
 
 ## 使用场景
 
@@ -33,7 +35,121 @@ under the License.
 1. 需要频繁进行键值查找的场景
 2. 维度表较小，可以完全加载到内存中
 3. 数据更新频率相对较低的场景
-4. 需要优化 JOIN 操作性能的场景
+
+原本需要使用 LEFT OUTER JOIN 实现的键值查找，在字典表的帮助下可以完全省去 JOIN 的开销，转变为普通的函数调用。以下是一个完整的场景示例：
+
+### 场景示例
+
+在电商系统中，订单表(`orders`, 事实表)记录了大量交易数据，需要经常关联商品表(`products`, 维度表)来获取商品的详细信息。
+
+```sql
+-- 商品维度表
+CREATE TABLE products (
+    product_id BIGINT NOT NULL COMMENT "商品ID",
+    product_name VARCHAR(128) NOT NULL COMMENT "商品名称",
+    brand_name VARCHAR(64) NOT NULL COMMENT "品牌名称",
+    category_name VARCHAR(64) NOT NULL COMMENT "品类名称",
+    retail_price DECIMAL(10,2) NOT NULL COMMENT "零售价",
+    update_time DATETIME NOT NULL COMMENT "更新时间"
+)
+DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
+
+-- 订单事实表
+CREATE TABLE orders (
+    order_id BIGINT NOT NULL COMMENT "订单ID",
+    product_id BIGINT NOT NULL COMMENT "商品ID",
+    user_id BIGINT NOT NULL COMMENT "用户ID",
+    quantity INT NOT NULL COMMENT "购买数量",
+    actual_price DECIMAL(10,2) NOT NULL COMMENT "实际成交价",
+    order_time DATETIME NOT NULL COMMENT "下单时间"
+)
+DISTRIBUTED BY HASH(`order_id`) BUCKETS 32;
+
+-- 插入示例数据
+INSERT INTO products VALUES
+(1001, 'iPhone 15 Pro 256G 黑色', 'Apple', '手机数码', 8999.00, '2024-01-01 00:00:00'),
+(1002, 'MacBook Pro M3 Max', 'Apple', '电脑办公', 19999.00, '2024-01-01 00:00:00'),
+(1003, 'AirPods Pro 2', 'Apple', '手机配件', 1999.00, '2024-01-01 00:00:00');
+
+INSERT INTO orders VALUES
+(10001, 1001, 88001, 1, 8899.00, '2024-02-22 10:15:00'),
+(10002, 1002, 88002, 1, 19599.00, '2024-02-22 11:30:00'),
+(10003, 1003, 88001, 2, 1899.00, '2024-02-22 14:20:00');
+```
+
+以下是一组典型的查询，为了统计各品类的订单量和销售额，以往我们需要使用 LEFT OUTER JOIN 来完成从商品表中提取商品信息的功能。
+
+```sql
+-- 统计各品类的订单量和销售额
+SELECT 
+    p.category_name,
+    p.brand_name,
+    COUNT(DISTINCT o.order_id) as order_count,
+    SUM(o.quantity) as total_quantity,
+    SUM(o.actual_price * o.quantity) as total_amount
+FROM orders o
+LEFT JOIN products p ON o.product_id = p.product_id
+WHERE o.order_time >= '2024-02-22 00:00:00'
+GROUP BY p.category_name, p.brand_name
+ORDER BY total_amount DESC;
+```
+
+```text
++---------------+------------+-------------+----------------+--------------+
+| category_name | brand_name | order_count | total_quantity | total_amount |
++---------------+------------+-------------+----------------+--------------+
+| 电脑办公      | Apple      |           1 |              1 |     19599.00 |
+| 手机数码      | Apple      |           1 |              1 |      8899.00 |
+| 手机配件      | Apple      |           1 |              2 |      3798.00 |
++---------------+------------+-------------+----------------+--------------+
+```
+
+在这类查询中，我们需要频繁地通过 `product_id` 查询商品的其他信息，这本质上是一种 KV 查找操作。
+
+设定好键值对关系，预先构建对应的字典表，可以完全将之前的 JOIN 操作转换为更轻的键值查找，提升 SQL 执行效率：
+
+```sql
+-- 创建商品信息字典
+CREATE DICTIONARY product_info_dict USING products
+(
+    product_id KEY,
+    product_name VALUE,
+    brand_name VALUE,
+    category_name VALUE,
+    retail_price VALUE
+)
+LAYOUT(HASH_MAP)
+PROPERTIES(
+    'data_lifetime'='300'  -- 考虑到商品信息变更频率，设置5分钟更新一次
+);
+```
+
+原始查询借助字典表将 JOIN 操作转换为了 `dict_get` 函数查找，该函数为较轻的 KV 查找操作：
+
+```sql
+SELECT
+    dict_get("test.product_info_dict", "category_name", o.product_id) as category_name,
+    dict_get("test.product_info_dict", "brand_name", o.product_id) as brand_name,
+    COUNT(DISTINCT o.order_id) as order_count,
+    SUM(o.quantity) as total_quantity,
+    SUM(o.actual_price * o.quantity) as total_amount
+FROM orders o
+WHERE o.order_time >= '2024-02-22 00:00:00'
+GROUP BY
+    dict_get("test.product_info_dict", "category_name", o.product_id),
+    dict_get("test.product_info_dict", "brand_name", o.product_id)
+ORDER BY total_amount DESC;
+```
+
+```text
++---------------+------------+-------------+----------------+--------------+
+| category_name | brand_name | order_count | total_quantity | total_amount |
++---------------+------------+-------------+----------------+--------------+
+| 电脑办公      | Apple      |           1 |              1 |     19599.00 |
+| 手机数码      | Apple      |           1 |              1 |      8899.00 |
+| 手机配件      | Apple      |           1 |              2 |      3798.00 |
++---------------+------------+-------------+----------------+--------------+
+```
 
 ## 字典表定义
 
@@ -67,7 +183,7 @@ PROPERTIES(
 - `<priority_item_key>`：表的某项属性名
 - `<priority_item_value>`：表的某项属性取值
 
-`<key_column>` 不必出现在 `<value_column>` 前。
+`<key_column>` 和 `<value_column>` 至少各有一个。`<key_column>` 不必出现在 `<value_column>` 前。
 
 ### 布局类型
 
@@ -78,11 +194,10 @@ PROPERTIES(
 
 ### 属性
 
-当前字典仅有一项允许且必须出现的属性：
-
-|属性名|值类型|含义|
-|-|-|-|
-|`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值时，将会自动发起重新导入|
+|属性名|值类型|含义|必须项|
+|-|-|-|-|
+|`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值时，将会自动发起重新导入，导入逻辑详见[自动导入](#自动导入)|是|
+|`skip_null_key`|布尔值|向字典导入时如果 Key 列中出现 null 值，如果该值为 `true`，跳过该行数据，否则报错。缺省值为 `false`|否|
 
 ### 示例
 
@@ -93,8 +208,7 @@ CREATE TABLE source_table (
     city VARCHAR(32) NOT NULL,
     code VARCHAR(32) NOT NULL
 ) ENGINE=OLAP
-DISTRIBUTED BY HASH(id) BUCKETS 1
-PROPERTIES("replication_num" = "1");
+DISTRIBUTED BY HASH(id) BUCKETS 1;
 
 -- 创建字典表
 CREATE DICTIONARY city_dict USING source_table
@@ -113,12 +227,13 @@ PROPERTIES('data_lifetime' = '600');
 1. Key 列
 
    - IP_TRIE 类型字典的 Key 列必须为 Varchar 或 String 类型，**Key 列中的值必须为 CIDR 格式**。
+   - IP_TRIE 类型的字典只允许出现一个 Key 列。
    - HASH_MAP 类型字典的 Key 列支持所有简单类型（即排除所有 Map、Array 等嵌套类型）。
    - 作为 Key 列的列，**在源表中不得存在重复值**，否则字典导入数据时将报错。
 
-2. Nullable 属性
+2. Null 值处理
 
-   - 所有 Key 列必须为 NOT NULLABLE, Value 列无限制。
+   - 字典的所有列都可以是 Nullable 列，但 Key 列不应当实际出现 null 值。如果出现，行为取决于[属性](#属性)当中的 `skip_null_key`。
 
 ## 使用与管理
 
@@ -148,31 +263,32 @@ REFRESH DICTIONARY <dict_name>;
 
 1. 只有导入数据后的字典才可以查询。
 2. 如果导入时 Key 列具有重复值，导入事务会失败。
-3. 如果导入的数据版本早于 BE 已有的版本，则事务会失败。
-4. 如果当前已经有导入事务正在进行（字典 Status 为 `LOADING` ），则手动进行的导入会失败。请等待正在进行的导入完成后操作。
+3. 如果当前已经有导入事务正在进行（字典 Status 为 `LOADING` ），则手动进行的导入会失败。请等待正在进行的导入完成后操作。
 
 ### 查询字典
 
 可以分别使用 `dict_get` 和 `dict_get_many` 函数进行单一 Key、Value 列和多 Key、Value 列的字典表查询。
 
+首次查询请待字典导入完成以后进行。
+
 #### 语法
 
 ```sql
-VALUE_TYPE dict_get("<db_name>.<dict_name>", "<query_column>", <query_key_value>);
-STRUCT<VALUE_TYPES> dict_get_many("<db_name>.<dict_name>", ARRAY<VARCHAR> <query_columns>, STRUCT <query_key_values>);
+dict_get("<db_name>.<dict_name>", "<query_column>", <query_key_value>);
+dict_get_many("<db_name>.<dict_name>", <query_columns>, <query_key_values>);
 ```
 
 其中：
 
 - `<db_name>` 为字典所在的 database 名
 - `<dict_name>` 为字典名
-- `<query_columns>` 为要查询的 value 列列名
+- `<query_column>` 为要查询的 value 列列名，类型为 `VARCHAR`，**必须为常量**
+- `<query_columns>` 为要查询的所有 value 列列名，类型为 `ARRAY<VARCHAR>`，**必须为常量**
 - `<query_key_value>` 为用来查询的 key 列数据
-- `<value_col_names>` 为一个包含要查询的 value 列列名的常量数组
-- `<query_key_values>` 为一个包含该字典所有 key 列对应数据的 STRUCT
+- `<query_key_values>` 为一个包含该字典**所有 key 列**的需查询数据的 STRUCT
 
 `dict_get` 的返回类型为 `<query_column>` 对应的字典列类型。
-`dict_get_many` 的返回类型为 `<query_columns>` 对应的各个字典列类型所组成的 STRUCT。
+`dict_get_many` 的返回类型为 `<query_columns>` 对应的各个字典列类型所组成的 [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT)。
 
 #### 查询示例
 
@@ -188,7 +304,7 @@ SELECT dict_get("test_db.city_dict", "id", "Beijing");
 SELECT dict_get_many("test_db.single_key_dict", ["k1", "k3"], struct(1));
 ```
 
-该语句查询 `test_db` database 内的字典 `multi_key_dict`，查询 2 个 key 列值依次为 2 和 'ABC' 时的对应 `k1` 和 `k3` 列值：
+该语句查询 `test_db` database 内的字典 `multi_key_dict`，查询 2 个 key 列值依次为 2 和 'ABC' 时的对应 `k2` 和 `k3` 列值：
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
@@ -203,8 +319,7 @@ create table if not exists multi_key_table(
     k2 float not null,
     k3 varchar not null
 )
-DISTRIBUTED BY HASH(`k0`) BUCKETS auto
-properties("replication_num" = "1");
+DISTRIBUTED BY HASH(`k0`) BUCKETS auto;
 
 create dictionary multi_key_dict using multi_key_table
 (
@@ -227,10 +342,9 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 
 #### 查询注意事项
 
-1. 当查询的 Key 数据不存在于字典表内时，返回 null。
+1. 当查询的 Key 数据不存在于字典表内，**或 Key 数据为 null 时**，返回 null。
 2. IP_TRIE 类型进行查询时，**`<query_key_value>` 类型必须为 `IPV4` 或 `IPV6`**。
 3. 使用 IP_TRIE 类型字典时，key 列 `<key_column>` 内的数据和查询时使用的 `<query_key_value>` 同时支持 `IPV4` 和 `IPV6` 格式数据。
-4. 当查询的值不存在时，返回值为 null。
 
 ### 字典表管理
 
@@ -253,6 +367,8 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     ```sql
     DROP DICTIONARY <dict_name>;
     ```
+
+    删除字典表后，被删除的字典可能不会立即从 BE 中移除。
 
 ### 状态显示
 
@@ -299,10 +415,6 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 +-------------+-------------+------+-------+
 ```
 
-#### 状态注意事项
-
-1. 每次 `SHOW DICTIONARIES` 都会实时拉取所有 BE 的对应字典状态，如当前 Database 内字典过多，推荐通过 LIKE 子句依 `DictionaryName` 进行过滤。
-
 ## 注意事项
 
 1. 数据一致性
@@ -344,8 +456,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
         city_name VARCHAR(32) NOT NULL,
         region_code VARCHAR(32) NOT NULL
     ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(city_id) BUCKETS 1
-    PROPERTIES("replication_num" = "1");
+    DISTRIBUTED BY HASH(city_id) BUCKETS 1;
 
     -- 插入数据
     INSERT INTO cities VALUES
@@ -367,6 +478,9 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 
     -- 使用字典表查询
     SELECT dict_get("test_refresh_dict.city_code_dict", "region_code", "Beijing");
+    ```
+
+    ```text
     +------------------------------------------------------------------------+
     | dict_get('test_refresh_dict.city_code_dict', 'region_code', 'Beijing') |
     +------------------------------------------------------------------------+
@@ -384,8 +498,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
         region VARCHAR(64) NOT NULL,
         city VARCHAR(64) NOT NULL
     ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(ip_range) BUCKETS 1
-    PROPERTIES("replication_num" = "1");
+    DISTRIBUTED BY HASH(ip_range) BUCKETS 1;
 
     -- 插入一些示例数据
     INSERT INTO ip_locations VALUES
@@ -412,11 +525,116 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
         dict_get("test_refresh_dict.ip_location_dict", "country", cast('1.0.0.1' as ipv4)) AS country,
         dict_get("test_refresh_dict.ip_location_dict", "region", cast('1.0.0.2' as ipv4)) AS region,
         dict_get("test_refresh_dict.ip_location_dict", "city", cast('1.0.0.3' as ipv4)) AS city;
+    ```
+
+    ```text
     +---------------+------------+-------------+
     | country       | region     | city        |
     +---------------+------------+-------------+
     | United States | California | Los Angeles |
     +---------------+------------+-------------+
+    ```
+
+3. HASH_MAP 多 Key / 多 Value
+
+    ```sql
+    -- 商品SKU维度表：包含了商品的基本属性
+    CREATE TABLE product_sku_info (
+        product_id INT NOT NULL COMMENT "商品ID",
+        color_code VARCHAR(32) NOT NULL COMMENT "颜色编码",
+        size_code VARCHAR(32) NOT NULL COMMENT "尺码编码",
+        product_name VARCHAR(128) NOT NULL COMMENT "商品名称",
+        color_name VARCHAR(32) NOT NULL COMMENT "颜色名称",
+        size_name VARCHAR(32) NOT NULL COMMENT "尺码名称",
+        stock INT NOT NULL COMMENT "库存",
+        price DECIMAL(10,2) NOT NULL COMMENT "价格",
+        update_time DATETIME NOT NULL COMMENT "更新时间"
+    )
+    DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
+
+    -- 订单明细表：记录实际的销售数据
+    CREATE TABLE order_details (
+        order_id BIGINT NOT NULL COMMENT "订单ID",
+        product_id INT NOT NULL COMMENT "商品ID",
+        color_code VARCHAR(32) NOT NULL COMMENT "颜色编码",
+        size_code VARCHAR(32) NOT NULL COMMENT "尺码编码",
+        quantity INT NOT NULL COMMENT "购买数量",
+        order_time DATETIME NOT NULL COMMENT "下单时间"
+    )
+    DISTRIBUTED BY HASH(`order_id`) BUCKETS 10;
+
+    -- 插入商品SKU数据
+    INSERT INTO product_sku_info VALUES
+    (1001, 'BLK', 'M', 'Nike运动T恤', '黑色', 'M码', 100, 199.00, '2024-02-23 10:00:00'),
+    (1001, 'BLK', 'L', 'Nike运动T恤', '黑色', 'L码', 80, 199.00, '2024-02-23 10:00:00'),
+    (1001, 'WHT', 'M', 'Nike运动T恤', '白色', 'M码', 90, 199.00, '2024-02-23 10:00:00'),
+    (1001, 'WHT', 'L', 'Nike运动T恤', '白色', 'L码', 70, 199.00, '2024-02-23 10:00:00'),
+    (1002, 'RED', 'S', 'Adidas运动裤', '红色', 'S码', 50, 299.00, '2024-02-23 10:00:00'),
+    (1002, 'RED', 'M', 'Adidas运动裤', '红色', 'M码', 60, 299.00, '2024-02-23 10:00:00'),
+    (1002, 'BLU', 'S', 'Adidas运动裤', '蓝色', 'S码', 55, 299.00, '2024-02-23 10:00:00'),
+    (1002, 'BLU', 'M', 'Adidas运动裤', '蓝色', 'M码', 65, 299.00, '2024-02-23 10:00:00');
+
+    -- 插入订单数据
+    INSERT INTO order_details VALUES
+    (10001, 1001, 'BLK', 'M', 2, '2024-02-23 12:01:00'),
+    (10002, 1001, 'WHT', 'L', 1, '2024-02-23 12:05:00'),
+    (10003, 1002, 'RED', 'S', 1, '2024-02-23 12:10:00'),
+    (10004, 1001, 'BLK', 'L', 3, '2024-02-23 12:15:00'),
+    (10005, 1002, 'BLU', 'M', 2, '2024-02-23 12:20:00');
+
+    -- 创建多键多值字典
+    CREATE DICTIONARY sku_dict USING product_sku_info
+    (
+        product_id KEY,
+        color_code KEY,
+        size_code KEY,
+        product_name VALUE,
+        color_name VALUE,
+        size_name VALUE,
+        price VALUE,
+        stock VALUE
+    )
+    LAYOUT(HASH_MAP)
+    PROPERTIES('data_lifetime'='300');
+
+    -- 使用dict_get_many的查询示例：获取订单详情及SKU信息
+    WITH order_sku_info AS (
+        SELECT 
+            o.order_id,
+            o.quantity,
+            o.order_time,
+            dict_get_many("test.sku_dict", 
+                ["product_name", "color_name", "size_name", "price", "stock"],
+                struct(o.product_id, o.color_code, o.size_code)
+            ) as sku_info
+        FROM order_details o
+        WHERE o.order_time >= '2024-02-23 12:00:00'
+            AND o.order_time < '2024-02-23 13:00:00'
+    )
+    SELECT 
+        order_id,
+        order_time,
+        struct_element(sku_info, 'product_name') as product_name,
+        struct_element(sku_info, 'color_name') as color_name,
+        struct_element(sku_info, 'size_name') as size_name,
+        quantity,
+        struct_element(sku_info, 'price') as unit_price,
+        quantity * struct_element(sku_info, 'price') as total_amount,
+        struct_element(sku_info, 'stock') as current_stock
+    FROM order_sku_info
+    ORDER BY order_time;
+    ```
+
+    ```text
+    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
+    | order_id | order_time          | product_name    | color_name | size_name | quantity | unit_price | total_amount | current_stock |
+    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
+    |    10001 | 2024-02-23 12:01:00 | Nike运动T恤     | 黑色       | M码       |        2 |     199.00 |       398.00 |           100 |
+    |    10002 | 2024-02-23 12:05:00 | Nike运动T恤     | 白色       | L码       |        1 |     199.00 |       199.00 |            70 |
+    |    10003 | 2024-02-23 12:10:00 | Adidas运动裤    | 红色       | S码       |        1 |     299.00 |       299.00 |            50 |
+    |    10004 | 2024-02-23 12:15:00 | Nike运动T恤     | 黑色       | L码       |        3 |     199.00 |       597.00 |            80 |
+    |    10005 | 2024-02-23 12:20:00 | Adidas运动裤    | 蓝色       | M码       |        2 |     299.00 |       598.00 |            65 |
+    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
     ```
 
 ## 错误排查
