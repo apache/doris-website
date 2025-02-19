@@ -30,7 +30,7 @@ under the License.
 
 Doris 通过可扩展的连接器框架、存算分离架构、高性能的数据处理引擎和数据生态开放性，为用户提供了优秀的湖仓一体解决方案。
 
-![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.png)
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### 灵活的数据接入
 

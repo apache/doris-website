@@ -30,7 +30,7 @@ under the License.
 
 Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
-![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.png)
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### Flexible Data Access
 
