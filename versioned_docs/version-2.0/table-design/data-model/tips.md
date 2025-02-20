@@ -145,7 +145,7 @@ AGGREGATE KEY columns. Otherwise, `select sum (count) from table;` can only expr
 Another method is to add a `cound` column of value 1 but aggregation type of REPLACE. Then `select sum (count) from table;`
 and `select count (*) from table;`  could produce the same results. Moreover, this method does not require the absence of same AGGREGATE KEY columns in the import data.
 
-### Merge on write of unique model
+### MoW Unique Key Model
 
 The Merge on Write implementation in the Unique Model does not impose the same limitation as the Aggregate Model. 
 In Merge on Write, the model adds a  `delete bitmap` for each imported rowset to mark the data being overwritten or deleted. With the previous example, after Batch 1 is imported, the data status will be as follows:

@@ -59,7 +59,7 @@ under the License.
 
 ## 写时合并
 
-在建表时，使用 UNIQUE KEY 关键字可以指定主键表。通过显示开启 `enable_unique_key_merge_on_write` 属性可以指定写时合并模式。自 Doris 2.1 版本以后，默认开启写时合并：
+在建表时，使用 `UNIQUE KEY` 关键字可以指定主键表。通过显示开启 `enable_unique_key_merge_on_write` 属性可以指定写时合并模式。自 Doris 2.1 版本以后，默认开启写时合并：
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique
