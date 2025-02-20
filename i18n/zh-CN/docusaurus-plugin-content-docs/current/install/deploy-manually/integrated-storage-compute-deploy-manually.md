@@ -23,7 +23,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在完成前置检查及规划后，如[环境检查](../preparation/env-checking.md)、[操作系统检查](../preparation/os-checking.md)、[集群规划](../preparation/cluster-planning.md)，可以开始部署集存算一体集群。
+在完成前置检查及规划后，如[环境检查](../preparation/env-checking)、[操作系统检查](../preparation/os-checking)、[集群规划](../preparation/cluster-planning)，可以开始部署集存算一体集群。
 
 存算一体集群架构如下，部署存算一体集群分为四步：
 
@@ -45,7 +45,7 @@ under the License.
 
    在部署 FE 时，建议与 BE 节点数据存储在不同的硬盘上。
 
-   在解压安装包时，会默认附带 doris-meta 目录，建议为元数据创建独立目录，并将其软连接到默认的 `doris-meta` 目录。生产环境应使用单独的 SSD 硬盘，不建议将其放在 Doris 安装目录下；开发和测试环境可以使用默认配置。
+   在解压安装包时，会默认附带 `doris-meta` 目录，建议为元数据创建独立目录，并将其软连接到默认的 `doris-meta` 目录。生产环境应使用单独的 SSD 硬盘，不建议将其放在 Doris 安装目录下；开发和测试环境可以使用默认配置。
 
    ```SQL
    ## Use a separate disk for FE metadata
@@ -106,11 +106,11 @@ under the License.
 
    链接到 Doris 集群后，可以通过 `show frontends` 命令查看 FE 的状态，通常要确认以下几项
 
-   - Alive 为 `true` 表示节点存活；
+   - `Alive` 为 true 表示节点存活；
 
-   - Join 为 `true` 表示节点加入到集群中，但不代表当前还在集群内（可能已失联）；
+   - `Join` 为 true 表示节点加入到集群中，但不代表当前还在集群内（可能已失联）；
 
-   - IsMaster 为 true 表示当前节点为 Master 节点。
+   - `IsMaster` 为 true 表示当前节点为 Master 节点。
 
 ## 第 2 步：部署 FE 集群（可选）
 
@@ -118,7 +118,7 @@ under the License.
 
 1. **创建元数据目录**
 
-   参考部署 FE Master 节点，创建 doris-meta 目录
+   参考部署 FE Master 节点，创建 `doris-meta` 目录
 
 2. **修改 FE Follower 节点配置文件**
 
@@ -126,6 +126,14 @@ under the License.
 
 3. **在 Doris 集群中注册新的 FE Follower 节点**
 
+   :::caution 注意
+
+   - FE Follower（包括 Master）节点的数量建议为奇数，建议部署 3 个组成高可用模式。
+
+   - 当 FE 处于高可用部署时（1 个 Master，2 个 Follower），建议通过增加 Observer FE 来扩展 FE 的读服务能力
+   
+   :::
+   
    在启动新的 FE 节点前，需要先在 FE 集群中注册新的 FE 节点。
 
    ```Bash
@@ -143,11 +151,6 @@ under the License.
    ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
    ```
 
-   :::caution 注意
-   - FE Follower（包括 Master）节点的数量建议为奇数，建议部署 3 个组成高可用模式。
-
-   - 当 FE 处于高可用部署时（1 个 Master，2 个 Follower），我们建议通过增加 Observer FE 来扩展 FE 的读服务能力
-   :::
 4. **启动 FE Follower 节点**
 
    通过以下命令，可以启动 FE Follower 节点，并自动同步元数据。
@@ -156,11 +159,11 @@ under the License.
    bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
    ```
 
-   其中，helper_fe_ip 是 FE 集群中任何存活节点的 IP 地址。`--helper` 参数仅在第一次启动 FE 时需要，之后重启无需指定。
+   其中，`helper_fe_ip` 是 FE 集群中任何存活节点的 IP 地址。`--helper` 参数仅在第一次启动 FE 时需要，之后重启无需指定。
 
 5. **判断 Follower 节点状态**
 
-   与 FE Master 节点状态判断相同，添加 Follower 节点后，可通过 `show frontends` 命令查看节点状态，IsMaster 应为 false。
+   与 FE Master 节点状态判断相同，添加 Follower 节点后，可通过 `SHOW FRONTENDS` 命令查看节点状态，`IsMaster` 应为 false。
 
 ## 第 3 步：部署 BE 节点
 
@@ -196,6 +199,7 @@ under the License.
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | [priority_networks](../../admin-manual/config/be-config#priority_networks) | 网络 CIDR，更具网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
+   | [storage_root_path](../../admin-manual/config/be-config#storage_root_path) | BE 数据存储的目录，多目录之间用英文状态的分号。 |
    | JAVA_OPTS                                                    | 指定参数 `-Xmx` 调整 Java Heap，生产环境建议 2G 以上。   |
    | JAVA_HOME                                                    | 建议 Doris 使用独立于操作系统的 JDK 环境。                |
 
@@ -233,11 +237,11 @@ under the License.
    show backends;
    ```
 
-   通常情况下需要注意以下几项状态：
+   启动 BE 后，需要注意以下几项状态：
 
-   - Alive 为 true 表示节点存活
+   - `Alive` 为 true 表示节点存活
 
-   - TabletNum 表示该节点上的分片数量，新加入的节点会进行数据均衡，TabletNum 逐渐趋于平均。
+   - `TabletNum` 表示该节点上的分片数量，新加入的节点会进行数据均衡，`TabletNum` 逐渐趋于平均。
 
 ## 第 4 步：验证集群正确性
 

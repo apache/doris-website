@@ -23,11 +23,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-After completing the preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections, you can begin deploying the cluster.
+After completing the preliminary checks and planning, such as [environment checks](../preparation/env-checking), [cluster planning](../preparation/cluster-planning), and [operating system inspections](../preparation/os-checking), you can begin deploying the cluster.
 
 The integrated storage-compute architecture is shown below, and the deployment of the integrated storage-compute cluster involves four steps:
 
-[integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
+![integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    
@@ -43,7 +43,7 @@ The integrated storage-compute architecture is shown below, and the deployment o
 
    When deploying FE, it is recommended to store metadata on a different hard drive from the BE node data storage.
 
-   When extracting the installation package, a doris-meta directory is included by default. It is recommended to create a separate metadata directory and link it to the doris-meta directory. In production, it's highly advised to use a separate directory outside the Doris installation folder, preferably on an SSD. For testing and development environments, you can use the default configuration.
+   When extracting the installation package, a `doris-meta` directory is included by default. It is recommended to create a separate metadata directory and link it to the `doris-meta` directory. In production, it's highly advised to use a separate directory outside the Doris installation folder, preferably on an SSD. For testing and development environments, you can use the default configuration.
    
    ```sql
    ## Use a separate disk for FE metadata
@@ -90,7 +90,7 @@ The integrated storage-compute architecture is shown below, and the deployment o
    bin/start_fe.sh --daemon
    ```
 
-   The FE process will start and run in the background. By default, logs are stored in the log/ directory. If the startup fails, you can check the log/fe.log or log/fe.out files for error details.
+   The FE process will start and run in the background. By default, logs are stored in the `log/` directory. If the startup fails, you can check the `log/fe.log` or `log/fe.out` files for error details.
 
 4. **Check FE Startup Status**
 
@@ -102,11 +102,11 @@ The integrated storage-compute architecture is shown below, and the deployment o
 
    After connecting to the Doris cluster, you can use the `show frontends` command to check the status of FE nodes. Typically, you should verify the following:
 
-   - Alive: If true, it indicates the node is alive.
+   - If `Alive` is true, it indicates the node is alive.
 
-   - Join: If true, it indicates the node has joined the cluster, but it doesn't necessarily mean the node is still active in the cluster (it may have lost connection).
+   - If `Join` is true, it indicates the node has joined the cluster, but it doesn't necessarily mean the node is still active in the cluster (it may have lost connection).
 
-   - IsMaster: If true, it indicates the current node is the Master node.
+   - If `IsMaster` true, it indicates the current node is the Master node.
 
 ## Step 2: Deploy FE Cluster (Optional)
 
@@ -121,6 +121,12 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    Modify the FE configuration file for the Follower node, following the same steps as for the FE Master node. Typically, you can simply copy the configuration file from the FE Master node.
 
 3. **Register New FE Follower Node in the Doris Cluster**
+
+   :::caution Note
+   - The number of FE Follower nodes (including Master) should be odd. It is recommended to deploy 3 nodes for high availability.
+
+   - When FE is deployed in high availability mode (1 Master, 2 Followers), we recommend adding Observer FE nodes to extend the FE read service capacity.
+   :::
 
    Before starting a new FE node, you need to register the new FE node in the FE cluster.
 
@@ -139,12 +145,6 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
    ```
 
-   :::caution Note
-   - The number of FE Follower nodes (including Master) should be odd. It is recommended to deploy 3 nodes for high availability.
-
-   - When FE is deployed in high availability mode (1 Master, 2 Followers), we recommend adding Observer FE nodes to extend the FE read service capacity.
-   :::
-
 4. **Start FE Follower Node**
 
    The FE Follower node can be started with the following command, which will automatically synchronize metadata.
@@ -153,11 +153,11 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
    ```
 
-   Here, helper_fe_ip refers to any live node in the FE cluster. The --helper parameter is used only during the initial startup of FE to synchronize metadata; subsequent restarts do not require this parameter.
+   Here, `helper_fe_ip` refers to any live node in the FE cluster. The `--helper` parameter is used only during the initial startup of FE to synchronize metadata; subsequent restarts do not require this parameter.
 
 5. **Check Follower Node Status**
 
-   The method for checking the FE Follower node status is the same as for the FE Master node status. After adding the Follower node, use the show frontendscommand to check the FE node status. Unlike the Master, theIsMaster state should be false.
+   The method for checking the FE Follower node status is the same as for the FE Master node status. After adding the Follower node, use the `SHOW FRONTENDS` command to check the FE node status. Unlike the Master, theIsMaster state should be false.
 
 ## Step 3: Deploy BE Node
 
@@ -190,8 +190,10 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | [priority_networks](../../admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
+   | [storage_root_path](../../admin-manual/config/be-config#storage_root_path) | The directory for BE data storage, multiple directories should be separated by semicolons. |
    | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 2GB or more for production environments.   |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment that is independent of the operating system for Doris.               |
+   
 
 3. **Register BE Node in Doris**
 
@@ -217,7 +219,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
 
 5. **Check BE Startup Status**
 
-   After connecting to the Doris cluster, use the show backends command to check the BE node status.
+   After connecting to the Doris cluster, use the `show backends` command to check the BE node status.
 
    ```Bash
    ## connect a alive FE node
@@ -247,7 +249,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
 
 2. **Check Doris Installation Information**
 
-   Use `show frontends` and `show backends` to view the status of each database instance.
+   Use `SHOW FRONTENDS` and `SHOW BACKENDS` to view the status of each database instance.
 
    ```Sql
    -- check fe status
@@ -280,7 +282,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
 
    ```SQL
    -- create a test database
-   create database testdb;
+   CREATE DATABASE testdb;
     
    -- create a test table
    CREATE TABLE testdb.table_hash
@@ -294,7 +296,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    DISTRIBUTED BY HASH(k1) BUCKETS 32;
    ```
 
-   Doris is compatible with the MySQL protocol, and you can use the INSERT statement to insert data.
+   Doris is compatible with the MySQL protocol, and you can use the `INSERT` statement to insert data.
 
    ```SQL
    -- insert data
