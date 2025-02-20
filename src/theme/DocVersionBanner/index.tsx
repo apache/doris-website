@@ -132,27 +132,26 @@ function DocVersionBannerEnabled({
   // back to main doc of latest version
   const latestVersionSuggestedDoc =
     latestDocSuggestion ?? getVersionMainDoc(latestVersionSuggestion);
+  const tempLatestVersionPath = '/docs/3.0/gettingStarted/what-is-apache-doris';
+  const tempVersionLabel = '3.0';
 
-  return (
-    <div
-      className={clsx(
-        className,
-        ThemeClassNames.docs.docVersionBanner,
-        'alert alert--warning margin-bottom--md',
-      )}
-      role="alert">
-      <div>
-        <BannerLabel siteTitle={siteTitle} versionMetadata={versionMetadata} />
-      </div>
-      <div className="margin-top--md">
-        <LatestVersionSuggestionLabel
-          versionLabel={latestVersionSuggestion.label}
-          to={latestVersionSuggestedDoc.path}
-          onClick={() => savePreferredVersionName(latestVersionSuggestion.name)}
-        />
-      </div>
-    </div>
-  );
+    return (
+        <div
+            className={clsx(className, ThemeClassNames.docs.docVersionBanner, 'alert alert--warning margin-bottom--md')}
+            role="alert"
+        >
+            <div>
+                <BannerLabel siteTitle={siteTitle} versionMetadata={versionMetadata} />
+            </div>
+            <div className="margin-top--md">
+                <LatestVersionSuggestionLabel
+                    versionLabel={tempVersionLabel}
+                    to={tempLatestVersionPath}
+                    onClick={() => savePreferredVersionName(latestVersionSuggestion.name)}
+                />
+            </div>
+        </div>
+    );
 }
 
 export default function DocVersionBanner({
