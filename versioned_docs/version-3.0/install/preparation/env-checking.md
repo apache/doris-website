@@ -80,7 +80,11 @@ SSD is recommended for data storage in the following scenarios:
 
 ### File System Check
 
-Doris recommends using EXT4 or XFS file systems. The EXT4 file system offers good stability, performance, and lower fragmentation issues. The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
+Doris recommends using EXT4 or XFS file systems:
+
+- **EXT4**: The EXT4 file system offers good stability, performance, and lower fragmentation issues. 
+
+- **XFS**: The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
 
 ### Network Card Check
 
@@ -131,9 +135,9 @@ In the Doris cluster, FE (Frontend) is mainly used for metadata storage, includi
 
 ## Java Environment Check
 
-All Doris processes depend on Java.
+All Doris processes depend on Java:
 
-- For versions prior to 2.1, use Java 8. Recommended version: `openjdk-8u352-b08-linux-x64`.
-  
-- For versions 3.0 and later, use Java 17. Recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+- **For versions before 2.1 (inclusive)**: please use Java 8, recommended version: jdk-8u352 or later.
+
+- **For versions from 3.0 (inclusive) onwards**: please use Java 17, recommended version: jdk-17.0.10 or later.
 

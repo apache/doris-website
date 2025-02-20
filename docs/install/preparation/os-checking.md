@@ -67,7 +67,7 @@ echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-To permanently disable THP, add the following commands to /etc/rc.d/rc.local to ensure it takes effect after a restart:
+To permanently disable THP, add the following commands to `/etc/rc.d/rc.local` to ensure it takes effect after a restart:
 
 ```bash
 cat >> /etc/rc.d/rc.local << EOF
