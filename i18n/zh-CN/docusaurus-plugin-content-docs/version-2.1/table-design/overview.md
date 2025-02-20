@@ -30,19 +30,19 @@ under the License.
 
 ## 表名
 
-Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置[lower_case_table_names](../admin-manual/config/fe-config.md)为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置[table_name_length_limit](../admin-manual/config/fe-config.md)更改，不建议配置过大。创建表的语法请参考[CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)。
+Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置 [lower_case_table_names](../admin-manual/config/fe-config) 为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置 [table_name_length_limit](../admin-manual/config/fe-config) 更改，不建议配置过大。创建表的语法请参考 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)。
 
 ## 表属性
 
 Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，包括：
 
-- 分桶数 (buckets)：决定数据在表中的分布；
+- **分桶数 (buckets)**：决定数据在表中的分布；
 
-- 存储介质 (storage_medium)：控制数据的存储方式，如使用 HDD、SSD 或远程共享存储；
+- **存储介质 (storage_medium)**：控制数据的存储方式，如使用 HDD、SSD 或远程共享存储；
 
-- 副本数 (replication_num)：控制数据副本的数量，以保证数据的冗余和可靠性；
+- **副本数 (replication_num)**：控制数据副本的数量，以保证数据的冗余和可靠性；
 
-- 冷热分离存储策略 (storage_policy) ：控制数据的冷热分离存储的迁移策略；
+- **冷热分离存储策略 (storage_policy)**：控制数据的冷热分离存储的迁移策略；
 
 这些属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)。
 
