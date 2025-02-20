@@ -30,7 +30,7 @@ under the License.
 
 Doris 通过可扩展的连接器框架、存算分离架构、高性能的数据处理引擎和数据生态开放性，为用户提供了优秀的湖仓一体解决方案。
 
-![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.png)
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### 灵活的数据接入
 
@@ -95,11 +95,11 @@ Doris 作为分析型数据仓库，在湖仓数据处理和计算方面做了�
 
 如下所示，在基于 Iceberg 表格式的 1TB 的 TPCDS 标准测试集上，Doris 执行 99 个查询的总体运行仅为 Trino 的 1/3。
 
-![doris-tpcds](/images/Lakehouse/tpcds1000.png)
+![doris-tpcds](/images/Lakehouse/tpcds1000.jpeg)
 
 实际用户场景中，Doris 在使用一半资源的情况下，相比 Presto 平均查询延迟降低了 20%，95 分位延迟更是降低 50%。在提升用户体验的同时，极大降低了资源成本。
 
-![doris-performance](/images/Lakehouse/performance.png)
+![doris-performance](/images/Lakehouse/performance.jpeg)
 
 ### 便捷的业务迁移
 
@@ -137,7 +137,7 @@ Doris 在湖仓一体方案中，主要用于 **湖仓查询加速**、**多源�
 
 在该场景中，Doris 作为 **计算引擎**，对湖仓中数据进行查询分析加速。
 
-![query-acceleration](/images/Lakehouse/query-acceleration.png)
+![query-acceleration](/images/Lakehouse/query-acceleration.jpeg)
 
 #### 缓存加速
 
@@ -161,7 +161,7 @@ Doris 可以作为 **统一 SQL 查询引擎**，连接不同数据源进行联�
 
 在该场景中，**Doris 作为数据处理引擎**，对湖仓数据进行加工处理。
 
-![data-management](/images/Lakehouse/data-management.png)
+![data-management](/images/Lakehouse/data-management.jpeg)
 
 #### 定时任务调度
 
