@@ -37,7 +37,7 @@ GROUPING_ID(<column_expression> [, ...])
 
 ## Parameters
 
-| Parameter               | Description                                       |
+| Parameters               | Description                                       |
 |-------------------------|---------------------------------------------------|
 | `<column_expression>`   | A column expression from the GROUP BY clause.     |
 

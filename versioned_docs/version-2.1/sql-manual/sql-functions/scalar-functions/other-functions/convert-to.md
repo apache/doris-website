@@ -36,7 +36,7 @@ CONVERT_TO(<column>, <character>)
 
 ## Parameters
 
-| Parameter      | Description                                                                 |
+| Parameters      | Description                                                                 |
 |----------------|-----------------------------------------------------------------------------|
 | `<column>`     | The VARCHAR column whose encoding is to be converted.                       |
 | `<character>`  | The target character set. Currently, only `'gbk'` is supported.             |

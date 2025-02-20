@@ -65,7 +65,6 @@ GROUP BY ROLLUP(department, level)
 ORDER BY GROUPING_ID(department, level) ASC;
 ```
 
-#### 结果
 
 ```text
 +--------------------+---------------------------+----------------+
@@ -106,7 +105,6 @@ GROUP BY ROLLUP(department, level)
 HAVING `Job Title` IN ('Senior');
 ```
 
-#### 结果
 
 ```text
 +--------------------+-----------+--------------+
