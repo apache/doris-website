@@ -23,12 +23,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
 ## Description
 
-The SHOW COMPUTE GROUPS command is used to display information about all configured compute groups in the system. Compute groups are logical units used to manage and organize computational resources, helping users allocate and utilize system resources more effectively.
-
-This command assists administrators and users in quickly understanding the existing compute group configurations in the system, including the name, attributes, and other relevant information for each compute group. This is particularly useful for resource management, performance optimization, and system monitoring.
+In the compute storage separation mode, display a list of compute groups that the current user has permissions to use.
 
 ## Syntax
 
@@ -36,23 +33,33 @@ This command assists administrators and users in quickly understanding the exist
 SHOW COMPUTE GROUPS
 ```
 
+## Return Value
 
-## Return Values
+Returns a list of compute groups that the current user has permissions for.
 
-This command returns a result set containing the following columns:
+- Name - The name of the compute group
+- IsCurrent - Whether the current user is using this compute group
+- Users - Usernames that have set this compute group as their default compute group
+- BackendNum - The number of backends this compute group has
 
-- `Name`: The name of the compute group.
-- `IsCurrent`: Indicates whether it is the current working compute group.
-- `Users`: Displays the list of users who have permission to use this compute group.
-- `BackendNum`: Shows the number of backends (compute nodes) currently allocated to this compute group.
+## Example
 
-## Related Commands
+Specify the use of the compute group named `compute_cluster`.
 
-- [ALTER SYSTEM ADD BACKEND](../Administration-Statements/ALTER-SYSTEM-ADD-BACKEND.md)
-- [GRANT](../../account-management/GRANT-TO)
-- [REVOKE](../../account-management/REVOKE-FROM)
-- [SET DEFAULT COMPUTE GROUP](../Administration-Statements/SET-DEFAULT-COMPUTE-GROUP.md)
+```sql
+SHOW COMPUTE GROUPS;
+```
 
-## Keywords
+The result is:
 
-SHOW, COMPUTE GROUPS
+```sql
++-----------------+-----------+-------+------------+
+| Name           | IsCurrent  | Users | BackendNum |
++-----------------+-----------+-------+------------+
+| compute_cluster | TRUE      |       | 3          |
++-----------------+-----------+-------+------------+
+```
+
+## Usage Note
+
+If the current user has no permissions for any compute group, `SHOW COMPUTE GROUPS` will return an empty list.
