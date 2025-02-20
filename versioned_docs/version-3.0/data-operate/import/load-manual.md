@@ -46,13 +46,13 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
     - You can use [Broker Load](./import-way/broker-load-manual.md) to write files from Object Storage and HDFS into Doris.
 
-    - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from Object Storage, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../scheduler/job-scheduler.md).
+    - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from Object Storage, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../../admin-manual/workload-management/job-scheduler).
 
     - You can use [Stream Load](./import-way/stream-load-manual) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
 
 - **External Data Source Integration**: Query and partially import data from external sources (e.g., Hive, JDBC, Iceberg) into Doris tables.
 
-    - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../scheduler/job-scheduler.md).
+    - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../../admin-manual/workload-management/job-scheduler).
     
     - You can use [X2Doris](data-source/migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
 

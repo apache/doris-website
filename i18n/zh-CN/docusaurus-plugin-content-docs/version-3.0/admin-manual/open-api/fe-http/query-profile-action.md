@@ -78,7 +78,7 @@ under the License.
     "data": {
         "column_names": [
             "Query ID",
-            "FE节点",
+            "FE 节点",
             "查询用户",
             "执行数据库",
             "Sql",
@@ -111,7 +111,7 @@ GET /rest/v2/manager/query/query_info
     "data": {
         "column_names": [
             "Query ID",
-            "FE节点",
+            "FE 节点",
             "查询用户",
             "执行数据库",
             "Sql",

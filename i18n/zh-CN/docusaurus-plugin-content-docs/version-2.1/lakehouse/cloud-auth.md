@@ -26,15 +26,15 @@ under the License.
 
 # 概述
 
-当访问云上的服务时，我们需要提供访问服务所需要的凭证，以便服务能够通过各云厂商IAM的认证。
+当访问云上的服务时，我们需要提供访问服务所需要的凭证，以便服务能够通过各云厂商 IAM 的认证。
 
 ## AWS
 
-现在Doris访问AWS服务时，能够支持两种类型的身份认证。
+现在 Doris 访问 AWS 服务时，能够支持两种类型的身份认证。
 
-### 使用Catalog属性认证
+### 使用 Catalog 属性认证
 
-以Iceberg Catalog访问Glue为例，我们可以填写以下属性访问在Glue上托管的表：
+以 Iceberg Catalog 访问 Glue 为例，我们可以填写以下属性访问在 Glue 上托管的表：
 
 ```sql
 -- Using access key and secret key
@@ -50,10 +50,10 @@ CREATE CATALOG glue2 PROPERTIES (
 
 ### 使用系统属性认证
 
-用于运行在AWS资源(如EC2实例)上的应用程序。可以避免硬编码写入Credentials，能够增强数据安全性。
+用于运行在 AWS 资源 (如 EC2 实例) 上的应用程序。可以避免硬编码写入 Credentials，能够增强数据安全性。
 
-当我们在创建Catalog时，未填写Credentials属性，那么此时会使用DefaultAWSCredentialsProviderChain，它能够读取系统环境变量或者instance profile中配置的属性。
+当我们在创建 Catalog 时，未填写 Credentials 属性，那么此时会使用 DefaultAWSCredentialsProviderChain，它能够读取系统环境变量或者 instance profile 中配置的属性。
 
 配置环境变量和系统属性的方式可以参考：[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) 。
 - 可以选择的配置的环境变量有：`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`、`AWS_SESSION_TOKEN`、`AWS_ROLE_ARN`、`AWS_WEB_IDENTITY_TOKEN_FILE`等
-- 另外，还可以使用[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)直接配置Credentials信息，同时在`~/.aws`目录下生成credentials文件。
+- 另外，还可以使用[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)直接配置 Credentials 信息，同时在`~/.aws`目录下生成 credentials 文件。

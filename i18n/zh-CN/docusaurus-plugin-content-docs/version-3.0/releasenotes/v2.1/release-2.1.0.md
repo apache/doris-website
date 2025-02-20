@@ -408,7 +408,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](../../table-design/data-partitioning/basic-concepts)
+参考文档：[数据划分](./table-design/data-partitioning/basic-concepts.mdx)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%
@@ -470,7 +470,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/import-way/group-commit-manual)
+- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/group-commit-manual)
 
 :::
 
@@ -699,11 +699,14 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
-- 参考文档：[Workload Group](../../admin-manual/resource-admin/workload-group.md)
+- 参考文档：[Workload Group](../../admin-manual/workload-management/workload-group)
 
 :::
 
 ### TopSQL
+:::tip
+自2.1.1版本之后，active_queries()已经废弃，TopSQl主要通过Doris内置的系统表实现，参考文档 [工作负载诊断与分析](../../admin-manual/workload-management/analysis-diagnosis.md)
+:::
 
 当集群出现预期外的大查询导致集群整体负载上升、查询可用性下降时，用户难以快速找到这些大查询并进行相应的降级操作。因此在 Apache Doris 2.1 版本中我们支持了运行时查看 SQL 资源用量的功能，具体指标如下：
 
@@ -757,7 +760,7 @@ select QueryId,max(BePeakMemoryBytes) as be_peak_mem from active_queries() group
 目前主要展示的负载类型包括 Select 和`Insert Into……Select`，预计在 2.1 版本之上的三位迭代版本中会支持 Stream Load 和 Broker Load 的资源用量展示。
 
 :::note
-参考文档：[ACTIVE_QUERIES](../../sql-manual/sql-functions/table-functions/active_queries.md)
+参考文档：[ACTIVE_QUERIES](../../admin-manual/system-tables/information_schema/active_queries)
 :::
 
 
@@ -858,7 +861,7 @@ JOB e_daily
 
 :::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
 
 :::
 

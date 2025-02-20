@@ -26,7 +26,7 @@ under the License.
 
 数据更新是指对具有相同 key 的数据记录中的 value 列进行修改。对于不同的数据模型，数据更新的处理方式有所不同：
 
-- **主键（Unique）模型**：主键模型是专门为数据更新设计的一种数据模型。Doris 支持两种存储方式：Merge-on-Read（MoR）和 Merge-on-Write（MoW）。MoR 优化了写入性能，而 MoW 则提供了更好的分析性能。从 Doris 2.1 版本开始，默认存储方式为 MoW。主键模型支持使用 `UPDATE` 语句进行少量数据更新，也支持通过导入方式进行批量更新。导入方式包括 Stream Load、Broker Load、Routine Load 和 Insert Into 等，所有导入操作都遵循 “UPSERT” 语义，即如果记录不存在则插入，存在则更新。更新操作支持整行更新和部分列更新，默认为整行更新。
+- **主键（Unique）模型**：主键模型是专门为数据更新设计的一种数据模型。Doris 支持两种存储方式：Merge-on-Read（MoR）和 Merge-on-Write（MoW）。MoR 优化了写入性能，而 MoW 则提供了更好的分析性能。从 Doris 2.1 版本开始，默认存储方式为 MoW。主键模型支持使用 `UPDATE` 语句进行少量数据更新，也支持通过导入方式进行批量更新。导入方式包括 Stream Load、Broker Load、Routine Load 和 Insert Into 等，所有导入操作都遵循“UPSERT”语义，即如果记录不存在则插入，存在则更新。更新操作支持整行更新和部分列更新，默认为整行更新。
 
 - **聚合（Aggregate）模型**：在聚合模型中，数据更新是一种特殊用法。当聚合函数设置为 REPLACE 或 REPLACE_IF_NOT_NULL 时，可以实现数据更新。聚合模型仅支持基于导入方式的更新，不支持使用 `UPDATE` 语句。通过设置聚合函数为 REPLACE_IF_NOT_NULL，可以实现部分列更新的能力。
 
@@ -79,7 +79,7 @@ PROPERTIES (
 ```
 
 :::caution
-从 Doris 2.1 版本开始，MoW是主键模型的默认方式。所以如果使用 Doris 2.1 及以上版本，务必要阅读相关建表文档。
+从 Doris 2.1 版本开始，MoW 是主键模型的默认方式。所以如果使用 Doris 2.1 及以上版本，务必要阅读相关建表文档。
 :::
 
 ### 主键模型的两种更新方式

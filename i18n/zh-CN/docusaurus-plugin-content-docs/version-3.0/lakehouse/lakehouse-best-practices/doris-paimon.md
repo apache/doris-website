@@ -54,7 +54,7 @@ Apache Paimon 是一种数据湖格式，并创新性地将数据湖格式和 LS
 
 本文将会再 Docker 环境中，为读者讲解如何快速搭建 Apache Doris + Apache Paimon 测试 & 演示环境，并展示各功能的使用操作。
 
-关于更多说明，请参阅 [Paimon Catalog](../../../lakehouse/datalake-analytics/paimon.md)
+关于更多说明，请参阅 [Paimon Catalog](../datalake-analytics/paimon)
 
 ## 使用指南
 

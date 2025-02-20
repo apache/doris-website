@@ -36,9 +36,9 @@ NULL_OR_EMPTY (<str>)
 
 ## Parameters
 
-| Parameter | Description |
-| -- | -- |
-| `<str>` | The string to check |
+| Parameter | Description            |
+| --------- | ---------------------- |
+| `<str>`   | The string to check.   |
 
 ## Return Value
 

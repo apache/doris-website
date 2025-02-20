@@ -521,8 +521,7 @@
                         "ecosystem/logstash",
                         "ecosystem/beats",
                         "ecosystem/automq-load",
-                        "ecosystem/hive-bitmap-udf",
-                        "ecosystem/hive-hll-udf"
+                        "ecosystem/hive-bitmap-udf"
                     ]
                 }
             ]
@@ -536,7 +535,8 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
-                "faq/bi-faq"
+                "faq/bi-faq",
+                "faq/correctness-faq"
             ]
         },
         {
@@ -771,7 +771,8 @@
                                 "sql-manual/sql-functions/spatial-functions/st-angle",
                                 "sql-manual/sql-functions/spatial-functions/st-azimuth",
                                 "sql-manual/sql-functions/spatial-functions/st-angle-sphere",
-                                "sql-manual/sql-functions/spatial-functions/st-area",
+                                "sql-manual/sql-functions/spatial-functions/st-area-square-meters",
+                                "sql-manual/sql-functions/spatial-functions/st-area-square-km",
                                 "sql-manual/sql-functions/spatial-functions/st-point",
                                 "sql-manual/sql-functions/spatial-functions/st-polygon",
                                 "sql-manual/sql-functions/spatial-functions/st-astext",
@@ -1232,7 +1233,7 @@
                                 "sql-manual/sql-reference/Database-Administration-Statements/UNINSTALL-PLUGIN",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SET-REPLICA-STATUS",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-DISTRIBUTION",
-                                "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-STATUS",
+                                "sql-manual/sql-reference/Database-Administration-Statements/SHOW-REPLICA-STATUS",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-REPAIR-TABLE",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-CANCEL-REPAIR",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-CHECK-TABLET",

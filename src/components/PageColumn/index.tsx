@@ -20,9 +20,9 @@ export default function PageColumn(props: PageColumnProps): JSX.Element {
                 <div className="container">{title}</div>
             </h1>
             {subTitle && (
-                <p className="sub-title">
+                <div className="sub-title">
                     <div className="container">{subTitle}</div>
-                </p>
+                </div>
             )}
             <div className="page-column-container">
                 <div className="container" style={props.style}>

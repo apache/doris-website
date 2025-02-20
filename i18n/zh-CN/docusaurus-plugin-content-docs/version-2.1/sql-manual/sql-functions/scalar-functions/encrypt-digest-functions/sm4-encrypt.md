@@ -26,6 +26,12 @@ under the License.
 
 SM4是一种国家标准的对称密钥加密算法，广泛应用于金融、通信、电子商务等领域。SM4_ENCRYPT函数用于对数据进行SM4加密。默认采用 `SM4_128_ECB` 算法。
 
+:::warning
+截止 2.1.6，两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `SM4_128_ECB` 算法进行加密。因此不推荐调用。
+
+2.1.7 起，该行为恢复正常。
+:::
+
 ## 语法
 
 ```sql
@@ -41,7 +47,6 @@ SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 | `<init_vector>` | 为算法中使用到的初始向量，仅在特定算法下生效，如不指定，则 Doris 使用内置向量 |
 | `<encryption_mode>` | 为加密算法，可选值见于变量 |
 
-
 ## 返回值
 
 返回二进制的加密后的数据
@@ -49,6 +54,7 @@ SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 ## 示例
 
 使用默认算法
+
 ```sql
 set block_encryption_mode='';
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -63,6 +69,7 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 使用SM4_128_CBC算法
+
 ```sql
 set block_encryption_mode="SM4_128_CBC";
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -77,10 +84,12 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 使用SM4_128_CBC算法并设置初始向量
+
 ```sql
 set block_encryption_mode="SM4_128_CBC";
 select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```
+
 ```text
 +--------------------------------------------------------------------+
 | to_base64(sm4_encrypt('text', '***', '0123456789', 'SM4_128_CBC')) |

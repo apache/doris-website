@@ -57,7 +57,7 @@ export default function ClusterManagement() {
                         <>
                             <ExternalLink href="https://github.com/apache/doris-operator" label="GitHub"></ExternalLink>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-doris-operator"
+                                href="https://doris.apache.org/docs/install/deploy-on-kubernetes/install-doris-operator"
                                 className="sub-btn"
                                 label="Docs"
                             ></ExternalLink>

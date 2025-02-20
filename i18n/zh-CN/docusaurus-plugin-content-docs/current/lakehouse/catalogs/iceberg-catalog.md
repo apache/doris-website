@@ -267,7 +267,7 @@ CREATE CATALOG iceberg_gdm PROPERTIES (
 
 ### Iceberg on S3 Tables
 
-```
+```sql
 CREATE CATALOG iceberg_s3 PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 's3tables',
@@ -278,6 +278,8 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
     's3.secret_key' = 'sk'
 );
 ```
+
+可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
 
 ## 查询操作
 

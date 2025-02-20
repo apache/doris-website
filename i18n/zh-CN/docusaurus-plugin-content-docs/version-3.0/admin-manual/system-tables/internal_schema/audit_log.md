@@ -72,5 +72,5 @@ under the License.
 ## 说明
 
 - `client_ip`：如果使用了代理服务，并且没有开启 IP 透传功能，则这里可能记录的是代理服务的 IP 而不是真实客户端 IP。
-- `state`：`EOF` 表示查询执行成功。`OK` 表示 DDL、DML语句执行成功。`ERR` 表示语句执行失败。
+- `state`：`EOF` 表示查询执行成功。`OK` 表示 DDL、DML 语句执行成功。`ERR` 表示语句执行失败。
 
