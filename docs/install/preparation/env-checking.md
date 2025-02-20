@@ -102,6 +102,8 @@ Doris can be deployed on x86-64 or ARM64 architecture server platforms.
 
   * If 3 replicas of data are required, at least 3 servers are needed, with each server deploying one BE instance.
 
+  Recommended server specifications are as follows:
+
   | Module    | CPU        | Memory  | Disk                         | Network              | Minimum Instance Count |
   | --------- | ---------- | ------- | ---------------------------- | -------------------- | ---------------------- |
   | Frontend  | 8 cores +  | 8 GB+   | SSD or SATA, 10 GB+          | Gigabit/Ten-Gigabit  | 1                      |
