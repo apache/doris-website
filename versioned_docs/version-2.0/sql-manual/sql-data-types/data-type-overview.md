@@ -100,9 +100,9 @@ The aggregation data types store aggregation results or intermediate results dur
 
 - **[HLL](../sql-data-types/aggregate/HLL.md)**: It is used for approximate deduplication and provides better performance than `COUNT DISTINCT`. It works in conjunction with HLL functions like `hll_union_agg`, `hll_raw_agg`, `hll_cardinality`, and `hll_hash`.
 
-- **[QUANTILE_STATE](../sql-data-types/aggregate/QUANTILE_STATE.md)**: It is used for approximate percentile calculations and offers better performance than the `PERCENTILE` function. It works with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, and `TO_QUANTILE_STATE`.
+- **[QUANTILE_STATE](../sql-data-types/aggregate/QUANTILE-STATE.md)**: It is used for approximate percentile calculations and offers better performance than the `PERCENTILE` function. It works with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, and `TO_QUANTILE_STATE`.
 
-- **[AGG_STATE](../sql-data-types/aggregate/AGG_STATE.md)**: It is used to accelerate aggregations, utilized in combination with aggregation function combinators like state/merge/union.
+- **[AGG_STATE](../sql-data-types/aggregate/AGG-STATE.md)**: It is used to accelerate aggregations, utilized in combination with aggregation function combinators like state/merge/union.
 
 
 ## IP Types

@@ -492,11 +492,7 @@ Set table properties. The following attributes are currently supported:
 
 * Dynamic partition related
 
-    References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning)
-
-* `file_cache_ttl_seconds`: 
-
-   Expiration time of TTL Cache in compute-storage decoupled mode.
+    References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning.md)
 
 ## Examples
 
@@ -867,7 +863,7 @@ If the materialized view is created when the table is created, all subsequent da
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
 
-For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/metarialized-view) document.
+For the introduction of materialized views, please refer to the [Materialized View](../../../../query-acceleration/materialized-view/sync-materialized-view.md) document.
 
 
 #### Index

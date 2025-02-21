@@ -843,7 +843,7 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 如果在之后的使用过程中添加物化视图，如果表中已有数据，则物化视图的创建时间取决于当前数据量大小。
 
-关于物化视图的介绍，请参阅文档 [同步物化视图](../../../../query/view-materialized-view/materialized-view)。
+关于物化视图的介绍，请参阅文档 [同步物化视图](../../../../query-acceleration/materialized-view/sync-materialized-view.md)。
 
 #### 索引
 

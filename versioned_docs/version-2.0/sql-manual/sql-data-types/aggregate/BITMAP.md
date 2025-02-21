@@ -68,7 +68,7 @@ Query data example:
     group by hour order by 1
     ) final;
 
-When querying, BITMAP can cooperate with `return_object_data_as_binary`. For details, please refer to [variables](../../../advanced/variables.md).
+You can set the [session variable](../../sql-statements/session/variable/SET-VARIABLE.md) `return_object_data_as_binary` to `true`. Consequently, the bitmap will be returned in binary format.
     
 ### keywords
 BITMAP

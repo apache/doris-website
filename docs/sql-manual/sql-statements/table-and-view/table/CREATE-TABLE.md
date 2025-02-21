@@ -493,7 +493,7 @@ Set table properties. The following attributes are currently supported:
 
 * Dynamic partition related
 
-References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partition.md#Dynamic partitioning)
+References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning.md)
     
 
 ## Example
@@ -843,7 +843,7 @@ NOTE: Multi Partition can be mixed with conventional manual creation of partitio
 
 #### Partitioning and bucketing
 
-A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/data-partition) document.
+A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/basic-concepts) document.
 
 Tables in Doris can be divided into partitioned tables and non-partitioned tables. This attribute is determined when the table is created and cannot be changed afterwards. That is, for partitioned tables, you can add or delete partitions in the subsequent use process, and for non-partitioned tables, you can no longer perform operations such as adding partitions afterwards.
 
@@ -853,11 +853,11 @@ Therefore, it is recommended to confirm the usage method to build the table reas
 
 #### Dynamic Partition
 
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partition#dynamic-partitioning) document for more help.
+The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partitioning/dynamic-partitioning) document for more help.
 
 #### Auto Partition
 
-See the [Auto Partition](../../../../table-design/data-partition#auto-partitioning) document.
+See the [Auto Partition](../../../../table-design/data-partitioning/auto-partitioning) document.
 
 #### Materialized View
 
@@ -867,7 +867,7 @@ If the materialized view is created when the table is created, all subsequent da
 
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
-For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/metarialized-view) document.
+For the introduction of materialized views, please refer to the [Materialized View](../../../../query-acceleration/materialized-view/sync-materialized-view.md) document.
 
 #### Index
 
