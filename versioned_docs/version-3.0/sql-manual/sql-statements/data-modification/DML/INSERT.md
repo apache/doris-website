@@ -216,7 +216,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
     
 3. Label and atomicity
 
-   The INSERT operation also guarantees the atomicity of imports, see the [Import Transactions and Atomicity](../../../../data-operate/import/import-scenes/load-atomicity.md) documentation.
+   The INSERT operation also guarantees the atomicity of imports, see the [Import Transactions and Atomicity](../../../../data-operate/transaction.md) documentation.
 
    When using `CTE(Common Table Expressions)` as the query part in an insert operation, the `WITH LABEL` and `column` parts must be specified.
 
@@ -224,7 +224,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
    Unlike other import methods, INSERT operations cannot specify a filter threshold (`max_filter_ratio`). The default filter threshold is 1, which means that rows with errors can be ignored.
 
-   For business scenarios that require data not to be filtered, you can set [session variable](../../../../advanced/variables.md) `enable_insert_strict` to `true` to ensure that when there is data When filtered out, `INSERT` will not be executed successfully.
+   For business scenarios that require data not to be filtered, you can set [session variable](../../session/variable/SET-VARIABLE) `enable_insert_strict` to `true` to ensure that when there is data When filtered out, `INSERT` will not be executed successfully.
 
 5. Performance issues
 
