@@ -87,7 +87,7 @@ In the example above, a fact table for user information and access behavior is d
 
 * **HLL_UNION**: Aggregation method for HLL (HyperLogLog) type columns, which aggregates using the HyperLogLog algorithm.
 
-* **BITMAP_UNION**: Aggregation method for BITMAP type columns, which aggregates using the union of bitmaps.
+* **BITMAP_UNION**: The aggregation method for columns of BIMTAP type involves performing a bitmap union aggregation.
 
 
 :::info Tip:
