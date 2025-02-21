@@ -26,7 +26,7 @@ under the License.
 
 # Column to Row (Lateral View)
 
-Used in conjunction with generator functions such as `EXPLODE`, will generate a virtual table containing one or more rows. `LATERAL VIEW` applies rows to each raw output row.
+Used in conjunction with generator functions such as `EXPLODE`, will generate a virtual table containing one or more rows. `LATERAL VIEW` applies rows to each raw input row.
 
 ## Grammar
 
@@ -46,7 +46,7 @@ LATERAL VIEW  generator_function ( expression [, ...] ) table_identifier AS colu
 
 - column_identifier
 
-   List column alias `generator_function`, which can be used to output rows. The number of column identifiers must match the number of columns returned by the generator function.
+   List column alias `generator_function`, which can be used to reference the output columns. The number of column identifiers must match the number of columns returned by the generator function.
 
 ## Example
 
