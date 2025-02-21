@@ -36,7 +36,7 @@ During version upgrades, the following rules apply:
 
 - **Two-digit and one-digit versions:** Cross-version upgrades for two-digit versions are not recommended due to compatibility concerns. It is advised to upgrade sequentially through each two-digit version. For example, upgrading from version 3.0 to 3.3 should follow the sequence 3.0 -> 3.1 -> 3.2 -> 3.3.
 
-The detailed version information can be found in the [versioning rules](../../../../docusaurus-plugin-content-docs-community/current/release-versioning).
+The detailed version information can be found in the [versioning rules](https://doris.apache.org/community/release-versioning).
 
 ## Upgrade Precautions
 

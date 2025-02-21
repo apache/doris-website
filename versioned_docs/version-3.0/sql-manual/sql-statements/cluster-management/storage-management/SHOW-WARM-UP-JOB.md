@@ -54,7 +54,7 @@ The commands are used to display warm-up jobs in Doris.
 
 ## Related Commands
 
- - [WARMUP COMPUTE GROUP](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+ - [WARMUP COMPUTE GROUP](./WARM-UP.md)
 
 ## References
 
