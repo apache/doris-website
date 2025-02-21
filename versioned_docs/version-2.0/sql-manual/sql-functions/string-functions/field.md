@@ -24,30 +24,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## field
+## Description
 
+Returns the position of the first occurrence of `<expr>` in the list of values `<param> [, ...]`.  
+If `<expr>` is not found, the function returns `0`. This function is commonly used in `ORDER BY` to implement custom sorting.
 
+## Syntax
 
-field
-
-
-
-### description
-#### Syntax
-
-`field(Expr e, param1, param2, param3,.....)`
-
-
-In the order by clause, you can use custom sorting to arrange the data in expr in the specified param1, 2, and 3 order.
-The data not in the param parameter will not participate in sorting, but will be placed first. 
-You can use asc and desc to control the overall order.
-If there is a NULL value, you can use nulls first, nulls last to control the order of nulls.
-
-
-### example
-
+```sql
+FIELD(<expr>, <param> [, ...])
 ```
-mysql> select k1,k7 from baseall where k1 in (1,2,3) order by field(k1,2,1,3);
+
+## Parameters
+
+| Parameter  | Description                                             |
+|------------|---------------------------------------------------------|
+| `<expr>`   | The value to be searched in the list of parameters.     |
+| `<param>`  | A sequence of values to compare against `<expr>`.       |
+
+## Return Value
+
+- Returns the position (1-based index) of `<expr>` in the list of `<param>` values.  
+- If `<expr>` is not found, returns `0`.  
+- If `<expr>` is `NULL`, returns `0`.
+
+## Examples
+
+```sql
+SELECT FIELD(2, 3, 1, 2, 5);
+```
+
+```text
++----------------------+
+| FIELD(2, 3, 1, 2, 5) |
++----------------------+
+|                    3 |
++----------------------+
+```
+
+```sql
+SELECT k1, k7 FROM baseall WHERE k1 IN (1,2,3) ORDER BY FIELD(k1, 2, 1, 3);
+```
+
+```text
 +------+------------+
 | k1   | k7         |
 +------+------------+
@@ -55,36 +74,16 @@ mysql> select k1,k7 from baseall where k1 in (1,2,3) order by field(k1,2,1,3);
 |    1 | wangjing04 |
 |    3 | yuanyuan06 |
 +------+------------+
+```
 
-mysql> select class_name from class_test order by field(class_name,'Suzi','Ben','Henry');
+```sql
+SELECT class_name FROM class_test ORDER BY FIELD(class_name, 'Suzi', 'Ben', 'Henry');
+```
+
+```text
 +------------+
 | class_name |
 +------------+
-| Suzi       |
-| Suzi       |
-| Ben        |
-| Ben        |
-| Henry      |
-| Henry      |
-+------------+
-
-mysql> select class_name from class_test order by field(class_name,'Suzi','Ben','Henry') desc;
-+------------+
-| class_name |
-+------------+
-| Henry      |
-| Henry      |
-| Ben        |
-| Ben        |
-| Suzi       |
-| Suzi       |
-+------------+
-
-mysql> select class_name from class_test order by field(class_name,'Suzi','Ben','Henry') nulls first;
-+------------+
-| class_name |
-+------------+
-| null       |
 | Suzi       |
 | Suzi       |
 | Ben        |
@@ -93,5 +92,3 @@ mysql> select class_name from class_test order by field(class_name,'Suzi','Ben',
 | Henry      |
 +------------+
 ```
-### keywords
-    field
