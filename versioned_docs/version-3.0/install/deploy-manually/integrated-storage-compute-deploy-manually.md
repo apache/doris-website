@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Storage Compute Coupled Manually",
+    "title": "Deploy Integrated Storage Compute Cluster Manually",
     "language": "en"
 }
 ---
@@ -23,7 +23,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-After completing preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections, you can begin deploying the cluster. Deploying the cluster is divided into four steps:
+After completing the preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections, you can begin deploying the cluster.
+
+The integrated storage-compute architecture is shown below, and the deployment of the integrated storage-compute cluster involves four steps:
+
+[integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    
@@ -35,9 +39,7 @@ After completing preliminary checks and planning, such as environment checks, cl
 
 ## Step 1: Deploy FE Master Node
 
-
-
-1. Create Metadata Path
+1. **Create Metadata Path**
 
    When deploying FE, it is recommended to store metadata on a different hard drive from the BE node data storage.
 
@@ -51,11 +53,11 @@ After completing preliminary checks and planning, such as environment checks, cl
    ln -s <doris_meta_original> <doris_meta_created>
    ```
 
-3. Modify FE Configuration File
+2. **Modify FE Configuration File**
 
-   The FE configuration file is located in the conf directory under the FE deployment path. Before starting the FE node, you need to modify conf/fe.conf.
+   The FE configuration file is located in the conf directory under the FE deployment path. Before starting the FE node, modify the `conf/fe.conf` file..
 
-   Before deploying the FE node, it is recommended to modify the following parameters:
+   Before deploying the FE node, it is recommended to modify the following configurations:
 
    ```Bash
    ## modify Java Heap
@@ -71,7 +73,7 @@ After completing preliminary checks and planning, such as environment checks, cl
    JAVA_HOME = <your-java-home-path>
    ```
    
-   Parameter Descriptions: For more detailed parameters, refer to the documentation. [FE Configuration](../../admin-manual/config/fe-config)：
+   Parameter Descriptions: For more details, refer to the [FE Configuration](../../admin-manual/config/fe-config)：
 
    | Parameter                                                    | Suggestion                                                 |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
@@ -80,16 +82,17 @@ After completing preliminary checks and planning, such as environment checks, cl
    | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment independent of the operating system for Doris.                |
    
-4. Start FE Process
+3. **Start FE Process**
 
    You can start the FE process using the following command:
+
    ```Shell
    bin/start_fe.sh --daemon
    ```
 
    The FE process will start and run in the background. By default, logs are stored in the log/ directory. If the startup fails, you can check the log/fe.log or log/fe.out files for error details.
 
-5. Check FE Startup Status
+4. **Check FE Startup Status**
 
    You can connect to the Doris cluster using MySQL Client. The default user is root, and the password is empty.
 
@@ -97,25 +100,27 @@ After completing preliminary checks and planning, such as environment checks, cl
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
    ```
 
-   After connecting to the Doris cluster, you can use the show frontends command to check the status of FE nodes. Typically, you should verify the following:
+   After connecting to the Doris cluster, you can use the `show frontends` command to check the status of FE nodes. Typically, you should verify the following:
 
    - Alive: If true, it indicates the node is alive.
+
    - Join: If true, it indicates the node has joined the cluster, but it doesn't necessarily mean the node is still active in the cluster (it may have lost connection).
+
    - IsMaster: If true, it indicates the current node is the Master node.
 
 ## Step 2: Deploy FE Cluster (Optional)
 
-In a production cluster, it is recommended to deploy at least 3 nodes. After deploying the FE Master node, you should deploy two additional FE Follower nodes.
+In production, it is recommended to deploy at least 3 nodes. After deploying the FE Master node, you should deploy two additional FE Follower nodes.
 
-1. Create Metadata Directory
+1. **Create Metadata Directory**
 
    Follow the same steps as for deploying the FE Master node to create the `doris-meta` directory.
 
-2. Modify FE Follower Node Configuration
+2. **Modify FE Follower Node Configuration**
 
    Modify the FE configuration file for the Follower node, following the same steps as for the FE Master node. Typically, you can simply copy the configuration file from the FE Master node.
 
-3. Register New FE Follower Node in the Doris Cluster
+3. **Register New FE Follower Node in the Doris Cluster**
 
    Before starting a new FE node, you need to register the new FE node in the FE cluster.
 
@@ -123,11 +128,11 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    ## connect a alive FE node
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
    
-   ## registe a new FE follower node
+   ## register a new FE follower node
    ALTER SYSTEM ADD FOLLOWER "<fe_ip_address>:<fe_edit_log_port>"
    ```
 
-   If you want to add an observer node, you can use the `ADD OBSERVER` command:
+   To add an observer node, use the `ADD OBSERVER` command:
 
    ```Bash
    ## register a new FE observer node
@@ -140,7 +145,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    - When FE is deployed in high availability mode (1 Master, 2 Followers), we recommend adding Observer FE nodes to extend the FE read service capacity.
    :::
 
-4. Start FE Follower Node
+4. **Start FE Follower Node**
 
    The FE Follower node can be started with the following command, which will automatically synchronize metadata.
 
@@ -150,13 +155,13 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
 
    Here, helper_fe_ip refers to any live node in the FE cluster. The --helper parameter is used only during the initial startup of FE to synchronize metadata; subsequent restarts do not require this parameter.
 
-5. Check Follower Node Status
+5. **Check Follower Node Status**
 
-   The method to check the FE Follower node status is the same as checking the FE Master node status. After adding the Follower node, use the show frontendscommand to check the FE node status. Unlike the Master, theIsMaster state should be false.
+   The method for checking the FE Follower node status is the same as for the FE Master node status. After adding the Follower node, use the show frontendscommand to check the FE node status. Unlike the Master, theIsMaster state should be false.
 
 ## Step 3: Deploy BE Node
 
-1. Create Data Directory
+1. **Create Data Directory**
 
    The BE process is responsible for data computation and storage. The data directory is by default located under `be/storage`. In a production environment, it is common to store BE data on a separate disk, placing the BE data and deployment files on different disks. BE supports distributing data across multiple disks to better utilize the I/O capabilities of multiple hard drives.
 
@@ -165,21 +170,18 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    mkdir -p <be_storage_root_path>
    ```
 
-2. Modify BE Configuration File
+2. **Modify BE Configuration File**
 
    The BE configuration file is located in the conf directory under the BE deployment path. Before starting the BE node, you need to modify the `conf/be.conf` file.
 
    ```Bash
    ## modify storage path for BE node
-   
    storage_root_path=/home/disk1/doris,medium:HDD;/home/disk2/doris,medium:SSD
    
    ## modify network CIDR 
-   
    priority_networks = 10.1.3.0/24
    
    ## modify Java Home in be/conf/be.conf
-   
    JAVA_HOME = <your-java-home-path>
    ```
 
@@ -191,19 +193,19 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 2GB or more for production environments.   |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment that is independent of the operating system for Doris.               |
 
-3. Register BE Node in Doris
+3. **Register BE Node in Doris**
 
-   Before starting the new BE node, you need to register it in the FE cluster:
+   Before starting the BE node, register it in the FE cluster:
 
    ```Bash
    ## connect a alive FE node
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
       
-   ## registe BE node
+   ## Register BE node
    ALTER SYSTEM ADD BACKEND "<be_ip_address>:<be_heartbeat_service_port>"
    ```
 
-4. Start BE Process
+4. **Start BE Process**
 
    The BE process can be started with the following command:
 
@@ -213,7 +215,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
 
    The BE process starts and runs in the background. Logs are stored by default in the `log/` directory. If the startup fails, check the `log/be.log` or `log/be.out` files for error information.
 
-5. Check BE Startup Status
+5. **Check BE Startup Status**
 
    After connecting to the Doris cluster, use the show backends command to check the BE node status.
 
@@ -234,7 +236,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
 
 ## Step 4: Verify Cluster Integrity
 
-1. Log in to the Database
+1. **Log in to the Database**
 
    Log in to the Doris cluster using the MySQL Client.
 
@@ -243,7 +245,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
    ```
 
-2. Check Doris Installation Information
+2. **Check Doris Installation Information**
 
    Use `show frontends` and `show backends` to view the status of each database instance.
 
@@ -255,10 +257,9 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    show backends \G
    ```
 
-3. Change Doris Cluster Password
+3. **Change Doris Cluster Password**
 
    When the Doris cluster is created, a user named `root` is automatically created, and its password is set to empty by default. For security reasons, it is recommended to set a new password for the `root` user immediately after the cluster is created.
-
 
    ```SQL
    -- check the current user
@@ -273,7 +274,7 @@ In a production cluster, it is recommended to deploy at least 3 nodes. After dep
    SET PASSWORD = PASSWORD('doris_new_passwd');
    ```
 
-4. Create a Test Table and Insert Data
+4. **Create a Test Table and Insert Data**
 
    To verify the integrity of the cluster, you can create a test table in the newly created cluster and insert some data.
 

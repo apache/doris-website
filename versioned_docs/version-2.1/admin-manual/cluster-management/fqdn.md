@@ -58,7 +58,7 @@ After Doris supports FQDN, communication between nodes is entirely based on FQDN
    ```
 4. Verification: It can 'ping fe2' on FE1, and can resolve the correct IP address and ping it, indicating that the network environment is available.
 5. fe.conf settings for each FE node ` enable_ fqdn_ mode = true`.
-6. Refer to[Standard deployment](../../install/deploy-manually/storage-compute-coupled-deploy-manually)
+6. Refer to[Standard deployment](../../../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)
 7. Select several machines to deploy broker on six machines as needed, and execute `ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`.
 
 ### Deployment of Doris for K8S

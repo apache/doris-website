@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Storage Compute Decoupled Manually",
+    "title": "Deploy Separating Storage Compute Cluster Manually",
     "language": "en"
 }
 ---
