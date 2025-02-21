@@ -84,6 +84,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
    kubectl apply -f fdb-operator.yaml
    ```
 
+  
    预期结果：
   
    ```shell
@@ -122,9 +123,10 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
    - 私网环境
 
-     在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。 fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
+     在私网环境下，如果不能直接访问 dockerhub 可从 FoundationDB 的官方仓库中将需要的镜像下载，并推到私有仓库中。fdb-kubernetes-operator 依赖 [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar) 。  
 
-     部署 FoundationDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb) ， [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
+
+     部署 FoundationDB 依赖的镜像包括：[foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb)，[foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar)。  
   
      推到私有仓库后，按照 fdb-kubernetes-operator 官方文档[定制化镜像配置](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image)说明进行配置。  
 

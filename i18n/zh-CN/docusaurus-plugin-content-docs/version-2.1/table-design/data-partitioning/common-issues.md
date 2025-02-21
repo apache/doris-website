@@ -45,7 +45,7 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 -   以下罗列一些常见的 tablet 创建失败错误，包括但不限于：
 
-    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../../install/deploy-manually/storage-compute-coupled-deploy-manually) 检查 FE 和 BE 的连通性。
+    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../../install/deploy-manually/integrated-storage-compute-deploy-manually) 检查 FE 和 BE 的连通性。
 
     -   预分配内存失败。可能是表中一行的字节长度超过了 100KB。
 
