@@ -77,6 +77,7 @@ In the example above, a fact table for user information and access behavior is d
 
 The following types of dimension aggregation are supported in the Aggregate Key Model:
 
+
 | Aggregation Method       | Description                                                         |
 |--------------------------|---------------------------------------------------------------------|
 | SUM                      | Sum, accumulates multiple Value rows.                               |
