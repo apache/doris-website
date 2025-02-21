@@ -1,5 +1,5 @@
-import { Pagination, Navigation } from 'swiper';
-import React, { useCallback, useState } from 'react';
+import { Pagination } from 'swiper';
+import React, { useCallback, useRef, useState } from 'react';
 import usePhone from '../../hooks/use-phone';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { NEWSLETTER_DATA } from '../../constant/newsletter.data';
@@ -14,6 +14,9 @@ export function NewsLetterSwiper() {
     const [progressCount, setProgressCount] = useState<number>(0);
     const [stop, setStop] = useState<boolean>(false);
 
+    // Using ref to track progress internally
+    const progressRef = useRef(progressCount);
+
     const handlePrevious = useCallback(() => {
         swiperRef?.slidePrev();
     }, [swiperRef]);
@@ -23,18 +26,17 @@ export function NewsLetterSwiper() {
     }, [swiperRef]);
 
     useAnimationFrame(deltaTime => {
-        // Pass on a function to the setter of the state
-        // to make sure we always have the latest state
-
-        setProgressCount(prevProgressCount => {
-            if (prevProgressCount >= 100) {
-                handleNext();
-                return 0;
+        if (!stop) {
+            const newProgress = progressRef.current + deltaTime * 0.02;
+            if (newProgress >= 100) {
+                setProgressCount(0); // Reset state after reaching 100%
+                progressRef.current = 0;
+                setTimeout(handleNext, 0); // Delay to avoid direct state change within render
+            } else {
+                progressRef.current = newProgress;
+                setProgressCount(newProgress); // Update UI state
             }
-            if (deltaTime > 100) return prevProgressCount;
-
-            return prevProgressCount + deltaTime * 0.02;
-        });
+        }
     }, stop);
 
     const pagination = {
@@ -64,12 +66,15 @@ export function NewsLetterSwiper() {
                     loop={true}
                     className="firstPageSwiper"
                     // style={{ minHeight: 480 }}
-                    onSlideChange={() => setProgressCount(0)}
+                    onSlideChange={() => {
+                        progressRef.current = 0;
+                        setProgressCount(0);
+                    }}
                     onSwiper={setSwiperRef}
                 >
-                    {NEWSLETTER_DATA.map(newsletter => {
+                    {NEWSLETTER_DATA.map((newsletter, index) => {
                         return (
-                            <SwiperSlide key={newsletter.title}>
+                            <SwiperSlide key={`${newsletter.title}-${index}`}>
                                 <div className=" row flex justify-center xl:justify-start flex-start pb-8 lg:pb-16">
                                     <div className="w-full lg:w-auto flex justify-center ml-4">
                                         <img
@@ -80,8 +85,11 @@ export function NewsLetterSwiper() {
                                     </div>
                                     <div className="lg:w-[48rem] px-6 lg:px-0 lg:ml-12 mt-4 lg:mt-0 flex flex-col ">
                                         <div className="flex gap-1 mb-1">
-                                            {newsletter.tags.map(value => (
-                                                <div className="color-[#4c576c] font-medium text-xs leading-5">
+                                            {newsletter.tags.map((value, idx) => (
+                                                <div
+                                                    key={'tag-' + idx}
+                                                    className="color-[#4c576c] font-medium text-xs leading-5"
+                                                >
                                                     {value}
                                                 </div>
                                             ))}
