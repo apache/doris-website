@@ -1,6 +1,6 @@
 ---
 {
-    "title": "multi_search_all_positions",
+    "title": "MULTI_SEARCH_ALL_POSITIONS",
     "language": "en"
 }
 ---
@@ -24,31 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## multi_search_all_positions
-### Description
-#### Syntax
+## Description
 
-`ARRAY<INT> multi_search_all_positions(VARCHAR haystack, ARRAY<VARCHAR> needles)`
+Returns the positions of the first occurrence of a set of regular expressions in a string.
 
-Returns an `ARRAY` where the `i`-th element is the position of the `i`-th element in `needles`(i.e. `needle`)'s **first** occurrence in the string `haystack`. Positions are counted from 1, with 0 meaning the element was not found. **Case-sensitive**.
+## Syntax
 
-### example
-
+```sql
+ARRAY<INT> multi_search_all_positions(VARCHAR haystack, ARRAY<VARCHAR> patterns)
 ```
-mysql> select multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `haystack` | The string to be checked |
+| `patterns` | Array of regular expressions |
+
+## Return Value
+
+Returns an `ARRAY` where the `i`-th element represents the position of the first occurrence of the `i`-th element (regular expression) in the `patterns` array within the string `haystack`. Positions are counted starting from 1, and 0 indicates that the element was not found.
+
+## Examples
+
+```sql
+mysql> SELECT multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
 +----------------------------------------------------------------------+
 | multi_search_all_positions('Hello, World!', ['hello', '!', 'world']) |
 +----------------------------------------------------------------------+
-| [0,13,0]                                                             |
+| [0, 13, 0]                                                           |
 +----------------------------------------------------------------------+
 
-select multi_search_all_positions("Hello, World!", ['hello', '!', 'world', 'Hello', 'World']);
+mysql> SELECT multi_search_all_positions("Hello, World!", ['hello', '!', 'world', 'Hello', 'World']);
 +---------------------------------------------------------------------------------------------+
 | multi_search_all_positions('Hello, World!', ARRAY('hello', '!', 'world', 'Hello', 'World')) |
 +---------------------------------------------------------------------------------------------+
 | [0, 13, 0, 1, 8]                                                                            |
 +---------------------------------------------------------------------------------------------+
 ```
-
-### keywords
-    MULTI_SEARCH,SEARCH,POSITIONS
