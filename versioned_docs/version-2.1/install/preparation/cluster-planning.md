@@ -49,9 +49,9 @@ FE nodes are primarily responsible for user request handling, query parsing and 
 
 For production clusters, it is generally recommended to deploy at least 3 FE nodes to achieve a high-availability environment. FE nodes are divided into the following two roles:
 
-- Follower nodes: Participate in election operations. When the Master node fails, a Follower node will be selected as the new Master.
+- **Follower nodes**: Participate in election operations. When the Master node fails, a Follower node will be selected as the new Master.
   
-- Observer nodes: Only sync metadata from the Leader node and do not participate in the election. These nodes can be used for horizontal scaling to improve the read service capacity of metadata.
+- **Observer nodes**: Only sync metadata from the Leader node and do not participate in the election. These nodes can be used for horizontal scaling to improve the read service capacity of metadata.
 
 In general, it is recommended to deploy at least 3 Follower nodes. In high-concurrency scenarios, increasing the number of Observer nodes can help improve the cluster's connection capacity.
 

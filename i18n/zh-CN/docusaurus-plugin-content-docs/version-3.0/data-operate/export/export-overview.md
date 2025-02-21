@@ -84,50 +84,29 @@ Apache Doris 提供以下三种不同的数据导出方式：
 Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出功能能够自动将 Apache Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型。CSV 格式没有类型，所有数据都以文本形式输出。
 
 以下是 Apache Doris 数据类型和 Parquet、ORC 文件格式的数据类型映射关系表：
+| Doris Type | Arrow Type | Orc Type |
+| ---------- | ---------- | -------- |
+| boolean    | boolean | boolean |
+| tinyint    | int8 | tinyint |
+| smallint   | int16 | smallint |
+| int        | int32 | int |
+| bigint     | int64 | bigint |
+| largeInt   | utf8 | string |
+| date       | utf8 | string |
+| datev2     | Date32Type | string |
+| datetime   | utf8 | string |
+| datetimev2 | TimestampType | timestamp |
+| float      | float32 | float |
+| double     | float64 | double |
+| char / varchar / string| utf8 | string |
+| decimal    | decimal128 | decimal |
+| struct     | struct | struct |
+| map        | map | map |
+| array      | list | array |
+| json       | utf8 | string |
+| variant    | utf8 | string |
+| bitmap     | binary | binary |
+| quantile_state| binary | binary |
+| hll        | binary | binary |
 
-1. Doris 导出到 Orc 文件格式的数据类型映射表：
-
-    |Doris Type|Orc Type|
-    | -------- | ------- |
-    |boolean|boolean|
-    |tinyint|tinyint|
-    |smallint|smallint|
-    |int|int|
-    |bigint|bigint|
-    |largeInt|string|
-    |date|string|
-    |datev2|string|
-    |datetime|string|
-    |datetimev2|timestamp|
-    |float|float|
-    |double|double|
-    |char / varchar / string|string|
-    |decimal|decimal|
-    |struct|struct|
-    |map|map|
-    |array|array|
-    |json|不支持|
-
-
-2. Apache Doris 导出到 Parquet 文件格式时，会先将 Apache Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。Apache Doris 数据类型到 Arrow 数据类的映射关系为：
-
-    |Doris Type|Arrow Type|
-    | ----- | ----- |
-    |boolean|boolean|
-    |tinyint|int8|
-    |smallint|int16|
-    |int|int32|
-    |bigint|int64|
-    |largeInt|utf8|
-    |date|utf8|
-    |datev2|Date32Type|
-    |datetime|utf8|
-    |datetimev2|TimestampType|
-    |float|float32|
-    |double|float64|
-    |char / varchar / string|utf8|
-    |decimal|decimal128|
-    |struct|struct|
-    |map|map|
-    |array|list|
-    |json|utf8|
+> 注意：Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。

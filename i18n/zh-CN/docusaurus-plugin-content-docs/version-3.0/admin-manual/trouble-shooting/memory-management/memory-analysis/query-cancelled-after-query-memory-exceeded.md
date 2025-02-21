@@ -42,7 +42,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 `show variables;` 可以查看 Doris Session Veriable，其中的 `exec_mem_limit` 是单次查询和导入的执行内存限制，但从 Doris 1.2 开始支持查询内存超发 (overcommit)，旨在允许查询设置更灵活的内存限制，内存充足时即使查询内存超过上限也不会被 Cancel，所以通常用户无需关注查询内存使用。直到内存不足时，查询会在尝试分配新内存时等待一段时间，此时会基于一定规则优先 Cancel `mem_used` 与 `exec_mem_limit` 比值大的 Query。如果等待过程中内存释放的大小满足需求，查询将继续执行，否则将抛出异常并终止查询。
 
-如果希望关闭查询内存超发，参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中增加 `enable_query_memory_overcommit=false`，此时单次查询和导入的内存超过 `exec_mem_limit` 即会被 Cancel。如果你希望避免大查询对集群稳定性造成的负面影响，或者希望准确控制集群上的任务执行来保证足够的稳定性，那么可以考虑关闭查询内存超发。
+如果希望关闭查询内存超发，参考 [BE 配置项](../../../config/be-config)，在 `conf/be.conf` 中增加 `enable_query_memory_overcommit=false`，此时单次查询和导入的内存超过 `exec_mem_limit` 即会被 Cancel。如果你希望避免大查询对集群稳定性造成的负面影响，或者希望准确控制集群上的任务执行来保证足够的稳定性，那么可以考虑关闭查询内存超发。
 
 ## 查询内存分析
 

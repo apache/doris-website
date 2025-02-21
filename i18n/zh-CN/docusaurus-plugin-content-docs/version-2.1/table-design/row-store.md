@@ -87,4 +87,4 @@ SELECT * FROM tbl_point_query WHERE key = 100；
 
 1. 开启行存后占用的存储空间会增加，存储空间的增加和数据特点有关，一般是原来表的 2 到 10 倍，具体空间占用需要使用实际数据测试。
 2. 行存的 page_size 对存储空间的也有影响，可以根据前面的表属性参数 `row_store_page_size` 说明进行调整。
-3. 2.1不支持 alter `store_row_column` 属性
+3. 2.1 不支持 alter `store_row_column` 属性

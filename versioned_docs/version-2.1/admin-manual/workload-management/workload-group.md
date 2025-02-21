@@ -159,7 +159,7 @@ mysql [information_schema]>create workload group if not exists g1
 Query OK, 0 rows affected (0.03 sec)
 
 ```
-You can refer to [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)。
+You can refer to [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)。
 
 The CPU limit configured at this point is a soft limit. Since version 2.1, Doris will automatically create a group named normal, which cannot be deleted.
 
@@ -234,7 +234,7 @@ When both methods are used to specify a Workload Group for the user, the session
 ```
 show workload groups;
 ```
-More details can be found in [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)
+More details can be found in [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)
 
 2. You can view the Workload Group through the system table:
 ```
@@ -262,7 +262,7 @@ mysql [information_schema]>select cpu_share from information_schema.workload_gro
 
 ```
 
-More details can be found in [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)
+More details can be found in [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)
 
 ## Drop Workload Group
 ```
@@ -270,7 +270,7 @@ mysql [information_schema]>drop workload group g1;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-More details can be found in[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)
+More details can be found in[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)
 
 ## Explanation of Switching Between CPU Soft and Hard Limit Modes
 Currently, Doris does not support running both CPU soft and hard limits simultaneously. At any given time, a Doris cluster can only operate in either CPU soft limit or CPU hard limit mode.

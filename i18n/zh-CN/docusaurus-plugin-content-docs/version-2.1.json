@@ -243,9 +243,9 @@
     "message": "集群管理",
     "description": "The label for category Managing Cluster in sidebar docs"
   },
-  "sidebar.docs.category.Managing Disater Recovery": {
+  "sidebar.docs.category.Managing Disaster Recovery": {
     "message": "容灾管理",
-    "description": "The label for category Managing Disater Recovery in sidebar docs"
+    "description": "The label for category Managing Disaster Recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
@@ -698,6 +698,10 @@
   "sidebar.docs.category.Business Continuity & Data Recovery": {
     "message": "业务连续性和数据恢复",
     "description": "The label for category Business Continuity & Data Recovery in sidebar docs"
+  },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
   },
   "sidebar.docs.category.Backup & Restore": {
     "message": "备份与恢复",

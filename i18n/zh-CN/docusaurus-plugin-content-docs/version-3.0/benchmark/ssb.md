@@ -37,7 +37,7 @@ under the License.
 | 硬件   | 配置说明                                     |
 |------|------------------------------------------|
 | 机器数量 | 4 台阿里云主机（1 个 FE，3 个 BE）                  |
-| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32核 |
+| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32 核 |
 | 内存   | 128G                                     |
 | 磁盘   | 阿里云 ESSD (PL0)                           |
 
@@ -104,7 +104,7 @@ under the License.
 
 ## 6. 环境准备
 
-请先参照 [官方文档](../install/cluster-deployment/standard-deployment) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+请先参照 [官方文档](../../current/install/deploy-manually/integrated-storage-compute-deploy-manually) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
 ## 7. 数据准备
 

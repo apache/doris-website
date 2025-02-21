@@ -60,7 +60,7 @@ In LDAP, data is organized in a tree structure.
 - cn(common name):name
 - group: Group, which can be understood as the role of Doris
 - user: User, equivalent to Doris' user
-- objectClass：It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
+- objectClass: It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
 
 ## Enable LDAP Authentication
 ### Server-side Configuration
@@ -70,7 +70,7 @@ You need to configure the LDAP basic information in the fe/conf/ldap.conf file,
 
 and the LDAP administrator password needs to be set using sql statements.
 
-#### Configure the fe/conf/ldap.conf file：
+#### Configure the fe/conf/ldap.conf file:
 * ldap_host = 127.0.0.1  
   LDAP service ip.
   
@@ -224,7 +224,7 @@ If jack also belongs to the LDAP groups doris_qa, doris_pm; Doris exists roles: 
 > If you want user2 to belong to group2, you need to add user2 to the member attribute of group2
 
 ### LDAP information cache
-To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](... /... /sql-manual/sql-reference/Utility-Statements/REFRESH-LDAP.md).
+To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ## Limitations of LDAP authentication
 

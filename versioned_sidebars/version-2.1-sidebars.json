@@ -27,23 +27,23 @@
                                 "install/preparation/os-checking"
                             ]
                         },
-                        "install/deploy-manually/storage-compute-coupled-deploy-manually",
+                        "install/deploy-manually/integrated-storage-compute-deploy-manually",
                         {
                             "type": "category",
                             "label": "Deploying on Kubernetes",
                             "items": [
-                                "install/cluster-deployment/k8s-deploy/install-doris-operator",
-                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/access-cluster",
-                                "install/cluster-deployment/k8s-deploy/cluster-operation"
+                                "install/deploy-on-kubernetes/install-doris-operator",
+                                "install/deploy-on-kubernetes/install-config-cluster",
+                                "install/deploy-on-kubernetes/install-doris-cluster",
+                                "install/deploy-on-kubernetes/access-cluster",
+                                "install/deploy-on-kubernetes/cluster-operation"
                             ]
                         },
                         {
                             "type": "category",
                             "label": "Deploying on Cloud",
                             "items": [
-                                "install/cluster-deployment/doris-on-aws"
+                                "install/deploy-on-cloud/doris-on-aws"
                             ]
                         }
                     ]
@@ -414,16 +414,22 @@
                                 "admin-manual/auth/ranger"
                             ]
                         },
+                        "admin-manual/audit-plugin",
                         {
                             "type": "category",
-                            "label": "Data Transmission Encryption",
+                            "label": "Data Encryption",
                             "items": [
-                                "admin-manual/auth/certificate",
-                                "admin-manual/auth/fe-certificate"
+                                {
+                                    "type": "category",
+                                    "label": "Encryption in Transit",
+                                    "items": [
+                                        "admin-manual/auth/certificate",
+                                        "admin-manual/auth/fe-certificate"
+                                    ]
+                                },
+                                "admin-manual/auth/encryption-function"
                             ]
-                        },
-                        "admin-manual/audit-plugin",
-                        "admin-manual/auth/encryption-function"
+                        }
                     ]
                 }
             ]
@@ -804,7 +810,8 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
-                "faq/bi-faq"
+                "faq/bi-faq",
+                "faq/correctness-faq"
             ]
         },
         {
@@ -1780,18 +1787,25 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Materialized View",
+                                    "label": "Synchronous Materialized View",
                                     "items": [
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Asynchronous Materialized View",
+                                    "items": [
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB"
                                     ]
                                 },
                                 {

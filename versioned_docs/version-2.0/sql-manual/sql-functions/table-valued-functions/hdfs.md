@@ -75,7 +75,7 @@ File format parameters:
 - `line_delimiter`: (optional) default `\n`.
 - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
-    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/file-format/json)
 
 - `read_json_by_line`: (optional) default `"true"`
 - `strip_outer_array`: (optional) default `"false"`
