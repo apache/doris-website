@@ -39,7 +39,10 @@ STOP SYNC JOB [<db>.]<job_name>
 **1. `<job_name>`**
 
 > Specifies the name of the data synchronization job to be stopped.  
-> If a database is specified with the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
+
+## Optional Parameters
+**1. `<db>`**
+> If a database is specified using the `[<db>.]` prefix, the job is located in that database; otherwise, the current database is used.
 
 
 ## Access Control Requirements  
