@@ -1,6 +1,6 @@
 ---
 {
-"title": "ALTER-STORAGE-POLICY",
+"title": "ALTER STORAGE POLICY",
 "language": "en"
 }
 ---
@@ -34,11 +34,13 @@ ALTER STORAGE POLICY  '<policy_name>' PROPERTIE ("<key>"="<value>"[, ... ]);
 ```
 
 ## Required Parameters
+
 | Parameter Name          | Description                                                         |
 |-------------------|--------------------------------------------------------------|
 | `<policy_name>`   | 	The name of the storage policy. This is the unique identifier of the storage policy you want to modify, and an existing policy name must be specified. |
 
 ## Optional Parameters
+`PROPERTIE ("<key>"="<value>"[, ... ])` 
 
 | Parameter Name           | Description                                                         |
 |-------------------|--------------------------------------------------------------|

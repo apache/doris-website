@@ -34,20 +34,20 @@ This command is used to create a storage vault. The topic of this document descr
 ## Syntax
 
 ```sql
-CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
+CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 ```
 
 ## Required Parameters
 
 | Parameter     | Description                     |
 |-------|-----------------------|
-| `vault_name` |  The name of the storage vault. This is the unique identifier for the new storage vault you are creating. |
+| `<vault_name>` |  The name of the storage vault. This is the unique identifier for the new storage vault you are creating. |
 
 ## Optional Parameters
 | Parameter   | Description                                                         |
 |-------------------|--------------------------------------------------------------|
 | `[IF NOT EXISTS]` | If the specified storage vault already exists, the creation operation will not be executed, and no error will be thrown. This prevents duplicate creation of the same storage vault. |
-| `PROPERTIES`      | A set of key-value pairs used to set or update specific properties of the storage vault. Each property consists of a key (<key>) and a value (<value>), separated by an equals sign (=). Multiple key-value pairs are separated by commas (,). |
+| `<properties>`    | A set of key-value pairs used to set or update specific properties of the storage vault. Each property consists of a key (<key>) and a value (<value>), separated by an equals sign (=). Multiple key-value pairs are separated by commas (,). |
 
 ### S3 Vault
 
