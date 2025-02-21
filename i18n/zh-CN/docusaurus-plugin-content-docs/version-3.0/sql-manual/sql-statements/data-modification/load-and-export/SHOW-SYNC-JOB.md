@@ -34,6 +34,10 @@ under the License.
 SHOW SYNC JOB [FROM db_name]
 ```
 
+## 可选参数
+**1. `<db_name>`**
+> 显示指定数据库下的所有数据同步作业状态。
+
 ## 权限控制  
 执行此 SQL 命令的用户必须至少具有以下权限之一：  
 

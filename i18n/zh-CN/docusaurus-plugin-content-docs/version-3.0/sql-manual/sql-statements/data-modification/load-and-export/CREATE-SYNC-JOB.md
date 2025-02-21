@@ -35,8 +35,16 @@ under the License.
 ```sql
 CREATE SYNC [<db>.]<job_name>
 (<channel_desc> [, ... ])
-  : FROM <mysql_db>.<src_tbl> INTO <des_tbl> [ <columns_mapping> ]
 <binlog_desc>
+  : FROM BINLOG ("<key>" = "<value>" [, ... ])
+```
+where:
+```sql
+channel_desc
+  : FROM <mysql_db>.<src_tbl> INTO <des_tbl> [ <columns_mapping> ]
+```
+```sql
+binlog_desc
   : FROM BINLOG ("<key>" = "<value>" [, ... ])
 ```
 

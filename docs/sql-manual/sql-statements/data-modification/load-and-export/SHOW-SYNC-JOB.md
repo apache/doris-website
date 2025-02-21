@@ -31,8 +31,13 @@ This statement displays the status of resident data synchronization jobs in all 
 ## Syntax
 
 ```sql
-SHOW SYNC JOB [FROM db_name]
+SHOW SYNC JOB [FROM <db_name>]
 ```
+
+## Optional Parameters
+
+**1. `<db_name>`**
+> `<db_name>`represents the database name, which is used to specify the database from which the information of the synchronization jobs is to be shown.
 
 ## Access Control Requirements  
 Users executing this SQL command must have at least one of the following privileges:  
