@@ -95,7 +95,7 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Usage Notes
 
-1. This command give over supports modifying user roles from versions 2.0. Please use [GRANT](./GRANT.md) and [REVOKE](./REVOKE.md) for related operations
+1. This command give over supports modifying user roles from versions 2.0. Please use [GRANT](./GRANT-TO.md) and [REVOKE](./REVOKE-FROM.md) for related operations
 
 2. In an ALTER USER command, only one of the following account attributes can be modified at the same time:
 - Change password
