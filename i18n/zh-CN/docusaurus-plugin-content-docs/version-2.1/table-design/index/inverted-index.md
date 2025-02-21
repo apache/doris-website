@@ -178,7 +178,7 @@ table_properties;
   **是否将分词进行小写转换，从而在匹配的时候实现忽略大小写**
   <p>- true: 转换小写</p>
   <p>- false：不转换小写</p>
-  <p>- 从 2.1.2 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
+  <p>- 从 2.0.7 和 2.1.2 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
 </details>
 
 <details>
@@ -236,7 +236,7 @@ CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
 
 `BUILD INDEX` 会生成一个异步任务执行，在每个 BE 上有多个线程执行索引构建任务，通过 BE 参数 `alter_index_worker_count` 可以设置，默认值是 3。
 
-2.1.4 之前的版本 `BUILD INDEX` 会一直重试直到成功，从这个版本开始通过失败和超时机制避免一直重试。
+2.0.12 和 2.1.4 之前的版本 `BUILD INDEX` 会一直重试直到成功，从这两个版本开始通过失败和超时机制避免一直重试。3.0 存算分离模式暂不支持此命令。
 
 1. 一个 tablet 的多数副本 `BUILD INDEX` 失败后，整个 `BUILD INDEX` 失败结束
 2. 时间超过 `alter_table_timeout_second` ()，`BUILD INDEX` 超时结束
@@ -376,11 +376,11 @@ mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
 1 row in set (0.02 sec)
 
-mysql> SELECT TOKENIZE('I love CHINA','"parser"="unicode"');
+mysql> SELECT TOKENIZE('I love CHINA 我爱我的祖国','"parser"="unicode"');
 +-------------------------------------------------------------------+
-| tokenize('I love CHINA', '"parser"="unicode"')       |
+| tokenize('I love CHINA 我爱我的祖国', '"parser"="unicode"')       |
 +-------------------------------------------------------------------+
-| ["i", "love", "china"]        |
+| ["i", "love", "china", "我", "爱", "我", "的", "祖", "国"]        |
 +-------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```

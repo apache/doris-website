@@ -245,7 +245,7 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 ## 与动态分区联用
 
-自 3.0.3 起，Doris 支持自动分区和动态分区同时使用。此时，二者的功能都生效：
+Doris 支持自动分区和动态分区同时使用。此时，二者的功能都生效：
 1. 自动分区将会自动在数据导入过程中按需创建分区；
 2. 动态分区将会自动创建、回收、转储分区。
 
@@ -302,5 +302,4 @@ mysql> select * from partitions("catalog"="internal","database"="optest","table"
 - 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。开启前移（`enable_memtable_on_sink_node = true`）后该变量不产生影响。
 - 在使用[insert-overwrite](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)插入数据时 AUTO PARTITION 表的行为详见 INSERT OVERWRITE 文档。
 - 如果导入创建分区时，该表涉及其他元数据操作（如 Schema Change、Rebalance），则导入可能失败。
-
 
