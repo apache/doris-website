@@ -51,11 +51,11 @@
     "message": "在 Kubernetes 部署",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
-  "sidebar.docs.category.Compute storage coupled": {
+  "sidebar.docs.category.Integrated Storage Compute": {
     "message": "部署存算一体集群",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
-  "sidebar.docs.category.Compute storage decoupled": {
+  "sidebar.docs.category.Separating Storage Compute": {
     "message": "部署存算分离集群",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
