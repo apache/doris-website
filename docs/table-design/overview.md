@@ -34,7 +34,7 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 ## Table property
 
-In the Doris CREATE TABLE statement, you can specify various [table properties](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties). Among them, the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold storage policy (storage_policy) properties apply to the partitions. That is, once a partition is created, it will have its own set of properties. Modifying the table properties will only affect partitions created in the future, and will not apply retroactively to partitions that have already been created. For more information about these properties, please refer to [modifying table properties](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)
+In the Doris CREATE TABLE statement, you can specify various [table properties](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties). Among them, the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold storage policy (storage_policy) properties apply to the partitions. That is, once a partition is created, it will have its own set of properties. Modifying the table properties will only affect partitions created in the future, and will not apply retroactively to partitions that have already been created. For more information about these properties, please refer to [modifying table properties](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)
 
 
 ## Notes
