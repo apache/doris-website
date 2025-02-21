@@ -92,14 +92,14 @@ Doris Operator 开发按照标准的 K8s 规范进行，兼容所有标准 K8s �
 
 在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD 。
 
-* 详细安装文档可参考：[Doris Operator 安装](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator.md)
+* 详细安装文档可参考：[Doris Operator 安装](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
 
 ### 部署 Doris 集群
 
-* 集群配置文档可参考：[Doris Operator 集群配置](../../install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster.md)
-* 安装文档可参考：[Doris Cluster 安装](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster.md)
+* 集群配置文档可参考：[Doris Operator 集群配置](../../install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster)
+* 安装文档可参考：[Doris Cluster 安装](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster)
 
 ### 集群运维
 
-* 集群运维文档可参考：[Doris Operator 集群运维](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md)
-* 集群访问文档可参考：[Doris Operator 集群访问](../../install/deploy-on-kubernetes/compute-storage-coupled/access-cluster.md)
+* 集群运维文档可参考：[Doris Operator 集群运维](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation)
+* 集群访问文档可参考：[Doris Operator 集群访问](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/access-cluster)

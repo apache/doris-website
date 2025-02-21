@@ -64,7 +64,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 5. 每个 FE 节点的 fe.conf 设置 `enable_fqdn_mode = true`。
 
-6. 参考[手动部署](../../install/deploy-manually/storage-compute-coupled-deploy-manually)
+6. 参考[手动部署](../../install/deploy-manually/integrated-storage-compute-deploy-manually)
 
 7. 按需在六台机器上选择几台机器部署 broker，执行`ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`。
 
