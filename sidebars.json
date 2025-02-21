@@ -31,8 +31,8 @@
                             "type": "category",
                             "label": "Cluster Deployment Manually",
                             "items": [
-                                "install/deploy-manually/storage-compute-coupled-deploy-manually",
-                                "install/deploy-manually/storage-compute-decoupled-deploy-manually"
+                                "install/deploy-manually/integrated-storage-compute-deploy-manually",
+                                "install/deploy-manually/separating-storage-compute-deploy-manually"
                             ]
                         },
                         {
@@ -41,24 +41,24 @@
                             "items": [
                                 {
                                     "type": "category",
-                                    "label": "Compute storage coupled",
+                                    "label": "Integrated Storage Compute",
                                     "items": [
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/access-cluster",
-                                        "install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation"
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/access-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation"
                                     ]
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Compute storage decoupled",
+                                    "label": "Separating Storage Compute",
                                     "items": [
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-fdb",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-ms",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-fe",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/config-cg",
-                                        "install/deploy-on-kubernetes/compute-storage-decoupled/install-doris-cluster"
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster"
                                     ]
                                 }
                             ]
@@ -481,31 +481,29 @@
                         "admin-manual/auth/security-overview",
                         {
                             "type": "category",
-                            "label": "Authentication",
+                            "label": "Authentication and Authorization",
                             "items": [
-                                "admin-manual/auth/authentication/internal",
-                                "admin-manual/auth/authentication/federation"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Authorization",
-                            "items": [
-                                "admin-manual/auth/authorization/internal",
-                                "admin-manual/auth/authorization/ranger",
-                                "admin-manual/auth/authorization/data"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Data Transmission Encryption",
-                            "items": [
-                                "admin-manual/auth/certificate",
-                                "admin-manual/auth/fe-certificate"
+                                "admin-manual/auth/authentication-and-authorization",
+                                "admin-manual/auth/ldap",
+                                "admin-manual/auth/ranger"
                             ]
                         },
                         "admin-manual/audit-plugin",
-                        "admin-manual/auth/encryption-function"
+                        {
+                            "type": "category",
+                            "label": "Data Encryption",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Encryption in Transit",
+                                    "items": [
+                                        "admin-manual/auth/certificate",
+                                        "admin-manual/auth/fe-certificate"
+                                    ]
+                                },
+                                "admin-manual/auth/encryption-function"
+                            ]
+                        }
                     ]
                 }
             ]

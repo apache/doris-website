@@ -106,7 +106,7 @@ Here we use Apache Doris 3.0.3-rc03 (Compute-Storage Coupled Mode) and Apache Do
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](../install/deploy-manually/storage-compute-coupled-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 

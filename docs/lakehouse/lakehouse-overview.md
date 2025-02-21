@@ -30,7 +30,7 @@ under the License.
 
 Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
-![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.png)
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### Flexible Data Access
 
@@ -95,11 +95,11 @@ As an analytical data warehouse, Doris has made numerous optimizations in lakeho
 
 As shown below, on a 1TB TPCDS standard test set based on the Iceberg table format, Doris's overall execution of 99 queries is only 1/3 of Trino's.
 
-![doris-tpcds](/images/Lakehouse/tpcds1000.png)
+![doris-tpcds](/images/Lakehouse/tpcds1000.jpeg)
 
 In actual user scenarios, Doris reduces average query latency by 20% and 95th percentile latency by 50% compared to Presto while using half the resources, significantly reducing resource costs while enhancing user experience.
 
-![doris-performance](/images/Lakehouse/performance.png)
+![doris-performance](/images/Lakehouse/performance.jpeg)
 
 ### Convenient Service Migration
 
@@ -137,7 +137,7 @@ In the lakehouse solution, Doris is mainly used for **lakehouse query accelerati
 
 In this scenario, Doris acts as a **compute engine**, accelerating query analysis on lakehouse data.
 
-![query-acceleration](/images/Lakehouse/query-acceleration.png)
+![query-acceleration](/images/Lakehouse/query-acceleration.jpeg)
 
 #### Cache Acceleration
 
@@ -161,7 +161,7 @@ Users can dynamically create multiple catalogs in Doris to connect different dat
 
 In this scenario, **Doris acts as a data processing engine**, processing lakehouse data.
 
-![data-management](/images/Lakehouse/data-management.png)
+![data-management](/images/Lakehouse/data-management.jpeg)
 
 #### Task Scheduling
 

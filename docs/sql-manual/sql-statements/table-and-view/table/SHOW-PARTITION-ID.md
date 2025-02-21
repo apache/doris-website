@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PARTITION-ID",
+    "title": "SHOW PARTITION ID",
     "language": "en"
 }
 ---
@@ -24,32 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SHOW-PARTITION-ID
+## Description
 
-### Name
+This statement is used to find the corresponding database name, table name, and partition name based on the partition ID.
 
-SHOW PARTITION ID
-
-### Description
-
-This statement is used to find the corresponding database name, table name, partition name according to the partition id (only for administrators)
-
-  grammar:
+## Syntax
 
 ```sql
-SHOW PARTITION [partition_id]
+SHOW PARTITION <partition_id>
 ```
-### Example
 
-1. Find the corresponding database name, table name, partition name according to the partition id
+## Required Parameters
+
+**1. `<partition_id>`**
+
+> partition id
+
+## Access Control Requirements
+
+The user who executes this SQL must have at least the following permissions:
+
+| Privilege                  | Object | Notes |
+|---------------------|----|----|
+| ADMIN_PRIV |    |    |
+
+## Examples
+
+1. To find the corresponding database name, table name, and partition name based on the partition ID.
 
     ```sql
     SHOW PARTITION 10002;
     ```
-
-### Keywords
-
-    SHOW, PARTITION, ID
-
-### Best Practice
 
