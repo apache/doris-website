@@ -88,8 +88,6 @@ Doris supports different semi-structured data types for JSON data processing, ea
 
 - **[ARRAY](../sql-data-types/semi-structured/ARRAY.md)** / **[MAP](../sql-data-types/semi-structured/MAP.md)** / **[STRUCT](../semi-structured/STRUCT.md)**: They support nested data and fixed schema, making them well-suited for analytical workloads such as user behavior and profile analysis, as well as querying data lake formats like Parquet. Due to the fixed schema, there is no overhead for dynamic schema inference, resulting in high write and analysis performance.
 
-- **[VARIANT](../sql-data-types/semi-structured/VARIANT.md)**: It supports nested data and flexible schema. It is well-suited for analytical workloads such as log, trace, and IoT data analysis. It can accommodate any legal JSON data, which will be automatically expanded into sub-columns in a columnar storage format. This approach enables high compression rate in storage and high performance in data aggregation, filtering, and sorting.
-
 - **[JSON](../sql-data-types/semi-structured/JSON.md)**: It supports nested data and flexible schema. It is optimized for high-concurrency point query use cases. The flexible schema allows for ingesting any legal JSON data, which will be stored in a binary format. Extracting fields from this binary JSON format is more than 2X faster than using regular JSON strings.
 
 ## Aggregation Types
@@ -103,12 +101,3 @@ The aggregation data types store aggregation results or intermediate results dur
 - **[QUANTILE_STATE](../sql-data-types/aggregate/QUANTILE_STATE.md)**: It is used for approximate percentile calculations and offers better performance than the `PERCENTILE` function. It works with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, and `TO_QUANTILE_STATE`.
 
 - **[AGG_STATE](../sql-data-types/aggregate/AGG_STATE.md)**: It is used to accelerate aggregations, utilized in combination with aggregation function combinators like state/merge/union.
-
-
-## IP Types
-
-
-IP data types store IP addresses in a binary format, which is faster and more space-efficient for querying compared to storing them as strings. There are two supported IP data types:
-
-- **[IPv4](../sql-data-types/ip/IPV4.md)**: It stores IPv4 addresses as a 4-byte binary value. It is used in conjunction with the `ipv4_*` family of functions.
-- **[IPv6](../sql-data-types/ip/IPV6.md)**: It stores IPv6 addresses as a 16-byte binary value. It is used in conjunction with the `ipv6_*` family of functions.
