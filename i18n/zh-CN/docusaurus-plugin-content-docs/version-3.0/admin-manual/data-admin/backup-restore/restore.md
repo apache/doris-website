@@ -105,43 +105,43 @@ PROPERTIES
 
 ## 3. 查看恢复作业的执行情况
 
-      ```sql
-   mysql> SHOW RESTORE\G;
-   *************************** 1. row ***************************
-                  JobId: 17891851
-                  Label: snapshot_label1
-              Timestamp: 2022-04-08-15-52-29
-                 DbName: default_cluster:example_db1
-                  State: FINISHED
-              AllowLoad: false
-         ReplicationNum: 3
-            RestoreObjs: {
-     "name": "snapshot_label1",
-     "database": "example_db",
-     "backup_time": 1649404349050,
-     "content": "ALL",
-     "olap_table_list": [
-       {
-         "name": "backup_tbl",
-         "partition_names": [
-           "p1",
-           "p2"
-         ]
-       }
-     ],
-     "view_list": [],
-     "odbc_table_list": [],
-     "odbc_resource_list": []
-   }
-             CreateTime: 2022-04-08 15:59:01
-       MetaPreparedTime: 2022-04-08 15:59:02
-   SnapshotFinishedTime: 2022-04-08 15:59:05
-   DownloadFinishedTime: 2022-04-08 15:59:12
-           FinishedTime: 2022-04-08 15:59:18
-        UnfinishedTasks:
-               Progress:
-             TaskErrMsg:
-                 Status: [OK]
-                Timeout: 86400
-   1 row in set (0.01 sec)
-   ```
+    ```sql
+    mysql> SHOW RESTORE\G;
+    *************************** 1. row ***************************
+                JobId: 17891851
+                Label: snapshot_label1
+            Timestamp: 2022-04-08-15-52-29
+                DbName: default_cluster:example_db1
+                State: FINISHED
+            AllowLoad: false
+        ReplicationNum: 3
+          RestoreObjs: {
+    "name": "snapshot_label1",
+    "database": "example_db",
+    "backup_time": 1649404349050,
+    "content": "ALL",
+    "olap_table_list": [
+      {
+        "name": "backup_tbl",
+        "partition_names": [
+          "p1",
+          "p2"
+        ]
+      }
+    ],
+    "view_list": [],
+    "odbc_table_list": [],
+    "odbc_resource_list": []
+    }
+            CreateTime: 2022-04-08 15:59:01
+      MetaPreparedTime: 2022-04-08 15:59:02
+    SnapshotFinishedTime: 2022-04-08 15:59:05
+    DownloadFinishedTime: 2022-04-08 15:59:12
+          FinishedTime: 2022-04-08 15:59:18
+      UnfinishedTasks:
+              Progress:
+            TaskErrMsg:
+                Status: [OK]
+              Timeout: 86400
+    1 row in set (0.01 sec)
+    ```

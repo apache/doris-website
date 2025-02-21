@@ -94,9 +94,9 @@ under the License.
 
 2. [HLL](../../sql-manual/sql-data-types/aggregate/HLL.md)：用于近似去重，性能优于 COUNT DISTINCT。配合  hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 等 HLL 函数使用。
 
-3. [QUANTILE_STATE](../../sql-manual/sql-data-types/aggregate/QUANTILE_STATE.md)：用于分位数近似计算，性能优于 PERCENTILE。配合 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数使用。
+3. [QUANTILE_STATE](../../sql-manual/sql-data-types/aggregate/QUANTILE-STATE.md)：用于分位数近似计算，性能优于 PERCENTILE。配合 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数使用。
 
-4. [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG_STATE.md)：用于聚合计算加速，配合 state/merge/union 聚合函数组合器使用。
+4. [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG-STATE.md)：用于聚合计算加速，配合 state/merge/union 聚合函数组合器使用。
 
 
 ## IP 类型
