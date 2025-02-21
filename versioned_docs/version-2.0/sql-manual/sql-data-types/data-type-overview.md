@@ -105,10 +105,4 @@ The aggregation data types store aggregation results or intermediate results dur
 - **[AGG_STATE](../sql-data-types/aggregate/AGG-STATE.md)**: It is used to accelerate aggregations, utilized in combination with aggregation function combinators like state/merge/union.
 
 
-## IP Types
 
-
-IP data types store IP addresses in a binary format, which is faster and more space-efficient for querying compared to storing them as strings. There are two supported IP data types:
-
-- **[IPv4](../sql-data-types/ip/IPV4.md)**: It stores IPv4 addresses as a 4-byte binary value. It is used in conjunction with the `ipv4_*` family of functions.
-- **[IPv6](../sql-data-types/ip/IPV6.md)**: It stores IPv6 addresses as a 16-byte binary value. It is used in conjunction with the `ipv6_*` family of functions.
