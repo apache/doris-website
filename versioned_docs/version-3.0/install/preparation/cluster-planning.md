@@ -24,6 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Architecture Planning
+
+When deploying Doris, you can choose between the integrated storage-compute architecture or the decoupled storage-compute architecture based on your business needs:
+
+- [Integrated Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Integrated-Storage-Compute): The integrated storage-compute architecture is easy to deploy, performs excellently, and does not rely on external shared storage devices. It is suitable for business scenarios that do not require extreme elasticity in scaling.
+
+- [Decoupled Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Decoupled-Storage-Compute): The decoupled storage-compute architecture relies on shared storage and enables elastic scaling of computing resources. It is suitable for business scenarios that require dynamic adjustment of computing resources.
 
 ## Port Planning
 
@@ -49,9 +56,9 @@ FE nodes are primarily responsible for user request handling, query parsing and 
 
 For production clusters, it is generally recommended to deploy at least 3 FE nodes to achieve a high-availability environment. FE nodes are divided into the following two roles:
 
-- Follower nodes: Participate in election operations. When the Master node fails, a Follower node will be selected as the new Master.
+- **Follower nodes**: Participate in election operations. When the Master node fails, a Follower node will be selected as the new Master.
   
-- Observer nodes: Only sync metadata from the Leader node and do not participate in the election. These nodes can be used for horizontal scaling to improve the read service capacity of metadata.
+- **Observer nodes**: Only sync metadata from the Leader node and do not participate in the election. These nodes can be used for horizontal scaling to improve the read service capacity of metadata.
 
 In general, it is recommended to deploy at least 3 Follower nodes. In high-concurrency scenarios, increasing the number of Observer nodes can help improve the cluster's connection capacity.
 

@@ -24,6 +24,7 @@ under the License.
 -->
 
 在完成前置检查及规划后，如环境检查、集群规划、操作系统检查后，可以开始部署集群。部署集群分为八步：
+
 1. **准备 FoundationDB 集群**：可以使用已有的 FoundationDB 集群，或新建 FoundationDB 集群；
    
 3. **部署 S3 或 HDFS 服务**：可以使用已有的共享存储，或新建共享存储；
@@ -56,8 +57,9 @@ under the License.
 
    | 参数             | 描述                             | 类型                           | 示例                                                         | 注意事项                                                     |
    | ---------------- | -------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+
    | DATA_DIRS        | 指定 FoundationDB 存储的数据目录 | 以逗号分隔的绝对路径列表       | /mnt/foundationdb/data1,/mnt/foundationdb/data2,/mnt/foundationdb/data3 | 运行脚本前确保目录已创建，确保目录已创建，生产环境建议使用 SSD 和独立目录  |
-   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | 生产集群至少应有 3 个 IP 地址，第一个 IP 地址将用作协调器- 为高可用性，将机器放置在不同机架上 |
+   | FDB_CLUSTER_IPS  | 定义集群 IP                      | 字符串（以逗号分隔的 IP 地址） | 172.200.0.2,172.200.0.3,172.200.0.4                          | 生产集群至少应有 3 个 IP 地址，第一个 IP 地址将用作协调器 - 为高可用性，将机器放置在不同机架上 |
    | FDB_HOME         | 定义 FoundationDB 主目录         | 绝对路径                       | /fdbhome                                                     | 默认路径为 /fdbhome，确保此路径是绝对路径                  |
    | FDB_CLUSTER_ID   | 定义集群 ID                      | 字符串                         | SAQESzbh                                                     | 每个集群的 ID 必须唯一，可使用 mktemp -u XXXXXXXX 生成     |
    | FDB_CLUSTER_DESC | 定义 FDB 集群的描述              | 字符串                         | dorisfdb                                                     | 建议更改为对部署有意义的内容                               |
@@ -234,7 +236,7 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
 
    第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
 
-## 第 6 步：注册并添加 FE Follower/Observer 节点
+## 第 6 步：注册 FE Follower/Observer 节点
 
 其他节点同样根据上述步骤修改配置文件并启动，使用 mysql 客户端连接 Master 角色的 FE，并用以下 SQL 命令添加额外的 FE 节点：
 
@@ -335,8 +337,7 @@ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了�
    );
    ```
 
-   要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
-
+   要在其他对象存储上创建 Storage Vault，请参考 [创建 Storage Vault ](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 3. 设置默认 Storage Vault
 
