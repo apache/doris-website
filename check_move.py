@@ -110,32 +110,3 @@ def extract_file_changes(git_show_output: List[AnyStr]):
 
 
 def travel(root_path: str):
-    for root, dirs, files in os.walk(root_path):
-        for file in files:
-            if file.endswith(".md") or file.endswith(".mdx"):
-                md_file_path = os.path.join(root, file)
-                process_md_file(md_file_path)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Add commit id as arguments to check")
-    parser.add_argument("commit_id", type=str, help="id of the commit to check")
-    args = parser.parse_args()
-
-    # extract all move/delete files
-    p = subprocess.Popen(
-        "git show " + args.commit_id,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
-    extract_file_changes(p.stdout.readlines())
-
-    # check docs directories
-    travel("docs")
-    travel("i18n")
-    travel("versioned_docs")
-
-    if change_detected:
-        print("Failed!")
-        sys.exit(1)
