@@ -33,13 +33,11 @@ under the License.
 ## 语法
 
 ```sql
-CREATE SYNC [db.]job_name
-(
-    channel_desc,
-    channel_desc,
-    ...
-)
-binlog_desc
+CREATE SYNC [<db>.]<job_name>
+(<channel_desc> [, ... ])
+  : FROM <mysql_db>.<src_tbl> INTO <des_tbl> [ <columns_mapping> ]
+<binlog_desc>
+  : FROM BINLOG ("<key>" = "<value>" [, ... ])
 ```
 
 ## 必选参数
@@ -52,18 +50,14 @@ binlog_desc
 
 > 用于描述 MySQL 源表到 Doris 目标表之间的映射关系。
 >
-> **语法:**
-> ```sql
-> FROM mysql_db.src_tbl INTO des_tbl [columns_mapping]
-> ```
 >
-> - **`mysql_db.src_tbl`**  
+> - **`<mysql_db.src_tbl>`**  
 >   指定 MySQL 端的数据库及源表。
 >
-> - **`des_tbl`**  
+> - **`<des_tbl>`**  
 >   指定 Doris 端的目标表。目标表必须为 Unique 表，并且需开启表的 batch delete 功能（详见 `help alter table` 中的“批量删除功能”）。
 >
-> - **`[columns_mapping]`** (可选)  
+> - **`<columns_mapping>`** (可选)  
 >   指定 MySQL 源表和 Doris 目标表之间的列映射关系。如果不指定，FE 会默认按照列顺序一一对应。  
 >   > **注意：** 不支持使用 `col_name = expr` 的形式指定列映射。
 >   >
@@ -74,16 +68,6 @@ binlog_desc
 **3. `<binlog_desc>`**
 
 > 用来描述远端数据源，目前仅支持 Canal 数据源。
->
-> **语法:**
-> ```sql
-> FROM BINLOG
-> (
->     "key1" = "value1",
->     "key2" = "value2",
->     ...
-> )
-> ```
 >
 > 对于 Canal 数据源，相关属性均以 `canal.` 为前缀：
 >
@@ -100,6 +84,14 @@ binlog_desc
 - 当前数据同步作业仅支持连接 Canal 服务器。
 - 同一数据库中，相同 `<job_name>` 的作业在同一时刻只能有一个运行。
 - Doris 目标表必须为 Unique 表，且需启用 batch delete 功能，否则数据同步可能失败。
+
+## 权限控制
+
+执行此 SQL 命令的用户必须至少具有以下权限：
+
+| 权限     | 对象         | 说明                                      |
+|---------|------------|-----------------------------------------|
+| LOAD_PRIV  | 表 | 该操作只能由拥有导入表的 LOAD_PRIV 权限的用户或角色执行。 |
 
 ## 示例
 

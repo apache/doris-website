@@ -31,15 +31,19 @@ Pause a running resident data synchronization job in a database identified by `j
 ## Syntax
 
 ```sql
-PAUSE SYNC JOB [db.]job_name
+PAUSE SYNC JOB [<db>.]<job_name>
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the synchronization job to be paused.  
-> If a database is specified using the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
+> If a database is specified using the `[<db.>]` prefix, the job is located in that database; otherwise, the current database is used.
+
+## Access Control Requirements  
+
+Any user or role can perform this operation.
 
 ## Example
 

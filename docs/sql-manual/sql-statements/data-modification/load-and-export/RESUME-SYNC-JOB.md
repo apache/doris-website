@@ -31,15 +31,21 @@ Resume a resident data synchronization job that has been suspended in a database
 ## Syntax
 
 ```sql
-RESUME SYNC JOB [db.]job_name
+RESUME SYNC JOB [<db>.]<job_name>
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the data synchronization job to be resumed.  
-> If a database is specified with the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
+> If a database is specified with the `[<db>.]` prefix, the job is located in that database; otherwise, the current database is used.
+
+
+## Access Control Requirements  
+
+Any user or role can perform this operation.
+
 
 ## Examples
 

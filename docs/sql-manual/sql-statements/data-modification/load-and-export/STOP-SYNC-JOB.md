@@ -31,15 +31,21 @@ Stop a running resident data synchronization job in a database by specifying its
 ## Syntax
 
 ```sql
-STOP SYNC JOB [db.]job_name
+STOP SYNC JOB [<db>.]<job_name>
 ```
 
 ## Required Parameters
 
-**1. `job_name`**
+**1. `<job_name>`**
 
 > Specifies the name of the data synchronization job to be stopped.  
 > If a database is specified with the `[db.]` prefix, the job is located in that database; otherwise, the current database is used.
+
+
+## Access Control Requirements  
+
+Any user or role can perform this operation.
+
 
 ## Example
 

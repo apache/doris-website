@@ -34,13 +34,11 @@ Users can view the status of synchronization jobs via [SHOW SYNC JOB](../../../.
 ## Syntax
 
 ```sql
-CREATE SYNC [db.]job_name
-(
-  channel_desc,
-  channel_desc,
-  ...
-)
-binlog_desc
+CREATE SYNC [<db>.]<job_name>
+(<channel_desc> [, ... ])
+  : FROM <mysql_db>.<src_tbl> INTO <des_tbl> [ <columns_mapping> ]
+<binlog_desc>
+  : FROM BINLOG ("<key>" = "<value>" [, ... ])
 ```
 
 ## Required Parameters
@@ -53,28 +51,14 @@ binlog_desc
 
 > Describes the mapping relationship between the MySQL source table and the Doris target table.
 >
-> **Syntax:**
-> ```sql
-> FROM mysql_db.src_tbl INTO des_tbl [columns_mapping]
-> ```
 >
-> - **`mysql_db.src_tbl`**: Specifies the source table in MySQL (including the database name).
-> - **`des_tbl`**: Specifies the target table in Doris. The target table must be unique, and its batch delete function must be enabled.
-> - **`[columns_mapping]`** (Optional): Defines the mapping between columns of the source and target tables. If omitted, columns are mapped one-to-one in order. Note that the form `col_name = expr` is not supported.
+> - **`<mysql_db.src_tbl>`**: Specifies the source table in MySQL (including the database name).
+> - **`<des_tbl>`**: Specifies the target table in Doris. The target table must be unique, and its batch delete function must be enabled.
+> - **`<columns_mapping>`** (Optional): Defines the mapping between columns of the source and target tables. If omitted, columns are mapped one-to-one in order. Note that the form `col_name = expr` is not supported.
 
 **3. `<binlog_desc>`**
 
 > Describes the remote data source for the Binlog.
->
-> **Syntax:**
-> ```sql
-> FROM BINLOG
-> (
->     "key1" = "value1",
->     "key2" = "value2",
->     ...
-> )
-> ```
 >
 > The properties for the Canal data source (keys prefixed with `canal.`) include:
 >
@@ -91,6 +75,13 @@ binlog_desc
 - Currently, the synchronization job only supports connecting to a Canal server.
 - Only one synchronization job with the same `<job_name>` can run concurrently within a database.
 - The target table specified in `<channel_desc>` must have its batch delete function enabled.
+
+## Access Control Requirements
+
+Users executing this SQL command must have at least the following privileges:
+| Privilege | Object | Notes                |
+| :---------------- | :------------- | :---------------------------- |
+| LOAD_PRIV        | Table   | This operation can only be performed by users or roles who have the LOAD_PRIV privilege for the imported table. |
 
 ## Examples
 

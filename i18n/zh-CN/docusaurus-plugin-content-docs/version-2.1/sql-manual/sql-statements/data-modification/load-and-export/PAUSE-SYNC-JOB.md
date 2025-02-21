@@ -31,8 +31,17 @@ under the License.
 ## 语法
 
 ```sql
-PAUSE SYNC JOB [db.]job_name
+PAUSE SYNC JOB [<db>.]<job_name>
 ```
+
+## 必选参数
+**1. `<job_name>`**
+> 要暂停的同步作业的名称。
+> 如果指定了 `[<db.>]` 前缀，作业将在该数据库中查找；否则，将使用当前数据库。
+
+## 权限控制
+
+任意用户或角色都可以执行该操作
 
 ## 示例
 

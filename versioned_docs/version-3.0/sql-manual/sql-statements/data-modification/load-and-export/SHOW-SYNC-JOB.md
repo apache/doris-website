@@ -34,6 +34,13 @@ This statement displays the status of resident data synchronization jobs in all 
 SHOW SYNC JOB [FROM db_name]
 ```
 
+## Access Control Requirements  
+Users executing this SQL command must have at least one of the following privileges:  
+
+| Privilege                                                                 | Object          | Notes                                   |  
+| :------------------------------------------------------------------------ | :------------- | :------------------------------------- |  
+| ADMIN_PRIV, SELECT_PRIV, LOAD_PRIV, ALTER_PRIV, CREATE_PRIV, DROP_PRIV, SHOW_VIEW_PRIV | Database `db_name` | This operation requires at least one of the listed privileges on the target database. |  
+
 ## Examples
 
 1. Display the status of all data synchronization jobs in the current database.

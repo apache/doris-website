@@ -34,6 +34,11 @@ This statement is used to synchronize metadata for non-master Frontend (FE) node
 SYNC;
 ```
 
+## Access Control Requirements  
+
+Any user or role can perform this operation.
+
+
 ## Examples
 
 Synchronize metadata:
