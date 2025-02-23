@@ -1,7 +1,7 @@
 ---
 {
-    "title": "字典表（实验性功能）",
-    "language": "zh-CN"
+    "title": "Dictionary Table(Experimental)",
+    "language": "en"
 }
 ---
 
@@ -22,28 +22,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
+## Overview
 
-字典表(Dictionary) 是 Doris 提供的一种用于加速 JOIN 操作的特殊数据结构。它在普通表的基础上建立，将原表的对应列视为键值关系，将这些列的全部数据预先加载到内存中，实现快速的查找操作，从而提升查询性能。特别适用于需要频繁进行键值查找的场景。
+Dictionary is a special data structure provided by Doris to speed up JOIN operations. It is built on the basis of ordinary tables, treating the corresponding columns of the original table as key-value relationships, and pre-loading all the data of these columns into memory to achieve fast lookup operations, thus improving query performance. It is especially suitable for scenarios that require frequent key-value lookups.
 
-自然地，作为键值查找解决方案，字典表不容许重复 Key 的出现。
+Naturally, as a key-value lookup solution, dictionary tables do not allow duplicate keys.
 
-## 使用场景
+## Usage Scenario
 
-字典表主要适用于以下场景：
+The dictionary table is mainly suitable for the following scenarios:
 
-1. 需要频繁进行键值查找的场景
-2. 维度表较小，可以完全加载到内存中
-3. 数据更新频率相对较低的场景
+1. Scenarios where frequent key-value lookups are required
+2. Dimension tables are small and can be fully loaded into memory
+3. Scenarios with relatively low frequency of data updates
 
-原本需要使用 LEFT OUTER JOIN 实现的键值查找，在字典表的帮助下可以完全省去 JOIN 的开销，转变为普通的函数调用。以下是一个完整的场景示例：
+The key-value lookup that originally needed to be implemented using LEFT OUTER JOIN can be completely eliminated with the help of the dictionary table, transforming into a normal function call. Here is a complete scenario example:
 
-### 场景示例
+### Scenario Example
 
-在电商系统中，订单表(`orders`, 事实表)记录了大量交易数据，需要经常关联商品表(`products`, 维度表)来获取商品的详细信息。
+In e-commerce systems, the order table (`orders`, fact table) records a large amount of transaction data, and it needs to frequently associate with the product table (`products`, dimension table) to obtain detailed product information.
 
 ```sql
--- 商品维度表
+-- Product Dimension Table
 CREATE TABLE products (
     product_id BIGINT NOT NULL COMMENT "商品ID",
     product_name VARCHAR(128) NOT NULL COMMENT "商品名称",
@@ -54,7 +54,7 @@ CREATE TABLE products (
 )
 DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
 
--- 订单事实表
+-- Order Fact Table
 CREATE TABLE orders (
     order_id BIGINT NOT NULL COMMENT "订单ID",
     product_id BIGINT NOT NULL COMMENT "商品ID",
@@ -65,7 +65,6 @@ CREATE TABLE orders (
 )
 DISTRIBUTED BY HASH(`order_id`) BUCKETS 32;
 
--- 插入示例数据
 INSERT INTO products VALUES
 (1001, 'iPhone 15 Pro 256G 黑色', 'Apple', '手机数码', 8999.00, '2024-01-01 00:00:00'),
 (1002, 'MacBook Pro M3 Max', 'Apple', '电脑办公', 19999.00, '2024-01-01 00:00:00'),
@@ -77,10 +76,10 @@ INSERT INTO orders VALUES
 (10003, 1003, 88001, 2, 1899.00, '2024-02-22 14:20:00');
 ```
 
-以下是一组典型的查询，为了统计各品类的订单量和销售额，以往我们需要使用 LEFT OUTER JOIN 来完成从商品表中提取商品信息的功能。
+The following is a set of typical queries. In order to count the order volume and sales of each category, in the past, we needed to use LEFT OUTER JOIN to achieve the function of extracting product information from the product table.
 
 ```sql
--- 统计各品类的订单量和销售额
+-- Analyze the order volume and sales revenue of each category
 SELECT 
     p.category_name,
     p.brand_name,
@@ -104,12 +103,12 @@ ORDER BY total_amount DESC;
 +---------------+------------+-------------+----------------+--------------+
 ```
 
-在这类查询中，我们需要频繁地通过 `product_id` 查询商品的其他信息，这本质上是一种 KV 查找操作。
+In such queries, we need to frequently retrieve other information about products using the `product_id`, which essentially involves a KV lookup operation.
 
-设定好键值对关系，预先构建对应的字典表，可以完全将之前的 JOIN 操作转换为更轻的键值查找，提升 SQL 执行效率：
+By setting up the key-value pair relationships and pre-building the corresponding dictionary tables, we can completely convert previous JOIN operations into lighter key-value lookups, thereby improving SQL execution efficiency:
 
 ```sql
--- 创建商品信息字典
+-- Create product information dictionary
 CREATE DICTIONARY product_info_dict USING products
 (
     product_id KEY,
@@ -120,11 +119,11 @@ CREATE DICTIONARY product_info_dict USING products
 )
 LAYOUT(HASH_MAP)
 PROPERTIES(
-    'data_lifetime'='300'  -- 考虑到商品信息变更频率，设置5分钟更新一次
+    'data_lifetime'='300'  -- Considering the frequency of changes in product information, set the update interval to 5 minutes.
 );
 ```
 
-原始查询借助字典表将 JOIN 操作转换为了 `dict_get` 函数查找，该函数为较轻的 KV 查找操作：
+The original query converts the JOIN operation into a `dict_get` function lookup using a dictionary table, which is a lighter KV lookup operation:
 
 ```sql
 SELECT
@@ -151,9 +150,9 @@ ORDER BY total_amount DESC;
 +---------------+------------+-------------+----------------+--------------+
 ```
 
-## 字典表定义
+## Dictionary Table Definition
 
-### 基本语法
+### Basic Grammar
 
 ```sql
 CREATE DICTIONARY <dict_name> USING <source_table>
@@ -173,36 +172,37 @@ PROPERTIES(
 );
 ```
 
-其中：
+Among:
 
-- `<dict_name>`：字典表的名字
-- `<source_table>`：源数据表
-- `<key_column>`：作为键的列在源表中的列名
-- `<value_column>`：作为值的列在源表中的列名
-- `<layout_type>`：字典表的存储布局类型，详见后文。
-- `<priority_item_key>`：表的某项属性名
-- `<priority_item_value>`：表的某项属性取值
+- `<dict_name>`: The name of the dictionary table
+- `<source_table>`: Source data table
+- `<key_column>`: The column name in the source table that serves as a key
+- `<value_column>`: The column name in the source table that serves as a value
+- `<layout_type>`: The storage layout type of the dictionary table, see later for details.
+- `<priority_item_key>`: The name of a certain property of a table
+- `<priority_item_value>`: The value of a certain property of a table
 
-`<key_column>` 和 `<value_column>` 至少各有一个。`<key_column>` 不必出现在 `<value_column>` 前。
+`<key_column>` and `<value_column>` each must have at least one. `<key_column>` does not have to appear before `<value_column>`.
 
-### 布局类型
+### Layout Type
 
-目前支持两种布局类型：
+Currently, two layout types are supported:
 
-- `HASH_MAP`：基于哈希表的实现，适用于一般的键值查找场景
-- `IP_TRIE`：基于 Trie 树的实现，专门优化用于 IP 地址类型的查找。Key 列需要为 CIDR 表示法表示的 IP 地址，查询时依 CIDR 表示法匹配。
+- `HASH_MAP`: An implementation based on a hash table, suitable for general key-value lookup scenarios.
 
-### 属性
+- `IP_TRIE`: An implementation based on a Trie tree, specifically optimized for IP address type lookups. The Key column needs to be represented in CIDR notation for IP addresses, and queries are matched according to CIDR notation.
 
-|属性名|值类型|含义|必须项|
+### Property
+
+|Property Name|Value Type|Meaning|Required|
 |-|-|-|-|
-|`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值时，将会自动发起重新导入，导入逻辑详见[自动导入](#自动导入)|是|
-|`skip_null_key`|布尔值|向字典导入时如果 Key 列中出现 null 值，如果该值为 `true`，跳过该行数据，否则报错。缺省值为 `false`|否|
+|`date_lifetime`|Integer, unit in seconds|Data validity period. When the time since the last update of this dictionary exceeds this value, it will automatically initiate a import. The import logic is detailed in [Automatic Import](#automatic-import)|Yes|
+|`skip_null_key`|Boolean|If the Key column contains null values when load to a dictionary, skip the row if the value is `true`, otherwise raise an error. The default value is `false`|No|
 
-### 示例
+### Example
 
 ```sql
--- 创建源数据表
+-- Create source data table
 CREATE TABLE source_table (
     id INT NOT NULL,
     city VARCHAR(32) NOT NULL,
@@ -210,7 +210,7 @@ CREATE TABLE source_table (
 ) ENGINE=OLAP
 DISTRIBUTED BY HASH(id) BUCKETS 1;
 
--- 创建字典表
+-- Create dictionary table
 CREATE DICTIONARY city_dict USING source_table
 (
     city KEY,
@@ -220,97 +220,97 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-基于该表，我们可以使用字典 `city_dict` 通过 `dict_get` 函数，基于 `source_table` 的 `city` 值查询对应的 `id`。
+Based on the table, we can use the dictionary `city_dict` through the `dict_get` function to query the corresponding `id` based on the `city` value in `source_table`.
 
-### 使用限制
+### Usage Restrictions
 
-1. Key 列
+1. Key Columns
 
-   - IP_TRIE 类型字典的 Key 列必须为 Varchar 或 String 类型，**Key 列中的值必须为 CIDR 格式**。
-   - IP_TRIE 类型的字典只允许出现一个 Key 列。
-   - HASH_MAP 类型字典的 Key 列支持所有简单类型（即排除所有 Map、Array 等嵌套类型）。
-   - 作为 Key 列的列，**在源表中不得存在重复值**，否则字典导入数据时将报错。
+   - The Key column of the IP_TRIE type dictionary must be of Varchar or String type, **the values in the Key column must be in CIDR format**.
+   - The dictionary of the IP_TRIE type allows only one Key column.
+   - The Key column of the HASH_MAP type dictionary supports all simple types (i.e., excluding all nested types such as Map, Array, etc.).
+   - As a Key column, **there must not be duplicate values in the source table**, otherwise an error will be reported when importing dictionary data.
 
-2. Null 值处理
+2. Null Value Handling
 
-   - 字典的所有列都可以是 Nullable 列，但 Key 列不应当实际出现 null 值。如果出现，行为取决于[属性](#属性)当中的 `skip_null_key`。
+   - All columns in the dictionary can be nullable columns, but the Key column should not actually appear with null values. If it does, the behavior depends on the `skip_null_key` in the [Property](#property).
 
-## 使用与管理
+## Use and Management
 
-### 导入（刷新）数据
+### Import (Refresh) Data
 
-字典支持自动与手动导入。字典的导入也称为”刷新“操作。
+The dictionary supports automatic and manual import. "import" is also called "refresh" here.
 
-#### 自动导入
+#### Automatic Import
 
-自动导入发生在以下时机：
+Automatic import occurs at the following times:
 
-1. 字典建立以后
-2. 字典数据过期时（见[属性](#属性)）
-3. BE 状态显示丢失该字典数据（有新 BE 上线，或旧 BE 重启等均有可能造成）
+1. After the dictionary is established
+2. When the dictionary data expires (see [Property](#property))
+3. When the BE state shows the loss of the dictionary data (new BE going online, or old BE restarting, etc.)
 
-#### 手动导入
+#### Manual Import
 
-Doris 支持通过以下命令手动刷新字典的数据：
+Doris supports manually refreshing dictionary data through the following commands:
 
 ```sql
 REFRESH DICTIONARY <dict_name>;
 ```
 
-其中 `<dict_name>` 为要导入数据的字典名。
+Among them, `<dict_name>` is the name of the dictionary to be imported.
 
-#### 导入注意事项
+#### Attention Points of Import
 
-1. 只有导入数据后的字典才可以查询。
-2. 如果导入时 Key 列具有重复值，导入事务会失败。
-3. 如果当前已经有导入事务正在进行（字典 Status 为 `LOADING` ），则手动进行的导入会失败。请等待正在进行的导入完成后操作。
+1. Only dictionaries that have imported data can be queried.
+2. If the Key column has duplicate values during import, the import transaction will fail.
+3. If there is already an ongoing import transaction at the moment (dictionary Status is `LOADING`), the manual import will fail. Please wait until the ongoing import is completed before proceeding.
 
-### 查询字典
+### Query Dictionary
 
-可以分别使用 `dict_get` 和 `dict_get_many` 函数进行单一 Key、Value 列和多 Key、Value 列的字典表查询。
+You can use the `dict_get` and `dict_get_many` functions for dictionary table queries of single Key, Value list and multi Key, Value list respectively.
 
-首次查询请待字典导入完成以后进行。
+Please wait until the dictionary is imported before performing the first query to a dictionary.
 
-#### 语法
+#### Grammar
 
 ```sql
 dict_get("<db_name>.<dict_name>", "<query_column>", <query_key_value>);
 dict_get_many("<db_name>.<dict_name>", <query_columns>, <query_key_values>);
 ```
 
-其中：
+Among:
 
-- `<db_name>` 为字典所在的 database 名
-- `<dict_name>` 为字典名
-- `<query_column>` 为要查询的 value 列列名，类型为 `VARCHAR`，**必须为常量**
-- `<query_columns>` 为要查询的所有 value 列列名，类型为 `ARRAY<VARCHAR>`，**必须为常量**
-- `<query_key_value>` 为用来查询的 key 列数据
-- `<query_key_values>` 为一个包含该字典**所有 key 列**的需查询数据的 STRUCT
+- `<db_name>` is the name of the database where the dictionary is located.
+- `<dict_name>` is the name of the dictionary
+- `<query_column>` is the column name for the value column to be queried, with a type of `VARCHAR`, **must be a constant**
+- `<query_columns>` are the column names for all value columns to be queried, with a type of `ARRAY<VARCHAR>`, **must be constants**.
+- `<query_key_value>` is data for key columns used in queries
+- `<query_key_values>` is a STRUCT that contains all Key columns of the data to be queried in a dictionary.
 
-`dict_get` 的返回类型为 `<query_column>` 对应的字典列类型。
-`dict_get_many` 的返回类型为 `<query_columns>` 对应的各个字典列类型所组成的 [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT)。
+The return type of `dict_get` is the dictionary column type corresponding to `<query_column>`.
+The return type of `dict_get_many` is a [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT) corresponding to the types of various dictionary columns in `<query_columns>`。
 
-#### 查询示例
+#### Query Example
 
-该语句查询 `test_db` database 内的字典 `city_dict`，查询 key 列值为 "Beijing" 时的对应 `id` 列值：
+The statement queries the dictionary `city_dict` within the `test_db` database, for the corresponding `id` value when the `key` column value is "Beijing":
 
 ```sql
 SELECT dict_get("test_db.city_dict", "id", "Beijing");
 ```
 
-该语句查询 `test_db` database 内的字典 `single_key_dict`，查询 key 列值为 1 时的对应 `k1` 和 `k3` 列值：
+The statement queries the dictionary `single_key_dict` within the `test_db` database, for the corresponding values of `k1` and `k3` when the value of the `key` column is 1:
 
 ```sql
 SELECT dict_get_many("test_db.single_key_dict", ["k1", "k3"], struct(1));
 ```
 
-该语句查询 `test_db` database 内的字典 `multi_key_dict`，查询 2 个 key 列值依次为 2 和 'ABC' 时的对应 `k2` 和 `k3` 列值：
+The statement queries the dictionary `multi_key_dict` within the `test_db` database, for the corresponding `k2` and `k3` column values when the 2 key column values are 2 and 'ABC' in sequence:
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 ```
 
-例如建表语句如下：
+For example, the table creation statement is as follows:
 
 ```sql
 create table if not exists multi_key_table(
@@ -332,47 +332,47 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-则上述语句
+Then the above statement
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 ```
 
-的返回值类型为 `STRUCT<float, varchar>`。
+returns type of `STRUCT<float, varchar>`。
 
-#### 查询注意事项
+#### Attention Points of Query
 
-1. 当查询的 Key 数据不存在于字典表内，**或 Key 数据为 null 时**，返回 null。
-2. IP_TRIE 类型进行查询时，**`<query_key_value>` 类型必须为 `IPV4` 或 `IPV6`**。
-3. 使用 IP_TRIE 类型字典时，key 列 `<key_column>` 内的数据和查询时使用的 `<query_key_value>` 同时支持 `IPV4` 和 `IPV6` 格式数据。
+1. When the query Key data does not exist in the dictionary table, **or the Key data is null**, return null.
+2. For IP_TRIE type queries, **`<query_key_value>` type must be `IPV4` or `IPV6`**.
+3. When using an IP_TRIE type dictionary, the data in the Key column `<key_column>` and the `<query_key_value>` used for querying both support `IPV4` and `IPV6` format data.
 
-### 字典表管理
+### Dictionary Management
 
-字典表支持以下管理和查看语句：
+The dictionary table supports the following management and viewing statements:
 
-1. 查看当前 database 内所有字典表状态
+1. Check the status of all dictionary tables in the current database.
 
     ```sql
     SHOW DICTIONARIES [LIKE <LIKE_NAME>];
     ```
 
-2. 查看特定字典定义
+2. Check the definition of a specific dictionary
 
     ```sql
     DESC DICTIONARY <dict_name>;
     ```
 
-3. 删除字典表
+3. Delete dictionary table
 
     ```sql
     DROP DICTIONARY <dict_name>;
     ```
 
-    删除字典表后，被删除的字典可能不会立即从 BE 中移除。
+    After deleting the dictionary table, the deleted dictionary may not be removed from BE immediately.
 
-### 状态显示
+### Status Display
 
-通过 `SHOW DICTIONARIES` 语句，可以查看字典对应的基表，当前数据版本号，以及对应在 FE 和 BE 的状态。
+By using the `SHOW DICTIONARIES` statement, you can view the base table corresponding to the dictionary, the current data version number, and the corresponding status in FE and BE:
 
 ```sql
 > SHOW DICTIONARIES;
@@ -390,25 +390,25 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 +--------------+----------------+----------------------------------------------+---------+--------+------------------------------------+------------------------------+
 ```
 
-其中：
+Among:
 
-1. `Version` 代表数据版本号，每次数据导入时将会自增 1。
+1. `Version` represents the data version number, which will increment by 1 each time data is imported.
 
-2. `Status` 代表字典状态，含义如下：
+2. `Status` represents the dictionary status, meaning as follows:
 
-    |状态名|含义|
+    |Status Name|Meaning|
     |-|-|
-    |NORMAL|字典当前正常|
-    |LOADING|字典当前正在进行导入|
-    |OUT_OF_DATE|字典当前数据已过期|
+    |NORMAL|The dictionary is currently normal|
+    |LOADING|The dictionary is currently importing|
+    |OUT_OF_DATE|The current dictionary data has expired|
 
-    字典正在导入时，不能再次对其进行导入。
+    The dictionary cannot be imported again while it is being imported.
 
-3. `DataDistribution` 表示在各个 BE 的当前状态，包括版本号及内存占用大小(KB)。
+3. `DataDistribution` represents the current status of each BE, including the version number and memory usage size (KB).
 
-4. `LastUpdateResult` 表示上一次导入（包括自动及手动）的结果，如果有异常，将会在此处显示详细信息。
+4. `LastUpdateResult` indicates the result of the last import (including automatic and manual), and detailed error message will be displayed here if there are any exceptions.
 
-如需查看字典表的列定义，可以通过 `DESC DICTIONARY` 进行。例如：
+To view the column definitions of the dictionary table, you can use `DESC DICTIONARY`. For example:
 
 ```sql
 > DESC DICTIONARY city_code_dict;
@@ -420,41 +420,42 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 +-------------+-------------+------+-------+
 ```
 
-## 注意事项
+## Cautionary Notes
 
-1. 数据一致性
+1. Data consistency
 
-   - 字典每次刷新都将产生新的版本，查询时如 BE 记录的版本与 FE 版本不一致，查询将会失败。
-   - Doris 不会保持字典表与基表的数据强一致性。用户需要妥善设置字典的 `data_lifetime` 以期自动更新，并在必要时根据业务逻辑辅以手动更新。
-   - 当源表以任何方式被删除时，对应的字典表也会被自动删除。
+   - Each refresh of the dictionary will generate a new version. If the version of the BE record doesn't match the FE version during the query, the query will fail.
+   - Doris does not maintain strong data consistency between dictionary tables and base tables. Users need to properly set the `data_lifetime` of the dictionary to achieve automatic updates, and manually update when necessary based on business logic.
+   - When the source table is deleted by any way, the corresponding dictionary table will also be automatically deleted.
 
-2. 性能考虑
+2. Performance Considerations
 
-   - 字典表适用于相对静态的数据，如维表数据等。
-   - 字典表为纯内存表，全量数据存储于所有 BE 内存中，占用较大，需要权衡内存使用和查询性能，选择合适的表派生字典。
+   - Dictionary tables are suitable for relatively static data, such as dimension table data.
 
-3. 最佳实践
+   - Dictionary tables are pure in-memory tables, with full data stored in the memory of all BEs, may occupying a large amount, and it is necessary to weigh memory usage and query performance to choose an appropriate table to derive dictionary.
 
-    1. 合理选择键值列：
+3. Best Practices
 
-       - 选择基数适中的列作为键
+   1. Reasonable Selection of Key Value Columns:
 
-    2. 布局选择：
+      - Choose columns with a moderate cardinality as keys
 
-       - 对于一般场景使用 HASH_MAP 布局
-       - 对于 IP 地址的范围匹配场景使用 IP_TRIE 布局
+   2. Layout Selection:
 
-    3. 状态管理：
+      - Use HASH_MAP layout for general scenarios
+      - Use IP_TRIE layout for IP address range matching scenarios
 
-       - 定期监控字典表的内存使用情况
-       - 选取合适的数据更新间隔，并在业务侧明确数据过期时手动刷新字典。
+   3. State Management:
 
-## 完整示例
+      - Regularly monitor the memory usage of dictionary tables
+      - Select an appropriate data update interval and manually refresh the dictionary when data expires on the business side
+
+## Complete Example
 
 1. HASH_MAP
 
     ```sql
-    -- 创建源数据表
+    -- Create source data table
     CREATE TABLE cities (
         city_id INT NOT NULL,
         city_name VARCHAR(32) NOT NULL,
@@ -462,13 +463,12 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     ) ENGINE=OLAP
     DISTRIBUTED BY HASH(city_id) BUCKETS 1;
 
-    -- 插入数据
     INSERT INTO cities VALUES
     (1, 'Beijing', 'BJ'),
     (2, 'Shanghai', 'SH'),
     (3, 'Guangzhou', 'GZ');
 
-    -- 创建字典表
+    -- Create dictionary table
     CREATE DICTIONARY city_code_dict USING cities
     (
         city_name KEY,
@@ -477,7 +477,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     LAYOUT(HASH_MAP)
     PROPERTIES('data_lifetime' = '600');
 
-    -- 使用字典表查询
+    -- Query using a dictionary table
     SELECT dict_get("test_refresh_dict.city_code_dict", "region_code", "Beijing");
     ```
 
@@ -492,7 +492,6 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 2. IP_TRIE
 
     ```sql
-    -- 创建源数据表
     CREATE TABLE ip_locations (
         ip_range VARCHAR(30) NOT NULL,
         country VARCHAR(64) NOT NULL,
@@ -501,13 +500,12 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     ) ENGINE=OLAP
     DISTRIBUTED BY HASH(ip_range) BUCKETS 1;
 
-    -- 插入一些示例数据
     INSERT INTO ip_locations VALUES
     ('1.0.0.0/24', 'United States', 'California', 'Los Angeles'),
     ('1.0.1.0/24', 'China', 'Beijing', 'Beijing'),
     ('1.0.4.0/24', 'Japan', 'Tokyo', 'Tokyo');
 
-    -- 创建 IP 地址字典表
+    -- Create an IP address dictionary table
     CREATE DICTIONARY ip_location_dict USING ip_locations
     (
         ip_range KEY,
@@ -518,7 +516,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     LAYOUT(IP_TRIE)
     PROPERTIES('data_lifetime' = '600');
 
-    -- 查询 IP 地址对应的位置信息，依 CIDR 匹配。
+    -- Query the location information corresponding to the IP address, based on CIDR matching.
     SELECT
         dict_get("test_refresh_dict.ip_location_dict", "country", cast('1.0.0.1' as ipv4)) AS country,
         dict_get("test_refresh_dict.ip_location_dict", "region", cast('1.0.0.2' as ipv4)) AS region,
@@ -533,10 +531,10 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     +---------------+------------+-------------+
     ```
 
-3. HASH_MAP 多 Key / 多 Value
+3. HASH_MAP with multi-key / multi-value
 
     ```sql
-    -- 商品SKU维度表：包含了商品的基本属性
+    -- Product SKU Dimension Table: Includes basic product attributes
     CREATE TABLE product_sku_info (
         product_id INT NOT NULL COMMENT "商品ID",
         color_code VARCHAR(32) NOT NULL COMMENT "颜色编码",
@@ -550,7 +548,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     )
     DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
 
-    -- 订单明细表：记录实际的销售数据
+    -- Order Details Table: Records actual sales data
     CREATE TABLE order_details (
         order_id BIGINT NOT NULL COMMENT "订单ID",
         product_id INT NOT NULL COMMENT "商品ID",
@@ -561,7 +559,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     )
     DISTRIBUTED BY HASH(`order_id`) BUCKETS 10;
 
-    -- 插入商品SKU数据
+    -- Insert product SKU data
     INSERT INTO product_sku_info VALUES
     (1001, 'BLK', 'M', 'Nike运动T恤', '黑色', 'M码', 100, 199.00, '2024-02-23 10:00:00'),
     (1001, 'BLK', 'L', 'Nike运动T恤', '黑色', 'L码', 80, 199.00, '2024-02-23 10:00:00'),
@@ -572,7 +570,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     (1002, 'BLU', 'S', 'Adidas运动裤', '蓝色', 'S码', 55, 299.00, '2024-02-23 10:00:00'),
     (1002, 'BLU', 'M', 'Adidas运动裤', '蓝色', 'M码', 65, 299.00, '2024-02-23 10:00:00');
 
-    -- 插入订单数据
+    -- Insert order data
     INSERT INTO order_details VALUES
     (10001, 1001, 'BLK', 'M', 2, '2024-02-23 12:01:00'),
     (10002, 1001, 'WHT', 'L', 1, '2024-02-23 12:05:00'),
@@ -580,7 +578,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     (10004, 1001, 'BLK', 'L', 3, '2024-02-23 12:15:00'),
     (10005, 1002, 'BLU', 'M', 2, '2024-02-23 12:20:00');
 
-    -- 创建多键多值字典
+    -- Create a multi-key multi-value dictionary
     CREATE DICTIONARY sku_dict USING product_sku_info
     (
         product_id KEY,
@@ -595,7 +593,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     LAYOUT(HASH_MAP)
     PROPERTIES('data_lifetime'='300');
 
-    -- 使用dict_get_many的查询示例：获取订单详情及SKU信息
+    -- Query example using dict_get_many: Retrieve order details and SKU information
     WITH order_sku_info AS (
         SELECT 
             o.order_id,
@@ -635,16 +633,16 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
     +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
     ```
 
-## 错误排查
+## Troubleshooting
 
-1. 查询时报错 "can not find dict name"
+1. The query reports an error of "can not find dict name"
 
-    首先通过 `SHOW DICTIONARIES` 确认字典是否存在。如存在，重新刷新对应字典数据。
+    Firstly, confirm the existence of the dictionary by using `SHOW DICTIONARIES`. If it exists, refresh the corresponding dictionary data.
 
-2. 查询报错 "dict_get() only support IP type for IP_TRIE"
+2. The query reports an error of "dict_get() only support IP type for IP_TRIE"
 
-    确认 IP_TRIE 类型字典的 Key 列是否严格满足 CIDR 格式。
+    Confirm whether the Key column of the IP_TRIE type dictionary strictly meets to the CIDR format.
 
-3. 导入报错 "Version ID is not greater than the existing version ID for the dictionary."
+3. The importing reports an error of "Version ID is not greater than the existing version ID for the dictionary."
 
-    通过 `DROP DICTIONARY` 命令删除对应字典后重新建立并导入数据。
+    Delete the corresponding dictionary using the `DROP DICTIONARY` command, recreate it, and then import the data.
