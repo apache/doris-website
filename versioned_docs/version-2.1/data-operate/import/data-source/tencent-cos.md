@@ -28,7 +28,7 @@ Doris provides two ways to load files from Tencent Cloud COS:
 - Use S3 Load to load Tencent Cloud COS files into Doris, which is an asynchronous load method.
 - Use TVF to load Tencent Cloud COS files into Doris, which is a synchronous load method.
 
-## load with S3 Load
+## Load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 
