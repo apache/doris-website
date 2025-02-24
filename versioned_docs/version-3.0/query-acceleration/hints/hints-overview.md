@@ -31,7 +31,7 @@ Currently, Doris possesses excellent out-of-the-box capabilities. In most scenar
 
 ## Hint Classification
 
-Doris currently supports several types of hints, including leading hint, ordered hint, and distribute hint::
+Doris currently supports several types of hints, including leading hint, ordered hint, and distribute hint:
 
 - [Leading Hint](leading-hint.md)：Specifies the join order according to the order provided in the leading hint.
 - [Ordered Hint](leading-hint.md)：A specific type of leading hint that specifies the join order as the original text sequence.

@@ -98,7 +98,7 @@ Doris 中，每个 operator 根据用户设置的并发数并发执行，所以 
 
 ### Execution Profile
 
-区别于 Merged Profile，Execution Profile 展示的是具体的某个并发中的详细指标。依以 id=4 的这个 exchange operator 为例：
+区别于 Merged Profile，Execution Profile 展示的是具体的某个并发中的详细指标，以 id=4 的这个 exchange operator 为例：
 
 ```sql
 EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
