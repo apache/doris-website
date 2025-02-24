@@ -1,6 +1,6 @@
 --- 
 {
-    "title": ""High-Concurrency Point Query Optimization",
+    "title": "High-Concurrency Point Query Optimization",
     "language": "en"
 }
 --- 
