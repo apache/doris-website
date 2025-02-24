@@ -189,7 +189,7 @@ Download the corresponding binary installation package from the Apache Doris web
    Start the BE process with the following command:
 
    ```sql
-   apache-doris/fe/bin/start_be.sh --daemon
+   apache-doris/be/bin/start_be.sh --daemon
    ```
 
 3. **Register BE Node in the Cluster**
