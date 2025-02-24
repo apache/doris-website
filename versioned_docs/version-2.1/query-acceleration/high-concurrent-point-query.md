@@ -73,7 +73,7 @@ PROPERTIES (
 **Note:**
 1. `enable_unique_key_merge_on_write` should be enabled, since we need primary key for quick point lookup in storage engine
 
-2. when condition only contains primary key like `select * from tbl_point_query where k1 = 123`, such query will go through the short fast path
+2. when condition only contains primary key like `select * from tbl_point_query where key = 123`, such query will go through the short fast path
 
 3. `light_schema_change` should also been enabled since we rely on `column unique id` of each column when doing a point query.
 

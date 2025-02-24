@@ -230,7 +230,7 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_row_count'='3000');
 ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 ```
 
-## Troubleshooting Cache Invalidation
+## Troubleshooting Cache Miss
 
 The reasons for cache invalidation typically include the following:
 
