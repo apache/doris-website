@@ -48,7 +48,7 @@ RESUME [ALL] ROUTINE LOAD FOR <job_name>
 
 > Optional parameter. If ALL is specified, it indicates restarting all paused routine load jobs.
 
-## Privilege Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following privileges:
 

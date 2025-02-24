@@ -384,7 +384,7 @@ FROM <data_source> [<data_source_properties>]
 
 >     Comment information for the routine load task.
 
-## Privilege Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following privileges:
 

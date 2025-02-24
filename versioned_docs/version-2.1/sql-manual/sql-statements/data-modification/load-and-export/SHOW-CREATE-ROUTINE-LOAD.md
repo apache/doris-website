@@ -51,7 +51,7 @@ SHOW [ALL] CREATE ROUTINE LOAD for <load_name>;
 
 > Optional parameter that represents retrieving all jobs, including historical jobs
 
-## Permission Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following permission:
 

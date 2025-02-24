@@ -45,7 +45,7 @@ STOP ROUTINE LOAD FOR <job_name>;
 > - `<job_name>`: Stop a job with the specified name in the current database
 > - `<db_name>.<job_name>`: Stop a job with the specified name in the specified database
 
-## Permission Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following permission:
 

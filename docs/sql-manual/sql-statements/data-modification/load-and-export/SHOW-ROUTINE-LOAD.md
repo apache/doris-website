@@ -75,7 +75,7 @@ SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 | ErrorLogUrls         | URLs to view filtered data that failed quality checks       |
 | OtherMsg            | Other error messages                                        |
 
-## Permission Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following permission:
 

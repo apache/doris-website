@@ -83,7 +83,7 @@ FROM [<data_source>]
 > 
 > - KAFKA
 
-## Privilege Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following privileges:
 

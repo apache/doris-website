@@ -58,7 +58,7 @@ The return results include the following fields:
 | BeId                 | BE node ID executing this subtask                            |
 | DataSourceProperties | Starting offset of Kafka Partition that the subtask is preparing to consume. It's a Json format string. Key is Partition Id, Value is the starting offset for consumption |
 
-## Privilege Control
+## Access Control Requirements
 
 Users executing this SQL command must have at least the following privileges:
 
