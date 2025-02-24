@@ -27,7 +27,8 @@ under the License.
 返回一个空的 `quantile_state` 类型列。
 
 ## Syntax
-```
+
+```sql
 QUANTILE_STATE_EMPTY()
 ```
 
@@ -38,14 +39,15 @@ QUANTILE_STATE_EMPTY()
 ## Example
 
 ```sql
---------------
 select quantile_percent(quantile_union(quantile_state_empty()), 0)
---------------
+```
 
+结果为
+
+```text
 +-------------------------------------------------------------+
 | quantile_percent(quantile_union(quantile_state_empty()), 0) |
 +-------------------------------------------------------------+
 |                                                        NULL |
 +-------------------------------------------------------------+
-1 row in set (0.12 sec)
 ```

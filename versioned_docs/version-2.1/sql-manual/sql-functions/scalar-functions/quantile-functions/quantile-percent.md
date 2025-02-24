@@ -23,11 +23,15 @@ under the License.
 -->
 
 ## Description
+
 The `QUANTILE_PERCENT` function is used to calculate the quantile value for a given percentage. It takes two parameters: a quantile_state column and a constant floating-point number representing the percentage. The function returns a floating-point number that represents the quantile value at the given percentage position.
+
 ## Syntax
-```
+
+```sql
 QUANTILE_PERCENT(<quantile_state>, <percent>)
 ```
+
 ## Parameters
 
 | Parameter | Description |
@@ -42,7 +46,7 @@ A `Double` type to represent quantile.
 ## Example
 
 ```sql
-CREATE TABLE IF NOT EXISTS ${tableName_21} (
+CREATE TABLE IF NOT EXISTS quantile_state_agg_test (
          `dt` int(11) NULL COMMENT "",
          `id` int(11) NULL COMMENT "",
          `price` quantile_state QUANTILE_UNION NOT NULL COMMENT ""
@@ -59,15 +63,15 @@ INSERT INTO quantile_state_agg_test VALUES(20220201,1, to_quantile_state(-1, 204
             (20220201,1, to_quantile_state(2, 2048)),(20220201,1, to_quantile_state(3, 2048));
 
 SELECT dt, id, quantile_percent(quantile_union(price), 0) FROM quantile_state_agg_test GROUP BY dt, id ORDER BY dt, id
---------------
+```
 
+Result is 
+
+```text
 +----------+------+--------------------------------------------+
 | dt       | id   | quantile_percent(quantile_union(price), 0) |
 +----------+------+--------------------------------------------+
 | 20220201 |    0 |                                          1 |
 | 20220201 |    1 |                                         -1 |
 +----------+------+--------------------------------------------+
-2 rows in set (0.42 sec)
 ```
-
-

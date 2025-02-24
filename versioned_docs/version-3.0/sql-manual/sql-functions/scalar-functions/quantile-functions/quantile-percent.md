@@ -23,11 +23,15 @@ under the License.
 -->
 
 ## Description
+
 The `QUANTILE_PERCENT` function is used to calculate the quantile value for a given percentage. It takes two parameters: a quantile_state column and a constant floating-point number representing the percentage. The function returns a floating-point number that represents the quantile value at the given percentage position.
+
 ## Syntax
-```
+
+```sql
 QUANTILE_PERCENT(<quantile_state>, <percent>)
 ```
+
 ## Parameters
 
 | Parameter | Description |
@@ -67,5 +71,4 @@ SELECT dt, id, quantile_percent(quantile_union(price), 0) FROM quantile_state_ag
 | 20220201 |    0 |                                          1 |
 | 20220201 |    1 |                                         -1 |
 +----------+------+--------------------------------------------+
-2 rows in set (0.42 sec)
 ```
