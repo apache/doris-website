@@ -47,7 +47,7 @@ under the License.
 
 - SELECT 列表中，不能包含自增列，不能包含常量，不能有重复表达式，也不支持窗口函数。
 
-- 如果 SELECT 列表包含聚合函数，则聚合函数必须是根表达式（不支持 `sum(a) + 1`，支持 `sum(a + 1)`），且聚合函数之后不能有其他非聚合函数表达式（例如，`SELECT x, sum(a)` 可以，而 `SELECT sum(a), x` 不行）。
+- 如果 SELECT 列表包含聚合函数，则聚合函数必须是根表达式（不支持 `sum(a) + 1`，支持 `sum(a + 1)`），且聚合函数之后不能有其他非聚合函数表达式（例如，`SELECT x, sum(a)` 可以，而 `SELECT sum(a)`, x 不行）。
 
 - 如果删除语句的条件列在物化视图中存在，则不能进行删除操作。如果确实需要删除数据，则需要先将物化视图删除，然后才能删除数据。
 
@@ -77,7 +77,7 @@ distributed by hash(record_id)
 properties("replication_num" = "1");
 
 -- 插入数据
-insert into sales_records values(1,1,1,'2020-02-02',1);
+insert into sales_records values(1,1,1,"2020-02-02",1), (1,1,1,"2020-02-02",2);
 ```
 
 ### 创建物化视图
@@ -163,7 +163,6 @@ show create materialized view store_amt on sales_records;
 | sales_records | store_amt | create materialized view store_amt as select store_id, sum(sale_amt) from sales_records group by store_id |
 +---------------+-----------+------------------------------------------------------------------------------------------------------------+
 ```
-
 
 ### 查询物化视图
 
@@ -441,7 +440,6 @@ group by
 
 在 `explain` 的结果中，可以看到 `internal.test_db.advertiser_view_record.advertiser_uv chose`。也就是说，查询会直接扫描物化视图的数据，说明匹配成功。其次，对于 `user_id` 字段求 `count(distinct)` 被改写为求 `bitmap_union_count(to_bitmap)`，也就是通过 Bitmap 的方式来达到精确去重的效果。
 
-
 ### 示例二：匹配不同前缀索引
 
 **业务场景：** 匹配前缀索引
@@ -606,18 +604,6 @@ select
 from 
     d_table;
 ```
-
-## 常见问题
-
-当创建好物化视图后，如果发现没有匹配的数据，可能是因为物化视图还处于构建过程中。此时，可以使用以下命令来查看物化视图的构建状态：
-
-```sql
-show alter table materialized view from test_db;
-```
-
-如果查询结果显示`status`字段不是`FINISHED`，那么需要等待，直到状态变为`FINISHED`后，物化视图才会变得可用。
-
-
 
 ## 常见问题
 
