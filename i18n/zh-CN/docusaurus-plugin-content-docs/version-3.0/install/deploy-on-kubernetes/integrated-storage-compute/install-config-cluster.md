@@ -348,7 +348,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 [`meta_dir`](../../../../admin-manual/config/fe-config.md#meta_dir) 或者 [`sys_log_dir`](../../../../admin-manual/config/fe-config.md#sys_log_dir) 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir`请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置
@@ -378,7 +378,7 @@ spec:
 
 - 多存储路径持久化
 
-  如果自定义配置中通过 [`storage_root_path`](../../../../admin-manual/config/be-config.md#storage_root_path) 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下配置：
+  如果自定义配置中通过 `storage_root_path` 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下配置：
 
   ```yaml
   beSpec:
@@ -635,7 +635,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 
 ## 配置管理用户名和密码
 
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
 DorisCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：
 
@@ -651,7 +651,7 @@ Doris 支持将 root 的用户以密文的形式配置在 `fe.conf` 中，在 Do
 
 #### 第 1 步：构建 root 加密密码
 
-Doris 支持密文的方式在 [FE 的配置文件](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用两阶段 SHA-1 加密实现。代码实现示例如下：
+Doris 支持密文的方式在 [FE 的配置文件](../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password)中设置 root 用户的密码，密码的加密方式是采用两阶段 SHA-1 加密实现。代码实现示例如下：
 
 Java 代码实现：
 
@@ -802,7 +802,7 @@ func main() {
 
 ### 集群部署后设置 root 用户密码
 
-Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
+Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#权限类型) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
 
 #### 第 1 步：新建拥有 Node_priv 权限用户
 
@@ -876,3 +876,25 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。
 
+## 配置启动配置修改后自动重启服务
+Doris 的服务通过配置文件的方式指定启动参数。目前大部分参数可以通过相应的 web 接口进行修改并实时生效，一些不能通过 web 接口修改的参数需要重启服务生效。Doris Operator 的 25.1.0 版本后提供修改服务启动参数自动重启生效的能力。
+启动参数修改并自动重启配置如下：
+```yaml
+spec:
+  enableRestartWhenConfigChange: true
+```
+如果 DorisCluster 资源含有上述配置，Doris Operator 会监测 `DorisCluster` 资源部署的集群依赖的启动配置(通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](#定制化启动配置))是否发生变化，如果集群服务的启动配置发生变化，Doris Operator 会自动重启相应服务来使配置生效。  
+FE 的使用范例如下：
+1. DorisCluster 部署规格如下：
+```yaml
+spec:
+  enableRestartWhenConfigChange: true
+  feSpec:
+    image: apache/doris:fe-2.1.8
+    replicas: 1
+    configMapInfo:
+      configMapName: fe-configmap
+```
+2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。
+
+当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值(为 FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
