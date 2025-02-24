@@ -28,7 +28,7 @@ under the License.
 
 ## 使用场景
 
-在实际的业务场景中，随着业务数据量越来越大，对数据去重的压力也越来越大，当数据达到一定规模之后，使用精准去重的成本也越来越高。HLL 的特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1%—2% 左右，误差与数据集大小以及所采用的哈希函数有关。
+在实际的业务场景中，随着业务数据量越来越大，数据去重的压力也随之增大，当数据达到一定规模之后，使用精准去重的成本也越来越高。HLL 的特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1%—2% 左右，误差与数据集大小以及所采用的哈希函数有关。
 
 在业务可以接受的情况下，通过近似算法来实现快速去重降低计算压力是一个非常好的方式。
 
@@ -36,7 +36,7 @@ under the License.
 
 它是 LogLog 算法的升级版，作用是能够提供不精确的去重计数。其数学基础为**伯努利试验**。
 
-假设硬币拥有正反两面，一次的上抛至落下，最终出现正反面的概率都是 50%。一直抛硬币，直到它出现正面为止，我们记录为一次完整的试验。
+假设硬币拥有正反两面，一次的上抛至落下，最终出现正反面的概率都是 50%。一直抛硬币，直到它出现正面为止，我们记录为一次完整的实验。
 
 那么对于多次的伯努利试验，假设这个多次为 n 次。就意味着出现了 n 次的正面。假设每次伯努利试验所经历了的抛掷次数为 k。第一次伯努利试验，次数设为 k1，以此类推，第 n 次对应的是 kn。
 
@@ -94,7 +94,7 @@ PROPERTIES(
 ```SQL
 curl --location-trusted -u root: -H "label:label_test_hll_load" \
     -H "column_separator:," \
-    -H "columns:dt,id,name,province,os, uv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
+    -H "columns:dt,id,name,province,os,uv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
 ```
 
  导入结果如下
@@ -141,7 +141,7 @@ mysql> select HLL_UNION_AGG(uv) from test_hll;
    等价于：
 
 ```SQL
-mysql> SELECT COUNT(DISTINCT pv) FROM test_hll;
+mysql> SELECT COUNT(DISTINCT uv) FROM test_hll;
 +----------------------+
 | count(DISTINCT `uv`) |
 +----------------------+

@@ -78,7 +78,7 @@ Doris 在计算时`select count(distinct name) from t`。会按照下图进行�
 - 查询加速：Bitmap 利用位运算进行查询计算，性能表现良好
 - 压缩存储：由于将明细数据压缩为了一个 bit 位，Bitmap 类型无论在磁盘还是内存上，资源消耗都远远低于明细数据
 
-但 Bitmap 只能对 TINYINT，SMALLINT，INT 和 BIGINT 类型的数据进行精确去重。如想要使用 Bitmap 对其他类型的数据精确去重，则需要额外构建全局字典。Doris 使用了 RoaringBitmap 实现了 Bimap 的精确去重，原理和细节可以参考[RoaringBitmap](https://roaringbitmap.org/)。
+但 Bitmap 只能对 TINYINT，SMALLINT，INT 和 BIGINT 类型的数据进行精确去重。如想要使用 Bitmap 对其他类型的数据精确去重，则需要额外构建全局字典。Doris 使用了 RoaringBitmap 实现了 Bitmap 的精确去重，原理和细节可以参考[RoaringBitmap](https://roaringbitmap.org/)。
 
 ## 使用 BITMAP 进行精确去重
 
