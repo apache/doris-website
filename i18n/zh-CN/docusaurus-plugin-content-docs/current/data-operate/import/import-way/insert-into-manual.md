@@ -31,13 +31,13 @@ INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INT
 
 1. 用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。
 
-2. 与 Multi-Catalog 外部表机制进行配合，如通过 Multi-Catalog 映射 MySQL 或者 Hive 系统中的表，然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
+2. 与 Multi-Catalog 外部表机制进行结合，如通过 Multi-Catalog 映射 MySQL 或者 Hive 系统中的表，然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
 
 3. 通过 Table Value Function（TVF）功能，可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询，并且支持自动的列类型推断。然后，通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。
 
 ## 基本原理
 
-在使用 INSERT INTO 时，需要通过 MySQL 协议发起导入作业给 FE 节点，FE 会生成执行计划，执行计划中前部是查询相关的算子，最后一个是 OlapTableSink 算子，用于将查询结果写到目标表中。执行计划会被发送给 BE 节点执行，Doris 会选定一个节点做为 Coordinator 节点，Coordinator 节点负责接受数据并分发数据到其他节点上。
+在使用 INSERT INTO 时，需要通过 MySQL 协议发起导入作业给 FE 节点，FE 会生成执行计划，执行计划中前部是查询相关的算子，最后一个是 OlapTableSink 算子，用于将查询结果写到目标表中。执行计划会被发送给 BE 节点执行，Doris 会选定一个节点作为 Coordinator 节点，Coordinator 节点负责接受数据并分发数据到其他节点上。
 
 ## 快速上手
 
@@ -151,7 +151,7 @@ INSERT INTO target_table SELECT ... FROM source_table;
 | --- | --- | --- |
 | insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
 | enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
-| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本，仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
 
 ### 导入返回值
 
@@ -213,11 +213,7 @@ Query OK, 2 rows affected, 2 warnings (0.31 sec)
 SHOW LOAD WHERE label="xxx";
 ```
 
-返回结果中的 URL 可以用于查询错误的数据，具体见后面 查看错误行 小结。
-
-数据不可见是一个临时状态，这批数据最终是一定可见的
-
-可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+返回结果中的 URL 可以用于查询错误的数据，具体见后面查看错误行小结。数据不可见是一个临时状态，这批数据最终是一定可见的。可以通过[ SHOW TRANSACTION ](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION)语句查看这批数据的可见状态：
 
 ```sql
 SHOW TRANSACTION WHERE id=4005;
@@ -358,7 +354,7 @@ DESC FUNCTION s3 (
 +---------------+--------------+------+-------+---------+-------+
 ```
 
-这里给出了了一个 s3 TVF 的例子。这个例子中指定了文件的路径、连接信息、认证信息等。
+这里给出了一个 S3 TVF 的例子。这个例子中指定了文件的路径、连接信息、认证信息等。
 
 之后，通过 `DESC FUNCTION` 语法可以查看这个文件的 Schema。
 
@@ -394,7 +390,7 @@ FROM s3(
 
 - 如果 `S3 / hdfs` TVF 指定的 uri 匹配不到文件，或者匹配到的所有文件都是空文件，那么 `S3 / hdfs` TVF 将会返回空结果集。在这种情况下使用`DESC FUNCTION`查看这个文件的 Schema，会得到一列虚假的列`__dummy_col`，可忽略这一列。
 
-- 如果指定 TVF 的 format 为 CSV `The first line is empty, can not parse column numbers`, 这因为无法通过该文件的第一行解析出 Schema。
+- 如果指定 TVF 的 format 为 CSV `The first line is empty, can not parse column numbers`, 因为无法通过该文件的第一行解析出 Schema。
 
 ## 更多帮助
 

@@ -289,7 +289,7 @@ mysql> select * from dt;
 # 配置 session 变量开启 group commit (默认为 off_mode),开启同步模式
 mysql> set group_commit = sync_mode;
 
-# 这里返回的 label 是 group_commit 开头的，可以区分出是否谁用了 group commit，导入耗时至少是表属性 group_commit_interval。
+# 这里返回的 label 是 group_commit 开头的，可以区分出是否使用了 group commit，导入耗时至少是表属性 group_commit_interval。
 mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
 Query OK, 2 rows affected (10.06 sec)
 {'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
