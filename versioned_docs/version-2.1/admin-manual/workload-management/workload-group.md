@@ -213,7 +213,7 @@ If the g1 Workload Group is not visible, you can use the ADMIN account to execut
 GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';
 ```
 This statement means granting the user_1 the permission to use the Workload Group named g1.
-More details can be found in [grant](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+More details can be found in [grant](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 **Two ways to bind Workload Group to user**
 1. By setting the user property, you can bind the user to a default Workload Group. The default is normal. It's important to note that the value here cannot be left empty; otherwise, the statement will fail.
@@ -424,7 +424,7 @@ Doris workloads can generally be categorized into three types:
 
 Different workloads have varying CPU consumption, and users have different latency requirements. When the BE CPU is fully utilized, availability decreases, and response times increase. For example, an Adhoc analysis query may fully utilize the CPU of the entire cluster, causing core report queries to experience higher latency, which impacts SLA. Therefore, a CPU isolation mechanism is needed to separate different workloads and ensure cluster availability and SLA.
 
-Workload Group supports both CPU soft limits and hard limits. It is currently recommended to configure Workload Groups with hard limits in production environments. This is because CPU soft limits typically only show priority effects when the CPU is fully utilized. However, when the CPU is fully used, internal Doris components (such as the RPC component) and the operating system’s available CPU are reduced, leading to a significant drop in overall cluster availability. Therefore, in production environments, it is essential to avoid CPU resource exhaustion, and the same logic applies to other resources such as memory.
+Workload Group supports both CPU soft limits and hard limits. It is currently recommended to configure Workload Groups with hard limits in production environments. This is because CPU soft limits typically only show priority effects when the CPU is fully utilized. However, when the CPU is fully used, internal Doris components (such as the RPC component) and the operating system's available CPU are reduced, leading to a significant drop in overall cluster availability. Therefore, in production environments, it is essential to avoid CPU resource exhaustion, and the same logic applies to other resources such as memory.
 
 **Test environment**
 
