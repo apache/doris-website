@@ -85,7 +85,7 @@ For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-ma
 
 1. Grant privileges on the table
 
-Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
 2. S3 authentication and connection info
 
@@ -164,7 +164,6 @@ Supported S3 Provider list:
 - "BOS" (Baidu Cloud)
 
 If your service is not in the list (such as MinIO), you can try using "S3" (AWS compatible mode)
-
 
 ## Checking import status
 
