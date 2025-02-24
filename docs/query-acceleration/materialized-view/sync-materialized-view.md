@@ -50,7 +50,7 @@ A synchronous materialized view is a special type of table in Doris that stores 
 
 - If the condition column for a DELETE statement exists in the materialized view, the DELETE operation cannot proceed. If data deletion is necessary, the materialized view must be dropped first.
 
-- Excessive materialized views on a single table can impact import efficiency: When importing data, both the materialized views and the base table are updated synchronously. Excessive materialized views on a table can slow down imports, similar to importing data into multiple tables simultaneously.
+- Excessive materialized views on a single table can impact import efficiency. When importing data, both the materialized views and the base table are updated synchronously. Excessive materialized views on a table can slow down imports, similar to importing data into multiple tables simultaneously.
 
 - Materialized views on Unique Key data models can only reorder columns and do not support aggregation. Therefore, coarse-grained aggregation operations cannot be performed through materialized views on Unique Key models.
 
@@ -565,7 +565,7 @@ from
 where 
     year(k4) = 2020;
 
--- Hit table d_table but not hit mv2，because where condition does match
+-- Hit table d_table but not hit mv2, because where condition does not match
 select 
     year(k4),
     month(k4) 
