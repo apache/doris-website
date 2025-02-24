@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Best Practices",
-  "language": "en"
+    "title": "Best Practices",
+    "language": "en"
 }
 ---
 
@@ -30,9 +30,9 @@ under the License.
 -  **Acceleration Effect and Consistency Consideration:** In query acceleration scenarios, when creating materialized views, DBAs should group common query SQL patterns, aiming to minimize overlap between groups. The clearer the SQL pattern grouping, the higher the quality of the materialized view construction. A query may use multiple materialized views, and a materialized view may be used by multiple queries. Constructing materialized views requires comprehensive consideration of response time (acceleration effect), construction cost, and data consistency requirements.
 
 -  **Materialized View Definition and Construction Cost Consideration:**
-
+    
     - The closer the materialized view definition is to the original query, the better the query acceleration effect, but the lower the generality and reusability of the materialization, meaning higher construction costs.
-
+    
     - The more general the materialized view definition (e.g., without WHERE conditions and more aggregation dimensions), the lower the query acceleration effect, but the better the generality and reusability of the materialization, meaning lower construction costs.
 
 :::caution Note
@@ -41,7 +41,7 @@ under the License.
 - **Regularly Check the Usage Status of Materialized Views:** If not used, they should be deleted in time.
 
 - **Base Table Data Update Frequency:** If the base table data of the materialized view is frequently updated, it may not be suitable to use materialized views, as this will cause the materialized view to frequently become invalid and not usable for transparent rewriting (direct query). If you need to use such materialized views for transparent rewriting, you need to allow a certain timeliness delay in the queried data and can set a `grace_period`. See the applicable introduction of `grace_period` for details.
-  :::
+:::
 
 
 ## Principles for Choosing Materialized View Refresh Methods
@@ -577,7 +577,7 @@ GROUP BY nation_name, month;
 In modern data architectures, enterprises often adopt a lake-warehouse integration design to balance data storage costs and query performance. Under this architecture, two key challenges are frequently encountered:
 - Limited Query Performance: When frequently querying data from data lakes, performance may be affected by network latency and third-party services, leading to query delays and impacting user experience.
 - Complexity of Data Layer Modeling: In the data flow and transformation process from data lake to real-time data warehouse, complex ETL processes are usually required, which increases maintenance costs and development difficulty.
-
+  
 Using Doris asynchronous materialized views can effectively address these challenges:
 - Transparent Rewriting Accelerates Queries: Materialize commonly used data lake query results into Doris internal storage, using transparent rewriting to effectively improve query performance.
 - Simplify Layer Modeling: Support creating materialized views based on tables in the data lake, enabling convenient transformation from data lake to real-time data warehouse, greatly simplifying the data modeling process.
@@ -665,12 +665,10 @@ If the materialized view is in MaterializedViewRewriteSuccessButNotChose status,
 Enable getting row count from file list for statistics
 
 ``SET enable_get_row_count_from_file_list = true;``
-
+   
 View external table statistics to confirm if they are complete
 
 ``SHOW TABLE STATS external_table_name;``
-
-Starting from version 2.1.3, it is supported to use materialized views in the SQL definition for creating materialized views, i.e., nested materialized views.
 :::
 
 ### Scenario Four: Improving Write Efficiency, Reducing Resource Contention

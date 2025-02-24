@@ -312,7 +312,7 @@ FROM
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-The following statement will fail to create a partitioned materialized view because the partition field `order_date_month` uses the `date_add()` function, resulting in the error `because column to check use invalid implicit expression, invalid expression is days_add(o_orderdate#4, 2)`.
+The following statement will fail to create a partitioned materialized view because the partition field `order_date_month` uses the `date_add()` function, resulting in the error `because column to check use invalid implicit expression, invalid expression is date_add(o_orderdate#4, 2)`.
 
 ```sql
 CREATE MATERIALIZED VIEW mv_2_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   

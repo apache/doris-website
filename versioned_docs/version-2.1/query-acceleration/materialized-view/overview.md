@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Materialized View Overview",
-  "language": "en"
+    "title": "Materialized View Overview",
+    "language": "en"
 }
 ---
 
