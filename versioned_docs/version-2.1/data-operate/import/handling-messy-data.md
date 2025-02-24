@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches, but problems like wrong types, too long fields, or wrong precision can cause errors.
 
 To deal with these problems, Doris has two key settings:
@@ -32,7 +33,6 @@ To deal with these problems, Doris has two key settings:
 - Max Filter Ratio (max_filter_ratio): Sets the highest allowed percentage of data that can be removed during loading.
 
 This makes it easier to handle data loading problems and keeps data management strong and simple.
-
 
 ## Strict Mode
 

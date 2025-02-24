@@ -66,7 +66,7 @@ The following figure shows the main flow of Stream load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual).
+For detailed syntax, please refer to [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
 
 ### Prerequisite check
 
@@ -326,6 +326,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 | enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
 | memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
+|unique_key_update_mode        | The update modes on Unique tables, currently are only effective for Merge-On-Write Unique tables. Supporting three types: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: Indicates that data is loaded with upsert semantics; `UPDATE_FIXED_COLUMNS`: Indicates that data is loaded through partial updates; `UPDATE_FLEXIBLE_COLUMNS`: Indicates that data is loaded through flexible partial updates.|
 
 ### Load return value
 
@@ -1006,12 +1007,12 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../handling-messy-data#enable-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Handling Messy Data](../../../data-operate/import/handling-messy-data) documentation.
 
-### Perform partial column updates during import
+### Perform partial column updates/flexible partial update during import
 
 For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
 
 ## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../data-operate/import/import-way/stream-load-manual) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
+For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
