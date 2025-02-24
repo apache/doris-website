@@ -40,11 +40,11 @@ INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSE
 
 INSERT INTO VALUES 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO VALUES 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT)。
 
 ### 前置检查
 
-INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO.md) 命令给用户授权。
+INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -222,7 +222,7 @@ Query OK, 5 rows affected (0.04 sec)
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过 [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION) 语句查看这批数据的可见状态。
+可以通过 [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) 语句查看这批数据的可见状态。
 当返回结果中的 `TransactionStatus` 列变成 `VISIBLE` 时代表数据可见。
 
 ```sql

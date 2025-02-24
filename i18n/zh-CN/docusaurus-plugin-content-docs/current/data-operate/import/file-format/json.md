@@ -30,11 +30,11 @@ under the License.
 
 以下导入方式支持 JSON 格式的数据导入：
 
-- [Stream Load](../import-way/stream-load-manual.md)
-- [Broker Load](../import-way/broker-load-manual.md)
-- [Routine Load](../import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [Stream Load](../import-way/stream-load-manual)
+- [Broker Load](../import-way/broker-load-manual)
+- [Routine Load](../import-way/routine-load-manual)
+- [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## 支持的 JSON 格式
 

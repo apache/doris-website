@@ -43,7 +43,7 @@ INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INT
 
 INSERT INTO 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT)。
 
 ### 前置检查
 

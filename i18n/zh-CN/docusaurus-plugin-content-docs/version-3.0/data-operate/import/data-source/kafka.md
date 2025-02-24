@@ -175,7 +175,7 @@ mysql> select * from test_multi_table_load2;
 1 rows in set (0.01 sec)
 ```
 
-#### **配置安全认证**
+#### 配置安全认证
 
 有关带有认证的 Kafka 配置方法，请参见 [Kafka 安全认证](../import-way/routine-load-manual.md#kafka-安全认证)。
 
@@ -191,7 +191,7 @@ Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。�
 2. 配置 `config/connect-distributed.properties`：
 
 ```Bash
-# 修改 kafka server 地址
+# 修改 broker 地址
 bootstrap.servers=127.0.0.1:9092
 
 # 修改 group.id，同一集群的需要一致
