@@ -54,23 +54,23 @@ Update 语句的性能和待更新的行数以及查询条件的检索效率密�
 
 ```sql
 CREATE TABLE transaction_details (
-  transaction_id BIGINT NOT NULL,        -- 唯一交易编号
-  user_id BIGINT NOT NULL,               -- 用户编号
-  transaction_date DATE NOT NULL,        -- 交易日期
-  transaction_time DATETIME NOT NULL,    -- 交易时间
-  transaction_amount DECIMAL(18, 2),     -- 交易金额
-  transaction_device STRING,             -- 交易设备
-  transaction_region STRING,             -- 交易地区
-  average_daily_amount DECIMAL(18, 2),   -- 最近 3 个月日均交易金额
-  recent_transaction_count INT,          -- 最近 7 天交易次数
-  has_dispute_history BOOLEAN,           -- 是否有拒付记录
-  risk_level STRING                      -- 风险等级
+    transaction_id BIGINT NOT NULL,        -- 唯一交易编号
+    user_id BIGINT NOT NULL,               -- 用户编号
+    transaction_date DATE NOT NULL,        -- 交易日期
+    transaction_time DATETIME NOT NULL,    -- 交易时间
+    transaction_amount DECIMAL(18, 2),     -- 交易金额
+    transaction_device STRING,             -- 交易设备
+    transaction_region STRING,             -- 交易地区
+    average_daily_amount DECIMAL(18, 2),   -- 最近 3 个月日均交易金额
+    recent_transaction_count INT,          -- 最近 7 天交易次数
+    has_dispute_history BOOLEAN,           -- 是否有拒付记录
+    risk_level STRING                      -- 风险等级
 )
 UNIQUE KEY(transaction_id)
 DISTRIBUTED BY HASH(transaction_id) BUCKETS 16
 PROPERTIES (
-  "replication_num" = "3",               -- 副本数量，默认 3
-  "enable_unique_key_merge_on_write" = "true"  -- 启用 MOW 模式，支持合并更新
+    "replication_num" = "3",               -- 副本数量，默认 3
+    "enable_unique_key_merge_on_write" = "true"  -- 启用 MOW 模式，支持合并更新
 );
 ```
 
@@ -101,22 +101,22 @@ PROPERTIES (
 ```sql
 UPDATE transaction_details
 SET risk_level = CASE
-  -- 有拒付记录或在高风险地区的交易
-  WHEN has_dispute_history = TRUE THEN 'high'
-  WHEN transaction_region IN ('high_risk_region1', 'high_risk_region2') THEN 'high'
+    -- 有拒付记录或在高风险地区的交易
+    WHEN has_dispute_history = TRUE THEN 'high'
+    WHEN transaction_region IN ('high_risk_region1', 'high_risk_region2') THEN 'high'
 
-  -- 突然异常交易金额
-  WHEN transaction_amount > 5 * average_daily_amount THEN 'high'
+    -- 突然异常交易金额
+    WHEN transaction_amount > 5 * average_daily_amount THEN 'high'
 
-  -- 最近 7 天交易频率很高
-  WHEN recent_transaction_count > 50 THEN 'high'
-  WHEN recent_transaction_count BETWEEN 20 AND 50 THEN 'medium'
+    -- 最近 7 天交易频率很高
+    WHEN recent_transaction_count > 50 THEN 'high'
+    WHEN recent_transaction_count BETWEEN 20 AND 50 THEN 'medium'
 
-  -- 非工作时间交易
-  WHEN HOUR(transaction_time) BETWEEN 2 AND 4 THEN 'medium'
+    -- 非工作时间交易
+    WHEN HOUR(transaction_time) BETWEEN 2 AND 4 THEN 'medium'
 
-  -- 默认风险
-  ELSE 'low'
+    -- 默认风险
+    ELSE 'low'
 END
 WHERE transaction_date = '2024-11-24';
 ```
