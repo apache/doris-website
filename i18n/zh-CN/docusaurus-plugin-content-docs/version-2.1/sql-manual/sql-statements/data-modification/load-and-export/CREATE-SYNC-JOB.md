@@ -36,7 +36,6 @@ under the License.
 CREATE SYNC [<db>.]<job_name>
 (<channel_desc> [, ... ])
 <binlog_desc>
-  : FROM BINLOG ("<key>" = "<value>" [, ... ])
 ```
 where:
 ```sql
