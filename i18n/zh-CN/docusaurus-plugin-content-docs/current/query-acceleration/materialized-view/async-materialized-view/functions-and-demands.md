@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文将详细说明物化视图创建，物化视图直查、查询改写和物化视图常见运维。
+本文将详细说明物化视图创建、物化视图直查、查询改写和物化视图常见运维。
 
 ## 物化视图创建
 
 ### 权限说明
 
-- 创建物化视图：需要具有有物化视图的创建权限（与建表权限相同）以及创建物化视图查询语句的查询权限（与 SELECT 权限相同）。
+- 创建物化视图：需要具有物化视图的创建权限（与建表权限相同）以及创建物化视图查询语句的查询权限（与 SELECT 权限相同）。
 
 ### 创建语法
 
@@ -70,7 +70,7 @@ CREATE MATERIALIZED VIEW
 - AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能感知数据变化的分区，只能退化成全量刷新，刷新所有分区。
 
 #### refresh_trigger 触发方式
-- ON MANUAL 手动触发
+- `ON MANUAL` 手动触发
 
 用户通过 SQL 语句触发物化视图的刷新，策略如下
 
@@ -81,7 +81,7 @@ REFRESH MATERIALIZED VIEW mvName AUTO;
 ```
 
 :::tip 提示
-如果物化视图定义 SQL 使用的基表是 JDBC 表，Doris 无法感知表数据变化，刷新物化视图时需要指定 COMPLETE。
+如果物化视图定义 SQL 使用的基表是 JDBC 表，Doris 无法感知表数据变化，刷新物化视图时需要指定 `COMPLETE`。
 如果指定了 AUTO，会导致基表有数据，但是刷新后物化视图没数据。
 刷新物化视图时，目前 Doris 只能感知内表和 Hive 数据源表数据变化，其他数据源逐步支持中。
 :::
@@ -246,8 +246,7 @@ FROM
 #### 示例 2
 如下，刷新时机是延迟刷新 `BUILD DEFERRED`，刷新方式是全量刷新 `REFRESH COMPLETE`，
 触发时机是定时刷新 `ON SCHEDULE`，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。
-如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE` 创建 完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 
-每隔一天刷新一次。
+如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE`，创建完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次。
 
 :::tip 提示
 STARTS 的时间要晚于当前的时间
@@ -294,8 +293,7 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 
 如下，创建分区物化视图时，需要指定 `PARTITION BY`，对于分区字段引用的表达式，仅允许使用 `date_trunc` 函数和标识符。
 以下语句是符合要求的：
-分区字段引用的列仅使用了 `date_trunc` 函数。分区物化视图的刷新方式一般是 AUTO，即尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，
-如果不能增量刷新，就刷新所有分区。
+分区字段引用的列仅使用了 `date_trunc` 函数。分区物化视图的刷新方式一般是 `AUTO`，即尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_2_0 
@@ -314,8 +312,7 @@ FROM
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-如下语句创建分区物化视图会失败，因为分区字段 `order_date_month` 使用了 `date_add()` 函数
-报错 `because column to check use invalid implicit expression, invalid expression is days_add(o_orderdate#4, 2)`
+如下语句创建分区物化视图会失败，因为分区字段 `order_date_month` 使用了 `date_add()` 函数，报错 `because column to check use invalid implicit expression, invalid expression is days_add(o_orderdate#4, 2)`。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_2_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL   
@@ -1298,6 +1295,6 @@ show partitions from mv11;
 
 #### fe.conf 配置
 - **job_mtmv_task_consumer_thread_num：** 此参数控制同时运行的物化视图刷新任务数量，默认是 10，超过这个数量的任务将处于 pending 状态
-修改这个参数需要重启 fe 才可以生效。
+修改这个参数需要重启 FE 才可以生效。
 
 
