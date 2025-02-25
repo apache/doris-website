@@ -57,7 +57,7 @@ PROPERTIES
     "backup_timestamp"="2022-04-08-15-52-29"
 );
 ```
-
+> 可以通过添加`"replication_num"="1"`指定恢复数据表的副本个数
 ### Option 2：恢复快照到指定数据库
 
 以下 SQL 语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
