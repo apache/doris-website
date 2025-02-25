@@ -49,21 +49,24 @@ $ cd Doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-delta-lake
 $ mvn clean install -DskipTest
+$ cd ../../lib/trino-hdfs
+$ mvn clean install -DskipTest
 ```
 
-After compiling, you will find the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/`.
+After compiling, you will find the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/` and the `hdfs` directory under `trino/lib/trino-hdfs/target/`.
 
-You can also directly download the precompiled [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) and extract it.
+You can also directly download the precompiled [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) and [hdfs.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-hdfs-435-20240724.tar.gz), then extract them.
 
 ## Deploying the Delta Lake Connector
 
-Place the `trino-delta-lake-435/` directory in the `connectors/` directory of all FE and BE deployment paths. (If it does not exist, you can create it manually).
+Place the `trino-delta-lake-435/` directory in the `connectors/` directory of all FE and BE deployment paths(If it does not exist, you can create it manually) and extract `hdfs.tar.gz` into the `trino-delta-lake-435/` directory.
 
 ```Plain Text
 ├── bin
 ├── conf
 ├── connectors
 │   ├── trino-delta-lake-435
+│   │   ├── hdfs
 ...
 ```
 
