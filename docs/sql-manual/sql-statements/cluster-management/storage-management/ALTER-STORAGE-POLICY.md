@@ -35,20 +35,27 @@ ALTER STORAGE POLICY  '<policy_name>' PROPERTIE ("<key>"="<value>"[, ... ]);
 
 ## Required Parameters
 
-| Parameter Name          | Description                                                         |
-|-------------------|--------------------------------------------------------------|
-| `<policy_name>`   | 	The name of the storage policy. This is the unique identifier of the storage policy you want to modify, and an existing policy name must be specified. |
+
+1.`<policy_name>`  
+> The name of the storage policy. This is the unique identifier of the storage policy you want to modify, and an existing policy name must be specified. 
 
 ## Optional Parameters
 `PROPERTIE ("<key>"="<value>"[, ... ])` 
 
-| Parameter Name           | Description                                                         |
-|-------------------|--------------------------------------------------------------|
-| `retention_days`  | Data retention period. Defines the duration for which the data is kept in storage. Data exceeding this period will be automatically deleted. |
-| `redundancy_level`| Redundancy level. Defines the number of data replicas to ensure high availability and fault tolerance. For example, a value of 2 means each data block has two replicas. |
-| `storage_type`    | Storage type. Specifies the storage medium used, such as SSD, HDD, or hybrid storage. This affects performance and cost. |
-| `cooloff_time`    | Cool-off time. The time interval between when data is marked for deletion and when it is actually deleted. This helps prevent data loss due to accidental operations. |
-| `location_policy` | Geographical location policy. Defines the geographical placement of data, such as cross-region replication for disaster recovery. |
+1.`retention_days`  
+> Data retention period. Defines the duration for which the data is kept in storage. Data exceeding this period will be automatically deleted. 
+
+2.`redundancy_level`
+> Redundancy level. Defines the number of data replicas to ensure high availability and fault tolerance. For example, a value of 2 means each data block has two replicas. 
+
+3.`storage_type`   
+> Storage type. Specifies the storage medium used, such as SSD, HDD, or hybrid storage. This affects performance and cost. 
+
+4.`cooloff_time`    
+> Cool-off time. The time interval between when data is marked for deletion and when it is actually deleted. This helps prevent data loss due to accidental operations. 
+
+5.`location_policy` 
+> Geographical location policy. Defines the geographical placement of data, such as cross-region replication for disaster recovery. 
 
 ## Examples
 
