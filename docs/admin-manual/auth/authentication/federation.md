@@ -1,3 +1,4 @@
+
 ---
 {
 "title": "Federated Authentication",
@@ -115,7 +116,7 @@ Assuming `jack` also belongs to LDAP groups `doris_qa` and `doris_pm`; and Doris
 
 > Note:
 >
-> Which group a user belongs to is unrelated to the organizational structure of the LDAP tree. The user2 in the example does not necessarily belong to group2.
+> The group a user belongs to is unrelated to the organizational structure of the LDAP tree. User2 in the example does not necessarily belong to group2.
 
 ### LDAP Example
 #### Modify Doris Configuration
@@ -147,7 +148,7 @@ To avoid frequent access to the LDAP service, Doris caches LDAP information in m
 
 - How to determine which roles an LDAP user has in Doris?
 
-  Log in to Doris using the LDAP user and execute `show grants;` to view the roles of the current user. Among them, ldapDefaultRole is the default role that each LDAP user has in Doris.
+  Log in to Doris using the LDAP user and execute `show grants;` to view the roles of the current user. `ldapDefaultRole` is the default role that each LDAP user has in Doris.
 
 - Why does an LDAP user have fewer roles in Doris than expected?
 

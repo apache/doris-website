@@ -82,7 +82,7 @@ LDAP 验证登录指的是接入 LDAP 服务的密码验证来补充 Doris 的�
     mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
     ```
 ### LDAP 组授权
-DLAP 用户 dn 是 LDAP 组节点的“member”属性则 Doris 认为用户属于该组。LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 role，并将所有对应的 role 权限授予登录用户，用户退出登录后 Doris 会撤销对应的 role 权限。在使用 LDAP 组授权前应该在 Doris 中创建相应对 role，并为 role 授权。
+DLAP 用户 dn 是 LDAP 组节点的“member”属性则 Doris 认为用户属于该组。LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 role，并将所有对应的 role 权限授予登录用户，用户退出登录后 Doris 会撤销对应的 role 权限。在使用 LDAP 组授权前应该在 Doris 中创建相应的 role，并为 role 授权。
 
 登录用户权限跟 Doris 用户和组权限有关，见下表：
 
@@ -139,7 +139,7 @@ set ldap_admin_password = password('ldap_admin_password');
 ### 常见问题
 - 怎么判断 LDAP 用户在 doris 中有哪些角色？
 
-  使用 LDAP 用户在 doris 中登陆，`show grants;`能查看当前用户有哪些角色。其中 ldapDefaultRole 是每个 ldap 用户在 doris 中都有的默认角色。
+  使用 LDAP 用户在 doris 中登录，`show grants;`能查看当前用户有哪些角色。其中 ldapDefaultRole 是每个 ldap 用户在 doris 中都有的默认角色。
 
 - LDAP 用户在 doris 中的角色比预期少怎么排查？
 

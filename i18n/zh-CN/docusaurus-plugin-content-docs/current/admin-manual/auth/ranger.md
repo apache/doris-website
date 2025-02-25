@@ -26,7 +26,7 @@ under the License.
 
 
 
-Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
+Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位的数据安全访问管理的安全框架。
 
 在 2.1.0 版本中，Doris 支持通过集成 Apache Ranger，进行统一的权限管理。
 
