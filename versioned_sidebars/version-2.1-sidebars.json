@@ -981,7 +981,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/left",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
