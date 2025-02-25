@@ -55,7 +55,7 @@ Github: https://github.com/apache/doris-spark-connector
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>24.0.0</version>
+    <version>25.0.0</version>
 </dependency>
 ``` 
 
@@ -78,7 +78,7 @@ Starting from version 24.0.0, the naming rules of the Doris connector package ha
 
 When compiling, you can directly run `sh build.sh`, for details, please refer to here.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-25.0.0.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
 You can also
 
 Execute in the source code directory:
@@ -87,21 +87,21 @@ Execute in the source code directory:
 
 Enter the Scala and Spark versions you need to compile according to the prompts.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar`.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-25.0.0.jar`.
 Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`.
 
 For example, if `Spark` is running in `Local` mode, put this file in the `jars/` folder. If `Spark` is running in `Yarn` cluster mode, put this file in the pre-deployment package.
 
-For example, upload `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
+For example, upload `spark-doris-connector-spark-3.5-25.0.0.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
 ```shell
 
-1. Upload `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` to hdfs.
+1. Upload `spark-doris-connector-spark-3.5-25.0.0.jar` to hdfs.
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.0.0.jar /spark-jars/
 
-2. Add the `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` dependency in the cluster.
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar
+2. Add the `spark-doris-connector-spark-3.5-25.0.0.jar` dependency in the cluster.
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.0.0.jar
 
 ```
 
@@ -209,7 +209,7 @@ mockDataDF.write.format("doris")
   //specify the fields to write
   .option("doris.write.fields", "$YOUR_FIELDS_TO_WRITE")
   // Support setting Overwrite mode to overwrite data
-  // .option("save_mode", SaveMode.Overwrite)
+  // .mode(SaveMode.Overwrite)
   .save()
 ```
 
@@ -542,7 +542,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
     resultDf.format("doris")
       .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
       // your own options
-      .option("save_mode", SaveMode.Overwrite)
+      .mode(SaveMode.Overwrite)
       .save()
     ```
 
@@ -579,4 +579,15 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
    .option("password", "$YOUR_DORIS_PASSWORD")
    .option("doris.read.bitmap-to-base64","true")
    .load()
+   ```
+
+4. **An error occurs when writing in DataFrame mode: `org.apache.spark.sql.AnalysisException: TableProvider implementation doris cannot be written with ErrorIfExists mode, please use Append or Overwrite modes instead.`**
+
+   Need to add save mode to append.
+    ```scala 
+    resultDf.format("doris")
+      .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT") 
+      // your own options 
+      .mode(SaveMode.Append)
+      .save() 
    ```
