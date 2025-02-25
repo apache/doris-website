@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In the current information technology landscape, query optimizers face multiple challenges: on the one hand, they need to handle increasingly complex query statements and diverse query scenarios from users; on the other hand, users have ever-stricter demands for query real-time performance, desiring instant access to required results. Furthermore, to address emerging new requirements, query optimizers must possess the capabilities of rapid iteration and flexible adaptation.
+In the current information technology landscape, query optimizers face multiple challenges: on the one hand, they need to handle increasingly complex query statements and diverse query scenarios from users; on the other hand, users have increasingly strict demands for query real-time performance, desiring instant access to required results. Furthermore, to address emerging new requirements, query optimizers must possess the capabilities of rapid iteration and flexible adaptation.
 
 Based on this background, Doris embarked on the development of a brand-new query optimizer. Leveraging a modern optimizer architecture, this optimizer aims to more efficiently tackle query requests in the current Doris scenarios while providing exceptional scalability, laying a solid foundation for potentially more complex future demands.
 

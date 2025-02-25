@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文是 Doris dev 尚未发行版本的统计信息使用指南，主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
+从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
 
 ## 统计信息的收集
 
@@ -119,7 +119,7 @@ SET GLOBAL auto_analyze_table_width_threshold = 350;
 
 2. 表的健康度低于阈值（默认为 90，可通过 `table_stats_health_threshold` 变量进行调整）。健康度表示从上次收集统计信息到当前时刻，表中数据保持不变的比例：100 表示完全没有变化；0 表示全部改变；当健康度低于 90 时，表示当前的统计信息已有较大偏差，需要重新收集。通过健康度评估，可以降低不必要的重复收集，从而节省系统资源。
 
-为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304`（2^22）`行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
+为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304，即 2^22 行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
 
 如果担心自动收集作业会对业务造成干扰，可根据自身需求通过设置参数 `auto_analyze_start_time` 和 `auto_analyze_end_time` 来指定自动收集作业在业务负载较低的时间段内执行。此外，也可以通过将参数 `enable_auto_analyze` 设置为 `false` 来完全停用此功能。
 
@@ -474,7 +474,7 @@ Set global auto_analyze_table_width_threshold=350
 
 ### Q3：为什么部分列没有统计信息？
 
-目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONV、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
+目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
 
 ### Q4：报错 "Stats table not available, please make sure your cluster status is normal"
 
