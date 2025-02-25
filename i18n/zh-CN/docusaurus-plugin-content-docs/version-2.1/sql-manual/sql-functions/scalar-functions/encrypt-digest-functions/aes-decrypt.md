@@ -26,6 +26,12 @@ under the License.
 
 AES 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。
 
+:::warning
+截止 2.1.6，两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `AES_128_ECB` 算法进行解密。因此不推荐调用。
+
+2.1.7 起，该行为恢复正常。
+:::
+
 ## 语法
 
 ```sql

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-ST_Distance_Sphere( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
+ST_DISTANCE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
 ## 参数

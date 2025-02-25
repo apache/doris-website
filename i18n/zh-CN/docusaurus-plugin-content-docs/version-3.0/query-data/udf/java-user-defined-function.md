@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 概述
-Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 语言进行自定义函数的执行。
+Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用 Java 语言进行自定义函数的执行。
 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 1. Java UDF  是较为常见的自定义标量函数 (Scalar Function)，即每输入一行数据，就会有一行对应的结果输出，较为常见的有 ABS，LENGTH 等。值得一提的是对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 2. Java UDAF 即为自定义的聚合函数 (Aggregate Function)，即在输入多行数据进行聚合后，仅输出一行对应的结果，较为常见的有 MIN，MAX，COUNT 等。
@@ -69,7 +69,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 
 
 ## 快速上手
-本小节主要介绍如何开发一个 Java UDF。在 `samples/doris-demo/java-udf-demo/` 下提供了示例，可供参考，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
+本节主要介绍如何开发 Java UDF。在 `samples/doris-demo/java-udf-demo/` 目录下提供了示例代码，供您参考。您也可以查看 [demo](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)。
 
 UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。
 所以如果当前链接 session 位于数据库 DB 内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName.funcName`。
@@ -105,7 +105,7 @@ insert into test_table values (6, 666.66, "d,e");
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -117,7 +117,7 @@ insert into test_table values (6, 666.66, "d,e");
     ```
 
 3. 用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
-    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/Show-Statements/SHOW-FUNCTIONS.md) 命令。
+    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) 命令。
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -129,7 +129,7 @@ insert into test_table values (6, 666.66, "d,e");
     +------+----------------------+
     ```
 
-4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION)
 
 另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 static 变量，可以参照文档下方的 static 变量加载方式。
 
@@ -316,7 +316,7 @@ public void destroy(State state) {
 </details>
 
 
-2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -368,11 +368,11 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上`_outer`后缀，其中带后缀`_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)。 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上 `_outer` 后缀，其中带后缀 `_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)。 
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLE FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",
@@ -408,7 +408,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
 
 *解决方案 1:*
 
-是可以将资源加载代码拆分开，单独生成一个 JAR 包文件，然后其他包直接引用该资源 JAR 包。 
+可以将资源加载代码拆分开，单独生成一个 JAR 包文件，然后其他包直接引用该资源 JAR 包。 
 
 假设已经将代码拆分为了 DictLibrary 和 FunctionUdf 两个文件。
 
@@ -451,7 +451,7 @@ public class FunctionUdf {
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
 
-2. 编译 FunctionUdf 文件，需要引用上一步的到的资源包最为库使用，这样打包后可以得到 UDF 的 FunctionUdf.jar 包。
+2. 编译 FunctionUdf 文件，需要引用上一步得到的资源包作为库使用，这样打包后可以得到 UDF 的 FunctionUdf.jar 包。
 
     ```shell
     javac -cp ./DictLibrary.jar  ./FunctionUdf.java

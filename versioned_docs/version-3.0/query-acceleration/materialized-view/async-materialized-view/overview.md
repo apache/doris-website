@@ -24,10 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Materialized views, as an efficient solution, combine the flexibility of views with the high
-performance advantages of physical tables.
-They can pre-compute and store the result sets of queries,
-allowing for quick retrieval of results directly from the stored materialized view
+Materialized views, as an efficient solution, combine the flexibility of views with the high 
+performance advantages of physical tables. 
+They can pre-compute and store the result sets of queries, 
+allowing for quick retrieval of results directly from the stored materialized view 
 when query requests arrive, thus avoiding the overhead of re-executing complex query statements.
 
 ## Use Cases
@@ -40,8 +40,8 @@ when query requests arrive, thus avoiding the overhead of re-executing complex q
 ## Limitations
 - **Consistency of Asynchronous Materialized Views with Base Table Data**: Asynchronous materialized views will eventually be consistent with the base table data, but they cannot be synchronized in real-time, meaning real-time consistency cannot be maintained.
 - **Support for Window Function Queries**: Currently, if a query contains window functions, it is not supported to transparently rewrite that query to utilize materialized views.
-- **Materialized Views with ORDER BY and Queries**: If the materialized view itself contains an ORDER BY clause, the system does not currently support using that materialized view for transparent query rewriting. However, please note that the query itself can still include an ORDER BY clause.
 - **Materialized Views Joining More Tables than Query Tables**: If the number of tables joined in the materialized view exceeds the number of tables involved in the query (for example, if the query only involves t1 and t2, while the materialized view includes t1, t2, and an additional t3), the system currently does not support transparently rewriting that query to utilize the materialized view.
+- If the materialized view contains set operations such as UNION ALL, LIMIT, ORDER BY, or CROSS JOIN, the materialized view can be built normally, but it cannot be used for transparent rewriting.
 
 ## Principle Introduction
 

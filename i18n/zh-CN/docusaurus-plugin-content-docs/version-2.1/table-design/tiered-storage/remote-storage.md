@@ -29,7 +29,7 @@ under the License.
 远程存储支持将冷数据放到外部存储（例如对象存储，HDFS）上。
 
 :::warning 注意
-远程存储的数据只有一个副本，数据可靠性依赖远程存储的数据可靠性，您需要保证远程存储有ec（擦除码）或者多副本技术确保数据可靠性。
+远程存储的数据只有一个副本，数据可靠性依赖远程存储的数据可靠性，您需要保证远程存储有 ec（擦除码）或者多副本技术确保数据可靠性。
 :::
 
 ## 使用方法
@@ -141,15 +141,15 @@ UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话�
 
 ### 存量表冷却到远程存储
 
-除了新建表支持设置远程存储外，Doris还支持对一个已存在的表或者 PARTITION，设置远程存储。
+除了新建表支持设置远程存储外，Doris 还支持对一个已存在的表或者 PARTITION，设置远程存储。
 
-对一个已存在的表，设置远程存储，将创建好的STORAGE POLICY与表关联：
+对一个已存在的表，设置远程存储，将创建好的 STORAGE POLICY 与表关联：
 
 ```sql
 ALTER TABLE create_table_not_have_policy set ("storage_policy" = "test_policy");
 ```
 
-对一个已存在的PARTITION，设置远程存储，将创建好的STORAGE POLICY与PARTITON关联：
+对一个已存在的 PARTITION，设置远程存储，将创建好的 STORAGE POLICY 与 PARTITON 关联：
 
 ```sql
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="test_policy");
@@ -158,7 +158,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY)、 [CREATE TABLE](../../sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档。
+具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档。
 :::
 
 ### 配置 compaction
@@ -205,7 +205,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考(../../lakehouse/filecache)。
+具体配置请参考 (../../lakehouse/filecache)。
 
 ## 常见问题
 

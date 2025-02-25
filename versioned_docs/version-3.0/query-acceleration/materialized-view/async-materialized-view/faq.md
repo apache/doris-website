@@ -38,7 +38,7 @@ Alternatively, if changes to t2 can be accepted without triggering a refresh of 
 
 ### Q2: What can be done if a materialized view consumes too many resources, impacting other business operations?
 
-You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](../../../admin-manual/resource-admin/workload-group) through the materialized view's properties.
+You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](../../../admin-manual/workload-management/workload-group) through the materialized view's properties.
 
 It's important to note that if the memory allocation is too small and the refresh of a single partition requires more memory, the task may fail. This trade-off should be carefully considered based on business requirements.
 
@@ -88,7 +88,7 @@ Unable to find a suitable base table for partitioning
 
 This error typically indicates that the SQL definition of the materialized view and the choice of partitioning fields do not allow incremental partition updates, resulting in an error during the creation of the partitioned materialized view.
 
-- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod) for details.
+- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod) for details.
 
 - The latest code can indicate the reason for partition build failure, with error summaries and descriptions provided in Appendix 2.
 
@@ -186,7 +186,7 @@ Reasons may be:
 
 ### Q1: How to confirm if a Materialized View hits, and how to find the reasons for Non-Hits?
 
-You can use `explain query_sql` to view a summary of materialized view hits. 
+You can use `explain query_sql` to view a summary of materialized view hits.
 
 For example, consider the following materialized view:
 

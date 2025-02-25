@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Query Statistics",
+    "title": "Statistics",
     "language": "en"
 }
 ---
@@ -24,5 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The document is under development, please refer to versioned doc 2.1 or 3.0
+Doris supports automatic or manual statistics collection for tables from external data sources like Hive、Iceberg and Paimon. The accuracy of statistics directly determines the accuracy of cost estimation, which is crucial for selecting the optimal query plan. This can significantly improve query execution efficiency, especially in complex query scenarios.
 
+For details, please refer to the [Statistics](../query-acceleration/optimization-technology-principle/statistics#外表收集) document in the "External Table Collection" section.

@@ -88,7 +88,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > Tips: When using dynamic multiple tables, please note that this parameter should be consistent with each dynamic table's type, otherwise it will result in import failure.
 
-**3. `load_properties`**
+**3. `<load_properties>`**
 
 > Used to describe imported data. The composition is as follows:
 >
@@ -335,7 +335,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >     When the value of a parameter is a file, the keyword "FILE:" needs to be added before the value.
 >
->     For information about how to create files, please refer to the [CREATE FILE](../../../Data-Definition-Statements/Create/CREATE-FILE) command documentation.
+>     For information about how to create files, please refer to the [CREATE FILE](../../security/CREATE-FILE) command documentation.
 >
 >     For more supported custom parameters, please refer to the client configuration items in the official CONFIGURATION documentation of librdkafka. For example:
 >
@@ -392,13 +392,14 @@ Users executing this SQL command must have at least the following privileges:
 | :-------- | :----- | :---- |
 | LOAD_PRIV | Table | CREATE ROUTINE LOAD belongs to table LOAD operation |
 
-## Notes
+## Usage Notes
 
 - Dynamic tables do not support the `columns_mapping` parameter
 - When using dynamic multiple tables, parameters like merge_type, where_predicates, etc., need to conform to each dynamic table's requirements
 - Time format cannot be mixed with OFFSET format
 - `kafka_partitions` and `kafka_offsets` must correspond one-to-one
 - When `enclose` is set to `"`, `trim_double_quotes` must be set to true.
+
 ## Examples
 
 - Create a Kafka routine load task named test1 for example_tbl in example_db. Specify column separator, group.id and client.id, and automatically consume all partitions by default, starting subscription from where data exists (OFFSET_BEGINNING)

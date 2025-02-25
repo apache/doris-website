@@ -32,7 +32,7 @@ under the License.
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
 
-有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
+有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)
 
 ## 适用场景
 
@@ -228,6 +228,9 @@ PROPERTIES(
 由于指定了 `"max_file_size" = "2048MB"` 最终生成文件如如果不大于 2GB，则只有一个文件。如果大于 2GB，则有多个文件。
 
 ## 注意事项
+
+- 使用并发 Outfile 时的限制
+    当前版本 pipeline 引擎不支持并发Outfile。所以若开启了 pipeline 引擎, 并发 Outfile 将回退到单并发导出。
 
 - 导出数据量和导出效率
 

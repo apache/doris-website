@@ -24,34 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_filter
-
-array_filter(lambda,array)
-
-array array_filter(array arr, array_bool filter_column)
-
 ## 描述
-
-## 语法
-```sql
-ARRAY<T> array_filter(lambda, ARRAY<T> arr)
-ARRAY<T> array_filter(ARRAY<T> arr, ARRAY<Bool> filter_column)
-```
 
 使用 lambda 表达式作为输入参数，计算筛选另外的输入参数 ARRAY 列的数据。
 并过滤掉在结果中 0 和 NULL 的值。
 
+## 语法
+
+```sql
+ARRAY_FILTER(<lambda>, <arr>)
+ARRAY_FILTER(<arr>, <filter_column>)
 ```
-array_filter(x->x>0, array1);
-array_filter(x->(x+2)=10, array1);
-array_filter(x->(abs(x)-2)>0, array1);
-array_filter(c_array,[0,1,0]);
-```
+
+## 参数
+
+| 参数 | 说明 | 
+| --- |---|
+| `<lambda>` | lambda 表达式，表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。 |
+| `<arr>` | ARRAY数组     |
+
+## 返回值
+
+对其输入 ARRAY 参数的内部数据做对应表达式计算。过滤掉在结果中 0 和 NULL 的值
 
 ## 举例
 
-```shell
-mysql [test]>select c_array,array_filter(c_array,[0,1,0]) from array_test;
+```sql
+select c_array,array_filter(c_array,[0,1,0]) from array_test;
+```
+
+```text
 +-----------------+----------------------------------------------------+
 | c_array         | array_filter(`c_array`, ARRAY(FALSE, TRUE, FALSE)) |
 +-----------------+----------------------------------------------------+
@@ -60,15 +62,25 @@ mysql [test]>select c_array,array_filter(c_array,[0,1,0]) from array_test;
 | []              | []                                                 |
 | NULL            | NULL                                               |
 +-----------------+----------------------------------------------------+
+```
 
-mysql [test]>select array_filter(x->(x > 1),[1,2,3,0,null]);
+```sql
+select array_filter(x->(x > 1),[1,2,3,0,null]);
+```
+
+```text
 +----------------------------------------------------------------------------------------------+
 | array_filter(ARRAY(1, 2, 3, 0, NULL), array_map([x] -> (x(0) > 1), ARRAY(1, 2, 3, 0, NULL))) |
 +----------------------------------------------------------------------------------------------+
 | [2, 3]                                                                                       |
 +----------------------------------------------------------------------------------------------+
+```
 
-mysql [test]>select *, array_filter(x->x>0,c_array2) from array_test2;
+```sql
+select *, array_filter(x->x>0,c_array2) from array_test2;
+```
+
+```text
 +------+-----------------+-------------------------+------------------------------------------------------------------+
 | id   | c_array1        | c_array2                | array_filter(`c_array2`, array_map([x] -> x(0) > 0, `c_array2`)) |
 +------+-----------------+-------------------------+------------------------------------------------------------------+
@@ -77,9 +89,13 @@ mysql [test]>select *, array_filter(x->x>0,c_array2) from array_test2;
 |    3 | [1]             | [-100]                  | []                                                               |
 |    4 | NULL            | NULL                    | NULL                                                             |
 +------+-----------------+-------------------------+------------------------------------------------------------------+
-4 rows in set (0.01 sec)
+```
 
-mysql [test]>select *, array_filter(x->x%2=0,c_array2) from array_test2;
+```sql
+select *, array_filter(x->x%2=0,c_array2) from array_test2;
+```
+
+```text
 +------+-----------------+-------------------------+----------------------------------------------------------------------+
 | id   | c_array1        | c_array2                | array_filter(`c_array2`, array_map([x] -> x(0) % 2 = 0, `c_array2`)) |
 +------+-----------------+-------------------------+----------------------------------------------------------------------+
@@ -88,8 +104,13 @@ mysql [test]>select *, array_filter(x->x%2=0,c_array2) from array_test2;
 |    3 | [1]             | [-100]                  | [-100]                                                               |
 |    4 | NULL            | NULL                    | NULL                                                                 |
 +------+-----------------+-------------------------+----------------------------------------------------------------------+
+```
 
-mysql [test]>select *, array_filter(x->(x*(-10)>0),c_array2) from array_test2;
+```sql
+select *, array_filter(x->(x*(-10)>0),c_array2) from array_test2;
+```
+
+```text
 +------+-----------------+-------------------------+----------------------------------------------------------------------------+
 | id   | c_array1        | c_array2                | array_filter(`c_array2`, array_map([x] -> (x(0) * (-10) > 0), `c_array2`)) |
 +------+-----------------+-------------------------+----------------------------------------------------------------------------+
@@ -98,8 +119,13 @@ mysql [test]>select *, array_filter(x->(x*(-10)>0),c_array2) from array_test2;
 |    3 | [1]             | [-100]                  | [-100]                                                                     |
 |    4 | NULL            | NULL                    | NULL                                                                       |
 +------+-----------------+-------------------------+----------------------------------------------------------------------------+
+```
 
-mysql [test]>select *, array_filter(x->x>0, array_map((x,y)->(x>y), c_array1,c_array2)) as res from array_test2;
+```sql
+select *, array_filter(x->x>0, array_map((x,y)->(x>y), c_array1,c_array2)) as res from array_test2;
+```
+
+```text
 +------+-----------------+-------------------------+--------+
 | id   | c_array1        | c_array2                | res    |
 +------+-----------------+-------------------------+--------+
@@ -109,8 +135,4 @@ mysql [test]>select *, array_filter(x->x>0, array_map((x,y)->(x>y), c_array1,c_a
 |    4 | NULL            | NULL                    | NULL   |
 +------+-----------------+-------------------------+--------+
 ```
-
-### keywords
-
-ARRAY,FILTER,ARRAY_FILTER
 

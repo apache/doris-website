@@ -1,7 +1,7 @@
 ---
 {
-    "title": "NOW",
-    "language": "en"
+  "title": "NOW",
+  "language": "en"
 }
 ---
 
@@ -24,46 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## now
-### Description
-#### Syntax
+## Description
 
-`DATETIME NOW ()`
+The function retrieves the current system time and returns it as a datetime value (`DATETIME`). An optional precision
+can be specified to adjust the number of digits in the fractional seconds part of the return value.
 
+## Syntax
 
-Get the current time and return it in Datetime type.
-
-### example
-
-```
-mysql> select now();
-+---------------------+
-| now()               |
-+---------------------+
-| 2019-05-27 15:58:25 |
-+---------------------+
+```sql
+NOW([<precision>])
 ```
 
-`DATETIMEV2 NOW(INT precision)`
+## Parameters
 
+| Parameter     | Description                                                                                                                                                                                                                                                                                                                                                                                                 |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<precision>` | Optional parameter specifying the precision of the fractional seconds part in the return value. The range is 0 to 6, and the default is 0 (no fractional seconds). <br/>Limited by the JDK implementation: if FE is built with JDK8, the precision supports up to milliseconds (3 fractional digits), and higher precision digits will be filled with 0. If higher precision is required, please use JDK11. |
 
-Get the current time and return it in DatetimeV2 type.
-Precision represents the second precision that the user wants. The current precision supports up to microseconds, that is, the value range of precision is [0, 6].
+## Return Value
 
-### example
+- Returns the current system time as a DATETIME type.
+- If the specified `<precision>` is out of range (e.g., negative or greater than 6), the function will return an error.
 
+## Example
+
+```sql
+select NOW(), NOW(3), NOW(6);
 ```
-mysql> select now(3);
-+-------------------------+
-| now(3)                  |
-+-------------------------+
-| 2022-09-06 16:13:30.078 |
-+-------------------------+
+
+```text
++---------------------+-------------------------+----------------------------+
+| now()               | now(3)                  | now(6)                     |
++---------------------+-------------------------+----------------------------+
+| 2025-01-23 11:08:35 | 2025-01-23 11:08:35.561 | 2025-01-23 11:08:35.562000 |
++---------------------+-------------------------+----------------------------+
 ```
-
-Note:
-1. Currently, only DatetimeV2 type supports precision.
-2. Limited by the JDK implementation, if you use jdk8 to build FE, the precision can be up to milliseconds (three decimal places), and the larger precision bits will be filled with 0. If you need higher accuracy, please use jdk11 to build FE.
-
-### keywords
-    NOW

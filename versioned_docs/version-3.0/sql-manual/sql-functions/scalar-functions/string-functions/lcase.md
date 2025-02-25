@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Convert all strings in the parameter to lowercase. Another alias for this function is [lower](./lower.md).
+Convert all strings in the parameter to lowercase.
 
 ## Alias
 

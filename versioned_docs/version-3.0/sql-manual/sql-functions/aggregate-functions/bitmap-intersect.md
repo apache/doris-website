@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BITMAP_INTERSECT",
-    "language": "en"
+"title": "BITMAP_INTERSECT",
+"language": "en"
 }
 ---
 
@@ -24,18 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## bitmap_intersect
-### description
+## Description
 
 Aggregation function, used to calculate the bitmap intersection after grouping. Common usage scenarios such as: calculating user retention rate.
 
-#### Syntax
+## Syntax
 
-`BITMAP BITMAP_INTERSECT(BITMAP value)`
+```sql
+BITMAP_INTERSECT(BITMAP <value>)
+```
 
-Enter a set of bitmap values, find the intersection of the set of bitmap values, and return.
+## Parameters
 
-### example
+| Parameter | Description |
+| -- | -- |
+| `<value>` | Supported bitmap data types |
+
+## Return Value
+
+The data type of the return value is BITMAP.
+
+## Example
 
 Table schema
 
@@ -55,7 +64,3 @@ Used in combination with the bitmap_to_string function to obtain the specific da
 Who are the users retained under different tags between 2020-05-18 and 2020-05-19?
 mysql> select tag, bitmap_to_string(bitmap_intersect(user_id)) from (select tag, date, bitmap_union(user_id) user_id from table where date in ('2020-05-18', '2020-05-19') group by tag, date) a group by tag;
 ```
-
-### keywords
-
-    BITMAP_INTERSECT, BITMAP

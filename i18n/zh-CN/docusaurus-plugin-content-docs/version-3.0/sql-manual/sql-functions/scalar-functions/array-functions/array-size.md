@@ -24,51 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_size (size, cardinality)
-array_size (size, cardinality)
+
 ## 描述
+
+计算数组中元素的数量
+
+## 别名
+
+- SIZE
+- CARDINALITY
 
 ## 语法
 
 ```sql
-BIGINT size(ARRAY<T> arr)
-BIGINT array_size(ARRAY<T> arr) 
-BIGINT cardinality(ARRAY<T> arr)
+ARRAY_SIZE(<arr>) 
 ```
+
+## 参数
+
+| 参数 | 说明 |
+|--|--|
+| `<arr>` | 待计算的数组 |
+
+## 返回值
 
 返回数组中元素数量，如果输入数组为NULL，则返回NULL
 
 ## 举例
 
-```
-mysql> select k1,k2,size(k2) from array_test;
-+------+-----------+------------+
-| k1   | k2        | size(`k2`) |
-+------+-----------+------------+
-|    1 | [1, 2, 3] |          3 |
-|    2 | []        |          0 |
-|    3 | NULL      |       NULL |
-+------+-----------+------------+
-
-mysql> select k1,k2,array_size(k2) from array_test;
-+------+-----------+------------------+
-| k1   | k2        | array_size(`k2`) |
-+------+-----------+------------------+
-|    1 | [1, 2, 3] |                3 |
-|    2 | []        |                0 |
-|    3 | NULL      |             NULL |
-+------+-----------+------------------+
-
-mysql> select k1,k2,cardinality(k2) from array_test;
-+------+-----------+-------------------+
-| k1   | k2        | cardinality(`k2`) |
-+------+-----------+-------------------+
-|    1 | [1, 2, 3] |                 3 |
-|    2 | []        |                 0 |
-|    3 | NULL      |              NULL |
-+------+-----------+-------------------+
+```sql
+SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
 ```
 
-### keywords
-
-ARRAY_SIZE, SIZE, CARDINALITY
+```text
++------------------------------+---------------------+-----------------+
+| cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
++------------------------------+---------------------+-----------------+
+|                            3 |                   1 |               0 |
++------------------------------+---------------------+-----------------+
+```

@@ -69,6 +69,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`: Uses Alibaba Cloud DLF as the metadata service.
 
+  * `s3tables`: Uses AWS S3 Tables Catalog to visit [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
+
 * `<warehouse>`
 
   The warehouse path for Iceberg. This parameter must be specified when `<iceberg_catalog_type>` is `hadoop`.
@@ -89,7 +91,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Supported Iceberg Versions
 
-The current Iceberg dependency is version 1.4.3, which is compatible with higher versions of Iceberg.
+The current Iceberg dependency is version 1.6.1, which is compatible with higher versions of Iceberg.
 
 ### Supported Iceberg Formats
 
@@ -250,6 +252,22 @@ CREATE CATALOG iceberg_gdm PROPERTIES (
     'use_path_style' = 'true'
 );
 ```
+
+### Iceberg on S3 Tables
+
+```sql
+CREATE CATALOG iceberg_s3 PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 's3tables',
+    'warehouse' = 'arn:aws:s3tables:us-east-1:169000000000:bucket/doris-s3-table-bucket',
+    's3.region' = 'us-east-1',
+    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.access_key' = 'ak',
+    's3.secret_key' = 'sk'
+);
+```
+
+Please refer to [Integration with AWS S3 Tables](../best-practices/doris-aws-s3tables.md)。
 
 ## Query Operations
 

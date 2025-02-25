@@ -40,7 +40,7 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
 - 调度记录可追溯：Job Scheduler 会存储最新的 Task 执行记录（可配置），通过简单的命令即可查看任务执行记录，确保过程可追溯。
 - 高可用：依托于 Doris 自身的高可用机制，Job Schedule 可以很轻松的做到自恢复、高可用。
 
-**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
 
 ## 语法说明
 一条有效的 Job 语句需包含以下内容：

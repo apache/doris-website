@@ -1,27 +1,18 @@
 import clsx from 'clsx';
 import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
-import More from '../components/More/index';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
 import PageColumn from '../components/PageColumn';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { JSX} from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
 import './index.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import { NEWSLETTER_DATA } from '../constant/newsletter.data';
 import { AchievementBanner } from '../components/achievement-banner/achievement-banner';
 import { CoreCapabilitiesData } from '../constant/core-capabilities.data';
 import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-capabilities-card';
-import { VariousAnalyticsData } from '../constant/various-analytics.data';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper';
 import GetStarted from '@site/src/components/get-started/get-started';
-import { Collapse, Tabs } from 'antd';
-import { Content } from 'antd/es/layout/layout';
-import ReadMore from '../components/ReadMore';
-import { ArrowDownIcon } from '../components/Icons/arrow-down-icon';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
 
@@ -169,9 +160,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_497" />
                         </filter>
@@ -200,9 +191,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14560" />
                         </filter>
@@ -259,9 +250,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14564" />
                         </filter>
@@ -298,9 +289,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_513" />
                         </filter>
@@ -313,7 +304,7 @@ export default function Home(): JSX.Element {
             title: <Translate id="community.title.c5">LinkedIn</Translate>,
             img: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="61" height="60" viewBox="0 0 61 60" fill="none">
-                    <g clip-path="url(#clip0_1665_520)">
+                    <g clipPath="url(#clip0_1665_520)">
                         <g opacity="0.6" filter="url(#filter0_f_1665_520)">
                             <ellipse cx="30.5" cy="47" rx="11" ry="3" fill="#1460D4" />
                         </g>
@@ -331,9 +322,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_520" />
                         </filter>
@@ -369,9 +360,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_524" />
                         </filter>

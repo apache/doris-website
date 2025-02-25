@@ -22,43 +22,102 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## pow
-
-### description
+## Description
 
 Returns the value of the first argument raised to the power of the second argument.
 
-:::tip
-The other aliases for this function are `power`, `fpow` and `dpow`.
-:::
+## Alias
 
-#### Syntax
+- POWER
+- FPOW
+- DPOW
 
-`DOUBLE pow(DOUBLE a, DOUBLE b)`
-Returns `a` raised to the `b` power.
+## Syntax
 
-### example
-
-```
-mysql> select pow(2,0);
-+---------------+
-| pow(2.0, 0.0) |
-+---------------+
-|             1 |
-+---------------+
-mysql> select pow(2,3);
-+---------------+
-| pow(2.0, 3.0) |
-+---------------+
-|             8 |
-+---------------+
-mysql> select pow(3,2.4);
-+--------------------+
-| pow(3.0, 2.4)      |
-+--------------------+
-| 13.966610165238235 |
-+--------------------+
+```sql
+POW(<a>, <b>)
 ```
 
-### keywords
-	POW, POWER, FPOW, DPOW
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<a>`   | Base   |
+| `<b>`   | Power  |
+
+## Return value
+
+Return an integer type or a floating-point type.
+
+Special cases:
+
+- If a `IS NULL` or b `IS NULL`, return `NULL`.
+- If `b = 0` and a `IS NOT NULL`, it will always return `1`.
+
+## Examples
+
+```sql
+select pow(2, 0);
+```
+```text
++-------------------------------------------+
+| pow(cast(2 as DOUBLE), cast(0 as DOUBLE)) |
++-------------------------------------------+
+|                                         1 |
++-------------------------------------------+
+```
+
+```sql
+select pow(2, 10);
+```
+```text
++--------------------------------------------+
+| pow(cast(2 as DOUBLE), cast(10 as DOUBLE)) |
++--------------------------------------------+
+|                                       1024 |
++--------------------------------------------+
+```
+
+```sql
+select pow(1.2, 2);
+```
+```text
++---------------------------------------------+
+| pow(cast(1.2 as DOUBLE), cast(2 as DOUBLE)) |
++---------------------------------------------+
+|                                        1.44 |
++---------------------------------------------+
+```
+
+```sql
+select pow(1.2, 2.1);
+```
+```text
++-----------------------------------------------+
+| pow(cast(1.2 as DOUBLE), cast(2.1 as DOUBLE)) |
++-----------------------------------------------+
+|                            1.4664951016517147 |
++-----------------------------------------------+
+```
+
+```sql
+select pow(2, null);
+```
+```text
++------------------------------+
+| pow(cast(2 as DOUBLE), NULL) |
++------------------------------+
+|                         NULL |
++------------------------------+
+```
+
+```sql
+select pow(null, 2);
+```
+```text
++------------------------------+
+| pow(NULL, cast(2 as DOUBLE)) |
++------------------------------+
+|                         NULL |
++------------------------------+
+```

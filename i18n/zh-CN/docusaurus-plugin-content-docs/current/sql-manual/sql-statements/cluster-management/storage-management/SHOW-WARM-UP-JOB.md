@@ -36,15 +36,16 @@ under the License.
 
 ## 参数
 
-* id : 预热作业的 id。
-
+| 参数                  | 说明                                                         |
+|---------------------------|--------------------------------------------------------------|
+| id                        | 预热作业的 ID                                                |
 ## 示例
 
 1. 查看所有预热作业
 
-    ```sql
+ ```sql
     SHOW WARM UP JOB;
-    ```
+```
 
 2. 查看 id 为 13418 的预热作业
 
@@ -52,14 +53,8 @@ under the License.
     SHOW WARM UP JOB WHERE id = 13418;
 ```
 
-## 相关命令
-
- - [WARMUP COMPUTE GROUP](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
-
 ## 参考
 
- - [管理文件缓存](../../../compute-storage-decoupled/file-cache.md)
+ - [管理文件缓存](../../../../compute-storage-decoupled/file-cache)
+ - [WARMUP COMPUTE GROUP](./WARM-UP.md)
 
-## 关键字
-
-    SHOW, CACHE, HOTSPOT, COMPUTE GROUP 

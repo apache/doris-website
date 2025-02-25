@@ -22,28 +22,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## positive
-
 ## 描述
+
+返回数值本身。
+
 ## 语法
 
 ```sql
-BIGINT positive(BIGINT x)
-DOUBLE positive(DOUBLE x)
-DECIMAL positive(DECIMAL x)
+POSITIVE(<x>)
 ```
-返回`x`.
+
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<x>` | 需要返回的数值 |
+
+## 返回值
+
+返回一个整型或者浮点数。特殊情况：
+
+- 当x is NULL 时，返回 NULL
 
 ## 举例
 
+```sql
+SELECT positive(-10);
 ```
-mysql> SELECT positive(-10);
+
+```text
 +---------------+
 | positive(-10) |
 +---------------+
 |           -10 |
 +---------------+
-mysql> SELECT positive(12);
+```
+
+```sql
+SELECT positive(10.111);
+```
+
+```text
++------------------+
+| positive(10.111) |
++------------------+
+|           10.111 |
++------------------+
+```
+
+```sql
+SELECT positive(12);
+```
+
+```text
 +--------------+
 | positive(12) |
 +--------------+
@@ -51,5 +82,14 @@ mysql> SELECT positive(12);
 +--------------+
 ```
 
-### keywords
-	POSITIVE
+```sql
+SELECT positive(null);
+```
+
+```text
++----------------+
+| positive(NULL) |
++----------------+
+|           NULL |
++----------------+
+```

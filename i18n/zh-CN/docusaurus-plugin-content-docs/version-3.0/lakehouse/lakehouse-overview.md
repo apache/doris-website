@@ -166,7 +166,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
     用户登录 Doris 后，默认进入 Internal Catalog，因此默认的使用和之前版本并无差别，可以直接使用 `SHOW DATABASES`，`USE DB` 等命令查看和切换数据库。
 
-    用户可以通过 [SWITCH](../sql-manual/sql-statements/session/context/SWITCH) 命令切换 Catalog。如：
+    用户可以通过 [SWITCH](../sql-manual/sql-statements/session/context/SWITCH-CATALOG) 命令切换 Catalog。如：
 
     ```Plain
     SWITCH internal;
@@ -239,7 +239,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/session/context/SWITCH)
+查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/session/context/SWITCH-CATALOG)
 
 **5. 使用 Catalog**
 

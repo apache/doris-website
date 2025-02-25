@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Link from '@docusaurus/Link';
 import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/ecomsystem-layout';
 import ExternalLink from '@site/src/components/external-link/external-link';
@@ -7,7 +7,7 @@ import '../index.scss';
 import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
 export default function ClusterManagement() {
-    const [flag,setFlag] = useState(true)
+    const [flag, setFlag] = useState(true)
     return (
         <EcomsystemLayout>
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
@@ -55,9 +55,9 @@ export default function ClusterManagement() {
                     }
                     moreLink={
                         <>
-                            <ExternalLink href="https://www.velodb.io/download/tools" label="Download"></ExternalLink>
+                            <ExternalLink href="https://github.com/apache/doris-operator" label="GitHub"></ExternalLink>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env"
+                                href="https://doris.apache.org/docs/install/deploy-on-kubernetes/install-doris-operator"
                                 className="sub-btn"
                                 label="Docs"
                             ></ExternalLink>

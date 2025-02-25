@@ -90,7 +90,7 @@ ALTER SYSTEM ADD BACKEND 'host:9050';
 
 ## 授予计算组访问权限
 
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 
 ```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
@@ -98,7 +98,7 @@ GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
 
 ## 撤销计算组访问权限
 
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 ```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user};
 ```
@@ -123,7 +123,7 @@ SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 SHOW PROPERTY;
 ```
 
-查看其他用户默认计算组，此操作需要当前用户具备admin权限，返回结果中`default_compute_group` 的值即为默认计算组：
+查看其他用户默认计算组，此操作需要当前用户具备 admin 权限，返回结果中`default_compute_group` 的值即为默认计算组：
 
 ```sql
 SHOW PROPERTY FOR {user};
@@ -174,4 +174,4 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。
 
 
-详细操作参考[存算分离相关操作](../../compute-storage-decoupled/overview.md)
+详细操作参考[存算分离相关操作](../compute-storage-decoupled/overview)
