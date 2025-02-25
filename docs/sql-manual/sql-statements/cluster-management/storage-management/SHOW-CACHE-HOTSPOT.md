@@ -67,4 +67,4 @@ Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query 
 ## References
 
 - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
-- [WARMUP CACHE](../../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP)
+- [WARMUP CACHE](./WARM-UP)
