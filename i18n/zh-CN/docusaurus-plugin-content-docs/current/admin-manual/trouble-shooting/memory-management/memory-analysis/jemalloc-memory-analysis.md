@@ -123,6 +123,6 @@ Jemalloc Metadata 大小和进程虚拟内存大小正相关，通常 Doris BE �
 
 如果频繁出现上述问题，参考下面的方法。
 
-1. 一个根本解决方法是关闭 Jemalloc Retained 缓存虚拟内存映射，在 `be.conf` 中 `JEMALLOC_CONF` 后面增加 `retain:false` 后重启 BE。但查询性能可能会明显降低，测试 TPC-H Benchmark 性能会降低 3 倍左右。
+1. 一个根本解决方法是关闭 Jemalloc Retained 缓存虚拟内存映射，在 `be.conf` 中 `JEMALLOC_CONF` 后面增加 `retain:false` 后重启 BE，但查询性能可能会降低，关闭后观察一段时间集群的性能变化。
 
 2. Doris 2.1 上可以关闭 Pipelinex 和 Pipeline，执行 `set global experimental_enable_pipeline_engine=false; set global experimental_enable_pipeline_x_engine=false;`，因为 pipelinex 和 pipeline 会申请更多的虚拟内存。这同样会导致查询性能降低。
