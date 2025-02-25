@@ -49,7 +49,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 | param           | is required | desc                                                                                                                                                                                                               |
 |:----------------|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `s3.endpoint`    | required    | The endpoint used for object storage. <br/>**Notice**, please don't provide the endpoint with any `http://` or `https://`. And for Azure Blob Storage, the endpoint should be `blob.core.windows.net`. |
-| `s3.region`      | required    | The region of your bucket.(Not required when you'r using GCP or AZURE).                                                                                                                               |
+| `s3.region`      | required    | The region of your bucket.(If you are using GCP or Azure, you can specify us-east-1).                                                                                                                               |
 | `s3.root.path`   | required    | The path where the data would be stored.                                                                                                                                |
 | `s3.bucket`      | required    | The bucket of your object storage account. (StorageAccount if you're using Azure).                                                                                                                                |
 | `s3.access_key`  | required    | The access key of your object storage account. (AccountName if you're using Azure).                                                                                                                                |
@@ -126,7 +126,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.secret_key" = "xxxxxx",                          -- required,  Your OBS secret key
         "s3.region" = "cn-north-4",                          -- required
         "s3.root.path" = "obs_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
+        "s3.bucket" = "xxxxxx",                              -- required,  Your OBS bucket name
         "provider" = "OBS",                                  -- required
         "use_path_style" = "false"                           -- optional,  OBS suggest setting `false`
     );
@@ -155,10 +155,10 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "type" = "S3",                                      -- required
         "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
         "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
-        "s3.secret_key" = "xxxxxx",                         -- required,  Your OBS secret key
+        "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
         "s3.region" = "us-east-1",                          -- required
         "s3.root.path" = "s3_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                             -- required,  Your s3 bucket name
+        "s3.bucket" = "xxxxxx",                             -- required,  Your S3 bucket name
         "provider" = "S3",                                  -- required
         "use_path_style" = "false"                          -- optional,  S3 suggest setting `false`
     );
@@ -208,6 +208,12 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "provider" = "GCP"                                   -- required
     );
     ```
+
+**Note**
+
+[The s3.access_key corresponds to the Access ID of the GCP HMAC key](https://cloud.google.com/storage/docs/authentication/hmackeys)
+
+[The s3.secret_key corresponds to the Secret of the GCP HMAC key](https://cloud.google.com/storage/docs/authentication/hmackeys)
 
 ### Keywords
 
