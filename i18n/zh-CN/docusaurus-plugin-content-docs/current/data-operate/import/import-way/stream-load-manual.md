@@ -582,7 +582,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 指定导入需要 Merge 的 Sequence 列
 
-当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通过制定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
+当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于 `DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通指定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -715,9 +715,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 表结构：
 
 ```sql
-`id` bigint(30) NOT NULL,
-`order_code` varchar(30) DEFAULT NULL COMMENT '',
-`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testDb.testTbl (
+    `id` BIGINT(30) NOT NULL,
+    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
+    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
 JSON 数据格式：
