@@ -454,8 +454,23 @@
                             "label": "Authentication and Authorization",
                             "items": [
                                 "admin-manual/auth/authentication-and-authorization",
-                                "admin-manual/auth/ldap",
-                                "admin-manual/auth/ranger"
+                                {
+                                    "type": "category",
+                                    "label": "Authentication",
+                                    "items": [
+                                        "admin-manual/auth/authentication/internal",
+                                        "admin-manual/auth/authentication/federation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Authorization",
+                                    "items": [
+                                        "admin-manual/auth/authorization/internal",
+                                        "admin-manual/auth/authorization/ranger",
+                                        "admin-manual/auth/authorization/data"
+                                    ]
+                                }
                             ]
                         },
                         "admin-manual/audit-plugin",
