@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/checksum?tablet_id={int}&version={int}&schema_hash={int}`
 
-## Description
+## 描述
 
 checksum
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
     需要校验的 tablet 的 id
@@ -45,16 +45,16 @@ checksum
 * `schema_hash`
     schema hash
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```
     1843743562
     ```
-## Examples
+## 示例
 
 
     ```
