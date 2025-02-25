@@ -64,7 +64,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### 第 3 步：使用 S3 Load 导入数据
 
 :::caution Caution
-Azure Storage 默认要求 HTTPs 传输，对应的存储账户配置是 `需要安全传输：已启用`。
+Azure Storage 默认要求 HTTPS 传输，对应的存储账户配置是 `需要安全传输：已启用`。
 必须在 Doris `be.conf` 中设置 `s3_client_http_scheme = https` 才能正常访问 Azure Storage。
 
 Azure S3 properties 中的 `s3.region` 可以省略。

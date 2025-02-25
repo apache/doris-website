@@ -32,7 +32,7 @@ Doris provides two ways to load files from S3 Compatible Storage:
 The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
 :::
 
-## load with S3 Load
+## Load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 

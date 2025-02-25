@@ -164,7 +164,7 @@ INTO TABLE [<db_name>.]<table_name>
 
 | 模块                  | 说明                                                         |
 | --------------------- | ------------------------------------------------------------ |
-| INFILE                | 指定本地文件路径，可以是相对路径，也可以是绝对路径。目前 load_data_file 只支持单个文件，不支持。 |
+| INFILE                | 指定本地文件路径，可以是相对路径，也可以是绝对路径。目前 load_data_file 只支持单个文件导入。 |
 | INTO TABLE            | 指定数据库名与表名，可以省略数据库名。                       |
 | PARTITION             | 指定导入的分区。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。 |
 | COLUMNS TERMINATED BY | 指定导入的列分隔符。                                         |
@@ -192,7 +192,7 @@ INTO TABLE [<db_name>.]<table_name>
 
 ### 指定导入超时时间
 
-通过制定 PROPERTIES 参数 timeout 可以调整导入超时时间。在以下案例中将超时时间设置为 100s：
+通过指定 PROPERTIES 参数 timeout 可以调整导入超时时间。在以下案例中将超时时间设置为 100s：
 
 ```sql
 LOAD DATA LOCAL
@@ -203,7 +203,7 @@ PROPERTIES ("timeout"="100");
 
 ### 指定导入允许误差率
 
-通过指定 PROPERTIES 参数 max_filter_ratio 可以调整导入超时时间。在以下案例中将错误容忍率设置为 20%：
+通过指定 PROPERTIES 参数 max_filter_ratio 可以调整导入容错率。在以下案例中将错误容忍率设置为 20%：
 
 ```sql
 LOAD DATA LOCAL
@@ -237,7 +237,7 @@ LINES TERMINATED BY '\n';
 
 ### 指定导入分区
 
-通过 PARTITON 子句可以指定导入分区。在以下案例中将数据导入指定分区 p1 与 p2，如果数据不属于 p1 与 p2 分区，会被过滤掉：
+通过 PARTITION 子句可以指定导入分区。在以下案例中将数据导入指定分区 p1 与 p2，如果数据不属于 p1 与 p2 分区，会被过滤掉：
 
 ```sql
 LOAD DATA LOCAL
