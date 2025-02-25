@@ -207,6 +207,10 @@
     "message": "安全概述",
     "description": "The label for category Security Overview in sidebar docs"
   },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
   "sidebar.docs.category.Data Transmission Encryption": {
     "message": "传输加密",
     "description": "The label for category Data Transmission Encryption in sidebar docs"
