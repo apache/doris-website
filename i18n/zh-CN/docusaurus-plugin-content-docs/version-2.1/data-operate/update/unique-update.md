@@ -23,7 +23,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-主要讲述如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
+
+主要介绍如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
 
 ## 适用场景
 
@@ -33,7 +34,7 @@ under the License.
 
 ## 基本原理
 
-利用查询引擎自身的 where 过滤逻辑，从待更新表中筛选出需要被更新的行。再利用 Unique 模型自带的 Value 列新数据替换旧数据的逻辑，将待更新的行变更后重新插入到表中，从而实现行级别更新。
+利用查询引擎自身的 where 过滤逻辑，从待更新表中筛选出需要被更新的行。再利用 Unique 模型自带的 Value 列新数据替换旧数据的逻辑，将待更新的行变更后，再重新插入到表中，从而实现行级别更新。
 
 ### 同步
 
@@ -41,11 +42,11 @@ Update 语法在 Doris 中是一个同步语法，即 Update 语句执行成功�
 
 ### 性能
 
-Update 语句的性能和待更新的行数以及条件的检索效率密切相关。
+Update 语句的性能和待更新的行数以及查询条件的检索效率密切相关。
 
 - 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。对于小范围更新，Doris 支持的频率与`INSERT INTO`语句类似，对于大范围更新，由于单个 update 执行的时间较长，仅适用于低频调用。
 
-- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要扫全表，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
+- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要全表扫描，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
 
 ## 使用示例
 

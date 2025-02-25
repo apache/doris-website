@@ -49,12 +49,12 @@ under the License.
 | DELETE         | 支持           | 支持           | 不支持         |
 | sequence 列    | 支持           | 支持           | 不支持         |
 | delete_sign    | 支持           | 支持           | 不支持         |
-| 部分列更新     | 支持           | 不支持         | 支持（但无法更新 null 值） |
+| 部分列更新     | 支持           | 不支持         | 支持 (但无法更新 null 值) |
 | 倒排索引       | 支持           | 不支持         | 不支持         |
 
 ## 主键（Unique）模型的更新
 
-Doris 主键（unique）模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
+Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
 
 在 Doris 2.0，默认创建的 unique 模型依旧是 MoR 的，如果要创建 MoW 的，需要通过参数 "enable_unique_key_merge_on_write" = "true" 手动指定，如下示例：
 

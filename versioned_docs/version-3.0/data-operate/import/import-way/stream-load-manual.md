@@ -26,15 +26,15 @@ under the License.
 
 Stream Load supports importing local files or data streams into Doris through the HTTP protocol. 
 
-Stream Load is a synchronous import method that returns the import result after the import is executed, allowing you to determine the success of the import through the request response. Generally, user can use Stream Load to import files under 10GB. If the file is too large, it is recommended to split the file and then use Stream Load for importing. Stream Load can ensure the atomicity of a batch of import tasks, meaning that either all of them succeed or all of them fail.
+Stream Load is a synchronous import method that returns the import result after the import is executed, allowing you to determine the success of the import through the request response. Generally, users can use Stream Load to import files under 10GB. If the file is too large, it is recommended to split the file and then use Stream Load for importing. Stream Load can ensure the atomicity of a batch of import tasks, meaning that either all of them succeed or all of them fail.
 
 :::tip
 
-In comparison to single-threaded load using `curl`, Doris Streamloader is a client tool designed for loading data into Apache Doris. it reduces the ingestion latency of large datasets by its concurrent loading capabilities. It comes with the following features:
+In comparison to single-threaded load using `curl`, Doris Streamloader is a client tool designed for loading data into Apache Doris. It reduces the ingestion latency of large datasets by its concurrent loading capabilities. It comes with the following features:
 
 - **Parallel loading**: multi-threaded load for the Stream Load method. You can set the parallelism level using the `workers` parameter.
-- **Multi-file load:** simultaneously load of multiple files and directories with one shot. It supports recursive file fetching and allows you to specify file names with wildcard characters.
-- **Path traversal support:** support path traversal when the source files are in directories
+- **Multi-file load:** simultaneously loading of multiple files and directories with one shot. It supports recursive file fetching and allows you to specify file names with wildcard characters.
+- **Path traversal support:** supports path traversal when the source files are in directories
 - **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
 - **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
 
@@ -52,11 +52,11 @@ Stream Load supports importing CSV, JSON, Parquet, and ORC format data from loca
 
 When using Stream Load, it is necessary to initiate an import job through the HTTP protocol to the FE (Frontend) node. The FE will redirect the request to a BE (Backend) node in a round-robin manner to achieve load balancing. It is also possible to send HTTP requests directly to a specific BE node. In Stream Load, Doris selects one node to serve as the Coordinator node. The Coordinator node is responsible for receiving data and distributing it to other nodes.
 
-The following figure shows the main flow of Stream load, omitting some import details.
+The following figure shows the main flow of Stream Load, omitting some import details.
 
 ![Basic principles](/images/stream-load.png)
 
-1. The client submits a Stream Load import job request to the FE (Frontend).
+1. The client submits a Stream Load imports job request to the FE (Frontend).
 2. The FE selects a BE (Backend) as the Coordinator node in a round-robin manner, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.
 3. The client connects to the Coordinator BE node and submits the import request.
 4. The Coordinator BE distributes the data to the appropriate BE nodes and returns the import result to the client once the import is complete.
@@ -66,7 +66,7 @@ The following figure shows the main flow of Stream load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual).
+For detailed syntax, please refer to [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
 
 ### Prerequisite check
 
@@ -107,7 +107,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-3. Enabling the load job
+3. Enable the load job
 
    The Stream Load job can be submitted using the `curl` command.
 
@@ -266,7 +266,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
   -XPUT http://fe_host:http_port/api/{db}/{table}/_stream_load
 ```
 
-Stream Load operations support both HTTP chunked and non-chunked import methods. For non-chunked imports, it is necessary to have a Content-Length header to indicate the length of the uploaded content, which ensures data integrity.
+Stream Load operation supports both HTTP chunked and non-chunked import methods. For non-chunked imports, it is necessary to have a Content-Length header to indicate the length of the uploaded content, which ensures data integrity.
 
 ### Load configuration parameters
 
@@ -287,7 +287,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 
    - Default value: 10240 (MB)
    - Dynamic configuration: Yes
-   - Parameter description: The maximum import size for Stream load. If the user's original file exceeds this value, the `streaming_load_max_mb` parameter on the BE needs to be adjusted.
+   - Parameter description: The maximum import size for Stream Load. If the user's original file exceeds this value, the `streaming_load_max_mb` parameter on the BE needs to be adjusted.
 
 2. Header parameters
 
@@ -316,7 +316,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 | fuzzy_parse                  | It is a boolean type. If set to true, the JSON will be parsed with the first row as the schema. Enabling this option can improve the efficiency of JSON imports, but it requires that the order of the keys in all JSON objects be consistent with the first line. The default is false and it is only used for JSON format. |
 | num_as_string                | It is a boolean type. When set to true, indicates that numeric types will be converted to strings during JSON parsing to ensure no loss of precision during the import process. |
 | read_json_by_line            | It is a boolean type. When set to true, indicates support for reading one JSON object per line, defaulting to false. |
-| send_batch_parallelism       | An integer used to set the parallelism for sending batch-processed data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` configured in BE, the coordinating BE will use the `max_send_batch_parallelism_per_job value`. |
+| send_batch_parallelism       | Sets the parallelism for the parallelism for sending batch-processed data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` configured in BE, the coordinating BE will use the `max_send_batch_parallelism_per_job value`. |
 | hidden_columns               | Used to specify hidden columns in the imported data, which takes effect when the Header does not include Columns. Multiple hidden columns are separated by commas. The system will use the user-specified data for import. In the following example, the last column of data in the imported data is `__DORIS_SEQUENCE_COL__`. `hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__`. |
 | load_to_single_tablet        | It is a boolean type. When set to true, indicates support for importing data only to a single Tablet corresponding to the partition, defaulting to false. This parameter is only allowed when importing to an OLAP table with random bucketing. |
 | compress_type                | Currently, only compression of CSV files is supported. Compression formats include gz, lzo, bz2, lz4, lzop, and deflate. |
@@ -326,6 +326,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 | enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
 | memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
+|unique_key_update_mode        | The update modes on Unique tables, currently are only effective for Merge-On-Write Unique tables. Supporting three types: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: Indicates that data is loaded with upsert semantics; `UPDATE_FIXED_COLUMNS`: Indicates that data is loaded through partial updates; `UPDATE_FLEXIBLE_COLUMNS`: Indicates that data is loaded through flexible partial updates.|
 
 ### Load return value
 
@@ -469,7 +470,7 @@ The following example demonstrates this usage through a bash command pipeline. T
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-### Setting CSV first row filtering 
+### Set CSV first row filtering 
 
 File data:
 
@@ -487,7 +488,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 ### Specifying merge_type for DELETE operations
 
-In stream load, there are three import types: APPEND, DELETE, and MERGE. These can be adjusted by specifying the parameter `merge_type`. If you want to specify that all data with the same key as the imported data should be deleted, you can use the following command:
+In Stream Load, there are three import types: APPEND, DELETE, and MERGE. These can be adjusted by specifying the parameter `merge_type`. If you want to specify that all data with the same key as the imported data should be deleted, you can use the following command:
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -594,10 +595,10 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 Given the following table schema:
 
 ```sql
-mysql> SET show_hidden_columns=true;
+SET show_hidden_columns=true;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> DESC table1;
+DESC table1;
 +------------------------+--------------+------+-------+---------+---------+
 | Field                  | Type         | Null | Key   | Default | Extra   |
 +------------------------+--------------+------+-------+---------+---------+
@@ -711,19 +712,15 @@ Here's an example of loading data into a table that contains a field with the DE
 Table schema:
 
 ```sql
-CREATE TABLE testDb.testTbl (
-    `id` BIGINT(30) NOT NULL,
-    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
-    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 10;
+`id` bigint(30) NOT NULL,
+`order_code` varchar(30) DEFAULT NULL COMMENT '',
+`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
 ```
 
 JSON data type:
 
 ```Plain
-{"id":1,"order_code":"avc"}
+{"id":1,"order_Code":"avc"}
 ```
 
 Command:
@@ -1010,12 +1007,12 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Strict Mode](../handling-messy-data#enable-strict-mode) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Handling Messy Data](../../../data-operate/import/handling-messy-data) documentation.
 
-### Perform partial column updates during import
+### Perform partial column updates/flexible partial update during import
 
 For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
 
 ## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../data-operate/import/import-way/stream-load-manual) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
+For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySQL client command line to get more help information.
