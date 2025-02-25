@@ -83,7 +83,7 @@ illustrate:
 2. backends: Displays the node list of BE in the cluster, equivalent to [SHOW BACKENDS](../cluster-management/instance-management/SHOW-BACKENDS)
 3. bdbje: To view the bdbje database list, you need to modify the `fe.conf` file to add `enable_bdbje_debug_mode=true`, and then start `FE` through `sh start_fe.sh --daemon` to enter the `debug` mode. After entering `debug` mode, only `http server` and `MySQLServer` will be started and the `BDBJE` instance will be opened, but no metadata loading and subsequent startup processes will be entered.
 4. brokers : View cluster broker node information, equivalent to [SHOW BROKER](../cluster-management/instance-management/SHOW-BROKER)
-5. catalogs : View the data catalogs that have been created currently, equivalent to [SHOW CATALOGS](./SHOW-CATALOGS.md)
+5. catalogs : View the data catalogs that have been created currently, equivalent to [SHOW CATALOGS](../catalog/SHOW-CATALOG.md)
 6. cluster_balance : To check the balance of the cluster, please refer to [Data Copy Management](../../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
 7. cluster_health: Run <code>SHOW PROC '/cluster_health/tablet_health';</code> statement to view the replica status of the entire cluster.
 8. colocation_group : This command can view the existing Group information in the cluster. For details, please refer to the [Colocation Join](../../../query-acceleration/colocation-join) chapter

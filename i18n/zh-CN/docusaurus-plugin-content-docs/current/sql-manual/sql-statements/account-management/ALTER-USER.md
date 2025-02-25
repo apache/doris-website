@@ -96,7 +96,7 @@ password_policy:
 
 ## 注意事项
 
-1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT.md)和[REVOKE](./REVOKE.md)。
+1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT-TO.md)和[REVOKE](./REVOKE-FROM.md)。
 
 2. 在一个 ALTER USER 命令中，只能同时对以下账户属性中的一项进行修改：
 - 修改密码

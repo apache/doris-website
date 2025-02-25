@@ -65,7 +65,7 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
 
 - VOlapScanNode 下面有 SORT LIMIT 代表有优化 2
 
-- OPT TWO PHRASE 代表有优化 3
+- OPT TWO PHASE 代表有优化 3
 
 ```sql
   1:VTOP-N(137)

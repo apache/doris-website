@@ -151,7 +151,7 @@ MySQL> select * from test_table;
 
 **1. Stream Load**
 
-stream load 的写法是在 header 中的 `function_column.sequence_col` 字段添加隐藏列对应的 source_sequence 的映射，示例
+Stream Load 的写法是在 header 中的 `function_column.sequence_col` 字段添加隐藏列对应的 source_sequence 的映射，示例如下：
 
 ```shell
 curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load

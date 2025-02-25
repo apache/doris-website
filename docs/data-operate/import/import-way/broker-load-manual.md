@@ -300,7 +300,7 @@ If ORC files are generated directly using certain Hive versions, the column head
 
 **5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
 
-The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating bucket paths.
+The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating buckets.
 
 **6. Import Timeout**
 

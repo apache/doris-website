@@ -24,19 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
-This statement is used to display hot spot information for file caches.
+This statement is used to display the hotspot information of the file cache.
+
+:::info Note
+
+Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query cache hotspot information statistics. Starting from version 3.0.4, the use of the `SHOW CACHE HOTSPOT` statement for cache hotspot information statistics is no longer supported. Please directly access the system table `__internal_schema.cloud_cache_hotspot` for queries. For detailed usage, refer to [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache). 
 
 
-:::info note
-Before version 3.0.4, the `SHOW CACHE HOTSPOT` statement can be used to query cache hotness information statistics. Starting from version 3.0.4, the `SHOW CACHE HOTSPOT` statement is no longer supported for querying cache hotness information statistics. Please directly query the system table `__internal_schema.cloud_cache_hotspot`. For specific usage, please refer to [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache).
-:::
 
 ## Syntax
 
+
 ```sql
-   SHOW CACHE HOTSPOT '/[<compute_group_name>/<table_name>]';
+   SHOW CACHE HOTSPOT '/[<compute_group_name>/<db.table_name>]';
 ```
 
 ## Parameters
@@ -63,4 +66,3 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 
 - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
 - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
-

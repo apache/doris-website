@@ -132,7 +132,7 @@ ODBC 的相关参数如下：
    );
    ```
 
-   如果 s3 reource 在[冷热分层](../../../../../docs/advanced/cold_hot_separation.md)中使用，需要添加额外的字段。
+   如果 s3 reource 在[冷热分层](../../../../table-design/tiered-storage/overview)中使用，需要添加额外的字段。
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES
@@ -204,7 +204,7 @@ HDFS 相关参数如下：
 
 **6. 创建 HMS resource**
 
-   HMS resource 用于 [hms catalog](../../../../lakehouse/datalake-analytics/hive)
+   HMS resource 用于 [hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

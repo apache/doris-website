@@ -54,8 +54,8 @@ The commands are used to display warm-up jobs in Doris.
    SHOW WARM UP JOB WHERE id = 13418;
 ```
 
-## References
 
- - [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
- - [WARMUP COMPUTE GROUP](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+## Related Commands
+
+ - [WARMUP COMPUTE GROUP](./WARM-UP.md)
 

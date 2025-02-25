@@ -30,12 +30,12 @@ under the License.
 
 Doris 支持以下方式导入 CSV 格式数据：
 
-- [Stream Load](../import-way/stream-load-manual.md)
-- [Broker Load](../import-way/broker-load-manual.md)
-- [Routine Load](../import-way/routine-load-manual.md)
-- [MySQL Load](../import-way/mysql-load-manual.md)
+- [Stream Load](../import-way/stream-load-manual)
+- [Broker Load](../import-way/broker-load-manual)
+- [Routine Load](../import-way/routine-load-manual)
+- [MySQL Load](../import-way/mysql-load-manual)
 - [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## 参数配置
 

@@ -74,10 +74,6 @@ Apache Doris 已支持的数据类型列表如下：
 | [QUANTILE_STATE](../sql-manual/sql-data-types/aggregate/QUANTILE-STATE) | 不定长     | QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对相同的 Key，不同 Value 进行预聚合，当 value 数量不超过 2048 时采用明细记录所有数据，当 Value 数量大于 2048 时采用 TDigest 算法，对数据进行聚合（聚类）保存聚类后的质心点。QUANTILE_STATE 不能作为 Key 列使用，建表时配合聚合类型为 QUANTILE_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。QUANTILE_STATE 列只能通过配套的 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数进行查询或使用。 |
 | [AGG_STATE](../sql-manual/sql-data-types/aggregate/AGG-STATE.md)      | 不定长     | 聚合函数，只能配合 state/merge/union 函数组合器使用。AGG_STATE 不能作为 Key 列使用，建表时需要同时声明聚合函数的签名。用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。 |
 
-### [IP 类型](../sql-manual/sql-data-types/data-type-overview#ip-类型)
-| 类型名         | 存储空间（字节）| 描述                                                     |
-| -------------- | --------- | ------------------------------------------------------------ |
-| [IPv4](../sql-manual/sql-data-types/ip/IPV4)            |   4 字节  |  以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。         |
-| [IPv6](../sql-manual/sql-data-types/ip/IPV6)            |   16 字节  |  以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。      |
+
 
 也可通过`SHOW DATA TYPES;`语句查看 Apache Doris 支持的所有数据类型。
