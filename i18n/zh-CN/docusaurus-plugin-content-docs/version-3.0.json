@@ -263,9 +263,9 @@
     "message": "数据加密",
     "description": "The label for category Data Encryption in sidebar docs"
   },
-  "sidebar.docs.category.Data Transmission Encryption": {
+  "sidebar.docs.category.Encryption in Transit": {
     "message": "传输加密",
-    "description": "The label for category Data Transmission Encryption in sidebar docs"
+    "description": "The label for category Encryption in Transit in sidebar docs"
   },
   "sidebar.docs.category.Authentication": {
     "message": "身份认证",
