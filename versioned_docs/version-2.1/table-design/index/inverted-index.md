@@ -339,13 +339,13 @@ To check the actual effect of tokenization or to tokenize a piece of text, you c
 
 The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
 
-mysql> SELECT TOKENIZE('I love Doris','"parser"="english"');
+SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
 | tokenize('I love Doris', '"parser"="english"') |
 +------------------------------------------------+
 | ["i", "love", "doris"]                         |
 +------------------------------------------------+
-1 row in set (0.02 sec)
+
 
 ```
 
@@ -419,13 +419,12 @@ curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz 
 **Confirm Data Import Success with SQL count()**
 
 ```sql
-mysql> SELECT count() FROM hackernews_1m;
+SELECT count() FROM hackernews_1m;
 +---------+
 | count() |
 +---------+
 | 1000000 |
 +---------+
-1 row in set (0.02 sec)
 ```
 
 ### Queries
@@ -435,13 +434,12 @@ mysql> SELECT count() FROM hackernews_1m;
 - Using `LIKE` to match and count rows containing 'OLAP' in the `comment` column took 0.18s.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%';
+  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%';
   +---------+
   | count() |
   +---------+
   |      34 |
   +---------+
-  1 row in set (0.18 sec)
   ```
 
 - Using full-text search with `MATCH_ANY` based on the inverted index to count rows containing 'OLAP' in the `comment` column took 0.02s, resulting in a 9x speedup. The performance improvement would be even more significant on larger datasets.
@@ -449,33 +447,30 @@ mysql> SELECT count() FROM hackernews_1m;
   The difference in the number of results is due to the inverted index normalizing the terms by converting them to lowercase, among other processes, hence `MATCH_ANY` yields more results than `LIKE`.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP';
+  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP';
   +---------+
   | count() |
   +---------+
   |      35 |
   +---------+
-  1 row in set (0.02 sec)
   ```
 
 - Similarly, comparing the performance for counting occurrences of 'OLTP', 0.07s vs 0.01s. Due to caching, both `LIKE` and `MATCH_ANY` improved, but the inverted index still provided a 7x speedup.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLTP%';
+  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLTP%';
   +---------+
   | count() |
   +---------+
   |      48 |
   +---------+
-  1 row in set (0.07 sec)
 
-  mysql> SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLTP';
+  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLTP';
   +---------+
   | count() |
   +---------+
   |      51 |
   +---------+
-  1 row in set (0.01 sec)
   ```
 
 - Counting rows where both 'OLAP' and 'OLTP' appear took 0.13s vs 0.01s, a 13x speedup.
@@ -483,21 +478,20 @@ mysql> SELECT count() FROM hackernews_1m;
   To require multiple terms to appear simultaneously (AND relationship), use `MATCH_ALL 'keyword1 keyword2 ...'`.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' AND comment LIKE '%OLTP%';
+  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' AND comment LIKE '%OLTP%';
   +---------+
   | count() |
   +---------+
   |      14 |
   +---------+
-  1 row in set (0.13 sec)
 
-  mysql> SELECT count() FROM hackernews_1m WHERE comment MATCH_ALL 'OLAP OLTP';
+
+  SELECT count() FROM hackernews_1m WHERE comment MATCH_ALL 'OLAP OLTP';
   +---------+
   | count() |
   +---------+
   |      15 |
   +---------+
-  1 row in set (0.01 sec)
   ```
 
 - Counting rows where either 'OLAP' or 'OLTP' appears took 0.12s vs 0.01s, a 12x speedup.
@@ -505,21 +499,19 @@ mysql> SELECT count() FROM hackernews_1m;
   To require any one or more of multiple terms to appear (OR relationship), use `MATCH_ANY 'keyword1 keyword2 ...'`.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' OR comment LIKE '%OLTP%';
+  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' OR comment LIKE '%OLTP%';
   +---------+
   | count() |
   +---------+
   |      68 |
   +---------+
-  1 row in set (0.12 sec)
   
-  mysql> SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP OLTP';
+  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP OLTP';
   +---------+
   | count() |
   +---------+
   |      71 |
   +---------+
-  1 row in set (0.01 sec)
   ```
 
   ### 02 Standard Equality and Range Queries
@@ -527,13 +519,12 @@ mysql> SELECT count() FROM hackernews_1m;
 - Range query on a `DateTime` type column
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
+  SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
   +---------+
   | count() |
   +---------+
   |  999081 |
   +---------+
-  1 row in set (0.03 sec)
   ```
 
 - Adding an inverted index for the `timestamp` column
@@ -541,71 +532,65 @@ mysql> SELECT count() FROM hackernews_1m;
   ```sql
   -- For date-time types, USING INVERTED does not require specifying a parser
   -- CREATE INDEX is one syntax for creating an index, another method will be shown later
-  mysql> CREATE INDEX idx_timestamp ON hackernews_1m(timestamp) USING INVERTED;
-  Query OK, 0 rows affected (0.03 sec)
+  CREATE INDEX idx_timestamp ON hackernews_1m(timestamp) USING INVERTED;
   ```
 
   ```sql
-  mysql> BUILD INDEX idx_timestamp ON hackernews_1m;
-  Query OK, 0 rows affected (0.01 sec)
+  BUILD INDEX idx_timestamp ON hackernews_1m;
   ```
 
 - Checking the index creation progress. From the difference between `FinishTime` and `CreateTime`, we can see that building the inverted index for 1 million rows on the `timestamp` column took only 1 second.
 
   ```sql
-  mysql> SHOW ALTER TABLE COLUMN;
+  SHOW ALTER TABLE COLUMN;
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
   | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
   | 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  1 row in set (0.00 sec)
   ```
 
   ```sql
   -- If the table has no partitions, PartitionName defaults to TableName
-  mysql> SHOW BUILD INDEX;
+  SHOW BUILD INDEX;
   +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
   | JobId | TableName     | PartitionName | AlterInvertedIndexes                                     | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
   +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
   | 10191 | hackernews_1m | hackernews_1m | [ADD INDEX idx_timestamp (`timestamp`) USING INVERTED],  | 2023-06-26 15:32:33.894 | 2023-06-26 15:32:34.847 | 3             | FINISHED |      | NULL     |
   +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  1 row in set (0.04 sec)
   ```
 
 - After the index is created, range queries use the same query syntax. Doris will automatically recognize the index for optimization. However, due to the small dataset, the performance difference is not significant.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
+  SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
   +---------+
   | count() |
   +---------+
   |  999081 |
   +---------+
-  1 row in set (0.01 sec)
   ```
 
 - Performing similar operations on a numeric column `parent` with an equality match query.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE parent = 11189;
+  SELECT count() FROM hackernews_1m WHERE parent = 11189;
   +---------+
   | count() |
   +---------+
   |       2 |
   +---------+
-  1 row in set (0.01 sec)
 
   -- For numeric types, USING INVERTED does not require specifying a parser
   -- ALTER TABLE t ADD INDEX is the second syntax for creating an index
-  mysql> ALTER TABLE hackernews_1m ADD INDEX idx_parent(parent) USING INVERTED;
-  Query OK, 0 rows affected (0.01 sec)
+  ALTER TABLE hackernews_1m ADD INDEX idx_parent(parent) USING INVERTED;
+
 
   -- Execute BUILD INDEX to create the inverted index for existing data
-  mysql> BUILD INDEX idx_parent ON hackernews_1m;
-  Query OK, 0 rows affected (0.01 sec)
+  BUILD INDEX idx_parent ON hackernews_1m;
 
-  mysql> SHOW ALTER TABLE COLUMN;
+
+  SHOW ALTER TABLE COLUMN;
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
   | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
@@ -613,46 +598,44 @@ mysql> SELECT count() FROM hackernews_1m;
   | 10053 | hackernews_1m | 2023-02-10 19:49:32.893 | 2023-02-10 19:49:33.982 | hackernews_1m | 10054   | 10008         | 1:378856428   | 4             | FINISHED |      | NULL     | 2592000 |
   +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
 
-  mysql> SHOW BUILD INDEX;
+  SHOW BUILD INDEX;
   +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
   | JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
   +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
   | 11005 | hackernews_1m | hackernews_1m | [ADD INDEX idx_parent (`parent`) USING INVERTED],  | 2023-06-26 16:25:10.167 | 2023-06-26 16:25:10.838 | 1002          | FINISHED |      | NULL     |
   +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  1 row in set (0.01 sec)
 
-  mysql> SELECT count() FROM hackernews_1m WHERE parent = 11189;
+
+  SELECT count() FROM hackernews_1m WHERE parent = 11189;
   +---------+
   | count() |
   +---------+
   |       2 |
   +---------+
-  1 row in set (0.01 sec)
   ```
 
 - Creating an inverted index for the string column `author` without tokenization. Equality queries can also leverage the index for speedup.
 
   ```sql
-  mysql> SELECT count() FROM hackernews_1m WHERE author = 'faster';
+  SELECT count() FROM hackernews_1m WHERE author = 'faster';
   +---------+
   | count() |
   +---------+
   |      20 |
   +---------+
-  1 row in set (0.03 sec)
   
   -- Here, USING INVERTED is used without tokenizing the `author` column, treating it as a single term
-  mysql> ALTER TABLE hackernews_1m ADD INDEX idx_author(author) USING INVERTED;
-  Query OK, 0 rows affected (0.01 sec)
+  ALTER TABLE hackernews_1m ADD INDEX idx_author(author) USING INVERTED;
+
   
   -- Execute BUILD INDEX to add the inverted index for existing data
-  mysql> BUILD INDEX idx_author ON hackernews_1m;
-  Query OK, 0 rows affected (0.01 sec)
+  BUILD INDEX idx_author ON hackernews_1m;
+
   
 Creating an incremental index for 1 million author records took only 1.5 seconds.
 
 ```sql
-mysql> SHOW ALTER TABLE COLUMN;
+SHOW ALTER TABLE COLUMN;
 +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
 | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
 +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
@@ -663,24 +646,22 @@ mysql> SHOW ALTER TABLE COLUMN;
 ```
 
 ```sql
-mysql> SHOW BUILD INDEX ORDER BY CreateTime DESC LIMIT 1;
+SHOW BUILD INDEX ORDER BY CreateTime DESC LIMIT 1;
 +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
 | JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
 +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
 | 13006 | hackernews_1m | hackernews_1m | [ADD INDEX idx_author (`author`) USING INVERTED],  | 2023-06-26 17:23:02.610 | 2023-06-26 17:23:03.755 | 3004          | FINISHED |      | NULL     |
 +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-1 row in set (0.01 sec)
 ```
 
 -- After creating the index, string equality matches also showed significant acceleration.
 
 ```sql
-mysql> SELECT count() FROM hackernews_1m WHERE author = 'faster';
+SELECT count() FROM hackernews_1m WHERE author = 'faster';
 +---------+
 | count() |
 +---------+
 |      20 |
 +---------+
-1 row in set (0.01 sec)
 ```
 
