@@ -177,7 +177,7 @@ const config = {
     ],
     themes: [
         [
-            '@easyops-cn/docusaurus-search-local',
+            '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
                 language: ['en', 'zh'],
