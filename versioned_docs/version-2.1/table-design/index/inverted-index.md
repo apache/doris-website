@@ -41,35 +41,35 @@ Inverted indexes have a wide range of applications and can accelerate equality, 
 
 The functionality of inverted indexes is briefly introduced as follows:
 
-**1. Accelerate full-text searches for string types** 
+1. **Accelerate full-text searches for string types**
 
-  - Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
-  
-  - Support for phrase queries `MATCH_PHRASE`
+   - Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
 
-  - Support for tokenized regular expression queries `MATCH_REGEXP`
+   - Support for phrase queries `MATCH_PHRASE`,  specifying `slop` for word distence and phrase + prefix `MATCH_PHRASE_PREFIX`
 
-  - Support for English, Chinese, and Unicode tokenizers
+   - Support for tokenized regular expression queries `MATCH_REGEXP`
 
-**2. Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
+   - Support for English, Chinese, and Unicode tokenizers
 
-  - Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
+2. **Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
 
-  - Support for fast filtering of string, numerical, and datetime array types for `array_contains`
+   - Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
 
-**3. Support for comprehensive logical combinations**
+   - Support for fast filtering of string, numerical, and datetime array types for `array_contains`
 
-  - Not only supports acceleration for AND conditions but also for OR and NOT conditions
+3. **Support for comprehensive logical combinations**
 
-  - Supports arbitrary logical combinations of multiple conditions with AND, OR, NOT
+   - Not only supports acceleration for AND conditions but also for OR and NOT conditions
 
-**4. Flexible and efficient index management**
+   - Supports arbitrary logical combinations of multiple conditions with AND, OR, NOT
 
-  - Support for defining inverted indexes when creating a table
+4. **Flexible and efficient index management**
 
-  - Support for adding inverted indexes to existing tables, with incremental index construction without rewriting existing data in the table
+   - Support for defining inverted indexes when creating a table
 
-  - Support for deleting inverted indexes from existing tables without rewriting existing data in the table
+   - Support for adding inverted indexes to existing tables, with incremental index construction without rewriting existing data in the table
+
+   - Support for deleting inverted indexes from existing tables without rewriting existing data in the table
 
 :::tip
 
@@ -157,7 +157,7 @@ Syntax explanation:
 ```sql
    INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "unicode", "char_filter_type" = "char_replace", "char_filter_pattern" = "._", "char_filter_replacement" = " ")
 ```
-
+`
 </details>
 
 <details>
@@ -175,7 +175,7 @@ Syntax explanation:
   **Whether to convert tokens to lowercase for case-insensitive matching**
   <p>- true: convert to lowercase</p>
   <p>- false: do not convert to lowercase</p>
-  <p>- From version 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
+  <p>- From versions 2.0.7 and 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
 </details>
 
 <details>
@@ -233,7 +233,7 @@ CANCEL BUILD INDEX ON table_name (job_id1, job_id2, ...);
 
 `BUILD INDEX` creates an asynchronous task executed by multiple threads on each BE. The number of threads can be set using the BE config `alter_index_worker_count`, with a default value of 3.
 
-In versions before and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from this version, failure and timeout mechanisms prevent endless retries.
+In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries. 3.0 (Cloud Mode) does not support this command as this moment.
 
 1. If the majority of replicas for a tablet fail to `BUILD INDEX`, the entire `BUILD INDEX` operation fails.
 2. If the time exceeds `alter_table_timeout_second`, the `BUILD INDEX` operation times out.
