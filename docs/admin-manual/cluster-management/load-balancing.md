@@ -285,7 +285,7 @@ Here is the main content of the configuration file `proxysql.cnf`:
 datadir="/var/lib/proxysql"         #Data directory
 admin_variables=
 {
-    admin_credentials="admin:admin"  # Admin databse username and password.
+    admin_credentials="admin:admin"  # Admin database username and password.
     mysql_ifaces="0.0.0.0:6032"    # Admin database port, used for connecting admin database of ProxySQL
 }
 mysql_variables=
@@ -480,7 +480,7 @@ ProxySQL > save mysql servers to disk;
 Query OK, 0 rows affected (0.348 sec)
 ```
 
-Verify monitoring results.
+Verification monitoring results.
 
 The metrics of the ProxySQL monitoring module are all saved in the `monitor.log` table.
 
