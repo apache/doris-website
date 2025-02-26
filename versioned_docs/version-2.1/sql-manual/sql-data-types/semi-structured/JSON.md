@@ -135,7 +135,7 @@ PROPERTIES("replication_num" = "1");
 25	[123, abc]
 ```
 
-- due to the 28% of rows is invalid，stream load with default configuration will fail with error message "too many filtered rows"
+- due to the 28% of rows is invalid, stream load with default configuration will fail with error message "too many filtered rows"
 
 ```
 curl --location-trusted -u root: -T test_json.csv http://127.0.0.1:8840/api/testdb/test_json/_stream_load
@@ -400,7 +400,7 @@ mysql> SELECT id, j, json_extract(j, '$.a1[0]'), json_extract(j, '$.a1[0].k1') F
 ```
 
 1. extract field with specific datatype
-- json_extract_string will extract field with string type，convert to string if the field is not string
+- json_extract_string will extract field with string type, convert to string if the field is not string
 ```
 mysql> SELECT id, j, json_extract_string(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+---------------------------------------------------------------+
@@ -456,7 +456,7 @@ mysql> SELECT id, j, json_extract_string(j, '$.k1') FROM test_json ORDER BY id;
 
 ```
 
-- json_extract_int will extract field with int type，return NULL if the field is not int
+- json_extract_int will extract field with int type, return NULL if the field is not int
 ```
 mysql> SELECT id, j, json_extract_int(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+-----------------------------+
@@ -511,7 +511,7 @@ mysql> SELECT id, j, json_extract_int(j, '$.k2') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-- json_extract_bigint will extract field with bigint type，return NULL if the field is not bigint
+- json_extract_bigint will extract field with bigint type, return NULL if the field is not bigint
 ```
 mysql> SELECT id, j, json_extract_bigint(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -567,7 +567,7 @@ mysql> SELECT id, j, json_extract_bigint(j, '$.k2') FROM test_json ORDER BY id;
 
 ```
 
-- json_extract_double will extract field with double type，return NULL if the field is not double
+- json_extract_double will extract field with double type, return NULL if the field is not double
 ```
 mysql> SELECT id, j, json_extract_double(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -622,7 +622,7 @@ mysql> SELECT id, j, json_extract_double(j, '$.k2') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-- json_extract_bool will extract field with boolean type，return NULL if the field is not boolean
+- json_extract_bool will extract field with boolean type, return NULL if the field is not boolean
 ```
 mysql> SELECT id, j, json_extract_bool(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+------------------------------+
@@ -677,7 +677,7 @@ mysql> SELECT id, j, json_extract_bool(j, '$[1]') FROM test_json ORDER BY id;
 19 rows in set (0.01 sec)
 ```
 
-- json_extract_isnull will extract field with json null type，return 1 if the field is json null , else 0
+- json_extract_isnull will extract field with json null type, return 1 if the field is json null , else 0
 - json null is different from SQL NULL. SQL NULL stands for no value for a field, but json null stands for an field with special value null.
 ```
 mysql> SELECT id, j, json_extract_isnull(j, '$') FROM test_json ORDER BY id;

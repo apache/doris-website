@@ -41,7 +41,7 @@ ARRAY_SORTBY(<lambda>, <arr> [, ...])
 | 参数 | 说明 | 
 | --- |---|
 | `<lambda>` | lambda 表达式，表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。 |
-| `<arr>` | ARRAY数组     |
+| `<arr>` | ARRAY 数组     |
 
 ## 返回值
 

@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-计算输入值是否在 BITMAP 中，返回值是 boolean 值.
+计算输入值是否在 BITMAP 中，返回值是 boolean 值。
 
 ## 语法
 

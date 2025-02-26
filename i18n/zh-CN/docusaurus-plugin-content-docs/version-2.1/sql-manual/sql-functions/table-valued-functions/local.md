@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 ## 语法
 
@@ -42,7 +42,7 @@ LOCAL(
 ## Required Parameters
 | 参数            | 说明                                                                                                                                                                                                | 备注                                              |
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径, 其中 `user_files_secure_path` 参数是 [be的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
+| `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径，其中 `user_files_secure_path` 参数是 [be 的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
 | `backend_id`    |  文件所在的 BE 节点的 ID，可以通过 `show backends` 命令得到                                                                                               | 在 2.1.1 之前的版本中，Doris 仅支持指定某个 BE 节点读取该节点上的本地数据文件 |
 | `format`        | 文件格式，必填，当前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`                                                                  |                                                 |
 
@@ -95,14 +95,14 @@ select * from local(
 +--------------------------------------------------------+
 | c1                                                     |
 +--------------------------------------------------------+
-| start time: 2023年 08月 07日 星期一 23:20:32 CST       |
-| start time: 2023年 08月 07日 星期一 23:32:10 CST       |
-| start time: 2023年 08月 08日 星期二 00:20:50 CST       |
-| start time: 2023年 08月 08日 星期二 00:29:15 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
 +--------------------------------------------------------+
 ```
 
-读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv格式文件：
+读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv 格式文件：
 ```sql
 select * from local(
       "file_path" = "student.csv", 

@@ -24,7 +24,7 @@ under the License.
 
 ## Description
 
-Use the SHA1 algorithm to digest the information。
+Use the SHA1 algorithm to digest the information.
 
 ## Alias
 SHA

@@ -24,9 +24,9 @@ under the License.
 
 ## 描述
 
-计算 32位murmur3 hash值
+计算 32 位 murmur3 hash 值
 
--注：在计算hash值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
+-注：在计算 hash 值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
 
 ## 语法
 
@@ -38,13 +38,13 @@ MURMUR_HASH3_32( <str> [ , <str> ... ] )
 
 | 参数      | 说明 |
 |---------| -- |
-| `<str>` | 需要被计算32位murmur3 hash的值 |
+| `<str>` | 需要被计算 32 位 murmur3 hash 的值 |
 
 ## 返回值
 
-返回输入字符串的32位murmur3 hash值。
+返回输入字符串的 32 位 murmur3 hash 值。
 
--当参数为NULL时，返回NULL
+-当参数为 NULL 时，返回 NULL
 
 ## 示例
 

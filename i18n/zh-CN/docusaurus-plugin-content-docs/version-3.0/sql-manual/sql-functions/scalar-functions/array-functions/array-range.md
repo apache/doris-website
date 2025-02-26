@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-1. 生成int数组
+1. 生成 int 数组
 2. 生成日期时间数组
 
 ## 别名
@@ -51,15 +51,15 @@ ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 | `<start>` | 起始值，为正整数，默认为 0 |
 | `<end>` | 结束值，为正整数 |
 | `<step>` | 步长，为正整数，默认为 1 |
-| `<start_datetime>` | 起始日期，为datetimev2类型 |
-| `<end_datetime>` | 结束日期，为datetimev2类型 |
+| `<start_datetime>` | 起始日期，为 datetimev2 类型 |
+| `<end_datetime>` | 结束日期，为 datetimev2 类型 |
 | `<interval_step>` | 间隔值，默认为 1 |
 | `<unit>` | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
 
 ## 返回值
 
-1. 返回一个数组，从start 到 end - 1, 步长为 step。如果第三个参数 step 为负数或者零，函数结果将为NULL
-2. 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。如果第三个参数 interval_step 为负数或者零，函数结果将为NULL
+1. 返回一个数组，从 start 到 end - 1, 步长为 step。如果第三个参数 step 为负数或者零，函数结果将为 NULL
+2. 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。如果第三个参数 interval_step 为负数或者零，函数结果将为 NULL
 
 ## 举例
 

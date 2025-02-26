@@ -42,11 +42,11 @@ SHOW ROLES
 | Comment               | string | 注释              |
 | Users                 | string | 包含的用户         |
 | GlobalPrivs           | string | 全局权限           |
-| CatalogPrivs          | string | Catalog权限       |
+| CatalogPrivs          | string | Catalog 权限       |
 | DatabasePrivs         | string | 数据库权限         |
 | TablePrivs            | string | 表权限            |
 | ResourcePrivs         | string | 资源权限           |
-| WorkloadGroupPrivs    | string | WorkloadGroup权限  |  
+| WorkloadGroupPrivs    | string | WorkloadGroup 权限  |  
 
 ## 权限控制
 

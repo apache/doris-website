@@ -40,7 +40,7 @@ SHOW COLLATION
 | -- | -- |
 | Collation | 校对名称 |
 | Charset | 字符集 |
-| Id | 校对的ID |
+| Id | 校对的 ID |
 | Default | 是否是该字符集的默认校对 |
 | Compiled | 是否已编译 |
 | Sortlen | 排序长度 |
