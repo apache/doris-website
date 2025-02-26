@@ -24,22 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# FQDN
 
- 
 
 This article introduces how to enable the use of Apache Doris based on FQDN (Fully Qualified Domain Name). FQDN is the complete domain name of a specific computer or host on the Internet.
 
-After Doris supports FQDN, communication between nodes is entirely based on FQDN. When adding various types of nodes, the FQDN should be directly specified. For example, the command to add a BE node is' ALTER SYSTEM ADD BACKEND "be_host:heartbeat_service_port",
-
-'be_host' was previously the IP address of the BE node. After starting the FQDN, be_host should specify the FQDN of the BE node.
+After Doris supports FQDN, communication between nodes is entirely based on FQDN. When adding various types of nodes, the FQDN should be directly specified. For example, the command to add a BE node is' ALTER SYSTEM ADD BACKEND "be_host:heartbeat_service_port", 'be_host' was previously the IP address of the BE node. After starting the FQDN, be_host should specify the FQDN of the BE node.
 
 ## Preconditions
 
 1. fe.conf file set `enable_fqdn_mode = true`.
 2. All machines in the cluster must be configured with a host name.
 3. The IP address and FQDN corresponding to other machines in the cluster must be specified in the '/etc/hosts' file for each machine in the cluster.
-4. /The etc/hosts file cannot have duplicate IP addresses.
+4. The /etc/hosts file cannot have duplicate IP addresses.
 
 ## Best Practices
 
@@ -56,16 +52,16 @@ After Doris supports FQDN, communication between nodes is entirely based on FQDN
    172.22.0.5 be2
    172.22.0.6 be3
    ```
-4. Verification: It can 'ping fe2' on FE1, and can resolve the correct IP address and ping it, indicating that the network environment is available.
+4. Verification: you can 'ping fe2' on FE1, and can resolve the correct IP address and ping it, indicating that the network environment is available.
 5. fe.conf settings for each FE node ` enable_ fqdn_ mode = true`.
-6. Refer to[Standard deployment](../../install/deploy-manually/storage-compute-coupled-deploy-manually)
+6. Refer to[Standard deployment](../../../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually)
 7. Select several machines to deploy broker on six machines as needed, and execute `ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`.
 
 ### Deployment of Doris for K8S
 
 After an unexpected restart of the Pod, K8s cannot guarantee that the Pod's IP will not change, but it can ensure that the domain name remains unchanged. Based on this feature, when Doris enables FQDN, it can ensure that the Pod can still provide services normally after an unexpected restart.
 
-Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/deploy-on-kubernetes/install-operator)
+Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
 
 ### Server change IP
 
@@ -73,7 +69,7 @@ After deploying the cluster according to 'Enable FQDN for new cluster', if you w
 
 ### Enable FQDN for old cluster
 
-Precondition: The current program supports the syntax 'Alter SYSTEM MODIFY FRONTEND'<fe_ip>:<edit_log_port>'HOSTNAME'<fe_hostname>',
+Precondition: The current program supports the syntax `ALTER SYSTEM MODIFY FRONTEND "<fe_ip>:<edit_log_port>" HOSTNAME "<fe_hostname>"`,
 If not, upgrade to a version that supports the syntax
 
 >Note that.

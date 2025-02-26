@@ -59,4 +59,4 @@ mysql> select year_floor("2023-07-13 22:28:18", 5);
 
 ### Best Practice
 
-See also [date_floor](./date_floor)
+See also [date_floor](./date-floor)

@@ -73,7 +73,7 @@ Doris supports the following password policies to assist users in better passwor
 
 1. `PASSWORD_HISTORY`
 
-    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `password_history`. A setting of 0 disables this feature. The default is 0.
+    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `PASSWORD_HISTORY`. A setting of 0 disables this feature. The default is 0.
 
     Examples:
 
@@ -308,7 +308,7 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
 
 3. SET PASSWORD
 
-    - Users with ADMIN privileges or GLOBAL level GRANT privileges can set passwords for non-ROOT users.
+    - Users with ADMIN privileges or GLOBAL level GRANT privileges can set passwords for non-root users.
     - Ordinary users can set the password for their corresponding User Identity. Their corresponding User Identity can be viewed with the `SELECT CURRENT_USER()` command.
     - ROOT users can change their own password.
 

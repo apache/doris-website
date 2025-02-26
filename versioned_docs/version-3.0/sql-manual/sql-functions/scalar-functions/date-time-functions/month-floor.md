@@ -73,4 +73,4 @@ SELECT MONTH_FLOOR("2023-07-13 22:28:18", 5);
 
 ## Best Practices
 
-See also [date_floor](./date_floor)
+See also [date_floor](./date-floor)

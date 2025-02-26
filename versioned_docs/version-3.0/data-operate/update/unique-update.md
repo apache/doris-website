@@ -34,7 +34,7 @@ This document explains how to use the `UPDATE` command to modify data in Doris. 
 
 ## How It Works
 
-The query engine uses its own filtering logic to identify the rows that need to be updated. Then, using the Unique model's Value column logic, it replaces old data with new data. The rows to be updated are modified and reinserted into the table to achieve row-level updates.
+The query engine uses its own filtering logic to identify the rows that need to be updated. Then, using the Unique model's Value column logic to replace old data with new data. The rows to be updated are modified and reinserted into the table to achieve row-level updates.
 
 ### Synchronization
 
@@ -44,9 +44,9 @@ The `UPDATE` syntax in Doris is synchronous, meaning that once the `UPDATE` stat
 
 The performance of the `UPDATE` statement is closely related to the number of rows to be updated and the efficiency of the query conditions.
 
-- Number of rows to be updated: The more rows that need updating, the slower the `UPDATE` statement will be. For small-scale updates, Doris supports a frequency similar to `INSERT INTO` statements. For large-scale updates, due to the long execution time, it is only suitable for infrequent calls.
+- Number of rows to be updated: The more rows that need to be updated, the slower the `UPDATE` statement will be. For small-scale updates, Doris supports a frequency similar to `INSERT INTO` statements. For large-scale updates, due to the long execution time, it is only suitable for infrequent calls.
 
-- Efficiency of query conditions: The `UPDATE` implementation first reads the rows that meet the query conditions. Therefore, if the query conditions are efficient, the `UPDATE` speed will be fast. It is best if the condition columns can hit the index or partition bucket pruning, so Doris does not need to scan the entire table and can quickly locate the rows that need updating, thereby improving update efficiency. It is strongly recommended not to include value columns in the condition columns.
+- Efficiency of query conditions: The `UPDATE` implementation first reads the rows that meet the query conditions. Therefore, if the query conditions are efficient, the `UPDATE` speed will be fast. Ideally, the condition columns should hit the index or partition bucket pruning, so Doris does not need to scan the entire table and can quickly locate the rows that need to be updated, thereby improving update efficiency. It is strongly recommended not to include value columns in the condition columns. 
 
 ## Usage Example
 

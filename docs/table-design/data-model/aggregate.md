@@ -77,6 +77,10 @@ In the example above, a fact table for user information and access behavior is d
 
 The following types of dimension aggregation are supported in the Aggregate Key Model:
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f7d075a99f0c0840b37c2cdb66df9ebe587ad565
 | Aggregation Method       | Description                                                         |
 |--------------------------|---------------------------------------------------------------------|
 | SUM                      | Sum, accumulates multiple Value rows.                               |
@@ -86,6 +90,10 @@ The following types of dimension aggregation are supported in the Aggregate Key 
 | REPLACE_IF_NOT_NULL      | Replace non-null values. Unlike REPLACE, null values are not replaced. |
 | HLL_UNION                | Aggregation method for HLL type columns, using the HyperLogLog algorithm. |
 | BITMAP_UNION             | Aggregation method for BITMAP type columns, performing bitmap union aggregation. |
+<<<<<<< HEAD
+=======
+
+>>>>>>> f7d075a99f0c0840b37c2cdb66df9ebe587ad565
 
 
 :::info Tip:

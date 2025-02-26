@@ -36,7 +36,7 @@ Streamloader 工具是一款用于将数据导入 Doris 数据库的专用客户
 
 - **MySQL Load**
 
-Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。更多文档参考[mysql load](../import-way/mysql-load-manual.md)。
+Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。更多文档参考[MySQL Load](../import-way/mysql-load-manual.md)。
 
 ## 使用 Stream Load 导入
 
@@ -110,7 +110,7 @@ Stream Load 是一种同步导入方式，导入结果会直接返回给用户�
 ### 第 4 步：检查导入数据
 
 ```SQL
-mysql> select count(*) from testdb.test_streamload;
+select count(*) from testdb.test_streamload;
 +----------+
 | count(*) |
 +----------+
@@ -139,7 +139,7 @@ mysql> select count(*) from testdb.test_streamload;
 
 ### 第 2 步：在库中创建表
 
-在 Doris 中创建被导入的表，具体语法如下
+在 Doris 中创建被导入的表，具体语法如下：
 
 ```SQL
 CREATE TABLE testdb.test_streamloader(
@@ -178,7 +178,7 @@ Load Result: {
 ### 第 4 步：检查导入数据
 
 ```SQL
-mysql> select count(*) from testdb.test_streamloader;
+select count(*) from testdb.test_streamloader;
 +----------+
 | count(*) |
 +----------+

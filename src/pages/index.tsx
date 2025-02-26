@@ -1,27 +1,18 @@
 import clsx from 'clsx';
 import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
-import More from '../components/More/index';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
 import PageColumn from '../components/PageColumn';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { JSX} from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
 import './index.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import { NEWSLETTER_DATA } from '../constant/newsletter.data';
 import { AchievementBanner } from '../components/achievement-banner/achievement-banner';
 import { CoreCapabilitiesData } from '../constant/core-capabilities.data';
 import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-capabilities-card';
-import { VariousAnalyticsData } from '../constant/various-analytics.data';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper';
 import GetStarted from '@site/src/components/get-started/get-started';
-import { Collapse, Tabs } from 'antd';
-import { Content } from 'antd/es/layout/layout';
-import ReadMore from '../components/ReadMore';
-import { ArrowDownIcon } from '../components/Icons/arrow-down-icon';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
 

@@ -116,4 +116,4 @@ After the adjustment, the query time was reduced from 5s to 2s.
 
 ## Summary
 
-The wait time of RuntimeFilter needs to be defined according to the scenario. Doris is undergoing some adaptive optimization and transformation. Use the EXPLAIN and PROFILE tools to observe the execution bottleneck, locate the corresponding problem, and modify the RuntimeFilter wait time through SQL HINT to avoid the impact of the corresponding problem on performance.
+The wait time of RuntimeFilter needs to be defined according to the scenario. Doris is undergoing some adaptive optimization and transformation. Use the EXPLAIN and PROFILE tools to observe the execution bottleneck, locate the corresponding problem, and modify the RuntimeFilter wait time through SQL Hint to avoid the impact of the corresponding problem on performance.

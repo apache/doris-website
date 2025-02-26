@@ -36,7 +36,7 @@ During version upgrades, the following rules apply:
 
 - **Two-digit and one-digit versions:** Cross-version upgrades for two-digit versions are not recommended due to compatibility concerns. It is advised to upgrade sequentially through each two-digit version. For example, upgrading from version 3.0 to 3.3 should follow the sequence 3.0 -> 3.1 -> 3.2 -> 3.3.
 
-The detailed version information can be found in the [versioning rules](../../../../docusaurus-plugin-content-docs-community/current/release-versioning).
+The detailed version information can be found in the [versioning rules](https://doris.apache.org/community/release-versioning).
 
 ## Upgrade Precautions
 
@@ -84,8 +84,8 @@ Before upgrading, conduct metadata compatibility testing to prevent failures cau
    arrow_flight_sql_port = 19040
    edit_log_port = 19010
 
-   ## modify clusterIP
-   clusterId=<a_new_clusterIP, such as 123456>
+   ## modify clusterID
+   clusterId=<a_new_clusterID, such as 123456>
    ...
    ```
 
@@ -95,7 +95,7 @@ Before upgrading, conduct metadata compatibility testing to prevent failures cau
    cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
    ```
 
-4. Edit the `VERSION` file in the copied metadata directory to update the `cluster_id` to a new cluster IP, for example, change it to `123456` as shown in the example:  
+4. Edit the `VERSION` file in the copied metadata directory to update the `cluster_id` to a new cluster ID, for example, change it to `123456` as shown in the example:  
 
    ```bash
    vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION

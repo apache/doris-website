@@ -158,6 +158,8 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 ## Notice
 
+* The current version of the Nereids optimizer does not support concurrent Outfile. If the Nereids optimizer is enabled, concurrent Outfile will directly revert to the old optimizer, which will handle the concurrent Outfile export. Similarly, the current version of the pipeline engine also does not support concurrent Outfile. If the pipeline engine is enabled, concurrent Outfile will revert to single-threaded export.
+
 * The CSV format does not support exporting binary types, such as BITMAP and HLL types. These types will be output as `\N`, which is null.
 
 * If you do not enable concurrent export, the query result is exported by a single BE node in a single thread. Therefore, the export time and the export result set size are positively correlated. Turning on concurrent export can reduce the export time.

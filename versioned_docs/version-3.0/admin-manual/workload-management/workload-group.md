@@ -1,7 +1,7 @@
 ---
 {
-"title": "Workload Group",
-"language": "en"
+    "title": "Workload Group",
+    "language": "en"
 }
 ---
 
@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-Workload Group is an in-process mechanism for isolating workloads.
+Workload Group is an in-process mechanism for isolating workloads. 
 It achieves resource isolation by finely partitioning or limiting resources (CPU, IO, Memory) within the BE process.
 Its principle is illustrated in the diagram below:
 
@@ -49,14 +49,14 @@ The currently supported isolation capabilities include:
 ## Configuring Workload Group
 
 ### Setting Up the CGroup Environment
-Workload Group supports managing CPU, memory, and IO. CPU management relies on the CGroup component.
+Workload Group supports managing CPU, memory, and IO. CPU management relies on the CGroup component. 
 To use Workload Group for CPU resource management, you must first configure the CGroup environment.
 
 The following are the steps for configuring the CGroup environment:
 
-1. First, verify whether the node where the BE is located has CGroup installed.
-   If the output includes cgroup, it indicates that CGroup V1 is installed in the current environment.
-   If it includes cgroup2, it indicates that CGroup V2 is installed. You can determine which version is active in the next step.
+1. First, verify whether the node where the BE is located has CGroup installed. 
+If the output includes cgroup, it indicates that CGroup V1 is installed in the current environment. 
+If it includes cgroup2, it indicates that CGroup V2 is installed. You can determine which version is active in the next step.
 ```shell
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -102,8 +102,8 @@ chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
 5. If the current environment is using CGroup v2, the following steps are required. If it is CGroup v1, this step can be skipped.
-* Modify the permissions of the cgroup.procs file in the root directory. This is necessary because CGroup v2 has stricter permission controls,
-  and write permissions to the cgroup.procs file in the root directory are required to move processes between CGroup directories.
+* Modify the permissions of the cgroup.procs file in the root directory. This is necessary because CGroup v2 has stricter permission controls, 
+and write permissions to the cgroup.procs file in the root directory are required to move processes between CGroup directories.
 ```shell
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
@@ -131,21 +131,21 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 
 :::tip
 1. It is recommended to deploy only one BE per machine, as the current Workload Group feature does not support deploying multiple BE instances on a single machine.
-2. After a machine is restarted, all configurations under the CGroup path will be cleared.
-   To persist the CGroup configuration, you can use systemd to set the operation as a custom system service,
-   so that the creation and authorization operations can be automatically performed each time the machine restarts.
+2. After a machine is restarted, all configurations under the CGroup path will be cleared. 
+To persist the CGroup configuration, you can use systemd to set the operation as a custom system service, 
+so that the creation and authorization operations can be automatically performed each time the machine restarts.
 3. If using CGroup within a container, the container must have permission to operate on the host machine.
    :::
 
 #### Considerations for Using Workload Group in Containers
-Workload's CPU management is based on CGroup. If you want to use Workload Group inside a container,
+Workload's CPU management is based on CGroup. If you want to use Workload Group inside a container, 
 the container needs to be started in privileged mode so that the BE process inside the container has permission to read and write CGroup files on the host machine.
 
-When BE runs inside a container, the CPU resource usage for Workload Group is partitioned based on the available resources of the container.
-For example, if the host machine has 64 cores and the container is allocated 8 cores,
+When BE runs inside a container, the CPU resource usage for Workload Group is partitioned based on the available resources of the container. 
+For example, if the host machine has 64 cores and the container is allocated 8 cores, 
 and the Workload Group is configured with a 50% CPU hard limit, the actual available CPU cores for the Workload Group will be 4 (8 cores * 50%).
 
-The memory and IO management functions of Workload Group are implemented internally by Doris and do not rely on external components,
+The memory and IO management functions of Workload Group are implemented internally by Doris and do not rely on external components, 
 so there is no difference in deployment between containers and physical machines.
 
 If you want to use Doris on K8S, it is recommended to deploy it using the Doris Operator, which can shield underlying permission issues.
@@ -184,8 +184,8 @@ The CPU limit configured at this point is a soft limit. Since version 2.1, Doris
 
 :::tip
 
-1. Currently, the simultaneous use of both cpu hard limit and cpu soft limit is not supported.
-   At any given time, a cluster can only have either a soft limit or a hard limit. The method for switching between them will be described later.
+1. Currently, the simultaneous use of both cpu hard limit and cpu soft limit is not supported. 
+At any given time, a cluster can only have either a soft limit or a hard limit. The method for switching between them will be described later.
 
 2. All properties are optional, but at least one property must be specified when creating a Workload Group.
 
@@ -213,7 +213,7 @@ If the g1 Workload Group is not visible, you can use the ADMIN account to execut
 GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';
 ```
 This statement means granting the user_1 the permission to use the Workload Group named g1.
-More details can be found in [grant](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+More details can be found in [grant](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 **Two ways to bind Workload Group to user**
 1. By setting the user property, you can bind the user to a default Workload Group. The default is normal. It's important to note that the value here cannot be left empty; otherwise, the statement will fail.
