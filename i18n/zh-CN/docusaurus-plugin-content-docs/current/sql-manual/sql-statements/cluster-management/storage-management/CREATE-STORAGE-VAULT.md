@@ -53,25 +53,25 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 
 | 参数              | 是否必需 | 描述                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`    | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，endpoint是固定的blob.core.windows.net。 |
-| `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则不需要)。 |
+| `s3.endpoint`    | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，endpoint 是固定的 blob.core.windows.net。 |
+| `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE，则不需要)。 |
 | `s3.root.path`   | 必需   | 存储数据的路径。 |
-| `s3.bucket`      | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。 |
-| `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。 |
-| `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。 |
+| `s3.bucket`      | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure，则为 StorageAccount)。 |
+| `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure，则为 AccountName)。 |
+| `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure，则为 AccountKey)。 |
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
-| `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境)或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
+| `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境) 或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
 
 ### HDFS vault
 
 | 参数                               | 是否必需 | 描述                                                    |
 |:---------------------------------|:-----|:------------------------------------------------------|
-| `fs.defaultFS`                   |必需| Hadoop 配置属性,指定要使用的默认文件系统。                             |
-| `path_prefix`                    |可选| 存储数据的路径前缀。如果没有指定则会使用 user 账户下的默认路径。                   |
-| `hadoop.username`                |可选| Hadoop 配置属性，指定访问文件系统的用户。如果没有指定则会使用启动 hadoop 进程的 user。 |
-| `hadoop.security.authentication` |可选| 用于 hadoop 的认证方式。如果希望使用 kerberos 则可以填写`kerberos`。      |
-| `hadoop.kerberos.principal`      |可选| 您的 kerberos 主体的路径。      |
-| `hadoop.kerberos.keytab`         |可选| 您的 kerberos keytab 的路径。      |
+| `fs.defaultFS`                   |必需 | Hadoop 配置属性，指定要使用的默认文件系统。                             |
+| `path_prefix`                    |可选 | 存储数据的路径前缀。如果没有指定则会使用 user 账户下的默认路径。                   |
+| `hadoop.username`                |可选 | Hadoop 配置属性，指定访问文件系统的用户。如果没有指定则会使用启动 hadoop 进程的 user。 |
+| `hadoop.security.authentication` |可选 | 用于 hadoop 的认证方式。如果希望使用 kerberos 则可以填写`kerberos`。      |
+| `hadoop.kerberos.principal`      |可选 | 您的 kerberos 主体的路径。      |
+| `hadoop.kerberos.keytab`         |可选 | 您的 kerberos keytab 的路径。      |
 
 ## 举例
 
@@ -101,7 +101,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "oss_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your OSS bucket name
         "provider" = "OSS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OSS 建议设置false
+        "use_path_style" = "false"                           -- optional,  OSS 建议设置 false
     );
     ```
 
@@ -117,7 +117,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "cos_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
         "provider" = "COS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  COS 建议设置false
+        "use_path_style" = "false"                           -- optional,  COS 建议设置 false
     );
     ```
 
@@ -133,7 +133,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "obs_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
         "provider" = "OBS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OBS 建议设置false
+        "use_path_style" = "false"                           -- optional,  OBS 建议设置 false
     );
     ```
 
@@ -149,7 +149,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "bos_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                              -- required,  Your BOS bucket name
         "provider" = "BOS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  BOS 建议设置false
+        "use_path_style" = "false"                           -- optional,  BOS 建议设置 false
     );
     ```
 
@@ -165,7 +165,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "s3_demo_vault_prefix",            -- required
         "s3.bucket" = "xxxxxx",                             -- required,  Your s3 bucket name
         "provider" = "S3",                                  -- required
-        "use_path_style" = "false"                          -- optional,  S3 建议设置false
+        "use_path_style" = "false"                          -- optional,  S3 建议设置 false
     );
     ```
 
@@ -181,7 +181,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.root.path" = "minio_demo_vault_prefix",        -- required
         "s3.bucket" = "xxxxxx",                            -- required,  Your minio bucket name
         "provider" = "S3",                                 -- required
-        "use_path_style" = "true"                          -- required,  minio 建议设置true
+        "use_path_style" = "true"                          -- required,  minio 建议设置 true
     );
    ```
 

@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-用来判断json_path指定的字段在JSONB数据中的类型，如果字段不存在返回NULL，如果存在返回下面的类型之一
+用来判断 json_path 指定的字段在 JSONB 数据中的类型，如果字段不存在返回 NULL，如果存在返回下面的类型之一
 
 - object
 - array

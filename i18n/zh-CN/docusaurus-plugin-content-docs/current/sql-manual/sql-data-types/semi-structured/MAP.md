@@ -34,7 +34,7 @@ MAP
 
 `MAP<K, V>`
 
-由K, V类型元素组成的map，不能作为key列使用。目前支持在Duplicate，Unique 模型的表中使用。
+由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
 
 K,V 支持的类型有：
 
@@ -66,7 +66,7 @@ PROPERTIES (
 mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
-stream_load示例：
+stream_load 示例：
 更多详细 stream_load 用法见 [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual) 
 
 ```shell
@@ -134,7 +134,7 @@ mysql> SELECT m['a'] FROM simple_map;
 +-----------------------------+
 ```
 
-map 支持的functions示例：
+map 支持的 functions 示例：
 
 ```sql
 # map construct

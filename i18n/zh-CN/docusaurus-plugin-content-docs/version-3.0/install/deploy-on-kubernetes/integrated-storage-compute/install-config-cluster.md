@@ -883,7 +883,7 @@ Doris 的服务通过配置文件的方式指定启动参数。目前大部分�
 spec:
   enableRestartWhenConfigChange: true
 ```
-如果 DorisCluster 资源含有上述配置，Doris Operator 会监测 `DorisCluster` 资源部署的集群依赖的启动配置(通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](#定制化启动配置))是否发生变化，如果集群服务的启动配置发生变化，Doris Operator 会自动重启相应服务来使配置生效。  
+如果 DorisCluster 资源含有上述配置，Doris Operator 会监测 `DorisCluster` 资源部署的集群依赖的启动配置 (通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](#定制化启动配置)) 是否发生变化，如果集群服务的启动配置发生变化，Doris Operator 会自动重启相应服务来使配置生效。  
 FE 的使用范例如下：
 1. DorisCluster 部署规格如下：
 ```yaml
@@ -897,4 +897,4 @@ spec:
 ```
 2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。
 
-当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值(为 FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
+当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值 (为 FE 服务的启动配置) 后，Doris Operator 自动滚动重启 FE 服务使配置生效。

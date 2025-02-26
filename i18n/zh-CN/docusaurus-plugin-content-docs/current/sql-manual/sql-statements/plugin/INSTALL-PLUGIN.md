@@ -38,7 +38,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 ## 必选参数
 
 ** 1. `<source>`**
-> 待安装插件路径,支持三种类型：
+> 待安装插件路径，支持三种类型：
 >  1. 指向一个 zip 文件的绝对路径。
 >  2. 指向一个插件目录的绝对路径。
 >  3. 指向一个 http 或 https 协议的 zip 文件下载路径
@@ -58,7 +58,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 
 ## 注意事项
 
-注意需要放置一个和 .zip 文件同名的 md5 文件，如 http://mywebsite.com/plugin.zip.md5 。其中内容为 .zip 文件的 MD5 值。
+注意需要放置一个和 .zip 文件同名的 md5 文件，如 http://mywebsite.com/plugin.zip.md5。其中内容为 .zip 文件的 MD5 值。
 
 ## 示例
 

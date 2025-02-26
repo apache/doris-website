@@ -103,7 +103,7 @@ successfully started brpc listening on port=5000 time_elapsed_ms=11
 doris_cloud start successfully
 ```
 
-启动脚本返回值为 0 表示启动成功, 否则启动失败。
+启动脚本返回值为 0 表示启动成功，否则启动失败。
 
 :::info
 在 3.0.4 中，启动脚本会输出更多信息：

@@ -50,7 +50,7 @@ WHERE
 
 **1. `<db_name>`**
 
-需要查看事务详情的database
+需要查看事务详情的 database
 
 
 ## 返回值

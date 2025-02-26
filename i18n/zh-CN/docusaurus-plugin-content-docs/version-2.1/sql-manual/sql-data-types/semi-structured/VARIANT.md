@@ -367,7 +367,7 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 
 ### FAQ
 1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
-由于 Compaction 和元信息存储限制， VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ， 但是不建议超过 4096
+由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096
 
 ### Keywords
 

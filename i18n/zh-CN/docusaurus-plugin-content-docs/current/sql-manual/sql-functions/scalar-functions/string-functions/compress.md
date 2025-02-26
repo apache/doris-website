@@ -37,7 +37,7 @@ COMPRESS(<uncompressed_str>)
 
 | 参数                | 说明            |
 |--------------------|---------------|
-| `<uncompressed_str>` | 未压缩的原串, 参数类型是varchar或者string   |
+| `<uncompressed_str>` | 未压缩的原串，参数类型是 varchar 或者 string   |
 
 ## 返回值
 

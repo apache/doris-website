@@ -86,7 +86,7 @@ spec:
 
 ## 自定义启动配置
 
-K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动配置可通过 ConfigMap 挂载文件的方式实现。在自定义启动配置时，Doris Operator 对于存算分离组件之间相互感知的配置进行了自动化处理，在自定义 MetaService 启动配置时, 无需填写 FoundationDB 有关的配置。
+K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动配置可通过 ConfigMap 挂载文件的方式实现。在自定义启动配置时，Doris Operator 对于存算分离组件之间相互感知的配置进行了自动化处理，在自定义 MetaService 启动配置时，无需填写 FoundationDB 有关的配置。
 
 
 1. 自定义包含启动配置的 ConfigMap，样例如下：
@@ -132,4 +132,4 @@ K8s 上通过 ConfigMap 挂载配置文件。Doris 存算分离组件的启动�
          mountPath: /etc/doris
    ```
 
-   以上一步构建的 ConfigMap 为例，更新需要部署的 [DorisDisaggregatedCluster 资源](install-quickstart.md#第3步部署存算分离集群)。MetaService 服务使用的启动配置文件名称为 `doris_cloud.conf`，ConfigMap 中启动信息对应的 key 必须是 `doris_cloud.conf`。 包含启动配置的 ConfigMap 的挂载点必须为 `/etc/doris` ，即 `mountPath` 为 `/etc/doris`。
+   以上一步构建的 ConfigMap 为例，更新需要部署的 [DorisDisaggregatedCluster 资源](install-quickstart.md#第3步部署存算分离集群)。MetaService 服务使用的启动配置文件名称为 `doris_cloud.conf`，ConfigMap 中启动信息对应的 key 必须是 `doris_cloud.conf`。包含启动配置的 ConfigMap 的挂载点必须为 `/etc/doris` ，即 `mountPath` 为 `/etc/doris`。

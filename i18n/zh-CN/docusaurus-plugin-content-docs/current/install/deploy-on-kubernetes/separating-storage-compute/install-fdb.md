@@ -70,7 +70,7 @@ fdb-kubernetes-operator 仓库提供了以 IP 模式部署 FoundationDB 集群�
 
    - 从 doris-operator 仓库下载
    
-     doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster 。
+     doris-operator 仓库中制定化了以 fdb-kuberentes-operator 1.46.0 版本为基础的部署示例，可直接使用部署 FoundationDB cluster。
 
      ```shell
      wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml

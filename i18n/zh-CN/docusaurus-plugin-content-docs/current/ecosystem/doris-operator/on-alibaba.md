@@ -27,13 +27,13 @@ under the License.
 ## 阿里云容器服务 ACK  
 
 阿里云容器服务 ACK 属于 购买 ECS 实例后，托管容器化服务的，因此可以获得完全访问控制权限来进行相关系统参数调整，使用实例镜像：Alibaba Cloud Linux 3 当前系统参数完全满足运行 Doris 需求。不符合要求的也能够通过 K8s 特权模式在容器内进行修正，以保证稳定运行。  
-**阿里云ACK集群，使用 Doris Operator 部署，大部分环境要求，ECS默认配置即可满足，未满足的，Doris Operator 可自行修正**。 用户亦可手动修正， 如下:
+**阿里云 ACK 集群，使用 Doris Operator 部署，大部分环境要求，ECS 默认配置即可满足，未满足的，Doris Operator 可自行修正**。用户亦可手动修正，如下：
 
 ### 已存在集群
 
 若容器服务集群已经创建，则可以参考此文档进行修改：[操作系统检查](../../install/preparation/os-checking.md)  
 重点关注 BE 启动参数要求：  
-1. 禁用和关闭 swap ： `swapon --show`  未开启则无输出
+1. 禁用和关闭 swap： `swapon --show`  未开启则无输出
 2. 查看系统最大打开文件句柄数 `ulimit -n`
 3. 查看修改虚拟内存区域数量  `sysctl vm.max_map_count`
 4. 透明大页是否关闭  `cat /sys/kernel/mm/transparent_hugepage/enabled`  是否包含 never  
@@ -50,7 +50,7 @@ under the License.
 
 ### 新建集群  
 
-若集群未购买和创建，则可以在阿里云 容器服务 ACK 控制台 点击 “创建集群” 购买，可以按需调整配置，上述参数可以在 创建集群的 “节点池配置” 步骤中在 “实例预自定义数据” 添加系统调整脚本。
+若集群未购买和创建，则可以在阿里云 容器服务 ACK 控制台 点击“创建集群”购买，可以按需调整配置，上述参数可以在 创建集群的“节点池配置”步骤中在“实例预自定义数据”添加系统调整脚本。
 在集群启动后，重启节点即可实现配置完成。参考脚本如下：  
 
 ```shell
@@ -72,7 +72,7 @@ fi
 ## 阿里云容器服务 ACS
 
 ACS 服务是以 K8s 为使用界面供给容器算力资源的云计算服务，提供按需计费的弹性算力资源。和上述 ACK 不同的是不需要关注具体使用 ECS。
-需要注意使用ACS的事项如下：
+需要注意使用 ACS 的事项如下：
 
 ### 镜像仓库访问
 
@@ -116,7 +116,7 @@ Doris BE 节点启动需要依赖一些特殊环境参数 比如，修改虚拟�
 
 ### Service 限制
 
-由于 ACS 服务是以 K8s 为使用界面供给容器算力资源的云计算服务，提供算力资源。其 node 是虚拟计算资源，用户无需关注，按使用资源量收费，可以无限拓展，即，不存在常规的 node 这个物理概念:  
+由于 ACS 服务是以 K8s 为使用界面供给容器算力资源的云计算服务，提供算力资源。其 node 是虚拟计算资源，用户无需关注，按使用资源量收费，可以无限拓展，即，不存在常规的 node 这个物理概念： 
 
 ```shell
 $ kubectl get nodes
@@ -124,8 +124,8 @@ NAME                            STATUS   ROLES   AGE   VERSION
 virtual-kubelet-cn-hongkong-d   Ready    agent   27h   v1.31.1-aliyun.1
 ```
 
-因此 ，部署 Doris 集群时 serviceType 禁用 NodePort 模式，允许使用 ClusterIP 和 LB 模式。  
-- ClusterIP模式：  
+因此，部署 Doris 集群时 serviceType 禁用 NodePort 模式，允许使用 ClusterIP 和 LB 模式。  
+- ClusterIP 模式：  
 
   Operator 默认的网络模式，具体使用和访问方式可参考[此文档](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)
 
@@ -134,7 +134,7 @@ virtual-kubelet-cn-hongkong-d   Ready    agent   27h   v1.31.1-aliyun.1
   使用时可以通过如下方式来配置（注意事项：https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/considerations-for-configuring-a-loadbalancer-type-service-1）：
 
   - 通过 Operator 提供的 DCR 的 service annotations 来配置 LB 接入，步骤如下：
-    1. 已通过负载均衡控制台创建 CLB 或 NLB 实例，且该实例与 ACK 集群处于同一地域。如果尚未创建，请参见[创建和管理CLB实例](https://help.aliyun.com/zh/slb/classic-load-balancer/user-guide/create-and-manage-a-clb-instance#task-ctx-xsm-vdb)和[创建和管理NLB实例](https://help.aliyun.com/zh/slb/network-load-balancer/user-guide/create-and-manage-an-nlb-instance)。
+    1. 已通过负载均衡控制台创建 CLB 或 NLB 实例，且该实例与 ACK 集群处于同一地域。如果尚未创建，请参见[创建和管理 CLB 实例](https://help.aliyun.com/zh/slb/classic-load-balancer/user-guide/create-and-manage-a-clb-instance#task-ctx-xsm-vdb)和[创建和管理 NLB 实例](https://help.aliyun.com/zh/slb/network-load-balancer/user-guide/create-and-manage-an-nlb-instance)。
     2. 通过 DCR 配置，上述 LB 的访问 annotations，参考格式如下：
       ```yaml
         feSpec:
@@ -150,6 +150,6 @@ virtual-kubelet-cn-hongkong-d   Ready    agent   27h   v1.31.1-aliyun.1
     步骤如下：
     1. serviceType 为 ClusterIP（默认策略）
     2. 可以通过阿里云控制台界面：容器计算服务 ACS -> 集群列表 -> 集群 -> 服务，通过 `创建` 按钮创建负载均衡服务。
-    3. 在创建 `服务` 的界面 选择新建的 LB ，会和 `service` 绑定，也会随着 该 `service` 的注销而注销。但是此 `service` 不受 Doris Operator 管控。
+    3. 在创建 `服务` 的界面 选择新建的 LB，会和 `service` 绑定，也会随着 该 `service` 的注销而注销。但是此 `service` 不受 Doris Operator 管控。
 
 

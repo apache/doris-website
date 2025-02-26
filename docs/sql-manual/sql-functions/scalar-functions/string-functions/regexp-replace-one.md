@@ -66,9 +66,9 @@ mysql> SELECT regexp_replace_one('a b b', '(b)', '<\\1>');
 | a <b> b                                |
 +----------------------------------------+
 
-mysql> select regexp_replace_one('这是一段中文This is a passage in English 1234567', '\\p{Han}', '123');
+mysql> select regexp_replace_one('这是一段中文 This is a passage in English 1234567', '\\p{Han}', '123');
 +------------------------------------------------------------------------------------------------+
-| regexp_replace_one('这是一段中文This is a passage in English 1234567', '\p{Han}', '123')       |
+| regexp_replace_one('这是一段中文 This is a passage in English 1234567', '\p{Han}', '123')       |
 +------------------------------------------------------------------------------------------------+
 | 123是一段中文This is a passage in English 1234567                                              |
 +------------------------------------------------------------------------------------------------+

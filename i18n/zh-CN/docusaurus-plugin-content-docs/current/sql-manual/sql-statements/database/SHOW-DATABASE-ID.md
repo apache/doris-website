@@ -38,7 +38,7 @@ SHOW DATABASE <database_id>
 ## 必选参数
 
 ** 1. `<database_id>`**
->  数据库对应id号
+>  数据库对应 id 号
 
 ## 返回结果
 

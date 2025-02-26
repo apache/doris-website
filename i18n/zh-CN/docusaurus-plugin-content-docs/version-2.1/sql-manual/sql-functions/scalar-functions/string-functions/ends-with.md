@@ -26,9 +26,9 @@ under the License.
 
 ## 描述
 
-如果字符串以指定后缀结尾则返回true，否则返回false。特殊情况：
+如果字符串以指定后缀结尾则返回 true，否则返回 false。特殊情况：
 
-- 两个参数任意一个参数为NULL，返回NULL。
+- 两个参数任意一个参数为 NULL，返回 NULL。
 
 ## 语法
 
@@ -47,7 +47,7 @@ ENDS_WITH ( <str> ,  <suffix> )
 
 true 或者 false，类型为 `BOOLEAN`。特殊情况：
 
-- 两个参数任意一个参数为NULL，返回NULL。
+- 两个参数任意一个参数为 NULL，返回 NULL。
 
 ## 举例
 

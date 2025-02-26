@@ -30,7 +30,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 代码库地址：https://github.com/apache/doris-spark-connector
 
-- 支持从 `Doris` 中通过 `RDD`、`DataFrame` 以及 `Spark SQL` 方式批量读取数据, 推荐使用 `DataFrame` 或 `Spark SQL`。
+- 支持从 `Doris` 中通过 `RDD`、`DataFrame` 以及 `Spark SQL` 方式批量读取数据，推荐使用 `DataFrame` 或 `Spark SQL`。
 - 支持使用 `DataFrame` 和 `Spark SQL` 批量或流式地将数据写入 `Doris`。
 - 支持在 `Doris` 端完成数据过滤，减少数据传输量。
 
@@ -76,7 +76,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 编译时，可直接运行 `sh build.sh`，具体可参考这里。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar。 将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。 例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar。将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 也可以
 
 
@@ -89,7 +89,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 
-例如将 `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar包路径
+例如将 `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar 包路径
 ```shell
 1. 上传 `spark-doris-connector-spark-3.5-24.0.0-SNAPSHOT.jar` 到 hdfs。
 
@@ -167,7 +167,7 @@ dorisSparkDF.show(5)
 
 从 24.0.0 版本开始，支持通过 Arrow Flight SQL 方式读取数据（需要 Doris 版本 >= 2.1.0）。
 
-设置 `doris.read.mode` 为 arrow， 设置 `doris.read.arrow-flight-sql.port` 为 FE 配置的 Arrow Flight SQL 端口，服务端配置方式参考 [基于 Arrow Flight SQL 的高速数据传输链路](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect)。
+设置 `doris.read.mode` 为 arrow，设置 `doris.read.arrow-flight-sql.port` 为 FE 配置的 Arrow Flight SQL 端口，服务端配置方式参考 [基于 Arrow Flight SQL 的高速数据传输链路](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect)。
 
 ```scala
 val df = spark.read.format("doris")
@@ -311,15 +311,15 @@ df.write.format("doris")
 
 ### Spark Doris Catalog
 
-从 24.0.0 版本开始, 支持通过 Spark Catalog 方式访问 Doris。
+从 24.0.0 版本开始，支持通过 Spark Catalog 方式访问 Doris。
 
 #### Catalog Config
 
 | 选项名称                                                 | 是否必须 | 注释                                                                                               |
 |------------------------------------------------------|------|--------------------------------------------------------------------------------------------------|
-| spark.sql.catalog.your_catalog_name                  | 是    | 设置 Catalog 提供者的类名, 对于 Doris 来说唯一的有效值为 `org.apache.doris.spark.catalog.DorisTableCatalog`。        |
+| spark.sql.catalog.your_catalog_name                  | 是    | 设置 Catalog 提供者的类名，对于 Doris 来说唯一的有效值为 `org.apache.doris.spark.catalog.DorisTableCatalog`。        |
 | spark.sql.catalog.your_catalog_name.doris.fenodes    | 是    | 设置 Doris FE 节点，格式为 fe_ip:fe_http_port。                                                           |
-| spark.sql.catalog.your_catalog_name.doris.query.port | 否    | 设置 Doris FE 查询端口, 当 `spark.sql.catalog.your_catalog_name.doris.fe.auto.fetch` 为 true 时，此选项可以不设置。 |
+| spark.sql.catalog.your_catalog_name.doris.query.port | 否    | 设置 Doris FE 查询端口，当 `spark.sql.catalog.your_catalog_name.doris.fe.auto.fetch` 为 true 时，此选项可以不设置。 |
 | spark.sql.catalog.your_catalog_name.doris.user       | 是    | 设置 Doris 用户。                                                                                     |
 | spark.sql.catalog.your_catalog_name.doris.password   | 是    | 设置 Doris 密码。                                                                                     |
 | spark.sql.defaultCatalog                             | 否    | 设置 Spark SQL 默认 catalog。                                                                         |
@@ -373,7 +373,7 @@ spark-sql \
 --conf "spark.sql.catalog.your_catalog_name.doris.password=" \
 --conf "spark.sql.defaultCatalog=your_catalog_name"
 ```
-在 Spark SQL CLI 中执行查询.
+在 Spark SQL CLI 中执行查询。
 ```sparksql
 -- show all databases
 show databases;
@@ -424,7 +424,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | doris.deserialize.queue.size     | 64             | 异步转换 Arrow 格式的内部处理队列，当 doris.deserialize.arrow.async 为 true 时生效                                                                                                                                                    |
 | doris.write.fields               | --             | 指定写入 Doris 表的字段或者字段顺序，多列之间使用逗号分隔。<br />默认写入时要按照 Doris 表字段顺序写入全部字段。                                                                                                                                                 |
 | doris.sink.batch.size            | 100000         | 单次写 BE 的最大行数                                                                                                                                                                                                       |
-| doris.sink.max-retries           | 0              | 写 BE 失败之后的重试次数，从 1.3.0 版本开始， 默认值为 0，即默认不进行重试。当设置该参数大于 0 时，会进行批次级别的失败重试，会在 Spark Executor 内存中缓存 `doris.sink.batch.size` 所配置大小的数据，可能需要适当增大内存分配。                                                                      |       
+| doris.sink.max-retries           | 0              | 写 BE 失败之后的重试次数，从 1.3.0 版本开始，默认值为 0，即默认不进行重试。当设置该参数大于 0 时，会进行批次级别的失败重试，会在 Spark Executor 内存中缓存 `doris.sink.batch.size` 所配置大小的数据，可能需要适当增大内存分配。                                                                      |       
 | doris.sink.properties.format     | csv            | Stream Load 的数据格式。<br/>共支持 3 种格式：csv，json，arrow <br/> [更多参数详情](https://doris.apache.org/zh-CN/docs/data-operate/import/stream-load-manual/)                                                                        |
 | doris.sink.properties.*          | --             | Stream Load 的导入参数。<br/>例如:<br/>指定列分隔符：`'doris.sink.properties.column_separator' = ','`等<br/> [更多参数详情](https://doris.apache.org/zh-CN/docs/data-operate/import/stream-load-manual/)                                 |
 | doris.sink.task.partition.size   | --             | Doris 写入任务对应的 Partition 个数。Spark RDD 经过过滤等操作，最后写入的 Partition 数可能会比较大，但每个 Partition 对应的记录数比较少，导致写入频率增加和计算资源浪费。<br/>此数值设置越小，可以降低 Doris 写入频率，减少 Doris 合并压力。该参数配合 doris.sink.task.use.repartition 使用。                  |
@@ -533,7 +533,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 
    :::
 
-2. **如何使用overwrite写入？**
+2. **如何使用 overwrite 写入？**
 
    从 1.3.0 版本开始，支持 overwrite 模式写入（只支持全表级别的数据覆盖），具体使用方式如下
    **DataFrame**

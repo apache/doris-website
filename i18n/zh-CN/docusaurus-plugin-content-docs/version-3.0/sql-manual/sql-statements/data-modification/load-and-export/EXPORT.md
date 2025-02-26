@@ -135,7 +135,7 @@ under the License.
   - `dfs.ha.namenodes.[nameservice ID]`: namenode 的 id 列表，与 hdfs-site.xml 保持一致
   - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致   
 
-  **对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性:**
+  **对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性：**
   - `dfs.namenode.kerberos.principal`: HDFS namenode 服务的 principal 名称
   - `hadoop.security.authentication`: 认证方式设置为 kerberos
   - `hadoop.kerberos.principal`: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体

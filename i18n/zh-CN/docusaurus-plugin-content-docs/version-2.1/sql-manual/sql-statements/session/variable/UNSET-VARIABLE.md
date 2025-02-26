@@ -39,7 +39,7 @@ UNSET [<effective_scope>] VARIABLE (<variable_name>)
 
 ## 必选参数
 **1. `<variable_name>`**
-> 指定变量名称，如果需要unset全部变量，可以写一个`ALL`关键字
+> 指定变量名称，如果需要 unset 全部变量，可以写一个`ALL`关键字
 
 
 ## 可选参数

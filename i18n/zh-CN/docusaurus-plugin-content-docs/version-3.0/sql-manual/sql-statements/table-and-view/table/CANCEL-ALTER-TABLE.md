@@ -63,13 +63,13 @@ CANCEL ALTER TABLE { COLUMN | MATERIALIZED VIEW | ROLLUP } FROM <db_name>.<table
 
 ## 可选参数
 **1. `<job_id>`**
-> 要取消的具体作业ID。
+> 要取消的具体作业 ID。
 >
-> 如果指定了作业ID，则只取消指定的作业；如果不指定，则取消该表上所有正在执行的指定类型（COLUMN 或 ROLLUP）的修改操作。
+> 如果指定了作业 ID，则只取消指定的作业；如果不指定，则取消该表上所有正在执行的指定类型（COLUMN 或 ROLLUP）的修改操作。
 >
-> 可以指定多个作业ID，用逗号分隔。
+> 可以指定多个作业 ID，用逗号分隔。
 >
-> 作业ID可以通过 `SHOW ALTER TABLE COLUMN` 或 `SHOW ALTER TABLE ROLLUP` 命令查看。
+> 作业 ID 可以通过 `SHOW ALTER TABLE COLUMN` 或 `SHOW ALTER TABLE ROLLUP` 命令查看。
 
 
 ## 权限控制
@@ -101,7 +101,7 @@ CANCEL ALTER TABLE ROLLUP
 FROM db_name.table_name
 ```
 
-3. 根据job id批量撤销rollup操作
+3. 根据 job id 批量撤销 rollup 操作
 
 
 ```sql

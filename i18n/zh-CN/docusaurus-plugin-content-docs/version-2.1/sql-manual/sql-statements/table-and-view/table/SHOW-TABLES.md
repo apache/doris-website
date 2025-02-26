@@ -37,7 +37,7 @@ SHOW [ FULL ] TABLES [ FROM [ <catalog_name>.]<db_name> ][ LIKE <like_condition>
 ## 可选参数
 
 **1. `FULL`**
-> 语句中加了此参数，返回结果会多三列值，分别为Table_type（表类型）、Storage_format（存储格式）、Inverted_index_storage_format（倒排索引存储格式）。
+> 语句中加了此参数，返回结果会多三列值，分别为 Table_type（表类型）、Storage_format（存储格式）、Inverted_index_storage_format（倒排索引存储格式）。
 
 **2. `FROM [ <catalog_name>.]<db_name>`**
 > FROM 子句中可以指定查询的 catalog 名称以及 database 的名称。
