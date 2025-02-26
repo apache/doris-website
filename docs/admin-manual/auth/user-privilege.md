@@ -26,13 +26,13 @@ under the License.
 
 # Authority Management
 
-Doris's new privilege management system refers to Mysql's privilege management mechanism, achieves table-level fine-grained privilege control, role-based privilege access control, and supports whitelist mechanism.
+Doris's new privilege management system refers to MySQL's privilege management mechanism, achieves table-level fine-grained privilege control, role-based privilege access control, and supports whitelist mechanism.
 
 ## Noun Interpretation
 
 1. user_identity
 
-	In a permission system, a user is identified as a User Identity. User ID consists of two parts: username and userhost. Username is a user name, which is composed of English upper and lower case. Userhost represents the IP from which the user link comes. User_identity is presented as username@'userhost', representing the username from userhost.
+	In a permission system, a user is identified as a User Identity. User ID consists of two parts: username and userhost. Username is a user name, which is composed of English uppercase and lowercase. Userhost represents the IP from which the user link comes. User_identity is presented as username@'userhost', representing the username from userhost.
 
 	Another expression of user_identity is username@['domain'], where domain is the domain name, which can be resolved into a set of IPS by DNS . The final expression is a set of username@'userhost', so we use username@'userhost'to represent it.
 
@@ -42,7 +42,7 @@ Doris's new privilege management system refers to Mysql's privilege management m
 
 3. Role
 
-	Doris can create custom named roles. Roles can be seen as a set of permissions. When a newly created user can be assigned a role, the role's permissions are automatically granted. Subsequent changes in the role's permissions will also be reflected in all user permissions that belong to the role.
+	Doris can create custom named roles. Roles can be seen as a set of permissions. When a newly created role can be assigned to a user, the role's permissions are automatically granted. Subsequent changes in the role's permissions will also be reflected in all user permissions that belong to the role.
 
 4. user_property
 
@@ -172,7 +172,7 @@ The workload group has only one level:
 
 ## ADMIN /GRANT
 
-ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the same time, which is more special. The operations related to these two privileges are described here one by one.
+ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the same time, which is more special. The operations related to these two privileges are described here individually.
 
 1. CREATE USER
 
@@ -247,7 +247,7 @@ ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the sam
 
 5. Forget passwords
 
-	If you forget your password and cannot log in to Doris, you can add `skip_localhost_auth_check` in fe config and restart FE so that logging to Doris without a password in localhost.
+	If you forget your password and cannot log in to Doris, you can add `skip_localhost_auth_check` in fe config and restart FE so that login to Doris without a password in localhost.
 
 	`skip_localhost_auth_check = true`
 
@@ -267,7 +267,7 @@ ADMIN_PRIV and GRANT_PRIV have the authority of **"grant authority"** at the sam
 
 	All privileges are given to a `current_user`, and the real user has all the privileges of the corresponding `current_user`.
         
-        `SELECT session_user()`  is supported , which is having same behaviour as user() function.
+        `SELECT session_user()`  is supported , which is having same behavior as user() function.
 
 10. Password Validation
 
@@ -289,7 +289,7 @@ Here are some usage scenarios of Doris privilege system.
 
 3. Blacklist
 
-    Doris itself does not support blacklist, only whitelist, but we can simulate blacklist in some way. Suppose you first create a user named `user@'192.%'`, which allows users from `192.*` to login. At this time, if you want to prohibit users from `192.168.10.1` from logging in, you can create another user with `cmy@'192.168.10.1'` and set a new password. Since `192.168.10.1` has a higher priority than `192.%`, user can no longer login by using the old password from `192.168.10.1`.
+    Doris itself does not support blacklist, only whitelist, but we can simulate blacklist in some way. Suppose you first create a user named `user@'192.%'`, which allows users from `192.*` to login. At this time, if you want to prohibit users from `192.168.10.1` from logging in, you can create another user with `user@'192.168.10.1'` and set a new password. Since `192.168.10.1` has a higher priority than `192.%`, user can no longer login by using the old password from `192.168.10.1`.
 
 ## More help
 
