@@ -28,7 +28,7 @@ under the License.
 
 :::tip
 
-从 2.0 版本开始，Doris 支持 SSL 密钥证书配置
+从 2.0 版本开始，Doris 支持 SSL 密钥和证书配置
 :::
 
 
