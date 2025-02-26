@@ -30,7 +30,7 @@ under the License.
 
 Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类节点时应直接指定 FQDN，例如添加 BE 节点的命令为`ALTER SYSTEM ADD BACKEND "be_host:heartbeat_service_port"`，
 
-"be_host" 此前是 BE 节点的 IP，启动 FQDN 后，be_host 应指定 BE 节点的 FQDN。
+`be_host` 此前是 BE 节点的 IP，启动 FQDN 后，`be_host` 应指定 BE 节点的 FQDN。
 
 ## 前置条件
 
@@ -40,7 +40,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 3. 必须在集群中每台机器的 `/etc/hosts` 文件中指定集群中其他机器对应的 IP 地址和 FQDN。
 
-4. /etc/hosts 文件中不能有重复的 IP 地址。
+4. `/etc/hosts` 文件中不能有重复的 IP 地址。
 
 ## 最佳实践
 

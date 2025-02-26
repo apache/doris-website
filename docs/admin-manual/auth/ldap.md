@@ -34,7 +34,7 @@ LDAP group authorization, is to map the group in LDAP to the Role in Doris, if t
 
 ## Noun Interpretation
 
-* LDAP: Lightweight directory access protocol that enables centralized management of account passwords.
+* LDAP: Lightweight Directory Access Protocol that enables centralized management of account passwords.
 * Privilege: Permissions act on nodes, databases or tables. Different permissions represent different permission to operate.
 * Role: Doris can create custom named roles. A role can be thought of as a collection of permissions.
 
@@ -81,7 +81,7 @@ and the LDAP administrator password needs to be set using sql statements.
   LDAP administrator account "Distinguished Name". When a user logs into Doris using LDAP authentication, Doris will bind the administrator account to search for user information in LDAP.
   
 * ldap_user_basedn = ou=people,dc=domain,dc=com
-  Doris base dn when searching for user information in LDAP,For example, only user2 in the above example is allowed to log in to Doris, which is configured as ou=ou2, dc=example, dc=com. If user1, user2, and user3 in the above example are allowed to log in to Doris, which is configured as dc=example, dc=com
+  Doris base DN(Distinguished Name) when searching for user information in LDAP,For example, only user2 in the above example is allowed to log in to Doris, which is configured as ou=ou2, dc=example, dc=com. If user1, user2, and user3 in the above example are allowed to log in to Doris, which is configured as dc=example, dc=com
   
 * ldap_user_filter = (&(uid={login}))
 
@@ -106,7 +106,7 @@ set ldap_admin_password = password('ldap_admin_password');
 #### MySQL Client
 Client-side LDAP authentication requires the mysql client-side explicit authentication plugin to be enabled. Logging into Doris using the command line enables the mysql explicit authentication plugin in one of two ways.
 
-* Set the environment variable LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN to value 1.
+* Set the environment variable `LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN` to value 1.
   For example, in a linux or max environment you can use the command:
   ```shell
   echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ～/.bash_profile && source ～/.bash_profile
