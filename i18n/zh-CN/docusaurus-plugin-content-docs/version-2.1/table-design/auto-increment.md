@@ -67,76 +67,61 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 1. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-        `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+         `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+   ```
 
 2. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列，并设置起始值为 100
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `id` BIGINT NOT NULL AUTO_INCREMENT(100),
-        `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `id` BIGINT NOT NULL AUTO_INCREMENT(100),
+         `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
   ```
 
 3. 创建一个 Dupliciate 模型表，其中一个 value 列是自增列
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `uid` BIGINT NOT NULL,
-        `name` BIGINT NOT NULL,
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-        `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`uid`, `name`)
-  DISTRIBUTED BY HASH(`uid`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `uid` BIGINT NOT NULL,
+         `name` BIGINT NOT NULL,
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+         `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`uid`, `name`)
+   DISTRIBUTED BY HASH(`uid`) BUCKETS 10;
+   ```
 
 4. 创建一个 Unique 模型表，其中一个 key 列是自增列
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-        `name` varchar(65533) NOT NULL,
-        `value` int(11) NOT NULL
-  ) ENGINE=OLAP
-  UNIQUE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+         `name` varchar(65533) NOT NULL,
+         `value` int(11) NOT NULL
+   ) ENGINE=OLAP
+   UNIQUE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+   ```
 
 5. 创建一个 Unique 模型表，其中一个 value 列是自增列
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `text` varchar(65533) NOT NULL,
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-  ) ENGINE=OLAP
-  UNIQUE KEY(`text`)
-  DISTRIBUTED BY HASH(`text`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `text` varchar(65533) NOT NULL,
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+   ) ENGINE=OLAP
+   UNIQUE KEY(`text`)
+   DISTRIBUTED BY HASH(`text`) BUCKETS 10;
+   ```
 
 ### 约束和限制
 
@@ -158,13 +143,11 @@ CREATE TABLE `demo`.`tbl` (
     `value` int(11) NOT NULL
 ) ENGINE=OLAP
 UNIQUE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`id`) BUCKETS 10;
 ```
 
 使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
+
 ```sql
 mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
 Query OK, 3 rows affected (0.09 sec)
@@ -242,7 +225,6 @@ mysql> CREATE TABLE `demo`.`tbl2` (
     -> UNIQUE KEY(`id`)
     -> DISTRIBUTED BY HASH(`id`) BUCKETS 10
     -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
     -> "enable_unique_key_merge_on_write" = "true"
     -> );
 Query OK, 0 rows affected (0.03 sec)
@@ -295,7 +277,6 @@ mysql> CREATE TABLE `demo`.`tbl3` (
     -> UNIQUE KEY(`id`)
     -> DISTRIBUTED BY HASH(`id`) BUCKETS 1
     -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
     -> "enable_unique_key_merge_on_write" = "true"
     -> );
 Query OK, 0 rows affected (0.16 sec)
@@ -368,10 +349,7 @@ CREATE TABLE `demo`.`dwd_dup_tbl` (
     `visit_time` DATE NOT NULL
 ) ENGINE=OLAP
 DUPLICATE KEY(`user_id`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
 ```
 
 利用自增列创建如下字典表
@@ -384,7 +362,6 @@ CREATE TABLE `demo`.`dictionary_tbl` (
 UNIQUE KEY(`user_id`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 3",
 "enable_unique_key_merge_on_write" = "true"
 );
 ```
@@ -417,10 +394,7 @@ CREATE TABLE `demo`.`dws_agg_tbl` (
     `pv` BIGINT SUM NOT NULL 
 ) ENGINE=OLAP
 AGGREGATE KEY(`dim1`,`dim3`,`dim5`)
-DISTRIBUTED BY HASH(`dim1`) BUCKETS 32
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`dim1`) BUCKETS 32;
 ```
 
 将数据聚合运算后存放至聚合结果表
@@ -453,10 +427,7 @@ CREATE TABLE `demo`.`records_tbl` (
     `phone` varchar(16) NOT NULL COMMENT "",
     `mktsegment` varchar(11) NOT NULL COMMENT ""
 ) DUPLICATE KEY (`user_id`, `name`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
 ```
 
 假设在分页展示中，每页展示 100 条数据。那么获取第 1 页的数据可以使用如下 sql 进行查询：
@@ -487,10 +458,7 @@ CREATE TABLE `demo`.`records_tbl2` (
     `mktsegment` varchar(11) NOT NULL COMMENT "",
     `unique_value` BIGINT NOT NULL AUTO_INCREMENT
 ) DUPLICATE KEY (`user_id`, `name`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
 ```
 
 在分页展示中，每页展示 100 条数据，使用如下方式获取第一页的数据：

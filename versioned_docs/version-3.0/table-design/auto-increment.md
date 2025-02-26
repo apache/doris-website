@@ -69,77 +69,67 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
 
 1. Creating a duplicate table with an auto-increment column as the key column.
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-          `id` BIGINT NOT NULL AUTO_INCREMENT,
-          `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+           `id` BIGINT NOT NULL AUTO_INCREMENT,
+           `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+   ```
 
 2. Creating a duplicate table with an auto-increment column as the key column, and setting the starting value to 100.
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `id` BIGINT NOT NULL AUTO_INCREMENT(100),
-        `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `id` BIGINT NOT NULL AUTO_INCREMENT(100),
+         `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+   ```
 
 3. Creating a duplicate table with an auto-increment column as one of the value columns.
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-      `uid` BIGINT NOT NULL,
-      `name` BIGINT NOT NULL,
-      `id` BIGINT NOT NULL AUTO_INCREMENT,
-      `value` BIGINT NOT NULL
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`uid`, `name`)
-  DISTRIBUTED BY HASH(`uid`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+       `uid` BIGINT NOT NULL,
+       `name` BIGINT NOT NULL,
+       `id` BIGINT NOT NULL AUTO_INCREMENT,
+       `value` BIGINT NOT NULL
+   ) ENGINE=OLAP
+   DUPLICATE KEY(`uid`, `name`)
+   DISTRIBUTED BY HASH(`uid`) BUCKETS 10;
+   ```
 
 4. Creating a unique table with an auto-increment column as the key column.
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-        `name` varchar(65533) NOT NULL,
-        `value` int(11) NOT NULL
-  ) ENGINE=OLAP
-  UNIQUE KEY(`id`)
-  DISTRIBUTED BY HASH(`id`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3",
-  "enable_unique_key_merge_on_write" = "true"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+         `name` varchar(65533) NOT NULL,
+         `value` int(11) NOT NULL
+   ) ENGINE=OLAP
+   UNIQUE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10
+   PROPERTIES (
+          "enable_unique_key_merge_on_write" = "true"
+   );
+   ```
 
 5. Creating a unique table with an auto-increment column as one of the value columns.
 
-  ```sql
-  CREATE TABLE `demo`.`tbl` (
-        `text` varchar(65533) NOT NULL,
-        `id` BIGINT NOT NULL AUTO_INCREMENT,
-  ) ENGINE=OLAP
-  UNIQUE KEY(`text`)
-  DISTRIBUTED BY HASH(`text`) BUCKETS 10
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 3",
-  "enable_unique_key_merge_on_write" = "true"
-  );
-  ```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+         `text` varchar(65533) NOT NULL,
+         `id` BIGINT NOT NULL AUTO_INCREMENT,
+   ) ENGINE=OLAP
+   UNIQUE KEY(`text`)
+   DISTRIBUTED BY HASH(`text`) BUCKETS 10
+   PROPERTIES (
+          "enable_unique_key_merge_on_write" = "true"
+   );
+   ```
 
 ### Constraints and Limitations
 
@@ -163,8 +153,7 @@ CREATE TABLE `demo`.`tbl` (
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 10
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 3",
-"enable_unique_key_merge_on_write" = "true"
+     "enable_unique_key_merge_on_write" = "true"
 );
 ```
 
@@ -248,7 +237,6 @@ mysql> CREATE TABLE `demo`.`tbl2` (
     -> UNIQUE KEY(`id`)
     -> DISTRIBUTED BY HASH(`id`) BUCKETS 10
     -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
     -> "enable_unique_key_merge_on_write" = "true"
     -> );
 Query OK, 0 rows affected (0.03 sec)
@@ -301,7 +289,6 @@ mysql> CREATE TABLE `demo`.`tbl3` (
     -> UNIQUE KEY(`id`)
     -> DISTRIBUTED BY HASH(`id`) BUCKETS 1
     -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
     -> "enable_unique_key_merge_on_write" = "true"
     -> );
 Query OK, 0 rows affected (0.16 sec)
@@ -375,10 +362,7 @@ CREATE TABLE `demo`.`dwd_dup_tbl` (
     `visit_time` DATE NOT NULL
 ) ENGINE=OLAP
 DUPLICATE KEY(`user_id`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
 ```
 
 Using the auto-increment column to create the following dictionary table:
@@ -391,7 +375,6 @@ CREATE TABLE `demo`.`dictionary_tbl` (
 UNIQUE KEY(`user_id`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 3",
 "enable_unique_key_merge_on_write" = "true"
 );
 ```
@@ -424,10 +407,7 @@ CREATE TABLE `demo`.`dws_agg_tbl` (
     `pv` BIGINT SUM NOT NULL 
 ) ENGINE=OLAP
 AGGREGATE KEY(`dim1`,`dim3`,`dim5`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
 ```
 
 Save the aggregated data into the results table.
@@ -459,10 +439,7 @@ CREATE TABLE `demo`.`records_tbl` (
     `phone` varchar(16) NOT NULL COMMENT "",
     `mktsegment` varchar(11) NOT NULL COMMENT ""
 ) DUPLICATE KEY (`key`, `name`)
-DISTRIBUTED BY HASH(`key`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+DISTRIBUTED BY HASH(`key`) BUCKETS 10;
 ```
 
 Assuming 100 records are displayed per page, the following SQL query can be used to fetch data for the first page:
@@ -493,10 +470,7 @@ CREATE TABLE `demo`.`records_tbl2` (
     `mktsegment` varchar(11) NOT NULL COMMENT "",
     `unique_value` BIGINT NOT NULL AUTO_INCREMENT
 ) DUPLICATE KEY (`key`, `name`)
-DISTRIBUTED BY HASH(`key`) BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-);
+DISTRIBUTED BY HASH(`key`) BUCKETS 10;
 ```
 
 For pagination with 100 records per page, the following SQL query can be used to fetch the data for the first page:
