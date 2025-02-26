@@ -61,7 +61,7 @@ spec:
       memory: 4Gi
 ```
 
-Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](install-quickstart.md#step-2-quickly-deploy-a-storage-and-computing-separation-cluster).
+Update the modified configuration to the [metadata management resources for storage and computing separation that need to be deployed](../../../gettingStarted/quick-start).
 
 ## Configure FDB
 - Use ConfigMap
@@ -140,7 +140,7 @@ spec:
         mountPath: /etc/doris
 ```
 
-In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [storage-and-computing-separation metadata management resource](install-quickstart#step-2-quickly-deploy-a-storage-and-computing-separation-cluster) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
+In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [storage-and-computing-separation metadata management resource](../../../gettingStarted/quick-start) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
 
 :::tip Tip
 MS services need to use FDB as the backend metadata storage. FDB services must be deployed when deploying MS services.

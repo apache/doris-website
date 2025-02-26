@@ -35,7 +35,7 @@ Doris supports the following methods to load CSV format data:
 - [Routine Load](../import-way/routine-load-manual)
 - [MySQL Load](../import-way/mysql-load-manual)
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## Parameter Configuration
 
