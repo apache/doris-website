@@ -45,9 +45,7 @@ The functionality of inverted indexes is briefly introduced as follows:
 
 - Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
 
-- Support for phrase queries `MATCH_PHRASE`
-  - Support for specifying slop for word distence
-  - Support for phrase + prefix `MATCH_PHRASE_PREFIX`
+- Support for phrase queries `MATCH_PHRASE`,  specifying `slop` for word distence and phrase + prefix `MATCH_PHRASE_PREFIX`
 
 - Support for tokenized regular expression queries `MATCH_REGEXP`
 

@@ -42,6 +42,7 @@ Inverted indexes have a wide range of applications and can accelerate equality, 
 The functionality of inverted indexes is briefly introduced as follows:
 
 **1. Accelerate full-text searches for string types** 
+
   - Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
   
   - Support for phrase queries `MATCH_PHRASE`
@@ -52,23 +53,23 @@ The functionality of inverted indexes is briefly introduced as follows:
 
 **2. Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
 
-- Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
+  - Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
 
-- Support for fast filtering of string, numerical, and datetime array types for `array_contains`
+  - Support for fast filtering of string, numerical, and datetime array types for `array_contains`
 
 **3. Support for comprehensive logical combinations**
 
-- Not only supports acceleration for AND conditions but also for OR and NOT conditions
+  - Not only supports acceleration for AND conditions but also for OR and NOT conditions
 
-- Supports arbitrary logical combinations of multiple conditions with AND, OR, NOT
+  - Supports arbitrary logical combinations of multiple conditions with AND, OR, NOT
 
 **4. Flexible and efficient index management**
 
-- Support for defining inverted indexes when creating a table
+  - Support for defining inverted indexes when creating a table
 
-- Support for adding inverted indexes to existing tables, with incremental index construction without rewriting existing data in the table
+  - Support for adding inverted indexes to existing tables, with incremental index construction without rewriting existing data in the table
 
-- Support for deleting inverted indexes from existing tables without rewriting existing data in the table
+  - Support for deleting inverted indexes from existing tables without rewriting existing data in the table
 
 :::tip
 
