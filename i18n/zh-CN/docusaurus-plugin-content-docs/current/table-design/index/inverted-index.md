@@ -45,11 +45,7 @@ under the License.
 
 - 支持关键词检索，包括同时匹配多个关键字 `MATCH_ALL`、匹配任意一个关键字 `MATCH_ANY`
 
-  - 支持短语查询 `MATCH_PHRASE`
-    
-    > 支持指定词距 `slop`
-    
-    > 支持短语 + 前缀 `MATCH_PHRASE_PREFIX`
+  - 支持短语查询 `MATCH_PHRASE`，支持指定词距 `slop`，支持短语 + 前缀 `MATCH_PHRASE_PREFIX`
 
   - 支持分词正则查询 `MATCH_REGEXP`
 
