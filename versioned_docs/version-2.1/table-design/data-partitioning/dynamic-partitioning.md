@@ -69,8 +69,6 @@ PROPERTIES(
 );
 ```
 
-In the example above, a dynamic partitioned table was created with the following specifications.
-
 For detailed `dynamic_partition` parameters, refer to [Dynamic Partition Parameter Description](#dynamic-partition-property-parameters).
 
 ## Managing Dynamic Partitions

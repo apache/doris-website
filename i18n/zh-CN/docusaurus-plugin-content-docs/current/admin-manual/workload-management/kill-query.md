@@ -93,4 +93,4 @@ kill CONNECTION 55;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-表示断开 Id=55 这个连接，这个连接上正在执行的 Query 也会被 Cancel。
+表示断开 Id=55 这个连接，这个连接上正在执行的 Query 也会被取消。

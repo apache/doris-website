@@ -49,7 +49,6 @@ When using dynamic partitioning, the following rules must be followed:
 
 When creating a table, you can create a dynamic partitioned table by specifying the `dynamic_partition` property.
 
-
 ```sql
 CREATE TABLE test_dynamic_partition(
     order_id    BIGINT,
@@ -68,8 +67,6 @@ PROPERTIES(
     "dynamic_partition.create_history_partition" = "true"
 );
 ```
-
-In the example above, a dynamic partitioned table was created with the following specifications.
 
 For detailed `dynamic_partition` parameters, refer to [Dynamic Partition Parameter Description](#dynamic-partition-property-parameters).
 

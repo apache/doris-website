@@ -31,7 +31,7 @@ under the License.
 
 * 动态分区起始偏移量 `dynamic_partition.start` 设置为 -1，保留一天前分区；
 
-* 动态分区结束偏移量 `dynamic_partition.end` 设置为 2，保留未来两天分区
+* 动态分区结束偏移量 `dynamic_partition.end` 设置为 2，保留未来两天分区。
 
 依据以上规则，随着时间推移，总会保留 4 个分区，即过去一天分区，当天分区与未来两天分区：
 
@@ -69,8 +69,6 @@ PROPERTIES(
     "dynamic_partition.create_history_partition" = "true"
 );
 ```
-
-上例中创建了动态分区表，指定以下
 
 详细 `dynamic_partition` 参数可以参考[动态分区参数说明](#动态分区属性参数)。
 

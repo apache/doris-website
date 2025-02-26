@@ -26,7 +26,7 @@ under the License.
 
 ## 背景
 
-在数据管理愈加精细化的需求背景下，定时调度在其中扮演着重要的角色。它通常被应用于以下场景：
+在数据管理更加精细化的需求背景下，定时调度在其中扮演着重要的角色。它通常被应用于以下场景：
 
 - 定期数据更新，如周期性数据导入和 ETL 操作，减少人工干预，提高数据处理的效率和准确性。
 
@@ -54,7 +54,7 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
 
 - ON SCHEDULE 子句用于指定 Job 作业的类型、触发时间和频率。
 
-    - AT timestamp 用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
+    - AT timestamp 用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因为 JOB 一旦创建则会立即运行，也可用于异步任务创建。
 
     - EVERY：用于周期性作业，可指定作业的执行频率，关键字后需指定时间间隔（周、天、小时、分钟）。
 
@@ -98,7 +98,7 @@ CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FR
 ```sql
 CREATE JOB my_job ON SCHEDULE AT '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
-创建周期性的 Job，未指定结束时间：在 22025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
+创建周期性的 Job，未指定结束时间：在 2025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
 
 ```sql
 CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE  create_time >=  days_add(now(),-1);
