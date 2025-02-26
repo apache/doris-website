@@ -43,7 +43,7 @@ DROP CATALOG [IF EXISTS] <catalog_name>;
 ## 权限控制
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                |
 |:--------------|:-----------|:-------------------------|
-| DROP_PRIV     | Catalog    | 需要有对应catalog的DROP_PRIV权限 |
+| DROP_PRIV     | Catalog    | 需要有对应 catalog 的 DROP_PRIV 权限 |
 
 ## 示例
 

@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-主要用于合并多个bitmap的值，并对结果进行按位 xor 计算
+主要用于合并多个 bitmap 的值，并对结果进行按位 xor 计算
 
 ## 语法
 
@@ -38,11 +38,11 @@ GROUP_BITMAP_XOR(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 支持bitmap的数据类型 |
+| `<expr>` | 支持 bitmap 的数据类型 |
 
 ## 返回值
 
-返回值的数据类型为BITMAP。
+返回值的数据类型为 BITMAP。
 
 ## 举例
 

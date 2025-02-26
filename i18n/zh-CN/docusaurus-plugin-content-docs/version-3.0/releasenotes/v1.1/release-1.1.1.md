@@ -57,7 +57,7 @@ MemTracker 是一个用于分析内存使用情况的统计工具，在 1.1.0 �
 
 ### 修复 Compaction 不能正常工作导致的 -235 错误。
 
-在 Unique Key 模型中，当一个 Rowset 有多个 Segment 时，在做 Compaction 过程中由于没有正确的统计行数，会导致Compaction 失败并且产生 Tablet 版本过多而导致的 -235 错误。
+在 Unique Key 模型中，当一个 Rowset 有多个 Segment 时，在做 Compaction 过程中由于没有正确的统计行数，会导致 Compaction 失败并且产生 Tablet 版本过多而导致的 -235 错误。
 
 ### 修复查询过程中出现的部分 Segment fault。
 
@@ -67,7 +67,7 @@ MemTracker 是一个用于分析内存使用情况的统计工具，在 1.1.0 �
 
 # 致谢
 
-感谢所有参与贡献 1.1.1 版本的开发者:
+感谢所有参与贡献 1.1.1 版本的开发者：
 
 ```
 @jacktengg

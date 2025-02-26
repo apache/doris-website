@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-JSON_VALID 函数返回0或1以表明是否为有效的JSON, 如果参数是NULL则返回NULL。
+JSON_VALID 函数返回 0 或 1 以表明是否为有效的 JSON, 如果参数是 NULL 则返回 NULL。
 
 ## 语法
 
@@ -45,7 +45,7 @@ JSON_VALID( <str> )
 
 ## 举例
 
-1. 正常JSON字符串
+1. 正常 JSON 字符串
 
 ```sql
 SELECT json_valid('{"k1":"v31","k2":300}');
@@ -57,7 +57,7 @@ SELECT json_valid('{"k1":"v31","k2":300}');
 1 row in set (0.02 sec)
 ```
 
-2. 无效的JSON字符串
+2. 无效的 JSON 字符串
 
 ```sql
 SELECT json_valid('invalid json');
@@ -69,7 +69,7 @@ SELECT json_valid('invalid json');
 
 ```
 
-3. NULL参数
+3. NULL 参数
 
 ```sql
 SELECT json_valid(NULL);

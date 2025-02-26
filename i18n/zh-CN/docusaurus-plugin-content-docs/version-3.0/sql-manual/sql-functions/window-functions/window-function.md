@@ -37,7 +37,7 @@ function(<args>) OVER(
 | 参数 | 说明 |
 |------|------|
 | `<args>` | 窗口函数的输入参数，具体参数根据所使用的函数而定 |
-| `<function>` | 支持的函数包括: AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM() |
+| `<function>` | 支持的函数包括：AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM() |
 | `<partition_by>` | 类似于 GROUP BY，按指定列对数据进行分组 |
 | `<order_by>` | 定义窗口内数据的排序方式 |
 | `<window_clause>` | 定义窗口范围，语法为：ROWS BETWEEN [ { m \| UNBOUNDED } PRECEDING \| CURRENT ROW] [ AND [CURRENT ROW \| { UNBOUNDED \| n } FOLLOWING] ] |
@@ -68,7 +68,7 @@ select * from stock_ticker order by stock_symbol, closing_date
  | JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-2. 这个查询使用分析函数产生 moving_average 这一列，它的值是3天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
+2. 这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
 
 ```sql
 select stock_symbol, closing_date, closing_price,    

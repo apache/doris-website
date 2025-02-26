@@ -61,7 +61,7 @@ Github: https://github.com/apache/doris-spark-connector
 ::: tip
 
 Starting from version 24.0.0, the naming rules of the Doris connector package have been adjusted:
-1. No longer contains Scala version information。
+1. No longer contains Scala version information.
 2. For Spark 2.x versions, use the package named `spark-doris-connector-spark-2` uniformly, and by default only compile based on Scala 2.11 version. If you need Scala 2.12 version, please compile it yourself.
 3. For Spark 3.x versions, use the package named `spark-doris-connector-spark-3.x` according to the specific Spark version. Applications based on Spark 3.0 version can use the package `spark-doris-connector-spark-3.1`.
 

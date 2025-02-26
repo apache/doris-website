@@ -26,11 +26,11 @@ under the License.
 
 ## Description
 
-表函数，需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅仅支持新优化器。
+表函数，需配合 Lateral View 使用，可以支持多个 Lateral view, 仅仅支持新优化器。
 
-将 array 列展开成多行, 并且增加一列标明位置的列，组成struct类型返回。
-当 array 为NULL或者为空时，`posexplode_outer` 返回NULL。
-`posexplode` 和 `posexplode_outer` 均会返回 array 内部的NULL元素。
+将 array 列展开成多行，并且增加一列标明位置的列，组成 struct 类型返回。
+当 array 为 NULL 或者为空时，`posexplode_outer` 返回 NULL。
+`posexplode` 和 `posexplode_outer` 均会返回 array 内部的 NULL 元素。
 
 ## Syntax
 ```sql

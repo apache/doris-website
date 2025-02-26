@@ -48,13 +48,13 @@ ADMIN CLEAN TRASH [ON ("<be_host>:<be_heartbeat_port>" [, ...])];
 
 | 权限（Privilege）  | 对象（Object） | 说明（Notes）                                        |
 | :--------- | :----- | :------------------------------------------- |
-| ADMIN_PRIV | 用户（User）或 角色（Role）  | 用户或者角色拥有 ADMIN_PRIV 权限才能进行CLEAN TRASH操作 |
+| ADMIN_PRIV | 用户（User）或 角色（Role）  | 用户或者角色拥有 ADMIN_PRIV 权限才能进行 CLEAN TRASH 操作 |
 
 
 ## 示例
 
 ```sql
--- 清理所有be节点的垃圾数据。
+-- 清理所有 be 节点的垃圾数据。
 ADMIN CLEAN TRASH;
 ```
 

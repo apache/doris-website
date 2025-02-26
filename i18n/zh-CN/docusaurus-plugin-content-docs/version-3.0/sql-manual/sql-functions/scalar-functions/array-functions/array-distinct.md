@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 ## 描述
-返回去除了重复元素的数组，如果输入数组为NULL，则返回NULL。
+返回去除了重复元素的数组，如果输入数组为 NULL，则返回 NULL。
 
 ## 语法
 ```sql
@@ -38,7 +38,7 @@ ARRAY_DISTINCT(<arr> )
 
 ## 返回值
 返回去除了重复元素的数组。特殊情况：
-- 如果输入数组为NULL，则返回NULL。
+- 如果输入数组为 NULL，则返回 NULL。
 
 ## 举例
 

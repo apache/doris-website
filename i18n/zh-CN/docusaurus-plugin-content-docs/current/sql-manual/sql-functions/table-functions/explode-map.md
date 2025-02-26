@@ -40,7 +40,7 @@ EXPLODE_MAP_OUTER(map<k,v>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `map<k,v>` | map类型 |
+| `map<k,v>` | map 类型 |
 
 ## 返回值
 

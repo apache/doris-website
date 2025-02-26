@@ -53,12 +53,12 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   | Password | 是否设置密码 |
   | Roles | 拥有的角色 |
   | GlobalPrivs | 拥有的全局权限 |
-  | CatalogPrivs | 拥有的catalog权限 |
+  | CatalogPrivs | 拥有的 catalog 权限 |
   | DatabasePrivs | 拥有的数据库权限 |
   | TablePrivs | 拥有的表权限 |
   | ColPrivs | 拥有的列权限 |
   | ResourcePrivs | 拥有的资源权限 |
-  | WorkloadGroupPrivs | 拥有的WorkloadGroup权限 |
+  | WorkloadGroupPrivs | 拥有的 WorkloadGroup 权限 |
 
 ## 权限控制
 

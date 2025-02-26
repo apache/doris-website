@@ -43,7 +43,7 @@ INTO OUTFILE "<file_path>"
 
 **1. `<query_stmt>`**   
 
-查询语句，必须是是合法的 SQL ，参考 [query 语句文档](../../data-query/SELECT.md)。  
+查询语句，必须是是合法的 SQL，参考 [query 语句文档](../../data-query/SELECT.md)。  
 
 **2. `<file_path>`**
 

@@ -65,9 +65,9 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
 | d                                                           |
 +-------------------------------------------------------------+
 
-mysql> select regexp_extract('这是一段中文This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);
+mysql> select regexp_extract('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);
 +-----------------------------------------------------------------------------------------------+
-| regexp_extract('这是一段中文This is a passage in English 1234567', '(\p{Han}+)(.+)', 2)       |
+| regexp_extract('这是一段中文 This is a passage in English 1234567', '(\p{Han}+)(.+)', 2)       |
 +-----------------------------------------------------------------------------------------------+
 | This is a passage in English 1234567                                                          |
 +-----------------------------------------------------------------------------------------------+

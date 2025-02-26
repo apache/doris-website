@@ -91,7 +91,7 @@ INSERT INTO `struct_test` VALUES (3, named_struct('s_id', 3, 's_name', 'sn3', 's
 
 Stream load:
 
-test.csv：
+test.csv:
 
 ```
 1|{"s_id":1, "s_name":"sn1", "s_address":"sa1"}

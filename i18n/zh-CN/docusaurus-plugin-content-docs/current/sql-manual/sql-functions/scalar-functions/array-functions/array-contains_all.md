@@ -34,7 +34,7 @@ array_contains_all
 
 `BOOLEAN array_contains_all(ARRAY<T> array1, ARRAY<T> array2)`
 
-判断数组array1中是否包含子数组array2，且需要保证元素顺序完全一致。返回结果如下：
+判断数组 array1 中是否包含子数组 array2，且需要保证元素顺序完全一致。返回结果如下：
 
 ```
 1    - array1中存在子数组array2；

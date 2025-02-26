@@ -24,7 +24,7 @@ under the License.
 
 ## 描述
 
-返回expr表达式的样本标准差
+返回 expr 表达式的样本标准差
 
 ## 语法
 

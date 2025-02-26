@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 描述
-返回一个数组，包含array1和array2的交集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
+返回一个数组，包含 array1 和 array2 的交集中的所有元素，不包含重复项，如果输入参数为 NULL，则返回 NULL
 
 ## 语法
 ```sql
@@ -36,11 +36,11 @@ ARRAY_INTERSECT(<arr1> , <arr2> )
 | Parameter | Description |
 |---|---|
 | `<arr1>` | 源数组 |
-| `<arr2>` | 与arr1求交集的数组 |
+| `<arr2>` | 与 arr1 求交集的数组 |
 
 ## 返回值
-返回包含array1和array2的交集中的所有元素的数组，特殊情况：
-- 如果输入参数为NULL，则返回NULL
+返回包含 array1 和 array2 的交集中的所有元素的数组，特殊情况：
+- 如果输入参数为 NULL，则返回 NULL
 
 ## 注意事项
 
