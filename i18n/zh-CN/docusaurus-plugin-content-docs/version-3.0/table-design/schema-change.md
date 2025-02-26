@@ -102,7 +102,7 @@ ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 
 - 非聚合模型（如 DUPLICATE KEY）如果增加 Key 列，需要指定 KEY 关键字。
 
-*往非聚合表添加列*
+**向非聚合表添加列**
 
 1. 建表语句
 
@@ -129,7 +129,7 @@ ALTER TABLE example_db.my_table ADD COLUMN key_col INT KEY DEFAULT "0" AFTER col
 ALTER TABLE example_db.my_table ADD COLUMN value_col INT DEFAULT "0" AFTER col4;
 ```
 
-*往聚合表添加列*
+**向聚合表添加列**
 
 1. 建表语句
 
@@ -162,7 +162,7 @@ ALTER TABLE example_db.my_table ADD COLUMN value_col INT SUM DEFAULT "0" AFTER c
 
 - 聚合模型如果增加 Key 列，需要指定 KEY 关键字
 
-*向聚合表添加多列*
+**向聚合表添加多列**
 
 1. 建表语句
 
@@ -308,7 +308,7 @@ ALTER TABLE example_db.my_table
 ORDER BY (k3,k1,k2,k4,v2,v1);
 ```
 
-## 限制
+## 使用限制
 
 - 一张表在同一时间只能有一个 Schema Change 作业在运行。
 

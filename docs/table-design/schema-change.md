@@ -102,7 +102,7 @@ For specific syntax, refer to [ALTER TABLE RENAME](../sql-manual/sql-statements/
 
 - If a non-aggregate model (such as DUPLICATE KEY) adds a key column, the KEY keyword must be specified.
 
-*Adding a column to a non-aggregate table*
+**Adding a column to a non-aggregate table**
 
 1. Create table statement
 
@@ -129,7 +129,7 @@ ALTER TABLE example_db.my_table ADD COLUMN key_col INT KEY DEFAULT "0" AFTER col
 ALTER TABLE example_db.my_table ADD COLUMN value_col INT DEFAULT "0" AFTER col4;
 ```
 
-*Adding a column to an aggregate table*
+**Adding a column to an aggregate table**
 
 1. Create table statement
 
@@ -162,7 +162,7 @@ ALTER TABLE example_db.my_table ADD COLUMN value_col INT SUM DEFAULT "0" AFTER c
 
 - If an aggregate model adds a key column, the KEY keyword must be specified.
 
-*Adding multiple columns to an aggregate table*
+**Adding multiple columns to an aggregate table**
 
 1. Create table statement
 
@@ -218,7 +218,6 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 - If a non-aggregate type modifies a key column, the **KEY** keyword must be specified.
 
 - Only the type of the column can be modified; other attributes of the column must remain the same.
-
 - Partition columns and bucket columns cannot be modified.
 
 - The following type conversions are currently supported (users need to be aware of precision loss):
