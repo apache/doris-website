@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { getIndexHash } = require('@easyops-cn/docusaurus-search-local/dist/server/server/utils/getIndexHash.js');
+const { getIndexHash } = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/getIndexHash.js');
 
 function ensureArray(object, key) {
     if (!Array.isArray(object[key])) {

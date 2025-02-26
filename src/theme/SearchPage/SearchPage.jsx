@@ -7,14 +7,15 @@ import { translate } from "@docusaurus/Translate";
 import { usePluralForm } from "@docusaurus/theme-common";
 import clsx from "clsx";
 import useSearchQuery from "../../hooks/use-search-query";
-import { fetchIndexesByWorker, searchByWorker } from '@easyops-cn/docusaurus-search-local/dist/client/client/theme/searchByWorker'
+import { fetchIndexesByWorker, searchByWorker } from '@yang1666204/docusaurus-search-local/dist/client/client/theme/searchByWorker'
 import { SearchDocumentType, } from "../../../shared/interfaces";
 import { highlight } from "../../utils/highlight";
 import { highlightStemmed } from "../../utils/highlightStemmed";
 import { getStemmedPositions } from "../../utils/getStemmedPositions";
 import LoadingRing from "../LoadingRing/LoadingRing";
 import { concatDocumentPath } from "../../utils/concatDocumentPath";
-import { Mark, searchContextByPaths, useAllContextsWithNoSearchContext, } from "../../utils/proxiedGenerated";
+import { Mark, searchContextByPaths, useAllContextsWithNoSearchContext } from "../../utils/proxiedGenerated";
+import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import styles from "./SearchPage.module.css";
 import { normalizeContextByPath } from "../../utils/normalizeContextByPath";
 export default function SearchPage() {
@@ -46,7 +47,7 @@ function SearchPageContent() {
         updateSearchPath(searchQuery);
         if (searchQuery) {
             (async () => {
-                const results = await searchByWorker(versionUrl, searchContext, searchQuery);
+                const results = await searchByWorker(versionUrl, searchContext, searchQuery, searchResultLimits);
                 setSearchResults(results);
             })();
         }
