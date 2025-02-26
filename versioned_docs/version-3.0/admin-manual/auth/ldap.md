@@ -34,7 +34,7 @@ LDAP group authorization, is to map the group in LDAP to the Role in Doris, if t
 
 ## Noun Interpretation
 
-* LDAP: Lightweight directory access protocol that enables centralized management of account passwords.
+* LDAP: Lightweight Directory Access Protocol that enables centralized management of account passwords.
 * Privilege: Permissions act on nodes, databases or tables. Different permissions represent different permission to operate.
 * Role: Doris can create custom named roles. A role can be thought of as a collection of permissions.
 

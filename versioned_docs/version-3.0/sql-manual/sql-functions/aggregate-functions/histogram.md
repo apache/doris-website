@@ -77,7 +77,7 @@ SELECT histogram(c_string, 2) FROM histogram_test;
 +-------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-Query result description：
+Query result description:
 
 ```json
 {
@@ -109,7 +109,7 @@ Query result description：
 ```
 
 ```text
-Field description：
+Field description:
 - num_buckets：The number of buckets
 - buckets：All buckets
     - lower：Upper bound of the bucket

@@ -259,9 +259,21 @@
     "message": "安全概述",
     "description": "The label for category Security Overview in sidebar docs"
   },
-  "sidebar.docs.category.Data Transmission Encryption": {
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Encryption in Transit": {
     "message": "传输加密",
-    "description": "The label for category Data Transmission Encryption in sidebar docs"
+    "description": "The label for category Encryption in Transit in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication": {
+    "message": "身份认证",
+    "description": "The label for category Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authorization": {
+    "message": "鉴权管控",
+    "description": "The label for category Authorization in sidebar docs"
   },
   "sidebar.docs.category.Authentication and Authorization": {
     "message": "认证与鉴权",

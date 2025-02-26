@@ -42,10 +42,10 @@ SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where>]
 > 生效范围的取值可以是`GLOBAL`或者`SESSION`或者`LOCAL`之一，如果不指定该值，默认为`SESSION`。`LOCAL`是`SESSION`的一个别名。
 
 **2. `<like_pattern>`**
-> 使用like语句去匹配和过滤最终结果
+> 使用 like 语句去匹配和过滤最终结果
 
 **3. `<where>`**
-> 使用where语句去匹配和过滤最终结果
+> 使用 where 语句去匹配和过滤最终结果
 
 ## 权限控制
 执行此 SQL 命令的用户必须至少具有以下权限：
@@ -65,7 +65,7 @@ SHOW [<effective_scope>] VARIABLES [<like_pattern> | <where>]
 
 - show variables 主要是用来查看系统变量的值。
 - 执行 SHOW VARIABLES 命令不需要任何权限，只要求能够连接到服务器就可以。
-- 返回值部分中的`Changed`列，0表示没有改变过，1表示改变过。
+- 返回值部分中的`Changed`列，0 表示没有改变过，1 表示改变过。
 - 使用`SHOW`语句的一些限制：
   - where 语法中不能使用`or`语句
   - 列名在等值左侧

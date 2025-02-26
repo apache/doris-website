@@ -37,7 +37,7 @@ under the License.
   - [https://github.com/apache/doris/pull/29488](https://github.com/apache/doris/pull/29488) 
 
 ## 新功能
-- 新优化器支持了 datev1， datetimev1 及 decimalv2 数据类型
+- 新优化器支持了 datev1，datetimev1 及 decimalv2 数据类型
 - 新优化器支持了 ODBC 外表
 - 倒排索引支持了 `lower_case` 和 `ignore_above` 选项
 - 倒排索引支持了 `match_regexp` 和 `match_phrase_prefix` 查询加速
@@ -55,6 +55,6 @@ under the License.
 
 ## 致谢
 
-感谢 73 位开发者为 Apache Doris 2.0.4 版本做出了重要贡献 ，正是由于他们的努力，Apache Doris 在性能和稳定性方面取得了显著的进步。
+感谢 73 位开发者为 Apache Doris 2.0.4 版本做出了重要贡献，正是由于他们的努力，Apache Doris 在性能和稳定性方面取得了显著的进步。
 
 airborne12、amorynan、AshinGau、BePPPower、bingquanzhao、BiteTheDDDDt、bobhan1、ByteYue、caiconghui、CalvinKirs、cambyzju、caoliang-web、catpineapple、csun5285、dataroaring、deardeng、dutyu、eldenmoon、englefly、feifeifeimoon、fornaix、Gabriel39、gnehil、HappenLee、hello-stephen、HHoflittlefish777、hubgeter、hust-hhb、ixzc、jacktengg、jackwener、Jibing-Li、kaka11chen、KassieZ、LemonLiTree、liaoxin01、LiBinfeng-01、lihuigang、liugddx、luwei16、morningman、morrySnow、mrhhsg、Mryange、nextdreamblue、Nitin-Kashyap、platoneko、py023、qidaye、shuke987、starocean999、SWJTU-ZhangLei、w41ter、wangbo、wsjz、wuwenchi、Xiaoccer、xiaokang、XieJiann、xingyingone、xinyiZzz、xuwei0912、xy720、xzj7019、yujun777、zclllyybb、zddr、zhangguoqiang666、zhangstar333、zhannngchen、zhiqiang-hhhh、zy-kkk、zzzxl1993

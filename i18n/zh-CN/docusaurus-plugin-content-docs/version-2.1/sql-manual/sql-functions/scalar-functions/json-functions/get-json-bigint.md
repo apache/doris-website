@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-解析并获取 json 字符串内指定路径的整型(BIGINT)内容。
+解析并获取 json 字符串内指定路径的整型 (BIGINT) 内容。
 
 ## 语法
 
@@ -46,11 +46,11 @@ under the License.
 path 的内容不能包含 ", [ 和 ]。
 如果 `<json_str>`  格式不对，或 `<json_path>` 格式不对，或无法找到匹配项，则返回 NULL。
 
-另外，推荐使用jsonb类型和jsonb_extract_XXX函数实现同样的功能。
+另外，推荐使用 jsonb 类型和 jsonb_extract_XXX 函数实现同样的功能。
 
 特殊情况处理如下：
-- 如果 `<json_path>` 指定的字段在JSON中不存在，返回NULL
-- 如果 `<json_path>` 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
+- 如果 `<json_path>` 指定的字段在 JSON 中不存在，返回 NULL
+- 如果 `<json_path>` 指定的字段在 JSON 中的实际类型和 json_extract_t 指定的类型不一致，如果能无损转换成指定类型返回指定类型 t，如果不能则返回 NULL
 
 ## 返回值
 

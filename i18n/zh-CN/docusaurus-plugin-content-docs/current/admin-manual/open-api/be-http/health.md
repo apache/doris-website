@@ -26,27 +26,27 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/health`
 
-## Description
+## 描述
 
 给监控服务提供的探活接口，请求能响应代表 BE 状态正常。
 
-## Query parameters
+## 请求参数
 无    
 
-## Request body
+## 请求体
 无
 
-## Response
+## 响应
 
     ```json
     {"status": "OK","msg": ""}
     ```
 
-## Examples
+## 示例
 
 
     ```shell

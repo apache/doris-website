@@ -48,7 +48,7 @@ ARRAY_SHUFFLE(<array>, <seed>)
 
 ## 返回值
 
-将数组中元素进行随机排列。其中，参数 array1 为要进行随机排列的数组，可选参数 seed 是设定伪随机数生成器用于生成伪随机数的初始数值。 shuffle 与 array_shuffle 功能相同。
+将数组中元素进行随机排列。其中，参数 array1 为要进行随机排列的数组，可选参数 seed 是设定伪随机数生成器用于生成伪随机数的初始数值。shuffle 与 array_shuffle 功能相同。
 
 ## 举例
 

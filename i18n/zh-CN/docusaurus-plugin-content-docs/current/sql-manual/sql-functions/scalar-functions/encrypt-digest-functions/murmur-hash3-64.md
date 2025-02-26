@@ -24,9 +24,9 @@ under the License.
 
 ## 描述
 
-计算 64位murmur3 hash值
+计算 64 位 murmur3 hash 值
 
--注：经过测试xxhash_64的性能大约是murmur_hash3_64的2倍，所以在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
+-注：经过测试 xxhash_64 的性能大约是 murmur_hash3_64 的 2 倍，所以在计算 hash 值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
 ## 语法
 
@@ -38,11 +38,11 @@ MURMUR_HASH3_64( <str> [ , <str> ... ] )
 
 | 参数      | 说明                     |
 |---------|------------------------|
-| `<str>` | 需要被计算64位murmur3 hash的值 |
+| `<str>` | 需要被计算 64 位 murmur3 hash 的值 |
 
 ## 返回值
 
-返回输入字符串的64位murmur3 hash值。
+返回输入字符串的 64 位 murmur3 hash 值。
 
 ## 示例
 

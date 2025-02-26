@@ -230,7 +230,7 @@ PROPERTIES(
 ## 注意事项
 
 - 使用并发 Outfile 时的限制
-    当前版本 pipeline 引擎不支持并发Outfile。所以若开启了 pipeline 引擎, 并发 Outfile 将回退到单并发导出。
+    当前版本 pipeline 引擎不支持并发 Outfile。所以若开启了 pipeline 引擎，并发 Outfile 将回退到单并发导出。
 
 - 导出数据量和导出效率
 

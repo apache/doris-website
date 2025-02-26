@@ -36,7 +36,7 @@ under the License.
 
 | 参数 | 说明 |
 | -- | -- |
-| `unit` | 提取DATETIME某个指定单位的值。单位可以为year, month, day, hour, minute, second 或者 microsecond |
+| `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month, day, hour, minute, second 或者 microsecond |
 | `datetime` | 参数是合法的日期表达式 |
 
 ## 返回值

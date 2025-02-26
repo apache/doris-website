@@ -39,12 +39,12 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 | Parameter | Description |
 |---|---|
 | `<lambda>` | lambda 表达式，可以执行合法的标量函数，不支持聚合函数等 |
-| `<arr1>` | 需要计算的数组arr1  |
-| `<arr2>` | 需要计算的数组arr2  |
+| `<arr1>` | 需要计算的数组 arr1  |
+| `<arr2>` | 需要计算的数组 arr2  |
 
 ## 返回值
 返回使用表达式计算后的数组，特殊情况：
-- 如果数组里面包含NULL或者本身为NULL，则返回NULL
+- 如果数组里面包含 NULL 或者本身为 NULL，则返回 NULL
 
 
 ## 举例

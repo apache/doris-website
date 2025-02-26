@@ -38,7 +38,7 @@ SHOW DATABASES [FROM <catalog>] [<filter_expr>];
 ## 可选参数
 
 ** 1. `<catalog>`**
->  对应catalog
+>  对应 catalog
 
 ** 2. `<filter_expr>`**
 >  进行指定条件的过滤

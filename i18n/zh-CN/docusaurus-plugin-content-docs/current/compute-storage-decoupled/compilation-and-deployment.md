@@ -95,9 +95,29 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
-启动脚本返回值为 0 表示启动成功，否则启动失败。
-启动成功同时标准输出的最后一行文本信息为"doris_cloud start successfully".
+```text
+LIBHDFS3_CONF=
+starts doris_cloud with args: --meta-service
+wait and check doris_cloud start successfully
+successfully started brpc listening on port=5000 time_elapsed_ms=11
+doris_cloud start successfully
+```
 
+启动脚本返回值为 0 表示启动成功，否则启动失败。
+
+:::info
+在 3.0.4 中，启动脚本会输出更多信息：
+```text
+2024-12-26 15:31:53 start with args: --meta-service
+wait and check MetaService and Recycler start successfully
+process working directory: "/mnt/disk1/doris/ms"
+pid=1666015 written to file=./bin/doris_cloud.pid
+version:{doris-3.0.4-release} code_version:{commit=fd44740fadabebfedb5da201d7ce427a5dd47c44 time=2025-01-16 18:53:00 +0800} build_info: ...
+
+MetaService has been started successfully
+successfully started service listening on port=5000 time_elapsed_ms=19
+```
+:::
 
 *停止命令*
 

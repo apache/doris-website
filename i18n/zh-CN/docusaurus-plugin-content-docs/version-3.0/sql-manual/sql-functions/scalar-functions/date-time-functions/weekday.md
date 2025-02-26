@@ -31,11 +31,11 @@ under the License.
 `INT WEEKDAY (DATETIME date)`
 
 
-WEEKDAY函数返回日期的工作日索引值，即星期一为0，星期二为1，星期日为6
+WEEKDAY 函数返回日期的工作日索引值，即星期一为 0，星期二为 1，星期日为 6
 
-参数为Date或者Datetime类型或者可以cast为Date或者Datetime类型的数字
+参数为 Date 或者 Datetime 类型或者可以 cast 为 Date 或者 Datetime 类型的数字
 
-注意WEEKDAY和DAYOFWEEK的区别：
+注意 WEEKDAY 和 DAYOFWEEK 的区别：
 ```
           +-----+-----+-----+-----+-----+-----+-----+
           | Sun | Mon | Tues| Wed | Thur| Fri | Sat |

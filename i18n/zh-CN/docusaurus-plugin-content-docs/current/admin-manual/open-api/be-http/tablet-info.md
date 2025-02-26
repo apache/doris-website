@@ -26,24 +26,24 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /tablets_json?limit={int}`
 
-## Description
+## 描述
 
 获取特定 BE 节点上指定数量的 tablet 的 tablet id 和 schema hash 信息
 
-## Query parameters
+## 请求参数
 
 * `limit`
     返回的 tablet 数量，选填，默认 1000 个，可填`all`返回全部 tablet。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -68,7 +68,7 @@ under the License.
         count: 30
     }
     ```
-## Examples
+## 示例
 
 
     ```shell
