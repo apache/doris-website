@@ -32,7 +32,7 @@ under the License.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 Label，以避免冲突造成数据错乱。
+根据您的存储选择适当的语句来创建 Repository。有关详细用法，请参阅[创建 Repository ](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY)。在不同集群使用相同路径的 Repository 进行备份时，请确保使用不同的 Label，以避免冲突造成数据错乱。
 
 ### 方法 1: 在 S3 上创建 Repository
 
@@ -56,7 +56,7 @@ PROPERTIES
 
 ### 方法 2: 在 Azure 上创建 Repository
 
-**自 Doris 3.0.4 版本起支持**
+**自 Doris 3.0.4 开始支持**
 
 要在 Azure 存储上创建 Repository，请使用以下 SQL 命令：
 
@@ -162,7 +162,7 @@ PROPERTIES
 
 ## 第 2 步。备份
 
-请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md)。
+请参考以下语句以备份数据库、表或分区。有关详细用法，请参阅[备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP)。
 
 建议使用有意义的 Label 名称，例如包含备份中包含的数据库和表。
 
@@ -262,5 +262,5 @@ mysql> SHOW SNAPSHOT ON example_repo;
 
 ## 第 5 步。取消备份（如有需要）
 
-可以使用 `CANCEL BACKUP FROM db_name;` 取消一个数据库中的备份任务。更具体的用法可以参考[取消备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md)。
+可以使用 `CANCEL BACKUP FROM db_name;` 取消一个数据库中的备份任务。更具体的用法可以参考[取消备份](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP)。
 

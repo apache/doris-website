@@ -50,7 +50,7 @@ Workload Group 支持对于 CPU，内存，IO 资源的管理，其中对于 CPU
 
 以下为 CGroup 环境配置流程：
 
-1. 首先确认 BE 所在节点是否已经安装好 GGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
+1. 首先确认 BE 所在节点是否已经安装好 CGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
 ```shell
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -101,8 +101,8 @@ chown -R doris:doris /sys/fs/cgroup/doris
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 * 在 CGroup V2 中，cgroup.controllers 保存了当前目录可用的控制器，cgroup.subtree_control 保存了当前目录的子目录的可用控制器。
-  因此需要确认 doris 目录是否已经启用 cpu 控制器，如果 doris 目录下的 cgroup.controllers 中不包含 cpu，那么说明 cpu 控制器未启用，可以在 doris 目录中执行以下命令，
-  这个命令是通过修改父级目录的 cgroup.subtree_control 文件使得 doris 目录可以使用 cpu 控制器。
+因此需要确认 doris 目录是否已经启用 cpu 控制器，如果 doris 目录下的 cgroup.controllers 中不包含 cpu，那么说明 cpu 控制器未启用，可以在 doris 目录中执行以下命令，
+这个命令是通过修改父级目录的 cgroup.subtree_control 文件使得 doris 目录可以使用 cpu 控制器。
 ```
 // 预期该命令执行完成之后，可以在 doris 目录下看到 cpu.max 文件，且 cgroup.controllers 的输出包含 cpu。
 // 如果该命令执行失败，则说明 doris 目录的父级目录也未启用 cpu 控制器，需要为父级目录启用 cpu 控制器。
@@ -124,7 +124,7 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 1. 建议单台机器上只部署一个 BE 实例，目前的 Workload Group 功能不支持一个机器上部署多个 BE；
 2. 当机器重启之后，CGroup 路径下的所有配置就会清空。如果期望 CGroup 配置持久化，可以使用 systemd 把操作设置成系统的自定义服务，这样在每次机器重启的时可以自动完成创建和授权操作
 3. 如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
-   :::
+:::
 
 #### 在容器中使用 Workload Group 的注意事项
 Workload 的 CPU 管理是基于 CGroup 实现的，如果期望在容器中使用 Workload Group，那么需要以特权模式启动容器，容器内的 Doris 进程才能具备读写宿主机 CGroup 文件的权限。
@@ -197,7 +197,7 @@ SELECT name FROM information_schema.workload_groups;
 GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';
 ```
 这个语句的含义是把名为 g1 的 Workload Group 的使用权限授予给名为 user_1 的账户。
-更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 **两种绑定方式**
 1. 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的 value 不能填空，否则语句会执行失败。
@@ -702,16 +702,16 @@ BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把�
 1. 为什么配置了 CPU 的硬限但是没有生效？
 
 * 通常有以下几种原因：
-   * 环境初始化失败，需要检查 Doris CGroup 路径下的两个配置文件，这里以 CGroup V1 版本为例，如果用户指定的 Doris 的 CGroup 路径为```/sys/fs/cgroup/cpu/doris/```，
-     那么首先需要去查看```/sys/fs/cgroup/cpu/doris/query/1/tasks```文件的内容是否包含对应 Workload Group 的线程号，路径中的 1 代表的是 Workload Group 的 id，可以通过```top -H -b -n 1 -p pid```的命令获得该
-     Workload Group 的线程号，通过对比确认该 Workload Group 的线程号都写入到 tasks 文件中；然后是看下```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us```文件的值是否为 -1，如果为 -1 就说明 CPU 硬限的配置没有生效。
-   * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
-     比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
-     CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
-   * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
-     可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
-     迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
-     观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
+    * 环境初始化失败，需要检查 Doris CGroup 路径下的两个配置文件，这里以 CGroup V1 版本为例，如果用户指定的 Doris 的 CGroup 路径为```/sys/fs/cgroup/cpu/doris/```，
+      那么首先需要去查看```/sys/fs/cgroup/cpu/doris/query/1/tasks```文件的内容是否包含对应 Workload Group 的线程号，路径中的 1 代表的是 Workload Group 的 id，可以通过```top -H -b -n 1 -p pid```的命令获得该
+      Workload Group 的线程号，通过对比确认该 Workload Group 的线程号都写入到 tasks 文件中；然后是看下```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us```文件的值是否为 -1，如果为 -1 就说明 CPU 硬限的配置没有生效。
+    * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
+      比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以创建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
+      CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
+    * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
+      可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
+      迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
+      观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
 
 2. 为什么默认的 Workload Group 的个数被限制为 15 个？
 * Workload Group 主要是对单机资源的划分，一个机器上如果划分了过多的 Workload Group，那么每个 Workload Group 都只能分到很少的资源。

@@ -55,7 +55,7 @@ When Syncer synchronizes, the user needs to provide accounts for both upstream a
 
 **Configuration Requirements**
 - `restore_reset_index_id`: If the table to be synchronized has an inverted index, it must be configured as `false` on the target cluster.
-- `ignore_backup_tmp_partitions`: If the upstream creates tmp partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
+- `ignore_backup_tmp_partitions`: If the upstream creates temporary partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
 
 ## Enable binlog for all tables in the database
 

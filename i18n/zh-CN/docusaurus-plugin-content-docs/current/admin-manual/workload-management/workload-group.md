@@ -50,7 +50,7 @@ Workload Group 支持对于 CPU，内存，IO 资源的管理，其中对于 CPU
 
 以下为 CGroup 环境配置流程：
 
-1. 首先确认 BE 所在节点是否已经安装好 GGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
+1. 首先确认 BE 所在节点是否已经安装好 CGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
 ```shell
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -706,7 +706,7 @@ BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把�
       那么首先需要去查看```/sys/fs/cgroup/cpu/doris/query/1/tasks```文件的内容是否包含对应 Workload Group 的线程号，路径中的 1 代表的是 Workload Group 的 id，可以通过```top -H -b -n 1 -p pid```的命令获得该
       Workload Group 的线程号，通过对比确认该 Workload Group 的线程号都写入到 tasks 文件中；然后是看下```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us```文件的值是否为 -1，如果为 -1 就说明 CPU 硬限的配置没有生效。
     * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
-      比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
+      比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以创建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
       CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
     * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
       可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
