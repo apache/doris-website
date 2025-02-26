@@ -60,7 +60,7 @@ DELETE FROM table_name [table_alias]
     1. The conditions do not include partition columns.
     2. The `op` of the partition column is `not in`.
 
-  - When the partitioned table does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
+  - When the partitioned table is not a Unique table, and it does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
 
 ### Examples
 
