@@ -162,8 +162,7 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
     );
     ```
 
-2. Automatically populate the auto-increment column through import
-
+2. **Automatically populate the auto-increment column through import**
 
    <Tabs>
      <TabItem value="Insert using Insert Into" label="Insert using Insert Into" default>
@@ -212,30 +211,31 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
      </TabItem>
      <TabItem value="Insert using Stream Load" label="Insert using Stream Load" default>
        <div>
-   When using Stream Load to import the file test.csv without specifying the auto-increment column `id`, the `id` column will be automatically populated with generated values.
+    When using Stream Load to import the file test.csv without specifying the auto-increment column `id`, the `id` column will be automatically populated with generated values.
 
-   ```
-   ## create load csv file
-   cat test.csv:
-   Tom,40
-   John,50
-   
-   ## stream load
-   curl --location-trusted -u user:passwd -H "columns:name,value" -H "column_separator:," -T ./test.csv http://{host}:{port}/api/{db}/tbl/_stream_load
+    ```
+    ## create load csv file
+    cat test.csv:
+    Tom,40
+    John,50
+    
+    ## stream load
+    curl --location-trusted -u user:passwd -H "columns:name,value" -H "column_separator:," -T ./test.csv http://{host}:{port}/api/{db}/tbl/_stream_load
 
-   ## check loading result
-   mysql> select * from tbl order by id;
-   +------+-------+-------+
-   | id   | name  | value |
-   +------+-------+-------+
-   |    1 | Bob   |    10 |
-   |    2 | Alice |    20 |
-   |    3 | Jack  |    30 |
-   |    4 | Tom   |    40 |
-   |    5 | John  |    50 |
-   +------+-------+-------+
-   5 rows in set (0.04 sec)
-   ```
+    ## check loading result
+    mysql> select * from tbl order by id;
+    +------+-------+-------+
+    | id   | name  | value |
+    +------+-------+-------+
+    |    1 | Bob   |    10 |
+    |    2 | Alice |    20 |
+    |    3 | Jack  |    30 |
+    |    4 | Tom   |    40 |
+    |    5 | John  |    50 |
+    +------+-------+-------+
+    5 rows in set (0.04 sec)
+    ```
+
        </div>
      </TabItem>
    </Tabs>
