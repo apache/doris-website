@@ -53,7 +53,7 @@ AS
 SELECT * FROM iceberg_catalog.iceberg_db.table1;
 ```
 
-For more details, refer to [Catalog Data Load](../../../lakehouse/catalog-overview.md#data-import)。
+For more details, refer to [Catalog Data Load](../../../data-operate/import/import-way/insert-into-manual)。
 
 ## Flink Doris Connector
 

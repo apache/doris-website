@@ -519,7 +519,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 ```
 
 ## Configuring the username and password for the management cluster
-Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), where the user must have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
+Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../../admin-manual/auth/authentication-and-authorization), where the user must have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
 
 The process of configuring the username and password can be divided into three scenarios:  
 - initializing the root user password during cluster deployment;
@@ -531,7 +531,7 @@ To secure access, you must configure a username and password with Node_Priv perm
 - Using a Kubernetes Secret
 
 ### Configuring the root user password during cluster deployment
-To set the root user's password securely, Doris supports encrypting it in [`fe.conf`](../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) using a two-stage SHA-1 encryption process. Here's how to set up the password.
+To set the root user's password securely, Doris supports encrypting it in [`fe.conf`](../../../admin-manual/config/fe-config#initial_root_password) using a two-stage SHA-1 encryption process. Here's how to set up the password.
 
 #### Step 1: Generate the root encrypted password
 
@@ -688,7 +688,7 @@ For more details on creating users, setting passwords, and granting permissions,
 #### Step 3: Configure DorisCluster  
 - Using environment variables
 
-  Directly configure the new user’s name and password in the DorisCluster resource:
+  Directly configure the new user's name and password in the DorisCluster resource:
   ```yaml
   spec:
     adminUser:
