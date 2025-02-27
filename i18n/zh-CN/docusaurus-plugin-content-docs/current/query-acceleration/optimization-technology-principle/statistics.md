@@ -52,22 +52,7 @@ Doris 支持用户通过提交 ANALYZE 语句来手动触发统计信息的收�
 
 **1. 语法**
 
-```sql
-ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
-    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
-```
-
-其中各参数解释如下：
-
-- `table_name`: 指定的目标表。该参数与database_name参数必须且只能指定其中之一。
-
-- `database_name`: 指定的目标数据库。该参数与table_name参数必须且只能指定其中之一。
-
-- `column_name`: 指定要收集统计信息的目标列。这些列必须存在于 table_name 中，多个列名称之间用逗号分隔。如果不指定列名，则会对表中的所有列进行统计信息的收集。
-
-- `WITH SYNC`：选择同步收集统计信息。如果指定此选项，收集完成后才会返回结果；如果不指定，则会异步执行并返回一个 JOB ID，用户可以通过该 JOB ID 查看收集任务的状态。
-
-- `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`：指定使用抽样方式收集。当不指定时，默认为全量收集。<sample_rate> 为抽样参数，在 PERCENT 采样时指定抽样百分比，ROWS 采样时指定抽样行数。对于较大的表（例如超过 5 GiB），从集群资源利用的角度出发，通常建议采用抽样收集。为了保证统计信息的准确性，采样的行数建议不低于 400 万行。
+具体可参阅SQL手册 [ANALYZE](../../sql-manual/sql-statements/statistics/ANALYZE)。
 
 **2. 示例**
 
@@ -204,16 +189,7 @@ SHOW table stats table_name;
 
 **1. 语法：**
 
-```sql
-SHOW [AUTO] ANALYZE [ <table_name> | <job_id> ]
-    [ WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"} ];
-```
-
-- `AUTO`：展示自动收集历史作业信息。如果不指定，则展示手动 `ANALYZE` 历史作业信息。
-
-- `table_name`：表名，指定后可查看该表对应的统计作业信息。可以是 `db_name.table_name` 形式。不指定时返回所有统计作业信息。
-
-- `job_id`：统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定 ID 时，此命令返回所有统计作业信息。
+具体可参阅SQL手册[SHOW ANALYZE](../../sql-manual/sql-statements/statistics/SHOW-ANALYZE)
 
 **2. 输出结果**
 

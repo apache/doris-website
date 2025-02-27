@@ -52,22 +52,7 @@ Doris allows users to manually trigger the collection and update of statistics b
 
 **1. Syntax**
 
-```sql
-+ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
-+    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
-```
-
-Parameters Explanation:
-
-- `table_name`: The specified target table. This parameter and the <database_name> parameter must have and can only have one of them specified.
-
-- `database_name`: The specified target database. This parameter and the <table_name> parameter must have and can only have one of them specified.
-
-- `column_name`: Specifies the target columns for which statistics will be collected. These columns must exist in `table_name`, and multiple column names are separated by commas. If no column names are specified, statistics will be collected for all columns in the table.
-
-- `WITH SYNC`: Optional parameter to collect statistics synchronously. If specified, the result will be returned after collection is complete; if not specified, the operation will be performed asynchronously, and a JOB ID will be returned, which can be used to check the status of the collection task.
-
-- `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`: Specify to use the sampling method for collection. When not specified, full collection is the default. <sample_rate> is the sampling parameter. When using PERCENT sampling, it specifies the sampling percentage; when using ROWS sampling, it specifies the number of sampled rows. For large tables (e.g., over 5 GiB), sampling is generally recommended from a cluster resource utilization perspective. To ensure the accuracy of statistics, it is recommended to sample at least 4 million rows.
+Please refer to SQL manual [ANALYZE](../../sql-manual/sql-statements/statistics/ANALYZE)
 
 **2. Examples**
 
@@ -198,16 +183,7 @@ Use `SHOW ANALYZE` to view information about statistics collection jobs. Current
 
 **1. Syntax**:
 
-```sql
-SHOW [AUTO] ANALYZE [ <table_name> | <job_id> ]
-    [ WHERE STATE = {"PENDING" | "RUNNING" | "FINISHED" | "FAILED"} ];
-```
-
-- `AUTO`: Displays information about historical automatic collection jobs. If unspecified, displays information about manual `ANALYZE` historical jobs.
-
-- `table_name`: Table name, specifying which allows you to view statistics job information for that table. Can be in the form `db_name.table_name`. If unspecified, returns information about all statistics jobs.
-
-- `job_id`: Statistics job ID, obtained when executing an asynchronous `ANALYZE` collection. If unspecified, the command returns information about all statistics jobs.
+Please refer to SQL manual [SHOW ANALYZE](../../sql-manual/sql-statements/statistics/SHOW-ANALYZE)
 
 **2. Output**:
 
