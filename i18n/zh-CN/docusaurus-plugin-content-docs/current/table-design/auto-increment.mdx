@@ -271,8 +271,32 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    3 rows in set (0.08 sec)
    ```
 
-开启部分列更新功能，并关闭严格模式
+2. 开启部分列更新功能，并关闭严格模式
+   ```
+   set enable_unique_key_partial_update=true;
+   Query OK, 0 rows affected (0.01 sec)
 
+   set enable_insert_strict=false;
+   Query OK, 0 rows affected (0.00 sec)
+   ```
+
+3. 使用部分列更新功能更新数据
+   ``` 
+   insert into tbl2(id, name) values(1, "modified"), (4, "added");
+   Query OK, 2 rows affected (0.06 sec)
+   {'label':'label_3e68324cfd87457d_a6166cc0a878cfdc', 'status':'VISIBLE', 'txnId':'1005'}
+
+   select * from tbl2 order by id;
+   +------+----------+-------+
+   | id   | name     | value |
+   +------+----------+-------+
+   |    1 | modified |    10 |
+   |    2 | Alice    |    20 |
+   |    3 | Jack     |    30 |
+   |    4 | added    |     0 |
+   +------+----------+-------+
+   4 rows in set (0.04 sec)
+   ```
     </div>
   </TabItem>
   <TabItem value="自增列为 Value 列" label="内容标题 2" default>
