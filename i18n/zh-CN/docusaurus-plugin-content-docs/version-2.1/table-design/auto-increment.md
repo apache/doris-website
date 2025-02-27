@@ -166,11 +166,9 @@ PROPERTIES (
 
 使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
 ```sql
-mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
-Query OK, 3 rows affected (0.09 sec)
-{'label':'label_183babcb84ad4023_a2d6266ab73fb5aa', 'status':'VISIBLE', 'txnId':'7'}
+insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
 
-mysql> select * from tbl order by id;
+select * from tbl order by id;
 +------+-------+-------+
 | id   | name  | value |
 +------+-------+-------+
@@ -178,7 +176,6 @@ mysql> select * from tbl order by id;
 |    2 | Alice |    20 |
 |    3 | Jack  |    30 |
 +------+-------+-------+
-3 rows in set (0.05 sec)
 ```
 
 类似地，使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
@@ -194,7 +191,7 @@ curl --location-trusted -u user:passwd -H "columns:name,value" -H "column_separa
 ```
 
 ```sql
-mysql> select * from tbl order by id;
+select * from tbl order by id;
 +------+-------+-------+
 | id   | name  | value |
 +------+-------+-------+
@@ -204,17 +201,14 @@ mysql> select * from tbl order by id;
 |    4 | Tom   |    40 |
 |    5 | John  |    50 |
 +------+-------+-------+
-5 rows in set (0.04 sec)
 ```
 
 使用 insert into 导入时指定自增列`id`，则该列数据中的 null 值会被生成的值替换。
 
 ```sql
-mysql> insert into tbl(id, name, value) values(null, "Doris", 60), (null, "Nereids", 70);
-Query OK, 2 rows affected (0.07 sec)
-{'label':'label_9cb0c01db1a0402c_a2b8b44c11ce4703', 'status':'VISIBLE', 'txnId':'10'}
+insert into tbl(id, name, value) values(null, "Doris", 60), (null, "Nereids", 70);
 
-mysql> select * from tbl order by id;
+select * from tbl order by id;
 +------+---------+-------+
 | id   | name    | value |
 +------+---------+-------+
@@ -226,7 +220,6 @@ mysql> select * from tbl order by id;
 |    6 | Doris   |    60 |
 |    7 | Nereids |    70 |
 +------+---------+-------+
-7 rows in set (0.04 sec)
 ```
 
 
@@ -234,24 +227,22 @@ mysql> select * from tbl order by id;
 
 在对一张包含自增列的 merge-on-write Unique 表进行部分列更新时，如果自增列是 key 列，由于部分列更新时用户必须显示指定 key 列，部分列更新的目标列必须包含自增列。此时的导入行为和普通的部分列更新相同。
 ```sql
-mysql> CREATE TABLE `demo`.`tbl2` (
-    ->     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    ->     `name` varchar(65533) NOT NULL,
-    ->     `value` int(11) NOT NULL DEFAULT "0"
-    -> ) ENGINE=OLAP
-    -> UNIQUE KEY(`id`)
-    -> DISTRIBUTED BY HASH(`id`) BUCKETS 10
-    -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
-    -> "enable_unique_key_merge_on_write" = "true"
-    -> );
-Query OK, 0 rows affected (0.03 sec)
+CREATE TABLE `demo`.`tbl2` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` varchar(65533) NOT NULL,
+  `value` int(11) NOT NULL DEFAULT "0"
+  ) ENGINE=OLAP
+  UNIQUE KEY(`id`)
+  DISTRIBUTED BY HASH(`id`) BUCKETS 10
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 3",
+  "enable_unique_key_merge_on_write" = "true"
+  );
 
-mysql> insert into tbl2(id, name, value) values(1, "Bob", 10), (2, "Alice", 20), (3, "Jack", 30);
-Query OK, 3 rows affected (0.14 sec)
-{'label':'label_5538549c866240b6_bce75ef323ac22a0', 'status':'VISIBLE', 'txnId':'1004'}
 
-mysql> select * from tbl2 order by id;
+insert into tbl2(id, name, value) values(1, "Bob", 10), (2, "Alice", 20), (3, "Jack", 30);
+
+select * from tbl2 order by id;
 +------+-------+-------+
 | id   | name  | value |
 +------+-------+-------+
@@ -259,19 +250,13 @@ mysql> select * from tbl2 order by id;
 |    2 | Alice |    20 |
 |    3 | Jack  |    30 |
 +------+-------+-------+
-3 rows in set (0.08 sec)
 
-mysql> set enable_unique_key_partial_update=true;
-Query OK, 0 rows affected (0.01 sec)
 
-mysql> set enable_insert_strict=false;
-Query OK, 0 rows affected (0.00 sec)
+set enable_unique_key_partial_update=true;
+set enable_insert_strict=false;
+insert into tbl2(id, name) values(1, "modified"), (4, "added");
 
-mysql> insert into tbl2(id, name) values(1, "modified"), (4, "added");
-Query OK, 2 rows affected (0.06 sec)
-{'label':'label_3e68324cfd87457d_a6166cc0a878cfdc', 'status':'VISIBLE', 'txnId':'1005'}
-
-mysql> select * from tbl2 order by id;
+select * from tbl2 order by id;
 +------+----------+-------+
 | id   | name     | value |
 +------+----------+-------+
@@ -280,31 +265,28 @@ mysql> select * from tbl2 order by id;
 |    3 | Jack     |    30 |
 |    4 | added    |     0 |
 +------+----------+-------+
-4 rows in set (0.04 sec)
 ```
 
 当自增列是非 key 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不变，然后以部分列更新的语义插入该表。
 
 ```sql
-mysql> CREATE TABLE `demo`.`tbl3` (
-    ->     `id` BIGINT NOT NULL,
-    ->     `name` varchar(100) NOT NULL,
-    ->     `score` BIGINT NOT NULL,
-    ->     `aid` BIGINT NOT NULL AUTO_INCREMENT
-    -> ) ENGINE=OLAP
-    -> UNIQUE KEY(`id`)
-    -> DISTRIBUTED BY HASH(`id`) BUCKETS 1
-    -> PROPERTIES (
-    -> "replication_allocation" = "tag.location.default: 3",
-    -> "enable_unique_key_merge_on_write" = "true"
-    -> );
-Query OK, 0 rows affected (0.16 sec)
+CREATE TABLE `demo`.`tbl3` (
+  `id` BIGINT NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `score` BIGINT NOT NULL,
+  `aid` BIGINT NOT NULL AUTO_INCREMENT
+  ) ENGINE=OLAP
+  UNIQUE KEY(`id`)
+  DISTRIBUTED BY HASH(`id`) BUCKETS 1
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 3",
+  "enable_unique_key_merge_on_write" = "true"
+  );
 
-mysql> insert into tbl3(id, name, score) values(1, "Doris", 100), (2, "Nereids", 200), (3, "Bob", 300);
-Query OK, 3 rows affected (0.28 sec)
-{'label':'label_c52b2c246e244dda_9b91ee5e27a31f9b', 'status':'VISIBLE', 'txnId':'2003'}
 
-mysql> select * from tbl3 order by id;
+insert into tbl3(id, name, score) values(1, "Doris", 100), (2, "Nereids", 200), (3, "Bob", 300);
+
+select * from tbl3 order by id;
 +------+---------+-------+------+
 | id   | name    | score | aid  |
 +------+---------+-------+------+
@@ -312,19 +294,13 @@ mysql> select * from tbl3 order by id;
 |    2 | Nereids |   200 |    1 |
 |    3 | Bob     |   300 |    2 |
 +------+---------+-------+------+
-3 rows in set (0.13 sec)
 
-mysql> set enable_unique_key_partial_update=true;
-Query OK, 0 rows affected (0.00 sec)
 
-mysql> set enable_insert_strict=false;
-Query OK, 0 rows affected (0.00 sec)
+set enable_unique_key_partial_update=true;
+set enable_insert_strict=false;
+insert into tbl3(id, score) values(1, 999), (2, 888);
 
-mysql> insert into tbl3(id, score) values(1, 999), (2, 888);
-Query OK, 2 rows affected (0.07 sec)
-{'label':'label_dfec927d7a4343ca_9f9ade581391de97', 'status':'VISIBLE', 'txnId':'2004'}
-
-mysql> select * from tbl3 order by id;
+select * from tbl3 order by id;
 +------+---------+-------+------+
 | id   | name    | score | aid  |
 +------+---------+-------+------+
@@ -332,13 +308,10 @@ mysql> select * from tbl3 order by id;
 |    2 | Nereids |   888 |    1 |
 |    3 | Bob     |   300 |    2 |
 +------+---------+-------+------+
-3 rows in set (0.06 sec)
 
-mysql> insert into tbl3(id, aid) values(1, 1000), (3, 500);
-Query OK, 2 rows affected (0.07 sec)
-{'label':'label_b26012959f714f60_abe23c87a06aa0bf', 'status':'VISIBLE', 'txnId':'2005'}
+insert into tbl3(id, aid) values(1, 1000), (3, 500);
 
-mysql> select * from tbl3 order by id;
+select * from tbl3 order by id;
 +------+---------+-------+------+
 | id   | name    | score | aid  |
 +------+---------+-------+------+
@@ -346,7 +319,6 @@ mysql> select * from tbl3 order by id;
 |    2 | Nereids |   888 |    1 |
 |    3 | Bob     |   300 |  500 |
 +------+---------+-------+------+
-3 rows in set (0.06 sec)
 ```
 
 ## 使用场景
