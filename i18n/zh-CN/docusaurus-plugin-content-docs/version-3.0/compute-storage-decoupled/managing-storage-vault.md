@@ -74,6 +74,9 @@ PROPERTIES (
 
 更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
+**注意**
+提供的对象存储路径必须具有head/get/list/put/multipartUpload/delete访问权限。
+
 ## 查看 Storage Vault 
 
 **语法**
