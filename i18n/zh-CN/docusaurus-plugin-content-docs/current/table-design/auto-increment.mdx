@@ -306,7 +306,8 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     <div>
     当自增列是 Value 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不变，然后以部分列更新的语义插入该表。
 
-    1. 创建待导入表并插入测试数据
+    1. **创建待导入表并插入测试数据**
+
         ```sql
         CREATE TABLE `demo`.`tbl3` (
             `id` BIGINT NOT NULL,
@@ -336,14 +337,16 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
         3 rows in set (0.13 sec)
         ```
 
-    2. 开启部分列更新功能，并关闭严格模式
+    2. **开启部分列更新功能，并关闭严格模式**
+
         ```sql
         set enable_unique_key_partial_update=true;
         Query OK, 0 rows affected (0.00 sec)
 
         set enable_insert_strict=false;
         Query OK, 0 rows affected (0.00 sec)
-        ```        
+        ```
+
     3. 使用部分列更新功能插入数据
         ```sql
         insert into tbl3(id, score) values(1, 999), (2, 888);
@@ -388,7 +391,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 以离线 uv，pv 分析场景为例，假设有如下用户行为表存放明细数据。
 
-1. 创建用户行为表
+1. **创建用户行为表**
 
     ```sql
     CREATE TABLE `demo`.`dwd_dup_tbl` (
@@ -404,7 +407,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
     ```
 
-2. 利用自增列创建字典表
+2. **利用自增列创建字典表**
 
     ```sql
     CREATE TABLE `demo`.`dictionary_tbl` (
@@ -418,7 +421,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     );
     ```
 
-3. 向字典表中导入数据 
+3. **向字典表中导入数据**
 
     将存量数据中的 `user_id` 导入字典表，建立 `user_id`到整数值的编码映射
     ```sql
@@ -435,7 +438,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
     实际场景中也可以使用 flink connector 把数据写入到 doris。
 
-4. 建立聚合表存放聚合结果
+4. **建立聚合表存放聚合结果**
 
     假设 `dim1`, `dim3`, `dim5` 是我们关心的统计维度，可以建立以下聚合表
     ```sql
@@ -459,7 +462,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     group by dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5;
     ```
 
-5. 查询 uv、pv 结果
+5. **查询 uv、pv 结果**
  
     用如下语句进行 uv, pv 查询
 
@@ -469,70 +472,74 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 ### 高效分页
 
-在页面展示数据时，往往需要做分页展示。传统的分页通常使用 SQL 中的 `limit`, `offset` + `order by` 进行查询。例如有如下业务表需要进行展示：
+在页面展示数据时，往往需要做分页展示。传统的分页通常使用 SQL 中的 `limit`, `offset` + `order by` 进行查询。例如有如下业务表需要进行展示。
 
-```sql
-CREATE TABLE `demo`.`records_tbl` (
-    `user_id` int(11) NOT NULL COMMENT "",
-    `name` varchar(26) NOT NULL COMMENT "",
-    `address` varchar(41) NOT NULL COMMENT "",
-    `city` varchar(11) NOT NULL COMMENT "",
-    `nation` varchar(16) NOT NULL COMMENT "",
-    `region` varchar(13) NOT NULL COMMENT "",
-    `phone` varchar(16) NOT NULL COMMENT "",
-    `mktsegment` varchar(11) NOT NULL COMMENT ""
-) DUPLICATE KEY (`user_id`, `name`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
-```
+- 常规分页查询方法
 
-假设在分页展示中，每页展示 100 条数据。那么获取第 1 页的数据可以使用如下 sql 进行查询：
+    ```sql
+        CREATE TABLE `demo`.`records_tbl` (
+        `user_id` int(11) NOT NULL COMMENT "",
+        `name` varchar(26) NOT NULL COMMENT "",
+        `address` varchar(41) NOT NULL COMMENT "",
+        `city` varchar(11) NOT NULL COMMENT "",
+        `nation` varchar(16) NOT NULL COMMENT "",
+        `region` varchar(13) NOT NULL COMMENT "",
+        `phone` varchar(16) NOT NULL COMMENT "",
+        `mktsegment` varchar(11) NOT NULL COMMENT ""
+    ) DUPLICATE KEY (`user_id`, `name`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
+    ```
 
-```sql
-select * from records_tbl order by user_id, name limit 100;
-```
+    假设在分页展示中，每页展示 100 条数据。那么获取第 1 页的数据可以使用如下 sql 进行查询：
 
-获取第 2 页的数据可以使用如下 sql 进行查询：
+    ```sql
+    select * from records_tbl order by user_id, name limit 100;
+    ```
 
-```sql
-select * from records_tbl order by user_id, name limit 100 offset 100;
-```
+    获取第 2 页的数据可以使用如下 sql 进行查询：
 
-然而，当进行深分页查询时 (offset 很大时)，即使实际需要需要的数据行很少，该方法依然会将全部数据读取到内存中进行全量排序后再进行后续处理，这种方法比较低效。可以通过自增列给每行数据一个唯一值，在查询时就可以通过记录之前页面`unique_value`列的最大值`max_value`，然后使用 `where unique_value > max_value limit rows_per_page` 的方式通过提下推谓词提前过滤大量数据，从而更高效地实现分页。
+    ```sql
+    select * from records_tbl order by user_id, name limit 100 offset 100;
+    ```
+  
+- 通过自增列优化分页查询
 
-仍然以上述业务表为例，通过在表中添加一个自增列从而赋予每一行一个唯一标识：
+    当进行深分页查询时 (offset 很大时)，即使实际需要需要的数据行很少，该方法依然会将全部数据读取到内存中进行全量排序后再进行后续处理，这种方法比较低效。可以通过自增列给每行数据一个唯一值，在查询时就可以通过记录之前页面 `unique_value` 列的最大值 `max_value`，然后使用 `where unique_value > max_value limit rows_per_page` 的方式通过提下推谓词提前过滤大量数据，从而更高效地实现分页。
 
-```sql
-CREATE TABLE `demo`.`records_tbl2` (
-    `user_id` int(11) NOT NULL COMMENT "",
-    `name` varchar(26) NOT NULL COMMENT "",
-    `address` varchar(41) NOT NULL COMMENT "",
-    `city` varchar(11) NOT NULL COMMENT "",
-    `nation` varchar(16) NOT NULL COMMENT "",
-    `region` varchar(13) NOT NULL COMMENT "",
-    `phone` varchar(16) NOT NULL COMMENT "",
-    `mktsegment` varchar(11) NOT NULL COMMENT "",
-    `unique_value` BIGINT NOT NULL AUTO_INCREMENT
-) DUPLICATE KEY (`user_id`, `name`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
-```
+    仍然以上述业务表为例，通过在表中添加一个自增列从而赋予每一行一个唯一标识：
 
-在分页展示中，每页展示 100 条数据，使用如下方式获取第一页的数据：
+    ```sql
+    CREATE TABLE `demo`.`records_tbl2` (
+        `user_id` int(11) NOT NULL COMMENT "",
+        `name` varchar(26) NOT NULL COMMENT "",
+        `address` varchar(41) NOT NULL COMMENT "",
+        `city` varchar(11) NOT NULL COMMENT "",
+        `nation` varchar(16) NOT NULL COMMENT "",
+        `region` varchar(13) NOT NULL COMMENT "",
+        `phone` varchar(16) NOT NULL COMMENT "",
+        `mktsegment` varchar(11) NOT NULL COMMENT "",
+        `unique_value` BIGINT NOT NULL AUTO_INCREMENT
+    ) DUPLICATE KEY (`user_id`, `name`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
+    ```
 
-```sql
-select * from records_tbl2 order by unique_value limit 100;
-```
+    在分页展示中，每页展示 100 条数据，使用如下方式获取第一页的数据：
 
-通过程序记录下返回结果中`unique_value`中的最大值，假设为 99，则可用如下方式查询第 2 页的数据：
+    ```sql
+    select * from records_tbl2 order by unique_value limit 100;
+    ```
 
-```sql
-select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
-```
+    通过程序记录下返回结果中`unique_value`中的最大值，假设为 99，则可用如下方式查询第 2 页的数据：
 
-如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中`unique_value`的最大值时，例如要直接获取第 101 页的内容，则可以使用如下方式进行查询
+    ```sql
+    select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
+    ```
 
-```sql
-select user_id, name, address, city, nation, region, phone, mktsegment
-from records_tbl2, (select unique_value as max_value from records_tbl2 order by unique_value limit 1 offset 9999) as previous_data
-where records_tbl2.unique_value > previous_data.max_value
-order by unique_value limit 100;
-```
+    如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中`unique_value`的最大值时，例如要直接获取第 101 页的内容，则可以使用如下方式进行查询
+
+    ```sql
+    select user_id, name, address, city, nation, region, phone, mktsegment
+    from records_tbl2, (select unique_value as max_value from records_tbl2 order by unique_value limit 1 offset 9999) as previous_data
+    where records_tbl2.unique_value > previous_data.max_value
+    order by unique_value limit 100;
+    ```
