@@ -37,22 +37,24 @@ Doris 默认采用列式存储，每个列连续存储，在分析场景（如�
 建表时在表的 PROPERTIES 中指定是否开启行存，哪些列开启行存，行存的存储压缩单元大小 page_size。
 
 1. 是否开启行存：默认为 false 不开启
-```
-"store_row_column" = "true"
-```
+
+    ```
+    "store_row_column" = "true"
+    ```
 
 2. 哪些列开启行存：如果 `"store_row_column" = "true"`，默认所有列开启行存，若需要指定部分列开启行存，设置 row_store_columns 参数，格式为逗号分割的列名
-```
-"row_store_columns" = "column1,column2,column3"
-```
+
+    ```
+    "row_store_columns" = "column1,column2,column3"
+    ```
 
 3. 行存 page_size：默认为 16KB。
-```
-"row_store_page_size" = "16384"
-```
+
+    ```
+    "row_store_page_size" = "16384"
+    ```
 
 page 是存储读写的最小单元，page_size 是行存 page 的大小，也就是说读一行也需要产生一个 page 的 IO。这个值越大压缩效果越好存储空间占用越低，但是点查时 IO 开销越大性能越低（因为一次 IO 至少读一个 page），反过来值越小存储空间极高，点查性能越好。默认值 16KB 是大多数情况下比较均衡的选择，如果更偏向查询性能可以配置较小的值比如 4KB 甚至更低，如果更偏向存储空间可以配置较大的值比如 64KB 甚至更高。
-
 
 ## 使用示例
 
@@ -80,7 +82,7 @@ PROPERTIES (
 );
 ```
 
-查询
+查询语句如下：
 ```
 SELECT key, v1, v3, v5, v7 FROM tbl_point_query WHERE key = 100；
 ```

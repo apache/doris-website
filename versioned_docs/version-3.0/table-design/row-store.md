@@ -37,19 +37,22 @@ The principle of row storage is that an additional column is added during storag
 When creating a table, specify whether to enable row storage, which columns to enable row storage for, and the storage compression unit size page_size in the table's PROPERTIES.
 
 1. Whether to enable row storage: defaults to false (not enabled).
-``` 
-"store_row_column" = "true"
-```
+
+     ``` 
+     "store_row_column" = "true"
+     ```
 
 2. Which columns to enable row storage for:if `"store_row_column" = "true"`, all columns are enabled by default. If you need to specify that only some columns are enabled for row storage, set the row_store_columns parameter, formatted as a comma-separated list of column names.
-``` 
-"row_store_columns" = "column1,column2,column3"
-```
+
+     ``` 
+     "row_store_columns" = "column1,column2,column3"
+     ```
 
 3. Row storage page_size: defaults to 16KB.
-``` 
-"row_store_page_size" = "16384"
-```
+
+     ``` 
+     "row_store_page_size" = "16384"
+     ```
 
 A page is the smallest unit for storage read and write operations, and `page_size` refers to the size of a row-store page. This means that reading a single row requires generating a page IO. The larger this value is, the better the compression effect and the lower the storage space usage. However, the IO overhead during point queries increases, resulting in lower performance (because each IO operation reads at least one page). Conversely, the smaller the value, the higher the storage space usage and the better the performance for point queries. The default value of 16KB is a balanced choice in most cases. If you prioritize query performance, you can configure a smaller value, such as 4KB or even lower. If you prioritize storage space, you can configure a larger value, such as 64KB or even higher.
 
@@ -80,7 +83,8 @@ PROPERTIES (
 );
 ```
 
-Query
+Query Statement as bellow:
+
 ```
 SELECT key, v1, v3, v5, v7 FROM tbl_point_query WHERE key = 100；
 ```
