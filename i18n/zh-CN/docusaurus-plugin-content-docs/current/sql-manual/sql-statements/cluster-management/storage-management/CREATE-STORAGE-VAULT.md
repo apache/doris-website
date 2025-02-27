@@ -54,7 +54,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 | 参数              | 是否必需 | 描述                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
 | `s3.endpoint`    | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，endpoint 是固定的 blob.core.windows.net。 |
-| `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE，则不需要)。 |
+| `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则可填us-east-1)。 |
 | `s3.root.path`   | 必需   | 存储数据的路径。 |
 | `s3.bucket`      | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure，则为 StorageAccount)。 |
 | `s3.access_key`  | 必需   | 您的对象存储账户的访问密钥。(如果您使用 Azure，则为 AccountName)。 |
@@ -131,7 +131,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "s3.secret_key" = "xxxxxx",                          -- required,  Your OBS secret key
         "s3.region" = "cn-north-4",                          -- required
         "s3.root.path" = "obs_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
+        "s3.bucket" = "xxxxxx",                              -- required,  Your OBS bucket name
         "provider" = "OBS",                                  -- required
         "use_path_style" = "false"                           -- optional,  OBS 建议设置 false
     );
@@ -160,10 +160,10 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "type" = "S3",                                      -- required
         "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
         "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
-        "s3.secret_key" = "xxxxxx",                         -- required,  Your OBS secret key
+        "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
         "s3.region" = "us-east-1",                          -- required
         "s3.root.path" = "s3_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                             -- required,  Your s3 bucket name
+        "s3.bucket" = "xxxxxx",                             -- required,  Your S3 bucket name
         "provider" = "S3",                                  -- required
         "use_path_style" = "false"                          -- optional,  S3 建议设置 false
     );
@@ -214,3 +214,13 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
         "provider" = "GCP"                                   -- required
     );
     ```
+
+    **注意**
+
+    [s3.access_key对应GCP HMAC key的Access ID](https://cloud.google.com/storage/docs/authentication/hmackeys)
+
+    [s3.secret_key对应GCP HMAC key的Secret](https://cloud.google.com/storage/docs/authentication/hmackeys)
+
+### 关键词
+
+    CREATE, STORAGE VAULT
