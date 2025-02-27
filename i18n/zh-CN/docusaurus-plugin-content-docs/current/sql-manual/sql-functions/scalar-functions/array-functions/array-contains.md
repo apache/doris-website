@@ -34,7 +34,7 @@ array_contains
 
 `BOOLEAN array_contains(ARRAY<T> arr, T value)`
 
-判断数组中是否包含value。返回结果如下：
+判断数组中是否包含 value。返回结果如下：
 
 ```
 1    - value在数组arr中存在；

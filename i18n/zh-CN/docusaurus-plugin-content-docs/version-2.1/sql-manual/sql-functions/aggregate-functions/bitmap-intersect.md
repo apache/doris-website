@@ -38,11 +38,11 @@ BITMAP_INTERSECT(BITMAP <value>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<value>` | 支持bitmap的数据类型 |
+| `<value>` | 支持 bitmap 的数据类型 |
 
 ## 返回值
 
-返回值的数据类型为BITMAP。
+返回值的数据类型为 BITMAP。
 
 ## 举例
 

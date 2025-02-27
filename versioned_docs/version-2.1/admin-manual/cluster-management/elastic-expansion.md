@@ -66,7 +66,7 @@ fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
     ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
     ```
 
-  * Register the node as a Observer FE:
+  * Register the node as an Observer FE:
 
     ```sql
     ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";

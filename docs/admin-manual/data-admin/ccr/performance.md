@@ -55,7 +55,7 @@ Incremental synchronization time difference: 33 seconds
 ## Full Synchronization Performance Test
 
 ### Test Steps
-1. Create the library and table information for TPC-H 1T in the upstream cluster and complete the data import, recording the completion time.
+1. Create the database and table information for TPC-H 1T in the upstream cluster and complete the data import, recording the completion time.
 2. Create a synchronization job for the TPC-H 1T database.
 3. Wait for the downstream data synchronization to complete and record the completion time.
 

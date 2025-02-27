@@ -49,9 +49,9 @@ AES_DECRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 
 ## 返回值
 
-如果解密成功: 返回解密后的数据，通常是明文的二进制表示。
+如果解密成功：返回解密后的数据，通常是明文的二进制表示。
 
-如果解密失败: 返回 NULL。
+如果解密失败：返回 NULL。
 
 ## 示例
 
@@ -72,7 +72,7 @@ select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B
 +--------------------------------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法
+使用 AES_256_CBC 算法
 
 ```sql
 set block_encryption_mode="AES_256_CBC";
@@ -87,7 +87,7 @@ select aes_decrypt(from_base64('3dym0E7/+1zbrLIaBVNHSw=='),'F3229A0B371ED2D9441B
 +--------------------------------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法并设置初始向量
+使用 AES_256_CBC 算法并设置初始向量
 
 ```sql
 select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B830D21A390C3', '0123456789');

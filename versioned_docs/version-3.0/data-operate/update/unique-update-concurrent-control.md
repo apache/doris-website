@@ -189,7 +189,7 @@ The mapping method is the same as above. Example:
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
     [WITH MERGE|APPEND|DELETE]
     COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1  100 and k2 like "%doris%"
+    WHERE k1 > 100 and k2 like "%doris%"
     [ORDER BY source_sequence]
     PROPERTIES
     (
@@ -252,7 +252,7 @@ This time, the data in the table is replaced. In summary, during the load proces
 
 ### Note
 
-1. To prevent misuse, in StreamLoad/BrokerLoad load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
+1. To prevent misuse, in Stream Load/Broker Load load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
 
 ```Plain
 Table test_tbl has sequence column, need to specify the sequence column

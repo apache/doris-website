@@ -32,7 +32,7 @@ Doris 在数据导入时提供了强大的数据转换能力，可以简化部�
 
 - **前置过滤**：在列映射和列变换前过滤掉不需要的原始数据。
 
-- **后置过滤**：在列映射和列变换后数据对最终结果进行过滤。
+- **后置过滤**：在列映射和列变换后对数据最终结果进行过滤。
 
 通过这些内置的数据转换功能，可以提高导入效率，并确保数据处理逻辑的一致性。
 
@@ -221,7 +221,7 @@ DISTRIBUTED BY HASH(k1) BUCKETS 1;
 #### 导入数据
 - Stream Load
 ```sql
-curl --location-trusted -u usr:passwd \
+curl --location-trusted -u user:password \
     -H "column_separator:," \
     -H "columns: k1,k2,tmp_skip,k3" \
     -T data.csv \

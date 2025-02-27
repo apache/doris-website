@@ -42,11 +42,11 @@ QUERY(
 ```
 
 ## 必填参数
-query表函数 tvf中的每一个参数都是一个 `"key"="value"` 对
+query 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
 
 | 字段           | 描述                         |
 |--------------|----------------------------|
-| `catalog`    | catalog名称，需要按照catalog的名称填写 |
+| `catalog`    | catalog 名称，需要按照 catalog 的名称填写 |
 | `query`      | 需要执行的查询语句                  |
 
 

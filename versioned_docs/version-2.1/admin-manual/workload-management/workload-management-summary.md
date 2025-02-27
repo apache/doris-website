@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Workload management is an very important feature of Doris, playing a critical role in the overall system management. Through reasonable workload management strategies, resource utilization can be optimized, system stability enhanced, and response time reduced. It has the following abilities:
+Workload management is a very important feature of Doris, playing a critical role in the overall system management. Through reasonable workload management strategies, resource utilization can be optimized, system stability enhanced, and response time reduced. It has the following abilities:
 
 - Resource Isolation: By dividing into multiple groups and setting resource (CPU, Memory, IO) limits for each group, it ensures that there is no interference between multiple users or different tasks (such as read and write operations) of the same user.
 
@@ -41,7 +41,6 @@ Doris can divide resource in the following three ways:
 
 - Workload Group: The resource (CPU, Memory, IO) within a BE are divided into multiple resource groups through Cgroup, enabling more fine-grained resource isolation.
 
-- Compute Group: It is a way of resource partitioning method in compute-storage decoupled mode. Similar to Resource Group, it also takes BE as the minimum granularity to divide multiple groups.
 
 The following table records the characteristics and advantageous scenarios of different resource partitioning methods:
 
@@ -49,7 +48,6 @@ The following table records the characteristics and advantageous scenarios of di
 | ---------- | ----------- |-----|-----|
 | Resource Group | BE node level, with complete resource isolation, can isolate BE failures      |   Hard limit  |Not support. And it is necessary to ensure that at least one copy of data is stored within the resource group.    |
 | Workload Group | Isolation within BE process; cannot isolate BE failures                                                          | Both hard and soft limit    | Support    |
-|Compute Group            | BE node level, with complete resource isolation, can isolate BE failures  | Hard limit | Not support |
 
 ## Soft Limit and Hard Limit
 
