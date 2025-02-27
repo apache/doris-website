@@ -474,7 +474,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 在页面展示数据时，往往需要做分页展示。传统的分页通常使用 SQL 中的 `limit`, `offset` + `order by` 进行查询。例如有如下业务表需要进行展示。
 
-- 常规分页查询方法
+- **常规分页查询方法**
 
     ```sql
         CREATE TABLE `demo`.`records_tbl` (
@@ -490,19 +490,17 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
     ```
 
-    假设在分页展示中，每页展示 100 条数据。那么获取第 1 页的数据可以使用如下 sql 进行查询：
+    执行分页查询，以下语句中以每页展示 100 条数据为例：
 
     ```sql
+    -- Display the data on the first page
     select * from records_tbl order by user_id, name limit 100;
-    ```
 
-    获取第 2 页的数据可以使用如下 sql 进行查询：
-
-    ```sql
+    -- Display the data on the second page
     select * from records_tbl order by user_id, name limit 100 offset 100;
     ```
   
-- 通过自增列优化分页查询
+- **通过自增列优化分页查询**
 
     当进行深分页查询时 (offset 很大时)，即使实际需要需要的数据行很少，该方法依然会将全部数据读取到内存中进行全量排序后再进行后续处理，这种方法比较低效。可以通过自增列给每行数据一个唯一值，在查询时就可以通过记录之前页面 `unique_value` 列的最大值 `max_value`，然后使用 `where unique_value > max_value limit rows_per_page` 的方式通过提下推谓词提前过滤大量数据，从而更高效地实现分页。
 
@@ -523,19 +521,19 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
     DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
     ```
 
-    在分页展示中，每页展示 100 条数据，使用如下方式获取第一页的数据：
+    执行分页查询，以下语句中以每页展示 100 条数据为例：
 
     ```sql
+    -- Display the data on the first page
     select * from records_tbl2 order by unique_value limit 100;
-    ```
 
-    通过程序记录下返回结果中`unique_value`中的最大值，假设为 99，则可用如下方式查询第 2 页的数据：
-
-    ```sql
+    -- By programmatically recording the maximum value in unique_value from the returned results, 
+    -- assuming it is 99, you can query the data on the second page using the following method.
     select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
+
     ```
 
-    如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中`unique_value`的最大值时，例如要直接获取第 101 页的内容，则可以使用如下方式进行查询
+    如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中 `unique_value` 的最大值时，例如要直接获取第 101 页的内容，则可以使用如下方式进行查询
 
     ```sql
     select user_id, name, address, city, nation, region, phone, mktsegment
