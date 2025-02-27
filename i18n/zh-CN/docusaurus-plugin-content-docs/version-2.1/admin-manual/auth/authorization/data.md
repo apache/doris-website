@@ -67,3 +67,5 @@ GRANT Select_priv(col1,col2) ON ctl.db.tbl TO user1
 例如，管理员可以选择将信用卡号、身份证号等敏感字段的部分或全部数字替换为星号 * 或其他字符，或者将真实姓名替换为假名。
 
 从 2.1.2 版本开始，支持通过 Apache Ranger 的 Data Masking 来为某些列设置脱敏策略，目前仅支持通过 [Apache Ranger](./ranger)来设置
+
+> 为 admin/root 用户设置数据脱敏不会生效

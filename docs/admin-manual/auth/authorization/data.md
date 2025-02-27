@@ -71,3 +71,5 @@ Data masking is a method to protect sensitive data by modifying, replacing, or h
 For example, administrators can choose to replace part or all of the digits of sensitive fields such as credit card numbers or ID numbers with asterisks * or other characters, or replace real names with pseudonyms.
 
 Starting from version 2.1.2, data masking is supported through Apache Ranger's Data Masking to set masking policies for certain columns, currently only through [Apache Ranger](ranger.md).
+
+> Data Masking settings for admin/root users will not take effect.

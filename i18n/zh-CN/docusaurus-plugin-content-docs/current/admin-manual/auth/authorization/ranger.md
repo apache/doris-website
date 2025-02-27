@@ -31,7 +31,44 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 ## Ranger 示例
 ### 更改 Doris 配置
 1. 在 fe/conf/fe.conf 文件中配置鉴权方式为 ranger access_controller_type=ranger-doris
-2. 在 fe/conf/ranger-doris-security.xml 文件中配置 ranger 基本信息
+2. 在所有 FE 的 conf 目录创建 `ranger-doris-security.xml` 文件，内容如下：
+
+   ```
+   <?xml version="1.0" encoding="UTF-8"?>
+   <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+   <configuration>
+       <property>
+           <name>ranger.plugin.doris.policy.cache.dir</name>
+           <value>/path/to/ranger/cache/</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.pollIntervalMs</name>
+           <value>30000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.client.connection.timeoutMs</name>
+           <value>60000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.client.read.timeoutMs</name>
+           <value>60000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.url</name>
+           <value>http://172.21.0.32:6080</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.source.impl</name>
+           <value>org.apache.ranger.admin.client.RangerAdminRESTClient</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.service.name</name>
+           <value>doris</value>
+       </property>
+   </configuration>
+   ```
+
+   其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
 3. 启动集群
 ### 权限示例
 1. 在 Doris 中创建 `user1`。
@@ -56,6 +93,8 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 ![database](/images/ranger/database.png)
 
 #### Table 权限
+> 这里的table泛指 表/视图/异步物化视图
+
 相当于 Doris 内部授权语句的 `grant select_priv on hive.tpch.user to user1`;
 
 ![table](/images/ranger/table.png)
@@ -100,6 +139,7 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。
 ## 常见问题
 1. ranger 访问失败，怎么查看日志
+
    在所有 FE 的 conf 目录创建 log4j.properties 文件，内容如下：
 
     ```
@@ -119,6 +159,10 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 	```
 
    其中 `log4j.appender.D.File` 改为实际值，用于存放 Ranger 插件的日志。
+2. 配置了 Row Level Filter policy ，但是用户查询时报没有权限
+
+   Row Level Filter policy 仅用来限制用户访问表中数据的特定记录， 仍需通过 ACCESS POLICY 为用户授权
+
 ## 安装和配置 Doris Ranger 插件
 ### 安装插件
 
