@@ -26,17 +26,17 @@ under the License.
 
 Doris provides multiple ways to load data from local sources:
 
-### 1. Stream Load
+- **Stream Load**
 
-Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSON, Parquet, and ORC formats. For more information, refer to the [Stream Load documentation](../import-way/stream-load-manual.md).
+    Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSON, Parquet, and ORC formats. For more information, refer to the [Stream Load documentation](../import-way/stream-load-manual.md).
 
-### 2. Streamloader Tool
+- **Streamloader Tool**
 
-The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
+    The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
 
-### 3. MySQL Load
+- **MySQL Load**
 
-Doris is compatible with MySQL protocol and supports using the standard [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) syntax to load local files, suitable for loading CSV files.
+    Doris is compatible with MySQL protocol and supports using the standard [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) syntax to load local files, suitable for loading CSV files.
 
 ## Using Stream Load to Load Data
 
@@ -88,9 +88,22 @@ Example of load result:
 ```SQL
 {
     "TxnId": 3,
+    "Label": "123",
+    "Comment": "",
+    "TwoPhaseCommit": "false",
     "Status": "Success",
+    "Message": "OK",
     "NumberTotalRows": 10,
-    "NumberLoadedRows": 10
+    "NumberLoadedRows": 10,
+    "NumberFilteredRows": 0,
+    "NumberUnselectedRows": 0,
+    "LoadBytes": 118,
+    "LoadTimeMs": 173,
+    "BeginTxnTimeMs": 1,
+    "StreamLoadPutTimeMs": 70,
+    "ReadDataTimeMs": 2,
+    "WriteDataTimeMs": 48,
+    "CommitAndPublishTimeMs": 52
 }
 ```
 
@@ -111,9 +124,32 @@ mysql> SELECT COUNT(*) FROM testdb.test_streamload;
 
 Create a CSV file named `streamloader_example.csv` with the same content as above.
 
+```SQL
+1,Emily,25
+2,Benjamin,35
+3,Olivia,28
+4,Alexander,60
+5,Ava,17
+6,William,69
+7,Sophia,32
+8,James,64
+9,Emma,37
+10,Liam,64
+```
+
 ### Step 2: Create Table
 
 Create the table in Doris with the same syntax as above.
+
+```SQL
+CREATE TABLE testdb.test_streamloader(
+    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
+    name               VARCHAR(20)           COMMENT "用户姓名",
+    age                INT                   COMMENT "用户年龄"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
 
 ### Step 3: Load Data
 
@@ -123,20 +159,27 @@ Use the Streamloader tool to load data:
 doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamload"
 ```
 
-Example of load result:
+This is a synchronous import method, and the import results are directly returned to the user:
 
 ```SQL
 Load Result: {
-    "Status": "Success",
-    "TotalRows": 10,
-    "LoadedRows": 10
+        "Status": "Success",
+        "TotalRows": 10,
+        "FailLoadRows": 0,
+        "LoadedRows": 10,
+        "FilteredRows": 0,
+        "UnselectedRows": 0,
+        "LoadBytes": 118,
+        "LoadTimeMs": 623,
+        "LoadFiles": [
+                "streamloader_example.csv"
+        ]
 }
-```
 
 ### Step 4: Check Loaded Data
 
 ```SQL
-mysql> SELECT COUNT(*) FROM testdb.test_streamload;
+select count(*) from testdb.test_streamloader;
 +----------+
 | count(*) |
 +----------+
@@ -165,6 +208,21 @@ Create a file named `client_local.csv` with the following sample data:
 mysql --local-infile -h <fe_ip> -P <fe_query_port> -u root -D testdb
 ```
 
+When executing MySQL Load, the following parameters need to be specified during the connection:
+
+1. When connecting to the MySQL client, the --local-infile option must be used, or an error may occur.
+2. When connecting via JDBC, you need to specify the configuration allowLoadLocalInfile=true in the URL.
+
+Create table in Doris:
+
+```SQL
+CREATE TABLE testdb.t1 (
+    pk     INT, 
+    v1     INT SUM
+) AGGREGATE KEY (pk) 
+DISTRIBUTED BY hash (pk);
+```
+
 ### Step 3: Load Data
 
 Execute the MySQL Load command:
@@ -179,7 +237,9 @@ LINES TERMINATED BY '\n';
 
 ### Step 4: Check Loaded Data
 
-If the load is successful, the result will be displayed as follows:
+MySQL Load is a synchronous import method, and the results are returned to the user in the command line after the import. If the import fails, specific error messages will be displayed.
+
+Below is the result display for a successful import, showing the number of rows imported:
 
 ```SQL
 Query OK, 6 row affected (0.17 sec)

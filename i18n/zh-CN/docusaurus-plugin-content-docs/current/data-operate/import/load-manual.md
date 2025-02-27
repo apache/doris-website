@@ -43,6 +43,7 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
     - 可以使用 [Flink CDC](../../ecosystem/flink-doris-connector.md) 或 [ Datax](../../ecosystem/datax.md) 将事务数据库的 CDC 数据流写入到 Doris 中。
 
 - **批量导入**：将数据从外部存储系统（如对象存储、HDFS、本地文件、NAS）批量加载到 Doris 表中，适用于非实时数据导入的需求。
+
     - 可以使用 [Broker Load](./import-way/broker-load-manual.md) 将对象存储和 HDFS 中的文件写入到 Doris 中。
 
     - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。

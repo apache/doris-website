@@ -83,6 +83,7 @@ PROPERTIES (
 ```
 
 查询语句如下：
+
 ```
 SELECT key, v1, v3, v5, v7 FROM tbl_point_query WHERE key = 100；
 ```
