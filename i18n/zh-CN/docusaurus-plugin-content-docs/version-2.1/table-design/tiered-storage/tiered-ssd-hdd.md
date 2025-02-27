@@ -38,7 +38,7 @@ Doris 支持在不同磁盘类型（SSD 和 HDD）之间进行分层存储，结
 
 ## 参数说明
 
-### `dynamic_partition.hot_partition_num`
+### dynamic_partition.hot_partition_num
 
 - **功能**：
   - 指定最近的多少个分区为热分区，这些分区存储在 SSD 上，其余分区存储在 HDD 上。
@@ -68,7 +68,7 @@ dynamic_partition.end = 3
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
 
-### `dynamic_partition.storage_medium`
+### dynamic_partition.storage_medium
 
 - **功能**：
   - 指定动态分区的最终存储介质。默认是 HDD，可选择 SSD。

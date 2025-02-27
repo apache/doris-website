@@ -36,30 +36,30 @@ under the License.
 
 ### 冷数据保存到 S3 兼容存储
 
-*第一步：* 创建 S3 Resource。
+1. 创建 S3 Resource
 
-```sql
-CREATE RESOURCE "remote_s3"
-PROPERTIES
-(
-    "type" = "s3",
-    "s3.endpoint" = "bj.s3.com",
-    "s3.region" = "bj",
-    "s3.bucket" = "test-bucket",
-    "s3.root.path" = "path/to/root",
-    "s3.access_key" = "bbb",
-    "s3.secret_key" = "aaaa",
-    "s3.connection.maximum" = "50",
-    "s3.connection.request.timeout" = "3000",
-    "s3.connection.timeout" = "1000"
-);
-```
+    ```sql
+    CREATE RESOURCE "remote_s3"
+    PROPERTIES
+    (
+        "type" = "s3",
+        "s3.endpoint" = "bj.s3.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "test-bucket",
+        "s3.root.path" = "path/to/root",
+        "s3.access_key" = "bbb",
+        "s3.secret_key" = "aaaa",
+        "s3.connection.maximum" = "50",
+        "s3.connection.request.timeout" = "3000",
+        "s3.connection.timeout" = "1000"
+    );
+    ```
 
 :::tip
 创建 S3 RESOURCE 的时候，会进行 S3 远端的链接校验，以保证 RESOURCE 创建的正确。
 :::
 
-*第二步：* 创建 STORAGE POLICY。
+**第 2 步：创建 STORAGE POLICY**
 
 之后创建 STORAGE POLICY，关联上文创建的 RESOURCE：
 
@@ -71,7 +71,7 @@ PROPERTIES(
 );
 ```
 
-*第三步：* 建表时使用 STORAGE POLICY。
+**第 3 步：建表时使用 STORAGE POLICY**
 
 ```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
@@ -94,7 +94,7 @@ UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话�
 
 ### 冷数据保存到 HDFS
 
-*第一步：* 创建 HDFS RESOURCE：
+**第 1 步：创建 HDFS RESOURCE**
 
 ```sql
 CREATE RESOURCE "remote_hdfs" PROPERTIES (
@@ -110,7 +110,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
     );
 ```
 
-*第二步：* 创建 STORAGE POLICY。
+**第 2 步：创建 STORAGE POLICY**
 
 ```sql
 CREATE STORAGE POLICY test_policy PROPERTIES (
@@ -119,7 +119,7 @@ CREATE STORAGE POLICY test_policy PROPERTIES (
 )
 ```
 
-*第三步：* 使用 STORAGE POLICY 创建表。
+**第 3 步：使用 STORAGE POLICY 创建表**
 
 ```sql
 CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
@@ -181,9 +181,9 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ### 查看
 
-方式一：通过 show proc '/backends'可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
+方式一：通过 `SHOW BACKENDS` 可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
 
-方式二：通过 show tablets from tableName 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
+方式二：通过 `show tablets from tableName` 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
 
 ### 垃圾回收
 
@@ -205,7 +205,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考 (../../lakehouse/filecache)。
+具体配置请参考 [File Cache](../../lakehouse/filecache)。
 
 ## 常见问题
 

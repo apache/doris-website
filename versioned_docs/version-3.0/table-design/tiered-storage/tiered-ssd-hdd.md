@@ -37,7 +37,7 @@ For more information on dynamic partitioning, please refer to: [Data Partitionin
 
 ## Parameter Description
 
-### `dynamic_partition.hot_partition_num`
+### dynamic_partition.hot_partition_num
 
 - **Function**:
   - Specifies how many of the most recent partitions are hot partitions, which are stored on SSD, while the remaining partitions are stored on HDD.
@@ -68,7 +68,7 @@ The system will automatically create the following partitions and configure thei
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
 
-### `dynamic_partition.storage_medium`
+### dynamic_partition.storage_medium
 
 - **Function**:
   - Specifies the final storage medium for dynamic partitions. The default is HDD, but SSD can be selected.
