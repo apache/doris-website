@@ -281,6 +281,24 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
        Query OK, 0 rows affected (0.00 sec)
        ```
 
+    3. 使用部分列更新功能更新数据
+
+       ``` 
+       insert into tbl2(id, name) values(1, "modified"), (4, "added");
+       Query OK, 2 rows affected (0.06 sec)
+       {'label':'label_3e68324cfd87457d_a6166cc0a878cfdc', 'status':'VISIBLE', 'txnId':'1005'}
+
+       select * from tbl2 order by id;
+       +------+----------+-------+
+       | id   | name     | value |
+       +------+----------+-------+
+       |    1 | modified |    10 |
+       |    2 | Alice    |    20 |
+       |    3 | Jack     |    30 |
+       |    4 | added    |     0 |
+       +------+----------+-------+
+       4 rows in set (0.04 sec)
+       ```
 
     </div>
   </TabItem>
@@ -292,45 +310,6 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 </Tabs>
 
 
-
-
-
-3. 使用部分列更新功能更新数据
-
-   ``` 
-   insert into tbl2(id, name) values(1, "modified"), (4, "added");
-   Query OK, 2 rows affected (0.06 sec)
-   {'label':'label_3e68324cfd87457d_a6166cc0a878cfdc', 'status':'VISIBLE', 'txnId':'1005'}
-
-   select * from tbl2 order by id;
-   +------+----------+-------+
-   | id   | name     | value |
-   +------+----------+-------+
-   |    1 | modified |    10 |
-   |    2 | Alice    |    20 |
-   |    3 | Jack     |    30 |
-   |    4 | added    |     0 |
-   +------+----------+-------+
-   4 rows in set (0.04 sec)
-   ```
-
-
-```
-insert into tbl2(id, name) values(1, "modified"), (4, "added");
-Query OK, 2 rows affected (0.06 sec)
-{'label':'label_3e68324cfd87457d_a6166cc0a878cfdc', 'status':'VISIBLE', 'txnId':'1005'}
-
-select * from tbl2 order by id;
-+------+----------+-------+
-| id   | name     | value |
-+------+----------+-------+
-|    1 | modified |    10 |
-|    2 | Alice    |    20 |
-|    3 | Jack     |    30 |
-|    4 | added    |     0 |
-+------+----------+-------+
-4 rows in set (0.04 sec)
-```
 
 当自增列是非 key 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不变，然后以部分列更新的语义插入该表。
 
