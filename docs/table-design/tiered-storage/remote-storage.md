@@ -36,68 +36,66 @@ The data in remote storage has only one copy, and the reliability of the data de
 
 ### Saving Cold Data to S3 Compatible Storage
 
-*Step 1:* Create S3 Resource.
+**1. Create S3 Resource**
 
-```sql
-CREATE RESOURCE "remote_s3"
-PROPERTIES
-(
-    "type" = "s3",
-    "s3.endpoint" = "bj.s3.com",
-    "s3.region" = "bj",
-    "s3.bucket" = "test-bucket",
-    "s3.root.path" = "path/to/root",
-    "s3.access_key" = "bbb",
-    "s3.secret_key" = "aaaa",
-    "s3.connection.maximum" = "50",
-    "s3.connection.request.timeout" = "3000",
-    "s3.connection.timeout" = "1000"
-);
-```
+    ```sql
+    CREATE RESOURCE "remote_s3"
+    PROPERTIES(
+        "type" = "s3",
+        "s3.endpoint" = "bj.s3.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "test-bucket",
+        "s3.root.path" = "path/to/root",
+        "s3.access_key" = "bbb",
+        "s3.secret_key" = "aaaa",
+        "s3.connection.maximum" = "50",
+        "s3.connection.request.timeout" = "3000",
+        "s3.connection.timeout" = "1000"
+    );
+    ```
 
-:::tip
-When creating the S3 RESOURCE, a link verification to the S3 remote will be performed to ensure the correctness of the RESOURCE creation.
-:::
+    :::tip
+    When creating the S3 RESOURCE, a link verification to the S3 remote will be performed to ensure the correctness of the RESOURCE creation.
+    :::
 
-*Step 2:* Create STORAGE POLICY.
+**2. Create STORAGE POLICY**
 
-Then create a STORAGE POLICY associated with the RESOURCE created above:
+    Then create a STORAGE POLICY associated with the RESOURCE created above:
 
-```sql
-CREATE STORAGE POLICY test_policy
-PROPERTIES(
-    "storage_resource" = "remote_s3",
-    "cooldown_ttl" = "1d"
-);
-```
+    ```sql
+    CREATE STORAGE POLICY test_policy
+    PROPERTIES(
+        "storage_resource" = "remote_s3",
+        "cooldown_ttl" = "1d"
+    );
+    ```
 
-*Step 3:* Use STORAGE POLICY when creating a table.
+**3. Use STORAGE POLICY when creating a table**
 
-```sql
-CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
-(
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048)
-)
-UNIQUE KEY(k1)
-DISTRIBUTED BY HASH (k1) BUCKETS 3
-PROPERTIES(
-    "enable_unique_key_merge_on_write" = "false",
-    "storage_policy" = "test_policy"
-);
-```
+    ```sql
+    CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048)
+    )
+    UNIQUE KEY(k1)
+    DISTRIBUTED BY HASH (k1) BUCKETS 3
+    PROPERTIES(
+        "enable_unique_key_merge_on_write" = "false",
+        "storage_policy" = "test_policy"
+    );
+    ```
 
-:::warning Note
-If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
-:::
+    :::caution Note
+    If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
+    :::
 
 ### Saving Cold Data to HDFS
 
-*Step 1:* Create HDFS RESOURCE:
+**1. Create HDFS RESOURCE**
 
-```sql
-CREATE RESOURCE "remote_hdfs" PROPERTIES (
+    ```sql
+    CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "type"="hdfs",
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
@@ -108,36 +106,36 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
         "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
-```
+    ```
 
-*Step 2:* Create STORAGE POLICY.
+**2. Create STORAGE POLICY**
 
-```sql
-CREATE STORAGE POLICY test_policy PROPERTIES (
-    "storage_resource" = "remote_hdfs",
-    "cooldown_ttl" = "300"
-)
-```
+    ```sql
+    CREATE STORAGE POLICY test_policy PROPERTIES (
+        "storage_resource" = "remote_hdfs",
+        "cooldown_ttl" = "300"
+    )
+    ```
 
-*Step 3:* Use STORAGE POLICY to create a table.
+**3. Use STORAGE POLICY to create a table**
 
-```sql
-CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048)
-)
-UNIQUE KEY(k1)
-DISTRIBUTED BY HASH (k1) BUCKETS 3
-PROPERTIES(
-"enable_unique_key_merge_on_write" = "false",
-"storage_policy" = "test_policy"
-);
-```
+    ```sql
+    CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048)
+    )
+    UNIQUE KEY(k1)
+    DISTRIBUTED BY HASH (k1) BUCKETS 3
+    PROPERTIES (
+        "enable_unique_key_merge_on_write" = "false",
+        "storage_policy" = "test_policy"
+    );
+    ```
 
-:::warning Note
-If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
-:::
+    :::caution Note
+    If the UNIQUE table is set with `"enable_unique_key_merge_on_write" = "true"`, this feature cannot be used.
+    :::
 
 ### Cooling Existing Tables to Remote Storage
 
@@ -158,7 +156,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 Note that if the user specifies different Storage Policies for the entire Table and some Partitions when creating the table, the Storage Policy set for the Partition will be ignored, and all Partitions of the table will use the table's Policy. If you need a Partition's Policy to differ from others, you can modify it using the method described above for associating a Storage Policy with an existing Partition.
 
-For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
+For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
 :::
 
 ### Configuring Compaction
@@ -179,9 +177,11 @@ For more details, please refer to the Docs directory under [RESOURCE](../../sql-
 
 ### Viewing
 
-Method 1: You can view the size uploaded to the object by each BE through `show proc '/backends'`, in the RemoteUsedCapacity item, this method has a slight delay.
+The following two methods can both be used to view the storage space used by cold data:
 
-Method 2: You can view the size of each tablet occupied by the table through `show tablets from tableName`, in the RemoteDataSize item.
+- Method 1: You can view the size uploaded to the object by each BE through `show backends`, in the RemoteUsedCapacity item, this method has a slight delay.
+
+- Method 2: You can view the size of each tablet occupied by the table through `show tablets from tableName`, in the RemoteDataSize item.
 
 ### Garbage Collection
 
@@ -203,28 +203,27 @@ To optimize query performance and save object storage resources, local Cache has
 
 -   The Cache is managed through LRU and does not support TTL.
 
-For specific configurations, please refer to (../../lakehouse/filecache).
+For specific configurations, please refer to [File Cache](../../lakehouse/filecache).
 
 ## FAQ
 
 1.  `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
 
-The S3 SDK defaults to using the virtual-hosted style method. However, some object storage systems (such as MinIO) may not have virtual-hosted style access enabled or supported. In this case, we can add the `use_path_style` parameter to force the use of the path style method:
+    The S3 SDK defaults to using the virtual-hosted style method. However, some object storage systems (such as MinIO) may not have virtual-hosted style access enabled or supported. In this case, we can add the `use_path_style` parameter to force the use of the path style method:
 
-```sql
-CREATE RESOURCE "remote_s3"
-PROPERTIES
-(
-    "type" = "s3",
-    "s3.endpoint" = "bj.s3.com",
-    "s3.region" = "bj",
-    "s3.bucket" = "test-bucket",
-    "s3.root.path" = "path/to/root",
-    "s3.access_key" = "bbb",
-    "s3.secret_key" = "aaaa",
-    "s3.connection.maximum" = "50",
-    "s3.connection.request.timeout" = "3000",
-    "s3.connection.timeout" = "1000",
-    "use_path_style" = "true"
-);
-```
+    ```sql
+    CREATE RESOURCE "remote_s3"
+    PROPERTIES (
+        "type" = "s3",
+        "s3.endpoint" = "bj.s3.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "test-bucket",
+        "s3.root.path" = "path/to/root",
+        "s3.access_key" = "bbb",
+        "s3.secret_key" = "aaaa",
+        "s3.connection.maximum" = "50",
+        "s3.connection.request.timeout" = "3000",
+        "s3.connection.timeout" = "1000",
+        "use_path_style" = "true"
+    );
+    ```

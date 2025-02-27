@@ -36,68 +36,68 @@ under the License.
 
 ### 冷数据保存到 S3 兼容存储
 
-*第一步：* 创建 S3 Resource。
+**1. 创建 S3 Resource**
 
-```sql
-CREATE RESOURCE "remote_s3"
-PROPERTIES
-(
-    "type" = "s3",
-    "s3.endpoint" = "bj.s3.com",
-    "s3.region" = "bj",
-    "s3.bucket" = "test-bucket",
-    "s3.root.path" = "path/to/root",
-    "s3.access_key" = "bbb",
-    "s3.secret_key" = "aaaa",
-    "s3.connection.maximum" = "50",
-    "s3.connection.request.timeout" = "3000",
-    "s3.connection.timeout" = "1000"
-);
-```
+    ```sql
+    CREATE RESOURCE "remote_s3"
+    PROPERTIES
+    (
+        "type" = "s3",
+        "s3.endpoint" = "bj.s3.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "test-bucket",
+        "s3.root.path" = "path/to/root",
+        "s3.access_key" = "bbb",
+        "s3.secret_key" = "aaaa",
+        "s3.connection.maximum" = "50",
+        "s3.connection.request.timeout" = "3000",
+        "s3.connection.timeout" = "1000"
+    );
+    ```
 
-:::tip
-创建 S3 RESOURCE 的时候，会进行 S3 远端的链接校验，以保证 RESOURCE 创建的正确。
-:::
+    :::tip
+    创建 S3 RESOURCE 的时候，会进行 S3 远端的链接校验，以保证 RESOURCE 创建的正确。
+    :::
 
-*第二步：* 创建 STORAGE POLICY。
+**2. 创建 STORAGE POLICY**
 
-之后创建 STORAGE POLICY，关联上文创建的 RESOURCE：
+    之后创建 STORAGE POLICY，关联上文创建的 RESOURCE：
 
-```sql
-CREATE STORAGE POLICY test_policy
-PROPERTIES(
-    "storage_resource" = "remote_s3",
-    "cooldown_ttl" = "1d"
-);
-```
+    ```sql
+    CREATE STORAGE POLICY test_policy
+    PROPERTIES(
+        "storage_resource" = "remote_s3",
+        "cooldown_ttl" = "1d"
+    );
+    ```
 
-*第三步：* 建表时使用 STORAGE POLICY。
+**3：建表时使用 STORAGE POLICY**
 
-```sql
-CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
-(
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048)
-)
-UNIQUE KEY(k1)
-DISTRIBUTED BY HASH (k1) BUCKETS 3
-PROPERTIES(
-    "enable_unique_key_merge_on_write" = "false",
-    "storage_policy" = "test_policy"
-);
-```
+    ```sql
+    CREATE TABLE IF NOT EXISTS create_table_use_created_policy
+    (
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048)
+    )
+    UNIQUE KEY(k1)
+    DISTRIBUTED BY HASH (k1) BUCKETS 3
+    PROPERTIES(
+        "enable_unique_key_merge_on_write" = "false",
+        "storage_policy" = "test_policy"
+    );
+    ```
 
-:::warning 注意
-UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
-:::
+    :::caution 注意
+    UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+    :::
 
 ### 冷数据保存到 HDFS
 
-*第一步：* 创建 HDFS RESOURCE：
+**1. 创建 HDFS RESOURCE**
 
-```sql
-CREATE RESOURCE "remote_hdfs" PROPERTIES (
+    ```sql
+    CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "type"="hdfs",
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
@@ -108,36 +108,36 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
         "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     );
-```
+    ```
 
-*第二步：* 创建 STORAGE POLICY。
+**2. 创建 STORAGE POLICY**
 
-```sql
-CREATE STORAGE POLICY test_policy PROPERTIES (
-    "storage_resource" = "remote_hdfs",
-    "cooldown_ttl" = "300"
-)
-```
+    ```sql
+    CREATE STORAGE POLICY test_policy PROPERTIES (
+        "storage_resource" = "remote_hdfs",
+        "cooldown_ttl" = "300"
+    )
+    ```
 
-*第三步：* 使用 STORAGE POLICY 创建表。
+**3. 使用 STORAGE POLICY 创建表**
 
-```sql
-CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
-    k1 BIGINT,
-    k2 LARGEINT,
-    v1 VARCHAR(2048)
-)
-UNIQUE KEY(k1)
-DISTRIBUTED BY HASH (k1) BUCKETS 3
-PROPERTIES(
-"enable_unique_key_merge_on_write" = "false",
-"storage_policy" = "test_policy"
-);
-```
+    ```sql
+    CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
+        k1 BIGINT,
+        k2 LARGEINT,
+        v1 VARCHAR(2048)
+    )
+    UNIQUE KEY(k1)
+    DISTRIBUTED BY HASH (k1) BUCKETS 3
+    PROPERTIES(
+        "enable_unique_key_merge_on_write" = "false",
+        "storage_policy" = "test_policy"
+    );
+    ```
 
-:::warning 注意
-UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
-:::
+    :::caution 注意
+    UNIQUE 表如果设置了 `"enable_unique_key_merge_on_write" = "true"` 的话，无法使用此功能。
+    :::
 
 ### 存量表冷却到远程存储
 
@@ -163,9 +163,9 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ### 配置 compaction
 
--   BE 参数`cold_data_compaction_thread_num`可以设置执行远程存储的 Compaction 的并发，默认是 2。
+-   BE 参数 `cold_data_compaction_thread_num` 可以设置执行远程存储的 Compaction 的并发，默认是 2。
 
--   BE 参数`cold_data_compaction_interval_sec`可以设置执行远程存储的 Compaction 的时间间隔，默认是 1800，单位：秒，即半个小时。
+-   BE 参数  `cold_data_compaction_interval_sec` 可以设置执行远程存储的 Compaction 的时间间隔，默认是 1800，单位：秒，即半个小时。
 
 ## 限制
 
@@ -181,9 +181,11 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ### 查看
 
-方式一：通过 show proc '/backends'可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
+通过以下两种方案都可以查看到冷数据使用空间：
 
-方式二：通过 show tablets from tableName 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
+- 方式一：通过 `SHOW BACKENDS` 可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
+
+- 方式二：通过 `show tablets from tableName` 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
 
 ### 垃圾回收
 
@@ -195,7 +197,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 3.  Compaction 完成后，参与 compaction 的 rowset。
 
-垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置远程存储的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
+垃圾数据并不会立即清理掉。BE 参数 `remove_unused_remote_files_interval_sec` 可以设置远程存储的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
 
 ## 查询与性能优化
 
@@ -205,28 +207,27 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考 (../../lakehouse/filecache)。
+具体配置请参考 [File Cache](../../lakehouse/filecache)。
 
 ## 常见问题
 
-1.  `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
+1. `ERROR 1105 (HY000): errCode = 2, detailMessage = Failed to create repository: connect to s3 failed: Unable to marshall request to JSON: host must not be null.`
 
-S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统 (如：minio) 可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 use_path_style 参数来强制使用 path style 方式：
+    S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统 (如：minio) 可能没开启或没支持 virtual-hosted style 方式的访问，此时我们可以添加 use_path_style 参数来强制使用 path style 方式：
 
-```sql
-CREATE RESOURCE "remote_s3"
-PROPERTIES
-(
-    "type" = "s3",
-    "s3.endpoint" = "bj.s3.com",
-    "s3.region" = "bj",
-    "s3.bucket" = "test-bucket",
-    "s3.root.path" = "path/to/root",
-    "s3.access_key" = "bbb",
-    "s3.secret_key" = "aaaa",
-    "s3.connection.maximum" = "50",
-    "s3.connection.request.timeout" = "3000",
-    "s3.connection.timeout" = "1000",
-    "use_path_style" = "true"
-);
-```
+    ```sql
+    CREATE RESOURCE "remote_s3"
+    PROPERTIES (
+        "type" = "s3",
+        "s3.endpoint" = "bj.s3.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "test-bucket",
+        "s3.root.path" = "path/to/root",
+        "s3.access_key" = "bbb",
+        "s3.secret_key" = "aaaa",
+        "s3.connection.maximum" = "50",
+        "s3.connection.request.timeout" = "3000",
+        "s3.connection.timeout" = "1000",
+        "use_path_style" = "true"
+    );
+    ```
