@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -311,11 +314,11 @@ When performing a partial update on a merge-on-write Unique table with an auto-i
 
     </div>
   </TabItem>
-  <TabItem value="自增列为 Value 列" label="自增列为 Value 列" default>
+  <TabItem value="Auto-increment column is the value column" label="Auto-increment column is the value column" default>
     <div>
-    当自增列是 Value 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不变，然后以部分列更新的语义插入该表。
+    When the auto-increment column is a value column, if the user does not specify a value for the auto-increment column, its value will be filled in from the existing rows in the table. If the user specifies the auto-increment column, any null values in that column will be replaced with the generated value, while non-null values will remain unchanged. The data will then be inserted into the table using the partial column update semantics.
 
-    1. **创建待导入表并插入测试数据**
+    1. **Create the table to be imported and insert test data**
 
         ```sql
         CREATE TABLE `demo`.`tbl3` (
@@ -346,7 +349,7 @@ When performing a partial update on a merge-on-write Unique table with an auto-i
         3 rows in set (0.13 sec)
         ```
 
-    2. **开启部分列更新功能，并关闭严格模式**
+    2. **Enable the partial column update feature and disable strict mode**
 
         ```sql
         set enable_unique_key_partial_update=true;
@@ -356,7 +359,7 @@ When performing a partial update on a merge-on-write Unique table with an auto-i
         Query OK, 0 rows affected (0.00 sec)
         ```
 
-    3. 使用部分列更新功能插入数据
+    3. **Insert data using the partial column update feature**
         ```sql
         insert into tbl3(id, score) values(1, 999), (2, 888);
         Query OK, 2 rows affected (0.07 sec)
@@ -399,146 +402,159 @@ Using bitmaps for audience analysis in user profiling involves creating a user d
 
 For example, in an offline UV (Unique Visitors) and PV (Page Views) analysis scenario, consider a detailed user behavior table:
 
+1. **Create the User Behavior Table**
 
-```sql
-CREATE TABLE `demo`.`dwd_dup_tbl` (
-    `user_id` varchar(50) NOT NULL,
-    `dim1` varchar(50) NOT NULL,
-    `dim2` varchar(50) NOT NULL,
-    `dim3` varchar(50) NOT NULL,
-    `dim4` varchar(50) NOT NULL,
-    `dim5` varchar(50) NOT NULL,
-    `visit_time` DATE NOT NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`user_id`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
-```
+    ```sql
+    CREATE TABLE `demo`.`dwd_dup_tbl` (
+        `user_id` varchar(50) NOT NULL,
+        `dim1` varchar(50) NOT NULL,
+        `dim2` varchar(50) NOT NULL,
+        `dim3` varchar(50) NOT NULL,
+        `dim4` varchar(50) NOT NULL,
+        `dim5` varchar(50) NOT NULL,
+        `visit_time` DATE NOT NULL
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`user_id`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
+    ```
 
-Using the auto-increment column to create the following dictionary table:
+2. **Create the Dictionary Table Using Auto-Increment Column**
 
-```sql
-CREATE TABLE `demo`.`dictionary_tbl` (
-    `user_id` varchar(50) NOT NULL,
-    `aid` BIGINT NOT NULL AUTO_INCREMENT
-) ENGINE=OLAP
-UNIQUE KEY(`user_id`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
-PROPERTIES (
-"enable_unique_key_merge_on_write" = "true"
-);
-```
+    ```sql
+    CREATE TABLE `demo`.`dictionary_tbl` (
+        `user_id` varchar(50) NOT NULL,
+        `aid` BIGINT NOT NULL AUTO_INCREMENT
+    ) ENGINE=OLAP
+    UNIQUE KEY(`user_id`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 32
+    PROPERTIES (
+        "enable_unique_key_merge_on_write" = "true"
+    );
+    ```
 
-Write the `user_id` values from existing data into the dictionary table to map `user_id` to corresponding integer values:
+3. **Import Data into the Dictionary Table**
 
-```sql
-insert into dictionary_tbl(user_id)
-select user_id from dwd_dup_tbl group by user_id;
-```
+    Import `user_id` from the existing data into the dictionary table to establish a mapping of user_id to integer values:
 
-Alternatively, write only the `user_id` values from incremental data into the dictionary table.
+    ```sql
+    insert into dictionary_tbl(user_id)
+    select user_id from dwd_dup_tbl group by user_id;
+    ```
 
-```sql
-insert into dictionary_tbl(user_id)
-select dwd_dup_tbl.user_id from dwd_dup_tbl left join dictionary_tbl
-on dwd_dup_tbl.user_id = dictionary_tbl.user_id where dwd_dup_tbl.visit_time > '2023-12-10' and dictionary_tbl.user_id is NULL;
-```
+    Alternatively, use the following method to only import the incremental `user_id` data into the dictionary table:
 
-In practical applications, Flink connectors can be used to write data into Doris.
+    ```sql
+    insert into dictionary_tbl(user_id)
+    select dwd_dup_tbl.user_id from dwd_dup_tbl left join dictionary_tbl
+    on dwd_dup_tbl.user_id = dictionary_tbl.user_id where dwd_dup_tbl.visit_time > '2023-12-10' and dictionary_tbl.user_id is NULL;
+    ```
 
-To store aggregated results for the statistical dimensions `dim1`, `dim3`, and `dim5`, create the following table:
+    In real-world scenarios, you can also use the Flink connector to write the data to Doris.
 
-```sql
-CREATE TABLE `demo`.`dws_agg_tbl` (
-    `dim1` varchar(50) NOT NULL,
-    `dim3` varchar(50) NOT NULL,
-    `dim5` varchar(50) NOT NULL,
-    `user_id_bitmap` BITMAP BITMAP_UNION NOT NULL,
-    `pv` BIGINT SUM NOT NULL 
-) ENGINE=OLAP
-AGGREGATE KEY(`dim1`,`dim3`,`dim5`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 32;
-```
+4. **Create an Aggregation Table to Store Aggregated Results**
 
-Save the aggregated data into the results table.
+    Assuming dim1, dim3, and dim5 are the dimensions we are interested in for statistics, we can create the following aggregation table:
 
-```sql
-insert into dws_agg_tbl
-select dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5, BITMAP_UNION(TO_BITMAP(dictionary_tbl.aid)), COUNT(1)
-from dwd_dup_tbl INNER JOIN dictionary_tbl on dwd_dup_tbl.user_id = dictionary_tbl.user_id;
-```
+    ```sql
+    CREATE TABLE `demo`.`dws_agg_tbl` (
+        `dim1` varchar(50) NOT NULL,
+        `dim3` varchar(50) NOT NULL,
+        `dim5` varchar(50) NOT NULL,
+        `user_id_bitmap` BITMAP BITMAP_UNION NOT NULL,
+        `pv` BIGINT SUM NOT NULL 
+    ) ENGINE=OLAP
+    AGGREGATE KEY(`dim1`,`dim3`,`dim5`)
+    DISTRIBUTED BY HASH(`dim1`) BUCKETS 32;
+    ```
 
-Execute UV and PV queries with the following statement:
+    After performing the aggregation, insert the results into the aggregation table:
 
-```sql
-select dim1, dim3, dim5, user_id_bitmap as uv, pv from dws_agg_tbl;
-```
+    ```sql
+    insert into dws_agg_tbl
+    select dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5, BITMAP_UNION(TO_BITMAP(dictionary_tbl.aid)), COUNT(1)
+    from dwd_dup_tbl INNER JOIN dictionary_tbl on dwd_dup_tbl.user_id = dictionary_tbl.user_id
+    group by dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5;
+    ```
+
+5. **Query UV and PV Results**
+ 
+    Use the following query to retrieve UV and PV:
+
+    ```sql
+    select dim1, dim3, dim5, bitmap_count(user_id_bitmap) as uv, pv from dws_agg_tbl;
+    ```
+
 
 ### Efficient Pagination
 
 Pagination is often required when displaying data on a page. Traditional pagination usually involves using `LIMIT`, `OFFSET`, and `ORDER BY` in SQL queries. For example, consider the following business table designed for display:
 
-```sql
-CREATE TABLE `demo`.`records_tbl` (
-    `key` int(11) NOT NULL COMMENT "",
-    `name` varchar(26) NOT NULL COMMENT "",
-    `address` varchar(41) NOT NULL COMMENT "",
-    `city` varchar(11) NOT NULL COMMENT "",
-    `nation` varchar(16) NOT NULL COMMENT "",
-    `region` varchar(13) NOT NULL COMMENT "",
-    `phone` varchar(16) NOT NULL COMMENT "",
-    `mktsegment` varchar(11) NOT NULL COMMENT ""
-) DUPLICATE KEY (`key`, `name`)
-DISTRIBUTED BY HASH(`key`) BUCKETS 10;
-```
+- **Regular Paging Query Method**
 
-Assuming 100 records are displayed per page, the following SQL query can be used to fetch data for the first page:
+    Create a pagination table:
 
-```sql
-select * from records_tbl order by `key`, `name` limit 100;
-```
+    ```sql
+        CREATE TABLE `demo`.`records_tbl` (
+        `user_id` int(11) NOT NULL COMMENT "",
+        `name` varchar(26) NOT NULL COMMENT "",
+        `address` varchar(41) NOT NULL COMMENT "",
+        `city` varchar(11) NOT NULL COMMENT "",
+        `nation` varchar(16) NOT NULL COMMENT "",
+        `region` varchar(13) NOT NULL COMMENT "",
+        `phone` varchar(16) NOT NULL COMMENT "",
+        `mktsegment` varchar(11) NOT NULL COMMENT ""
+    ) DUPLICATE KEY (`user_id`, `name`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
+    ```
 
-To fetch data for the second page, you can use the following query:
+    Execute a paging query, with the example showing 100 rows per page:
 
-```sql
-select * from records_tbl order by `key`, `name` limit 100 offset 100;
-```
+    ```sql
+    -- Display the data on the first page
+    select * from records_tbl order by user_id, name limit 100;
 
-However, when performing deep pagination queries (with large offsets), this method can be inefficient, as it reads all data into memory for sorting before processing, even if only a small number of rows are needed. By using an auto-increment column, each row is assigned a unique value, enabling the use of a query like `WHERE unique_value > x LIMIT y` to filter out a large portion of the data in advance, making pagination more efficient.
+    -- Display the data on the second page
+    select * from records_tbl order by user_id, name limit 100 offset 100;
+    ```
+  
+- **Optimize Paging Queries with Auto-Increment Column**
 
-To illustrate this, an auto-increment column is added to the business table, giving each row a unique identifier:
+    When performing deep paging queries (with a large offset), even if the actual data needed is small, this method still reads all the data into memory for full sorting before proceeding with further processing, which can be inefficient. By using an auto-increment column to give each row a unique value, the maximum `unique_value` from the previous page's results can be used to filter out large amounts of data efficiently in the query. This allows for more efficient paging by using `where unique_value > max_value limit rows_per_page` to push down predicates.
 
-```sql
-CREATE TABLE `demo`.`records_tbl2` (
-    `key` int(11) NOT NULL COMMENT "",
-    `name` varchar(26) NOT NULL COMMENT "",
-    `address` varchar(41) NOT NULL COMMENT "",
-    `city` varchar(11) NOT NULL COMMENT "",
-    `nation` varchar(16) NOT NULL COMMENT "",
-    `region` varchar(13) NOT NULL COMMENT "",
-    `phone` varchar(16) NOT NULL COMMENT "",
-    `mktsegment` varchar(11) NOT NULL COMMENT "",
-    `unique_value` BIGINT NOT NULL AUTO_INCREMENT
-) DUPLICATE KEY (`key`, `name`)
-DISTRIBUTED BY HASH(`key`) BUCKETS 10;
-```
+    Using the same example business table, we can add an auto-increment column to the table to assign a unique identifier to each row:
 
-For pagination with 100 records per page, the following SQL query can be used to fetch the data for the first page:
+    ```sql
+    CREATE TABLE `demo`.`records_tbl2` (
+        `user_id` int(11) NOT NULL COMMENT "",
+        `name` varchar(26) NOT NULL COMMENT "",
+        `address` varchar(41) NOT NULL COMMENT "",
+        `city` varchar(11) NOT NULL COMMENT "",
+        `nation` varchar(16) NOT NULL COMMENT "",
+        `region` varchar(13) NOT NULL COMMENT "",
+        `phone` varchar(16) NOT NULL COMMENT "",
+        `mktsegment` varchar(11) NOT NULL COMMENT "",
+        `unique_value` BIGINT NOT NULL AUTO_INCREMENT
+    ) DUPLICATE KEY (`user_id`, `name`)
+    DISTRIBUTED BY HASH(`user_id`) BUCKETS 10;
+    ```
 
-```sql
-select * from records_tbl2 order by unique_value limit 100;
-```
+    Execute the paging query, with the example showing 100 rows per page:
 
-By recording the maximum value of `unique_value` from the returned results, let's assume it is 99. The following query can then be used to fetch data for the second page:
+    ```sql
+    -- Display the data on the first page
+    select * from records_tbl2 order by unique_value limit 100;
 
-```sql
-select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
-```
+    -- By programmatically recording the maximum value in unique_value from the returned results, 
+    -- assuming it is 99, you can query the data on the second page using the following method.
+    select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
 
-If directly querying data from a later page and it's inconvenient to retrieve the maximum value of `unique_value` from the previous page's results (for example, when fetching data starting from the 101st page), the following query can be used:
+    ```
 
-```sql
-select key, name, address, city, nation, region, phone, mktsegment
-from records_tbl2, (select unique_value as max_value from records_tbl2 order by unique_value limit 1 offset 9999) as previous_data
-where records_tbl2.unique_value > previous_data.max_value
-order by records_tbl2.unique_value limit 100;
-```
+    If you need to query data from a later page and it's inconvenient to directly access the maximum `unique_value` from the previous page’s data, for example, to directly retrieve the content from page 101, you can use the following query:
+
+    ```sql
+    select user_id, name, address, city, nation, region, phone, mktsegment
+    from records_tbl2, (select unique_value as max_value from records_tbl2 order by unique_value limit 1 offset 9999) as previous_data
+    where records_tbl2.unique_value > previous_data.max_value
+    order by unique_value limit 100;
+    ```

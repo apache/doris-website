@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -357,7 +360,7 @@ When performing a partial update on a merge-on-write Unique table with an auto-i
         ```
 
     3. **Insert data using the partial column update feature**
-    
+
         ```sql
         insert into tbl3(id, score) values(1, 999), (2, 888);
         Query OK, 2 rows affected (0.07 sec)
