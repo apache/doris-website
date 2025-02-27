@@ -156,18 +156,9 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 <Tabs>
-  <TabItem value="内容标题 1" label="内容标题 1" default>
-    <p>内容 1 </p>
-    <p>内容 2 </p>
-  </TabItem>
-  <TabItem value="内容标题 2" label="内容标题 2" default>
-    <p>内容 1 </p>
-    <p>内容 2 </p>
-  </TabItem>
-</Tabs>
-
-
-使用 insert into 语句导入并且不指定自增列 `id` 时，`id` 列会被自动填充生成的值。
+  <TabItem value="使用 Insert Into 插入" label="使用 Insert Into 插入" default>
+    <div>
+使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
 
 ```sql
 mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
@@ -184,8 +175,13 @@ mysql> select * from tbl order by id;
 +------+-------+-------+
 3 rows in set (0.05 sec)
 ```
+    </div>
 
-类似地，使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
+
+  </TabItem>
+  <TabItem value="使用 Stream Load 插入" label="使用 Stream Load 插入" default>
+    <div>
+使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
 
 test.csv:
 ```
@@ -210,6 +206,11 @@ mysql> select * from tbl order by id;
 +------+-------+-------+
 5 rows in set (0.04 sec)
 ```
+    </div>
+  </TabItem>
+</Tabs>
+
+
 
 使用 insert into 导入时指定自增列`id`，则该列数据中的 null 值会被生成的值替换。
 
