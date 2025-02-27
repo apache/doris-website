@@ -737,7 +737,8 @@ When this configuration is present, Doris Operator will:
 1. Monitor changes to cluster startup configurations (mounted via ConfigMap, see [Customizing Startup Configurations](#custom-startup-configuration)).
 2. Automatically restart affected services when configurations change.
 
-### FE Service Example
+### Example Usage
+Support configmap monitoring and restart for FE and BE, Use FE usage as example.
 1. Sample DorisCluster deployment specification:
 ```yaml
 spec:
