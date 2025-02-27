@@ -43,11 +43,11 @@ spec:
       memory: 8Gi
 ```
 
-Update the above configuration in the [DorisDisaggregatedCluster resource](install-quickstart.md#step-3-deploy-the-compute-storage-decoupled-cluster).
+Update the above configuration in the [DorisDisaggregatedCluster resource](../../../gettingStarted/quick-start).
 
 ### Configuring storage resources
 
-The FE service in the storage-computation separation cluster is a stateful service. When deployed on Kubernetes, it requires persistent storage for metadata. Doris Operator automatically mounts the persistent storage based on the configuration of the metadata storage directory and the storage template. Add the following configuration to the [DorisDisaggregatedCluster resource](install-quickstart.md#step-3-deploy-the-compute-storage-decoupled-cluster):
+The FE service in the storage-computation separation cluster is a stateful service. When deployed on Kubernetes, it requires persistent storage for metadata. Doris Operator automatically mounts the persistent storage based on the configuration of the metadata storage directory and the storage template. Add the following configuration to the [DorisDisaggregatedCluster resource](../../../gettingStarted/quick-start):
 
 ```yaml
 spec:
@@ -116,7 +116,7 @@ Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration.
        configMaps:
        - name: fe-configmap
    ```
-   In the `DorisDisaggregatedCluster` resource, the `configMaps` field is an array, with each element’s `name` representing the name of the ConfigMap in the current namespace.
+   In the `DorisDisaggregatedCluster` resource, the `configMaps` field is an array, with each element's `name` representing the name of the ConfigMap in the current namespace.
   
 :::tip Tip  
 1. In Kubernetes deployments, no need to manually set `meta_service_endpoint`, `deploy_mode`, or `cluster_id` in the startup configuration. These are automatically handled by Doris Operator services.  

@@ -28,7 +28,7 @@ Broker Load is initiated from the MySQL API. Doris will actively pull the data f
 
 Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
 
-Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file-analysis). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
+Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../data-operate/import/file-format/csv#TVF Load). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
 In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
 In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.

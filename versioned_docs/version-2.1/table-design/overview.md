@@ -34,7 +34,7 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 ## Table property
 
-In Doris, the CREATE TABLE statement can specify [table properties](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties), including:
+In Doris, the CREATE TABLE statement can specify [table properties](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties), including:
 
 - **buckets**: Determines the distribution of data within the table.
 

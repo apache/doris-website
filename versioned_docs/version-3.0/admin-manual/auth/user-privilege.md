@@ -96,8 +96,8 @@ The default role cannot be deleted or assigned to others. When a user is deleted
 1. Create users: [CREATE USER](../../sql-manual/sql-statements/account-management/CREATE-USER)
 2. Alter users: [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER)
 3. Delete users: [DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER)
-4. Authorization/Assign roles: [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md)
-5. Withdrawal/REVOKE roles: [REVOKE](../../sql-manual/sql-reference/Account-Management-Statements/REVOKE.md)
+4. Authorization/Assign roles: [GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)
+5. Withdrawal/REVOKE roles: [REVOKE](../../sql-manual/sql-statements/account-management/REVOKE-FROM)
 6. Create role: [CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE)
 7. Delete roles: [DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE)
 8. View current user privileges: [SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
@@ -293,4 +293,4 @@ Here are some usage scenarios of Doris privilege system.
 
 ## More help
 
-For more detailed syntax and best practices for permission management use, please refer to the [GRANTS](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md) command manual. Enter `HELP GRANTS` at the command line of the MySql client for more help information.
+For more detailed syntax and best practices for permission management use, please refer to the [GRANTS](../../sql-manual/sql-statements/account-management/GRANT-TO) command manual. Enter `HELP GRANTS` at the command line of the MySql client for more help information.
