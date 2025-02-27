@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -152,63 +155,60 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 2. **通过导入自动填充自增列**
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+   <Tabs>
+     <TabItem value="使用 Insert Into 插入" label="使用 Insert Into 插入" default>
+       <div>
+   使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
 
-<Tabs>
-  <TabItem value="使用 Insert Into 插入" label="使用 Insert Into 插入" default>
-    <div>
-使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
+   ```sql
+   insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
+   Query OK, 3 rows affected (0.09 sec)
+   {'label':'label_183babcb84ad4023_a2d6266ab73fb5aa', 'status':'VISIBLE', 'txnId':'7'}
 
-```sql
-mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
-Query OK, 3 rows affected (0.09 sec)
-{'label':'label_183babcb84ad4023_a2d6266ab73fb5aa', 'status':'VISIBLE', 'txnId':'7'}
-
-mysql> select * from tbl order by id;
-+------+-------+-------+
-| id   | name  | value |
-+------+-------+-------+
-|    1 | Bob   |    10 |
-|    2 | Alice |    20 |
-|    3 | Jack  |    30 |
-+------+-------+-------+
-3 rows in set (0.05 sec)
-```
-    </div>
+   select * from tbl order by id;
+   +------+-------+-------+
+   | id   | name  | value |
+   +------+-------+-------+
+   |    1 | Bob   |    10 |
+   |    2 | Alice |    20 |
+   |    3 | Jack  |    30 |
+   +------+-------+-------+
+   3 rows in set (0.05 sec)
+   ```
+       </div>
 
 
-  </TabItem>
-  <TabItem value="使用 Stream Load 插入" label="使用 Stream Load 插入" default>
-    <div>
-使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
+     </TabItem>
+     <TabItem value="使用 Stream Load 插入" label="使用 Stream Load 插入" default>
+       <div>
+   使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
 
-test.csv:
-```
-Tom,40
-John,50
-```
+   test.csv:
+   ```
+   Tom,40
+   John,50
+   ```
 
-```
-curl --location-trusted -u user:passwd -H "columns:name,value" -H "column_separator:," -T ./test.csv http://{host}:{port}/api/{db}/tbl/_stream_load
-```
+   ```
+   curl --location-trusted -u user:passwd -H "columns:name,value" -H "column_separator:," -T ./test.csv http://{host}:{port}/api/{db}/tbl/_stream_load
+   ```
 
-```sql
-mysql> select * from tbl order by id;
-+------+-------+-------+
-| id   | name  | value |
-+------+-------+-------+
-|    1 | Bob   |    10 |
-|    2 | Alice |    20 |
-|    3 | Jack  |    30 |
-|    4 | Tom   |    40 |
-|    5 | John  |    50 |
-+------+-------+-------+
-5 rows in set (0.04 sec)
-```
-    </div>
-  </TabItem>
-</Tabs>
+   ```sql
+   mysql> select * from tbl order by id;
+   +------+-------+-------+
+   | id   | name  | value |
+   +------+-------+-------+
+   |    1 | Bob   |    10 |
+   |    2 | Alice |    20 |
+   |    3 | Jack  |    30 |
+   |    4 | Tom   |    40 |
+   |    5 | John  |    50 |
+   +------+-------+-------+
+   5 rows in set (0.04 sec)
+   ```
+       </div>
+     </TabItem>
+   </Tabs>
 
 
 
