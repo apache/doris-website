@@ -65,18 +65,17 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 ### 示例
 
-1. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列
-
-   ```sql
-   CREATE TABLE `demo`.`tbl` (
-         `id` BIGINT NOT NULL AUTO_INCREMENT,
-         `value` BIGINT NOT NULL
+1. **创建一个 Dupliciate 模型表，其中一个 key 列是自增列**
+  ```sql
+  CREATE TABLE `demo`.`tbl` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `value` BIGINT NOT NULL
    ) ENGINE=OLAP
    DUPLICATE KEY(`id`)
    DISTRIBUTED BY HASH(`id`) BUCKETS 10;
    ```
 
-2. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列，并设置起始值为 100
+2. **创建一个 Dupliciate 模型表，其中一个 key 列是自增列，并设置起始值为 100**
 
    ```sql
    CREATE TABLE `demo`.`tbl` (
@@ -85,9 +84,9 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    ) ENGINE=OLAP
    DUPLICATE KEY(`id`)
    DISTRIBUTED BY HASH(`id`) BUCKETS 10;
-  ```
+   ```
 
-3. 创建一个 Dupliciate 模型表，其中一个 value 列是自增列
+3. **创建一个 Dupliciate 模型表，其中一个 value 列是自增列**
 
    ```sql
    CREATE TABLE `demo`.`tbl` (
@@ -100,7 +99,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    DISTRIBUTED BY HASH(`uid`) BUCKETS 10;
    ```
 
-4. 创建一个 Unique 模型表，其中一个 key 列是自增列
+4. **创建一个 Unique 模型表，其中一个 key 列是自增列**
 
    ```sql
    CREATE TABLE `demo`.`tbl` (
@@ -112,7 +111,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    DISTRIBUTED BY HASH(`id`) BUCKETS 10;
    ```
 
-5. 创建一个 Unique 模型表，其中一个 value 列是自增列
+5. **创建一个 Unique 模型表，其中一个 value 列是自增列**
 
    ```sql
    CREATE TABLE `demo`.`tbl` (
@@ -125,28 +124,50 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 
 ### 约束和限制
 
-1. 仅 Duplicate 模型表和 Unique 模型表可以包含自增列。
-2. 一张表最多只能包含一个自增列。
-3. 自增列的类型必须是 BIGINT 类型，且必须为 NOT NULL。
-4. 自增列手动指定的起始值必须大于等于 0。
+使用自增列时遵循以下约束限制：
+
+- 仅 Duplicate 模型表和 Unique 模型表可以包含自增列；
+
+- 一张表最多只能包含一个自增列；
+
+-  自增列的类型必须是 BIGINT 类型，且必须为 NOT NULL；
+
+- 自增列手动指定的起始值必须大于等于 0。
 
 ## 使用方式
 
 ### 普通导入
 
-以下表为例：
+1. **创建待导入的表**
 
-```sql
-CREATE TABLE `demo`.`tbl` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` varchar(65533) NOT NULL,
-    `value` int(11) NOT NULL
-) ENGINE=OLAP
-UNIQUE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 10;
-```
+   ```sql
+   CREATE TABLE `demo`.`tbl` (
+       `id` BIGINT NOT NULL AUTO_INCREMENT,
+       `name` varchar(65533) NOT NULL,
+       `value` int(11) NOT NULL
+   ) ENGINE=OLAP
+   UNIQUE KEY(`id`)
+   DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+   ```
 
-使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
+2. **通过导入自动填充自增列**
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="内容标题 1" label="内容标题 1" default>
+    <p>内容 1 </p>
+    <p>内容 2 </p>
+  </TabItem>
+  <TabItem value="内容标题 2" label="内容标题 2" default>
+    <p>内容 1 </p>
+    <p>内容 2 </p>
+  </TabItem>
+</Tabs>
+
+
+使用 insert into 语句导入并且不指定自增列 `id` 时，`id` 列会被自动填充生成的值。
 
 ```sql
 mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);

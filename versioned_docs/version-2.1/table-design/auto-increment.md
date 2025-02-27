@@ -133,9 +133,14 @@ To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to
 
 ### Constraints and Limitations
 
+When using an auto-increment column, the following constraints must be followed:
+
 - Auto-increment columns can only be used in Duplicate or Unique model tables.
+
 - A table can have only one auto-increment column.
+
 - The auto-increment column must be of type `BIGINT` and cannot be `NULL`.
+
 - The manually specified starting value for an auto-increment column must be 0 or greater.
 
 ## Usage
