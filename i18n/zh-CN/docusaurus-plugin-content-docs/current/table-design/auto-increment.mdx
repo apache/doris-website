@@ -272,6 +272,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    ```
 
 2. 开启部分列更新功能，并关闭严格模式
+
    ```
    set enable_unique_key_partial_update=true;
    Query OK, 0 rows affected (0.01 sec)
@@ -281,6 +282,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    ```
 
 3. 使用部分列更新功能更新数据
+
    ``` 
    insert into tbl2(id, name) values(1, "modified"), (4, "added");
    Query OK, 2 rows affected (0.06 sec)
@@ -297,6 +299,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    +------+----------+-------+
    4 rows in set (0.04 sec)
    ```
+
     </div>
   </TabItem>
   <TabItem value="自增列为 Value 列" label="内容标题 2" default>
