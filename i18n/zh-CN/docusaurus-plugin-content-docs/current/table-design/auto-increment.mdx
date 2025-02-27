@@ -158,45 +158,45 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
    <Tabs>
      <TabItem value="使用 Insert Into 插入" label="使用 Insert Into 插入" default>
        <div>
-   使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
+使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
 
-   ```sql
-   insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
-   Query OK, 3 rows affected (0.09 sec)
-   {'label':'label_183babcb84ad4023_a2d6266ab73fb5aa', 'status':'VISIBLE', 'txnId':'7'}
+```sql
+insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
+Query OK, 3 rows affected (0.09 sec)
+{'label':'label_183babcb84ad4023_a2d6266ab73fb5aa', 'status':'VISIBLE', 'txnId':'7'}
 
-   select * from tbl order by id;
-   +------+-------+-------+
-   | id   | name  | value |
-   +------+-------+-------+
-   |    1 | Bob   |    10 |
-   |    2 | Alice |    20 |
-   |    3 | Jack  |    30 |
-   +------+-------+-------+
-   3 rows in set (0.05 sec)
-   ```
+select * from tbl order by id;
++------+-------+-------+
+| id   | name  | value |
++------+-------+-------+
+|    1 | Bob   |    10 |
+|    2 | Alice |    20 |
+|    3 | Jack  |    30 |
++------+-------+-------+
+3 rows in set (0.05 sec)
+```
 
-   使用 insert into 导入时指定自增列`id`，则该列数据中的 null 值会被生成的值替换。
+使用 insert into 导入时指定自增列`id`，则该列数据中的 null 值会被生成的值替换。
 
-   ```sql
-   mysql> insert into tbl(id, name, value) values(null, "Doris", 60), (null, "Nereids", 70);
-   Query OK, 2 rows affected (0.07 sec)
-   {'label':'label_9cb0c01db1a0402c_a2b8b44c11ce4703', 'status':'VISIBLE', 'txnId':'10'}
+```sql
+insert into tbl(id, name, value) values(null, "Doris", 60), (null, "Nereids", 70);
+Query OK, 2 rows affected (0.07 sec)
+{'label':'label_9cb0c01db1a0402c_a2b8b44c11ce4703', 'status':'VISIBLE', 'txnId':'10'}
 
-   mysql> select * from tbl order by id;
-   +------+---------+-------+
-   | id   | name    | value |
-   +------+---------+-------+
-   |    1 | Bob     |    10 |
-   |    2 | Alice   |    20 |
-   |    3 | Jack    |    30 |
-   |    4 | Tom     |    40 |
-   |    5 | John    |    50 |
-   |    6 | Doris   |    60 |
-   |    7 | Nereids |    70 |
-   +------+---------+-------+
-   7 rows in set (0.04 sec)
-   ```
+select * from tbl order by id;
++------+---------+-------+
+| id   | name    | value |
++------+---------+-------+
+|    1 | Bob     |    10 |
+|    2 | Alice   |    20 |
+|    3 | Jack    |    30 |
+|    4 | Tom     |    40 |
+|    5 | John    |    50 |
+|    6 | Doris   |    60 |
+|    7 | Nereids |    70 |
++------+---------+-------+
+7 rows in set (0.04 sec)
+```
        </div>
 
      </TabItem>
