@@ -34,6 +34,7 @@ In Doris, the auto increment column is a feature that automatically generates a 
 For tables with an auto-increment column, Doris processes data writes as follows:
 
 - **Auto-Population (Column Excluded)**:
+
   If the written data does not include the auto-increment column, Doris generates and populates unique values for this column.
 
 - **Partial Specification (Column Included)**:
