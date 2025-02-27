@@ -36,7 +36,7 @@ under the License.
 
 ### 冷数据保存到 S3 兼容存储
 
-**1. 创建 S3 Resource**
+1. **创建 S3 Resource**
 
     ```sql
     CREATE RESOURCE "remote_s3"
@@ -59,7 +59,7 @@ under the License.
     创建 S3 RESOURCE 的时候，会进行 S3 远端的链接校验，以保证 RESOURCE 创建的正确。
     :::
 
-**2. 创建 STORAGE POLICY**
+2. **创建 STORAGE POLICY**
 
     之后创建 STORAGE POLICY，关联上文创建的 RESOURCE：
 
@@ -71,7 +71,7 @@ under the License.
     );
     ```
 
-**3：建表时使用 STORAGE POLICY**
+3. **建表时使用 STORAGE POLICY**
 
     ```sql
     CREATE TABLE IF NOT EXISTS create_table_use_created_policy
@@ -94,7 +94,7 @@ under the License.
 
 ### 冷数据保存到 HDFS
 
-**1. 创建 HDFS RESOURCE**
+1. **创建 HDFS RESOURCE**
 
     ```sql
     CREATE RESOURCE "remote_hdfs" PROPERTIES (
@@ -110,7 +110,7 @@ under the License.
     );
     ```
 
-**2. 创建 STORAGE POLICY**
+2. **创建 STORAGE POLICY**
 
     ```sql
     CREATE STORAGE POLICY test_policy PROPERTIES (
@@ -119,7 +119,7 @@ under the License.
     )
     ```
 
-**3. 使用 STORAGE POLICY 创建表**
+3. **使用 STORAGE POLICY 创建表**
 
     ```sql
     CREATE TABLE IF NOT EXISTS create_table_use_created_policy (

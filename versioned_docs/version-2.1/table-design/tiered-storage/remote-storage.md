@@ -36,7 +36,7 @@ The data in remote storage has only one copy, and the reliability of the data de
 
 ### Saving Cold Data to S3 Compatible Storage
 
-**1. Create S3 Resource**
+1. **Create S3 Resource**
 
     ```sql
     CREATE RESOURCE "remote_s3"
@@ -58,7 +58,7 @@ The data in remote storage has only one copy, and the reliability of the data de
     When creating the S3 RESOURCE, a link verification to the S3 remote will be performed to ensure the correctness of the RESOURCE creation.
     :::
 
-**2. Create STORAGE POLICY**
+2. **Create STORAGE POLICY**
 
     Then create a STORAGE POLICY associated with the RESOURCE created above:
 
@@ -70,7 +70,7 @@ The data in remote storage has only one copy, and the reliability of the data de
     );
     ```
 
-**3. Use STORAGE POLICY when creating a table**
+3. **Use STORAGE POLICY when creating a table**
 
     ```sql
     CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
@@ -92,7 +92,7 @@ The data in remote storage has only one copy, and the reliability of the data de
 
 ### Saving Cold Data to HDFS
 
-**1. Create HDFS RESOURCE**
+1. **Create HDFS RESOURCE**
 
     ```sql
     CREATE RESOURCE "remote_hdfs" PROPERTIES (
@@ -108,7 +108,7 @@ The data in remote storage has only one copy, and the reliability of the data de
     );
     ```
 
-**2. Create STORAGE POLICY**
+2. **Create STORAGE POLICY**
 
     ```sql
     CREATE STORAGE POLICY test_policy PROPERTIES (
@@ -117,7 +117,7 @@ The data in remote storage has only one copy, and the reliability of the data de
     )
     ```
 
-**3. Use STORAGE POLICY to create a table**
+3. **Use STORAGE POLICY to create a table**
 
     ```sql
     CREATE TABLE IF NOT EXISTS create_table_use_created_policy (
