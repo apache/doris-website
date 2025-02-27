@@ -347,7 +347,7 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
         Query OK, 0 rows affected (0.00 sec)
         ```
 
-    3. 使用部分列更新功能插入数据
+    3. **使用部分列更新功能插入数据**
         ```sql
         insert into tbl3(id, score) values(1, 999), (2, 888);
         Query OK, 2 rows affected (0.07 sec)
@@ -475,6 +475,8 @@ Doris 生成的自增值通常是**密集的**，但有一些考虑：
 在页面展示数据时，往往需要做分页展示。传统的分页通常使用 SQL 中的 `limit`, `offset` + `order by` 进行查询。例如有如下业务表需要进行展示。
 
 - **常规分页查询方法**
+
+    创建分页表：
 
     ```sql
         CREATE TABLE `demo`.`records_tbl` (
