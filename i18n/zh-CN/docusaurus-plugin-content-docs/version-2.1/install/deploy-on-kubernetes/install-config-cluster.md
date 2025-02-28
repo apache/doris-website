@@ -875,4 +875,31 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。
+:::
+
+## 启动配置修改后自动重启服务生效参数
+Doris 通过配置文件的方式指定启动参数。目前大部分参数可以通过相应的 web 接口进行修改并实时生效，一些不能通过 web 接口修改的参数需要重启服务生效。Doris Operator 的 25.1.0 版本后提供服务启动参数修改后自动重启生效的能力。  
+在 `DorisCluster` 资源中配置开启上述能力，配置如下：
+```yaml
+spec:
+  enableRestartWhenConfigChange: true
+```
+如果 DorisCluster 资源含有上述配置，Doris Operator 将会进行如下处理：
+1. 监测 `DorisCluster` 资源部署的集群依赖的启动配置(通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](#定制化启动配置))是否发生变化。
+2. 启动配置变化后，自动重启相应服务来使配置生效。
+
+### 使用范例
+支持 FE、BE 节点类型的 configmap 监测重启，这里以 FE 为例。
+1. DorisCluster 部署规格如下：
+    ```yaml
+    spec:
+      enableRestartWhenConfigChange: true
+      feSpec:
+        image: apache/doris:fe-2.1.8
+        replicas: 1
+        configMapInfo:
+          configMapName: fe-configmap
+    ```
+2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。  
+  当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值( FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
 

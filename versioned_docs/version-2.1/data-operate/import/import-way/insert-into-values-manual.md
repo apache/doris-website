@@ -221,7 +221,7 @@ Query OK, 5 rows affected (0.04 sec)
 
 The invisible state of data is temporary, and the data will eventually become visible. 
 
-You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) statement.
+You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION) statement.
 
 If the `TransactionStatus` column in the result is `visible`, it indicates that the data is visible.
 

@@ -88,7 +88,7 @@ Unable to find a suitable base table for partitioning
 
 This error typically indicates that the SQL definition of the materialized view and the choice of partitioning fields do not allow incremental partition updates, resulting in an error during the creation of the partitioned materialized view.
 
-- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod) for details.
+- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#Optional Parameters) for details.
 
 - The latest code can indicate the reason for partition build failure, with error summaries and descriptions provided in Appendix 2.
 

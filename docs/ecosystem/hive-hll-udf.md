@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- then reuse the previous steps to insert data from a normal table into it using the to_hll function
 ```
 
-2. [Create a Doris catalog](../lakehouse/datalake-analytics/hive.md)
+2. [Create a Doris catalog](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
