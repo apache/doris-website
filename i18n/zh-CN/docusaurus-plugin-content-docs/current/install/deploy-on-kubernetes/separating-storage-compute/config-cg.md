@@ -77,7 +77,7 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置更新到需要部署的[`DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)中。
+将上述配置更新到需要部署的[`DorisDisaggregatedCluster` 资源](../../../gettingStarted/quick-start)中。
 
 ## 配置 Cache 持久化
 
@@ -101,7 +101,7 @@ spec:
        file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
    ```
 
-   存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。以上示例中，设置了一个目录为 `/mnt/disk1/doris_cloud/file_cache` 的持久化缓存，设置可使用持久化总容量大小为 100Gi，查询的缓存可使用的总容量大小也为 100Gi。
+   存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../compute-storage-decoupled/compilation-and-deployment) 章节。以上示例中，设置了一个目录为 `/mnt/disk1/doris_cloud/file_cache` 的持久化缓存，设置可使用持久化总容量大小为 100Gi，查询的缓存可使用的总容量大小也为 100Gi。
 
 2. 部署 ConfigMap  
 

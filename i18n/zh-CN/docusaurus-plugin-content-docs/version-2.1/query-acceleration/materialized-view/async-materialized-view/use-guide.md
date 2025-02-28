@@ -52,7 +52,7 @@ under the License.
 
 - 物化视图使用的表除了分区表外，其他表不经常变化。
 
-- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)
+- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
 
 - 物化视图分区数不多，分区过多会导致分区多物化视图构建时间会过长。
 
@@ -62,7 +62,7 @@ under the License.
 
 ## 分区物化视图常见使用方式
 
-当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
+当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
 
 物化视图的分区是跟随基表的分区映射创建的，一般和基表的分区是 1:1 或者 1:n 的关系。
 

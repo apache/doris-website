@@ -36,16 +36,16 @@ JDBC Catalog 仅适用于数据集成，如将少量数据从数据源导入到 
 
 Doris JDBC Catalog 支持连接以下数据库：
 
-| 支持的数据源 |
-| ---------------------------------- |
-| [ MySQL](./jdbc-mysql-catalog.md)      |
-| [ PostgreSQL](./jdbc-mysql-catalog.md) |
-| [ Oracle](./jdbc-mysql-catalog.md)     |
-| [ SQL Server](./jdbc-mysql-catalog.md) |
-| [ IBM DB2](./jdbc-mysql-catalog.md)    |
+| 支持的数据源                                      |
+|---------------------------------------------|
+| [ MySQL](./jdbc-mysql-catalog.md)           |
+| [ PostgreSQL](./jdbc-mysql-catalog.md)      |
+| [ Oracle](./jdbc-mysql-catalog.md)          |
+| [ SQL Server](./jdbc-mysql-catalog.md)      |
+| [ IBM DB2](./jdbc-mysql-catalog.md)         |
 | [ ClickHouse](./jdbc-clickhouse-catalog.md) |
-| [ SAP HANA](./jdbc-sap-hana-catalog.md)   |
-| [ Oceanbase](./jdbc-oceanbase-catalog.md) |
+| [ SAP HANA](./jdbc-saphana-catalog)         |
+| [ Oceanbase](./jdbc-oceanbase-catalog.md)   |
 
 ## 配置 Catalog
 
