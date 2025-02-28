@@ -748,4 +748,4 @@ Support configmap monitoring and restart for FE and BE, Use FE usage as example.
         configMapName: fe-configmap
     ```
 2. Update FE service configurations.  
-When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.
+   When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.
