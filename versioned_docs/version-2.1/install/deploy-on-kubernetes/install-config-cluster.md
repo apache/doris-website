@@ -722,4 +722,30 @@ For more details on creating users, setting passwords, and granting permissions,
 
 :::tip Tip  
 After setting the root password and configuring the new username and password for managing nodes after deployment, the existing services will be restarted once in a rolling manner.  
-:::
+:::  
+
+## Automatic Service Restart on Configuration Changes
+Doris specifies startup parameters through configuration files. While most parameters can be modified through web interfaces and take effect immediately, certain parameters requiring service restart can now be automatically handled through Doris Operator's restart capability introduced in version 25.1.0.    
+To enable this functionality in a `DorisCluster` resource, configure:
+```yaml
+spec:
+  enableRestartWhenConfigChange: true
+```
+When this configuration is present, Doris Operator will:  
+1. Monitor changes to cluster startup configurations (mounted via ConfigMap, see [Customizing Startup Configurations](#custom-startup-configuration)).  
+2. Automatically restart affected services when configurations change.
+
+### Example Usage
+Support configmap monitoring and restart for FE and BE, Use FE usage as example.
+1. Sample DorisCluster deployment specification:
+    ```yaml
+    spec:
+      enableRestartWhenConfigChange: true
+      feSpec:
+        image: apache/doris:fe-2.1.8
+        replicas: 1
+        configMapInfo:
+        configMapName: fe-configmap
+    ```
+2. Update FE service configurations.  
+   When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.
