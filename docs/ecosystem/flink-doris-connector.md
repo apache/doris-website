@@ -43,6 +43,7 @@ This document primarily introduces the usage of the Flink Doris Connector.
 | 1.6.1             | 1.15,1.16,1.17,1.18,1.19      | 1.0+          | 8            | -             |
 | 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 24.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
+| 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 
 # Usage
 
@@ -60,7 +61,7 @@ To use it with Maven, simply add the following dependency to your Pom file:
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>24.1.0</version>
+  <version>25.0.0</version>
 </dependency> 
 ```
 
