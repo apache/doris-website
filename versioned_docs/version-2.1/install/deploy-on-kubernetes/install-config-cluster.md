@@ -738,14 +738,14 @@ When this configuration is present, Doris Operator will:
 ### Example Usage
 Support configmap monitoring and restart for FE and BE, Use FE usage as example.
 1. Sample DorisCluster deployment specification:
-```yaml
-spec:
-  enableRestartWhenConfigChange: true
-  feSpec:
-    image: apache/doris:fe-2.1.8
-    replicas: 1
-    configMapInfo:
-    configMapName: fe-configmap
-```
+    ```yaml
+    spec:
+      enableRestartWhenConfigChange: true
+      feSpec:
+        image: apache/doris:fe-2.1.8
+        replicas: 1
+        configMapInfo:
+        configMapName: fe-configmap
+    ```
 2. Update FE service configurations.  
 When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.

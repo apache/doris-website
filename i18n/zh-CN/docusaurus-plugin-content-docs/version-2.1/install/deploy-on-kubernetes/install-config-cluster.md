@@ -891,15 +891,15 @@ spec:
 ### 使用范例
 支持 FE、BE 节点类型的 configmap 监测重启，这里以 FE 为例。
 1. DorisCluster 部署规格如下：
-```yaml
-spec:
-  enableRestartWhenConfigChange: true
-  feSpec:
-    image: apache/doris:fe-2.1.8
-    replicas: 1
-    configMapInfo:
-      configMapName: fe-configmap
-```
+    ```yaml
+    spec:
+      enableRestartWhenConfigChange: true
+      feSpec:
+        image: apache/doris:fe-2.1.8
+        replicas: 1
+        configMapInfo:
+          configMapName: fe-configmap
+    ```
 2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。  
-   当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值( FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
+  当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值( FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
 
