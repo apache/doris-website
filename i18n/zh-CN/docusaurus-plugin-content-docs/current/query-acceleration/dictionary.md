@@ -198,6 +198,7 @@ PROPERTIES(
 |-|-|-|-|
 |`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值时，将会自动发起重新导入，导入逻辑详见[自动导入](#自动导入)|是|
 |`skip_null_key`|布尔值|向字典导入时如果 Key 列中出现 null 值，如果该值为 `true`，跳过该行数据，否则报错。缺省值为 `false`|否|
+|`memory_limit`|整数，单位为 byte|该字典在单一 BE 上所占内存的上限，缺省值为 `2147483648` 即 2GB|否|
 
 ### 示例
 
@@ -264,6 +265,7 @@ REFRESH DICTIONARY <dict_name>;
 1. 只有导入数据后的字典才可以查询。
 2. 如果导入时 Key 列具有重复值，导入事务会失败。
 3. 如果当前已经有导入事务正在进行（字典 Status 为 `LOADING` ），则手动进行的导入会失败。请等待正在进行的导入完成后操作。
+4. 如果导入的字典大小超过设定的 `memory_limit`，导入事务会失败。
 
 ### 查询字典
 
@@ -448,6 +450,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 
        - 定期监控字典表的内存使用情况
        - 选取合适的数据更新间隔，并在业务侧明确数据过期时手动刷新字典。
+       - 使用字典表时应关注 BE 内存监控，防止字典表过多、过大占据过多内存，导致 BE 状态异常。
 
 ## 完整示例
 
@@ -648,3 +651,15 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 3. 导入报错 "Version ID is not greater than the existing version ID for the dictionary."
 
     通过 `DROP DICTIONARY` 命令删除对应字典后重新建立并导入数据。
+
+4. `SHOW DICTIONARIES` 发现字典在某个 BE 的 Version 大于 FE Version
+
+    通过 `DROP DICTIONARY` 命令删除对应字典后重新建立并导入数据。
+
+5. 导入报错 "Dictionary `X` commit version `Y` failed"
+
+    重新对该字典进行导入。
+
+6. 兜底策略
+
+    对于绝大多数报错，如果正常操作失败， `DROP` 之后重建字典可以解决。

@@ -198,6 +198,7 @@ Currently, two layout types are supported:
 |-|-|-|-|
 |`date_lifetime`|Integer, unit in seconds|Data validity period. When the time since the last update of this dictionary exceeds this value, it will automatically initiate a import. The import logic is detailed in [Automatic Import](#automatic-import)|Yes|
 |`skip_null_key`|Boolean|If the Key column contains null values when load to a dictionary, skip the row if the value is `true`, otherwise raise an error. The default value is `false`|No|
+|`memory_limit`|Integer, unit in bytes|The upper limit of memory occupied by this dictionary on a single BE. The deafult value is `2147483648`, which equals to 2GB.|No|
 
 ### Example
 
@@ -264,6 +265,7 @@ Among them, `<dict_name>` is the name of the dictionary to be imported.
 1. Only dictionaries that have imported data can be queried.
 2. If the Key column has duplicate values during import, the import transaction will fail.
 3. If there is already an ongoing import transaction at the moment (dictionary Status is `LOADING`), the manual import will fail. Please wait until the ongoing import is completed before proceeding.
+4. If the size of the imported dictionary exceeds the set `memory_limit`, the import transaction will fail.
 
 ### Query Dictionary
 
@@ -449,6 +451,7 @@ To view the column definitions of the dictionary table, you can use `DESC DICTIO
 
       - Regularly monitor the memory usage of dictionary tables
       - Select an appropriate data update interval and manually refresh the dictionary when data expires on the business side
+      - When using dictionary tables, pay attention to the BE memory monitoring to prevent the dictionary tables from being too numerous or too large, occupying excessive memory and causing abnormal BE status.
 
 ## Complete Example
 
@@ -646,3 +649,15 @@ To view the column definitions of the dictionary table, you can use `DESC DICTIO
 3. The importing reports an error of "Version ID is not greater than the existing version ID for the dictionary."
 
     Delete the corresponding dictionary using the `DROP DICTIONARY` command, recreate it, and then import the data.
+
+4. `SHOW DICTIONARIES` result shows that the dictionary is in a BE version greater than the FE version.
+
+    Delete the corresponding dictionary using the `DROP DICTIONARY` command, recreate it, and then import the data.
+
+5. The importing reports an error of "Dictionary `X` commit version `Y` failed"
+
+    Re-refresh the dictionary.
+
+6. Contingency Strategy
+
+    For the vast majority of error messages, if normal operation fails, rebuilding the dictionary after `DROP` can resolve the issue.
