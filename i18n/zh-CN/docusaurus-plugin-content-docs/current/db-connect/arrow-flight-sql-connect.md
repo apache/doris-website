@@ -68,7 +68,9 @@ import adbc_driver_flightsql.dbapi as flight_sql
 - 修改 fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
 - 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 9091。
 
-`注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 不相同`
+`注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 端口号不相同`
+
+修改配置并重启集群后，在 fe/log/fe.log 文件中搜索到 `Arrow Flight SQL service is started` 表明 FE 的 Arrow Flight Server 启动成功；在 be/log/be.INFO 文件中搜索到 `Arrow Flight Service bind to host` 表明 BE 的 Arrow Flight Server 启动成功。
 
 假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
@@ -281,7 +283,7 @@ Arrow Flight SQL 协议的开源 JDBC 驱动兼容标准的 JDBC API，可用于
 POM dependency:
 ```Java
 <properties>
-    <arrow.version>15.0.1</arrow.version>
+    <arrow.version>17.0.0</arrow.version>
 </properties>
 <dependencies>
     <dependency>

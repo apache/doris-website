@@ -99,6 +99,10 @@ Configure parameters for Doris frontend (FE) and backend (BE):
 
 - In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
 
+`Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
+
+After modifying the configuration and restarting the cluster, searching for `Arrow Flight SQL service is started` in the fe/log/fe.log file indicates that the Arrow Flight Server of FE has been successfully started; searching for `Arrow Flight Service bind to host` in the be/log/be.INFO file indicates that the Arrow Flight Server of BE has been successfully started.
+
 Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
 ```C++
