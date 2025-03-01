@@ -90,13 +90,12 @@ FROM KAFKA(
 **Step 4: Check Loaded Data**
 
 ```SQL
-mysql> select * from test_routineload_tbl;
+select * from test_routineload_tbl;
 +-----------+----------------+------+
 | user_id   | name           | age  |
 +-----------+----------------+------+
 |  1        | Emily          | 25   |
 +-----------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### Multi-Table Load
@@ -164,7 +163,6 @@ select * from test_multi_table_load1;
 +------+----------------+------+
 |  1   | Emily          | 25   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 
 select * from test_multi_table_load2;
 +------+----------------+------+
@@ -172,7 +170,6 @@ select * from test_multi_table_load2;
 +------+----------------+------+
 |  2   | Benjamin       | 35   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### **Configure Security Authentication**
