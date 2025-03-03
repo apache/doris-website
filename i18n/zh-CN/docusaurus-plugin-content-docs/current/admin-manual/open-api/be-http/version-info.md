@@ -26,11 +26,11 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/be_version_info`
 
-## Description
+## 描述
 
 用于获取 be 节点的版本信息。
     
@@ -38,15 +38,15 @@ under the License.
 
 无
 
-## Query parameters
+## 请求参数
 
 无
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -69,7 +69,7 @@ under the License.
         "count":0
     }
     ```
-## Examples
+## 示例
 
 
     ```

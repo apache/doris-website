@@ -227,12 +227,16 @@
     "message": "认证与鉴权",
     "description": "The label for category Authentication and Authorization in sidebar docs"
   },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
   "sidebar.docs.category.Authentication": {
-    "message": "认证",
+    "message": "身份认证",
     "description": "The label for category Authentication in sidebar docs"
   },
   "sidebar.docs.category.Authorization": {
-    "message": "鉴权",
+    "message": "鉴权管控",
     "description": "The label for category Authorization in sidebar docs"
   },
   "sidebar.docs.category.Alter Table": {

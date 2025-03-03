@@ -68,13 +68,13 @@ under the License.
 
 ### 增加新 Session 变量 `group_by_and_having_use_alias_first`
 
-用于控制 group by 和 having 语句是否优先使用列的别名，而非从 From 语句里寻找列的名字，默认为false。
+用于控制 group by 和 having 语句是否优先使用列的别名，而非从 From 语句里寻找列的名字，默认为 false。
 
 # Improvement
 
 ### Compaction 优化
 
-- **支持 Vetical Compaction**。在过去版本中，宽列场景 Compaction 往往会带来大量的内存开销。在 1.2.2 版本中，Vertical Compaction 采用了按列组的方式进行数据合并，单次合并只需要加载部分列的数据，能够极大减少合并过程中的内存占用。在实际测试中，Vertical compaction 使用内存仅为原有 compaction 算法的 1/10，同时 Compaction 速率提升15%。
+- **支持 Vetical Compaction**。在过去版本中，宽列场景 Compaction 往往会带来大量的内存开销。在 1.2.2 版本中，Vertical Compaction 采用了按列组的方式进行数据合并，单次合并只需要加载部分列的数据，能够极大减少合并过程中的内存占用。在实际测试中，Vertical compaction 使用内存仅为原有 compaction 算法的 1/10，同时 Compaction 速率提升 15%。
 
 - 支持 **Segment Compaction**。在过去版本中，当用户大数据量高频导入时可能会遇到 -238 以及 -235 问题，Segment Compaction 允许在导入数据的同时进行数据的合并，以有效控制 Segment 文件的数量，提升高频导入的系统稳定性。
 
@@ -102,7 +102,7 @@ under the License.
 
 ### 其他
 
-- 支持访问 Hadoop KMS 加密的 HDFS 。 
+- 支持访问 Hadoop KMS 加密的 HDFS。 
 
 - 支持取消正在执行的导出任务。
 

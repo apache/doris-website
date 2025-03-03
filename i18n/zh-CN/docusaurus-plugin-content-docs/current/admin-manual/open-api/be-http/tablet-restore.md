@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `POST /api/restore_tablet?tablet_id={int}&schema_hash={int}"`
 
-## Description
+## 描述
 
 该功能用于恢复 trash 目录中被误删的 tablet 数据。
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
     需要恢复的 table 的 id
@@ -43,11 +43,11 @@ under the License.
     schema hash       
 
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -55,7 +55,7 @@ under the License.
         code: 0
     }
     ```
-## Examples
+## 示例
 
 
     ```

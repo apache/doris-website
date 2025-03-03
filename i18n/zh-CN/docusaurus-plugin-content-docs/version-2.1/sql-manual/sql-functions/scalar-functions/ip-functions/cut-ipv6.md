@@ -33,9 +33,9 @@ CUT_IPV6(<ipv6>, <cut_ipv6_bytes>, <cut_ipv4_bytes>)
 ## 参数
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| `<ipv6>`      | ipv6类型的地址 |
-| `<cut_ipv6_bytes>`     | 需要对ipv6地址剪切的字节数         |
-| `<cut_ipv4_bytes>`     | 如果第一个参数是ipv4类型的地址，需要对ipv4地址剪切的字节数           |
+| `<ipv6>`      | ipv6 类型的地址 |
+| `<cut_ipv6_bytes>`     | 需要对 ipv6 地址剪切的字节数         |
+| `<cut_ipv4_bytes>`     | 如果第一个参数是 ipv4 类型的地址，需要对 ipv4 地址剪切的字节数           |
 
 ## 返回值
 返回一个包含指定字节数的地址的字符串。

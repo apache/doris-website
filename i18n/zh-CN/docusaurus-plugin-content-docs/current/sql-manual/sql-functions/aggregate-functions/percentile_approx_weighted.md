@@ -66,10 +66,10 @@ PROPERTIES (
 
 -- 插入示例数据
 INSERT INTO weighted_scores VALUES
-(1, 85.5, 1),   -- 普通作业分数，权重1
-(2, 90.0, 2),   -- 重要作业分数，权重2
+(1, 85.5, 1),   -- 普通作业分数，权重 1
+(2, 90.0, 2),   -- 重要作业分数，权重 2
 (3, 75.5, 1),
-(4, 95.5, 3),   -- 非常重要的作业，权重3
+(4, 95.5, 3),   -- 非常重要的作业，权重 3
 (5, 88.0, 2),
 (6, 92.5, 2),
 (7, 78.0, 1),
@@ -79,7 +79,7 @@ INSERT INTO weighted_scores VALUES
 
 -- 计算带权重的分数分布
 SELECT 
-    -- 计算不同压缩度下的90分位数
+    -- 计算不同压缩度下的 90 分位数
     percentile_approx_weighted(score, weight, 0.9) as p90_default,          -- 默认压缩度
     percentile_approx_weighted(score, weight, 0.9, 2048) as p90_fast,       -- 低压缩度，更快
     percentile_approx_weighted(score, weight, 0.9, 10000) as p90_accurate   -- 高压缩度，更精确

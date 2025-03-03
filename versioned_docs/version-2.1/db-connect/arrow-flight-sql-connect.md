@@ -68,7 +68,9 @@ Modify the configuration parameters of Doris FE and BE:
 - Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 - Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 
-`Note: arrow_flight_sql_port configured in fe.conf and be.conf are different`
+`Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
+
+After modifying the configuration and restarting the cluster, searching for `Arrow Flight SQL service is started` in the fe/log/fe.log file indicates that the Arrow Flight Server of FE has been successfully started; searching for `Arrow Flight Service bind to host` in the be/log/be.INFO file indicates that the Arrow Flight Server of BE has been successfully started.
 
 Assuming that the Arrow Flight SQL services of FE and BE in the Doris instance will run on ports 9090 and 9091 respectively, and the Doris username/password is "user"/"pass", the connection process is as follows:
 
@@ -281,7 +283,7 @@ The open source JDBC driver of Arrow Flight SQL protocol is compatible with the 
 POM dependency:
 ```Java
 <properties>
-    <arrow.version>15.0.1</arrow.version>
+    <arrow.version>17.0.0</arrow.version>
 </properties>
 <dependencies>
     <dependency>

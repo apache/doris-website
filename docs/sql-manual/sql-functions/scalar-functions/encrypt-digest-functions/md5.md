@@ -40,7 +40,7 @@ MD5( <str> )
 
 ## Return Value
 
-Returns the MD5 value of a string。
+Returns the MD5 value of a string.
 
 ## Examples
 

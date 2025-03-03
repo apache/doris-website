@@ -50,7 +50,7 @@ HISTOGRAM(<expr>[, <num_buckets>])
 ## 返回值
 
 返回直方图估算后的 JSON 类型的值。特殊情况：
-- 当参数<expr>为NULL时，返回 NULL。
+- 当参数<expr>为 NULL 时，返回 NULL。
 
 ## 举例
 

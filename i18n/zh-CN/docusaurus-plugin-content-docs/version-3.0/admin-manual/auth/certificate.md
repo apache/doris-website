@@ -70,7 +70,7 @@ openssl x509 -req -in client-req.pem -days 3600 \
 openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 ```
 
-3. 将您的 CA 密钥和证书和 Sever 端密钥和证书分别合并到 PKCS#12 (P12) 包中。您也可以指定某个证书格式，默认 PKCS12，可以通过修改 conf/fe.conf 配置文件，添加参数 ssl_trust_store_type 指定证书格式
+3. 将您的 CA 密钥和证书和 Server 端密钥和证书分别合并到 PKCS#12 (P12) 包中。您也可以指定某个证书格式，默认 PKCS12，可以通过修改 conf/fe.conf 配置文件，添加参数 ssl_trust_store_type 指定证书格式
 
 ```shell
 # 打包 CA 密钥和证书

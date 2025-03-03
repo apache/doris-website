@@ -1241,7 +1241,7 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - If set to 10, allows up to 10 seconds of delay between materialized view and base table data. The materialized view can be used for transparent rewriting during this 10-second window.
 :::
 
-For more details, see [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
+For more details, see [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
 
 ### Querying Materialized View Jobs
 

@@ -64,5 +64,5 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 ## 参考
 
  - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
- - [WARMUP CACHE](../../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP)
+ - [WARMUP CACHE](./WARM-UP)
 

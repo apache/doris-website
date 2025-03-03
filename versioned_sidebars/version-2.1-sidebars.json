@@ -410,8 +410,23 @@
                             "label": "Authentication and Authorization",
                             "items": [
                                 "admin-manual/auth/authentication-and-authorization",
-                                "admin-manual/auth/ldap",
-                                "admin-manual/auth/ranger"
+                                {
+                                    "type": "category",
+                                    "label": "Authentication",
+                                    "items": [
+                                        "admin-manual/auth/authentication/internal",
+                                        "admin-manual/auth/authentication/federation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Authorization",
+                                    "items": [
+                                        "admin-manual/auth/authorization/internal",
+                                        "admin-manual/auth/authorization/ranger",
+                                        "admin-manual/auth/authorization/data"
+                                    ]
+                                }
                             ]
                         },
                         "admin-manual/audit-plugin",
@@ -981,7 +996,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/left",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
@@ -2010,6 +2024,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",
                         "releasenotes/v3.0/release-3.0.1",

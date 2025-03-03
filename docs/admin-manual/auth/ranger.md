@@ -70,7 +70,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 
 	The service address port can be viewed in the `ranger.service.http.port` configuration item of the `ranger-admin-site.xml` configuration file.
 
-	If the execution is successful, the service definition in Json format will be returned, such as:
+	If the execution is successful, the service definition in JSON format will be returned, such as:
 	
 	```
 	{
@@ -243,40 +243,40 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 2. Using the `admin` user in Doris, create a Catalog named `hive`.
 3. Create `user1` in Ranger.
 
-#### Global Priv
+#### Global Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on *.*.* to user1`;
 - The global option can be found in the dropdown menu of the same level in the catalog
 - Only `*` can be entered in the input box 
 
   ![global](/images/ranger/global.png)
 
-#### Catalog Priv
+#### Catalog Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.*.* to user1`;
 
 ![catalog](/images/ranger/catalog.png)
 
-#### Database Priv
+#### Database Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.* to user1`;
 
 ![database](/images/ranger/database.png)
 
-#### Table Priv
+#### Table Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.user to user1`;
 
 ![table](/images/ranger/table.png)
 
-#### Column Priv
+#### Column Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv(name,age) on hive.tpch.user to user1`;
 
 ![column](/images/ranger/column.png)
 
-#### Resource Priv
+#### Resource Privileges
 Equivalent to Doris' internal authorization statement `grant usage_priv on resource 'resource1' to user1`;
 - The resource option can be found in the dropdown menu of the same level in the catalog
 
 ![resource](/images/ranger/resource.png)
 
-#### Workload Group Priv
+#### Workload Group Privileges
 Equivalent to Doris' internal authorization statement `grant usage_priv on workload group 'group1' to user1`;
 - The workload group option can be found in the dropdown menu of the same level in the catalog
 

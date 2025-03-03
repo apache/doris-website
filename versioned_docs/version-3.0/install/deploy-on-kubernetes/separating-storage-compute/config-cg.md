@@ -74,7 +74,7 @@ spec:
       memory: 8Gi
 ```
 
-Update the above configuration in the required [DorisDisaggregatedCluster resource](install-quickstart.md#step-3-deploy-the-compute-storage-decoupled-cluster).
+Update the above configuration in the required [DorisDisaggregatedCluster resource](../../../gettingStarted/quick-start).
 
 ## Configure Cache persistent
 
@@ -82,7 +82,7 @@ In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubern
 
 1. Create a custom ConfigMap containing the startup information.
 
-   In the default deployment, each compute group’s BE service starts using the default configuration file from the image. To persist cache data, a custom startup configuration is needed. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file.
+   In the default deployment, each compute group's BE service starts using the default configuration file from the image. To persist cache data, a custom startup configuration is needed. Doris Operator uses Kubernetes' ConfigMap to mount the startup configuration file.
 
    Below is an example of a ConfigMap that a BE service can use:
 
@@ -100,7 +100,7 @@ In the default deployment, BE services use Kubernetes' [EmptyDir](https://kubern
        file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":107374182400,"query_limit":107374182400}]
    ```
 
-   For decoupled compute-storage clusters, the BE service's startup configuration must include file_cache_path. For formatting details, refer to the [Decoupled Compute-Storage Configuration be.conf section](../../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf). In the example above, a persistent cache is configured at the directory `/mnt/disk1/doris_cloud/file_cache`, with a total persistent capacity of 100Gi and a query cache limit of 100Gi.
+   For decoupled compute-storage clusters, the BE service's startup configuration must include file_cache_path. For formatting details, refer to the [Decoupled Compute-Storage Configuration be.conf section](../../../compute-storage-decoupled/compilation-and-deployment). In the example above, a persistent cache is configured at the directory `/mnt/disk1/doris_cloud/file_cache`, with a total persistent capacity of 100Gi and a query cache limit of 100Gi.
 
 2. Deploy the ConfigMap.
 

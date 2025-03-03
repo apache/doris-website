@@ -38,7 +38,7 @@ SHOW FILE { [ FROM | IN ] <database_name>}
 
 **1. `<database_name>`**
 
-> 文件归属于的database，如果没有指定，则使用当前 session 的 database。
+> 文件归属于的 database，如果没有指定，则使用当前 session 的 database。
 
 ## 返回值
 

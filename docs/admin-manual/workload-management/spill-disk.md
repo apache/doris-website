@@ -44,7 +44,7 @@ Currently, the operators that support spilling include:
 When a query triggers spilling, additional disk read/write operations may significantly increase query time. It is recommended to increase the FE Session variable query_timeout. Additionally, spilling can generate significant disk I/O, so it is advisable to configure a separate disk directory or use SSD disks to reduce the impact of query spilling on normal data ingestion or queries. The query spilling feature is currently disabled by default.
 
 ##Memory Management Mechanism
-Doris's memory management is divided into three levels: process level, WorkloadGroup level, and Query level.
+Doris's memory management is divided into three levels: process level, Workload Group level, and Query level.
 ![spill_disk_memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE Process Memory Configuration
@@ -111,7 +111,7 @@ SpillWriteBytesToLocalStorage=503412182|SpillReadBytesFromLocalStorage=503412182
 ```
 
 #### Profile
-If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build HashTable as an example, you can see the following counters:
+If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build Hash Table as an example, you can see the following counters:
 
 ```
 PARTITIONED_HASH_JOIN_SINK_OPERATOR  (id=4  ,  nereids_id=179):(ExecTime:  6sec351ms)

@@ -36,7 +36,7 @@ IPV6_STRING_TO_NUM_OR_NULL(<ipv6_string>)
 ## 参数
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| `<ipv6_string>`      | 字符串类型的ipv6地址  |
+| `<ipv6_string>`      | 字符串类型的 ipv6 地址  |
 
 ## 返回值
 返回二进制格式的 IPv6 地址

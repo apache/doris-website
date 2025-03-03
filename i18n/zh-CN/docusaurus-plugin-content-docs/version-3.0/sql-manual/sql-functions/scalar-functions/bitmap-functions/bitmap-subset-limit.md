@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-从不小于指定位置 position 开始, 按照指定基数 cardinality_limit 为上限截取 Bitmap 元素，返回一个 Bitmap 子集。
+从不小于指定位置 position 开始，按照指定基数 cardinality_limit 为上限截取 Bitmap 元素，返回一个 Bitmap 子集。
 
 ## 语法
 

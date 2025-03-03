@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在 Kubernetes 上部署存算分离集群分为4步：
+在 Kubernetes 上部署存算分离集群分为 4 步：
 
 1. 部署前准备。
 
@@ -81,7 +81,7 @@ under the License.
            address: ${fdbAddress}
      ```
  
-     其中, ${fdbAddress} 为 FoundationDB 使用客户端的访问地址。Linux 虚机默认部署的情况下存储在 `/etc/foundationdb/fdb.cluster`，可参考 FoundationDB 对于 [cluster file](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file) 的介绍了解详细信息。
+     其中，${fdbAddress} 为 FoundationDB 使用客户端的访问地址。Linux 虚机默认部署的情况下存储在 `/etc/foundationdb/fdb.cluster`，可参考 FoundationDB 对于 [cluster file](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file) 的介绍了解详细信息。
 
    - 配置包含访问信息的 ConfigMap
      使用 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) 部署 FoundationDB，`fdb-kubernetes-operator` 会在部署的命名空间下生成一个特定的，包含 FoundationDB 访问信息的 ConfigMap。
