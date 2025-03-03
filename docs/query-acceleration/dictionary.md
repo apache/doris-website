@@ -372,6 +372,15 @@ The dictionary table supports the following management and viewing statements:
 
     After deleting the dictionary table, the deleted dictionary may not be removed from BE immediately.
 
+#### Config Item
+
+The dictionary table supports the following configuration items, all of which are FE CONFIG:
+
+1. `dictionary_task_queue_size` —— The queue length of the thread pool for all tasks in the dictionary is not dynamically adjustable. The default value is 1024, and it is generally not necessary to adjust it.
+2. `job_dictionary_task_consumer_thread_num` —— The number of threads in the thread pool for all tasks in the dictionary is not dynamically adjustable. Default value is 3.
+3. `dictionary_rpc_timeout_ms` —— The timeout duration for all related RPCs in the dictionary can be dynamically adjusted. The default is 5000 (i.e., 5 seconds), and it generally does not need to be adjusted.
+4. `dictionary_auto_refresh_interval_seconds` —— The interval for automatically checking if all dictionary data is up to date is default 60 (seconds), and it can be dynamically adjusted.
+
 ### Status Display
 
 By using the `SHOW DICTIONARIES` statement, you can view the base table corresponding to the dictionary, the current data version number, and the corresponding status in FE and BE:

@@ -372,6 +372,15 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 
     删除字典表后，被删除的字典可能不会立即从 BE 中移除。
 
+#### 配置项
+
+字典表支持以下配置项，均为 FE CONFIG：
+
+1. `dictionary_task_queue_size` —— 字典所有任务的线程池的队列长度，不可动态调整。默认值 1024，一般不需要调整。
+2. `job_dictionary_task_consumer_thread_num` —— 字典所有任务的线程池的线程数量，不可动态调整。默认值 3。
+3. `dictionary_rpc_timeout_ms` —— 字典所有相关 rpc 的超时时间，可以动态调整。默认 5000（即 5s），一般不需要调整。
+4. `dictionary_auto_refresh_interval_seconds` —— 自动检查所有字典数据是否过期的间隔，默认 60（秒），可以动态调整。
+
 ### 状态显示
 
 通过 `SHOW DICTIONARIES` 语句，可以查看字典对应的基表，当前数据版本号，以及对应在 FE 和 BE 的状态。
