@@ -30,11 +30,11 @@ The integrated storage-compute architecture is shown below, and the deployment o
 [integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
-   
+
 2. **Deploy FE Cluster**: Deploy the FE cluster by adding Follower or Observer FE nodes;
-   
+
 3. **Deploy BE Nodes**: Register BE nodes to the FE cluster;
-   
+
 4. **Verify Cluster Correctness**: After deployment, connect to and verify the cluster's correctness.
 
 ## Step 1: Deploy FE Master Node
@@ -44,13 +44,16 @@ The integrated storage-compute architecture is shown below, and the deployment o
    When deploying FE, it is recommended to store metadata on a different hard drive from the BE node data storage.
 
    When extracting the installation package, a doris-meta directory is included by default. It is recommended to create a separate metadata directory and link it to the doris-meta directory. In production, it's highly advised to use a separate directory outside the Doris installation folder, preferably on an SSD. For testing and development environments, you can use the default configuration.
-   
+
    ```sql
    ## Use a separate disk for FE metadata
    mkdir -p <doris_meta_created>
       
    ## Create FE metadata directory symlink
-   ln -s <doris_meta_original> <doris_meta_created>
+   rm -rf <doris_meta_original>
+
+   ln -s <doris_meta_created> <doris_meta_original>
+
    ```
 
 2. **Modify FE Configuration File**
@@ -72,16 +75,16 @@ The integrated storage-compute architecture is shown below, and the deployment o
    ## modify Java Home
    JAVA_HOME = <your-java-home-path>
    ```
-   
+
    Parameter Descriptions: For more details, refer to the [FE Configuration](../../admin-manual/config/fe-config)：
 
    | Parameter                                                    | Suggestion                                                 |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | JAVA_OPTS                                                    | Specify the `-Xmx` parameter to adjust the Java Heap. It is recommended to set it to above 16G in production environments.   |
-   | [lower_case_table_names ](../../admin-manual/config/fe-config#lower_case_table_names) | Set case sensitivity. It is recommended to adjust it to 1, meaning case-insensitive.            |
-   | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
+   | [lower_case_table_names](../../admin-manual/config/fe-config#lower_case_table_names) | Set case sensitivity. It is recommended to adjust it to 1, meaning case-insensitive.            |
+   | [priority_networks](../../admin-manual/config/fe-config#priority_networks) | Network CIDR is specified based on the network IP address. It can be ignored in an FQDN environment. |
    | JAVA_HOME                                                    | It is recommended to use a JDK environment independent of the operating system for Doris.                |
-   
+
 3. **Start FE Process**
 
    You can start the FE process using the following command:
@@ -232,7 +235,6 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
    - `Alive` being true indicates that the node is alive.
 
    - `TabletNum` represents the number of shards on the node. Newly added nodes will undergo data balancing, and the `TabletNum` will gradually become more evenly distributed.
-
 
 ## Step 4: Verify Cluster Integrity
 

@@ -29,8 +29,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-For years, JDBC and ODBC have been commonly adopted norms for database interaction. Now, as we gaze upon the vast expanse of the data realm, the rise of data science and data lake analytics brings bigger and bigger datasets. Correspondingly, we need faster and faster data reading and transmission, so we start to look for better answers than JDBC and ODBC. Thus, we include **Arrow Flight SQL protocol** into [Apache Doris 2.1](https://doris.apache.org), which provides **tens-fold speedups for data transfer**. 
+For years, JDBC and ODBC have been commonly adopted norms for database interaction. Now, as we gaze upon the vast expanse of the data realm, the rise of data science and data lake analytics brings bigger and bigger datasets. Correspondingly, we need faster and faster data reading and transmission, so we start to look for better answers than JDBC and ODBC. Thus, we include **Arrow Flight SQL protocol** into [Apache Doris 2.1](https://doris.apache.org), which provides **tens-fold speedups for data transfer**.
 
 :::tip Tip
 A [demo](https://www.youtube.com/watch?v=zIqy24gI8DE) of loading data from Apache Doris to Python using Arrow Flight SQL.
@@ -42,12 +41,11 @@ As a column-oriented data warehouse, Apache Doris arranges its query results in 
 
 Apache Doris 2.1 has a data transmission channel built on [Arrow Flight SQL](https://arrow.apache.org/docs/format/FlightSql.html). ([Apache Arrow](https://arrow.apache.org/) is a software development platform designed for high data movement efficiency across systems and languages, and the Arrow format aims for high-performance, lossless data exchange.) It allows **high-speed, large-scale data reading from Doris via SQL in various mainstream programming languages**. For target clients that also support the Arrow format, the whole process will be free of serialization/deserialization, thus no performance loss. Another upside is, Arrow Flight can make full use of multi-node and multi-core architecture and implement parallel data transfer, which is another enabler of high data throughput.
 
-For example, if a Python client reads data from Apache Doris, Doris will first convert the column-oriented Blocks to Arrow RecordBatch. Then in the Python client, Arrow RecordBatch will be converted to Pandas DataFrame. Both conversions are fast because the Doris Blocks, Arrow RecordBatch, and Pandas DataFrame are all column-oriented. 
+For example, if a Python client reads data from Apache Doris, Doris will first convert the column-oriented Blocks to Arrow RecordBatch. Then in the Python client, Arrow RecordBatch will be converted to Pandas DataFrame. Both conversions are fast because the Doris Blocks, Arrow RecordBatch, and Pandas DataFrame are all column-oriented.
 
 ![img](/images/high-speed-data-transfer-based-on-doris-arrow-flight-sql.png)
 
-
-In addition, Arrow Flight SQL provides a general JDBC driver to facilitate seamless communication between databases that supports the Arrow Flight SQL protocol. This unlocks the the potential of Doris to be connected to a wider ecosystem and to be used in more cases. 
+In addition, Arrow Flight SQL provides a general JDBC driver to facilitate seamless communication between databases that supports the Arrow Flight SQL protocol. This unlocks the the potential of Doris to be connected to a wider ecosystem and to be used in more cases.
 
 ## Performance test
 
@@ -55,12 +53,11 @@ The "tens-fold speedups" conclusion is based on our benchmark tests. We tried re
 
 ![Performance test](/images/doris-performance-test.png)
 
-
-Results on various data types are as follows: 
+Results on various data types are as follows:
 
 ![Performance test results](/images/doris-performance-test-2.png)
 
-**As shown, Arrow Flight SQL outperforms PyMySQL and Pandas in all data types by a factor ranging from 20 to several hundreds**. 
+**As shown, Arrow Flight SQL outperforms PyMySQL and Pandas in all data types by a factor ranging from 20 to several hundreds**.
 
 ![Arrow Flight SQL outperforms PyMySQL and Pandas](/images/doris-performance-test-3.png)
 
@@ -70,17 +67,18 @@ With support for Arrow Flight SQL, Apache Doris can leverage the Python ADBC Dri
 
 ### 01  Install library
 
-The relevant library is already published on PyPI. It can be installed simply as follows: 
+The relevant library is already published on PyPI. It can be installed simply as follows:
 
 ```C++
 pip install adbc_driver_manager
 pip install adbc_driver_flightsql
 ```
 
-Import the following module/library to interact with the installed library: 
+Import the following module/library to interact with the installed library:
 
 ```Python
 import adbc_driver_manager
+import adbc_driver_flightsql
 import adbc_driver_flightsql.dbapi as flight_sql
 
 >>> print(adbc_driver_manager.__version__)
@@ -95,9 +93,9 @@ Create a client for interacting with the Doris Arrow Flight SQL service. Prerequ
 
 Configure parameters for Doris frontend (FE) and backend (BE):
 
-- In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 9090.
+- In `fe/conf/fe.conf`, set `arrow_flight_sql_port` to an available port, such as 9090.
 
-- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
+- In `be/conf/be.conf`, set `arrow_flight_sql_port` to an available port, such as 9091.
 
 `Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
 
@@ -370,7 +368,7 @@ dbapi_adbc_execute_fetch_df()
 dbapi_adbc_execute_partitions()
 ```
 
-Results are as follows (omitting the repeated outputs). **It only takes 3s** to load a Clickbench dataset containing 1 million rows and 105 columns. 
+Results are as follows (omitting the repeated outputs). **It only takes 3s** to load a Clickbench dataset containing 1 million rows and 105 columns.
 
 ```Python
 ##################
@@ -399,9 +397,9 @@ None
 
 ### 02  JDBC
 
-The open-source JDBC driver for the Arrow Flight SQL protocol provides compatibility with the standard JDBC API. It allows most BI tools to access Doris via JDBC and supports high-speed transfer of Apache Arrow data. 
+The open-source JDBC driver for the Arrow Flight SQL protocol provides compatibility with the standard JDBC API. It allows most BI tools to access Doris via JDBC and supports high-speed transfer of Apache Arrow data.
 
-Usage of this driver is similar to using that for the MySQL protocol. You just need to replace `jdbc:mysql` in the connection URL with `jdbc:arrow-flight-sql`. The returned result will be in the JDBC ResultSet data structure. 
+Usage of this driver is similar to using that for the MySQL protocol. You just need to replace `jdbc:mysql` in the connection URL with `jdbc:arrow-flight-sql`. The returned result will be in the JDBC ResultSet data structure.
 
 ```Java
 import java.sql.Connection;
@@ -458,6 +456,6 @@ For Spark users, apart from connecting to Flight SQL Server using JDBC and JAVA,
 
 ## Hop on the trend train
 
-A number of enterprise users of Doris has tried loading data from Doris to Python, Spark, and Flink using Arrow Flight SQL and enjoyed much faster data reading speed. In the future, we plan to include the support for Arrow Flight SQL in data writing, too. By then, most systems built with mainstream programming languages will be able to read and write data from/to Apache Doris by an ADBC client. That's high-speed data interaction which opens up numerous possibilities. On our to-do list, we also envision leveraging Arrow Flight to implement parallel data reading by multiple backends and facilitate federated queries across Doris and Spark. 
+A number of enterprise users of Doris has tried loading data from Doris to Python, Spark, and Flink using Arrow Flight SQL and enjoyed much faster data reading speed. In the future, we plan to include the support for Arrow Flight SQL in data writing, too. By then, most systems built with mainstream programming languages will be able to read and write data from/to Apache Doris by an ADBC client. That's high-speed data interaction which opens up numerous possibilities. On our to-do list, we also envision leveraging Arrow Flight to implement parallel data reading by multiple backends and facilitate federated queries across Doris and Spark.
 
-Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw). 
+Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).
