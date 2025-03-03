@@ -267,7 +267,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 Note: whether modifying a key column or a value column, the complete column information needs to be declared.
 
-**2. Modifying the maximum length of column val1 in the Base Index. The original val1 is (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
+**2. Modifying the maximum length of column val5 in the Base Index. The original val5 is (val5 VARCHAR(32) REPLACE DEFAULT "abc")**
 
 ```sql
 ALTER TABLE example_db.my_table

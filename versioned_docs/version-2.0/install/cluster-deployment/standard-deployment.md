@@ -19,7 +19,7 @@ Manually deploying a Doris cluster typically involves four steps:
 
 **CPU**
 
-When installing Doris, it is recommended to use machines that support the AVX2 instruction set to leverage its vectorization capabilities for query acceleration. 
+When installing Doris, it is recommended to use machines that support the AVX2 instruction set to leverage its vectorization capabilities for query acceleration.
 
 Run the following command. If a result is returned, that means the machine supports the AVX2 instruction set.
 
@@ -61,13 +61,15 @@ Doris can run on servers with x86-64 architecture or ARM64 architecture.
 | Frontend | 8+ Cores | 8+ GB  | SSD or SATA, 10+ GB | 1 or 10 GbE | 1                  |
 | Backend  | 8+ Cores | 16+ GB | SSD or SATA, 50+ GB | 1 or 10 GbE | 1                  |
 
-:::tip 
+:::tip
 Description:
+
 - In a validation testing environment, you can deploy the FE and BE on the same server.
 - It is generally recommended to deploy only **one BE instance on a single machine**. Meanwhile, you can only deploy **one** **FE** **on one machine**.
 - If you need three replicas of data, you will need at least three machines and deploy one BE instance on each of them, instead of deploying three BE instances on one single machine.
 - **The clocks of multiple servers hosting FEs must be synchronized, allowing a maximum clock deviation of 5 seconds.**
 - In a testing environment, you can also perform tests with just one BE. In the actual production environment, the number of BE instances directly affects the overall query latency.
+
 :::
 
 **Production environment**
@@ -77,11 +79,13 @@ Description:
 | Frontend | 16+ Cores | 64+ GB | SSD or RAID, 100+ GB | 10 GbE  | 1                  |
 | Backend  | 16+ Cores | 64+ GB | SSD or SATA, 100+ GB | 10 GbE  | 3                  |
 
-:::tip 
+:::tip
 Description:
+
 - In a production environment, if the FE and BE are co-located, be mindful of resource contention issues. It is recommended to store metadata and data on separate disks.
 - BE nodes can be configured with multiple disks for storage. You can bind multiple HDDs or SSDs to a single BE instance.
 - The performance of the cluster is dependent on the resources of the BE nodes. The more BE nodes there are, the better the performance of Doris. Typically, Doris can fully leverage its performance potential with 10 to 100 machines.
+
 :::
 
 ### Hard disk space calculation
@@ -125,8 +129,8 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 /dev/sda3              /home         ext4      defaults,noatime      0      2
 ```
 
-:::caution 
-It is not recommended to disable swap by setting vm.swappiness = 0 because this parameter has different semantics in different Linux kernel versions. In many cases, this will not completely disable swap. 
+:::caution
+It is not recommended to disable swap by setting vm.swappiness = 0 because this parameter has different semantics in different Linux kernel versions. In many cases, this will not completely disable swap.
 :::
 
 ### Check and disable system firewall
@@ -140,7 +144,7 @@ sudo systemctl disable firewalld.service
 
 ### Configure NTP service
 
-Doris metadata requires a time precision of less than 5000ms, so clock synchronization is required for all machines in the cluster. This prevents metadata inconsistency from causing service abnormalities. 
+Doris metadata requires a time precision of less than 5000ms, so clock synchronization is required for all machines in the cluster. This prevents metadata inconsistency from causing service abnormalities.
 
 Typically, you can ensure clock synchronization across nodes by NTP service configuration.
 
@@ -159,8 +163,8 @@ vi /etc/security/limits.conf
 * hard nofile 1000000
 ```
 
-:::caution 
-For the changes to take effect, the current user needs to log out of the current session and log back in. 
+:::caution
+For the changes to take effect, the current user needs to log out of the current session and log back in.
 :::
 
 ### Modify the number of virtual memory areas
@@ -232,7 +236,8 @@ After extracting the installation package, there is usually a default doris-meta
 mkdir -p <doris_meta_created>
 
 ## Create a symbolic link to the FE metadata directory.
-ln -s <doris_meta_original> <doris_meta_created>
+rm -rf <doris_meta_original>
+ln -s <doris_meta_created> <doris_meta_original>
 ```
 
 **Modify FE configuration file**
@@ -318,9 +323,11 @@ ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
 ```
 
 :::note
+
 1. It is recommended to have an odd number of FE Follower nodes (including the Master node), with a suggested number of three to achieve high availability.
 2. When FE is deployed in a high availability mode (1 Master node, 2 Follower nodes), it is advisable to increase the scalability of the FE read services by adding an Observer FE.
 3. Typically, one FE node can handle around 10-20 BE nodes. It is recommended to keep the total number of FE nodes below 10.
+
 :::
 
 **Start** **FE** **Follower node**
@@ -337,7 +344,7 @@ bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
 
 To check the status of a Follower node, follow the same method of checking the status of the FE Master node. After registering the FE Follower node, use the `show frontends` command to view the FE node status. Unlike the Master node, the `IsMaster` status should be false for the Follower node.
 
-### Deploy BE 
+### Deploy BE
 
 **Create directory**
 
@@ -379,10 +386,12 @@ storage_root_path=/home/disk1/doris,medium:HDD;/home/disk2/doris,medium:SSD
 ```
 
 :::note
+
 1. When specifying the storage type for the storage path, at least one path should have the storage type set as HDD.
 2. If the storage type for a storage path is not explicitly declared, it defaults to HDD.
 3. Specifying the storage type as HDD or SSD is to differentiate the storage types for the paths. It is independent of the physical storage medium. For example, you can designate a directory on an HDD disk as SSD.
 4. The keywords for storage types, HDD and SSD, must be capitalized.
+
 :::
 
 6. Bind cluster IP
@@ -419,7 +428,7 @@ After BE process is started, it runs in the background. The log files are stored
 
 **Check BE status**
 
-After connecting to the Doris cluster, you can use the `show backends` command to check the status of the BE nodes. 
+After connecting to the Doris cluster, you can use the `show backends` command to check the status of the BE nodes.
 
 ```SQL
 ## Connect to Doris cluster
@@ -526,20 +535,20 @@ Doris processes listen to network segments represented in CIDR format for IP add
 
 This parameter is mainly used to help the system select the correct network card IP as its listening IP. For example, if the required listening IP is 192.168.0.1, you can set `priority_networks=192.168.0.0/24`. The system will automatically scan all IPs on the machine, and only those matching the 192.168.0.0/24 network segment will be used as service listening addresses. You can also configure multiple CIDR network segments in this parameter, such as `priority_networks = 10.10.0.0/16; 192.168.0.0/24`.
 
-:::tip 
+:::tip
 **Why use priority_networks to configure listening address segments instead of directly setting the listening IP address in the configuration file?**
 
-The main reason is that Doris is a distributed cluster, and the same configuration file will be deployed on multiple nodes. To facilitate deployment, updates, and maintenance, it is desirable to keep all nodes' configuration files consistent. By configuring the listening address segment and then starting the system, the appropriate listening IP can be found based on this network segment, thus each machine can use a single value in this configuration. 
+The main reason is that Doris is a distributed cluster, and the same configuration file will be deployed on multiple nodes. To facilitate deployment, updates, and maintenance, it is desirable to keep all nodes' configuration files consistent. By configuring the listening address segment and then starting the system, the appropriate listening IP can be found based on this network segment, thus each machine can use a single value in this configuration.
 :::
 
 ### Why do new BE nodes need to be manually added to the cluster?
 
 After the BE node is started, you need to send a command to the FE through the MySQL protocol or the built-in web console to join the BE node to the cluster.
 
-:::tip 
+:::tip
 **How does the FE know which BE nodes constitute the cluster?**
 
-As a distributed database, Doris generally has many BE nodes. Doris adds BE nodes to the cluster by sending commands to the FE. This is different from the way how BE nodes know the addresses of FE nodes and then actively report connections. The way of manual adding and having the FE actively connect to BE nodes is beneficial to cluster management in many aspects. For example, it can determine which nodes constitute the cluster and it can proactively shut down a BE node that cannot be connected to. 
+As a distributed database, Doris generally has many BE nodes. Doris adds BE nodes to the cluster by sending commands to the FE. This is different from the way how BE nodes know the addresses of FE nodes and then actively report connections. The way of manual adding and having the FE actively connect to BE nodes is beneficial to cluster management in many aspects. For example, it can determine which nodes constitute the cluster and it can proactively shut down a BE node that cannot be connected to.
 :::
 
 ### How to quickly detect whether the FE has started successfully?
@@ -570,8 +579,8 @@ ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 
 ![Doris-Web-UI-Playground-en](/images/Doris-Web-UI-Playground-en.png)
 
-:::tip 
-For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later. 
+:::tip
+For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later.
 :::
 
 ### Why can't I change the root password via the Web UI?

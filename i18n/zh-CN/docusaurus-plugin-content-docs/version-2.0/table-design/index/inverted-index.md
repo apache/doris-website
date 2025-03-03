@@ -108,7 +108,7 @@ table_properties;
 
   **用于指定分词的模式，目前 parser = chinese 时支持如下几种模式：**
   <p>- fine_grained：细粒度模式，倾向于分出比较短、较多的词，比如 '武汉市长江大桥' 会分成 '武汉', '武汉市', '市长', '长江', '长江大桥', '大桥' 6 个词</p>
-  <p>- coarse_grained：粗粒度模式，倾向于分出比较长、较少的词，，比如 '武汉市长江大桥' 会分成 '武汉市' '长江大桥' 2 个词</p>
+  <p>- coarse_grained：粗粒度模式，倾向于分出比较长、较少的词，比如 '武汉市长江大桥' 会分成 '武汉市' '长江大桥' 2 个词</p>
   <p>- 默认 coarse_grained</p>
 </details>
 
@@ -131,7 +131,7 @@ table_properties;
 
   **用于指定在分词前对文本进行预处理，通常用于影响分词行为**
 
-  <p>char_filter_type：指定使用不同功能的 char_filter（目前仅支持 char_replace）</p>
+  <p>- char_filter_type：指定使用不同功能的 char_filter（目前仅支持 char_replace）</p>
 
   <p>char_replace 将 pattern 中每个 char 替换为一个 replacement 中的 char</p>
   <p>- char_filter_pattern：需要被替换掉的字符数</p>
@@ -157,7 +157,7 @@ table_properties;
   <summary>lower_case</summary>
 
   **是否将分词进行小写转换，从而在匹配的时候实现忽略大小写**
-  <p>- true: 转换小写</p>
+  <p>- true：转换小写</p>
   <p>- false：不转换小写</p>
   <p>- 从 2.0.7 版本开始默认为 true，自动转小写，之前的版本默认为 false</p>
 </details>
@@ -167,7 +167,7 @@ table_properties;
 
   **指明使用的停用词表，会影响分词器的行为**
   <p>默认的内置停用词表包含一些无意义的词：'is'、'the'、'a' 等。在写入或者查询时，分词器会忽略停用词表中的词。</p>
-  <p>- none: 使用空的停用词表</p>
+  <p>- none：使用空的停用词表</p>
 </details>
 
 **4. `COMMENT` 是可选的，用于指定索引注释**
@@ -210,7 +210,7 @@ SHOW BUILD INDEX where TableName = "table1";
 通过 `CANCEL BUILD INDEX` 取消 `BUILD INDEX`：
 ```sql
 CANCEL BUILD INDEX ON table_name;
-CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
+CANCEL BUILD INDEX ON table_name (job_id1,job_id2,...);
 ```
 
 :::tip
@@ -248,7 +248,7 @@ ALTER TABLE table_name DROP INDEX idx_name;
 SHOW CREATE TABLE table_name;
 
 -- 语法 2，IndexType 为 INVERTED 的是倒排索引
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 ```
 
 
@@ -274,7 +274,7 @@ SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
 -- 2.1 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword2 必须紧跟在 keyword1 后面
 -- 'keyword1 keyword2'，'wordx keyword1 keyword2'，'wordx keyword1 keyword2 wordy' 能匹配，因为他们都包含 keyword1 keyword2，而且 keyword2 紧跟在 keyword1 后面
 -- 'keyword1 wordx keyword2' 不能匹配，因为 keyword1 keyword2 之间隔了一个词 wordx
--- 'keyword2 keyword1'，因为 keyword1 keyword2 的顺序反了
+-- 'keyword2 keyword1' 不能匹配，因为 keyword1 keyword2 的顺序反了
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 
 -- 2.2 content 列中同时包含 keyword1 和 keyword2 的行，而且 keyword1 keyword2 的 `词距`（slop）不超过 3
@@ -414,7 +414,7 @@ PROPERTIES ("replication_num" = "1");
 ```
 wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
-curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz  http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
+curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz -XPUT http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {
     "TxnId": 2,
     "Label": "a8a3e802-2329-49e8-912b-04c800a461a6",

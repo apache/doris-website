@@ -5,28 +5,6 @@
 }
 ---
 
-<<<<<<< HEAD
-=======
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
->>>>>>> 3ce78af1b (squash commit)
 ## 描述
 此函数用于对给定字符串 STR 执行正则匹配，并提取符合指定模式的第 POS 个匹配部分。若函数要返回匹配结果，该模式必须与 STR 的某些部分完全匹配。
 

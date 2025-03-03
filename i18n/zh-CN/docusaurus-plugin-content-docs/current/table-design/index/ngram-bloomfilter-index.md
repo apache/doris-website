@@ -60,7 +60,7 @@ NGram BloomFilter 索引只能加速字符串 LIKE 查询，而且 LIKE pattern 
 SHOW CREATE TABLE table_name;
 
 -- 语法 2，IndexType 为 NGRAM_BF 的是倒排索引
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 ```
 
 ### 删除 NGram BloomFilter 索引

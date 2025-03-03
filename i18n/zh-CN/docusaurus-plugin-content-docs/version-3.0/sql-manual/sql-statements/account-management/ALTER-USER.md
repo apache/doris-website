@@ -34,7 +34,7 @@ password_policy:
 
 > 一个用户的唯一标识，语法为：'user_name'@'host'
 > `user_identity` 由两部分组成，user_name 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，即表示该用户可以从任意 host 连接到 Doris。
-> host 部分也可指定为 domain，，即使用中括号包围，则 Doris 会认为这个是一个 domain，并尝试解析其 ip 地址。
+> host 部分也可指定为 domain，即使用中括号包围，则 Doris 会认为这个是一个 domain，并尝试解析其 ip 地址。
 
 ## 可选参数
 
