@@ -47,7 +47,7 @@ FE 的配置项有两种方式进行查看：
 
 2. 通过命令查看
 
-   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md)：
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG)：
 
    `SHOW FRONTEND CONFIG;`
 

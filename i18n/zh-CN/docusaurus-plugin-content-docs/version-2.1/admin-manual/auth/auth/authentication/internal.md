@@ -64,13 +64,13 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 ## 黑白名单
 Doris 本身不支持黑名单，只有白名单功能，但我们可以通过某些方式来模拟黑名单。假设先创建了名为 `user@'192.%'` 的用户，表示允许来自 `192.*` 的用户登录。此时如果想禁止来自 `192.168.10.1` 的用户登录，则可以再创建一个用户 `cmy@'192.168.10.1'`，并设置一个新的密码。因为 `192.168.10.1` 的优先级高于 `192.%`，所以来自 `192.168.10.1` 的用户将不能再使用旧密码进行登录。
 ## 相关命令
-- 创建用户：[CREATE USER](../../../sql-manual/sql-statements/account-management/CREATE-USER)
-- 查看用户：[SHOW ALL GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
-- 修改用户：[ALTER USER](../../../sql-manual/sql-statements/account-management/ALTER-USER)
-- 修改密码：[SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD)
-- 删除用户：[DROP USER](../../../sql-manual/sql-statements/account-management/DROP-USER)
-- 设置用户属性：[SET PROPERTY](../../../sql-manual/sql-statements/account-management/SET-PROPERTY)
-- 查看用户属性：[SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
+- 创建用户：[CREATE USER](../../../../sql-manual/sql-statements/account-management/CREATE-USER)
+- 查看用户：[SHOW ALL GRANTS](../../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- 修改用户：[ALTER USER](../../../../sql-manual/sql-statements/account-management/ALTER-USER)
+- 修改密码：[SET PASSWORD](../../../../sql-manual/sql-statements/account-management/SET-PASSWORD)
+- 删除用户：[DROP USER](../../../../sql-manual/sql-statements/account-management/DROP-USER)
+- 设置用户属性：[SET PROPERTY](../../../../sql-manual/sql-statements/account-management/SET-PROPERTY)
+- 查看用户属性：[SHOW PROPERTY](../../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 ## 其它说明
   1. 登录时 user_identity 优先级选择问题
 

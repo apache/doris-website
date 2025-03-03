@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
+2. [在 Doris 中创建 Catalog](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
