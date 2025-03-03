@@ -34,7 +34,7 @@ Doris 中表名默认是大小写敏感的，可以在第一次初始化集群�
 
 ## 表属性
 
-Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，包括：
+Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties)，包括：
 
 - 分桶数 (buckets)：决定数据在表中的分布；
 

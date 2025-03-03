@@ -77,7 +77,7 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置更新到需要部署的[`DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)中。
+将上述配置更新到需要部署的[`DorisDisaggregatedCluster` 资源](../../../gettingStarted/quick-start)中。
 
 ## 配置 Cache 持久化
 

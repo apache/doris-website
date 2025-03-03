@@ -107,15 +107,15 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
 - 默认角色不能被删除，不能被分配给其他人，删除用户时，默认角色也自动删除。
 
 ## 相关命令
-- 授权/分配角色：[GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO)
-- 撤权/撤销角色：[REVOKE](../../../sql-manual/sql-statements/account-management/REVOKE-FROM)
-- 创建角色：[CREATE ROLE](../../../sql-manual/sql-statements/account-management/CREATE-ROLE)
-- 删除角色：[DROP ROLE](../../../sql-manual/sql-statements/account-management/DROP-ROLE)
-- 修改角色：[ALTER ROLE](../../../sql-manual/sql-statements/account-management/ALTER-ROLE)
-- 查看当前用户权限和角色：[SHOW GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
-- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
-- 查看已创建的角色：[SHOW ROLES](../../../sql-manual/sql-statements/account-management/SHOW-ROLES)
-- 查看支持的所有权限项：[SHOW PRIVILEGES](../../../sql-manual/sql-statements/account-management/SHOW-PRIVILEGES)
+- 授权/分配角色：[GRANT](../../../../sql-manual/sql-statements/account-management/GRANT-TO)
+- 撤权/撤销角色：[REVOKE](../../../../sql-manual/sql-statements/account-management/REVOKE-FROM)
+- 创建角色：[CREATE ROLE](../../../../sql-manual/sql-statements/account-management/CREATE-ROLE)
+- 删除角色：[DROP ROLE](../../../../sql-manual/sql-statements/account-management/DROP-ROLE)
+- 修改角色：[ALTER ROLE](../../../../sql-manual/sql-statements/account-management/ALTER-ROLE)
+- 查看当前用户权限和角色：[SHOW GRANTS](../../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- 查看已创建的角色：[SHOW ROLES](../../../../sql-manual/sql-statements/account-management/SHOW-ROLES)
+- 查看支持的所有权限项：[SHOW PRIVILEGES](../../../../sql-manual/sql-statements/account-management/SHOW-PRIVILEGES)
 
 ## 最佳实践
 

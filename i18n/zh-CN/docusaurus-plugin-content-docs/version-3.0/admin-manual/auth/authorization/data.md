@@ -36,8 +36,8 @@ under the License.
 不能为默认用户 root 和 admin 设置 Row Policy
 
 ### 相关命令
-- 查看行权限策略 [SHOW ROW POLICY](../../../sql-manual/sql-statements/Show-Statements/SHOW-POLICY.md)
-- 创建行权限策略 [CREATE ROW POLICY](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY.md)
+- 查看行权限策略 [SHOW ROW POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY)
+- 创建行权限策略 [CREATE ROW POLICY](../../../sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY)
 ### 行权限示例
 1. 限制 test 用户仅能查询 table1 表中 c1='a' 的数据
 

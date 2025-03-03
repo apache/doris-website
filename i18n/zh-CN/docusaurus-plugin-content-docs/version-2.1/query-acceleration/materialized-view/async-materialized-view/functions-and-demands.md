@@ -1117,11 +1117,11 @@ SHOW CREATE MATERIALIZED VIEW mv_1;
 
 ### 暂停物化视图
 
-详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW)
+详情参考 [PAUSE MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB)
 
 ### 启用物化视图
 
-详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW)
+详情参考 [RESUME MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB)
 
 ### 取消物化视图刷新任务
 
@@ -1238,7 +1238,7 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 
 - 如果设置成 10，意味着物化视图和基表数据允许 10 秒的延迟，如果物化视图的数据和基表的数据有延迟，在 10 秒内，此物化视图都可以用于透明改写。
   :::
-详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
+详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
 
 
 ### 查询物化视图对应的 JOB 
