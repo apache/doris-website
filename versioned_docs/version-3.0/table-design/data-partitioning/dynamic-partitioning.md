@@ -67,12 +67,13 @@ When using the ALTER TABLE statement to modify dynamic partitioning, the changes
 In the example below, the ALTER TABLE statement is used to modify a non-dynamic partitioned table to a dynamic partitioned table:
 
 ```sql
-CREATE TABLE test_dynamic_partition(
+CREATE TABLE test_partition(
     order_id    BIGINT,
     create_dt   DATE,
     username    VARCHAR(20)
 )
 DUPLICATE KEY(order_id)
+PARTITION BY RANGE(create_dt) ()
 DISTRIBUTED BY HASH(order_id) BUCKETS 10;
 
 ALTER TABLE test_partition SET (

@@ -159,7 +159,7 @@ select group_concat_merge(v2) from aggstate;
 If you do not want the final aggregation result, you can use `union` to combine multiple intermediate aggregation results and generate a new intermediate result.
 
 ```sql
-insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate;
+insert into aggstate select 3,sum(v1),group_concat_union(v2) from aggstate;
 ```
 
 The calculations in the table are as follows:
@@ -169,16 +169,16 @@ The calculations in the table are as follows:
 The query result is as follows:
 
 ```sql
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
+mysql> select sum(v1), group_concat_merge(v2) from aggstate;
 +---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
+|       sum(v1) | group_concat_merge(v2) |
 +---------------+------------------------+
 |            20 | c,b,a,d,c,b,a,d        |
 +---------------+------------------------+
 
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
+mysql> select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
 +---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
+|       sum(v1) | group_concat_merge(v2) |
 +---------------+------------------------+
 |            16 | c,b,a,d,c,b,a          |
 +---------------+------------------------+

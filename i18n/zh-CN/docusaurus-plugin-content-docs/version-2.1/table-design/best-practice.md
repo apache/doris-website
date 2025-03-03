@@ -302,7 +302,7 @@ DISTRIBUTED BY HASH(`siteid`) BUCKETS 10;
 4.  亿级别以上数据，如果有模糊匹配，使用倒排索引或者是 NGram Bloomfilter
 :::
 
-### 2.6 Bitmap 索引
+### 06 Bitmap 索引
 
 为了加速数据查询，Doris 支持用户为某些字段添加 Bitmap 索引，适合在基数较低的列上进行等值查询或范围查询的场景。
 
