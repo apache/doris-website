@@ -131,7 +131,7 @@ set ldap_admin_password = password('ldap_admin_password');
 注：使用其它客户端登录可以参考下文中 客户端如何使用明文登录
 ### LDAP 信息缓存
 
-为了避免频繁访问 LDAP 服务，Doris 会将 LDAP 信息缓存到内存中，可以通过 ldap.conf 中的 ldap_user_cache_timeout_s 配置项指定 LDAP 用户的缓存时间，默认为 12 小时；在修改了 LDAP 服务中的信息或者修改了 Doris 中 LDAP 用户组对应的 Role 权限后，可能因为缓存而没有及时生效，可以通过 refresh ldap 语句刷新缓存，详细查看[REFRESH-LDAP](../../../sql-manual/sql-statements/account-management/REFRESH-LDAP)。
+为了避免频繁访问 LDAP 服务，Doris 会将 LDAP 信息缓存到内存中，可以通过 ldap.conf 中的 ldap_user_cache_timeout_s 配置项指定 LDAP 用户的缓存时间，默认为 12 小时；在修改了 LDAP 服务中的信息或者修改了 Doris 中 LDAP 用户组对应的 Role 权限后，可能因为缓存而没有及时生效，可以通过 refresh ldap 语句刷新缓存，详细查看[REFRESH-LDAP](../../../../sql-manual/sql-statements/account-management/REFRESH-LDAP)。
 
 ### LDAP 验证的局限
 - 目前 Doris 的 LDAP 功能只支持明文密码验证，即用户登录时，密码在 client 与 fe 之间、fe 与 LDAP 服务之间以明文的形式传输。

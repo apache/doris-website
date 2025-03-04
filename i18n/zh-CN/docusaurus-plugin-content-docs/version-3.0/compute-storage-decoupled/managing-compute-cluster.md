@@ -74,8 +74,8 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
-要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) 命令。例如：
+操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/account-management/GRANT-TO)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
+要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 命令。例如：
 
 
 ```sql

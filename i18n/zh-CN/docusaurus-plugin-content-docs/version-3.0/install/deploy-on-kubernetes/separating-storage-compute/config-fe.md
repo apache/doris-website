@@ -43,11 +43,11 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)中。
+将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](../../../gettingStarted/quick-start)中。
 
 ### 配置存储资源
 
-存算分离集群 FE 服务是有状态服务，在 Kubernetes 上部署，需要持久化元数据存储目录。Doris Operator 根据配置文件配置的元数据存储目录，以及配置的存储模板自动挂载持久化存储。在[需要部署的 `DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)添加如下配置：
+存算分离集群 FE 服务是有状态服务，在 Kubernetes 上部署，需要持久化元数据存储目录。Doris Operator 根据配置文件配置的元数据存储目录，以及配置的存储模板自动挂载持久化存储。在[需要部署的 `DorisDisaggregatedCluster` 资源](../../../gettingStarted/quick-start)添加如下配置：
 
 ```yaml
 spec:
@@ -107,7 +107,7 @@ Doris Operator 使用 Kubernetes 的 ConfigMap 挂载启动配置。
 
    其中，`${namespace}` 为 `DorisDisaggregatedCluster` 所在的命名空间，${feConfigMapName} 为包含上述配置的文件名。
 
-3. 更新 [`DorisDisaggregatedCluster` 资源](install-quickstart.md#第3步部署存算分离集群)来使用上述 ConfigMap, 示例如下：
+3. 更新 [`DorisDisaggregatedCluster` 资源](../../../gettingStarted/quick-start)来使用上述 ConfigMap, 示例如下：
   ```yaml
   spec:
     feSpec:
