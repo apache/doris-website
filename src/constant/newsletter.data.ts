@@ -1,9 +1,9 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris 2.1.8 just released",
-        content: `This version introduces continuous upgrades and enhancements in several key areas, including Lakehouse, Asynchronous Materialized Views, Query Optimizer and Execution Engine, Storage Management, and more.`,
-        image: '2.1.8.jpg',
+        title: "Apache Doris 3.0.4 Released",
+        content: `This version introduces continuous upgrades and enhancements in several key areas, including Lakehouse, Storage Efficiency, Compute-Storage Separation, Query Optimizer and Asynchronous Materialized Views, and more.`,
+        image: '3.0.4.jpg',
     },
     {
         tags: ['Best Practice'],
