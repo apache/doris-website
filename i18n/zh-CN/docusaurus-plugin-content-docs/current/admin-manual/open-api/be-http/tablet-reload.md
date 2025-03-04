@@ -25,15 +25,15 @@ under the License.
 -->
 
 
-## Request
+## 请求路径
 
 `GET /api/reload_tablet?tablet_id={int}&schema_hash={int}&path={string}"`
 
-## Description
+## 描述
 
 该功能用于重加载 tablet 数据。
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
     需要重加载的 table 的 id
@@ -45,16 +45,16 @@ under the License.
     文件路径     
 
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```shell
     load header succeed
     ```
-## Examples
+## 示例
 
 
     ```shell

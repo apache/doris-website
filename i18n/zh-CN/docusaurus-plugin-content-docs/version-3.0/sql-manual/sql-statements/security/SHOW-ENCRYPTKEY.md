@@ -58,7 +58,7 @@ SHOW ENCRYPTKEYS [ { IN | FROM } <db> ] [ LIKE '<key_pattern>']
 
 | 权限（Privilege） | 对象（Object）          | 说明（Notes）                         |
 |:--------------|:--------------------|:----------------------------------|
-| `ADMIN_PRIV`  | 用户（User） 或 角色（Role） | 需对目标用户或角色持有 `ADMIN_PRIV` 权限才能查看密钥 |
+| `ADMIN_PRIV`  | 用户（User）或 角色（Role） | 需对目标用户或角色持有 `ADMIN_PRIV` 权限才能查看密钥 |
 
 ## 注意事项
 

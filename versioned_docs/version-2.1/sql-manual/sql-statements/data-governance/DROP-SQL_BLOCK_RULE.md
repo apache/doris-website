@@ -24,30 +24,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Delete SQL blocking rules, support multiple rules, separated by ,
+Deletes one or more SQL blocking rules. Multiple rules can be deleted at once by separating them with commas.
 
-grammar:
+## Syntax
 
 ```sql
-DROP SQL_BLOCK_RULE test_rule1,...
+DROP SQL_BLOCK_RULE <rule_name>[, ...]
 ```
 
-## Examples
+## Required Parameters
 
-1. Delete the test_rule1 and test_rule2 blocking rules
+<rule_name>
+The name of the SQL blocking rule to be deleted. Multiple rule names can be specified, separated by commas. 
 
-    ```sql
-    mysql> DROP SQL_BLOCK_RULE test_rule1,test_rule2;
-    Query OK, 0 rows affected (0.00 sec)
-    ```
+## Access Control Requirements
 
-## Keywords
+Users executing this SQL command must have at least the following privileges:
+| Privilege | Object | Notes                |
+| :---------------- | :------------- | :---------------------------- |
+| ADMIN        | User or Role   | Only users or roles with the ADMIN privilege can perform the DROP operation. |
 
-```text
-DROP, SQL_BLOCK_RULE
+
+## Example
+
+Delete `test_rule1` and `test_rule2` blocking rules
+
+```sql
+DROP SQL_BLOCK_RULE test_rule1, test_rule2;
 ```
 
-## Best Practice

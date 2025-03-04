@@ -52,7 +52,7 @@ WHERE [ LABEL = "<export_label>" | LABEL like "<label_pattern>" | STATE = "<stat
 
 **4. `<state>`**
 
-  state 可选项: `PENDING`、`IN_QUEUE`、`EXPORTING`。
+  state 可选项：`PENDING`、`IN_QUEUE`、`EXPORTING`。
 
 ## 权限控制
 

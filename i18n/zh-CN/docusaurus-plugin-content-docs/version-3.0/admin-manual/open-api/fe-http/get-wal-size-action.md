@@ -33,7 +33,7 @@ under the License.
 
 ## Description
 
-用户可以通过该 HTTP 接口获取指定BE的WAL文件的数目，若不指定BE，则默认返回所有BE的WAL文件的数目。
+用户可以通过该 HTTP 接口获取指定 BE 的 WAL 文件的数目，若不指定 BE，则默认返回所有 BE 的 WAL 文件的数目。
 
 ## Path parameters
 
@@ -43,7 +43,7 @@ under the License.
 
 * `host_ports`
 
-    BE的ip和http端口。
+    BE 的 ip 和 http 端口。
 
 ## Request body
 
@@ -62,7 +62,7 @@ under the License.
     
 ## Examples
 
-1. 获取所有BE的WAL文件的数目。
+1. 获取所有 BE 的 WAL 文件的数目。
 
     ```
     curl -u root: "127.0.0.1:8038/api/get_wal_size"
@@ -76,9 +76,9 @@ under the License.
     }
     ```
     
-    在返回的结果中，BE后跟的数字即为对应BE的WAL文件数目。
+    在返回的结果中，BE 后跟的数字即为对应 BE 的 WAL 文件数目。
 
-2. 获取指定BE的WAL文件的数目。
+2. 获取指定 BE 的 WAL 文件的数目。
 
     ```
     curl -u root: "127.0.0.1:8038/api/get_wal_size?192.168.10.11:9050"
@@ -92,4 +92,4 @@ under the License.
     }
     ```
     
-    在返回的结果中，BE后跟的数字即为对应BE的WAL文件数目。
+    在返回的结果中，BE 后跟的数字即为对应 BE 的 WAL 文件数目。

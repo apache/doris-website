@@ -31,13 +31,13 @@ under the License.
 与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
 
 1. 数据写入时进行 JSON 格式校验
-2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
+2. 二进制存储格式更加高效，通过 json_extract 等函数可以高效访问 JSON 内部字段，比 get_json_xx 函数快几倍
 
 :::caution[注意]
-在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
+在 1.2.x 版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
 :::
 
-## CSV格式导入
+## CSV 格式导入
 
 ### 第 1 步：准备数据
 
@@ -93,7 +93,7 @@ SELECT * FROM json_test;
 5 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON 格式导入
 
 ### 第 1 步：准备数据
 

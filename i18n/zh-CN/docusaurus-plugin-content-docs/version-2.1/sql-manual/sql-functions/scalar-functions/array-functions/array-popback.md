@@ -24,7 +24,7 @@ under the License.
 
 ## 描述
 
-返回移除最后一个元素后的数组，如果输入参数为NULL，则返回NULL
+返回移除最后一个元素后的数组，如果输入参数为 NULL，则返回 NULL
 
 ## 语法
 
@@ -36,7 +36,7 @@ ARRAY_POPBACK(<arr>)
 
 | 参数 | 说明 | 
 | --- | --- |
-| `<arr>` | ARRAY数组 |
+| `<arr>` | ARRAY 数组 |
 
 ## 返回值
 

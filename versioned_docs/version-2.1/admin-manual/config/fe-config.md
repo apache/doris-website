@@ -48,7 +48,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
 
     `SHOW FRONTEND CONFIG;`
 
@@ -85,7 +85,7 @@ There are two ways to configure FE configuration items:
 
 3. Dynamic configuration via HTTP protocol
 
-    For details, please refer to [Set Config Action](../fe/set-config-action)
+    For details, please refer to [Set Config Action](../open-api/fe-http/set-config-action)
 
     This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
 
@@ -1512,7 +1512,7 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 
 #### `label_clean_interval_second`
 
-Default：1 * 3600  (1 hour)
+Default: 1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
 

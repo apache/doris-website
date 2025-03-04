@@ -43,7 +43,7 @@ ARRAY_UNION(<array>, <array> [, ... ])
 
 ## 返回值
 
-返回一个数组，包含array1和array2的并集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL
+返回一个数组，包含 array1 和 array2 的并集中的所有元素，不包含重复项，如果输入参数为 NULL，则返回 NULL
 
 ## 举例
 

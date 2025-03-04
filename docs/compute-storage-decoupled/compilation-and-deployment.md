@@ -95,8 +95,29 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
+```text
+LIBHDFS3_CONF=
+starts doris_cloud with args: --meta-service
+wait and check doris_cloud start successfully
+successfully started brpc listening on port=5000 time_elapsed_ms=11
+doris_cloud start successfully
+```
+
 The startup script returns a value of 0 to indicate that the startup was successful; otherwise, the startup fails.
-Upon successful startup, the last line of the standard output text will be "doris_cloud start successfully."
+
+:::info
+In 3.0.4, the startup script will output more information:
+```text
+2024-12-26 15:31:53 start with args: --meta-service
+wait and check MetaService and Recycler start successfully
+process working directory: "/mnt/disk1/doris/ms"
+pid=1666015 written to file=./bin/doris_cloud.pid
+version:{doris-3.0.4-release} code_version:{commit=fd44740fadabebfedb5da201d7ce427a5dd47c44 time=2025-01-16 18:53:00 +0800} build_info: ...
+
+MetaService has been started successfully
+successfully started service listening on port=5000 time_elapsed_ms=19
+```
+:::
 
 *Stop Command*
 

@@ -44,7 +44,7 @@ Currently, the operators that support spilling include:
 When a query triggers spilling, additional disk read/write operations may significantly increase query time. It is recommended to increase the FE Session variable query_timeout. Additionally, spilling can generate significant disk I/O, so it is advisable to configure a separate disk directory or use SSD disks to reduce the impact of query spilling on normal data ingestion or queries. The query spilling feature is currently disabled by default.
 
 ##Memory Management Mechanism
-Doris's memory management is divided into three levels: process level, WorkloadGroup level, and Query level.
+Doris's memory management is divided into three levels: process level, Workload Group level, and Query level.
 ![spill_disk_memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE Process Memory Configuration
@@ -53,9 +53,9 @@ When Doris's BE is collocated with other processes (such as Doris FE, Kafka, HDF
 When the Doris process is deployed in K8S or managed by Cgroup, Doris automatically senses the memory configuration of the container.
 
 ### Workload Group Memory Configuration
-- memory_limit，default is 30%. Represents the percentage of memory allocated to the current workload group as a fraction of the entire process memory.
+- memory_limit, default is 30%. Represents the percentage of memory allocated to the current workload group as a fraction of the entire process memory.
 - enable_memory_overcommit, default is true. Indicates whether the memory limit for the current workload group is a hard or soft limit. When this value is true, it means that the memory usage of all tasks within this workload group can exceed the memory_limit. However, when the memory of the entire process is insufficient, to ensure rapid memory reclamation, BE will prioritize canceling queries from workload groups that exceed their limits without waiting for spilling to disk. This is a user-friendly configuration strategy when users are unsure how much memory to allocate to multiple workload groups.
-- write_buffer_ratio，default is 20%. Represents the size of the write buffer within the current workload group. To speed up data ingestion, Doris first accumulates data in memory (i.e., constructs a Memtable), sorts it in its entirety when it reaches a certain size, and then writes it to disk. However, accumulating too many Memtables in memory can affect the memory available for normal queries, leading to query cancellation. Therefore, Doris allocates a separate write buffer for each workload group. For workload groups with heavy write operations, a larger write buffer can effectively improve ingestion throughput; for workload groups with more query operations, this value can be reduced.
+- write_buffer_ratio, default is 20%. Represents the size of the write buffer within the current workload group. To speed up data ingestion, Doris first accumulates data in memory (i.e., constructs a Memtable), sorts it in its entirety when it reaches a certain size, and then writes it to disk. However, accumulating too many Memtables in memory can affect the memory available for normal queries, leading to query cancellation. Therefore, Doris allocates a separate write buffer for each workload group. For workload groups with heavy write operations, a larger write buffer can effectively improve ingestion throughput; for workload groups with more query operations, this value can be reduced.
 - low watermark: Default is 75%.
 - high watermark: Default is 90%.
 
@@ -111,7 +111,7 @@ SpillWriteBytesToLocalStorage=503412182|SpillReadBytesFromLocalStorage=503412182
 ```
 
 #### Profile
-If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build HashTable as an example, you can see the following counters:
+If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build Hash Table as an example, you can see the following counters:
 
 ```
 PARTITIONED_HASH_JOIN_SINK_OPERATOR  (id=4  ,  nereids_id=179):(ExecTime:  6sec351ms)

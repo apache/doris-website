@@ -123,7 +123,7 @@ models:
 
 2. 判断 `this_table` 是否不存在，即是首次创建，执行`rename`，将临时表变更为最终表。
 
-3. 若已经存在，则 `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，此操作可以交换表名并且删除`this_table_temp`临时表，[此过程](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE)通过 Doris 内核的事务机制保证本次操作原子性。
+3. 若已经存在，则 `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，此操作可以交换表名并且删除`this_table_temp`临时表，[此过程](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE)通过 Doris 内核的事务机制保证本次操作原子性。
 ``` 
 优点：table查询速度会比view快。
 缺点：table需要较长时间才能构建或重建，会额外存储数据，而且不能够做增量数据同步。
@@ -311,7 +311,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 增量模型样例参考(duplicate 模式)
+### 增量模型样例参考 (duplicate 模式)
 
 建表为 duplicate 模式，无数据聚合，不需要指定 unique_key
 
@@ -330,7 +330,7 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型样例参考(unique 模式)
+### 增量模型样例参考 (unique 模式)
 
 建表为 unique 模式，数据聚合，必须指定 unique_key
 
@@ -466,7 +466,7 @@ select
 
 {% if is_incremental() %}
     where    
-    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}
@@ -494,7 +494,7 @@ select
 
 {% if is_incremental() %}
     where    
-    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}

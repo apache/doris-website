@@ -61,7 +61,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### Step 3: Load data with S3 Load
 
 ```sql
 LOAD LABEL s3_load_2022_04_01

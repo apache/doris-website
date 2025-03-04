@@ -65,13 +65,13 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 +------------------------------------------------------------------------------+
 ```
 
-当 Leading Hint 不生效的时候会走正常的流程生成计划，EXPLAIN 会显示使用的 Hint 是否生效，主要分三种来显示:
+当 Leading Hint 不生效的时候会走正常的流程生成计划，EXPLAIN 会显示使用的 Hint 是否生效，主要分三种来显示：
 
    - `Used`：Leading Hint 正常生效
    - `Unused`：这里不支持的情况包含 Leading Hint 指定的 join order 与原 SQL 不等价或本版本暂不支持特性（详见限制）
    - `SyntaxError`：指 Leading Hint 语法错误，如找不到对应的表等 
 
-1. Leading Hint 语法默认构造出左深树:
+1. Leading Hint 语法默认构造出左深树：
 ```sql
 mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
 +--------------------------------------------------------------------------------+

@@ -47,7 +47,7 @@ LakeSoul 是由数元灵开发的云原生湖仓框架，并在 2023 年 5 月�
 
 本文将解释如何快速搭建 Apache Doris + LakeSoul 测试和演示环境，并演示各种功能的使用方法，展示在湖仓架构中使用两个系统集成和优势。
 
-关于更多说明，请参阅 [LakeSoul Catalog](../../../lakehouse/datalake-analytics/lakesoul)
+关于更多说明，请参阅 [LakeSoul Catalog](../datalake-analytics/lakesoul)
 
 ## 使用指南
 

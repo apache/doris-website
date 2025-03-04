@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 描述
-根据分隔符(sep)和替换NULL的字符串(null_replace), 将数组中的所有元素组合成一个新的字符串。
+根据分隔符 (sep) 和替换 NULL 的字符串 (null_replace), 将数组中的所有元素组合成一个新的字符串。
 
 ## 语法
 
@@ -35,16 +35,16 @@ ARRAY_JOIN(<arr> , <sep> [, <null_replace>])
 ## 参数
 | Parameter | Description |
 |---|---|
-| `<arr>`   | 需要join的数组 |
+| `<arr>`   | 需要 join 的数组 |
 | `<sep>`   | 分隔符 |
-| `<null_replace>`   | 替换NULL的字符串 |
+| `<null_replace>`   | 替换 NULL 的字符串 |
 
 ## 返回值
 返回一个新的字符串，特殊情况：
-- 若sep为NULL，则返回值为NULL。
-- 若null_replace为NULL，则返回值也为NULL。
-- 若sep为空字符串，则不应用任何分隔符。
-- 若null_replace为空字符串或者不指定，则直接丢弃数组中的NULL元素。
+- 若 sep 为 NULL，则返回值为 NULL。
+- 若 null_replace 为 NULL，则返回值也为 NULL。
+- 若 sep 为空字符串，则不应用任何分隔符。
+- 若 null_replace 为空字符串或者不指定，则直接丢弃数组中的 NULL 元素。
 
 ## 举例
 

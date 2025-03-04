@@ -1,7 +1,7 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "zh-CN"
+  "title": "数据类型概览",
+  "language": "zh-CN"
 }
 ---
 
@@ -26,238 +26,83 @@ under the License.
 
 
 
+## 数值类型
+
+包括以下 4 种：
+
+**1. BOOLEAN 类型：**
+
+两种取值，0 代表 false，1 代表 true。更多信息参考 [BOOLEAN 文档](../../sql-manual/sql-data-types/numeric/BOOLEAN.md)。
+
+**2. 整数类型：**
+
+都是有符号整数，xxINT 的差异是占用字节数和表示范围
+
+- TINYINT 占 1 字节，范围 [-128, 127], 更多信息参考 [TINYINT 文档](../../sql-manual/sql-data-types/numeric/TINYINT.md)。
+
+- SMALLINT 占 2 字节，范围 [-32768, 32767], 更多信息参考 [SMALLINT 文档](../../sql-manual/sql-data-types/numeric/SMALLINT.md)。
+
+- INT 占 4 字节，范围 [-2147483648, 2147483647], 更多信息参考 [INT 文档](../../sql-manual/sql-data-types/numeric/INT.md)。
+
+- BIGINT 占 8 字节，范围 [-9223372036854775808, 9223372036854775807], 更多信息参考 [BIGINT 文档](../../sql-manual/sql-data-types/numeric/BIGINT.md)。
+
+- LARGEINT 占 16 字节，范围 [-2^127, 2^127 - 1], 更多信息参考 [LARGEINT 文档](../../sql-manual/sql-data-types/numeric/LARGEINT.md)。
+
+**3. 浮点数类型：**
+
+不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../sql-manual/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../sql-manual/sql-data-types/numeric/DOUBLE.md) 文档。
+
+**4. 定点数类型：**
+
+精确的定点数类型 DECIMAL，用于金融等精度要求严格准确的场景。更多信息参考 [DECIMAL](../../sql-manual/sql-data-types/numeric/DECIMAL.md) 文档。
 
 
-## 描述
+## 日期类型
 
-`STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
+日期类型包括 DATE、TIME 和 DATETIME，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。
 
-由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。
+对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../sql-functions/scalar-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
 
-
-一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable，一个 Field 通常由下面部分组成。
-
-- field_name: Field 的标识符，不可重复
-- field_type: Field 的类型
-- COMMENT: Field 的注释，可选 (暂不支持)
-
-当前可支持的类型有：
-
-```
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
-
-在将来的版本我们还将完善：
-
-```
-TODO:支持嵌套 STRUCT 或其他的复杂类型
-```
-
-## 举例
-
-建表示例如下：
-
-```
-mysql> CREATE TABLE `struct_test` (
-  `id` int(11) NULL,
-  `s_info` STRUCT<s_id:int(11), s_name:string, s_address:string> NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-COMMENT 'OLAP'
-DISTRIBUTED BY HASH(`id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"storage_format" = "V2",
-"light_schema_change" = "true",
-"disable_auto_compaction" = "false"
-);
-```
-
-插入数据示例：
-
-Insert:
-
-```
-INSERT INTO `struct_test` VALUES (1, {1, 'sn1', 'sa1'});
-INSERT INTO `struct_test` VALUES (2, struct(2, 'sn2', 'sa2'));
-INSERT INTO `struct_test` VALUES (3, named_struct('s_id', 3, 's_name', 'sn3', 's_address', 'sa3'));
-```
-
-Stream load:
-
-test.csv:
-
-```
-1|{"s_id":1, "s_name":"sn1", "s_address":"sa1"}
-2|{s_id:2, s_name:sn2, s_address:sa2}
-3|{"s_address":"sa3", "s_name":"sn3", "s_id":3}
-```
-
-示例：
-
-```
-curl --location-trusted -u root -T test.csv  -H "label:test_label" http://host:port/api/test/struct_test/_stream_load
-```
-
-查询数据示例：
-
-```
-mysql> select * from struct_test;
-+------+-------------------+
-| id   | s_info            |
-+------+-------------------+
-|    1 | {1, 'sn1', 'sa1'} |
-|    2 | {2, 'sn2', 'sa2'} |
-|    3 | {3, 'sn3', 'sa3'} |
-+------+-------------------+
-3 rows in set (0.02 sec)
-```
+更多信息参考 [DATE](../../sql-manual/sql-data-types/date-time/DATE)、[TIME](../../sql-manual/sql-data-types/date-time/TIME) 和 [DATETIME](../../sql-manual/sql-data-types/date-time/DATETIME) 文档。
 
 
+## 字符串类型
 
-map 取值示例：
+字符串类型支持定长和不定长，总共有以下 3 种：
 
-```sql
-mysql> SELECT m['a'] FROM simple_map;
-+-----------------------------+
-| %element_extract%(`m`, 'a') |
-+-----------------------------+
-|                         100 |
-|                        NULL |
-|                          10 |
-+-----------------------------+
-```
+1. [CHAR(M)](./string-type/CHAR)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
 
-map 支持的 functions 示例：
+2. [VARCHAR(M)](./string-type/VARCHAR)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
 
-```sql
-# map construct
+3. [STRING](./string-type/STRING)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['k11'];
-+---------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'k11') |
-+---------------------------------------------------------+
-|                                                    1000 |
-+---------------------------------------------------------+
+## 半结构化类型
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['nokey'];
-+-----------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'nokey') |
-+-----------------------------------------------------------+
-|                                                      NULL |
-+-----------------------------------------------------------+
-1 row in set (0.06 sec)
+针对 JSON 半结构化数据，支持 3 类不同场景的半结构化数据类型：
 
-# map size
+1. 支持嵌套的固定 schema，适合分析的数据类型 **[ARRAY](../../sql-manual/sql-data-types/semi-structured/ARRAY.md)、 [MAP](../../sql-manual/sql-data-types/semi-structured/MAP.md) [STRUCT](../../sql-manual/sql-data-types/semi-structured/STRUCT.md)**：常用于用户行为和画像分析，湖仓一体查询数据湖中 Parquet 等格式的数据等场景。由于 schema 相对固定，没有动态 schema 推断的开销，写入和分析性能很高。
 
-mysql> SELECT map_size(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_size(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-|                                       2 |
-+-----------------------------------------+
+2. 支持嵌套的不固定 schema，适合分析的数据类型 **[VARIANT](../../sql-manual/sql-data-types/semi-structured/VARIANT.md)**：常用于 Log, Trace, IoT 等分析场景，schema 灵活可以写入任何合法的 JSON 数据，并自动展开成子列采用列式存储，存储压缩率高，聚合 过滤 排序等分析性能很好。
 
-mysql> SELECT id, m, map_size(m) FROM simple_map ORDER BY id;
-+------+-----------------------------+---------------+
-| id   | m                           | map_size(`m`) |
-+------+-----------------------------+---------------+
-|    1 | {"a":100, "b":200}          |             2 |
-|    2 | {"b":100, "c":200, "d":300} |             3 |
-|    2 | {"a":10, "d":200}           |             2 |
-+------+-----------------------------+---------------+
-3 rows in set (0.04 sec)
+3. 支持嵌套的不固定 schema，适合点查的数据类型 **[JSON](../../sql-manual/sql-data-types/semi-structured/JSON.md)**：常用于高并发点查场景，schema 灵活可以写入任何合法的 JSON 数据，采用二进制格式存储，提取字段的性能比普通 JSON String 快 2 倍以上。
 
-# map_contains_key
+## 聚合类型
 
-mysql> SELECT map_contains_key(map('k11', 1000, 'k22', 2000), 'k11');
-+--------------------------------------------------------+
-| map_contains_key(map('k11', 1000, 'k22', 2000), 'k11') |
-+--------------------------------------------------------+
-|                                                      1 |
-+--------------------------------------------------------+
-1 row in set (0.08 sec)
+聚合类型存储聚合的结果或者中间状态，用于加速聚合查询，包括下面几种：
 
-mysql> SELECT id, m, map_contains_key(m, 'k1') FROM simple_map ORDER BY id;
-+------+-----------------------------+-----------------------------+
-| id   | m                           | map_contains_key(`m`, 'k1') |
-+------+-----------------------------+-----------------------------+
-|    1 | {"a":100, "b":200}          |                           0 |
-|    2 | {"b":100, "c":200, "d":300} |                           0 |
-|    2 | {"a":10, "d":200}           |                           0 |
-+------+-----------------------------+-----------------------------+
-3 rows in set (0.10 sec)
+1. [BITMAP](../../sql-manual/sql-data-types/aggregate/BITMAP.md)：用于精确去重，如 UV 统计，人群圈选等场景。配合 bitmap_union、bitmap_union_count、bitmap_hash、bitmap_hash64 等 BITMAP 函数使用。
 
-mysql> SELECT id, m, map_contains_key(m, 'a') FROM simple_map ORDER BY id;
-+------+-----------------------------+----------------------------+
-| id   | m                           | map_contains_key(`m`, 'a') |
-+------+-----------------------------+----------------------------+
-|    1 | {"a":100, "b":200}          |                          1 |
-|    2 | {"b":100, "c":200, "d":300} |                          0 |
-|    2 | {"a":10, "d":200}           |                          1 |
-+------+-----------------------------+----------------------------+
-3 rows in set (0.17 sec)
+2. [HLL](../../sql-manual/sql-data-types/aggregate/HLL.md)：用于近似去重，性能优于 COUNT DISTINCT。配合  hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 等 HLL 函数使用。
 
-# map_contains_value
+3. [QUANTILE_STATE](../../sql-manual/sql-data-types/aggregate/QUANTILE-STATE.md)：用于分位数近似计算，性能优于 PERCENTILE。配合 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数使用。
 
-mysql> SELECT map_contains_value(map('k11', 1000, 'k22', 2000), NULL);
-+---------------------------------------------------------+
-| map_contains_value(map('k11', 1000, 'k22', 2000), NULL) |
-+---------------------------------------------------------+
-|                                                       0 |
-+---------------------------------------------------------+
-1 row in set (0.04 sec)
-
-mysql> SELECT id, m, map_contains_value(m, '100') FROM simple_map ORDER BY id;
-+------+-----------------------------+------------------------------+
-| id   | m                           | map_contains_value(`m`, 100) |
-+------+-----------------------------+------------------------------+
-|    1 | {"a":100, "b":200}          |                            1 |
-|    2 | {"b":100, "c":200, "d":300} |                            1 |
-|    2 | {"a":10, "d":200}           |                            0 |
-+------+-----------------------------+------------------------------+
-3 rows in set (0.11 sec)
-
-# map_keys
-
-mysql> SELECT map_keys(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_keys(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-| ["k11", "k22"]                          |
-+-----------------------------------------+
-1 row in set (0.04 sec)
-
-mysql> SELECT id, map_keys(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_keys(`m`)   |
-+------+-----------------+
-|    1 | ["a", "b"]      |
-|    2 | ["b", "c", "d"] |
-|    2 | ["a", "d"]      |
-+------+-----------------+
-3 rows in set (0.19 sec)
-
-# map_values
-
-mysql> SELECT map_values(map('k11', 1000, 'k22', 2000));
-+-------------------------------------------+
-| map_values(map('k11', 1000, 'k22', 2000)) |
-+-------------------------------------------+
-| [1000, 2000]                              |
-+-------------------------------------------+
-1 row in set (0.03 sec)
-
-mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_values(`m`) |
-+------+-----------------+
-|    1 | [100, 200]      |
-|    2 | [100, 200, 300] |
-|    2 | [10, 200]       |
-+------+-----------------+
-3 rows in set (0.18 sec)
-
-```
+4. [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG-STATE.md)：用于聚合计算加速，配合 state/merge/union 聚合函数组合器使用。
 
 
+## IP 类型
+
+IP 类型以二进制形式存储 IP 地址，比用字符串存储更省空间查询速度更快，支持 2 种类型：
+
+1. [IPv4](../../sql-manual/sql-data-types/ip/IPV4.md)：以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。
+
+2. [IPv6](../../sql-manual/sql-data-types/ip/IPV6.md)：以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。

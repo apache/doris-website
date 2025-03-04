@@ -61,8 +61,8 @@ SHOW [AUTO] ANALYZE [ <table_name> | <job_id> ]
 
 | 列名 | 说明           |
 | -- |--------------|
-| job_id | 收集作业的唯一ID           |
-| catalog_name |   Catalog名           |
+| job_id | 收集作业的唯一 ID           |
+| catalog_name |   Catalog 名           |
 | db_name | 数据库名           |
 | tbl_name | 表名         |
 | col_name | 收集的列列表           |

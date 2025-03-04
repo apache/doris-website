@@ -65,7 +65,7 @@ The user who executes this operation needs to have the NODE_PRIV permission.
 1. Delete all Brokers
 
     ```sql
-    ALTER SYSTEM DROP ALL BROKER broker_name；
+    ALTER SYSTEM DROP ALL BROKER broker_name.
     ```
 
 2. Delete a specific Broker node

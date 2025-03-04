@@ -76,4 +76,4 @@ SELECT parse_url ('https://doris.apache.org/', null);
 
 ## 相关命令
 
-如果想获取 QUERY 中的特定Parameter，可使用[extract_url_parameter](./extract_url_parameter.md)。
+如果想获取 QUERY 中的特定 Parameter，可使用[extract_url_parameter](./extract-url-parameter.md)。

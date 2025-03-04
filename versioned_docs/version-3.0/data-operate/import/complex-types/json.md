@@ -44,7 +44,7 @@ The separator is `|` instead of comma to distinguish it from the comma in json.
 ```
 1|{"name": "tom", "age": 35}
 2|{"name": null, "age": 28}
-3|{"name": "micheal", "age": null}
+3|{"name": "michael", "age": null}
 4|{"name": null, "age": null}
 5|null
 ```
@@ -83,7 +83,7 @@ SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | null                          |
 +------+-------------------------------+
@@ -100,7 +100,7 @@ Create the following JSON file, `test_json.json`
 [
     {"id": 1, "c_json": {"name": "tom", "age": 35}},
     {"id": 2, "c_json": {"name": null, "age": 28}},
-    {"id": 3, "c_json": {"name": "micheal", "age": null}},
+    {"id": 3, "c_json": {"name": "michael", "age": null}},
     {"id": 4, "c_json": {"name": null, "age": null}},
     {"id": 5, "c_json": null}
 ]
@@ -141,7 +141,7 @@ mysql> SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | NULL                          |
 +------+-------------------------------+

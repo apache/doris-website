@@ -24,19 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## array_flatten
-
-array_flatten
-
 ## 描述
+
+将多维数组展平成一维。
 
 ## 语法
 
 ```sql
-ARRAY<T> array_flatten(ARRAY<ARRAY<T>> array1)
+array_flatten(<a>)
 ```
 
-将多维数组展平成一维。
+## 参数
+
+| 参数 | 说明 |
+| -- | -- |
+| `<a>` | 需要被展平的数组|
+
+## 返回值
+
+被展平的结果。
 
 ## 举例
 
@@ -57,7 +63,3 @@ mysql> select array_flatten([[[[[[1,2,3,4,5],[6,7],[8,9],[10,11],[12]],[[13]]],[
 +-------------------------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-
-### keywords
-
-ARRAY,ARRAY_FLATTEN

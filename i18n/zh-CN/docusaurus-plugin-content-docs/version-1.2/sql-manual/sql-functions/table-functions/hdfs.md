@@ -68,7 +68,7 @@ hdfs(
 - `column_separator`：(选填) 列分割符, 默认为`,`。 
 - `line_delimiter`：(选填) 行分割符，默认为`\n`。
 
-    下面6个参数是用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    下面6个参数是用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/file-format/json)
 
 - `read_json_by_line`： (选填) 默认为 `"true"`
 - `strip_outer_array`： (选填) 默认为 `"false"`

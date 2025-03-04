@@ -108,7 +108,7 @@ select k1,bitmap_union(uuid) from hive_bitmap_table group by k1
 
 ## Hive Bitmap import into Doris
 
-### Method 1：Catalog (recommended)
+### Method 1: Catalog (recommended)
 
 When create a Hive table in the format specified as TEXT, for Binary type, Hive will be saved as a bash64 encoded string. Therefore, the binary data can be directly saved as Bitmap through bitmap_from_base64 function by using  Doris's Hive Catalog.
 
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [Creating a Catalog in Doris](../lakehouse/datalake-analytics/hive.md)
+2. [Creating a Catalog in Doris](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (

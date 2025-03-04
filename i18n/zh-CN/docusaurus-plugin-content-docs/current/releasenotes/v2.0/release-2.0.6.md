@@ -45,10 +45,10 @@ under the License.
 - 使用 protobuf 稳定序列化减少 Tablet Schema 缓存内存占用
 - 提升 `show column stats` 的性能
 - 统计信息收集和优化器支持 Iceberg 和 Paimon 的行数估计
-- JDBC Catalog支持读取 SQL Server 的 Timestamp 类型
+- JDBC Catalog 支持读取 SQL Server 的 Timestamp 类型
 
 
 ## 致谢
-最后，衷心感谢 51 位开发者为 Apache Doris 2.0.6 版本做出了重要贡献:
+最后，衷心感谢 51 位开发者为 Apache Doris 2.0.6 版本做出了重要贡献：
 
 924060929, AshinGau, BePPPower, BiteTheDDDDt, CalvinKirs, cambyzju, deardeng, DongLiang-0, eldenmoon, englefly, feelshana, feiniaofeiafei, felixwluo, HappenLee, hust-hhb, iwanttobepowerful, ixzc, JackDrogon, Jibing-Li, KassieZ, larshelge, liaoxin01, LiBinfeng-01, liutang123, luennng, morningman, morrySnow, mrhhsg, qidaye, starocean999, TangSiyang2001, wangbo, wsjz, wuwenchi, xiaokang, XieJiann, xuwei0912, xy720, xzj7019, yiguolei, yujun777, Yukang-Lian, Yulei-Yang, zclllyybb, zddr, zhangstar333, zhannngchen, zhiqiang-hhhh, zy-kkk, zzzxl1993

@@ -208,4 +208,4 @@ mysql> show delete from test_db;
 
 ## Syntax
 
-For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) syntax manual.
+For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) syntax manual.

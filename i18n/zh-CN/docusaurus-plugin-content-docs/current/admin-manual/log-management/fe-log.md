@@ -82,7 +82,7 @@ under the License.
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`ASYNC` 默认是日志异步输出且包含位置信息。 `BRIEF` 模式是日志异步输出但不包含位置信息。三种日志输出模式的性能依次递增 |
 
 ::: note
-从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。
+从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `ASYNC`。
 :::
 
 :::tip

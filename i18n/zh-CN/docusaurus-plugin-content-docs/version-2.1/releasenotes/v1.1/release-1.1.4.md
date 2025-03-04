@@ -48,7 +48,7 @@ under the License.
 
 - 修复了在使用 Anti Join 和其他 Join 谓词时产生错误结果的问题。 [#13743](https://github.com/apache/doris/pull/13743)
 
-- 修复了当调用函数 concat(ifnull)时 BE 宕机的问题。 [#13693](https://github.com/apache/doris/pull/13693)
+- 修复了当调用函数 concat(ifnull) 时 BE 宕机的问题。 [#13693](https://github.com/apache/doris/pull/13693)
 
 - 修复了 group by 语句中存在函数时 planner 错误的问题。 [#13613](https://github.com/apache/doris/pull/13613)
 

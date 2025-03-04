@@ -26,16 +26,16 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/check_tablet_segment_lost?repair={bool}`
 
-## Description
+## 描述
 
 在 BE 节点上，可能会因为一些异常情况导致数据文件丢失，但是元数据显示正常，这种副本异常不会被 FE 检测到，也不能被修复。
 当用户查询时，会报错`failed to initialize storage reader`。该接口的功能是检测出当前 BE 节点上所有存在文件丢失的 tablet。
 
-## Query parameters
+## 请求参数
 
 * `repair`
 
@@ -43,11 +43,11 @@ under the License.
     
     - 设置为`false`时，只会返回所有存在文件丢失的 tablet，并不做任何处理。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     返回值是当前BE节点上所有存在文件丢失的tablet
 
@@ -66,7 +66,7 @@ under the License.
     }
     ```
 
-## Examples
+## 示例
 
 
     ```shell

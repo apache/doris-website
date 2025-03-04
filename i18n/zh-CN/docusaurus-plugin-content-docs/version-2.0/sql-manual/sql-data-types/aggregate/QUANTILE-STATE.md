@@ -28,7 +28,7 @@ under the License.
 ## 描述
     QUANTILE_STATE
 
-**在 2.0 中我们支持了[agg_state](AGG_STATE.md)功能，推荐使用 agg_state quantile_union(quantile_state not null) 来代替本类型。**
+**在 2.0 中我们支持了[agg_state](AGG-STATE.md)功能，推荐使用 agg_state quantile_union(quantile_state not null) 来代替本类型。**
 
 QUANTILE_STATE 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 QUANTILE_UNION。
 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。

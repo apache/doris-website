@@ -26,11 +26,11 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/reset_rpc_channel/{endpoints}`
 
-## Description
+## 描述
 
 该功能用于重置 brpc 的连接缓存。
 
@@ -43,11 +43,11 @@ under the License.
    
     - `host1:port1,host2:port2`
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -57,7 +57,7 @@ under the License.
         "count":0
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

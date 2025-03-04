@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-从Bitmap列中删除指定的值。
+从 Bitmap 列中删除指定的值。
 
 ## 语法
 

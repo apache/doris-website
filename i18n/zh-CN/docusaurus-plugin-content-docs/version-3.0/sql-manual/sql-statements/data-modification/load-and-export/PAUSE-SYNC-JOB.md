@@ -24,18 +24,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 描述
 
-通过 `job_name` 暂停一个数据库内正在运行的常驻数据同步作业，被暂停的作业将停止同步数据，保持消费的最新位置，直到被用户恢复。
+通过 `job_name` 暂停一个数据库内正在运行的常驻数据同步作业。被暂停的作业将停止同步数据，并保持消费的最新位置，直到用户恢复该作业。
 
-语法：
+## 语法
 
 ```sql
-PAUSE SYNC JOB [db.]job_name
+PAUSE SYNC JOB [<db>.]<job_name>
 ```
+
+## 必选参数
+**1. `<job_name>`**
+> 要暂停的同步作业的名称。
+
+## 可选参数
+ **1. `<db>`**
+ > 如果使用[<db>.]前缀指定了一个数据库，那么该作业将处于指定的数据库中；否则，将使用当前数据库。
+
+## 权限控制
+
+任意用户或角色都可以执行该操作
+
 
 ## 示例
 
@@ -44,10 +54,3 @@ PAUSE SYNC JOB [db.]job_name
    ```sql
    PAUSE SYNC JOB `job_name`;
    ```
-
-## 关键词
-
-    PAUSE, SYNC, JOB
-
-### 最佳实践
-

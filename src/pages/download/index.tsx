@@ -303,7 +303,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/cluster-deployment/standard-deployment"
+                                to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',
@@ -374,7 +374,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/cluster-deployment/standard-deployment"
+                                to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',

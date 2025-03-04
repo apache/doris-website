@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 内置了如下加密和脱敏函数。详细使用，请参考 SQL 手册。
+Doris 内置了如下加密和脱敏函数。详细用法请参考 SQL 手册。
 
 - [AES_ENCRYPT](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt)
 - [AES_DECRYPT](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-decrypt)

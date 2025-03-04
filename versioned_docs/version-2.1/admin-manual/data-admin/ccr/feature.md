@@ -1,7 +1,7 @@
 ---
 {
     "title": "Feature Details",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 

@@ -30,7 +30,7 @@ under the License.
 
 `Export` 是一个异步执行的命令，命令执行成功后，立即返回结果，用户可以通过`Show Export` 命令查看该 Export 任务的详细信息。
 
-有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
@@ -103,7 +103,7 @@ PROPERTIES (
 ```
 
 ### 查看导出作业
-提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
+提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) 命令查询导出作业状态，结果举例如下：
 
 ```sql
 mysql> show export\G
@@ -132,11 +132,11 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md)：
+有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT)：
 
 ### 取消导出作业
 
-提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
+提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) 命令取消导出作业。取消命令举例如下：
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";

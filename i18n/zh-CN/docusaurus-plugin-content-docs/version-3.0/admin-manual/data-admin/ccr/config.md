@@ -35,10 +35,10 @@ under the License.
 |`restore_reset_index_id`|如果同步的表中使用 inverted index 或者 bitmap 索引，需设置为 `false`。| false| 从 2.1.8 及 3.0.4 开始。 |
 |`ignore_backup_tmp_partitions`|避免因上游创建 `tmp partition` 导致同步中断，需设置为 `true`。|false| 从 2.1.8 及 3.0.4 开始。 |
 |`max_backup_restore_job_num_per_db`|内存中每个 DB 的 backup/restore job 数量限制，建议设置为 2。|10 | 所有版本。|
-|`label_num_threshold`|控制 TXN Label 数量，防止事务回收过快，过大会占用较多内存，过下可能导致异常情况下数据重复，默认值在大多数情况下够用。| 2000 | 2.1 开始。|
+|`label_num_threshold`|控制 TXN Label 数量，防止事务回收过快，过大会占用较多内存，过小可能导致异常情况下数据重复，默认值在大多数情况下够用。| 2000 | 2.1 开始。|
 |`restore_job_compressed_serialization`| tablet 数目超过 10w 时建议配置为 true。<br /> 降级前关闭配置并确保 FE 完成一次 checkpoint。<br /> 2.1 升级 3.0 时，至少升级到 3.0.3。|false| 从 2.1.8 和 3.0.3 开始。|
 |`backup_job_compressed_serialization`| tablet 数目超过 10w 时建议配置为 true。<br /> 降级前关闭配置并确保 FE 完成一次 checkpoint。<br /> 2.1 升级 3.0 时，至少升级到 3.0.3。|false| 从 2.1.8 和 3.0.3 开始。|
-|`backup_job_default_timeout_ms`|备份/恢复任务超时时间，源、目标集群的 FE 都需要配置。|无 | 根据需求设置|
+|`backup_job_default_timeout_ms`|备份/恢复任务超时时间，源、目标集群的 FE 都需要配置。|无 | 根据需求设置 |
 |`enable_restore_snapshot_rpc_compression`|开启 snapshot info 压缩，降低 RPC 消息大小，建议设置为 true。| true | 从 2.1.8 和 3.0.3 开始。|
 
 

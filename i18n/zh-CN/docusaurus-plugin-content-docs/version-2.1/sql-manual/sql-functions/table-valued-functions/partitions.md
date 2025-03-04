@@ -50,7 +50,7 @@ PARTITIONS(
 
 | 字段名                      | 描述                      |
 |--------------------------|-------------------------|
-| PartitionId              | 分区ID                    |
+| PartitionId              | 分区 ID                    |
 | PartitionName            | 分区名称                    |
 | VisibleVersion           | 分区版本                    |
 | VisibleVersionTime       | 分区版本提交时间                |

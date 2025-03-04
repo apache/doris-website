@@ -69,7 +69,7 @@ The user executing this SQL command must have at least the following permissions
 
 ## Usage Notes
 
-- After executing `DROP TABLE` for a period of time, the deleted table can be restored by using the RECOVER statement. For details, see the [RECOVER](../../../../sql-manual/sql-statements/Database-Administration-Statements/RECOVER) statement.
+- After executing `DROP TABLE` for a period of time, the deleted table can be restored by using the RECOVER statement. For details, see the [RECOVER](../../recycle/RECOVER) statement.
 - If you execute `DROP TABLE FORCE`, the system will not check whether there are unfinished transactions for the table. The table will be deleted directly and cannot be restored. Generally, this operation is not recommended.
 
 ## Examples

@@ -46,7 +46,7 @@ variable_assignment
 > 指定用户层级的变量，比如：@@your_variable_name 等以`@@`开头的变量名称
 
 **2. `<system_var_name>`**
-> 指定系统层级的变量，比如exec_mem_limit 等
+> 指定系统层级的变量，比如 exec_mem_limit 等
 
 ## 可选参数
 **1. `<effective_scope>`**

@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-计算输入Bitmap的并集，返回其基数
+计算输入 Bitmap 的并集，返回其基数
 
 ## 语法
 
@@ -38,11 +38,11 @@ BITMAP_UNION_COUNT(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 支持BITMAP的数据类型 |
+| `<expr>` | 支持 BITMAP 的数据类型 |
 
 ## 返回值
 
-返回Bitmap并集的大小，即去重后的元素个数
+返回 Bitmap 并集的大小，即去重后的元素个数
 
 ## 举例
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Runtime Filter 主要分为两种，Join Runtime Filter 与 TopN Runtime Filter。本文将详细介绍两类 Runtime Filter 的工作原理、使用指南与调优方法。
+Runtime Filter 主要分为两种，Join Runtime Filter 与 TopN Runtime Filter。本文将详细介绍两类 Runtime Filter 的工作原理、使用指南与优化方法。
 
 ## Join Runtime Filter
 
@@ -82,7 +82,7 @@ where c_nation = "china" and o_custkey in (c001, c003)
 
 Doris 是一个分布式数据库，为了满足分布式场景的需求，JRF 还需要进行一次合并。假设上述例子中的 Join 是一个 Shuffle Join，那么这个 Join 有多个 Instance，每个 Join 只处理 orders 和 customer 表的一个分片。因此，每个 Join Instance 都只得到了集合 A 的一部分。
 
-在当前 Doris 的版本中，我们会选出一个节点作为 Runtime Filter Manager。每个 Join Instance 根据各自分片中的 `c_custkey` 生成 Partial JRF，并发送给 Manager。Manager 收集所有 Partial JRF 后，合并生成 Global JRF，再将 Global JRF 发送给 orders 表的所有 Scan Instance。
+在当前 Doris 的版本中，我们会选出一个节点作为 Runtime Filter Manager。每个 Join Instance 根据各自分片中的 `c_custkey` 生成 Partial JRF，并发送给 Manager。Manager 收集所有 Partial JRF 后，合并生成 Global JRF，再将 Global JRF 发送给 orders 表的相关 Scan Instance。
 
 生成 Global JRF 的流程如下图所示：
 
@@ -276,7 +276,7 @@ PhysicalResultSink                                                              
 
 **1. 开关 JRF**
 
-Session 变量 `runtime_filter_mode` 可以控制是否生成 JRF。
+Session 变量 `runtime_filter_mode` 可以控制是否开启 JRF。
 
 - 打开 JRF：`set runtime_filter_mode = GLOBAL`
 

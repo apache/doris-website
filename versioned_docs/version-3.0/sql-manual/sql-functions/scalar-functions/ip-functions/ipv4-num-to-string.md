@@ -24,7 +24,7 @@ under the License.
 
 
 ## Description
-Takes a Int16、Int32、Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form)
+Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form)
 
 ## Alias
 - INET_NTOA

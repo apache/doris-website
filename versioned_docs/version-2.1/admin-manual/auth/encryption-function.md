@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Encryption and Masking Function",
+    "title": "Encryption and Masking Function ",
     "language": "en"
 }
 ---

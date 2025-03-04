@@ -30,7 +30,7 @@ This document will introduce how to use the `EXPORT` command to export the data 
 
 `Export` is an asynchronously executed command. Once the command is executed successfully, it will return the result immediately. Users can view the detailed information of the Export task through the `Show Export` command.
 
-For the detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+For the detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
 Regarding how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](../../data-operate/export/export-overview.md).
 
@@ -104,7 +104,7 @@ PROPERTIES (
 
 ### View Export Jobs
 
-After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) command. An example of the result is as follows: 
+After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) command. An example of the result is as follows: 
 
 ```sql
 mysql> show export\G
@@ -133,11 +133,11 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md).
+For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT).
 
 ### Cancel Export Jobs
 
-After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
+After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";

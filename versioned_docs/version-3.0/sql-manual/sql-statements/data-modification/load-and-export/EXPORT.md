@@ -151,7 +151,7 @@ Depending on the storage medium of `<target_storage>`, different properties need
   WITH S3 ("key"="value" [,...])
   ```  
 
-  **S3 properties：**
+  **S3 properties:**
   - `s3.endpoint`
   - `s3.region`
   - `s3.secret_key`

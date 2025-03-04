@@ -93,3 +93,16 @@ CCR 支持四种同步方式：
 | **Partial Sync** | 上游表或分区级别备份，下游表或分区级别恢复。             | 特定操作触发，触发条件请参见[功能详情](./feature.md)。   |
 | **TXN**        | 增量数据同步，上游提交后，下游开始同步。                   | 特定操作触发，触发条件请参见[功能详情](./feature.md)。   |
 | **SQL**        | 在下游回放上游操作的 SQL。                              | 特定操作触发，触发条件请参见[功能详情](./feature.md)。   |
+
+## 下载
+
+要求：glibc >= 2.28
+
+| 版本 | 架构  | 包地址                                                                                                                                         | SHA256                                                           |
+|------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| 2.1  | ARM64 | [ccr-syncer-2.1.8-rc03-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.8-rc03-arm64.tar.xz) | 28b8396a7c4f766f9da55c8bbad56de364c2d7ea674cefb5f51fe37d3ac07769 |
+| 2.1  | X64   | [ccr-syncer-2.1.8-rc03-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.8-rc03-x64.tar.xz)     | ddf456e9fef9abfde482a5fc06d27606411fc6e2595ff83859529d607419c60e |
+| 3.0  | ARM64 | [ccr-syncer-3.0.4-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.4-rc02-arm64.tar.xz) | 4756397ffcd96d294fa8b8620ed04e9b36ac289d314c9a641abcee8b1180d961 |
+| 3.0  | X64   | [ccr-syncer-3.0.4-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.4-rc02-x64.tar.xz)   | 14bdd838b525ea77d334152a5be1423086e24669065a2d74e34524f1e8bffb38 |
+
+

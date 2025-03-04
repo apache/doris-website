@@ -24,7 +24,7 @@ under the License.
 
 ## 描述
 
-`REGR_INTERCEPT` 函数用于计算线性回归方程中的截距（y轴截距）。它返回组内非空值对的单变量线性回归线的截距。对于非空值对，使用以下公式计算：
+`REGR_INTERCEPT` 函数用于计算线性回归方程中的截距（y 轴截距）。它返回组内非空值对的单变量线性回归线的截距。对于非空值对，使用以下公式计算：
 
 `AVG(y) - REGR_SLOPE(y, x) * AVG(x)`
 
@@ -69,7 +69,7 @@ INSERT INTO test_regr_intercept VALUES
 (4, 5, 6),
 (5, 10, 20);
 
--- 计算x和y的线性回归截距
+-- 计算 x 和 y 的线性回归截距
 SELECT REGR_INTERCEPT(y, x) FROM test_regr_intercept;
 ```
 

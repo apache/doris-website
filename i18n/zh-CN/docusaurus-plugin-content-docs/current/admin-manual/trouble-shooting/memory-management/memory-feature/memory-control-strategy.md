@@ -34,7 +34,7 @@ Doris MemoryReclamation 作为内存回收器，在可用内存不足时触发�
 
 ![Memory Management Overview](/images/memory-management-overview.png)
 
-Allocator从系统申请内存，并在申请过程中使用 MemTracker 跟踪内存申请和释放的大小，执行算子所需批量申请的大内存将交由不同的数据结构管理。
+Allocator 从系统申请内存，并在申请过程中使用 MemTracker 跟踪内存申请和释放的大小，执行算子所需批量申请的大内存将交由不同的数据结构管理。
 
 查询执行过程中大块内存的分配主要使用 Arena、HashTable、PODArray 这三个数据结构管理，Allocator 作为 Arena、PODArray、HashTable 的统一内存接口，实现内存统一管理和局部的内存复用。
 
@@ -76,7 +76,7 @@ Doris BE 会定时从系统获取进程的物理内存和系统当前剩余可�
 
 ## 内存限制和水位线计算方法
 
-- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%，具体参考 。
+- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%，具体参考。
 
 - 进程内存软限 SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`, 默认系统总内存的 81%。
 

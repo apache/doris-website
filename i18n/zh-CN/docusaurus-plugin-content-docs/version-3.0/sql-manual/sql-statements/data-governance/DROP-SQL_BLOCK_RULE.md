@@ -1,7 +1,7 @@
 ---
 {
     "title": "DROP SQL_BLOCK_RULE",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,34 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
+Deletes one or more SQL blocking rules. Multiple rules can be deleted at once by separating them with commas.
 
-
-
-## 描述
-
-删除 SQL 阻止规则，支持多规则，以，隔开
-
-语法：
+## Syntax
 
 ```sql
-DROP SQL_BLOCK_RULE test_rule1,...
+DROP SQL_BLOCK_RULE <rule_name>[, ...]
 ```
 
-## 示例
+## Required Parameters
 
-1. 删除 test_rule1、test_rule2 阻止规则
+<rule_name>
+The name of the SQL blocking rule to be deleted. Multiple rule names can be specified, separated by commas. 
 
-   ```sql
-   mysql> DROP SQL_BLOCK_RULE test_rule1,test_rule2;
-   Query OK, 0 rows affected (0.00 sec)
-   ```
+## Access Control Requirements
 
-## 关键词
+Users executing this SQL command must have at least the following privileges:
+| Privilege | Object | Notes                |
+| :---------------- | :------------- | :---------------------------- |
+| ADMIN        | User or Role   | Only users or roles with the ADMIN privilege can perform the DROP operation. |
 
-```text
-DROP, SQL_BLOCK_RULE
+
+## Example
+
+Delete `test_rule1` and `test_rule2` blocking rules
+
+```sql
+DROP SQL_BLOCK_RULE test_rule1, test_rule2;
 ```
-
-### 最佳实践
-

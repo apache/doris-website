@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-The previous section on [diagnostic tools](diagnostic-tools.md) helped business and operations personnel pinpoint specific slow SQL queries. This section will introduce how to analyze the performance bottlenecks of slow SQL to determine which part of the SQL execution process is causing the slowdown.
+The previous section on [diagnostic tools](diagnostic-tools.md) helped business and operations personnel pinpoint specific slow SQL queries. This section will introduce how to analyze the performance bottlenecks of slow SQL to determine which part of the SQL execution process is causing the slowdown. 
 
 The execution process of an SQL query can be roughly divided into two stages: plan generation and plan execution. The former is responsible for generating the execution plan, while the latter executes the specific plan. Issues in either part can lead to performance bottlenecks. For example, if a poor plan is generated, no matter how excellent the executor is, good performance cannot be achieved. Similarly, even with a correct plan, inappropriate execution methods can also lead to performance bottlenecks. Furthermore, the performance of the executor is closely related to the current hardware and system architecture. Deficiencies in infrastructure or incorrect configurations can also cause performance issues.
 
@@ -137,7 +137,7 @@ For cases of using Profile for execution-level tuning, please refer to the [Tuni
 
 ## System-Level Performance Tools
 
-Commonly used system tools can assist in identifying performance bottlenecks during execution. For instance, widely used Linux tools such as top, free, perf, sar, and iostats can be utilized to observe the CPU, memory, I/O, and network status of the system while SQL is running, thereby aiding in the identification of performance bottlenecks.
+Commonly used system tools can assist in identifying performance bottlenecks during execution. For instance, widely used Linux tools such as top, free, perf, sar, and iostat can be utilized to observe the CPU, memory, I/O, and network status of the system while SQL is running, thereby aiding in the identification of performance bottlenecks.
 
 ## Summary
 

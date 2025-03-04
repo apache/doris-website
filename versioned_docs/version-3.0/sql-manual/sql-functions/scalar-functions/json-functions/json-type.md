@@ -67,7 +67,7 @@ Returns the type of the JSON string. Possible values include:
 
 ## Usage Notes
 
-JSON_TYPE returns the type of the outermost value in the JSON document. If the JSON document contains multiple different types of values, it will return the type of the outermost value. For invalid JSON strings, JSON_TYPE returns NULL. Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+JSON_TYPE returns the type of the outermost value in the JSON document. If the JSON document contains multiple different types of values, it will return the type of the outermost value. For invalid JSON strings, JSON_TYPE returns NULL. Refer to [json tutorial](../../../sql-data-types/semi-structured/JSON)
 
 ## Examples
 1. JSON is of string type:

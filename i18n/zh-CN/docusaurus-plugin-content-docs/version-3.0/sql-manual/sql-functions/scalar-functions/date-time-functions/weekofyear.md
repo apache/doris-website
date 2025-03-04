@@ -34,7 +34,7 @@ under the License.
 
 获得一年中的第几周
 
-参数为Date或者Datetime类型
+参数为 Date 或者 Datetime 类型
 
 ## 举例
 

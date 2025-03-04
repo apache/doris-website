@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 描述
-返回数组下标, 例如  [1, 2, 3, …, length (arr) ]
+返回数组下标，例如  [1, 2, 3, …, length (arr) ]
 
 ## 语法
 ```sql
@@ -39,7 +39,7 @@ ARRAY_ENUMERATE(<arr>)
 
 ## 返回值
 返回包含数组下标的数组，特殊情况：
-- 如果参数是NULL，则返回NULL
+- 如果参数是 NULL，则返回 NULL
 
 ## 举例
 

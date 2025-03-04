@@ -408,7 +408,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](../../table-design/data-partitioning/basic-concepts)
+参考文档：[数据划分](./table-design/data-partitioning/basic-concepts.mdx)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%

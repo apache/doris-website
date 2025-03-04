@@ -100,7 +100,7 @@ SHOW LOAD
     SHOW LOAD;
     ```
 
-2. 展示指定 db 的导入任务，label 中包含字符串 "2014_01_02"，展示最老的10个
+2. 展示指定 db 的导入任务，label 中包含字符串 "2014_01_02"，展示最老的 10 个
     
     ```sql
     SHOW LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
@@ -118,7 +118,7 @@ SHOW LOAD
     SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" AND STATE = "loading" ORDER BY LoadStartTime DESC;
     ```
 
-5. 展示指定 db 的导入任务 并按 LoadStartTime 降序排序,并从偏移量5开始显示10条查询结果
+5. 展示指定 db 的导入任务 并按 LoadStartTime 降序排序，并从偏移量 5 开始显示 10 条查询结果
     
     ```sql
     SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 5,10;

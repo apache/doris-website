@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-该语句用于查看BACKUP任务
+该语句用于查看 BACKUP 任务
 
 ## 语法
 
@@ -49,7 +49,7 @@ under the License.
 
 | 列名 | 说明 |
 | -- | -- |
-| JobId | 唯一作业id |
+| JobId | 唯一作业 id |
 | SnapshotName | 备份的名称 |
 | DbName | 所属数据库 |
 | State | 当前阶段：<ul><li>PENDING：提交作业后的初始状态。</li><li>SNAPSHOTING：执行快照中。</li><li>UPLOAD_SNAPSHOT：快照结束，准备上传。</li><li>UPLOADING：正在上传快照。</li><li>SAVE_META：将作业元信息保存为本地文件。</li><li>UPLOAD_INFO：上传作业元信息。</li><li>FINISHED：作业成功。</li><li>CANCELLED：作业失败。</li></ul> |
@@ -72,7 +72,7 @@ under the License.
 SHOW BACKUP FROM example_db;
 ```
 
-2. 查看备份名称为snapshot_label的BACKUP任务。
+2. 查看备份名称为 snapshot_label 的 BACKUP 任务。
 
 ```sql
 show backup from example_db where SnapshotName = 'snapshot_label';

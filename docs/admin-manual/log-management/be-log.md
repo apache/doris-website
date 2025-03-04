@@ -140,7 +140,7 @@ RuntimeLogger I20240624 00:36:46.326643 1460958 olap_server.cpp:424] try to star
 
 The meanings of different prefixes are as follows:
 
-- `RuntimeLogger`: corresponds to the logs in `fe.log`.
+- `RuntimeLogger`: corresponds to the logs in `be.log`.
 
 > Support for `jni.log` will be added in future versions.
 

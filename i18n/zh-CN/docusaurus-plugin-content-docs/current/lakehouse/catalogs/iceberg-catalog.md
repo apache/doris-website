@@ -279,6 +279,8 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 );
 ```
 
+可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+
 ## 查询操作
 
 ### 基础查询

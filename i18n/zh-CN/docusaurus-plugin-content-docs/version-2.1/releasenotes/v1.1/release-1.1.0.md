@@ -36,11 +36,11 @@ under the License.
 
 ### BE 二进制文件更名
 
-BE 二进制文件从原有的 palo_be 更名为 doris_be ，如果您以前依赖进程名称进行集群管理和其他操作，请注意修改相关脚本。
+BE 二进制文件从原有的 palo_be 更名为 doris_be，如果您以前依赖进程名称进行集群管理和其他操作，请注意修改相关脚本。
 
 ### Segment 存储格式升级
 
-Apache Doris 早期版本的存储格式为 Segment V1，在 0.12 版本中我们实现了新的存储格式 Segment V2 ，引入了 Bitmap 索引、内存表、Page Cache、字典压缩以及延迟物化等诸多特性。从 0.13 版本开始，新建表的默认存储格式为 Segment V2，与此同时也保留了对 Segment V1 格式的兼容。
+Apache Doris 早期版本的存储格式为 Segment V1，在 0.12 版本中我们实现了新的存储格式 Segment V2，引入了 Bitmap 索引、内存表、Page Cache、字典压缩以及延迟物化等诸多特性。从 0.13 版本开始，新建表的默认存储格式为 Segment V2，与此同时也保留了对 Segment V1 格式的兼容。
 
 为了保证代码结构的可维护性、降低冗余历史代码带来的额外学习及开发成本，我们决定从下一个版本起不再支持 Segment v1 存储格式，预计在 Apache Doris 1.2 版本中将删除这部分代码。
 
@@ -57,7 +57,7 @@ Apache Doris 早期版本的存储格式为 Segment V1，在 0.12 版本中我�
 
 在某些场景中（例如日志分析类场景），用户可能无法找到一个合适的分桶键来避免数据倾斜，因此需要由系统提供额外的分布方式来解决数据倾斜的问题。
 
-因此通过在建表时可以不指定具体分桶键，选择使用随机分布对数据进行分桶`DISTRIBUTED BY random BUCKETS number`，数据导入时将会随机写入单个 Tablet ，以减少加载过程中的数据扇出，并减少资源开销、提升系统稳定性。
+因此通过在建表时可以不指定具体分桶键，选择使用随机分布对数据进行分桶`DISTRIBUTED BY random BUCKETS number`，数据导入时将会随机写入单个 Tablet，以减少加载过程中的数据扇出，并减少资源开销、提升系统稳定性。
 
 ### 支持创建 Iceberg 外部表 [实验性功能] [#7391](https://github.com/apache/doris/pull/7391) [#7981](https://github.com/apache/doris/pull/7981) [#8179](https://github.com/apache/doris/pull/8179)
 
@@ -115,7 +115,7 @@ Iceberg 外部表为 Apache Doris 提供了直接访问存储在 Iceberg 数据�
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6d5c50f16a048f3ab27357bc97b7461~tplv-k3u1fbpfcp-zoom-1.image)
 
-在数据上游维持每秒 10w 的写入频率时（20 个并发写入任务、每个作业 5000 行、 Checkpoint 间隔 1s），1.1 版本表现如下：
+在数据上游维持每秒 10w 的写入频率时（20 个并发写入任务、每个作业 5000 行、Checkpoint 间隔 1s），1.1 版本表现如下：
 
 -   数据快速合并：Tablet 数据版本维持在 50 以下，Compaction Score 稳定。相较于之前版本高并发写入时频繁出现的 -235 问题，**Compaction 合并效率有 10 倍以上的提升**。
 
@@ -147,7 +147,7 @@ Iceberg 外部表为 Apache Doris 提供了直接访问存储在 Iceberg 数据�
 
 ### 解决了资源隔离对加载任务的资源使用限制无效的问题（中等）[#9492](https://github.com/apache/doris/pull/9492)
 
-在 1.1 版本中， Broker Load 和 Routine Load 将使用具有指定资源标记的 BE 节点进行加载。
+在 1.1 版本中，Broker Load 和 Routine Load 将使用具有指定资源标记的 BE 节点进行加载。
 
 ### 修复使用 HTTP BRPC 超过 2GB 传输网络数据包导致数据传输错误的问题（中等）[#9770](https://github.com/apache/doris/pull/9770)
 
@@ -159,7 +159,7 @@ Iceberg 外部表为 Apache Doris 提供了直接访问存储在 Iceberg 数据�
 
 Mini Load 与 Stream Load 的导入实现方式完全一致，都是通过 HTTP 协议提交和传输数据，在导入功能支持上 Stream Load 更加完备。
 
-在 1.1 版本中，默认情况下 Mini Load 接口 `/_load` 将处于禁用状态，请统一使用 Stream Load 来替换 Mini Load。您也可以通过关闭 FE 配置项 `disable_mini_load` 来重新启用 Mini Load 接口。在版本 1.2 中，将彻底删除 Mini Load 。
+在 1.1 版本中，默认情况下 Mini Load 接口 `/_load` 将处于禁用状态，请统一使用 Stream Load 来替换 Mini Load。您也可以通过关闭 FE 配置项 `disable_mini_load` 来重新启用 Mini Load 接口。在版本 1.2 中，将彻底删除 Mini Load。
 
 ### 完全禁用 SegmentV1 存储格式
 

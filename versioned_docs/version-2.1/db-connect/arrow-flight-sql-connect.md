@@ -68,7 +68,9 @@ Modify the configuration parameters of Doris FE and BE:
 - Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 - Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 
-`Note: arrow_flight_sql_port configured in fe.conf and be.conf are different`
+`Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
+
+After modifying the configuration and restarting the cluster, searching for `Arrow Flight SQL service is started` in the fe/log/fe.log file indicates that the Arrow Flight Server of FE has been successfully started; searching for `Arrow Flight Service bind to host` in the be/log/be.INFO file indicates that the Arrow Flight Server of BE has been successfully started.
 
 Assuming that the Arrow Flight SQL services of FE and BE in the Doris instance will run on ports 9090 and 9091 respectively, and the Doris username/password is "user"/"pass", the connection process is as follows:
 
@@ -281,7 +283,7 @@ The open source JDBC driver of Arrow Flight SQL protocol is compatible with the 
 POM dependency:
 ```Java
 <properties>
-    <arrow.version>15.0.1</arrow.version>
+    <arrow.version>17.0.0</arrow.version>
 </properties>
 <dependencies>
     <dependency>
@@ -465,7 +467,7 @@ Compared with the traditional `jdbc:mysql` connection method, the performance te
 
 ### Spark & ​​Flink
 
-Arrow Flight currently has no official plan to support Spark and Flink ([GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)). Doris' own [Spark Connector](https://github.com/apache/doris-spark-connector) and [Flink Connector](https://github.com/apache/doris-flink-connector) do not currently support accessing Doris through Arrow Flight SQL. Among them, Doris Flink Connector supporting Arrow Flight SQL is under development, and it is expected to improve the reading performance several times.
+Arrow Flight currently has no official plan to support Spark and Flink ([GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)). Since version 24.0.0, Doris' own [Spark Connector](https://github.com/apache/doris-spark-connector) and [Flink Connector](https://github.com/apache/doris-flink-connector) have supported accessing Doris via Arrow Flight SQL, and it is expected that this will improve the reading performance several times.
 
 The community previously referred to the open source [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) and used FlightClient in Spark to connect to Doris for testing. It was found that the data format conversion between Arrow and Doris Block is faster, which is 10 times the conversion speed between CSV format and Doris Block, and it has better support for complex types such as Map and Array. This is because the Arrow data format has a high compression rate and low network overhead during transmission. However, Doris Arrow Flight has not yet implemented multi-node parallel reading. It still aggregates query results to a BE node and returns them. For simple batch export of data, the performance may not be as fast as Doris Spark Connector, which supports Tablet-level parallel reading. If you want to use Arrow Flight SQL to connect to Doris in Spark, you can refer to the open-sourced [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) and [Dremio-Flight-Connector](https://github.com/dremio-hub/dremio-flight-connector) to implement it yourself.
 

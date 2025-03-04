@@ -377,7 +377,7 @@ UDTF is supported starting from Doris version 3.0.
     }
     ```
 
-2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
+2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers).
 For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql

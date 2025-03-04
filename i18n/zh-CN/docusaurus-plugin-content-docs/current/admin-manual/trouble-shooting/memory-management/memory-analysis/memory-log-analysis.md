@@ -40,7 +40,7 @@ os physical memory 375.81 GB. process memory used 4.09 GB(= 3.49 GB[vm/rss] - 41
 - 当前我们认为 BE 进程使用了 4.09 GB 内存，实际 BE 进程使用的物理内存 `vm/rss` 是 3.49 GB，
 - 其中有 410.44 MB 是 `tc/jemalloc_cache`，这部分 Cache 会在之后执行过程中被优先复用，所以这里不将其算作 BE 进程内存。
 - `reserved` 是在执行过程中被预留的内存，通常在构建 HashTable 等会耗费大量内存的操作前会提前预留 HashTable 的内存，确保构建 HashTable 的过程不会因为内存不足而终止，这部分预留的内存被计算在 BE 进程内存中，即使实际上还没有被分配。
-- `waiting_refresh` 是两次内存状态刷新的间隔中申请的大内存，Doris 内存状态刷新的间隔默认是 100ms，为避免两次内存状态刷新的间隔中发生大量内存申请，在内存超限后没有及时感知和触发内存 GC，所以间隔中申请的大内存被计算在 BE 进程内存中，每次内存状态刷新后`waiting_refresh`都将清0，
+- `waiting_refresh` 是两次内存状态刷新的间隔中申请的大内存，Doris 内存状态刷新的间隔默认是 100ms，为避免两次内存状态刷新的间隔中发生大量内存申请，在内存超限后没有及时感知和触发内存 GC，所以间隔中申请的大内存被计算在 BE 进程内存中，每次内存状态刷新后`waiting_refresh`都将清 0，
 
 3. `sys available memory 134.41 GB(= 135.41 GB[proc/available] - 1 GB[reserved] - 0B[waiting_refresh])`
 - 当前 BE 进程剩余可使用的内存是 134.41 GB，系统中实际可提供给 BE 进程使用的内存 `proc/available` 是 135.41 GB.

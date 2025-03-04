@@ -26,9 +26,9 @@ under the License.
 
 ## 描述
 
- `explode_numbers` 表函数，接受一个整数 n ，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。
+ `explode_numbers` 表函数，接受一个整数 n，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。
  
- `explode_numbers_outer` 与 `explode_numbers` 不同的是，会在表函数生成0行数据时添加一行`Null`数据。
+ `explode_numbers_outer` 与 `explode_numbers` 不同的是，会在表函数生成 0 行数据时添加一行`Null`数据。
 
 ## 语法
 ```sql
@@ -45,7 +45,7 @@ EXPLODE_NUMBERS_OUTER(<n>)
 
 ## 返回值
 
-返回一个[0,n)的序列
+返回一个 [0,n) 的序列
 
 - 当为 0 或者 NULL 时不返回
 

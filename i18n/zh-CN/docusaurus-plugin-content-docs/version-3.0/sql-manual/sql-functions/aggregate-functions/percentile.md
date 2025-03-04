@@ -74,10 +74,10 @@ INSERT INTO sales_data VALUES
 -- 计算不同百分位的销售价格
 SELECT 
     percentile(sale_price, 0.5)  as median_price,     -- 中位数
-    percentile(sale_price, 0.75) as p75_price,        -- 75分位数
-    percentile(sale_price, 0.90) as p90_price,        -- 90分位数
-    percentile(sale_price, 0.95) as p95_price,        -- 95分位数
-    percentile(null, 0.99)       as p99_null          -- null的99分位数
+    percentile(sale_price, 0.75) as p75_price,        -- 75 分位数
+    percentile(sale_price, 0.90) as p90_price,        -- 90 分位数
+    percentile(sale_price, 0.95) as p95_price,        -- 95 分位数
+    percentile(null, 0.99)       as p99_null          -- null 的 99 分位数
 FROM sales_data;
 ```
 

@@ -43,7 +43,7 @@ MONTHS_DIFF(<enddate>, <startdate>)
 ## 返回值
 
 返回 `<enddate>` 减去 `<startdate>` 所得月份数
-- 当`<enddate>`与`<startdate>`任意为NULL，或者两者都为NULL时，返回NULL
+- 当`<enddate>`与`<startdate>`任意为 NULL，或者两者都为 NULL 时，返回 NULL
 
 
 ## 举例

@@ -31,8 +31,8 @@
                             "type": "category",
                             "label": "Cluster Deployment Manually",
                             "items": [
-                                "install/deploy-manually/storage-compute-coupled-deploy-manually",
-                                "install/deploy-manually/storage-compute-decoupled-deploy-manually"
+                                "install/deploy-manually/integrated-storage-compute-deploy-manually",
+                                "install/deploy-manually/separating-storage-compute-deploy-manually"
                             ]
                         },
                         {
@@ -41,24 +41,24 @@
                             "items": [
                                 {
                                     "type": "category",
-                                    "label": "Compute storage coupled",
+                                    "label": "Integrated Storage Compute",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation"
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/access-cluster",
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation"
                                     ]
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Compute storage decoupled",
+                                    "label": "Separating Storage Compute",
                                     "items": [
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-fdb",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-ms",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-fe",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/config-cg",
-                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart"
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster"
                                     ]
                                 }
                             ]
@@ -67,7 +67,7 @@
                             "type": "category",
                             "label": "Deploying on Cloud",
                             "items": [
-                                "install/cluster-deployment/doris-on-aws"
+                                "install/deploy-on-cloud/doris-on-aws"
                             ]
                         }
                     ]
@@ -454,20 +454,41 @@
                             "label": "Authentication and Authorization",
                             "items": [
                                 "admin-manual/auth/authentication-and-authorization",
-                                "admin-manual/auth/ldap",
-                                "admin-manual/auth/ranger"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Data Transmission Encryption",
-                            "items": [
-                                "admin-manual/auth/certificate",
-                                "admin-manual/auth/fe-certificate"
+                                {
+                                    "type": "category",
+                                    "label": "Authentication",
+                                    "items": [
+                                        "admin-manual/auth/authentication/internal",
+                                        "admin-manual/auth/authentication/federation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Authorization",
+                                    "items": [
+                                        "admin-manual/auth/authorization/internal",
+                                        "admin-manual/auth/authorization/ranger",
+                                        "admin-manual/auth/authorization/data"
+                                    ]
+                                }
                             ]
                         },
                         "admin-manual/audit-plugin",
-                        "admin-manual/auth/encryption-function"
+                        {
+                            "type": "category",
+                            "label": "Data Encryption",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Encryption in Transit",
+                                    "items": [
+                                        "admin-manual/auth/certificate",
+                                        "admin-manual/auth/fe-certificate"
+                                    ]
+                                },
+                                "admin-manual/auth/encryption-function"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -851,7 +872,8 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
-                "faq/bi-faq"
+                "faq/bi-faq",
+                "faq/correctness-faq"
             ]
         },
         {
@@ -1022,7 +1044,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/left",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
@@ -1645,7 +1666,6 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
-                                        
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD-WARNINGS",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
@@ -1848,18 +1868,25 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Materialized View",
+                                    "label": "Synchronous Materialized View",
                                     "items": [
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/REFRESH-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-CREATE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/RESUME-MATERIALIZED-VIEW-JOB",
-                                        "sql-manual/sql-statements/table-and-view/materialized-view/CANCEL-MATERIALIZED-VIEW-TASK"
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/sync-materialized-view/SHOW-CREATE-MATERIALIZED-VIEW"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Asynchronous Materialized View",
+                                    "items": [
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB"
                                     ]
                                 },
                                 {
@@ -1986,7 +2013,6 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING",
                                         "sql-manual/sql-statements/cluster-management/storage-management/WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB",
@@ -2060,8 +2086,7 @@
                             "type": "category",
                             "label": "Info System and Help",
                             "items": [
-                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
-                                "sql-manual/sql-statements/system-info-and-help/HELP"
+                                "sql-manual/sql-statements/system-info-and-help/SHOW-PROC"
                             ]
                         }
                     ]
@@ -2078,6 +2103,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",
                         "releasenotes/v3.0/release-3.0.1",

@@ -48,7 +48,7 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 
 
 ## 下载安装
-请参考 [全新安装(Docker Linux/MacOS)](https://www.clougence.com/cc-doc/productOP/docker/install_linux_macos)，前往 [CloudCanal 官网](https://www.clougence.com/) 下载安装私有部署版本。
+请参考 [全新安装 (Docker Linux/MacOS)](https://www.clougence.com/cc-doc/productOP/docker/install_linux_macos)，前往 [CloudCanal 官网](https://www.clougence.com/) 下载安装私有部署版本。
 
 ## 使用示例
 以下以 MySQL 为例，演示如何实现 MySQL 到 Doris 的数据迁移同步。
@@ -56,28 +56,28 @@ CloudCanal 提供可视化的界面，可轻松实现数据的结构迁移、全
 ### 添加数据源
 1. 登录 CloudCanal 控制台，点击 **数据源管理** > **新增数据源**。
 2. 分别选择 MySQL 和 Doris 数据源，并填写相应信息。
-   ![添加数据源-1](/images/cc-doris-1.png)
+   ![添加数据源 -1](/images/cc-doris-1.png)
 
 3. 点击 **测试连接**，连接成功后，点击 **新增数据源**，完成数据源添加。
-   ![添加数据源-2](/images/cc-doris-2.png)
+   ![添加数据源 -2](/images/cc-doris-2.png)
 
 ### 创建任务
 1. 点击 **同步任务** > **创建任务**。
 2. 选择源和目标数据源，并分别点击 **测试连接**。
-   ![创建任务-1](/images/cc-doris-3.png)
+   ![创建任务 -1](/images/cc-doris-3.png)
 
 3. 选择 **数据同步** 并勾选 **全量初始化**。
-   ![创建任务-2](/images/cc-doris-4.png)
+   ![创建任务 -2](/images/cc-doris-4.png)
 
 4. 选择需要同步的表。
-   ![创建任务-3](/images/cc-doris-5.png)
+   ![创建任务 -3](/images/cc-doris-5.png)
 
 5. 选择需要同步的列。
-   ![创建任务-4](/images/cc-doris-6.png)
+   ![创建任务 -4](/images/cc-doris-6.png)
 
 6. 确认创建任务。
 7. 任务自动运行。CloudCanal 会自动进行任务流转，其中的步骤包括：
-  - 结构迁移: 将源端的表结构迁移到对端，如果同名表在对端已存在，则忽略。
-  - 全量数据迁移: 已存在的存量数据将会完整迁移到对端，支持断点续传。
-  - 增量数据同步: 增量数据将会持续地同步到对端数据库，并且保持实时（秒级别延迟）。   
-  ![创建任务-5](/images/cc-doris-8.png)
+  - 结构迁移：将源端的表结构迁移到对端，如果同名表在对端已存在，则忽略。
+  - 全量数据迁移：已存在的存量数据将会完整迁移到对端，支持断点续传。
+  - 增量数据同步：增量数据将会持续地同步到对端数据库，并且保持实时（秒级别延迟）。   
+  ![创建任务 -5](/images/cc-doris-8.png)

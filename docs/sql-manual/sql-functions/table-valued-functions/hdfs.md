@@ -1,7 +1,7 @@
 ---
 {
-    "title": "HDFS",
-    "language": "en"
+  "title": "LOCAL",
+  "language": "en"
 }
 ---
 
@@ -26,120 +26,135 @@ under the License.
 
 ## Description
 
-HDFS table-valued-function(tvf), allows users to read and access file contents on S3-compatible object storage, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
+Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
 
-## Syntax
+## syntax
 
 ```sql
-HDFS(
-    "uri" = "<uri>",
-    "fs.defaultFS" = "<fs_defaultFS>",
-    "hadoop.username" = "<hadoop_username>",
-    "format" = "<format>",
-    [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
+LOCAL(
+  "file_path" = "<file_path>", 
+  "backend_id" = "<backend_id>",
+  "format" = "<format>"
+  [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
   );
 ```
 
 ## Required Parameters
-| Parameter              | Description                                                                                                            |
-|------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `uri`                  | The URI for accessing HDFS. If the URI path does not exist or the file is empty, the HDFS TVF will return an empty set. |
-| `fs.defaultFS`         | The default file system URI for HDFS                                                                                    |
-| `hadoop.username`      | Required, can be any string but cannot be empty.                                                                        |
-| `format`               | File format, required. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`.           |
+| Parameter         | Description                                                                                                                                                                                          | Remarks                                           |
+|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `file_path`       | The path of the file to be read, which is relative to the `user_files_secure_path` directory. The `user_files_secure_path` parameter is a [BE configuration item](../../../admin-manual/config/be-config.md). <br /> The path cannot include `..`, and glob syntax can be used for pattern matching, such as `logs/*.log`. |                                                   |
+| `backend_id`      | The ID of the BE node where the file is located. It can be obtained via the `show backends` command.                                                                                                  | Before version 2.1.1, Doris only supports specifying a BE node to read local data files on that node. |
+| `format`          | The file format, which is required. Supported formats are `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`.                                                                             |                                                   |
 
 ## Optional Parameters
+| Parameter              | Description                                                                                                                                                                       | Remarks                                                                |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
+| `shared_storage`        | Defaults to false. If true, the specified file is located on shared storage (e.g., NAS). The shared storage must support POSIX file interfaces and be mounted on all BE nodes. <br /> When `shared_storage` is true, `backend_id` can be omitted. Doris may utilize all BE nodes to access the data. If `backend_id` is set, the data will be accessed only on the specified BE node. | Supported starting from version 2.1.2                                      |
+| `column_separator`      | The column separator, optional, defaults to `\t`.                                                                                                                                 |                                                                       |
+| `line_delimiter`        | The line delimiter, optional, defaults to `\n`.                                                                                                                                   |                                                                       |
+| `compress_type`         | The compression type, optional. Supported types are `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Defaults to `UNKNOWN`, and the type will be automatically inferred from the `uri` suffix. |                                                                       |
+| `read_json_by_line`     | For JSON format imports, optional, defaults to `true`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array`     | For JSON format imports, optional, defaults to `false`.                                                                                                                           | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `json_root`             | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `json_paths`            | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `num_as_string`         | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse`           | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `trim_double_quotes`    | For CSV format imports, optional, defaults to `false`. If true, it will trim the outermost double quotes around each field in the CSV file.                                          | For CSV format                                                           |
+| `skip_lines`            | For CSV format imports, optional, defaults to `0`, which means skipping the first few lines of the CSV file. When the format is `csv_with_names` or `csv_with_names_and_types`, this parameter is ignored. | For CSV format                                                           |
+| `path_partition_keys`   | Optional, specifies the partition column names carried in the file path, e.g., `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`. This will automatically read the corresponding column names and values from the path for import. |                                                                       |
 
-`optional_property_key` in the above syntax can select the corresponding parameter from the following list as needed, and `optional_property_value` is the value of the parameter
-
-| Parameter                                   | Description                                                                                                                                  | Remarks                                                                             |
-|---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `hadoop.security.authentication`            | HDFS security authentication type                                                                                                            |                                                                                     |
-| `hadoop.username`                           | Alternative HDFS username                                                                                                                    |                                                                                     |
-| `hadoop.kerberos.principal`                 | Kerberos principal                                                                                                                           |                                                                                     |
-| `hadoop.kerberos.keytab`                    | Kerberos keytab                                                                                                                                 |                                                                                     |
-| `dfs.client.read.shortcircuit`              | Enable short-circuit read                                                                                                                    |                                                                                     |
-| `dfs.domain.socket.path`                   | Domain socket path                                                                                                                           |                                                                                     |
-| `dfs.nameservices`                          | The nameservice for HA mode                                                                                                                  |                                                                                     |
-| `dfs.ha.namenodes.your-nameservices`        | Configuration for namenode in HA mode                                                                                                        |                                                                                     |
-| `dfs.namenode.rpc-address.your-nameservices.your-namenode` | Specify the RPC address for the namenode                                                                                                     |                                                                                     |
-| `dfs.client.failover.proxy.provider.your-nameservices` | Specify the proxy provider for failover                                                                                                      |                                                                                     |
-| `column_separator`                          | Column separator, default is `\t`                                                                                                            |                                                                                     |
-| `line_delimiter`                            | Line separator, default is `\n`                                                                                                              |                                                                                     |
-| `compress_type`                             | Supported types: `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default is `UNKNOWN`, and the type will be automatically inferred based on the URI suffix. |                                                                                     |
-| `read_json_by_line`                         | For JSON format imports, default is `true`                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `strip_outer_array`                         | For JSON format imports, default is `false`                                                                                                  | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_root`                                 | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_paths`                                | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `num_as_string`                             | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `fuzzy_parse`                               | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `trim_double_quotes`                        | For CSV format imports, boolean type. Default is `false`. If `true`, removes the outermost double quotes from each field.                  |                                                                                     |
-| `skip_lines`                                | For CSV format imports, integer type. Default is 0. Skips the first few lines of the CSV file. This parameter is ignored if `csv_with_names` or `csv_with_names_and_types` is set. |                                                                                     |
-| `path_partition_keys`                       | Specify the partition column names carried in the file path, for example `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`, which will automatically read the corresponding column names and values from the path for import. |                                                                                     |
-| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
 
 ## Access Control Requirements
+| Privilege  | Object | Notes |
+| :--------- |:-------|:------|
+| ADMIN_PRIV | global |       |
 
-| Privilege     | Object | Notes |
-|:--------------|:-------|:------|
-| USAGE_PRIV    | table  |       |
-| SELECT_PRIV   | table  |       |
+
+## Usage Notes
+
+- For more detailed usage of local tvf, please refer to [S3](./s3.md) tvf, The only difference between them is the way of accessing the storage system.
+
+- Access data on NAS through local tvf
+
+  NAS shared storage allows to be mounted to multiple nodes at the same time. Each node can access files in the shared storage just like local files. Therefore, the NAS can be thought of as a local file system, accessed through local tvf.
+
+  When setting `"shared_storage" = "true"`, Doris will think that the specified file can be accessed from any BE node. When a set of files is specified using wildcards, Doris will distribute requests to access files to multiple BE nodes, so that multiple nodes can be used to perform distributed file scanning and improve query performance.
 
 
 ## Examples
 
-- Read and access csv format files on hdfs storage.
-  ```sql
-  select * from hdfs(
-                "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-                "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-                "hadoop.username" = "doris",
-                "format" = "csv");
-  ```
-  ```text
-    +------+---------+------+
-    | c1   | c2      | c3   |
-    +------+---------+------+
-    | 1    | alice   | 18   |
-    | 2    | bob     | 20   |
-    | 3    | jack    | 24   |
-    | 4    | jackson | 19   |
-    | 5    | liming  | 18   |
-    +------+---------+------+
-  ```
+Analyze the log file on specified BE:
+```sql
+select * from local(
+        "file_path" = "log/be.out",
+        "backend_id" = "10006",
+        "format" = "csv")
+       where c1 like "%start_time%" limit 10;
+```
+```text
++--------------------------------------------------------+
+| c1                                                     |
++--------------------------------------------------------+
+| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
++--------------------------------------------------------+
+```
 
-- Read and access csv format files on hdfs storage in HA mode.
+Read and access csv format files located at path `${DORIS_HOME}/student.csv`:
+```sql
+select * from local(
+      "file_path" = "student.csv", 
+      "backend_id" = "10003", 
+      "format" = "csv");
+```
+```text
++------+---------+--------+
+| c1   | c2      | c3     |
++------+---------+--------+
+| 1    | alice   | 18     |
+| 2    | bob     | 20     |
+| 3    | jack    | 24     |
+| 4    | jackson | 19     |
+| 5    | liming  | d18    |
++------+---------+--------+
+```--+---------+--------+
+```
 
-  ```sql
-  select * from hdfs(
-              "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-              "hadoop.username" = "doris",
-              "format" = "csv",
-              "dfs.nameservices" = "my_hdfs",
-              "dfs.ha.namenodes.my_hdfs" = "nn1,nn2",
-              "dfs.namenode.rpc-address.my_hdfs.nn1" = "nanmenode01:8020",
-              "dfs.namenode.rpc-address.my_hdfs.nn2" = "nanmenode02:8020",
-              "dfs.client.failover.proxy.provider.my_hdfs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
-  ```
-  ```text
-    +------+---------+------+
-    | c1   | c2      | c3   |
-    +------+---------+------+
-    | 1    | alice   | 18   |
-    | 2    | bob     | 20   |
-    | 3    | jack    | 24   |
-    | 4    | jackson | 19   |
-    | 5    | liming  | 18   |
-    +------+---------+------+
-  ```
+Query files on NAS:
+```sql
+select * from local(
+        "file_path" = "/mnt/doris/prefix_*.txt",
+        "format" = "csv",
+        "column_separator" =",",
+        "shared_storage" = "true");
+```
+```text
++------+------+------+
+| c1   | c2   | c3   |
++------+------+------+
+| 1    | 2    | 3    |
+| 1    | 2    | 3    |
+| 1    | 2    | 3    |
+| 1    | 2    | 3    |
+| 1    | 2    | 3    |
++------+------+------+
+```
 
-- Can be used with `desc function` :
-
-  ```sql
-  desc function hdfs(
-              "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student_with_names.csv",
-              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
-              "hadoop.username" = "doris",
-              "format" = "csv_with_names");
-  ```
+Can be used with `desc function` :
+```sql
+desc function local(
+      "file_path" = "student.csv", 
+      "backend_id" = "10003", 
+      "format" = "csv");
+```
+```text
++-------+------+------+-------+---------+-------+
+| Field | Type | Null | Key   | Default | Extra |
++-------+------+------+-------+---------+-------+
+| c1    | TEXT | Yes  | false | NULL    | NONE  |
+| c2    | TEXT | Yes  | false | NULL    | NONE  |
+| c3    | TEXT | Yes  | false | NULL    | NONE  |
++-------+------+------+-------+---------+-------+
+```

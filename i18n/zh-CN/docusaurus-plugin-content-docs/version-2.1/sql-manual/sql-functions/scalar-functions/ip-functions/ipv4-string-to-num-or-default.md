@@ -33,7 +33,7 @@ IPV4_STRING_TO_NUM_OR_DEFAULT(<ipv4_string>)
 ## 参数
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| `<ipv4_string>`      | 字符串类型的ipv4地址, 例如 'A.B.C.D'  |
+| `<ipv4_string>`      | 字符串类型的 ipv4 地址，例如 'A.B.C.D'  |
 
 ## 返回值
 返回一个 BIGINT 数字，表示相应的大端 IPv4 地址

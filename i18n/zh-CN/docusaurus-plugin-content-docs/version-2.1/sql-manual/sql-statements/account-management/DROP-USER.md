@@ -38,7 +38,7 @@ under the License.
 
 **1. `<user_identity>`**
 
-> 指定的用户identity。
+> 指定的用户 identity。
 
 ## 权限控制
 

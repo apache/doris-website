@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-`MAP<K, V>` 表示由K, V类型元素组成的 map，不能作为 key 列使用。
+`MAP<K, V>` 表示由 K, V 类型元素组成的 map，不能作为 key 列使用。
 
 - 目前支持在 Duplicate，Unique 模型的表中使用。
 
@@ -35,7 +35,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-## CSV格式导入
+## CSV 格式导入
 
 ### 第 1 步：准备数据
 
@@ -89,7 +89,7 @@ mysql> SELECT * FROM map_test;
 4 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON 格式导入
 
 ### 第 1 步：准备数据
 

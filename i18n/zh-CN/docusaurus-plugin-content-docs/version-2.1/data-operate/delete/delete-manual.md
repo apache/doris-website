@@ -202,4 +202,4 @@ mysql> show delete from test_db;
 
 ## 语法
 
-删除语法详见 [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) 语法手册。
+删除语法详见 [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) 语法手册。

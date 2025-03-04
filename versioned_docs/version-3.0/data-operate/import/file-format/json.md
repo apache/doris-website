@@ -34,7 +34,7 @@ The following loading methods support JSON format data:
 - [Broker Load](../import-way/broker-load-manual.md)
 - [Routine Load](../import-way/routine-load-manual.md)
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## Supported JSON Formats
 

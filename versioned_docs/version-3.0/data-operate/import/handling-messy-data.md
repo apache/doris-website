@@ -29,7 +29,7 @@ When loading data, sometimes the types of data in the source and target columns 
 
 To deal with these problems, Doris has two key settings:
 
-- Strict Mode (strict_mode): Decides if rows with errors should be removed.
+- Strict Mode (strict_mode): Decide if rows with errors should be removed.
 - Max Filter Ratio (max_filter_ratio): Sets the highest allowed percentage of data that can be removed during loading.
 
 This makes it easier to handle data loading problems and keeps data management strong and simple.
@@ -84,7 +84,7 @@ The system employs different strategies based on the strict mode setting:
 
 ### Restricting Partial Column Updates to Existing Columns Only
 
-In strict mode, each row in a partial column update must have its Key already existing in the table. In non-strict mode, partial column updates can both update existing rows (where Key exists) and insert new rows (where Key doesn't exist).
+In strict mode, each row in a partial column update must have its Key already exist in the table. In non-strict mode, partial column updates can both update existing rows (where Key exists) and insert new rows (where Key doesn't exist).
 
 For example, given a table structure as follows:
 ```sql
@@ -203,7 +203,7 @@ INSERT INTO test_table ...;
 
 ## Maximum Filter Ratio
 
-Maximum Filter Ratio (max_filter_ratio) is a crucial load control parameter that defines the maximum allowable ratio of filtered data to total data during load. If the actual filter ratio is below the set maximum, the load task will continue and filtered data will be ignored; if it exceeds this ratio, the load task will fail.
+Maximum Filter Ratio (max_filter_ratio) is a crucial load control parameter that defines the maximum allowable ratio of filtered data to total data during load. If the actual filter ratio is below the set maximum, the load task will continue and filtered data will be ignored; if it exceeds this ratio, the load task fails.
 
 ### Filter Ratio Calculation Method
 
@@ -220,7 +220,7 @@ The filter ratio is calculated as:
 
 Note that `Unselected Rows` are not included in the filter ratio calculation.
 
-### Maximum Filter Ratio Configuration
+### Configuring the Maximum Filter Ratio
 The maximum filter ratio (max_filter_ratio) defaults to 0, meaning no filtered data is allowed. Here's how to set it for different load methods:
 
 **Stream Load**

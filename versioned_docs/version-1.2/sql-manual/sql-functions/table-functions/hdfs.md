@@ -67,7 +67,7 @@ File format parameters:
 - `column_separator`: (optional) default `,`.
 - `line_delimiter`: (optional) default `\n`.
 
-    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/file-format/json)
 
 - `read_json_by_line`: (optional) default `"true"`
 - `strip_outer_array`: (optional) default `"false"`

@@ -45,10 +45,10 @@ This command returns a result set with the following columns:
 
 ## Related Commands
 
-- [CREATE STORAGE VAULT](../Data-Definition-Statements/CREATE-STORAGE-VAULT.md)
-- [GRANT](../account-management/GRANT-TO.md)
-- [REVOKE](../account-management/REVOKE-FROM.md)
-- [SET DEFAULT STORAGE VAULT](../Data-Definition-Statements/SET-DEFAULT-STORAGE-VAULT.md)
+- [CREATE STORAGE VAULT](./CREATE-STORAGE-VAULT)
+- [GRANT](../../account-management/GRANT-TO)
+- [REVOKE](../../account-management/REVOKE-FROM)
+- [SET DEFAULT STORAGE VAULT](./SET-DEFAULT-STORAGE-VAULT)
 
 ## Keywords
 

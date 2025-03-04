@@ -42,7 +42,7 @@ Provided for prometheus
     - `json`: Json format
 
 * `with_tablet`
-    Whether to output tablet-related items，Optional with default `false`.
+    Whether to output tablet-related items, Optional with default `false`.
 
 ## Request body
 

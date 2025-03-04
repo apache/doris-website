@@ -122,7 +122,7 @@ Doris 会在下发到 SQL Server 的查询语句中，自动在字段名与表�
     unable to find valid certification path to requested target". ClientConnectionId:a92f3817-e8e6-4311-bc21-7c66
     ```
 
-   可在创建 Catalog 的 `jdbc_url` 把JDBC连接串最后增加 `encrypt=false` ，如 `"jdbc_url" = "jdbc:sqlserver://127.0.0.1:1433;DataBaseName=doris_test;encrypt=false"`
+   可在创建 Catalog 的 `jdbc_url` 把 JDBC 连接串最后增加 `encrypt=false` ，如 `"jdbc_url" = "jdbc:sqlserver://127.0.0.1:1433;DataBaseName=doris_test;encrypt=false"`
 
 2. 连接 SQL Server 出现 TLS 异常
 
@@ -143,7 +143,7 @@ Doris 会在下发到 SQL Server 的查询语句中，自动在字段名与表�
       DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL, \
       include jdk.disabled.namedCurves
       
-      #删掉其中的TLSv1, TLSv1.1 , 改成下面这样即可
+      #删掉其中的 TLSv1, TLSv1.1 , 改成下面这样即可
       jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \
       DH keySize < 1024, EC keySize < 224, anon, NULL, \
       include jdk.disabled.namedCurves

@@ -236,7 +236,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-Syntax help: [SWITCH](../sql-manual/sql-statements/session/context/SWITCH/)
+Syntax help: [SWITCH](../sql-manual/sql-statements/session/context/SWITCH-CATALOG)
 
 5. Use the Catalog
 

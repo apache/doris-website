@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-**Quick Download：** [https://doris.apache.org/download/](https://doris.apache.org/download/)
+**Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 

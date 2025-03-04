@@ -53,7 +53,7 @@ AS
 SELECT * FROM iceberg_catalog.iceberg_db.table1;
 ```
 
-For more details, refer to [Catalog Data Load](../../../lakehouse/catalog-overview.md#data-import)。
+For more details, refer to [Catalog Data Load](../../../data-operate/import/import-way/insert-into-manual)。
 
 ## Flink Doris Connector
 
@@ -174,9 +174,9 @@ val jdbcDF = spark.read
 ```
 For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem//spark-doris-connector.md#batch-write)
 
-## DataX / Seatunnel / CloudCanal And other third-party tools.
+## DataX / Seatunnel / CloudCanal and other third-party tools.
 
 In addition, you can also use third-party synchronization tools for data synchronization. For more details, please refer to:
-- [DataX](../../../ecosystem/datax.md)
-- [Seatunnel](../../../ecosystem/seatunnel.md)
-- [CloudCanal](../../../ecosystem/cloudcanal.md)
+- [DataX](../../../ecosystem/datax)
+- [Seatunnel](../../../ecosystem/seatunnel)
+- [CloudCanal](../../../ecosystem/cloudcanal)

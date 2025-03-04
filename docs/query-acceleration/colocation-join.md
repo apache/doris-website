@@ -26,7 +26,7 @@ under the License.
 
 # Colocation Join
 
-Colocation Join is to provide local optimization for some Join queries to reduce data transmission time between nodes and speed up queries.
+Colocation Join provides local optimization for some Join queries to reduce data transmission time between nodes and accelerating query execution.
 
 Note: This property will not be synchronized by CCR. If this table is copied by CCR, that is, PROPERTIES contains `is_being_synced = true`, this property will be erased in this table.
 
@@ -35,7 +35,7 @@ Note: This property will not be synchronized by CCR. If this table is copied by 
 * FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.
 * BE: Backend, Doris's back-end node. Responsible for query execution and data storage.
 * Colocation Group (CG): A CG contains one or more tables. Tables within the same group have the same Colocation Group Schema and the same data fragmentation distribution.
-* Colocation Group Schema (CGS): Used to describe table in a CG and general Schema information related to Colocation. Including bucket column type, bucket number and copy number.
+* Colocation Group Schema (CGS): Used to describe tables in a CG and general schema information related to Colocation. Including bucket column type, bucket number and copy number.
 
 ## Principle
 
@@ -45,9 +45,9 @@ The data of a table will eventually fall into a barrel according to the barrel c
 
 In order for a table to have the same data distribution, the table in the same CG must ensure the following attributes are the same:
 
-1. Barrel row and number of barrels
+1. Bucket column and number of buckets
 
-  Bucket column, that is, the column specified in `DISTRIBUTED BY HASH (col1, col2,...)'in the table building statement. Bucket columns determine which column values are used to Hash data from a table into different Tablets. Tables in the same CG must ensure that the type and number of barrel columns are identical, and the number of barrels is identical, so that the data fragmentation of multiple tables can be controlled one by one.
+  Bucket column, that is, the column specified in `DISTRIBUTED BY HASH (col1, col2,...)` in the table building statement. Bucket columns determine which column values are used to Hash data from a table into different Tablets. Tables in the same CG must ensure that the type and number of barrel columns are identical, and the number of barrels is identical, so that the data fragmentation of multiple tables can be controlled one by one.
 
 2. Number of copies
 
@@ -130,7 +130,7 @@ SHOW PROC '/colocation_group';
 
 * GroupId: The unique identity of a group's entire cluster, with DB ID in the first half and group ID in the second half.
 * GroupName: The full name of Group.
-* Tablet Ids: The group contains a list of Tables'ID.
+* TabletIds: The group contains a list of Tables'ID.
 * Buckets Num: Number of barrels.
 * Replication Num: Number of copies.
 * DistCols: Distribution columns, 
@@ -187,11 +187,11 @@ Group itself has a Stable attribute, when Stable is true, which indicates that a
 
 Copies can only be stored on specified BE nodes. So when a BE is unavailable (downtime, Decommission, etc.), a new BE is needed to replace it. Doris will first look for the BE with the lowest load to replace it. After replacement, all data fragments on the old BE in the Bucket will be repaired. During the migration process, Group is marked Unstable.
 
-### Duplicate Equilibrium
+### Replica Balancing
 
 Doris will try to distribute the fragments of the Collocation table evenly across all BE nodes. For the replica balancing of common tables, the granularity is single replica, that is to say, it is enough to find BE nodes with lower load for each replica alone. The equilibrium of the Colocation table is at the Bucket level, where all replicas within a Bucket migrate together. We adopt a simple equalization algorithm, which distributes Buckets Sequence evenly on all BEs, regardless of the actual size of the replicas, but only according to the number of replicas. Specific algorithms can be referred to the code annotations in `ColocateTableBalancer.java`.
 
-> Note 1: Current Colocation replica balancing and repair algorithms may not work well for heterogeneous deployed Oris clusters. The so-called heterogeneous deployment, that is, the BE node's disk capacity, number, disk type (SSD and HDD) is inconsistent. In the case of heterogeneous deployment, small BE nodes and large BE nodes may store the same number of replicas.
+> Note 1: Current Colocation replica balancing and repair algorithms may not work well for heterogeneously deployed Doris clusters. The so-called heterogeneous deployment, that is, the BE node's disk capacity, number, disk type (SSD and HDD) is inconsistent. In the case of heterogeneous deployment, small BE nodes and large BE nodes may store the same number of replicas.
 >
 > Note 2: When a group is in an Unstable state, the Join of the table in it will degenerate into a normal Join. At this time, the query performance of the cluster may be greatly reduced. If you do not want the system to balance automatically, you can set the FE configuration item `disable_colocate_balance` to prohibit automatic balancing. Then open it at the right time. (See Section `Advanced Operations` for details)
 
@@ -362,9 +362,9 @@ Whether to turn off the Colocation Join function or not. In 0.10 and previous ve
 
 In 0.10 and previous versions, the new replica scheduling logic is incompatible with the Colocation Join function, so in 0.10 and previous versions, if `disable_colocate_join = false`, you need to set `use_new_tablet_scheduler = false`, that is, close the new replica scheduler. In later versions, `use_new_tablet_scheduler` will be equal to true.
 
-###HTTP Restful API
+### HTTP RESTful API
 
-Doris provides several HTTP Restful APIs related to Colocation Join for viewing and modifying Colocation Group.
+Doris provides several HTTP RESTful APIs related to Colocation Join for viewing and modifying Colocation Group.
 
 The API is implemented on the FE side and accessed using `fe_host: fe_http_port`. ADMIN privileges are required.
 
@@ -411,7 +411,7 @@ The API is implemented on the FE side and accessed using `fe_host: fe_http_port`
 
 3. Setting Data Distribution for Group
 
-  The interface can force the number distribution of a group.
+  The interface can force the bucket sequence distribution of a group.
 
     ```
     POST /api/colocate/bucketseq?db_id=10005&group_id=10008
@@ -423,4 +423,4 @@ The API is implemented on the FE side and accessed using `fe_host: fe_http_port`
     ```
   Body is a Buckets Sequence represented by a nested array and the ID of the BE where the fragments are distributed in each Bucket.
 
-  Note that using this command, you may need to set the FE configuration `disable_colocate_relocate` and `disable_colocate_balance` to true. That is to shut down the system for automatic Colocation replica repair and balancing. Otherwise, it may be automatically reset by the system after modification.
+  Note that using this command, you may need to set the FE configuration `disable_colocate_relocate` and `disable_colocate_balance` to true. "This will prevent the system from automatically repairing or balancing Colocation replicas. Otherwise, it may be automatically reset by the system after modification.

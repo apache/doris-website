@@ -84,49 +84,29 @@ Suitable for the following scenarios:
 Parquet and ORC file formats have their own data types. Doris's export function can automatically map Doris's data types to the corresponding data types in Parquet and ORC file formats. The CSV format does not have types, all data is output as text.
 
 The following table shows the mapping between Doris data types and Parquet, ORC file format data types:
+| Doris Type | Arrow Type | Orc Type |
+| ---------- | ---------- | -------- |
+| boolean    | boolean | boolean |
+| tinyint    | int8 | tinyint |
+| smallint   | int16 | smallint |
+| int        | int32 | int |
+| bigint     | int64 | bigint |
+| largeInt   | utf8 | string |
+| date       | utf8 | string |
+| datev2     | Date32Type | string |
+| datetime   | utf8 | string |
+| datetimev2 | TimestampType | timestamp |
+| float      | float32 | float |
+| double     | float64 | double |
+| char / varchar / string| utf8 | string |
+| decimal    | decimal128 | decimal |
+| struct     | struct | struct |
+| map        | map | map |
+| array      | list | array |
+| json       | utf8 | string |
+| variant    | utf8 | string |
+| bitmap     | binary | binary |
+| quantile_state| binary | binary |
+| hll        | binary | binary |
 
-1. Doris export to ORC file format data type mapping table:
-   
-    |Doris Type|Orc Type|
-    | -------- | ------- |
-    |boolean|boolean|
-    |tinyint|tinyint|
-    |smallint|smallint|
-    |int|int|
-    |bigint|bigint|
-    |largeInt|string|
-    |date|string|
-    |datev2|string|
-    |datetime|string|
-    |datetimev2|timestamp|
-    |float|float|
-    |double|double|
-    |char / varchar / string|string|
-    |decimal|decimal|
-    |struct|struct|
-    |map|map|
-    |array|array|
-    |json| Not supported|
-
-2. When Doris exports to Parquet file format, it first converts Doris in-memory data to Arrow in-memory data format, then writes out to Parquet file format. The mapping relationship between Doris data types and Arrow data types is:
-
-    | Doris Type | Arrow Type |
-    | ----- | ----- |
-    | boolean | boolean |
-    | tinyint | int8 |
-    | smallint | int16 |
-    | int | int32 |
-    | bigint | int64 |
-    | largeInt | utf8 |
-    | date | utf8 |
-    | datev2 | Date32Type |
-    | datetime | utf8 |
-    | datetimev2 | TimestampType |
-    | float | float32 |
-    | double | float64 |
-    | char / varchar / string | utf8 |
-    | decimal | decimal128 |
-    | struct | struct |
-    | map | map |
-    | array | list |
-    |json| utf8 |
+> Note: When Doris exports data to the Parquet file format, it first converts the in-memory data of Doris into the Arrow in-memory data format, and then writes it out to the Parquet file format via Arrow. 

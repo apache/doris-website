@@ -26,7 +26,7 @@ under the License.
 
 JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor.org/rfc/rfc8785) 数据，通过 JSON 函数访问其内部字段。
 
-默认支持1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
+默认支持 1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
 
     与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
     1. 数据写入时进行 JSON 格式校验
@@ -103,10 +103,10 @@ PROPERTIES("replication_num" = "1");
 
 #### 导入数据
 
-##### stream load 导入test_json.csv测试数据
+##### stream load 导入 test_json.csv 测试数据
 
-- 测试数据有2列，第一列ID，第二列是JSON
-- 测试数据有25行，其中前18行的JSON是合法的，后7行的JSON是非法的
+- 测试数据有 2 列，第一列 ID，第二列是 JSON
+- 测试数据有 25 行，其中前 18 行的 JSON 是合法的，后 7 行的 JSON 是非法的
 
 ```
 1	\N
@@ -136,7 +136,7 @@ PROPERTIES("replication_num" = "1");
 25	[123, abc]
 ```
 
-- 由于有28%的非法数据，默认会失败报错 "too many filtered rows"
+- 由于有 28% 的非法数据，默认会失败报错 "too many filtered rows"
 ```
 curl --location-trusted -u root: -T test_json.csv http://127.0.0.1:8840/api/testdb/test_json/_stream_load
 {
@@ -184,7 +184,7 @@ curl --location-trusted -u root: -H 'max_filter_ratio: 0.3' -T test_json.csv htt
 }
 ```
 
-- 查看stream load导入的数据，JSON类型的列j会自动转成JSON String展示
+- 查看 stream load 导入的数据，JSON 类型的列 j 会自动转成 JSON String 展示
 
 ```
 mysql> SELECT * FROM test_json ORDER BY id;
@@ -216,7 +216,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 ##### insert into 插入数据
 
-- insert 1条数据，总数据从18条增加到19条
+- insert 1 条数据，总数据从 18 条增加到 19 条
 ```
 mysql> INSERT INTO test_json VALUES(26, '{"k1":"v1", "k2": 200}');
 Query OK, 1 row affected (0.09 sec)
@@ -252,9 +252,9 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 #### 查询
 
-##### 用json_extract取json内的某个字段
+##### 用 json_extract 取 json 内的某个字段
 
-1. 获取整个json，$ 在json path中代表root，即整个json
+1. 获取整个 json，$ 在 json path 中代表 root，即整个 json
 ```
 +------+---------------------------------------------------------------+---------------------------------------------------------------+
 | id   | j                                                             | json_extract(`j`, '$')                                       |
@@ -282,7 +282,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-1. 获取k1字段，没有k1字段的行返回NULL
+1. 获取 k1 字段，没有 k1 字段的行返回 NULL
 ```
 mysql> SELECT id, j, json_extract(j, '$.k1') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+----------------------------+
@@ -311,7 +311,7 @@ mysql> SELECT id, j, json_extract(j, '$.k1') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-1. 获取顶层数组的第0个元素
+1. 获取顶层数组的第 0 个元素
 ```
 mysql> SELECT id, j, json_extract(j, '$[0]') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+----------------------------+
@@ -340,7 +340,7 @@ mysql> SELECT id, j, json_extract(j, '$[0]') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-1. 获取整个json array
+1. 获取整个 json array
 ```
 mysql> SELECT id, j, json_extract(j, '$.a1') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+------------------------------------+
@@ -369,7 +369,7 @@ mysql> SELECT id, j, json_extract(j, '$.a1') FROM test_json ORDER BY id;
 19 rows in set (0.02 sec)
 ```
 
-1. 获取json array中嵌套object的字段
+1. 获取 json array 中嵌套 object 的字段
 ```
 mysql> SELECT id, j, json_extract(j, '$.a1[0]'), json_extract(j, '$.a1[0].k1') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+-------------------------------+----------------------------------+
@@ -400,7 +400,7 @@ mysql> SELECT id, j, json_extract(j, '$.a1[0]'), json_extract(j, '$.a1[0].k1') F
 ```
 
 1. 获取具体类型的
-- json_extract_string 获取String类型字段，非String类型转成String
+- json_extract_string 获取 String 类型字段，非 String 类型转成 String
 ```
 mysql> SELECT id, j, json_extract_string(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+---------------------------------------------------------------+
@@ -456,7 +456,7 @@ mysql> SELECT id, j, json_extract_string(j, '$.k1') FROM test_json ORDER BY id;
 
 ```
 
-- json_extract_int 获取int类型字段，非int类型返回NULL
+- json_extract_int 获取 int 类型字段，非 int 类型返回 NULL
 ```
 mysql> SELECT id, j, json_extract_int(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+-----------------------------+
@@ -511,7 +511,7 @@ mysql> SELECT id, j, json_extract_int(j, '$.k2') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-- json_extract_bigint 获取bigint类型字段，非bigint类型返回NULL
+- json_extract_bigint 获取 bigint 类型字段，非 bigint 类型返回 NULL
 ```
 mysql> SELECT id, j, json_extract_bigint(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -567,7 +567,7 @@ mysql> SELECT id, j, json_extract_bigint(j, '$.k2') FROM test_json ORDER BY id;
 
 ```
 
-- json_extract_double 获取double类型字段，非double类型返回NULL
+- json_extract_double 获取 double 类型字段，非 double 类型返回 NULL
 ```
 mysql> SELECT id, j, json_extract_double(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -622,7 +622,7 @@ mysql> SELECT id, j, json_extract_double(j, '$.k2') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-- json_extract_bool 获取bool类型字段，非bool类型返回NULL
+- json_extract_bool 获取 bool 类型字段，非 bool 类型返回 NULL
 ```
 mysql> SELECT id, j, json_extract_bool(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+------------------------------+
@@ -677,8 +677,8 @@ mysql> SELECT id, j, json_extract_bool(j, '$[1]') FROM test_json ORDER BY id;
 19 rows in set (0.01 sec)
 ```
 
-- json_extract_isnull 获取JSON NULL类型字段，null返回1，非null返回0
-- 需要注意的是JSON NULL和SQL NULL不一样，SQL NULL表示某个字段的值不存在，而JSON表示值存在但是是一个特殊值NULL
+- json_extract_isnull 获取 JSON NULL 类型字段，null 返回 1，非 null 返回 0
+- 需要注意的是 JSON NULL 和 SQL NULL 不一样，SQL NULL 表示某个字段的值不存在，而 JSON 表示值存在但是是一个特殊值 NULL
 ```
 mysql> SELECT id, j, json_extract_isnull(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -708,7 +708,7 @@ mysql> SELECT id, j, json_extract_isnull(j, '$') FROM test_json ORDER BY id;
 
 ```
 
-##### 用json_exists_path检查json内的某个字段是否存在
+##### 用 json_exists_path 检查 json 内的某个字段是否存在
 
 ```
 mysql> SELECT id, j, json_exists_path(j, '$') FROM test_json ORDER BY id;
@@ -792,9 +792,9 @@ mysql> SELECT id, j, json_exists_path(j, '$[2]') FROM test_json ORDER BY id;
 
 ```
 
-##### 用json_type获取JSON内的某个字段的类型
+##### 用 json_type 获取 JSON 内的某个字段的类型
 
-- 返回json path对应的JSON字段类型，如果不存在返回NULL
+- 返回 json path 对应的 JSON 字段类型，如果不存在返回 NULL
 ```
 mysql> SELECT id, j, json_type(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+----------------------+

@@ -114,7 +114,7 @@ When using the `table` materialization mode, your model is rebuilt as a table at
 For the tablet materialization of dbt, dbt-doris uses the following steps to ensure the atomicity of data changes:
 1. first create a temporary table: `create table this_table_temp as {{ model sql}}`.
 2. Determine whether `this_table` does not exist, that is, it is created for the first time, execute `rename`, and change the temporary table to the final table.
-3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table,[this](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE.md) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
+3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table,[this](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
 
 ``` 
 Advantages: table query speed will be faster than view.

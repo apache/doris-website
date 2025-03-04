@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-数据缓存(Data Cache)通过缓存最近访问的远端存储系统(HDFS 或对象存储)的数据文件，加速后续访问相同数据的查询。在频繁访问相同数据的查询场景中，Data Cache 可以避免重复的远端数据访问开销，提升热点数据的查询分析性能和稳定性。
+数据缓存 (Data Cache) 通过缓存最近访问的远端存储系统 (HDFS 或对象存储) 的数据文件，加速后续访问相同数据的查询。在频繁访问相同数据的查询场景中，Data Cache 可以避免重复的远端数据访问开销，提升热点数据的查询分析性能和稳定性。
 
 ## 原理
 
@@ -49,7 +49,7 @@ SET enable_file_cache = true;
 SET GLOBAL enable_file_cache = true;
 ```
 
-> Data Cache 功能仅作用于针对文件的外表查询（如 Hive、Hudi ）。对内表查询，或非文件的外表查询（如 JDBC、Elasticsearch）等无影响。
+> Data Cache 功能仅作用于针对文件的外表查询（如 Hive、Hudi）。对内表查询，或非文件的外表查询（如 JDBC、Elasticsearch）等无影响。
 
 ### BE 配置
 
@@ -58,14 +58,14 @@ SET GLOBAL enable_file_cache = true;
 |  参数   | 必选项 | 说明  |
 |  ---  | ---  | --- |
 | `enable_file_cache`  | 是 | 是否启用 Data Cache，默认 false |
-| `file_cache_path` | 是 | 缓存目录的相关配置，json格式，例子: `[{"path": "/path/to/file_cache1", "total_size":53687091200},{"path": "/path/to/file_cache2", "total_size":53687091200},{"path": "/path/to/file_cache3", "total_size":53687091200}]`。`path` 是缓存的保存路径，`total_size` 是缓存的大小上限。|
+| `file_cache_path` | 是 | 缓存目录的相关配置，json 格式，例子：`[{"path": "/path/to/file_cache1", "total_size":53687091200},{"path": "/path/to/file_cache2", "total_size":53687091200},{"path": "/path/to/file_cache3", "total_size":53687091200}]`。`path` 是缓存的保存路径，`total_size` 是缓存的大小上限。|
 | `clear_file_cache` | 否 | BE 重启时是否删除之前的缓存数据，默认 false |
 
 ## 缓存可观测性
 
 ### 查看 Data Cache 命中情况
 
-执行 `set enable_profile=true` 打开会话变量，可以在 FE 的 web 页面的 Queris 标签中查看到作业的 Profile。Data Cache 相关的指标如下:
+执行 `set enable_profile=true` 打开会话变量，可以在 FE 的 web 页面的 Queris 标签中查看到作业的 Profile。Data Cache 相关的指标如下：
 
 ```
 -  FileCache:  0ns

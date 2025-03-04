@@ -58,7 +58,7 @@ REFRESH TABLE [[<catalog_name>.]<database_name>.]<table_name>;
 
 
 ## 注意事项
-刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。 包括 Partition Cache、Schema Cache、File Cache 等。
+刷新 Catalog 的同时，会强制使对象相关的 Cache 失效。包括 Partition Cache、Schema Cache、File Cache 等。
 
 ## 示例
 

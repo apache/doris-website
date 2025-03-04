@@ -22,7 +22,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ### Description
 
 SM4 is a China's national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce, and other fields. The SM4_ENCRYPT function is used to encrypt data using the SM4 algorithm. By default, it uses the `SM4_128_ECB` algorithm.
@@ -40,6 +39,10 @@ VARCHAR SM4_ENCRYPT(VARCHAR str, VARCHAR key_str[, VARCHAR init_vector][, VARCHA
 - `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
 - `encryption_mode` is the encryption algorithm, optionally available in variable.
 
+:::warning
+Function with two arguments will ignore session variable `block_encryption_mode` and always use `SM4_128_ECB` to do encryption. This is different from the 1.2 version behavior and must be taken into account when upgrading or downgrading.
+:::
+
 ### Example
 
 ```sql
@@ -47,7 +50,7 @@ set block_encryption_mode='';
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
-```
+```text
 +----------------------------------------------------------+
 | to_base64(sm4_encrypt('text', '***', '', 'SM4_128_ECB')) |
 +----------------------------------------------------------+
@@ -58,6 +61,8 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```sql
 select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```
+
+```text
 +----------------------------------------------------------------------------------+
 | to_base64(sm4_encrypt('text', 'F3229A0B371ED2D9441B830D21A390C3', '0123456789')) |
 +----------------------------------------------------------------------------------+

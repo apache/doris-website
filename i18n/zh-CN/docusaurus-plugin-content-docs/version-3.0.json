@@ -51,11 +51,11 @@
     "message": "在 Kubernetes 部署",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
-  "sidebar.docs.category.Compute storage coupled": {
+  "sidebar.docs.category.Integrated Storage Compute": {
     "message": "部署存算一体集群",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
-  "sidebar.docs.category.Compute storage decoupled": {
+  "sidebar.docs.category.Separating Storage Compute": {
     "message": "部署存算分离集群",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
@@ -235,6 +235,10 @@
     "message": "业务连续性与数据恢复",
     "description": "The label for category Business continuity & data recovery in sidebar docs"
   },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
   "sidebar.docs.category.Managing Resource": {
     "message": "资源管理",
     "description": "The label for category Managing Resource in sidebar docs"
@@ -255,9 +259,21 @@
     "message": "安全概述",
     "description": "The label for category Security Overview in sidebar docs"
   },
-  "sidebar.docs.category.Data Transmission Encryption": {
+  "sidebar.docs.category.Data Encryption": {
+    "message": "数据加密",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Encryption in Transit": {
     "message": "传输加密",
-    "description": "The label for category Data Transmission Encryption in sidebar docs"
+    "description": "The label for category Encryption in Transit in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication": {
+    "message": "身份认证",
+    "description": "The label for category Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authorization": {
+    "message": "鉴权管控",
+    "description": "The label for category Authorization in sidebar docs"
   },
   "sidebar.docs.category.Authentication and Authorization": {
     "message": "认证与鉴权",
@@ -643,9 +659,9 @@
     "message": "历史版本",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.Managing Disater Recovery": {
+  "sidebar.docs.category.Managing Disaster Recovery": {
     "message": "容灾管理",
-    "description": "The label for category Managing Disater Recovery in sidebar docs"
+    "description": "The label for category Managing Disaster Recovery in sidebar docs"
   },
   "sidebar.docs.category.Managing Workload": {
     "message": "负载管理",

@@ -67,7 +67,7 @@ SELECT rtrim_in('ab d   ') str;
 
 2. 移除指定字符集合
 ```sql
--- RTRIM_IN会移除右端的'a'和'b'中的任意字符
+-- RTRIM_IN 会移除右端的'a'和'b'中的任意字符
 SELECT rtrim_in('ababccaab', 'ab') str;
 ```
 ```text

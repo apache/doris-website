@@ -46,7 +46,7 @@ SQL Cache stores and retrieves caches based on the following key factors:
 
 The combination of these factors uniquely determines a cached dataset. If any of these factors change, such as variations in SQL, different query fields or conditions, or version changes after data updates, the cache will not be hit.
 
-For queries involving multi-table Joins, if one of the tables is updated, the partition ID or version number will differ, resulting in a cache miss.
+For queries involving multi-table joins, if one of the tables is updated, the partition ID or version number will differ, resulting in a cache miss.
 
 SQL Cache is highly suitable for T+1 update scenarios. Data is updated early in the morning, the first query fetches results from the Backend (BE) and stores them in the cache, and subsequent queries of the same nature retrieve results directly from the cache. Real-time data updates can also use SQL Cache, but may face a lower cache hit rate.
 
@@ -62,7 +62,7 @@ Take the common function `select now()` as an example. It returns the current da
 
 To optimize cache utilization, it is recommended to convert such fine-grained time into coarse-grained time, such as using `select * from tbl where dt=date(now())`. In this case, queries within the same day can leverage the SQL Cache.
 
-In contrast, the `random()` function is difficult to utilize Cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
+In contrast, the `random()` function is difficult to utilize cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
 
 ## Principles
 
@@ -230,7 +230,7 @@ ADMIN SET FRONTEND CONFIG ('cache_result_max_row_count'='3000');
 ADMIN SET FRONTEND CONFIG ('cache_result_max_data_size'='31457280');
 ```
 
-## Troubleshooting Cache Invalidation
+## Troubleshooting Cache Miss
 
 The reasons for cache invalidation typically include the following:
 

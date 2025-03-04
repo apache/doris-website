@@ -177,7 +177,7 @@ const config = {
     ],
     themes: [
         [
-            '@easyops-cn/docusaurus-search-local',
+            '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
                 language: ['en', 'zh'],
@@ -209,6 +209,7 @@ const config = {
                     </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',
+
                 // isCloseable: false,
             },
             navbar: {

@@ -63,7 +63,7 @@ rollup 的 alter_clause 支持如下几种创建方式
 
     - 如果没有指定 from_index_name，则默认从 base index 创建
     - rollup 表中的列必须是 from_index 中已有的列
-    - 在 properties 中，可以指定存储格式。具体请参阅 [CREATE TABLE](../Create/CREATE-TABLE.md)
+    - 在 properties 中，可以指定存储格式。具体请参阅 [CREATE TABLE](./CREATE-TABLE)
 
 3. 删除 rollup index
 

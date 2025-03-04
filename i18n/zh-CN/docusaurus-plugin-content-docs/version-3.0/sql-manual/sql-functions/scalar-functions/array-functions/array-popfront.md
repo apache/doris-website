@@ -35,7 +35,7 @@ ARRAY_POPFRONT(<arr>)
 
 | 参数 | 说明 | 
 | --- | --- |
-| `<arr>` | ARRAY数组 |
+| `<arr>` | ARRAY 数组 |
 
 ## 返回值
 

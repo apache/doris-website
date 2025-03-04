@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-判断left和right数组中是否包含公共元素
+判断 left 和 right 数组中是否包含公共元素
 
 ## 语法
 
@@ -44,7 +44,7 @@ ARRAYS_OVERLAP(<left>, <right>)
 
 ## 返回值
 
-返回判断结果： 1：left和right数组存在公共元素；0：left和right数组不存在公共元素；NULL：left或者right数组为NULL；或者left和right数组中，任意元素为NULL
+返回判断结果：1：left 和 right 数组存在公共元素；0：left 和 right 数组不存在公共元素；NULL：left 或者 right 数组为 NULL；或者 left 和 right 数组中，任意元素为 NULL
 
 ## 举例
 

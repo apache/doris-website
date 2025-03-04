@@ -26,41 +26,46 @@ under the License.
 
 
 
-
 ## Description
 
-Modify SQL blocking rules to allow modification of each item such as sql/sqlHash/partition_num/tablet_num/cardinality/global/enable.
+This statement is used to modify an SQL block rule.
 
-grammar:
+## Syntax
 
-```sql
-ALTER SQL_BLOCK_RULE rule_name
-[PROPERTIES ("key"="value", ...)];
-```
-
-illustrate:
-
-- sql and sqlHash cannot be set at the same time. This means that if a rule sets sql or sqlHash, the other attribute cannot be modified;
-- sql/sqlHash and partition_num/tablet_num/cardinality cannot be set at the same time. For example, if a rule sets partition_num, then sql or sqlHash cannot be modified;
-
-## Examples
-
-1. Modify according to SQL properties
 
 ```sql
-ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
+ALTER SQL_BLOCK_RULE <rule_name>
+PROPERTIES (
+          -- property
+          <property>
+          -- Additional properties
+          [ , ... ]
+          ) 
 ```
 
-2. If a rule sets partition_num, then sql or sqlHash cannot be modified
+## Required Parameters
 
-```sql
-ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
-```
+**1. `<rule_name>`**
 
-## Keywords
+> The name of the rule.
 
-```text
-ALTER,SQL_BLOCK_RULE
-```
+**2. `<property>`**
 
-## Best Practice
+See the introduction of [CREATE SQL_BLOCK_RULE](../data-governance/CREATE-SQL_BLOCK_RULE.md) for details.
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following permissions:
+
+| Privilege   | Object | Notes |
+| ------------ | ------ | ----------- |
+| ADMIN_PRIV | Global |             |
+
+## Example
+
+1. Modify the SQL and enable the rule
+
+
+  ```sql
+  ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
+  ```

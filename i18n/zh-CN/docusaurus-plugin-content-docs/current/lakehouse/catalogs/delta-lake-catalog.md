@@ -49,21 +49,24 @@ $ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-delta-lake
 $ mvn clean install -DskipTest
+$ cd ../../lib/trino-hdfs
+$ mvn clean install -DskipTest
 ```
 
-完成编译后，会在 `trino/plugin/trino-delta-lake/target/` 下得到 `trino-delta-lake-435` 目录。
+完成编译后，会在 `trino/plugin/trino-delta-lake/target/` 下得到 `trino-delta-lake-435` 目录，在 `trino/lib/trino-hdfs/target/` 下得到 `hdfs` 目录
 
-也可以直接下载预编译的 [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) 并解压。
+也可以直接下载预编译的 [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) 及 [hdfs.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-hdfs-435-20240724.tar.gz) 并解压。
 
 ### 部署 Delta Lake Connector
 
-将 `trino-delta-lake-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下。（如果没有，可以手动创建）。
+将 `trino-delta-lake-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下（如果没有，可以手动创建），将 `hdfs.tar.gz` 解压到 `trino-delta-lake-435/` 目录下。
 
 ```text
 ├── bin
 ├── conf
 ├── connectors
 │   ├── trino-delta-lake-435
+│   │   ├── hdfs
 ...
 ```
 

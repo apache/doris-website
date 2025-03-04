@@ -77,7 +77,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 - The properties (PROPERTIES) vary depending on whether it is S3 or HDFS, as shown in the example.
 - For ON LOCATION, if it is S3, the following should be the S3 Bucket Name.
 - When performing data migration, the same repository must be created in both the source and destination clusters so that the destination cluster can view the data snapshot from the source cluster's backup.
-- Any user can view the repositories that have been created by using the [SHOW REPOSITORIES](../../Show-Statements/SHOW-REPOSITORIES.md) command.
+- Any user can view the repositories that have been created by using the [SHOW REPOSITORIES](./SHOW-REPOSITORIES) command.
 
 
 ## Examples

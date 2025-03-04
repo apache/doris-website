@@ -43,7 +43,7 @@ MURMUR_HASH3_64( <str> [ , <str> ... ] )
 
 ## Return Value
 
-Returns the 64-bit murmur3 hash of the input string。
+Returns the 64-bit murmur3 hash of the input string.
 
 
 

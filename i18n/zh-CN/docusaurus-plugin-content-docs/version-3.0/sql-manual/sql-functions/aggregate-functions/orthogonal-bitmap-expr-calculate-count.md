@@ -40,7 +40,7 @@ ORTHOGONAL_BITMAP_EXPR_CALCULATE_COUNT(<bitmap_column>, <column_to_filter>, <inp
 | -- | -- |
 | `bitmap_column` | 需要获取值的 Bitmap 类型表达式 |
 | `column_to_filter` | 过滤的维度列，即计算的 Key 列 |
-| `input_string` | 计算表达式字符串，含义是依据 Key 列进行 Bitmap 交并差集表达式计算，表达式支持的计算符：& 代表交集计算，\| 代表并集计算，- 代表差集计算, ^ 代表异或计算，\ 代表转义字符 |
+| `input_string` | 计算表达式字符串，含义是依据 Key 列进行 Bitmap 交并差集表达式计算，表达式支持的计算符：& 代表交集计算，\| 代表并集计算，- 代表差集计算，^ 代表异或计算，\ 代表转义字符 |
 
 ## 返回值
 

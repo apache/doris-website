@@ -1,6 +1,6 @@
 --- 
 {
-    "title": "High-Concurrency Point Query",
+    "title": "High-Concurrency Point Query Optimization",
     "language": "en"
 }
 --- 
@@ -73,7 +73,7 @@ PROPERTIES (
 **Note:**
 1. `enable_unique_key_merge_on_write` should be enabled, since we need primary key for quick point lookup in storage engine
 
-2. when condition only contains primary key like `select * from tbl_point_query where k1 = 123`, such query will go through the short fast path
+2. when condition only contains primary key like `select * from tbl_point_query where key = 123`, such query will go through the short fast path
 
 3. `light_schema_change` should also been enabled since we rely on `column unique id` of each column when doing a point query.
 
@@ -87,7 +87,7 @@ PROPERTIES (
 
 ## Using `PreparedStatement`
 
-In order to reduce CPU cost for parsing query SQL and SQL expressions, we provide `PreparedStatement` feature in FE fully compatible with mysql protocol (currently only support point queries like above mentioned).Enable it will pre caculate PreparedStatement SQL and expresions and caches it in a session level memory buffer and will be reused later on.We could improve 4x+ performance by using `PreparedStatement` when CPU became hotspot doing such queries.Bellow is an JDBC example of using `PreparedStatement`.
+In order to reduce CPU cost for parsing query SQL and SQL expressions, we provide `PreparedStatement` feature in FE fully compatible with mysql protocol (currently only support point queries like above mentioned).Enable it will pre calculate PreparedStatement SQL and expressions and caches it in a session level memory buffer and will be reused later on.We could improve 4x+ performance by using `PreparedStatement` when CPU became bottleneck doing such queries.Bellow is an JDBC example of using `PreparedStatement`.
 
 1. Setup JDBC url and enable server side prepared statement
 

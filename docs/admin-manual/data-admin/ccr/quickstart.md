@@ -59,7 +59,7 @@ sh stop_syncer.sh
 ALTER TABLE your_table_name ENABLE BINLOG SET ("binlog.enable" = "true");
 ```
 
-## Step 4. Initiate a synchronization job to Syncer
+## Step 4. Initiate a synchronization job in Syncer
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{

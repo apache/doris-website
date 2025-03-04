@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Integration with Apache Ranger
+
 
 Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform.
 
@@ -54,7 +54,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 	
 3. Restart the Ranger service.
 
-4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-2.1/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. Execute the following command to upload the definition file to the Ranger service:
 
@@ -239,20 +239,48 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 ## Best Practices
 
 ### Configuring Permissions
-
 1. Create `user1` in Doris.
 2. Using the `admin` user in Doris, create a Catalog named `hive`.
 3. Create `user1` in Ranger.
-4. Add a Policy in Ranger named `show_hive_catalog`
 
-    ![ranger3](/images/ranger/ranger3.png)
+#### Global Priv
+Equivalent to Doris' internal authorization statement `grant select_priv on *.*.* to user1`;
+- The global option can be found in the dropdown menu of the same level in the catalog
+- Only `*` can be entered in the input box 
 
-5. Log in to Doris as `user1` and execute `show catalogs`; only the `hive` catalog should be visible.
-6. Add a Policy in Ranger named `select_hive_catalog`
+  ![global](/images/ranger/global.png)
 
-    ![ranger4](/images/ranger/ranger4.png)
+#### Catalog Priv
+Equivalent to Doris' internal authorization statement `grant select_priv on hive.*.* to user1`;
 
-7. Log in to Doris as `user1`. This user can now view or query all tables under any database starting with `tpch` in the `hive` catalog.
+![catalog](/images/ranger/catalog.png)
+
+#### Database Priv
+Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.* to user1`;
+
+![database](/images/ranger/database.png)
+
+#### Table Priv
+Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.user to user1`;
+
+![table](/images/ranger/table.png)
+
+#### Column Priv
+Equivalent to Doris' internal authorization statement `grant select_priv(name,age) on hive.tpch.user to user1`;
+
+![column](/images/ranger/column.png)
+
+#### Resource Priv
+Equivalent to Doris' internal authorization statement `grant usage_priv on resource 'resource1' to user1`;
+- The resource option can be found in the dropdown menu of the same level in the catalog
+
+![resource](/images/ranger/resource.png)
+
+#### Workload Group Priv
+Equivalent to Doris' internal authorization statement `grant usage_priv on workload group 'group1' to user1`;
+- The workload group option can be found in the dropdown menu of the same level in the catalog
+
+![group1](/images/ranger/group1.png)
 
 ### Row Policy Example
 

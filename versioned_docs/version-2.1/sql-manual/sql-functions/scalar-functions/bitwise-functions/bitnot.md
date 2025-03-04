@@ -27,7 +27,7 @@ under the License.
 ## Description
 Used to perform a bitwise inversion operation on an integer.
 
-Integer range: TINYINT、SMALLINT、INT、BIGINT、LARGEINT
+Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
 
 ## Syntax
 ```sql

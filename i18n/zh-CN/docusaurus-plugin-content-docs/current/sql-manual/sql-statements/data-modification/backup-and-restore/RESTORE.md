@@ -85,7 +85,7 @@ FROM `<repository_name>`
 
 ## 权限控制
 
-执行此SQL命令的用户必须至少具有以下权限：
+执行此 SQL 命令的用户必须至少具有以下权限：
 | 权限         | 对象         | 说明          |
 |:------------|:------------|:--------------|
 | LOAD_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 LOAD_PRIV 权限才能进行此操作 |
@@ -97,7 +97,7 @@ FROM `<repository_name>`
 - 可以将仓库中备份的表恢复替换数据库中已有的同名表，但须保证两张表的表结构完全一致。表结构包括：表名、列、分区、Rollup 等等。
 - 可以指定恢复表的部分分区，系统会检查分区 Range 或者 List 是否能够匹配。
 - 可以通过 AS 语句将仓库中备份的表名恢复为新的表。但新表名不能已存在于数据库中。分区名称不能修改。
-- 恢复操作的效率： 在集群规模相同的情况下，恢复操作的耗时基本等同于备份操作的耗时。如果想加速恢复操作，可以先通过设置 `replication_num` 参数，仅恢复一个副本，之后在通过调整副本数 [ALTER TABLE PROPERTY](../../../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md)，将副本补齐。
+- 恢复操作的效率：在集群规模相同的情况下，恢复操作的耗时基本等同于备份操作的耗时。如果想加速恢复操作，可以先通过设置 `replication_num` 参数，仅恢复一个副本，之后在通过调整副本数 [ALTER TABLE PROPERTY](../../../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md)，将副本补齐。
 
 ## 示例
 

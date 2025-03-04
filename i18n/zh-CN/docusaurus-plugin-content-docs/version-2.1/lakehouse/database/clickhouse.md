@@ -30,7 +30,7 @@ Doris JDBC Catalog 支持通过标准 JDBC 接口连接 ClickHouse 数据库。�
 
 要连接到 ClickHouse 数据库，您需要
 
-- ClickHouse 23.x 或更高版本(低于此版本未经充分测试)。
+- ClickHouse 23.x 或更高版本 (低于此版本未经充分测试)。
 
 - ClickHouse 数据库的 JDBC 驱动程序，您可以从 [Maven 仓库](https://mvnrepository.com/artifact/com.clickhouse/clickhouse-jdbc)下载最新或指定版本的 ClickHouse JDBC 驱动程序。**推荐使用 ClickHouse JDBC Driver 0.4.6 版本。**
 
@@ -96,7 +96,7 @@ CREATE CATALOG clickhouse PROPERTIES (
 | Int256/UInt128/UInt256 | STRING           | Doris 没有这个数量级的数据类型，采用 STRING 处理           |
 | DECIMAL                | DECIMALV3/STRING | 将根据 DECIMAL 字段的（precision, scale) 选择用何种类型 |
 | Enum/IPv4/IPv6/UUID    | STRING           |                                           |
-| Array                  | ARRAY            | Array内部类型适配逻辑参考上述类型                       |
+| Array                  | ARRAY            | Array 内部类型适配逻辑参考上述类型                       |
 | Other                  | UNSUPPORTED      |                                           |
 
 ## 查询优化
@@ -105,7 +105,7 @@ CREATE CATALOG clickhouse PROPERTIES (
 
 1. 当执行类似于 `where dt = '2022-01-01'` 这样的查询时，Doris 能够将这些过滤条件下推到外部数据源，从而直接在数据源层面排除不符合条件的数据，减少了不必要的数据获取和传输。这大大提高了查询性能，同时也降低了对外部数据源的负载。
 
-2. 当变量 `enable_ext_func_pred_pushdown` 设置为true，会将 where 之后的函数条件也下推到外部数据源。
+2. 当变量 `enable_ext_func_pred_pushdown` 设置为 true，会将 where 之后的函数条件也下推到外部数据源。
 
    目前支持下推到 ClickHouse 的函数有：
 

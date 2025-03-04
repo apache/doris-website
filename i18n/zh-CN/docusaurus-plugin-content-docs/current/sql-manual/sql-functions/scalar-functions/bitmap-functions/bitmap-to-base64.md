@@ -45,7 +45,7 @@ Bitmap 基于 Base64 编码后的字符串。
 
 ::: note
 
-BE配置项 `enable_set_in_bitmap_value` 会改变bitmap值在内存中的具体格式，因此会影响此函数的结果。  
+BE 配置项 `enable_set_in_bitmap_value` 会改变 bitmap 值在内存中的具体格式，因此会影响此函数的结果。  
 由于不能保证 bitmap 中元素的顺序，因此不能保证相同内容的 bitmap 生成的 base64 结果始终相同，但可以保证 bitmap_from_base64 解码后的 bitmap 相同。
 
 :::

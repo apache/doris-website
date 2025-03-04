@@ -44,11 +44,11 @@ SHOW TABLET STORAGE FORMAT [VERBOSE]
 
 | 列名            | 类型     | 说明                                  |
 |---------------|--------|-------------------------------------|
-| BackendId     | Int    | BE（Backend）节点的ID，表示该tablet的副本所在的节点。 |
+| BackendId     | Int    | BE（Backend）节点的 ID，表示该 tablet 的副本所在的节点。 |
 | V1Count       | Int    | V1 版本 tablet 数量。                    |
 | V2Count       | Int    | V2 版本 tablet 数量。                    |
-| TabletId      | Int    | tablet的唯一标识符，用于标识具体的tablet。         |
-| StorageFormat | String | tablet的版本 V1或V2                     |
+| TabletId      | Int    | tablet 的唯一标识符，用于标识具体的 tablet。         |
+| StorageFormat | String | tablet 的版本 V1 或 V2                     |
 
 
 ## 权限控制

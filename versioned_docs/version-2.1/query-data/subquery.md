@@ -304,20 +304,20 @@ With this flag, the `where` filtering condition can be rewritten as `where mark_
 
 ## Usage notes
 
-Since the output of a scalar subquery must be a single value, Doris adopts different processing methods for correlated and non-correlated scalar subqueries.
+Since the output of a scalar subquery must be a single value, a runtime error will be reported when the subquery returns more than one row of data.
 
 ### For Correlated Scalar Subqueries
 
-Currently, Doris can only statically ensure that the subquery outputs a single value (i.e., a single aggregate function without `group by`). Therefore, when using correlated scalar subqueries, a `group by`-less aggregate function such as `any_value` needs to be added according to requirements, so that the optimizer can recognize the single-value semantics smoothly. Users need to ensure that the subquery always returns only one value. If the subquery actually returns multiple values (other database systems would report an error at runtime), due to the added aggregate function, it will always return one value, although the result may not match expectations.
+When using a correlated quantifier subquery, if the subquery that satisfies the correlation condition returns more than one row of data, a runtime error will be reported.
 
 Please refer to the following SQL example:
 
 ```sql
--- Correlated scalar subquery lacking a single aggregate function without group by, currently not supported    
-select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;    
-  
--- Add a single aggregate function for the optimizer to recognize smoothly    
-select t1.*, (select any_value(t2.c1) from t2 where t1.c2 = t2.c2) from t1;
+-- If there are more than 1 row in the t2 table that satisfies t1.c2 = t2.c2 in the associated scalar subquery, a runtime error will be reported
+select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;
+
+-- Example error message
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT][E33] correlate scalar subquery must return only 1 row
 ```
 
 ### For Non-Correlated Scalar Subqueries

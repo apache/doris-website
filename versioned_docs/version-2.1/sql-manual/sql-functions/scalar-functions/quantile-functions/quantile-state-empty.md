@@ -1,6 +1,6 @@
 ---
 {
-    "title": "quantile_percent",
+    "title": "quantile_state_empty",
     "language": "en"
 }
 ---
@@ -22,4 +22,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
+Return an empty `quantile_state` type column.
+
+## Syntax
+
+```sql
+QUANTILE_STATE_EMPTY()
+```
+
+## Return value
+
+An empty `quantile_state` type column.
+
+## Example
+
+```sql
+select quantile_percent(quantile_union(quantile_state_empty()), 0)
+```
+
+Result is 
+
+```text
++-------------------------------------------------------------+
+| quantile_percent(quantile_union(quantile_state_empty()), 0) |
++-------------------------------------------------------------+
+|                                                        NULL |
++-------------------------------------------------------------+
+```

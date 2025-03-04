@@ -26,7 +26,7 @@ under the License.
 
 # Monitor Metrics
 
-Doris FE process and BE processes provide complete monitoring metrics. Monitoring metrics can be divided into two categories：
+Doris FE process and BE processes provide complete monitoring metrics. Monitoring metrics can be divided into two categories:
 
 1. **Process monitoring**: mainly displays some monitoring values of the Doris process itself .
 2. **Node monitoring**: mainly displays the monitoring of the node machine itself where the Doris process is located, such as CPU , memory, IO , network , etc.
@@ -48,7 +48,7 @@ doris_fe_cache_hit{type="sql"} 0
 doris_fe_connection_total 2
 ```
 
-Monitoring metrics in Json format can be fetched using `type` parameter in rest interface, for eg：
+Monitoring metrics in Json format can be fetched using `type` parameter in rest interface, for eg:
 
 ```
 curl http://fe_host:http_port/metrics?type=json

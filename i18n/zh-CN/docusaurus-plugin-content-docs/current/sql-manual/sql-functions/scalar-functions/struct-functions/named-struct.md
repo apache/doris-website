@@ -38,8 +38,8 @@ NAMED_STRUCT( <field_name> , <filed_value> [ , <field_name> , <filed_value> ... 
 
 | 参数 | 说明 |
 | -- | -- |
-| `<field_name>` | 构造 struct 的奇数位输入内容, field 的名字 |
-| `<filed_value>` | 构造 struct 的偶数位输入内容, field 的值，可以是多列或常量 |
+| `<field_name>` | 构造 struct 的奇数位输入内容，field 的名字 |
+| `<filed_value>` | 构造 struct 的偶数位输入内容，field 的值，可以是多列或常量 |
 
 ## 返回值
 

@@ -82,7 +82,7 @@ The following configuration items are configured in the `fe.conf` file.
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE log output mode, where `NORMAL` is the default output mode, log output is synchronous and includes location information. `ASYNC` is the default log output is asynchronous and includes location information. `BRIEF` mode is log output asynchronously but does not include location information. The performance of the three log output modes increases in sequence. |
 
 ::: note
-Starting from version 3.0.2, the default value of `sys_log_mode` configuration is changed to `AYSNC`.
+Starting from version 3.0.2, the default value of `sys_log_mode` configuration is changed to `ASYNC`.
 :::
 
 :::tip

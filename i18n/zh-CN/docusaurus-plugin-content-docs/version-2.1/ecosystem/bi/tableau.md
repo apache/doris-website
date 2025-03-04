@@ -33,12 +33,12 @@ Tableau Desktop 可通过如下链接进行下载：https://www.tableau.com/prod
 1. iODBC 安装
     1. 关闭 Tableau Desktop
     2. 安装 iODBC Driver Manager，可从 iODBC.org 网站获取最新版本 (mxkozzz.dmg)
-    3. 安装下载的dmg文件
+    3. 安装下载的 dmg 文件
 2. MySQL 驱动安装
 
 选择 MySQL 5.x 的 ODBC 驱动安装，最新的 MySQL 驱动连接 Doris 会报错 Unsupported command 错误。
 ## 连接配置与使用
-1. 点击 Tableau Desktop 主页，在连接数据源处选择MySQL
+1. 点击 Tableau Desktop 主页，在连接数据源处选择 MySQL
 
    ![main page](/images/bi-tableau-en-1.png)
 

@@ -30,7 +30,7 @@ under the License.
 
 `ARRAY<INT> multi_search_all_positions(VARCHAR haystack, ARRAY<VARCHAR> needles)`
 
-返回一个 `ARRAY`，其中第 `i` 个元素为 `needles` 中第 `i` 个元素 `needle`，在字符串 `haystack` 中**首次**出现的位置。位置从1开始计数，0代表未找到该元素。**大小写敏感**。
+返回一个 `ARRAY`，其中第 `i` 个元素为 `needles` 中第 `i` 个元素 `needle`，在字符串 `haystack` 中**首次**出现的位置。位置从 1 开始计数，0 代表未找到该元素。**大小写敏感**。
 
 ## 举例
 

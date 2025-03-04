@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 集成 Apache Ranger
 
-Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
+
+Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位的数据安全访问管理的安全框架。
 
 在 2.1.0 版本中，Doris 支持通过集成 Apache Ranger，进行统一的权限管理。
 
@@ -54,7 +54,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	
 3. 重启 Ranger 服务。
 
-4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-3.0/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. 执行以下命令上传定义文件到 Ranger 服务：
 
@@ -114,7 +114,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 
 安装完毕后，打开 Ranger WebUI，可以再 Service Manger 界面中看到 Apache Doris 插件：
 
-![ranger1](/images/ranger/ranger1.png)
+![ranger](/images/ranger/ranger1.png)
 
 点击插件旁边的 `+` 号添加一个  Doris 服务：
 
@@ -248,12 +248,12 @@ Config Properties 部分参数含义如下：
 - catalog 同级下拉框可以找到 global 选项
 - 输入框里只能输入 `*`
 
-  ![global](/images/ranger/global.png)
+	![global](/images/ranger/global.png)
 
 #### Catalog 权限
 相当于 Doris 内部授权语句的 `grant select_priv on hive.*.* to user1`;
 
-![catalog](/images/ranger/catalog.png)
+  ![catalog](/images/ranger/catalog.png)
 
 #### Database 权限
 相当于 Doris 内部授权语句的 `grant select_priv on hive.tpch.* to user1`;
