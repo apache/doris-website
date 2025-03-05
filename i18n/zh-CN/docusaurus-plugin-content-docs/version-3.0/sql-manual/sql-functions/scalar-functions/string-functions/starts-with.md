@@ -1,7 +1,7 @@
 ---
 {
     "title": "STARTS_WITH",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,32 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-The STARTS_WITH function checks if a string starts with a specified prefix. Returns true if the string starts with the specified prefix; otherwise returns false.
+STARTS_WITH 函数检查字符串是否以指定的前缀开头。如果字符串以指定的前缀开头，则返回 true；否则返回 false。
 
-## Syntax
+## 语法
 
 ```sql
 STARTS_WITH(<str>, <prefix>)
 ```
 
-## Parameters
-| Parameter | Description |
+## 参数
+| 参数 | 说明 |
 | ------- | ------------------------------ |
-| `<str>` | The string to check. Type: VARCHAR |
-| `<prefix>` | The prefix string to match. Type: VARCHAR |
+| `<str>` | 要检查的字符串。类型：VARCHAR |
+| `<prefix>` | 要匹配的前缀字符串。类型：VARCHAR |
 
-## Return Value
+## 返回值
 
-Returns BOOLEAN type.
+返回 BOOLEAN 类型。
 
-Special cases:
-- Returns NULL if any argument is NULL
+特殊情况：
+- 如果任何参数为 NULL，则返回 NULL
 
-## Examples
+## 举例
 
-1. Successful match
+1. 匹配成功
 ```sql
 SELECT starts_with('hello world', 'hello');
 ```
@@ -61,7 +61,7 @@ SELECT starts_with('hello world', 'hello');
 +-------------------------------------+
 ```
 
-2. Failed match
+2. 匹配失败
 ```sql
 SELECT starts_with('hello world', 'world');
 ```
