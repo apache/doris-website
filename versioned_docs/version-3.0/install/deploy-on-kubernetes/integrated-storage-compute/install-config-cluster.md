@@ -751,3 +751,27 @@ Support configmap monitoring and restart for FE and BE, Use FE usage as example.
     ```
 2. Update FE service configurations.  
    When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.
+
+## Using Kerberos Authentication
+The Doris Operator has supported Kerberos authentication for Doris (versions 2.1.9, 3.0.4, and later) in Kubernetes since version 25.2.0. To enable Kerberos authentication in Doris, both the [krb5.conf file](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) and [keytab files](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) are required.
+The Doris Operator mounts the krb5.conf file using a ConfigMap resource and mounts the keytab files using a Secret resource. The workflow for enabling Kerberos authentication is as follows:
+
+1. Create a ConfigMap containing the krb5.conf file:
+    ```shell
+    kubectl create -n ${namespace} configmap ${name} --from-file=krb5.conf
+    ```
+   Replace ${namespace} with the namespace where the DorisCluster is deployed, and ${name} with the desired name for the ConfigMap.
+2. Create a Secret containing the keytab files:
+    ```shell
+    kubectl create -n ${namespace} secret generic ${name} --from-file=${xxx.keytab}
+    ```
+   Replace ${namespace} with the namespace where the DorisCluster is deployed, and ${name} with the desired name for the Secret. If multiple keytab files need to be mounted, refer to the [kubectl create Secret documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/) to include them in a single Secret.
+3. Configure the DorisCluster resource to specify the ConfigMap containing krb5.conf and the Secret containing keytab files:
+    ```yaml
+    spec:
+      kerberosInfo:
+        krb5ConfigMap: ${krb5ConfigMapName}
+        keytabSecretName: ${keytabSecretName}
+        keytabPath: ${keytabPath}
+    ```
+   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/datalake-analytics/hive.md#catalog-configuration) documentation.
