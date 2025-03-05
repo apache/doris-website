@@ -138,13 +138,13 @@ Performance optimization suggestions:
 
 Currently, all rows in the same batch data writing task (whether a load task or `INSERT INTO`) can only update the same columns. To update data with different columns, write in different batches.
 
-## Flexible Partial Column Updates
+## Flexible Partial Column Updates (Experimental Feature)
 
-Before version x.x.x, Doris's partial update feature required that every row in an import update the same columns. Starting from version x.x.x, Doris supports a more flexible partial update method that allows each row in a single import to update different columns.
+Previously, Doris's partial update feature required that every row in an import update the same columns. Now, Doris supports a more flexible partial update method that allows each row in a single import to update different columns(only supported on the master branch).
 
 :::caution Note:
 
-1. The flexible partial update feature is supported since version x.x.x.
+1. The flexible partial update feature is still in the internal testing.
 2. Currently, only the Stream Load import method and tools using Stream Load (e.g. Doris-Flink-Connector) support this feature.
 3. The import file must be in JSON format when using flexible column updates.
 :::
