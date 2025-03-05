@@ -57,14 +57,14 @@ CloudDM 对 Apache Doris 进行了适配，通过添加 Doris 数据源进行数
 
 4. 添加数据源
    在填写完连接信息后，单击下方 新增数据源。CloudDM 跳转如下页面则添加成功。然后单击查看数据源跳转到数据查询页面。
-   ![添加数据源](/images/clouddm4.png)
+   ![添加数据源](/images/clouddm3.png)
 
 
 5. 使用数据库
 
    数据库连接建立以后，可以在左侧的数据库连接导航看到已创建的数据源连接，并且可以通过 CloudDM 连接并管理数据库。
 
-   ![数据查询](/images/clouddm3.png)
+   ![数据查询](/images/clouddm4.png)
 
 ## 功能支持
 

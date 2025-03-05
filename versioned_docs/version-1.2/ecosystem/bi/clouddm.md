@@ -50,24 +50,24 @@ The current verification is using CloudDM 3.0.1 version
 
    On the New Data Source page, select Doris Data Source to configure the following connection information:
 
-   - Client地址：The FE host address of Doris cluster, such as 192.0.0.1:9030.
-   - 账号：The username used to log in to the Doris cluster, such as admin.
-   - 密码：The user password used to log in to the Doris cluster.
-     ![配置连接](/images/clouddm2.png)
+    - Client地址：The FE host address of Doris cluster, such as 192.0.0.1:9030.
+    - 账号：The username used to log in to the Doris cluster, such as admin.
+    - 密码：The user password used to log in to the Doris cluster.
+      ![configure connections](/images/clouddm2.png)
 
 4. add data source
-   After filling in the connection information, click on "Add Data Source" below. If CloudDM redirects to the following page, 
+   After filling in the connection information, click on "Add Data Source" below. If CloudDM redirects to the following page,
    the addition is successful. Then click to view the data source and jump to the data query page.
-   ![添加数据源](/images/clouddm4.png)
+   ![add data source](/images/clouddm3.png)
 
 
 5. Using database
 
    After establishing the database connection, you can see the created data source connection in the left
-    database connection navigation, and you can connect and manage the database through CloudDM.
+   database connection navigation, and you can connect and manage the database through CloudDM.
 
 
-   ![数据查询](/images/clouddm3.png)
+![query data](/images/clouddm4.png)
 
 ## Functional support
 
