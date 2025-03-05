@@ -915,7 +915,7 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
     ```shell
     kubectl create -n ${namespace} secret generic ${name} --from-file= ${xxx.keytab}
     ```
-    ${namespace} 为 `DorisCluster` 部署的命名空间，${name} 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)。
+    ${namespace} 为 `DorisCluster` 部署的命名空间，${name} 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)将多个 `keytab` 文件放到一个 Secret 中。
 3. 配置 DorisCluster 资源，指定包含 `krb5.conf` 的 ConfigMap, 以及包含 `keytab` 文件的 Secret。
     ```yaml
     spec:
@@ -925,4 +925,4 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabPath: ${keytabPath}
     ```
     ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
-    catalog 请参考配置 [Hive Catalog](../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
+      atalog 请参考配置 [Hive Catalog](../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
