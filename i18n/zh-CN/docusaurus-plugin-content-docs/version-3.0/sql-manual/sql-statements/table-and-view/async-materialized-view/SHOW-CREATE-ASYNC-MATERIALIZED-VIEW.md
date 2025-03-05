@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
-    "language": "zh-CN"
+"title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
+"language": "zh-CN"
 }
 ---
 
@@ -24,10 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
-查看物化视图创建语句。
+查看异步物化视图创建语句。
 
 ## 语法
 
@@ -37,28 +36,29 @@ SHOW CREATE MATERIALIZED VIEW <materialized_view_name>
 
 ## 必选参数
 
-**1. <materialized_view_new_name>**
+**1. `<materialized_view_new_name>`**
 
 > 物化视图名称
+
+## 返回值
+
+| 列名 | 说明   |
+| -- |------|
+| Materialized View | 物化视图名   |
+| Create Materialized View | 物化视图创建语句 |
 
 ## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
-| 权限（Privilege） | 对象（Object） | 说明（Notes）                         |
-| :---------------- | :------------- | :------------------------------------ |
-| SHOW_PRIV         | 表（Table）    | 需要拥有当前物化视图的 SHOW_PRIV 权限 |
+| 权限 | 对象  | 说明                                                           |
+| :---------------- | :------------- |:-------------------------------------------------------------|
+| SELECT_PRIV/LOAD_PRIV/ALTER_PRIV/CREATE_PRIV/DROP_PRIV         | 表     |  |
 
-## 示例
+## 示例（Examples）
 
 1. 查看异步物化视图创建语句
 
     ```sql
     SHOW CREATE MATERIALIZED VIEW partition_mv;
-    ```
-
-2. 查看同步物化视图创建语句
-
-    ```sql
-    SHOW CREATE MATERIALIZED VIEW sync_agg_mv on lineitem;
     ```
