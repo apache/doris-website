@@ -46,6 +46,10 @@ When creating a table, specify whether to enable row storage, which columns to e
 "row_store_columns" = "column1,column2,column3"
 ```
 
+:::caution
+This feature is only supported in version 3.0 and above.
+:::
+
 3. Row storage page_size: defaults to 16KB.
 ``` 
 "row_store_page_size" = "16384"
