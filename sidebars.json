@@ -751,6 +751,15 @@
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/doris-kafka-connector",
+                {
+                    "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
                 "ecosystem/doris-streamloader",
                 {
                     "type": "category",
@@ -771,15 +780,6 @@
                     "items": [
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Operator",
-                    "items": [
-                        "ecosystem/doris-operator/doris-operator-overview",
-                        "ecosystem/doris-operator/on-alibaba",
-                        "ecosystem/doris-operator/on-aws"
                     ]
                 },
                 {
