@@ -74,6 +74,9 @@ PROPERTIES (
 
 更多云厂商示例和参数说明可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
+**注意**
+提供的对象存储路径必须具有head/get/list/put/multipartUpload/delete访问权限。
+
 ## 查看 Storage Vault 
 
 **语法**

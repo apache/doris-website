@@ -75,6 +75,9 @@ PROPERTIES (
 
 More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md).
 
+**Note**
+The provided object storage path must have head/get/list/put/multipartUpload/delete access permissions.
+
 ## View Storage Vaults
 
 **Syntax**

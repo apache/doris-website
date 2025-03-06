@@ -28,29 +28,50 @@ under the License.
 
 ## Description
 
-Used to restart a suspended Routine Load job. The restarted job will continue to consume from the previously consumed offset.
+This syntax is used to restart one or all paused Routine Load jobs. The restarted job will continue consuming from the previously consumed offset.
+
+## Syntax
 
 ```sql
-RESUME [ALL] ROUTINE LOAD FOR job_name
+RESUME [ALL] ROUTINE LOAD FOR <job_name>
 ```
 
-## Example
+## Required Parameters
 
-1. Restart the routine import job named test1.
+**1. `<job_name>`**
 
-    ```sql
-    RESUME ROUTINE LOAD FOR test1;
-    ```
+> Specifies the name of the job to restart. If ALL is specified, job_name is not required.
 
-2. Restart all routine import jobs.
+## Optional Parameters
 
-    ```sql
-    RESUME ALL ROUTINE LOAD;
-    ```
+**1. `[ALL]`**
 
-## Keywords
+> Optional parameter. If ALL is specified, it indicates restarting all paused routine load jobs.
 
-    RESUME, ROUTINE, LOAD
+## Access Control Requirements
 
-## Best Practice
+Users executing this SQL command must have at least the following privileges:
 
+| Privilege | Object | Notes |
+| :-------- | :----- | :---- |
+| LOAD_PRIV | Table | SHOW ROUTINE LOAD requires LOAD privilege on the table |
+
+## Notes
+
+- Only jobs in PAUSED state can be restarted
+- Restarted jobs will continue consuming data from the last consumed position
+- If a job has been paused for too long, the restart may fail due to expired Kafka data
+
+## Examples
+
+- Restart a routine load job named test1.
+
+   ```sql
+   RESUME ROUTINE LOAD FOR test1;
+   ```
+
+- Restart all routine load jobs.
+
+   ```sql
+   RESUME ALL ROUTINE LOAD;
+   ```
