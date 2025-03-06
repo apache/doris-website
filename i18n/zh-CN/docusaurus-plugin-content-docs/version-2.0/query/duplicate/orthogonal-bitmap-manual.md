@@ -136,6 +136,12 @@ orthogonal_bitmap_intersect_count(bitmap_column, column_to_filter, filter_values
 
 查询规划聚合上分 2 层，在第一层 be 节点（update、serialize）先按 filter_values 为 key 进行 hash 聚合，然后对所有 key 的 bitmap 求交集，再对交集结果求 count，count 值序列化后发送至第二层 be 节点（merge、finalize），在第二层 be 节点对所有来源于第一层节点的 count 值循环求 sum
 
+- **样例：**
+
+  ```sql
+    select orthogonal_bitmap_intersect_count(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+  ```
+
 **orthogonal_bitmap_union_count**
 
 求 bitmap 并集 count 函数，语法同原版 bitmap_union_count，但实现不同。
@@ -151,6 +157,13 @@ orthogonal_bitmap_union_count(bitmap_column)
 - 说明：
 
 查询规划上分 2 层，在第一层 be 节点（update、serialize）对所有 bitmap 求并集，再对并集的结果 bitmap 求 count，count 值序列化后发送至第二层 be 节点（merge、finalize），在第二层 be 节点对所有来源于第一层节点的 count 值循环求 sum
+
+
+- **样例：**
+
+  ```sql
+    select ORTHOGONAL_BITMAP_UNION_COUNT(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+  ```
 
 **orthogonal_bitmap_expr_calculate**
 
