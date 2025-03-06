@@ -86,3 +86,63 @@ mysql> select typ_id,hou,bitmap_to_string(arr) from testdb.test_bitmap;
 |     10 | buag  | 97997                 |
 +--------+-------+-----------------------+
 10 rows in set (0.07 sec)
+```
+
+## Importing a Bitmap Containing Multiple Elements
+
+The following demonstrates two methods for importing a bitmap column containing multiple elements using stream load. Users can choose the appropriate method based on their source file format.
+
+### bitmap_from_string
+
+When using `bitmap_from_string`, square brackets are not allowed in the arr column of the source file. Otherwise, it will be considered a data quality error.
+
+```sql
+1|koga|17,723
+2|nijg|146,285
+3|lojn|347,890
+4|lofn|489,871
+5|jfin|545,679
+6|kon|676,724
+7|nhga|767,689
+8|nfubg|879,878
+9|huang|969,798
+10|buag|97,997
+```
+
+Command for stream load
+
+```sql
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "column_separator:|" \
+    -H "columns:typ_id,hou,arr,arr=bitmap_from_string(arr)" \
+    -T test_bitmap.csv \
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
+```
+
+### bitmap_from_array
+
+When using `bitmap_from_array`, the source file can contain square brackets in the arr column. However, in stream load, the string type must first be cast to an array type before use.
+If the cast conversion is not applied, an error will occur due to the function signature not being found:  `[ANALYSIS_ERROR]TStatus: errCode = 2, detailMessage = Does not support non-builtin functions, or function does not exist: bitmap_from_array(<slot 8>)`
+
+```sql
+1|koga|[17,723]
+2|nijg|[146,285]
+3|lojn|[347,890]
+4|lofn|[489,871]
+5|jfin|[545,679]
+6|kon|[676,724]
+7|nhga|[767,689]
+8|nfubg|[879,878]
+9|huang|[969,798]
+10|buag|[97,997]
+```
+
+Command for stream load
+
+```sql
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "column_separator:|" \
+    -H "columns:typ_id,hou,arr_str,arr=bitmap_from_array(cast(arr_str as array<int>))" \
+    -T test_bitmap.csv \
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
+```
