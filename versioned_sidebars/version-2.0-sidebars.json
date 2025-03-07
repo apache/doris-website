@@ -952,7 +952,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-not-count",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-union-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-xor-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-or-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-contains",
