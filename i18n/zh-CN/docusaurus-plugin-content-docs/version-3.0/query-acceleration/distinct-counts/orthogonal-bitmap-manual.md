@@ -124,6 +124,12 @@ Load 数据时，对用户 BITMAP 值 Range 范围纵向切割，例如，用户
 
 - **说明：** 查询规划聚合上分 2 层，在第一层 BE 节点（Update、Serialize）先按 `filter_values` 为 Key 进行 Hash 聚合，然后对所有 Key 的 BITMAP 求交集，再对交集结果求 COUNT，COUNT 值序列化后发送至第二层 BE 节点（Merge、Finalize），在第二层 BE 节点对所有来源于第一层节点的 COUNT 值循环求 SUM。
 
+- **样例：**
+
+  ```sql
+    select orthogonal_bitmap_intersect_count(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+  ```
+
 **3. orthogonal_bitmap_union_count**
 
 求 BITMAP 并集 COUNT 函数，语法同原版 `bitmap_union_count`，但实现不同。
@@ -134,6 +140,11 @@ Load 数据时，对用户 BITMAP 值 Range 范围纵向切割，例如，用户
 
 - 说明：查询规划上分 2 层，在第一层 BE 节点（update、serialize）对所有 BITMAP 求并集，再对并集的结果 BITMAP 求 COUNT，COUNT 值序列化后发送至第二层 BE 节点（Merge、Finalize），在第二层 BE 节点对所有来源于第一层节点的 COUNT 值循环求 SUM。
 
+- **样例：**
+
+  ```sql
+    select ORTHOGONAL_BITMAP_UNION_COUNT(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
+  ```
 **4. orthogonal_bitmap_expr_calculate**
 
 求表达式 BITMAP 交并差集合计算函数。
