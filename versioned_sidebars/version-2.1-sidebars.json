@@ -767,6 +767,15 @@
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/doris-kafka-connector",
+                {
+                    "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
                 "ecosystem/doris-streamloader",
                 {
                     "type": "category",
@@ -787,15 +796,6 @@
                     "items": [
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Operator",
-                    "items": [
-                        "ecosystem/doris-operator/doris-operator-overview",
-                        "ecosystem/doris-operator/on-alibaba",
-                        "ecosystem/doris-operator/on-aws"
                     ]
                 },
                 {
@@ -1486,11 +1486,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/intersect-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-expr-calculate",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-expr-calculate-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-intersect",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-intersect-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-union-count",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/sum0",
                                 "sql-manual/sql-functions/aggregate-functions/window-funnel",
