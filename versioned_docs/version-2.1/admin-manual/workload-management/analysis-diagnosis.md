@@ -1,6 +1,6 @@
 ---
 {
-"title": "workload analysis diagnosis",
+"title": "Workload Analysis Diagnosis",
 "language": "en"
 }
 ---
