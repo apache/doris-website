@@ -78,6 +78,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.connect_timeout`        | `10s`           | 连接 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.read_timeout`           | `120s`          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.retry_count`            | `4`             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
+  | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于6位，则条件下推可能导致结果不准确。         | 2.1.9（含）之后  |
 
 * `{CommonProperties}`
 
