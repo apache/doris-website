@@ -38,6 +38,7 @@ under the License.
 - 导出数据至 Parquet/ORC 格式时，`bitmap`、`quantile_state` 和 `hll` 类型将以 Binary 格式导出。同时新增支持导出 `jsonb` 和 `variant` 类型，导出格式为 `string`。 [#44041](https://github.com/apache/doris/pull/44041) 
 
   - 更多内容，参考文档：[Export Overview - Apache Doris](https://doris.apache.org/docs/3.0/data-operate/export/export-overview)
+- 当通过 External Catalog 查询表名大小写不敏感的数据源（如 Hive）时，在之前版本中，可以使用任意大小写进行表名查询，但是在 3.0.4 版本中，将严格遵循 Doris 自身的表名大小写敏感策略。
 - 将 Hudi JNI Scanner 从 Spark API 替换为 Hadoop API，以增强兼容性。用户可以通过设置会话变量 `set hudi_jni_scanner=spark/hadoop` 进行切换。[#44267](https://github.com/apache/doris/pull/44267) 
 - 禁止在 Colocate 表中使用 `auto bucket`。 [#44396](https://github.com/apache/doris/pull/44396) 
 - 为 Catalog 增加 Paimon 缓存，不再进行实时数据查询。 [#44911 ](https://github.com/apache/doris/pull/44911)
