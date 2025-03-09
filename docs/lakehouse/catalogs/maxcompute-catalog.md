@@ -78,6 +78,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.connect_timeout`        | `10s`           | Timeout for connecting to MaxCompute.                                       | 2.1.8 and later         |
   | `mc.read_timeout`           | `120s`          | Timeout for reading from MaxCompute.                                        | 2.1.8 and later         |
   | `mc.retry_count`            | `4`             | Number of retries after a timeout.                                          | 2.1.8 and later         |
+  | `mc.datetime_predicate_push_down` | `true`  | Whether to allow pushdown of predicate conditions of `timestamp/timestamp_ntz` types. Doris will lose precision (9 -> 6) when synchronizing these two types. Therefore, if the original data has a precision higher than 6 digits, condition pushdown may lead to inaccurate results. | 2.1.9 and later  |
   
 * `{CommonProperties}`
 
