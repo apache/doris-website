@@ -36,7 +36,7 @@ under the License.
   
 - 向 Doris 中写入数据：在 Flink 中进行攒批后，通过 Stream Load 批量导入到 Doris 中；
   
-- 使用 Lookup Join 方式进行维表关联：借助 Lookup Join 的能力加速 Flink 中维表关联的性能；
+- 使用 Lookup Join 方式进行维表关联：通过攒批与异步查询加速维表关联的性能；
   
 - 整库同步：通过 FlinkCDC 完成 MySQL、Oracle、PostgreSQL 等数据库的整库同步，包含自动建表与 DDL 操作。
 
@@ -530,7 +530,17 @@ env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 
 ### Lookup Join
 
-对于维度表在 Doris 存放的场景，可以借助 Flink 的 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 对实时流里面的数据和 Doris 的维度表做 Join。
+使用 Lookup Join 的能力可以优化 Flink 中维表关联的性能。当使用 Flink JDBC Connector 进行维表关联时，会遇到以下问题：
+
+- Flink JDBC Connector 采用同步查询模式，即上游数据（如 Kafka）发送一条数据后，会立即查询 Doris 维表，导致高并发场景下查询延迟较高。
+  
+- JDBC 方式执行的查询通常是 逐条点查，Doris 更推荐批量查询以提升查询效率。
+
+使用 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 的方式进行维表关联，在 Flink Doris Connector 中具有以下优势：
+
+- 批量缓存上游数据，避免逐条查询带来的高延迟和数据库压力。
+
+- 异步执行关联查询，提升数据吞吐量并减少 Doris 查询负载。
 
 ```SQL
 CREATE TABLE fact_table (
