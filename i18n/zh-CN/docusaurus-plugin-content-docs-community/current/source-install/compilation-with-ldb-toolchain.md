@@ -110,6 +110,14 @@ export PATH=/path/to/node/bin:$PATH
 export PATH=/path/to/ldb_toolchain/bin:$PATH
 ```
 
+如果使用高版本（比合并相关代码时流水线使用的工具链高）的工具链可能会因为`-Werror`编译标志导致编译错误，高版本的clang可能会加一些新的warning会触发`-Werror`使编译错误，这时候可以在`custom_env.sh`中添加：
+
+```bash
+# 这里是举个例子可以根据具体情况添加
+export EXTRA_CXX_FLAGS="-Wno-deprecated-declarations"
+```
+
+来暂时通过编译，当然能提一个pr修复相关错误更好
 ## 编译 Doris
 
 :::tip
