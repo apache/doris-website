@@ -210,7 +210,7 @@ mysql> select * from test.student_trans;
 
 ### 读取 Doris 中的数据
 
-Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据：
+Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据，2.1 版本后推荐使用 ArrowFlightSQL 方式：
 
 - Thrift：通过调用 BE 的 thrift 接口读取数据，具体流程可参考 [通过 Thrift 接口读取数据](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md)
 
