@@ -36,7 +36,7 @@ order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 
 ## Function
 
-目前支持的 Function 包括 AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER() 和 SUM()。
+目前支持的 Function 包括 AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM() 和所有聚合函数。
 
 ## PARTITION BY 从句
 
@@ -75,15 +75,18 @@ ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | {
 create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
- | stock_symbol | closing_price | closing_date        |
- |--------------|---------------|---------------------|
- | JDR          | 12.86         | 2014-10-02 00:00:00 |
- | JDR          | 12.89         | 2014-10-03 00:00:00 |
- | JDR          | 12.94         | 2014-10-04 00:00:00 |
- | JDR          | 12.55         | 2014-10-05 00:00:00 |
- | JDR          | 14.03         | 2014-10-06 00:00:00 |
- | JDR          | 14.75         | 2014-10-07 00:00:00 |
- | JDR          | 13.98         | 2014-10-08 00:00:00 |
+```
+
+```text
+| stock_symbol | closing_price | closing_date        |
+|--------------|---------------|---------------------|
+| JDR          | 12.86         | 2014-10-02 00:00:00 |
+| JDR          | 12.89         | 2014-10-03 00:00:00 |
+| JDR          | 12.94         | 2014-10-04 00:00:00 |
+| JDR          | 12.55         | 2014-10-05 00:00:00 |
+| JDR          | 14.03         | 2014-10-06 00:00:00 |
+| JDR          | 14.75         | 2014-10-07 00:00:00 |
+| JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
 这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
@@ -93,15 +96,18 @@ select stock_symbol, closing_date, closing_price,
 avg(closing_price) over (partition by stock_symbol order by closing_date    
 rows between 1 preceding and 1 following) as moving_average    
 from stock_ticker;
- | stock_symbol | closing_date        | closing_price | moving_average |
- |--------------|---------------------|---------------|----------------|
- | JDR          | 2014-10-02 00:00:00 | 12.86         | 12.87          |
- | JDR          | 2014-10-03 00:00:00 | 12.89         | 12.89          |
- | JDR          | 2014-10-04 00:00:00 | 12.94         | 12.79          |
- | JDR          | 2014-10-05 00:00:00 | 12.55         | 13.17          |
- | JDR          | 2014-10-06 00:00:00 | 14.03         | 13.77          |
- | JDR          | 2014-10-07 00:00:00 | 14.75         | 14.25          |
- | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
+```
+
+```text
+| stock_symbol | closing_date        | closing_price | moving_average |
+|--------------|---------------------|---------------|----------------|
+| JDR          | 2014-10-02 00:00:00 | 12.86         | 12.87          |
+| JDR          | 2014-10-03 00:00:00 | 12.89         | 12.89          |
+| JDR          | 2014-10-04 00:00:00 | 12.94         | 12.79          |
+| JDR          | 2014-10-05 00:00:00 | 12.55         | 13.17          |
+| JDR          | 2014-10-06 00:00:00 | 14.03         | 13.77          |
+| JDR          | 2014-10-07 00:00:00 | 14.75         | 14.25          |
+| JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
 ## 更多帮助
