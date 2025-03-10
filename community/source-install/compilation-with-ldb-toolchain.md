@@ -108,6 +108,14 @@ export PATH=/path/to/node/bin:$PATH
 export PATH=/path/to/ldb_toolchain/bin:$PATH
 ```
 
+If using a high version (higher than the toolchain used by the pipeline when merging related code) of the toolchain may cause compilation errors due to the `-Werror` compilation flag, and a high version of clang may add some new warnings that will trigger `-Werror` to make the compilation error, which can be added in ``custom_env.sh``:
+
+```bash
+# Here's an example that can be added on a case-by-case basis.
+export EXTRA_CXX_FLAGS="-Wno-deprecated-declarations”
+```
+
+to temporarily pass the compilation, but of course it would be nice to have a pr to fix the error.
 ## Compile Doris
 
 :::tip
