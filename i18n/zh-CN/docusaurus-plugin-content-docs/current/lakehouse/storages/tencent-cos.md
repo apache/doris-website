@@ -26,7 +26,7 @@ under the License.
 
 ## 腾讯云 COS 访问参数
 
-本文档介绍访问腾讯云COS所需的参数，这些参数适用于以下场景：
+本文档介绍访问腾讯云 COS 所需的参数，这些参数适用于以下场景：
 
 - Catalog 属性
 - Table Valued Function 属性
@@ -61,16 +61,10 @@ under the License.
 
 ### 示例配置
 
-```properties
-"cos.access_key"="ak"
-"cos.secret_key"="sk"
-"cos.endpoint"="cos.ap-beijing.myqcloud.com"
-"cos.region"="ap-beijing"
+```plaintext
+"cos.access_key" = "ak",
+"cos.secret_key" = "sk",
+"cos.endpoint" = "cos.ap-beijing.myqcloud.com",
+"cos.region" = "ap-beijing"
 ```
 
-```properties
-"s3.access_key"="ak"
-"s3.secret_key"="sk"
-"cos.endpoint"="cos.ap-beijing.myqcloud.com"
-"cos.region"="ap-beijing"
-```
