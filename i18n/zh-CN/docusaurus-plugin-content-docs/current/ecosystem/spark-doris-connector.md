@@ -58,7 +58,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 </dependency>
 ```
 
-::: tip
+:::tip
 
 从 24.0.0 版本开始，Doris connector 包命名规则发生调整：
 1. 不再包含 Scala 版本信息
