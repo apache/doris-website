@@ -30,7 +30,16 @@ under the License.
 
 [Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
-本文档主要介绍 Flink Doris Connector 的使用。
+使用 FlinkConnector 可以完成以下操作：
+
+- 读取 Doris 中的数据：Flink Connector 支持从 BE 中并行读取数据，提高了数据读取的效率；
+  
+- 向 Doris 中写入数据：在 Flink 中进行攒批后，通过 Stream Load 批量导入到 Doris 中；
+  
+- 使用 Lookup Join 方式进行维表关联：借助 Lookup Join 的能力加速 Flink 中维表关联的性能；
+  
+- 整库同步：通过 FlinkCDC 完成 MySQL、Oracle、PostgreSQL 等数据库的整库同步，包含自动建表与 DDL 操作。
+
 
 ## 版本说明
 
