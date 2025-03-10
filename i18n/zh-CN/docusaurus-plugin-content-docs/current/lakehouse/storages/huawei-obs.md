@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 华为云OBS访问参数
+## 华为云 OBS 访问参数
 
-本文档介绍访问华为云OBS所需的参数，这些参数适用于以下场景：
+本文档介绍访问华为云 OBS 所需的参数，这些参数适用于以下场景：
 
 - Catalog 属性
 - Table Valued Function 属性
@@ -45,7 +45,7 @@ under the License.
 | `s3.secret_key`                 | `obs.secret_key` | OBS secret key，与 access key 配合使用的访问密钥 |        | 是    |
 | `s3.connection.maximum`         |                  | S3 最大连接数，指定与 OBS 服务建立的最大连接数           | `50`   | 否    |
 | `s3.connection.request.timeout` |                  | S3 请求超时时间，单位为毫秒，指定连接 OBS 服务时的请求超时时间   | `3000` | 否    |
-| `s3.connection.timeout`         |                  | S3 连接超时时间，单位为毫秒，指定与 OBS 服务建立连接时的超     
+| `s3.connection.timeout`         |                  | S3 连接超时时间，单位为毫秒，指定与 OBS 服务建立连接时的超     | `1000` | 否 |
 
 ### 认证配置
 
@@ -58,9 +58,9 @@ under the License.
 
 ### 配置示例
 
-```properties:
-  s3.endpoint: obs.cn-north-4.myhuaweicloud.com
-  s3.access_key: AKI******
-  s3.secret_key: 5+******
-  s3.region: cn-north-4
+```plaintext:
+"s3.access_key" = "ak",
+"s3.secret_key" = "sk",
+"s3.endpoint" = "obs.cn-north-4.myhuaweicloud.com"
+"s3.region" = "cn-north-4"
 ```

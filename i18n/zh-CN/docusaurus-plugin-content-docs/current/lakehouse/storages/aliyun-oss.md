@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 阿里云OSS访问参数
+# 阿里云 OSS 访问参数
 
-本文档介绍访问阿里云OSS所需的参数，这些参数适用于以下场景：
+本文档介绍访问阿里云 OSS 所需的参数，这些参数适用于以下场景：
 
 - Catalog 属性
 - Table Valued Function 属性
@@ -59,10 +59,10 @@ under the License.
 
 ### 示例配置
 
-```properties
-"oss.access_key" = "ak"
-"oss.secret_key" = "sk"
-"oss.endpoint" = "oss-cn-beijing.aliyuncs.com"
+```plaintext
+"oss.access_key" = "ak",
+"oss.secret_key" = "sk",
+"oss.endpoint" = "oss-cn-beijing.aliyuncs.com",
 "oss.region" = "cn-beijing"
 ```
 

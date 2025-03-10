@@ -222,6 +222,12 @@ By using `desc` to view the execution plan, you can see that Doris converts `@in
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 
+## FAQ
+
+1. Query blocked when using Java SKD to read incremental data through JNI
+
+    Please add `-Djol.skipHotspotSAAttach=true` to `JAVA_OPTS_FOR_JDK_17` or `JAVA_OPTS` in `be.conf`.
+
 ## Appendix
 
 ### Change Log
