@@ -75,6 +75,37 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 </dependency> 
 ```
 
+## 使用原理
+
+### 从 Doris 中读取数据
+
+在读取数据时，相较于 Flink JDBC Connector，Flink Doris Connector 具备更高的性能，推荐优先使用：
+
+- Flink JDBC Connector：虽然 Doris 兼容 MySQL 协议，但不建议通过 Flink JDBC Connector 读写 Doris 集群。此方式会导致数据在单个 FE 节点上串行读写，形成瓶颈，影响性能。
+  
+- Flink Doris Connector：自 Doris 2.1 版本后，默认使用 ADBC 协议作为 Flink Doris Connector 读取协议，读取时经过以下步骤：
+  
+  1. Flink Doris Connector 首先从 FE 获取查询计划中的 Tablet ID 信息
+     
+  2. 生成查询语句 SELECT * FROM tbs TABLET(id1, id2, id3)
+     
+  3. 然后通过 FE 的 ADBC 端口执行查询
+     
+  4. 由 BE 直接返回数据，避免数据流经 FE，从而消除 FE 单点瓶颈
+ 
+     
+### 向 Doris 中写入数据
+
+在使用 Flink Doris Connector 写入数据时，会在 Flink 内存中进行攒批操作，在通过 Stream Load 批量导入。Doris Flink Connector 提供了两种攒批模式，默认使用基于 Flink Checkpoint 的流式写入方式：
+
+|          | 流式写入 | 批量写入 |
+|----------|----------|----------|
+| **触发条件** | 依赖 Flink 的 Checkpoint，跟随 Flink 的 Checkpoint 周期写入到 Doris 中 | 基于 Connector 内的时间阈值、数据量阈值进行周期性提交，写入到 Doris 中 |
+| **一致性** | Exactly-Once | At-Least-Once，基于主键模型可以保证 Exactly-Once |
+| **延迟** | 受 Checkpoint 时间间隔限制，通常较高 | 独立的批处理机制，灵活调整 |
+| **容错与恢复** | 与 Flink 状态恢复完全一致 | 依赖外部去重逻辑（如 Doris 主键去重） |
+
+
 ## 快速上手
 
 #### 准备工作
