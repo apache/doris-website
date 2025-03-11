@@ -24,27 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_sub
 ## 描述
+
+对指定日期时间减去指定的周数，并返回计算后的新日期时间
+
 ## 语法
 
-`DATETIME WEEKS_SUB(DATETIME date, INT weeks)`
+```sql
+WEEKS_SUB(<datetime/date>, <nums>)
+```
 
-从日期时间或日期减去指定星期数
+## 参数
 
-参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
+| 参数                | 说明            |
+|-------------------|---------------|
+| `<datetime/date>` | 需要被计算的日期时间值，类型为 `DATETIME` 或 `DATE` |
+| `<nums>`          | 需要减去的周数 |
+
+## 返回值
+
+返回计算后的新日期
+
+返回值与输入的 <datetime/date> 类型一致。
+
+特殊情况：
+
+- <datetime/date> 输入为 NULL 时，返回 NULL
+- 如果计算结果越界，SQL 执行将会报错。在过滤条件中可以改写为 [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## 举例
 
+```sql
+select weeks_sub("2020-01-31 02:02:02", 1);
 ```
-mysql> select weeks_sub("2020-02-02 02:02:02", 1);
+
+```text
 +-------------------------------------+
-| weeks_sub('2020-02-02 02:02:02', 1) |
+| weeks_sub("2020-01-31 02:02:02", 1) |
 +-------------------------------------+
-| 2020-01-26 02:02:02                 |
+| 2020-01-24 02:02:02                 |
 +-------------------------------------+
 ```
 
-### keywords
+```sql
+select weeks_sub("0000-12-31", 500);
+```
 
-    WEEKS_SUB
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation weeks_sub of 0000-12-31, 500 out of range
+```

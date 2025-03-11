@@ -24,27 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_add
 ## 描述
+
+对指定日期时间增加指定的周数，并返回计算后的新日期时间
+
 ## 语法
 
-`DATETIME WEEKS_ADD(DATETIME date, INT weeks)`
+```sql
+WEEKS_ADD(<datetime/date>, <nums>)
+```
 
-从日期加上指定星期数
+## 参数
 
-参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
+| 参数                | 说明            |
+|-------------------|---------------|
+| `<datetime/date>` | 需要被计算的日期时间值，类型为 `DATETIME` 或 `DATE` |
+| `<nums>`          | 需要增加的周数 |
+
+## 返回值
+
+返回计算后的新日期
+
+返回值与输入的 <datetime/date> 类型一致。
+
+特殊情况：
+
+- <datetime/date> 输入为 NULL 时，返回 NULL
+- 如果计算结果越界，SQL 执行将会报错。在过滤条件中可以改写为 [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## 举例
 
+```sql
+select weeks_add("2020-01-31 02:02:02", 1);
 ```
-mysql> select weeks_add("2020-02-02 02:02:02", 1);
+
+```text
 +-------------------------------------+
-| weeks_add('2020-02-02 02:02:02', 1) |
+| weeks_add("2020-01-31 02:02:02", 1) |
 +-------------------------------------+
-| 2020-02-09 02:02:02                 |
+| 2020-02-07 02:02:02                 |
 +-------------------------------------+
 ```
 
-### keywords
+```sql
+select weeks_add("9999-02-02", 200);
+```
 
-    WEEKS_ADD
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation weeks_add of 9999-02-02, 200 out of range
+```

@@ -24,27 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_add
 ## 描述
+
+对指定日期时间增加指定的年数，并返回计算后的新日期时间
+
 ## 语法
 
-`DATETIME YEARS_ADD(DATETIME date, INT years)`
+```sql
+YEARS_ADD(<datetime/date>, <nums>)
+```
 
-从日期加上指定年数
+## 参数
 
-参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
+| 参数                | 说明            |
+|-------------------|---------------|
+| `<datetime/date>` | 需要被计算的日期时间值，类型为 `DATETIME` 或 `DATE` |
+| `<nums>`          | 需要增加的年数 |
+
+## 返回值
+
+返回计算后的新日期
+
+返回值与输入的 <datetime/date> 类型一致。
+
+特殊情况：
+
+- <datetime/date> 输入为 NULL 时，返回 NULL
+- 如果计算结果越界，SQL 执行将会报错。在 `where` 条件中使用，避免报错可以改写为作差形式： [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## 举例
 
+```sql
+select years_add('2010-11-30 23:59:59', 2);
 ```
-mysql> select years_add("2020-01-31 02:02:02", 1);
+
+```text
 +-------------------------------------+
-| years_add('2020-01-31 02:02:02', 1) |
+| years_add('2010-11-30 23:59:59', 2) |
 +-------------------------------------+
-| 2021-01-31 02:02:02                 |
+| 2012-11-30 23:59:59                 |
 +-------------------------------------+
 ```
 
-### keywords
+```sql
+select years_add('9999-12-31 23:59:59', 2);
+```
 
-    YEARS_ADD
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation years_add of 9999-12-31 23:59:59, 2 out of range
+```

@@ -44,13 +44,20 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 合法的日期值 |
+| `<date>` | 合法的日期值，类型为 `DATETIME` 或 `DATE` |
 | `<expr>` | 希望添加的时间间隔 |
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## 返回值
 
-返回计算后的日期。
+返回计算后的新日期
+
+返回值与输入的 <datetime/date> 类型一致。
+
+特殊情况：
+
+- <datetime/date> 输入为 NULL 时，返回 NULL
+- 如果计算结果越界，SQL 执行将会报错。在 `where` 条件中使用，避免报错可以改写为作差形式： [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## 举例
 
@@ -64,4 +71,12 @@ select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
 +-------------------------------------------------+
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
+```
+
+```sql
+select date_add('0000-01-01 23:59:59', INTERVAL -2 DAY);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation days_add of 0000-01-01 23:59:59, -2 out of range
 ```

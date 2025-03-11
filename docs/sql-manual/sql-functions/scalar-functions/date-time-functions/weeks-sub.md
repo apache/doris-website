@@ -24,25 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_sub
-### description
-#### Syntax
+## Description
 
-`DATETIME WEEKS_SUB(DATETIME date, INT weeks)`
+Subtracts a specified number of weeks from the given datetime and returns the calculated new datetime.
 
-Subtracts a specified number of weeks from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
+```sql
+WEEKS_SUB(<datetime/date>, <nums>)
 ```
-mysql> select weeks_sub("2020-02-02 02:02:02", 1);
+
+## Parameters
+
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of weeks to subtract |
+
+## Return Value
+
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
+
+## Example
+
+```sql
+select weeks_sub("2020-01-31 02:02:02", 1);
+```
+
+```text
 +-------------------------------------+
-| weeks_sub('2020-02-02 02:02:02', 1) |
+| weeks_sub("2020-01-31 02:02:02", 1) |
 +-------------------------------------+
-| 2020-01-26 02:02:02                 |
+| 2020-01-24 02:02:02                 |
 +-------------------------------------+
+```
+
+```sql
+select weeks_sub("0000-12-31", 500);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation weeks_sub of 0000-12-31, 500 out of range
 ```
 
 ### keywords

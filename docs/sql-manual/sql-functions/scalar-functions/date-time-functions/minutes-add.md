@@ -24,43 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Adds a specified number of minutes to a datetime value and returns a new datetime value.
+Adds a specified number of minutes to the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-MINUTES_ADD(<datetime>, <minutes>)
+MINUTES_ADD(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
+| Parameter | Description |
 |-----------|--------------------------------------------------|
-| `<datetime>`  | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
-| `<minutes>`   | The number of minutes to add, of type INT; can be positive or negative |
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of minutes to add |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the datetime value after adding the specified number of minutes.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
 ```sql
-SELECT MINUTES_ADD("2020-02-02", 1);
+select minutes_add("2020-01-31 02:02:02", 1),minutes_add("2020-01-31", 1),minutes_add("2020-01-31", -1);
 ```
 
 ```text
-+-----------------------------------------------------+
-| minutes_add(cast('2020-02-02' as DATETIMEV2(0)), 1) |
-+-----------------------------------------------------+
-| 2020-02-02 00:01:00                                 |
-+-----------------------------------------------------+
++---------------------------------------+------------------------------+-------------------------------+
+| minutes_add("2020-01-31 02:02:02", 1) | minutes_add("2020-01-31", 1) | minutes_add("2020-01-31", -1) |
++---------------------------------------+------------------------------+-------------------------------+
+| 2020-01-31 02:03:02                   | 2020-01-31 00:01:00          | 2020-01-30 23:59:00           |
++---------------------------------------+------------------------------+-------------------------------+
 ```
 
-**Note:**
-- When the number of minutes added is negative, it effectively subtracts the corresponding number of minutes.
-- The function automatically handles cases that cross hours and days.
-- If the input parameter is NULL, the function returns NULL.
+```sql
+select minutes_add("9999-12-31 12:00:00", 1000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation minutes_add of 9999-12-31 12:00:00, 1000 out of range

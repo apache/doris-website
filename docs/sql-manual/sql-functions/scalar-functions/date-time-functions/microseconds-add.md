@@ -24,42 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Adds a specified number of microseconds to a datetime value and returns a new datetime value.
+Adds a specified number of microseconds to the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-MICROSECONDS_ADD(<basetime>, <delta>)
+MICROSECONDS_ADD(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
+| Parameter | Description |
 |-----------|--------------------------------------------------|
-| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
-| `<delta>`     | The number of microseconds to add, of type INT; 1 second = 1,000,000 microseconds |
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of microseconds to add |
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, representing the time value after adding the specified number of microseconds to the input datetime. The precision of the return value is the same as that of the input parameter basetime.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
 ```sql
-SELECT NOW(3) AS current_time, MICROSECONDS_ADD(NOW(3), 100000) AS after_add;
+select microseconds_add("2020-01-31 02:02:02", 1),microseconds_add("2020-01-31", 1),microseconds_add("2020-01-31", -1);
 ```
 
 ```text
-+-------------------------+----------------------------+
-| current_time            | after_add                  |
-+-------------------------+----------------------------+
-| 2025-01-16 11:48:10.505 | 2025-01-16 11:48:10.605000 |
-+-------------------------+----------------------------+
++--------------------------------------------+-----------------------------------+------------------------------------+
+| microseconds_add("2020-01-31 02:02:02", 1) | microseconds_add("2020-01-31", 1) | microseconds_add("2020-01-31", -1) |
++--------------------------------------------+-----------------------------------+------------------------------------+
+| 2020-01-31 02:02:02.000001                 | 2020-01-31 00:00:00.000001        | 2020-01-30 23:59:59.999999         |
++--------------------------------------------+-----------------------------------+------------------------------------+
 ```
 
-**Note:**
-- `NOW(3)` returns the current time with a precision of 3 decimal places.
-- After adding 100000 microseconds (0.1 seconds), the time increases by 0.1 seconds.
+```sql
+select microseconds_add("9999-12-31 23:59:59", 10000000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation microseconds_add of 9999-12-31 23:59:59, 10000000 out of range
