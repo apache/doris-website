@@ -79,6 +79,8 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
 ### 从 Doris 中读取数据
 
+![FlinkConnectorPrinciples-JDBC-Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
+
 在读取数据时，相较于 Flink JDBC Connector，Flink Doris Connector 具备更高的性能，推荐优先使用：
 
 - Flink JDBC Connector：虽然 Doris 兼容 MySQL 协议，但不建议通过 Flink JDBC Connector 读写 Doris 集群。此方式会导致数据在单个 FE 节点上串行读写，形成瓶颈，影响性能。
