@@ -31,18 +31,27 @@ year_of_week
 
 ## Description
 
+Return to the `ISO week date` standard year, please refer to [ISO Week date](https://en.wikipedia.org/wiki/ISO_week_date).
+
+## Alias
+
+- yow
+
 ## Syntax
-
-`INT YEAR(DATETIME date)`
-
 
 ```sql
 SMALLINT year_of_week(DATE value)
-SMALLINT yow(DATE value)
 ```
 
+## Parameters
 
-Return to the `ISO week date` standard anniversary, please refer to [ISO Week date](https://en.wikipedia.org/wiki/ISO_week_date).
+| Parameters | Description |
+| -- | -- |
+| `<value>` | A date for calculate the year of week |
+
+## 返回值
+
+Return to the `ISO week date` standard year
 
 ## example
 
