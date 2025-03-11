@@ -738,6 +738,57 @@ After starting the Flink cluster, you can directly run the following command:
     --table-conf replication_num=1
 ```
 
+#### AWS Aurora MySQL Whole Database Synchronization
+
+```Shell
+<FLINK_HOME>bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    lib/flink-doris-connector-1.18-25.0.0.jar \
+    mysql-sync-database \
+    --database testwd \
+    --mysql-conf hostname=xxx.us-east-1.rds.amazonaws.com \
+    --mysql-conf port=3306 \
+    --mysql-conf username=admin \
+    --mysql-conf password=123456 \
+    --mysql-conf database-name=test \
+    --mysql-conf server-time-zone=UTC \
+    --including-tables "student" \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --table-conf replication_num=1 
+```
+
+#### AWS RDS MySQL Whole Database Synchronization
+
+```Shell
+<FLINK_HOME>bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    lib/flink-doris-connector-1.18-25.0.0.jar \
+    mysql-sync-database \
+    --database testwd \
+    --mysql-conf hostname=xxx.ap-southeast-1.rds.amazonaws.com \
+    --mysql-conf port=3306 \
+    --mysql-conf username=admin \
+    --mysql-conf password=123456 \
+    --mysql-conf database-name=test \
+    --mysql-conf server-time-zone=UTC \
+    --including-tables "student" \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --table-conf replication_num=1 
+```
+
+
 ## Usage Instructions
 
 ### Parameter Configuration
@@ -747,7 +798,7 @@ After starting the Flink cluster, you can directly run the following command:
 | Key                           | Default Value | Required | Comment                                                      |
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | fenodes                       | --            | Y        | Doris FE http addresses. Multiple addresses are supported and should be separated by commas. |
-| benodes                       | --            | N        | Doris BE http addresses. Multiple addresses are supported and should be separated by commas. Refer to [#187](https://github.com/apache/doris-flink-connector/pull/187). |
+| benodes                       | --            | N        | Doris BE http addresses. Multiple addresses are supported and should be separated by commas. |
 | jdbc-url                      | --            | N        | JDBC connection information, such as jdbc:mysql://127.0.0.1:9030. |
 | table.identifier              | --            | Y        | Doris table name, such as db.tbl.                            |
 | username                      | --            | Y        | Username for accessing Doris.                                |
@@ -763,10 +814,8 @@ After starting the Flink cluster, you can directly run the following command:
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | doris.request.query.timeout   | 21600s        | N        | The timeout for querying Doris. The default value is 6 hours. |
 | doris.request.tablet.size     | 1             | N        | The number of Doris Tablets corresponding to one Partition. The smaller this value is set, the more Partitions will be generated, which can increase the parallelism on the Flink side. However, it will also put more pressure on Doris. |
-| doris.batch.size              | 1024          | N        | The maximum number of rows read from BE at one time. Increasing this value can reduce the number of connections established between Flink and Doris, thereby reducing the additional time overhead caused by network latency. |
+| doris.batch.size              | 4064          | N        | The maximum number of rows read from BE at one time. Increasing this value can reduce the number of connections established between Flink and Doris, thereby reducing the additional time overhead caused by network latency. |
 | doris.exec.mem.limit          | 8192mb        | N        | The memory limit for a single query. The default is 8GB, in bytes. |
-| doris.deserialize.arrow.async | FALSE         | N        | Whether to support asynchronous conversion of Arrow format to the RowBatch required by the flink-doris-connector iteration. |
-| doris.deserialize.queue.size  | 64            | N        | The internal processing queue for asynchronous conversion of the Arrow format. It takes effect when doris.deserialize.arrow.async is set to true. |
 | source.use-flight-sql         | FALSE         | N        | Whether to use Arrow Flight SQL for reading.                 |
 | source.flight-sql-port        | -             | N        | The arrow_flight_sql_port of FE when using Arrow Flight SQL for reading. |
 
@@ -848,9 +897,7 @@ After starting the Flink cluster, you can directly run the following command:
 | --sink-conf             | All the configurations of the Doris Sink can be viewed [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#General Configuration Items). |
 | --mongodb-conf          | The configuration of the MongoDB CDCSource, for example, --mongodb-conf hosts=127.0.0.1:27017. You can view all the configurations of Mongo-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/). Among them, hosts, username, password, and database are required. --mongodb-conf schema.sample-percent is the configuration for automatically sampling MongoDB data to create tables in Doris, and the default value is 0.2. |
 | --table-conf            | The configuration items of the Doris table, that is, the content included in properties (except for table-buckets, which is not a properties attribute). For example, --table-conf replication_num=1, and --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50" means specifying the number of buckets for different tables in the order of regular expressions. If there is no match, the BUCKETS AUTO method will be used to create tables. |
-| --ignore-default-value  | Disable the default values of the MySQL table structure when synchronizing. It is applicable to the situation where there are default values for fields when synchronizing MySQL data to Doris, but the actual inserted data is null. Refer to [#152](https://github.com/apache/doris-flink-connector/pull/152). |
-| --use-new-schema-change | Whether to use the new schema change, which supports multi-column changes and default values in MySQL synchronization. Since version 1.6.0, this parameter is set to true by default. Refer to [#167](https://github.com/apache/doris-flink-connector/pull/167). |
-| --schema-change-mode    | The modes for parsing schema change, including debezium_structure and sql_parser. The debezium_structure mode is used by default. The debezium_structure mode parses the data structure used when the upstream CDC synchronizes data and judges DDL change operations by parsing this structure. The sql_parser mode parses the DDL statements when the upstream CDC synchronizes data to judge DDL change operations, so this parsing mode is more accurate. Usage example: --schema-change-mode debezium_structure. This function will be available in versions after 1.6.2.1. |
+| --schema-change-mode    | The modes for parsing schema change, including debezium_structure and sql_parser. The debezium_structure mode is used by default. The debezium_structure mode parses the data structure used when the upstream CDC synchronizes data and judges DDL change operations by parsing this structure. The sql_parser mode parses the DDL statements when the upstream CDC synchronizes data to judge DDL change operations, so this parsing mode is more accurate. Usage example: --schema-change-mode debezium_structure. This function will be available in versions after 24.0.0. |
 | --single-sink           | Whether to use a single Sink to synchronize all tables. After enabling, it can also automatically identify newly created tables upstream and create tables automatically. |
 | --multi-to-one-origin   | The configuration of the source tables when multiple upstream tables are written to the same table, for example: --multi-to-one-origin "a\_.\*\|b_.\*", refer to [#208](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | Used in combination with multi-to-one-origin, the configuration of the target table, for example: --multi-to-one-target "a\|b" |
@@ -1039,6 +1086,13 @@ json_value(data,'$.name') as name,
 if(op_type='delete',1,0) as __DORIS_DELETE_SIGN__ 
 from KAFKA_SOURCE;
 ```
+
+### Flink CDC Synchronize DDL Statements
+Generally, when synchronizing upstream data sources such as MySQL, when adding or deleting fields in the upstream, you need to synchronize the Schema Change operation in Doris.
+
+For this scenario, you usually need to write a program for the DataStream API and use the JsonDebeziumSchemaSerializer serializer provided by DorisSink to automatically perform SchemaChange. For details, please refer to [CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
+
+In the whole database synchronization tool provided by the Connector, no additional configuration is required, and the upstream DDL will be automatically synchronized and the SchemaChange operation will be performed in Doris.
 
 ## Frequently Asked Questions (FAQ)
 
