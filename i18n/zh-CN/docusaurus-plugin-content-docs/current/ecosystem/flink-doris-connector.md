@@ -30,7 +30,16 @@ under the License.
 
 [Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
-本文档主要介绍 Flink Doris Connector 的使用。
+使用 FlinkConnector 可以完成以下操作：
+
+- 读取 Doris 中的数据：Flink Connector 支持从 BE 中并行读取数据，提高了数据读取的效率；
+  
+- 向 Doris 中写入数据：在 Flink 中进行攒批后，通过 Stream Load 批量导入到 Doris 中；
+  
+- 使用 Lookup Join 方式进行维表关联：通过攒批与异步查询加速维表关联的性能；
+  
+- 整库同步：通过 FlinkCDC 完成 MySQL、Oracle、PostgreSQL 等数据库的整库同步，包含自动建表与 DDL 操作。
+
 
 ## 版本说明
 
@@ -65,6 +74,39 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
   <version>25.0.0</version>
 </dependency> 
 ```
+
+## 使用原理
+
+### 从 Doris 中读取数据
+
+![FlinkConnectorPrinciples-JDBC-Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
+
+在读取数据时，相较于 Flink JDBC Connector，Flink Doris Connector 具备更高的性能，推荐优先使用：
+
+- Flink JDBC Connector：虽然 Doris 兼容 MySQL 协议，但不建议通过 Flink JDBC Connector 读写 Doris 集群。此方式会导致数据在单个 FE 节点上串行读写，形成瓶颈，影响性能。
+  
+- Flink Doris Connector：自 Doris 2.1 版本后，默认使用 ADBC 协议作为 Flink Doris Connector 读取协议，读取时经过以下步骤：
+  
+  a. Flink Doris Connector 首先从 FE 获取查询计划中的 Tablet ID 信息
+     
+  b. 生成查询语句 SELECT * FROM tbs TABLET(id1, id2, id3)
+     
+  c. 然后通过 FE 的 ADBC 端口执行查询
+     
+  d. 由 BE 直接返回数据，避免数据流经 FE，从而消除 FE 单点瓶颈
+ 
+     
+### 向 Doris 中写入数据
+
+在使用 Flink Doris Connector 写入数据时，会在 Flink 内存中进行攒批操作，在通过 Stream Load 批量导入。Doris Flink Connector 提供了两种攒批模式，默认使用基于 Flink Checkpoint 的流式写入方式：
+
+|          | 流式写入 | 批量写入 |
+|----------|----------|----------|
+| **触发条件** | 依赖 Flink 的 Checkpoint，跟随 Flink 的 Checkpoint 周期写入到 Doris 中 | 基于 Connector 内的时间阈值、数据量阈值进行周期性提交，写入到 Doris 中 |
+| **一致性** | Exactly-Once | At-Least-Once，基于主键模型可以保证 Exactly-Once |
+| **延迟** | 受 Checkpoint 时间间隔限制，通常较高 | 独立的批处理机制，灵活调整 |
+| **容错与恢复** | 与 Flink 状态恢复完全一致 | 依赖外部去重逻辑（如 Doris 主键去重） |
+
 
 ## 快速上手
 
@@ -170,7 +212,7 @@ mysql> select * from test.student_trans;
 
 ### 读取 Doris 中的数据
 
-Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据：
+Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据，2.1 版本后推荐使用 ArrowFlightSQL 方式：
 
 - Thrift：通过调用 BE 的 thrift 接口读取数据，具体流程可参考 [通过 Thrift 接口读取数据](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md)
 
@@ -490,7 +532,17 @@ env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 
 ### Lookup Join
 
-对于维度表在 Doris 存放的场景，可以借助 Flink 的 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 对实时流里面的数据和 Doris 的维度表做 Join。
+使用 Lookup Join 的能力可以优化 Flink 中维表关联的性能。当使用 Flink JDBC Connector 进行维表关联时，会遇到以下问题：
+
+- Flink JDBC Connector 采用同步查询模式，即上游数据（如 Kafka）发送一条数据后，会立即查询 Doris 维表，导致高并发场景下查询延迟较高。
+  
+- JDBC 方式执行的查询通常是 逐条点查，Doris 更推荐批量查询以提升查询效率。
+
+使用 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 的方式进行维表关联，在 Flink Doris Connector 中具有以下优势：
+
+- 批量缓存上游数据，避免逐条查询带来的高延迟和数据库压力。
+
+- 异步执行关联查询，提升数据吞吐量并减少 Doris 查询负载。
 
 ```SQL
 CREATE TABLE fact_table (
