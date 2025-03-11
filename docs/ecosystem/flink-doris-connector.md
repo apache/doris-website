@@ -24,13 +24,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
 
 The [Flink Doris Connector](https://github.com/apache/doris-flink-connector) is used to read from and write data to a Doris cluster through Flink. It also integrates [FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/), which allows for more convenient full database synchronization with upstream databases such as MySQL.
 
-This document primarily introduces the usage of the Flink Doris Connector.
+Using the Flink Connector, you can perform the following operations:
 
-# Version Description
+- **Read data from Doris**: Flink Connector supports parallel reading from BE, improving data retrieval efficiency.
+
+- **Write data to Doris**: After batching in Flink, data is imported into Doris in bulk using Stream Load.
+
+- **Perform dimension table joins with Lookup Join**: Batching and asynchronous queries accelerate dimension table joins.
+
+- **Full database synchronization**: Using Flink CDC, you can synchronize entire databases such as MySQL, Oracle, and PostgreSQL, including automatic table creation and DDL operations.
+
+## Version Description
 
 | Connector Version | Flink Version                 | Doris Version | Java Version | Scala Version |
 | ----------------- | ----------------------------- | ------------- | ------------ | ------------- |
@@ -45,7 +52,7 @@ This document primarily introduces the usage of the Flink Doris Connector.
 | 24.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 
-# Usage
+## Usage
 
 The Flink Doris Connector can be used in two ways: via Jar or Maven.
 
@@ -64,6 +71,38 @@ To use it with Maven, simply add the following dependency to your Pom file:
   <version>25.0.0</version>
 </dependency> 
 ```
+
+## Working Principles
+
+### Reading Data from Doris
+
+![FlinkConnectorPrinciples-JDBC-Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
+
+When reading data, Flink Doris Connector offers higher performance compared to Flink JDBC Connector and is recommended for use:
+
+- **Flink JDBC Connector**: Although Doris is compatible with the MySQL protocol, using Flink JDBC Connector for reading and writing to a Doris cluster is not recommended. This approach results in serial read/write operations on a single FE node, creating a bottleneck and affecting performance.
+
+- **Flink Doris Connector**: Starting from Doris 2.1, ADBC is the default protocol for Flink Doris Connector. The reading process follows these steps:
+
+  a. Flink Doris Connector first retrieves Tablet ID information from FE based on the query plan.  
+
+  b. It generates the query statement: `SELECT * FROM tbs TABLET(id1, id2, id3)`.  
+
+  c. The query is then executed through the ADBC port of FE.  
+
+  d. Data is returned directly from BE, bypassing FE to eliminate the single-point bottleneck.  
+
+### Writing Data to Doris
+
+When using Flink Doris Connector for data writing, batch processing is performed in Flink's memory before bulk import via Stream Load. Doris Flink Connector provides two batching modes, with Flink Checkpoint-based streaming writes as the default:
+
+|          | Streaming Write | Batch Write |
+|----------|----------------|-------------|
+| **Trigger Condition** | Relies on Flink Checkpoints and follows Flink's checkpoint cycle to write to Doris | Periodic submission based on connector-defined time or data volume thresholds |
+| **Consistency** | Exactly-Once | At-Least-Once; Exactly-Once can be ensured with the primary key model |
+| **Latency** | Limited by the Flink checkpoint interval, generally higher | Independent batch mechanism with flexible adjustment |
+| **Fault Tolerance & Recovery** | Fully consistent with Flink state recovery | Relies on external deduplication logic (e.g., Doris primary key deduplication) |
+
 
 ## Quick Start
 
@@ -171,7 +210,7 @@ mysql> select * from test.student_trans;
 
 ### Reading Data from Doris
 
-When Flink reads data from Doris, currently the Doris Source is a bounded stream and does not support continuous reading in CDC mode. You can read data from Doris using Thrift or ArrowFlightSQL (supported from version 24.0.0 onwards):
+When Flink reads data from Doris, the Doris Source is currently a bounded stream and does not support continuous reading in a CDC manner. Data can be read from Doris using Thrift or ArrowFlightSQL (supported from version 24.0.0 onward). Starting from version 2.1, ArrowFlightSQL is the recommended approach.
 
 - **Thrift**: Data is read by calling the BE's Thrift interface. For detailed steps, refer to [Reading Data via Thrift Interface](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md).
 - **ArrowFlightSQL**: Based on Doris 2.1, this method allows high-speed reading of large volumes of data using the Arrow Flight SQL protocol. For more information, refer to [High-speed Data Transfer via Arrow Flight SQL](https://doris.apache.org/docs/dev/db-connect/arrow-flight-sql-connect/).
@@ -490,7 +529,17 @@ For the complete code, refer to:[DorisSinkMultiTableExample.java](https://github
 
 ### Lookup Join
 
-In scenarios where dimension tables are stored in Doris, you can use Flink's [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) to perform a join between real-time stream data and the dimension tables in Doris.
+Using Lookup Join can optimize dimension table joins in Flink. When using Flink JDBC Connector for dimension table joins, the following issues may arise:
+
+- Flink JDBC Connector uses a synchronous query mode, meaning that after upstream data (e.g., from Kafka) sends a record, it immediately queries the Doris dimension table. This results in high query latency under high-concurrency scenarios.  
+
+- Queries executed via JDBC are typically point lookups per record, whereas Doris recommends batch queries for better efficiency.  
+
+Using [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) for dimension table joins in Flink Doris Connector provides the following advantages:  
+
+- **Batch caching of upstream data**, avoiding the high latency and database load caused by per-record queries.  
+
+- **Asynchronous execution of join queries**, improving data throughput and reducing the query load on Doris.  
 
 ```SQL
 CREATE TABLE fact_table (
