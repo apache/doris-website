@@ -39,7 +39,7 @@ Partial column update allows you to update specific fields in a table without mo
 1. Version 2.0 only supports partial column updates in the Merge-on-Write implementation of the Unique Key.
 2. Starting from version 2.0.2, partial column updates are supported using INSERT INTO.
 3. Partial column updates are not supported on tables with synchronized materialized views.
-
+4. Partial column updates are not allowed on tables doing schema change.
 :::
 
 ### Applicable Scenarios
