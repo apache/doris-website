@@ -415,7 +415,7 @@ FE https 端口，当前所有 FE https 端口都必须相同
 
 默认值：false
 
-FE https 使能标志位，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
+是否开启 FE https 的支持，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
 如果 enable_https 为 true，需要在 fe.conf 中配置 ssl 证书信息
 
 #### `enable_ssl`
