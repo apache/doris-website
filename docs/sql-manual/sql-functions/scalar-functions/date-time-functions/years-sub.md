@@ -24,27 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_sub
-### description
-#### Syntax
+## Description
 
-`DATETIME YEARS_SUB(DATETIME date, INT years)`
+Returns a new datetime value that is the result of subtracting a specified number of years from the input datetime.
 
-Subtracts a specified number of years from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
+```sql
+YEARS_SUB(<date>, <years>)
 ```
-mysql> select years_sub("2020-02-02 02:02:02", 1);
+
+## Parameters
+
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<date>`      | The input datetime value, which can be of type DATETIME or DATE |
+| `<years>`     | The number of years to subtract, of type INT         |
+
+## Return Value
+
+Returns a value with the same type as the input `<date>` (DATETIME or DATE), representing the time value after subtracting the specified number of years from the input datetime.
+
+## Example
+
+```sql
+SELECT YEARS_SUB('2020-02-02 02:02:02', 1);
+```
+
+```text
 +-------------------------------------+
 | years_sub('2020-02-02 02:02:02', 1) |
 +-------------------------------------+
 | 2019-02-02 02:02:02                 |
 +-------------------------------------+
 ```
-
-### keywords
-
-    YEARS_SUB

@@ -24,25 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_diff
-### description
-#### Syntax
+## Description
 
-`INT years_diff(DATETIME enddate, DATETIME startdate)`
+Calculates the difference in years between two datetime values.
 
-The difference between the start time and the end time is several years
+## Syntax
 
-### example
-
+```sql
+YEARS_DIFF(<enddate>, <startdate>)
 ```
-mysql> select years_diff('2020-12-25','2019-10-25');
+
+## Parameters
+
+| Parameter | Description                                      |
+|-----------|--------------------------------------------------|
+| `<enddate>`      | The end date, which can be of type DATETIME or DATE |
+| `<startdate>`     | The start date, which can be of type DATETIME or DATE |
+
+## Return Value
+
+Returns a value of type INT, representing the number of years between the two dates.
+
+## Example
+
+```sql
+SELECT YEARS_DIFF('2020-12-25', '2019-10-25');
+```
+
+```text
 +----------------------------------------------------------+
 | years_diff('2020-12-25 00:00:00', '2019-10-25 00:00:00') |
 +----------------------------------------------------------+
 |                                                        1 |
 +----------------------------------------------------------+
 ```
-
-### keywords
-
-    years_diff
