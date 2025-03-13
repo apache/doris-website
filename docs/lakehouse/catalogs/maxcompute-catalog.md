@@ -78,6 +78,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.connect_timeout`        | `10s`           | Timeout for connecting to MaxCompute.                                       | 2.1.8 and later         |
   | `mc.read_timeout`           | `120s`          | Timeout for reading from MaxCompute.                                        | 2.1.8 and later         |
   | `mc.retry_count`            | `4`             | Number of retries after a timeout.                                          | 2.1.8 and later         |
+  | `mc.datetime_predicate_push_down` | `true`  | Whether to allow pushdown of predicate conditions of `timestamp/timestamp_ntz` types. Doris will lose precision (9 -> 6) when synchronizing these two types. Therefore, if the original data has a precision higher than 6 digits, condition pushdown may lead to inaccurate results. | 2.1.9/3.0.5 and later  |
   
 * `{CommonProperties}`
 
@@ -112,6 +113,7 @@ Only the public cloud version of MaxCompute is supported. For support with the p
 | date             | date          |                                                                              |
 | datetime         | datetime(3)   | Fixed mapping to precision 3. You can specify the time zone using `SET [GLOBAL] time_zone = 'Asia/Shanghai'`. |
 | timestamp_ntz    | datetime(6)   | The precision of MaxCompute's `timestamp_ntz` is 9, but Doris' DATETIME supports a maximum precision of 6. Therefore, the extra part will be directly truncated when reading data. |
+| timestamp        | datetime(6)   | Since 2.1.9 & 3.0.5. The precision of MaxCompute's `timestamp` is 9, but Doris' DATETIME supports a maximum precision of 6. Therefore, the extra part will be directly truncated when reading data. |
 | array            | array         |                                                                              |
 | map              | map           |                                                                              |
 | struct           | struct        |                                                                              |
