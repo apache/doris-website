@@ -194,106 +194,106 @@ GROUP BY
 
 接下来，将详细说明如何针对上述四种操作构建物化视图：
 
-**1. 对于 Join**
+1. **对于 Join**
+    
+    可以提取查询中使用的公共的表连接模式来构建物化视图。透明改写如果使用了此物化视图，可以节省 Join 连接的计算。将查询中的 Filters 去除，这样就是一个比较通用的 Join 物化视图。
+    
+2. **对于 Aggregate**
+    
+    建议尽量使用低基数的字段作为维度来构建物化视图。如果维度相关，那么聚合后的数量可以尽量减少。
+    
+    比如表 t1，原表的数据量是 1000000，查询语句 SQL 中有 `group by a, b, c`。如果 a，b，c 的基数分别是 100，50，15，那么聚合后的数据大概在 75000 左右，说明此物化视图是有效的。如果 a，b，c 具有相关性，那么聚合后的数据量会进一步减少。
+    
+    如果 a, b, c 的基数很高，会导致聚合后的数据急速膨胀。如果聚合后的数据比原表的数据还多，可能这样的场景不太适合构建物化视图。比如 c 的基数是 3500，那么聚合后的数据量在 17000000 左右，比原表数据量大的多，构建这样的物化视图性能加速收益低。
+    
+    物化视图的聚合粒度要比查询细，即物化视图的聚合维度包含查询的聚合维度，这样才能提供查询所需的数据。查询可以不写 Group By，同理，物化视图的聚合函数应该包含查询的聚合函数。
 
-可以提取查询中使用的公共的表连接模式来构建物化视图。透明改写如果使用了此物化视图，可以节省 Join 连接的计算。将查询中的 Filters 去除，这样就是一个比较通用的 Join 物化视图。
+3. **对于 Filter**
+    
+    如果查询中经常出现对相同字段的过滤，那么通过在物化视图中添加相应的 Filter，可以减少物化视图中的数据量，从而提高查询时命中物化视图的性能。
+    
+    要注意的是，物化视图应该比查询中出现的 Filter 少，查询的 Filter 要包含物化的 Filter。比如查询是 `a > 10 and b > 5`，物化视图可以没有 Filter，如果有 Filter 的话应对 a 和 b 过滤，并且数据范围要求比查询大，例如物化视图可以是 `a > 5 and b > 5`，也可以是 `a > 5` 等。
 
-**2. 对于 Aggregate**
-
-建议尽量使用低基数的字段作为维度来构建物化视图。如果维度相关，那么聚合后的数量可以尽量减少。
-
-比如表 t1，原表的数据量是 1000000，查询语句 SQL 中有 `group by a, b, c`。如果 a，b，c 的基数分别是 100，50，15，那么聚合后的数据大概在 75000 左右，说明此物化视图是有效的。如果 a，b，c 具有相关性，那么聚合后的数据量会进一步减少。
-
-如果 a, b, c 的基数很高，会导致聚合后的数据急速膨胀。如果聚合后的数据比原表的数据还多，可能这样的场景不太适合构建物化视图。比如 c 的基数是 3500，那么聚合后的数据量在 17000000 左右，比原表数据量大的多，构建这样的物化视图性能加速收益低。
-
-物化视图的聚合粒度要比查询细，即物化视图的聚合维度包含查询的聚合维度，这样才能提供查询所需的数据。查询可以不写 Group By，同理，物化视图的聚合函数应该包含查询的聚合函数。
-
-**3. 对于 Filter**
-
-如果查询中经常出现对相同字段的过滤，那么通过在物化视图中添加相应的 Filter，可以减少物化视图中的数据量，从而提高查询时命中物化视图的性能。
-
-要注意的是，物化视图应该比查询中出现的 Filter 少，查询的 Filter 要包含物化的 Filter。比如查询是 `a > 10 and b > 5`，物化视图可以没有 Filter，如果有 Filter 的话应对 a 和 b 过滤，并且数据范围要求比查询大，例如物化视图可以是 `a > 5 and b > 5`，也可以是 `a > 5` 等。
-
-**4. 对于 Calculated Expressions**
-
-以 case when、处理字符串等函数为例，这部分表达式计算非常消耗性能，如果在物化视图中能够提前计算好，透明改写使用计算好的物化视图则可以提高查询的性能。
-
-建议物化视图的列数量尽量不要过多。如果查询使用了多个字段，应该根据最开始的查询 SQL 模式分组，分别构建对应列的物化视图，避免单个物化视图的列过多。
-
-以聚合查询加速为例：
-
-查询 1：
-
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_partkey;
-```
-
-查询 2：
-
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey;
-```
-
-根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by 
-维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，
-同时也需要被包含在物化视图的聚合 group by 维度中。
-
-通过这种方式构建的物化视图后，查询 1 和查询 2 都可以命中该物化视图，物化视图定义如下：
-
-```sql
-CREATE MATERIALIZED VIEW common_agg_mv
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL
-DISTRIBUTED BY RANDOM BUCKETS 2
-AS 
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate;
-```
+4. **对于 Calculated Expressions**
+    
+    以 case when、处理字符串等函数为例，这部分表达式计算非常消耗性能，如果在物化视图中能够提前计算好，透明改写使用计算好的物化视图则可以提高查询的性能。
+    
+    建议物化视图的列数量尽量不要过多。如果查询使用了多个字段，应该根据最开始的查询 SQL 模式分组，分别构建对应列的物化视图，避免单个物化视图的列过多。
+    
+    以聚合查询加速为例：
+    
+    查询 1：
+    
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_partkey;
+    ```
+    
+    查询 2：
+    
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey;
+    ```
+    
+    根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by 
+    维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，
+    同时也需要被包含在物化视图的聚合 group by 维度中。
+    
+    通过这种方式构建的物化视图后，查询 1 和查询 2 都可以命中该物化视图，物化视图定义如下：
+        
+    ```sql
+    CREATE MATERIALIZED VIEW common_agg_mv
+    BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    AS 
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate;
+    ```
 
 ## 使用场景
 
