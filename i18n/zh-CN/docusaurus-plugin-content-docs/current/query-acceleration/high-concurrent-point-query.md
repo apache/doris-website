@@ -29,7 +29,7 @@ under the License.
 高并发点查功能自 Doris 2.0 版本起具有重大性能提升
 :::
 
-## 背景 
+## 描述 
 
 Doris 基于列存格式引擎构建，在高并发服务场景中，用户总是希望从系统中获取整行数据。但是，当表宽时，列存格式将大大放大随机读取 IO。Doris 查询引擎和计划对于某些简单的查询（如点查询）来说太重了。需要一个在 FE 的查询规划中规划短路径来处理这样的查询。FE 是 SQL 查询的访问层服务，使用 Java 编写，分析和解析 SQL 也会导致高并发查询的高 CPU 开销。为了解决上述问题，我们在 Doris 中引入了行存、短查询路径、PreparedStatement 来解决上述问题，下面是开启这些优化的指南。
 
@@ -125,7 +125,7 @@ Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的�
 
 ## FAQ
 
-### Q1. 如何确定配置无误使用了并发点查的短路径优化
+#### Q1. 如何确定配置无误使用了并发点查的短路径优化
 
 A：explain sql，当执行计划中出现 SHORT-CIRCUIT，证明使用了短路径优化
 
@@ -161,7 +161,7 @@ mysql> explain select * from tbl_point_query where k1 = -2147481418 ;
 +-----------------------------------------------------------------------------------------------+
    ```
 
-### Q2. 如何确定 prepared statement 生效
+#### Q2. 如何确定 prepared statement 生效
 
 A：当发送请求到 Doris 之后，在 fe.audit.log 中找到相应的 query 请求，发现 Stmt=EXECUTE() ，说明 prepared statement 生效
 
@@ -171,14 +171,14 @@ A：当发送请求到 Doris 之后，在 fe.audit.log 中找到相应的 query 
    bles=
 ```
    
-### Q3. 非主键查询能否使用到高并发点查的特殊优化
+#### Q3. 非主键查询能否使用到高并发点查的特殊优化
 
 A：不能，高并发点查只针对于 key 列的等值查询，且查询中不能包含 join，嵌套子查询
 
-### Q4. useServerPrepStmts 在普通查询中是否有用
+#### Q4. useServerPrepStmts 在普通查询中是否有用
 
 A：Prepared Statement 目前只在主键点查的情况下生效
 
-### Q5. 优化器选择需要进行全局设置吗
+#### Q5. 优化器选择需要进行全局设置吗
 
 A：在使用 prepared statement 进行查询时，Doris 会选择性能最好的查询方式，不需要手动设置优化器
