@@ -3,7 +3,7 @@ import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
 import PageColumn from '../components/PageColumn';
-import React, { JSX} from 'react';
+import React, { JSX } from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
@@ -369,7 +369,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://www.youtube.com/@apachedoris/channels',
+            href: 'https://www.youtube.com/hashtag/apachedoris',
         },
     ];
     return (
