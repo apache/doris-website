@@ -81,7 +81,7 @@ Since `COUNT DISTINCT` requires storing detailed data and performing shuffling, 
 
 ------
 
-## Use Cases
+### Use Cases
 
 In large-scale data scenarios, the cost of deduplication using `COUNT DISTINCT` increases significantly, resulting in slower queries. Bitmap-based precise deduplication addresses these performance bottlenecks by mapping detailed data to bits. While sacrificing the flexibility of raw data, Bitmap greatly enhances computational efficiency. Consider using Bitmap in the following scenarios:
 
