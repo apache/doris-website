@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-This statement is used to show tablets and information of their belonging table (only for administrators).
+This statement is used to show tablets and information of their belonging table.
 
 ## Syntax
 
