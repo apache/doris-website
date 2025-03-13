@@ -34,7 +34,7 @@ under the License.
 SHOW STORAGE POLICY [ USING [ FOR <storage_policy_name> ] ]
 ```
 
-## 必选参数（Required Parameters）
+## 必选参数
 
 `<storage_policy_name>`: 要查看的存储策略的名字。
 
