@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DAYS_ADD",
+    "title": "DATE_ADD",
     "language": "en"
 }
 ---
@@ -44,13 +44,20 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date>` | A valid date value |
+| `<date>` | A valid date value, of type `DATETIME` or `DATE` |
 | `<expr>` | The time interval you want to add |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 
-Returns the calculated date.
+Returns the calculated new date.
+
+The return value type is consistent with the input <date> type.
+
+Special cases:
+
+- When <date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In `where` conditions, to avoid errors, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Examples
 
@@ -64,4 +71,12 @@ select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
 +-------------------------------------------------+
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
+```
+
+```sql
+select date_add('0000-01-01 23:59:59', INTERVAL -2 DAY);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation days_add of 0000-01-01 23:59:59, -2 out of range
 ```

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DAYS_SUB",
+    "title": "DATE_SUB",
     "language": "en"
 }
 ---
@@ -26,11 +26,9 @@ under the License.
 
 ## Description
 
-Subtracts a specified time interval to the date.
+Subtracts a specified time interval from the date.
 
 ## Alias
-
-## 别名
 
 - days_sub
 - date_sub
@@ -46,13 +44,20 @@ DATE_SUB(<date>, <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date>` | A valid date value |
-| `<expr>`| The time interval you want to subtract |
-| `<type>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | A valid date value, of type `DATETIME` or `DATE` |
+| `<expr>` | The time interval you want to subtract |
+| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 
-Returns the calculated date.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. When used in a `where` condition, to avoid errors, you can rewrite it as a difference form: [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Examples
 
@@ -66,4 +71,12 @@ select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
 +-------------------------------------------------+
 | 2010-11-28 23:59:59                             |
 +-------------------------------------------------+
+```
+
+```sql
+select date_sub('0000-01-01 23:59:59', INTERVAL 2 DAY);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation days_sub of 0000-01-01 23:59:59, 2 out of range
 ```

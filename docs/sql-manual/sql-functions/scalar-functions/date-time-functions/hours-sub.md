@@ -26,35 +26,49 @@ under the License.
 
 ## Description
 
-Returns a new datetime value that is the result of subtracting a specified number of hours from the input datetime.
+Subtracts a specified number of hours from the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-HOURS_SUB(<date>, <hours>)
+HOURS_SUB(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
+| Parameter | Description |
 |-----------|--------------------------------------------------|
-| `<date>`      | The input datetime value, which can be of type DATETIME or DATE |
-| `<hours>`     | The number of hours to subtract, of type INT     |
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of hours to subtract |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the time value after subtracting the specified number of hours from the input datetime.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
 ```sql
-SELECT HOURS_SUB('2020-02-02 02:02:02', 1);
+select hours_sub("2020-01-31 02:02:02", 1),hours_sub("2020-01-31", 1),hours_sub("2020-01-31", -1);
 ```
 
 ```text
-+------------------------------------------------------------+
-| hours_sub(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), 1) |
-+------------------------------------------------------------+
-| 2020-02-02 01:02:02                                        |
-+------------------------------------------------------------+
++-------------------------------------+----------------------------+-----------------------------+
+| hours_sub("2020-01-31 02:02:02", 1) | hours_sub("2020-01-31", 1) | hours_sub("2020-01-31", -1) |
++-------------------------------------+----------------------------+-----------------------------+
+| 2020-01-31 01:02:02                 | 2020-01-30 23:00:00        | 2020-01-31 01:00:00         |
++-------------------------------------+----------------------------+-----------------------------+
 ```
+
+```sql
+select hours_sub("0000-12-31 12:00:00", 200000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation hours_sub of 0000-12-31 12:00:00, 200000 out of range
