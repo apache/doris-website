@@ -18,15 +18,15 @@ LAG() is a window function that accesses data from previous rows without perform
 ## Syntax
 
 ```sql
-LAG ( <expr> [, <offset> [, <default> ] ] )
+LAG ( <expr>, <offset>, <default> )
 ```
 
 ## Parameters
-| Parameter           | Description                                                                                        |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
-| expr                | The expression whose value is to be retrieved                                                      |
-| offset              | Optional. Number of rows to look backward. Default is 1. When negative, behaves like LEAD function |
-| default             | Optional. Value to return when the offset goes beyond window bounds. Default is NULL               |
+| Parameter           | Description                                                                             |
+| ------------------- |-----------------------------------------------------------------------------------------|
+| expr                | The expression whose value is to be retrieved                                           |
+| offset              | Number of rows to look backward. When negative, behaves like LEAD function |
+| default             | Value to return when the offset goes beyond window bounds.     |
 
 ## Return Value
 
