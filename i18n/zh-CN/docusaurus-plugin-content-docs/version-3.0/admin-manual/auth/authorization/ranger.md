@@ -162,6 +162,10 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 2. 配置了 Row Level Filter policy ，但是用户查询时报没有权限
 
    Row Level Filter policy 仅用来限制用户访问表中数据的特定记录， 仍需通过 ACCESS POLICY 为用户授权
+3. 创建服务后，默认仅 `admin` 用户有权限， `root` 用户没有权限
+
+   如图所示，创建服务的时候，添加配置 `default.policy.users` ，如需配置多个用户拥有全部权限，用 `,` 分隔
+   ![default policy](/images/ranger/default-policy.png)
 
 ## 安装和配置 Doris Ranger 插件
 ### 安装插件
