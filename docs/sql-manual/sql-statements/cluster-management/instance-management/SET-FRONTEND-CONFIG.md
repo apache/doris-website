@@ -32,15 +32,14 @@ under the License.
 
 This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items).
 
-The configurable items can be viewed using the `SHOW FRONTEND CONFIG;` command.
-
-Syntax:
+## Syntax:
 
 ```sql
-ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
--- or
-ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
+ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_value>")
 ```
+
+## Optional Parameters
+`fe_config_key` and `fe_config_value` can be viewed and modified by `SHOW FRONTEND CONFIG;` command
 
 :::tip Explanation
 
@@ -52,11 +51,7 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 
 1. Set `disable_balance` to true
 
-    `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
-
-## Keywords
-
-ADMIN, SET, CONFIG
-
-## Best Practice
+    ```sql
+    ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+    ```
 
