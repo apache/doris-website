@@ -1,7 +1,7 @@
 ---
 {
-    "title": "TO_DATE",
-    "language": "en"
+  "title": "TO_DATE",
+  "language": "en"
 }
 ---
 
@@ -24,18 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_date
-### description
-#### Syntax
 
-`DATE TO_DATE(DATETIME)`
+## Description
+Date conversion function, used to convert a date time string or timestamp to a date type (DATE), that is, remove the time part and keep only the date (YYYY-MM-DD)
 
-Return the DATE part of DATETIME value.
-
-### example
-
+## Syntax
+```sql
+TO_DATE(<datetime_value>)
 ```
-mysql> select to_date("2020-02-02 00:00:00");
+
+## Required parameter
+**datetime_value**: datetime type datetime
+
+## Example
+
+Convert `2020-02-02 00:00:00` to `2020-02-02`
+```sql
+select to_date("2020-02-02 00:00:00");
+```
+```text
 +--------------------------------+
 | to_date('2020-02-02 00:00:00') |
 +--------------------------------+
@@ -43,6 +50,3 @@ mysql> select to_date("2020-02-02 00:00:00");
 +--------------------------------+
 ```
 
-### keywords
-
-    TO_DATE
