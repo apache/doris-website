@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SET FRONTEND CONFIG",
-    "language": "en"
+   "title": "SET FRONTEND CONFIG",
+   "language": "en"
 }
 ---
 
@@ -32,31 +32,26 @@ under the License.
 
 This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items).
 
-The configurable items can be viewed using the `SHOW FRONTEND CONFIG;` command.
-
-Syntax:
+## Syntax:
 
 ```sql
-ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
--- or
-ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
+ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_value>")
 ```
+
+## Optional Parameters
+`fe_config_key` and `fe_config_value` can be viewed and modified by `SHOW FRONTEND CONFIG;` command
 
 :::tip Explanation
 
-- Starting from versions 2.0.11 and 2.1.5, the `ALL` keyword is supported. When using the `ALL` keyword, the configuration parameters will be applied to all FEs (except for the `master_only` parameter).
+- The `ALL` keyword is supported. When using the `ALL` keyword, the configuration parameters will be applied to all FEs (except for the `master_only` parameter).
 - This syntax does not persistently modify the configuration. After an FE restarts, the modified configuration becomes invalid. To persist the changes, the configuration items need to be synchronously added in fe.conf.
-:::
+  :::
 
 ## Example
 
 1. Set `disable_balance` to true
 
-    `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
-
-## Keywords
-
-ADMIN, SET, CONFIG
-
-## Best Practice
+    ```sql
+    ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+    ```
 
