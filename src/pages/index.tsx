@@ -71,12 +71,19 @@ export default function Home(): JSX.Element {
         event: (
             <Link
                 to={'https://www.linkedin.com/events/7303775032810356736/comments/'}
-                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF' }}
-                onMouseEnter={()=>{document.getElementById('event-star-icon').fill = '#444FD9'}}
+                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+                onMouseEnter={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+                }}
+                onMouseLeave={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+                }}
                 className="rounded-full group w-[43.125rem] mx-auto flex py-4 px-[2.25rem] items-center justify-center"
             >
-                <HomeEvenStarIcon id='event-star-icon' />
-                <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">NEW</span>
+                <HomeEvenStarIcon id="event-star-icon" />
+                <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+                    NEW
+                </span>
                 <span className="ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
                     Join us live to decode the Apache Doris 2025 Roadmap on March 20 !{' '}
                 </span>

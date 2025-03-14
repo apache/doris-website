@@ -43,115 +43,7 @@ const EVENTS_PAGE_DATA = {
             description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
             status: 'Upcoming',
             img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
-        },
-        {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
-            img: <Events1Icon />,
-            link:'https://www.linkedin.com/events/7303775032810356736/comments/',
+            link: 'https://www.linkedin.com/events/7303775032810356736/comments/',
         },
     ],
 };
@@ -167,7 +59,11 @@ export default function Events() {
 
     const EventCard = ({ data }: { data: Event }) => {
         return (
-            <Link to={data.link} className="w-[24rem] rounded-lg">
+            <Link
+                to={data.link}
+                style={{ transition: 'all 0.2s ease-in-out' }}
+                className="!no-underline w-[24rem] rounded-lg hover:translate-y-[-0.5rem]"
+            >
                 <div className="relative h-[10.25rem] rounded-t-lg bg-[#162033] text-[#FFF] pt-[1.625rem] px-4">
                     <div className="absolute right-2 bottom-4">{data.img}</div>
                     <span className="">{data.tag}</span>
@@ -183,7 +79,7 @@ export default function Events() {
                     >
                         {data.status}
                     </div>
-                    <div className="mb-4 text-[1.25rem]/[2rem] font-semibold font-[#000]">{data.detailTitle}</div>
+                    <div className="mb-4 text-[1.25rem]/[2rem] font-semibold text-[#000]">{data.detailTitle}</div>
                     <p className="line-clamp-2 mb-4 text-[#1D1D1D] text-[0.875rem]/[1.375rem]">{data.description}</p>
                     <p className="mb-[0.675rem] flex items-center text-[#4C576C] text-[0.875rem]/[1.375rem]">
                         <DateIcon className="inline mr-2" />
@@ -204,12 +100,12 @@ export default function Events() {
                 <div className="events-banner-container container">
                     <div className="banner-title mb-4">{banner.title}</div>
                     <div className="banner-desc mb-6">{banner.desc}</div>
-                    <Link
+                    {/* <Link
                         className={clsx('button button--secondary button--lg', banner.action.type)}
                         to={banner.action.link}
                     >
                         {banner.action.label}
-                    </Link>
+                    </Link> */}
                 </div>
             </section>
             <section className="my-[5.5rem]">
@@ -230,9 +126,14 @@ export default function Events() {
                             ))}
                         </div>
                     ) : null}
-                    <div onClick={() => setShowMore(true)} className="cursor-pointer text-center mx-auto text-[#444FD9] text-[0.875rem]/[1.375rem]">
-                        See More <ArrowDown className="inline" />
-                    </div>
+                    {eventList.length > 9 ? (
+                        <div
+                            onClick={() => setShowMore(true)}
+                            className="cursor-pointer text-center mx-auto text-[#444FD9] text-[0.875rem]/[1.375rem]"
+                        >
+                            See More <ArrowDown className="inline" />
+                        </div>
+                    ) : null}
                 </div>
             </section>
         </Layout>
