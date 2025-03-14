@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   height: var(--docusaurus-announcement-bar-height);
-  background-color: var(--ifm-color-white);
+  background: linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF;
   color: var(--ifm-color-black);
 
   /*
