@@ -203,14 +203,13 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'support_us',
-                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
-                <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
-                    </a>`,
-                backgroundColor: '#3C2FD4',
-                textColor: '#FFFFFF',
-
-                // isCloseable: false,
+                id: 'join_us',
+                content: `<div style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; "><img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg"><span style="font-color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem;">NEW</span>
+                <a href="https://www.linkedin.com/events/7303775032810356736/comments/" target="_blank" style="text-decoration: none;">
+               <p>Join us live to decode the Apache Doris 2025 Roadmap on March 20 !  <span style="font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></span> 
+                   </p> </a></div>`,
+                textColor: '#4C576C',
+                isCloseable: false,
             },
             navbar: {
                 title: '',
@@ -236,6 +235,11 @@ const config = {
                     {
                         label: 'Ecosystem',
                         to: '/ecosystem/cluster-management',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Events',
+                        to: '/events',
                         position: 'left',
                     },
                     {

@@ -6,6 +6,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import HomeIcon from '@site/static/images/toc-icon/home.svg';
 import PdfIcon from '@site/static/images/toc-icon/pdf.svg';
 import GithubIcon from '@site/static/images/toc-icon/github.svg';
+import SlackIconUrl from '@site/static/images/toc-icon/slack.png';
+import SlackColorIconUrl from '@site/static/images/toc-icon/slack-color.png';
 import ConcatIcon from '@site/static/images/toc-icon/concat.svg';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS } from '@site/src/constant/common';
@@ -18,7 +20,7 @@ import styles from './styles.module.css';
 const LINK_CLASS_NAME = 'table-of-contents__link toc-highlight';
 const LINK_ACTIVE_CLASS_NAME = 'table-of-contents__link--active';
 
-export function downloadFile(url:string, filename:string) {
+export function downloadFile(url: string, filename: string) {
     var xml = new XMLHttpRequest();
     xml.open('GET', url, true);
     xml.responseType = 'blob';
@@ -37,6 +39,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const DEFAULT_VERSION = '2.1';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
+    const [isHoverSlack, setIsHoverSlack] = useState(false);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
         dom!.style.color = '#444FD9';
@@ -105,6 +108,24 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                     >
                         <GithubIcon />
                         <span>Ask Questions on Discussion</span>
+                    </Link>
+                ) : null}
+
+                {!isCN ? (
+                    <Link
+                        className="toc-icon-content"
+                        to={
+                            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw'
+                        }
+                        onMouseEnter={() => setIsHoverSlack(true)}
+                        onMouseLeave={() => setIsHoverSlack(false)}
+                    >
+                        {isHoverSlack ? (
+                            <img style={{margin:'2px'}} src={SlackColorIconUrl} width={16} alt="slack icon" />
+                        ) : (
+                            <img style={{margin:'2px'}} src={SlackIconUrl} width={16} alt="slack icon" />
+                        )}
+                        <span>Chat on Slack</span>
                     </Link>
                 ) : null}
             </div>

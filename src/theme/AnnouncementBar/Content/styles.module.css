@@ -12,3 +12,7 @@
 .content a:active {
   background-color: #3C2FD4;
 }
+
+.content p:hover {
+  text-decoration: underline;
+}
