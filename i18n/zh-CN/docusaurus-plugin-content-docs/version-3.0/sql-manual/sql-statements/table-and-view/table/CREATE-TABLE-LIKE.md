@@ -42,6 +42,7 @@ CREATE [TEMPORARY | EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name LIKE [
 - 用户需要对复制的原表有`SELECT`权限 
 - 支持复制 MySQL 等外表 
 - 支持复制 OLAP Table 的 rollup
+- 临时表只能是内表。只能基于内表创建
 - 指定 TEMPORARY 关键字时将会创建临时表
 - 未指定 TEMPORARY 关键字时将会创建普通内表，无论源表是否是临时表
 
