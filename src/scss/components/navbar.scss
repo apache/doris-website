@@ -3,8 +3,8 @@
     background-color: var(--global-colors-white);
     padding: 0;
     display: flex;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0px 6px 16px rgba(160, 170, 208, 0.15);
+    border-bottom: 1px solid #EDF2FA;
+
     &.docs {
         .navbar__inner {
             padding-left: 1.5rem;

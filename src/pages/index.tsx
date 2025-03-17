@@ -85,7 +85,7 @@ export default function Home(): JSX.Element {
                     NEW
                 </span>
                 <span className="ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    Join us live to decode the Apache Doris 2025 Roadmap on March 20 !{' '}
+                    Join us live on March 20 to deep dive into the Apache Doris 2025 Roadmap !
                 </span>
             </Link>
         ),
