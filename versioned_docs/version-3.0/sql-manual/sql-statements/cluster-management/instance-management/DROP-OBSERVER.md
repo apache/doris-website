@@ -24,36 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## Description
 
-This statement is to delete the node of the OBSERVER role of FRONTEND, (only for administrators!)
+This statement deletes the node with the OBSERVER role of FRONTEND (only used by administrators!)
 
-grammar:
+## Syntax
 
 ```sql
-ALTER SYSTEM DROP OBSERVER "follower_host:edit_log_port"
+ALTER SYSTEM DROP OBSERVER "<observer_host>:<edit_log_port>"
 ```
 
-illustrate:
+## Required Parameters
 
-1. host can be a hostname or an ip address
-2. edit_log_port : edit_log_port in its configuration file fe.conf
+**1. `<observer_host>`**
 
-## Example
+> Can be the hostname or IP address of the FE node
 
-1. Add a FOLLOWER node
+**2. `<edit_log_port>`**
 
-    ```sql
-    ALTER SYSTEM DROP OBSERVER "host_ip:9010"
-    ```
+> bdbje communication port of FE node, the default is 9010
 
-## Keywords
+## Access Control Requirements
 
-    ALTER, SYSTEM, DROP, OBSERVER, ALTER SYSTEM
+The user executing this SQL command must have at least the following permissions:
 
-## Best Practice
+| Privilege | Object | Notes |
+|-----------|----|-------|
+| NODE_PRIV |    |       |
 
+## Usage Notes
+
+1. After deleting the OBSERVER node, use[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they were successfully deleted.
+
+## Examples
+
+1. Deleting an OBSERVER node
+
+   ```sql
+   ALTER SYSTEM DROP OBSERVER "host_ip:9010"
+   ```
+   This command deletes an OBSERVER node in the cluster (IP host_ip, port 9010)

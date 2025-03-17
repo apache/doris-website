@@ -24,36 +24,43 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
-
 ## Description
 
-This statement is to increase the node of the OBSERVER role of FRONTEND, (only for administrators!)
+This statement adds a node with the OBSERVER role to the FRONTEND node (only used by administrators!)
 
-grammar:
+## Syntax
 
 ```sql
-ALTER SYSTEM ADD OBSERVER "follower_host:edit_log_port"
+ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>"
 ```
 
-illustrate:
+## Required Parameters
 
-1. host can be a hostname or an ip address
-2. edit_log_port : edit_log_port in its configuration file fe.conf
+**1. `<observer_host>`**
 
-## Example
+> Can be the hostname or IP address of the FE node
 
-1. Add an OBSERVER node
+**2. `<edit_log_port>`**
 
-    ```sql
-    ALTER SYSTEM ADD OBSERVER "host_ip:9010"
-    ```
+> bdbje communication port of FE node, the default is 9010
 
-## Keywords
+## Access Control Requirements
 
-    ALTER, SYSTEM, ADD, OBSERVER, ALTER SYSTEM
+The user executing this SQL command must have at least the following permissions:
 
-## Best Practice
+| Privilege | Object | Notes |
+|-----------|----|-------|
+| NODE_PRIV |    |       |
 
+## Usage Notes
+
+1. Before adding a new OBSERVER node, make sure the node is properly configured.
+2. After adding the OBSERVER node, use[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they have been added successfully and are in a normal state.
+
+## Examples
+
+1. Add a OBSERVER node
+   ```sql
+   ALTER SYSTEM ADD OBSERVER "host_ip:9010"
+   ```
+   This command adds a OBSERVER node to the cluster (IP host_ip, port 9010)
