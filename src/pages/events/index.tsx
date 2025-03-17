@@ -25,7 +25,7 @@ interface Event {
 const EVENTS_PAGE_DATA = {
     banner: {
         title: 'Events',
-        desc: 'Below is a list of key industry events hosted by Pulsar contributors, as well as local meetups around the globe.',
+        desc: "Stay tuned to community voices. Together, we celebrate collaboration, innovation, and the power of shared knowledge. Let's connect, learn, and grow!",
         action: {
             label: 'Are we missing any ? Click here to contribute',
             link: '/',
