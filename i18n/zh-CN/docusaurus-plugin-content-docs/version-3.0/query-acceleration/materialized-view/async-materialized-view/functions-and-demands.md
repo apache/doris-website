@@ -70,86 +70,85 @@ CREATE MATERIALIZED VIEW
 - AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能感知数据变化的分区，只能退化成全量刷新，刷新所有分区。
 
 #### refresh_trigger 触发方式
-- `ON MANUAL` 手动触发
+- **`ON MANUAL` 手动触发**
 
-用户通过 SQL 语句触发物化视图的刷新，策略如下
+  用户通过 SQL 语句触发物化视图的刷新，策略如下
 
-检测基表的分区数据自上次刷新后是否有变化，刷新数据变化的分区。
+  检测基表的分区数据自上次刷新后是否有变化，刷新数据变化的分区。
 
-```sql
-REFRESH MATERIALIZED VIEW mvName AUTO;
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName AUTO;
+  ```
 
-:::tip 提示
-如果物化视图定义 SQL 使用的基表是 JDBC 表，Doris 无法感知表数据变化，刷新物化视图时需要指定 `COMPLETE`。
-如果指定了 AUTO，会导致基表有数据，但是刷新后物化视图没数据。
-刷新物化视图时，目前 Doris 只能感知内表和 Hive 数据源表数据变化，其他数据源逐步支持中。
-:::
+  :::tip 提示
+  如果物化视图定义 SQL 使用的基表是 JDBC 表，Doris 无法感知表数据变化，刷新物化视图时需要指定 `COMPLETE`。
+  如果指定了 AUTO，会导致基表有数据，但是刷新后物化视图没数据。
+  刷新物化视图时，目前 Doris 只能感知内表和 Hive 数据源表数据变化，其他数据源逐步支持中。
+  :::
 
-不校验基表的分区数据自上次刷新后是否有变化，直接刷新物化视图的所有分区。
+  不校验基表的分区数据自上次刷新后是否有变化，直接刷新物化视图的所有分区。
 
-```sql
-REFRESH MATERIALIZED VIEW mvName COMPLETE;
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName COMPLETE;
+  ```
 
-只刷新指定的分区。
+  只刷新指定的分区。
 
-```sql
-REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
+  ```
 
-:::tip 提示
-`partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
-从 2.1.3 版本开始支持 Hive 检测基表的分区数据自上次刷新后是否有变化，其他外表暂时还不支持。内表一直支持。
-:::
+  :::tip 提示
+  `partitionName` 可以通过 `SHOW PARTITIONS FROM mvName` 获取。
+  从 2.1.3 版本开始支持 Hive 检测基表的分区数据自上次刷新后是否有变化，其他外表暂时还不支持。内表一直支持。
+  :::
 
-- ON SCHEDULE 定时触发
+- **`ON SCHEDULE` 定时触发**
 
-通过物化视图的创建语句指定间隔多久刷新一次数据
+  通过物化视图的创建语句指定间隔多久刷新一次数据
 
-如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
+  如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
+  ```sql
+  CREATE MATERIALIZED VIEW mv_6
+  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+  AS
+  SELECT * FROM lineitem;
+  ```
 
-```sql
-CREATE MATERIALIZED VIEW mv_6
-REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-AS
-SELECT * FROM lineitem;
-```
+  如下，尽量增量刷新 (`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
-如下，尽量增量刷新 (`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
+    ```sql
+    CREATE MATERIALIZED VIEW mv_7
+    REFRESH AUTO ON SCHEDULE EVERY 10 hour
+    PARTITION by(l_shipdate)
+    AS
+  SELECT * FROM lineitem;
+  ```
 
-```sql
-CREATE MATERIALIZED VIEW mv_7
-REFRESH AUTO ON SCHEDULE EVERY 10 hour
-PARTITION by(l_shipdate)
-AS
-SELECT * FROM lineitem;
-```
+- **`ON COMMIT` 自动触发**
 
-- ON COMMIT 自动触发
+  :::tip 提示
+  自 Apache Doris 2.1.4 版本起支持此功能。
+  :::
 
-:::tip 提示
-自 Apache Doris 2.1.4 版本起支持此功能。
-:::
+  基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围与"定时触发"一致。
 
-基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围与"定时触发"一致。
+  如果物化视图的创建语句如下，那么当 基表 `lineitem` 的 `t1` 分区数据发生变化时，会自动触发物化视图的对应分区刷新。
 
-如果物化视图的创建语句如下，那么当 基表 `lineitem` 的 `t1` 分区数据发生变化时，会自动触发物化视图的对应分区刷新。
+  ```sql
+  CREATE MATERIALIZED VIEW mv_8
+  REFRESH AUTO ON COMMIT
+  PARTITION by(l_shipdate)
+  AS
+  SELECT * FROM lineitem;
+  ```
 
-```sql
-CREATE MATERIALIZED VIEW mv_8
-REFRESH AUTO ON COMMIT
-PARTITION by(l_shipdate)
-AS
-SELECT * FROM lineitem;
-```
+  :::caution 注意
+  如果基表的数据频繁变更，不太适合使用此种触发方式，因为会频繁构建物化刷新任务，消耗过多资源。
+  :::
 
-:::caution 注意
-如果基表的数据频繁变更，不太适合使用此种触发方式，因为会频繁构建物化刷新任务，消耗过多资源。
-:::
-
-详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
+  详情参考 [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 
 #### 示例如下
@@ -221,7 +220,7 @@ INSERT INTO partsupp VALUES
 (2, 3, 10, 11.01, 'supply3');
 ```
 
-#### 示例 1
+#### 刷新机制示例一
 
 如下，刷新时机是创建完立即刷新 `BUILD IMMEDIATE`，刷新方式尽量增量刷新 `REFRESH AUTO`，
 只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区。
@@ -243,7 +242,7 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### 示例 2
+#### 刷新机制示例二
 如下，刷新时机是延迟刷新 `BUILD DEFERRED`，刷新方式是全量刷新 `REFRESH COMPLETE`，
 触发时机是定时刷新 `ON SCHEDULE`，首次刷新时间是 `2024-12-01 20:30:00`, 并且每隔一天刷新一次。
 如果 `BUILD DEFERRED` 指定为 `BUILD IMMEDIATE`，创建完物化视图会立即刷新一次。之后从 `2024-12-01 20:30:00` 每隔一天刷新一次。
@@ -268,7 +267,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### 示例 3
+#### 刷新机制示例三
 
 如下，刷新时机是创建完立即刷新 `BUILD IMMEDIATE`，刷新方式是全量刷新 `REFRESH COMPLETE`，
 触发方式是触发刷新 `ON COMMIT`，当 orders 或者 lineitem 表数据发生变化的时候，会自动触发物化视图的刷新。
@@ -330,10 +329,6 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 
 #### 基表有多列分区
 
-:::tip 提示
-自 Doris 2.1.0 版本起支持多列分区
-:::
-
 目前仅支持 Hive 外表有多列分区。Hive 外表有很多多级分区的情况，例如一级分区按照日期，二级分区按照区域。物化视图可以选择 Hive 的某一级分区列作为物化视图的分区列。
 
 例如，Hive 的建表语句如下：
@@ -379,10 +374,6 @@ SELECT k1,year,region FROM hive1;
 
 #### 使用基表部分分区
 
-:::tip 提示
-自 Doris 2.1.1 版本起支持此功能
-:::
-
 有些基表有很多分区，但是物化视图只关注最近一段时间的"热"数据，那么可以使用此功能。
 
 基表的建表语句如下：
@@ -425,14 +416,12 @@ SELECT * FROM t1;
 #### 分区上卷
 
 :::tip 提示
-自 Doris 2.1.5 版本起支持此功能
+自 Doris 2.1.5 版本起支持 Range 分区
 :::
 
 当基表数据经过聚合处理后，各分区的数据量可能会显著减少。在这种情况下，可以采用分区上卷策略，以降低物化视图的分区数量。
 
-**Range 分区**
-
-  假设基表的建表语句如下：
+假设基表的建表语句如下：
 
 ```sql
     CREATE TABLE `t1` (
@@ -450,7 +439,7 @@ SELECT * FROM t1;
     DISTRIBUTED BY HASH(`k1`) BUCKETS 2;
 ```
 
-  若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
+若物化视图的创建语句如下，则该物化视图将包含两个分区：`[("2020-01-01","2020-02-01")] `和` [("2020-02-01","2020-03-01")]`
 
 ```sql
     CREATE MATERIALIZED VIEW mv_3
@@ -461,7 +450,7 @@ SELECT * FROM t1;
     SELECT * FROM t1;
 ```
 
-  若物化视图的创建语句如下，则该物化视图将只包含一个分区：`[("2020-01-01","2021-01-01")]`
+若物化视图的创建语句如下，则该物化视图将只包含一个分区：`[("2020-01-01","2021-01-01")]`
 
 ```sql
     CREATE MATERIALIZED VIEW mv_4
@@ -525,7 +514,7 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 透明改写指在处理查询时，用户无需手动修改查询，系统会自动优化并改写查询。
 Doris 异步物化视图采用基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式的透明改写算法。
 该算法能够分析 SQL 的结构信息，自动寻找合适的物化视图进行透明改写，并选择最优的物化视图来响应查询 SQL。
-Doris 提供了丰富且全面的透明改写能力。
+Doris 提供了丰富且全面的透明改写能力。例如下面这些能力：
 
 ### 条件补偿
 
@@ -533,62 +522,62 @@ Doris 提供了丰富且全面的透明改写能力。
 
 当物化视图和查询的 `where` 条件是通过 `and` 连接的表达式时：
 
-**1. 当查询的表达式包含物化视图的表达式时：**
+1. **当查询的表达式包含物化视图的表达式时：**
 
-可以进行条件补偿。
+   可以进行条件补偿。
 
-例如，查询是 `a > 5 and b > 10 and c = 7`，物化的条件是 `a > 5 and b > 10`，物化视图的条件是查询条件的子集，那么只需补偿 `c = 7` 条件即可。
+   例如，查询是 `a > 5 and b > 10 and c = 7`，物化的条件是 `a > 5 and b > 10`，物化视图的条件是查询条件的子集，那么只需补偿 `c = 7` 条件即可。
 
-**2. 当查询的表达式不完全包含物化视图的表达式时：**
+2. **当查询的表达式不完全包含物化视图的表达式时：**
 
-查询的条件可以推导出物化视图的条件时（常见的是比较和范围表达式，如 `>`、`<`、`=`、`in` 等），也可以进行条件补偿。补偿结果就是查询条件本身。
+   查询的条件可以推导出物化视图的条件时（常见的是比较和范围表达式，如 `>`、`<`、`=`、`in` 等），也可以进行条件补偿。补偿结果就是查询条件本身。
 
-例如，查询是 `a > 5 and b = 10`，物化视图是 `a > 1 and b > 8`，可见物化的条件包含了查询的条件，查询的条件可以推导出物化视图的条件，这样也可以进行补偿，补偿结果就是 `a > 5 and b = 10`。
+   例如，查询是 `a > 5 and b = 10`，物化视图是 `a > 1 and b > 8`，可见物化的条件包含了查询的条件，查询的条件可以推导出物化视图的条件，这样也可以进行补偿，补偿结果就是 `a > 5 and b = 10`。
 
-条件补偿使用限制：
+   条件补偿使用限制：
 
-1. 对于通过 `or` 连接的表达式，不能进行条件补偿，必须一样才可以改写成功。
+    1. 对于通过 `or` 连接的表达式，不能进行条件补偿，必须一样才可以改写成功。
 
-2. 对于 `like` 这种非比较和范围表达式，不能进行条件补偿，必须一样才可以改写成功。
+    2. 对于 `like` 这种非比较和范围表达式，不能进行条件补偿，必须一样才可以改写成功。
 
-例如
+   例如
 
-**物化视图定义：**
-```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
-DISTRIBUTED BY RANDOM BUCKETS 3
-AS
-SELECT t1.l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey;
-```
+   **物化视图定义：**
+      ```sql
+      CREATE MATERIALIZED VIEW mv1
+      BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+      DISTRIBUTED BY RANDOM BUCKETS 3
+      AS
+      SELECT t1.l_linenumber,
+             o_custkey,
+             o_orderdate
+      FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
+      LEFT OUTER JOIN orders
+      ON l_orderkey = o_orderkey;
+      ```
 
-如下查询都可以命中物化视图，多个查询通过透明改写可以复用一个物化视图，
-减少查询改写时间，节省物化视图构建成本。
+   如下查询都可以命中物化视图，多个查询通过透明改写可以复用一个物化视图，
+   减少查询改写时间，节省物化视图构建成本。
 
-```sql
-SELECT l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM lineitem
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey
-WHERE l_linenumber > 2;
-```
+    ```sql
+    SELECT l_linenumber,
+           o_custkey,
+           o_orderdate
+    FROM lineitem
+    LEFT OUTER JOIN orders
+    ON l_orderkey = o_orderkey
+    WHERE l_linenumber > 2;
+    ```
 
-```sql
-SELECT l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM lineitem
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey
-WHERE l_linenumber > 2 and o_orderdate = '2023-10-19';
-```
+    ```sql
+    SELECT l_linenumber,
+           o_custkey,
+           o_orderdate
+    FROM lineitem
+    LEFT OUTER JOIN orders
+    ON l_orderkey = o_orderkey
+    WHERE l_linenumber > 2 and o_orderdate = '2023-10-19';
+    ```
 
 ### JOIN 改写
 
@@ -978,7 +967,7 @@ where o_orderstatus = 'o'
 
 
 ### 聚合查询使用非聚合物化视图改写
-如果查询是聚合查询，物化视图不包含聚合，但是物化视图可以提供查询使用的所有列，那么也可以改写，比如查询先是 join 
+如果查询是聚合查询，物化视图不包含聚合，但是物化视图可以提供查询使用的所有列，那么也可以改写，比如查询先是 join
 连接，之后是 group by 聚合，命中包含 join 连接的物化视图，那么也是有收益的。
 
 
@@ -1011,40 +1000,40 @@ group by
 
 查询透明改写命中情况，用于查看和调试。
 
-**1. 如果需要查看物化视图的透明改写命中情况，该语句会展示查询透明改写的简要过程信息。**
+1. **如果需要查看物化视图的透明改写命中情况，该语句会展示查询透明改写的简要过程信息。**
 
-```sql
-explain <query_sql> 
-```
+   ```sql
+   explain <query_sql> 
+   ```
 
-返回的信息如下，此处截取了与物化视图相关的信息：
+   返回的信息如下，此处截取了与物化视图相关的信息：
 
-```sql
-| MaterializedView                                                                                                                                                                                                                                      |
-| MaterializedViewRewriteSuccessAndChose:                                                                                                                                                                                                               |
-|   Names: mv5                                                                                                                                                                                                                                          |
-| MaterializedViewRewriteSuccessButNotChose:                                                                                                                                                                                                            |
-|                                                                                                                                                                                                                                                       |
-| MaterializedViewRewriteFail:                                                                                                                                                                                                                          |
-|   Name: mv4                                                                                                                                                                                                                                           |
-|   FailSummary: Match mode is invalid, View struct info is invalid                                                                                                                                                                                     |
-|   Name: mv3                                                                                                                                                                                                                                           |
-|   FailSummary: Match mode is invalid, Rewrite compensate predicate by view fail, View struct info is invalid                                                                                                                                          |
-|   Name: mv1                                                                                                                                                                                                                                           |
-|   FailSummary: The columns used by query are not in view, View struct info is invalid                                                                                                                                                                 |
-|   Name: mv2                                                                                                                                                                                                                                           |
-|   FailSummary: The columns used by query are not in view, View struct info is invalid
-```
+    ```sql
+    | MaterializedView                                                                                                                                                                                                                                      |
+    | MaterializedViewRewriteSuccessAndChose:                                                                                                                                                                                                               |
+    |   Names: mv5                                                                                                                                                                                                                                          |
+    | MaterializedViewRewriteSuccessButNotChose:                                                                                                                                                                                                            |
+    |                                                                                                                                                                                                                                                       |
+    | MaterializedViewRewriteFail:                                                                                                                                                                                                                          |
+    |   Name: mv4                                                                                                                                                                                                                                           |
+    |   FailSummary: Match mode is invalid, View struct info is invalid                                                                                                                                                                                     |
+    |   Name: mv3                                                                                                                                                                                                                                           |
+    |   FailSummary: Match mode is invalid, Rewrite compensate predicate by view fail, View struct info is invalid                                                                                                                                          |
+    |   Name: mv1                                                                                                                                                                                                                                           |
+    |   FailSummary: The columns used by query are not in view, View struct info is invalid                                                                                                                                                                 |
+    |   Name: mv2                                                                                                                                                                                                                                           |
+    |   FailSummary: The columns used by query are not in view, View struct info is invalid
+    ```
 
 - MaterializedViewRewriteSuccessAndChose：表示透明改写成功，并且 CBO（Cost-Based Optimizer）选择的物化视图名称列表。
-- MaterializedViewRewriteSuccessButNotChose：表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表。
+    - MaterializedViewRewriteSuccessButNotChose：表示透明改写成功，但是最终 CBO 没有选择的物化视图名称列表。
 - MaterializedViewRewriteFail：列举透明改写失败的情况及原因摘要。
 
-**2. 如果想了解物化视图的候选、改写以及最终选择情况的详细过程信息，可以执行如下语句：**
+2. **如果想了解物化视图的候选、改写以及最终选择情况的详细过程信息，可以执行如下语句：**
 
-```sql
-explain memo plan <query_sql>
-```
+    ```sql
+    explain memo plan <query_sql>
+    ```
 
 
 ## 维护物化视图
@@ -1158,9 +1147,9 @@ SyncWithBaseTables: 1
 
 - **SyncWithBaseTables：** 表示物化视图和基表的数据是否一致。
 
-  - 对于全量构建的物化视图，此字段为 1，表明此物化视图可用于透明改写。
+    - 对于全量构建的物化视图，此字段为 1，表明此物化视图可用于透明改写。
 
-  - 对于分区增量的物化视图，分区物化视图是否可用，是以分区粒度去看的。也就是说，即使物化视图的部分分区不可用，但只要查询的是有效分区，那么此物化视图依旧可用于透明改写。是否能透明改写，主要看查询所用分区的 `SyncWithBaseTables` 字段是否一致。如果 `SyncWithBaseTables` 是 1，此分区可用于透明改写；如果是 0，则不能用于透明改写。
+    - 对于分区增量的物化视图，分区物化视图是否可用，是以分区粒度去看的。也就是说，即使物化视图的部分分区不可用，但只要查询的是有效分区，那么此物化视图依旧可用于透明改写。是否能透明改写，主要看查询所用分区的 `SyncWithBaseTables` 字段是否一致。如果 `SyncWithBaseTables` 是 1，此分区可用于透明改写；如果是 0，则不能用于透明改写。
 
 - **JobName：** 物化视图构建 Job 的名称，每个物化视图有一个 Job，每次刷新会有一个新的 Task，Job 和 Task 是 1:n 的关系
 
@@ -1182,7 +1171,7 @@ SyncWithBaseTables: 1
 详情参考 [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
 
-### 查询刷新任务 TASK 信息 
+### 查询刷新任务 TASK 信息
 
 每个物化视图有一个 Job，每次刷新会有一个新的 Task，Job 和 Task 是 1:n 的关系。
 根据物化视图名称查看物化视图的 Task 状态，运行如下语句，可以查看刷新任务的状态和进度：
@@ -1238,10 +1227,10 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 
 - 如果设置成 10，意味着物化视图和基表数据允许 10 秒的延迟，如果物化视图的数据和基表的数据有延迟，在 10 秒内，此物化视图都可以用于透明改写。
   :::
-详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
+  详情参考 [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
 
 
-### 查询物化视图对应的 JOB 
+### 查询物化视图对应的 JOB
 
 ```sql
 SELECT * 
@@ -1295,6 +1284,6 @@ show partitions from mv11;
 
 #### fe.conf 配置
 - **job_mtmv_task_consumer_thread_num：** 此参数控制同时运行的物化视图刷新任务数量，默认是 10，超过这个数量的任务将处于 pending 状态
-修改这个参数需要重启 FE 才可以生效。
+  修改这个参数需要重启 FE 才可以生效。
 
 
