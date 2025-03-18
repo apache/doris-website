@@ -56,6 +56,10 @@ The user executing this SQL command must have at least the following privileges:
 | GRANT_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with GRANT_PRIV permissions  |
 
 
+## Usage Notes
+
+Doris creates a default role for each user. If you want to display the default role, you can execute the command ```set show_user_default_role=true;```.
+
 ## Example
 
 - View created roles

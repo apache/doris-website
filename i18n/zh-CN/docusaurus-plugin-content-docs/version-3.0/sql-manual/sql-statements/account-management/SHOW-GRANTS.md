@@ -72,6 +72,7 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   - `SHOW ALL GRANTS` 可以查看所有用户的权限，但需要有 `GRANT_PRIV` 权限。
   - 如果指定 `user_identity`，则查看该指定用户的权限。且该 `user_identity` 必须为通过 `CREATE USER` 命令创建的。
   - 如果不指定 `user_identity`，则查看当前用户的权限。
+  - Doris 基于 RBAC（Role-Based Access Control）的权限管理模型进行权限控制，因此这里展示出来的权限其实是用户所有角色的权限合集，如果想查看具体权限来源于哪个角色， 可以通过[SHOW ROLES](./SHOW-ROLES.md)查看
 
 ## 示例
 
