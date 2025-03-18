@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '../../theme/Layout';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
-import Events1Icon from '@site/static/images/events/event-1.svg';
 import DateIcon from '@site/static/images/events/date-icon.svg';
 import AddressIcon from '@site/static/images/events/address-icon.svg';
 import ArrowDown from '@site/static/images/events/arrow-down.svg';
@@ -42,7 +41,14 @@ const EVENTS_PAGE_DATA = {
             address: 'Virtual',
             description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
             status: 'Upcoming',
-            img: <Events1Icon />,
+            img: (
+                <img
+                    alt="address icon"
+                    width={64}
+                    height={64}
+                    src={`${require('@site/static/images/events/event-1.png').default}`}
+                />
+            ),
             link: 'https://www.linkedin.com/events/7303775032810356736/comments/',
         },
     ],
@@ -82,7 +88,13 @@ export default function Events() {
                     <div className="mb-4 text-[1.25rem]/[2rem] font-semibold text-[#000]">{data.detailTitle}</div>
                     <p className="line-clamp-2 mb-4 text-[#1D1D1D] text-[0.875rem]/[1.375rem]">{data.description}</p>
                     <p className="mb-[0.675rem] flex items-center text-[#4C576C] text-[0.875rem]/[1.375rem]">
-                        <DateIcon className="inline mr-2" />
+                        <img
+                            alt="date icon"
+                            width={16}
+                            className="inline mr-2"
+                            height={16}
+                            src={`${require('@site/static/images/events/date-icon.png').default}`}
+                        />
                         {data.date}
                     </p>
                     <p className="text-[#4C576C] flex items-center  text-[0.875rem]/[1.375rem]">

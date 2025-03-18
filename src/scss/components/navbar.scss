@@ -147,15 +147,16 @@
         }
 
         .header-right-button-slack {
-            min-width: 2.25rem;
+            min-width: 1.625rem;
             padding-left: 2.25rem;
-            height: 2.25rem;
-            background: url('@site/static/images/icon/slack.svg') no-repeat left center;
+            height: 1.625rem;
+            background: url('@site/static/images/icon/slack.png') no-repeat left center;
             background-size: contain;
             position: relative;
             margin-left: 1rem;
             &:hover {
-                opacity: 0.8;
+                background: url('@site/static/images/icon/slack-hover.png') no-repeat left center;
+                background-size: contain;
             }
         }
 
