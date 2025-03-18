@@ -78,15 +78,17 @@ export default function Home(): JSX.Element {
                 onMouseLeave={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
                 }}
-                className="rounded-full group w-[43.125rem] mx-auto flex py-4 px-[2.25rem] items-center justify-center"
+                className="lg:rounded-full rounded-[1.625rem] text-center group lg:w-[46.375rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
             >
-                <HomeEvenStarIcon id="event-star-icon" />
-                <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
-                    NEW
-                </span>
-                <span className="ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+                <div className="lg:mb-0 mb-4 flex items-center">
+                    <HomeEvenStarIcon id="event-star-icon" />
+                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+                        NEW
+                    </span>
+                </div>
+                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
                     Join us live on March 20 to deep dive into the Apache Doris 2025 Roadmap !
-                </span>
+                </p>
             </Link>
         ),
         bannerImg: require('@site/static/images/home-banner.png').default,

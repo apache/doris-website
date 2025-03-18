@@ -1,15 +1,15 @@
 :root {
-  --docusaurus-announcement-bar-height: auto;
+    --docusaurus-announcement-bar-height: auto;
 }
 
 .announcementBar {
-  display: flex;
-  align-items: center;
-  height: var(--docusaurus-announcement-bar-height);
-  background: linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF;
-  color: var(--ifm-color-black);
+    display: flex;
+    align-items: center;
+    height: var(--docusaurus-announcement-bar-height);
+    background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff;
+    color: var(--ifm-color-black);
 
-  /*
+    /*
   Unfortunately we can't make announcement bar render above the navbar
   IE need to use border-bottom instead of shadow
   See https://github.com/facebookincubator/infima/issues/275
@@ -17,39 +17,47 @@
   box-shadow: var(--ifm-global-shadow-lw);
   z-index: calc(var(--ifm-z-index-fixed) + 1);
   */
-  border-bottom: 1px solid var(--ifm-color-emphasis-100);
+    border-bottom: 1px solid var(--ifm-color-emphasis-100);
 }
 
 html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
-  display: none;
+    display: none;
 }
 
 .announcementBarPlaceholder {
-  flex: 0 0 10px;
+    flex: 0 0 10px;
 }
 
 .announcementBarClose {
-  flex: 0 0 30px;
-  align-self: stretch;
+    flex: 0 0 30px;
+    align-self: stretch;
 }
 
 .announcementBarContent {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+.announcementBarContent:hover p {
+    text-decoration: underline !important;
+}
+
+.announcementBarContent > a:active {
+    background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff !important;
 }
 
 @media print {
-  .announcementBar {
-    display: none;
-  }
+    .announcementBar {
+        display: none;
+    }
 }
 
 @media (min-width: 997px) {
-  :root {
-    --docusaurus-announcement-bar-height: 40px;
-  }
+    :root {
+        --docusaurus-announcement-bar-height: 40px;
+    }
 
-  .announcementBarPlaceholder,
-  .announcementBarClose {
-    flex-basis: 50px;
-  }
+    .announcementBarPlaceholder,
+    .announcementBarClose {
+        flex-basis: 50px;
+    }
 }
