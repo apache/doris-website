@@ -13,6 +13,7 @@ import { AchievementBanner } from '../components/achievement-banner/achievement-
 import { CoreCapabilitiesData } from '../constant/core-capabilities.data';
 import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-capabilities-card';
 import GetStarted from '@site/src/components/get-started/get-started';
+import HomeEvenStarIcon from '@site/static/images/home-event-star.svg';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
 
@@ -66,6 +67,29 @@ export default function Home(): JSX.Element {
                     </Translate>
                 </p>
             </div>
+        ),
+        event: (
+            <Link
+                to={'https://www.linkedin.com/events/7303775032810356736/comments/'}
+                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+                onMouseEnter={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+                }}
+                onMouseLeave={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+                }}
+                className="lg:rounded-full rounded-[1.625rem] text-center group lg:w-[46.375rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+            >
+                <div className="lg:mb-0 mb-4 flex items-center">
+                    <HomeEvenStarIcon id="event-star-icon" />
+                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+                        NEW
+                    </span>
+                </div>
+                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+                    Join us live on March 20 to deep dive into the Apache Doris 2025 Roadmap !
+                </p>
+            </Link>
         ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,
@@ -374,7 +398,10 @@ export default function Home(): JSX.Element {
     ];
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}
+            title={translate({
+                id: 'homepage.title',
+                message: 'Apache Doris: Open source data warehouse for real time data analytics',
+            })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
@@ -383,7 +410,7 @@ export default function Home(): JSX.Element {
             showAnnouncementBar={true}
             keywords={translate({
                 id: 'homepage.keywords',
-                message: 'Open Source database, OLAP, data warehouse, database analytics'
+                message: 'Open Source database, OLAP, data warehouse, database analytics',
             })}
         >
             <PageBanner {...banner}></PageBanner>
