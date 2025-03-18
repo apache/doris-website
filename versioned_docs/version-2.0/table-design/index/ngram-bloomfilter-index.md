@@ -93,6 +93,11 @@ ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_B
 
 ## Using Indexes
 
+To use NGram BloomFilter index, you need to set the following parameters (enable_function_pushdown is false by default):
+```sql
+SET enable_function_pushdown = true;
+```
+
 NGram BloomFilter index is used to accelerate LIKE queries, for example:
 SELECT count() FROM table1 WHERE message LIKE '%error%';
 
