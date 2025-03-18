@@ -81,7 +81,6 @@ CCR 任务不同步修改库属性操作。
 | compaction_policy                         | 支持     | -             | SQL      |                                                          |
 | time_series_compaction 系列               | 支持     | -             | SQL      |                                                          |
 | binlog 系列                               | 支持     | -             | SQL      | |
-| variant_enable_flatten_nested             | 支持     | -             | SQL      |                                                          |
 | skip_write_index_on_load                  | 支持     | -             | SQL      |                                                          |
 | row_strore 系列                            | 支持     | -             | SQL      |                                                          |
 | seq 列                                    | 支持     | -             | SQL      |                                                          |

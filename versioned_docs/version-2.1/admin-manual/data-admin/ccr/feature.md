@@ -81,7 +81,6 @@ Renaming is not supported for upstream and downstream; if done, it may cause vie
 | compaction_policy                             | Supported | -             | SQL         |                                                                |
 | time_series_compaction series                 | Supported | -             | SQL         |                                                                |
 | binlog series                                 | Supported | -             | SQL         |                                                                |
-| variant_enable_flatten_nested                 | Supported | -             | SQL         |                                                                |
 | skip_write_index_on_load                      | Supported | -             | SQL         |                                                                |
 | row_store series                               | Supported | -             | SQL         |                                                                |
 | seq column                                    | Supported | -             | SQL         |                                                                |
