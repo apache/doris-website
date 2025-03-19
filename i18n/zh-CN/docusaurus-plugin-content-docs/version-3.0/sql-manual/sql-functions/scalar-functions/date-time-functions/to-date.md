@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## 描述
-日期转换函数，用于将日期时间字符串或时间戳 转换为 日期类型（DATE），即去掉时间部分，仅保留日期（YYYY-MM-DD）
+日期转换函数，用于将日期时间（DATETIME）转换为日期类型（DATE），即去掉时间部分，仅保留日期（YYYY-MM-DD）
 
 ## 语法
 ```sql
@@ -33,7 +33,10 @@ TO_DATE(<datetime_value>)
 ```
 
 ## 必选参数
-**datetime_value**：datetime 类型日期时间
+| 参数               | 描述                 |
+|------------------|--------------------|
+| `datetime_value` | DATETIME 类型日期时间    |
+
 
 ## 举例
 

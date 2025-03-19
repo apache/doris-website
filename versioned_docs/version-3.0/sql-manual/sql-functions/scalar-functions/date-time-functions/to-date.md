@@ -26,7 +26,7 @@ under the License.
 
 
 ## Description
-Date conversion function, used to convert a date time string or timestamp to a date type (DATE), that is, remove the time part and keep only the date (YYYY-MM-DD)
+Date conversion function, used to convert date time (DATETIME) to date type (DATE), that is, remove the time part and keep only the date (YYYY-MM-DD)
 
 ## Syntax
 ```sql
@@ -34,7 +34,9 @@ TO_DATE(<datetime_value>)
 ```
 
 ## Required parameter
-**datetime_value**: datetime type datetime
+| Parameter        | Description               |
+|-----------------|--------------------------|
+| `datetime_value` | DATETIME type date-time |
 
 ## Example
 
