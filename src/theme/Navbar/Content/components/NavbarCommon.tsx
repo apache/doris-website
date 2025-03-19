@@ -53,7 +53,7 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
                 target="_blank"
             >
                 <GithubIconNew id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
-                <span className='ml-1 text-[1rem]/[137.5%] group-hover:text-[#444FD9] text-[#252734] font-medium'>Star Me</span>
+                <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-[#444FD9] text-[#252734] font-medium'>Star Me</span>
             </Link>
             {star && <div className="gh-count text-[1rem]/[1rem]">{star}k</div>}
             <Link
