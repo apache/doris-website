@@ -78,7 +78,7 @@ export default function Home(): JSX.Element {
                 onMouseLeave={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
                 }}
-                className="lg:rounded-full rounded-[1.625rem] text-center group lg:w-[46.375rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[46.375rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
             >
                 <div className="lg:mb-0 mb-4 flex items-center">
                     <HomeEvenStarIcon id="event-star-icon" />
