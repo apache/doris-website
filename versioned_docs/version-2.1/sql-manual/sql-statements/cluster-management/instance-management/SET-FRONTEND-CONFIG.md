@@ -1,7 +1,7 @@
 ---
 {
-   "title": "SET FRONTEND CONFIG",
-   "language": "en"
+  "title": "SET FRONTEND CONFIG",
+  "language": "en"
 }
 ---
 
@@ -35,11 +35,11 @@ This statement is used to set the configuration items of the cluster (currently 
 ## Syntax:
 
 ```sql
-ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_value>")
+ADMIN SET {ALL FRONTENDS | FRONTEND} CONFIG ("<fe_config_key>" = "<fe_config_value>")
 ```
 
 ## Optional Parameters
-`fe_config_key` and `fe_config_value` can be viewed and modified by `SHOW FRONTEND CONFIG;` command
+The `<fe_config_key>` and `<fe_config_value>` that need to be modified can be viewed through the [SHOW FRONTEND CONFIG](./SHOW-FRONTEND-CONFIG) command
 
 :::tip Explanation
 
@@ -49,9 +49,13 @@ ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_val
 
 ## Example
 
-1. Set `disable_balance` to true
+1. Set `disable_balance` to `true`
 
     ```sql
     ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
     ```
 
+2. Set `disable_balance` of all FE nodes to `true`
+   ```sql
+   ADMIN SET ALL FRONTENDS CONFIG ("disable_balance" = "true");
+   ```

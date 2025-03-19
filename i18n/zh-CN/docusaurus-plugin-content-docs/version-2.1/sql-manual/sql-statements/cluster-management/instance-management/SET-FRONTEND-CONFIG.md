@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SET FRONTEND CONFIG",
-    "language": "zh-CN"
+   "title": "SET FRONTEND CONFIG",
+   "language": "zh-CN"
 }
 ---
 
@@ -32,15 +32,14 @@ under the License.
 
 该语句用于设置集群的配置项（当前仅支持设置 FE 的配置项）。
 
-
 ## 语法：
 
 ```sql
-ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_value>")
+ADMIN SET {ALL FRONTENDS | FRONTEND} CONFIG ("<fe_config_key>" = "<fe_config_value>")
 ```
 
 ## 可选参数
-`fe_config_key`、`fe_config_value` 可通过 `SHOW FRONTEND CONFIG;` 命令查看并修改
+需要修改的 `<fe_config_key>`、`<fe_config_value>` 可通过 [SHOW FRONTEND CONFIG](./SHOW-FRONTEND-CONFIG) 命令查看
 
 :::tip 提示
 
@@ -51,8 +50,13 @@ ADMIN SET [ALL FRONTENDS | FRONTEND] CONFIG ("<fe_config_key>" = "<fe_config_val
 
 ## 示例
 
-1. 设置 `disable_balance` 为 true
+1. 设置 `disable_balance` 为 `true`
 
     ```sql
    ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+   ```
+
+2. 设置所有 FE 节点的 `disable_balance` 为 `true`
+   ```sql
+   ADMIN SET ALL FRONTENDS CONFIG ("disable_balance" = "true");
    ```
