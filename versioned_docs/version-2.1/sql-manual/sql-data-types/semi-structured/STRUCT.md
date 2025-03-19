@@ -52,13 +52,7 @@ The currently supported types are:
 
 ```
 BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
-
-We have a todo list for future version:
-
-```
-TODO: Supports nested Struct or other complex types
+DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT
 ```
 
 ### example
