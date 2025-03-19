@@ -29,19 +29,14 @@ under the License.
 
 ## 语法
 ```sql
-WEEKS_SUB([<date_value> | <datetime_value>], <week_period>)
+WEEKS_SUB(<date_value>, <week_period>)
 ```
 
 ## 必选参数
-**<week_period>**
-> 整数，表示要减少的周数（正数表示减少，负数表示增加）。
-
-## 可选参数
-- **<date_value>**
-  > `DATE` 类型的日期输入值
-
-- **<datetime_value>**
-  > `DATETIME` 类型的日期时间输入值
+| 参数名称          | 描述                                                                |
+|---------------|-------------------------------------------------------------------|
+| `date_value`  | `DATE` 或 `DATETIME` 类型的输入值。                                       |
+| `week_period` | 整数，表示要减少的周数（正数表示减少，负数表示增加）。                                       |
 
 
 ## 举例
