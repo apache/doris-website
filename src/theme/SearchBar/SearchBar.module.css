@@ -232,7 +232,7 @@ html[data-theme='dark'] .noResultsIcon {
     input {
         width: 100% !important;
         border: none !important;
-        background-color: #f7f9fe !important;
+        background-color: #FFF;
         background-image: url('/static/images/search-icon.svg');
         height: 2.5rem !important;
         background-position: 0.625rem center !important;
