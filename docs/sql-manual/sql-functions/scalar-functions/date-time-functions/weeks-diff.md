@@ -30,16 +30,14 @@ Calculates the number of complete weeks (in 7-day units) between two date or tim
 ## Syntax
 
 ```sql
-WEEKS_DIFF([<end_date> | <end_datetime>], [<start_date> | <start_datetime>])
+WEEKS_DIFF(<end_date>, <start_date>)
 ```
 
-## Optional parameters
-| Parameter name | Data type | Description |
-|----------------------|------------|----------------------|
-| **`end_date`** | `DATE` | Later date |
-| **`end_datetime`** | `DATETIME` | Later datetime |
-| **`start_date`** | `DATE` | Earlier date |
-| **`start_datetime`** | `DATETIME` | Earlier datetime |
+## Required parameters
+| Parameter Name | Data Type            | Description                 |
+|---------------|----------------------|-----------------------------|
+| `end_date`    | `DATE`, `DATETIME`   | Later date or date-time     |
+| `start_date`  | `DATE`, `DATETIME`   | Earlier date or date-time   |
 
 
 ## Example

@@ -30,16 +30,14 @@ under the License.
 ## 语法
 
 ```sql
-WEEKS_DIFF([<end_date> | <end_datetime>], [<start_date> | <start_datetime>])
+WEEKS_DIFF(<end_date>, <start_date>)
 ```
 
-## 可选参数
-| 参数名称                 | 数据类型       | 描述                   |
-|----------------------|------------|----------------------|
-| **`end_date`**       | `DATE`     | 较晚的日期                |
-| **`end_datetime`**   | `DATETIME` | 较晚的日期时间              |
-| **`start_date`**     | `DATE`     | 较早的日期                |
-| **`start_datetime`** | `DATETIME` | 较早的日期时间              |
+## 必选参数
+| 参数名称         | 数据类型               | 描述          |
+|--------------|--------------------|-------------|
+| `end_date`   | `DATE`, `DATETIME` | 较晚的日期或者日期时间 |
+| `start_date` | `DATE`, `DATETIME` | 较早的日期或者日期时间 |
 
 
 ## 举例
