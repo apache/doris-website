@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW FRONTEND CONFIG",
-    "language": "zh-CN"
+   "title": "SHOW FRONTEND CONFIG",
+   "language": "zh-CN"
 }
 ---
 
@@ -38,6 +38,11 @@ under the License.
 SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
 
+## 可选参数
+| **参数**            | **描述**                         |
+|-------------------|--------------------------------|
+| `<pattern>`       | 可以包含普通字符和通配符的字符串               |
+
 ## 返回值
 
 | 列名         | 说明                             |
@@ -58,7 +63,7 @@ SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 
 2. 使用 like 谓词搜索当前 Fe 节点的配置
 
-   ```sql
+    ```sql
     SHOW FRONTEND CONFIG LIKE '%check_java_version%';
     ```
     ```text

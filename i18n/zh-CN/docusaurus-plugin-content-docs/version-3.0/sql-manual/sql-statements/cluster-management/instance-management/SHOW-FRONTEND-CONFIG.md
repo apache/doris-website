@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW FRONTEND CONFIG",
-    "language": "zh-CN"
+   "title": "SHOW FRONTEND CONFIG",
+   "language": "zh-CN"
 }
 ---
 
@@ -37,6 +37,11 @@ under the License.
 ```sql
 SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
+
+## 可选参数
+| **参数**            | **描述**                         |
+|-------------------|--------------------------------|
+| `<pattern>`       | 可以包含普通字符和通配符的字符串               |
 
 ## 返回值
 

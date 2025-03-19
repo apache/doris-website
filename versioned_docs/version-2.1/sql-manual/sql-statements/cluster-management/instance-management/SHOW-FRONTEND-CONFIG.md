@@ -37,6 +37,13 @@ This statement is used to display the configuration of the current cluster (curr
 SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
 
+## Optional Parameters
+
+| **Parameter**        | **Description**                                              |
+|----------------------|--------------------------------------------------------------|
+| `<pattern>`          | A string that can contain ordinary characters and wildcards. |
+
+
 ## Return Values
 | Column name | Describe                                            |
 |-------------|-----------------------------------------------------|
