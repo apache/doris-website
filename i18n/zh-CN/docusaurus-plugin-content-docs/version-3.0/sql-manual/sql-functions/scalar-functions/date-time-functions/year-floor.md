@@ -1,7 +1,7 @@
 ---
 {
-    "title": "year_floor",
-    "language": "zh-CN"
+   "title": "year_floor",
+   "language": "zh-CN"
 }
 ---
 
@@ -29,20 +29,16 @@ under the License.
 
 ## 语法
 ```sql
-YEAR_FLOOR([<datetime_value> | <date_value>]) |
-YEAR_FLOOR([<datetime_value> | <date_value>], [<origin_datetime_value | origin_date_value>]) |
-YEAR_FLOOR([<datetime_value> | <date_value>], <period>) |
-YEAR_FLOOR([<datetime_value> | <date_value>], <period>, [<origin_datetime_value | origin_date_value>])
+YEAR_FLOOR(<date_value>, [<period> | <origin_date_value>])
+YEAR_FLOOR(<date_value>, <period>, <origin_date_value>)
 ```
 
-## 可选参数
-| **参数**                      | **类型**     | **说明**                                            |
-|-----------------------------|------------|---------------------------------------------------|
-| `<datetime_value>`          | `DATETIME` | 需要取整的 `DATETIME` 日期时间                             |
-| `<date_value>`              | `DATE`     | 需要取整的 `DATE` 日期                                   |
-| `<origin_datetime_value>`   | `DATETIME` | 用作基准的 `DATETIME` 日期, 如果不填，默认是 0001-01-01T00:00:00 |
-| `<origin_date_value>`       | `DATE`     | 用作基准的 `DATE` 日期, 如果不填，默认是 0001-01-01T00:00:00     |
-| `<period>`                  | `INT`      | 取整的时间间隔，正整数，表示以多少年为周期进行取整。                        |
+## 参数
+| **参数**                 | **类型**             | **说明**                                                                 |
+|----------------------|--------------------|--------------------------------------------------------------------|
+| `<date_value>`      | `DATE`, `DATETIME` | 需要取整的 `DATE` 或 `DATETIME` 输入值。                           |
+| `<origin_date_value>` | `DATE`, `DATETIME` | 用作基准的 `DATE` 或 `DATETIME` 输入值，如果不填，默认值为 `0001-01-01T00:00:00`。 |
+| `<period>`          | `INT`              | 取整的时间间隔，正整数，表示以多少年为周期进行取整。               |
 
 
 ## 举例

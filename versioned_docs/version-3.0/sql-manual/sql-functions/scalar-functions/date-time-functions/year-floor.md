@@ -1,7 +1,7 @@
 ---
 {
-  "title": "year_floor",
-  "language": "en"
+   "title": "year_floor",
+   "language": "en"
 }
 ---
 
@@ -31,20 +31,16 @@ It is used to round the given date down to the specified year interval starting 
 ## Syntax
 
 ```sql
-YEAR_FLOOR([<datetime_value> | <date_value>]) |
-YEAR_FLOOR([<datetime_value> | <date_value>], [<origin_datetime_value | origin_date_value>]) |
-YEAR_FLOOR([<datetime_value> | <date_value>], <period>) |
-YEAR_FLOOR([<datetime_value> | <date_value>], <period>, [<origin_datetime_value | origin_date_value>])
+YEAR_FLOOR(<date_value>, [<period> | <origin_date_value>])
+YEAR_FLOOR(<date_value>, <period>, <origin_date_value>)
 ```
 
-## Optional Parameters
-| **Parameter**               | **Type**   | **Description**                                          |
-|-----------------------------|------------|---------------------------------------------------------|
-| `<datetime_value>`          | `DATETIME` | The `DATETIME` value to be floored.                     |
-| `<date_value>`              | `DATE`     | The `DATE` value to be floored.                         |
-| `<origin_datetime_value>`   | `DATETIME` | The `DATETIME` value used as the reference. If not specified, defaults to `0001-01-01T00:00:00`. |
-| `<origin_date_value>`       | `DATE`     | The `DATE` value used as the reference. If not specified, defaults to `0001-01-01T00:00:00`. |
-| `<period>`                  | `INT`      | The time interval, a positive integer, specifying the number of years to floor by. |
+## Parameters
+| **Parameter**            | **Type**             | **Description**                                                                                                          |
+|--------------------------|----------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `<date_value>`           | `DATE`, `DATETIME`   | The `DATE` or `DATETIME` input value to be rounded.                                                                      |
+| `<origin_date_value>`    | `DATE`, `DATETIME`   | The `DATE` or `DATETIME` input value used as the reference point. If not provided, the default is `0001-01-01T00:00:00`. |
+| `<period>`               | `INT`                | The rounding interval, a positive integer indicating the number of years per cycle.                                      |
 
 
 ## Example
