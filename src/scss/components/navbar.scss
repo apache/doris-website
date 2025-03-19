@@ -23,6 +23,11 @@
             top: 12px;
             max-width: 443px;
         }
+
+        .navbar__link {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
     }
 
     &.docs {
@@ -279,7 +284,7 @@
     }
 }
 
-@media screen and (max-width: 1062px) {
+@media screen and (max-width: 1118px) {
     .navbar {
         height: 3.75rem;
         &.docs,
