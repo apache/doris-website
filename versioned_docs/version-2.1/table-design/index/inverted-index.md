@@ -133,7 +133,7 @@ Syntax explanation:
   **Specifies whether the index supports MATCH_PHRASE phrase query acceleration**
   <p>- true: supported, but the index requires more storage space</p>
   <p>- false: not supported, more storage efficient, can use MATCH_ALL to query multiple keywords</p>
-  <p>- default false</p>
+  <p>- From versions 2.0.14, 2.1.5 and 3.0.1, the default is true if parser is set. Otherwise default to false.</p>
 
   For example, the following example specifies Chinese tokenization, coarse-grained mode, and supports phrase query acceleration.
 ```sql
