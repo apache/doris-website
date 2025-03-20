@@ -606,7 +606,19 @@ mysql> select * from example_table;
 
 比如源数据中存储了多张表的数据（或者多张表的数据写入了同一个 Kafka 消息队列）。数据中每行有一列表名来标识该行数据属于哪个表。用户可以通过前置过滤条件来筛选对应的表数据进行导入。
 
-### 示例
+前置过滤有以下限制：
+- 过滤列限制。
+
+前置过滤只能对列表中的独立简单列进行过滤，无法对带有表达式的列进行过滤。如：在列映射为（a, tmp, b = tmp + 1）时，b 列无法作为过滤条件。
+
+- 数据处理限制
+
+前置过滤发生在数据转换之前，使用原始数据值进行比较，原始数据会视为字符串类型。如：对于 `\N` 这样的数据，会直接用 `\N` 字符串进行比较，而不会转换为 NULL 后再比较。
+
+### 示例一：使用数值条件进行前置过滤
+
+本示例展示如何使用简单的数值比较条件来过滤源数据。通过设置 k1 > 1 的过滤条件，实现在数据转换前过滤掉不需要的记录。
+
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
 列 1，列 2，列 3，列 4
@@ -668,6 +680,64 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
+### 示例二：使用中间列过滤无效数据
+
+本示例展示如何处理包含无效数据的导入场景。
+
+源数据为：
+```plain text
+1,1
+2,abc
+3,3
+```
+
+#### 建表语句
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT NOT NULL
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+对于k2列，类型为int，`abc`是不合法的脏数据，想要过滤该数据，可以引入中间列来过滤。
+
+#### 导入语句
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp, k2 = tmp)
+    PRECEDING FILTER tmp != "abc"
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp, k2 = tmp),
+COLUMNS TERMINATED BY ","
+PRECEDING FILTER tmp != "abc"
+FROM KAFKA (...);
+```
+
+#### 导入结果
+```sql
+mysql> select * from example_table;
++------+----+
+| k1   | k2 |
++------+----+
+|    1 |  1 |
+|    3 |  3 |
++------+----+
+```
 
 ## 后置过滤
 

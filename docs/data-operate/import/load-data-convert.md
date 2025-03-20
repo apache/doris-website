@@ -619,7 +619,18 @@ Scenarios where filtering is needed before column mapping and transformation, al
 
 For example, source data contains multiple tables' data (or multiple tables' data is written to the same Kafka message queue). Each row of data has a column indicating which table the data belongs to. Users can use pre-filtering conditions to filter out the corresponding table data for loading.
 
-### Example
+Pre-filtering has the following limitations:
+- Column filtering restrictions
+
+Pre-filtering can only filter independent simple columns in the column list and cannot filter columns with expressions. For example: when the column mapping is (a, tmp, b = tmp + 1), column b cannot be used as a filter condition.
+
+- Data processing restrictions
+
+Pre-filtering occurs before data transformation, using raw data values for comparison, and raw data is treated as string type. For example: for data like `\N`, it will be compared directly as the `\N` string, rather than being converted to NULL before comparison.
+
+### Example 1: Using Numeric Conditions for Pre-filtering
+
+This example demonstrates how to filter source data using simple numeric comparison conditions. By setting the filter condition k1 > 1, we can filter out unwanted records before data transformation.
 
 Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
 ```plain
@@ -683,6 +694,64 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
+### Example 2: Using Intermediate Columns to Filter Invalid Data
+
+This example demonstrates how to handle data import scenarios containing invalid data.
+
+Source data:
+```plain text
+1,1
+2,abc
+3,3
+```
+
+#### Table Creation
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT NOT NULL
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+For column k2, which is of type INT, `abc` is invalid dirty data. To filter this data, we can introduce an intermediate column for filtering.
+
+#### Load Statements
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp, k2 = tmp)
+    PRECEDING FILTER tmp != "abc"
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp, k2 = tmp),
+COLUMNS TERMINATED BY ","
+PRECEDING FILTER tmp != "abc"
+FROM KAFKA (...);
+```
+
+#### Load Results
+```sql
+mysql> select * from example_table;
++------+----+
+| k1   | k2 |
++------+----+
+|    1 |  1 |
+|    3 |  3 |
++------+----+
+```
 
 ## Post-filtering
 
