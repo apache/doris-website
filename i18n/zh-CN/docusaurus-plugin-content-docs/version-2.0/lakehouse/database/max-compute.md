@@ -31,7 +31,7 @@ MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云�
 [什么是 MaxCompute](https://help.aliyun.com/zh/maxcompute/product-overview/what-is-maxcompute?spm=a2c4g.11174283.0.i1)
 :::
 
-## 连接 Max Compute
+## 连接 MaxCompute
 
 ```sql
 CREATE CATALOG mc PROPERTIES (
@@ -63,16 +63,16 @@ CREATE CATALOG mc PROPERTIES (
 
 ## 自定义服务地址
 
-默认情况下，Max Compute Catalog 根据 region 去默认生成公网的 endpoint。
+默认情况下，MaxCompute Catalog 根据 region 去默认生成公网的 endpoint。
 
-除了默认的 endpoint 地址外，Max Compute Catalog 也支持在属性中自定义服务地址。
+除了默认的 endpoint 地址外，MaxCompute Catalog 也支持在属性中自定义服务地址。
 
 使用以下两个属性：
-* `mc.odps_endpoint`：Max Compute Endpoint。
+* `mc.odps_endpoint`：MaxCompute Endpoint。
 
-* `mc.tunnel_endpoint`: Tunnel Endpoint，Max Compute Catalog 使用 Tunnel SDK 获取数据。
+* `mc.tunnel_endpoint`: Tunnel Endpoint，MaxCompute Catalog 使用 Tunnel SDK 获取数据。
 
-Max Compute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)
+MaxCompute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)
 
 示例：
 

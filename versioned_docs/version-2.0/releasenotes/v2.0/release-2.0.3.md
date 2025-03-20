@@ -190,7 +190,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/27108 
 - Fix compatibility issues of different hive metastore versions 
   - https://github.com/apache/doris/pull/27327 
-- Fix an error reading max compute partition table 
+- Fix an error reading MaxCompute partition table 
   - https://github.com/apache/doris/pull/24911 
 - Fix the issue that backup to object storage failed 
   - https://github.com/apache/doris/pull/25496 

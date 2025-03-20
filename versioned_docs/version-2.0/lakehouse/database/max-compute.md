@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Alibaba Cloud Max Compute",
+    "title": "MaxCompute",
     "language": "en"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-# Alibaba Cloud MaxCompute
 
 MaxCompute (previously known as ODPS) is a data warehousing solution that can process terabytes or petabytes of data.
 
@@ -61,13 +60,13 @@ Consistent with Hive Catalog, please refer to the **column type mapping** sectio
 
 The region property is specified to generate a default endpoint of public network.
 
-In addition to default endpoint addresses, Max Compute Catalog also supports custom service addresses in properties.
+In addition to default endpoint addresses, MaxCompute Catalog also supports custom service addresses in properties.
 
 Use the following properties:
-* `mc.odps_endpoint`：Max Compute Endpoint。
-* `mc.tunnel_endpoint`: Tunnel Endpoint，Max Compute Catalog uses the Tunnel SDK to obtain data.
+* `mc.odps_endpoint`：MaxCompute Endpoint。
+* `mc.tunnel_endpoint`: Tunnel Endpoint，MaxCompute Catalog uses the Tunnel SDK to obtain data.
 
-For more information about Max Compute Endpoint and Tunnel Endpoint that are used in different regions and network connection modes, see [Endpoint](https://www.alibabacloud.com/help/en/maxcompute/user-guide/endpoints)
+For more information about MaxCompute Endpoint and Tunnel Endpoint that are used in different regions and network connection modes, see [Endpoint](https://www.alibabacloud.com/help/en/maxcompute/user-guide/endpoints)
 
 For example:
 
