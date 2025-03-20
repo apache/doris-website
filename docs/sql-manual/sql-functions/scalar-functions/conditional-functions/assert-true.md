@@ -39,12 +39,12 @@ ASSERT_TRUE(<condition>, <errmsg>)
 | Parameter               | Description                      |
 |-------------------------|----------------------------------|
 | `<condition>`                | The boolean expression or field used for the check.            |
-| `<value_false_or_null>` | This parameter must be a literal. Throws an exception and returns the value if `<condition>` is not all true or contains NULL. |
+| `<errmsg>` | This parameter must be a literal. Throws an exception and returns the value if `<condition>` is not all true or contains NULL. |
 
 ## Return Value
 
 - If all values in the `<condition>` input are true, returns a boolean column that is all true. 
-- Otherwise, an exception is thrown and errmsg is returned.
+- Otherwise, an exception is thrown and `<errmsg>` is returned.
 
 
 ## Examples

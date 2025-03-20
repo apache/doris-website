@@ -44,7 +44,7 @@ ASSERT_TRUE(<condition>, <errmsg>)
 ## 返回值
 
 - 如果 `<condition>` 输入的所有值都是 true，则返回一个全为 true 的布尔列。
-- 否则，抛出异常并返回 errmsg 。
+- 否则，抛出异常并返回 `<errmsg>` 。
 
 
 ## 举例
