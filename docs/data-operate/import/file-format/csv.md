@@ -69,11 +69,17 @@ The following table lists the CSV format parameters supported by various loading
 
 ### Parameter Description
 
-#### Line Delimiter
-- Purpose: Specifies the line break character in the data file
-- Default Value: `\n`
-- Features: Supports multiple characters combination as line break
-- Use Cases and Examples:
+| Parameter | Default Value | Description |
+|--|--|--|
+| Line Delimiter | `\n` | Specify the line break character in the imported file. Multiple character combinations are supported as line breaks. |
+| Column Delimiter | `\t` | Specifies the column separator in the import file. It supports visible and invisible characters and multiple character combinations. Invisible characters need to be represented in hexadecimal with the prefix `\x`. Invisible characters in the MySQL protocol need to be represented with an additional backslash. |
+| Enclosure | 无 | Protect fields containing special characters from being parsed incorrectly. Only single-byte characters are supported. |
+| Escape Character | `\` | Escape the same characters as the enclosing characters in the field. Only single-byte characters are supported. |
+| Skip Lines | 0 | Skip the first few lines of the CSV file. When format is `csv_with_names`, the system automatically skips the first line (column names). When format is `csv_with_names_and_types`, the system automatically skips the first two lines (column names and types). The skip_lines parameter is ignored. |
+| Trim Double Quotes | false | Trim the outermost double quotes of each field in the CSV file |
+| Compression Format | plain | Specify the compression format of the imported file. Tar is a file packaging format, not a compression format, so .tar files are not supported. If you need to use a tar-packed file, please unpack it before importing it. |
+
+  The Line Delimiter example is as follows:
   - Linux/Unix System Files:
     ```
     Data File:
@@ -111,17 +117,7 @@ The following table lists the CSV format parameters supported by various loading
     line_delimiter: ||
     ```
 
-#### Column Delimiter
-- Purpose: Specifies the column delimiter in the data file
-- Default Value: `\t` (tab)
-- Features:
-  - Supports visible and invisible characters
-  - Supports multiple character combinations
-  - Invisible characters need to use hex representation with `\x` prefix
-- Special Handling for MySQL Protocol:
-  - Invisible characters need an extra backslash
-  - For example, Hive's `\x01` needs to be written as `\\x01` in Broker Load
-- Use Cases and Examples:
+  The following is an example of Column Delimiter:
   - Common Visible Characters:
     ```
     Data File:
@@ -168,13 +164,7 @@ The following table lists the CSV format parameters supported by various loading
     column_separator: ||
     ```
 
-#### Enclosure
-- Purpose: Protects fields containing special characters from being incorrectly parsed
-- Limitation: Only supports single-byte characters
-- Common Characters:
-  - Single quote: `'`
-  - Double quote: `"`
-- Use Cases and Examples:
+  The following is an example of Enclosure:
   - Field Contains Column Delimiter:
     ```
     Data: a,'b,c',d
@@ -197,10 +187,7 @@ The following table lists the CSV format parameters supported by various loading
     Parsing Result: 3 fields [a] [b,c\nd,e] [f]
     ```
 
-#### Escape Character
-- Purpose: Escapes characters in fields that are the same as the enclosure character
-- Limitation: Only supports single-byte characters, default is `\`
-- Use Cases and Examples:
+  The following are examples of Escape Characters:
   - Field Contains Enclosure Character:
     ```
     Data: a,'b,\'c',d
@@ -226,14 +213,7 @@ The following table lists the CSV format parameters supported by various loading
     Parsing Result: 3 fields [a] [b\c] [d]
     ```
 
-#### Skip Lines
-- Purpose: Skips the first few lines of the CSV file
-- Type: Integer
-- Default Value: 0
-- Special Note:
-  - When format is `csv_with_names`, the system automatically skips the first line (column names), ignoring the `skip_lines` parameter
-  - When format is `csv_with_names_and_types`, the system automatically skips the first two lines (column names and types), ignoring the `skip_lines` parameter
-- Use Cases and Examples:
+  The Skip Lines example is as follows:
   - Skip Title Line:
     ```
     Data File:
@@ -281,11 +261,7 @@ The following table lists the CSV format parameters supported by various loading
     Result: System automatically skips the first two lines of column names and types
     ```
 
-#### Trim Double Quotes
-- Purpose: Trims the outermost double quotes from each field in the CSV file
-- Type: Boolean
-- Default Value: false
-- Use Cases and Examples:
+  Trim Double Quotes example is as follows:
   - Trim Double Quotes:
     ```
     Data File:
@@ -299,23 +275,17 @@ The following table lists the CSV format parameters supported by various loading
     Mary,30,Los Angeles
     ```
 
-#### Compression Format
-- Purpose: Specifies the compression format of the data file
-- Type: String, ignoring case
-- Default Value: plain
-- Supported Compression Formats:
-  - plain: No compression (default)
-  - bz2: BZIP2 compression
-  - deflate: DEFLATE compression
-  - gz: GZIP compression
-  - lz4: LZ4 Frame format compression
-  - lz4_block: LZ4 Block format compression
-  - lzo: LZO compression
-  - lzop: LZOP compression
-  - snappy_block: SNAPPY Block format compression
-- Note:
-  - tar is a file packaging format, not a compression format, so it is not supported
-  - If you need to use tar packaged files, please unpack them first before loading
+  The Compression Format example is as follows:
+  - Supported Compression Formats:
+    - plain: No compression (default)
+    - bz2: BZIP2 compression
+    - deflate: DEFLATE compression
+    - gz: GZIP compression
+    - lz4: LZ4 Frame format compression
+    - lz4_block: LZ4 Block format compression
+    - lzo: LZO compression
+    - lzop: LZOP compression
+    - snappy_block: SNAPPY Block format compression
 
 ## Usage Examples
 
