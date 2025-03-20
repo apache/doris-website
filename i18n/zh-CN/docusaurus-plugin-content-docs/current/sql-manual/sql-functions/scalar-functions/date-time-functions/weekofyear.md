@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`WEEKOFYEAR (<date>)`
+```sql
+WEEKOFYEAR (<date>)
+```
 
 ## 参数
 

@@ -30,7 +30,9 @@ Get the week of the year
 
 ## Syntax
 
-`WEEKOFYEAR (<date>)`
+```sql
+WEEKOFYEAR (<date>)
+```
 
 ## Parameters
 

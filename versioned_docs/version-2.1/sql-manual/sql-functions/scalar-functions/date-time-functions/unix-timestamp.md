@@ -30,7 +30,9 @@ Converts a Date or Datetime type to a unix timestamp (the conversion is affected
 
 ## Syntax
 
-`UNIX_TIMESTAMP (<date>[, <fmt>])`
+```sql
+UNIX_TIMESTAMP (<date>[, <fmt>])
+```
 
 ## Parameters
 

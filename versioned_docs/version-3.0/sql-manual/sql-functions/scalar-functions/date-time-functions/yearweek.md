@@ -30,7 +30,9 @@ Returns the year and week number of the specified date. The default value of mod
 
 ## Syntax
 
-`YEARWEEK (<date>[, mode])`
+```sql
+YEARWEEK (<date>[, mode])
+```
 
 ## Parameters
 

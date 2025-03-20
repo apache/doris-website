@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`UNIX_TIMESTAMP (<date>[, <fmt>])`
+```sql
+UNIX_TIMESTAMP (<date>[, <fmt>])
+```
 
 ## 参数
 

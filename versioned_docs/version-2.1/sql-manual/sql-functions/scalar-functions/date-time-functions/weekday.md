@@ -30,7 +30,9 @@ Returns the weekday index of a date, i.e. Monday is 0, Tuesday is 1, and Sunday 
 
 ## Syntax
 
-`WEEKDAY (<date>)`
+```sql
+WEEKDAY (<date>)
+```
 
 ## Parameters
 

@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`YEARWEEK (<date>[, mode])`
+```sql
+YEARWEEK (<date>[, mode])
+```
 
 ## 参数
 

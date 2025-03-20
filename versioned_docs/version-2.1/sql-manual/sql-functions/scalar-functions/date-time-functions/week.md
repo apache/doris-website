@@ -30,7 +30,9 @@ Returns the day of the week for a given date. The default value of mode is 0
 
 ## Syntax
 
-`WEEK(<date>[, <mode>])`
+```sql
+WEEK(<date>[, <mode>])
+```
 
 ## Parameters
 

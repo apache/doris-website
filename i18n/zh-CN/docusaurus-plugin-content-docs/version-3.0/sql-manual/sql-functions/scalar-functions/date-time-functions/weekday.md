@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`WEEKDAY (<date>)`
+```sql
+WEEKDAY (<date>)
+```
 
 ## 参数
 

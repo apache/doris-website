@@ -30,7 +30,9 @@ under the License.
 
 ## 语法
 
-`WEEK(<date>[, <mode>])`
+```sql
+WEEK(<date>[, <mode>])
+```
 
 ## 参数
 
