@@ -116,6 +116,7 @@ Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all part
 ```sql
 CREATE MATERIALIZED VIEW mv_6
 REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS
 SELECT FROM lineitem;
 ```
@@ -128,6 +129,7 @@ only refreshing changed partitions or falling back to full refresh if needed
 CREATE MATERIALIZED VIEW mv_7
 REFRESH AUTO ON SCHEDULE EVERY 10 hour
 PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS
 SELECT FROM lineitem;
 ```
@@ -147,6 +149,7 @@ Example: When partition `t1` data changes in base table `lineitem`, it automatic
 CREATE MATERIALIZED VIEW mv_8
 REFRESH AUTO ON COMMIT
 PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS
 SELECT FROM lineitem;
 ```
@@ -261,7 +264,8 @@ The time specified in STARTS must be later than the current time.
 CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
-ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   
@@ -281,6 +285,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   
