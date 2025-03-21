@@ -34,7 +34,7 @@ under the License.
 This command is used to create a table. The subject of this document describes the syntax for creating Doris self-maintained tables.
 
 ```sql
-CREATE TABLE [IF NOT EXISTS] [database.]table
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] [database.]table
 (
     column_definition_list
     [, index_definition_list]
@@ -48,6 +48,10 @@ distribution_desc
 [properties]
 [extra_properties]
 ```
+
+#### TEMPORARY
+
+Indicates creating a temporary table, which only available in current session, and will be deleted after the session be closed.
 
 #### column_definition_list
 
