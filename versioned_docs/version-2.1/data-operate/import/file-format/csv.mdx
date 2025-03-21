@@ -23,6 +23,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 This document explains how to load CSV format data files into Doris. Doris supports flexible CSV format configuration, including custom delimiters, field enclosures, and provides various loading methods to meet data loading requirements in different scenarios.
 
@@ -79,213 +81,279 @@ The following table lists the CSV format parameters supported by various loading
 | Trim Double Quotes | false | Trim the outermost double quotes of each field in the CSV file |
 | Compression Format | plain | Specify the compression format of the imported file. Tar is a file packaging format, not a compression format, so .tar files are not supported. If you need to use a tar-packed file, please unpack it before importing it. |
 
-  The Line Delimiter example is as follows:
-  - Linux/Unix System Files:
-    ```
-    Data File:
-    John,25\n
-    Mary,30\n
-    
-    Parameter Setting:
-    line_delimiter: \n (default value, can be omitted)
-    ```
-  - Windows System Files:
-    ```
-    Data File:
-    John,25\r\n
-    Mary,30\r\n
-    
-    Parameter Setting:
-    line_delimiter: \r\n
-    ```
-  - Special Program Generated Files:
-    ```
-    Data File:
-    John,25\r
-    Mary,30\r
-    
-    Parameter Setting:
-    line_delimiter: \r
-    ```
-  - Custom Multi-character Delimiter:
-    ```
-    Data File:
-    John,25||
-    Mary,30||
-    
-    Parameter Setting:
-    line_delimiter: ||
-    ```
+<Tabs>
+  <TabItem value="The Line Delimiter example is as follows" label="The Line Delimiter example is as follows" default>
+    <div>
 
-  The following is an example of Column Delimiter:
-  - Common Visible Characters:
-    ```
-    Data File:
-    John,25,New York
-    Mary,30,Los Angeles
-    
-    Parameter Setting:
-    column_separator: ,
-    ```
-  - Tab (Default):
-    ```
-    Data File:
-    John    25    New York
-    Mary    30    Los Angeles
-    
-    Parameter Setting:
-    column_separator: \t (default value, can be omitted)
-    ```
-  - Hive Files (Stream Load):
-    ```
-    Data File:
-    John\x0125\x01New York
-    Mary\x0130\x01Los Angeles
-    
-    Parameter Setting:
-    column_separator: \x01
-    ```
-  - Hive Files (Broker Load):
-    ```
-    Data File:
-    John\x0125\x01New York
-    Mary\x0130\x01Los Angeles
-    
-    Parameter Setting:
-    PROPERTIES("column_separator"="\\x01")
-    ```
-  - Multi-character Delimiter:
-    ```
-    Data File:
-    John||25||New York
-    Mary||30||Los Angeles
-    
-    Parameter Setting:
-    column_separator: ||
-    ```
+1. Linux/Unix System Files:
+```
+Data File:
+John,25\n
+Mary,30\n
 
-  The following is an example of Enclosure:
-  - Field Contains Column Delimiter:
-    ```
-    Data: a,'b,c',d
-    Column Delimiter: ,
-    Enclosure: '
-    Parsing Result: 3 fields [a] [b,c] [d]
-    ```
-  - Field Contains Line Delimiter:
-    ```
-    Data: a,'b\nc',d
-    Column Delimiter: ,
-    Enclosure: '
-    Parsing Result: 3 fields [a] [b\nc] [d]
-    ```
-  - Field Contains Both Column and Line Delimiters:
-    ```
-    Data: a,'b,c\nd,e',f
-    Column Delimiter: ,
-    Enclosure: '
-    Parsing Result: 3 fields [a] [b,c\nd,e] [f]
-    ```
+Parameter Setting:
+line_delimiter: \n (default value, can be omitted)
+```
+  </div>
+    <div>
 
-  The following are examples of Escape Characters:
-  - Field Contains Enclosure Character:
-    ```
-    Data: a,'b,\'c',d
-    Column Delimiter: ,
-    Enclosure: '
-    Escape Character: \
-    Parsing Result: 3 fields [a] [b,'c] [d]
-    ```
-  - Field Contains Multiple Enclosure Characters:
-    ```
-    Data: a,"b,\"c\"d",e
-    Column Delimiter: ,
-    Enclosure: "
-    Escape Character: \
-    Parsing Result: 3 fields [a] [b,"c"d] [e]
-    ```
-  - Field Contains Escape Character Itself:
-    ```
-    Data: a,'b\\c',d
-    Column Delimiter: ,
-    Enclosure: '
-    Escape Character: \
-    Parsing Result: 3 fields [a] [b\c] [d]
-    ```
+2. Windows System Files:
+```
+Data File:
+John,25\r\n
+Mary,30\r\n
 
-  The Skip Lines example is as follows:
-  - Skip Title Line:
-    ```
-    Data File:
-    Name,Age,City
-    John,25,New York
-    Mary,30,Los Angeles
-    
-    Parameter Setting:
-    skip_lines: 1
-    Result: Skip title line, load subsequent data
-    ```
-  - Skip Comment Lines:
-    ```
-    Data File:
-    # User Information Table
-    # Created Time: 2024-01-01
-    John,25,New York
-    Mary,30,Los Angeles
-    
-    Parameter Setting:
-    skip_lines: 2
-    Result: Skip comment lines, load subsequent data
-    ```
-  - Use csv_with_names Format:
-    ```
-    Data File:
-    name,age,city
-    John,25,New York
-    Mary,30,Los Angeles
-    
-    Parameter Setting:
-    format: csv_with_names
-    Result: System automatically skips the first line of column names
-    ```
-  - Use csv_with_names_and_types Format:
-    ```
-    Data File:
-    name,age,city
-    string,int,string
-    John,25,New York
-    Mary,30,Los Angeles
-    
-    Parameter Setting:
-    format: csv_with_names_and_types
-    Result: System automatically skips the first two lines of column names and types
-    ```
+Parameter Setting:
+line_delimiter: \r\n
+```
+  </div>
+    <div>
 
-  Trim Double Quotes example is as follows:
-  - Trim Double Quotes:
-    ```
-    Data File:
-    "John","25","New York"
-    "Mary","30","Los Angeles"
-    
-    Parameter Setting:
-    trim_double_quotes: true
-    Result:
-    John,25,New York
-    Mary,30,Los Angeles
-    ```
+3. Special Program Generated Files:
+```
+Data File:
+John,25\r
+Mary,30\r
 
-  The Compression Format example is as follows:
-  - Supported Compression Formats:
-    - plain: No compression (default)
-    - bz2: BZIP2 compression
-    - deflate: DEFLATE compression
-    - gz: GZIP compression
-    - lz4: LZ4 Frame format compression
-    - lz4_block: LZ4 Block format compression
-    - lzo: LZO compression
-    - lzop: LZOP compression
-    - snappy_block: SNAPPY Block format compression
+Parameter Setting:
+line_delimiter: \r
+```
+  </div>
+    <div>
+
+4. Custom Multi-character Delimiter:
+```
+Data File:
+John,25||
+Mary,30||
+
+Parameter Setting:
+line_delimiter: ||
+```
+  </div>
+  </TabItem>
+  <TabItem value="The following is an example of Column Delimiter" label="The following is an example of Column Delimiter">
+    <div>
+
+1. Common Visible Characters:
+```
+Data File:
+John,25,New York
+Mary,30,Los Angeles
+
+Parameter Setting:
+column_separator: ,
+```
+  </div>
+    <div>
+
+2. Tab (Default):
+```
+Data File:
+John    25    New York
+Mary    30    Los Angeles
+
+Parameter Setting:
+column_separator: \t (default value, can be omitted)
+```
+  </div>
+    <div>
+
+3. Hive Files (Stream Load):
+```
+Data File:
+John\x0125\x01New York
+Mary\x0130\x01Los Angeles
+
+Parameter Setting:
+column_separator: \x01
+```
+  </div>
+    <div>
+
+4. Hive Files (Broker Load):
+```
+Data File:
+John\x0125\x01New York
+Mary\x0130\x01Los Angeles
+
+Parameter Setting:
+PROPERTIES("column_separator"="\\x01")
+```
+  </div>
+    <div>
+
+5. Multi-character Delimiter:
+```
+Data File:
+John||25||New York
+Mary||30||Los Angeles
+
+Parameter Setting:
+column_separator: ||
+```
+  </div>
+  </TabItem>
+  <TabItem value="The following is an example of Enclosure" label="The following is an example of Enclosure">
+    <div>
+
+1. Field Contains Column Delimiter:
+```
+Data: a,'b,c',d
+Column Delimiter: ,
+Enclosure: '
+Parsing Result: 3 fields [a] [b,c] [d]
+```
+  </div>
+    <div>
+
+2. Field Contains Line Delimiter:
+```
+Data: a,'b\nc',d
+Column Delimiter: ,
+Enclosure: '
+Parsing Result: 3 fields [a] [b\nc] [d]
+```
+  </div>
+    <div>
+
+3. Field Contains Both Column and Line Delimiters:
+```
+Data: a,'b,c\nd,e',f
+Column Delimiter: ,
+Enclosure: '
+Parsing Result: 3 fields [a] [b,c\nd,e] [f]
+```
+  </div>
+  </TabItem>
+  <TabItem value="The following are examples of Escape Characters" label="The following are examples of Escape Characters">
+    <div>
+
+1. Field Contains Enclosure Character:
+```
+Data: a,'b,\'c',d
+Column Delimiter: ,
+Enclosure: '
+Escape Character: \
+Parsing Result: 3 fields [a] [b,'c] [d]
+```
+  </div>
+    <div>
+
+2. Field Contains Multiple Enclosure Characters:
+```
+Data: a,"b,\"c\"d",e
+Column Delimiter: ,
+Enclosure: "
+Escape Character: \
+Parsing Result: 3 fields [a] [b,"c"d] [e]
+```
+  </div>
+    <div>
+
+3. Field Contains Escape Character Itself:
+```
+Data: a,'b\\c',d
+Column Delimiter: ,
+Enclosure: '
+Escape Character: \
+Parsing Result: 3 fields [a] [b\c] [d]
+```
+  </div>
+  </TabItem>
+  <TabItem value="The Skip Lines example is as follows" label="The Skip Lines example is as follows">
+    <div>
+
+1. Skip Title Line:
+```
+Data File:
+Name,Age,City
+John,25,New York
+Mary,30,Los Angeles
+
+Parameter Setting:
+skip_lines: 1
+Result: Skip title line, load subsequent data
+```
+  </div>
+    <div>
+
+2. Skip Comment Lines:
+```
+Data File:
+# User Information Table
+# Created Time: 2024-01-01
+John,25,New York
+Mary,30,Los Angeles
+
+Parameter Setting:
+skip_lines: 2
+Result: Skip comment lines, load subsequent data
+```
+  </div>
+    <div>
+
+3. Use csv_with_names Format:
+```
+Data File:
+name,age,city
+John,25,New York
+Mary,30,Los Angeles
+
+Parameter Setting:
+format: csv_with_names
+Result: System automatically skips the first line of column names
+```
+  </div>
+    <div>
+
+4. Use csv_with_names_and_types Format:
+```
+Data File:
+name,age,city
+string,int,string
+John,25,New York
+Mary,30,Los Angeles
+
+Parameter Setting:
+format: csv_with_names_and_types
+Result: System automatically skips the first two lines of column names and types
+```
+  </div>
+  </TabItem>
+  <TabItem value="Trim Double Quotes example is as follows" label="Trim Double Quotes example is as follows">
+    <div>
+
+1. Trim Double Quotes:
+```
+Data File:
+"John","25","New York"
+"Mary","30","Los Angeles"
+
+Parameter Setting:
+trim_double_quotes: true
+Result:
+John,25,New York
+Mary,30,Los Angeles
+```
+  </div>
+  </TabItem>
+  <TabItem value="The Compression Format example is as follows" label="The Compression Format example is as follows">
+    <div>
+
+1. Supported Compression Formats:
+- plain: No compression (default)
+- bz2: BZIP2 compression
+- deflate: DEFLATE compression
+- gz: GZIP compression
+- lz4: LZ4 Frame format compression
+- lz4_block: LZ4 Block format compression
+- lzo: LZO compression
+- lzop: LZOP compression
+- snappy_block: SNAPPY Block format compression
+  </div>
+  </TabItem>
+</Tabs>
 
 ## Usage Examples
 
