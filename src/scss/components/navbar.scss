@@ -3,7 +3,8 @@
     background-color: var(--global-colors-white);
     padding: 0;
     display: flex;
-    border-bottom: 1px solid #EDF2FA;
+    border-bottom: 1px solid #edf2fa;
+    box-shadow: none !important;
 
     &.docs {
         .navbar__inner {
@@ -21,6 +22,11 @@
             width: 38vw;
             top: 12px;
             max-width: 443px;
+        }
+
+        .navbar__link {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
         }
     }
 
@@ -278,7 +284,7 @@
     }
 }
 
-@media screen and (max-width: 996px) {
+@media screen and (max-width: 1118px) {
     .navbar {
         height: 3.75rem;
         &.docs,
@@ -495,5 +501,18 @@
         &:hover {
             opacity: 0.8;
         }
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .github-btn {
+        width: 2.5rem;
+        .github-text {
+            display: none;
+        }
+    }
+
+    .gh-count {
+        display: none;
     }
 }

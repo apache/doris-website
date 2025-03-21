@@ -451,7 +451,9 @@ try (
 
 ### Choice of Jdbc and Java connection methods
 
-Compared with the traditional `jdbc:mysql` connection method, the performance test of the Arrow Flight SQL connection method of Jdbc and Java can be found at [GitHub Issue](https://github.com/apache/doris/issues/25514). Here are some usage suggestions based on the test conclusions.
+[JDBC/Java Arrow Flight SQL Sample](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/README.md) is a JDBC/Java demo using Arrow FLight SQL. You can use it to test various connection methods for sending queries to Arrow Flight Server, helping you understand how to use Arrow FLight SQL and test performance. Implemented in [Add Arrow Flight Sql demo for Java](https://github.com/apache/doris/pull/45306).
+
+Compared with the traditional `jdbc:mysql` connection method, the performance test of the Arrow Flight SQL connection method of Jdbc and Java can be found in Section 6.2 of [GitHub Issue](https://github.com/apache/doris/issues/25514). Here are some usage suggestions based on the test conclusions.
 
 1. For the above three Java Arrow Flight SQL connection methods, if the subsequent data analysis will be based on the row-based data format, then use jdbc:arrow-flight-sql, which will return data in the JDBC ResultSet format; if the subsequent data analysis can be based on the Arrow format or other column-based data formats, then use Flight AdbcDriver or Flight JdbcDriver to directly return data in the Arrow format, which will avoid row-column conversion and use the characteristics of Arrow to accelerate data parsing.
 
@@ -471,26 +473,152 @@ Arrow Flight currently has no official plan to support Spark and Flink ([GitHub 
 
 The community previously referred to the open source [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) and used FlightClient in Spark to connect to Doris for testing. It was found that the data format conversion between Arrow and Doris Block is faster, which is 10 times the conversion speed between CSV format and Doris Block, and it has better support for complex types such as Map and Array. This is because the Arrow data format has a high compression rate and low network overhead during transmission. However, Doris Arrow Flight has not yet implemented multi-node parallel reading. It still aggregates query results to a BE node and returns them. For simple batch export of data, the performance may not be as fast as Doris Spark Connector, which supports Tablet-level parallel reading. If you want to use Arrow Flight SQL to connect to Doris in Spark, you can refer to the open-sourced [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) and [Dremio-Flight-Connector](https://github.com/dremio-hub/dremio-flight-connector) to implement it yourself.
 
+### Support BI tools
+
+Since Doris v2.1.8, BI tools such as DBeaver are supported to connect to Doris using the `arrow-flight-sql` protocol. For DBeaver's method of connecting to Doris using the `arrow-flight-sql` Driver, refer to: [how-to-use-jdbc-driver-with-dbeaver-client](https://www.dremio.com/blog/jdbc-driver-for-arrow-flight-sql/#h-how-to-use-jdbc-driver-with-dbeaver-client), [client-applications/clients/dbeaver/](https://docs.dremio.com/current/sonar/client-applications/clients/dbeaver/?_gl=1*1epgwh0*_gcl_au*MjUyNjE1ODM0LjE3MzQwMDExNDg).
+
+## Extended Application
+
+### Multiple BEs return results in parallel
+
+Doris will aggregate the results of a query on all BE nodes to one BE node by default. In Mysql/JDBC queries, FE will request query results from this aggregated data node. In Arrow Flight SQL queries, FE will wrap the IP/Port of this node in the Endpoint and return it to ADBC ​​Client. ADBC ​​Client will request the BE node corresponding to this Endpoint to pull data.
+
+If the query is just a simple Select to pull data from Doris, without Join, Sort, Window Function and other operators with data Shuffle behavior, the query can be split according to Tablet granularity. Now Doris Spark/Flink Connector uses this method to implement parallel data reading, which is divided into two steps:
+1. Execute `explain sql`, and the ScanOperator in the query plan returned by FE contains all Tablet ID Lists of Scan.
+2. Split the original SQL into multiple SQLs based on the Tablet ID List above. Each SQL only reads part of the Tablet. The usage is similar to `SELECT * FROM t1 TABLET(10001,10002) limit 1000;`. The multiple SQLs after splitting can be executed in parallel. Refer to [Support select table sample](https://github.com/apache/doris/pull/10170).
+
+If the outermost layer of the query is aggregation, the SQL is similar to `select k1, sum(k2) from xxx group by k1`. After Doris v3.4, execute `set enable_parallel_result_sink=true;` to allow each BE node of a query to return query results independently. After receiving the Endpoint list returned by FE, ADBC ​​Client pulls results from multiple BE nodes in parallel. However, please note that when the aggregation result is very small, returning multiple BEs will increase the pressure on RPC. For specific implementation, please refer to [support parallel result sink](https://github.com/apache/doris/pull/36053). In theory, except for the outermost query which is sorted, other queries can support each BE node to return results in parallel, but there is no need for this convenience at present, and no further implementation has been made.
+
+### Multiple BEs share the same IP accessible from outside the cluster
+
+If there is a Doris cluster, its FE node can be accessed from outside the cluster, and all its BE nodes can only be accessed from inside the cluster. This is fine when using Mysql Client and JDBC to connect to Doris to execute queries, and the query results will be returned by the Doris FE node. However, using Arrow Flight SQL to connect to Doris cannot execute queries, because ADBC ​​Client needs to connect to the Doris BE node to pull query results, but the Doris BE node is not allowed to be accessed from outside the cluster.
+
+In a production environment, it is often inconvenient to expose the Doris BE node outside the cluster. However, you can add a reverse proxy (such as Nginx) to all Doris BE nodes. When the client outside the cluster connects to Nginx, it will be randomly routed to a Doris BE node. By default, the Arrow Flight SQL query results will be randomly saved on a Doris BE node. If it is different from the Doris BE node randomly routed by Nginx, data forwarding is required within the Doris BE node.
+
+Starting from Doris v2.1.8, you can configure `public_host` and `arrow_flight_sql_proxy_port` in `be.conf` of all Doris BE nodes to the IP and port shared by multiple Doris BE nodes and accessible outside the cluster. The query results can be correctly forwarded and returned to the ADBC ​​Client.
+```conf
+public_host={nginx ip}
+arrow_flight_sql_proxy_port={nginx port}
+```
+
 ## FAQ
 
-1. ARM environment reports an error `get flight info statement failed, arrow flight schema timeout, TimeoutException: Waited 5000 milliseconds for io.grpc.stub.Client`. If the Linux kernel version is <= 4.19.90, you need to upgrade to 4.19.279 or above, or recompile Doris BE in the environment of the lower version of the Linux kernel. For specific compilation methods, refer to the document <docs/dev/install/source-install/compilation-arm>
+1. Q: ARM environment reports an error `get flight info statement failed, arrow flight schema timeout, TimeoutException: Waited 5000 milliseconds for io.grpc.stub.Client`.
 
-Problem cause: This is because there is a compatibility issue between the old version of the Linux kernel and Arrow. `cpp: arrow::RecordBatch::MakeEmpty()` will get stuck when constructing Arrow Record Batch, causing Doris BE's Arrow Flight Server to fail to respond to Doris FE's Arrow Flight Server RPC request within 5000ms, causing FE to return rpc timeout failed to Client. When Spark and Flink read Doris, they also convert the query results into Arrow Record Batch and return them, so the same problem exists.
+A: If the Linux kernel version is <= 4.19.90, you need to upgrade to 4.19.279 or above, or recompile Doris BE in the environment of the lower version of the Linux kernel. For specific compilation methods, refer to the document <docs/dev/install/source-install/compilation-arm>
 
-The Linux kernel version of kylinv10 SP2 and SP3 is only up to 4.19.90-24.4.v2101.ky10.aarch64. You cannot continue to upgrade the kernel version. You can only recompile Doris BE on kylinv10. If the problem still exists after compiling Doris BE with the new version of ldb_toolchain, you can try to compile it with the lower version of ldb_toolchain v0.17. If your ARM environment cannot connect to the Internet, Huawei Cloud provides ARM + kylinv10, and Alibaba Cloud provides x86 + kylinv10
+Cause: This is because there is a compatibility issue between the old version of the Linux kernel and Arrow. `cpp: arrow::RecordBatch::MakeEmpty()` will get stuck when constructing Arrow Record Batch, causing Doris BE's Arrow Flight Server to fail to respond to Doris FE's Arrow Flight Server's RPC request within 5000ms, causing FE to return rpc timeout failed to Client. When Spark and Flink read Doris, they also convert the query results into Arrow Record Batch and return them, so the same problem exists.
 
-2. Currently, `jdbc:arrow-flight-sql` and Java ADBC/JDBCDriver do not support prepared statement passing parameters. For example, `select * from xxx where id=?` will report an error `parameter ordinal 1 out of range`. This is a bug in Arrow Flight SQL ([GitHub Issue](https://github.com/apache/arrow/issues/40118))
+The Linux kernel version of kylinv10 SP2 and SP3 is only 4.19.90-24.4.v2101.ky10.aarch64 at most. The kernel version cannot be upgraded further. Doris BE can only be recompiled on kylinv10. If the problem still exists after compiling Doris BE with the new version of ldb_toolchain, you can try to compile it with the lower version of ldb_toolchain v0.17. If your ARM environment cannot connect to the external network, Huawei Cloud provides ARM + kylinv10, and Alibaba Cloud provides x86 + kylinv10
 
-3. Modification `jdbc:arrow-flight-sql` The batch size of each read can improve performance in some scenarios. By modifying the `setTargetBatchSize` in the `makeJdbcConfig` method in the `org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader` file, the default is 1024, and then saving the modified file to the local directory with the same name, it will overwrite the original file to take effect.
+2. Q: Prepared statement passes parameters and reports errors.
 
-4. ADBC ​​v0.10, JDBC and Java ADBC/JDBCDriver do not support parallel reading, and the `stmt.executePartitioned()` method is not implemented. You can only use the native FlightClient to implement parallel reading of multiple Endpoints, using the method `sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`. In addition, the default AdbcStatement of ADBC ​​V0.10 is actually JdbcStatement. After executeQuery, the row-format JDBC ResultSet is converted back to the Arrow column-format. It is expected that Java ADBC ​​will be fully functional by ADBC ​​1.0.0 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490).
+A: Currently, `jdbc:arrow-flight-sql` and Java ADBC/JDBCDriver do not support prepared statement parameter passing. For example, `select * from xxx where id=?` will report an error `parameter ordinal 1 out of range`. This is a bug in Arrow Flight SQL ([GitHub Issue](https://github.com/apache/arrow/issues/40118)).
 
-5. As of Arrow v15.0, Arrow JDBC Connector does not support specifying the database name in the URL. For example, `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` specifies that the connection to the `test` database is invalid. You can only execute the SQL `use database` manually.
+3. Q: How to modify the batch size read by `jdbc:arrow-flight-sql` each time to improve performance in some scenarios.
 
-6. There is a bug in Doris 2.1.4 version. There is a chance of error when reading large amounts of data. This bug is fixed in [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827) PR. Upgrading Doris 2.1.5 version can solve this problem. For details of the problem, see: [Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
+A: By modifying `setTargetBatchSize` in the `makeJdbcConfig` method in the `org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader` file, the default is 1024, and then saving the modified file to the local directory with the same path name, so as to overwrite the original file and take effect.
 
-7. `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant` Ignore this warning when using Python. This is a problem with the Python ADBC ​​Client and will not affect the query.
+4. Q: ADBC ​​v0.10, JDBC and Java ADBC/JDBCDriver do not support parallel reading.
 
-8. Python reports an error `grpc: received message larger than max (20748753 vs. 16777216)`. Refer to [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) to add `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value` in Database Option.
+A: The `stmt.executePartitioned()` method is not implemented. You can only use the native FlightClient to implement parallel reading of multiple endpoints, using the method `sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`. In addition, the default AdbcStatement of ADBC ​​V0.10 is actually JdbcStatement. After executeQuery, the row-format JDBC ResultSet is converted back to the Arrow column format. It is expected that Java ADBC ​​will be fully functional by ADBC ​​1.0.0 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490).
 
-9. Before Doris version 2.1.7, the error `Reach limit of connections` is reported. This is because there is no limit on the number of Arrow Flight connections for a single user, which is less than `max_user_connections` in `UserProperty`, which is 100 by default. You can modify the current maximum number of connections for Billie user to 100 by `SET PROPERTY FOR 'Billie' 'max_user_connections' = '1000';`, or add `arrow_flight_token_cache_size=50` in `fe.conf` to limit the overall number of Arrow Flight connections. Before Doris version 2.1.7, Arrow Flight connections are disconnected after a default timeout of 3 days. It only forces the number of connections to be less than `qe_max_connection/2`. If the number of connections exceeds the limit, they will be eliminated according to lru. `qe_max_connection` is the total number of connections for all fe users, which is 1024 by default. For details, see the introduction of the conf `arrow_flight_token_cache_size`. Fixed in [Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127). For details, please see: [Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie- shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
+5. Q: Specify the database name in the URL.
+
+A: As of Arrow v15.0, Arrow JDBC Connector does not support specifying database name in URL. For example, specifying connection to `test` database in `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` is invalid, and you can only execute SQL `use database` manually. Arrow v18.0 supports specifying database name in URL, but there are still bugs in actual testing.
+
+6. Q: Python ADBC ​​prints `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant`.
+
+A: Ignore this Warning when using Python. This is a problem with Python ADBC ​​Client and will not affect queries.
+
+7. Q: Python reports an error `grpc: received message larger than max (20748753 vs. 16777216)`.
+
+A: Refer to [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) and add `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value` in Database Option.
+
+8. Q: Error `invalid bearer token` is reported.
+
+A: Execute `SET PROPERTY FOR 'root' 'max_user_connections' = '10000';` to change the current maximum number of connections for the current user to 10000; add qe_max_connection=30000 and arrow_flight_token_cache_size=8000 in `fe.conf` and restart FE.
+
+The connection between the ADBC ​​Client and the Arrow Flight Server is essentially a long link, which requires Auth Token, Connection, and Session to be cached on the Server. After the connection is created, it will not be disconnected immediately at the end of a single query. The Client needs to send a close() request to clean it up, but in fact, the Client often does not send a close request, so the Auth Token, Connection, and Session will be saved on the Arrow Flight Server for a long time. By default, they will time out and disconnect after 3 days, or be eliminated according to LRU after the number of connections exceeds the limit of `arrow_flight_token_cache_size`.
+
+As of Doris v2.1.8, Arrow Flight connections and Mysql/JDBC connections use the same connection limit, including the total number of connections of all FE users `qe_max_connection` and the number of connections of a single user `max_user_connections` in `UserProperty`. But the default `qe_max_connection` and `max_user_connections` are 1024 and 100 respectively. Arrow Flight SQL is often used to replace JDBC scenarios, but the JDBC connection will be released immediately after the query ends. Therefore, when using Arrow Flight SQL, the default connection limit of Doris is too small, which often causes the connection number to exceed the limit of `arrow_flight_token_cache_size` and the connections still in use to be eliminated.
+
+9. Q: Java Arrow Flight SQL reads the Datatime type and returns a timestamp instead of the formatted time.
+
+A: Java Arrow Flight SQL needs to convert the timestamp by itself when reading the Datatime type. Refer to [Add java parsing datetime type in arrow flight sql sample #48578](https://github.com/apache/doris/pull/48578). Using Python Arrow Flight SQL to read the Datatime type returns `2025-03-03 17:23:28Z`, while Java Arrow Flight SQL returns `1740993808`.
+
+10. Q: Java Arrow Flight JDBC Client reports an error `Configuration does not provide a mapping for array column 2` when reading Array nested types.
+
+A: Refer to [`sample/arrow-flight-sql`](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/src/main/java/doris/arrowflight/demo/FlightAdbcDriver.java) to use JAVA ADBC ​​Client.
+
+Python ADBC ​​Client, JAVA ADBC ​​Client, and Java JDBC DriverManager all have no problem reading Array nested types. Only Java Arrow Flight JDBC Client has problems. In fact, the compatibility of Arrow Flight JDBC Client is not guaranteed. It is not officially developed by Arrow, but by a third-party database company Dremio. Other compatibility issues have been found before, so it is recommended to use JAVA ADBC ​​Client first.
+
+## Release Note
+
+> Arrow Flight SQL protocol is supported since Doris 2.1. As of Doris 2.1.9, the issues fixed are listed based on Doris 2.1 series versions. Doris 3.0 series versions are self-checked.
+
+### v2.1.9
+
+1. Fix the problem of Doris data serialization to Arrow.
+[Fix UT DataTypeSerDeArrowTest of Array/Map/Struct/Bitmap/HLL/Decimal256 types](https://github.com/apache/doris/pull/48944)
+- Failed to read `Decimal256` type;
+- Subtle error in reading `DatetimeV2` type;
+- Incorrect result in reading `DateV2` type;
+- Error when reading `IPV4/IPV6` type result is NULL;
+
+2. Fix the problem that Doris Arrow Flight SQL query fails and returns empty result, without returning real error information.
+[Fix query result is empty and not return query error message](https://github.com/apache/doris/pull/45023)
+
+### v2.1.8
+
+1. Support BI tools such as DBeaver to connect to Doris using the `arrow-flight-sql` protocol, and support the correct display of metadata trees.
+[Support arrow-flight-sql protocol getStreamCatalogs, getStreamSchemas, getStreamTables #46217](https://github.com/apache/doris/pull/46217).
+
+2. When multiple BEs share the same IP that is accessible to the outside of the cluster, the query results can be correctly forwarded and returned to the ADBC ​​Client.
+[Arrow flight server supports data forwarding when BE uses public vip](https://github.com/apache/doris/pull/43281)
+
+3. Support multiple endpoints to read in parallel.
+[Arrow Flight support multiple endpoints](https://github.com/apache/doris/pull/44286)
+
+4. Fix query error `FE not found arrow flight schema`.
+[Fix FE not found arrow flight schema](https://github.com/apache/doris/pull/43960)
+
+5. Fix error `BooleanBuilder::AppendValues` when reading columns that allow NULL.
+[Fix Doris NULL column conversion to arrow batch](https://github.com/apache/doris/pull/43929)
+
+6. Fix `show processlist` displays duplicate Connection IDs.
+[Fix arrow-flight-sql ConnectContext to use a unified ID #46284](https://github.com/apache/doris/pull/46284)
+
+### v2.1.7
+
+1. Fix frequent log printing `Connection wait_timeout`.
+[Fix kill timeout FlightSqlConnection and FlightSqlConnectProcessor close](https://github.com/apache/doris/pull/41770)
+
+2. Fix Arrow Flight Bearer Token expiration from Cache.
+[Fix Arrow Flight bearer token cache evict after expired](https://github.com/apache/doris/pull/41754)
+
+### v2.1.6
+
+1. Fix query error `0.0.0.0:xxx, connection refused`.
+[Fix return result from FE Arrow Flight server error 0.0.0.0:xxx, connection refused](https://github.com/apache/doris/pull/40002)
+
+2. Fix query error `Reach limit of connections`.
+[Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127)
+
+In previous versions, execute `SET PROPERTY FOR 'root' 'max_user_connections' = '1024';` to modify the current maximum number of connections for the current user to 1024, which can be temporarily circumvented.
+
+Because the previous version only limits the number of Arrow Flight connections to less than `qe_max_connection/2`, `qe_max_connection` is the total number of connections for all fe users, the default is 1024, and does not limit the number of Arrow Flight connections for a single user to less than `max_user_connections` in `UserProperty`, the default is 100, so when the number of Arrow Flight connections exceeds the upper limit of the current user's connection number, an error `Reach limit of connections` will be reported, so the current user's `max_user_connections` needs to be increased.
+
+For details of the problem, see: [Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie-shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
+
+3. Add Conf `arrow_flight_result_sink_buffer_size_rows` to support modifying the ArrowBatch size of query results returned in a single time, the default is 4096 * 8.
+[Add config arrow_flight_result_sink_buffer_size_rows](https://github.com/apache/doris/pull/38221)
+
+### v2.1.5
+
+1. Fix the problem that Arrow Flight SQL query results are empty.
+[Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827)
+
+Doris v2.1.4 may report an error when reading large amounts of data. For details, see: [Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
+
+### Doris Arrow Flight v2.1.4 and earlier versions are not perfect. It is recommended to upgrade before use.
