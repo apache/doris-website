@@ -19,6 +19,7 @@ interface Event {
     cardDate: string;
     img: React.ReactElement;
     link: string;
+    isCover?: boolean;
 }
 
 const EVENTS_PAGE_DATA = {
@@ -32,6 +33,27 @@ const EVENTS_PAGE_DATA = {
         },
     },
     eventList: [
+        {
+            cardTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
+            detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
+            tag: 'Apache Doris Webinar',
+            date: 'March 27, 2025 21:00-22:00 GMT+8',
+            cardDate: 'March 27, 2025',
+            address: 'Virtual',
+            description: 'Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris',
+            status: 'Upcoming',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className='rounded-t-lg'
+                    src={`${require('@site/static/images/events/event-2.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-compute-storage-decoupled-mode-and-velo-db-cloud-demo',
+        },
         {
             cardTitle: 'Interpreting 2025 Roadmap',
             detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
@@ -70,14 +92,20 @@ export default function Events() {
                 style={{ transition: 'all 0.2s ease-in-out' }}
                 className="!no-underline w-[24rem] rounded-lg hover:translate-y-[-0.5rem]"
             >
-                <div className="relative h-[10.25rem] rounded-t-lg bg-[#162033] text-[#FFF] pt-[1.625rem] px-4">
-                    <div className="absolute right-2 bottom-4">{data.img}</div>
-                    <span className="">{data.tag}</span>
-                    <div className="mb-[0.675rem] text-[1.25rem]/[155%] font-meidum tracking-[0.8px]">
-                        {data.cardTitle}
+                {data.isCover ? (
+                    // <img alt='cover img' width={384} height={164} src={data.img} />
+                    data.img
+                ) : (
+                    <div className="relative h-[10.25rem] rounded-t-lg bg-[#162033] text-[#FFF] pt-[1.625rem] px-4">
+                        <div className="absolute right-2 bottom-4">{data.img}</div>
+                        <span className="">{data.tag}</span>
+                        <div className="mb-[0.675rem] text-[1.25rem]/[155%] font-meidum tracking-[0.8px]">
+                            {data.cardTitle}
+                        </div>
+                        <span className="text-[0.75rem]">{data.cardDate}</span>
                     </div>
-                    <span className="text-[0.75rem]">{data.cardDate}</span>
-                </div>
+                )}
+
                 <div className="border-r rounded-b-lg border-l border-b border-[#DFE5F0] p-6">
                     <div
                         style={{ color: `${STATUS_COLOR_MAP[data.status]}` }}

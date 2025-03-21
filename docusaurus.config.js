@@ -204,10 +204,10 @@ const config = {
             },
             announcementBar: {
                 id: 'join_us',
-                content: `<a href="https://www.linkedin.com/events/7303775032810356736/comments/" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                content: `<a href="https://www.velodb.io/events/apache-doris-compute-storage-decoupled-mode-and-velo-db-cloud-demo" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
                 <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
                 <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-               <span>Join us live on March 20 to deep dive into the Apache Doris 2025 Roadmap !</span> 
+               <span>Join us for a live webinar to explore Apache Doris' compute-storage decoupled mode and get a hands-on demo</span> 
                <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
                    </a>`,
                 textColor: '#4C576C',
