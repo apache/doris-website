@@ -106,7 +106,7 @@ The following table lists the JSON format parameters supported by various loadin
 | read json by line | false | read_json_by_line | Always true | Not supported | read_json_by_line, default true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | Not supported | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
-| compression format | plain | compress_type | PROPERTIES.compress_type | Not supported | Not supported | compress_type |
+| compression format | plain | compress_type | PROPERTIES.compress_type | Not supported |  compress_type |
 
 :::tip Note
 1. Stream Load: Parameters are specified directly through HTTP Headers, e.g., `-H "jsonpaths: $.data"`
