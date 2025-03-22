@@ -1052,6 +1052,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-part",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-by-string",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/substring-index",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/strcmp",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
