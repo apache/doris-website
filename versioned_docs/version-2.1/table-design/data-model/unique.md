@@ -142,3 +142,4 @@ SELECT * FROM example_tbl_unique;
 
 * For partial column upsert, enable merge-on-write mode with the appropriate parameters. Refer to [Partial Column Updates](../../data-operate/update/update-of-unique-model) for guidance.
 
+* When using a Unique table, the partition key must be included in the Key columns to ensure data uniqueness.
