@@ -34,7 +34,7 @@ Apache Doris JDBC Catalog 支持通过标准 JDBC 接口连接 Oracle 数据库�
 
 - Oracle 数据库的 JDBC 驱动程序，您可以从 [Maven 仓库](https://mvnrepository.com/artifact/com.oracle.database.jdbc)下载 Ojdbc8 及以上版本的 Oracle JDBC 驱动程序。
 
-- Apache Doris 每个 FE 和 BE 节点和 Oracle 服务器之间的网络连接，默认端口为 1521。
+- Apache Doris 每个 FE 和 BE 节点和 Oracle 服务器之间的网络连接，默认端口为 1521；如果 Oracle RAC 启用 ONS，还需开通 6200 端口。
 
 ## 连接 Oracle
 
