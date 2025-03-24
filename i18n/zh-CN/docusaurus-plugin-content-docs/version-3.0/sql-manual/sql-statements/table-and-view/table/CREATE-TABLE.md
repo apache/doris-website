@@ -33,7 +33,7 @@ under the License.
 该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法
 
 ```sql
-CREATE TABLE [IF NOT EXISTS] [database.]table
+CREATE [TEMPORARY] TABLE [IF NOT EXISTS] [database.]table
 (
     column_definition_list
     [, index_definition_list]
@@ -47,6 +47,10 @@ distribution_desc
 [properties]
 [extra_properties]
 ```
+
+#### TEMPORARY
+
+创建临时表。临时表仅在当前 Session 可见，会话结束自动删除
 
 #### column_definition_list
 
