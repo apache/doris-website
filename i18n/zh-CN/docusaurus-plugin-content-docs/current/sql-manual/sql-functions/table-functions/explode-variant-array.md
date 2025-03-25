@@ -26,12 +26,12 @@ under the License.
 
 ## 描述
 
-`explode_variant_array` 表函数，接受一个 variant 类型，其中每个元素是 JSON 对象类型，将该 json 数组中的每个 json 对象展开为多行，每行包含一个 JSON 对象。配合 LATERAL VIEW 使用。
+`explode_variant_array` 表函数，接受一个或多个 variant 类型，其中每个元素是 JSON 对象类型，将该 json 数组中的每个 json 对象展开为多行，每行包含一个 JSON 对象。配合 LATERAL VIEW 使用。
 
 ## 语法
 
 ```sql
-EXPLODE_VARIANT_ARRAY(<variant>)
+EXPLODE_VARIANT_ARRAY(<variant>[, <variant>])
 ```
 
 ## 参数
@@ -91,7 +91,8 @@ insert into simple_nested_test values(1, '{
         "type": "WORK"
       }
     ]
-  }
+  },
+  "hobbies": ["Swimming", "Programming", "Music", "Photography"]
 }');
 ```
 
@@ -108,4 +109,19 @@ select v['eventId'], phone_numbers
 | 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
 | 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
 +--------------------------+----------------------------------------------------+
+```
+
+```sql
+select v['eventId'], phone_numbers, hobbies
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers'], v['hobbies']) tmp1 as phone_numbers,hobbies
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;   
+```
+
+```text
++--------------+----------------------------------------------------+-------------+
+| v['eventId'] | phone_numbers                                      | hobbies     |
++--------------+----------------------------------------------------+-------------+
+| 1            | {"callLimit":5,"number":"1111111111","type":"GSM"} | Swimming    |
+| 1            | {"callLimit":3,"number":"222222222","type":"HOME"} | Programming |
++--------------+----------------------------------------------------+-------------+
 ```

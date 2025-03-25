@@ -26,12 +26,12 @@ under the License.
 
 ## 描述
 
-`explode` 函数接受一个数组，会将数组的每个元素映射为单独的行。通常与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。`explode` 和 `explode_outer` 区别主要在于空值处理。
+`explode` 函数接受一个或多个数组，会将数组的每个元素映射为单独的行，每个数组的同一索引位置的元素会被组合在一起，形成一行。通常与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。`explode` 和 `explode_outer` 区别主要在于空值处理。
 
 ## 语法
 ```sql
-EXPLODE(<array>)
-EXPLODE_OUTER(<array>)
+EXPLODE(<array>[, <array> ])
+EXPLODE_OUTER(<array>[, <array> ]
 ```
 
 ## 参数
@@ -65,6 +65,7 @@ select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
 |    3 |
 +------+
 ```
+
 
 ```sql
 select e1 from (select 1 k1) as t lateral view explode_outer(null) tmp1 as e1;
@@ -109,4 +110,31 @@ select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null]) tmp1
 |    1 |
 | NULL |
 +------+
+```
+
+```sql
+select e1,e2 from (select 1 k1) as t lateral view explode([null,1,null], ["4","5","6"]) tmp1 as e1,e2;
+```
+
+```text
++------+------+
+| e1   | e2   |
++------+------+
+| NULL | 4    |
+|    1 | 5    |
+| NULL | 6    |
++------+------+
+```
+
+```sql
+select e1,e2,e3 from (select 1 k1) as t lateral view explode([null,1,null], ["4","5","6"], null) tmp1 as e1,e2,e3;
+```
+```text
++------+------+------+
+| e1   | e2   | e3   |
++------+------+------+
+| NULL | 4    | NULL |
+|    1 | 5    | NULL |
+| NULL | 6    | NULL |
++------+------+------+
 ```

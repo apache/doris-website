@@ -26,12 +26,12 @@ under the License.
 
 ## Description
 
-The `explode` function takes an array as input and maps each element of the array to a separate row. It is typically used in conjunction with LATERAL VIEW to flatten nested data structures into a standard tabular format. The main difference between explode and `explode_outer` lies in handling empty values.
+The `explode` function takes one or more arrays as input and maps each element of the array to a separate row.The elements at the same index position of each array will be grouped together to form a row. It is typically used in conjunction with LATERAL VIEW to flatten nested data structures into a standard tabular format. The main difference between explode and `explode_outer` lies in handling empty values.
 
 ## Syntax
 ```sql
-EXPLODE(<array>)
-EXPLODE_OUTER(<array>)
+EXPLODE(<array>[, <array> ])
+EXPLODE_OUTER(<array>[, <array> ])
 ```
 
 ## Required Parameters
@@ -109,3 +109,31 @@ select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null]) tmp1
 | NULL |
 +------+
 ```
+
+```sql
+select e1,e2 from (select 1 k1) as t lateral view explode([null,1,null],["4","5","6"]) tmp1 as e1,e2;
+```
+
+```text
++------+------+
+| e1   | e2   |
++------+------+
+| NULL | 4    |
+|    1 | 5    |
+| NULL | 6    |
++------+------+
+```
+
+```sql
+select e1,e2,e3 from (select 1 k1) as t lateral view explode([null,1,null],["4","5","6"],null) tmp1 as e1,e2,e3;
+```
+```text
++------+------+------+
+| e1   | e2   | e3   |
++------+------+------+
+| NULL | 4    | NULL |
+|    1 | 5    | NULL |
+| NULL | 6    | NULL |
++------+------+------+
+```
+z
