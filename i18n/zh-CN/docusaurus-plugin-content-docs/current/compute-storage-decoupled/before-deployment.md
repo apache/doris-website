@@ -109,7 +109,7 @@ Doris 存算分离架构包含三个主要模块：
 
 #### 5.1.4 启动 FDB 服务
 
-FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
+FDB 集群部署完成后，您可以在每个节点上使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
 
 ```bash
 ./fdb_ctl.sh start
