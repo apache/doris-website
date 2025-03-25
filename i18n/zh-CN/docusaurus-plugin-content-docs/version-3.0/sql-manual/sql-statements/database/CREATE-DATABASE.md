@@ -65,6 +65,20 @@ CREATE DATABASE [IF NOT EXISTS] <db_name>
   )
   ```
 
+如果要为 db 下的 table 指定默认的 Storage Vault，需要指定`<storage_vault_name>`（table 的`<storage_vault_name>`属性优先级会高于 db）:
+
+  ```sql
+  PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+  )
+  ```
+
+:::info 备注
+
+从 3.0.5 版本支持指定 db 的 `storage_vault_name`。
+
+:::
+
 ## 示例
 
 - 新建数据库 db_test
@@ -79,5 +93,14 @@ CREATE DATABASE [IF NOT EXISTS] <db_name>
    CREATE DATABASE `db_test`
    PROPERTIES (
    	"replication_allocation" = "tag.location.group_1:3"
+   );
+   ```
+
+- 新建数据库并设置默认的 Storage Vault：
+
+   ```sql
+   CREATE DATABASE `db_test`
+   PROPERTIES (
+   	"storage_vault_name" = "hdfs_demo_vault"
    );
    ```
