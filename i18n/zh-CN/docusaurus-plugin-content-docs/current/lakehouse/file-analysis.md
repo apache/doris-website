@@ -41,9 +41,10 @@ under the License.
 ```sql
 SELECT * FROM S3 (
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 )
 ```
@@ -154,9 +155,10 @@ TVF 非常适用于对存储系统上的独立文件进行直接分析，而无�
 ```sql
 SELECT * FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 )
 ORDER BY p_partkey LIMIT 5;
@@ -180,9 +182,10 @@ TVF 可以出现在 SQL 中，Table 能出现的任意位置。如 `CTE` 的 `WI
 CREATE VIEW tvf_view AS 
 SELECT * FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 );
 
@@ -216,9 +219,10 @@ INSERT INTO test_table (id,name,age)
 SELECT cast(id as INT) as id, name, cast (age as INT) as age
 FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 );
 ```
