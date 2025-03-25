@@ -38,7 +38,7 @@ This document mainly introduces how to determine whether resource utilization is
 
     For example, in a cluster with 3 BE nodes, where each node has 8 CPU cores. When parallel export is enabled, it will generate (4*3=) 12 Writers.
 
-    Note that not all queries can enable parallel export, such as when the query contains global sorting or aggregation semantics. For example:
+    Note that even if `enable_parallel_outfile` is enabled, not all queries can be exported in parallel. For example, if the query contains global sorting and aggregation semantics, it cannot be exported in parallel. For example:
 
     ```
     SELECT * FROM table ORDER BY id;
