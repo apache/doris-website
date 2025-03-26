@@ -29,7 +29,7 @@ under the License.
 This feature is supported since the Apache Doris 2.0 version
 :::
 
-## Background 
+## Description
 
 Doris is built on a columnar storage format engine. In high-concurrency service scenarios, users always want to retrieve entire rows of data from the system. However, when tables are wide, the columnar format greatly amplifies random read IO. Doris query engine and planner are too heavy for some simple queries, such as point queries. A short path needs to be planned in the FE's query plan to handle such queries. FE is the access layer service for SQL queries, written in Java. Parsing and analyzing SQL also leads to high CPU overhead for high-concurrency queries. To solve these problems, we have introduced row storage, short query path, and PreparedStatement in Doris. Below is a guide to enable these optimizations.
 
@@ -126,8 +126,8 @@ Doris has a page-level cache that stores data for a specific column in each page
 
 ## FAQ
 
-**1. How to confirm that the configuration is correct and short path optimization using concurrent enumeration is used ?**
-   
+#### **1. How to confirm that the configuration is correct and short path optimization using concurrent enumeration is used ?**
+
 A: explain sql, when SHORT-CIRCUIT appears in the execution plan, it proves that short path optimization is used
 
 ```sql
@@ -162,7 +162,7 @@ mysql> explain select * from tbl_point_query where k1 = -2147481418 ;
    +-----------------------------------------------------------------------------------------------+
 ```
 
-**2. How to confirm that prepared statement is effective ?**
+#### **2. How to confirm that prepared statement is effective ?**
 
 A: After sending the request to Doris, find the corresponding query request in fe.audit.log and find Stmt=EXECUTE(), indicating that prepared statement is effective
 
@@ -172,14 +172,14 @@ A: After sending the request to Doris, find the corresponding query request in f
    bles=
 ```
 
-**3. Can non-primary key queries use special optimization of high-concurrency point lookups?**
+#### **3. Can non-primary key queries use special optimization of high-concurrency point lookups?**
 
 A: No, high-concurrency query only targets the equivalent query of the key column, and the query cannot contain join or nested subqueries.
 
-**4. Is useServerPrepStmts useful in ordinary queries?**
+#### **4. Is useServerPrepStmts useful in ordinary queries?**
 
 A: Prepared Statement currently only takes effect when primary key is checked.
 
-**5. Does optimizer selection require global settings?**
+#### **5. Does optimizer selection require global settings?**
 
 A: When using prepared statement for query, Doris will choose the query method with the best performance, and there is no need to manually set the optimizer.
