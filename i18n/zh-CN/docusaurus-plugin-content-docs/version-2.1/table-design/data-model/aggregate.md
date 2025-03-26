@@ -135,7 +135,7 @@ AGGREGATE KEY(k1)
 DISTRIBUTED BY HASH(k1) BUCKETS 3;
 ```
 
-在此示例中，`agg_state` 用于声明数据类型，`sum/group_concat` 为聚合函数签名。agg_state 是一种数据类型，类似于 int、array、string。agg_state 只能与 [state](../../sql-manual/sql-functions/combinators/state)、[merge](../../sql-manual/sql-functions/combinators/merge)[union](../../sql-manual/sql-functions/combinators/union) 函数组合器配合使用。它表示聚合函数的中间结果，例如 `group_concat` 的中间状态，而非最终结果。
+在此示例中，`agg_state` 用于声明数据类型，`sum/group_concat` 为聚合函数签名。agg_state 是一种数据类型，类似于 int、array、string。agg_state 只能与 [state](../../sql-manual/sql-functions/combinators/state)、[merge](../../sql-manual/sql-functions/combinators/merge)、[union](../../sql-manual/sql-functions/combinators/union) 函数组合器配合使用。它表示聚合函数的中间结果，例如 `group_concat` 的中间状态，而非最终结果。
 
 agg_state 类型需要使用 state 函数来生成，对于当前的这个表，需要使用 `group_concat_state`：
 
