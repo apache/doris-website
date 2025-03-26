@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
 Subtracts a specified number of milliseconds from a datetime value and returns a new datetime value.
@@ -37,10 +36,10 @@ MILLISECONDS_SUB(<basetime>, <delta>)
 
 ## Parameters
 
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
-| `<delta>`     | The number of milliseconds to subtract, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
+| Parameter | Description |
+| ---- | ---- |
+| `<basetime>` | The input datetime value, of type DATETIMEV2 |
+| `<delta>` | The number of milliseconds to subtract, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
 
 ## Return Value
 
@@ -58,7 +57,6 @@ SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
 +--------------------------------------------------------------------------+
 | 2023-09-08 16:02:08.434123                                               |
 +--------------------------------------------------------------------------+
-1 row in set (0.11 sec)
 ```
 
 **Note:**
