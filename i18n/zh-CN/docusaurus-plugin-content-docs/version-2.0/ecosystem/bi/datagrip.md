@@ -74,7 +74,7 @@ Apache Doris 高度兼容 MySQL 协议，可以使用 DataGrip 的 MySQL 数据�
 
 5. 测试数据源连接
 
-    在填写完连接信息后，单击左下角 Test Connection 验证数据库连接信息的准确性。DBeaver 返回如下对弹窗则测试连接成功。然后单击右下角 OK 完成连接配置。
+    在填写完连接信息后，单击左下角 Test Connection 验证数据库连接信息的准确性。DataGrip 返回如下对弹窗则测试连接成功。然后单击右下角 OK 完成连接配置。
 
    ![测试连接](/images/datagrip4.png)
 
