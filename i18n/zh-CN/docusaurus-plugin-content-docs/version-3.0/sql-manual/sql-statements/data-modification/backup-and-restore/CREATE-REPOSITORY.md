@@ -95,6 +95,8 @@ PROPERTIES
 );
 ```
 
+Doris也支持AWS assume role的方式访问，请参考[AWS集成](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+
 创建名为 hdfs_repo 的仓库
 
 ```sql

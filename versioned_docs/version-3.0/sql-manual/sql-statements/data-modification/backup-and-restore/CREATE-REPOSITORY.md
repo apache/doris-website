@@ -97,6 +97,8 @@ PROPERTIES
 );
 ```
 
+Doris also suppoted AWS assume role, please refer to[AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md).
+
 Create a repository named hdfs_repo.
 
 ```sql

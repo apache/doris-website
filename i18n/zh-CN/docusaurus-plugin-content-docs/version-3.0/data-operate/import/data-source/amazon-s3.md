@@ -187,3 +187,5 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+
+Doris也支持AWS assume role的方式访问，请参考[AWS集成](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
