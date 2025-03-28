@@ -85,7 +85,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
 ```
 
 * 通过执行 SQL 设置
@@ -100,7 +100,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -289,7 +289,7 @@ mysql> select * from dt;
 # 配置 session 变量开启 group commit (默认为 off_mode),开启同步模式
 mysql> set group_commit = sync_mode;
 
-# 这里返回的 label 是 group_commit 开头的，可以区分出是否谁用了 group commit，导入耗时至少是表属性 group_commit_interval。
+# 这里返回的 label 是 group_commit 开头的，可以区分出是否使用了 group commit，导入耗时至少是表属性 group_commit_interval。
 mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
 Query OK, 2 rows affected (10.06 sec)
 {'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
@@ -487,7 +487,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 ### Stream Load 日志场景测试
 
-**机器配置**
+#### 机器配置
 
 * 1 台 FE：阿里云 8 核 CPU、16GB 内存、1 块 100GB ESSD PL1 云磁盘
 
@@ -497,19 +497,19 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 测试版本为 Doris-3.0.1
 
-**数据集**
+#### 数据集
 
 * `httplogs` 数据集，总共 31GB、2.47 亿条
 
-**测试工具**
+#### 测试工具
 
 * [doris-streamloader](/ecosystem/doris-streamloader.md)
 
-**测试方法**
+#### 测试方法
 
 * 对比 `非 group_commit` 和 `group_commit `的 `async_mode` 模式下，设置不同的单并发数据量和并发数，导入 `247249096` 行数据
 
-**测试结果**
+#### 测试结果
 
 | 导入方式    | 单并发数据量  | 并发数  | 耗时 (秒)     | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
 |----------------|---------|------|-----------|----------|-----------|
@@ -532,7 +532,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 ### JDBC
 
-**机器配置**
+#### 机器配置
 
 * 1 台 FE：阿里云 8 核 CPU、16GB 内存、1 块 100GB ESSD PL1 云磁盘
 
@@ -544,19 +544,19 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 关闭打印 parpared 语句的 audit log 以提高性能
 
-**数据集**
+#### 数据集
 
 * tpch sf10 `lineitem` 表数据集，30 个文件，总共约 22 GB，1.8 亿行
 
-**测试工具**
+#### 测试工具
 
 * [DataX](https://github.com/alibaba/DataX)
 
-**测试方法**
+#### 测试方法
 
 * 通过 `txtfilereader` 向 `mysqlwriter` 写入数据，配置不同并发数和单个 `INSERT` 的行数
 
-**测试结果**
+#### 测试结果
 
 | 单个 insert 的行数 | 并发数 | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
 |-------------|-----|-----------|----------|
@@ -568,7 +568,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 ### Insert into sync 模式小批量数据
 
-**机器配置**
+#### 机器配置
 
 * 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
@@ -578,7 +578,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 测试版本为 Doris-3.0.1
 
-**数据集**
+#### 数据集
 
 * tpch sf10 `lineitem` 表数据集。
 
@@ -609,7 +609,7 @@ PROPERTIES (
 );
 ```
 
-**测试工具**
+#### 测试工具
 
 * [Jmeter](https://jmeter.apache.org/)
 
@@ -619,37 +619,41 @@ PROPERTIES (
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的 init 语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+2. 开启 jdbc 的 prepared statement，完整的 url 为: 
+
+    ```
+    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`。
+    ```
+
 3. 设置导入类型为 prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。
 
-**测试方法**
+#### 测试方法
 
 * 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1 行数据。
 
-**测试结果**
+#### 测试结果
 
 * 数据单位为行每秒。
 
 * 以下测试分为 30，100，500 并发。
 
-**30 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 30 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
 |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
 
-
-**100 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 100 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
 |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
-**500 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 500 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
@@ -658,7 +662,7 @@ PROPERTIES (
 
 ### Insert into sync 模式大批量数据
 
-**机器配置**
+#### 机器配置
 
 * 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
@@ -668,7 +672,7 @@ PROPERTIES (
 
 * 测试版本为 Doris-3.0.1
 
-**数据集**
+#### 数据集
 
 * tpch sf10 `lineitem` 表数据集。
 
@@ -699,35 +703,35 @@ PROPERTIES (
 );
 ```
 
-**测试工具**
+#### 测试工具
 
 * [Jmeter](https://jmeter.apache.org/)
 
-**测试方法**
+#### 测试方法
 
 * 通过 `Jmeter` 向`Doris`写数据。每个并发每次通过 insert into 写入 1000 行数据。
 
-**测试结果**
+#### 测试结果
 
 * 数据单位为行每秒。
 
 * 以下测试分为 30，100，500 并发。
 
-**30 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 30 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
 |enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
-**100 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 100 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
 |enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
-**500 并发 sync 模式 5 个 BE3 副本性能测试**
+#### 500 并发 sync 模式 5 个 BE3 副本性能测试
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
