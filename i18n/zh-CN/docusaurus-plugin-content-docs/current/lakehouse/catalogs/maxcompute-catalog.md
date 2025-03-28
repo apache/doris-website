@@ -86,7 +86,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 MaxCompute 版本
 
-仅支持公有云版本的 Max Compute。私有云版本支持请联系 Doris 社区支持。
+仅支持公有云版本的 MaxCompute。私有云版本支持请联系 Doris 社区支持。
 
 ### 支持的 MaxCompute 表
 
@@ -96,7 +96,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 列类型映射
 
-| Max Compute Type | Doris Type    | Comment                                                                      |
+| MaxCompute Type | Doris Type    | Comment                                                                      |
 | ---------------- | ------------- | ---------------------------------------------------------------------------- |
 | bolean           | boolean       |                                                                              |
 | tiny             | tinyint       |                                                                              |
