@@ -25,7 +25,7 @@
         "@docusaurus/plugin-pwa": "3.6.3",
         "@docusaurus/preset-classic": "3.6.3",
         "@mdx-js/react": "^3.0.0",
-        "@yang1666204/docusaurus-search-local": "0.0.2",
+        "@yang1666204/docusaurus-search-local": "0.0.4",
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
