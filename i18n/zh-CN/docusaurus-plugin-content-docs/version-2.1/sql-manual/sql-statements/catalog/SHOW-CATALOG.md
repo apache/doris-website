@@ -52,9 +52,9 @@ LIKE：可按照 CATALOG 名进行模糊查询
 | CatalogId | 数据目录唯一 ID |
 | CatalogName | 数据目录名称，其中 internal 是默认内置的 catalog，不可修改 |
 | Type | 数据目录类型 |
-| IsCurrent | 是否为当前正在使用的数据目录 |
+| IsCurrent | 是否为当前会话正在使用的数据目录 |
 | CreateTime | 创建时间 |
-| LastUpdateTime | 最后更新时间 |
+| LastUpdateTime | 最后更新时间，REFRESH CATALOG， ALTER CATALOG，或者Hive、Paimon等外部元数据系统发生变更时间 |
 | Comment | 备注 |
 
 ## 权限控制
