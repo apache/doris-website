@@ -66,10 +66,12 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
 - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
 - "meta_version" = 40: Use the specified meta_version to read the previously backed up metadata. Note that this parameter is used as a temporary solution and is only used to restore the data backed up by the old version of Doris. The latest version of the backup data already contains the meta version, no need to specify it.
 - "clean_tables" : Indicates whether to clean up tables that do not belong to the restore target. For example, if the target db before the restore has tables that are not present in the snapshot, specifying `clean_tables` can drop these extra tables and move them into the recycle bin during the restore.
-  - This feature is supported since the Apache Doris 1.2.6  version
-- "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
-  - This feature is supported since the Apache Doris 1.2.6  version
-
+  - This feature is supported since the Apache Doris 2.1.6  version
+- "clean_partitions"：Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
+  - This feature is supported since the Apache Doris 2.1.6  version
+- "atomic_restore"：The data will be loaded into a temporary table first, and then the original table will be replaced atomically to ensure that the read and write of the target table are not affected during the recovery process.
+- "force_replace"：Force replace when the table exists and the schema is different with the backup table. 
+  - Note that to enable "force_replace", you must enable "atomic_restore"
 ## Optional Parameters
 
 **1.`<table_name>`**

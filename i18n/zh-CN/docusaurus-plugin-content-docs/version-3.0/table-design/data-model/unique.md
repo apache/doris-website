@@ -136,4 +136,6 @@ SELECT * FROM example_tbl_unique;
 
 * 在整行 `UPSERT` 语义下，即使用户使用 insert into 指定部分列进行写入，Doris 也会在 Planner 中将未提供的列使用 NULL 值或者默认值进行填充；
 
-* 部分列更新。如果用户希望更新部分字段，需要使用写时合并实现，并通过特定的参数来开启部分列更新的支持。请查阅文档[部分列更新](../../data-operate/update/update-of-unique-model)获取相关使用建议。
+* 部分列更新。如果用户希望更新部分字段，需要使用写时合并实现，并通过特定的参数来开启部分列更新的支持。请查阅文档[部分列更新](../../data-operate/update/update-of-unique-model)获取相关使用建议；
+
+* 使用 Unique 表时，为了保证数据的唯一性，分区键必须包含在 Key 列内。

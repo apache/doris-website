@@ -117,6 +117,16 @@ The `SELECT INTO OUTFILE` currently supports exporting the following file format
 * csv\_with\_names
 * csv\_with\_names\_and\_types
 
+### Export concurrency
+
+You can enable concurrent export through the session variable `enable_parallel_outfile`.
+
+`SET enable_parallel_outfile=true;`
+
+Concurrent export will use multi-node and multi-thread to export result data to improve the overall export throughout. However, concurrent export may generate more files.
+
+Note that some queries cannot perform concurrent export even if this variable is turned on, such as queries containing global sorting. If the number of rows returned by the export command is greater than 1, it means that concurrent export is enabled.
+
 ## Export Examples
 
 ### Export to an HDFS Cluster with High Availability Enabled
@@ -231,33 +241,29 @@ Since `"max_file_size" = "2048MB"` is specified, if the final generated file is 
 
 ## Notice
 
-1. Limitations when using concurrent Outfile
-
-    The current version of the pipeline engine does not support concurrent Outfile. Therefore, if the pipeline engine is enabled, concurrent Outfile will revert to single-threaded export.
-
-2. Export Data Volume and Export Efficiency
+1. Export Data Volume and Export Efficiency
 
 	The `SELECT INTO OUTFILE` function is essentially executing an SQL query command. If concurrent exports are not enabled, the query results are exported by a single BE node in a single thread. Therefore, the entire export time includes the time consumed by the query itself and the time consumed by writing out the final result set. Enabling concurrent exports can reduce the export time.
 
-3. Export Timeout
+2. Export Timeout
 
 	The timeout period of the export command is the same as that of the query. If the export data times out due to a large amount of data, you can set the session variable `query_timeout` to appropriately extend the query timeout period.
 
-4. Management of Exported Files
+3. Management of Exported Files
 
 	Doris does not manage the exported files. Whether the files are successfully exported or left over after a failed export, users need to handle them on their own.
 
 	In addition, the `SELECT INTO OUTFILE` command does not check whether files or file paths exist. Whether the `SELECT INTO OUTFILE` command will automatically create paths or overwrite existing files is completely determined by the semantics of the remote storage system.
 
-5. If the Query Result Set Is Empty
+4. If the Query Result Set Is Empty
 
 	For an export with an empty result set, an empty file will still be generated.
 
-6. File Splitting
+5. File Splitting
 
 	File splitting ensures that a row of data is completely stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
 
-7. Functions with Non-visible Characters
+6. Functions with Non-visible Characters
 
 	For some functions whose output is non-visible characters, such as BITMAP and HLL types, when exported to the CSV file format, the output is `\N`.
 

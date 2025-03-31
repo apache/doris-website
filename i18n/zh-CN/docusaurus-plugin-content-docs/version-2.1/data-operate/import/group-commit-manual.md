@@ -100,7 +100,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -618,7 +618,7 @@ PROPERTIES (
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的 init 语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`。
 3. 设置导入类型为 prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。

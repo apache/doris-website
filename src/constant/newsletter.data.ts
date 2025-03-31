@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Slash your cost by 90% with Apache Doris Compute-Storage Decoupled Mode",
+        content: `Apache Doris compute-storage decoupled mode achieves 90% cost reduction and provides elasticity and workload isolation, while maintaining high performance in data ingestion and queries.`,
+        to: '/blog/doris-compute-storage-decoupled',
+        image: 'compute-storage-decoupled-banner.jpg',
+    },
+    {
         tags: ['Release Note'],
         title: "Apache Doris 3.0.4 Released",
         content: `This version introduces continuous upgrades and enhancements in several key areas, including Lakehouse, Storage Efficiency, Compute-Storage Separation, Query Optimizer and Asynchronous Materialized Views, and more.`,
@@ -18,13 +25,6 @@ export const NEWSLETTER_DATA = [
         content: `Ortege handles massive volumes of blockchain data to power its analytics platform, Ortege Studio. Apache Doris forms the backbone of its Lakehouse v2, enabling it to process billions of records and deliver real-time insights.`,
         to: '/blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience',
         image: 'ortege-2.jpg',
-    },
-    {
-        tags: ['Best Practice'],
-        title: "Scaling Bitcoin data to billions of records with Apache Doris: our journey to auto-partitioning",
-        content: `To power lightning-fast queries and ensure the Deep Dive dashboards deliver real-time insights, Ortege relies on Apache Doris. A crucial feature they embrace is Auto Partition.`,
-        to: '/blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records',
-        image: 'ortege-1.jpg',
     },
 
 
