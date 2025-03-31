@@ -37,7 +37,7 @@ Apache Doris has a wide user base. It has been used in production environments o
 
 As shown in the figure below, after various data integrations and processing, data sources are typically ingested into the real-time data warehouse Doris and offline lakehouses (such as Hive, Iceberg, and Hudi). These are widely used in OLAP analysis scenarios.
 
-![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.png) 
+![Apache Doris Usage Scenarios](/images/getting-started/apache-doris-usage-scenarios-pipeline.png) 
 
 Apache Doris is widely used in the following scenarios:
 
@@ -74,7 +74,7 @@ The storage-compute integrated architecture of Apache Doris is streamlined and e
 
 - **Backend (BE):** Primarily responsible for data storage and query execution. Data is partitioned into shards and stored with multiple replicas across BE nodes.
 
-![Overall Architecture and Technical Features](/images/getting-started/apache-doris-technical-overview.png)
+![MPP Architecture of Storage-Compute Integrated Architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 In a production environment, multiple FE nodes can be deployed for disaster recovery. Each FE node maintains a full copy of the metadata. The FE nodes are divided into three roles:
 
@@ -146,15 +146,15 @@ Apache Doris also supports strongly consistent single-table materialized views a
 
 Apache Doris has an MPP-based query engine for parallel execution between and within nodes. It supports distributed shuffle join for large tables to better handle complicated queries.
 
-![Query engine 1](/images/getting-started/apache-doris-query-engine-1.png)
+![MPP-based Query engine 1](/images/getting-started/apache-doris-query-engine-1.png)
 
 The query engine of Apache Doris is fully vectorized, with all memory structures laid out in a columnar format. This can largely reduce virtual function calls, increase cache hit rates, and make efficient use of SIMD instructions. Apache Doris delivers a 5~10 times higher performance in wide table aggregation scenarios than non-vectorized engines.
 
-![Query engine 2](/images/getting-started/apache-doris-query-engine-2.png)
+![MPP-based Query engine 2](/images/getting-started/apache-doris-query-engine-2.png)
 
 Apache Doris uses adaptive query execution technology to dynamically adjust the execution plan based on runtime statistics. For example, it can generate a runtime filter and push it to the probe side. Specifically, it pushes the filters to the lowest-level scan node on the probe side, which largely reduces the data amount to be processed and increases join performance. The runtime filter of Apache Doris supports In/Min/Max/Bloom Filter.
 
-![pip_exec_3](/images/pip_exec_3.png)
+![MPP-based pip_exec_3](/images/pip_exec_3.png)
 
 Apache Doris uses a Pipeline execution engine that breaks down queries into multiple sub-tasks for parallel execution, fully leveraging multi-core CPU capabilities. It simultaneously addresses the thread explosion problem by limiting the number of query threads. The Pipeline execution engine reduces data copying and sharing, optimizes sorting and aggregation operations, thereby significantly improving query efficiency and throughput.
 
