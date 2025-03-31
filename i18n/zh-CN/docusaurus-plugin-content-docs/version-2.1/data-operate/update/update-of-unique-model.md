@@ -39,7 +39,7 @@ under the License.
 1. 2.0 版本仅在 Unique Key 的 Merge-on-Write 实现中支持部分列更新能力。
 2. 从 2.0.2 版本开始，支持使用 INSERT INTO 进行部分列更新。
 3. 不支持在有同步物化视图的表上进行部分列更新。
-
+4. 不支持在进行 Schema Change 的表上进行部分列更新。
 :::
 
 ### 适用场景
