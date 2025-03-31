@@ -34,15 +34,16 @@ WEEKS_ADD([<date_value> | <datetime_value>], <weeks_value>)
 ```
 
 ## Required parameters
-**<weeks_value>**
-> Integer, indicating the number of weeks to increase or decrease (positive number indicates increase, negative number indicates decrease)
+| Parameter      | Description                                                   |
+|--------------|---------------------------------------------------------------|
+| `<weeks_value>` | Integer, indicating the number of weeks to increase or decrease (positive number indicates increase, negative number indicates decrease) |
 
 ## Optional parameters
-- **<date_value>**
-    > `DATE` date type input value
+| Parameter          | Description                      |
+|------------------|--------------------------------|
+| `<date_value>`     | `DATE` type date input value   |
+| `<datetime_value>` | `DATETIME` type time input value |
 
-- **<datetime_value>**
-    > `DATETIME` time type input value
   
 ## example
 
