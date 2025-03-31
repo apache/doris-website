@@ -26,7 +26,7 @@ under the License.
 
 Resource Group is a mechanism under the compute-storage integration architecture that achieves physical isolation between different workloads. Its basic principle is illustrated in this diagram:
 
-![Resource Group](/images/resource_group.png)
+![Resource Group under the compute-storage integration architecture](/images/resource_group.png)
 
 - By using tags, BEs are divided into different groups, each identified by the tag's name. For example, in the diagram above, host1, host2, and host3 are all set to group a, while host4 and host5 are set to group b.
 

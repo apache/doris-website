@@ -30,7 +30,7 @@ Since Doris 2.1, a high-speed data link based on the Arrow Flight SQL protocol h
 
 In Doris, query results are organized in columnar format as Blocks. In versions prior to 2.1, data could be transferred to the target client via MySQL Client or JDBC/ODBC drivers, but this required deserializing row-based Bytes into columnar format. By building a high-speed data transfer link based on Arrow Flight SQL, if the target client also supports Arrow columnar format, the entire transfer process avoids serialization and deserialization operations, completely eliminating the time and performance overhead associated with them.
 
-![Arrow_Flight_SQL](/images/db-connect/arrow-flight-sql/Arrow_Flight_SQL.png)
+![Arrow Flight SQL](/images/db-connect/arrow-flight-sql/Arrow_Flight_SQL.png)
 
 To install Apache Arrow, you can find detailed installation instructions in the official documentation [Apache Arrow](https://arrow.apache.org/install/). For more information on how Doris implements the Arrow Flight protocol, you can refer to [Doris support Arrow Flight SQL protocol](https://github.com/apache/doris/issues/25514).
 
