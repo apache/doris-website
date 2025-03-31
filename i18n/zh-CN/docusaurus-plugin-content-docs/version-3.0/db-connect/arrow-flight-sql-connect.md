@@ -487,7 +487,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
     1. 执行 `explain sql`，FE 返回的查询计划中 ScanOperator 包含 Scan 的所有 Tablet ID List。
     2. 依据上面的 Tablet ID List 将原始 SQL 拆分为多个 SQL，每个 SQL 只读取部分 Tablet，用法类似 `SELECT * FROM t1 TABLET(10001,10002) limit 1000;`，拆分后的多个 SQL 可以并行执行。参考 [Support select table sample](https://github.com/apache/doris/pull/10170)。
 
-如果查询最外层是聚合，SQL 类似 `select k1, sum(k2) from xxx group by k1`，Doris v3.4 版本后，执行 `set enable_parallel_result_sink=true;` 后允许一个查询的每个 BE 节点独立返回查询结果，ADBC Client 收到 FE 返回的 Endpoint 列表后并行从多个 BE 节点拉取结果。不过注意当聚合结果很小时，多 BE 返回会增加 RPC 的压力。具体实现参考 [support parallel result sink](https://github.com/apache/doris/pull/36053)。理论上除了最外层是排序的查询，其他查询都可以支持每个 BE 节点并行返回结果，不过暂时没有这方便的需求，没有更进一步实现。
+如果查询最外层是聚合，SQL 类似 `select k1, sum(k2) from xxx group by k1`，Doris v3.0.4 版本后，执行 `set enable_parallel_result_sink=true;` 后允许一个查询的每个 BE 节点独立返回查询结果，ADBC Client 收到 FE 返回的 Endpoint 列表后并行从多个 BE 节点拉取结果。不过注意当聚合结果很小时，多 BE 返回会增加 RPC 的压力。具体实现参考 [support parallel result sink](https://github.com/apache/doris/pull/36053)。理论上除了最外层是排序的查询，其他查询都可以支持每个 BE 节点并行返回结果，不过暂时没有这方便的需求，没有更进一步实现。
 
 ### 多 BE 共享同一个可供集群外部访问的 IP
 
