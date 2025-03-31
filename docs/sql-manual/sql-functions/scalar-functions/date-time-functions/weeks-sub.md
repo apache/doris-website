@@ -34,7 +34,6 @@ WEEKS_SUB(<date_value>, <week_period>)
 ```
 
 ## Required parameters
-## 必选参数
 | Parameter       | Description                                                                                         |
 |-----------------|-----------------------------------------------------------------------------------------------------|
 | `date_value`    | `DATE` or `DATETIME` type input value.                                                              |
