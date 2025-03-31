@@ -28,17 +28,17 @@ This article introduces the differences, advantages, and applicable scenarios of
 
 The following sections will describe in detail how to deploy and use Apache Doris in the compute-storage decoupled mode. For information on deployment in compute-storage coupled mode, please refer to the [Cluster Deployment](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually) section.
 
-## **Compute-storage coupled VS decoupled**
+## Compute-storage coupled VS decoupled
 
 The overall architecture of Doris consists of two types of processes: Frontend (FE) and Backend (BE). The FE is primarily responsible for user request access, query parsing and planning, metadata management, and node management. The BE is responsible for data storage and query plan execution. ([More information](../gettingStarted/what-is-apache-doris))
 
-### **Compute-storage coupled**
+### Compute-storage coupled
 
 In the compute-storage coupled mode, the BE nodes perform both data storage and computation, and multiple BE nodes forms a massively parallel processing (MPP) distributed computing architecture.
 
 ![compute-storage-coupled](/images/compute-storage-coupled.png)
 
-### **Compute-storage decoupled**
+### Compute-storage decoupled
 
 The BE nodes no longer store the primary data. Instead, the shared storage layer serves as the unified primary data storage. Additionally, to overcome the performance loss caused by the limitations of the underlying object storage system and the overhead of network transmission, Doris introduces a high-speed cache on the local compute nodes.
 

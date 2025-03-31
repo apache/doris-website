@@ -609,8 +609,8 @@ PROPERTIES (
 
 JMeter Parameter Settings as Shown in the Images
 
-![jmeter1](/images/group-commit/jmeter1.jpg)
-![jmeter2](/images/group-commit/jmeter2.jpg)
+![jmeter parameter settings](/images/group-commit/jmeter1.jpg)
+![jmeter parameter settings](/images/group-commit/jmeter2.jpg)
 
 1. Set the Init Statement Before Testing:
 

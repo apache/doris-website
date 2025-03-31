@@ -32,6 +32,7 @@ Dear Community, **Apache Doris version 2.1.8 was officially released on January 
 
 ## Behavior Changes
 
+- When querying a data source with case-insensitive table names (such as Hive) through External Catalog, in previous versions, you can use any case to query the table name, but in version 2.1.8, Doris's own table name case sensitivity policy will be strictly followed.
 - Add the environment variable `SKIP_CHECK_ULIMIT` to skip the ulimit value verification check within the BE process. This is only available to applications in the Docker quick start scenario. [#45267](https://github.com/apache/doris/pull/45267)
 - Add the `enable_cooldown_replica_affinity` session variable to control the selection of replica affinity for queries under cold - hot separation.
 - In FE, add the configurations `restore_job_compressed_serialization` and `backup_job_compressed_serialization` to solve the OOM problem of FE during backup and restore operations when the number of db tablets is extremely large. By default, these configurations are disabled, and once enabled, they cannot be downgraded.

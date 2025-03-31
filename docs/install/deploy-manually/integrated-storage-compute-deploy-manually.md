@@ -27,7 +27,7 @@ After completing the preliminary checks and planning, such as environment checks
 
 The integrated storage-compute architecture is shown below, and the deployment of the integrated storage-compute cluster involves four steps:
 
-[integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
+[MPP-based integrated storage compute architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    

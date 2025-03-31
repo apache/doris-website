@@ -76,7 +76,7 @@ To use it with Maven, simply add the following dependency to your Pom file:
 
 ### Reading Data from Doris
 
-![FlinkConnectorPrinciples-JDBC-Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
+![Flink Connector Principles JDBC Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
 
 When reading data, Flink Doris Connector offers higher performance compared to Flink JDBC Connector and is recommended for use:
 

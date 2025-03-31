@@ -71,7 +71,7 @@ Doris 在计算时`select count(distinct name) from t`。会按照下图进行�
 
 由于 Count Distinct 需要保存计算明细数据，并且需要进行 shuffle，当数据量增大时，查询也会越来越慢。用 Bitmap 来精确去重，可以解决 count distinct 在大量数据场景下的性能问题。
 
-## 使用场景
+### 使用场景
 
 在实际的业务场景中，当数据达到一定规模之后，通过 count distinct 去重的成本也越来越高。查询也会越来越慢。而使用 Bitmap 精确去重，就是为了解决 count distinct 在大量数据场景下的性能问题。Bitmap 将对应明细数据映射为 bit 位，放弃了明细数据的灵活性下，大幅度提升计算效率。所以在如下场景可以考虑利用 Bitmap 进行精确去重：
 
