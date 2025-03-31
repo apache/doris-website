@@ -35,7 +35,7 @@ This document mainly introduces the performance of Doris on the TPC-DS 1000G tes
 On 99 queries on the TPC-DS standard test data set, we conducted a comparison test based on Apache Doris 2.1.7-rc03 and Apache Doris 2.0.15.1 versions.
 
 
-![TPCDS_1000G](/images/tpcds_2.1.png)
+![Doris on TPC-DS 1000G test set](/images/tpcds_2.1.png)
 
 ## 1. Hardware Environment
 

@@ -29,7 +29,7 @@ Workload Group is an in-process mechanism for isolating workloads.
 It achieves resource isolation by finely partitioning or limiting resources (CPU, IO, Memory) within the BE process.
 Its principle is illustrated in the diagram below:
 
-![workload_group](/images/workload_group_arch.png)
+![Workload Group Architecture](/images/workload_group_arch.png)
 
 The currently supported isolation capabilities include:
 

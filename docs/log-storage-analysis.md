@@ -40,7 +40,7 @@ Focused on this solution, this chapter contains the following 3 sections:
 
 The following figure illustrates the architecture of the log storage and analysis platform built on Apache Doris:
 
-![Overall architecture](/images/doris-overall-architecture.png)
+![log storage and analysis platform architecture](/images/doris-overall-architecture.png)
 
 The architecture contains the following 3 parts:
 
@@ -577,7 +577,7 @@ ORDER BY ts DESC LIMIT 10;
 
 Some third-party vendors offer visual log analysis development platforms based on Apache Doris, which include a log search and analysis interface similar to Kibana Discover. These platforms provide an intuitive and user-friendly exploratory log analysis interaction.
 
-![WebUI](/images/WebUI-EN.jpeg)
+![WebUI-a log search and analysis interface similar to Kibana](/images/WebUI-EN.jpeg)
 
 - Support for full-text search and SQL modes
 
