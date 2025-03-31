@@ -303,8 +303,8 @@
                             "type": "category",
                             "label": "Distincting Counts",
                             "items": [
-                                "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
-                                "query-acceleration/distinct-counts/using-hll"
+                                "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+                                "query-acceleration/distinct-counts/hll-approximate-deduplication"
                             ]
                         },
                         "query-acceleration/colocation-join",
