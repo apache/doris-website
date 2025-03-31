@@ -38,10 +38,8 @@ SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
 
 ## Optional Parameters
-
-| **Parameter**        | **Description**                                              |
-|----------------------|--------------------------------------------------------------|
-| `<pattern>`          | A string that can contain ordinary characters and wildcards. |
+**`<pattern>`**
+> A string that can contain ordinary characters and wildcards.
 
 
 ## Return Values
