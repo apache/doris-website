@@ -70,93 +70,91 @@ Determines whether to refresh immediately after materialized view creation.
 - AUTO: Attempt incremental refresh, only refreshing partitions with data changes since the last materialization. Falls back to full refresh of all partitions if data changes cannot be detected.
 
 #### refresh_trigger Trigger Methods
-- ON MANUAL Manual Trigger
+- **`ON MANUAL` Manual Trigger**
 
-Users can trigger materialized view refreshes using SQL statements with the following strategies:
+  Users can trigger materialized view refreshes using SQL statements with the following strategies:
 
-Check for base table partition data changes since last refresh and refresh only changed partitions:
+  Check for base table partition data changes since last refresh and refresh only changed partitions:
 
-```sql
-REFRESH MATERIALIZED VIEW mvName AUTO;
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName AUTO;
+  ```
 
-:::tip
-If the base table used in the SQL definition of the materialized view is a JDBC table, 
-Doris cannot perceive changes in the table data. When refreshing the materialized view, 
-it is necessary to specify COMPLETE. If AUTO is specified, it may result in the base table 
-having data, but the materialized view being empty after the refresh. Currently, 
-when refreshing the materialized view, Doris can only perceive data changes in internal 
-tables and Hive data source tables; support for other data sources is being gradually implemented.
-:::
+  :::tip
+  If the base table used in the SQL definition of the materialized view is a JDBC table,
+  Doris cannot perceive changes in the table data. When refreshing the materialized view,
+  it is necessary to specify COMPLETE. If AUTO is specified, it may result in the base table
+  having data, but the materialized view being empty after the refresh. Currently,
+  when refreshing the materialized view, Doris can only perceive data changes in internal
+  tables and Hive data source tables; support for other data sources is being gradually implemented.
+  :::
 
-Refresh all materialized view partitions without checking for base table changes:
+  Refresh all materialized view partitions without checking for base table changes:
 
-```sql
-REFRESH MATERIALIZED VIEW mvName COMPLETE;
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName COMPLETE;
+  ```
 
-Refresh only specified partitions:
+  Refresh only specified partitions:
 
-```sql
-REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
-```
+  ```sql
+  REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
+  ```
+ 
+   :::tip
+   `partitionName` can be obtained using `SHOW PARTITIONS FROM mvName`.
+   Starting from version 2.1.3, Hive supports detecting base table partition changes since last refresh. Other external tables don't support this yet. Internal tables have always supported this feature.
+   :::
 
+- **`ON SCHEDULE` Scheduled Trigger**
 
-:::tip
-`partitionName` can be obtained using `SHOW PARTITIONS FROM mvName`.
-Starting from version 2.1.3, Hive supports detecting base table partition changes since last refresh. Other external tables don't support this yet. Internal tables have always supported this feature.
-:::
+  Specify refresh intervals in the materialized view creation statement.
 
-- ON SCHEDULE Scheduled Trigger
+  Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
 
-Specify refresh intervals in the materialized view creation statement.
+  ```sql
+  CREATE MATERIALIZED VIEW mv_6
+  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+  AS
+  SELECT FROM lineitem;
+  ```
 
-Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
+  Example of incremental refresh (`REFRESH AUTO`) every 10 hours,
+  only refreshing changed partitions or falling back to full refresh if needed
+  (automatic Hive partition calculation supported from version 2.1.3):
 
-```sql
-CREATE MATERIALIZED VIEW mv_6
-REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-AS
-SELECT FROM lineitem;
-```
-
-Example of incremental refresh (`REFRESH AUTO`) every 10 hours, 
-only refreshing changed partitions or falling back to full refresh if needed 
-(automatic Hive partition calculation supported from version 2.1.3):
-
-```sql
-CREATE MATERIALIZED VIEW mv_7
-REFRESH AUTO ON SCHEDULE EVERY 10 hour
-PARTITION by(l_shipdate)
-AS
-SELECT FROM lineitem;
-```
-
-
-- ON COMMIT Automatic Trigger
-
-:::tip
-This feature is available from Apache Doris version 2.1.4 onwards.
-:::
-
-Automatically triggers materialized view refresh when base table data changes, with refresh partition scope matching "scheduled trigger".
-
-Example: When partition `t1` data changes in base table `lineitem`, it automatically triggers corresponding materialized view partition refresh:
-
-```sql
-CREATE MATERIALIZED VIEW mv_8
-REFRESH AUTO ON COMMIT
-PARTITION by(l_shipdate)
-AS
-SELECT FROM lineitem;
-```
+  ```sql
+  CREATE MATERIALIZED VIEW mv_7
+  REFRESH AUTO ON SCHEDULE EVERY 10 hour
+  PARTITION by(l_shipdate)
+  AS
+  SELECT FROM lineitem;
+  ```
 
 
-:::caution
-Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
-:::
+- **`ON COMMIT` Automatic Trigger**
 
-For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
+  :::tip
+  This feature is available from Apache Doris version 2.1.4 onwards.
+  :::
+
+  Automatically triggers materialized view refresh when base table data changes, with refresh partition scope matching "scheduled trigger".
+
+  Example: When partition `t1` data changes in base table `lineitem`, it automatically triggers corresponding materialized view partition refresh:
+
+    ```sql
+    CREATE MATERIALIZED VIEW mv_8
+    REFRESH AUTO ON COMMIT
+    PARTITION by(l_shipdate)
+    AS
+    SELECT FROM lineitem;
+    ```
+
+  :::caution
+  Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
+  :::
+
+  For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
 #### Examples
 Table Creation Statements
@@ -229,7 +227,7 @@ INSERT INTO partsupp VALUES
 ```
 
 
-#### Example 1
+#### Refresh mechanism example 1
 
 In the following example, the refresh timing is set to `BUILD IMMEDIATE` (refresh immediately after creation), the refresh method is set to `REFRESH AUTO` (attempt incremental refresh), which only refreshes partitions that have changed since the last materialization. If incremental refresh is not possible, it will perform a full refresh of all partitions.
 The trigger method is set to `ON MANUAL`. For non-partitioned full materialized views that have only one partition, if the base table data changes, a full refresh will be required.
@@ -250,7 +248,7 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### Example 2
+#### Refresh mechanism example 2
 In the following example, the refresh timing is set to delayed refresh (`BUILD DEFERRED`), the refresh method is set to full refresh (`REFRESH COMPLETE`), and the trigger timing is set to scheduled refresh (`ON SCHEDULE`). The first refresh time is `2024-12-01 20:30:00`, and it will refresh every day thereafter. If `BUILD DEFERRED` is specified as `BUILD IMMEDIATE`, the materialized view will refresh immediately upon creation. After that, it will refresh every day starting from `2024-12-01 20:30:00`.
 
 :::tip
@@ -273,7 +271,7 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 
-#### Example 3
+#### Refresh mechanism example 3
 In this example, the refresh timing is set to immediate refresh upon creation (`BUILD IMMEDIATE`), the refresh method is set to full refresh (`REFRESH COMPLETE`), and the trigger method is set to trigger refresh (`ON COMMIT`). When data in the `orders` or `lineitem` tables changes, it will automatically trigger the refresh of the materialized view.
 
 ```sql
@@ -330,9 +328,6 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 
 
 #### Base Table with Multiple Partition Columns
-:::tip
-Support for multiple partition columns has been available since Doris version 2.1.0.
-:::
 
 Currently, only Hive external tables support multiple partition columns. Hive external tables often have many multi-level partitions, such as a first-level partition by date and a second-level partition by region. Materialized views can choose one of Hive's partition columns as the partition column for the materialized view.
 
@@ -383,9 +378,6 @@ SELECT k1, year, region FROM hive1;
 
 
 #### Using Partial Partitions from the Base Table
-:::tip
-Support for this feature has been available since Doris version 2.1.1.
-:::
 
 Some base tables have many partitions, but the materialized view only focuses on the "hot" data from a recent period. This feature allows for that.
 
@@ -433,12 +425,10 @@ Additionally, when the partition field is of string type, the materialized view 
 
 #### Partition Aggregation
 :::tip
-Support for this feature has been available since Doris version 2.1.5.
+Range partitioning is supported since Doris 2.1.5
 :::
 
 When the data in the base table is aggregated, the amount of data in each partition may significantly decrease. In this case, a partition aggregation strategy can be adopted to reduce the number of partitions in the materialized view.
-
-**Range Partitioning**
 
 Assuming the base table creation statement is as follows:
 
@@ -542,7 +532,7 @@ WHERE o_orderdate = '2023-10-18';
 Transparent rewriting means that when processing queries, users do not need to manually modify queries, as the system will automatically optimize and rewrite them.
 Doris asynchronous materialized views use a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern.
 This algorithm can analyze SQL structure information, automatically find suitable materialized views for transparent rewriting, and select the optimal materialized view to respond to query SQL.
-Doris provides rich and comprehensive transparent rewriting capabilities.
+Doris provides rich and comprehensive transparent rewriting capabilities. For example, the following capabilities:
 
 ### Condition Compensation
 
@@ -550,19 +540,19 @@ Query and materialized view conditions do not need to be exactly the same. By co
 
 When the `where` conditions in the materialized view and query are expressions connected by `and`:
 
-**1. When the query's expressions contain the materialized view's expressions:**
+1. **When the query's expressions contain the materialized view's expressions:**
 
-Condition compensation can be performed.
+   Condition compensation can be performed.
 
-For example, if the query condition is `a > 5 and b > 10 and c = 7`, and the materialized view condition is `a > 5 and b > 10`, the materialized view condition is a subset of the query condition, so only the `c = 7` condition needs to be compensated.
+   For example, if the query condition is `a > 5 and b > 10 and c = 7`, and the materialized view condition is `a > 5 and b > 10`, the materialized view condition is a subset of the query condition, so only the `c = 7` condition needs to be compensated.
 
-**2. When the query's expressions do not completely contain the materialized view's expressions:**
+2. **When the query's expressions do not completely contain the materialized view's expressions:**
 
-When the query conditions can be derived from the materialized view conditions (common for comparison and range expressions like `>`, `<`, `=`, `in`, etc.), condition compensation can also be performed. The compensation result is the query condition itself.
+   When the query conditions can be derived from the materialized view conditions (common for comparison and range expressions like `>`, `<`, `=`, `in`, etc.), condition compensation can also be performed. The compensation result is the query condition itself.
 
-For example, if the query condition is `a > 5 and b = 10`, and the materialized view condition is `a > 1 and b > 8`, it can be seen that the materialized view condition contains the query condition, and the query condition can be derived from the materialized view condition, so compensation can be performed, with the compensation result being `a > 5 and b = 10`.
+   For example, if the query condition is `a > 5 and b = 10`, and the materialized view condition is `a > 1 and b > 8`, it can be seen that the materialized view condition contains the query condition, and the query condition can be derived from the materialized view condition, so compensation can be performed, with the compensation result being `a > 5 and b = 10`.
 
-Condition compensation usage restrictions:
+   Condition compensation usage restrictions:
 
 1. For expressions connected by `or`, condition compensation cannot be performed; they must be exactly the same for successful rewriting.
 
@@ -572,42 +562,42 @@ For example:
 
 **Materialized View Definition:**
 
-```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
-DISTRIBUTED BY RANDOM BUCKETS 3
-AS
-SELECT t1.l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey;
-```
+ ```sql
+ CREATE MATERIALIZED VIEW mv1
+ BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+ DISTRIBUTED BY RANDOM BUCKETS 3
+ AS
+ SELECT t1.l_linenumber,
+        o_custkey,
+        o_orderdate
+ FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
+ LEFT OUTER JOIN orders
+ ON l_orderkey = o_orderkey;
+ ```
 
 The following queries can all hit the materialized view. Multiple queries can reuse one materialized view through transparent rewriting,
 reducing query rewriting time and saving materialized view construction costs.
 
-```sql
-SELECT l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM lineitem
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey
-WHERE l_linenumber > 2;
-```
+ ```sql
+ SELECT l_linenumber,
+        o_custkey,
+        o_orderdate
+ FROM lineitem
+ LEFT OUTER JOIN orders
+ ON l_orderkey = o_orderkey
+ WHERE l_linenumber > 2;
+ ```
 
-```sql
-SELECT l_linenumber,
-       o_custkey,
-       o_orderdate
-FROM lineitem
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey
-WHERE l_linenumber > 2 and o_orderdate = '2023-10-19';
-
-```
+ ```sql
+ SELECT l_linenumber,
+        o_custkey,
+        o_orderdate
+ FROM lineitem
+ LEFT OUTER JOIN orders
+ ON l_orderkey = o_orderkey
+ WHERE l_linenumber > 2 and o_orderdate = '2023-10-19';
+ 
+ ```
 
 ### JOIN Rewriting
 
@@ -969,9 +959,9 @@ inner join partsupp on l_partkey = ps_partkey AND l_suppkey = ps_suppkey;
 
 For the following query, both `mv8_0_inner_mv` and `mv8_0` will be successfully rewritten, and the cost model will ultimately choose `mv8_0`.
 
-Nested materialized views are commonly used in data modeling and particularly complex queries. If a single materialized 
-view cannot be transparently rewritten, you can split the complex query and build nested materialized views. 
-The transparent rewriting process will attempt to use nested materialized views for rewriting. If the rewrite is successful, 
+Nested materialized views are commonly used in data modeling and particularly complex queries. If a single materialized
+view cannot be transparently rewritten, you can split the complex query and build nested materialized views.
+The transparent rewriting process will attempt to use nested materialized views for rewriting. If the rewrite is successful,
 it will save computation and improve query performance.
 
 ```sql
@@ -990,9 +980,9 @@ Note:
 
 
 ### Aggregate Query Using Non-Aggregate Materialized View Rewrite
-If the query is an aggregate query and the materialized view does not contain aggregates, 
-but the materialized view can provide all the columns used in the query, then it can also be rewritten. 
-For example, if the query first performs a join and then a group by aggregation, 
+If the query is an aggregate query and the materialized view does not contain aggregates,
+but the materialized view can provide all the columns used in the query, then it can also be rewritten.
+For example, if the query first performs a join and then a group by aggregation,
 hitting a materialized view that includes the join will also yield benefits.
 
 ```sql
@@ -1006,7 +996,7 @@ from lineitem
 left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate;
 ```
 
-The following query can hit the mv10_0 materialized view, saving the computation of the 
+The following query can hit the mv10_0 materialized view, saving the computation of the
 lineitem join orders join:
 
 ```sql
@@ -1025,40 +1015,40 @@ group by
 
 To view materialized view transparent rewriting hits, used for viewing and debugging.
 
-**1. To view materialized view transparent rewriting hit status, this statement will show brief process information about query transparent rewriting.**
+1. **To view materialized view transparent rewriting hit status, this statement will show brief process information about query transparent rewriting.**
 
-```sql
-explain <query_sql> 
-```
+    ```sql
+    explain <query_sql> 
+    ```
 
-The returned information is as follows, with materialized view-related information excerpted here:
+   The returned information is as follows, with materialized view-related information excerpted here:
 
-```sql
-| MaterializedView                                                                                                                                                                                                                                      |
-| MaterializedViewRewriteSuccessAndChose:                                                                                                                                                                                                               |
-|   Names: mv5                                                                                                                                                                                                                                          |
-| MaterializedViewRewriteSuccessButNotChose:                                                                                                                                                                                                            |
-|                                                                                                                                                                                                                                                       |
-| MaterializedViewRewriteFail:                                                                                                                                                                                                                          |
-|   Name: mv4                                                                                                                                                                                                                                           |
-|   FailSummary: Match mode is invalid, View struct info is invalid                                                                                                                                                                                     |
-|   Name: mv3                                                                                                                                                                                                                                           |
-|   FailSummary: Match mode is invalid, Rewrite compensate predicate by view fail, View struct info is invalid                                                                                                                                          |
-|   Name: mv1                                                                                                                                                                                                                                           |
-|   FailSummary: The columns used by query are not in view, View struct info is invalid                                                                                                                                                                 |
-|   Name: mv2                                                                                                                                                                                                                                           |
-|   FailSummary: The columns used by query are not in view, View struct info is invalid
-```
+    ```sql
+    | MaterializedView                                                                                                                                                                                                                                      |
+    | MaterializedViewRewriteSuccessAndChose:                                                                                                                                                                                                               |
+    |   Names: mv5                                                                                                                                                                                                                                          |
+    | MaterializedViewRewriteSuccessButNotChose:                                                                                                                                                                                                            |
+    |                                                                                                                                                                                                                                                       |
+    | MaterializedViewRewriteFail:                                                                                                                                                                                                                          |
+    |   Name: mv4                                                                                                                                                                                                                                           |
+    |   FailSummary: Match mode is invalid, View struct info is invalid                                                                                                                                                                                     |
+    |   Name: mv3                                                                                                                                                                                                                                           |
+    |   FailSummary: Match mode is invalid, Rewrite compensate predicate by view fail, View struct info is invalid                                                                                                                                          |
+    |   Name: mv1                                                                                                                                                                                                                                           |
+    |   FailSummary: The columns used by query are not in view, View struct info is invalid                                                                                                                                                                 |
+    |   Name: mv2                                                                                                                                                                                                                                           |
+    |   FailSummary: The columns used by query are not in view, View struct info is invalid
+    ```
 
 - MaterializedViewRewriteSuccessAndChose: Indicates the list of materialized view names that were successfully transparently rewritten and chosen by CBO (Cost-Based Optimizer).
 - MaterializedViewRewriteSuccessButNotChose: Indicates the list of materialized view names that were successfully transparently rewritten but ultimately not chosen by CBO.
 - MaterializedViewRewriteFail: Lists the failed cases and summary reasons.
 
-**2. To understand the detailed process information about materialized view candidacy, rewriting, and final selection, execute the following statement:**
+2. **To understand the detailed process information about materialized view candidacy, rewriting, and final selection, execute the following statement:**
 
-```sql
-explain memo plan <query_sql>
-```
+    ```sql
+    explain memo plan <query_sql>
+    ```
 
 
 
@@ -1067,7 +1057,7 @@ explain memo plan <query_sql>
 ### Permission Requirements
 
 - Dropping materialized views: Requires materialized view deletion permission (same as table deletion permission)
-- Modifying materialized views: Requires materialized view modification permission (same as table modification permission) 
+- Modifying materialized views: Requires materialized view modification permission (same as table modification permission)
 - Pausing/resuming/canceling/refreshing materialized views: Requires materialized view creation permission
 
 ### Modifying Materialized Views
@@ -1165,8 +1155,8 @@ SyncWithBaseTables: 1
 ```
 
 - **SyncWithBaseTables:** Indicates whether the materialized view is synchronized with base tables.
-  - For fully built materialized views, a value of 1 indicates the view is available for transparent rewriting.
-  - For incrementally partitioned materialized views, availability is determined at the partition level. Even if some partitions are unavailable, the view can still be used for transparent rewriting if the queried partitions are valid. The ability to use transparent rewriting depends on the `SyncWithBaseTables` value of the queried partitions - 1 means available, 0 means unavailable.
+    - For fully built materialized views, a value of 1 indicates the view is available for transparent rewriting.
+    - For incrementally partitioned materialized views, availability is determined at the partition level. Even if some partitions are unavailable, the view can still be used for transparent rewriting if the queried partitions are valid. The ability to use transparent rewriting depends on the `SyncWithBaseTables` value of the queried partitions - 1 means available, 0 means unavailable.
 
 - **JobName:** Name of the materialized view's build job. Each materialized view has one Job, and each refresh creates a new Task, with a 1:n relationship between Jobs and Tasks.
 
@@ -1239,9 +1229,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - If set to 0, requires exact consistency between materialized view and base table data for transparent rewriting.
 
 - If set to 10, allows up to 10 seconds of delay between materialized view and base table data. The materialized view can be used for transparent rewriting during this 10-second window.
-:::
+  :::
 
-For more details, see [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks?_highlight=task)
+For more details, see [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)
 
 ### Querying Materialized View Jobs
 
