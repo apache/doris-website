@@ -39,10 +39,11 @@ ADMIN SET {ALL FRONTENDS | FRONTEND} CONFIG ("<fe_config_key>" = "<fe_config_val
 ```
 
 ## 必选参数
-1. **`ALL FRONTENDS`**
-   > 代表 Doris 集群中的所有 FE 节点
-2. **`FRONTEND`**
-   > 代表当前连接的 FE 节点，即用户当前交互的 FE 节点
+**`{ALL FRONTENDS | FRONTEND}`**
+
+> **`ALL FRONTENDS`**：代表 Doris 集群中的所有 FE 节点
+>**`FRONTEND`**：代表当前连接的 FE 节点，即用户当前交互的 FE 节点
+
 
 
 ## 可选参数
