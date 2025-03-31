@@ -1,7 +1,7 @@
 ---
 {
-  "title": "TO_DAYS",
-  "language": "zh-CN"
+   "title": "TO_DAYS",
+   "language": "zh-CN"
 }
 ---
 
@@ -35,11 +35,10 @@ TO_DAYS([<datetime_value> | <date_value>])
 ```
 
 ## 可选参数
-1. **<datetime_value>**
-   > datetime 类型日期时间
-
-2. **<date_value>**
-   > date 类型日期时间
+| 参数              | 描述                    |
+|-----------------|-----------------------|
+| `<datetime_value>` | `datetime` 类型日期时间 |
+| `<date_value>`     | `date` 类型日期时间     |
 
 
 ## 举例

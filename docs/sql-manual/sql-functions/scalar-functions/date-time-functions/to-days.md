@@ -35,11 +35,10 @@ TO_DAYS([<datetime_value> | <date_value>])
 ```
 
 ## Optional parameters
-1. **<datetime_value>**
-> datetime type datetime
-
-2. **<date_value>**
-> date type datetime
+| Parameter          | Description              |
+|------------------|------------------------|
+| `<datetime_value>` | `datetime` type date-time |
+| `<date_value>`     | `date` type date-time     |
 
 
 ## Example
