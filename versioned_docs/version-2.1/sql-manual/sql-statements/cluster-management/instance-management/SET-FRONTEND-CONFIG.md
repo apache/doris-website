@@ -39,12 +39,10 @@ ADMIN SET {ALL FRONTENDS | FRONTEND} CONFIG ("<fe_config_key>" = "<fe_config_val
 ```
 
 ## Required Parameters
-
-| **Parameter**     | **Description**                               |
-|-------------------|-----------------------------------------------|
-| `ALL FRONTENDS`   | Represents all FE nodes in the Doris cluster. |
-| `FRONTEND`        | Represents the currently connected FE node, i.e., the FE node the user is interacting with. |
-
+1. **`ALL FRONTENDS`**
+   > Represents all FE nodes in the Doris cluster
+2. **`FRONTEND`**
+   > Represents the currently connected FE node, i.e., the FE node the user is interacting with
 
 ## Optional Parameters
 The `<fe_config_key>` and `<fe_config_value>` that need to be modified can be viewed through the [SHOW FRONTEND CONFIG](./SHOW-FRONTEND-CONFIG) command
