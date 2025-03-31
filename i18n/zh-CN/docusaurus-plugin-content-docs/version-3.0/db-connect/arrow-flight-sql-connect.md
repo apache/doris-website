@@ -65,14 +65,14 @@ import adbc_driver_flightsql.dbapi as flight_sql
 创建与 Doris Arrow Flight SQL 服务交互的客户端。需提供 Doris FE 的 Host、Arrow Flight Port、登陆用户名以及密码，并进行以下配置。
 修改 Doris FE 和 BE 的配置参数：
 
-- 修改 fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
-- 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 9091。
+- 修改 fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 8070。
+- 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 8050。
 
 `注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 端口号不相同`
 
 修改配置并重启集群后，在 fe/log/fe.log 文件中搜索到 `Arrow Flight SQL service is started` 表明 FE 的 Arrow Flight Server 启动成功；在 be/log/be.INFO 文件中搜索到 `Arrow Flight Service bind to host` 表明 BE 的 Arrow Flight Server 启动成功。
 
-假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
+假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 8070 和 8050 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
 ```Python
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
@@ -182,7 +182,7 @@ cursor.execute("show variables like \"%exec_mem_limit%\";")
 print(cursor.fetchallarrow().to_pandas())
 
 cursor.execute("select k5, sum(k1), count(1), avg(k3) from arrow_flight_sql_test group by k5;")
-print(cursor.fetchallarrow().to_pandas())
+print(cursor.fetch_df())
 ```
 
 结果如下所示：
@@ -210,6 +210,8 @@ print(cursor.fetchallarrow().to_pandas())
 [2 rows x 5 columns]
 ```
 
+**注意：** fetch 查询结果需要使用 `cursor.fetchallarrow()` 返回 arrow 格式，或使用 `cursor.fetch_df()` 直接返回 pandas dataframe，这将保持数据的列存格式。不能使用 `cursor.fetchall()`，否则会将列存格式的数据转回行存，这和使用 mysql-client 没有本质区别，甚至由于在 client 侧多了一次列转行的操作，可能比 mysql-client 还慢。
+
 ### 完整代码
 
 ```Python
@@ -222,8 +224,8 @@ import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
-# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 8070.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 8050.
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
@@ -294,20 +296,18 @@ POM dependency:
 </dependencies>
 ```
 
-使用 Java 9 或更高版本时，必须通过在 Java 命令中添加 --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED 来暴露某些 JDK 内部结构：
+**注意：** 使用 Java 9 或更高版本时，必须通过在 Java 命令中添加 `--add-opens=java.base/java.nio=ALL-UNNAMED` 来暴露一些 JDK 内部结构，否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` 或者 `java.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
 
 ```shell
 # Directly on the command line
-$ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -jar ...
+$ java --add-opens=java.base/java.nio=ALL-UNNAMED -jar ...
 # Indirectly via environment variables
-$ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
+$ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=ALL-UNNAMED" java -jar ...
 ```
 
-否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` 或者 `ava.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
+如果在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，参照下面的图片：
 
-如果您在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，参照下面的图片：
-
-![IntelliJ IDEA](https://github.com/user-attachments/assets/7439ee6d-9013-40bf-89af-0365925d3fdb)
+![arrow-flight-sql-IntelliJ](/images/db-connect/arrow-flight-sql/arrow-flight-sql-IntelliJ.png)
 
 连接代码示例如下：
 
@@ -342,7 +342,7 @@ conn.close();
 POM dependency:
 ```Java
 <properties>
-    <adbc.version>0.12.0</adbc.version>
+    <adbc.version>0.15.0</adbc.version>
 </properties>
 
 <dependencies>
@@ -451,7 +451,7 @@ try (
 
 ### JDBC 和 Java 连接方式的选择
 
-[JDBC/Java Arrow Flight SQL Sample](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/README.md) 是 JDBC/Java 使用 Arrow FLight SQL 的 demo，你可以使用它来测试向 Arrow Flight Server 发送查询的多种连接方法，帮助你了解如何使用 Arrow FLight SQL 并测试性能。在 [Add Arrow Flight Sql demo for Java](https://github.com/apache/doris/pull/45306) 中实现。
+[JDBC/Java Arrow Flight SQL Sample](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/README.md) 是 JDBC/Java 使用 Arrow FLight SQL 的 demo，你可以使用它来测试向 Arrow Flight Server 发送查询的多种连接方法，帮助你了解如何使用 Arrow FLight SQL 并测试性能。预期的执行结果见 [Add Arrow Flight Sql demo for Java](https://github.com/apache/doris/pull/45306)。
 
 对比传统的 `jdbc:mysql` 连接方式，Jdbc 和 Java 的 Arrow Flight SQL 连接方式的性能测试见 Section 6.2 of [GitHub Issue](https://github.com/apache/doris/issues/25514)，这里基于测试结论给出一些使用建议。
 
@@ -491,7 +491,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 
 ### 多 BE 共享同一个可供集群外部访问的 IP
 
-如果存在一个 Doris 集群，它的 FE 节点可以被集群外部访问，它的所有 BE 节点只可以被集群内部访问。这在使用 Mysql Client 和 JDBC 连接 Doris 执行查询是没问题的，查询结果将由 Doris FE 节点返回给。但使用 Arrow Flight SQL 连接 Doris 无法执行查询，因为 ADBC Client 需要连接 Doris BE 节点拉取查询结果，但 Doris BE 节点不允许被集群外部访问。
+如果存在一个 Doris 集群，它的 FE 节点可以被集群外部访问，它的所有 BE 节点只可以被集群内部访问。这在使用 Mysql Client 和 JDBC 连接 Doris 执行查询是没问题的，查询结果将由 Doris FE 节点返回。但使用 Arrow Flight SQL 连接 Doris 无法执行查询，因为 ADBC Client 需要连接 Doris BE 节点拉取查询结果，但 Doris BE 节点不允许被集群外部访问。
 
 在生产环境中，很多时候不方便将 Doris BE 节点暴露到集群外。但可以为所有 Doris BE 节点增加了一层反向代理（比如 Nginx），集群外部的 Client 连接 Nginx 时会随机路由到一台 Doris BE 节点上。默认情况下，Arrow Flight SQL 查询结果会随机保存在一台 Doris BE 节点上，如果和 Nginx 随机路由的 Doris BE 节点不同，需要在 Doris BE 节点内部做一次数据转发。
 
@@ -503,7 +503,31 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 
 ## FAQ
 
-1. Q: ARM 环境报错 `get flight info statement failed, arrow flight schema timeout, TimeoutException: Waited 5000 milliseconds for io.grpc.stub.Client`。
+1. Q: 报错 `connection error: desc = "transport: Error while dialing: dial tcp <ip:arrow_flight_port>: i/o timeout"`。
+    
+    A: 如果报错信息中的 `<ip:arrow_flight_port>` 是 Doris FE 节点的 IP 和 arrow-flight-prot，
+
+        首先检查 Doris FE 节点的 arrow-flight-server 是否正常启动，在 fe/log/fe.log 文件中搜索到 `Arrow Flight SQL service is started` 表明 FE 的 Arrow Flight Server 启动成功。
+
+        若 Doris FE 节点的 arrow-flight-server 正常启动，，检查 Client 所在机器能否 `ping` 通报错信息 `<ip:arrow_flight_port>` 中的 IP，若无法 `ping` 通，需要为 Doris FE 节点开通一个可供外部访问的 IP，并重新部署集群。
+
+    A: 如果报错信息中的 `<ip:arrow_flight_port>` 是 Doris BE 节点的 IP 和 arrow-flight-prot。
+    
+        首先检查 Doris BE 节点的 arrow-flight-server 是否正常启动，在 be/log/be.INFO 文件中搜索到 `Arrow Flight Service bind to host` 表明 BE 的 Arrow Flight Server 启动成功。
+        
+        若 Doris BE 节点的 arrow-flight-server 正常启动，检查 Client 所在机器能否 `ping` 通报错信息 `<ip:arrow_flight_port>` 中的 IP，若无法 `ping` 通，若已知 Doris BE 节点处于无法被外部访问的内网，下面两个方法：
+
+            - 考虑为每个 Doris BE 节点开通一个可供外部访问的 IP，自 Doris v2.1.8 开始，你可以在这个 Doris BE 节点的 `be.conf` 中将 `public_host` 配置成这个 IP，同理将所有 Doris BE 节点的 `public_host` 配置成对应 BE 节点可被 Client 访问的 IP。
+
+            - 参考上文 [多 BE 共享同一个可供集群外部访问的 IP] 章节，可以为所有 Doris BE 节点增加了一层反向代理。
+        
+        若不清楚 Doris BE 是否完全处于内网，检查 Client 所在机器与 Doris BE 节点所在机器的其他 IP 之间的连通性，在 Doris BE 节点所在机器执行 `ifconfig` 返回当前机器所有的 IP，其中一个 IP 应该和 `<ip:arrow_flight_port>` 中的 IP 相同，并且和 `show backends` 打印的这个 Doris BE 节点的 IP 相同，依次 `ping` `ifconfig` 返回的其他 IP，若 Doris BE 节点存在可以被 Client 访问的 IP，参考上文同样将这个 IP 配置为 `public_host`。若 Doris BE 节点所有的 IP 均无法被 Client 访问，那么 Doris BE 节点完全处于内网。
+
+2. Q：使用 JDBC 或 JAVA 连接 Arrow Flight SQL 时报错 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` 或者 `java.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
+
+    A：首先检查 fe/conf/fe.conf 中 `JAVA_OPTS_FOR_JDK_17` 是否包含 `--add-opens=java.base/java.nio=ALL-UNNAMED`，若没有则添加。然后参考上文 [JDBC Connector with Arrow Flight SQL] 中的注意事项在 Java 命令中添加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，如果在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`。
+
+3. Q: ARM 环境报错 `get flight info statement failed, arrow flight schema timeout, TimeoutException: Waited 5000 milliseconds for io.grpc.stub.Client`。
    
     A: 如果 Linux 内核版本 <= 4.19.90，需要升级到 4.19.279 及以上，或者在低版本 Linux 内核的环境中重新编译 Doris BE，具体编译方法参考文档<docs/dev/install/source-install/compilation-arm>
 
@@ -511,31 +535,31 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 
     kylinv10 SP2 和 SP3 的 Linux 内核版本最高只有 4.19.90-24.4.v2101.ky10.aarch64，无法继续升级内核版本，只能在 kylinv10 上重新编译 Doris BE，如果使用新版本 ldb_toolchain 编译 Doris  BE 后问题依然存在，可以尝试使用低版本 ldb_toolchain v0.17 编译，如果你的 ARM 环境无法连外网，华为云提供 ARM + kylinv10，阿里云提供 x86 + kylinv10
 
-2. Q:  prepared statement 传递参数报错。
+4. Q:  prepared statement 传递参数报错。
    
     A: 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBCDriver 不支持 prepared statement 传递参数，类似`select * from xxx where id=?`，将报错 `parameter ordinal 1 out of range`，这是 Arrow Flight SQL 的一个 BUG（[GitHub Issue](https://github.com/apache/arrow/issues/40118)）。
 
-3. Q: 如何修改 `jdbc:arrow-flight-sql` 每次读取的批次大小，在某些场景下提升性能。
+5. Q: 如何修改 `jdbc:arrow-flight-sql` 每次读取的批次大小，在某些场景下提升性能。
    
     A: 通过修改`org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader`文件中`makeJdbcConfig`方法中的 `setTargetBatchSize`，默认是 1024，然后将修改后的文件保存到本地同名路径目录下，从而覆盖原文件生效。
 
-4. Q: ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 不支持并行读取。
+6. Q: ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 不支持并行读取。
    
     A: 没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的 AdbcStatement 实际是 JdbcStatement，executeQuery 后将行存格式的 JDBC ResultSet 又重新转成的 Arrow 列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
 
-5. Q: 在 URL 中指定 database name。
+7. Q: 在 URL 中指定 database name。
 
     A: 截止 Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` 中指定连接`test` database 无效，只能手动执行 SQL `use database`。Arrow v18.0 支持了在 URL 中指定 database name，但实测仍有 BUG。
 
-6. Q: Python ADBC print `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant`。
+8. Q: Python ADBC print `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant`。
 
     A: 使用 Python 时忽略这个 Warning，这是 Python ADBC Client 的问题，不会影响查询。
 
-7. Q: Python 报错 `grpc: received message larger than max (20748753 vs. 16777216)`。
+9. Q: Python 报错 `grpc: received message larger than max (20748753 vs. 16777216)`。
 
     A: 参考 [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) 在 Database Option 中增加 `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value`.
 
-8. Q: 报错 `invalid bearer token`。
+10. Q: 报错 `invalid bearer token`。
 
     A: 执行 `SET PROPERTY FOR 'root' 'max_user_connections' = '10000';` 修改当前用户的当前最大连接数到 10000；在 `fe.conf` 增加 qe_max_connection=30000 和 arrow_flight_token_cache_size=8000 并重启 FE。
 
@@ -543,19 +567,19 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
     
     截止 Doris v2.1.8，Arrow Flight 连接和 Mysql/JDBC 连接使用相同的连接数限制，包括 FE 所有用户的总连接数 `qe_max_connection` 和单个用户的连接数 `UserProperty` 中的 `max_user_connections`。但默认的 `qe_max_connection` 和 `max_user_connections` 分别是 1024 和 100。Arrow Flight SQL 常用来取代使用 JDBC 的场景，但 JDBC 连接会在查询结束后立即释放，所以使用 Arrow Flight SQL 时，Doris 默认的连接数限制太小，经常导致连接数超过 `arrow_flight_token_cache_size` 的限制后将仍在被使用的连接淘汰。
 
-9. Q: Java Arrow Flight SQL 读取 Datatime 类型返回时间戳，而不是格式化时间。
+11. Q: 使用 JDBC 或 JAVA 连接 Arrow Flight SQL 读取 Datatime 类型返回时间戳，而不是格式化时间。
 
-    A: Java Arrow Flight SQL 读取 Datatime 类型需要自行转换时间戳，参考 [Add java parsing datetime type in arrow flight sql sample #48578](https://github.com/apache/doris/pull/48578)。用 Python Arrow Flight SQL 读取 Datatime 类型返回结果为 `2025-03-03 17:23:28Z`，而 Java Arrow Flight SQL 返回 `1740993808`。
+    A: JDBC 或 JAVA 连接 Arrow Flight SQL 读取 Datatime 类型需要自行转换时间戳，参考 [Add java parsing datetime type in arrow flight sql sample #48578](https://github.com/apache/doris/pull/48578)。用 Python Arrow Flight SQL 读取 Datatime 类型返回结果为 `2025-03-03 17:23:28Z`，而 JDBC 或 JAVA 返回 `1740993808`。
 
-10. Q: Java Arrow Flight JDBC Client 读取 Array 嵌套类型报错 `Configuration does not provide a mapping for array column 2`。
+12. Q: 使用 JDBC 或 Java JDBC Client 连接 Arrow Flight SQL 读取 Array 嵌套类型报错 `Configuration does not provide a mapping for array column 2`。
 
     A: 参考 [`sample/arrow-flight-sql`](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/src/main/java/doris/arrowflight/demo/FlightAdbcDriver.java) 使用 JAVA ADBC Client。
     
-    Python ADBC Client、JAVA ADBC Client、Java JDBC DriverManager 读取 Array 嵌套类型都没问题，只有 Java Arrow Flight JDBC Client 有问题，实际上 Arrow Flight JDBC Client 的兼容性不好保证，不是 Arrow 官方开发的，由一个第三方数据库公司 Dremio 开发，之前还发现过其他兼容性问题，所以建议优先用 JAVA ADBC Client。
+    Python ADBC Client、JAVA ADBC Client、Java JDBC DriverManager 读取 Array 嵌套类型都没问题，只有使用 JDBC 或 Java JDBC Client 连接 Arrow Flight SQL 有问题，实际上 Arrow Flight JDBC 的兼容性不好保证，不是 Arrow 官方开发的，由一个第三方数据库公司 Dremio 开发，之前还发现过其他兼容性问题，所以建议优先用 JAVA ADBC Client。
 
-## Release Note
+## 2.1 Release Note
 
-> 自 Doris 2.1 开始支持 Arrow Flight SQL 协议，截止 Doris 2.1.9，以 Doris 2.1 系列版本为准列举修复的问题，Doris 3.0 系列版本自行对照。
+> v2.1.4 及之前的版本 Doris Arrow Flight 不够完善，建议升级后使用。
 
 ### v2.1.9
 
@@ -589,6 +613,9 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 6. 修复 `show processlist` 显示重复的 Connection ID。
     [Fix arrow-flight-sql ConnectContext to use a unified ID #46284](https://github.com/apache/doris/pull/46284)
 
+7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少8小时的问题。
+    [Fix time zone issues and accuracy issues #38215](https://github.com/apache/doris/pull/38215)
+
 ### v2.1.7
 
 1. 修复频繁打印日志 `Connection wait_timeout`。
@@ -621,4 +648,71 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 
     Doris v2.1.4 读取大数据量时有几率报错，问题详情见：[Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
 
-### v2.1.4 及之前的版本 Doris Arrow Flight 不够完善，建议升级后使用。
+## 3.0 Release Note
+
+### v3.0.5
+
+1. 修复 Doris 数据序列化到 Arrow 的问题。
+    [Fix UT DataTypeSerDeArrowTest of Array/Map/Struct/Bitmap/HLL/Decimal256 types](https://github.com/apache/doris/pull/48944)
+    - 读取 `Decimal256` 类型失败;
+    - 读取 `DatetimeV2` 类型微妙部分错误;
+    - 读取 `DateV2` 类型结果不正确;
+    - 读取 `IPV4/IPV6` 类型结果为 NULL 时报错;
+
+### v3.0.4
+
+1. 支持 DBeaver 等 BI 工具使用 `arrow-flight-sql` 协议连接 Doris，支持正确显示元数据树。
+    [Support arrow-flight-sql protocol getStreamCatalogs, getStreamSchemas, getStreamTables #46217](https://github.com/apache/doris/pull/46217)。
+
+2. 支持多个 Endpoint 并行读取。
+    [Arrow Flight support multiple endpoints](https://github.com/apache/doris/pull/44286)
+
+3. 修复读取允许 NULL 的列报错 `BooleanBuilder::AppendValues`。
+    [Fix Doris NULL column conversion to arrow batch](https://github.com/apache/doris/pull/43929)
+
+4. 修复 `show processlist` 显示重复的 Connection ID。
+    [Fix arrow-flight-sql ConnectContext to use a unified ID #46284](https://github.com/apache/doris/pull/46284)
+
+5. 修复 Doris Arrow Flight SQL 查询失败返回空结果，没有返回真实的错误信息。
+    [Fix query result is empty and not return query error message](https://github.com/apache/doris/pull/45023)
+
+### v3.0.3
+
+1. 修复查询报错 `0.0.0.0:xxx, connection refused`。
+    [Fix return result from FE Arrow Flight server error 0.0.0.0:xxx, connection refused](https://github.com/apache/doris/pull/40002)
+
+2. 修复查询报错 `Reach limit of connections`。
+    [Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127)
+    
+    之前的版本执行 `SET PROPERTY FOR 'root' 'max_user_connections' = '1024';` 修改当前用户的当前最大连接数到 1024，可临时规避。
+
+    因为之前的版本只限制 Arrow Flight 连接数小于 `qe_max_connection/2`，`qe_max_connection` 是 fe 所有用户的总连接数，默认 1024，没有限制单个用户的 Arrow Flight 连接数小于 `UserProperty` 中的 `max_user_connections`，默认 100，所以当 Arrow Flight 连接数超过当前用户连接数上限时将报错 `Reach limit of connections`，所以需调大当前用户的 `max_user_connections`。
+    
+    问题详情见：[Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie-shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
+
+3. 修复频繁打印日志 `Connection wait_timeout`。
+    [Fix kill timeout FlightSqlConnection and FlightSqlConnectProcessor close](https://github.com/apache/doris/pull/41770)
+
+4. 修复 Arrow Flight Bearer Token 过期后从 Cache 中淘汰。
+    [Fix Arrow Flight bearer token cache evict after expired](https://github.com/apache/doris/pull/41754)
+
+5. 支持多 BE 共享同一个可供集群外部访问的 IP 时，查询结果可以正确转发后返回 ADBC Client。
+    [Arrow flight server supports data forwarding when BE uses public vip](https://github.com/apache/doris/pull/43281)
+
+6. 修复查询报错 `FE not found arrow flight schema`。
+    [Fix FE not found arrow flight schema](https://github.com/apache/doris/pull/43960)
+
+7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少8小时的问题。
+    [Fix time zone issues and accuracy issues #38215](https://github.com/apache/doris/pull/38215)
+
+### v3.0.2
+
+1. 增加 Conf `arrow_flight_result_sink_buffer_size_rows`，支持修改单次返回的查询结果 ArrowBatch 大小，默认 4096 * 8。
+    [Add config arrow_flight_result_sink_buffer_size_rows](https://github.com/apache/doris/pull/38221)
+
+### v3.0.1
+
+1. 查询结果缺失，查询结果行数 = 实际行数 / BE 个数
+    [Fix get Schema failed when enable_parallel_result_sink is false #37779](https://github.com/apache/doris/pull/37779) 
+
+    在 Doris 3.0.0 版本，如果查询最外层是聚合，SQL 类似 `select k1, sum(k2) from xxx group by k1`，你可能会遇到（查询结果行数 = 实际行数 / BE 个数），这是 [support parallel result sink](https://github.com/apache/doris/pull/36053) 引入的问题，在 [Fix get Schema failed when enable_parallel_result_sink is false](https://github.com/apache/doris/pull/37779) 临时修复，在 [Arrow Flight support multiple endpoints](https://github.com/apache/doris/pull/44286) 支持多个 Endpoint 并行读取后正式修复。
