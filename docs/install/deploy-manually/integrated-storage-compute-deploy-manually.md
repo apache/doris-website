@@ -50,7 +50,7 @@ The integrated storage-compute architecture is shown below, and the deployment o
    mkdir -p <doris_meta_created>
       
    ## Create FE metadata directory symlink
-   ln -s <doris_meta_original> <doris_meta_created>
+   ln -s <doris_meta_created> <doris_meta_original>
    ```
 
 2. **Modify FE Configuration File**
