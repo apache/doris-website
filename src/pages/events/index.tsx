@@ -41,7 +41,7 @@ const EVENTS_PAGE_DATA = {
             cardDate: 'March 27, 2025',
             address: 'Virtual',
             description: 'Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris',
-            status: 'Upcoming',
+            status: 'Completed',
             img: (
                 <img
                     alt="cover img"
@@ -62,7 +62,7 @@ const EVENTS_PAGE_DATA = {
             cardDate: 'March 20, 2025',
             address: 'Virtual',
             description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Upcoming',
+            status: 'Completed',
             img: (
                 <img
                     alt="address icon"
@@ -151,9 +151,8 @@ export default function Events() {
             <section className="my-[5.5rem]">
                 <div className="max-w-[75rem] mx-auto ">
                     <div
-                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${
-                            !showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
-                        } `}
+                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
+                            } `}
                     >
                         {eventList.slice(0, 9).map((event: Event, index) => (
                             <EventCard data={event} key={index} />
