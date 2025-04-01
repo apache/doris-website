@@ -475,7 +475,7 @@ Arrow Flight 官方目前没有支持 Spark 和 Flink 的计划（见 [GitHub Is
 
 ### 支持 BI 工具
 
-自 Doris v2.1.8 开始，支持 DBeaver 等 BI 工具使用 `arrow-flight-sql` 协议连接 Doris。DBeaver 使用 `arrow-flight-sql` Driver 连接 Doris 的方法参考: [how-to-use-jdbc-driver-with-dbeaver-client](https://www.dremio.com/blog/jdbc-driver-for-arrow-flight-sql/#h-how-to-use-jdbc-driver-with-dbeaver-client)，[client-applications/clients/dbeaver/](https://docs.dremio.com/current/sonar/client-applications/clients/dbeaver/?_gl=1*1epgwh0*_gcl_au*MjUyNjE1ODM0LjE3MzQwMDExNDg)。
+自 Doris v2.1.8 开始，支持 DBeaver 等 BI 工具使用 `arrow-flight-sql` 协议连接 Doris。DBeaver 使用 `arrow-flight-sql` Driver 连接 Doris 的方法参考：[how-to-use-jdbc-driver-with-dbeaver-client](https://www.dremio.com/blog/jdbc-driver-for-arrow-flight-sql/#h-how-to-use-jdbc-driver-with-dbeaver-client)，[client-applications/clients/dbeaver/](https://docs.dremio.com/current/sonar/client-applications/clients/dbeaver/?_gl=1*1epgwh0*_gcl_au*MjUyNjE1ODM0LjE3MzQwMDExNDg)。
 
 ## 扩展应用
 
@@ -487,7 +487,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
     1. 执行 `explain sql`，FE 返回的查询计划中 ScanOperator 包含 Scan 的所有 Tablet ID List。
     2. 依据上面的 Tablet ID List 将原始 SQL 拆分为多个 SQL，每个 SQL 只读取部分 Tablet，用法类似 `SELECT * FROM t1 TABLET(10001,10002) limit 1000;`，拆分后的多个 SQL 可以并行执行。参考 [Support select table sample](https://github.com/apache/doris/pull/10170)。
 
-如果查询最外层是聚合，SQL 类似 `select k1, sum(k2) from xxx group by k1`，Doris v3.4 版本后，执行 `set enable_parallel_result_sink=true;` 后允许一个查询的每个 BE 节点独立返回查询结果，ADBC Client 收到 FE 返回的 Endpoint 列表后并行从多个 BE 节点拉取结果。不过注意当聚合结果很小时，多 BE 返回会增加 RPC 的压力。具体实现参考 [support parallel result sink](https://github.com/apache/doris/pull/36053)。理论上除了最外层是排序的查询，其他查询都可以支持每个 BE 节点并行返回结果，不过暂时没有这方便的需求，没有更进一步实现。
+如果查询最外层是聚合，SQL 类似 `select k1, sum(k2) from xxx group by k1`，Doris v3.0.4 版本后，执行 `set enable_parallel_result_sink=true;` 后允许一个查询的每个 BE 节点独立返回查询结果，ADBC Client 收到 FE 返回的 Endpoint 列表后并行从多个 BE 节点拉取结果。不过注意当聚合结果很小时，多 BE 返回会增加 RPC 的压力。具体实现参考 [support parallel result sink](https://github.com/apache/doris/pull/36053)。理论上除了最外层是排序的查询，其他查询都可以支持每个 BE 节点并行返回结果，不过暂时没有这方便的需求，没有更进一步实现。
 
 ### 多 BE 共享同一个可供集群外部访问的 IP
 
@@ -613,7 +613,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 6. 修复 `show processlist` 显示重复的 Connection ID。
     [Fix arrow-flight-sql ConnectContext to use a unified ID #46284](https://github.com/apache/doris/pull/46284)
 
-7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少8小时的问题。
+7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少 8 小时的问题。
     [Fix time zone issues and accuracy issues #38215](https://github.com/apache/doris/pull/38215)
 
 ### v2.1.7
@@ -643,7 +643,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 
 ### v2.1.5
 
-1. 修复Arrow Flight SQL 查询结果为空。
+1. 修复 Arrow Flight SQL 查询结果为空。
     [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827)
 
     Doris v2.1.4 读取大数据量时有几率报错，问题详情见：[Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
@@ -702,7 +702,7 @@ Doris 默认会将一个查询在所有 BE 节点上的结果汇总聚合到一�
 6. 修复查询报错 `FE not found arrow flight schema`。
     [Fix FE not found arrow flight schema](https://github.com/apache/doris/pull/43960)
 
-7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少8小时的问题。
+7. 修复读取 `Datetime` 和 `DatetimeV2` 类型丢失时区，导致比真实数据的 datetime 少 8 小时的问题。
     [Fix time zone issues and accuracy issues #38215](https://github.com/apache/doris/pull/38215)
 
 ### v3.0.2
