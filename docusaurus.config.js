@@ -361,6 +361,11 @@ const config = {
                         position: 'left',
                     },
                     {
+                        label: 'Events',
+                        to: '/events',
+                        position: 'left',
+                    },
+                    {
                         label: 'Community',
                         to: '/community/join-community',
                         position: 'left',
