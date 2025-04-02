@@ -1488,6 +1488,8 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.9",
+                        "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",
                         "releasenotes/v2.1/release-2.1.5",

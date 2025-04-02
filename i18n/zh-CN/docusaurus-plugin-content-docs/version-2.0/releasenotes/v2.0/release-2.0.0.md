@@ -70,7 +70,7 @@ under the License.
 
 在实现极速分析体验的同时，为了保证多个混合分析负载的执行效率以及查询的稳定性，在 2.0.0 版本中我们引入了 Pipeline 执行模型作为查询执行引擎。在 Pipeline 执行引擎中，查询的执行是由数据来驱动控制流变化的，各个查询执行过程之中的阻塞算子被拆分成不同 Pipeline，各个 Pipeline 能否获取执行线程调度执行取决于前置数据是否就绪，实现了阻塞操作的异步化、可以更加灵活地管理系统资源，同时减少了线程频繁创建和销毁带来的开销，并提升了 Apache Doris 对于 CPU 的利用效率。因此 Apache Doris 在混合负载场景中的查询性能和稳定性都得到了全面提升。
 
-参考文档：[查询执行引擎](../../query/pipeline-execution-engine)
+参考文档：[查询执行引擎](../../query-acceleration/optimization-technology-principle/pipeline-execution-engine)
 
 如何开启：` Set enable_pipeline_engine = true  `
 - 该功能在 Apache Doris 2.0 版本中将默认开启，BE 在进行查询执行时默认将 SQL 的执行模型转变 Pipeline 的执行方式。
@@ -208,7 +208,7 @@ under the License.
 - 限制了表达式树的深度，默认为 200；
 - array string 返回值 单引号变双引号；
 - 对 Doris 的进程名重命名为 DorisFE 和 DorisBE；
-- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
+- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 ## 正式踏上 2.0 之旅
 
