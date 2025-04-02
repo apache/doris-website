@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-亲爱的社区小伙伴们，[Apache Doris 1.2.8](https://doris.apache.org/download/) 版本已于 2024 年 3 月 09 日正式与大家见面。该版本对多个功能进行了更新优化，旨在更好地满足用户的需求, 欢迎大家下载体验。
+亲爱的社区小伙伴们，[Apache Doris 1.2.8](https://doris.apache.org/download/) 版本已于 2024 年 3 月 09 日正式与大家见面。该版本对多个功能进行了更新优化，旨在更好地满足用户的需求，欢迎大家下载体验。
 
 **官网下载：** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 

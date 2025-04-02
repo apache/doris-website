@@ -95,7 +95,7 @@ To further release burden on operation and maintenance, V2.1 allows auto data pa
 
 ### High-concurrency real-time data ingestion
 
-For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](../../data-operate/import/import-way/group-commit-manual)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
+For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](../../data-operate/import/group-commit-manual)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
 
 ## Semi-structured data analysis
 
