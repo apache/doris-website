@@ -47,7 +47,7 @@ Apache Doris 在中国乃至全球范围内拥有广泛的用户群体。截至�
 
 数据源经过各种数据集成和加工处理后，通常会进入实时数据仓库 Doris 和离线湖仓（如 Hive、Iceberg 和 Hudi），广泛应用于 OLAP 分析场景，如下图所示：
 
-![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.png)
+![Apache Doris 的使用场景](/images/getting-started/apache-doris-usage-scenarios-pipeline.jpeg)
 
 Apache Doris 主要应用于以下场景：
 
@@ -83,7 +83,7 @@ Apache Doris 存算一体架构精简且易于维护。它包含以下两种类�
   
 *   **Backend (BE)：** 主要负责数据存储和查询计划的执行。数据会被切分成数据分片（Shard），在 BE 中以多副本方式存储。
 
-![整体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
+![MPP 数据库整体架构和技术特点](/images/getting-started/apache-doris-technical-overview.png)
 
 在生产环境中，可以部署多个 FE 节点以实现容灾备份。每个 FE 节点都会维护完整的元数据副本。FE 节点分为以下三种角色：
 
@@ -156,7 +156,7 @@ Apache Doris 也支持强一致的单表物化视图和异步刷新的多表物�
 
 Apache Doris 采用大规模并行处理（MPP）架构，支持节点间和节点内并行执行，以及多个大型表的分布式 Shuffle Join，从而更好地应对复杂查询。
 
-![查询引擎](/images/getting-started/apache-doris-query-engine-1.png)
+![MPP-based 查询引擎](/images/getting-started/apache-doris-query-engine-1.png)
 
 Doris 查询引擎是向量化引擎，所有内存结构均按列式布局，可显著减少虚函数调用，提高缓存命中率，并有效利用 SIMD 指令。在宽表聚合场景下，性能是非向量化引擎的 5-10 倍。
 
