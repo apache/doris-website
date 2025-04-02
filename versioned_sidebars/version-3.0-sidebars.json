@@ -629,6 +629,7 @@
                                 "admin-manual/system-tables/information_schema/profiling",
                                 "admin-manual/system-tables/information_schema/referential_constraints",
                                 "admin-manual/system-tables/information_schema/routines",
+                                "admin-manual/system-tables/information_schema/routine_load_job",
                                 "admin-manual/system-tables/information_schema/rowsets",
                                 "admin-manual/system-tables/information_schema/schema_privileges",
                                 "admin-manual/system-tables/information_schema/schemata",
