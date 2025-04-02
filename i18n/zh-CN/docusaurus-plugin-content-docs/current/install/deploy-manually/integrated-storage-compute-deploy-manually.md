@@ -52,7 +52,7 @@ under the License.
    mkdir -p <doris_meta_created>
       
    ## Create FE metadata directory symlink
-   ln -s <doris_meta_original> <doris_meta_created>
+   ln -s <doris_meta_created> <doris_meta_original>
    ```
 
 2. **修改 FE 配置文件**
