@@ -32,12 +32,14 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
-🎉 Version 2.1.8 released now. Check out the 🔗[Release Notes](../releasenotes/v2.1/release-2.1.8) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
+🎉 Version 2.1.9 released now. Check out the 🔗[Release Notes](../releasenotes/v2.1/release-2.1.9) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
 
 :::
 
 
 <br />
+
+- [2025-04-02, Apache Doris 2.1.9 is released](../releasenotes/v2.1/release-2.1.9.md)
 
 - [2025-02-28, Apache Doris 3.0.4 is released](../releasenotes/v3.0/release-3.0.4.md)
 

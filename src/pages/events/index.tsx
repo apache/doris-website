@@ -15,11 +15,19 @@ interface Event {
     date: string;
     address: string;
     description: string;
-    status: string;
+    status?: EventsStatusEnum;
     cardDate: string;
     img: React.ReactElement;
     link: string;
     isCover?: boolean;
+    start_date: string;
+    end_date: string;
+}
+
+enum EventsStatusEnum {
+    Pre = 'Upcoming',
+    Processing = 'Processing',
+    Complete = 'Completed',
 }
 
 const EVENTS_PAGE_DATA = {
@@ -41,13 +49,14 @@ const EVENTS_PAGE_DATA = {
             cardDate: 'March 27, 2025',
             address: 'Virtual',
             description: 'Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris',
-            status: 'Completed',
+            start_date: '2025-03-27T21:00:00.000Z',
+            end_date: '2025-03-27T22:00:00.000Z',
             img: (
                 <img
                     alt="cover img"
                     width={384}
                     height={164}
-                    className='rounded-t-lg'
+                    className="rounded-t-lg"
                     src={`${require('@site/static/images/events/event-2.jpeg').default}`}
                 />
             ),
@@ -60,9 +69,10 @@ const EVENTS_PAGE_DATA = {
             tag: 'Apache Doris Webinar',
             date: 'March 20, 2025 21:00-22:00 GMT+8',
             cardDate: 'March 20, 2025',
+            start_date: '2025-03-20T21:00:00.000Z',
+            end_date: '2025-03-20T22:00:00.000Z',
             address: 'Virtual',
             description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
-            status: 'Completed',
             img: (
                 <img
                     alt="address icon"
@@ -77,13 +87,21 @@ const EVENTS_PAGE_DATA = {
 };
 
 const STATUS_COLOR_MAP = {
-    Upcoming: '#00B42A',
-    Past: '#8592A6',
+    [EventsStatusEnum.Pre]: '#00B42A',
+    [EventsStatusEnum.Complete]: '#8592A6',
 };
 
 export default function Events() {
     const { banner, eventList } = EVENTS_PAGE_DATA;
     const [showMore, setShowMore] = useState(false);
+    eventList.forEach((event: Event) => {
+        event.status =
+            new Date() >= new Date(event.end_date)
+                ? EventsStatusEnum.Complete
+                : new Date() >= new Date(event.start_date)
+                ? EventsStatusEnum.Processing
+                : EventsStatusEnum.Pre;
+    });
 
     const EventCard = ({ data }: { data: Event }) => {
         return (
@@ -151,8 +169,9 @@ export default function Events() {
             <section className="my-[5.5rem]">
                 <div className="max-w-[75rem] mx-auto ">
                     <div
-                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
-                            } `}
+                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${
+                            !showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
+                        } `}
                     >
                         {eventList.slice(0, 9).map((event: Event, index) => (
                             <EventCard data={event} key={index} />

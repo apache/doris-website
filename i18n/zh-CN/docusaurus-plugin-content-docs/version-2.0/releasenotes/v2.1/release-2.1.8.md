@@ -33,7 +33,6 @@ under the License.
 
 ## 行为变更
 
-- 当通过 External Catalog 查询表名大小写不敏感的数据源（如 Hive）时，在之前版本中，可以使用任意大小写进行表名查询，但是在 2.1.8版本中，将严格遵循 Doris 自身的表名大小写敏感策略。
 - 添加环境变量 `SKIP_CHECK_ULIMIT` 以跳过 BE 进程内关于 ulimit 值校验检查，仅适用于 Docker 快速启动场景中应用。[#45267](https://github.com/apache/doris/pull/45267)
 - 添加 `enable_cooldown_replica_affinity session` 变量控制冷热分层下查询选用副本亲和性
 - FE 添加配置` restore_job_compressed_serialization` 和 `backup_job_compressed_serialization` 用于解决 db tablet 数量非常大情况下备份和恢复操作时 FE OOM 的问题，默认关闭，打开之后无法降级

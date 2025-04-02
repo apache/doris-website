@@ -92,11 +92,11 @@ under the License.
 
 - **新增 `replace_empty` 函数**：将字符串中的子字符串进行替换，当旧字符串为空时，会将新字符串插入到原有字符串的每个字符前以及最后。
   
-  关于更多信息，请参考文档：[字符串函数 - REPLACE_EMPTY](../../sql-manual/sql-functions/string-functions/replace_empty.md)
+  关于更多信息，请参考文档：[字符串函数 - REPLACE_EMPTY](../../sql-manual/sql-functions/scalar-functions/string-functions/replace-empty)
 
 - 支持 `show storage policy using` 语句：支持查看所有或指定存储策略关联的表和分区。
 
-	关于更多信息，请参考文档：[SQL 语句 - SHOW](../../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md)
+	关于更多信息，请参考文档：[SQL 语句 - SHOW](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING)
 
 - **支持 BE 侧的 JVM 指标：** 通过在 `be.conf` 配置文件中设置`enable_jvm_monitor=true`，可以启用对 BE 节点 JVM 的监控和指标收集，有助于了解 BE JVM 的资源使用情况，以便进行故障排除和性能优化。
 

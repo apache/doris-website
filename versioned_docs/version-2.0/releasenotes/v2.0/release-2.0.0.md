@@ -226,7 +226,7 @@ This feature allows for higher availability of data, read/write workload separat
 - A limit has been imposed on the depth of the expression tree. The default value is 200;
 - The single quote in the return value of array string has been changed to double quote;
 - The Doris processes are renamed to DorisFE and DorisBE.
-- The functions AES and SM4 with two arguments' behaviour changed. See more informations in [relative function docs](../../sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
+- The functions AES and SM4 with two arguments' behaviour changed. See more informations in [relative function docs](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 ## Embarking on the 2.0.0 Journey
 
