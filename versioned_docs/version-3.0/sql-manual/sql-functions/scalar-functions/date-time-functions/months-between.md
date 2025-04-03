@@ -25,6 +25,8 @@ under the License.
 -->
 
 ## Description
+> after version 3.0.6
+
 The `MONTHS_BETWEEN` function calculates the floating-point number of months between two dates. It receives two date arguments and a optional boolean argument.
 
 ## Syntax
