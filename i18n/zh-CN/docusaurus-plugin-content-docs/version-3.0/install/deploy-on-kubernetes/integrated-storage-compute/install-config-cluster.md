@@ -429,7 +429,7 @@ Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有�
 
 ### ClusterIP
 
-Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的。
+Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的被访问地址。
 
 #### 第 1 步：配置使用 ClusterIP 作为 Service 类型
 
