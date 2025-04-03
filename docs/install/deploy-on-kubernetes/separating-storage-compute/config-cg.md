@@ -123,6 +123,18 @@ spec:
         type: NodePort
 ```
 
+### LoadBalancer Mode
+The [LoadBalancer service](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) type is applicable in cloud-based Kubernetes environments and is provided by the cloud provider's load balancer.
+Set the `computeGroup.service` type to LoadBalancer, as shown:
+```yaml
+spec:
+  feSpec:
+    service:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/load-balancer-type: "external"
+```
+
 ## Custom Startup Configuration
 1. Create a Custom ConfigMap Containing Startup Information
    In the default deployment, each compute group's BE service starts with a default configuration file embedded in the image. The Doris Operator uses a Kubernetes ConfigMap to mount a custom startup configuration file. Below is an example ConfigMap for a BE service:
@@ -213,7 +225,7 @@ In the above configuration, the log directory is mounted using a custom storage 
 If the `mountPaths` array is empty, it indicates that the current storage configuration is using the template configuration.
 :::
 
-### Disabling Log Persistence
+### Disable Log Persistence
 If log persistence is not required and logs should only be output to the standard output, configure as follows:
 ```yaml
 spec:

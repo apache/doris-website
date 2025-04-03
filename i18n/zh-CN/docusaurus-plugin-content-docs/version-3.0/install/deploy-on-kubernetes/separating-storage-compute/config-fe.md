@@ -196,6 +196,8 @@ spec:
   feSpec:
     service:
       type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/load-balancer-type: "external"
 ```
 
 #### 第 2 步：获取 Service
@@ -264,7 +266,7 @@ spec:
 若 `mountPaths` 数组为空，则表示当前存储配置为模板配置。
 :::
 
-### 取消日志持久化
+### 不持久化日志
 如果不希望将日志持久化，而仅输出到标准输出，则可配置如下：
 ```yaml
 spec:

@@ -199,6 +199,8 @@ spec:
   feSpec:
     service:
       type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/load-balancer-type: "external"
 ```
 
 #### Step 2: Obtain the Service
@@ -266,7 +268,7 @@ spec:
 If the `mountPaths` array is empty, it indicates that the current storage configuration is using the template configuration.
 :::
 
-### Disabling Log Persistence
+### Disable Log Persistence
 If log persistence is not desired and logs should only be output to the standard output, configure as follows:
 ```yaml
 spec:

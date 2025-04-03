@@ -32,7 +32,7 @@ under the License.
 
 ## 第 1 步：部署前准备
 在 Kubernetes 上部署存算分离集群需要提前部署好 FoundationDB。
-- 如果使用机器直接部署，需要确保该机器能够被 Kubernetes 集群上的服务访问。FoundationDB 在机器上直接部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../compute-storage-decoupled/before-deployment)。  
+- （推荐）如果使用机器直接部署，需要确保该机器能够被 Kubernetes 集群上的服务访问。FoundationDB 在机器上直接部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../compute-storage-decoupled/before-deployment)。
 - 在 Kubernetes 上部署请参考[在 Kubernetes 上部署 FoundationDB](install-fdb.md)。
 
 ## 第 2 步：部署 Doris Operator

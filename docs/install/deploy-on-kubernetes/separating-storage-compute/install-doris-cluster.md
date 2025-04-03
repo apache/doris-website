@@ -32,7 +32,7 @@ Deploying a functional decoupled storage and compute Doris cluster on Kubernetes
 
 ## Step 1: Preparation
 Before deploying a decoupled cluster on Kubernetes, it is essential to have FoundationDB deployed in advance.
-- Direct Deployment on Machines:
+- (Preferred) Direct Deployment on Machines:
   Ensure that the machine where FoundationDB is installed is accessible by services running within the Kubernetes cluster. For direct machine deployments, please refer to the [Preparation Phase](../../../compute-storage-decoupled/before-deployment) in the decoupled deployment documentation.
 - Deployment on Kubernetes:
   For deploying FoundationDB on Kubernetes, please refer to [Deploying FoundationDB on Kubernetes](install-fdb.md).

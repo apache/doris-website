@@ -118,6 +118,19 @@ spec:
         type: NodePort
 ```
 
+### LoadBalancer
+[LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) 模式适用于云平台的 Kubernetes 环境，是由云服务商提供的负载均衡器。
+在 `computeGroup.service` 中设置类型为 LoadBalancer，如下所示：
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    service:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/load-balancer-type: "external"
+```
+
 ## 自定义启动配置
 1. 自定义包含启动信息的 ConfigMap  
    默认部署中，每个计算组的 BE 服务均使用镜像内的默认配置文件启动。Doris Operator 使用 Kubernetes 的 ConfigMap 来挂载自定义启动配置文件。以下展示了一个 BE 服务可使用的 ConfigMap 示例：
@@ -207,7 +220,7 @@ spec:
 若 `mountPaths` 数组为空，则表示当前存储配置为模板配置。
 :::
 
-### 取消日志持久化
+### 不持久化日志
 如果不希望将日志持久化，而仅输出到标准输出，则可配置如下：
 ```yaml
 spec:
