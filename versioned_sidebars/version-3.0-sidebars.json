@@ -1183,7 +1183,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/next_day"
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day"
                                     ]
                                 },
                                 {
