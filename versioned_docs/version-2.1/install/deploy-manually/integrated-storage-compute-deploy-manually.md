@@ -187,7 +187,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
 
    Parameter explanations are as follows:
 
-   | 参数                                                         | 修改建议                                                  |
+   | Parameters                                                         | Suggestions                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | [priority_networks](../../admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
    | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 2GB or more for production environments.   |
