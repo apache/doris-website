@@ -27,7 +27,7 @@ under the License.
 ## 描述
 > 从版本 2.1.10 开始支持
 
-XPATH_STRING 函数用于解析 XML 字符串并返回第一个匹配 XPath 表达式的 XML 节点。
+XPATH_STRING 函数用于解析 XML 字符串并返回第一个匹配 [XPath](https://www.w3.org/TR/xpath-10/) 表达式的 XML 节点。
 
 ## 语法
 

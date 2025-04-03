@@ -27,7 +27,7 @@ under the License.
 ## Description
 > after version 2.1.10
 
-The XPATH_STRING function is used to parse the XML string and return the first XML node that matches the XPath expression.
+The XPATH_STRING function is used to parse the XML string and return the first XML node that matches the [XPath](https://www.w3.org/TR/xpath-10/) expression.
 
 ## Syntax
 
