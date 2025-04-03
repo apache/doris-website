@@ -35,16 +35,16 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 
 ## Parameters
 
-| Parameter         | Description                                                |
-|-------------------|------------------------------------------------------------|
-| `<datetime/date>` | The date value with the day of week to be found.           |
-| `<day_of_week>`   | A STRING expression identifying a day of the week.         |
+| Parameter         | Description                                                   |
+|-------------------|---------------------------------------------------------------|
+| `<datetime/date>` | The date which will be used to find the next day of the week. |
+| `<day_of_week>`   | A STRING expression identifying a day of the week.            |
 
 ## Return Value
-A <date> whatever the input is <datetime> or <date>.
+A DATE value whatever the input is DATETIME or DATE.
 
 
-<day_of_week> must be one of the following (case insensitive):
+`<day_of_week>` must be one of the following (case insensitive):
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
 - 'TU', 'TUE', 'TUESDAY'
@@ -54,8 +54,8 @@ A <date> whatever the input is <datetime> or <date>.
 - 'SA', 'SAT', 'SATURDAY'
 
 Special cases:
-- If the <datetime/date> input is NULL, the function returns NULL.
-- If the input is NEXT_DAY("9999-12-31", <day_of_week>), the function will return same value as the input.
+- If the `<datetime/date>` input is NULL, the function returns NULL.
+- If the input is NEXT_DAY("9999-12-31 12:00:00", `<day_of_week>`), the function will return same value as the input.
 
 ## Example
 
