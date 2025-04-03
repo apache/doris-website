@@ -25,6 +25,8 @@ under the License.
 -->
 
 ## Description
+> after version 2.1.10
+
 The NEXT_DAY function is used to return the first date that is later than the given date and matches the specified day of the week.
 
 ## Syntax
