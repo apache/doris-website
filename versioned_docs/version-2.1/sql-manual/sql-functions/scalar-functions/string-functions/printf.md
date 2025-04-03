@@ -25,6 +25,7 @@ under the License.
 -->
 
 ## Description
+> after version 2.1.10
 
 Returns a formatted string using the specified [printf](https://pubs.opengroup.org/onlinepubs/009695399/functions/fprintf.html) string and arguments.
 
