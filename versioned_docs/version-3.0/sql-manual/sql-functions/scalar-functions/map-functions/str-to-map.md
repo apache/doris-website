@@ -25,6 +25,7 @@ under the License.
 -->
 
 ## Description
+> after version 3.0.6
 
 Constructs a `Map<String, String>` from a string.
 

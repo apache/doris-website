@@ -25,6 +25,7 @@ under the License.
 -->
 
 ## 描述
+> 从版本 3.0.6 开始支持
 
 将字符串转换为 `Map<String, String>` 类型。
 
