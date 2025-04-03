@@ -1,8 +1,8 @@
 ---
 {
     'title': 'Why Apache Doris is a Better Alternative to Elasticsearch for Real-Time Analytics',
-    'summary': 'Apache Doris is a real-time data warehouse commonly used for observability, cyber security analysis, online reports, customer profiles, data lakehouse and more. Elasticsearch is more like a search engine, but it is also widely used for data analytics, so there's an overlap in their use cases. The comparison in this post will focus on the real-time analytics capabilities of Apache Doris and Elasticsearch from a user-oriented perspective',
-    'description': 'Apache Doris is a real-time data warehouse commonly used for observability, cyber security analysis, online reports, customer profiles, data lakehouse and more. Elasticsearch is more like a search engine, but it is also widely used for data analytics, so there's an overlap in their use cases. The comparison in this post will focus on the real-time analytics capabilities of Apache Doris and Elasticsearch from a user-oriented perspective',
+    'summary': "Apache Doris is a real-time data warehouse commonly used for observability, cyber security analysis, online reports, customer profiles, data lakehouse and more. Elasticsearch is more like a search engine, but it is also widely used for data analytics, so there's an overlap in their use cases. The comparison in this post will focus on the real-time analytics capabilities of Apache Doris and Elasticsearch from a user-oriented perspective",
+    'description': "Apache Doris is a real-time data warehouse commonly used for observability, cyber security analysis, online reports, customer profiles, data lakehouse and more. Elasticsearch is more like a search engine, but it is also widely used for data analytics, so there's an overlap in their use cases. The comparison in this post will focus on the real-time analytics capabilities of Apache Doris and Elasticsearch from a user-oriented perspective",
     'date': '2025-03-25',
     'author': 'Kang, Apache Doris PMC Member',
     'tags': ['Release Notes'],
