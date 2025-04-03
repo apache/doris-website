@@ -32,6 +32,7 @@ under the License.
 
 ```sql
 DATE_TRUNC(<datetime>, <time_unit>)
+DATE_TRUNC(<time_unit>, <datetime>)
 ```
 
 ## 参数
