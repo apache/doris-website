@@ -29,9 +29,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The author previously presented this topic at the VeloDB Webinar. This article expands on that presentation by providing more detailed comparative information, including test data and in-depth technical explanations:
-
-<iframe width="800" height="560" src="https://www.youtube.com/embed/qnxX-FOd8Wc?si=TcEF_w-XhqgQyP4A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+The author previously presented this topic at the VeloDB Webinar. This article expands on that presentation by providing more detailed comparative information, including test data and in-depth technical explanations: [https://www.youtube.com/embed/qnxX-FOd8Wc?si=TcEF_w-XhqgQyP4A](https://www.youtube.com/embed/qnxX-FOd8Wc?si=TcEF_w-XhqgQyP4A)
 
 
 In the past year, there's an increasing number of users looking to use Apache Doris as an alternative to Elasticsearch, so I'd like to provide an in-depth comparison of the two to serve as a reference for users.
