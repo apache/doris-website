@@ -985,6 +985,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/format-round",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/pmod",
