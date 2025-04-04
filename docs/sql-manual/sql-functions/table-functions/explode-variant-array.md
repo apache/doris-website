@@ -26,11 +26,11 @@ under the License.
 
 ## Description
 
-The `explode_variant_array` table function accepts a variant type, where each element is a JSON object, and expands each JSON object in the array into multiple rows, with each row containing one JSON object. It is used in conjunction with LATERAL VIEW.
+The `explode_variant_array` table function accepts one or more variant type, where each element is a JSON object, and expands each JSON object in the array into multiple rows, with each row containing one JSON object. It is used in conjunction with LATERAL VIEW.
 
 ## Syntax
 ```sql
-EXPLODE_VARIANT_ARRAY(<variant>)
+EXPLODE_VARIANT_ARRAY(<variant>[, <variant>])
 ```
 
 ## Return Value
@@ -90,7 +90,8 @@ insert into simple_nested_test values(1, '{
         "type": "WORK"
       }
     ]
-  }
+  },
+  "hobbies": ["Swimming", "Programming", "Music", "Photography"]
 }');
 ```
 
@@ -107,4 +108,19 @@ select v['eventId'], phone_numbers
 | 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
 | 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
 +--------------------------+----------------------------------------------------+
+```
+
+```sql
+select v['eventId'], phone_numbers, hobbies
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers'], v['hobbies']) tmp1 as phone_numbers,hobbies
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;   
+```
+
+```text
++--------------+----------------------------------------------------+-------------+
+| v['eventId'] | phone_numbers                                      | hobbies     |
++--------------+----------------------------------------------------+-------------+
+| 1            | {"callLimit":5,"number":"1111111111","type":"GSM"} | Swimming    |
+| 1            | {"callLimit":3,"number":"222222222","type":"HOME"} | Programming |
++--------------+----------------------------------------------------+-------------+
 ```
