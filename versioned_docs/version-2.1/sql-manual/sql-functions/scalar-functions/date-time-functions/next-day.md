@@ -42,10 +42,6 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 | `<datetime/date>` | The date which will be used to find the next day of the week. |
 | `<day_of_week>`   | A STRING expression identifying a day of the week.            |
 
-## Return Value
-A DATE value whatever the input is DATETIME or DATE.
-
-
 `<day_of_week>` must be one of the following (case insensitive):
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
@@ -54,6 +50,9 @@ A DATE value whatever the input is DATETIME or DATE.
 - 'TH', 'THU', 'THURSDAY'
 - 'FR', 'FRI', 'FRIDAY'
 - 'SA', 'SAT', 'SATURDAY'
+
+## Return Value
+A DATE value whatever the input is DATETIME or DATE.
 
 Special cases:
 - If the `<datetime/date>` input is NULL, the function returns NULL.

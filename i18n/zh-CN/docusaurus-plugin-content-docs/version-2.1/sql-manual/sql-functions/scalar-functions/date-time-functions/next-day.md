@@ -42,9 +42,6 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 | `<datetime/date>` | 用于查找下一个星期几的日期。                                 |
 | `<day_of_week>`   | 用于标识星期几的字符串表达式。                               |
 
-## 返回值
-无论输入是 DATETIME 还是 DATE 类型，都返回 DATE 类型的值。
-
 `<day_of_week>` 必须是以下值之一（不区分大小写）：
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
@@ -53,6 +50,9 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 - 'TH', 'THU', 'THURSDAY'
 - 'FR', 'FRI', 'FRIDAY'
 - 'SA', 'SAT', 'SATURDAY'
+
+## 返回值
+无论输入是 DATETIME 还是 DATE 类型，都返回 DATE 类型的值。
 
 特殊情况：
 - 如果 `<datetime/date>` 输入为 NULL，函数返回 NULL。
