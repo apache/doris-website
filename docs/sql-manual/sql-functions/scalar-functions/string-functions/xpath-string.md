@@ -38,7 +38,7 @@ XPATH_STRING(<xml_string>, <xpath_expression>)
 | Parameter | Description                                   |
 | --------- | ----------------------------------------------|
 | `<xml_string>` | Source string. Type: VARCHAR             |
-| `<xpath_expression>` | XPath expression. Type: VARCHAR    |
+| `<xpath_expression>` | [XPath](https://www.w3.org/TR/xpath-10/) expression. Type: VARCHAR    |
 
 ## Return Value
 

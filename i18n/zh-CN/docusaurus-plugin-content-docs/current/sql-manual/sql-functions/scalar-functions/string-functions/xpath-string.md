@@ -38,7 +38,7 @@ XPATH_STRING(<xml_string>, <xpath_expression>)
 | 参数 | 描述 |
 | --------- | ----------------------------------------------|
 | `<xml_string>` | 源字符串。类型：VARCHAR |
-| `<xpath_expression>` | XPath 表达式。类型：VARCHAR |
+| `<xpath_expression>` | [XPath](https://www.w3.org/TR/xpath-10/) 表达式。类型：VARCHAR |
 
 ## 返回值
 
