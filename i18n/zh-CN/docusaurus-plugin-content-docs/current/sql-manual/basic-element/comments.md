@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Comments",
+    "title": "注释",
     "language": "zh-CN"
 }
 ---

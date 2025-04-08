@@ -926,12 +926,12 @@
                                         "sql-manual/basic-element/operators/conditional-operators/in-operators",
                                         "sql-manual/basic-element/operators/conditional-operators/exists-operators"
                                     ]
-                                }
+                                },
+                                "sql-manual/basic-element/operators/bitwise-operators",
+                                "sql-manual/basic-element/operators/assignment-operators",
+                                "sql-manual/basic-element/operators/operator-precedence"
                             ]
-                        },
-                        "sql-manual/basic-element/operators/bitwise-operators",
-                        "sql-manual/basic-element/operators/assignment-operators",
-                        "sql-manual/basic-element/operators/operator-precedence"
+                        }
                     ]
                 },
                 {
@@ -1809,8 +1809,6 @@
                                     "label": "Table",
                                     "items": [
                                         "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE",
-                                        "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE",
-                                        "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT",
                                         "sql-manual/sql-statements/table-and-view/table/DESC-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION",
