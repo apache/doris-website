@@ -57,7 +57,7 @@ In strings, certain sequences have special meanings unless the NO_BACKSLASH_ESCA
 > 1. In pattern matching contexts, `%` and `_` are usually interpreted as wildcards, but using the sequences `\%` and `\_` can search for literal instances of `%` and `_`. For more information, see the description of the LIKE operator in the "Pattern Matching Operators" section. If `\%` or `\_` are used outside of pattern contexts, they will be calculated as the string `\%` and `\_`, not as `%` and `_`.
 > 2. Backslashes in escape characters not listed in the table are ignored. For example, `'\y'` and `'y' are equivalent.
 
-## Using Quotes in String Character Lengths
+## Using Quotes in String Literals
 
 There are several ways to include quote characters in strings:
 
