@@ -958,9 +958,9 @@
                             "type": "category",
                             "label": "Character Length",
                             "items": [
-                                "sql-manual/basic-element/character-length/numeric-character-length",
-                                "sql-manual/basic-element/character-length/string-character-length",
-                                "sql-manual/basic-element/character-length/date-character-length"
+                                "sql-manual/basic-element/literal/numeric-literal",
+                                "sql-manual/basic-element/literal/string-literal",
+                                "sql-manual/basic-element/literal/date-literal"
                             ]
                         },
                         "sql-manual/basic-element/nulls",
