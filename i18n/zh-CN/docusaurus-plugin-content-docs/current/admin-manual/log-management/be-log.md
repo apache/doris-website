@@ -105,6 +105,11 @@ sys_log_verbose_modules=*
 
 `sys_log_verbose_level` 表示 DEBUG 的级别。数字越大，则 DEBUG 日志越详细。取值范围在 1-10。
 
+通常情况下，只需在 `be.conf` 中配置 `sys_log_verbose_modules` 和 `sys_log_verbose_level` 即可满足需求。
+只有在特殊情况下，比如发现某些调试日志没有按预期输出时，才需要额外设置 `sys_log_verbose_flags_v`，它的作用范围不受 modules 限制。
+
+`sys_log_verbose_flags_v` 表示 glog 中的 `FLAGS_v`，用于控制全局的日志详细程度。数字越大，则 DEBUG 日志越详细。只有当 `n <= FLAGS_v` 时，`VLOG(n)` 的日志信息才会被输出，从而实现对日志输出粒度的精细控制。
+
 ### 动态调整
 
 BE 的 DEBUG 日志从 2.1 开始支持动态修改，通过以下 RESTful API 即可：
