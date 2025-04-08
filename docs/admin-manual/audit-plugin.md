@@ -75,5 +75,5 @@ FE configuration items can be modified by editing the `fe.conf` directory.
 
 | Configuration Item         | Description                                                                                                                                                                 |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `skip_audit_user_list`     | If you do not want operations of certain users to be recorded in the audit logs, you can modify this configuration (supported since version 3.0.01). For example, use the following command to exclude `user1` and `user2` from audit log recording: |
+| `skip_audit_user_list`     | If you do not want operations of certain users to be recorded in the audit logs, you can modify this configuration (supported since version 3.0.01). For example, use the config to exclude `user1` and `user2` from audit log recording: `skip_audit_user_list=user1,user2`|
 
