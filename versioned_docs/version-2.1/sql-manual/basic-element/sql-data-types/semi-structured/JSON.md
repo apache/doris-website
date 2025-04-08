@@ -58,6 +58,7 @@ INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
 
 - When the  all special character with `'\'` such as `'\r'`, `'\t'` appears in JSON, you need to use the replace function to replace `"\"` with `"\\"`, for example, you need replace `"\n"` to `"\\n"` 
 
+
 **Query:**
 - Directly select the entire JSON column:
 ```sql

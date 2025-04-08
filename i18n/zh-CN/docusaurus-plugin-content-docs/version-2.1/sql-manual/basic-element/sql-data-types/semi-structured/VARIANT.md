@@ -1,7 +1,7 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -26,52 +26,53 @@ under the License.
 
 ## VARIANT
 
-### Description
+## 描述
 
-Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data. It allows storing complex data structures containing different data types (such as integers, strings, boolean values, etc.) without the need to define specific columns in the table structure beforehand. The VARIANT type is particularly useful for handling complex nested structures that may change at any time. During the writing process, this type can automatically infer column information based on the structure and types of the columns, dynamicly merge written schemas. It stores JSON keys and their corresponding values as columns and dynamic sub-columns.
+在 Doris 2.1 中引入一种新的数据类型 VARIANT，它可以存储半结构化 JSON 数据。它允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中提前定义具体的列。VARIANT 类型特别适用于处理复杂的嵌套结构，而这些结构可能随时会发生变化。在写入过程中，该类型可以自动根据列的结构、类型推断列信息，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列。
 
 ### Note
 
-Advantages over JSON Type:
+相比 JSON 类型有以下优势：
 
-1. Different storage methods: The JSON type is stored in binary JSONB format, and the entire JSON is stored row by row in segment files. In contrast, the VARIANT type infers types during writing and stores the written JSON columns. It has a higher compression ratio compared to the JSON type, providing better storage efficiency.
-2. Query: Querying does not require parsing. VARIANT fully utilizes columnar storage, vectorized engines, optimizers, and other components in Doris, providing users with extremely high query performance.
-Below are test results based on clickbench data:
+1. 存储方式不同，JSON 类型是以二进制 JSONB 格式进行存储，整行 JSON 以行存的形式存储到 segment 文件中。而 VARIANT 类型在写入的时候进行类型推断，将写入的 JSON 列存化。比 JSON 类型有更高的压缩比，存储空间更小。
+2. 查询方式不同，查询不需要进行解析。VARIANT 充分利用 Doris 中列式存储、向量化引擎、优化器等组件给用户带来极高的查询性能。
+下面是基于 clickbench 数据测试的结果：
 
-|    | Storage Space |
+|    | 存储空间   |
 |--------------|------------|
-| Predefined Static Columns | 12.618 GB  |
-| VARIANT Type    | 12.718 GB  |
-| JSON Type             | 35.711 GB   |
+| 预定义静态列 | 12.618 GB  |
+| VARIANT 类型    | 12.718 GB |
+| JSON 类型             | 35.711 GB   |
 
-**Saves approximately 65% storage capacity**
+**节省约 65% 存储容量**
 
-| Query Counts        | Predefined Static Columns | VARIANT Type | JSON Type        |
-|---------------------|---------------------------|--------------|-----------------|
-| First Query (cold)  | 233.79s                   | 248.66s        | **Most queries timeout**  |
-| Second Query (hot) | 86.02s                     | 94.82s          | 789.24s         |
-| Third Query (hot)   | 83.03s                     | 92.29s          | 743.69s         |
+| 查询次数        | 预定义静态列 | VARIANT 类型 | JSON 类型        |
+|----------------|--------------|--------------|-----------------|
+| 第一次查询 (cold) | 233.79s      | 248.66s      | **大部分查询超时**  |
+| 第二次查询 (hot)  | 86.02s       | 94.82s       | 789.24s         |
+| 第三次查询 (hot)  | 83.03s       | 92.29s       | 743.69s         |
 
-[test case](https://github.com/ClickHouse/ClickBench/blob/main/doris/queries.sql) contains 43 queries 
+[测试集](https://github.com/ClickHouse/ClickBench/blob/main/doris/queries.sql) 一共 43 个查询语句
 
-**8x faster query, query performance comparable to static columns**
+**查询提速 8+ 倍，查询性能与静态列相当**
 
-### Example
+## 举例
 
-Demonstrate the functionality and usage of VARIANT with an example covering table creation, data import, and query cycle.
+用一个从建表、导数据、查询全周期的例子说明 VARIANT 的功能和用法。
 
-**Table Creation Syntax**
-Create a table, using the `VARIANT` keyword in the syntax.
+**建表语法**
+
+建表语法关键字 VARIANT
 
 ``` sql
--- Without index
+-- 无索引
 CREATE TABLE IF NOT EXISTS ${table_name} (
     k BIGINT,
     v VARIANT
 )
 table_properties;
 
--- Create an index on the v column, optionally specify the tokenize method, default is untokenized 
+-- 在v列创建索引，可选指定分词方式，默认不分词
 CREATE TABLE IF NOT EXISTS ${table_name} (
     k BIGINT,
     v VARIANT,
@@ -79,28 +80,26 @@ CREATE TABLE IF NOT EXISTS ${table_name} (
 )
 table_properties;
 
--- Create an bloom filter on v column, to enhance query seed on sub columns
+-- 在v列创建bloom filter
 CREATE TABLE IF NOT EXISTS ${table_name} (
     k BIGINT,
     v VARIANT
 )
 ...
 properties("replication_num" = "1", "bloom_filter_columns" = "v");
-
 ```
 
-**Query Syntax**
+**查询语法**
 
 ``` sql
--- use v['a']['b'] format for example, v['properties']['title'] type is VARIANT
+-- 使用 v['a']['b'] 形式如下，v['properties']['title']类型是VARIANT
 SELECT v['properties']['title'] from ${table_name}
-
 ```
 
-**Example based on the GitHub events dataset**
+### 基于 github events 数据集示例
 
-Here, github events data is used to demonstrate the table creation, data import, and query using VARIANT.
-The below is a formatted line of data:
+这里用 github events 数据展示 VARIANT 的建表、导入、查询。
+下面是格式化后的一行数据
 
 ``` json
 {
@@ -133,12 +132,12 @@ The below is a formatted line of data:
 }
 ```
 
-**Table Creation**
+**建表**
 
-- Created three columns of VARIANT type: `actor`, `repo`, and `payload`.
-- Simultaneously created an inverted index, `idx_payload`, for the `payload` column while creating the table.
-- Specified the index type as inverted using `USING INVERTED`, aimed at accelerating conditional filtering of sub-columns.
-- `PROPERTIES("parser" = "english")` specified the adoption of English tokenization.
+- 创建了三个 VARIANT 类型的列， `actor`，`repo` 和 `payload`
+- 创建表的同时创建了 `payload` 列的倒排索引 `idx_payload`
+- USING INVERTED 指定索引类型是倒排索引，用于加速子列的条件过滤
+- `PROPERTIES("parser" = "english")` 指定采用 english 分词
 
 ``` sql
 CREATE DATABASE test_variant;
@@ -158,17 +157,18 @@ DISTRIBUTED BY HASH(id) BUCKETS 10
 properties("replication_num" = "1");
 ```
 
+**需要注意的是：**
+
 :::tip
 
-1. Creating an index on VARIANT columns, such as when there are numerous sub-columns in payload, might lead to an excessive number of index columns, impacting write performance.
-2. The tokenization properties for the same VARIANT column are uniform. If you have varied tokenization requirements, consider creating multiple VARIANT columns and specifying index properties separately for each.
+1. 在 VARIANT 列上创建索引，比如 payload 的子列很多时，可能会造成索引列过多，影响写入性能
+2. 同一个 VARIANT 列的分词属性是相同的，如果您有不同的分词需求，那么可以创建多个 VARIANT 然后分别指定索引属性
 
 :::
 
+**使用 streamload 导入**
 
-**Using Streamload for Import**
-
-Importing gh_2022-11-07-3.json, which contains one hour's worth of GitHub events data.
+导入 gh_2022-11-07-3.json，这是 github events 一个小时的数据
 
 ``` shell
 wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
@@ -197,10 +197,10 @@ m_load
 }
 ```
 
-Confirm the successful import.
+确认导入成功
 
 ``` sql
--- View the number of rows.
+-- 查看行数
 mysql> select count() from github_events;
 +----------+
 | count(*) |
@@ -209,7 +209,7 @@ mysql> select count() from github_events;
 +----------+
 1 row in set (0.25 sec)
 
--- Random select one row
+-- 随机看一条数据
 mysql> select * from github_events limit 1;
 +-------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------------+
 | id          | type      | actor                                                                                                                                                                                                                       | repo                                                                                                                                                     | payload                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | public | created_at          |
@@ -218,7 +218,8 @@ mysql> select * from github_events limit 1;
 +-------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------------+
 1 row in set (0.23 sec)
 ```
-Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
+
+desc 查看 schema 信息，子列会在存储层自动扩展、并进行类型推导
 
 ``` sql
 mysql> desc github_events;
@@ -259,24 +260,27 @@ mysql> desc github_events;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 406 rows in set (0.07 sec)
 ```
-DESC can be used to specify partition and view the schema of a particular partition. The syntax is as follows:
 
-``` sql
+desc 可以指定 partition 查看某个 partition 的 schema，语法如下
+
+```
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
-**Querying**
+**查询**
 
 :::tip
 
-When utilizing filtering and aggregation functionalities to query sub-columns, additional casting operations need to be performed on sub-columns (because the storage types are not necessarily fixed and require a unified SQL type).
-For instance, `SELECT * FROM tbl where CAST(var['titile'] as text) MATCH "hello world"`
-The simplified examples below illustrate how to use VARIANT for querying:
-The following are three typical query scenarios
+**注意**
+如使用过滤和聚合等功能来查询子列，需要对子列进行额外的 cast 操作（因为存储类型不一定是固定的，需要有一个 SQL 统一的类型）。
+例如 SELECT * FROM tbl where CAST(var['titile'] as text) MATCH "hello world"
+以下简化的示例说明了如何使用 VARIANT 进行查询
 
 :::
 
-1. Retrieve the top 5 repositories based on star count from the `github_events` table.
+下面是典型的三个查询场景：
+
+1. 从 github_events 表中获取 top 5 star 数的代码库
 
 ``` sql
 mysql> SELECT
@@ -297,7 +301,7 @@ mysql> SELECT
 5 rows in set (0.03 sec)
 ```
 
-2. Retrieve the count of comments containing "doris".
+2. 获取评论中包含 doris 的数量
 
 ``` sql
 -- implicit cast `payload['comment']['body']` to string type
@@ -312,7 +316,7 @@ mysql> SELECT
 1 row in set (0.04 sec)
 ```
 
-3. Query the issue number with the highest number of comments along with its corresponding repository.
+3. 查询 comments 最多的 issue 号以及对应的库
 
 ``` sql
 mysql> SELECT 
@@ -323,7 +327,7 @@ mysql> SELECT
     ->     distinct cast(actor['login'] as string)
     ->   ) AS authors 
     -> FROM  github_events 
-    -> WHERE type = 'IssueCommentEvent' AND (cast(payload["action"] as string) = 'created') AND (cast(payload["issue"]["number"] as int) > 10) 
+    -> WHERE type = 'IssueCommentEvent' AND (cast(payload['action'] as string) = 'created') AND (cast(payload['issue']['number'] as int) > 10) 
     -> GROUP BY repo_name, issue_number 
     -> HAVING authors >= 4
     -> ORDER BY comments DESC, repo_name 
@@ -338,32 +342,122 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
-### Usage Restrictions and Best Practices
+### 嵌套数组类型
+```json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
+}
+```
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开。以下是一个示例：
+``` sql
+-- 注意：设置 variant_enable_flatten_nested 为 true
+-- 这样可以展开嵌套数组，将数组中的元素以列式存储
+-- 如果设置为 false，嵌套数组会存储为 JSON 类型
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+"file_cache_ttl_seconds" = "0",
+"is_being_synced" = "false",
+"storage_medium" = "hdd",
+"storage_format" = "V2",
+"inverted_index_storage_format" = "V2",
+"light_schema_change" = "true",
+"disable_auto_compaction" = "false",
+"variant_enable_flatten_nested" = "true",
+"enable_single_replica_compaction" = "false",
+"group_commit_interval_ms" = "10000",
+"group_commit_data_bytes" = "134217728"
+);
 
-**There are several limitations when using the VARIANT type:**
-Dynamic columns of VARIANT are nearly as efficient as predefined static columns. When dealing with data like logs, where fields are often added dynamically (such as container labels in Kubernetes), parsing JSON and inferring types can generate additional costs during write operations. Therefore, it's recommended to keep the number of columns for a single import below 1000.
+insert into simple_nested_test values(1, '{
+  "eventId": 1,
+  "firstName": "Name1",
+  "lastName": "Eric",
+  "body": {
+    "phoneNumbers": [
+      {
+        "number": "1111111111",
+        "type": "GSM",
+        "callLimit": 5
+      },
+      {
+        "number": "222222222",
+        "type": "HOME",
+        "callLimit": 3
+      },
+      {
+        "number": "33333333",
+        "callLimit": 2,
+        "type": "WORK"
+      }
+    ]
+  }
+}');
 
-Ensure consistency in types whenever possible. Doris automatically performs compatible type conversions. When a field cannot undergo compatible type conversion, it is uniformly converted to JSONB type. The performance of JSONB columns may degrade compared to columns like int or text.
+-- 设置为展示扩展列的描述信息
+set describe_extend_variant_column = true;  
 
-1. tinyint -> smallint -> int -> bigint, integer types can be promoted following the direction of the arrows.
-2. float -> double, floating-point numbers can be promoted following the direction of the arrow.
-3. text, string type.
-4. JSON, binary JSON type.
+-- 使用 DESC 命令将展示如下的扩展列，v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, v.body.phoneNumbers.type
+-- 是从 v.body.phoneNumbers 中展开的字段
+mysql> desc simple_nested_test;
++-------------------------------+----------------+------+-------+---------+-------+
+| Field                         | Type           | Null | Key   | Default | Extra |
++-------------------------------+----------------+------+-------+---------+-------+
+| k                             | bigint         | Yes  | true  | NULL    |       |
+| v                             | variant        | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
+| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
+| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
+| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
+| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
++-------------------------------+----------------+------+-------+---------+-------+
+8 rows in set (0.00 sec)
 
-When the above types cannot be compatible, they will be transformed into JSON type to prevent loss of type information. If you need to set a strict schema in VARIANT, the VARIANT MAPPING mechanism will be introduced soon.
+-- 使用 lateral view (explode_variant_array) 来展开数组，并查询符合条件的电话号码及事件 ID
+mysql> select v['eventId'], phone_numbers
+    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
+    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
++--------------------------+----------------------------------------------------+
+| element_at(v, 'eventId') | phone_numbers                                      |
++--------------------------+----------------------------------------------------+
+| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
+| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
++--------------------------+----------------------------------------------------+
+2 rows in set (0.02 sec)
+```
 
-**Other limitations include:**
+### 使用限制和最佳实践
 
-- VARIANT columns can only create inverted indexes or bloom filter to speed up query.
-- Using the **RANDOM** mode or [group commit](/docs/data-operate/import/group-commit-manual.md) mode is recommended for higher write performance.
-- Non-standard JSON types such as date and decimal should ideally use static types for better performance, since these types are infered to text type.
-- Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
-- Not supported as primary or sort keys.
-- Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
+**VARIANT 类型的使用有以下限制：**
+VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之类的数据，在这类数据中，经常通过动态属性添加字段（例如 Kubernetes 中的容器标签）。但是解析 JSON 和推断类型会在写入时产生额外开销。因此，我们建议保持单次导入列数在 1000 以下。
+
+尽可能保证类型一致，Doris 会自动进行如下兼容类型转换，当字段无法进行兼容类型转换时会统一转换成 JSONB 类型。JSONB 列的性能与 int、text 等列性能会有所退化。
+
+1. tinyint->smallint->int->bigint，整形可以按照箭头做类型提升
+2. float->double，浮点数按照箭头做类型提升
+3. text，字符串类型
+4. JSON，二进制 JSON 类型
+
+上诉类型无法兼容时，会变成 JSON 类型防止类型信息丢失，如果您需要在 VARIANT 中设置严格的 schema，即将推出 VARIANT MAPPING 机制
+
+其它限制如下：
+
+- VARIANT 列只能创建倒排索引或者 bloom filter 来加速过滤
+- **推荐使用 RANDOM 模式和[Group Commit](../../../data-operate/import/group-commit-manual.md) 模式，写入性能更高效**
+- 日期、decimal 等非标准 JSON 类型会被默认推断成字符串类型，所以尽可能从 VARIANT 中提取出来，用静态类型，性能更好
+- 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
+- 不支持作为主键或者排序键
+- 查询过滤、聚合需要带 cast，存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
 
 ### FAQ
-1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
-Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
+1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
+由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096
+
 
 ### Keywords
 
