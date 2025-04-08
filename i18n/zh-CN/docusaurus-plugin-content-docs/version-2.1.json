@@ -583,9 +583,9 @@
     "message": "基础元素",
     "description": "The label for category Basic Elements in sidebar docs"
   },
-  "sidebar.docs.category.Character Length": {
+  "sidebar.docs.category.Literal": {
     "message": "字面量",
-    "description": "The label for category Character Length in sidebar docs"
+    "description": "The label for category Literal in sidebar docs"
   },
   "sidebar.docs.category.Operators": {
     "message": "操作符",

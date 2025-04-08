@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Numeric Type Character Length",
+    "title": "Numeric Type Literal",
     "language": "en"
 }
 ---

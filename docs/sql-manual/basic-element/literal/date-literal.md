@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Date Type Character Length",
+    "title": "Date Type Literal",
     "language": "en"
 }
 ---

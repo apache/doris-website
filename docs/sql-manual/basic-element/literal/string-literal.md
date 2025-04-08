@@ -1,6 +1,6 @@
 ---
 {
-    "title": "String Type Character Length",
+    "title": "String Type Literal",
     "language": "en"
 }
 ---

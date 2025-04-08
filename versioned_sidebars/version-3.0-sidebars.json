@@ -956,7 +956,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "Character Length",
+                            "label": "Literal",
                             "items": [
                                 "sql-manual/basic-element/literal/numeric-literal",
                                 "sql-manual/basic-element/literal/string-literal",
