@@ -1133,8 +1133,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/months-between",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day"
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub"
                                     ]
                                 },
                                 {
