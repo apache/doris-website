@@ -1,6 +1,6 @@
 ---
 {
-"title": "Java UDF, UDAF, UDTF",
+"title": "Java UDF, UDAF, UDWF, UDTF",
 "language": "zh-CN"
 }
 ---
