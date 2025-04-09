@@ -29,7 +29,6 @@ under the License.
 Formats a number in a format similar to "#,###,###.##", rounds to the specified decimal places, and returns the result as a string.
 
 :::tip
-Note
 This function has been supported since version 2.1.10. 
 :::
 
