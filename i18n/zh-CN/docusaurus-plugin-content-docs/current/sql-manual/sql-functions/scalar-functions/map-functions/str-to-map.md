@@ -28,6 +28,10 @@ under the License.
 
 将字符串转换为 `Map<String, String>` 类型。
 
+:::tip
+该函数自 3.0.6 版本开始支持.
+:::
+
 ## 语法
 
 ```sql
