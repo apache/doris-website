@@ -542,7 +542,7 @@ SELECT v["properties"]["title"] from ${table_name}
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
-- 参考文档：[VARIANT](../../sql-manual/sql-data-types/semi-structured/VARIANT.md)
+- 参考文档：[VARIANT](../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
 
 :::
 
@@ -557,7 +557,7 @@ SELECT v["properties"]["title"] from ${table_name}
 - INET_ATON：获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）
 
 :::note
-参考文档：[IPV6](../../sql-manual/sql-data-types/ip/IPV6)
+参考文档：[IPV6](../../sql-manual/basic-element/sql-data-types/ip/IPV6)
 
 :::
 
