@@ -38,40 +38,40 @@ In Doris, different objects have different restrictions on identifiers, and the 
 
 | Mode               | Identifier Restrictions                             |
 | :----------------- | :------------------------------------- |
-| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9_]*$`             |
-| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9-_\\p{L}]*$` |
+| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9\\-_]*$`             |
+| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9\\-_\\p{L}]*$` |
 
 ### Column Names
 
 | Mode               | Identifier Restrictions                                                   |
 | :----------------- | :----------------------------------------------------------- |
-| Closed Unicode Mode | `^[_a-zA-Z@0-9\\s/][.a-zA-Z0-9_+-/?@#` |
-| Enabled Unicode Mode | `^[_a-zA-Z@0-9\\p{L}][.a-zA-Z0-9_+-/?@#` |
+| Closed Unicode Mode | `^[.a-zA-Z0-9_+\\-/?@#$%^&*\"\\s,:]{1,256}$` |
+| Enabled Unicode Mode | `^[.a-zA-Z0-9_+\\-/?@#$%^&*\"\\s,:\\p{L}]{1,256}$` |
 
 ## OUTFILE Names
 
 | Mode               | Identifier Restrictions                                   |
 | :----------------- | :------------------------------------------- |
-| Closed Unicode Mode | `^[_a-zA-Z][a-zA-Z0-9-_]{0,63}$`             |
-| Enabled Unicode Mode | `^[_a-zA-Z\\p{L}][a-zA-Z0-9-_\\p{L}]{0,63}$` |
+| Closed Unicode Mode | `^[_a-zA-Z][a-zA-Z0-9\\-_]{0,63}$`             |
+| Enabled Unicode Mode | `^[_a-zA-Z\\p{L}][a-zA-Z0-9\\-_\\p{L}]{0,63}$` |
 
 ## User Names
 
 | Mode               | Identifier Restrictions                              |
 | :----------------- | :--------------------------------------- |
-| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9.-_]*$`             |
-| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9.-_\\p{L}]*$` |
+| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9.\\-_]*$`             |
+| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9.\\-_\\p{L}]*$` |
 
 ## LABEL Names
 
 | Mode               | Identifier Restrictions                      |
 | :----------------- | :------------------------------ |
-| Closed Unicode Mode | `^[-_A-Za-z0-9:]{1,128}$`       |
-| Enabled Unicode Mode | `^[-_A-Za-z0-9:\\p{L}]{1,128}$` |
+| Closed Unicode Mode | `^[-_A-Za-z0-9:]{1,N}$`, where `N` is determined by the `label_regex_length` configuration in FE, with a default value of 128. |
+| Enabled Unicode Mode | `^[\\-_A-Za-z0-9:\\p{L}]{1,N}$`, where `N` is determined by the `label_regex_length` configuration in FE, with a default value of 128. |
 
 ## Others
 
 | Mode               | Identifier Restrictions                                  |
 | :----------------- | :------------------------------------------ |
-| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9-_]{0,63}$`             |
-| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9-_\\p{L}]{0,63}$` |
+| Closed Unicode Mode | `^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$`             |
+| Enabled Unicode Mode | `^[a-zA-Z\\p{L}][a-zA-Z0-9\\-_\\p{L}]{0,63}$` |

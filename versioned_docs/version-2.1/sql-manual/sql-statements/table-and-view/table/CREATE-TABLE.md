@@ -77,7 +77,6 @@ columns_definition
     <col_name> <col_type>
       [ KEY ]
       [ <col_aggregate_type> ]
-      [ [ GENERATED ALWAYS ] AS (<col_generate_expression>) ]
       [ [NOT] NULL ]
       [ AUTO_INCREMENT(<col_auto_increment_start_value>) ]
       [ DEFAULT <col_default_value> ]
@@ -247,9 +246,6 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 ### Column Default Value Related Parameters
 
-**[ GENERATED ALWAYS ] AS (<col_generate_expression>)**
-
-> Generated column. Uses the columns before the current column to generate data for the current column through the expression `<col_generate_expression>`. A generated column is a special type of database table column whose value is calculated from the values of other columns, rather than being directly inserted or updated by the user. This feature supports pre-calculating the results of expressions and storing them in the database, suitable for scenarios that require frequent querying or complex calculations.
 
 **AUTO_INCREMENT(<col_auto_increment_start_value>)**
 
@@ -484,21 +480,6 @@ CREATE TABLE t3
   c2 INT
 )
 UNIQUE KEY(c1)
-DISTRIBUTED BY HASH(c1)
-PROPERTIES (
-  'replication_num' = '1'
-);
-```
-
-**Using Generated Columns**
-
-```sql
-CREATE TABLE t4
-(
-  c1 INT,
-  c2 INT GENERATED ALWAYS AS (c1 + 1)
-)
-DUPLICATE KEY(c1)
 DISTRIBUTED BY HASH(c1)
 PROPERTIES (
   'replication_num' = '1'

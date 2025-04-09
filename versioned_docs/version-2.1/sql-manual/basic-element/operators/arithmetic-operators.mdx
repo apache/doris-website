@@ -46,12 +46,12 @@ Unary arithmetic operators return the same data type as the parameter numeric da
         <td>Unary operator. It represents taking the positive or negative value of an expression. Equivalent to 0 + a and 0 - a</td>
         <td>
             <pre>
-SELECT +(5 + 3), -(5 + 3);
-+---------+---------------+
-| (5 + 3) | (0 - (5 + 3)) |
-+---------+---------------+
-| 8       | -8            |
-+---------+---------------+
+            <div>SELECT +(5 + 3), -(5 + 3);</div>
+            <div>+---------+---------------+</div>
+            <div>| (5 + 3) | (0 - (5 + 3)) |</div>
+            <div>+---------+---------------+</div>
+            <div>| 8       | -8            |</div>
+            <div>+---------+---------------+</div>
             </pre>
         </td>
     </tr>
@@ -59,14 +59,14 @@ SELECT +(5 + 3), -(5 + 3);
         <td>+ -</td>
         <td>Binary operator. It represents adding or subtracting two expressions.</td>
         <td>
-            <pre>
-SELECT 5 + 3, 5 - 3;
-+---------+---------+
-| (5 + 3) | (5 - 3) |
-+---------+---------+
-| 8       | 2       |
-+---------+---------+
-            </pre>
+        <pre>
+            <div>SELECT 5 + 3, 5 - 3;</div>
+            <div>+---------+---------+</div>
+            <div>| (5 + 3) | (5 - 3) |</div>
+            <div>+---------+---------+</div>
+            <div>| 8       | 2       |</div>
+            <div>+---------+---------+</div>
+        </pre>
         </td>
     </tr>
     <tr>
@@ -74,12 +74,12 @@ SELECT 5 + 3, 5 - 3;
         <td>Binary operator. It represents multiplying or dividing two expressions. Special case: when the second argument of division is 0, it returns NULL</td>
         <td>
             <pre>
-SELECT 5 * 3, 5 / 3;
-+---------+-----------------------------------------+
-| (5 * 3) | (cast(5 as DOUBLE) / cast(3 as DOUBLE)) |
-+---------+-----------------------------------------+
-| 15      | 1.6666666666666667                      |
-+---------+-----------------------------------------+
+                <div>SELECT 5 * 3, 5 / 3;</div>
+                <div>+---------+-----------------------------------------+</div>
+                <div>| (5 * 3) | (cast(5 as DOUBLE) / cast(3 as DOUBLE)) |</div>
+                <div>+---------+-----------------------------------------+</div>
+                <div>| 15      | 1.6666666666666667                      |</div>
+                <div>+---------+-----------------------------------------+</div>
             </pre>
         </td>
     </tr>
@@ -88,12 +88,12 @@ SELECT 5 * 3, 5 / 3;
         <td>Binary operator. It represents integer division of two expressions. Special case: when the second argument is 0, it returns NULL</td>
         <td>
             <pre>
-SELECT 5 DIV 3, 9 DIV 0;
-+-----------+-----------+
-| (5 DIV 3) | (9 DIV 0) |
-+-----------+-----------+
-| 1         | NULL      |
-+-----------+-----------+
+                <div>SELECT 5 DIV 3, 9 DIV 0;</div>
+                <div>+-----------+-----------+</div>
+                <div>| (5 DIV 3) | (9 DIV 0) |</div>
+                <div>+-----------+-----------+</div>
+                <div>| 1         | NULL      |</div>
+                <div>+-----------+-----------+</div>
             </pre>
         </td>
     </tr>
@@ -102,12 +102,12 @@ SELECT 5 DIV 3, 9 DIV 0;
         <td>Binary operator. It represents the remainder of two expressions. Special case: when the second argument is 0, it returns NULL</td>
         <td>
             <pre>
-SELECT 5 % 3, 9 % 0;
-+---------+---------+
-| (5 % 3) | (9 % 0) |
-+---------+---------+
-| 2       | NULL    |
-+---------+---------+
+                <div>SELECT 5 % 3, 9 % 0;</div>
+                <div>+---------+---------+</div>
+                <div>| (5 % 3) | (9 % 0) |</div>
+                <div>+---------+---------+</div>
+                <div>| 2       | NULL    |</div>
+                <div>+---------+---------+</div>
             </pre>
         </td>
     </tr>

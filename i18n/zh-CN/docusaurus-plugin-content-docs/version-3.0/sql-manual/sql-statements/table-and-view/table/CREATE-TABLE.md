@@ -61,9 +61,9 @@ CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     ]
     [ <roll_up_definition> ]
     [ PROPERTIES (
-          -- Table property
+          -- 表属性
           <table_property>
-          -- Additional table properties
+          -- 其他表属性
           [ , ... ]) 
     ]
 ```
@@ -72,7 +72,7 @@ CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
 
 ```sql
 columns_definition
-  : -- Column definition
+  : -- 列定义
     <col_name> <col_type>
       [ KEY ]
       [ <col_aggregate_type> ]
@@ -82,24 +82,24 @@ columns_definition
       [ DEFAULT <col_default_value> ]
       [ ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>) ]
       [ COMMENT '<col_comment>' ]
-    -- Additional column definitions
+    -- 其他列定义
     [ , <col_name> <col_type> [ ... ] ]
 ```
 
 ```sql    
 indexes_definition
-  : -- Index definition
+  : -- 索引定义
     INDEX [ IF NOT EXISTS ]
       <index_name> (<index_cols>)
       [ USING <index_type> ]
       [ PROPERTIES (
-            -- Table property
+            -- 表属性
             <index_property>
-            -- Additional table properties
+            -- 其他表属性
             [ , ... ]) 
       ]
       [ COMMENT '<index_comment>' ]
-    -- Additional index definitions
+    -- 其他索引定义
     [ , <index_name> (<index_cols>) [ ... ] ]
 ```
 
@@ -111,9 +111,9 @@ partitions_definition
   | PARTITION BY <partition_type>
     (<partition_cols>)
     (
-        -- Partition definition
+        -- 分区定义
         <one_partition_definition>
-        -- Additional partition definition
+        -- 其他分区定义
         [ , ... ]
     )
 ```
@@ -138,10 +138,10 @@ partitions_definition
 ```sql      
 roll_up_definition
   : ROLLUP (
-        -- Rollup definition
+        -- 聚合定义
         <rollup_name> (<rollup_cols>)
         [ DUPLICATE KEY (<duplicate_cols>) ]
-        -- Additional rollup deifinition
+        -- 其他聚合定义
         [ , <rollup_name> (<rollup_cols>) [ ... ] ]
     )
 ```
@@ -169,9 +169,9 @@ CREATE
     ]
     [ <rollUpDefinition> ]
     [ PROPERTIES (
-          -- Table property
+          -- 表属性
           <table_property>
-          -- Additional table properties
+          -- 其他表属性
           [ , ... ]) 
     ]
     AS <query>

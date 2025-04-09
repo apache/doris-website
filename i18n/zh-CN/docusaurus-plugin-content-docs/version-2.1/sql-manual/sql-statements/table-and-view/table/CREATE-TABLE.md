@@ -61,9 +61,9 @@ CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     ]
     [ <roll_up_definition> ]
     [ PROPERTIES (
-          -- Table property
+          -- 表属性
           <table_property>
-          -- Additional table properties
+          -- 其他表属性
           [ , ... ]) 
     ]
 ```
@@ -72,34 +72,33 @@ CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
 
 ```sql
 columns_definition
-  : -- Column definition
+  : -- 列定义
     <col_name> <col_type>
       [ KEY ]
       [ <col_aggregate_type> ]
-      [ [ GENERATED ALWAYS ] AS (<col_generate_expression>) ]
       [ [NOT] NULL ]
       [ AUTO_INCREMENT(<col_auto_increment_start_value>) ]
       [ DEFAULT <col_default_value> ]
       [ ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>) ]
       [ COMMENT '<col_comment>' ]
-    -- Additional column definitions
+    -- 其他列定义
     [ , <col_name> <col_type> [ ... ] ]
 ```
 
 ```sql    
 indexes_definition
-  : -- Index definition
+  : -- 索引定义
     INDEX [ IF NOT EXISTS ]
       <index_name> (<index_cols>)
       [ USING <index_type> ]
       [ PROPERTIES (
-            -- Table property
+            -- 表属性
             <index_property>
-            -- Additional table properties
+            -- 其他表属性
             [ , ... ]) 
       ]
       [ COMMENT '<index_comment>' ]
-    -- Additional index definitions
+    -- 其他索引定义
     [ , <index_name> (<index_cols>) [ ... ] ]
 ```
 
@@ -111,9 +110,9 @@ partitions_definition
   | PARTITION BY <partition_type>
     (<partition_cols>)
     (
-        -- Partition definition
+        -- 分区定义
         <one_partition_definition>
-        -- Additional partition definition
+        -- 其他分区定义
         [ , ... ]
     )
 ```
@@ -138,10 +137,10 @@ partitions_definition
 ```sql      
 roll_up_definition
   : ROLLUP (
-        -- Rollup definition
+        -- 聚合定义
         <rollup_name> (<rollup_cols>)
         [ DUPLICATE KEY (<duplicate_cols>) ]
-        -- Additional rollup deifinition
+        -- 其他聚合定义
         [ , <rollup_name> (<rollup_cols>) [ ... ] ]
     )
 ```
@@ -169,9 +168,9 @@ CREATE
     ]
     [ <rollUpDefinition> ]
     [ PROPERTIES (
-          -- Table property
+          -- 表属性
           <table_property>
-          -- Additional table properties
+          -- 其他表属性
           [ , ... ]) 
     ]
     AS <query>
@@ -248,9 +247,6 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 ### 列的默认值相关参数
 
-**[ GENERATED ALWAYS ] AS (<col_generate_expression>)**
-
-> 生成列。使用当前列之前的列，通过表达式 <col_generate_expression> ，对当前列生成数据。生成列是一种特殊的数据库表列，其值由其他列的值计算而来，而不是直接由用户插入或更新。该功能支持预先计算表达式的结果，并存储在数据库中，适用于需要频繁查询或进行复杂计算的场景。
 
 **AUTO_INCREMENT(<col_auto_increment_start_value>)**
 
@@ -488,20 +484,6 @@ PROPERTIES (
 )
 ```
 
-**使用生成列**
-
-```sql
-CREATE TABLE t4
-(
-  c1 INT,
-  c2 INT GENERATED ALWAYS AS (c1 + 1)
-)
-DUPLICATE KEY(c1)
-DISTRIBUTED BY HASH(c1)
-PROPERTIES (
-  'replication_num' = '1'
-)
-```
 
 **指定列的默认值**
 
