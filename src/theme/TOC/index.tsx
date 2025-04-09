@@ -8,6 +8,7 @@ import PdfIcon from '@site/static/images/toc-icon/pdf.svg';
 import GithubIcon from '@site/static/images/toc-icon/github.svg';
 import SlackIconUrl from '@site/static/images/toc-icon/slack.png';
 import SlackColorIconUrl from '@site/static/images/toc-icon/slack-color.png';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import ConcatIcon from '@site/static/images/toc-icon/concat.svg';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS } from '@site/src/constant/common';
@@ -36,6 +37,7 @@ export function downloadFile(url: string, filename: string) {
 
 export default function TOC({ className, ...props }: Props): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
+    const isBrowser = useIsBrowser();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const DEFAULT_VERSION = '2.1';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
@@ -70,7 +72,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
 
     return (
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>
-            <div>
+            <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
                 <Link to={'/'}>
                     <div
                         className="toc-icon-content"
@@ -121,9 +123,9 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                         onMouseLeave={() => setIsHoverSlack(false)}
                     >
                         {isHoverSlack ? (
-                            <img style={{margin:'2px'}} src={SlackColorIconUrl} width={16} alt="slack icon" />
+                            <img style={{ margin: '2px' }} src={SlackColorIconUrl} width={16} alt="slack icon" />
                         ) : (
-                            <img style={{margin:'2px'}} src={SlackIconUrl} width={16} alt="slack icon" />
+                            <img style={{ margin: '2px' }} src={SlackIconUrl} width={16} alt="slack icon" />
                         )}
                         <span>Chat on Slack</span>
                     </Link>
