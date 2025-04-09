@@ -37,7 +37,6 @@ JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path �
 * JSON_EXTRACT_STRING 返回 STRING 类型
 
 :::tip
-提示
 JSON_EXTRACT_NO_QUOTES 函数自 3.0.6 版本开始支持.
 :::
 

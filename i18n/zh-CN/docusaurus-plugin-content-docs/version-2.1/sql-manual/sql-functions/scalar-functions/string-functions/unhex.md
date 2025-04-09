@@ -30,7 +30,6 @@ under the License.
 `unhex_null` 函数与`unhex`函数作用一致。但是当传入的参数是无效值时，将返回`NULL`。
 
 :::tip
-提示
 unhex_null 函数自 2.1.10 版本开始支持.
 :::
 

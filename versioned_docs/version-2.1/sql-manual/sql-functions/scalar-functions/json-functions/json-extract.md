@@ -38,7 +38,6 @@ JSON_EXTRACT is a series of functions that extract the field specified by json_p
 * JSON_EXTRACT_STRING returns the STRING type.
 
 :::tip
-Note
 The `JSON_EXTRACT_NO_QUOTES` function has been supported since version 2.1.10. 
 :::
 

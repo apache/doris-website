@@ -30,7 +30,6 @@ The `unhex` function is used to convert a hexadecimal string back into the origi
 The `unhex_null` function has the same effect as the `unhex` function. However, when an invalid value is passed as a parameter, it will return NULL.
 
 :::tip
-Note
 The `unhex_null` function has been supported since version 2.1.10. 
 :::
 
