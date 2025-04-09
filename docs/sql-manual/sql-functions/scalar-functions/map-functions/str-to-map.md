@@ -28,6 +28,10 @@ under the License.
 
 Constructs a `Map<String, String>` from a string.
 
+:::tip
+This function is supported since version 3.0.6.
+:::
+
 ## Syntax
 
 ```sql

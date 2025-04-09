@@ -25,7 +25,12 @@ under the License.
 -->
 
 ## Description
+
 The `MONTHS_BETWEEN` function calculates the floating-point number of months between two dates. It receives two date arguments and a optional boolean argument.
+
+:::tip
+This function is supported since version 3.0.6.
+:::
 
 **Note:**
 When both `<enddate>` and `<startdate>` are the last day of their respective months, the function applies special handling.It returns the full month difference without considering the fractional part based on days. This ensures consistency when comparing the end of one month to the end of another.

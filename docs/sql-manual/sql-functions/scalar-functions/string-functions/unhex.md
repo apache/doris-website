@@ -29,6 +29,10 @@ under the License.
 The `unhex` function is used to convert a hexadecimal string back into the original string. It converts every two hexadecimal characters into one byte. When an invalid value is passed as a parameter, it will return empty string.
 The `unhex_null` function has the same effect as the `unhex` function. However, when an invalid value is passed as a parameter, it will return NULL.
 
+:::tip
+`unhex_null` function is supported since version 3.0.6. 
+:::
+
 ## Syntax
 
 ```sql

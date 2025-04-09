@@ -38,6 +38,10 @@ JSON_EXTRACT is a series of functions that extract the field specified by json_p
 * JSON_EXTRACT_DOUBLE returns the DOUBLE type.
 * JSON_EXTRACT_STRING returns the STRING type.
 
+:::tip
+The `JSON_EXTRACT_NO_QUOTES` function is supported since version 3.0.6. 
+:::
+
 ## Alias
 * JSONB_EXTRACT is the same as JSON_EXTRACT.
 * JSON_EXTRACT_NO_QUOTES is the same as JSON_EXTRACT_NO_QUOTES.

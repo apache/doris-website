@@ -25,9 +25,12 @@ under the License.
 -->
 
 ## 描述
-> 从版本 3.0.6 开始支持
 
 XPATH_STRING 函数用于解析 XML 字符串并返回第一个匹配 [XPath](https://www.w3.org/TR/xpath-10/) 表达式的 XML 节点。
+
+:::tip
+该函数自 3.0.6 版本开始支持.
+:::
 
 ## 语法
 

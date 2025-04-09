@@ -25,9 +25,12 @@ under the License.
 -->
 
 ## 描述
-> 从版本 3.0.6 开始支持
 
 使用指定的 [printf](https://pubs.opengroup.org/onlinepubs/009695399/functions/fprintf.html) 格式字符串和参数返回格式化后的字符串。
+
+:::tip
+该函数自 3.0.6 版本开始支持.
+:::
 
 ## 语法
 
