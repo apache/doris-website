@@ -27,6 +27,7 @@ under the License.
 ## 描述
 JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path 指定的字段，根据要提取的字段类型不同提供不同的系列函数。
 * JSON_EXTRACT 对 VARCHAR 类型的 json string 返回 VARCHAR 类型
+* JSON_EXTRACT_NO_QUOTES 对 VARCHAR 类型的 json string 返回 VARCHAR 类型, 如果 json 字段值为 string，则将去掉双引号。
 * JSON_EXTRACT_ISNULL 返回是否为 json null 的 BOOLEAN 类型
 * JSON_EXTRACT_BOOL 返回 BOOLEAN 类型
 * JSON_EXTRACT_INT 返回 INT 类型
@@ -35,8 +36,13 @@ JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path �
 * JSON_EXTRACT_DOUBLE 返回 DOUBLE 类型
 * JSON_EXTRACT_STRING 返回 STRING 类型
 
+:::tip
+JSON_EXTRACT_NO_QUOTES 函数自 2.1.10 版本开始支持.
+:::
+
 ## 别名
 * JSONB_EXTRACT 同 `JSON_EXTRACT`
+* JSON_EXTRACT_NO_QUOTES 同 `JSON_EXTRACT_NO_QUOTES`
 * JSONB_EXTRACT_ISNULL 同 `JSON_EXTRACT_ISNULL`
 * JSONB_EXTRACT_BOOL 同 `JSON_EXTRACT_BOOL`
 * JSONB_EXTRACT_INT 同 `JSON_EXTRACT_INT`
@@ -48,6 +54,9 @@ JSON_EXTRACT 是一系列函数，从 JSON 类型的数据中提取 json_path �
 ## 语法
 ```sql
 JSON_EXTRACT (<json_str>, <path>[, path] ...)
+```
+```sql
+JSON_EXTRACT_NO_QUOTES (<json_str>, <path>[, path] ...)
 ```
 ```sql
 JSON_EXTRACT_ISNULL (<json_str>, <path>)
@@ -133,6 +142,16 @@ SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 +-----------------------------------------------------------------+
 | [null,"doris"]                                                  |
 +-----------------------------------------------------------------+
+```
+```sql
+SELECT json_extract_no_quotes('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++------------------------------------------------------------------+
+| json_extract_no_quotes('{"id": 123, "name": "doris"}', '$.name') |
++------------------------------------------------------------------+
+| doris                                                            |
++------------------------------------------------------------------+
 ```
 ```sql
 SELECT JSON_EXTRACT_ISNULL('{"id": 123, "name": "doris"}', '$.id');
