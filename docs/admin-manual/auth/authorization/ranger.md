@@ -97,6 +97,19 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 ![ Workload Group Permissions](/images/ranger/group1.png)
 
+#### Compute Group Permissions
+Equivalent to the internal Doris authorization statement `grant usage_priv on compute group 'group1' to user1`;
+- The compute group option can be found in the dropdown box at the same level as the catalog.
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault Permissions
+Equivalent to the internal Doris authorization statement `grant usage_priv on storage vault 'vault1' to user1`;
+- The storage vault option can be found in the dropdown box at the same level as the catalog.
+
+![storage vault](/images/ranger/storage-vault.png)
+
+
 ### Row-Level Permissions Example
 
 > Supported in version 2.1.3

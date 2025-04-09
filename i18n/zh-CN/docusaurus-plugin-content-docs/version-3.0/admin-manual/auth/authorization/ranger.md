@@ -97,6 +97,18 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 ![group1](/images/ranger/group1.png)
 
+#### Compute Group 权限
+相当于 Doris 内部授权语句的 `grant usage_priv on compute group 'group1' to user1`;
+- catalog 同级下拉框可以找到 compute group 选项
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault 权限
+相当于 Doris 内部授权语句的 `grant usage_priv on storage vault 'vault1' to user1`;
+- catalog 同级下拉框可以找到 storage vault 选项
+
+![storage vault](/images/ranger/storage-vault.png)
+
 ### 行权限示例
 
 > 2.1.3 版本支持
