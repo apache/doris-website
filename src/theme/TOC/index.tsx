@@ -70,7 +70,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
 
     return (
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>
-            <div>
+            <div style={location && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
                 <Link to={'/'}>
                     <div
                         className="toc-icon-content"
@@ -121,9 +121,9 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                         onMouseLeave={() => setIsHoverSlack(false)}
                     >
                         {isHoverSlack ? (
-                            <img style={{margin:'2px'}} src={SlackColorIconUrl} width={16} alt="slack icon" />
+                            <img style={{ margin: '2px' }} src={SlackColorIconUrl} width={16} alt="slack icon" />
                         ) : (
-                            <img style={{margin:'2px'}} src={SlackIconUrl} width={16} alt="slack icon" />
+                            <img style={{ margin: '2px' }} src={SlackIconUrl} width={16} alt="slack icon" />
                         )}
                         <span>Chat on Slack</span>
                     </Link>
