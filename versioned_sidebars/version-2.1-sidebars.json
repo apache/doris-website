@@ -827,7 +827,8 @@
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
                 "faq/bi-faq",
-                "faq/correctness-faq"
+                "faq/correctness-faq",
+                "faq/routineload-faq"
             ]
         },
         {
