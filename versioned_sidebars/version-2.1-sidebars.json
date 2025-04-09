@@ -1034,7 +1034,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/printf",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string"
                                     ]
                                 },

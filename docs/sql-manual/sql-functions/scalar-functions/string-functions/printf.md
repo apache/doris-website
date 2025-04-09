@@ -28,6 +28,10 @@ under the License.
 
 Returns a formatted string using the specified [printf](https://pubs.opengroup.org/onlinepubs/009695399/functions/fprintf.html) string and arguments.
 
+:::tip
+This function is supported since version 3.0.6.
+:::
+
 ## Syntax
 
 ```sql
