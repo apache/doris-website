@@ -88,7 +88,11 @@ under the License.
    ```
    
    以上命令启动 FDB 服务，使集群工作并获取 FDB 集群连接字符串，后续可以用于配置 MetaService。
-
+   
+   :::caution 注意
+   fdb_ctl.sh 脚本中的 clean 命令会清除所有 fdb 元数据信息，可能导致数据丢失，严禁在生产环境中使用！
+   :::
+   
 ## 第 2 步：安装 S3 或 HDFS 服务（可选）
 
 Doris 的存算分离模式依赖于 S3 或 HDFS 服务来存储数据，如果您已经有相关服务，直接使用即可。
