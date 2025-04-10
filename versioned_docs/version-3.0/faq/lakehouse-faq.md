@@ -244,6 +244,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     It is because the Doris built-in `libz.a` conflicts with the system environment's `libz.so`. To resolve this issue, first execute `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH`, and then restart the BE process.
 
+12. When inserting data into Hive, an error occurred as `HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`.
+
+    Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
