@@ -68,10 +68,16 @@ under the License.
 
 - `org.apache.hive.hcatalog.data.JsonSerDe` 格式的 Hive 表（自3.0.4 版本支持）
 
-    
+  1. 支持普通类型和复杂类型。
+  2. 不支持 `timestamp.formats` SERDEPROPERTIES
+
 - `org.openx.data.jsonserde.JsonSerDe` 格式的 Hive 表（自3.0.6 版本支持）
-    
-    
+  
+  1. 支持普通类型和复杂类型。
+  2. SERDEPROPERTIES: 只支持 `ignore.malformed.json` 且行为与该JsonSerDe一致, 其他 SERDEPROPERTIES 不生效。 
+  3. 不支持`Using Arrays`(类似于Text/CSV, 将所有列的数据放一个数组中)。
+  4. 不支持Promoting a Scalar to an Array (提升标量返回一个的单元素数组)。
+  5. 可以通过`set read_hive_json_in_one_column = true`, 将一整行json数据都放到第一列中，要求第一列的数据类型为String.
 
 ### 导入
 
