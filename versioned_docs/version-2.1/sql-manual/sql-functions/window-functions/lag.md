@@ -26,7 +26,7 @@ LAG ( <expr>, <offset>, <default> )
 | ------------------- |-----------------------------------------------------------------------------------------|
 | expr                | The expression whose value is to be retrieved                                           |
 | offset              | Number of rows to look ahead. |
-| default             | Value to return when the offset goes beyond window bounds. Default is NULL     |
+| default             | Value to return when the offset goes beyond window bounds.    |
 
 ## Return Value
 

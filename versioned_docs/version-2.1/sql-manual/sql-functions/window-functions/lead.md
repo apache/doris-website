@@ -25,8 +25,8 @@ LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 | Parameter           | Description                                                                                                                                               |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | expr                | The expression whose value needs to be retrieved                                                                                                          |
-| offset              | Optional. Number of rows to look backward. Default is 1.|
-| default             | Optional. Default value to return when the offset goes beyond the window range. Default is NULL                                                           |
+| offset              | Number of rows to look backward. |
+| default             | Default value to return when the offset goes beyond the window range.                                                            |
 
 ## Return Value
 
