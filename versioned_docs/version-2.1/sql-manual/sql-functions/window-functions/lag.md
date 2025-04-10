@@ -25,8 +25,8 @@ LAG ( <expr>, <offset>, <default> )
 | Parameter           | Description                                                                             |
 | ------------------- |-----------------------------------------------------------------------------------------|
 | expr                | The expression whose value is to be retrieved                                           |
-| offset              | Number of rows to look backward. When negative, behaves like LEAD function |
-| default             | Value to return when the offset goes beyond window bounds.     |
+| offset              | Number of rows to look ahead. |
+| default             | Value to return when the offset goes beyond window bounds. Default is NULL     |
 
 ## Return Value
 
