@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Key type, not as a Value column. When using the BITMAP type in an Aggregate table, the table must be created with the aggregate type BITMAP_UNION. Users do not need to specify length and default values. The length is controlled by the system based on the degree of data aggregation. For more documentation, refer to [Bitmap](../../../sql-manual/sql-data-types/aggregate/BITMAP.md).
+The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Key type, not as a Value column. When using the BITMAP type in an Aggregate table, the table must be created with the aggregate type BITMAP_UNION. Users do not need to specify length and default values. The length is controlled by the system based on the degree of data aggregation. For more documentation, refer to [Bitmap](../../../sql-manual/basic-element/sql-data-types/aggregate/BITMAP).
 
 ## Usage Example
 

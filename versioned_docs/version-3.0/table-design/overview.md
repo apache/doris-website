@@ -26,7 +26,7 @@ under the License.
 
 ## Creating tables
 
-Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. You can also use the [CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) or [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) clause to derive the table definition from another table.
+Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. You can also use the [CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) or [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md) clause to derive the table definition from another table.
 
 ## Table name
 

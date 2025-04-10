@@ -503,8 +503,12 @@
     "message": "视图",
     "description": "The label for category View in sidebar docs"
   },
-  "sidebar.docs.category.Materialized View": {
-    "message": "物化视图",
+  "sidebar.docs.category.Synchronous Materialized View": {
+    "message": "同步物化视图",
+    "description": "The label for category Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Asynchronous Materialized View": {
+    "message": "异步物化视图",
     "description": "The label for category Materialized View in sidebar docs"
   },
   "sidebar.docs.category.Data and Status Management": {
@@ -575,9 +579,25 @@
     "message": "系统信息和帮助",
     "description": "The label for category Info System and Help in sidebar docs"
   },
-  "sidebar.docs.category.SQL Types": {
+  "sidebar.docs.category.Basic Elements": {
+    "message": "基础元素",
+    "description": "The label for category Basic Elements in sidebar docs"
+  },
+  "sidebar.docs.category.Literal": {
+    "message": "字面量",
+    "description": "The label for category Literal in sidebar docs"
+  },
+  "sidebar.docs.category.Operators": {
+    "message": "操作符",
+    "description": "The label for category Operators in sidebar docs"
+  },
+  "sidebar.docs.category.Conditional Operators": {
+    "message": "条件操作符",
+    "description": "The label for category Conditional Operators in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Data Types": {
     "message": "SQL 类型",
-    "description": "The label for category Data Types in sidebar docs"
+    "description": "The label for category SQL Data Types in sidebar docs"
   },
   "sidebar.docs.category.Aggregation Data Type": {
     "message": "聚合类型",
