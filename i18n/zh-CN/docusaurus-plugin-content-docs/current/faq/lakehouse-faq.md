@@ -272,6 +272,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
+12. 在插入 hive 数据的时候报错：`HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`。
+
+    因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
