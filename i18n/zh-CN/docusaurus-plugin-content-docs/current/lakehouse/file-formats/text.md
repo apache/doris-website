@@ -64,13 +64,18 @@ under the License.
 
 ## JSON
 
-* Catalog
+### Catalog
 
-  支持读取 `org.apache.hive.hcatalog.data.JsonSerDe` 格式的 Hive 表。（3.0.4 版本支持）
+- `org.apache.hive.hcatalog.data.JsonSerDe` 格式的 Hive 表（自3.0.4 版本支持）
 
-* 导入
+    
+- `org.openx.data.jsonserde.JsonSerDe` 格式的 Hive 表（自3.0.6 版本支持）
+    
+    
 
-  导入功能支持的 JSON 格式，详见导入相关文档。
+### 导入
+
+导入功能支持的 JSON 格式，详见导入相关文档。
 
 ## 字符集
 
