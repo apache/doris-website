@@ -88,8 +88,9 @@ This section provides step-by-step instructions for configuring, deploying, and 
    ```
       This command starts the FDB service, bringing the cluster online and obtaining the FDB cluster connection string, which can be used for configuring MetaService.
       
-   #### Note:
+   :::caution Note
    The 'clean' command in the fdb_ctl.sh script will clear all FDB metadata, which may result in data loss. It is strictly prohibited to use this command in production environments!
+   :::
 
 ## Step 2: Install S3/HDFS Service (Optional)
 
