@@ -31,20 +31,26 @@ under the License.
 
 This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)
 
-grammar:
+## Syntax
 
 ```sql
-SHOW FRONTEND CONFIG [LIKE "pattern"];
+SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
 
-The columns in the results have the following meanings:
+## Optional Parameters
+**`<pattern>`**
+> A string that can contain ordinary characters and wildcards.
 
-1. Key: Configuration item name
-2. Value: Configuration item value
-3. Type: Configuration item type
-4. IsMutable: Whether it can be set by ADMIN SET CONFIG command
-5. MasterOnly: Is it only applicable to Master FE
-6. Comment: Configuration item description
+
+## Return Values
+| Column name | Describe                                            |
+|-------------|-----------------------------------------------------|
+| Value       | Configuration item value                            |
+| Type        | Configuration item type                             |
+| IsMutable   | Whether it can be set by `ADMIN SET CONFIG` command |
+| MasterOnly  | Is it only applicable to Master FE                  |
+| Comment     | Configuration item description                      |
+
 
 ## Example
 
@@ -57,18 +63,13 @@ The columns in the results have the following meanings:
 2. Use the like predicate to search the configuration of the current Fe node
 
    ```sql
-   mysql> SHOW FRONTEND CONFIG LIKE '%check_java_version%';
-   +--------------------+-------+---------+---------- -+------------+---------+
-   | Key | Value | Type | IsMutable | MasterOnly | Comment |
-   +--------------------+-------+---------+---------- -+------------+---------+
-   | check_java_version | true | boolean | false | false | |
-   +--------------------+-------+---------+---------- -+------------+---------+
-   1 row in set (0.01 sec)
-   ```
-
-## Keywords
-
-SHOW, CONFIG
-
-## Best Practice
+    SHOW FRONTEND CONFIG LIKE '%check_java_version%';
+    ```
+    ```text
+    +--------------------+-------+---------+-----------+------------+---------+
+    | Key                | Value | Type    | IsMutable | MasterOnly | Comment |
+    +--------------------+-------+---------+-----------+------------+---------+
+    | check_java_version | true  | boolean | false     | false      |         |
+    +--------------------+-------+---------+-----------+------------+---------+
+    ```
 

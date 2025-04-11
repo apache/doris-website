@@ -1,7 +1,7 @@
 ---
 {
-   "title": "SHOW FRONTEND CONFIG",
-   "language": "en"
+    "title": "SHOW FRONTEND CONFIG",
+    "language": "zh-CN"
 }
 ---
 
@@ -27,42 +27,42 @@ under the License.
 
 
 
-## Description
 
-This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)
+## 描述
 
-## Syntax
+该语句用于展示当前集群的配置（当前仅支持展示 FE 的配置项）
+
+## 语法：
 
 ```sql
 SHOW FRONTEND CONFIG [LIKE "<pattern>"];
 ```
 
-## Optional Parameters
+## 可选参数
 **`<pattern>`**
-> A string that can contain ordinary characters and wildcards.
+   > 可以包含普通字符和通配符的字符串
 
+## 返回值
 
-## Return Values
-| Column name | Describe                                            |
-|-------------|-----------------------------------------------------|
-| Value       | Configuration item value                            |
-| Type        | Configuration item type                             |
-| IsMutable   | Whether it can be set by `ADMIN SET CONFIG` command |
-| MasterOnly  | Is it only applicable to Master FE                  |
-| Comment     | Configuration item description                      |
+| 列名         | 说明                             |
+|------------|--------------------------------|
+| Value      | 配置项值                           |
+| Type       | 配置项类型                          |
+| IsMutable  | 是否可以通过 `ADMIN SET CONFIG` 命令设置 |
+| MasterOnly | 是否仅适用于 Master FE               |
+| Comment    | 配置项说明                          |
 
+## 示例
 
-## Example
-
-1. View the configuration of the current FE node
+1. 查看当前 FE 节点的配置
 
    ```sql
    SHOW FRONTEND CONFIG;
    ```
 
-2. Use the like predicate to search the configuration of the current Fe node
+2. 使用 like 谓词搜索当前 Fe 节点的配置
 
-   ```sql
+    ```sql
     SHOW FRONTEND CONFIG LIKE '%check_java_version%';
     ```
     ```text
