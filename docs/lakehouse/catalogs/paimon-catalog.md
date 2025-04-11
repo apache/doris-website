@@ -192,6 +192,34 @@ CREATE CATALOG paimon_dlf PROPERTIES (
 );
 ```
 
+### Paimon on Google Dataproc Metastore
+
+```sql
+CREATE CATALOG `paimon_gms` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "hms",
+    "hive.metastore.uris" = "thrift://ip:port",
+    "warehouse" = "gs://bucket/warehouse",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "region",
+    "s3.endpoint" = "storage.googleapis.com"
+);
+```
+
+### Paimon on Google Cloud Storage
+
+```sql
+CREATE CATALOG `paimon_gcs` PROPERTIES (
+    "type" = "paimon",
+    "warehouse" = "gs://bucket/warehouse",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "region",
+    "s3.endpoint" = "storage.googleapis.com"
+);
+```
+
 ## Query Operations
 
 ### Basic Query
