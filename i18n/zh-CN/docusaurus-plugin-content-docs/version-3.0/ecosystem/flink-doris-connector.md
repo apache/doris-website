@@ -223,7 +223,7 @@ Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持�
 ##### Thrift 方式
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -231,18 +231,18 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '127.0.0.1:8030',  -- Fe的host:HttpPort
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 ##### ArrowFlightSQL 方式
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -250,14 +250,14 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '{fe.conf:http_port}', 
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'source.use-flight-sql' = 'true',
       'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 #### 使用 DataStream API 读取数据
@@ -268,7 +268,7 @@ SELECT * FROM students;
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 DorisOptions option = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("")
         .build();
@@ -327,7 +327,7 @@ CREATE TABLE student_sink (
     WITH (
       'connector' = 'doris',
       'fenodes' = '10.16.10.6:28737',
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = 'password',
       'sink.label-prefix' = 'doris_label'
@@ -409,7 +409,7 @@ properties.setProperty("format", "csv");
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder
         .setFenodes("10.16.10.6:28737")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("");
 DorisExecutionOptions.Builder executionBuilder = DorisExecutionOptions.builder();
@@ -470,7 +470,7 @@ props.setProperty("format", "json");
 props.setProperty("read_json_by_line", "true");
 DorisOptions dorisOptions = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("").build();
 
@@ -581,7 +581,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 
 :::info 注意
 
-1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
+1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 包依赖 (Fat Jar)，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
 2. Connector 24.0.0 之后依赖的 Flink CDC 版本需要在 3.1 以上，下载地址见[这里](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，FlinkCDC 如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
 
 :::
