@@ -76,6 +76,24 @@ The specific import process of Routine Load is shown in the following diagram:
 
 5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
+### Auto Resume
+
+To ensure high availability of jobs, an auto-resume mechanism has been introduced. In the event of an unexpected pause, the Routine Load Scheduler thread will attempt to auto-resume the job. For unexpected Kafka outages or other scenarios where the system is unable to function, the auto-resume mechanism ensures that once Kafka is restored, the routine load job can continue running normally without manual intervention.
+
+Situations where auto-resume will not occur:
+
+- The user manually executes the PAUSE ROUTINE LOAD command.
+
+- There are issues with data quality.
+
+- Situations where resuming is not possible, such as when a database table is deleted.
+
+Apart from these three situations, other paused jobs will attempt to resume automatically.
+
+### FAQ
+
+Auto-resume may encounter some issues during cluster restarts or upgrades. Before version 3.0.2, there was similarly a high probability that tasks would not automatically resume after being paused due to cluster restarts or upgrades. Since version 3.0.2, even if tasks are paused due to cluster restarts or upgrades, auto-resume is expected to be achievable.
+
 ## Quick Start
 
 ### Create Job

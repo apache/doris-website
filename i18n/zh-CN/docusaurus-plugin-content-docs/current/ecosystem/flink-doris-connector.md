@@ -30,7 +30,16 @@ under the License.
 
 [Flink Doris Connector](https://github.com/apache/doris-flink-connector)是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可以更便捷的对上游 MySQL 等数据库进行整库同步。
 
-本文档主要介绍 Flink Doris Connector 的使用。
+使用 FlinkConnector 可以完成以下操作：
+
+- 读取 Doris 中的数据：Flink Connector 支持从 BE 中并行读取数据，提高了数据读取的效率；
+  
+- 向 Doris 中写入数据：在 Flink 中进行攒批后，通过 Stream Load 批量导入到 Doris 中；
+  
+- 使用 Lookup Join 方式进行维表关联：通过攒批与异步查询加速维表关联的性能；
+  
+- 整库同步：通过 FlinkCDC 完成 MySQL、Oracle、PostgreSQL 等数据库的整库同步，包含自动建表与 DDL 操作。
+
 
 ## 版本说明
 
@@ -44,7 +53,7 @@ under the License.
 | 1.5.2             | 1.15,1.16,1.17,1.18           | 1.0+          | 8            | -             |
 | 1.6.1             | 1.15,1.16,1.17,1.18,1.19      | 1.0+          | 8            | -             |
 | 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
-| 24.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
+| 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## 使用方式
 
@@ -62,9 +71,42 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>24.1.0</version>
+  <version>25.0.0</version>
 </dependency> 
 ```
+
+## 使用原理
+
+### 从 Doris 中读取数据
+
+![FlinkConnectorPrinciples-JDBC-Doris](/images/ecomsystem/flink-connector/FlinkConnectorPrinciples-JDBC-Doris.png)
+
+在读取数据时，相较于 Flink JDBC Connector，Flink Doris Connector 具备更高的性能，推荐优先使用：
+
+- Flink JDBC Connector：虽然 Doris 兼容 MySQL 协议，但不建议通过 Flink JDBC Connector 读写 Doris 集群。此方式会导致数据在单个 FE 节点上串行读写，形成瓶颈，影响性能。
+  
+- Flink Doris Connector：自 Doris 2.1 版本后，默认使用 ADBC 协议作为 Flink Doris Connector 读取协议，读取时经过以下步骤：
+  
+  a. Flink Doris Connector 首先从 FE 获取查询计划中的 Tablet ID 信息
+     
+  b. 生成查询语句 SELECT * FROM tbs TABLET(id1, id2, id3)
+     
+  c. 然后通过 FE 的 ADBC 端口执行查询
+     
+  d. 由 BE 直接返回数据，避免数据流经 FE，从而消除 FE 单点瓶颈
+ 
+     
+### 向 Doris 中写入数据
+
+在使用 Flink Doris Connector 写入数据时，会在 Flink 内存中进行攒批操作，在通过 Stream Load 批量导入。Doris Flink Connector 提供了两种攒批模式，默认使用基于 Flink Checkpoint 的流式写入方式：
+
+|          | 流式写入 | 批量写入 |
+|----------|----------|----------|
+| **触发条件** | 依赖 Flink 的 Checkpoint，跟随 Flink 的 Checkpoint 周期写入到 Doris 中 | 基于 Connector 内的时间阈值、数据量阈值进行周期性提交，写入到 Doris 中 |
+| **一致性** | Exactly-Once | At-Least-Once，基于主键模型可以保证 Exactly-Once |
+| **延迟** | 受 Checkpoint 时间间隔限制，通常较高 | 独立的批处理机制，灵活调整 |
+| **容错与恢复** | 与 Flink 状态恢复完全一致 | 依赖外部去重逻辑（如 Doris 主键去重） |
+
 
 ## 快速上手
 
@@ -170,7 +212,7 @@ mysql> select * from test.student_trans;
 
 ### 读取 Doris 中的数据
 
-Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据：
+Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持以 CDC 的方式持续读取。可以通过 Thrift 和 ArrowFlightSQL 方式 (24.0.0 版本之后支持) 读取 Doris 中数据，2.1 版本后推荐使用 ArrowFlightSQL 方式：
 
 - Thrift：通过调用 BE 的 thrift 接口读取数据，具体流程可参考 [通过 Thrift 接口读取数据](https://github.com/apache/doris/blob/master/samples/doris-demo/doris-source-demo/README.md)
 
@@ -490,7 +532,17 @@ env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 
 ### Lookup Join
 
-对于维度表在 Doris 存放的场景，可以借助 Flink 的 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 对实时流里面的数据和 Doris 的维度表做 Join。
+使用 Lookup Join 的能力可以优化 Flink 中维表关联的性能。当使用 Flink JDBC Connector 进行维表关联时，会遇到以下问题：
+
+- Flink JDBC Connector 采用同步查询模式，即上游数据（如 Kafka）发送一条数据后，会立即查询 Doris 维表，导致高并发场景下查询延迟较高。
+  
+- JDBC 方式执行的查询通常是 逐条点查，Doris 更推荐批量查询以提升查询效率。
+
+使用 [Lookup Join](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/dev/table/sql/queries/joins/#lookup-join) 的方式进行维表关联，在 Flink Doris Connector 中具有以下优势：
+
+- 批量缓存上游数据，避免逐条查询带来的高延迟和数据库压力。
+
+- 异步执行关联查询，提升数据吞吐量并减少 Doris 查询负载。
 
 ```SQL
 CREATE TABLE fact_table (
@@ -691,6 +743,56 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
     --table-conf replication_num=1
 ```
 
+#### AWS Aurora MySQL 整库同步
+
+```Shell
+<FLINK_HOME>bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    lib/flink-doris-connector-1.18-25.0.0.jar \
+    mysql-sync-database \
+    --database testwd \
+    --mysql-conf hostname=xxx.us-east-1.rds.amazonaws.com \
+    --mysql-conf port=3306 \
+    --mysql-conf username=admin \
+    --mysql-conf password=123456 \
+    --mysql-conf database-name=test \
+    --mysql-conf server-time-zone=UTC \
+    --including-tables "student" \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --table-conf replication_num=1 
+```
+
+#### AWS RDS MySQL 整库同步
+
+```Shell
+<FLINK_HOME>bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    lib/flink-doris-connector-1.18-25.0.0.jar \
+    mysql-sync-database \
+    --database testwd \
+    --mysql-conf hostname=xxx.ap-southeast-1.rds.amazonaws.com \
+    --mysql-conf port=3306 \
+    --mysql-conf username=admin \
+    --mysql-conf password=123456 \
+    --mysql-conf database-name=test \
+    --mysql-conf server-time-zone=UTC \
+    --including-tables "student" \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --table-conf replication_num=1 
+```
+
 ## 使用说明
 
 ### 参数配置
@@ -700,7 +802,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | Key                           | Default Value | Required | Comment                                                      |
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | fenodes                       | --            | Y        | Doris FE http 地址，支持多个地址，使用逗号分隔               |
-| benodes                       | --            | N        | Doris BE http 地址，支持多个地址，使用逗号分隔，参考[#187](https://github.com/apache/doris-flink-connector/pull/187) |
+| benodes                       | --            | N        | Doris BE http 地址，支持多个地址，使用逗号分隔 |
 | jdbc-url                      | --            | N        | jdbc 连接信息，如：jdbc:mysql://127.0.0.1:9030               |
 | table.identifier              | --            | Y        | Doris 表名，如：db.tbl                                       |
 | username                      | --            | Y        | 访问 Doris 的用户名                                          |
@@ -716,10 +818,8 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | ----------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | doris.request.query.timeout   | 21600s        | N        | 查询 Doris 的超时时间，默认值为 6 小时                       |
 | doris.request.tablet.size     | 1             | N        | 一个 Partition 对应的 Doris Tablet 个数。此数值设置越小，则会生成越多的 Partition。从而提升 Flink 侧的并行度，但同时会对 Doris 造成更大的压力。 |
-| doris.batch.size              | 1024          | N        | 一次从 BE 读取数据的最大行数。增大此数值可减少 Flink 与 Doris 之间建立连接的次数。从而减轻网络延迟所带来的额外时间开销。 |
+| doris.batch.size              | 4064          | N        | 一次从 BE 读取数据的最大行数。增大此数值可减少 Flink 与 Doris 之间建立连接的次数。从而减轻网络延迟所带来的额外时间开销。 |
 | doris.exec.mem.limit          | 8192mb        | N        | 单个查询的内存限制。默认为 8GB，单位为字节                   |
-| doris.deserialize.arrow.async | FALSE         | N        | 是否支持异步转换 Arrow 格式到 flink-doris-connector 迭代所需的 RowBatch |
-| doris.deserialize.queue.size  | 64            | N        | 异步转换 Arrow 格式的内部处理队列，当 doris.deserialize.arrow.async 为 true 时生效 |
 | source.use-flight-sql         | FALSE         | N        | 是否使用 Arrow Flight SQL 读取                               |
 | source.flight-sql-port        | -             | N        | 使用 Arrow Flight SQL 读取时，FE 的 arrow_flight_sql_port    |
 
@@ -793,20 +893,18 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --table-suffix          | 同上，Doris 表的后缀名。                                     |
 | --including-tables      | 需要同步的 MySQL 表，可以使用 \| 分隔多个表，并支持正则表达式。比如--including-tables table1 |
 | --excluding-tables      | 不需要同步的表，用法同上。                                   |
-| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用，隔开。 |
-| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
-| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
-| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
-| --db2-conf              | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜ |
+| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用，隔开。 |
+| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
+| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
+| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
+| --db2-conf              | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜ |
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#通用配置项)查看完整的配置项。 |
-| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样 mongodb 数据为 Doris 建表的配置，默认为 0.2 |
+| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样 mongodb 数据为 Doris 建表的配置，默认为 0.2 |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 --table-conf replication_num=1，而 --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |
-| --ignore-default-value  | 关闭同步 MySQL 表结构的默认值。适用于同步 MySQL 数据到 Doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152) |
-| --use-new-schema-change | 是否使用新的 schema change，支持同步 MySQL 多列变更、默认值，1.6.0 开始该参数默认为 true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167) |
-| --schema-change-mode    | 解析 schema change 的模式，支持 debezium_structure、sql_parser 两种解析模式，默认采用 debezium_structure 模式。debezium_structure 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。sql_parser 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。使用例子：--schema-change-mode debezium_structure 本功能将在 24.0.0 后的版本中提供 |
+| --schema-change-mode    | 解析 schema change 的模式，支持 debezium_structure、sql_parser 两种解析模式，默认采用 debezium_structure 模式。debezium_structure 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。sql_parser 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。使用例子：--schema-change-mode debezium_structure。24.0.0 后支持 |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。 |
 | --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin "a\_.\*\|b_.\*"，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208) |
-| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target "a\ |
+| --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target "a\|b" |
 | --create-table-only     | 是否只仅仅同步表的结构                                       |
 
 ### 类型映射
@@ -990,6 +1088,14 @@ json_value(data,'$.name') as name,
 if(op_type='delete',1,0) as __DORIS_DELETE_SIGN__ 
 from KAFKA_SOURCE;
 ```
+
+### Flink CDC 同步 DDL 语句
+一般同步 MySQL 等上游数据源的时候，上游增加或删除字段的时候需要同步在 Doris 中进行 Schema Change 操作。
+
+对于这种场景，通常需要编写 DataStream API 的程序，同时使用 DorisSink 提供的 JsonDebeziumSchemaSerializer 序列化，便可以自动做到 SchemaChange，具体可参考[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
+
+在 Connector 提供的整库同步工具中，无需额外配置，自动会同步上游 DDL，并在 Doris 进行 SchemaChange 操作。
+
 
 ## FAQ
 

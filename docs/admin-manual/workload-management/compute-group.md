@@ -26,7 +26,7 @@ under the License.
 
 Compute Group is a mechanism for physical isolation between different workloads in a storage-compute separation architecture. The basic principle of Compute Group is illustrated in the diagram below:
 
-![compute_group](/images/compute_group_workload_management.png)
+![Compute Group workloads management in a storage-compute separation architecture](/images/compute_group_workload_management.png)
 
 - One or more BE nodes can form a Compute Group.
 

@@ -1,7 +1,7 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 2.1.8 just released`,
-        link: 'https://doris.apache.org/blog/release-note-2.1.8',
+        label: `Apache Doris 3.0.4 Released`,
+        link: 'https://doris.apache.org/blog/release-note-3.0.4',
     },
     {
         label: 'Automatic and flexible data sharding: Auto Partition in Apache Doris',

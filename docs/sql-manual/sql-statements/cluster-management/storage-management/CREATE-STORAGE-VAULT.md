@@ -37,6 +37,7 @@ This command is used to create a storage vault. The topic of this document descr
 CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 ```
 
+
 ## Required Parameters
 
 | Parameter     | Description                     |
@@ -77,6 +78,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
 ## Examples
 
 1. Create HDFS storage vault。
+
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
     PROPERTIES (
@@ -132,7 +134,7 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "s3.secret_key" = "xxxxxx",                          -- required,  Your OBS secret key
         "s3.region" = "cn-north-4",                          -- required
         "s3.root.path" = "obs_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
+        "s3.bucket" = "xxxxxx",                              -- required,  Your OBS bucket name
         "provider" = "OBS",                                  -- required
         "use_path_style" = "false"                           -- optional,  OBS recommended to set false
     );
@@ -161,10 +163,10 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "type" = "S3",                                      -- required
         "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
         "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
-        "s3.secret_key" = "xxxxxx",                         -- required,  Your OBS secret key
+        "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
         "s3.region" = "us-east-1",                          -- required
         "s3.root.path" = "s3_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                             -- required,  Your s3 bucket name
+        "s3.bucket" = "xxxxxx",                             -- required,  Your S3 bucket name
         "provider" = "S3",                                  -- required
         "use_path_style" = "false"                          -- optional,  S3 recommended to set false
     );
@@ -215,3 +217,4 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
         "provider" = "GCP"                                   -- required
     );
     ```
+

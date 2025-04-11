@@ -30,7 +30,7 @@ under the License.
 
 Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
-![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
+![doris lakehouse architecture](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### Flexible Data Access
 
@@ -137,7 +137,7 @@ In the lakehouse solution, Doris is mainly used for **lakehouse query accelerati
 
 In this scenario, Doris acts as a **compute engine**, accelerating query analysis on lakehouse data.
 
-![query-acceleration](/images/Lakehouse/query-acceleration.jpeg)
+![lakehouse query acceleration](/images/Lakehouse/query-acceleration.jpeg)
 
 #### Cache Acceleration
 
@@ -153,7 +153,7 @@ This feature can significantly improve query performance by reducing runtime com
 
 Doris can act as a **unified SQL query engine**, connecting different data sources for federated analysis, solving data silos.
 
-![federation-query](/images/Lakehouse/federation-query.png)
+![federated analysis](/images/Lakehouse/federation-query.png)
 
 Users can dynamically create multiple catalogs in Doris to connect different data sources. They can use SQL statements to perform arbitrary join queries on data from different data sources. For details, refer to the [Catalog Overview](catalog-overview.md).
 
@@ -161,7 +161,7 @@ Users can dynamically create multiple catalogs in Doris to connect different dat
 
 In this scenario, **Doris acts as a data processing engine**, processing lakehouse data.
 
-![data-management](/images/Lakehouse/data-management.jpeg)
+![lakehouse data processing](/images/Lakehouse/data-management.jpeg)
 
 #### Task Scheduling
 

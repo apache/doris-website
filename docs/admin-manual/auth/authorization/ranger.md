@@ -30,7 +30,44 @@ Apache Ranger is a security framework used for monitoring, enabling services, an
 
 ### Change Doris Configuration
 1. In the `fe/conf/fe.conf` file, configure the authorization method as `ranger access_controller_type=ranger-doris`.
-2. In the `fe/conf/ranger-doris-security.xml` file, configure the basic information of Ranger.
+2. Create a `ranger-doris-security.xml` file in the conf directory of all FEs with the following content:
+
+   ```
+   <?xml version="1.0" encoding="UTF-8"?>
+   <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+   <configuration>
+       <property>
+           <name>ranger.plugin.doris.policy.cache.dir</name>
+           <value>/path/to/ranger/cache/</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.pollIntervalMs</name>
+           <value>30000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.client.connection.timeoutMs</name>
+           <value>60000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.client.read.timeoutMs</name>
+           <value>60000</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.rest.url</name>
+           <value>http://172.21.0.32:6080</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.policy.source.impl</name>
+           <value>org.apache.ranger.admin.client.RangerAdminRESTClient</value>
+       </property>
+       <property>
+           <name>ranger.plugin.doris.service.name</name>
+           <value>doris</value>
+       </property>
+   </configuration>
+   ```
+
+   Among which, the `ranger.plugin.doris.policy.cache.dir` and `ranger.plugin.doris.policy.rest.url` need to be modified to their actual values.
 3. Start the cluster.
 
 ### Permission Example
@@ -43,39 +80,41 @@ Equivalent to the internal Doris authorization statement `grant select_priv on *
 - The global option can be found in the dropdown box at the same level as the catalog.
 - Only `*` can be entered in the input box.
 
-  ![global](/images/ranger/global.png)
+  ![Global Permissions](/images/ranger/global.png)
 
 #### Catalog Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.*.* to user1`;
 
-![catalog](/images/ranger/catalog.png)
+![Catalog Permissions](/images/ranger/catalog.png)
 
 #### Database Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.db1.* to user1`;
 
-![database](/images/ranger/database.png)
+![Database Permissions](/images/ranger/database.png)
 
 #### Table Permissions
+> Here, the term "table" generally refers to tables, views, and asynchronous materialized views.
+
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.db1.tbl1 to user1`;
 
-![table](/images/ranger/table.png)
+![Table Permissions](/images/ranger/table.png)
 
 #### Column Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv(col1,col2) on hive.db1.tbl1 to user1`;
 
-![column](/images/ranger/column.png)
+![Column Permissions](/images/ranger/column.png)
 
 #### Resource Permissions
 Equivalent to the internal Doris authorization statement `grant usage_priv on resource 'resource1' to user1`;
 - The resource option can be found in the dropdown box at the same level as the catalog.
 
-![resource](/images/ranger/resource.png)
+![Resource Permissions](/images/ranger/resource.png)
 
 #### Workload Group Permissions
 Equivalent to the internal Doris authorization statement `grant usage_priv on workload group 'group1' to user1`;
 - The workload group option can be found in the dropdown box at the same level as the catalog.
 
-![group1](/images/ranger/group1.png)
+![ Workload Group Permissions](/images/ranger/group1.png)
 
 ### Row-Level Permissions Example
 
@@ -101,6 +140,7 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 ## Frequently Asked Questions
 1. How to view the log when Ranger access fails?
+
    Create a `log4j.properties` file in the `conf` directory of all FEs, with the following content:
 
     ```
@@ -120,6 +160,9 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 	```
 
    Change `log4j.appender.D.File` to the actual path, which is used to store the Ranger plugin log.
+2. A Row Level Filter policy has been configured, but the user encounters a permission denied error when querying.
+
+   The Row Level Filter policy is solely used to restrict users from accessing specific records within a table's data; authorization for the user must still be granted through an ACCESS POLICY.
 
 ## Install and Configure Doris Ranger Plugin
 

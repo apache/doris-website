@@ -78,6 +78,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.connect_timeout`        | `10s`           | 连接 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.read_timeout`           | `120s`          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.retry_count`            | `4`             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
+  | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于6位，则条件下推可能导致结果不准确。         | 2.1.9/3.0.5（含）之后  |
 
 * `{CommonProperties}`
 
@@ -85,7 +86,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 MaxCompute 版本
 
-仅支持公有云版本的 Max Compute。私有云版本支持请联系 Doris 社区支持。
+仅支持公有云版本的 MaxCompute。私有云版本支持请联系 Doris 社区支持。
 
 ### 支持的 MaxCompute 表
 
@@ -95,7 +96,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 列类型映射
 
-| Max Compute Type | Doris Type    | Comment                                                                      |
+| MaxCompute Type | Doris Type    | Comment                                                                      |
 | ---------------- | ------------- | ---------------------------------------------------------------------------- |
 | bolean           | boolean       |                                                                              |
 | tiny             | tinyint       |                                                                              |
@@ -112,6 +113,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | date             | date          |                                                                              |
 | datetime         | datetime(3)   | 固定映射到精度 3。可以通过 `SET [GLOBAL] time_zone = 'Asia/Shanghai'` 来指定时区                |
 | timestamp_ntz   | datetime(6)   | MaxCompute 的 `timestamp_ntz` 精度为 9, Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
+| timestamp   | datetime(6)   | 自 2.1.9/3.0.5 支持。MaxCompute 的 `timestamp` 精度为 9, Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
 | array            | array         |                                                                              |
 | map              | map           |                                                                              |
 | struct           | struct        |                                                                              |

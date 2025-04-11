@@ -1,6 +1,6 @@
 [
     {
-        "story": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. AWS for Apache Doris is coming soon, enabling businesses to effortlessly scale their data analytics capabilities to handle massive workloads.",
+        "story": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. The commercial version of Apache Doris, VeloDB Cloud is available on AWS, offering scalable and efficient data analytics capabilities.",
         "name": "AWS",
         "category": "Commercial Distribution",
         "logo": "AWS",

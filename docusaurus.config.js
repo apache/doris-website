@@ -203,14 +203,18 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'support_us',
-                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
-                <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
-                    </a>`,
-                backgroundColor: '#3C2FD4',
-                textColor: '#FFFFFF',
-
-                // isCloseable: false,
+                id: 'join_us',
+                content: JSON.stringify({
+                    zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250401" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+               <span>4 月 1 日 Apache Doris x AI 应用实践直播专场来袭！</span> 
+               <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">观看回放 -></p> 
+                   </a>`,
+                    en: null,
+                }),
+                textColor: '#4C576C',
+                isCloseable: false,
             },
             navbar: {
                 title: '',
@@ -236,6 +240,11 @@ const config = {
                     {
                         label: 'Ecosystem',
                         to: '/ecosystem/cluster-management',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Events',
+                        to: '/events',
                         position: 'left',
                     },
                     {
@@ -349,6 +358,11 @@ const config = {
                     {
                         label: 'Ecosystem',
                         to: '/ecosystem/cluster-management',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Events',
+                        to: '/events',
                         position: 'left',
                     },
                     {

@@ -244,6 +244,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     It is because the Doris built-in `libz.a` conflicts with the system environment's `libz.so`. To resolve this issue, first execute `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH`, and then restart the BE process.
 
+12. When inserting data into Hive, an error occurred as `HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`.
+
+    Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
@@ -252,30 +256,28 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Note: This feature may increase the load on the HDFS cluster, so use it judiciously.
 
-    You can enable this feature in two ways:
+    You can enable this feature by:
 
-    - Specify it in the parameters when creating the Catalog:
+    ```
+    create catalog regression properties (
+        'type'='hms',
+        'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
+        'dfs.client.hedged.read.threadpool.size' = '128',
+        'dfs.client.hedged.read.threshold.millis' = "500"
+    );
+    ```
 
-        ```
-        create catalog regression properties (
-            'type'='hms',
-            'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
-            'dfs.client.hedged.read.threadpool.size' = '128',
-            'dfs.client.hedged.read.threshold.millis' = "500"
-        );
-        ```
-
-`dfs.client.hedged.read.threadpool.size` represents the number of threads used for Hedged Read, which are shared by an HDFS Client. Typically, for an HDFS cluster, BE nodes will share an HDFS Client.
-
-`dfs.client.hedged.read.threshold.millis` is the read threshold in milliseconds. When a read request exceeds this threshold without returning, a Hedged Read is triggered.
-
-When enabled, you can see the related parameters in the Query Profile:
-
-`TotalHedgedRead`: Number of times Hedged Read was initiated.
-
-`HedgedReadWins`: Number of successful Hedged Reads (times when the request was initiated and returned faster than the original request)
-
-Note that these values are cumulative for a single HDFS Client, not for a single query. The same HDFS Client can be reused by multiple queries.
+    `dfs.client.hedged.read.threadpool.size` represents the number of threads used for Hedged Read, which are shared by an HDFS Client. Typically, for an HDFS cluster, BE nodes will share an HDFS Client.
+    
+    `dfs.client.hedged.read.threshold.millis` is the read threshold in milliseconds. When a read request exceeds this threshold without returning, a Hedged Read is triggered.
+    
+    When enabled, you can see the related parameters in the Query Profile:
+    
+    `TotalHedgedRead`: Number of times Hedged Read was initiated.
+    
+    `HedgedReadWins`: Number of successful Hedged Reads (times when the request was initiated and returned faster than the original request)
+    
+    Note that these values are cumulative for a single HDFS Client, not for a single query. The same HDFS Client can be reused by multiple queries.
 
 3. `Couldn't create proxy provider class org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider`
 

@@ -107,7 +107,7 @@ This command initiates the deployment process of the FDB cluster.
 
 ### 5.1.4 Start FDB Service
 
-Once the FDB cluster is deployed, you can start the FDB service using the `fdb_ctl.sh` script.
+Once the FDB cluster is deployed, you can start the FDB service on each node using the `fdb_ctl.sh` script.
 
 ```bash
 ./fdb_ctl.sh start

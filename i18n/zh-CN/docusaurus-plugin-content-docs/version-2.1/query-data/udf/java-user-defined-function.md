@@ -372,7 +372,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
 更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLE FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

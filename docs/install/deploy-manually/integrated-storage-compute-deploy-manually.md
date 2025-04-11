@@ -27,7 +27,7 @@ After completing the preliminary checks and planning, such as environment checks
 
 The integrated storage-compute architecture is shown below, and the deployment of the integrated storage-compute cluster involves four steps:
 
-[integrated-storage-compute-architecture](/images/getting-started/apache-doris-technical-overview.png)
+[MPP-based integrated storage compute architecture](/images/getting-started/apache-doris-technical-overview.png)
 
 1. **Deploy FE Master Node**: Deploy the first FE node as the Master node;
    
@@ -50,7 +50,7 @@ The integrated storage-compute architecture is shown below, and the deployment o
    mkdir -p <doris_meta_created>
       
    ## Create FE metadata directory symlink
-   ln -s <doris_meta_original> <doris_meta_created>
+   ln -s <doris_meta_created> <doris_meta_original>
    ```
 
 2. **Modify FE Configuration File**
@@ -187,7 +187,7 @@ In production, it is recommended to deploy at least 3 nodes. After deploying the
 
    Parameter explanations are as follows:
 
-   | 参数                                                         | 修改建议                                                  |
+   | Parameters                                                         | Suggestions                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | [priority_networks](../../admin-manual/config/be-config#priority_networks) | Network CIDR, specified by network IP address. Can be ignored in FQDN environments. |
    | JAVA_OPTS                                                    | Set the `-Xmx` parameter to adjust the Java heap size. It is recommended to set it to 2GB or more for production environments.   |
