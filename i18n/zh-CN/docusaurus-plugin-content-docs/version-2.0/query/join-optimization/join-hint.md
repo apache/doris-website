@@ -150,7 +150,7 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c
 15 rows in set (0.00 sec)
 ```
 
-- 同时允许使用大括号指定 join 树形状。例：/*+ leading(t1 {t2 t3}) */
+- 同时允许使用大括号指定 join 树形状。例：/*+ leading(t1 (t2 t3)) */
   join
   /    \
   t1    join
@@ -158,7 +158,7 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c
   t2    t3
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
 +----------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                  |
 +----------------------------------------------------------------------------------+
@@ -174,7 +174,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 | --------------PhysicalOlapScan[t3]                                               |
 |                                                                                  |
 | Hint log:                                                                        |
-| Used: leading(t1 { t2 t3 })                                                      |
+| Used: leading(t1 ( t2 t3 ))                                                      |
 | UnUsed:                                                                          |
 | SyntaxError:                                                                     |
 +----------------------------------------------------------------------------------+
@@ -331,7 +331,7 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t
 当我们想将计划的形状做成右深树或者 bushy 树或者 zigzag 树的时候，只需要加上大括号来限制 plan 的形状即可，不需要像 oracle 一样用 swap 从左深树一步步调整。
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
 +-----------------------------------------------+
 | Explain String                                |
 +-----------------------------------------------+
@@ -346,7 +346,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 | ------------PhysicalDistribute                |
 | --------------PhysicalOlapScan[t3]            |
 |                                               |
-| Used: leading(t1 { t2 t3 })                   |
+| Used: leading(t1 ( t2 t3 ))                   |
 | UnUsed:                                       |
 | SyntaxError:                                  |
 +-----------------------------------------------+
@@ -356,7 +356,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 **Bushy 树**
 
 ```sql
-mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+mysql> explain shape plan select /*+ leading((t1 t2) (t3 t4)) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
 +-----------------------------------------------+
 | Explain String                                |
 +-----------------------------------------------+
@@ -384,7 +384,7 @@ mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join 
 **Zig-Zag 树**
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3) t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
 +--------------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                      |
 +--------------------------------------------------------------------------------------+
@@ -419,7 +419,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2
 --  t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
 +--------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                |
 +--------------------------------------------------------------------------------+
@@ -436,7 +436,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join 
 |                                                                                |
 | Hint log:                                                                      |
 | Used:                                                                          |
-| UnUsed: leading(t1 { t2 t3 })                                                  |
+| UnUsed: leading(t1 ( t2 t3 ))                                                  |
 | SyntaxError:                                                                   |
 +--------------------------------------------------------------------------------+
 15 rows in set (0.01 sec)
@@ -456,13 +456,13 @@ explain shape plan select /*+ leading(t1 t3 t2) */ * from t1 left join t2 on c1 
 
 -- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P23) = t1 leftjoin (t2  leftjoin t3 on (P23)) on (P12)
 select /*+ leading(t2 t3 t1) SWAP_INPUT(t1) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
 
 -------- test outer join which can not swap
 --  t1 leftjoin (t2  join t3 on (P23)) on (P12) != (t1 leftjoin t2  on (P12)) join t3 on (P23)
 -- eliminated to inner join
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
 explain graph select /*+ leading(t1 t2 t3) */ * from t1 left join (select * from t2 join t3 on c2 = c3) on c1 = c2;
 
 -- test semi join
