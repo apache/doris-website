@@ -116,6 +116,19 @@ CREATE CATALOG `paimon_oss` PROPERTIES (
 
 ```
 
+#### Google Cloud Storage
+
+```sql
+CREATE CATALOG `paimon_gcs` PROPERTIES (
+    "type" = "paimon",
+    "warehouse" = "gs://bucket/warehouse",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "region",
+    "s3.endpoint" = "storage.googleapis.com"
+);
+```
+
 ### 基于 Hive Metastore 创建 Catalog
 
 ```sql
@@ -167,6 +180,21 @@ CREATE CATALOG `paimon_dlf` PROPERTIES (
     
     -- "dlf.endpoint" = "dlf.cn-beijing.aliyuncs.com",  -- optional
     -- "dlf.catalog.id" = "xxxx", -- optional
+);
+```
+
+### 基于 Google Dataproc Metastore 创建 Catalog
+
+```sql
+CREATE CATALOG `paimon_gms` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "hms",
+    "hive.metastore.uris" = "thrift://ip:port",
+    "warehouse" = "gs://bucket/warehouse",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "region",
+    "s3.endpoint" = "storage.googleapis.com"
 );
 ```
 
