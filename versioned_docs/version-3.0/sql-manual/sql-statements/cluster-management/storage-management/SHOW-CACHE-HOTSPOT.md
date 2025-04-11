@@ -33,7 +33,7 @@ This statement is used to display the hotspot information of the file cache.
 
 Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query cache hotspot information statistics. Starting from version 3.0.4, the use of the `SHOW CACHE HOTSPOT` statement for cache hotspot information statistics is no longer supported. Please directly access the system table `__internal_schema.cloud_cache_hotspot` for queries. For detailed usage, refer to [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache). 
 
-:::
+
 
 ## Syntax
 
@@ -44,27 +44,26 @@ Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query 
 
 ## Parameters
 
-| Parameter Name         | Description                    |
-| ---------------------- | ------------------------------ |
-| `<compute_group_name>` | The name of the compute group. |
-| `<table_name>`         | The name of the table.         |
-
+| Parameter Name	                  | Description                                                         |
+|---------------------------|--------------------------------------------------------------|
+| <compute_group_name>        | The name of the compute group.                                               |
+| <table_name>                | The name of the table.                                                   |
 ## Examples
 
-1. Display the cache hotspot information for the entire system.
+1. Display cache hot spot information for the entire system:
 
-    ```sql
-    SHOW CACHE HOTSPOT '/';
-    ```
+```sql
+SHOW CACHE HOTSPOT '/';
+```
 
-2. Display the cache hotspot information for a specific compute group named `my_compute_group`.
+2. Display cache hot spot information for a specific compute group my_compute_group:
 
-
-    ```sql
-    SHOW CACHE HOTSPOT '/my_compute_group/';
-    ```
+```sql
+SHOW CACHE HOTSPOT '/my_compute_group/';
+```
 
 ## References
 
-- [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
-- [WARMUP CACHE](./WARM-UP)
+
+- [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+- [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)

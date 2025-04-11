@@ -36,31 +36,26 @@ The commands are used to display warm-up jobs in Doris.
 
 ## Parameters
 
-* id : id of the warm-up job.
 
-## Example
+| Parameter Name                  | Description                                                         |
+|---------------------------|--------------------------------------------------------------|
+| id                        | The ID of the warm-up job                                                |
+## Examples
 
-1. View all warmup job
+1. View all warm-up jobs:
 
-    ```sql
+ ```sql
     SHOW WARM UP JOB;
-    ```
+```
 
-2. View one warmup job with id = 13418
+2. View the warm-up job with ID 13418:
 
 ```sql
-    SHOW WARM UP JOB WHERE id = 13418;
+   SHOW WARM UP JOB WHERE id = 13418;
 ```
+
 
 ## Related Commands
 
  - [WARMUP COMPUTE GROUP](./WARM-UP.md)
-
-## References
-
- - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
-
-## Keywords
-
-    SHOW, CACHE, HOTSPOT, COMPUTE GROUP 
 
