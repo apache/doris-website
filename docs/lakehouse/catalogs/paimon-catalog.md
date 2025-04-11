@@ -203,8 +203,7 @@ CREATE CATALOG `paimon_gms` PROPERTIES (
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
     "s3.region" = "region",
-    "s3.endpoint" = "storage.googleapis.com",
-    "ipc.client.fallback-to-simple-auth-allowed" = "true"
+    "s3.endpoint" = "storage.googleapis.com"
 );
 ```
 
