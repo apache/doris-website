@@ -171,7 +171,9 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
     );
     ```
 
-7. Create  MinIO storage vault。
+Doris also suppoted AWS assume role, please refer to[AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md).
+
+7. create a S3 storage vault using MinIO.
    ```sql
     CREATE STORAGE VAULT IF NOT EXISTS minio_demo_vault
     PROPERTIES (

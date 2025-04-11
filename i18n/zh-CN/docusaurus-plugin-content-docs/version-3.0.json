@@ -766,5 +766,9 @@
   "sidebar.docs.category.Backup & Restore": {
     "message": "备份与恢复",
     "description": "The label for category Backup & Restore in sidebar docs"
+  },
+  "sidebar.docs.category.Integrations": {
+    "message": "外部集成",
+    "description": "The label for category Integrations in sidebar docs"
   }
 }

@@ -169,6 +169,8 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
     );
     ```
 
+Doris也支持AWS assume role的方式访问，请参考[AWS集成](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+
 7. 创建 MinIO storage vault。
    ```sql
     CREATE STORAGE VAULT IF NOT EXISTS minio_demo_vault
