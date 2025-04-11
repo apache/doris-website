@@ -24,44 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Subtracts a specified number of minutes from a datetime value and returns a new datetime value.
+Subtracts a specified number of minutes from the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-MINUTES_SUB(<date>, <minutes>)
+MINUTES_SUB(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
+| Parameter | Description |
 |-----------|--------------------------------------------------|
-| `<datetime>`  | The input datetime value, which can be of type DATE, DATETIME, or DATETIMEV2 |
-| `<minutes>`   | The number of minutes to subtract, of type INT; can be positive or negative |
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of minutes to subtract |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the datetime value after subtracting the specified number of minutes.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
 ```sql
-SELECT MINUTES_SUB("2020-02-02 02:02:02", 1);
+select minutes_sub("2020-01-31 02:02:02", 1),minutes_sub("2020-01-31", 1),minutes_sub("2020-01-31", -1);
 ```
 
 ```text
-+--------------------------------------------------------------+
-| minutes_sub(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), 1) |
-+--------------------------------------------------------------+
-| 2020-02-02 02:01:02                                          |
-+--------------------------------------------------------------+
++---------------------------------------+------------------------------+-------------------------------+
+| minutes_sub("2020-01-31 02:02:02", 1) | minutes_sub("2020-01-31", 1) | minutes_sub("2020-01-31", -1) |
++---------------------------------------+------------------------------+-------------------------------+
+| 2020-01-31 02:01:02                   | 2020-01-30 23:59:00          | 2020-01-31 00:01:00           |
++---------------------------------------+------------------------------+-------------------------------+
 ```
 
-**Note:**
-- When the number of minutes subtracted is negative, it effectively adds the corresponding number of minutes.
-- The function automatically handles cases that cross hours and days.
-- If the input parameter is NULL, the function returns NULL.
-- The result retains the seconds portion of the original time.
+```sql
+select minutes_sub("0000-12-31 12:00:00", 100000000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation minutes_sub of 0000-12-31 12:00:00, 100000000 out of range

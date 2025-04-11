@@ -24,25 +24,54 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_add
-### description
-#### Syntax
+## Description
 
-`DATETIME WEEKS_ADD(DATETIME date, INT weeks)`
+Adds a specified number of weeks to the given datetime and returns the calculated new datetime.
 
-ADD a specified number of weeks from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
+```sql
+WEEKS_ADD(<datetime/date>, <nums>)
 ```
-mysql> select weeks_add("2020-02-02 02:02:02", 1);
+
+## Parameters
+
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of weeks to add |
+
+## Return Value
+
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
+
+## Example
+
+```sql
+select weeks_add("2020-02-02 02:02:02", 1);
+```
+
+```text
 +-------------------------------------+
-| weeks_add('2020-02-02 02:02:02', 1) |
+| weeks_add("2020-02-02 02:02:02", 1) |
 +-------------------------------------+
 | 2020-02-09 02:02:02                 |
 +-------------------------------------+
+```
+
+```sql
+select weeks_add("9999-02-02", 200);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation weeks_add of 9999-02-02, 200 out of range
 ```
 
 ### keywords

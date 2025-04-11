@@ -25,7 +25,8 @@ under the License.
 -->
 
 ## Description
-The MONTHS_SUB function is used to add or subtract a specified number of months to a given date and returns the resulting date.
+
+Subtracts a specified number of months from the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
@@ -35,27 +36,40 @@ MONTHS_SUB(<datetime/date>, <nums>)
 
 ## Parameters
 
-| Parameter         | Description                                                |
-|-------------------|------------------------------------------------------------|
-| `<datetime/date>` | The date value to which months will be added or subtracted |
-| `<nums>`          | The number of months to add or subtract                    |
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of months to subtract |
 
 ## Return Value
-The return value is of the same type as the input <datetime/date>.
+
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
 Special cases:
-- If the <datetime/date> input is 0000-00-00 or 0000-00-00 00:00:00, the function returns NULL.
-- If the <datetime/date> input is NULL, the function returns NULL.
-- If the input is MONTHS_SUB("9999-12-31", -1), the function will return NULL.
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
-``` sql
+```sql
 select months_sub("2020-01-31 02:02:02", 1),months_sub("2020-01-31", 1),months_sub("2020-01-31", -1);
 ```
+
 ```text
-+-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
-| months_sub(cast('2020-01-31 02:02:02' as DATETIMEV2(0)), 1) | months_sub(cast('2020-01-31' as DATEV2), 1) | months_sub(cast('2020-01-31' as DATEV2), -1) |
-+-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
-| 2019-12-31 02:02:02                                         | 2019-12-31                                  | 2020-02-29                                   |
-+-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
++--------------------------------------+-----------------------------+------------------------------+
+| months_sub("2020-01-31 02:02:02", 1) | months_sub("2020-01-31", 1) | months_sub("2020-01-31", -1) |
++--------------------------------------+-----------------------------+------------------------------+
+| 2019-12-31 02:02:02                  | 2019-12-31                  | 2020-02-29                   |
++--------------------------------------+-----------------------------+------------------------------+
+```
+
+```sql
+select months_sub("0000-02-02", 2);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation months_sub of 0000-02-02, 2 out of range
 ```

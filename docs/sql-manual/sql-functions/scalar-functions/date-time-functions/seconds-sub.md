@@ -26,36 +26,49 @@ under the License.
 
 ## Description
 
-The function subtracts or adds a specified number of seconds to/from a given datetime value and returns the resulting
-datetime.
+Subtracts a specified number of seconds from the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-SECONDS_SUB(<datetime>, <seconds>)
+SECONDS_SUB(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter    | Description                                                                                                                                         |
-|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<datetime>` | Required. The input datetime value. Supports the DATETIME and DATE type.                                                                            |
-| `<seconds>`  | Required. The number of seconds to subtract or add. Supports integers (INT). Positive numbers add seconds, while negative numbers subtract seconds. |
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of seconds to subtract |
 
 ## Return Value
-- Returns a datetime value of the same type as the input <datetime>.
-- If `<datetime>` is NULL, the function returns NULL.
-- If `<datetime>` is an invalid date (e.g., 0000-00-00T00:00:00), the function returns NULL.
+
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Examples
 
+```sql
+select seconds_sub("2020-01-31 02:02:02", 1),seconds_sub("2020-01-31", 1),seconds_sub("2020-01-31", -1);
 ```
-SELECT SECONDS_SUB('2025-01-23 12:34:56', 30),SECONDS_SUB('2025-01-23 12:34:56', -30);
-```
+
 ```text
-+---------------------------------------------------------------+----------------------------------------------------------------+
-| seconds_sub(cast('2025-01-23 12:34:56' as DATETIMEV2(0)), 30) | seconds_sub(cast('2025-01-23 12:34:56' as DATETIMEV2(0)), -30) |
-+---------------------------------------------------------------+----------------------------------------------------------------+
-| 2025-01-23 12:34:26                                           | 2025-01-23 12:35:26                                            |
-+---------------------------------------------------------------+----------------------------------------------------------------+
++---------------------------------------+------------------------------+-------------------------------+
+| seconds_sub("2020-01-31 02:02:02", 1) | seconds_sub("2020-01-31", 1) | seconds_sub("2020-01-31", -1) |
++---------------------------------------+------------------------------+-------------------------------+
+| 2020-01-31 02:02:01                   | 2020-01-30 23:59:59          | 2020-01-31 00:00:01           |
++---------------------------------------+------------------------------+-------------------------------+
 ```
+
+```sql
+select seconds_sub("0000-12-31 12:00:00", 100000000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation seconds_sub of 0000-12-31 12:00:00, 100000000 out of range

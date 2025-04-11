@@ -24,20 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_add
-### description
-#### Syntax
+## Description
 
-`DATETIME YEARS_ADD(DATETIME date, INT years)`
+Adds a specified number of years to the given datetime and returns the calculated new datetime.
 
-ADD a specified number of years from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
+```sql
+YEARS_ADD(<datetime/date>, <nums>)
 ```
-mysql> select years_add("2020-01-31 02:02:02", 1);
+
+## Parameters
+
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of years to add |
+
+## Return Value
+
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In `where` conditions, to avoid errors, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
+
+## Example
+
+```sql
+select years_add('2020-01-31 02:02:02', 1);
+```
+
+```text
 +-------------------------------------+
 | years_add('2020-01-31 02:02:02', 1) |
 +-------------------------------------+
@@ -45,6 +66,10 @@ mysql> select years_add("2020-01-31 02:02:02", 1);
 +-------------------------------------+
 ```
 
-### keywords
+```sql
+select years_add('9999-12-31 23:59:59', 2);
+```
 
-    YEARS_ADD
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation years_add of 9999-12-31 23:59:59, 2 out of range
+```

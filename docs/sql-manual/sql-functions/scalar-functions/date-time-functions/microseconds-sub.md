@@ -24,43 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## Description
 
-Subtracts a specified number of microseconds from a datetime value and returns a new datetime value.
+Subtracts a specified number of microseconds from the given datetime and returns the calculated new datetime.
 
 ## Syntax
 
 ```sql
-MICROSECONDS_SUB(<basetime>, <delta>)
+MICROSECONDS_SUB(<datetime/date>, <nums>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
+| Parameter | Description |
 |-----------|--------------------------------------------------|
-| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
-| `<delta>`     | The number of microseconds to subtract, of type INT; 1 second = 1,000,000 microseconds |
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of microseconds to subtract |
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, representing the time value after subtracting the specified number of microseconds from the input datetime. The precision of the return value is the same as that of the input parameter basetime.
+Returns the calculated new date.
+
+The return value type is consistent with the input <datetime/date> type.
+
+Special cases:
+
+- When <datetime/date> input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In filter conditions, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
 
 ## Example
 
 ```sql
-SELECT NOW(3) AS current_time, MICROSECONDS_SUB(NOW(3), 100000) AS after_sub;
+select microseconds_sub("2020-01-31 02:02:02", 1),microseconds_sub("2020-01-31", 1),microseconds_sub("2020-01-31", -1);
 ```
 
 ```text
-+-------------------------+----------------------------+
-| current_time            | after_sub                  |
-+-------------------------+----------------------------+
-| 2025-01-16 11:52:22.296 | 2025-01-16 11:52:22.196000 |
-+-------------------------+----------------------------+
++--------------------------------------------+-----------------------------------+------------------------------------+
+| microseconds_sub("2020-01-31 02:02:02", 1) | microseconds_sub("2020-01-31", 1) | microseconds_sub("2020-01-31", -1) |
++--------------------------------------------+-----------------------------------+------------------------------------+
+| 2020-01-31 02:02:01.999999                 | 2020-01-30 23:59:59.999999        | 2020-01-31 00:00:00.000001         |
++--------------------------------------------+-----------------------------------+------------------------------------+
 ```
 
-**Note:**
-- `NOW(3)` returns the current time with a precision of 3 decimal places.
-- After subtracting 100000 microseconds (0.1 seconds), the time decreases by 0.1 seconds.
-- The function's result is dependent on the precision of the input time.
+```sql
+select microseconds_sub("0000-01-01 00:00:00", 1);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation microseconds_sub of 0000-01-01 00:00:00, 1 out of range

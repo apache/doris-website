@@ -24,27 +24,51 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_sub
-### description
-#### Syntax
+## Description
 
-`DATETIME YEARS_SUB(DATETIME date, INT years)`
+Subtracts a specified number of years from the given datetime and returns the calculated new datetime.
 
-Subtracts a specified number of years from a datetime or date
+## Syntax
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
-```
-mysql> select years_sub("2020-02-02 02:02:02", 1);
-+-------------------------------------+
-| years_sub('2020-02-02 02:02:02', 1) |
-+-------------------------------------+
-| 2019-02-02 02:02:02                 |
-+-------------------------------------+
+```sql
+YEARS_SUB(<datetime/date>, <nums>)
 ```
 
-### keywords
+## Parameters
 
-    YEARS_SUB
+| Parameter | Description |
+|-------------------|---------------|
+| `<datetime/date>` | The datetime value to be calculated, of type `DATETIME` or `DATE` |
+| `<nums>` | The number of years to subtract |
+
+## Return Value
+
+Returns the calculated new date.
+
+The return value type is consistent with the input `<datetime/date>` type.
+
+Special cases:
+
+- When `<datetime/date>` input is NULL, returns NULL
+- If the calculation result is out of range, SQL execution will report an error. In `where` conditions, to avoid errors, you can rewrite it as [`TIMESTAMPDIFF`](./timestampdiff)
+
+## Example
+
+```sql
+select years_sub('2010-11-30 23:59:59', 2);
+```
+
+```text
++-------------------------------------+
+| years_sub('2010-11-30 23:59:59', 2) |
++-------------------------------------+
+| 2008-11-30 23:59:59                 |
++-------------------------------------+
+```
+
+```sql
+select years_sub('0000-12-12', 2000);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [E-218] Operation years_sub of 0000-12-12, 2000 out of range
