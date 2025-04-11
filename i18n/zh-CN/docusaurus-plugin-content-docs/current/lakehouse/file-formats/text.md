@@ -71,13 +71,13 @@ under the License.
   1. 支持普通类型和复杂类型。
   2. 不支持 `timestamp.formats` SERDEPROPERTIES
 
-- `org.openx.data.jsonserde.JsonSerDe` 格式的 Hive 表（自3.0.6 版本支持）
+- [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde) 格式的 Hive 表（自3.0.6 版本支持）
   
   1. 支持普通类型和复杂类型。
-  2. SERDEPROPERTIES: 只支持 `ignore.malformed.json` 且行为与该JsonSerDe一致, 其他 SERDEPROPERTIES 不生效。 
-  3. 不支持`Using Arrays`(类似于Text/CSV, 将所有列的数据放一个数组中)。
-  4. 不支持Promoting a Scalar to an Array (提升标量返回一个的单元素数组)。
-  5. 可以通过`set read_hive_json_in_one_column = true`, 将一整行json数据都放到第一列中，要求第一列的数据类型为String.
+  2. SERDEPROPERTIES: 只支持 [`ignore.malformed.json`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#importing-malformed-data) 且行为与该 JsonSerDe 一致, 其他 SERDEPROPERTIES 不生效。 
+  3. 不支持[`Using Arrays`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#using-arrays) (类似于 Text/CSV, 将所有列的数据放一个数组中)。
+  4. 不支持[`Promoting a Scalar to an Array`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#promoting-a-scalar-to-an-array) (提升标量返回一个的单元素数组)。
+  5. 默认情况下，Doris 会正常识别表的 Schema。但因为某些特殊参数不支持，可能导致自动识别 Schema 失败。此时可以通过`set read_hive_json_in_one_column = true`, 将一整行 Json 数据都放到第一列中，这样可以确保原始数据被完整读取，用户可以自行处理。该功能要求第一列的数据类型为 String.
 
 ### 导入
 
