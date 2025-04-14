@@ -48,7 +48,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
     {MetaStoreProperties},
     {StorageProperties},
-    {CommonProperties}
+    {CommonProperties},
+    {OtherProperties}
 );
 ```
 
@@ -79,6 +80,12 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
+
+* `{OtherProperties}`
+
+  OtherProperties 部分用于填写和 Hive Catalog 相关的其他参数。
+
+  * `get_schema_from_table`：默认为 false。默认情况下，Doris 会从 Hive Metastore 中获取表的 Schema 信息。但某些情况下可能出现兼容问题，如错误 `Storage schema reading not supported`。此时可以将这个参数设置为 true，则会从 Table 对象中直接获取表 Schema。但注意，该方式会导致列的默认值信息被忽略。该参数自 2.1.10 和 3.0.6 版本支持。
 
 ### 支持的 Hive 版本
 
@@ -357,16 +364,14 @@ AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 
 ### 相关参数
 
-* fe
+* Session 变量
 
-  | 参数名称                         | 描述                                                                                                                                                                                                                                                                                                          | 默认值 |
-  | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-  | `hive_parquet_use_column_names` | Doris 在读取 Hive 表 Parquet 数据类型时，默认会根据 Hive 表的列名从 Parquet 文件中找同名的列来读取数据。当该变量为 `false` 时，Doris 会根据 Hive 表中的列顺序从 Parquet 文件中读取数据，与列名无关。类似于 Hive 中的 `parquet.column.index.access` 变量。该参数只适用于顶层列名，对 Struct 内部无效。 | `true` |
-  | `hive_orc_use_column_names`     | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 ORC 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。                                                                                                                                       | `true` | 
+  | 参数名称  | 描述  | 默认值 | 版本 |
+  | ----------| ---- | ---- | --- |
+  | `hive_parquet_use_column_names` | `true` | Doris 在读取 Hive 表 Parquet 数据类型时，默认会根据 Hive 表的列名从 Parquet 文件中找同名的列来读取数据。当该变量为 `false` 时，Doris 会根据 Hive 表中的列顺序从 Parquet 文件中读取数据，与列名无关。类似于 Hive 中的 `parquet.column.index.access` 变量。该参数只适用于顶层列名，对 Struct 内部无效。 | 2.1.6+, 3.0.3+ |
+  | `hive_orc_use_column_names`     | `true` | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 ORC 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。  | 2.1.6+, 3.0.3+ |
 
-
-
-* BE
+* BE 配置
 
   | 参数名称                                                                          | 描述                                                                                                                                                                                                                                                                              | 默认值 |
   | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
