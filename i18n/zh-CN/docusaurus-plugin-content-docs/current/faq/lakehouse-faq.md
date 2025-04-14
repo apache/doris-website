@@ -128,17 +128,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 ## Hive Catalog
 
-1. 通过 Hive Metastore 访问 Iceberg 表报错：`failed to get schema` 或 `Storage schema reading not supported`
+1. 通过 Hive Catalog 访问 Iceberg 或 Hive 表报错：`failed to get schema` 或 `Storage schema reading not supported`
 
-   在 Hive 的 lib/ 目录放上 `iceberg` 运行时有关的 jar 包。
+   可以尝试以下方法：
 
-   在 `hive-site.xml` 配置：
+   * 在 Hive 的 lib/ 目录放上 `iceberg` 运行时有关的 jar 包。
 
-   ```
-   metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
-   ```
+   * 在 `hive-site.xml` 配置：
 
-   配置完成后需要重启 Hive Metastore。
+       ```
+       metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
+       ```
+
+       配置完成后需要重启 Hive Metastore。
+
+   * 在 Catalog 属性中添加 `"get_schema_from_table" = "true"`
+
+       该参数自 2.1.10 和 3.0.6 版本支持。
 
 2. 连接 Hive Catalog 报错：`Caused by: java.lang.NullPointerException`
 
