@@ -358,10 +358,11 @@ AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ### 相关参数
 
 * fe
+
   | 参数名称                         | 描述                                                                                                                                                                                                                                                                                                          | 默认值 |
   | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
   | `hive_parquet_use_column_names` | Doris 在读取 Hive 表 Parquet 数据类型时，默认会根据 Hive 表的列名从 Parquet 文件中找同名的列来读取数据。当该变量为 `false` 时，Doris 会根据 Hive 表中的列顺序从 Parquet 文件中读取数据，与列名无关。类似于 Hive 中的 `parquet.column.index.access` 变量。该参数只适用于顶层列名，对 Struct 内部无效。 | `true` |
-  | `hive_orc_use_column_names`     | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 Parquet 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。                                                                                                                                       | `true` | 
+  | `hive_orc_use_column_names`     | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 ORC 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。                                                                                                                                       | `true` | 
 
 
 
