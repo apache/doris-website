@@ -220,7 +220,7 @@ When Flink reads data from Doris, the Doris Source is currently a bounded stream
 ##### Thrift Method
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -228,18 +228,18 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '127.0.0.1:8030',  -- Fe的host:HttpPort
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 ##### ArrowFlightSQL
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -247,14 +247,14 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '{fe.conf:http_port}', 
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'source.use-flight-sql' = 'true',
       'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 #### Using DataStream API to Read Data
@@ -265,7 +265,7 @@ When using the DataStream API to read data, you need to include the dependencies
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 DorisOptions option = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("")
         .build();
@@ -324,7 +324,7 @@ CREATE TABLE student_sink (
     WITH (
       'connector' = 'doris',
       'fenodes' = '10.16.10.6:28737',
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = 'password',
       'sink.label-prefix' = 'doris_label'
@@ -406,7 +406,7 @@ properties.setProperty("format", "csv");
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder
         .setFenodes("10.16.10.6:28737")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("");
 DorisExecutionOptions.Builder executionBuilder = DorisExecutionOptions.builder();
@@ -467,7 +467,7 @@ props.setProperty("format", "json");
 props.setProperty("read_json_by_line", "true");
 DorisOptions dorisOptions = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("").build();
 
@@ -578,7 +578,7 @@ The Flink Doris Connector integrates **Flink CDC** ([Flink CDC Documentation](ht
 
 :::info Note
 
-1. When using full database synchronization, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory, such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC version 3.1 and later is not compatible with previous versions. You can download the dependencies from the following links: [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/), [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/).
+1. When using full database synchronization, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory (Fat Jar), such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC version 3.1 and later is not compatible with previous versions. You can download the dependencies from the following links: [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/), [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/).
 2. For versions after Connector 24.0.0, the required Flink CDC version must be 3.1 or higher. You can download it [here](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/). If Flink CDC is used to synchronize MySQL and Oracle, you must also add the relevant JDBC drivers under `$FLINK_HOME/lib`.
 
 #### MySQL Whole Database Synchronization
