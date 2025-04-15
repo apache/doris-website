@@ -40,7 +40,7 @@ ARRAYS_OVERLAP(<left>, <right>)
 | 参数 | 说明 |
 |--|--|
 | `<left>` | 待判断的数组 |
-| `<right>` | 带判断的数组 |
+| `<right>` | 待判断的数组 |
 
 ## 返回值
 
