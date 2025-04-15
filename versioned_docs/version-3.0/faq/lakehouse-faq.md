@@ -126,17 +126,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 ## Hive Catalog
 
-1. Error accessing Iceberg table via Hive Metastore: `failed to get schema` or `Storage schema reading not supported`
+1. Accessing Iceberg or Hive table through Hive Catalog reports an error: `failed to get schema` or `Storage schema reading not supported`
 
-   Place the relevant `iceberg` runtime jar files in Hive's lib/ directory.
-
-   Configure in `hive-site.xml`:
-
-   ```
-   metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
-   ```
-
-   After configuration, restart the Hive Metastore.
+    You can try the following methods:
+    
+    * Put the `iceberg` runtime-related jar package in the lib/ directory of Hive.
+    
+    * Configure in `hive-site.xml`:
+    
+        ```
+        metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
+        ```
+        
+        After the configuration is completed, you need to restart the Hive Metastore.
+    
+    * Add `"get_schema_from_table" = "true"` in the Catalog properties
+    
+        This parameter is supported since versions 2.1.10 and 3.0.6.
 
 2. Error connecting to Hive Catalog: `Caused by: java.lang.NullPointerException`
 
@@ -243,6 +249,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     ```
 
     It is because the Doris built-in `libz.a` conflicts with the system environment's `libz.so`. To resolve this issue, first execute `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH`, and then restart the BE process.
+
+12. When inserting data into Hive, an error occurred as `HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`.
+
+    Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
 
 ## HDFS
 
