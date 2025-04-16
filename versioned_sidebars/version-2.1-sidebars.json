@@ -1574,7 +1574,6 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
-                                "sql-manual/sql-functions/table-functions/explode-variant-array",
                                 "sql-manual/sql-functions/table-functions/explode",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
