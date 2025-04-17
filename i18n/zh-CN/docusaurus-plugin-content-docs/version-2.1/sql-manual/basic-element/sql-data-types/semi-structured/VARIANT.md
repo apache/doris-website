@@ -348,7 +348,7 @@ mysql> SELECT
   "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 }
 ```
-在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开。以下是一个示例：
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开，且需要在是object的子field。以下是一个示例：
 ``` sql
 -- 注意：设置 variant_enable_flatten_nested 为 true
 -- 这样可以展开嵌套数组，将数组中的元素以列式存储
@@ -417,19 +417,6 @@ mysql> desc simple_nested_test;
 | v.lastName                    | text           | Yes  | false | NULL    | NONE  |
 +-------------------------------+----------------+------+-------+---------+-------+
 8 rows in set (0.00 sec)
-
--- 使用 lateral view (explode_variant_array) 来展开数组，并查询符合条件的电话号码及事件 ID
-mysql> select v['eventId'], phone_numbers
-    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
-    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
-+--------------------------+----------------------------------------------------+
-| element_at(v, 'eventId') | phone_numbers                                      |
-+--------------------------+----------------------------------------------------+
-| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
-| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
-+--------------------------+----------------------------------------------------+
-2 rows in set (0.02 sec)
-```
 
 ### 使用限制和最佳实践
 

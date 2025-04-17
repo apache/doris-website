@@ -344,7 +344,7 @@ mysql> SELECT
   "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 }
 ```
-In the JSON example above, the array nested contains objects (or nested data types). It’s important to note that only one level of array expansion is currently supported. Here is an example:
+In the JSON example above, the array nested contains objects (or nested data types). It’s important to note that **only one level of array expansion is currently supported, and the array must be a subfield of an object**. Here is an example:
 ``` sql
 -- Note: Set variant_enable_flatten_nested to true
 -- This setting enables nested array expansion, allowing array<object> elements to be stored in columnar format.
