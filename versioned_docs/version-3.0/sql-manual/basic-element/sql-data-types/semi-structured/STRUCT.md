@@ -99,7 +99,7 @@ test.csv:
 3|{"s_address":"sa3", "s_name":"sn3", "s_id":3}
 ```
 
-exmaple:
+example:
 
 ```
 curl --location-trusted -u root -T test.csv  -H "label:test_label" http://host:port/api/test/struct_test/_stream_load
