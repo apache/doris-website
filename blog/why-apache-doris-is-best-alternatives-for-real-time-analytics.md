@@ -7,7 +7,7 @@
     'author': 'Kang, Apache Doris PMC Member',
     'tags': ['Release Notes'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/es-alternatives/Alternative-to-Elasticsearch.jpg'
 }
 ---
