@@ -348,7 +348,7 @@ mysql> SELECT
   "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 }
 ```
-在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开。以下是一个示例：
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开，且需要在是object的子field。以下是一个示例：
 ``` sql
 -- 注意：设置 variant_enable_flatten_nested 为 true
 -- 这样可以展开嵌套数组，将数组中的元素以列式存储
