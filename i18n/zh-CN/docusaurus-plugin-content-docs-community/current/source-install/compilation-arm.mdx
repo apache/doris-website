@@ -71,7 +71,7 @@ Codename:	AltArch
 
 ## 软件环境配置
 
-### 软件环境对照表
+### 软件环境对照表（以JDK8为例）
 
 | 组件名称                                                     | 组件版本             |
 | ------------------------------------------------------------ | -------------------- |
@@ -113,7 +113,8 @@ mkdir /opt/software
   - JDK8
 
 ```shell
-  # 两种方式，第一种是省去额外下载和配置，直接使用 yum 安装，安装 devel 包是为了获取一些工具，如 jps 命令
+  # 编译Doris 2.1及更早版本时，可以安装JDK8
+  # 两种安装方式，第一种是省去额外下载和配置，直接使用 yum 安装，安装 devel 包是为了获取一些工具，如 jps 命令
   yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
   # 第二种是下载 arm64 架构的安装包，解压配置环境变量后使用
@@ -123,14 +124,21 @@ mkdir /opt/software
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
+  - JDK17
+
+```shell
+  # 若要编译Doris 3.0（含）之后的版本，或 master 分支，需要将JDK8换成JDK17
+  yum install -y java-17-openjdk java-17-openjdk-devel
+```
+
   - Maven
 
 ```shell
   cd /opt/tools
   # wget 工具下载后，直接解压缩配置环境变量使用
-  wget https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-    tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
-    mv apache-maven-3.6.3 /opt/software/maven
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
 ```
 
   - NodeJS
@@ -148,7 +156,7 @@ mkdir /opt/software
 ```shell
   cd /opt/tools
   # 下载 LDB-Toolchain ARM 版本
-  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
@@ -157,7 +165,7 @@ mkdir /opt/software
 3. 配置环境变量
 
 ```shell
-# 配置环境变量
+# 配置环境变量（java以jdk8为例）
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -168,11 +176,11 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # 保存退出并刷新环境变量
 source /etc/profile.d/doris.sh
 
-# 测试是否成功
+# 测试是否成功（java以jdk8为例）
 java -version
 > java version "1.8.0_291"
 mvn -version
-> Apache Maven 3.6.3
+> Apache Maven 3.9.9
 node --version
 > v16.3.0
 gcc --version
@@ -258,14 +266,21 @@ sudo dpkg-reconfigure dash
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
+  - JDK17
+
+```shell
+  # 若要编译Doris 3.0（含）之后的版本，或 master 分支，需要将JDK8换成JDK17
+  apt-get -y install openjdk-17-jdk
+```
+
   - Maven
 
 ```shell
   cd /opt/tools
   # wget 工具下载后，直接解压缩配置环境变量使用
-  wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-    tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
-    mv apache-maven-3.6.3 /opt/software/maven
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
 ```
 
   - NodeJS
@@ -283,7 +298,7 @@ sudo dpkg-reconfigure dash
 ```shell
   cd /opt/tools
   # 下载 LDB-Toolchain ARM 版本
-  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
@@ -292,7 +307,7 @@ sudo dpkg-reconfigure dash
 5. 配置环境变量
 
 ```shell
-# 配置环境变量
+# 配置环境变量（java以jdk8为例）
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -303,11 +318,11 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # 保存退出并刷新环境变量
 source /etc/profile.d/doris.sh
 
-# 测试是否成功
+# 测试是否成功（java以jdk8为例）
 java -version
 > java version "1.8.0_291"
 mvn -version
-> Apache Maven 3.6.3
+> Apache Maven 3.9.9
 node --version
 > v16.3.0
 gcc --version
@@ -328,6 +343,7 @@ sudo apt-get install -y byacc
 sudo apt-get install -y automake
 sudo apt-get install -y libtool
 sudo apt-get install -y bzip2
+sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
 sudo apt update
 sudo apt install gcc-11 g++-11
@@ -353,24 +369,20 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 目前 ARM 环境仅推荐使用 ldb-toolchain 进行编译，该方法适用于 [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) 之后的 Doris 版本。
 :::
 
-下载 [ldb\_toolchain\_gen.aarch64.sh](https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh)
+ldb-toolchain下载和安装详见本文前面的介绍，之后的编译方式参阅 [使用 LDB toolchain 编译](./compilation-with-ldb-toolchain)
 
-之后的编译方式参阅 [使用 LDB toolchain 编译](./compilation-with-ldb-toolchain)
-
-其中，jdk 和 nodejs 替换为对应的 aarch64 版本：
-
-1. [Java8-aarch64](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz)
-2. [Node v16.3.0-aarch64](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz)
+其中，jdk 和 nodejs 替换为对应的 aarch64 版本，具体处理方式详见本文前面的介绍
 
 如下载预编译的三方库遇到问题，请使用`tools/build_thirdparty.sh`自行编译。在编译三方库时，请使用 gcc：
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-在 ARM 平台编译 Doris 时，**请关闭 AVX2 和 LIBUNWIND 三方库**：
+在 ARM 平台编译 Doris 时，**请关闭 AVX2、LIBUNWIND和AZURE 三方库**：
 ```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
+export DISABLE_BUILD_AZURE=ON
 ```
 
 如在编译、启动时仍遇到问题，请查阅[常见问题](#常见问题)。如果没有相关解决方案，欢迎[提出issue](https://github.com/apache/doris/issues)。
