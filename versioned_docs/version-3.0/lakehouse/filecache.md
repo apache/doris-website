@@ -57,7 +57,7 @@ Add settings to the BE node's configuration file `conf/be.conf`, and restart the
 |  Parameter | Required  | Description  |
 |  ---  | ---  | --- |
 | `enable_file_cache` | Yes | Whether to enable Data cache, default false |
-| `file_cache_path` | Yes | Parameters about cache path, json format, for exmaple: `[{"path": "/path/to/file_cache1", "total_size":53687091200},{"path": "/path/to/file_cache2", "total_size":53687091200},{"path": "/path/to/file_cache3", "total_size":53687091200}]`. `path` is the path to save cached data; `total_size` is the max size of cached data. |
+| `file_cache_path` | Yes | Parameters about cache path, json format, for example: `[{"path": "/path/to/file_cache1", "total_size":53687091200},{"path": "/path/to/file_cache2", "total_size":53687091200},{"path": "/path/to/file_cache3", "total_size":53687091200}]`. `path` is the path to save cached data; `total_size` is the max size of cached data. |
 | `clear_file_cache` | No | Whether to delete the previous cache data when the BE restarts, default false |
 
 ## Cache Observability

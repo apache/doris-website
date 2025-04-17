@@ -1,6 +1,6 @@
 ---
 {
-  "title": "ALTER TABLE AND GENERATED COLUMN",
+  "title": "ALTER TABLE ADD GENERATED COLUMN",
   "language": "zh-CN"
 }
 ---
