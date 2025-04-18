@@ -32,7 +32,7 @@ under the License.
 
 在迁移之前，需要根据 SnowFlake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/overview.md)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
 
-SnowFlake 和 Doris 的数据类型映射可参考下面表格：
+# 数据类型映射
 
 | SnowFlake                                        | Doris          | 备注                                               |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
@@ -54,7 +54,7 @@ SnowFlake 和 Doris 的数据类型映射可参考下面表格：
 | OBJECT                                           | JSON           |                                                    |
 | GEOGRAPHY/GEOMETRY                               | STRING         |                                                    |
 
-# 前置工作
+# 1. 创建表
 
 在迁移 SnowFlake 表到 Doris 中的时候，需要先创建 Doris 表。
 
@@ -101,7 +101,7 @@ PROPERTIES (
 );
 ```
 
-# 导出 SnowFlake 数据
+# 2. 导出 SnowFlake 数据
 
 1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
 
@@ -126,7 +126,7 @@ COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCH
 
 ![img](/images/data-operate/snowflake_s3_out2.png)
 
-# 导入数据到 Doris
+# 3. 导入数据到 Doris
 
 导入使用 S3 Load 进行导入，**S3 Load 是一种异步的数据导入方式，执行后 Doris 会主动从数据源拉取数据，**数据源支持兼容 S3 协议的对象存储，包括 ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)等)。
 

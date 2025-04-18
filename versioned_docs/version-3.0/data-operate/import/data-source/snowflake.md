@@ -33,9 +33,9 @@ During the migration from Snowflake to Doris, object storage is typically used a
 
 Before migration, select Doris' [data model](../../../table-design/data-model/overview.md), [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md), and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategies based on Snowflake's table structure. For more table creation strategies, refer to [Load Best Practices](../load-best-practices.md).
 
-Refer to the following table for Snowflake-to-Doris data type mappings:
+# Data type mapping
 
-| SnowFlake                                        | Doris          | 备注                                               |
+| SnowFlake                                        | Doris          | Comment                                            |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
 | NUMBER(p, s)/DECIMAL(p, s)/NUMERIC(p,s)          | DECIMAL(p, s)  |                                                    |
 | INT/INTEGER                                      | INT            |                                                    |
@@ -55,7 +55,7 @@ Refer to the following table for Snowflake-to-Doris data type mappings:
 | OBJECT                                           | JSON           |                                                    |
 | GEOGRAPHY/GEOMETRY                               | STRING         |                                                    |
 
-# Prerequisites
+# 1. Create Table
 
 To migrate a Snowflake table to Doris, first create the Doris table.
 
@@ -102,7 +102,7 @@ PROPERTIES (
 );
 ```
 
-# Export Data from Snowflake
+# 2. Export Data from Snowflake
 
 1. **Export to S3 Parquet Files via COPY INTO**
 
@@ -127,7 +127,7 @@ Exported files are organized into **subdirectories by partition** on S3:
 
 ![img](/images/data-operate/snowflake_s3_out2.png)
 
-# Load Data to Doris
+# 3. Load Data to Doris
 
 S3 Load is an asynchronous data import method. After execution, Doris actively pulls data from the data source. The data source supports object storage compatible with the S3 protocol, including ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)，etc)
 
