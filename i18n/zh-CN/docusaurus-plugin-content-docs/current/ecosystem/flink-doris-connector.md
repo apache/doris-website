@@ -67,7 +67,17 @@ under the License.
 
 Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
-```SQL
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
+  <artifactId>flink-doris-connector-${flink.version}</artifactId>
+  <version>${connector.version}</version>
+</dependency> 
+```
+
+例如：
+
+```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
@@ -339,7 +349,13 @@ INSERT INTO student_sink SELECT * FROM student_source;
 
 #### 使用 DataStream API 写入数据
 
-通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表
+通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表。
+
+:::info
+
+Connector 内部已经包含 HttpClient4.5.13 版本，如果项目中有单独引用 HttpClient，需要确保版本一致。
+
+:::
 
 ##### 普通 String 格式
 
@@ -581,7 +597,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 
 :::info 注意
 
-1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖 (Fat Jar)，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
+1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖 (**Fat Jar**)，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
 2. Connector 24.0.0 之后依赖的 Flink CDC 版本需要在 3.1 以上，下载地址见[这里](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，FlinkCDC 如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
 
 :::
