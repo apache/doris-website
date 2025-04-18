@@ -5,7 +5,7 @@
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -38,8 +38,6 @@ SUBSTRING_INDEX(<content>, <delimiter>, <field>)
 | `<content>` | 需要截取的字符串。类型：VARCHAR                         |
 | `<delimiter>` | 分隔符，大小写敏感且多字节安全。类型：VARCHAR           |
 | `<field>` | 分隔符出现的次数。正数从左计数，负数从右计数。类型：INT |
-
-注意：delimiter 和 field 参数需要是常量，不支持变量。
 
 ## 返回值
 
