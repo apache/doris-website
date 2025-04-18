@@ -175,7 +175,8 @@
                         "data-operate/import/handling-messy-data",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/group-commit-manual"
+                        "data-operate/import/group-commit-manual",
+                        "data-operate/import/load-best-practices"
                     ]
                 },
                 {
