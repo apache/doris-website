@@ -156,3 +156,5 @@ PROPERTIES
     "s3.region" = "ap-beijing"
 );
 ```
+
+Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

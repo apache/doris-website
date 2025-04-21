@@ -177,7 +177,8 @@ PROPERTIES (
 );
 ```
 
-Doris also suppoted AWS assume role, please refer to[AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md).
+Doris also suppoted `AWS Assume Role` for AWS S3 Storage Vault, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+
 
 ### 7. Create MinIO storage vault
 

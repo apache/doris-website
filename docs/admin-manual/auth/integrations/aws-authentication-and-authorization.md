@@ -24,30 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 支持两种 AWS 认证和鉴权方式访问 AWS 服务，IAM User和Assumed Role， 本文介绍如何配置这两种认证和鉴权方式的 AWS 安全凭证。
+Doris supports accessing AWS service resources through two authentication methods: ​​`IAM User`​​ and `​​Assumed Role`​​. This article explains how to configure security credentials for both methods and use Doris features to interact with AWS services.
 
-# 认证方式介绍
+# Authentication Methods Overview
 
-## IAM User 认证鉴权
+## IAM User Authentication
 
-Doris 支持通过 AWS IAM User 来实现对外部数据源的访问认证和鉴权, 即access_key和secret_key密钥的方式，具体配置步骤如下(详细的介绍请参见 AWS 官网文档 [IAM USER](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html))：
+Doris enables access to external data sources by configuring `AWS IAM User` credentials(equal to `access_key` and `secret_key`), below are the detailed configuration steps(for more information, refer to the AWS doc [IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html)):
 
-### Step1 登录AWS控制台创建IAM User并配置IAM策略
+### Step1 create an IAM User and configure policies
 
-1. 登录AWS控制台选择Create user按钮
+1. Login to the `AWS Console` and create an `IAM User`​
 
 ![](/images/integrations/create_iam_user.png)
 
-2. 选择直接附加策略
+2. Enter the IAM User name and attach policies directly​
 
 ![](/images/integrations/iam_user_attach_policy1.png)
 
-3. 在策略编辑器中填入对应的AWS资源策略，下文S3 Bucket为例列出了读/写策略的常见模板
+3. Define AWS resource policies in the policy editor​​, below are read/write policy templates for accessing an S3 bucket
 
 ![](/images/integrations/iam_user_attach_policy2.png)
 
-S3 Bucket读策略模版(注意替换对应的bucket name和prefix路径)
-```JSON
+S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+
+**Notes:&#x20;**
+
+1. **Replace `your-bucket` and `your-prefix` with actual values.**
+
+2. **Avoid adding extra `/` separators.**
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -55,9 +62,9 @@ S3 Bucket读策略模版(注意替换对应的bucket name和prefix路径)
             "Effect": "Allow",
             "Action": [
               "s3:GetObject",
-              "s3:GetObjectVersion"
+              "s3:GetObjectVersion",
             ],
-            "Resource": "arn:aws:s3:::<bucket>/<prefix>/*"
+            "Resource": "arn:aws:s3:::<your-bucket>/your-prefix/*"
         },
         {
             "Effect": "Allow",
@@ -65,21 +72,21 @@ S3 Bucket读策略模版(注意替换对应的bucket name和prefix路径)
                 "s3:ListBucket",
                 "s3:GetBucketLocation"
             ],
-            "Resource": "arn:aws:s3:::<bucket>",
-            "Condition": {
-                "StringLike": {
-                    "s3:prefix": [
-                        "<prefix>/*"
-                    ]
-                }
-            }
-        }
+            "Resource": "arn:aws:s3:::<your-bucket>"
+        }    
     ]
 }
 ```
 
-S3 Bucket写策略模板
-```JSON
+S3 write policy template​​ (Applies to Doris features requiring read/write access, e.g: Export, Storage Vault, Repository)
+
+**Notes:&#x20;**
+
+1. **Replace `your-bucket` and `your-prefix` with actual values.**
+
+2. **Avoid adding extra `/` separators.**
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -94,32 +101,29 @@ S3 Bucket写策略模板
               "s3:AbortMultipartUpload",      
               "s3:ListMultipartUploadParts"
             ],
-            "Resource": "arn:aws:s3:::<bucket>/<prefix>/*"
+            "Resource": "arn:aws:s3:::<your-bucket>/<your-prefix>/*"
         },
         {
             "Effect": "Allow",
             "Action": [
                 "s3:ListBucket",
-                "s3:GetBucketLocation"
+                "s3:GetBucketLocation",
+                "s3:GetBucketVersioning",
+                "s3:GetLifecycleConfiguration"
             ],
-            "Resource": "arn:aws:s3:::<bucket>",
-            "Condition": {
-                "StringLike": {
-                    "s3:prefix": [
-                        "<prefix>/*"
-                    ]
-                }
-            }
-        }
+            "Resource": "arn:aws:s3:::<your-bucket>"
+        }    
     ]
 }
 ```
 
-4. 创建IAM User成功后，创建访问密钥
+4. After successfully creating the IAM User, create access/secret key pair
 
 ![](/images/integrations/iam_user_create_ak_sk.png)
 
-### Step2 通过访问密钥和SQL语句使用Doris对应功能
+### Step2 Use doris features with access/secret key pair via SQL
+
+After completing all configurations in Step 1, you will obtain `access_key` and `secret_key`. Use these credentials to access doris features as shown in the following examples:
 
 S3 Load
 ```SQL
@@ -136,8 +140,8 @@ S3 Load
       "provider" = "S3",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.access_key" = "<your-ak>",
-      "s3.secret_key" = "<your-sk>"
+      "s3.access_key" = "<your-access-key>",
+      "s3.secret_key" = "<your-secrety-key>"
   )
   PROPERTIES
   (
@@ -152,8 +156,8 @@ TVF
       'format' = 'parquet',
       's3.endpoint' = 's3.us-east-1.amazonaws.com',
       's3.region' = 'us-east-1',
-      's3.access_key' = '<your-ak>',
-      's3.secret_key'='<your-sk>'
+      "s3.access_key" = "<your-access-key>",
+      "s3.secret_key"="<your-secret-key>"
   )
 ```
 
@@ -165,38 +169,106 @@ External Catalog
       'warehouse' = 's3://your_bucket/dir/key',
       's3.endpoint' = 's3.us-east-1.amazonaws.com',
       's3.region' = 'us-east-1',
-      's3.access_key' = '<your-ak>',
-      's3.secret_key' = '<your-sk>'
+      "s3.access_key" = "<your-access-key>",
+      "s3.secret_key"="<your-secret-key>"
   );
 ```
-......
 
-您可以在不同 业务逻辑 里指定不同的 IAM User 的 Access Key 和 Secret Key，从而实现外部数据的访问控制。
+Storage Vault
+```SQL
+CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
+PROPERTIES (
+    "type" = "S3",
+    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "s3.bucket" = "<your-bucket>",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key"="<your-secret-key>",
+    "s3.root.path" = "s3_demo_vault_prefix",
+    "provider" = "S3",
+    "use_path_style" = "false"
+);
+```
 
-## Assumed Role 认证鉴权
+Export
+```SQL
+EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
+PROPERTIES (
+    "column_separator"="\\x07", 
+    "line_delimiter" = "\\x07"
+) WITH S3 (
+    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key"="<your-secret-key>",
+)
+```
 
-Assumed Role 支持通过担任 AWS IAM Role 来实现对外部数据源的访问认证和鉴权，配置图示如下图，详细步骤如下文(参见 AWS 官网文档[代入角色](https://docs.aws.amazon.com/zh_cn/awscloudtrail/latest/userguide/cloudtrail-sharing-logs-assume-role.html)):
+Repository
+```SQL
+CREATE REPOSITORY `s3_repo`
+WITH S3
+ON LOCATION "s3://your_bucket/s3_repo"
+PROPERTIES
+(
+    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key"="<your-secret-key>"
+);
+```
+
+Resource
+```SQL
+CREATE RESOURCE "remote_s3"
+PROPERTIES
+(
+    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "s3.bucket" = "<your-bucket>",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key"="<your-secret-key>"
+);
+```
+
+You can specify different IAM User credentials (`access_key` and `secret_key`) across different business logic to implement access control for external data.
+
+## Assumed Role Authentication
+
+Assumed Role allows accessing external data sources by assuming an AWS IAM Role(for details, refer to AWS documentation [assume role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage-assume.html)), the following diagram illustrates the configuration workflow:
 
 ![](/images/integrations/assumed_role_flow.png)
 
-### Step1 准备工作
+Terminology:
 
-源账户（Source Account）​：发起 Assume Role 的 AWS 账户（本例中是Doris FE/BE EC2机器所属账户）。
-目标账户（Target Account）​：拥有目标 S3 Bucket 的 AWS 账户。
+`Source Account`: The AWS account initiating the Assume Role action (where Doris FE/BE EC2 instances reside);
 
-注意：源账户和目标账户可以是同一个AWS账户
+`Target Account`: The AWS account owning the target S3 bucket;
 
-1. 请确保源账户创建了一个ec2_role，Doris FE/BE 部署EC2机器都绑定到新创建的ec2_role
-2. 请确保目标账户创建了一个bucket_role和对应的bucket
+**Note: The source and target accounts can be the same AWS account**
+
+`ec2_role`: A role created in the source account, attached to EC2 instances running Doris FE/BE;
+
+`bucket_role`: A role created in the target account with permissions to access the target bucket;
+
+​​More detailed configuration steps are as follows:​
+
+### Step1 Prerequisites
+
+1. Ensure the source account has created an `ec2_role` and attached it to all `EC2 instances` running Doris FE/BE;
+
+2. Ensure the target account has created a `bucket_role` and corresponding bucket;
+
+After attaching `ec2_role` to `EC2 instances`, you can find the `role_arn` as shown below:
 
 ![](/images/integrations/ec2_instance.png)
 
-### Step2 配置源账户IAM角色( EC2 实例关联角色) 权限策略
+### Step2 Configure Permissions for Source Account IAM Role (EC2 Instance Role)
 
-1. 登录 [AWS IAM 控制台](https://us-east-1.console.aws.amazon.com/iamv2/home#/home)，在左侧导航栏选择 Access management > Roles；
-2. 找到 EC2 实例关联角色，单击角色名称；
-3. 在角色详情页的 Permissions  区域，单击 Add permissions 并选择 Create inline policy；
-4. 在 Specify permissions 步骤， 单击 JSON 页签，然后填入如下策略，最后，单击 Review policy；
+1. Log in to the [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home)，navigate to ​​`Access management` > `Roles`；
+2. Find the EC2 instance role and click its name;
+3. On the role details page, go to the ​​`Permissions`​​ tab, click ​​`Add permissions`​​, then select `​​Create inline policy`​​;
+4. In the ​​`Specify permissions​​ section`, switch to the `​​JSON`​​ tab, paste the following policy, and click ​​`Review policy`​​:
 
 ![](/images/integrations/source_role_permission.png)
 
@@ -213,12 +285,15 @@ Assumed Role 支持通过担任 AWS IAM Role 来实现对外部数据源的访�
 }
 ```
 
-### Step3 配置目标账户IAM角色信任策略和权限策略
+### Step3 Configure Trust Policy and Permissions for Target Account IAM Role
 
-1. 登录 [AWS IAM 控制台](https://us-east-1.console.aws.amazon.com/iamv2/home#/home)，在左侧导航栏选择 Access management > Roles 找到 Assumed Target Role，单击角色名称 在角色详情页上；
-2. 单击 Trust relationships 页签，然后在 Trust relationships 页签上单击 Edit trust policy。在 Edit trust policy 页面中填入如下JSON。最后，单击 Update policy（需要把下面策略中的 `<ec2_iam_role_arn>` 替换为 EC2 实例关联角色的 ARN）；
+1. Log in [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home), navigate to ​​Access management > Roles​​, find the target role (bucket_role), and click its name;
+
+2. Go to the `​​Trust relationships`​​ tab, click `​​Edit trust policy`​​, and paste the following JSON (replace <ec2_iam_role_arn> with your EC2 instance role ARN). Click ​​Update policy
 
 ![](/images/integrations/target_role_trust_policy.png)
+
+**Note: The `ExternalId` in the `Condition` section is an optional string parameter used to distinguish scenarios where multiple source users need to assume the same role. If configured, include it in the corresponding Doris SQL statements. For a detailed explanation of ExternalId, refer to [aws doc](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_third-party.html)**
 
 ```JSON
 {
@@ -240,12 +315,19 @@ Assumed Role 支持通过担任 AWS IAM Role 来实现对外部数据源的访�
 }
 ```
 
-3. 在角色详情页的 Permissions 区域，单击 Add permissions 并选择 Create inline policy，在 Specify permissions 步骤， 单击 JSON 页签，输入如下JSON策略配置，最后，单击 Review policy。
+3. On the role details page, go to the ​​`Permissions`​​ tab, click `​​Add permissions`​​, then select `​​Create inline policy`​​. In the `​​JSON`​​ tab, paste one of the following policies based on your requirements;
 
 ![](/images/integrations/target_role_permission2.png)
 
-S3 Bucket读策略模版(注意替换对应的bucket name和prefix路径)
-```JSON
+S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+
+**Notes:&#x20;**
+
+1. **Replace `your-bucket` and `your-prefix` with actual values.**
+
+2. **Avoid adding extra `/` separators.**
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -264,20 +346,20 @@ S3 Bucket读策略模版(注意替换对应的bucket name和prefix路径)
                 "s3:GetBucketLocation"
             ],
             "Resource": "arn:aws:s3:::<bucket>",
-            "Condition": {
-                "StringLike": {
-                    "s3:prefix": [
-                        "<prefix>/*"
-                    ]
-                }
-            }
         }
     ]
 }
 ```
 
-S3 Bucket写策略模板
-```JSON
+S3 write policy template​​ (Applies to Doris features requiring read/write access, e.g: Export, Storage Vault, Repository)
+
+**Notes:&#x20;**
+
+1. **Replace `your-bucket` and `your-prefix` with actual values.**
+
+2. **Avoid adding extra `/` separators.**
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -300,20 +382,22 @@ S3 Bucket写策略模板
                 "s3:ListBucket",
                 "s3:GetBucketLocation"
             ],
-            "Resource": "arn:aws:s3:::<bucket>",
-            "Condition": {
-                "StringLike": {
-                    "s3:prefix": [
-                        "<prefix>/*"
-                    ]
-                }
-            }
+            "Resource": "arn:aws:s3:::<bucket>"
         }
     ]
 }
 ```
 
-### Step4 通过role_arn和SQL语句使用Doris对应功能
+#### Step4 Use doris features with Assumed Role via SQL, according to `role_arn` and `external_id` fields;
+
+After completing the above configurations, obtain the target account's `role_arn` and `external_id` (if applicable). 
+Use these parameters in doris SQL statements as shown below:
+
+Common important key parameters:​​
+```sql
+"s3.role_arn" = "<your-target-role-arn>",
+"s3.external_id" = "<your-external-id>"      -- option parameter
+```
 
 S3 Load
 ```SQL
@@ -331,7 +415,7 @@ S3 Load
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-target-role-arn>",
-      "s3.external_id" = "<your-external-id>"      -- 可选参数
+      "s3.external_id" = "<your-external-id>"      -- option parameter
   )
   PROPERTIES
   (
@@ -347,7 +431,7 @@ TVF
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-target-role-arn>",
-      "s3.external_id" = "<your-external-id>"      -- 可选参数
+      "s3.external_id" = "<your-external-id>"      -- option parameter
   )
 ```
 
@@ -360,7 +444,7 @@ External Catalog
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-target-role-arn>",
-      "s3.external_id" = "<your-external-id>"      -- 可选参数
+      "s3.external_id" = "<your-external-id>"      -- option parameter
   );
 ```
 
@@ -370,11 +454,11 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
     "type" = "S3",
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
-    "s3.role_arn" = "<your-target-role-arn>",
-    "s3.external_id" = "<your-external-id>",            -- 可选参数
     "s3.region" = "us-east-1",
+    "s3.bucket" = "<your-bucket>",
+    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.external_id" = "<your-external-id>",            -- option parameter
     "s3.root.path" = "s3_demo_vault_prefix",
-    "s3.bucket" = "xxxxxx",
     "provider" = "S3",
     "use_path_style" = "false"
 );
@@ -382,7 +466,7 @@ PROPERTIES (
 
 Export
 ```SQL
-EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
+EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
 PROPERTIES (
     "column_separator"="\\x07", 
     "line_delimiter" = "\\x07"
@@ -390,7 +474,7 @@ PROPERTIES (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.role_arn" = "<your-target-role-arn>",
-    "s3.external_id" = "<your-external-id>",
+    "s3.external_id" = "<your-external-id>"
 )
 ```
 
@@ -398,13 +482,13 @@ Repository
 ```SQL
 CREATE REPOSITORY `s3_repo`
 WITH S3
-ON LOCATION "s3://bucket_name/s3_repo"
+ON LOCATION "s3://your_bucket/s3_repo"
 PROPERTIES
 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.role_arn" = "<your-target-role-arn>",
-    "s3.external_id" = "<your-external-id>", 
+    "s3.external_id" = "<your-external-id>"
 );
 ```
 
@@ -415,9 +499,9 @@ PROPERTIES
 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
-    "s3.bucket" = "bucket4",
+    "s3.bucket" = "<your-bucket>",
     "s3.role_arn" = "<your-target-role-arn>",
-    "s3.external_id" = "<your-external-id>",
+    "s3.external_id" = "<your-external-id>"
 );
 ```
 
