@@ -1,6 +1,6 @@
 ---
 {
-    "title": "snowflake",
+    "title": "Snowflake",
     "language": "en"
 }
 ---
@@ -24,16 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Overview
-
 During the migration from Snowflake to Doris, object storage is typically used as an intermediate medium. The core process is as follows: First, export data to object storage using Snowflake's [COPY INTO](https://docs.snowflake.com/en/user-guide/data-unload-overview) statement. Then, use Doris' S3 Load feature to read data from the object storage and load it into Doris. For details, refer to [S3 Load](./amazon-s3.md).
 
 
-# Considerations
+## Considerations
 
 Before migration, select Doris' [data model](../../../table-design/data-model/overview.md), [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md), and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategies based on Snowflake's table structure. For more table creation strategies, refer to [Load Best Practices](../load-best-practices.md).
 
-# Data type mapping
+## Data type mapping
 
 | SnowFlake                                        | Doris          | Comment                                            |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
@@ -55,7 +53,7 @@ Before migration, select Doris' [data model](../../../table-design/data-model/ov
 | OBJECT                                           | JSON           |                                                    |
 | GEOGRAPHY/GEOMETRY                               | STRING         |                                                    |
 
-# 1. Create Table
+## 1. Create Table
 
 To migrate a Snowflake table to Doris, first create the Doris table.
 
@@ -102,7 +100,7 @@ PROPERTIES (
 );
 ```
 
-# 2. Export Data from Snowflake
+## 2. Export Data from Snowflake
 
 1. **Export to S3 Parquet Files via COPY INTO**
 
@@ -127,7 +125,7 @@ PROPERTIES (
 
     ![img](/images/data-operate/snowflake_s3_out2.png)
 
-# 3. Load Data to Doris
+## 3. Load Data to Doris
 
 S3 Load is an asynchronous data load method. After execution, Doris actively pulls data from the data source. The data source supports object storage compatible with the S3 protocol, including ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)，etc)
 

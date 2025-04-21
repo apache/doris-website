@@ -1,6 +1,6 @@
 ---
 {
-    "title": "snowflake",
+    "title": "Snowflake",
     "language": "zh-CN"
 }
 ---
@@ -24,15 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 概述
-
 在迁移 SnowFlake 的过程中，通常需要借助对象存储作为中间媒介。核心流程如下：首先通过 Snowflake 的 [COPY INTO](https://docs.snowflake.cn/zh/guides-overview-unloading-data) 语句将数据导出到对象存储；再利用 Doris 的 S3 Load 功能从对象存储中读取数据并导入到 Doris 中，具体可参考 [S3 导入](./amazon-s3.md)。
 
-# 注意事项
+## 注意事项
 
 在迁移之前，需要根据 SnowFlake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/overview.md)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
 
-# 数据类型映射
+## 数据类型映射
 
 | SnowFlake                                        | Doris          | 备注                                               |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
@@ -54,7 +52,7 @@ under the License.
 | OBJECT                                           | JSON           |                                                    |
 | GEOGRAPHY/GEOMETRY                               | STRING         |                                                    |
 
-# 1. 创建表
+## 1. 创建表
 
 在迁移 SnowFlake 表到 Doris 中的时候，需要先创建 Doris 表。
 
@@ -101,7 +99,7 @@ PROPERTIES (
 );
 ```
 
-# 2. 导出 SnowFlake 数据
+## 2. 导出 SnowFlake 数据
 
 1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
 
@@ -126,7 +124,7 @@ PROPERTIES (
 
 ​   ![img](/images/data-operate/snowflake_s3_out2.png)
 
-# 3. 导入数据到 Doris
+## 3. 导入数据到 Doris
 
 导入使用 S3 Load 进行导入，**S3 Load 是一种异步的数据导入方式，执行后 Doris 会主动从数据源拉取数据，**数据源支持兼容 S3 协议的对象存储，包括 ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)等)。
 
