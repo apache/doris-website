@@ -105,26 +105,26 @@ PROPERTIES (
 
 1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
 
-SnowFlake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
+    SnowFlake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
 
-```sql
-CREATE FILE FORMAT my_parquet_format TYPE = parquet;
+    ```sql
+    CREATE FILE FORMAT my_parquet_format TYPE = parquet;
 
-CREATE OR REPLACE STAGE external_stage
-URL='s3://mybucket/sales_data'
-CREDENTIALS=(AWS_KEY_ID='<ak>' AWS_SECRET_KEY='<sk>')
-FILE_FORMAT = my_parquet_format;
+    CREATE OR REPLACE STAGE external_stage
+    URL='s3://mybucket/sales_data'
+    CREDENTIALS=(AWS_KEY_ID='<ak>' AWS_SECRET_KEY='<sk>')
+    FILE_FORMAT = my_parquet_format;
 
-COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
-```
+    COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
+    ```
 
 2. **查看 S3 上的导出文件**
 
-导出后，在 S3 上会按照**分区划分成具体的子目录**，每一个目录是对应的 如下
+    导出后，在 S3 上会按照**分区划分成具体的子目录**，每一个目录是对应的 如下
 
-![img](/images/data-operate/snowflake_s3_out.png)
+​   ![img](/images/data-operate/snowflake_s3_out.png)
 
-![img](/images/data-operate/snowflake_s3_out2.png)
+​   ![img](/images/data-operate/snowflake_s3_out2.png)
 
 # 3. 导入数据到 Doris
 
@@ -136,278 +136,95 @@ COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCH
 
 1. **导入一个分区的数据**
 
-```sql
-LOAD LABEL sales_data_2025_04_08
-(
-    DATA INFILE("s3://mybucket/sales_data/2025_04_08/*")
-    INTO TABLE sales_data
-    FORMAT AS "parquet"
-    (order_id, order_date, customer_name, amount, country)
-)
-WITH S3
-(
-    "provider" = "S3",
-    "AWS_ENDPOINT" = "s3.ap-southeast-1.amazonaws.com",
-    "AWS_ACCESS_KEY" = "<ak>",
-    "AWS_SECRET_KEY"="<sk>",
-    "AWS_REGION" = "ap-southeast-1"
-);
-```
+    ```sql
+    LOAD LABEL sales_data_2025_04_08
+    (
+        DATA INFILE("s3://mybucket/sales_data/2025_04_08/*")
+        INTO TABLE sales_data
+        FORMAT AS "parquet"
+        (order_id, order_date, customer_name, amount, country)
+    )
+    WITH S3
+    (
+        "provider" = "S3",
+        "AWS_ENDPOINT" = "s3.ap-southeast-1.amazonaws.com",
+        "AWS_ACCESS_KEY" = "<ak>",
+        "AWS_SECRET_KEY"="<sk>",
+        "AWS_REGION" = "ap-southeast-1"
+    );
+    ```
 
 2. **通过 Show Load 查看任务运行情况**
 
-由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
+    由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
-```yaml
-mysql> show load where label = "label_sales_data_2025_04_08"\G
-*************************** 1. row ***************************
-         JobId: 17956078
-         Label: label_sales_data_2025_04_08
-         State: FINISHED
-      Progress: 100.00% (1/1)
-          Type: BROKER
-       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
-      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
-      ErrorMsg: NULL
-    CreateTime: 2025-04-10 17:50:53
-  EtlStartTime: 2025-04-10 17:50:54
- EtlFinishTime: 2025-04-10 17:50:54
- LoadStartTime: 2025-04-10 17:50:54
-LoadFinishTime: 2025-04-10 17:50:54
-           URL: NULL
-    JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
- TransactionId: 766228
-  ErrorTablets: {}
-          User: root
-       Comment: 
-1 row in set (0.00 sec)
-```
+    ```yaml
+    mysql> show load where label = "label_sales_data_2025_04_08"\G
+    *************************** 1. row ***************************
+            JobId: 17956078
+            Label: label_sales_data_2025_04_08
+            State: FINISHED
+        Progress: 100.00% (1/1)
+            Type: BROKER
+        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
+        TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
+        ErrorMsg: NULL
+        CreateTime: 2025-04-10 17:50:53
+    EtlStartTime: 2025-04-10 17:50:54
+    EtlFinishTime: 2025-04-10 17:50:54
+    LoadStartTime: 2025-04-10 17:50:54
+    LoadFinishTime: 2025-04-10 17:50:54
+            URL: NULL
+        JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
+    TransactionId: 766228
+    ErrorTablets: {}
+            User: root
+        Comment: 
+    1 row in set (0.00 sec)
+    ```
 
 3. **处理导入过程中的错误**
 
-当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
+    当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
 
-```SQL
-mysql> show load where state='CANCELLED' and label like "label_test%"\G
-*************************** 1. row ***************************
-         JobId: 18312384
-         Label: label_test123
-         State: CANCELLED
-      Progress: 100.00% (3/3)
-          Type: BROKER
-       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
-      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
-      ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
-    CreateTime: 2025-04-15 17:32:59
-  EtlStartTime: 2025-04-15 17:33:02
- EtlFinishTime: 2025-04-15 17:33:02
- LoadStartTime: 2025-04-15 17:33:02
-LoadFinishTime: 2025-04-15 17:33:02
-           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
-    JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
- TransactionId: 769213
-  ErrorTablets: {}
-          User: root
-       Comment: 
-```
+    ```SQL
+    mysql> show load where state='CANCELLED' and label like "label_test%"\G
+    *************************** 1. row ***************************
+            JobId: 18312384
+            Label: label_test123
+            State: CANCELLED
+        Progress: 100.00% (3/3)
+            Type: BROKER
+        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
+        TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
+        ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
+        CreateTime: 2025-04-15 17:32:59
+    EtlStartTime: 2025-04-15 17:33:02
+    EtlFinishTime: 2025-04-15 17:33:02
+    LoadStartTime: 2025-04-15 17:33:02
+    LoadFinishTime: 2025-04-15 17:33:02
+            URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
+        JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
+    TransactionId: 769213
+    ErrorTablets: {}
+            User: root
+        Comment: 
+    ```
 
-如上面的例子是**数据质量错误**(ETL_QUALITY_UNSATISFIED)，具体错误需要通过访问返回的 URL 的链接进行查看，如下是数据超过了表中的 Schema 中 country 列的实际长度：
+    如上面的例子是**数据质量错误**(ETL_QUALITY_UNSATISFIED)，具体错误需要通过访问返回的 URL 的链接进行查看，如下是数据超过了表中的 Schema 中 country 列的实际长度：
 
-```python
-[root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
-```
+    ```python
+    [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
+    ```
 
-同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
+    同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
 
 4. **导入多个分区的数据**
 
-当需要迁移大数据量的存量数据时，可以使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
+    当需要迁移大数据量的存量数据时，可以使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
 
-以下脚本可以实现了轮询 S3 上的分区目录，提交 S3 Load 任务到 Doris 中，实现批量导入的效果。
-
-```bash
-#!/bin/bash
-
-# Specify the partition range to import
-START_DATE="2025-04-08"
-END_DATE="2025-04-10"
-
-# Specify a particular partitioned array. When the task fails, 
-# you can separately specify this partition for rerunning.
-SPECIFIC_DATES=()
-
-# Doris connection configuration
-DORIS_HOST="127.0.0.1"
-DORIS_QUERY_PORT="9030"
-DORIS_USER="root"
-DORIS_PASSWORD=""
-DORIS_DATABASE="testdb"
-DORIS_TABLE="sales_data"
-
-LABEL_PREFIX="label"
-S3_PREFIX="s3://mybucket/sales_data"
-AWS_ACCESS_KEY="ak"
-AWS_SECRET_KEY="sk"
-
-# Maximum number of concurrent tasks
-MAX_RUNNING_JOB=100
-
-# Interval for checking whether the S3 Load task is completed
-CHECK_INTERVAL=10
-
-# Generate the date array to process
-generate_dates() {
-    if [ ${#SPECIFIC_DATES[@]} -gt 0 ]; then
-        DATES=()
-        for date in "${SPECIFIC_DATES[@]}"; do
-            DATES+=("$date")
-        done
-        
-        echo "Running with specified partitions: ${SPECIFIC_DATES[*]}"
-    else
-        echo "Starting load for partition range: $START_DATE to $END_DATE"
-        
-        # Build date array
-        DATES=()
-        current_date="$START_DATE"
-        while [ "$(date -d "$current_date" +%s)" -le "$(date -d "$END_DATE" +%s)" ]; do
-            DATES+=("$current_date")
-            current_date=$(date -I -d "$current_date + 1 day")
-        done
-    fi
-}
-
-# Common query function
-run_query() {
-    mysql -h ${DORIS_HOST} -P ${DORIS_QUERY_PORT} -u ${DORIS_USER} -p${DORIS_PASSWORD} ${DORIS_DATABASE} -N -e "USE ${DORIS_DATABASE}; $1"
-}
-
-# Get task count by state
-get_task_count() {
-    run_query "SHOW LOAD WHERE state='$1' and label like '${LABEL_PREFIX}_sales_data_%'" | wc -l
-}
-
-# Check if task count has reached maximum limit(MAX_RUNNING_JOB)
-wait_for_available_slots() {
-    while true; do
-        pending_tasks=$(get_task_count "PENDING")
-        etl_tasks=$(get_task_count "ETL")
-        loading_tasks=$(get_task_count "LOADING")
-    
-        running_jobs=$((pending_tasks + etl_tasks + loading_tasks))
-        if [ $running_jobs -le $MAX_RUNNING_JOB ]; then
-            break
-        fi
-        
-        echo "Current running job: $running_jobs, Exceeding the limit: $MAX_RUNNING_JOB, Retry after ${CHECK_INTERVAL} seconds..."
-        sleep $CHECK_INTERVAL
-    done
-}
-
-# Submit load task
-submit_load_job() {
-    local current_date="$1"
-    local label="${LABEL_PREFIX}_sales_data_${current_date//-/_}"
-    local s3_path="${S3_PREFIX}/${current_date}/*"
-
-    echo "Starting load for ${label}"
-    
-    # Build S3 LOAD query
-    local sql=$(cat <<EOF
-USE ${DORIS_DATABASE};
-LOAD LABEL ${label}
-(
-    DATA INFILE("${s3_path}")
-    INTO TABLE ${DORIS_TABLE}
-    FORMAT AS "parquet"
-    (order_id, order_date, customer_name, amount, country)
-)
-WITH S3
-(
-    "provider" = "S3",
-    "AWS_ENDPOINT" = "s3.ap-southeast-1.amazonaws.com",
-    "AWS_ACCESS_KEY" = "${AWS_ACCESS_KEY}",
-    "AWS_SECRET_KEY" = "${AWS_SECRET_KEY}",
-    "AWS_REGION" = "ap-southeast-1"
-)
-PROPERTIES
-(
-    "timeout" = "3600"
-);
-EOF
-)
-
-    mysql -h ${DORIS_HOST} -P ${DORIS_QUERY_PORT} -u ${DORIS_USER} -p${DORIS_PASSWORD} ${DORIS_DATABASE} -e "${sql}"
-    echo "Submit load ${label} success"
-
-    wait_for_available_slots
-}
-
-wait_for_all_tasks() {
-    echo "Waiting for all load tasks to complete..."
-    while true; do
-        pending_tasks=$(get_task_count "PENDING")
-        etl_tasks=$(get_task_count "ETL")
-        loading_tasks=$(get_task_count "LOADING")
-        
-        total_running=$((pending_tasks + etl_tasks + loading_tasks))
-        
-        if [ $total_running -eq 0 ]; then
-            echo "All Loading Job Finished"
-            break
-        fi
-        
-        echo "Current Status: PENDING=$pending_tasks, ETL=$etl_tasks, LOADING=$loading_tasks, Retry after ${CHECK_INTERVAL} seconds..."
-        sleep $CHECK_INTERVAL
-    done
-}
-
-check_failed_tasks() {
-    echo "Checking for failed load tasks..."
-    local failed_tasks=$(run_query "SHOW LOAD WHERE state='CANCELLED' and label like '${LABEL_PREFIX}_sales_data_%'")
-
-    if [ -n "$failed_tasks" ]; then
-        echo "Failed load tasks:"
-
-        # Process each line of results
-        echo "$failed_tasks" | while read -r line; do
-            # Extract Label (2nd column)
-            local label=$(echo "$line" | awk '{print $2}')        
-
-            printf "$label\n"
-        done
-        echo "Task execution complete, but there are failed tasks. Please check the errors above."
-        return 1
-    else
-        echo "All tasks executed successfully!"
-        return 0
-    fi
-}
-
-# Main function
-main() {
-    # Generate the date list to load
-    generate_dates
-    
-    # Submit load tasks for each date
-    for current_date in "${DATES[@]}"; do
-        submit_load_job "$current_date"
-    done
-    
-    # Wait for all tasks to complete
-    wait_for_all_tasks
-    
-    # Check for failed tasks
-    check_failed_tasks
-    exit $?
-}
-
-# Execute main function
-main
-```
-
-同步任务时，修改上面脚本的配置即可运行。脚本默认指定 START_DATE 和 END_DATE 可以同步该日期范围之内的分区。提交完成后，会检测任务是否都同步成功，当某些分区同步出错时，会打印具体的 Label，可以直接在 SPECIFIC_DATES 指定错误的日期分区，重新运行脚本，即可重新同步出错的分区数据。
+    可参考脚本 [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh)，该脚本可以实现了轮询 S3 上的分区目录，同时提交 S3 Load 任务到 Doris 中，实现批量导入的效果。
