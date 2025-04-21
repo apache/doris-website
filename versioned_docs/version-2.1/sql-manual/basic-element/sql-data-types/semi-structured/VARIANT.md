@@ -413,6 +413,7 @@ mysql> desc simple_nested_test;
 | v.lastName                    | text           | Yes  | false | NULL    | NONE  |
 +-------------------------------+----------------+------+-------+---------+-------+
 8 rows in set (0.00 sec)
+```
 
 ### Usage Restrictions and Best Practices
 
