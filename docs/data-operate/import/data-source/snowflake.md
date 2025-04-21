@@ -225,6 +225,6 @@ This method is suitable for scenarios involving large volumes of data that requi
 
 4. **Load data for multiple partitions**
 
-   When migrating a large volume of historical data, a batch load strategy can be used. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
+   When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
 
    You can refer to the script [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh), which can poll the partition directory on S3 and submit the S3 Load task to Doris to achieve batch load.
