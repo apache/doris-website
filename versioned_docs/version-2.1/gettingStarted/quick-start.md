@@ -47,14 +47,14 @@ Copy the following content into the docker-compose.yaml file, and replace the `D
 version: "3"
 services:
   fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:fe-${DORIS_QUICK_START_VERSION}
     hostname: fe
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
      - FE_ID=1
     network_mode: host
   be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
+    image: apache/doris:be-${DORIS_QUICK_START_VERSION}
     hostname: be
     environment:
      - FE_SERVERS=fe1:127.0.0.1:9010
