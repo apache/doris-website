@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 华为云 OBS 访问参数
-
 本文档介绍访问华为云 OBS 所需的参数，这些参数适用于以下场景：
 
 - Catalog 属性
@@ -35,7 +33,8 @@ under the License.
 - Outfile 属性
 
 **Doris 使用 S3 Client，通过 S3 兼容协议访问华为云 OBS。**
-### 参数总览
+
+## 参数总览
 
 | 属性名称                            | 曾用名              | 描述                                    | 默认值    | 是否必须 |
 |---------------------------------|------------------|---------------------------------------|--------|------|

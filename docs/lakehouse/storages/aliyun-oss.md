@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Aliyun OSS Access Parameters
-
 This document introduces the parameters required to access Aliyun OSS, applicable to the following scenarios:
 
 - Catalog properties
@@ -37,6 +35,7 @@ This document introduces the parameters required to access Aliyun OSS, applicabl
 **Doris uses the S3 Client to access Aliyun OSS through the S3 compatible protocol.**
 
 ## Parameter Overview
+
 | Property Name                     | Former Name      | Description                                                      | Default | Required |
 |-----------------------------------|------------------|------------------------------------------------------------------|---------|----------|
 | `s3.endpoint`                     | `oss.endpoint`   | OSS endpoint, specifies the access endpoint for Aliyun OSS. Note that the endpoints for OSS and OSS HDFS are different. |         | Yes      |
