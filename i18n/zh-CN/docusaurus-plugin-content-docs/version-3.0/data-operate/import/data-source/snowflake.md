@@ -145,10 +145,10 @@ PROPERTIES (
     WITH S3
     (
         "provider" = "S3",
-        "AWS_ENDPOINT" = "s3.ap-southeast-1.amazonaws.com",
-        "AWS_ACCESS_KEY" = "<ak>",
-        "AWS_SECRET_KEY"="<sk>",
-        "AWS_REGION" = "ap-southeast-1"
+        "s3.endpoint" = "s3.ap-southeast-1.amazonaws.com",
+        "s3.access_key" = "<ak>",
+        "s3.secret_key" = "<sk>",
+        "s3.region" = "ap-southeast-1"
     );
     ```
 
