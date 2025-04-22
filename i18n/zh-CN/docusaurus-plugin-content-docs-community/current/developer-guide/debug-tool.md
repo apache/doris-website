@@ -231,7 +231,10 @@ Total: 1296.4 MB
 
 ###### 1. 实时 Heap Dump
 
-将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true` 并重启BE，然后使用 Jemalloc Heap Dump HTTP 接口，在对应的BE机器上生成 Heap Profile 文件。
+将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，将 `prof_active:false` 修改为 `prof_active:true` 并重启 Doris BE，然后使用 Jemalloc Heap Dump HTTP 接口，在对应的BE机器上生成 Heap Profile 文件。
+
+> Doris 2.1.8 和 3.0.4 及之后的版本，`JEMALLOC_CONF` 中 `prof` 已经默认为 `true`，无需修改。
+> Doris 2.1.8 和 3.0.4 之前的版本， `JEMALLOC_CONF` 中没有 `prof_active`，只需将 `prof:false` 修改为 `prof:true` 即可。
 
 ```shell
 curl http://be_host:be_webport/jeheap/dump
@@ -270,7 +273,9 @@ Heap Profile 文件所在目录可以在 `be.conf` 中通过 `jeprofile_dir` 变
 
 ##### 3. `jeprof` 解析 Heap Profile
 
-使用 `jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。若系统没有 `jeprof` 命令，可以将 `doris/tools` 目录下的 `jeprof` 这个二进制打包后上传到 Heap Dump 的服务器。
+使用 `be/bin/jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。
+
+若 Doris BE 部署路径的 `be/bin` 目录下没有 `jeprof` 这个二进制，可以将 `doris/tools` 目录下的 `jeprof` 打包后上传到服务器。
 
 > 需要 addr2line 版本为 2.35.2 及以上, 详情见下面的 QA-1
 > 尽可能让执行 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，即尽可能在运行 Doris BE 的机器上直接解析 Heap Profile，详情见下面的 QA-2

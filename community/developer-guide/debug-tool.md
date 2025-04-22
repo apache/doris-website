@@ -226,7 +226,10 @@ Supports both real-time and periodic Heap Dump, and then uses `jeprof` to parse 
 
 ###### 1. realtime heap dump
 
-Change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true` and restart BE. Then use the Jemalloc Heap Dump HTTP interface to generate a Heap Profile file on the corresponding BE machine.
+Change `prof:false` in `JEMALLOC_CONF` in `be.conf` to `prof:true`, change `prof_active:false` to `prof_active:true` and restart Doris BE, then use the Jemalloc Heap Dump HTTP interface to generate a Heap Profile file on the corresponding BE machine.
+
+> For Doris 2.1.8 and 3.0.4 and later versions, `prof` in `JEMALLOC_CONF` is already `true` by default, no need to modify.
+> For Doris versions before 2.1.8 and 3.0.4, there is no `prof_active` in `JEMALLOC_CONF`, just change `prof:false` to `prof:true`.
 
 ```shell
 curl http://be_host:be_webport/jeheap/dump
@@ -265,7 +268,9 @@ Use `jeprof --alloc_space` to display the cumulative value of heap dump.
 
 ##### 3. `jeprof` parses Heap Profile
 
-Use `jeprof` to parse the Heap Profile of the above dump. If the process memory is too large, the parsing process may take several minutes, so please wait patiently. If the system does not have the `jeprof` command, you can package the `jeprof` binary in the `doris/tools` directory and upload it to the Heap Dump server.
+Use `be/bin/jeprof` to parse the Heap Profile of the above dump. If the process memory is too large, the parsing process may take several minutes, please wait patiently.
+
+If there is no `jeprof` binary in the `be/bin` directory of the Doris BE deployment path, you can package the `jeprof` in the `doris/tools` directory and upload it to the server.
 
 > Requires addr2line version 2.35.2 and above, see QA-1 below for details
 > Try to have Heap Dump and `jeprof` analyze Heap Profile on the same server, that is, analyze Heap Profile directly on the machine running Doris BE, see QA-2 below for details
