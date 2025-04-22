@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Tencent Cloud COS Access Parameters
-
 This document introduces the parameters required to access Tencent Cloud COS, applicable to the following scenarios:
 
 - Catalog properties
