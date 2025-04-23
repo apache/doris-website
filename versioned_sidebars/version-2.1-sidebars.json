@@ -133,6 +133,7 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
+                                "data-operate/import/data-source/snowflake",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
@@ -175,7 +176,8 @@
                         "data-operate/import/handling-messy-data",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/group-commit-manual"
+                        "data-operate/import/group-commit-manual",
+                        "data-operate/import/load-best-practices"
                     ]
                 },
                 {

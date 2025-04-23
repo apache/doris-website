@@ -157,6 +157,7 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
+                                "data-operate/import/data-source/snowflake",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
@@ -199,7 +200,8 @@
                         "data-operate/import/handling-messy-data",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/group-commit-manual"
+                        "data-operate/import/group-commit-manual",
+                        "data-operate/import/load-best-practices"
                     ]
                 },
                 {
@@ -1824,7 +1826,7 @@
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT",
-                                        "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-AND-GENERATED-COLUMN",
+                                        "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE",

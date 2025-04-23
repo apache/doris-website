@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 腾讯云 COS 访问参数
-
 本文档介绍访问腾讯云 COS 所需的参数，这些参数适用于以下场景：
 
 - Catalog 属性

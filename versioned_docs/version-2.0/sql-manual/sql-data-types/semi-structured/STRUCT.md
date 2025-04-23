@@ -91,7 +91,7 @@ INSERT INTO `struct_test` VALUES (3, named_struct('s_id', 3, 's_name', 'sn3', 's
 
 Stream load:
 
-test.csv：
+test.csv:
 
 ```
 1|{"s_id":1, "s_name":"sn1", "s_address":"sa1"}
@@ -99,7 +99,7 @@ test.csv：
 3|{"s_address":"sa3", "s_name":"sn3", "s_id":3}
 ```
 
-exmaple:
+example:
 
 ```
 curl --location-trusted -u root -T test.csv  -H "label:test_label" http://host:port/api/test/struct_test/_stream_load
