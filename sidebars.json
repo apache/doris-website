@@ -158,6 +158,7 @@
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
                                 "data-operate/import/data-source/snowflake",
+                                "data-operate/import/data-source/bigquery",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
