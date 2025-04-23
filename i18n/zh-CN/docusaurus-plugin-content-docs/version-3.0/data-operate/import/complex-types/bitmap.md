@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-BITMAP 类型可以在 Duplicate 表、Unique 表、Aggregate 表中使用，只能作为 Key 类，无法作为 Value 列使用。在 Aggregate 表中使用 BITMAP 类型，其建表时必须使用聚合类型 BITMAP_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。更多文档参考[Bitmap](../../../sql-manual/basic-element/sql-data-types/aggregate/BITMAP)。
+
+BITMAP 类型可以在 Duplicate 表、Unique 表、Aggregate 表中使用，只能作为 Value 列，无法作为 Key 列使用。在 Aggregate 表中使用 BITMAP 类型，其建表时必须使用聚合类型 BITMAP_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。更多文档参考[Bitmap](../../../sql-manual/sql-data-types/aggregate/BITMAP.md)。
+
 
 ## 使用示例
 
@@ -88,6 +90,7 @@ mysql> select typ_id,hou,bitmap_to_string(arr) from testdb.test_bitmap;
 10 rows in set (0.07 sec)
 ```
 
+
 ## 导入含有多个元素的 bitmap 
 
 以下展示了 stream load 导入含有多个元素的 bitmap 列的两种方法，用户可以根据自己源文件格式选择合适的方法。
@@ -146,3 +149,4 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -T test_bitmap.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
 ```
+
