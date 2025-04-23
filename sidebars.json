@@ -301,6 +301,7 @@
                         },
                         "query-acceleration/sql-cache-manual",
                         "query-acceleration/high-concurrent-point-query",
+                        "query-acceleration/dictionary",
                         {
                             "type": "category",
                             "label": "Distincting Counts",
