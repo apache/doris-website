@@ -183,7 +183,7 @@ PROPERTIES (
 
 ## 3. 导入数据到 Doris
 
-导入使用 S3 Load 进行导入，**S3 Load 是一种异步的数据导入方式，执行后 Doris 会主动从数据源拉取数据，**数据源支持兼容 S3 协议的对象存储，包括 ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)等)。
+导入使用 S3 Load 进行导入，**S3 Load 是一种异步的数据导入方式，执行后 Doris 会主动从数据源拉取数据**，数据源支持兼容 S3 协议的对象存储，包括 ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)等)。
 
 该方式适用于数据量大、需要后台异步处理的场景。对于需要同步处理的数据导入，可以参考 [TVF 导入](./amazon-s3.md#load-with-tvf)。
 
