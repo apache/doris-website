@@ -163,6 +163,10 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 2. A Row Level Filter policy has been configured, but the user encounters a permission denied error when querying.
 
    The Row Level Filter policy is solely used to restrict users from accessing specific records within a table's data; authorization for the user must still be granted through an ACCESS POLICY.
+3. After creating the service, only the 'admin' user has permission by default` Root 'user does not have permission
+
+   As shown in the image, when creating the service, add the configuration `default.policy.users`. If you need to configure multiple users with full permissions, separate them with `,`.
+   ![default policy](/images/ranger/default-policy.png)
 
 ## Install and Configure Doris Ranger Plugin
 
