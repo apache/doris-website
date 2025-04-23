@@ -75,152 +75,161 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 
 ## 举例
 
-1. 创建 HDFS storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
-    PROPERTIES (
-        "type" = "hdfs",                                     -- required
-        "fs.defaultFS" = "hdfs://127.0.0.1:8020",            -- required
-        "path_prefix" = "big/data",                          -- optional,  一般按照业务名称填写
-        "hadoop.username" = "user"                           -- optional
-        "hadoop.security.authentication" = "kerberos"        -- optional
-        "hadoop.kerberos.principal" = "hadoop/127.0.0.1@XXX" -- optional
-        "hadoop.kerberos.keytab" = "/etc/emr.keytab"         -- optional
-    );
+### 1. 创建 HDFS storage vault。
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
+PROPERTIES (
+    "type" = "hdfs",                                     -- required
+    "fs.defaultFS" = "hdfs://127.0.0.1:8020",            -- required
+    "path_prefix" = "big/data",                          -- optional,  一般按照业务名称填写
+    "hadoop.username" = "user"                           -- optional
+    "hadoop.security.authentication" = "kerberos"        -- optional
+    "hadoop.kerberos.principal" = "hadoop/127.0.0.1@XXX" -- optional
+    "hadoop.kerberos.keytab" = "/etc/emr.keytab"         -- optional
+);
+```
+
+### 2. 创建阿里云 OSS storage vault。
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS oss_demo_vault
+PROPERTIES (
+    "type" = "S3",                                       -- required
+    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",       -- required
+    "s3.access_key" = "xxxxxx",                          -- required,  Your OSS access key
+    "s3.secret_key" = "xxxxxx",                          -- required,  Your OSS secret key
+    "s3.region" = "cn-beijing",                          -- required
+    "s3.root.path" = "oss_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                              -- required,  Your OSS bucket name
+    "provider" = "OSS",                                  -- required
+    "use_path_style" = "false"                           -- optional,  OSS 建议设置 false
+);
+```
+
+### 3. 创建腾讯云 COS storage vault。
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS cos_demo_vault
+PROPERTIES (
+    "type" = "S3",
+    "s3.endpoint" = "cos.ap-guangzhou.myqcloud.com",     -- required
+    "s3.access_key" = "xxxxxx",                          -- required,  Your COS access key
+    "s3.secret_key" = "xxxxxx",                          -- required,  Your COS secret key
+    "s3.region" = "ap-guangzhou",                        -- required
+    "s3.root.path" = "cos_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
+    "provider" = "COS",                                  -- required
+    "use_path_style" = "false"                           -- optional,  COS 建议设置 false
+);
+```
+
+### 4. 创建华为云 OBS storage vault。
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
+PROPERTIES (
+    "type" = "S3",                                       -- required
+    "s3.endpoint" = "obs.cn-north-4.myhuaweicloud.com",  -- required
+    "s3.access_key" = "xxxxxx",                          -- required,  Your OBS access key
+    "s3.secret_key" = "xxxxxx",                          -- required,  Your OBS secret key
+    "s3.region" = "cn-north-4",                          -- required
+    "s3.root.path" = "obs_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                              -- required,  Your OBS bucket name
+    "provider" = "OBS",                                  -- required
+    "use_path_style" = "false"                           -- optional,  OBS 建议设置 false
+);
+```
+
+### 5. 创建百度云 BOS storage vault。
+
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
+PROPERTIES (
+    "type" = "S3",                                       -- required
+    "s3.endpoint" = "s3.bj.bcebos.com",                  -- required
+    "s3.access_key" = "xxxxxx",                          -- required,  Your BOS access key
+    "s3.secret_key" = "xxxxxx",                          -- required,  Your BOS secret key
+    "s3.region" = "bj",                                  -- required
+    "s3.root.path" = "bos_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                              -- required,  Your BOS bucket name
+    "provider" = "BOS",                                  -- required
+    "use_path_style" = "false"                           -- optional,  BOS 建议设置 false
+);
     ```
 
-2. 创建阿里云 OSS storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS oss_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                       -- required
-        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",       -- required
-        "s3.access_key" = "xxxxxx",                          -- required,  Your OSS access key
-        "s3.secret_key" = "xxxxxx",                          -- required,  Your OSS secret key
-        "s3.region" = "cn-beijing",                          -- required
-        "s3.root.path" = "oss_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your OSS bucket name
-        "provider" = "OSS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OSS 建议设置 false
-    );
-    ```
+### 6. 创建亚马逊云 S3 storage vault。
 
-3. 创建腾讯云 COS storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS cos_demo_vault
-    PROPERTIES (
-        "type" = "S3",
-        "s3.endpoint" = "cos.ap-guangzhou.myqcloud.com",     -- required
-        "s3.access_key" = "xxxxxx",                          -- required,  Your COS access key
-        "s3.secret_key" = "xxxxxx",                          -- required,  Your COS secret key
-        "s3.region" = "ap-guangzhou",                        -- required
-        "s3.root.path" = "cos_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your COS bucket name
-        "provider" = "COS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  COS 建议设置 false
-    );
-    ```
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
+PROPERTIES (
+    "type" = "S3",                                      -- required
+    "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
+    "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
+    "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
+    "s3.region" = "us-east-1",                          -- required
+    "s3.root.path" = "s3_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                             -- required,  Your S3 bucket name
+    "provider" = "S3",                                  -- required
+    "use_path_style" = "false"                          -- optional,  S3 建议设置 false
+);
+```
 
-4. 创建华为云 OBS storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                       -- required
-        "s3.endpoint" = "obs.cn-north-4.myhuaweicloud.com",  -- required
-        "s3.access_key" = "xxxxxx",                          -- required,  Your OBS access key
-        "s3.secret_key" = "xxxxxx",                          -- required,  Your OBS secret key
-        "s3.region" = "cn-north-4",                          -- required
-        "s3.root.path" = "obs_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your OBS bucket name
-        "provider" = "OBS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  OBS 建议设置 false
-    );
-    ```
+### 7. 创建 MinIO storage vault。
 
-5. 创建百度云 BOS storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                       -- required
-        "s3.endpoint" = "s3.bj.bcebos.com",                  -- required
-        "s3.access_key" = "xxxxxx",                          -- required,  Your BOS access key
-        "s3.secret_key" = "xxxxxx",                          -- required,  Your BOS secret key
-        "s3.region" = "bj",                                  -- required
-        "s3.root.path" = "bos_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your BOS bucket name
-        "provider" = "BOS",                                  -- required
-        "use_path_style" = "false"                           -- optional,  BOS 建议设置 false
-    );
-    ```
+```sql
+ CREATE STORAGE VAULT IF NOT EXISTS minio_demo_vault
+ PROPERTIES (
+     "type" = "S3",                                     -- required
+     "s3.endpoint" = "127.0.0.1:9000",                  -- required
+     "s3.access_key" = "xxxxxx",                        -- required,  Your minio access key
+     "s3.secret_key" = "xxxxxx",                        -- required,  Your minio secret key
+     "s3.region" = "us-east-1",                         -- required
+     "s3.root.path" = "minio_demo_vault_prefix",        -- required
+     "s3.bucket" = "xxxxxx",                            -- required,  Your minio bucket name
+     "provider" = "S3",                                 -- required
+     "use_path_style" = "true"                          -- required,  minio 建议设置 true
+ );
+```
 
-6. 创建亚马逊云 S3 storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                      -- required
-        "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
-        "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
-        "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
-        "s3.region" = "us-east-1",                          -- required
-        "s3.root.path" = "s3_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                             -- required,  Your S3 bucket name
-        "provider" = "S3",                                  -- required
-        "use_path_style" = "false"                          -- optional,  S3 建议设置 false
-    );
-    ```
+### 8. 创建微软 AZURE storage vault。
 
-7. 创建 MinIO storage vault。
-   ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS minio_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                     -- required
-        "s3.endpoint" = "127.0.0.1:9000",                  -- required
-        "s3.access_key" = "xxxxxx",                        -- required,  Your minio access key
-        "s3.secret_key" = "xxxxxx",                        -- required,  Your minio secret key
-        "s3.region" = "us-east-1",                         -- required
-        "s3.root.path" = "minio_demo_vault_prefix",        -- required
-        "s3.bucket" = "xxxxxx",                            -- required,  Your minio bucket name
-        "provider" = "S3",                                 -- required
-        "use_path_style" = "true"                          -- required,  minio 建议设置 true
-    );
-   ```
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS azure_demo_vault
+PROPERTIES (
+    "type" = "S3",                                       -- required
+    "s3.endpoint" = "blob.core.windows.net",             -- required
+    "s3.access_key" = "xxxxxx",                          -- required,  Your Azure AccountName
+    "s3.secret_key" = "xxxxxx",                          -- required,  Your Azure AccountKey
+    "s3.region" = "us-east-1",                           -- required
+    "s3.root.path" = "azure_demo_vault_prefix",          -- required
+    "s3.bucket" = "xxxxxx",                              -- required,  Your Azure StorageAccount
+    "provider" = "AZURE"                                 -- required
+);
+```
 
-8. 创建微软 AZURE storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS azure_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                       -- required
-        "s3.endpoint" = "blob.core.windows.net",             -- required
-        "s3.access_key" = "xxxxxx",                          -- required,  Your Azure AccountName
-        "s3.secret_key" = "xxxxxx",                          -- required,  Your Azure AccountKey
-        "s3.region" = "us-east-1",                           -- required
-        "s3.root.path" = "azure_demo_vault_prefix",          -- required
-        "s3.bucket" = "xxxxxx",                              -- required,  Your Azure StorageAccount
-        "provider" = "AZURE"                                 -- required
-    );
-    ```
+### 9. 创建谷歌 GCP storage vault。
 
-9. 创建谷歌 GCP storage vault。
-    ```sql
-    CREATE STORAGE VAULT IF NOT EXISTS gcp_demo_vault
-    PROPERTIES (
-        "type" = "S3",                                       -- required
-        "s3.endpoint" = "storage.googleapis.com",            -- required
-        "s3.access_key" = "xxxxxx",                          -- required
-        "s3.secret_key" = "xxxxxx",                          -- required
-        "s3.region" = "us-east-1",                           -- required
-        "s3.root.path" = "gcp_demo_vault_prefix",            -- required
-        "s3.bucket" = "xxxxxx",                              -- required
-        "provider" = "GCP"                                   -- required
-    );
-    ```
+```sql
+CREATE STORAGE VAULT IF NOT EXISTS gcp_demo_vault
+PROPERTIES (
+    "type" = "S3",                                       -- required
+    "s3.endpoint" = "storage.googleapis.com",            -- required
+    "s3.access_key" = "xxxxxx",                          -- required
+    "s3.secret_key" = "xxxxxx",                          -- required
+    "s3.region" = "us-east-1",                           -- required
+    "s3.root.path" = "gcp_demo_vault_prefix",            -- required
+    "s3.bucket" = "xxxxxx",                              -- required
+    "provider" = "GCP"                                   -- required
+);
+```
 
-    **注意**
+**注意**
 
-    [s3.access_key对应GCP HMAC key的Access ID](https://cloud.google.com/storage/docs/authentication/hmackeys)
+[s3.access_key对应GCP HMAC key的Access ID](https://cloud.google.com/storage/docs/authentication/hmackeys)
 
-    [s3.secret_key对应GCP HMAC key的Secret](https://cloud.google.com/storage/docs/authentication/hmackeys)
+[s3.secret_key对应GCP HMAC key的Secret](https://cloud.google.com/storage/docs/authentication/hmackeys)
 
-### 关键词
+## 关键词
 
     CREATE, STORAGE VAULT

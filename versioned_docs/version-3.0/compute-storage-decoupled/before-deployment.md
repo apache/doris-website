@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Doris Compute-Storage Decoupled Deployment Preparation",
-  "language": "en"
+    "title": "Doris Compute-Storage Decoupled Deployment Preparation",
+    "language": "en"
 }
 ---
 
@@ -71,6 +71,7 @@ This section provides a step-by-step guide to configure, deploy, and start the F
 #### 5.1.1 Machine Requirements
 
 Typically, at least 3 machines equipped with SSDs are required to form a FoundationDB cluster with dual data replicas and allow for single machine failures.
+If SSDs are not available, at least standard cloud disks or local disks with a standard POSIX-compliant file system must be used for data storage. Otherwise, FoundationDB may fail to operate properly - for instance, storage solutions like JuiceFS should not be used as the underlying storage for FoundationDB.
 
 :::tip
 If only for development/testing purposes, a single machine is sufficient.
@@ -120,35 +121,6 @@ This command starts the FDB service, making the cluster operational and obtainin
 1. Download [OpenJDK 17](https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz)
 2. Extract and set the environment variable JAVA_HOME.
 
-### 5.3 Install S3 or HDFS (Optional)
-
-The Apache Doris (cloud mode) stores data on S3 or HDFS services. If you already have the relevant services, you can use them directly. If not, this document provides a simple deployment tutorial for MinIO:
-
-1. Choose the appropriate version and operating system on 在 MinIO MinIO's [download page](https://min.io/download?license=agpl&platform=linux) and download the corresponding binary or installation packages for the server and client.
-2. start MinIO Server
-   ```bash
-   export MINIO_REGION_NAME=us-east-1
-   export MINIO_ROOT_USER=minio # In older versions, the configuration is MINIO_ACCESS_KEY=minio
-   export MINIO_ROOT_PASSWORD=minioadmin # In older versions, the configuration is MINIO_SECRET_KEY=minioadmin
-   nohup ./minio server /mnt/data 2>&1 &
-   ```
-3. config MinIO Client
-   ```bash
-   # If you are using a client installed with an installation package, the client name is mcli. If you directly download the client binary package, its name is mc
-   ./mc config host add myminio http://127.0.0.1:9000 minio minioadmin
-   ```
-4. create a bucket
-   ```bash
-   ./mc mb myminio/doris
-   ```
-5. verify if it is working properly
-   ```bash
-   # upload a file
-   ./mc mv test_file myminio/doris
-   # list files
-   ./mc ls myminio/doris
-   ```
-
 ## 6. Next Steps
 
 After completing the above preparations, please refer to the following documents to continue the deployment:
@@ -162,6 +134,8 @@ After completing the above preparations, please refer to the following documents
 - Ensure time synchronization across all nodes
 - Regularly back up FoundationDB data
 - Adjust FoundationDB and Doris configuration parameters based on actual load
+- Use standard cloud disks or local disks with a POSIX-compliant file system for data storage; otherwise, FoundationDB may not function properly.
+	* For example, storage solutions like JuiceFS should not be used as FoundationDB's storage backend.
 
 ## 8. References
 
