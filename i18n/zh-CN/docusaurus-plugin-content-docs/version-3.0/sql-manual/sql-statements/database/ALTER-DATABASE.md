@@ -94,3 +94,21 @@ ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
   ```sql
     ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
   ```
+
+- 修改 db 下 table 的默认 Storage Vault（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "hdfs_demo_vault");
+  ```
+
+- 取消 db 下 table 的默认 Storage Vault（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "");
+  ```
+
+:::info 备注
+
+从 3.0.5 版本支持指定 db 的 `storage_vault_name`。
+
+:::

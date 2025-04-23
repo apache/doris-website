@@ -65,6 +65,20 @@ If you want to specify the default replica distribution strategy for the table u
   )
   ```
 
+If you want to specify the default Storage Vault for the table under db, you need to specify `<storage_vault_name>` (the `<storage_vault_name>` attribute of table has a higher priority than db):
+
+  ```sql
+  PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+  )
+  ```
+
+:::info Note
+
+Setting db's `storage_vault_name` is supported since version 3.0.5
+
+:::
+
 ## Example
 
 - Create a new database db_test
@@ -79,5 +93,14 @@ If you want to specify the default replica distribution strategy for the table u
    CREATE DATABASE `db_test`
    PROPERTIES (
    	"replication_allocation" = "tag.location.group_1:3"
+   );
+   ```
+
+- Create a new database and set the default Storage Vault:
+
+   ```sql
+   CREATE DATABASE `db_test`
+   PROPERTIES (
+   	"storage_vault_name" = "hdfs_demo_vault"
    );
    ```
