@@ -1581,7 +1581,7 @@
                             "type": "category",
                             "label": "Analytic (Window) Functions",
                             "items": [
-                                "sql-manual/sql-functions/window-functions/window-function",
+                                "sql-manual/sql-functions/window-functions/overview",
                                 "sql-manual/sql-functions/window-functions/rank",
                                 "sql-manual/sql-functions/window-functions/dense-rank",
                                 "sql-manual/sql-functions/window-functions/percent-rank",
