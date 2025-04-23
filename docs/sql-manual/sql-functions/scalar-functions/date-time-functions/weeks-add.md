@@ -30,21 +30,16 @@ This function is used to add (or subtract) a certain number of weeks from a spec
 ## Syntax
 
 ```sql
-WEEKS_ADD([<date_value> | <datetime_value>], <weeks_value>)
+WEEKS_ADD(<datetime_or_date_value>, <weeks_value>)
 ```
 
 ## Required parameters
-| Parameter      | Description                                                   |
-|--------------|---------------------------------------------------------------|
-| `<weeks_value>` | Integer, indicating the number of weeks to increase or decrease (positive number indicates increase, negative number indicates decrease) |
-
-## Optional parameters
-| Parameter          | Description                      |
-|------------------|--------------------------------|
-| `<date_value>`     | `DATE` type date input value   |
-| `<datetime_value>` | `DATETIME` type time input value |
-
+| Parameter                  | Description                                                                                                                              |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| `<datetime_or_date_value>` | `DATETIME` or `DATE` type date input value                                                                                               |
+| `<weeks_value>`            | Integer, indicating the number of weeks to increase or decrease (positive number indicates increase, negative number indicates decrease) |
   
+
 ## example
 
 

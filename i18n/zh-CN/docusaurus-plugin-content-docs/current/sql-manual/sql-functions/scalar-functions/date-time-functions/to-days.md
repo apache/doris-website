@@ -31,14 +31,13 @@ under the License.
 ## 语法
 
 ```sql
-TO_DAYS([<datetime_value> | <date_value>])
+TO_DAYS(<datetime_or_date_value>)
 ```
 
-## 可选参数
-| 参数              | 描述                    |
-|-----------------|-----------------------|
-| `<datetime_value>` | `datetime` 类型日期时间 |
-| `<date_value>`     | `date` 类型日期时间     |
+## 必选参数
+| 参数                         | 描述                          |
+|----------------------------|-----------------------------|
+| `<datetime_or_date_value>` | `datetime` 或者 `date` 类型日期时间 |
 
 
 ## 举例

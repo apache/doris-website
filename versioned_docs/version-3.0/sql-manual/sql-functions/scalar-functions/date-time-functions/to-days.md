@@ -31,14 +31,13 @@ Date calculation function, which is used to convert a date into a day value, tha
 ## Syntax
 
 ```sql
-TO_DAYS([<datetime_value> | <date_value>])
+TO_DAYS(<datetime_or_date_value>)
 ```
 
-## Optional parameters
-| Parameter          | Description              |
-|------------------|------------------------|
-| `<datetime_value>` | `datetime` type date-time |
-| `<date_value>`     | `date` type date-time     |
+## Required parameters
+| Parameter                  | Description                       |
+|----------------------------|-----------------------------------|
+| `<datetime_or_date_value>` | `datetime` or `date` type date-time |
 
 
 ## Example

@@ -29,19 +29,15 @@ under the License.
 
 ## 语法
 ```sql
-WEEKS_ADD([<date_value> | <datetime_value>], <weeks_value>)
+WEEKS_ADD(<datetime_or_date_value>, <weeks_value>)
 ```
 
 ## 必选参数
-| 参数            | 描述                                       |
-|--------------|----------------------------------------|
-| `<weeks_value>` | 整数，表示要增加或减少的周数（正数表示增加，负数表示减少） |
+| 参数                         | 描述                            |
+|----------------------------|-------------------------------|
+| `<datetime_or_date_value>` | `DATETIME` 或者 `DATE` 类型的输入值   |
+| `<weeks_value>`            | 整数，表示要增加或减少的周数（正数表示增加，负数表示减少） |
 
-## 可选参数
-| 参数              | 描述                      |
-|-----------------|------------------------|
-| `<date_value>`     | `DATE` 日期类型的输入值   |
-| `<datetime_value>` | `DATETIME` 时间类型的输入值 |
 
 ## 举例
 
