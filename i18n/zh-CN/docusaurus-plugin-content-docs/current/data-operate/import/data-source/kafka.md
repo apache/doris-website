@@ -90,13 +90,12 @@ FROM KAFKA(
 **第 4 步：检查导入数据**
 
 ```SQL
-mysql> select * from test_routineload_tbl;
+select * from test_routineload_tbl;
 +-----------+----------------+------+
 | user_id   | name           | age  |
 +-----------+----------------+------+
 |  1        | Emily          | 25   |
 +-----------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### 多表导入
@@ -164,7 +163,6 @@ mysql> select * from test_multi_table_load1;
 +------+----------------+------+
 |  1   | Emily          | 25   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 
 mysql> select * from test_multi_table_load2;
 +------+----------------+------+
@@ -172,7 +170,6 @@ mysql> select * from test_multi_table_load2;
 +------+----------------+------+
 |  2   | Benjamin       | 35   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### 配置安全认证
