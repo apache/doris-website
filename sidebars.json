@@ -473,8 +473,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
-                        "compute-storage-decoupled/upgrade",
-                        "compute-storage-decoupled/meta-service-api"
+                        "compute-storage-decoupled/upgrade"
                     ]
                 },
                 {
