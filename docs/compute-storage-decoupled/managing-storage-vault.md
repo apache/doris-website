@@ -120,6 +120,30 @@ PROPERTIES (
 );
 ```
 
+## Specify Storage Vault When Creating a Database
+
+When creating a database, specify `storage_vault_name` in `PROPERTIES`. If `storage_vault_name` is not specified when creating a table under the database, the table will use the Storage Vault corresponding to the database's `vault name` for data storage. Users can change the `storage_vault_name` of the database via [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md). However, this action will not affect the `storage_vault` of tables that have already been created under the database, and only newly created tables will use the updated `storage_vault`.
+
+**Example**
+
+```sql
+CREATE DATABASE IF NOT EXIST `db_test`
+PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+);
+```
+
+:::info Note
+
+This feature is supported since version 3.0.5.
+
+The priority order for using Storage Vault when creating a table is: Table -> Database -> Default Storage Vault. If Storage Vault is not specified in the table's PROPERTY, it will check if Storage Vault is specified in the database; if the database also does not specify it, it will further check if there is a default Storage Vault.
+
+If the `VAULT_NAME` attribute of Storage Vault is modified, it may cause the Storage Vault set in the database to become invalid, resulting in an error. Users will need to configure a valid `storage_vault_name` for the database based on the actual situation.
+
+:::
+
+
 ## Alter Storage Vault
 
 Used to alter modifiable properties of the Storage Vault configuration.
