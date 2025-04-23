@@ -67,7 +67,17 @@ under the License.
 
 Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
-```SQL
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
+  <artifactId>flink-doris-connector-${flink.version}</artifactId>
+  <version>${connector.version}</version>
+</dependency> 
+```
+
+例如：
+
+```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
@@ -339,7 +349,13 @@ INSERT INTO student_sink SELECT * FROM student_source;
 
 #### 使用 DataStream API 写入数据
 
-通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表
+通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表。
+
+:::info
+
+Connector 内部已经包含 HttpClient4.5.13 版本，如果项目中有单独引用 HttpClient，需要确保版本一致。
+
+:::
 
 ##### 普通 String 格式
 

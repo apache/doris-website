@@ -67,6 +67,16 @@ To use it with Maven, simply add the following dependency to your Pom file:
 ```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
+  <artifactId>flink-doris-connector-${flink.version}</artifactId>
+  <version>${connector.version}</version>
+</dependency> 
+```
+
+For example:
+
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
   <version>25.0.0</version>
 </dependency> 
@@ -337,6 +347,12 @@ INSERT INTO student_sink SELECT * FROM student_source;
 #### Using DataStream API to Write Data
 
 When using the DataStream API to write data, different serialization methods can be used to serialize the upstream data before writing it to the Doris table.
+
+:::info
+
+The Connector already contains the HttpClient4.5.13 version. If you reference HttpClient separately in your project, you need to ensure that the versions are consistent.
+
+:::
 
 ##### Standard String Format
 
