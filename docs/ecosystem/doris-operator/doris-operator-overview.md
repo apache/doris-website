@@ -92,14 +92,14 @@ Before deployment, you need to check the host system. Refer to [Operating System
 
 Before deploying Doris Operator on Kubernetes, you need to install Doris Operator CRD.
 
-* For detailed installation documents, please refer to: [Doris Operator Installation](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-operator.md)
+* For detailed installation documents, please refer to: [Doris Operator Installation](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
 
 ### Deploy Doris cluster
 
-* For cluster configuration documents, please refer to: [Doris Operator Cluster Configuration](../../install/deploy-on-kubernetes/compute-storage-coupled/install-config-cluster.md)
-* For installation documents, please refer to: [Doris Cluster Installation](../../install/deploy-on-kubernetes/compute-storage-coupled/install-doris-cluster.md)
+* For cluster configuration documents, please refer to: [Doris Operator Cluster Configuration](../../install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster)
+* For installation documents, please refer to: [Doris Cluster Installation](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster)
 
 ### Cluster operation and maintenance
 
-* For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md)
-* For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/deploy-on-kubernetes/compute-storage-coupled/access-cluster.md)
+* For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation)
+* For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/deploy-on-kubernetes/integrated-storage-compute/access-cluster)

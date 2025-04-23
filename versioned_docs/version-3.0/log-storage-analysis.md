@@ -40,7 +40,7 @@ Focused on this solution, this chapter contains the following 3 sections:
 
 The following figure illustrates the architecture of the log storage and analysis platform built on Apache Doris:
 
-![Overall architecture](/images/doris-overall-architecture.png)
+![Log Storage and Analysis Platform built on Apache Doris](/images/doris-overall-architecture.png)
 
 The architecture contains the following 3 parts:
 
@@ -175,7 +175,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](./install/deploy-manually/storage-compute-coupled-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 ### Step 3: Optimize FE and BE configurations
 

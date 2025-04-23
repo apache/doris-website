@@ -73,6 +73,8 @@ Doris 存算分离架构包含三个主要模块：
 #### 5.1.1 机器要求
 
 通常，至少需要 3 台配备 SSD 的机器来形成具有双数据副本并允许单机故障的 FoundationDB 集群。
+如果没有SSD, 也至少需要使用标准云盘或者本地盘以及标准的Posix 文件系统作为数据的存储,
+否则可能 FoundationDB 不能正常工作, 比如不能 JuiceFS 等作为 FoundationDB 的存储.
 
 :::tip
 如果仅用于开发/测试目的，单台机器就足够了。
@@ -109,7 +111,7 @@ Doris 存算分离架构包含三个主要模块：
 
 #### 5.1.4 启动 FDB 服务
 
-FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
+FDB 集群部署完成后，您可以在每个节点上使用 `fdb_ctl.sh` 脚本启动 FDB 服务。
 
 ```bash
 ./fdb_ctl.sh start
@@ -121,35 +123,6 @@ FDB 集群部署完成后，您可以使用 `fdb_ctl.sh` 脚本启动 FDB 服务
 
 1. 下载 [OpenJDK 17](https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz)
 2. 解压并设置环境变量 JAVA_HOME.
-
-### 5.3 安装 S3 或 HDFS 服务（可选）
-
-Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上面，如果您已经有相关服务，直接使用即可。如果没有，本文档提供 MinIO 的简单部署教程：
-
-1. 在 MinIO 的[下载页面](https://min.io/download?license=agpl&platform=linux)选择合适的版本以及操作系统，下载对应的 Server 以及 Client 的二进制包或安装包。
-2. 启动 MinIO Server
-   ```bash
-   export MINIO_REGION_NAME=us-east-1
-   export MINIO_ROOT_USER=minio # 在较老版本中，该配置为 MINIO_ACCESS_KEY=minio
-   export MINIO_ROOT_PASSWORD=minioadmin # 在较老版本中，该配置为 MINIO_SECRET_KEY=minioadmin
-   nohup ./minio server /mnt/data 2>&1 &
-   ```
-3. 配置 MinIO Client
-   ```bash
-   # 如果你使用的是安装包安装的客户端，那么客户端名为 mcli，直接下载客户端二进制包，则其名为 mc
-   ./mc config host add myminio http://127.0.0.1:9000 minio minioadmin
-   ```
-4. 创建一个桶
-   ```bash
-   ./mc mb myminio/doris
-   ```
-5. 验证是否正常工作
-   ```bash
-   # 上传一个文件
-   ./mc mv test_file myminio/doris
-   # 查看这个文件
-   ./mc ls myminio/doris
-   ```
 
 ## 6. 后续步骤
 
@@ -164,6 +137,8 @@ Apache Doris 存算分离模式会将数据存储在 S3 服务或 HDFS 服务上
 - 确保所有节点的时间同步
 - 定期备份 FoundationDB 数据
 - 根据实际负载调整 FoundationDB 和 Doris 的配置参数
+- 使用标准云盘或者本地盘以及标准的Posix 文件系统作为数据的存储, 否则 FoundationDB 可能不能正常工作
+	* 比如不能 JuiceFS 等作为 FoundationDB 的存储
 
 ## 8. 参考资料
 

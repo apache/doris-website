@@ -46,12 +46,12 @@ SHOW [BRIEF] RESTORE [FROM <db_name>]
 
 | 列名 | 说明 |
 | -- | -- |
-| JobId | 唯一作业id |
+| JobId | 唯一作业 id |
 | Label | 要恢复的备份的名称 |
 | Timestamp | 要恢复的备份的时间版本 |
 | DbName | 所属数据库 |
 | State | 当前阶段：<ul><li>PENDING：提交作业后的初始状态。</li><li>SNAPSHOTING：执行快照中。</li><li>DOWNLOAD：快照完成，准备下载仓库中的快照。</li><li>DOWNLOADING：快照下载中。</li><li>COMMIT：快照下载完成，准备生效。</li><li>COMMITTING：生效中。</li><li>FINISHED：作业成功。</li><li>CANCELLED：作业失败。</li></ul> |
-| AllowLoad | 恢复时是否允许导入 （当前不支持）|
+| AllowLoad | 恢复时是否允许导入（当前不支持）|
 | ReplicationNum | 指定恢复的副本数 |
 | ReserveReplica | 是否保留副本 |
 | ReplicaAllocation | 是否保留动态分区启用 |

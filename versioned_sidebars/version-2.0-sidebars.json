@@ -589,8 +589,7 @@
                                 "sql-manual/sql-data-types/semi-structured/ARRAY",
                                 "sql-manual/sql-data-types/semi-structured/MAP",
                                 "sql-manual/sql-data-types/semi-structured/STRUCT",
-                                "sql-manual/sql-data-types/semi-structured/JSON",
-                                "sql-manual/sql-data-types/semi-structured/VARIANT"
+                                "sql-manual/sql-data-types/semi-structured/JSON"
                             ]
                         },
                         {
@@ -601,14 +600,6 @@
                                 "sql-manual/sql-data-types/aggregate/BITMAP",
                                 "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
                                 "sql-manual/sql-data-types/aggregate/AGG-STATE"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "IP Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/ip/IPV4",
-                                "sql-manual/sql-data-types/ip/IPV6"
                             ]
                         }
                     ]
@@ -961,7 +952,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-not-count",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-union-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-xor-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-or-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-contains",
@@ -971,10 +961,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-min",
                                 "sql-manual/sql-functions/bitmap-functions/intersect-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-intersect",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect-count",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-hash64",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-from-base64",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-to-base64",
@@ -1491,6 +1477,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",
                         "releasenotes/v3.0/release-3.0.1",
@@ -1501,6 +1488,8 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.9",
+                        "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",
                         "releasenotes/v2.1/release-2.1.5",

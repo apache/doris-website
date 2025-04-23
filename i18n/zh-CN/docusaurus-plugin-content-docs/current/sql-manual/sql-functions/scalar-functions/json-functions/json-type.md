@@ -28,7 +28,7 @@ under the License.
 
 ## 描述
 
-用来判断json_path指定的字段在JSONB数据中的类型，如果字段不存在返回NULL，如果存在返回下面的类型之一
+用来判断 json_path 指定的字段在 JSONB 数据中的类型，如果字段不存在返回 NULL，如果存在返回下面的类型之一
 
 - object
 - array
@@ -70,7 +70,7 @@ STRING JSON_TYPE( <json> )
 
 JSON_TYPE 返回的是 JSON 文档中最外层的值的类型。如果 JSON 文档包含多个不同类型的值，则返回最外层值的类型。
 对于无效的 JSON 字符串，JSON_TYPE 会返回 NULL。
-参考 [json tutorial](../../../sql-data-types/semi-structured/JSON) 中的示例
+参考 [json tutorial](../../../basic-element/sql-data-types/semi-structured/JSON) 中的示例
 
 
 ## 示例

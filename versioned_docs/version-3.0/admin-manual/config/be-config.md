@@ -50,7 +50,7 @@ There are two ways to view the configuration items of BE:
 
 2. View by command
 
-   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
+   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
 
     `SHOW BACKEND CONFIG;`
 

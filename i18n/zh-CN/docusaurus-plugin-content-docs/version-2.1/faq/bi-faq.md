@@ -1,6 +1,6 @@
 ---
 {
-    "title": "常见BI问题",
+    "title": "常见 BI 问题",
     "language": "zh-CN"
 }
 ---
@@ -33,7 +33,7 @@ under the License.
 
 ### Q2. 2.1.x 版本 JDBC 连接 Power BI 时报错读取数据时报错，给定的关键字目前不在字典中。
 
-先在数据库中执行 show collation，一般情况下会只有 utf8mb4_900_bin，charset 为 utf8mb4 这一行结果。该报错的主要原因是在连接 Power BI 时需要找33号 ID，即需要该表中有33 ID 的行，需要升级至2.1.5版本以上。
+先在数据库中执行 show collation，一般情况下会只有 utf8mb4_900_bin，charset 为 utf8mb4 这一行结果。该报错的主要原因是在连接 Power BI 时需要找 33 号 ID，即需要该表中有 33 ID 的行，需要升级至 2.1.5 版本以上。
 
 ### Q3. 连接时报错从提供程序读取数据时出错：索引和计数必须引用该字符串内的位置。
 
@@ -45,17 +45,17 @@ SELECT
 @@license,@@sql_mode ,@@lower_case_table_names , @@autocommit ;
 ```
 
-可以在当前版本关闭新优化器也可以升级到2.0.7或者2.1.6及以上版本。
+可以在当前版本关闭新优化器也可以升级到 2.0.7 或者 2.1.6 及以上版本。
 
-### Q4. JDBC 连接2.1.x 版本报错从提供读取数据时出错："Character set 'utf8mb3' is not supported by .Net.Framework"。
+### Q4. JDBC 连接 2.1.x 版本报错从提供读取数据时出错："Character set 'utf8mb3' is not supported by .Net.Framework"。
 
-该问题易在2.1.x 版本遇到，如果遇到该问题则需要把 JDBC Driver 升级到8.0.32。
+该问题易在 2.1.x 版本遇到，如果遇到该问题则需要把 JDBC Driver 升级到 8.0.32。
 
 ## Tableau
 
-### Q1. 2.0.x报错Tableau无法连接到数据源，错误代码：37CE01A3。
+### Q1. 2.0.x 报错 Tableau 无法连接到数据源，错误代码：37CE01A3。
 
-在当前版本关闭新优化器或者升级至2.0.7及以上版本。
+在当前版本关闭新优化器或者升级至 2.0.7 及以上版本。
 
 ### Q2. 报错 SSL connection error:protocol version mismatch 无法连接到 MySQL 服务器。
 

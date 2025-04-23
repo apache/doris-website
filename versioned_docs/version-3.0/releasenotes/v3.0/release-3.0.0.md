@@ -282,7 +282,7 @@ Data processing in data warehouses often involves multiple data changes that nee
   
   ```Java
   BEGIN WITH LABEL label_etl_1;
-  INTO table1 SELECT * FROM stage_table1;
+  INSERT INTO table1 SELECT * FROM stage_table1;
   INSERT INTO table SELECT * FROM stage_table;
   COMMIT;
   ```

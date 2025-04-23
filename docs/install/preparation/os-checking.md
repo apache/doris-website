@@ -67,7 +67,7 @@ echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-To permanently disable THP, add the following commands to /etc/rc.d/rc.local to ensure it takes effect after a restart:
+To permanently disable THP, add the following commands to `/etc/rc.d/rc.local` to ensure it takes effect after a restart:
 
 ```bash
 cat >> /etc/rc.d/rc.local << EOF
@@ -120,7 +120,7 @@ sysctl -p
 ## Open Doris-related Ports
 If Doris-related ports are blocked, you can try disabling the firewall to verify whether it is the cause. If the firewall is the issue, open the relevant ports for Doris components.
 
-```sql
+```bash
 sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 ```
@@ -131,7 +131,7 @@ Since Doris manages a large number of files, you need to increase the system's f
 
 To change the maximum number of open files, add the following to `/etc/security/limits.conf`:
 
-```sql
+```bash
 vi /etc/security/limits.conf 
 * soft nofile 1000000
 * hard nofile 1000000
@@ -143,7 +143,7 @@ Doris requires the metadata's timestamp accuracy to be within 5000ms. To ensure 
 
 Use the following commands to start and enable the NTP service:
 
-```sql
+```bash
 sudo systemctl start ntpd.service
 sudo systemctl enable ntpd.service
 ```

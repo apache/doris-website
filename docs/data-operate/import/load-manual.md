@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Apache Doris offers various methods for importing and integrating data, allowing you to import data from diverse sources into the database. These methods can be categorized into four types:
+Apache Doris offers various methods for importing and integrating data, allowing you to import data from various sources into the database. These methods can be categorized into four types:
 
 - **Real-Time Writing**: Data is written into Doris tables in real-time via HTTP or JDBC, suitable for scenarios requiring immediate analysis and querying.
 
     - For small amounts of data (once every 5 minutes), you can use [JDBC INSERT](./import-way/insert-into-manual.md).
 
-    - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable enable [Group Commit](./group-commit-manual.md) and use JDBC INSERT or Stream Load.
+    - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable [Group Commit](./group-commit-manual.md) and use JDBC INSERT or Stream Load.
 
     - For high throughput, you can use [Stream Load](./import-way/stream-load-manual) via HTTP.
 
@@ -52,7 +52,7 @@ Apache Doris offers various methods for importing and integrating data, allowing
 
 - **External Data Source Integration**: Query and partially import data from external sources (e.g., Hive, JDBC, Iceberg) into Doris tables.
 
-    - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../../admin-manual/workload-management/job-scheduler).
+    - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous execution via [JOB](../../admin-manual/workload-management/job-scheduler).
     
     - You can use [X2Doris](data-source/migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
 
@@ -60,11 +60,11 @@ Each import method in Doris is an implicit transaction by default. For more info
 
 ### Quick Overview of Import Methods
 
-Doris's import process mainly involves various aspects such as data sources, data formats, import methods, error handling, data transformation, and transactions. You can quickly browse the scenarios suitable for each import method and the supported file formats in the table below.
+Doris import process mainly involves various aspects such as data sources, data formats, import methods, error handling, data transformation, and transactions. You can quickly browse the scenarios suitable for each import method and the supported file formats in the table below.
 
 | Import Method                                      | Use Case                                   | Supported File Formats | Import Mode |
 | :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
-| [Stream Load](./import-way/stream-load-manual)           | Importing local files or push data in applications via http.                             | csv, json, parquet, orc | Synchronous     |
+| [Stream Load](./import-way/stream-load-manual)           | Importing local files or push data in applications via HTTP.                             | csv, json, parquet, orc | Synchronous     |
 | [Broker Load](./import-way/broker-load-manual.md)        | Importing from object storage, HDFS, etc.                     | csv, json, parquet, orc | Asynchronous     |
 | [INSERT INTO VALUES](./import-way/insert-into-manual.md) | Writing data via JDBC. | SQL                     | Synchronous     |
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | Importing from an external source like a table in a catalog or files in Object Storage, HDFS.      | SQL                     | Synchronous, Asynchronous via Job     |

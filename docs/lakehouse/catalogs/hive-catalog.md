@@ -48,7 +48,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
     {MetaStoreProperties},
     {StorageProperties},
-    {CommonProperties}
+    {CommonProperties},
+    {OtherProperties}
 );
 ```
 
@@ -77,6 +78,12 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{CommonProperties}`
 
   The CommonProperties section is for entering common attributes. Please see the "Common Properties" section in the [Catalog Overview](../catalog-overview.md).
+
+* `{OtherProperties}`
+
+  OtherProperties section is for entering properties related to Hive Catalog.
+
+  * `get_schema_from_table`：The default value is false. By default, Doris will obtain the table schema information from the Hive Metastore. However, in some cases, compatibility issues may occur, such as the error `Storage schema reading not supported`. In this case, you can set this parameter to true, and the table schema will be obtained directly from the Table object. But please note that this method will cause the default value information of the column to be ignored. This property is supported since version 2.1.10 and 3.0.6.
 
 ### Supported Hive Versions
 
@@ -347,6 +354,13 @@ AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 
 ```
 
 ### Related Parameters
+
+* Session variables
+
+| Parameter name | Default value | Desciption | Since version |
+| ----------| ---- | ---- | --- |
+| `hive_parquet_use_column_names` | `true` | When Doris reads the Parquet data type of the Hive table, it will find the column with the same name from the Parquet file to read the data according to the column name of the Hive table by default. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct. | 2.1.6+, 3.0.3+ |
+| `hive_orc_use_column_names` | `true` | Similar to `hive_parquet_use_column_names`, it is for the Hive table ORC data type. Similar to the `orc.force.positional.evolution` variable in Hive. | 2.1.6+, 3.0.3+ |
 
 * BE
 

@@ -24,21 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris's **Aggregate Model** is designed to efficiently handle aggregation operations in large-scale data queries. The Aggregate Model reduces the redundancy of computations by performing pre-aggregation on the data, improving query performance. The model supports common aggregation functions and allows aggregation operations at different granularities. In the Aggregate Model, only aggregated data is stored, and the raw data is not retained, which reduces storage space and enhances query performance.
+Doris's **Aggregate Key Model** is designed to efficiently handle aggregation operations in large-scale data queries. By performing pre-aggregation on the data, it reduces redundancy in computations and improves query performance. The model stores only aggregated data, omitting raw data, which saves storage space and enhances query performance.
 
 ## Use Cases
 
-* **Summarizing Detailed Data**: In business scenarios such as e-commerce platforms needing to evaluate monthly sales performance, financial risk control requiring customer transaction totals, or advertising campaigns analyzing total ad clicks, the Aggregate Model is used for multidimensional summarization of detailed data.
+* **Summarizing Detailed Data**: The Aggregate Key Model is used in scenarios like e-commerce platforms evaluating monthly sales, financial risk control calculating customer transaction totals, or advertising campaigns analyzing total ad clicks, for multidimensional summarization of detailed data.
 
 * **No Need to Query Raw Detailed Data**: For use cases such as dashboard reports or user transaction behavior analysis, where the raw data is stored in a data lake and does not need to be retained in the database, only the aggregated data is stored.
 
 ## Principle
 
-Each data import creates a version in the Aggregate Model, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
+Each data import creates a version in the Aggregate Key Model, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
 
 * **Data Import Stage**
 
-  * Data is imported into the aggregate table in batches, with each batch creating a new version.
+  * Data is imported into the aggregate key table in batches, with each batch creating a new version.
 
   * Within each version, data with the same aggregation keys is pre-aggregated (e.g., sum, count, etc.).
 
@@ -52,12 +52,12 @@ Each data import creates a version in the Aggregate Model, and during the **Comp
 
   * During queries, the system aggregates data with the same aggregation key from all versions to ensure accurate results.
 
-  * Through this process, the system ensures that the aggregation operations are performed efficiently, even when dealing with large amounts of data. The aggregated results are ready for fast querying, providing a significant performance boost compared to querying raw data.
+  * This process ensures that aggregation operations are performed efficiently, even with large data volumes. The aggregated results are optimized for fast querying, providing a significant performance improvement over raw data queries
 
 
 ## Table Creation Instructions
 
-When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Model. The Aggregate Model must specify the Key columns, which are used for aggregation of the Value columns based on the Key columns during storage. 
+When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Key Model. The Aggregate Key Model must specify Key columns, which are used to aggregate Value columns during storage. 
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_agg
@@ -73,32 +73,33 @@ AGGREGATE KEY(user_id, load_dt, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, `city`, and `age` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. The following types of dimension aggregation are supported in the Aggregate Model:
+In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, `city`, and `age` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
 
-* **SUM**: Sum, the values of multiple rows are added together.
+The following types of dimension aggregation are supported in the Aggregate Key Model:
 
-* **REPLACE**: Replacement, the Value in the next batch of data will replace the Value in previously imported rows.
 
-* **MAX**: Retain the maximum value.
+| Aggregation Method       | Description                                                         |
+|--------------------------|---------------------------------------------------------------------|
+| SUM                      | Sum, accumulates multiple Value rows.                               |
+| REPLACE                  | Replacement, the Value in the next batch replaces the previously inserted Value. |
+| MAX                      | Retain the maximum value.                                           |
+| MIN                      | Retain the minimum value.                                           |
+| REPLACE_IF_NOT_NULL      | Replace non-null values. Unlike REPLACE, null values are not replaced. |
+| HLL_UNION                | Aggregation method for HLL type columns, using the HyperLogLog algorithm. |
+| BITMAP_UNION             | Aggregation method for BITMAP type columns, performing bitmap union aggregation. |
 
-* **MIN**: Retain the minimum value.
-
-* **REPLACE_IF_NOT_NULL**: Non-null replacement. The difference from REPLACE is that null values will not be replaced.
-
-* **HLL_UNION**: Aggregation method for HLL (HyperLogLog) type columns, which aggregates using the HyperLogLog algorithm.
-
-* **BITMAP_UNION**: Aggregation method for BITMAP type columns, which aggregates using the union of bitmaps.
 
 
 :::info Tip:
 
-If the above aggregation methods do not meet business requirements, you can choose to use the `agg_state` type.
+If the aggregation methods above do not meet your business requirements, consider using the `agg_state` type.
+
 :::
 
 
 ## Data Insertion and Storage
 
-In the Aggregate table, data is aggregated based on the primary key. After data insertion, aggregation operations are completed.
+In the Aggregate Key table, data is aggregated based on the primary key. After data insertion, aggregation operations are completed.
 
 ![aggrate-key-model-insert](/images/table-desigin/aggrate-key-model-insert.png)
 
@@ -136,7 +137,7 @@ SELECT * FROM example_tbl_agg;
 AGG_STATE is an experimental feature and is recommended for use in development and testing environments.
 :::
 
-AGG_STATE cannot be used as a Key column. When creating a table, the aggregation function's signature must also be declared. Users do not need to specify the length or default value. The actual storage size of the data depends on the function implementation.
+AGG_STATE cannot be used as a Key column. The aggregation function's signature must be declared when creating the table. Users don’t need to specify length or default values. The data storage size depends on the function implementation.
 
 ```sql
 set enable_agg_state = true;

@@ -33,8 +33,8 @@ The following loading methods support JSON format data:
 - [Stream Load](../import-way/stream-load-manual.md)
 - [Broker Load](../import-way/broker-load-manual.md)
 - [Routine Load](../import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## Supported JSON Formats
 
@@ -106,6 +106,7 @@ The following table lists the JSON format parameters supported by various loadin
 | read json by line | false | read_json_by_line | Always true | Not supported | read_json_by_line, default true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | Not supported | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
+| compression format | plain | compress_type(supported from 3.0.5) | PROPERTIES.compress_type | compress_type |
 
 :::tip Note
 1. Stream Load: Parameters are specified directly through HTTP Headers, e.g., `-H "jsonpaths: $.data"`

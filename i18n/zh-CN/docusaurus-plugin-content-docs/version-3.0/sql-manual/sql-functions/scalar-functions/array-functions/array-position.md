@@ -38,14 +38,14 @@ ARRAY_POSITION(<arr>, <vaule>)
 
 | 参数 | 说明 | 
 | --- | --- |
-| `<arr>` | ARRAY数组 |
+| `<arr>` | ARRAY 数组 |
 | `<vaule>` | 待查询的元素 |
 
 ## 返回值
 
-value在arr中的位置（从1开始计算）。特殊情况：
-- 0，如果value在arr中不存在；
-- NULL， 如果数组为NULL。
+value 在 arr 中的位置（从 1 开始计算）。特殊情况：
+- 0，如果 value 在 arr 中不存在；
+- NULL，如果数组为 NULL。
 
 ## 举例
 

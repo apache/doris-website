@@ -42,7 +42,7 @@ MURMUR_HASH3_32( <str> [ , <str> ... ] )
 
 ## Return Value
 
-Returns the 32-bit murmur3 hash of the input string。
+Returns the 32-bit murmur3 hash of the input string.
 
 -When the parameter is NULL, it returns NULL
 

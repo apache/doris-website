@@ -43,9 +43,9 @@ COVAR_SAMP(<expr1>, <expr2>)
 
 ## 返回值
 
-返回expr1和expr2的样本协方差，特殊情况：
+返回 expr1 和 expr2 的样本协方差，特殊情况：
 
-- 如果expr1或者expr2某一列为NULL时，该行数据不会被统计到最终结果中。
+- 如果 expr1 或者 expr2 某一列为 NULL 时，该行数据不会被统计到最终结果中。
 
 ## 举例
 

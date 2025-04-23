@@ -38,9 +38,9 @@ When point is a valid POINT type, the corresponding Y coordinate value is return
 ```
 mysql> SELECT ST_Y(ST_Point(24.7, 56.7));
 +----------------------------+
-| st_y(st_point(24.7, 56.7)) |
+| ST_Y(ST_Point(24.7, 56.7)) |
 +----------------------------+
-|                       56.7 |
+| 56.7                       |
 +----------------------------+
 ```
 ### keywords

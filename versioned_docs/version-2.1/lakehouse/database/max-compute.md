@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Alibaba Cloud Max Compute",
+    "title": "MaxCompute",
     "language": "en"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-# Alibaba Cloud MaxCompute
 
 MaxCompute is an enterprise-level SaaS (Software as a Service) cloud data warehouse on Alibaba Cloud.
 

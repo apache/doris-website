@@ -28,7 +28,7 @@ under the License.
 
 1. Ensure you have **administrator** privileges to perform the restore operation.
 2. Ensure you have an existing **Repository** to store the backup. If not, follow the steps to create a Repository and perform a [backup](backup.md).
-3. Ensure you have a valid **backup** snapshot available for restoration.
+3. Ensure you have a valid **backup** snapshot available for restore.
 
 ## 1. Get the Backup Timestamp of the Snapshot
 
@@ -88,7 +88,7 @@ PROPERTIES
 
 ### Option 4: Restore Partitions and Tables from Snapshot
 
-Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot label timestamp `"2018-05-04-17-11-01"`.
+Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot timestamp `"2018-05-04-17-11-01"`.
 
    ```sql
    RESTORE SNAPSHOT `restore_label1`

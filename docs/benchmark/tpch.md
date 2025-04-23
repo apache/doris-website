@@ -32,7 +32,7 @@ This document mainly introduces the performance of Doris on the TPC-H 1000G test
 
 On 22 queries on the TPC-H standard test data set, we conducted a comparison test based on Apache Doris 2.1.7-rc03 and Apache Doris 2.0.15.1 versions.
 
-![image-20220614114351241](/images/tpch_2.1.png)
+![Doris on TPC-H 1000G standard test data set](/images/tpch_2.1.png)
 
 ## 1. Hardware Environment
 
@@ -105,7 +105,7 @@ Here we use Apache Doris 2.1.7-rc03 and Apache Doris 2.0.15.1 for comparative te
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](../install/deploy-manually/storage-compute-coupled-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](../../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 

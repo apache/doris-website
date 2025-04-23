@@ -67,7 +67,7 @@ The following configuration items are configured in the `fe.conf` file.
 | `sys_log_enable_compress` | false | true, false | Whether to enable compression for historical `fe.log` and `fe.warn.log` logs. Default is off. When enabled, historical audit logs will be archived using gzip compression. |
 | `log_rollover_strategy` | `age` | `age`, `size` | Log retention strategy, default is `age`, which retains historical logs based on time. `size` retains historical logs based on log size. |
 | `sys_log_delete_age` | 7d | Supports formats like 7d, 10h, 60m, 120s | Only effective when `log_rollover_strategy` is `age`. Controls the number of days to retain `fe.log` and `fe.warn.log` files. Default is 7 days. Logs older than 7 days will be automatically deleted. |
-| `audit_log_delete_age` | 7d | Supports formats like 7d, 10h, 60m, 120s | Only effective when `log_rollover_strategy` is `age`. Controls the number of days to retain `fe.audit.log` files. Default is 30 days. Logs older than 30 days will be automatically deleted. |
+| `audit_log_delete_age` | 30d | Supports formats like 7d, 10h, 60m, 120s | Only effective when `log_rollover_strategy` is `age`. Controls the number of days to retain `fe.audit.log` files. Default is 30 days. Logs older than 30 days will be automatically deleted. |
 | `info_sys_accumulated_file_size` | 4 |  | Only effective when `log_rollover_strategy` is `size`. Controls the cumulative size of `fe.log` files. Default is 4GB. When the cumulative log size exceeds this threshold, historical log files will be deleted. |
 | `warn_sys_accumulated_file_size` | 2 |  | Only effective when `log_rollover_strategy` is `size`. Controls the cumulative size of `fe.warn.log` files. Default is 2GB. When the cumulative log size exceeds this threshold, historical log files will be deleted. |
 | `audit_sys_accumulated_file_size` | 4 |  | Only effective when `log_rollover_strategy` is `size`. Controls the cumulative size of `fe.audit.log` files. Default is 4GB. When the cumulative log size exceeds this threshold, historical log files will be deleted. |
@@ -82,7 +82,7 @@ The following configuration items are configured in the `fe.conf` file.
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE log output mode, where `NORMAL` is the default output mode, log output is synchronous and includes location information. `ASYNC` is the default log output is asynchronous and includes location information. `BRIEF` mode is log output asynchronously but does not include location information. The performance of the three log output modes increases in sequence. |
 
 ::: note
-Starting from version 3.0.2, the default value of `sys_log_mode` configuration is changed to `AYSNC`.
+Starting from version 3.0.2, the default value of `sys_log_mode` configuration is changed to `ASYNC`.
 :::
 
 :::tip

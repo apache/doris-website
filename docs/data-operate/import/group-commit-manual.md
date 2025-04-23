@@ -85,7 +85,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * Through JDBC url by adding `sessionVariables=group_commit=async_mode`
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
 ```
 
 * Through SQL execution
@@ -100,7 +100,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -609,22 +609,31 @@ PROPERTIES (
 
 JMeter Parameter Settings as Shown in the Images
 
-![jmeter1](/images/group-commit/jmeter1.jpg)
-![jmeter2](/images/group-commit/jmeter2.jpg)
+![jmeter parameter settings](/images/group-commit/jmeter1.jpg)
+![jmeter parameter settings](/images/group-commit/jmeter2.jpg)
 
 1. Set the Init Statement Before Testing:
-set group_commit=async_mode and set enable_nereids_planner=false.
+
+    ```
+    set group_commit=async_mode;
+    set enable_nereids_planner=false;
+    ```
 
 2. Enable JDBC Prepared Statement:
-Complete URL:
-jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
 
+    Complete URL:
+
+    ```
+    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false.
+    ```
+    
 3. Set the Import Type to Prepared Update Statement.
 
 4. Set the Import Statement.
 
 5. Set the Values to Be Imported:
-Ensure that the imported values match the data types one by one.
+
+    Ensure that the imported values match the data types one by one.
 
 **Testing Methodology**
 
@@ -636,26 +645,26 @@ Ensure that the imported values match the data types one by one.
 
 * The following tests are divided into 30, 100, and 500 concurrency.
 
-**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
-|enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
-
-**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
-|enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
-
-**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
-|enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
+    **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit internal | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
+    |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
+    
+    **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit internal | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
+    |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
+    
+    **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit internal | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
+    |enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
 
 ### Insert into Sync Mode Large Batch Data
 

@@ -110,7 +110,7 @@ REVOKE <role_list> FROM <user_identity>
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                 |
 | :---------------- | :------------- | :---------------------------- |
-| GRANT_PRIV        | 用户（User）或 角色（Role）    | 用户或者角色拥有 GRANT_PRIV 权限才能进行GRANT操作 |
+| GRANT_PRIV        | 用户（User）或 角色（Role）    | 用户或者角色拥有 GRANT_PRIV 权限才能进行 GRANT 操作 |
 
 ## 示例
 

@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-Doris, as a high-performance real-time analytics data warehouse, offers a powerful partition pruning feature that can significantly enhance query performance. 
+Doris, as a high-performance real-time analytic data warehouse, offers a powerful partition pruning feature that can significantly enhance query performance. 
 
 Partition pruning is a query optimization technique that intelligently identifies partitions relevant to a query by analyzing its conditions, and scans only the data within these partitions, thereby avoiding unnecessary scans of irrelevant partitions. This approach can greatly reduce I/O operations and computational load, thus accelerating query execution.
 

@@ -128,16 +128,37 @@ In this profile, for instance, LocalBytesReceived is a metric specific to the ex
 ### PipelineTask Execution Time
 
 In Doris, a PipelineTask consists of multiple operators. When analyzing the execution time of a PipelineTask, several key aspects need to be focused on:
+1. ExecuteTime: The actual execution time of the entire PipelineTask, which is approximately equal to the sum of the ExecTime of all operators in this task
+2. WaitWorkerTime: The time that a task waits for a worker to execute. When a task is in the runnable state, it has to wait for an idle worker to execute it. The time it takes depends mainly on the cluster load.
+3. Waiting time for executing dependencies: A task can be executed only when all the dependencies of each operator meet the execution conditions, and the time a task waits for executing dependencies is the sum of the waiting times of these dependencies. For example, simplifying one of the tasks in this example:
 
-1. ExecuteTime: 1.656ms (The actual execution time of the entire PipelineTask, which is approximately the sum of the ExecTime of all operators within the task).
-2. WaitWorkerTime: 63.868us (The time the task waits for an execution worker. When the task is in a runnable state, it waits for an available worker to execute it, and this duration primarily depends on the cluster load).
-3. Time Waiting for Execution Dependencies: 10.495ms (WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time). The time a task waits for execution dependencies is the sum of the waiting times for these dependencies.
+    ```sql
+    PipelineTask  (index=1):(ExecTime:  4.773ms)
+      -  ExecuteTime:  1.656ms
+          -  CloseTime:  90.402us
+          -  GetBlockTime:  11.235us
+          -  OpenTime:  1.448ms
+          -  PrepareTime:  1.555ms
+          -  SinkTime:  14.228us
+      -  WaitWorkerTime:  63.868us
+        DATA_STREAM_SINK_OPERATOR  (id=8,dst_id=8):(ExecTime:  1.688ms)
+          -  WaitForDependencyTime:  0ns
+              -  WaitForBroadcastBuffer:  0ns
+              -  WaitForRpcBufferQueue:  0ns
+        AGGREGATION_OPERATOR  (id=7  ,  nereids_id=648):(ExecTime:  398.12us)
+          -  WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time:  10.495ms
+    ```
+   This task includes two operators (DATA_STREAM_SINK_OPERATOR - AGGREGATION_OPERATOR), of which DATA_STREAM_SINK_OPERATOR has two dependencies (WaitForBroadcastBuffer and WaitForRpcBufferQueue), and AGGREGATION_OPERATOR has one dependency (AGGREGATION_OPERATOR_DEPENDENCY), so the time consumption of the current task is distributed as follows:
+
+   1. ExecuteTime: 1.656ms (The actual execution time of the entire PipelineTask, which is approximately the sum of the ExecTime of all operators within the task).
+   2. WaitWorkerTime: 63.868us (The time the task waits for an execution worker. When the task is in a runnable state, it waits for an available worker to execute it, and this duration primarily depends on the cluster load).
+   3. Time Waiting for Execution Dependencies: 10.495ms (WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time). The time a task waits for execution dependencies is the sum of the waiting times for these dependencies.
 
 For cases of using Profile for execution-level tuning, please refer to the [Tuning Execution](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md) section.
 
 ## System-Level Performance Tools
 
-Commonly used system tools can assist in identifying performance bottlenecks during execution. For instance, widely used Linux tools such as top, free, perf, sar, and iostats can be utilized to observe the CPU, memory, I/O, and network status of the system while SQL is running, thereby aiding in the identification of performance bottlenecks.
+Commonly used system tools can assist in identifying performance bottlenecks during execution. For instance, widely used Linux tools such as top, free, perf, sar, and iostat can be utilized to observe the CPU, memory, I/O, and network status of the system while SQL is running, thereby aiding in the identification of performance bottlenecks.
 
 ## Summary
 

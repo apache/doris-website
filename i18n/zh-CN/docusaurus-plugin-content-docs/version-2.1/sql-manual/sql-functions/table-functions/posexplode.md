@@ -26,9 +26,9 @@ under the License.
 
 ## 描述
 
-表函数，需配合 Lateral View使用，并且支持多个Lateral View。它仅支持新的优化器。
+表函数，需配合 Lateral View 使用，并且支持多个 Lateral View。它仅支持新的优化器。
 
-该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为NULL或空时，posexplode_outer会返回 NULL。posexplode和posexplode_outer均会返回数组中的NULL元素。
+该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为 NULL 或空时，posexplode_outer 会返回 NULL。posexplode 和 posexplode_outer 均会返回数组中的 NULL 元素。
 
 ## 语法
 ```sql
@@ -45,10 +45,10 @@ POSEXPLODE_OUTER(<array>)
 
 ## 返回值
 
-按照数组array展开的多行。特殊情况：
+按照数组 array 展开的多行。特殊情况：
 
-- 当数组为NULL或空时，返回NULL。
-- 当数组存在NULL元素时，返回NULL元素。
+- 当数组为 NULL 或空时，返回 NULL。
+- 当数组存在 NULL 元素时，返回 NULL 元素。
 
 ### 举例
 

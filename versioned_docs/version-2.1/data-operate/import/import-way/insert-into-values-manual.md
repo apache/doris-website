@@ -29,7 +29,7 @@ The INSERT INTO VALUES statement supports importing values from SQL into a Doris
 ## Applicable scenarios
 
 1. If a user wants to import only a few test data records to verify the functionality of the Doris system, the INSERT INTO VALUES syntax is applicable. It is similar to the MySQL syntax. However, it is not recommended to use INSERT INTO VALUES in a production environment.
-2. The performance of concurrent INSERT INTO VALUES jobs will be bottlenecked by commit stage. When loading large quantity of data, you can enable [group commit](../group-commit-manual.md) to achieve high performance. 
+2. The performance of concurrent INSERT INTO VALUES jobs will be bottlenecked by commit stage. When loading large quantity of data, you can enable [group commit](../../../data-operate/import/group-commit-manual) to achieve high performance. 
 
 ## Implementation
 
@@ -182,7 +182,7 @@ Query OK, 4 rows affected, 1 warning (0.04 sec)
 
 `Query OK` indicates successful execution. `4 rows affected` indicates that a total of 4 rows of data have been imported. `1 warnings` indicates the number of rows that were filtered out. 
 
-You can use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD.md) statement to view the filtered rows.
+You can use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) statement to view the filtered rows.
 
 The result of this statement will include a URL that can be used to query the error data. For more details, refer to the "View error rows" section below.
 
@@ -221,7 +221,7 @@ Query OK, 5 rows affected (0.04 sec)
 
 The invisible state of data is temporary, and the data will eventually become visible. 
 
-You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/Show-Statements/SHOW-TRANSACTION/) statement.
+You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION) statement.
 
 If the `TransactionStatus` column in the result is `visible`, it indicates that the data is visible.
 
@@ -288,4 +288,4 @@ You can control whether INSERT INTO ignores error rows by configuring the enviro
 
 ## More help
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.

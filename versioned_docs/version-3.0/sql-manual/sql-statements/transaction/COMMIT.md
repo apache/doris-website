@@ -28,7 +28,7 @@ under the License.
 
 ## Description
 
-Submit an explicit transaction, used in pairs with [BEGIN](./BEGIN_en).
+Submit an explicit transaction, used in pairs with [BEGIN](./BEGIN).
 
 ## Syntax
 

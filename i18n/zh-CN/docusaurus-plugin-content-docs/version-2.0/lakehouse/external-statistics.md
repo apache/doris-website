@@ -26,7 +26,7 @@ under the License.
 
 
 
-外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[内表统计信息](../query/nereids/statistics)。目前支持对 Hive，Iceberg 和 Hudi 等外部表的收集。
+外表统计信息的收集方式和收集内容与内表基本一致，目前支持对 Hive，Iceberg 和 Hudi 等外部表的收集。
 
 外表暂不支持的功能包括
 

@@ -27,7 +27,7 @@
                                 "install/preparation/os-checking"
                             ]
                         },
-                        "install/deploy-manually/storage-compute-coupled-deploy-manually",
+                        "install/deploy-manually/integrated-storage-compute-deploy-manually",
                         {
                             "type": "category",
                             "label": "Deploying on Kubernetes",
@@ -133,6 +133,7 @@
                                 "data-operate/import/data-source/tencent-cos",
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
+                                "data-operate/import/data-source/snowflake",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
@@ -175,7 +176,8 @@
                         "data-operate/import/handling-messy-data",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
-                        "data-operate/import/group-commit-manual"
+                        "data-operate/import/group-commit-manual",
+                        "data-operate/import/load-best-practices"
                     ]
                 },
                 {
@@ -215,7 +217,8 @@
                         "data-operate/export/export-overview",
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
-                        "data-operate/export/export-with-mysql-dump"
+                        "data-operate/export/export-with-mysql-dump",
+                        "data-operate/export/export-best-practice"
                     ]
                 },
                 {
@@ -278,8 +281,8 @@
                             "type": "category",
                             "label": "Distincting Counts",
                             "items": [
-                                "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
-                                "query-acceleration/distinct-counts/using-hll"
+                                "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+                                "query-acceleration/distinct-counts/hll-approximate-deduplication"
                             ]
                         },
                         "query-acceleration/colocation-join",
@@ -410,8 +413,23 @@
                             "label": "Authentication and Authorization",
                             "items": [
                                 "admin-manual/auth/authentication-and-authorization",
-                                "admin-manual/auth/ldap",
-                                "admin-manual/auth/ranger"
+                                {
+                                    "type": "category",
+                                    "label": "Authentication",
+                                    "items": [
+                                        "admin-manual/auth/authentication/internal",
+                                        "admin-manual/auth/authentication/federation"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Authorization",
+                                    "items": [
+                                        "admin-manual/auth/authorization/internal",
+                                        "admin-manual/auth/authorization/ranger",
+                                        "admin-manual/auth/authorization/data"
+                                    ]
+                                }
                             ]
                         },
                         "admin-manual/audit-plugin",
@@ -752,6 +770,15 @@
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/doris-kafka-connector",
+                {
+                    "type": "category",
+                    "label": "Doris Operator",
+                    "items": [
+                        "ecosystem/doris-operator/doris-operator-overview",
+                        "ecosystem/doris-operator/on-alibaba",
+                        "ecosystem/doris-operator/on-aws"
+                    ]
+                },
                 "ecosystem/doris-streamloader",
                 {
                     "type": "category",
@@ -772,15 +799,6 @@
                     "items": [
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Operator",
-                    "items": [
-                        "ecosystem/doris-operator/doris-operator-overview",
-                        "ecosystem/doris-operator/on-alibaba",
-                        "ecosystem/doris-operator/on-aws"
                     ]
                 },
                 {
@@ -811,7 +829,8 @@
                 "faq/sql-faq",
                 "faq/lakehouse-faq",
                 "faq/bi-faq",
-                "faq/correctness-faq"
+                "faq/correctness-faq",
+                "faq/routineload-faq"
             ]
         },
         {
@@ -821,69 +840,112 @@
             "items": [
                 {
                     "type": "category",
-                    "label": "SQL Types",
+                    "label": "Basic Elements",
                     "items": [
-                        "sql-manual/sql-data-types/data-type-overview",
                         {
                             "type": "category",
-                            "label": "Numeric Data Type",
+                            "label": "SQL Data Types",
                             "items": [
-                                "sql-manual/sql-data-types/numeric/BOOLEAN",
-                                "sql-manual/sql-data-types/numeric/TINYINT",
-                                "sql-manual/sql-data-types/numeric/SMALLINT",
-                                "sql-manual/sql-data-types/numeric/INT",
-                                "sql-manual/sql-data-types/numeric/BIGINT",
-                                "sql-manual/sql-data-types/numeric/LARGEINT",
-                                "sql-manual/sql-data-types/numeric/FLOAT",
-                                "sql-manual/sql-data-types/numeric/DOUBLE",
-                                "sql-manual/sql-data-types/numeric/DECIMAL"
+                                "sql-manual/basic-element/sql-data-types/data-type-overview",
+                                {
+                                    "type": "category",
+                                    "label": "Numeric Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/numeric/BOOLEAN",
+                                        "sql-manual/basic-element/sql-data-types/numeric/TINYINT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/SMALLINT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/INT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/FLOAT",
+                                        "sql-manual/basic-element/sql-data-types/numeric/DOUBLE",
+                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Datetime Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/date-time/DATE",
+                                        "sql-manual/basic-element/sql-data-types/date-time/TIME",
+                                        "sql-manual/basic-element/sql-data-types/date-time/DATETIME"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "String Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/string-type/CHAR",
+                                        "sql-manual/basic-element/sql-data-types/string-type/VARCHAR",
+                                        "sql-manual/basic-element/sql-data-types/string-type/STRING"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Semi-Structured Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Aggregation Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/aggregate/HLL",
+                                        "sql-manual/basic-element/sql-data-types/aggregate/BITMAP",
+                                        "sql-manual/basic-element/sql-data-types/aggregate/QUANTILE-STATE",
+                                        "sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "IP Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/ip/IPV4",
+                                        "sql-manual/basic-element/sql-data-types/ip/IPV6"
+                                    ]
+                                }
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Datetime Data Type",
+                            "label": "Literal",
                             "items": [
-                                "sql-manual/sql-data-types/date-time/DATE",
-                                "sql-manual/sql-data-types/date-time/TIME",
-                                "sql-manual/sql-data-types/date-time/DATETIME"
+                                "sql-manual/basic-element/literal/numeric-literal",
+                                "sql-manual/basic-element/literal/string-literal",
+                                "sql-manual/basic-element/literal/date-literal"
                             ]
                         },
+                        "sql-manual/basic-element/nulls",
+                        "sql-manual/basic-element/object-identifiers",
+                        "sql-manual/basic-element/reserved-keywords",
+                        "sql-manual/basic-element/variables",
+                        "sql-manual/basic-element/comments",
                         {
                             "type": "category",
-                            "label": "String Data Type",
+                            "label": "Operators",
                             "items": [
-                                "sql-manual/sql-data-types/string-type/CHAR",
-                                "sql-manual/sql-data-types/string-type/VARCHAR",
-                                "sql-manual/sql-data-types/string-type/STRING"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Semi-Structured Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/semi-structured/ARRAY",
-                                "sql-manual/sql-data-types/semi-structured/MAP",
-                                "sql-manual/sql-data-types/semi-structured/STRUCT",
-                                "sql-manual/sql-data-types/semi-structured/JSON",
-                                "sql-manual/sql-data-types/semi-structured/VARIANT"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Aggregation Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/aggregate/HLL",
-                                "sql-manual/sql-data-types/aggregate/BITMAP",
-                                "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
-                                "sql-manual/sql-data-types/aggregate/AGG-STATE"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "IP Data Type",
-                            "items": [
-                                "sql-manual/sql-data-types/ip/IPV4",
-                                "sql-manual/sql-data-types/ip/IPV6"
+                                "sql-manual/basic-element/operators/arithmetic-operators",
+                                {
+                                    "type": "category",
+                                    "label": "Conditional Operators",
+                                    "items": [
+                                        "sql-manual/basic-element/operators/conditional-operators/logical-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/comparison-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/full-text-search-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/in-operators",
+                                        "sql-manual/basic-element/operators/conditional-operators/exists-operators"
+                                    ]
+                                },
+                                "sql-manual/basic-element/operators/bitwise-operators",
+                                "sql-manual/basic-element/operators/assignment-operators",
+                                "sql-manual/basic-element/operators/operator-precedence"
                             ]
                         }
                     ]
@@ -981,7 +1043,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/left",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
@@ -990,6 +1051,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-part",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-by-string",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/substring-index",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/strcmp",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
@@ -1472,11 +1534,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/intersect-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-expr-calculate",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-expr-calculate-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-intersect",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-intersect-count",
-                                "sql-manual/sql-functions/aggregate-functions/orthogonal-bitmap-union-count",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/sum0",
                                 "sql-manual/sql-functions/aggregate-functions/window-funnel",
@@ -1519,7 +1576,6 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
-                                "sql-manual/sql-functions/table-functions/explode-variant-array",
                                 "sql-manual/sql-functions/table-functions/explode",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
@@ -1735,8 +1791,6 @@
                                     "label": "Table",
                                     "items": [
                                         "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE",
-                                        "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE",
-                                        "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT",
                                         "sql-manual/sql-statements/table-and-view/table/DESC-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION",
@@ -2010,6 +2064,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",
                         "releasenotes/v3.0/release-3.0.1",
@@ -2020,6 +2075,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",
                         "releasenotes/v2.1/release-2.1.7",
                         "releasenotes/v2.1/release-2.1.6",

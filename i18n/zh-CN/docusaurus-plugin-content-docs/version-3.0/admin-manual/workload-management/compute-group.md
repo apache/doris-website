@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 Compute Group 是存算分离架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示：
 
 ![compute_group](/images/compute_group_workload_management.png)
@@ -32,7 +33,7 @@ Compute Group 是存算分离架构下，实现不同的负载之间物理隔离
 - BE 节点本地无状态，数据都是存储在共享存储上；
 - 多个 Compute Group 之间通过共享的存储的方式来访问数据。
 
-在保持了 Resource Group 强隔离的优点的同时，Compute Group 与 Resource Group 相比还有以下优势：
+在保持了 Resource Group 强隔离的优点的同时，Compute Group 与 Resource Group 相比，还有以下优势：
 
 - 成本更低，由于采用了存算分离的架构，数据位于共享存储中，所以 Compute Group 的数量不再受限于副本的数量，用户可以根据需求创建任意多的 Compute Group，存储成本不会变多；
 - 更灵活，在存算分离架构下，BE 本地的数据都是缓存，所以增加 Compute Group 时不需要做笨重的数据迁移过程，新的 Compute Group 只需在查询时缓存预热即可；
@@ -58,7 +59,7 @@ SHOW COMPUTE GROUPS;
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
 ```
 
-上面命令会将`host:9050`这台节点添加到`new_group`这个 Compute Group 中，您也可以不指定 Compute Group，默认会添加到`default_compute_group`组里，示例：
+上面命令会将`host:9050`这台节点添加到`new_group`这个 Compute Group 中，您也可以不指定 Compute Group，默认会添加到`default_compute_group`组里，例如：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050';
@@ -156,7 +157,7 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 
 ## Compute Group 扩缩容
 
-通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现 Compute Group 的扩缩容。
+通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISSION BACKEND` 添加或者删除 BE 实现 Compute Group 的扩缩容。
 
 
 详细操作参考[存算分离相关操作](../../compute-storage-decoupled/overview.md)

@@ -82,7 +82,7 @@ SELECT COUNT(*) FROM orders o JOIN [broadcast] customer c ON o.customer_number =
 select count(*) 
 from orders, customer 
 where o_custkey = c_custkey
-and o_orderdate < '1920-01-02'；
+and o_orderdate < '1920-01-02';
 ```
 
 在均匀分布的假设下，优化器可能会认为经过`o_orderdate < '1920-01-02'`过滤后输出的行数会少于 `customer` 表的行数，因此可能选择`customer`join `orders` 的连接顺序。

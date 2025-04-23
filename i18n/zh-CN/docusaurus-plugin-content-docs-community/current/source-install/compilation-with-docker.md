@@ -73,7 +73,9 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 
 -   编译镜像变更信息可参考 [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
 
--   最新版本的 `apache/doris:build-env-ldb-toolchain-latest` 镜像中同时包含 JDK 8 和 JDK 17。2.1（含）之前的版本，请使用 JDK 8。3.0（含）之后的版本或 master 分支，请使用 JDK 17。
+-   最新版本的 `apache/doris:build-env-ldb-toolchain-latest` 镜像（目前仅支持x64架构）中同时包含 JDK 8 和 JDK 17。2.1（含）之前的版本，请使用 JDK 8。3.0（含）之后的版本或 master 分支，请使用 JDK 17。
+
+-   若要在ARM64架构下使用docker编译，则需要下载支持ARM64的Linux镜像（可选`apache/doris:base-latest`，对应版本为Ubuntu 22.04.5 LTS），再参考Linux和ARM平台编译文档下载和安装所需的依赖包后进行编译。
 
 ```shell
 # 切换到 JDK 8

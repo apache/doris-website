@@ -39,7 +39,7 @@ ARRAY_EXCEPT(<arr1> , <arr2> )
 | `<arr2>` | An array of elements to compare with arr1  |
 
 ## Return Value
-Returns an array, Special cases：
+Returns an array, Special cases:
 - If the input parameter is null, null is returned.
 
 

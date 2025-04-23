@@ -117,6 +117,16 @@ The `SELECT INTO OUTFILE` currently supports exporting the following file format
 * csv\_with\_names
 * csv\_with\_names\_and\_types
 
+### Export concurrency
+
+You can enable concurrent export through the session variable `enable_parallel_outfile`.
+
+`SET enable_parallel_outfile=true;`
+
+Concurrent export will use multi-node and multi-thread to export result data to improve the overall export throughout. However, concurrent export may generate more files.
+
+Note that some queries cannot perform concurrent export even if this variable is turned on, such as queries containing global sorting. If the number of rows returned by the export command is greater than 1, it means that concurrent export is enabled.
+
 ## Export Examples
 
 ### Export to an HDFS Cluster with High Availability Enabled

@@ -52,7 +52,7 @@ CREATE ENCRYPTKEY <key_name> AS "<key_string>"
 
 | 权限（Privilege） | 对象（Object）          | 说明（Notes）                            |
 |:--------------|:--------------------|:-------------------------------------|
-| `ADMIN_PRIV`  | 用户（User） 或 角色（Role） | 需对目标用户或角色持有 `ADMIN_PRIV` 权限方可创建自定义密钥 |
+| `ADMIN_PRIV`  | 用户（User）或 角色（Role） | 需对目标用户或角色持有 `ADMIN_PRIV` 权限方可创建自定义密钥 |
 
 ## 示例
 

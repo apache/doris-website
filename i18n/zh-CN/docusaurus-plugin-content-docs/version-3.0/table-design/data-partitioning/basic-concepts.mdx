@@ -354,7 +354,7 @@ ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-0
 
 ## 分区检索
 
-`partitions` 表函数和 `information_schema.partitions` 系统表（自 3.0.2 起支持）记录了集群的分区信息。在自动管理分区时，可以通过对应表提取分区信息使用：
+`partitions` 表函数和 `information_schema.partitions` 系统表记录了集群的分区信息。在自动管理分区时，可以通过对应表提取分区信息使用：
 
 ```sql
 --- 在 Auto Partition 表中找对应值所属的分区

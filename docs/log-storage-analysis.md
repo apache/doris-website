@@ -40,7 +40,7 @@ Focused on this solution, this chapter contains the following 3 sections:
 
 The following figure illustrates the architecture of the log storage and analysis platform built on Apache Doris:
 
-![Overall architecture](/images/doris-overall-architecture.png)
+![log storage and analysis platform architecture](/images/doris-overall-architecture.png)
 
 The architecture contains the following 3 parts:
 
@@ -175,7 +175,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](./install/deploy-manually/storage-compute-coupled-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 
 ### Step 3: Optimize FE and BE configurations
@@ -577,7 +577,7 @@ ORDER BY ts DESC LIMIT 10;
 
 Some third-party vendors offer visual log analysis development platforms based on Apache Doris, which include a log search and analysis interface similar to Kibana Discover. These platforms provide an intuitive and user-friendly exploratory log analysis interaction.
 
-![WebUI](/images/WebUI-EN.jpeg)
+![WebUI-a log search and analysis interface similar to Kibana](/images/WebUI-EN.jpeg)
 
 - Support for full-text search and SQL modes
 

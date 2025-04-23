@@ -28,11 +28,11 @@ Doris 提供以下方式从 Kafka 导入数据：
 
 - **使用 Routine Load 消费 Kafka 数据**
 
-Doris 通过 Routine Load 持续消费 Kafka Topic 中的数据。提交 Routine Load 作业后，Doris 会实时生成导入任务，消费 Kafka 集群中指定 Topic 的消息。Routine Load 支持 CSV 和 JSON 格式，具备 Exactly-Once 语义，确保数据不丢失且不重复。更多文档请参考 [Routine Load](../import-way/routine-load-manual.md)。
+Doris 通过 Routine Load 持续消费 Kafka Topic 中的数据。提交 Routine Load 作业后，Doris 会实时生成导入任务，消费 Kafka 集群中指定 Topic 的消息。Routine Load 支持 CSV 和 JSON 格式，具备 Exactly-Once 语义，确保数据不丢失且不重复。更多信息请参考 [Routine Load](../import-way/routine-load-manual.md)。
 
 - **Doris Kafka Connector 消费 Kafka 数据**
 
-Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。用户可通过 Kafka Connect 插件轻松导入多种序列化格式（如 JSON、Avro、Protobuf），并支持解析 Debezium 组件的数据格式。更多文档请参考 [Doris Kafka Connector](../../../ecosystem/doris-kafka-connector.md)。
+Doris Kafka Connector 是将 Kafka 数据流导入 Doris 数据库的工具。用户可通过 Kafka Connect 插件轻松导入多种序列化格式（如 JSON、Avro、Protobuf），并支持解析 Debezium 组件的数据格式。更多信息请参考 [Doris Kafka Connector](../../../ecosystem/doris-kafka-connector.md)。
 
 在大多数情况下，可以直接选择 Routine Load 进行数据导入，无需集成外部组件即可消费 Kafka 数据。当需要加载 Avro、Protobuf 格式的数据，或通过 Debezium 采集的上游数据库数据时，可以使用 Doris Kafka Connector。
 
@@ -117,7 +117,7 @@ test_multi_table_load2|2,Benjamin,35
 
 在 Doris 中创建被导入的表，具体语法如下：
 
-表 1:
+表 1：
 
 ```SQL
 CREATE TABLE test_multi_table_load1(
@@ -129,7 +129,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-表 2:
+表 2：
 
 ```SQL
 CREATE TABLE test_multi_table_load2(

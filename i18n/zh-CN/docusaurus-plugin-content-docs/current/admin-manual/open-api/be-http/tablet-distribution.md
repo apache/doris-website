@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/tablets_distribution?group_by={enum}&partition_id={int}`
 
-## Description
+## 描述
 
 获取 BE 节点上每一个 partition 下的 tablet 在不同磁盘上的分布情况
 
-## Query parameters
+## 请求参数
 
 * `group_by`
     分组，当前只支持`partition`
@@ -42,11 +42,11 @@ under the License.
 * `partition_id`
     指定 partition 的 id，选填，默认返回所有 partition。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -82,7 +82,7 @@ under the License.
         count: ***
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

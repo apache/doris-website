@@ -37,14 +37,14 @@ UNCOMPRESS(<compressed_str>)
 
 | 参数                | 说明            |
 |--------------------|---------------|
-| `<compressed_str>` | 压缩得到的二进制数据, 参数类型是varchar或者string |
+| `<compressed_str>` | 压缩得到的二进制数据，参数类型是 varchar 或者 string |
 
 ## 返回值
 
 返回值与输入的 `compressed_str` 类型一致
 
 特殊情况：
-- `compressed_str` 输入不是`COMPRESS`得到的二进制数据时, 返回 NULL.
+- `compressed_str` 输入不是`COMPRESS`得到的二进制数据时，返回 NULL.
 
 
 ## 举例

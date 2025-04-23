@@ -526,7 +526,6 @@
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-and-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-and-not-count",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-union-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-xor-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-or-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-contains",
@@ -536,8 +535,6 @@
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-min",
                                         "sql-manual/sql-functions/bitmap-functions/intersect-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-intersect",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-hash64"
                                     ]
                                 },

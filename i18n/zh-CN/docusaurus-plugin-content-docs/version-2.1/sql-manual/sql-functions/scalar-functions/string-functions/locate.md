@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-返回 substr 在 str 中出现的位置（从1开始计数）。如果指定第3个参数 pos，则从 str 以 pos 下标开始的字符串处开始查找 substr 出现的位置。如果没有找到，返回0
+返回 substr 在 str 中出现的位置（从 1 开始计数）。如果指定第 3 个参数 pos，则从 str 以 pos 下标开始的字符串处开始查找 substr 出现的位置。如果没有找到，返回 0
 
 ## 语法
 
@@ -44,7 +44,7 @@ LOCATE ( <substr> , <str> [, <pos> ] )
 
 ## 返回值
 
-substr 在 str 中出现的位置（从1开始计数）
+substr 在 str 中出现的位置（从 1 开始计数）
 
 ## 举例
 

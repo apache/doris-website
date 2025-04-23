@@ -30,11 +30,11 @@ under the License.
 
 以下导入方式支持 JSON 格式的数据导入：
 
-- [Stream Load](../import-way/stream-load-manual.md)
-- [Broker Load](../import-way/broker-load-manual.md)
-- [Routine Load](../import-way/routine-load-manual.md)
+- [Stream Load](../import-way/stream-load-manual)
+- [Broker Load](../import-way/broker-load-manual)
+- [Routine Load](../import-way/routine-load-manual)
 - [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## 支持的 JSON 格式
 
@@ -106,6 +106,7 @@ Doris 支持以下三种 JSON 格式：
 | read json by line | false | read_json_by_line | 不支持配置，都为 true | 不支持 | read_json_by_line, 默认为 true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | 不支持 | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
+| 压缩格式 | plain | 不支持 | PROPERTIES.compress_type | 不支持 | compress_type |
 
 :::tip 注意
 1. Stream Load：参数直接通过 HTTP Header 指定，如：`-H "jsonpaths: $.data"`

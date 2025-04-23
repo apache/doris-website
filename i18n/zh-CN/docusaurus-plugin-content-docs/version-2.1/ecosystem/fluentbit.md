@@ -58,12 +58,12 @@ Fluent Bit Doris output plugin 的配置如下：
 --- | ---
 `host` | Stream Load HTTP host
 `port` | Stream Load HTTP port
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
+`user` | Doris 用户名，该用户需要有 doris 对应库表的导入权限
 `password` | Doris 用户的密码
 `database` | 要写入的 Doris 库名
 `table` | 要写入的 Doris 表名
 `label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}\_{timestamp}\_{uuid}* ，默认值是 fluentbit, 如果设置为 false 则不会添加 Label
- `time_key` | 数据中要添加的时间戳列的名称，默认值是 date， 如果设置为 false 则不会添加该列
+ `time_key` | 数据中要添加的时间戳列的名称，默认值是 date，如果设置为 false 则不会添加该列
 `header` | Doris Stream Load 的 header 参数，可以设置多个
 `log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 true
 `log_progress_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
@@ -250,7 +250,7 @@ fluent-bit -c doris_log.conf
 
 **1. 数据**
 
-github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024年1月1日15点的数据。
+github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
 
 ```shell
 wget https://data.gharchive.org/2024-01-01-15.json.gz

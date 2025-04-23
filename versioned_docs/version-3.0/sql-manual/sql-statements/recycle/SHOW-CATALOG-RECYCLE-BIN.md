@@ -1,7 +1,7 @@
 ---
 {
-    "title": "SHOW CATALOG RECYCLE BIN",
-    "language": "en"
+  "title": "SHOW CATALOG RECYCLE BIN",
+  "language": "en"
 }
 ---
 
@@ -26,45 +26,61 @@ under the License.
 
 ## Description
 
-This statement is used to display the dropped meta informations that can be recovered
+This statement is used to display the recoverable metadata of databases, tables, or partitions in the recycle bin.
 
-grammar:
+## Syntax
 
 ```sql
-SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "name" | LIKE "name_matcher"] ]
+SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "<name>" | LIKE "<name_matcher>"] ]
 ```
 
-grammar: 
+## Optional Parameters
 
-```
-The meaning of each column is as follows:
-        Type：                type of meta information:Database、Table、Partition
-        Name：                name of meta information
-        DbId：                id of database
-        TableId：             id of table
-        PartitionId：         id of partition
-        DropTime：            drop time of meta information
-        DataSize：            the amount of data. If the type is database, this value includes the data size of the recycled tables and partitions in the database
-        RemoteDataSize：      the amount of data on remote storage(hdfs or object storage). If the type is database, this value includes the remote data size of the recycled tables and partitions in the database
-```
+Filter by name
 
-## Example
+**1. `<name>`**
+> The name of the database, table, or partition.
 
- 1. Display all meta informations that can be recovered
-    
-      ```sql
-       SHOW CATALOG RECYCLE BIN;
-      ```
+Filter by pattern matching
 
- 2. Display meta informations with name 'test'
-    
-      ```sql
-       SHOW CATALOG RECYCLE BIN WHERE NAME = 'test';
-      ```
+**1. `<name_matcher>`**
+> The pattern matching for the name of the database, table, or partition.
 
-## Keywords
+## Return Values
 
-    SHOW, CATALOG RECYCLE BIN
+| Column         | Type     | Note                                                                                                                                                                             |
+|----------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Type           | String   | Metadata type: Database, Table, Partition                                                                                                                                        |
+| Name           | String   | Metadata name                                                                                                                                                                    |
+| DbId           | Bigint   | ID of the database                                                                                                                                                               |
+| TableId        | Bigint   | ID of the table                                                                                                                                                                  |
+| PartitionId    | Bigint   | ID of the partition                                                                                                                                                              |
+| DropTime       | DateTime | Time when the metadata was moved to the recycle bin                                                                                                                              |
+| DataSize       | Bigint   | Data size. If the metadata type is database, this value includes the data size of all tables and partitions in the recycle bin                                                   |
+| RemoteDataSize | Decimal  | Data size on remote storage (HDFS or object storage). If the metadata type is database, this value includes the remote data size of all tables and partitions in the recycle bin |
 
-## Best Practice
+## Access Control Requirements
 
+| Privilege   | Object | Notes |
+|-------------|--------|-------|
+| ADMIN_PRIV  |        |       |
+
+## Examples
+
+1. Display all metadata in the recycle bin
+
+    ```sql
+    SHOW CATALOG RECYCLE BIN;
+    ```
+
+2. Display metadata with the name 'test' in the recycle bin
+
+    ```sql
+    SHOW CATALOG RECYCLE BIN WHERE NAME = 'test';
+    ```
+
+3. Display metadata with names starting with 'test' in the recycle bin
+
+    ```sql
+    SHOW CATALOG RECYCLE BIN WHERE NAME LIKE 'test%';
+    ```

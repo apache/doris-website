@@ -25,7 +25,7 @@ under the License.
 
 ## 描述
 
-`sub_replace` 函数用于替换字符串中的子字符串。可以指定要替换的子字符串和替换的目标字符串，返回用`new_str` 字符串替换 `str` 中从 `start` 开始长度为len的新字符串。其中 `start`, `len` 为负整数，返回 NULL, 且 `len` 的默认值为 `new_str` 的长度。
+`sub_replace` 函数用于替换字符串中的子字符串。可以指定要替换的子字符串和替换的目标字符串，返回用`new_str` 字符串替换 `str` 中从 `start` 开始长度为 len 的新字符串。其中 `start`, `len` 为负整数，返回 NULL, 且 `len` 的默认值为 `new_str` 的长度。
 
 ## 语法
 

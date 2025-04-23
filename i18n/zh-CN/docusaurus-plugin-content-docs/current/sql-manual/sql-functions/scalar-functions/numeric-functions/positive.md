@@ -42,7 +42,7 @@ POSITIVE(<x>)
 
 返回一个整型或者浮点数。特殊情况：
 
-- 当x is NULL 时，返回 NULL
+- 当 x is NULL 时，返回 NULL
 
 ## 举例
 

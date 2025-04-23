@@ -39,7 +39,7 @@ hll_union_agg(<hll>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<hll>` | 需要被计算HyperLogLog类型表达式 |
+| `<hll>` | 需要被计算 HyperLogLog 类型表达式 |
 
 ## 返回值
 

@@ -28,851 +28,716 @@ under the License.
 
 
 
+
 ## Description
 
-This command is used to create a table. The subject of this document describes the syntax for creating Doris self-maintained tables.
+Create a new table in the current or specified database. A table can have multiple columns, and each column definition includes the name, data type, and optionally the following attributes:
+
+- Whether it is a key
+- Whether it has aggregation semantics
+- Whether it is a generated column
+- Whether it requires a value (NOT NULL)
+- Whether it is an auto-increment column
+- Whether there is a default value upon insertion
+- Whether there is a default value upon update
+
+Furthermore, this command also supports the following variations:
+
+- CREATE TABLE … AS SELECT (to create a table pre-populated with data; also known as CTAS)
+- CREATE TABLE … LIKE (to create an empty copy of an existing table)
+
+## Syntax
 
 ```sql
-CREATE TABLE [IF NOT EXISTS] [database.]table
-(
-    column_definition_list
-    [, index_definition_list]
-)
-[engine_type]
-[keys_type]
-[table_comment]
-[partition_info]
-distribution_desc
-[rollup_list]
-[properties]
-[extra_properties]
+CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
+    (<columns_definition> [ <indexes_definition> ])
+    [ ENGINE = <table_engine_type> ]
+    [ <key_type> KEY (<key_cols>)
+        [ CLUSTER BY (<cluster_cols>) ]
+    ]
+    [ COMMENT '<table_comment>' ]
+    [ <partitions_definition> ]
+    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }
+        [ BUCKETS { <bucket_count> | AUTO } ]
+    ]
+    [ <roll_up_definition> ]
+    [ PROPERTIES (
+          -- Table property
+          <table_property>
+          -- Additional table properties
+          [ , ... ]) 
+    ]
 ```
 
-#### column_definition_list
+Where:
 
-Column definition list:
+```sql
+columns_definition
+  : -- Column definition
+    <col_name> <col_type>
+      [ KEY ]
+      [ <col_aggregate_type> ]
+      [ [NOT] NULL ]
+      [ AUTO_INCREMENT(<col_auto_increment_start_value>) ]
+      [ DEFAULT <col_default_value> ]
+      [ ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>) ]
+      [ COMMENT '<col_comment>' ]
+    -- Additional column definitions
+    [ , <col_name> <col_type> [ ... ] ]
+```
 
-`column_definition[, column_definition]`
+```sql    
+indexes_definition
+  : -- Index definition
+    INDEX [ IF NOT EXISTS ]
+      <index_name> (<index_cols>)
+      [ USING <index_type> ]
+      [ PROPERTIES (
+            -- Table property
+            <index_property>
+            -- Additional table properties
+            [ , ... ]) 
+      ]
+      [ COMMENT '<index_comment>' ]
+    -- Additional index definitions
+    [ , <index_name> (<index_cols>) [ ... ] ]
+```
 
-* `column_definition`
+```sql
+partitions_definition
+  : AUTO PARTITION BY RANGE(
+      <auto_partition_function>(<auto_partition_arguments>))
+      ()
+  | PARTITION BY <partition_type>
+    (<partition_cols>)
+    (
+        -- Partition definition
+        <one_partition_definition>
+        -- Additional partition definition
+        [ , ... ]
+    )
+```
 
-    Column definition:
-
-    `column_name column_type [KEY] [aggr_type] [NULL] [AUTO_INCREMENT(auto_inc_start_value)] [default_value] [on update current_timestamp] [column_comment]`
-
-    * `column_type`
-
-        Column type, the following types are supported:
-
-        ```
-        TINYINT (1 byte)
-            Range: -2^7 + 1 ~ 2^7-1
-        SMALLINT (2 bytes)
-            Range: -2^15 + 1 ~ 2^15-1
-        INT (4 bytes)
-            Range: -2^31 + 1 ~ 2^31-1
-        BIGINT (8 bytes)
-            Range: -2^63 + 1 ~ 2^63-1
-        LARGEINT (16 bytes)
-            Range: -2^127 + 1 ~ 2^127-1
-        FLOAT (4 bytes)
-            Support scientific notation
-        DOUBLE (12 bytes)
-            Support scientific notation
-        DECIMAL[(precision, scale)] (16 bytes)
-            The decimal type with guaranteed precision. The default is DECIMAL(10, 0)
-            precision: 1 ~ 27
-            scale: 0 ~ 9
-            Where the integer part is 1 ~ 18
-            Does not support scientific notation
-        DATE (3 bytes)
-            Range: 0000-01-01 ~ 9999-12-31
-        DATETIME (8 bytes)
-            Range: 0000-01-01 00:00:00 ~ 9999-12-31 23:59:59
-        CHAR[(length)]
-            Fixed-length character string. Length range: 1 ~ 255. Default is 1
-        VARCHAR[(length)]
-            Variable length character string. Length range: 1 ~ 65533. Default is 65533
-        HLL (1~16385 bytes)
-            HyperLogLog column type, do not need to specify the length and default value. The length is controlled within the system according to the degree of data aggregation.
-            Must be used with HLL_UNION aggregation type.
-        BITMAP
-            The bitmap column type does not need to specify the length and default value. Represents a collection of integers, and the maximum number of elements supported is 2^64-1.
-            Must be used with BITMAP_UNION aggregation type.
-        ```
-
-    * `aggr_type`
-
-        Aggregation type, the following aggregation types are supported:
-
-        ```
-        SUM: Sum. Applicable numeric types.
-        MIN: Find the minimum value. Suitable for numeric types.
-        MAX: Find the maximum value. Suitable for numeric types.
-        REPLACE: Replace. For rows with the same dimension column, the index column will be imported in the order of import, and the last imported will replace the first imported.
-        REPLACE_IF_NOT_NULL: non-null value replacement. The difference with REPLACE is that there is no replacement for null values. It should be noted here that the default value should be NULL, not an empty string. If it is an empty string, you should replace it with an empty string.
-        HLL_UNION: The aggregation method of HLL type columns, aggregated by HyperLogLog algorithm.
-        BITMAP_UNION: The aggregation mode of BIMTAP type columns, which performs the union aggregation of bitmaps.
-        ```
-
-    * `AUTO_INCREMENT(auto_inc_start_value)`
-
-        To indicate if the column is a auto-increment column. Auto-increment column can be used to generate a unique identity for new row. If no values are assgined for auto-increment column when inserting, Doris will generate sequence numbers automatically. You can also assign the auto-increment column with NULL literal to indicate Doris to generate sequence numbers. It should be noted that, for performance reasons, BE will cache some values of auto-increment column in memory. Therefore, the values generated by auto-increment column can only guarantee monotonicity and uniqueness, but not strict continuity.
-        A table can have at most one auto-incremnt column. The auto-increment column should be BIGINT type and be NOT NULL.
-        Both Duplicate model table and Unique model table support auto-increment column.
-        You can specify the starting value for an auto-increment column by providing `auto_inc_start_value. If not specified, the default starting value is 1.
-
-    * `default_value`
-
-        Default value of the column. If the load data does not specify a value for this column, the system will assign a default value to this column.
-        
-        The syntax is: `default default_value`.
-        
-        Currently, the default value supports two forms:
-
-        1. The user specifies a fixed value, such as:
-
-        ```SQL
-        	k1 INT DEFAULT '1',
-            k2 CHAR(10) DEFAULT 'aaaa'
-        ```
-        2. Keywords are provided by the system. Currently, the following keywords are supported: 
-        
-        ```SQL
-            // This keyword is used only for DATETIME type. If the value is missing, the system assigns the current timestamp.
-            dt DATETIME DEFAULT CURRENT_TIMESTAMP
-        ```
-
-
-    *  `on update current_timestamp`
-        To indicate that whether the value of this column should be updated to the current timestamp (`current_timestamp`) when there is an update on the row. The feature is only available on unique table with merge-on-write enabled. Columns with this feature enabled must declare a default value, and the default value must be `current_timestamp`. If the precision of the timestamp is declared here, the timestamp precision in the default value of the column must be the same as the precision declared here."
-
-    Example:
-
-        ```sql
-        k1 TINYINT,
-        k2 DECIMAL(10,2) DEFAULT "10.5",
-        k4 BIGINT NULL DEFAULT "1000" COMMENT "This is column k4",
-        v1 VARCHAR(10) REPLACE NOT NULL,
-        v2 BITMAP BITMAP_UNION,
-        v3 HLL HLL_UNION,
-        v4 INT SUM NOT NULL DEFAULT "1" COMMENT "This is column v4"
-        dt datetime(6) default current_timestamp(6) on update current_timestamp(6)
-        ```
-
-#### index_definition_list
-
-Index list definition:
-
-`index_definition[, index_definition]`
-
-* `index_definition`
-
-    Index definition:
+- Where <one_partition_definition>:
 
     ```sql
-    INDEX index_name (col_name) [USING INVERTED] COMMENT'xxxxxx'
+    <one_partition_definition>
+    : PARTITION [ IF NOT EXISTS ] <partition_name>
+        VALUES LESS THAN <partition_value_list>
+    | PARTITION [ IF NOT EXISTS ] <partition_name>
+        VALUES [ <partition_lower_bound>, <partition_upper_bound>)
+    | FROM <partition_lower_bound> TO <partition_upper_bound>
+        INTERVAL <n> [ <datetime_unit> ]
+    | PARTITION [ IF NOT EXISTS ] <partition_name>
+        VALUES IN {
+            (<partition_value> [, <partition_value> [ ... ] ])
+            | <partition_value>
+        }
     ```
 
-    Example:
-
-    ```sql
-    INDEX idx1 (k1) USING INVERTED COMMENT "This is a inverted index1",
-    INDEX idx2 (k2) USING INVERTED COMMENT "This is a inverted index2",
-    ...
-    ```
-
-#### engine_type
-
-
-Table engine type. All types in this document are OLAP. Example:
-
-    `ENGINE=olap`
-
-#### keys_type
-
-Data model.
-
-`key_type(col1, col2, ...)`
-
-`key_type` supports the following models:
-
-* DUPLICATE KEY (default): The subsequent specified column is the sorting column.
-* AGGREGATE KEY: The specified column is the dimension column.
-* UNIQUE KEY: The subsequent specified column is the primary key column.
-
-NOTE: when set table property `"enable_duplicate_without_keys_by_default" = "true"`, will create a duplicate model without sorting columns and prefix indexes by default.
-
-Example:
-
-```
-DUPLICATE KEY(col1, col2),
-AGGREGATE KEY(k1, k2, k3),
-UNIQUE KEY(k1, k2)
+```sql      
+roll_up_definition
+  : ROLLUP (
+        -- Rollup definition
+        <rollup_name> (<rollup_cols>)
+        [ DUPLICATE KEY (<duplicate_cols>) ]
+        -- Additional rollup definition
+        [ , <rollup_name> (<rollup_cols>) [ ... ] ]
+    )
 ```
 
-#### table_comment
+## Varaint Syntax
 
-Table notes. Example:
+### CREATE TABLE ... AS SELECT (Also Referred to as CTAS)
 
-    ```
-    COMMENT "This is my first DORIS table"
-    ```
+Generates a table and populates it with data returned from the `query`:
 
-#### partition_info
+```sql
+CREATE
+    [ EXTERNAL ]
+    TABLE [ IF NOT EXISTS ] <table_name>
+    [ ( <column_definitions> ) ]
+    [ <index_definitions> ]
+    [ ENGINE = <storage_engine_type> ]
+    [ <partitioning_key_type> KEY ( <key_columns> )
+        [ CLUSTER BY ( <clustering_columns> ) ]
+    ]
+    [ COMMENT '<table_description>' ]
+    [ <partition_definitions> ]
+    [ DISTRIBUTED BY { HASH ( <distribution_columns> ) | RANDOM }
+        [ BUCKETS { <number_of_buckets> | AUTO } ]
+    ]
+    [ <rollup_definitions> ]
+    [ PROPERTIES (
+          "<table_properties>"
+          [ , ... ] 
+    ) ]
+AS <query>;
+```
 
-Partition information supports three writing methods:
+### CREATE TABLE ... LIKE
 
-1. LESS THAN: Only define the upper boundary of the partition. The lower bound is determined by the upper bound of the previous partition.
+Creates a new table with the same column definitions as an existing table, without copying data from the existing table. All properties of the columns will be replicated in the new table. If a list of `rollup` names is specified, the corresponding `rollup` from the original table will also be replicated:
 
-    ```
-    PARTITION BY RANGE(col1[, col2, ...])
-    (
-        PARTITION partition_name1 VALUES LESS THAN MAXVALUE|("value1", "value2", ...),
-        PARTITION partition_name2 VALUES LESS THAN MAXVALUE|("value1", "value2", ...)
-    )
-    ```
+```sql
+CREATE TABLE <new_table_name> LIKE <existing_table_name>
+[ WITH ROLLUP ( <rollup_list> ) ];
+```
 
-2. FIXED RANGE: Define the left closed and right open interval of the zone.
+## Required Parameters
 
-    ```
-    PARTITION BY RANGE(col1[, col2, ...])
-    (
-        PARTITION partition_name1 VALUES [("k1-lower1", "k2-lower1", "k3-lower1",...), ("k1-upper1", "k2-upper1", "k3-upper1", ... )),
-        PARTITION partition_name2 VALUES [("k1-lower1-2", "k2-lower1-2", ...), ("k1-upper1-2", MAXVALUE, ))
-    )
-    ```
-           
+**<name>**
 
-    
-3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
+> Specifies the identifier (i.e., name) of the table; it must be unique within the database where the table is created.
+>
+> The identifier must start with a letter (any language character if Unicode name support is enabled) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., ``My Object``).
+>
+> Identifiers cannot use reserved keywords.
+>
+> For more details, see [Identifier Requirements](../../../basic-element/object-identifiers.md) and [Reserved Keywords](../../../basic-element/reserved-keywords.md).
 
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
+**<col_name>**
+
+> Specifies the column identifier (i.e., name). It must be unique within the created table.
+>
+> The identifier must start with a letter (any language character if Unicode name support is enabled), a digit, or the symbol `@`, and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., ``My Object``).
+>
+> For more details, see [Identifier Requirements](../../../basic-element/object-identifiers.md) and [Reserved Keywords](../../../basic-element/reserved-keywords.md).
+
+**<col_type>**
+
+> Specifies the data type of the column.
+>
+> For details on the data types that can be specified for table columns, see the [Data Types](../../../basic-element/sql-data-types/data-type-overview.md) section.
+
+**<query>**
+
+> A required parameter in CTAS. Specifies the SELECT statement that populates the data.
+
+**<source_table>**
+
+> A required parameter in CREATE TABLE ... LIKE. Specifies the original table to be copied.
+
+## Optional Parameters
+
+### Data Model Related Parameters
+
+**<key_type>**
+
+> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/overview.md) section.
+
+**<key_cols>**
+
+> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/overview.md) section.
+
+**<cluster_cols>**
+
+> Data local sort columns, can only be used when the data model is UNIQUE (primary key model). When `<cluster_cols>` is specified, data is sorted by `<cluster_cols>` instead of using `<key_cols>`.
+
+**<col_aggregate_type>**
+
+> The aggregation method of the column. Can only be used when the table is an aggregation model. For details on aggregation methods, see the [Aggregation Model](../../../../table-design/data-model/aggregate.md) section.
+
+### Bucketing Related Parameters
+
+**<distribute_cols> and <bucket_count>**
+
+> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manual-setting-bucket-count) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-setting-bucket-count) sections.
+
+### Column Default Value Related Parameters
+
+
+**AUTO_INCREMENT(<col_auto_increment_start_value>)**
+
+> When importing data, Doris will assign a unique value within the table to rows of data in the auto-increment column that do not specify a value. `<col_auto_increment_start_value>` specifies the starting value for the auto-increment column. For more details on auto-increment columns, see the [Auto-Increment Columns](../../../../table-design/auto-increment.md) section.
+
+**DEFAULT <col_default_value>**
+
+> The default value for the column. When writing without including this column, this default value is used. If the default value is not explicitly set, NULL is used. Available default values include:
+>
+> - NULL: Available for all types, using NULL as the default value.
+> - Numeric literals: Can only be used for numeric types.
+> - String literals: Can only be used for string types.
+> - CURRENT_DATE: Can only be used for date types. Uses the current date as the default value.
+> - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]: Can only be used for datetime types. Uses the current timestamp as the default value. `<defaultValuePrecision>` can specify the time precision.
+> - PI: Can only be used for double types. Uses pi as the default value.
+> - E: Can only be used for double types. Uses the mathematical constant e as the default value.
+> - BITMAP_EMPTY: Can only be used when the column is of bitmap type. Fills an empty bitmap.
+
+**ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>)**
+
+> When data is updated, if no value is specified for this column, the current timestamp is used to update the data in this column. Can only be used on tables with a UNIQUE (primary key model).
+
+### Index Related Parameters
+
+**<index_name>**
+
+> Specifies the index identifier (i.e., name). It must be unique within the created table. For more details on identifiers, see [Identifier Requirements](../../../basic-element/object-identifiers.md) and [Reserved Keywords](../../../basic-element/reserved-keywords.md).
+
+**<index_cols>**
+
+> A list of columns to add an index to. Must be existing columns in the table.
+
+**<index_type>**
+
+> The type of index. Currently, only INVERTED is supported.
+
+**<index_property>**
+
+> The properties of the index. For detailed explanations, refer to the [Inverted Index](../../../../table-design/index/inverted-index.md) section.
+
+### Automatic Partitioning Related Parameters
+
+For a detailed introduction to partitioning, see the [Automatic Partitioning](../../../../table-design/data-partitioning/auto-partitioning.md) section.
+
+**<auto_partition_function>(<auto_partition_arguments>)**
+
+> The method of automatic partitioning. `<auto_partition_function>` currently only supports `date_trunc`. `<auto_partition_arguments>` specifies the column for automatic partitioning and the unit of `date_trunc`. For example, `date_trunc(col_1, 'day')`.
+>
+> When using automatic partitioning, the partition column must be NOT NULL.
+
+### Manual Partitioning Related Parameters
+
+For a detailed introduction to partitioning, see the "Manual Partitioning" section.
+
+**<partition_type>**
+
+> Doris supports RANGE partitioning and LIST partitioning. For details, see the [Manual Partitioning](../../../../table-design/data-partitioning/manual-partitioning.md) section.
+
+**<partition_name>**
+
+> The partition identifier (i.e., name). It must be unique within the created table. For more details on identifiers, see [Identifier Requirements](../../../basic-element/object-identifiers.md) and [Reserved Keywords](../../../basic-element/reserved-keywords.md).
+
+**VALUES LESS THAN <partition_value_list>**
+
+> RANGE partitioning. The partition data range is from the lower bound to `<partition_value_list>`.
+>
+> If it represents the upper bound, `<partition_value_list>` can be simplified to `MAX_VALUE`.
+>
+> The format of `<partition_value_list>` is as follows: `((col_1_value, ...), (col_1_value, ...), ...)`
+
+**VALUES [ <partition_lower_bound>, <partition_upper_bound>)**
+
+> RANGE partitioning. The partition data range is from `<partition_lower_bound>` to `<partition_upper_bound>`. Only one partition is created.
+>
+> The format of `<partition_lower_bound>` and `<partition_upper_bound>` is as follows: `(col_1_value, ...)`
+
+**FROM <partition_lower_bound> TO <partition_upper_bound>**
+
+**INTERVAL <n> [ <datetime_unit> ]**
+
+> RANGE partitioning. The partition data range is from `<partition_lower_bound>` to `<partition_value_list>`. A partition is created every `<n>`.
+>
+> The format of `<partition_lower_bound>` and `<partition_upper_bound>` is as follows: `(col_1_value, ...)`
+
+**VALUES IN {**
+
+​          **(<partition_value> [, <partition_value> [ ... ] ])**
+
+​          **| <partition_value>**
+
+​      **}**
+
+> LIST partitioning. Rows where the partition column equals `<partition_value>` belong to this partition.
+>
+> The format of `<partition_value>` is as follows: `(col_1_value, ...)`
+
+
+### Synchronized Materialized View Related
+
+:::caution Note
+The functionality of creating synchronized materialized views with rollup is limited and no longer recommended. It is advised to use separate statements to create synchronized materialized views. For details, please refer to the [CREATE MATERIALIZED VIEW](../sync-materialized-view/CREATE-MATERIALIZED-VIEW.md) statement and the [Synchronized Materialized View](../../../../query-acceleration/materialized-view/sync-materialized-view.md) section.
 :::
 
+**<rollup_name>**
 
+> The identifier (i.e., name) of the synchronized materialized view. It must be unique within the created table. For more details on identifiers, see [Identifier Requirements](../../../basic-element/object-identifiers.md) and [Reserved Keywords](../../../basic-element/reserved-keywords.md).
+
+**<rollup_cols>**
+
+> The columns included in the synchronized materialized view.
+
+### Table Property Related Parameters
+
+**<table_property>**
+
+| Property Name | Function |
+| :------------ | :-------- |
+| replication_num | The number of replicas. The default number of replicas is 3. If the number of BE nodes is less than 3, you must specify a number of replicas less than or equal to the number of BE nodes. After version 0.15, this property will automatically convert to the `replication_allocation` property, e.g., `"replication_num" = "3"` will automatically convert to `"replication_allocation" = "tag.location.default:3"`. |
+| replication_allocation | Sets the distribution of replicas based on Tags. This property can completely override the functionality of the `replication_num` property. |
+| min_load_replica_num | Sets the minimum number of replicas required for a successful data import, with a default value of -1. When this property is less than or equal to 0, it indicates that the majority of replicas must still succeed for the data import. |
+| is_being_synced | Used to identify whether this table is being replicated by CCR and is currently being synchronized by the syncer, with a default value of `false`. If set to `true`, the `colocate_with` and `storage_policy` properties will be cleared. The `dynamic partition and` `auto bucket` features will become ineffective. That is, they will appear enabled in `show create table` but will not actually take effect. When `is_being_synced` is set to `false`, these features will resume. This property is for use only by the CCR peripheral module and should not be manually set during the CCR synchronization process. |
+| storage_medium | Declares the initial storage medium for table data. |
+| storage_cooldown_time | Sets the expiration time for the initial storage medium of the table data. After this time, it will automatically downgrade to the first-level storage medium. |
+| colocate_with | When the Colocation Join feature is needed, use this parameter to set the Colocation Group. |
+| bloom_filter_columns | A list of column names specified by the user that require the addition of a Bloom Filter index. Each column's Bloom Filter index is independent and not a composite index. For example: `"bloom_filter_columns" = "k1, k2, k3"` |
+| compression | The default compression method for Doris tables is LZ4. After version 1.1, support for specifying ZSTD as the compression method is available for higher compression ratios. |
+| function_column.sequence_col | When using the Unique Key model, you can specify a Sequence column. When Key columns are the same, REPLACE will be performed according to the Sequence column (the larger value replaces the smaller value; otherwise, it cannot be replaced). `function_column.sequence_col` is used to map the sequence column to a specific column in the table, which can be of integer or date/time types (DATE, DATETIME). The type of this column cannot be changed after creation. If `function_column.sequence_col` is set, `function_column.sequence_type` will be ignored. |
+| function_column.sequence_type | When using the Unique Key model, you can specify a Sequence column. When Key columns are the same, REPLACE will be performed according to the Sequence column (the larger value replaces the smaller value; otherwise, it cannot be replaced). Here, you only need to specify the type of the sequence column, which supports date/time types or integers. Doris will create a hidden sequence column. |
+| enable_unique_key_merge_on_write | Whether the Unique table uses the Merge-on-Write implementation. This property was default disabled before version 2.1 and default enabled from version 2.1 onwards. |
+| light_schema_change | Whether to use the Light Schema Change optimization. If set to `true`, addition and subtraction operations on value columns can be completed faster and synchronously. This feature is enabled by default in versions 2.0.0 and later. |
+| disable_auto_compaction | Whether to disable automatic compaction for this table. If this property is set to `true`, the background automatic compaction process will skip all tablets of this table. |
+| enable_single_replica_compaction | Whether to enable single-replica compaction for this table. If this property is set to `true`, only one replica of all replicas of the table's tablets will perform the actual compaction action, and other replicas will pull the compacted rowset from that replica. |
+| enable_duplicate_without_keys_by_default | When set to `true`, if no Unique, Aggregate, or Duplicate is specified when creating a table, a Duplicate model table without sort columns and prefix indexes will be created by default. |
+| skip_write_index_on_load | Whether to enable not writing indexes during data import for this table. If this property is set to `true`, indexes will not be written during data import (currently only effective for inverted indexes), but will be delayed until compaction. This can avoid the CPU and IO resource consumption of writing indexes repeatedly during the first write and compaction, improving the performance of high-throughput imports. |
+| compaction_policy | Configures the compaction merge policy for this table, supporting only time_series or size_basedtime_series: When the disk volume of rowsets accumulates to a certain size, version merging is performed. The merged rowset is directly promoted to the base compaction phase. This effectively reduces the write amplification of compact in scenarios with continuous imports. This policy will use parameters prefixed with time_series_compaction to adjust the execution of compaction. |
+| time_series_compaction_goal_size_mbytes | When the compaction merge policy is time_series, this parameter is used to adjust the size of the input files for each compaction, with the output file size being comparable to the input. |
+| time_series_compaction_file_count_threshold | When the compaction merge policy is time_series, this parameter is used to adjust the minimum number of input files for each compaction. If the number of files in a tablet exceeds this configuration, compaction will be triggered. |
+| time_series_compaction_time_threshold_seconds | When the compaction merge policy is time_series, this parameter is used to adjust the longest interval between compactions, i.e., a compaction will be triggered if it has not been executed for a long time, in seconds. |
+| time_series_compaction_level_threshold | When the compaction merge policy is time_series, this parameter defaults to 1. When set to 2, it is used to control that segments merged once are merged again to ensure that the segment size reaches time_series_compaction_goal_size_mbytes, achieving the effect of reducing the number of segments. |
+| group_commit_interval_ms | Configures the Group Commit batch interval for this table. The unit is ms, with a default value of 10000ms, i.e., 10s. The timing of Group Commit depends on which of `group_commit_interval_ms` and `group_commit_data_bytes` reaches the set value first. |
+| group_commit_data_bytes | Configures the Group Commit batch data size for this table. The unit is bytes, with a default value of 134217728, i.e., 128MB. The timing of Group Commit depends on which of `group_commit_interval_ms` and `group_commit_data_bytes` reaches the set value first. |
+| enable_mow_light_delete | Whether to enable writing Delete predicate with Delete statements on Unique tables with Mow. If enabled, it will improve the performance of Delete statements, but partial column updates after Delete may result in some data errors. If disabled, it will reduce the performance of Delete statements to ensure correctness. The default value of this property is `false`. This property can only be enabled on Unique Merge-on-Write tables. |
+| Dynamic Partitioning Related Properties | For dynamic partitioning, refer to [Data Partitioning - Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning) |
+
+
+## Access Control Requirements
+
+The [user](../../../../admin-manual/auth/authentication-and-authorization.md) executing this SQL command must have at least the following [privileges](../../../../admin-manual/auth/authentication-and-authorization.md):
+
+| Privilege | Object | Description |
+| :---------------- | :------------------------ | :----------------------------------------------------------- |
+| CREATE_PRIV | Database | |
+| SELECT_PRIV | Table, View | Required when executing CTAS to have SELECT_PRIV on the queried table, view, or materialized view |
+
+## Usage Notes
+
+- The database (Database) must not contain tables (Table) or views (View) with the same name.
+- Table names, column names, and rollup names must not use [Reserved Keywords](../../../basic-element/reserved-keywords.md).
+- CREATE TABLE ... LIKE:
+  - This command can only be used on internal Doris tables.
+  - Only explicitly specified rollups will be copied.
+  - All synchronized materialized views will not be replicated.
+- CREATE TABLE ... AS SELECT (CTAS):
+  - If the alias of the column name in the SELECT list is a valid column, then column definitions are not required in the CTAS statement; if omitted, column names and data types will be inferred from the base query:
+      
     ```sql
-    PARTITION BY RANGE(col)
-    (
-       FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,
-       FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,
-       FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,
-       FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY
-    )
+    CREATE TABLE <table_name> AS SELECT ...
     ```
+  - Alternatively, you can explicitly specify names using the following syntax:
     
-
-
-4. MULTI RANGE: Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
-
     ```sql
-    PARTITION BY RANGE(int_col)
-    (
-        FROM (1) TO (100) INTERVAL 10
-    )
-    ```
-    
-#### distribution_desc
-
-Define the data bucketing method.
-
-1. Hash
-   Syntax:
-   `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num|auto]`
-   Explain:
-   Hash bucketing using the specified key column. 
-
-2. Random
-   Syntax:
-   `DISTRIBUTED BY RANDOM [BUCKETS num|auto]`
-   Explain:
-   Use random numbers for bucketing.
-
-#### rollup_list
-
-Multiple materialized views (ROLLUP) can be created at the same time as the table is built.
-
-`ROLLUP (rollup_definition[, rollup_definition, ...])`
-
-* `rollup_definition`
-
-    `rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])] [PROPERTIES("key" = "value")]`
-
-    Example:
-
-    ```
-    ROLLUP (
-        r1 (k1, k3, v1, v2),
-        r2 (k1, v1)
-    )
+    CREATE TABLE <table_name> ( <col1_name>, <col2_name>, ... ) AS SELECT ...
     ```
 
-#### properties
+- Partitioning and Bucketing
+  - A table must specify bucketing columns but can opt out of specifying partitions. For detailed information on partitioning and bucketing, refer to the [Data Partitioning](../../../../table-design/data-partition) documentation.
+  - Tables in Doris can be either partitioned or non-partitioned. This attribute is determined at table creation and cannot be changed afterward. That is, for partitioned tables, partitions can be added or removed in subsequent use, while non-partitioned tables cannot have partitions added later.
+  - Partition and bucket columns cannot be altered after table creation; neither the types of partition and bucket columns can be changed nor can these columns be added or removed.
+- Dynamic Partitioning
+  - The dynamic partitioning feature is primarily used to help users manage partitions automatically. By setting certain rules, the Doris system periodically adds new partitions or removes old ones. For more assistance, refer to the [Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning.md) documentation.
+- Automatic Partitioning
+  - Documentation for automatic partitioning can be found in [Automatic Partitioning](../../../../table-design/data-partitioning/auto-partitioning.md).
+- Synchronized Materialized Views
+  - Users can create multiple synchronized materialized views (ROLLUP) while creating a table. Synchronized materialized views can also be added after the table is created. Including them in the table creation statement facilitates the one-time creation of all synchronized materialized views.
+  - If synchronized materialized views are created at the time of table creation, all subsequent data import operations will synchronously generate data for the materialized views. The number of materialized views may affect the efficiency of data import.
+  - For an introduction to materialized views, please refer to the documentation on [Synchronized Materialized Views](../../../../query-acceleration/materialized-view/sync-materialized-view.md).
+- Indexes
+  - Users can create multiple column indexes while creating a table. Indexes can also be added after the table is created.
+  - If indexes are added during subsequent use and there is existing data in the table, all data will need to be rewritten; hence, the time to create an index depends on the current volume of data.
 
-Set table properties. The following attributes are currently supported:
-
-* `replication_num`
-
-   Number of copies. The default number of copies is 3. If the number of BE nodes is less than 3, you need to specify that the number of copies is less than or equal to the number of BE nodes.
-    
-   After version 0.15, this attribute will be automatically converted to the `replication_allocation` attribute, such as:
-
-   `"replication_num" = "3"` will be automatically converted to `"replication_allocation" = "tag.location.default:3"`
-
-* `replication_allocation`
-
-    Set the copy distribution according to Tag. This attribute can completely cover the function of the `replication_num` attribute.
-
-* `min_load_replica_num`
-
-    The minimum required successful replica num for loading data. The default value is `-1`. If set less than or equal to 0, loading data requires a majority replicas to succeed.
-
-* `is_being_synced`  
-
-    Used to identify whether this table is copied by CCR and is being synchronized by syncer. The default is `false`.  
-
-    If set to `true`:  
-    `colocate_with`, `storage_policy` properties will be erased  
-    `dynamic partition`, `auto bucket` features will be disabled, that is, they will be displayed as enabled in `show create table`, but will not actually take effect. When `is_being_synced` is set to `false`, these features will resume working.  
-
-    This property is for CCR peripheral modules only and should not be manually set during CCR synchronization.  
-
-* `storage_medium/storage_cooldown_time`
-
-   Data storage medium. `storage_medium` is used to declare the initial storage medium of the table data, and `storage_cooldown_time` is used to set the expiration time. Example:
-
-   ```
-   "storage_medium" = "SSD",
-   "storage_cooldown_time" = "2020-11-20 00:00:00"
-   ```
-
-   This example indicates that the data is stored in the SSD and will be automatically migrated to the HDD storage after the expiration of 2020-11-20 00:00:00.
-
-* `colocate_with`
-
-   When you need to use the Colocation Join function, use this parameter to set the Colocation Group.
-
-   `"colocate_with" = "group1"`
-
-* `bloom_filter_columns`
-
-   The user specifies the list of column names that need to be added to the Bloom Filter index. The Bloom Filter index of each column is independent, not a composite index.
-
-   `"bloom_filter_columns" = "k1, k2, k3"`
-
-* `in_memory`
-
-   Deprecated.
-
-* `function_column.sequence_col`
-
-   When using the UNIQUE KEY model, you can specify a sequence column. When the KEY columns are the same, REPLACE will be performed according to the sequence column (the larger value replaces the smaller value, otherwise it cannot be replaced)
-
-  The `function_column.sequence_col` is used to specify the mapping of the sequence column to a column in the table, which can be integral and time (DATE, DATETIME). The type of this column cannot be changed after creation. If `function_column.sequence_col` is set, `function_column.sequence_type` is ignored.
-
-   `"function_column.sequence_col" ='column_name'`
-
-* `function_column.sequence_type`
-
-   When using the UNIQUE KEY model, you can specify a sequence column. When the KEY columns are the same, REPLACE will be performed according to the sequence column (the larger value replaces the smaller value, otherwise it cannot be replaced)
-
-   Here we only need to specify the type of sequence column, support time type or integer type. Doris will create a hidden sequence column.
-
-   `"function_column.sequence_type" ='Date'`
-
-* `compression`
-
-   The default compression method for Doris tables is LZ4. After version 1.1, it is supported to specify the compression method as ZSTD to obtain a higher compression ratio.
-
-   `"compression"="zstd"`
-
-* `enable_unique_key_merge_on_write`
-
-    Wheather the unique table use merge-on-write implementation. 
-
-    The property is disabled by default before version 2.1 and is enabled by default since version 2.1.
-
-* `light_schema_change`
-
-   Whether to use the Light Schema Change optimization.
-    
-   If set to true, the addition and deletion of value columns can be done more quickly and synchronously.
-
-   `"light_schema_change"="true"`
-
-   This feature is enabled by default after v2.0.0.
-
-* `disable_auto_compaction`
-
-   Whether to disable automatic compaction for this table.
-
-   If this property is set to 'true', the background automatic compaction process will skip all the tables of this table.
-
-   `"disable_auto_compaction" = "false"`
-
-* `enable_single_replica_compaction`
-
-   Whether to enable single replica compaction for this table.
-
-   If this property is set to 'true', all replicas of the tablet will only have one replica performing compaction, while the others fetch rowsets from that replica.
-
-   `"enable_single_replica_compaction" = "false"`
-
-* `enable_duplicate_without_keys_by_default`
-
-   When `true`, if Unique, Aggregate, or Duplicate is not specified when creating a table, a Duplicate model table without sorting columns and prefix indexes will be created by default.
-
-   `"enable_duplicate_without_keys_by_default" = "false"`
-
-* `skip_write_index_on_load`
-
-   Whether to enable skip inverted index on load for this table.
-
-   If this property is set to 'true', skip writting index (only inverted index now) on first time load and delay writting 
-   index to compaction. It can reduce CPU and IO resource usage for high throughput load.
-
-   `"skip_write_index_on_load" = "false"`
-
-* `compaction_policy`
-
-    Configure the compaction strategy in the compression phase. Only support configuring the compaction policy as "time_series" or "size_based".
-
-    time_series: When the disk size of a rowset accumulates to a certain threshold, version merging takes place. The merged rowset is directly promoted to the base compaction stage. This approach effectively reduces the write amplification rate of compaction, especially in scenarios with continuous imports in a time series context.
-
-    In the case of time series compaction, the execution of compaction is adjusted using parameters that have the prefix time_series_compaction.
-
-    `"compaction_policy" = ""`
-
-* `group_commit_interval_ms`
-
-    Configures the group commit batch interval for this table. The unit is milliseconds, with a default value of 10000ms (10 seconds).
-
-    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
-
-    `"group_commit_interval_ms" = "10000"`
-
-* `group_commit_data_bytes`
-
-    Configures the group commit batch data size for this table. The unit is bytes, with a default value of 134217728 bytes (128MB).
-
-    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
-
-    `"group_commit_data_bytes" = "134217728"`
-
-* `time_series_compaction_goal_size_mbytes`
-
-    Time series compaction policy will utilize this parameter to adjust the size of input files for each compaction. The output file size will be approximately equal to the input file size.
-
-    `"time_series_compaction_goal_size_mbytes" = "1024"`
-
-* `time_series_compaction_file_count_threshold`
-
-    Time series compaction policy will utilize this parameter to adjust the minimum number of input files for each compaction.
-
-    If the number of files in a tablet exceeds the configured threshold, it will trigger a compaction process.
-
-    `"time_series_compaction_file_count_threshold" = "2000"`
-
-* `time_series_compaction_time_threshold_seconds`
-
-     When time series compaction policy is applied, a significant duration passes without a compaction being executed, a compaction will be triggered.
-
-    `"time_series_compaction_time_threshold_seconds" = "3600"`
-
-* `enable_mow_light_delete`
-
-    If modify delete predicate for the DELETE statement on the unique merge-on-write table. If enabled, it will improve the performance of the DELETE statement, but errors may occur in partial column updates after deletion. If disabled, it will reduce the performance of the DELETE statement to ensure correctness.
-
-    The default value for this property is false.
-
-    This propertiy can only be enabled on unique merge-on-write tables.
-
-    `"enable_mow_light_delete" = "true"`
-
-* Dynamic partition related
-
-    References related to dynamic partitioning[Data Partitioning-Dynamic partitioning](../../../../table-design/data-partitioning/dynamic-partitioning)
-
-* `file_cache_ttl_seconds`: 
-
-   Expiration time of TTL Cache in compute-storage decoupled mode.
 
 ## Examples
 
-1. Create a detailed model table
+### Basic Examples
+
+**Detail Model**
+
+```sql
+CREATE TABLE t1
+(
+  c1 INT,
+  c2 STRING
+)
+DUPLICATE KEY(c1)
+DISTRIBUTED BY HASH(c1)
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Aggregation Model**
+
+```sql
+CREATE TABLE t2
+(
+  c1 INT,
+  c2 INT MAX
+)
+AGGREGATE KEY(c1)
+DISTRIBUTED BY HASH(c1)
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Primary Key Model**
+
+```sql
+CREATE TABLE t3
+(
+  c1 INT,
+  c2 INT
+)
+UNIQUE KEY(c1)
+DISTRIBUTED BY HASH(c1)
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Specifying Column Default Values**
+
+```sql
+CREATE TABLE t5
+(
+  c1 INT,
+  c2 INT DEFAULT 10
+)
+DUPLICATE KEY(c1)
+DISTRIBUTED BY HASH(c1)
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Bucketing Method**
+
+```sql
+CREATE TABLE t6
+(
+  c1 INT,
+  c2 INT
+)
+DUPLICATE KEY(c1)
+DISTRIBUTED BY RANDOM
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Automatic Partitioning**
+
+```sql
+CREATE TABLE t7
+(
+  c1 INT,
+  c2 DATETIME NOT NULL
+)
+DUPLICATE KEY(c1)
+AUTO PARTITION BY RANGE(date_trunc(c2, 'day')) ()
+DISTRIBUTED BY RANDOM
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Range Partitioning**
+
+```sql
+CREATE TABLE t8
+(
+  c1 INT,
+  c2 DATETIME NOT NULL
+)
+DUPLICATE KEY(c1)
+PARTITION BY RANGE(c2) (
+  FROM ('2020-01-01') TO ('2020-01-10') INTERVAL 1 DAY
+)
+DISTRIBUTED BY RANDOM
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**List Partitioning**
+
+```sql
+CREATE TABLE t9
+(
+  c1 INT,
+  c2 DATE NOT NULL
+)
+DUPLICATE KEY(c1)
+PARTITION BY LIST(c2) (
+  PARTITION p1 VALUES IN (('2020-01-01'),('2020-01-02'))
+)
+DISTRIBUTED BY RANDOM
+PROPERTIES (
+  'replication_num' = '1'
+);
+```
+
+**Storage Medium and Cooldown Time**
+
+```sql
+CREATE TABLE example_db.table_hash
+(
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048),
+    v2 SMALLINT DEFAULT "10"
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+PROPERTIES(
+    "storage_medium" = "SSD",
+    "storage_cooldown_time" = "2015-06-04 00:00:00"
+);
+```
+
+**Setting Table's Cold-Hot Tiered Data Migration Strategy with `storage_policy` Property**
+
+1. You need to create an s3 resource and storage policy first for the table to successfully associate with the migration strategy.
 
     ```sql
-    CREATE TABLE example_db.table_hash
-    (
-        k1 TINYINT,
-        k2 DECIMAL(10, 2) DEFAULT "10.5",
-        k3 CHAR(10) COMMENT "string column",
-        k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
-    )
-    COMMENT "my first table"
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    ```
-
-2. Create a detailed model table, partition, specify the sorting column, and set the number of copies to 1
-
-    ```sql
-    CREATE TABLE example_db.table_hash
-    (
-        k1 DATE,
-        k2 DECIMAL(10, 2) DEFAULT "10.5",
-        k3 CHAR(10) COMMENT "string column",
-        k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
-    )
-    DUPLICATE KEY(k1, k2)
-    COMMENT "my first table"
-    PARTITION BY RANGE(k1)
-    (
-        PARTITION p1 VALUES LESS THAN ("2020-02-01"),
-        PARTITION p2 VALUES LESS THAN ("2020-03-01"),
-        PARTITION p3 VALUES LESS THAN ("2020-04-01")
-    )
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    PROPERTIES (
-        "replication_num" = "1"
-    );
-    ```
-
-3. Create a table with a unique model of the primary key, set the initial storage medium and cooling time
-
-    ```sql
-    CREATE TABLE example_db.table_hash
+    -- Non-partitioned table
+    CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
     (
         k1 BIGINT,
         k2 LARGEINT,
-        v1 VARCHAR(2048),
-        v2 SMALLINT DEFAULT "10"
+        v1 VARCHAR(2048)
     )
-    UNIQUE KEY(k1, k2)
-    DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+    UNIQUE KEY(k1)
+    DISTRIBUTED BY HASH (k1) BUCKETS 3
     PROPERTIES(
-        "storage_medium" = "SSD",
-        "storage_cooldown_time" = "2015-06-04 00:00:00"
+        "storage_policy" = "test_create_table_use_policy",
+        "replication_num" = "1"
     );
-    ```
 
-4. Create an aggregate model table, using a fixed range partition description
-
-    ```sql
-    CREATE TABLE table_range
+    -- Partitioned table
+    CREATE TABLE create_table_partion_use_created_policy
     (
         k1 DATE,
         k2 INT,
-        k3 SMALLINT,
-        v1 VARCHAR(2048) REPLACE,
-        v2 INT SUM DEFAULT "1"
-    )
-    AGGREGATE KEY(k1, k2, k3)
-    PARTITION BY RANGE (k1, k2, k3)
-    (
-        PARTITION p1 VALUES [("2014-01-01", "10", "200"), ("2014-01-01", "20", "300")),
-        PARTITION p2 VALUES [("2014-06-01", "100", "200"), ("2014-07-01", "100", "300"))
-    )
-    DISTRIBUTED BY HASH(k2) BUCKETS 32
+        V1 VARCHAR(2048) REPLACE
+    ) PARTITION BY RANGE (k1) (
+        PARTITION p1 VALUES LESS THAN ("2022-01-01") ("storage_policy" = "test_create_table_partition_use_policy_1" ,"replication_num"="1"),
+        PARTITION p2 VALUES LESS THAN ("2022-02-01") ("storage_policy" = "test_create_table_partition_use_policy_2" ,"replication_num"="1")
+    ) DISTRIBUTED BY HASH(k2) BUCKETS 1;
     ```
 
-5. Create an aggregate model table with HLL and BITMAP column types
+**Colocation Group**
 
-    ```sql
-    CREATE TABLE example_db.example_table
-    (
-        k1 TINYINT,
-        k2 DECIMAL(10, 2) DEFAULT "10.5",
-        v1 HLL HLL_UNION,
-        v2 BITMAP BITMAP_UNION
-    )
-    ENGINE=olap
-    AGGREGATE KEY(k1, k2)
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    ```
+```sql
+CREATE TABLE t1 (
+    id int(11) COMMENT "",
+    value varchar(8) COMMENT ""
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES (
+    "colocate_with" = "group1"
+);
 
-6. Create two self-maintained tables of the same Colocation Group.
+CREATE TABLE t2 (
+    id int(11) COMMENT "",
+    value1 varchar(8) COMMENT "",
+    value2 varchar(8) COMMENT ""
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 10
+PROPERTIES (
+    "colocate_with" = "group1"
+);
+```
 
-    ```sql
-    CREATE TABLE t1 (
-        id int(11) COMMENT "",
-        value varchar(8) COMMENT ""
-    )
-    DUPLICATE KEY(id)
-    DISTRIBUTED BY HASH(id) BUCKETS 10
-    PROPERTIES (
-        "colocate_with" = "group1"
-    );
+**Index**
 
-    CREATE TABLE t2 (
-        id int(11) COMMENT "",
-        value1 varchar(8) COMMENT "",
-        value2 varchar(8) COMMENT ""
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 10
-    PROPERTIES (
-        "colocate_with" = "group1"
-    );
-    ```
+```sql
+CREATE TABLE example_db.table_hash
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.5",
+    v1 CHAR(10) REPLACE,
+    v2 INT SUM,
+    INDEX k1_idx (k1) USING INVERTED COMMENT 'my first index'
+)
+AGGREGATE KEY(k1, k2)
+DISTRIBUTED BY HASH(k1) BUCKETS 32
+PROPERTIES (
+    "bloom_filter_columns" = "k2"
+);
+```
 
-7. Create a table with inverted index and bloom filter index
+**Setting Table's Replication Properties**
 
-    ```sql
-    CREATE TABLE example_db.table_hash
-    (
-        k1 TINYINT,
-        k2 DECIMAL(10, 2) DEFAULT "10.5",
-        v1 CHAR(10) REPLACE,
-        v2 INT SUM,
-        INDEX k1_idx (k1) USING INVERTED COMMENT'my first index'
-    )
-    AGGREGATE KEY(k1, k2)
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    PROPERTIES (
-        "bloom_filter_columns" = "k2"
-    );
-    ```
+```sql
+CREATE TABLE example_db.table_hash
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.5"
+)
+DISTRIBUTED BY HASH(k1) BUCKETS 32
+PROPERTIES (
+    "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
+);
+```
 
-8. Create a dynamic partition table.
+**Dynamic Partitioning**
 
-    The table creates partitions 3 days in advance every day, and deletes the partitions 3 days ago. For example, if today is `2020-01-08`, partitions named `p20200108`, `p20200109`, `p20200110`, `p20200111` will be created. The partition ranges are:
+This table creates partitions 3 days in advance and deletes partitions from 3 days ago. For example, if today is `2020-01-08`, it will create partitions named `p20200108`, `p20200109`, `p20200110`, `p20200111`. The partition ranges are as follows:
 
-    ```
-    [types: [DATE]; keys: [2020-01-08]; ‥types: [DATE]; keys: [2020-01-09];)
-    [types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10];)
-    [types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11];)
-    [types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12];)
-    ```
+```Plain
+[types: [DATE]; keys: [2020-01-08]; ‥types: [DATE]; keys: [2020-01-09]; )
+[types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
+[types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
+[types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+CREATE TABLE example_db.dynamic_partition
+(
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT "2014-02-04 15:36:00"
+)
+DUPLICATE KEY(k1, k2, k3)
+PARTITION BY RANGE (k1) ()
+DISTRIBUTED BY HASH(k2) BUCKETS 32
+PROPERTIES(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-3",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "32" 
+);
+```
 
-    ```sql
-    CREATE TABLE example_db.dynamic_partition
-    (
-        k1 DATE,
-        k2 INT,
-        k3 SMALLINT,
-        v1 VARCHAR(2048),
-        v2 DATETIME DEFAULT "2014-02-04 15:36:00"
-    )
-    DUPLICATE KEY(k1, k2, k3)
-    PARTITION BY RANGE (k1) ()
-    DISTRIBUTED BY HASH(k2) BUCKETS 32
-    PROPERTIES(
-        "dynamic_partition.time_unit" = "DAY",
-        "dynamic_partition.start" = "-3",
-        "dynamic_partition.end" = "3",
-        "dynamic_partition.prefix" = "p",
-        "dynamic_partition.buckets" = "32"
-    );
-    ```
+**Setting Dynamic Partition's Replication Properties**
 
-9. Create a table with a materialized view (ROLLUP).
+```sql
+CREATE TABLE example_db.dynamic_partition
+(
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT "2014-02-04 15:36:00"
+)
+PARTITION BY RANGE (k1) ()
+DISTRIBUTED BY HASH(k2) BUCKETS 32
+PROPERTIES(
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-3",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "32",
+    "dynamic_partition.replication_allocation" = "tag.location.group_a:3"
+ );
+```
 
-    ```sql
-    CREATE TABLE example_db.rolup_index_table
-    (
-        event_day DATE,
-        siteid INT DEFAULT '10',
-        citycode SMALLINT,
-        username VARCHAR(32) DEFAULT'',
-        pv BIGINT SUM DEFAULT '0'
-    )
-    AGGREGATE KEY(event_day, siteid, citycode, username)
-    DISTRIBUTED BY HASH(siteid) BUCKETS 10
-    ROLLUP (
-        r1(event_day,siteid),
-        r2(event_day,citycode),
-        r3(event_day)
-    )
-    PROPERTIES("replication_num" = "3");
-    ```
+### CTAS Example
 
-10. Set the replica of the table through the `replication_allocation` property.
+```sql
+CREATE TABLE t10
+PROPERTIES (
+  'replication_num' = '1'
+)
+AS SELECT * FROM t1;
+```
 
-    ```sql
-    CREATE TABLE example_db.table_hash
-    (
-      k1 TINYINT,
-    	k2 DECIMAL(10, 2) DEFAULT "10.5"
-    )
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    PROPERTIES (
-        "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
-    );
-    ```
-    ```sql
-    CREATE TABLE example_db.dynamic_partition
-    (
-    	k1 DATE,
-    	k2 INT,
-    	k3 SMALLINT,
-    	v1 VARCHAR(2048),
-    	v2 DATETIME DEFAULT "2014-02-04 15:36:00"
-    )
-    PARTITION BY RANGE (k1) ()
-    DISTRIBUTED BY HASH(k2) BUCKETS 32
-    PROPERTIES(
-        "dynamic_partition.time_unit" = "DAY",
-        "dynamic_partition.start" = "-3",
-        "dynamic_partition.end" = "3",
-        "dynamic_partition.prefix" = "p",
-        "dynamic_partition.buckets" = "32",
-        "dynamic_partition.replication_allocation" = "tag.location.group_a:3"
-     );
-    ```
+### CREATE TABLE ... LIKE Example
 
-11. Set the table hot and cold separation policy through the `storage_policy` property.
-    ```sql
-        CREATE TABLE IF NOT EXISTS create_table_use_created_policy 
-        (
-            k1 BIGINT,
-            k2 LARGEINT,
-            v1 VARCHAR(2048)
-        )
-        UNIQUE KEY(k1)
-        DISTRIBUTED BY HASH (k1) BUCKETS 3
-        PROPERTIES(
-            "storage_policy" = "test_create_table_use_policy",
-            "replication_num" = "1"
-        );
-    ```
-NOTE: Need to create the s3 resource and storage policy before the table can be successfully associated with the migration policy 
-
-12. Add a hot and cold data migration strategy for the table partition
-    ```sql
-        CREATE TABLE create_table_partion_use_created_policy
-        (
-            k1 DATE,
-            k2 INT,
-            V1 VARCHAR(2048) REPLACE
-        ) PARTITION BY RANGE (k1) (
-            PARTITION p1 VALUES LESS THAN ("2022-01-01") ("storage_policy" = "test_create_table_partition_use_policy_1" ,"replication_num"="1"),
-            PARTITION p2 VALUES LESS THAN ("2022-02-01") ("storage_policy" = "test_create_table_partition_use_policy_2" ,"replication_num"="1")
-        ) DISTRIBUTED BY HASH(k2) BUCKETS 1;
-    ```
-NOTE: Need to create the s3 resource and storage policy before the table can be successfully associated with the migration policy 
-
-
-
-13. Multi Partition by a partition desc
-
-:::tip Tips
-This feature is supported since the Apache Doris 1.2 version
-:::
-
-
-    ```sql
-        CREATE TABLE create_table_multi_partion_date
-        (
-            k1 DATE,
-            k2 INT,
-            V1 VARCHAR(20)
-        ) PARTITION BY RANGE (k1) (
-            FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,
-            FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,
-            FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,
-            FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY,
-            PARTITION p_20230114 VALUES [('2023-01-14'), ('2023-01-15'))
-        ) DISTRIBUTED BY HASH(k2) BUCKETS 1
-        PROPERTIES(
-            "replication_num" = "1"
-        );
-    ```
-    ```sql
-        CREATE TABLE create_table_multi_partion_date_hour
-        (
-            k1 DATETIME,
-            k2 INT,
-            V1 VARCHAR(20)
-        ) PARTITION BY RANGE (k1) (
-            FROM ("2023-01-03 12") TO ("2023-01-14 22") INTERVAL 1 HOUR
-        ) DISTRIBUTED BY HASH(k2) BUCKETS 1
-        PROPERTIES(
-            "replication_num" = "1"
-        );
-    ```
-    ```sql
-        CREATE TABLE create_table_multi_partion_integer
-        (
-            k1 BIGINT,
-            k2 INT,
-            V1 VARCHAR(20)
-        ) PARTITION BY RANGE (k1) (
-            FROM (1) TO (100) INTERVAL 10
-        ) DISTRIBUTED BY HASH(k2) BUCKETS 1
-        PROPERTIES(
-            "replication_num" = "1"
-        );
-    ```
-
-NOTE: Multi Partition can be mixed with conventional manual creation of partitions. When using, you need to limit the partition column to only one, The default maximum number of partitions created in multi partition is 4096, This parameter can be adjusted in fe configuration `max_multi_partition_num`.
-
-
-1.  Add a duplicate without sorting column table
-
-    ```sql
-    CREATE TABLE example_db.table_hash
-    (
-        k1 DATE,
-        k2 DECIMAL(10, 2) DEFAULT "10.5",
-        k3 CHAR(10) COMMENT "string column",
-        k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
-    )
-    COMMENT "duplicate without keys"
-    PARTITION BY RANGE(k1)
-    (
-        PARTITION p1 VALUES LESS THAN ("2020-02-01"),
-        PARTITION p2 VALUES LESS THAN ("2020-03-01"),
-        PARTITION p3 VALUES LESS THAN ("2020-04-01")
-    )
-    DISTRIBUTED BY HASH(k1) BUCKETS 32
-    PROPERTIES (
-        "replication_num" = "1",
-        "enable_duplicate_without_keys_by_default" = "true"
-    );
-    ```
-
-## Keywords
-
-    CREATE, TABLE
-
-## Best Practice
-
-#### Partitioning and bucketing
-
-A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Partitioning](../../../../table-design/data-partitioning/basic-concepts) document.
-
-Tables in Doris can be divided into partitioned tables and non-partitioned tables. This attribute is determined when the table is created and cannot be changed afterwards. That is, for partitioned tables, you can add or delete partitions in the subsequent use process, and for non-partitioned tables, you can no longer perform operations such as adding partitions afterwards.
-
-At the same time, partitioning columns and bucketing columns cannot be changed after the table is created. You can neither change the types of partitioning and bucketing columns, nor do any additions or deletions to these columns.
-
-Therefore, it is recommended to confirm the usage method to build the table reasonably before building the table.
-
-#### Dynamic Partition
-
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partitioning/dynamic-partitioning) document for more help.
-
-#### Auto Partition
-
-
-See the [Auto Partition](../../../../table-design/data-partitioning/auto-partitioning) document.
-
-
-#### Materialized View
-
-Users can create multiple materialized views (ROLLUP) while building a table. Materialized views can also be added after the table is built. It is convenient for users to create all materialized views at one time by writing in the table creation statement.
-
-If the materialized view is created when the table is created, all subsequent data import operations will synchronize the data of the materialized view to be generated. The number of materialized views may affect the efficiency of data import.
-
-If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
-
-
-For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/metarialized-view) document.
-
-
-#### Index
-
-Users can create indexes on multiple columns while building a table. Indexes can also be added after the table is built.
-
-If you add an index in the subsequent use process, if there is data in the table, you need to rewrite all the data, so the creation time of the index depends on the current data volume.
-
+```sql
+CREATE TABLE t11 LIKE t10;
+```

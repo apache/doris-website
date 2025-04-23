@@ -28,7 +28,7 @@ Broker Load is initiated from the MySQL API. Doris will actively pull the data f
 
 Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
 
-Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file-analysis). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
+Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../data-operate/import/file-format/csv#TVF Load). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
 
 In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
 In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
@@ -85,7 +85,7 @@ For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-ma
 
 1. Grant privileges on the table
 
-Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
+Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
 2. S3 authentication and connection info
 
@@ -300,7 +300,7 @@ If ORC files are generated directly using certain Hive versions, the column head
 
 **5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
 
-The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating bucket paths.
+The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating buckets.
 
 **6. Import Timeout**
 

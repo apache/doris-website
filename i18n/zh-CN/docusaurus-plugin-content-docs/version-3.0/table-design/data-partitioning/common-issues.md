@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 **1.  如果在较长的建表语句中出现语法错误，可能会出现语法错误提示不全的现象。这里罗列可能的语法错误供手动纠错：**
 
 -   语法结构错误。请仔细阅读 `HELP CREATE TABLE;`，检查相关语法结构。
@@ -44,7 +45,7 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 -   以下罗列一些常见的 tablet 创建失败错误，包括但不限于：
 
-    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../../install/deploy-manually/storage-compute-coupled-deploy-manually) 检查 FE 和 BE 的连通性。
+    -   BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志或者 BE 创建成功，但汇报失败。以上问题，请参阅 [安装与部署](../../../current/install/deploy-manually/integrated-storage-compute-deploy-manually) 检查 FE 和 BE 的连通性。
 
     -   预分配内存失败。可能是表中一行的字节长度超过了 100KB。
 

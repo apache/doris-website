@@ -229,6 +229,12 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 
+## FAQ
+
+1. 通过 JNI 调用 Java SDK 读取 Hudi 增量数据偶发卡死
+
+    请在 `be.conf` 的 `JAVA_OPTS_FOR_JDK_17` 或 `JAVA_OPTS` 中添加 `-Djol.skipHotspotSAAttach=true`.
+
 ## 附录
 
 ### 版本更新记录

@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-返回分组中表达式或列的任意一个值。如果存在非NULL值，返回任意非NULL值，否则返回NULL。
+返回分组中表达式或列的任意一个值。如果存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。
 
 ## 别名
 
@@ -46,7 +46,7 @@ ANY_VALUE(<expr>)
 
 ## 返回值
 
-如果存在非NULL值，返回任意非NULL值，否则返回NULL。
+如果存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。
 
 ## 举例
 

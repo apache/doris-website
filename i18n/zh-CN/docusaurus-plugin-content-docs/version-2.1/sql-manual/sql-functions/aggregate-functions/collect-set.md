@@ -49,7 +49,7 @@ COLLECT_SET(<expr> [,<max_size>])
 
 返回类型是 ARRAY，该数组包含去重后的所有值，特殊情况：
 
-- 如果值为NULL，则会过滤
+- 如果值为 NULL，则会过滤
 
 ## 举例
 

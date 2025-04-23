@@ -33,4 +33,4 @@ under the License.
 
 综上所述，性能调优需要从全局视角来评估当前系统的性能状况。首先需要定位存在性能问题的业务 SQL，然后运用分析工具发现性能瓶颈，最后实施具体的调优操作。
 
-基于上述调优流程和方法论，Apache Doris 在上述各个层面都提供了相应的工具。下文将分别对性能[诊断工具](diagnostic-tools.md)、[分析工具](analysis-tools.md)、[调优流程](tuning-process.md)三个方面进行介绍。
+基于上述调优流程和方法论，Apache Doris 在上述各个层面都提供了相应的工具。下文将分别对性能[诊断工具](./diagnostic-tools)、[分析工具](./analysis-tools)、[调优流程](./tuning-process)三个方面进行介绍。

@@ -1,6 +1,6 @@
 ---
 {
-"title": "workload analysis diagnosis",
+"title": "Workload Analysis Diagnosis",
 "language": "en"
 }
 ---
@@ -25,7 +25,7 @@ under the License.
 -->
 
 The workload analysis for clusters is primarily divided into two stages:
-- The first stage is runtime workload analysis, where when the cluster's availability declines, queries with significant resource consumption can be identified through monitoring and downgraded accordingly.
+- The first stage is runtime workload analysis, when the cluster's availability declines, queries with significant resource consumption can be identified through monitoring and downgraded accordingly.
 - The second stage involves analyzing historical data, such as audit logs, to identify unreasonable workloads and optimize them.
 
 ## Runtime Workload Analysis
