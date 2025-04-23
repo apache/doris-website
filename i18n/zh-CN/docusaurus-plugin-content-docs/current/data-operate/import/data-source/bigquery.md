@@ -177,7 +177,7 @@ PROPERTIES (
 
 2. **查看 GCS 上的导出文件**
 
-  导出后，在 GCS 上会按照**分区划分成具体的子目录，**如下
+  导出后，在 GCS 上会按照**分区划分成具体的子目录**，如下
 
   ![img](/images/data-operate/gcs_export.png)
 
