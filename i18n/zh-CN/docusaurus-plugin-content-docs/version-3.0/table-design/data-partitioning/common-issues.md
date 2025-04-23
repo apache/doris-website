@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 **1.  如果在较长的建表语句中出现语法错误，可能会出现语法错误提示不全的现象。这里罗列可能的语法错误供手动纠错：**
 
 -   语法结构错误。请仔细阅读 `HELP CREATE TABLE;`，检查相关语法结构。

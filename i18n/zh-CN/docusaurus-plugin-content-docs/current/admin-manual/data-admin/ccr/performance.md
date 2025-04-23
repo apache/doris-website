@@ -1,7 +1,7 @@
 ---
 {
     "title": "性能测试",
-    "language": "zh=CN"
+    "language": "zh-CN"
 }
 ---
 

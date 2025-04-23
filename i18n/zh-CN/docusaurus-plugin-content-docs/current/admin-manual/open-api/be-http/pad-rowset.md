@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `POST /api/pad_rowset?tablet_id={int}&start_version={int}&end_version={int}`
 
-## Description
+## 描述
 
 该功能用于使用一个空的 rowset 填充损坏的副本。
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
     table 的 id
@@ -46,11 +46,11 @@ under the License.
     终止版本       
 
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -58,7 +58,7 @@ under the License.
         code: 0
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

@@ -102,7 +102,7 @@ The minimum required resources for FE and BE to start are 4 CPUs and 8Gi of memo
 
 ## Custom startup configuration
 
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
 
 ### Custom FE startup configuration
 #### Step 1:  Create and deploy the FE ConfigMap
@@ -519,7 +519,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 ```
 
 ## Configuring the username and password for the management cluster
-Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), where the user must have the [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
+Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../../admin-manual/auth/authentication-and-authorization?_highlight=rbac), where the user must have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
 
 The process of configuring the username and password can be divided into three scenarios:  
 - initializing the root user password during cluster deployment;
@@ -531,7 +531,7 @@ To secure access, you must configure a username and password with Node_Priv perm
 - Using a Kubernetes Secret
 
 ### Configuring the root user password during cluster deployment
-To set the root user's password securely, Doris supports encrypting it in [`fe.conf`](../../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) using a two-stage SHA-1 encryption process. Here's how to set up the password.
+To set the root user's password securely, Doris supports encrypting it in [`fe.conf`](../../../admin-manual/config/fe-config?_highlight=initial_#initial_root_password) using a two-stage SHA-1 encryption process. Here's how to set up the password.
 
 #### Step 1: Generate the root encrypted password
 
@@ -666,7 +666,7 @@ After deployment, please set the root password. Doris Operator will switch to us
 :::
 
 ### Setting the root user password after cluster deployment
-After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv permission.
+After deploying the Doris cluster and setting the root user's password, it's essential to create a management user with the necessary [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to allow Doris Operator to automatically manage the cluster nodes. Using the root user for this purpose is not recommended. Instead, please refer to [the User Creation and Permission Assignment Section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv permission.
 
 #### Step 1: Create a user with Node_priv permission
 First, connect to the Doris database using the MySQL protocol, then create a new user with the required permissions:
@@ -725,3 +725,53 @@ For more details on creating users, setting passwords, and granting permissions,
 :::tip Tip  
 After setting the root password and configuring the new username and password for managing nodes after deployment, the existing services will be restarted once in a rolling manner.  
 :::
+
+## Automatic Service Restart on Configuration Changes
+Doris specifies startup parameters through configuration files. While most parameters can be modified through web interfaces and take effect immediately, certain parameters requiring service restart can now be automatically handled through Doris Operator's restart capability introduced in version 25.1.0.    
+To enable this functionality in a `DorisCluster` resource, configure:
+```yaml
+spec:
+  enableRestartWhenConfigChange: true
+```
+When this configuration is present, Doris Operator will:
+1. Monitor changes to cluster startup configurations (mounted via ConfigMap, see [Customizing Startup Configurations](#custom-startup-configuration)).
+2. Automatically restart affected services when configurations change.
+
+### Example Usage
+Support configmap monitoring and restart for FE and BE, Use FE usage as example.
+1. Sample DorisCluster deployment specification:
+    ```yaml
+    spec:
+      enableRestartWhenConfigChange: true
+      feSpec:
+        image: apache/doris:fe-2.1.8
+        replicas: 1
+        configMapInfo:
+        configMapName: fe-configmap
+    ```
+2. Update FE service configurations.  
+   When modifying values under the `fe.conf` key in the fe-configmap ConfigMap (containing FE service configurations), Doris Operator will automatically perform a rolling restart of FE services to apply changes.
+
+## Using Kerberos Authentication
+The Doris Operator has supported Kerberos authentication for Doris (versions 2.1.9, 3.0.4, and later) in Kubernetes since version 25.2.0. To enable Kerberos authentication in Doris, both the [krb5.conf file](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) and [keytab files](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) are required.
+The Doris Operator mounts the krb5.conf file using a ConfigMap resource and mounts the keytab files using a Secret resource. The workflow for enabling Kerberos authentication is as follows:
+
+1. Create a ConfigMap containing the krb5.conf file:
+    ```shell
+    kubectl create -n ${namespace} configmap ${name} --from-file=krb5.conf
+    ```
+   Replace ${namespace} with the namespace where the DorisCluster is deployed, and ${name} with the desired name for the ConfigMap.
+2. Create a Secret containing the keytab files:
+    ```shell
+    kubectl create -n ${namespace} secret generic ${name} --from-file=${xxx.keytab}
+    ```
+   Replace ${namespace} with the namespace where the DorisCluster is deployed, and ${name} with the desired name for the Secret. If multiple keytab files need to be mounted, refer to the [kubectl create Secret documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/) to include them in a single Secret.
+3. Configure the DorisCluster resource to specify the ConfigMap containing krb5.conf and the Secret containing keytab files:
+    ```yaml
+    spec:
+      kerberosInfo:
+        krb5ConfigMap: ${krb5ConfigMapName}
+        keytabSecretName: ${keytabSecretName}
+        keytabPath: ${keytabPath}
+    ```
+   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.md#configuring-catalog) documentation.

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-主要讲述如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
+主要介绍如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
 
 ## 适用场景
 
@@ -46,7 +46,7 @@ Update 语句的性能和待更新的行数以及查询条件的检索效率密�
 
 - 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。对于小范围更新，Doris 支持的频率与`INSERT INTO`语句类似，对于大范围更新，由于单个 update 执行的时间较长，仅适用于低频调用。
 
-- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要扫全表，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
+- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要全表扫描，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
 
 ## 使用示例
 
@@ -54,23 +54,23 @@ Update 语句的性能和待更新的行数以及查询条件的检索效率密�
 
 ```sql
 CREATE TABLE transaction_details (
-  transaction_id BIGINT NOT NULL,        -- 唯一交易编号
-  user_id BIGINT NOT NULL,               -- 用户编号
-  transaction_date DATE NOT NULL,        -- 交易日期
-  transaction_time DATETIME NOT NULL,    -- 交易时间
-  transaction_amount DECIMAL(18, 2),     -- 交易金额
-  transaction_device STRING,             -- 交易设备
-  transaction_region STRING,             -- 交易地区
-  average_daily_amount DECIMAL(18, 2),   -- 最近 3 个月日均交易金额
-  recent_transaction_count INT,          -- 最近 7 天交易次数
-  has_dispute_history BOOLEAN,           -- 是否有拒付记录
-  risk_level STRING                      -- 风险等级
+    transaction_id BIGINT NOT NULL,        -- 唯一交易编号
+    user_id BIGINT NOT NULL,               -- 用户编号
+    transaction_date DATE NOT NULL,        -- 交易日期
+    transaction_time DATETIME NOT NULL,    -- 交易时间
+    transaction_amount DECIMAL(18, 2),     -- 交易金额
+    transaction_device STRING,             -- 交易设备
+    transaction_region STRING,             -- 交易地区
+    average_daily_amount DECIMAL(18, 2),   -- 最近 3 个月日均交易金额
+    recent_transaction_count INT,          -- 最近 7 天交易次数
+    has_dispute_history BOOLEAN,           -- 是否有拒付记录
+    risk_level STRING                      -- 风险等级
 )
 UNIQUE KEY(transaction_id)
 DISTRIBUTED BY HASH(transaction_id) BUCKETS 16
 PROPERTIES (
-  "replication_num" = "3",               -- 副本数量，默认 3
-  "enable_unique_key_merge_on_write" = "true"  -- 启用 MOW 模式，支持合并更新
+    "replication_num" = "3",               -- 副本数量，默认 3
+    "enable_unique_key_merge_on_write" = "true"  -- 启用 MOW 模式，支持合并更新
 );
 ```
 
@@ -101,22 +101,22 @@ PROPERTIES (
 ```sql
 UPDATE transaction_details
 SET risk_level = CASE
-  -- 有拒付记录或在高风险地区的交易
-  WHEN has_dispute_history = TRUE THEN 'high'
-  WHEN transaction_region IN ('high_risk_region1', 'high_risk_region2') THEN 'high'
+    -- 有拒付记录或在高风险地区的交易
+    WHEN has_dispute_history = TRUE THEN 'high'
+    WHEN transaction_region IN ('high_risk_region1', 'high_risk_region2') THEN 'high'
 
-  -- 突然异常交易金额
-  WHEN transaction_amount > 5 * average_daily_amount THEN 'high'
+    -- 突然异常交易金额
+    WHEN transaction_amount > 5 * average_daily_amount THEN 'high'
 
-  -- 最近 7 天交易频率很高
-  WHEN recent_transaction_count > 50 THEN 'high'
-  WHEN recent_transaction_count BETWEEN 20 AND 50 THEN 'medium'
+    -- 最近 7 天交易频率很高
+    WHEN recent_transaction_count > 50 THEN 'high'
+    WHEN recent_transaction_count BETWEEN 20 AND 50 THEN 'medium'
 
-  -- 非工作时间交易
-  WHEN HOUR(transaction_time) BETWEEN 2 AND 4 THEN 'medium'
+    -- 非工作时间交易
+    WHEN HOUR(transaction_time) BETWEEN 2 AND 4 THEN 'medium'
 
-  -- 默认风险
-  ELSE 'low'
+    -- 默认风险
+    ELSE 'low'
 END
 WHERE transaction_date = '2024-11-24';
 ```

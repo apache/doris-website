@@ -59,7 +59,7 @@ under the License.
 
 **3. `'<key>' = '<value>'`**
 
-需要修改/添加的 Catalog 属性的key和value
+需要修改/添加的 Catalog 属性的 key 和 value
 
 **4. `<new catalog comment>`**
 
@@ -68,7 +68,7 @@ under the License.
 ## 权限控制
 | 权限（Privilege） | 对象（Object）    | 说明（Notes）                 |
 |:--------------|:--------------|:--------------------------|
-| ALTER_PRIV    | Catalog       | 需要有对应catalog的ALTER_PRIV权限 |
+| ALTER_PRIV    | Catalog       | 需要有对应 catalog 的 ALTER_PRIV 权限 |
 
 ## 注意事项
 

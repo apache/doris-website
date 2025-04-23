@@ -49,12 +49,12 @@ under the License.
 | DELETE         | 支持           | 支持           | 不支持         |
 | sequence 列    | 支持           | 支持           | 不支持         |
 | delete_sign    | 支持           | 支持           | 不支持         |
-| 部分列更新     | 支持           | 不支持         | 支持（但无法更新 null 值） |
+| 部分列更新     | 支持           | 不支持         | 支持 (但无法更新 null 值) |
 | 倒排索引       | 支持           | 不支持         | 不支持         |
 
 ## 主键（Unique）模型的更新
 
-Doris 主键（unique）模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
+Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
 
 在 Doris 2.0，默认创建的 unique 模型依旧是 MoR 的，如果要创建 MoW 的，需要通过参数 "enable_unique_key_merge_on_write" = "true" 手动指定，如下示例：
 
@@ -114,7 +114,7 @@ Doris 对所有导入更新操作提供原子性保障，即每次导入数据�
 
 由于多个并发导入更新的提交顺序可能无法预期，若这些并发导入涉及相同主键的更新，则其生效顺序也无法预知，最终的可见结果会因此存在不确定性。为解决此问题，Doris 提供了 sequence 列机制，允许用户在并发导入更新时为每一行数据指定版本，以便明确控制并发更新的结果顺序，实现确定性。
 
-我们将在文档[主键模型的更新并发控制](../update/unique-update-concurrent-control.md) 中对更新的并发控制机制进行详细介绍。
+我们将在文档 [主键模型的更新并发控制](../update/unique-update-concurrent-control.md) 中对更新的并发控制机制进行详细介绍。
 
 ## 聚合（Aggregate）模型的更新
 

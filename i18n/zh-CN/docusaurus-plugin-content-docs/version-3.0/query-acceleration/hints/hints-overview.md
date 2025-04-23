@@ -31,7 +31,7 @@ under the License.
 
 ## Hint 分类
 
-doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，distribute hint 等几种：
+Doris 目前支持以下几种 hint 类型，包括 leading hint，ordered hint，distribute hint 等：
 
 - [Leading Hint](leading-hint.md)：用于指定 join order 为 leading 中提供的 order 顺序；
 - [Ordered Hint](leading-hint.md)：一种特定的 leading hint, 用于指定 join order 为原始文本序；
@@ -41,7 +41,7 @@ doris 目前支持的几种 hint 类型，包括 leading hint，ordered hint，d
 
 假设有一个包含大量数据的表，而在某些特定情况下，你了解到在一个查询中，表的连接顺序可能会影响查询性能。此时，Leading Hint 允许你指定希望优化器遵循的表连接顺序。
 
-以下面 SQL 查询为例，若执行效率不理想，我们希望调整 join 顺序，同时不改变原始 SQL，以免影响用户原始场景，并达到调优目的。
+以下面 SQL 查询为例，若执行效率不理想，我们希望调整 join 顺序，同时不改变原始 SQL，以免影响用户原始查询逻辑，并达到调优目的。
 
 ```sql
 mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
@@ -80,7 +80,7 @@ mysql> explain shape plan select  /*+ leading(t2 t1) */ * from t1 join t2 on t1.
 +-----------------------------------------------------------------------------------------------------+
 ```
 
-在此示例中，使用了 `/*+ leading(t2 t1) */` 的 Leading Hint。Leading Hint 会告知优化器在执行计划中使用指定表（t2）作为驱动表，并将其置于（t1）之前。
+在此示例中，使用了 `/*+ leading(t2 t1) */` 的 Leading Hint。Leading Hint 会告知优化器在执行计划中使用指定表（t2）作为驱动表，并将其置于 (t1) 之前。
 
 ## Hint Log
 
@@ -100,7 +100,7 @@ Hint Log 分为三个状态：
 - `Used`：表明该提示生效了。
 - `UnUsed` 和 `SyntaxError`：都表明该提示未生效。 `SyntaxError` 表示提示语法使用错误或该语法不支持，同时会附加不支持的原因信息。
 
-用户可以通过 Hint log 查看生效情况以及未生效原因，便于调整和验证。
+用户可以通过 Hint Log 查看生效情况以及未生效原因，便于调整和验证。
 
 ## 总结
 

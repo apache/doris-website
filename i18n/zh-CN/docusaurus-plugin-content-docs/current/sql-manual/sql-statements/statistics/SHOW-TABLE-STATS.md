@@ -69,7 +69,7 @@ SHOW TABLE STATS <table_name>;
 
 ## 举例
 
-1. 展示表test1的统计信息概况
+1. 展示表 test1 的统计信息概况
 
 ```sql
 SHOW TABLE STATS test1;

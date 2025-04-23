@@ -55,6 +55,6 @@ under the License.
 
 ## 参考
 
- - [管理文件缓存](../../../compute-storage-decoupled/file-cache.md)
- - [WARMUP COMPUTE GROUP](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+ - [管理文件缓存](../../../../compute-storage-decoupled/file-cache)
+ - [WARMUP COMPUTE GROUP](./WARM-UP.md)
 

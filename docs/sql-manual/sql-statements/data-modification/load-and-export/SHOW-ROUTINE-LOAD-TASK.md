@@ -28,52 +28,54 @@ under the License.
 
 ## Description
 
-View the currently running subtasks of a specified Routine Load job.
+This syntax is used to view the currently running subtasks of a specified Routine Load job.
 
-
+## Syntax
 
 ```sql
-SHOW ROUTINE LOAD TASK
-WHERE JobName = "job_name";
+SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 ```
 
-The returned results are as follows:
+## Required Parameters
 
-```text
-              TaskId: d67ce537f1be4b86-abf47530b79ab8e6
-               TxnId: 4
-           TxnStatus: UNKNOWN
-               JobId: 10280
-          CreateTime: 2020-12-12 20:29:48
-    ExecuteStartTime: 2020-12-12 20:29:48
-             Timeout: 20
-                BeId: 10002
-DataSourceProperties: {"0":19}
-```
+**1. `<job_name>`**
 
-- `TaskId`: The unique ID of the subtask.
-- `TxnId`: The import transaction ID corresponding to the subtask.
-- `TxnStatus`: The import transaction status corresponding to the subtask. When TxnStatus is null, it means that the subtask has not yet started scheduling.
-- `JobId`: The job ID corresponding to the subtask.
-- `CreateTime`: The creation time of the subtask.
-- `ExecuteStartTime`: The time when the subtask is scheduled to be executed, usually later than the creation time.
-- `Timeout`: Subtask timeout, usually twice the `max_batch_interval` set by the job.
-- `BeId`: The ID of the BE node executing this subtask.
-- `DataSourceProperties`: The starting offset of the Kafka Partition that the subtask is ready to consume. is a Json format string. Key is Partition Id. Value is the starting offset of consumption.
+> The name of the routine load job to view.
 
-## Example
+## Return Results
 
-1. Display the subtask information of the routine import task named test1.
+The return results include the following fields:
 
-   ```sql
-   SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
-   ```
+| Field Name           | Description                                                  |
+| :------------------- | :---------------------------------------------------------- |
+| TaskId               | Unique ID of the subtask                                     |
+| TxnId                | Import transaction ID corresponding to the subtask           |
+| TxnStatus            | Import transaction status of the subtask. Null indicates the subtask has not yet been scheduled |
+| JobId                | Job ID corresponding to the subtask                          |
+| CreateTime           | Creation time of the subtask                                 |
+| ExecuteStartTime     | Time when the subtask was scheduled for execution, typically later than creation time |
+| Timeout              | Subtask timeout, typically twice the `max_batch_interval` set in the job |
+| BeId                 | BE node ID executing this subtask                            |
+| DataSourceProperties | Starting offset of Kafka Partition that the subtask is preparing to consume. It's a Json format string. Key is Partition Id, Value is the starting offset for consumption |
 
-## Keywords
+## Access Control Requirements
 
-    SHOW, ROUTINE, LOAD, TASK
+Users executing this SQL command must have at least the following privileges:
 
-## Best Practice
+| Privilege | Object | Notes |
+| :-------- | :----- | :---- |
+| LOAD_PRIV | Table | SHOW ROUTINE LOAD TASK requires LOAD privilege on the table |
 
-With this command, you can view how many subtasks are currently running in a Routine Load job, and which BE node is running on.
+## Notes
 
+- A null TxnStatus doesn't indicate task error, it may mean the task hasn't been scheduled yet
+- The offset information in DataSourceProperties can be used to track data consumption progress
+- When Timeout is reached, the task will automatically end regardless of whether data consumption is complete
+
+## Examples
+
+- Show subtask information for a routine load task named test1.
+
+    ```sql
+    SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
+    ```

@@ -40,7 +40,7 @@ Focused on this solution, this chapter contains the following 3 sections:
 
 The following figure illustrates the architecture of the log storage and analysis platform built on Apache Doris:
 
-![Overall architecture](/images/doris-overall-architecture.png)
+![Log Storage and Analysis Platform built on Apache Doris](/images/doris-overall-architecture.png)
 
 The architecture contains the following 3 parts:
 

@@ -134,7 +134,7 @@ Spark related parameters are as follows:
    );
    ```
 
-   If S3 resource is used for [cold hot separation](../../../../../docs/advanced/cold_hot_separation.md), we should add more required fields.
+   If S3 resource is used for [cold hot separation](../../../../table-design/tiered-storage/overview), we should add more required fields.
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES
@@ -207,7 +207,7 @@ Spark related parameters are as follows:
 
 **6. Create HMS resource**
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/multi-catalog/multi-catalog.md)
+   HMS resource is used to create [hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

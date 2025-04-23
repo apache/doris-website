@@ -53,7 +53,7 @@ properties (
 :::tip
 目前的排队设计是不感知 FE 的个数的，排队的参数只在单 FE 粒度生效，例如：
 
-一个 Doris 集群配置了一个 work load group，设置 max_concurrency = 1；
+一个 Doris 集群配置了一个 workload group，设置 max_concurrency = 1；
 如果集群中有 1FE，那么这个 workload group 在 Doris 集群视角看同时只会运行一个 SQL；
 如果有 3 台 FE，那么在 Doris 集群视角看最大可运行的 SQL 个数为 3。
 :::

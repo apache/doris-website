@@ -84,9 +84,9 @@ SELECT k1 FROM test WHERE k1 REGEXP 'ok$'
 中文字符示例
 
 ```sql
-mysql> select regexp('这是一段中文This is a passage in English 1234567', '\\p{Han}');
+mysql> select regexp('这是一段中文 This is a passage in English 1234567', '\\p{Han}');
 +-----------------------------------------------------------------------------+
-| ('这是一段中文This is a passage in English 1234567' regexp '\p{Han}')         |
+| ('这是一段中文 This is a passage in English 1234567' regexp '\p{Han}')         |
 +-----------------------------------------------------------------------------+
 |                                                                           1 |
 +-----------------------------------------------------------------------------+

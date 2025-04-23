@@ -59,7 +59,7 @@ CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
 ## 权限控制
 | 权限（Privilege） | 对象（Object） | 说明（Notes）                  |
 |:--------------|:-----------|:---------------------------|
-| CREATE_PRIV   | Catalog    | 需要有对应catalog的CREATE_PRIV权限 |
+| CREATE_PRIV   | Catalog    | 需要有对应 catalog 的 CREATE_PRIV 权限 |
 
 ## 示例
 

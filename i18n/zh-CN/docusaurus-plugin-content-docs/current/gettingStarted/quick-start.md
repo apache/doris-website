@@ -191,7 +191,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
    通过以下命令启动 BE 进程：
 
    ```sql
-   apache-doris/fe/bin/start_be.sh --daemon
+   apache-doris/be/bin/start_be.sh --daemon
    ```
 
 3. **在集群中注册 BE 节点**

@@ -242,7 +242,7 @@ Use the `CREATE WORKLOAD Policy` command to create a resource management policy.
 In the example below, create a Policy named `test_cancel_Policy`, which will cancel queries running in the cluster for more than 1000ms. The current status is enabled. Creating a Workload Policy requires `admin_priv` privileges.
 
 ```sql
-create workload Policy test_cancel_Policy
+create workload policy test_cancel_Policy
 Conditions(query_time > 1000)
 Actions(cancel_query) 
 properties('enabled'='true'); 
@@ -280,7 +280,7 @@ When creating a Workload Policy, the following must be specified:
 By default, Workload Policies apply to all supported queries. If you want to specify that a Policy only targets a specific Workload Group, you need to bind the Workload Group through the `workload_group` option. The statement is as follows:
 
 ```sql
-create workload Policy test_cancel_big_query
+create workload policy test_cancel_big_query
 Conditions(query_time > 1000)
 Actions(cancel_query) 
 properties('workload_group'='normal')
@@ -299,8 +299,8 @@ properties('workload_group'='normal')
 Attempt to modify concurrency-related parameters in the session variables of the Admin account.
 
 ```sql
-// log on admin to check variables
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
+-- log on admin to check variables
+show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
 +-------------------------------------+-------+---------------+---------+
@@ -308,13 +308,13 @@ mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 1 row in set (0.00 sec)
 
-// Create a Policy to modify the concurrency parameters of the admin account.
+-- Create a Policy to modify the concurrency parameters of the admin account.
 create workload Policy test_set_var_Policy
 Conditions(username='admin')
 Actions(set_session_variable 'parallel_fragment_exec_instance_num=1') 
 
-// After some time, check the admin account's parameters again.
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
+-- After some time, check the admin account's parameters again.
+show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
 +-------------------------------------+-------+---------------+---------+

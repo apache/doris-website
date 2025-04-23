@@ -34,7 +34,7 @@ LDAP group authorization, is to map the group in LDAP to the Role in Doris, if t
 
 ## Noun Interpretation
 
-* LDAP: Lightweight directory access protocol that enables centralized management of account passwords.
+* LDAP: Lightweight Directory Access Protocol that enables centralized management of account passwords.
 * Privilege: Permissions act on nodes, databases or tables. Different permissions represent different permission to operate.
 * Role: Doris can create custom named roles. A role can be thought of as a collection of permissions.
 
@@ -195,7 +195,7 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 
 ### LDAP group authorization details
 
-If a LDAP user dn is the "member" attribute of an LDAP group node, Doris assumes that the user belongs to the group. Doris will revoke the corresponding role privileges after the user logs out. Before using LDAP group authorization, you should create the corresponding role pairs in Doris and authorize the roles.
+If a DLAP user dn is the "member" attribute of an LDAP group node, Doris assumes that the user belongs to the group. Doris will revoke the corresponding role privileges after the user logs out. Before using LDAP group authorization, you should create the corresponding role pairs in Doris and authorize the roles.
 
 Login user Privileges are related to Doris user and group Privileges, as shown in the following table:  
 |LDAP Users|Doris Users|Login User Privileges|

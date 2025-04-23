@@ -85,7 +85,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
 ```
 
 * 通过执行 SQL 设置
@@ -100,7 +100,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -289,7 +289,7 @@ mysql> select * from dt;
 # 配置 session 变量开启 group commit (默认为 off_mode),开启同步模式
 mysql> set group_commit = sync_mode;
 
-# 这里返回的 label 是 group_commit 开头的，可以区分出是否谁用了 group commit，导入耗时至少是表属性 group_commit_interval。
+# 这里返回的 label 是 group_commit 开头的，可以区分出是否使用了 group commit，导入耗时至少是表属性 group_commit_interval。
 mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
 Query OK, 2 rows affected (10.06 sec)
 {'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
@@ -619,7 +619,12 @@ PROPERTIES (
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. 设置测试前的 init 语句，`set group_commit=async_mode`以及`set enable_nereids_planner=false`。
-2. 开启 jdbc 的 prepared statement，完整的 url 为`jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false`。
+2. 开启 jdbc 的 prepared statement，完整的 url 为: 
+
+    ```
+    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`。
+    ```
+
 3. 设置导入类型为 prepared update statement。
 4. 设置导入语句。
 5. 设置每次需要导入的值，注意，导入的值与导入值的类型要一一匹配。

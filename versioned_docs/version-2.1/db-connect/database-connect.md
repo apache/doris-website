@@ -56,7 +56,7 @@ Example of connection code:
 ```Java
 String user = "user_name";
 String password = "user_password";
-String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo？useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
+String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo?useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
 try {
     Connection myCon = DriverManager.getConnection(newUrl, user, password);
     Statement stmt = myCon.createStatement();
@@ -71,6 +71,12 @@ try {
 } catch (SQLException e) {
     log.error("get JDBC connection exception.", e);
 }
+```
+
+If you need to initially change session variables when connecting, you can use the following format:
+
+```
+jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
 ```
 
 ## DBeaver

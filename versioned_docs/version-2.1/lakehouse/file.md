@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Querying Files on S3/HDFS",
+    "title": "Analyze Files on S3/HDFS",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,25 +24,62 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-With the Table Value Function feature, Doris is able to query files in object storage or HDFS as simply as querying Tables. In addition, it supports automatic column type inference.
+Through the Table Value Function feature, Doris can directly query and analyze files on object storage or HDFS as a Table. It also supports automatic column type inference.
 
-## Usage
+For more usage methods, refer to the Table Value Function documentation:
 
-For more usage details, please see the documentation:
+* [S3](../sql-manual/sql-functions/table-valued-functions/s3.md): Supports file analysis on S3-compatible object storage.
 
-* [S3](../sql-manual/sql-functions/table-valued-functions/s3.md): supports file analysis on object storage compatible with S3
+* [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md): Supports file analysis on HDFS.
 
-* [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md): supports file analysis on HDFS
+## Basic Usage
 
-* [LOCAL](../sql-manual/sql-functions/table-valued-functions/local.md): supports file analysis on local file system
+Here we illustrate how to analyze files on object storage using the S3 Table Value Function as an example.
 
-The followings illustrate how file analysis is conducted with the example of S3 Table Value Function.
-
-### Automatic Column Type Inference
+### Query
 
 ```sql
-> DESC FUNCTION s3 (
-    "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
+SELECT * FROM S3 (
+    'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+    's3.region' = 'us-east-1',
+    's3.access_key' = 'ak',
+    's3.secret_key'='sk'
+)
+```
+
+The `S3(...)` is a TVF (Table Value Function). A Table Value Function is essentially a table, so it can appear in any SQL statement where a "table" can appear.
+
+The attributes of a TVF include the file path to be analyzed, file format, connection information of the object storage, etc. The file path (URI) can use wildcards to match multiple files. The following file paths are valid:
+
+* Match a specific file
+
+  `s3://bucket/path/to/tvf_test/test.parquet`
+
+* Match all files starting with `test_`
+
+  `s3://bucket/path/to/tvf_test/test_*`
+
+* Match all files with the `.parquet` suffix
+
+  `s3://bucket/path/to/tvf_test/*.parquet`
+
+* Match all files in the `tvf_test` directory
+
+  `s3://bucket/path/to/tvf_test/*`
+
+* Match files with `test` in the filename
+
+  `s3://bucket/path/to/tvf_test/*test*`
+
+### Automatic Inference of File Column Types
+
+You can view the Schema of a TVF using the `DESC FUNCTION` syntax:
+
+```sql
+DESC FUNCTION s3 (
+    "URI" = "s3://bucket/path/to/tvf_test/test.parquet",
     "s3.access_key"= "ak",
     "s3.secret_key" = "sk",
     "format" = "parquet",
@@ -63,78 +100,68 @@ The followings illustrate how file analysis is conducted with the example of S3 
 +---------------+--------------+------+-------+---------+-------+
 ```
 
-An S3 Table Value Function is defined as follows:
+Doris infers the Schema based on the following rules:
 
-```sql
-s3(
-    "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
-    "s3.access_key"= "ak",
-    "s3.secret_key" = "sk",
-    "Format" = "parquet",
-    "use_path_style"="true")
-```
+* For Parquet and ORC formats, Doris obtains the Schema from the file metadata.
 
-It specifies the file path, connection, and authentication.
+* In the case of matching multiple files, the Schema of the first file is used as the TVF's Schema.
 
-After defining, you can view the schema of this file using the `DESC FUNCTION` statement.
+* For CSV and JSON formats, Doris parses the **first line of data** to obtain the Schema based on fields, delimiters, etc.
 
-As can be seen, Doris is able to automatically infer column types based on the metadata of the Parquet file.
+  By default, all column types are `string`. You can specify column names and types individually using the `csv_schema` attribute. Doris will use the specified column types for file reading. The format is: `name1:type1;name2:type2;...`. For example:
 
-Besides Parquet, Doris supports analysis and auto column type inference of ORC, CSV, and Json files.
+  ```sql
+  S3 (
+      'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+      's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+      's3.region' = 'us-east-1',
+      's3.access_key' = 'ak'
+      's3.secret_key'='sk',
+      'format' = 'csv',
+      'column_separator' = '|',
+      'csv_schema' = 'k1:int;k2:int;k3:int;k4:decimal(38,10)'
+  )
+  ```
 
-**CSV Schema**
+  The currently supported column type names are as follows:
 
-By default, for CSV format files, all columns are of type String. Column names and column types can be specified individually via the `csv_schema` attribute. Doris will use the specified column type for file reading. The format is as follows:
+  | Column Type Name |
+  | ------------ |
+  | tinyint      |
+  | smallint     |
+  | int          |
+  | bigint       |
+  | largeint     |
+  | float        |
+  | double       |
+  | decimal(p,s) |
+  | date         |
+  | datetime     |
+  | char         |
+  | varchar      |
+  | string       |
+  | boolean      |
 
-`name1:type1;name2:type2;...`
+* For columns with mismatched formats (e.g., the file contains a string, but the user defines it as `int`; or other files have a different Schema than the first file), or missing columns (e.g., the file has 4 columns, but the user defines 5 columns), these columns will return `null`.
 
-For columns with mismatched formats (such as string in the file and int defined by the user), or missing columns (such as 4 columns in the file and 5 columns defined by the user), these columns will return null.
+## Applicable Scenarios
 
-Currently supported column types are:
+### Query Analysis
 
-| name | mapping type |
-| --- | --- |
-|tinyint |tinyint |
-|smallint |smallint |
-|int |int |
-| bigint | bigint |
-| largeint | largeint |
-| float| float |
-| double| double|
-| decimal(p,s) | decimalv3(p,s) |
-| date | datev2 |
-| datetime | datetimev2 |
-| char |string |
-|varchar |string |
-|string|string |
-|boolean| boolean |
+TVF is very suitable for directly analyzing independent files on storage systems without having to import the data into Doris in advance.
 
-Example:
-
-```sql
-s3 (
-    "uri" = "https://bucket1/inventory.dat",
-    "s3.access_key"= "ak",
-    "s3.secret_key" = "sk",
-    "format" = "csv",
-    "column_separator" = "|",
-    "csv_schema" = "k1:int;k2:int;k3:int;k4:decimal(38,10)",
-    "use_path_style"="true"
-)
-```
-
-### Query and Analysis
-
-You can conduct queries and analysis on this Parquet file using any SQL statements:
+You can use any SQL statement for file analysis, such as:
 
 ```sql
 SELECT * FROM s3(
-    "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
-    "s3.access_key"= "ak",
-    "s3.secret_key" = "sk",
-    "format" = "parquet",
-    "use_path_style"="true")
-LIMIT 5;
+    'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+    's3.region' = 'us-east-1',
+    's3.access_key' = 'ak',
+    's3.secret_key'='sk'
+)
+ORDER BY p_partkey LIMIT 5;
 +-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
 | p_partkey | p_name                                   | p_mfgr         | p_brand  | p_type                  | p_size | p_container | p_retailprice | p_comment           |
 +-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
@@ -146,32 +173,38 @@ LIMIT 5;
 +-----------+------------------------------------------+----------------+----------+-------------------------+--------+-------------+---------------+---------------------+
 ```
 
-You can put the Table Value Function anywhere that you used to put Table in the SQL, such as in the WITH or FROM clause in CTE. In this way, you can treat the file as a normal table and conduct analysis conveniently.
+TVF can appear in any position in SQL where a Table can appear, such as in the `WITH` clause of a `CTE`, in the `FROM` clause, etc. This way, you can treat the file as a regular table for any analysis.
 
-You can also create a logic view by using `CREATE VIEW` statement for a Table Value Function. So that you can query this view, grant priv on this view or allow other user to access this Table Value Function.
+You can also create a logical view for a TVF using the `CREATE VIEW` statement. After that, you can access this TVF like other views, manage permissions, etc., and allow other users to access this View without having to repeatedly write connection information and other attributes.
 
 ```sql
-CREATE VIEW v1 AS 
+-- Create a view based on a TVF
+CREATE VIEW tvf_view AS 
 SELECT * FROM s3(
-    "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
-    "s3.access_key"= "ak",
-    "s3.secret_key" = "sk",
-    "format" = "parquet",
-    "use_path_style"="true");
+    'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+    's3.region' = 'us-east-1',
+    's3.access_key' = 'ak',
+    's3.secret_key'='sk'
+);
 
-DESC v1;
+-- Describe the view as usual
+DESC tvf_view;
 
-SELECT * FROM v1;
+-- Query the view as usual
+SELECT * FROM tvf_view;
 
-GRANT SELECT_PRIV ON db1.v1 TO user1;
+-- Grant SELECT priv to other user on this view
+GRANT SELECT_PRIV ON db.tvf_view TO other_user;
 ```
 
-### Data Ingestion
+### Data Import
 
-Users can ingest files into Doris tables via  `INSERT INTO SELECT`  for faster file analysis:
+TVF can be used as a method for data import into Doris. With the `INSERT INTO SELECT` syntax, we can easily import files into Doris.
 
 ```sql
-// 1. Create Doris internal table
+-- Create a Doris table
 CREATE TABLE IF NOT EXISTS test_table
 (
     id int,
@@ -181,20 +214,21 @@ CREATE TABLE IF NOT EXISTS test_table
 DISTRIBUTED BY HASH(id) BUCKETS 4
 PROPERTIES("replication_num" = "1");
 
-// 2. Insert data using S3 Table Value Function
+-- 2. Load data into table from TVF
 INSERT INTO test_table (id,name,age)
 SELECT cast(id as INT) as id, name, cast (age as INT) as age
 FROM s3(
-    "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
-    "s3.access_key"= "ak",
-    "s3.secret_key" = "sk",
-    "format" = "parquet",
-    "use_path_style" = "true");
+    'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+    's3.region' = 'us-east-1',
+    's3.access_key' = 'ak',
+    's3.secret_key'='sk'
+);
 ```
 
+## Notes
 
-### Note
+1. If the specified `uri` does not match any files, or all matched files are empty, the TVF will return an empty result set. In this case, using `DESC FUNCTION` to view the Schema of this TVF will yield a virtual column `__dummy_col`, which is meaningless and only serves as a placeholder.
 
-1. If the URI specified by the `S3 / HDFS` TVF is not matched with the file, or all the matched files are empty files, then the` S3 / HDFS` TVF will return to the empty result set. In this case, using the `DESC FUNCTION` to view the schema of this file, you will get a dummy column` __dummy_col`, which can be ignored.
-
-2. If the format of the TVF is specified to `CSV`, and the read file is not a empty file but the first line of this file is empty, then it will prompt the error `The first line is empty, can not parse column numbers`. This is because the schema cannot be parsed from the first line of the file
+2. If the specified file format is `csv`, and the file read is not empty but the first line of the file is empty, an error `The first line is empty, can not parse column numbers` will be prompted, as the Schema cannot be parsed from the first line of the file.

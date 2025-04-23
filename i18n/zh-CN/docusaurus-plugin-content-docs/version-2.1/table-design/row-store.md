@@ -34,14 +34,19 @@ Doris 默认采用列式存储，每个列连续存储，在分析场景（如�
 
 ## 使用语法
 
-建表时在表的 PROPERTIES 中指定是否开启行存，行存的存储压缩单元大小 page_size。
+建表时在表的 PROPERTIES 中指定是否开启行存，哪些列开启行存，行存的存储压缩单元大小 page_size。
 
 1. 是否开启行存：默认为 false 不开启
 ```
 "store_row_column" = "true"
 ```
 
-1. 行存 page_size：默认为 16KB。
+2. 哪些列开启行存：如果 `"store_row_column" = "true"`，默认所有列开启行存，若需要指定部分列开启行存，设置 row_store_columns 参数，格式为逗号分割的列名
+```
+"row_store_columns" = "column1,column2,column3"
+```
+
+3. 行存 page_size：默认为 16KB。
 ```
 "row_store_page_size" = "16384"
 ```
@@ -51,7 +56,7 @@ page 是存储读写的最小单元，page_size 是行存 page 的大小，也�
 
 ## 使用示例
 
-下面的例子创建一个 8 列的表，开启行存，为了高并发点查性能配置 page_size 为 4KB。
+下面的例子创建一个 8 列的表，其中 "key,v1,v3,v5,v7" 这 5 列开启行存，为了高并发点查性能配置 page_size 为 4KB。
 
 ```
 CREATE TABLE `tbl_point_query` (
@@ -70,14 +75,14 @@ DISTRIBUTED BY HASH(`key`) BUCKETS 1
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "true",
     "light_schema_change" = "true",
-    "store_row_column" = "true",
+    "row_store_columns" = "key,v1,v3,v5,v7",
     "row_store_page_size" = "4096"
 );
 ```
 
 查询
 ```
-SELECT * FROM tbl_point_query WHERE key = 100；
+SELECT key, v1, v3, v5, v7 FROM tbl_point_query WHERE key = 100；
 ```
 
 更多点查的使用请参考 [高并发点查](../query-acceleration/high-concurrent-point-query) 。
@@ -87,4 +92,3 @@ SELECT * FROM tbl_point_query WHERE key = 100；
 
 1. 开启行存后占用的存储空间会增加，存储空间的增加和数据特点有关，一般是原来表的 2 到 10 倍，具体空间占用需要使用实际数据测试。
 2. 行存的 page_size 对存储空间的也有影响，可以根据前面的表属性参数 `row_store_page_size` 说明进行调整。
-3. 2.1 不支持 alter `store_row_column` 属性

@@ -25,7 +25,7 @@ under the License.
 ## 描述
 
 返回表达式的 [斜度](https://en.wikipedia.org/wiki/Skewness)。
-用来计算斜度的公式是 `3阶中心矩 / ((方差)^{1.5})`, 当方差为零时, `SKEWNESS` 会返回 `NULL`。
+用来计算斜度的公式是 `3阶中心矩 / ((方差)^{1.5})`, 当方差为零时，`SKEWNESS` 会返回 `NULL`。
 
 **相关命令**
 

@@ -38,7 +38,7 @@ EXPLODE_OUTER(<array>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<arr>` | array类型 |
+| `<arr>` | array 类型 |
 
 ## 返回值
 

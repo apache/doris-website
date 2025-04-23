@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-返回一个使用指定格式字符串和参数格式化的字符串。[format格式](https://fmt.dev/11.1/syntax/#format-specification-mini-language)
+返回一个使用指定格式字符串和参数格式化的字符串。[format 格式](https://fmt.dev/11.1/syntax/#format-specification-mini-language)
 
 ## 语法
 

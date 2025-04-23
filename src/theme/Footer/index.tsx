@@ -99,7 +99,7 @@ function Footer(): JSX.Element | null {
                             </div>
                             <div className="social">
                                 <a
-                                    href="https://www.youtube.com/@apachedoris/channels"
+                                    href="https://www.youtube.com/hashtag/apachedoris"
                                     title="youtube"
                                     target="_blank"
                                     className="item"

@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-该语句用于展示导入作业的创建语句.
+该语句用于展示导入作业的创建语句。
 
 ## 语法：
 
@@ -54,7 +54,7 @@ SHOW CREATE LOAD FOR <load_name>;
 
 ## 举例
 
-- 展示默认db下指定导入作业的创建语句
+- 展示默认 db 下指定导入作业的创建语句
 
    ```sql
    SHOW CREATE LOAD for test_load

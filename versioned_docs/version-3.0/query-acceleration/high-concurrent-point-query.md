@@ -1,6 +1,6 @@
 --- 
 {
-    "title": "High-Concurrency Point Query",
+    "title": "High-Concurrency Point Query Optimization",
     "language": "en"
 }
 --- 
@@ -29,7 +29,7 @@ under the License.
 This feature is supported since the Apache Doris 2.0 version
 :::
 
-## Background 
+## Description
 
 Doris is built on a columnar storage format engine. In high-concurrency service scenarios, users always want to retrieve entire rows of data from the system. However, when tables are wide, the columnar format greatly amplifies random read IO. Doris query engine and planner are too heavy for some simple queries, such as point queries. A short path needs to be planned in the FE's query plan to handle such queries. FE is the access layer service for SQL queries, written in Java. Parsing and analyzing SQL also leads to high CPU overhead for high-concurrency queries. To solve these problems, we have introduced row storage, short query path, and PreparedStatement in Doris. Below is a guide to enable these optimizations.
 
@@ -73,13 +73,13 @@ PROPERTIES (
 **Note:**
 1. `enable_unique_key_merge_on_write` should be enabled, since we need primary key for quick point lookup in storage engine
 
-2. when condition only contains primary key like `select * from tbl_point_query where k1 = 123`, such query will go through the short fast path
+2. when condition only contains primary key like `select * from tbl_point_query where key = 123`, such query will go through the short fast path
 
 3. `light_schema_change` should also been enabled since we rely on `column unique id` of each column when doing a point query.
 
 4. It only supports equality queries on the key column of a single table and does not support joins or nested subqueries. The WHERE condition should consist of the key column alone and be an equality comparison. It can be considered as a type of key-value query.
 
-5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 2.1, it is recommended to use `"row_store_columns"="key,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
+5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 2.1, it is recommended to use `"row_store_columns"="k1,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
 
    ```sql
    SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1
@@ -87,7 +87,7 @@ PROPERTIES (
 
 ## Using `PreparedStatement`
 
-In order to reduce CPU cost for parsing query SQL and SQL expressions, we provide `PreparedStatement` feature in FE fully compatible with mysql protocol (currently only support point queries like above mentioned).Enable it will pre caculate PreparedStatement SQL and expresions and caches it in a session level memory buffer and will be reused later on.We could improve 4x+ performance by using `PreparedStatement` when CPU became hotspot doing such queries.Bellow is an JDBC example of using `PreparedStatement`.
+In order to reduce CPU cost for parsing query SQL and SQL expressions, we provide `PreparedStatement` feature in FE fully compatible with mysql protocol (currently only support point queries like above mentioned).Enable it will pre calculate PreparedStatement SQL and expressions and caches it in a session level memory buffer and will be reused later on.We could improve 4x+ performance by using `PreparedStatement` when CPU became bottleneck doing such queries.Bellow is an JDBC example of using `PreparedStatement`.
 
 1. Setup JDBC url and enable server side prepared statement
 
@@ -126,8 +126,8 @@ Doris has a page-level cache that stores data for a specific column in each page
 
 ## FAQ
 
-**1. How to confirm that the configuration is correct and short path optimization using concurrent enumeration is used ?**
-   
+#### **1. How to confirm that the configuration is correct and short path optimization using concurrent enumeration is used ?**
+
 A: explain sql, when SHORT-CIRCUIT appears in the execution plan, it proves that short path optimization is used
 
 ```sql
@@ -162,7 +162,7 @@ mysql> explain select * from tbl_point_query where k1 = -2147481418 ;
    +-----------------------------------------------------------------------------------------------+
 ```
 
-**2. How to confirm that prepared statement is effective ?**
+#### **2. How to confirm that prepared statement is effective ?**
 
 A: After sending the request to Doris, find the corresponding query request in fe.audit.log and find Stmt=EXECUTE(), indicating that prepared statement is effective
 
@@ -172,14 +172,14 @@ A: After sending the request to Doris, find the corresponding query request in f
    bles=
 ```
 
-**3. Can non-primary key queries use special optimization of high-concurrency point lookups?**
+#### **3. Can non-primary key queries use special optimization of high-concurrency point lookups?**
 
 A: No, high-concurrency query only targets the equivalent query of the key column, and the query cannot contain join or nested subqueries.
 
-**4. Is useServerPrepStmts useful in ordinary queries?**
+#### **4. Is useServerPrepStmts useful in ordinary queries?**
 
 A: Prepared Statement currently only takes effect when primary key is checked.
 
-**5. Does optimizer selection require global settings?**
+#### **5. Does optimizer selection require global settings?**
 
 A: When using prepared statement for query, Doris will choose the query method with the best performance, and there is no need to manually set the optimizer.

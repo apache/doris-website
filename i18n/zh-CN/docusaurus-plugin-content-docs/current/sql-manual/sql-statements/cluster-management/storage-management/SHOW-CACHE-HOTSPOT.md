@@ -29,9 +29,9 @@ under the License.
 该语句用于显示文件缓存的热点信息。
 
 :::info 备注
-在3.0.4版本之前可以使用`SHOW CACHE HOTSPOT`语句进行缓存热度信息统计查询,
-从3.0.4版本开始不再支持使用 `SHOW CACHE HOTSPOT` 语句进行缓存热度信息统计查询,
-请直接访问系统表 `__internal_schema.cloud_cache_hotspot` 进行查询.
+在 3.0.4 版本之前可以使用`SHOW CACHE HOTSPOT`语句进行缓存热度信息统计查询，
+从 3.0.4 版本开始不再支持使用 `SHOW CACHE HOTSPOT` 语句进行缓存热度信息统计查询，
+请直接访问系统表 `__internal_schema.cloud_cache_hotspot` 进行查询。
 具体用法请参考 [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
 :::
 
@@ -64,5 +64,5 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 ## 参考
 
  - [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
- - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
+ - [WARMUP CACHE](./WARM-UP)
 

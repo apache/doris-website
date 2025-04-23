@@ -66,7 +66,7 @@ INSERT INTO test_regr_slope VALUES
 (4, 5, 6),
 (5, 10, 20);
 
--- 计算x和y的线性回归斜率
+-- 计算 x 和 y 的线性回归斜率
 SELECT REGR_SLOPE(y, x) FROM test_regr_slope;
 ```
 

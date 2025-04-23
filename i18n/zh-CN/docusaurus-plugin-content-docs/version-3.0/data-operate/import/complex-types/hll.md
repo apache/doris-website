@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-HLL 是用作模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的导入需要结合 hll_hash 等函数来使用。更多文档参考[HLL](../../../sql-manual/sql-data-types/aggregate/HLL.md)。
+HLL 是用作模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的导入需要结合 hll_hash 等函数来使用。更多文档参考[HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL)。
 
 ## 使用示例
 

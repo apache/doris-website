@@ -70,7 +70,7 @@ DESC[RIBE] [<db_name>.]<table_name> [ALL];
 | Field | 列名           |
 | Type | 数据类型         |
 | Null | 是否允许为 NULL 值 |
-| Key | 是否为key列      |
+| Key | 是否为 key 列      |
 | Default | 默认值          |
 | Extra | 显示一些额外的信息    |
 | Visible | 是否可见         |
@@ -91,7 +91,7 @@ DESC[RIBE] [<db_name>.]<table_name> [ALL];
 
 ## 举例
 
-1. 显示Base表Schema
+1. 显示 Base 表 Schema
 
 ```sql
 DESC test_table;

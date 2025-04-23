@@ -37,12 +37,12 @@ COSINE_DISTANCE(<array1>, <array2>)
 
 | 参数 | 说明 |
 |---|--|
-| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array2保持一致 |
-| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与array1保持一致 |
+| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与 array2 保持一致 |
+| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与 array1 保持一致 |
 
 ## 返回值
 
-返回两个向量（向量值为坐标）之间的余弦距离。如果输入array为NULL，或者array中任何元素为NULL，则返回NULL。
+返回两个向量（向量值为坐标）之间的余弦距离。如果输入 array 为 NULL，或者 array 中任何元素为 NULL，则返回 NULL。
 
 ## 举例
 

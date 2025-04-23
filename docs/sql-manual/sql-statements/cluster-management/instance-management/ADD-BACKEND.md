@@ -76,8 +76,8 @@ The user executing this SQL must have at least the following permissions:
    ALTER SYSTEM ADD BACKEND "192.168.0.1:9050,192.168.0.2:9050";
    ```
    This command adds two BE nodes to the cluster:
-   * 192.168.0.1，port 9050
-   * 192.168.0.2，port 9050
+   * 192.168.0.1, port 9050
+   * 192.168.0.2, port 9050
    No additional properties are specified, so the default settings will be applied.
 
 2. In the integrated storage and computing mode, add a BE node to a specified Resource Group

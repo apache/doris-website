@@ -71,7 +71,7 @@ For example, in CDC data synchronization scenarios, the CDC program can mark a D
 
 This method can perform batch deletion of a large number of primary keys, which is more efficient than the DELETE statement.
 
-The delete sign is an advanced feature and is more complex to use compared to the previous methods. For detailed usage, please refer to the document [Batch Deletion](./delete-overview.md).
+The delete sign is an advanced feature and is more complex to use compared to the previous methods. For detailed usage, please refer to the document [Batch Deletion](./batch-delete-manual.md).
 
 ### Atomic Overwrite Using Temporary Partitions
 

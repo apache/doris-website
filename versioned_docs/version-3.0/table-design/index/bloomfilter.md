@@ -38,7 +38,7 @@ A BloomFilter consists of a very long binary bit array and a series of hash func
 
 The figure below shows an example of a BloomFilter with m=18 and k=3 (where m is the size of the bit array and k is the number of hash functions). Elements x, y, and z in the set are hashed by 3 different hash functions into the bit array. When querying element w, if any bit calculated by the hash functions is 0, then w is not in the set. Conversely, if all bits are 1, it only indicates that w may be in the set, but not definitely, due to possible hash collisions.
 
-![Bloom_filter.svg](/images/Bloom_filter.svg.png)
+![Bloom Filter](/images/Bloom_filter.svg.png)
 
 Thus, if all bits at the calculated positions are 1, it only indicates that the element may be in the set, not definitely, due to possible hash collisions. This is the "false positive" nature of BloomFilter. Therefore, a BloomFilter-based index can only skip data that does not meet the conditions but cannot precisely locate data that does.
 

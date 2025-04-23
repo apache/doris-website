@@ -30,23 +30,23 @@ SQL Cache is a query optimization mechanism provided by Doris that can significa
 
 SQL Cache stores and retrieves caches based on the following key factors:
 
-1. SQL Text
+- SQL Text
 
-2. View Definitions
+- View Definitions
 
-3. Table and Partition Versions
+- Table and Partition Versions
 
-4. User Variables and Result Values
+- User Variables and Result Values
 
-5. Non-deterministic Functions and Result Values
+- Non-deterministic Functions and Result Values
 
-6. Row Policy Definitions
+- Row Policy Definitions
 
-7. Data Masking Definitions
+- Data Masking Definitions
 
 The combination of these factors uniquely determines a cached dataset. If any of these factors change, such as variations in SQL, different query fields or conditions, or version changes after data updates, the cache will not be hit.
 
-For queries involving multi-table Joins, if one of the tables is updated, the partition ID or version number will differ, resulting in a cache miss.
+For queries involving multi-table joins, if one of the tables is updated, the partition ID or version number will differ, resulting in a cache miss.
 
 SQL Cache is highly suitable for T+1 update scenarios. Data is updated early in the morning, the first query fetches results from the Backend (BE) and stores them in the cache, and subsequent queries of the same nature retrieve results directly from the cache. Real-time data updates can also use SQL Cache, but may face a lower cache hit rate.
 
@@ -56,13 +56,13 @@ Currently, SQL Cache supports both internal OlapTables and external Hive tables.
 
 ### Non-Deterministic Functions
 
-Non-deterministic functions refer to those whose computation results do not form a fixed relationship with their input parameters.
+1. Non-deterministic functions refer to those whose computation results do not form a fixed relationship with their input parameters.
 
-Take the common function `select now()` as an example. It returns the current date and time. Since this function returns different results when executed at different times, its return value is dynamically changing. The `now` function returns time at the second level, so SQL Cache from the previous second can be reused within the same second; however, a new SQL Cache needs to be created for the next second.
+2. Take the common function `select now()` as an example. It returns the current date and time. Since this function returns different results when executed at different times, its return value is dynamically changing. The `now` function returns time at the second level, so SQL Cache from the previous second can be reused within the same second; however, a new SQL Cache needs to be created for the next second.
 
-To optimize cache utilization, it is recommended to convert such fine-grained time into coarse-grained time, such as using `select * from tbl where dt=date(now())`. In this case, queries within the same day can leverage the SQL Cache.
+3. To optimize cache utilization, it is recommended to convert such fine-grained time into coarse-grained time, such as using `select * from tbl where dt=date(now())`. In this case, queries within the same day can leverage the SQL Cache.
 
-In contrast, the `random()` function is difficult to utilize Cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
+4. In contrast, the `random()` function is difficult to utilize cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
 
 ## Principles
 
@@ -163,7 +163,7 @@ Both methods provide effective means for users to verify whether queries utilize
 
 ## Metrics and Monitor
 
-**1. The HTTP interface on the FE `http://${FE_IP}:${FE_HTTP_PORT}/metrics` returns two relevant metrics:**
+**1. The HTTP interface on the FE `http://${FE_IP}:${FE_HTTP_PORT}/metrics` returns two relevant metrics:** This indicator counts the number of hits, which only increases and never decreases. When FE is restarted, the count starts from 0.
 
 ```Plain
 # Represents that 1 SQL has been written to the cache  
@@ -173,13 +173,7 @@ doris_fe_cache_added{type="sql"} 1
 doris_fe_cache_hit{type="sql"} 2
 ```
 
-:::caution Note
-
-The above metrics count the number of hits and only increase. They reset to 0 after an FE restart.
-
-:::
-
-**2. The HTTP interface on the BE `http://${BE_IP}:${BE_HTTP_PORT}/metrics` returns relevant information:**
+**2. The HTTP interface on the BE `http://${BE_IP}:${BE_HTTP_PORT}/metrics` returns relevant information:** Since different caches may be stored in different BEs, it is necessary to collect metrics from all BEs to obtain complete information.
 
 ```Plain
 # Represents that there are 1205 caches in the memory of the current BE  
@@ -188,12 +182,6 @@ doris_be_query_cache_sql_total_count 1205
 # The current total memory occupied by all caches in the BE is 44k  
 doris_be_query_cache_memory_total_byte 44101
 ```
-
-:::caution Note
-
-Different caches may be stored in different BEs, so metrics from all BEs need to be collected for complete information.
-
-:::
 
 ## Memory Control
 

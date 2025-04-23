@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 可以通过 Routine Load 导入方式持续消费 Kafka Topic 中的数据。在提交 Routine Load 作业后，Doris 会持续运行该导入作业，实时生成导入任务不断消费 Kakfa 集群中指定 Topic 中的消息。
+Doris 可以通过 Routine Load 导入方式持续消费 Kafka Topic 中的数据。在提交 Routine Load 作业后，Doris 会持续运行该导入作业，实时生成导入任务不断消费 Kafka 集群中指定 Topic 的消息。
 
 Routine Load 是一个流式导入作业，支持 Exactly-Once 语义，保证数据不丢不重。
 
@@ -62,7 +62,7 @@ Routine Load 会持续消费 Kafka Topic 中的数据，写入 Doris 中。
 
 - 导入任务（load task）：一个导入作业会被拆解成若干个导入任务进行实际消费，每个任务都是一个独立的事务。
 
-Routine Load 的导入具体流程如下图展示：
+Routine Load 的导入具体流程如下图所示：
 
 ![Routine Load](/images/routine-load.png)
 
@@ -75,6 +75,20 @@ Routine Load 的导入具体流程如下图展示：
 4. 一个 Routine Load Task 提交后，会继续生成新的 Task，或对超时的 Task 进行重试。
 
 5. 新生成的 Routine Load Task 由 Task Scheduler 继续调度，不断循环。
+
+### 自动恢复
+
+为了确保作业的高可用性，引入了自动恢复机制。在非预期暂停的情况下，Routine Load Scheduler 调度线程会尝试自动恢复作业。对于 Kafka 侧的意外宕机或其他无法工作的情况，自动恢复机制可以确保在 Kafka 恢复后，无需人工干预，导入作业能够继续正常运行。
+
+不会自动恢复的情况：
+
+- 用户手动执行 PAUSE ROUTINE LOAD 命令。
+
+- 数据质量存在问题。
+
+- 无法自动恢复的情况，例如库表被删除。
+
+除了上述三种情况，其他暂停状态的作业都会尝试自动恢复。
 
 ## 快速上手
 
@@ -89,7 +103,7 @@ Routine Load 的导入具体流程如下图展示：
 在 Kafka 中，有以下样本数据
 
 ```sql
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -185,7 +199,7 @@ FROM KAFKA(
 
 ### 查看导入状态
 
-在 Doris 中，可以查看 Routine Load 的导入作业情况和导入任务情况：
+在 Doris 中，Routine Load 的导入作业情况和导入任务状态：
 
 - 导入作业：主要用于查看导入任务目标表、子任务数量、导入延迟状态、导入配置与导入结果等信息；
 
@@ -314,7 +328,7 @@ FROM KAFKA [data_source_properties]
 | job_name               | 指定创建的导入任务名称，同一个 database 不能有名字相同的任务。 |
 | tbl_name               | 指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。 |
 | merge_type             | 数据合并类型。默认值为 APPEND。<p>merge_type 有三种选项：</p> <p>- APPEND：追加导入方式；</p> <p>- MERGE：合并导入方式；</p> <p>- DELETE：导入的数据皆为需要删除的数据。</p> |
-| load_properties        | 导入描述模块，包括以下组成部分：<p>- colum_spearator 子句</p> <p>- columns_mapping 子句</p> <p>- preceding_filter 子句</p> <p>- where_predicates 子句</p> <p>- partitions 子句</p> <p>- delete_on 子句</p> <p>- order_by 子句</p> |
+| load_properties        | 导入描述模块，包括以下组成部分：<p>- column_spearator 子句</p> <p>- columns_mapping 子句</p> <p>- preceding_filter 子句</p> <p>- where_predicates 子句</p> <p>- partitions 子句</p> <p>- delete_on 子句</p> <p>- order_by 子句</p> |
 | job_properties         | 用于指定 Routine Load 的通用导入参数。                       |
 | data_source_properties | 用于描述 Kafka 数据源属性。                                  |
 | comment                | 用于描述导入作业的备注信息。                                 |
@@ -328,7 +342,7 @@ FROM KAFKA [data_source_properties]
 | max_routine_load_task_concurrent_num | 256    | 是       | 是                  | 限制 Routine Load 的导入作业最大子并发数量。建议维持在默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。 |
 | max_routine_load_task_num_per_be  | 1024   | 是       | 是                  | 每个 BE 限制的最大并发 Routine Load 任务数。`max_routine_load_task_num_per_be` 应该小于 `routine_load_thread_pool_size`。 |
 | max_routine_load_job_num           | 100    | 是       | 是                  | 限制最大 Routine Load 作业数，包括 NEED_SCHEDULED，RUNNING，PAUSE。                        |
-| max_tolerable_backend_down_num     | 0      | 是       | 是                  | 只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都是 alive 状态时允许重新调度。 |
+| max_tolerable_backend_down_num     | 0      | 是       | 是                  | 只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都处于 alive 状态时允许重新调度。 |
 | period_of_auto_resume_min          | 5（分钟） | 是       | 是                  | 自动恢复 Routine Load 的周期。                                                               |
 
 **02 BE 配置参数**
@@ -380,8 +394,8 @@ FROM KAFKA [data_source_properties]
 | &nbsp;&nbsp;               | <column_mapping>      | 在导入过程中，可以通过列映射进行列的过滤和转换。如在导入的过程中，目标列需要基于数据源的某一列进行衍生计算，目标列 k4 基于 k3 列使用公式 k3+1 计算得出，需要可以使用以下命令：`COLUMNS(k1, k2, k3, k4 = k3 + 1)`详细内容可以参考[数据转换](../../import/load-data-convert) |                                                              |
 | WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
 | PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
-| DELETE ON             | <delete_expr>                                                | 在 MERGE 导入模式下，使用 delete_expr 标记哪些列需要被删除。如需要在 MERGE 时删除 age > 30 的列，可以使用，可以使用以下命令：`DELETE ON age > 30` |
-| ORDER BY              | <order_by_column>                                            | 进针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[ 数据更新/Sequence 列 ](../../../data-operate/update/update-of-unique-model) |
+| DELETE ON             | <delete_expr>                                                | 在 MERGE 导入模式下，使用 delete_expr 标记哪些列需要被删除。如需要在 MERGE 时删除 age > 30 的列，可以使用以下命令：`DELETE ON age > 30` |
+| ORDER BY              | <order_by_column>                                            | 仅针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[数据更新/Sequence 列](../../../data-operate/update/update-of-unique-model) |
 
 **job_properties 子句**
 
@@ -395,7 +409,7 @@ job_properties 子句具体参数选项如下：
 
 | 参数                      | 说明                                                         |
 | ------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number | <p>默认值：256 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 parititon 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
+| desired_concurrent_number | <p>默认值：256 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 paritition 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
 | max_batch_interval        | 每个子任务的最大运行时间，单位是秒，必须大于 0，默认值为 60(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 20000000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 1G。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
@@ -428,7 +442,7 @@ data_source_properties 子句具体参数选项如下：
 | kafka_broker_list | 指定 Kafka 的 broker 连接信息。格式为 `<kafka_broker_ip>:<kafka port>`。多个 broker 之间以逗号分隔。例如在 Kafka Broker 中默认端口号为 9092，可以使用以下命令指定 Broker List：`"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
 | kafka_topic       | 指定要订阅的 Kafka 的 topic。一个导入作业仅能消费一个 Kafka Topic。 |
 | kafka_partitions  | 指定需要订阅的 Kafka Partition。如果不指定，则默认消费所有分区。 |
-| kafka_offsets     | 待销费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<p>- OFFSET_BEGINNING: 从有数据的位置开始订阅。</p> <p>- OFFSET_END: 从末尾开始订阅。</p> <p>- 时间格式，如："2021-05-22 11:00:00"</p> <p>如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。</p> <p>可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>注意，时间格式不能和 OFFSET 格式混用。</p> |
+| kafka_offsets     | 待消费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<p>- OFFSET_BEGINNING: 从有数据的位置开始订阅。</p> <p>- OFFSET_END: 从末尾开始订阅。</p> <p>- 时间格式，如："2021-05-22 11:00:00"</p> <p>如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。</p> <p>可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>注意，时间格式不能和 OFFSET 格式混用。</p> |
 | property          | 指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。当参数的 Value 为一个文件时，需要在 Value 前加上关键词："FILE:"。创建文件可以参考 [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) 命令文档。更多支持的自定义参数，可以参考 librdkafka 的官方 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文档中，client 端的配置项。如：`"property.client.id" = "12345"``"property.group.id" = "group_id_0"``"property.ssl.ca.location" = "FILE:ca.pem"` |
 
 通过配置 data_source_properties 中的 kafka property 参数，可以配置安全访问选项。目前 Doris 支持多种 Kafka 安全协议，如 plaintext（默认）、SSL、PLAIN、Kerberos 等。
