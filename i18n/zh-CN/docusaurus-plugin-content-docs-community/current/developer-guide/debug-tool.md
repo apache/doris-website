@@ -227,25 +227,28 @@ Total: 1296.4 MB
 
 有关 Heap Profile 的原理解析参考 [Heap Profiling 原理解析](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/)，需要注意的是 Heap Profile 记录的是虚拟内存
 
-支持实时和定期两种方式 Dump Heap Profile，然后使用 `jeprof` 解析 Heap Profile。
+支持实时和定期两种方式 Heap Dump，然后使用 `jeprof` 解析生成的 Heap Profile。
 
 ###### 1. 实时 Heap Dump
 
-将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true` 并重启BE，然后使用jemalloc heap dump http接口，在对应的BE机器上生成heap dump文件。
+将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，将 `prof_active:false` 修改为 `prof_active:true` 并重启 Doris BE，然后使用 Jemalloc Heap Dump HTTP 接口，在对应的BE机器上生成 Heap Profile 文件。
+
+> Doris 2.1.8 和 3.0.4 及之后的版本，`JEMALLOC_CONF` 中 `prof` 已经默认为 `true`，无需修改。
+> Doris 2.1.8 和 3.0.4 之前的版本， `JEMALLOC_CONF` 中没有 `prof_active`，只需将 `prof:false` 修改为 `prof:true` 即可。
 
 ```shell
 curl http://be_host:be_webport/jeheap/dump
 ```
 
-heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变量进行配置，默认为``${DORIS_HOME}/log``
+Heap Profile 文件所在目录可以在 `be.conf` 中通过 `jeprofile_dir` 变量进行配置，默认为 `${DORIS_HOME}/log`
 
-默认采样间隔为 512K，这通常只会有 10% 的内存被heap dump记录，对性能的影响通常小于 10%，可以修改 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_sample`，默认为 `19` (2^19 B = 512K)，减小 `lg_prof_sample` 可以更频繁的采样使 heap profile 接近真实内存，但这会带来更大的性能损耗。
+默认采样间隔为 512K，这通常只会有 10% 的内存被记录，对性能的影响通常小于 10%，可以修改 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_sample`，默认为 `19` (2^19 B = 512K)，减小 `lg_prof_sample` 可以更频繁的采样使 Heap Profile 接近真实内存，但这会带来更大的性能损耗。
 
-如果你在做性能测试，保持 `prof:false` 来避免 heap dump 的性能损耗。
+如果你在做性能测试，保持 `prof:false` 来避免 Heap Dump 的性能损耗。
 
 ###### 2. 定期 Heap Dump
 
-首先将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `be.conf` 中的 `JEMALLOC_PROF_PRFIX`，默认是 `jemalloc_heap_profile_`。
+首先将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，Heap Profile 文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `be.conf` 中的 `JEMALLOC_PROF_PRFIX`，默认是 `jemalloc_heap_profile_`。
 
 > 在 Doris 2.1.6 之前，`JEMALLOC_PROF_PRFIX` 为空，需要修改为任意值作为 profile 文件名
 
@@ -270,14 +273,14 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
 
 ##### 3. `jeprof` 解析 Heap Profile
 
-使用 `jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。若系统没有 `jeprof` 命令，可以将 `doris/tools` 目录下的 `jeprof` 这个二进制打包后上传到 Heap Dump 的服务器。
+使用 `be/bin/jeprof` 解析上面 Dump 的 Heap Profile，如果进程内存太大，解析过程可能需要几分钟，请耐心等待。
 
-```
-需要 addr2line 版本为 2.35.2 及以上, 见下面的 QA-1
-尽可能让 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，见下面的 QA-2
-```
+若 Doris BE 部署路径的 `be/bin` 目录下没有 `jeprof` 这个二进制，可以将 `doris/tools` 目录下的 `jeprof` 打包后上传到服务器。
 
-1. 分析单个 Heap Dump 文件
+> 需要 addr2line 版本为 2.35.2 及以上, 详情见下面的 QA-1
+> 尽可能让执行 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，即尽可能在运行 Doris BE 的机器上直接解析 Heap Profile，详情见下面的 QA-2
+
+1. 分析单个 Heap Profile 文件
 
 ```shell
    jeprof --dot lib/doris_be heap_dump_file_1
@@ -292,7 +295,7 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
    jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
    ```
 
-2.  分析两个 Heap Dump 文件的diff
+2.  分析两个 Heap Profile 文件的diff
 
 ```shell
    jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
@@ -336,13 +339,74 @@ hash -r
 
 2. 运行 `jeprof` 后出现很多错误: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`，解析后的 Heap 栈都是代码的内存地址，而不是函数名称
 
-这是因为 Heap Dump 和执行 `jeprof` 解析 Heap Profile 不在同一台服务器上，导致 `jeprof` 使用符号表解析函数名称失败，尽可能在同一台机器上完成 Dump Heap 和 `jeprof` 解析的操作。
+通常是因为执行 Heap Dump 和执行 `jeprof` 解析 Heap Profile 不在同一台服务器上，导致 `jeprof` 使用符号表解析函数名称失败，尽可能在同一台机器上完成 Dump Heap 和 `jeprof` 解析的操作，，即尽可能在运行 Doris BE 的机器上直接解析 Heap Profile。
 
-3. 如果 Heap Dump 和执行 `jeprof` 解析 Heap Profile 在同一台服务器上，但解析后的 Heap 栈依然是代码的内存地址，而不是函数名称
+或者确认下运行 Doris BE 的机器 Linux 内核版本，将 `be/bin/doris_be` 二进制文件和 Heap Profile 文件下载到相同内核版本的机器上执行 `jeprof`。
 
-尝试在 Heap Dump 的机器上重新编译 Doris BE，也就是让编译和运行 Doris BE 在一台机器上，并在这台机器上 Heap Dump 和 `jeprof` 解析。
+3. 如果在运行 Doris BE 的机器上直接解析 Heap Profile 后的 Heap 栈依然是代码的内存地址，而不是函数名称
 
-上面的操作后，如果 Heap 栈依然是代码的内存地址，尝试 `USE_JEMALLOC=OFF ./build.sh --be` 编译使用 TCMalloc 的 Doris BE，然后参考上面的章节使用 TCMalloc Heap Profile 分析内存。
+使用下面的脚本，手动解析 Heap Profile，修改这几个变量:
+
+- heap: Heap Profile 的文件名。
+- bin: `be/bin/doris_be` 二进制文件名
+- llvm_symbolizer: llvm 符号表解析程序的路径，版本最好是编译 `be/bin/doris_be` 二进制使用的版本。
+
+```
+#!/bin/bash
+## @brief
+## @author zhoufei
+## @email  gavineaglechou@gmail.com
+## @date   2024-02-24-Sat
+
+# 1. jeprof --dot ${bin} ${heap} > heap.dot to generate calling profile
+# 2. find base addr and symbol
+# 3. get addr to symble table with llvm-symbolizer
+# 4. replace the addr with symbol
+
+# heap file name
+heap=jeheap_dump.1708694081.3443.945778264.heap
+# binary name
+bin=doris_be_aws.3.0.5
+# path to llvm symbolizer
+llvm_symbolizer=$HOME/opt/ldb-toolchain-16/bin/llvm-symbolizer
+# output file name
+out=out.dot
+vaddr_baddr_symbol=vaddr_baddr_symbol.txt
+program_name=doris_be
+
+jeprof --dot ${bin} ${heap} > ${out}
+
+baseaddr=$(grep ${program_name} ${heap} | head -n 1 | awk -F'-' '{print $1}')
+echo "$baseaddr: ${baseaddr}"
+
+function find_symbol() {
+  local addr="$1"
+  "${llvm_symbolizer}" --inlining --obj=${bin} ${addr} | head -n 1 | awk -F'(' '{print $1}'
+}
+
+if [ -f ${vaddr_baddr_symbol} ]; then
+  cat ${vaddr_baddr_symbol} | while read vaddr baddr; do
+    symbol=$(find_symbol ${baddr})
+    echo "${vaddr} ${baddr} ${symbol}"
+    sed -ri.orig "s/${vaddr}/${symbol}/g" ${out}
+  done
+else # recalculate the addr and
+  grep -oP '0x(\d|[a-f])+' ${out} | xargs -I {} python -c "print('{}', '0x{:x}'.format({} - 0x${baseaddr}))" \
+    | while read vaddr baddr; do
+    symbol=$(find_symbol ${baddr})
+    echo "${vaddr} ${baddr} ${symbol}"
+    sed -ri.orig "s/${vaddr}/${symbol}/g" ${out}
+  done | tee ${vaddr_baddr_symbol}
+fi
+
+# vim: et tw=80 ts=2 sw=2 cc=80:
+```
+
+4. 如果上面所有的方法都不行
+
+- 尝试在运行 Doris BE 的机器上重新编译 `be/bin/doris_be` 二进制，也就是让编译、运行、`jeprof` 解析在同一台机器上。
+
+- 上面的操作后，如果 Heap 栈依然是代码的内存地址，尝试 `USE_JEMALLOC=OFF ./build.sh --be` 编译使用 TCMalloc 的 Doris BE，然后参考上面的章节使用 TCMalloc Heap Profile 分析内存。
 
 #### LSAN
 
