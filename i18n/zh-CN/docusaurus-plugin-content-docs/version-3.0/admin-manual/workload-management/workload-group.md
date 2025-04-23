@@ -716,10 +716,12 @@ BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把�
     * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
       比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以创建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
       CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
-    * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
-      可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
-      迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
-      观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
+  * 有用户配置了参数```cpu_resource_limit```，首先通过执行```show property for jack like 'cpu_resource_limit';```确认用户 jack 属性中是否设置了该参数；
+    然后通过执行```show variables like 'cpu_resource_limit'``` 确认session变量中是否设置了该参数；该参数默认值为-1，代表未设置。
+    配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
+    可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
+    迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
+    观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
 
 2. 为什么默认的 Workload Group 的个数被限制为 15 个？
 * Workload Group 主要是对单机资源的划分，一个机器上如果划分了过多的 Workload Group，那么每个 Workload Group 都只能分到很少的资源。
