@@ -3,13 +3,12 @@ import clsx from 'clsx';
 import TOCItems from '@theme/TOCItems';
 import type { Props } from '@theme/TOC';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import HomeIcon from '@site/static/images/toc-icon/home.svg';
-import PdfIcon from '@site/static/images/toc-icon/pdf.svg';
-import GithubIcon from '@site/static/images/toc-icon/github.svg';
-import SlackIconUrl from '@site/static/images/toc-icon/slack.png';
-import SlackColorIconUrl from '@site/static/images/toc-icon/slack-color.png';
+import { HomeIcon } from '../../components/Icons/home-icon';
+import { PdfIcon } from '../../components/Icons/pdf-icon';
+import { ForumIcon } from '../../components/Icons/forum-icon';
+import { GithubIcon } from '../../components/Icons/github-icon';
+import { SlackIcon } from '../../components/Icons/slack-icon';
 import useIsBrowser from '@docusaurus/useIsBrowser';
-import ConcatIcon from '@site/static/images/toc-icon/concat.svg';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS } from '@site/src/constant/common';
 import Link from '@docusaurus/Link';
@@ -41,18 +40,6 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const DEFAULT_VERSION = '2.1';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
-    const [isHoverSlack, setIsHoverSlack] = useState(false);
-    const handleMouseEnter = (id: string) => {
-        const dom = document.getElementById(id);
-        dom!.style.color = '#444FD9';
-        dom!.firstChild!.style.fill = '#444FD9';
-    };
-
-    const handleMouseLeave = (id: string) => {
-        const dom = document.getElementById(id);
-        dom!.style.color = '#1F1F26';
-        dom!.firstChild!.style.fill = '#7F7F83';
-    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -75,59 +62,50 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
                 <Link to={'/'}>
                     <div
-                        className="toc-icon-content"
-                        id="toc-icon-home"
-                        onMouseEnter={() => handleMouseEnter('toc-icon-home')}
-                        onMouseLeave={() => handleMouseLeave('toc-icon-home')}
+                        className="toc-icon-content group"
                     >
-                        <HomeIcon />
-                        <span>{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
+                        <HomeIcon className="group-hover:text-[#444FD9]" />
+                        <span className="group-hover:text-[#444FD9]">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
                     </div>
                 </Link>
                 {isCN && ['3.0', '2.0', '2.1'].includes(currentVersion) ? (
                     <div
-                        className="toc-icon-content"
-                        id="toc-icon-pdf"
+                        className="toc-icon-content group"
                         onClick={() => {
                             const pdfInfo = DOWNLOAD_PDFS.find(item => item.version === currentVersion);
                             downloadFile(pdfInfo.link, pdfInfo.filename);
                         }}
-                        onMouseEnter={() => handleMouseEnter('toc-icon-pdf')}
-                        onMouseLeave={() => handleMouseLeave('toc-icon-pdf')}
                     >
-                        <PdfIcon />
-                        <span>{isCN ? '下载 PDF' : 'Download PDF'}</span>
+                        <PdfIcon className="group-hover:text-[#444FD9]" />
+                        <span className="group-hover:text-[#444FD9]">{isCN ? '下载 PDF' : 'Download PDF'}</span>
                     </div>
                 ) : null}
-
+                {isCN ? (
+                    <Link to={'https://doris-forum.org.cn'}>
+                        <div className="toc-icon-content group">
+                            <ForumIcon className="group-hover:text-[#444FD9]" />{' '}
+                            <span className="group-hover:text-[#444FD9]">技术论坛</span>
+                        </div>
+                    </Link>
+                ) : null}
                 {!isCN ? (
-                    <Link
-                        className="toc-icon-content"
-                        to={'https://github.com/apache/doris/discussions'}
-                        id="toc-icon-github"
-                        onMouseEnter={() => handleMouseEnter('toc-icon-github')}
-                        onMouseLeave={() => handleMouseLeave('toc-icon-github')}
-                    >
-                        <GithubIcon />
-                        <span>Ask Questions on Discussion</span>
+                    <Link className="toc-icon-content group" to={'https://github.com/apache/doris/discussions'}>
+                        <GithubIcon className="group-hover:text-[#444FD9]" />
+                        <span className="group-hover:text-[#444FD9]">Ask Questions on Discussion</span>
                     </Link>
                 ) : null}
 
                 {!isCN ? (
                     <Link
-                        className="toc-icon-content"
+                        className="toc-icon-content group"
                         to={
                             'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw'
                         }
-                        onMouseEnter={() => setIsHoverSlack(true)}
-                        onMouseLeave={() => setIsHoverSlack(false)}
                     >
-                        {isHoverSlack ? (
-                            <img style={{ margin: '2px' }} src={SlackColorIconUrl} width={16} alt="slack icon" />
-                        ) : (
-                            <img style={{ margin: '2px' }} src={SlackIconUrl} width={16} alt="slack icon" />
-                        )}
-                        <span>Chat on Slack</span>
+                        <div style={{ padding: '2px' }}>
+                            <SlackIcon className="group-hover:text-[#444FD9]" />
+                        </div>
+                        <span className="group-hover:text-[#444FD9]">Chat on Slack</span>
                     </Link>
                 ) : null}
             </div>
