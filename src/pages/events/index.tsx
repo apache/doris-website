@@ -102,7 +102,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/aliyun_selectdb_doris_meetup_768bc17a70.jpg`}
+                    src={`${require('@site/static/images/events/meetup-ali.jpg').default}`}
                 />
             ),
             isCover: true,
@@ -125,7 +125,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/banner_86e5fb95ee.jpeg`}
+                    src={`${require('@site/static/images/events/webniar-5.jpeg').default}`}
                 />
             ),
             isCover: true,
@@ -148,7 +148,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/banner_c6210a02e5.jpeg`}
+                    src={`${require('@site/static/images/events/webniar-4.jpeg').default}`}
                 />
             ),
             isCover: true,
@@ -171,7 +171,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/webinar_2_7513bacc91.jpeg`}
+                    src={`${require('@site/static/images/events/webniar-2.jpeg').default}`}
                 />
             ),
             isCover: true,
@@ -195,7 +195,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/_340b7f3bcb.png`}
+                    src={`${require('@site/static/images/events/meetup-20250315.png').default}`}
                 />
             ),
             isCover: true,
@@ -218,7 +218,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/banner_8cd1b24a6e.jpeg`}
+                    src={`${require('@site/static/images/events/webniar-1.jpeg').default}`}
                 />
             ),
             isCover: true,
@@ -241,7 +241,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`https://cdn.selectdb.com/static/2_1800_766_0c9057ec0d.jpg`}
+                    src={`${require('@site/static/images/events/summit.jpg').default}`}
                 />
             ),
             isCover: true,
