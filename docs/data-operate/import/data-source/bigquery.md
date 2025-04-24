@@ -101,86 +101,20 @@ PROPERTIES (
 ## 2. Export BigQuery Data
 
 1. **Export to GCS Parquet format file through Export method**
-   When exporting to GCS, it is recommended to export according to the **Partition field of Doris**.
-
-   a. **Exporting data from a single partition**
-      ```sql
-        EXPORT DATA
-          OPTIONS (
-            uri = 'gs://mybucket/2025-04-08/*.parquet',
-            format = 'PARQUET')
-        AS (
-          SELECT *
-          FROM test.sales_data 
-          where order_date = '2025-04-08'
-        );
-      ```
-
-   b. **Exporting data from multiple partitions**
-
-    For tables with a small number of partitions and data, you can directly export the entire table. BigQuery will generate one or more files for each partition by default.
-
-    For tables with many partitions, you can execute the following script in the [BigQuery notebook](https://cloud.google.com/bigquery/docs/notebooks-introduction) to batch export the table and write it to GCS in partitioned form.
-    
-    ```python
-    # Description:
-    # Can export the specified table to gcs by date partition
-    from google.cloud import bigquery
-    from datetime import datetime, timedelta
-    
-    client = bigquery.Client()
-    
-    dataset = "test"
-    table_name = "sales_data"
-    export_path_prefix = "gs://mybucket/sales_data"
-    # Specify the start and end date partition (format: yyyy-mm-dd)
-    start_str = "2025-04-08"
-    end_str = "2025-04-10"
-    
-    start_date = datetime.strptime(start_str, "%Y-%m-%d")
-    end_date = datetime.strptime(end_str, "%Y-%m-%d")
-    
-    # Iterate over a date range
-    current_date = start_date
-    while current_date <= end_date:
-        # For table decorators, BigQuery requires partition IDs to be YYYYMMDD
-        partition_for_table = current_date.strftime("%Y%m%d")
-        partition_for_dir = current_date.strftime("%Y-%m-%d")
-    
-        # Construct tableId, data set name is test, table name is sales_data
-        table_id = f"{dataset}.{table_name}${partition_for_table}"
-        destination_uri = f"{export_path_prefix}/{partition_for_dir}/part-*.parquet"
-        job_config = bigquery.ExtractJobConfig(
-            destination_format="PARQUET"
-        )
-    
-        try:
-            # Initiate an export task
-            extract_job = client.extract_table(
-                table_id,
-                destination_uri,
-                job_config=job_config
-            )
-            extract_job.result()  # Wait for the task to complete
-            print(f"Successfully exported partition {partition_for_table} to {destination_uri}")
-    
-        except Exception as e:
-            # When a partition does not exist or a task fails, an error message is output
-            print(f"Exporting partition {partition_for_table} failed:{e}")
-    
-        # Continue to the next partition
-        current_date += timedelta(days=1)
-    ```
-
-  ​	 The results are as follows:
-
-  ​	![img](/images/data-operate/bigquery_notebook.png)
-
+  ```sql
+    EXPORT DATA
+      OPTIONS (
+        uri = 'gs://mybucket/export/sales_data/*.parquet',
+        format = 'PARQUET')
+    AS (
+      SELECT *
+      FROM test.sales_data 
+    );
+  ```
 2. **View the exported files on GCS**
-
-    After exporting, the files on GCS will be divided into specific subdirectories according to the partitions, as follows
-
+  The above command will export the data of sales_data to GCS, and each partition will generate one or more files with increasing file names. For details, please refer to [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files), as follows:
   ![img](/images/data-operate/gcs_export.png)
+
 
 ## 3. Load Data to Doris
 
@@ -190,12 +124,12 @@ This method is suitable for scenarios involving large volumes of data that requi
 
 *Note: For **Parquet/ORC format files that contain complex types (Struct/Array/Map)**, TVF Load must be used.*
 
-1. **Load a Single Partition**
+1. **Loading data from a single file**
 
   ```sql
   LOAD LABEL sales_data_2025_04_08
   (
-      DATA INFILE("s3://mybucket/sales_data/2025-04-08/*")
+      DATA INFILE("s3://mybucket/export/sales_data/000000000000.parquet")
       INTO TABLE sales_data
       FORMAT AS "parquet"
       (order_id, order_date, customer_name, amount, country)
@@ -277,10 +211,10 @@ This method is suitable for scenarios involving large volumes of data that requi
   Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
   ```
 
-  For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
+  For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Load Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
   
-1. **Load data for multiple partitions**
+1. **Loading data from multiple files**
 
    When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
 
-   You can refer to the script [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh), which can poll the partition directory on S3 and submit the S3 Load task to Doris to achieve batch load.
+   You can refer to the script [s3_load_file_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_file_demo.sh), which can split the file list under the specified directory on the object storage and submit multiple S3 Load tasks to Doris in batches to achieve the effect of batch load.

@@ -100,85 +100,18 @@ PROPERTIES (
 ## 2. 导出 BigQuery 数据
 
 1. **通过 Export 方式导出到 GCS Parquet 格式的文件**
-   导出到 GCS 时，建议按照**Doris 的 Partition 字段**进行导出。
-
-   a. **导出单分区的数据**
-      ```sql
-        EXPORT DATA
-          OPTIONS (
-            uri = 'gs://mybucket/2025-04-08/*.parquet',
-            format = 'PARQUET')
-        AS (
-          SELECT *
-          FROM test.sales_data 
-          where order_date = '2025-04-08'
-        );
-      ```
-
-   b. **导出多分区的数据**
-   
-    对于分区和数据量都比较少的表，可以直接将整个表导出，BigQuery 默认会对每个分区生成一个或多个文件。
-    
-    对于分区较多的表，可以在[BigQuery 笔记本](https://cloud.google.com/bigquery/docs/notebooks-introduction)中执行以下脚本，可以批量导出表并以分区形式写入到 GCS 上。
-    
-    ```python
-    # Description:
-    # Can export the specified table to gcs by date partition
-    from google.cloud import bigquery
-    from datetime import datetime, timedelta
-    
-    client = bigquery.Client()
-    
-    dataset = "test"
-    table_name = "sales_data"
-    export_path_prefix = "gs://mybucket/sales_data"
-    # Specify the start and end date partition (format: yyyy-mm-dd)
-    start_str = "2025-04-08"
-    end_str = "2025-04-10"
-    
-    start_date = datetime.strptime(start_str, "%Y-%m-%d")
-    end_date = datetime.strptime(end_str, "%Y-%m-%d")
-    
-    # Iterate over a date range
-    current_date = start_date
-    while current_date <= end_date:
-        # For table decorators, BigQuery requires partition IDs to be YYYYMMDD
-        partition_for_table = current_date.strftime("%Y%m%d")
-        partition_for_dir = current_date.strftime("%Y-%m-%d")
-    
-        # Construct tableId, data set name is test, table name is sales_data
-        table_id = f"{dataset}.{table_name}${partition_for_table}"
-        destination_uri = f"{export_path_prefix}/{partition_for_dir}/part-*.parquet"
-        job_config = bigquery.ExtractJobConfig(
-            destination_format="PARQUET"
-        )
-    
-        try:
-            # Initiate an export task
-            extract_job = client.extract_table(
-                table_id,
-                destination_uri,
-                job_config=job_config
-            )
-            extract_job.result()  # Wait for the task to complete
-            print(f"Successfully exported partition {partition_for_table} to {destination_uri}")
-    
-        except Exception as e:
-            # When a partition does not exist or a task fails, an error message is output
-            print(f"Exporting partition {partition_for_table} failed:{e}")
-    
-        # Continue to the next partition
-        current_date += timedelta(days=1)
-    ```
-
-  ​		运行结果如下：
-
-  ​	![img](/images/data-operate/bigquery_notebook.png)
-
+  ```sql
+    EXPORT DATA
+      OPTIONS (
+        uri = 'gs://mybucket/export/sales_data/*.parquet',
+        format = 'PARQUET')
+    AS (
+      SELECT *
+      FROM test.sales_data 
+    );
+  ```
 2. **查看 GCS 上的导出文件**
-
-  导出后，在 GCS 上会按照**分区划分成具体的子目录**，如下
-
+  以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files)，如下
   ![img](/images/data-operate/gcs_export.png)
 
 ## 3. 导入数据到 Doris
@@ -189,12 +122,12 @@ PROPERTIES (
 
 *注意：对于含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 TVF 导入*
 
-1. **导入一个分区的数据**
+1. **导入单个文件的数据**
 
   ```sql
   LOAD LABEL sales_data_2025_04_08
   (
-      DATA INFILE("s3://mybucket/sales_data/2025-04-08/*")
+      DATA INFILE("s3://mybucket/export/sales_data/000000000000.parquet")
       INTO TABLE sales_data
       FORMAT AS "parquet"
       (order_id, order_date, customer_name, amount, country)
@@ -278,8 +211,8 @@ PROPERTIES (
 
   同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
 
-4. **导入多个分区的数据**
+4. **导入多个文件的数据**
 
   当需要迁移大数据量的存量数据时，建议使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
 
-  可参考脚本 [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh)，该脚本可以实现了轮询 S3 上的分区目录，同时提交 S3 Load 任务到 Doris 中，实现批量导入的效果。
+  可参考脚本 [s3_load_file_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_file_demo.sh)，该脚本可以对对象存储上指定目录下的文件列表进行拆分，分批提交多个 S3 Load 任务到 Doris 中，实现批量导入的效果。
