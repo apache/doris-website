@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Point",
+    "title": "ST_POINT",
     "language": "zh-CN"
 }
 ---

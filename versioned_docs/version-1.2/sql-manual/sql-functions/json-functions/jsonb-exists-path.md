@@ -1,6 +1,6 @@
 ---
 {
-    "title": "jsonb_exists_path",
+    "title": "JSONB_EXISTS_PATH",
     "language": "en"
 }
 ---

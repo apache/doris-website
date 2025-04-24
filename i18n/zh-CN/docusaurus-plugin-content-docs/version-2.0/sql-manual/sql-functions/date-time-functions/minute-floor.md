@@ -1,6 +1,6 @@
 ---
 {
-    "title": "minute_floor",
+    "title": "MINUTE_FLOOR",
     "language": "zh-CN"
 }
 ---

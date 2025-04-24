@@ -1,6 +1,6 @@
 ---
 {
-    "title": "char_length",
+    "title": "CHAR_LENGTH",
     "language": "en"
 }
 ---

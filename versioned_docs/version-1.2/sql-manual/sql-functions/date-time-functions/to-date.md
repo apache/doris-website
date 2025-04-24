@@ -1,6 +1,6 @@
 ---
 {
-    "title": "to_date",
+    "title": "TO_DATE",
     "language": "en"
 }
 ---

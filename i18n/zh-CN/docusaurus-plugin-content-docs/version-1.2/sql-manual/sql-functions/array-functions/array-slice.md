@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_slice",
+    "title": "ARRAY_SLICE",
     "language": "zh-CN"
 }
 ---

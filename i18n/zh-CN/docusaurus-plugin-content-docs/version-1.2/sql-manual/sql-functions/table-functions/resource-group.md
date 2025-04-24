@@ -1,6 +1,6 @@
 ---
 {
-    "title": "resource_groups",
+    "title": "RESOURCE_GROUPS",
     "language": "zh-CN"
 }
 ---

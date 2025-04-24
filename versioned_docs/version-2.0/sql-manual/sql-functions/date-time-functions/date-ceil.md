@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_ceil",
+    "title": "DATE_CEIL",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "St_Point",
+    "title": "ST_POINT",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_extract_bigint",
+    "title": "JSON_EXTRACT_BIGINT",
     "language": "zh-CN"
 }
 ---

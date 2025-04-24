@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_union",
+    "title": "ARRAY_UNION",
     "language": "zh-CN"
 }
 ---

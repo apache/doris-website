@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_except",
+    "title": "ARRAY_EXCEPT",
     "language": "en"
 }
 ---

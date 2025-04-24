@@ -1,6 +1,6 @@
 ---
 {
-    "title": "l2_distance",
+    "title": "L2_DISTANCE",
     "language": "en"
 }
 ---

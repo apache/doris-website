@@ -1,6 +1,6 @@
 ---
 {
-    "title": "time_to_sec",
+    "title": "TIME_TO_SEC",
     "language": "en"
 }
 ---

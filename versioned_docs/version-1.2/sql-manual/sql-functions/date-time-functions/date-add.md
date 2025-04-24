@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_add",
+    "title": "DATE_ADD",
     "language": "en"
 }
 ---

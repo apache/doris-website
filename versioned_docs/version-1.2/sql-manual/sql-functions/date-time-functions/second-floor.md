@@ -1,6 +1,6 @@
 ---
 {
-    "title": "second_floor",
+    "title": "SECOND_FLOOR",
     "language": "en"
 }
 ---

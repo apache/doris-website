@@ -1,6 +1,6 @@
 ---
 {
-    "title": "get_json_bigint",
+    "title": "GET_JSON_BIGINT",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-"title": "extract_url_parameter",
+"title": "EXTRACT_URL_PARAMETER",
 "language": "zh-CN"
 }
 ---

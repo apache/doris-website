@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_sum",
+    "title": "ARRAY_SUM",
     "language": "zh-CN"
 }
 ---

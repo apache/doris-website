@@ -1,6 +1,6 @@
 ---
 {
-    "title": "seconds_add",
+    "title": "SECONDS_ADD",
     "language": "en"
 }
 ---

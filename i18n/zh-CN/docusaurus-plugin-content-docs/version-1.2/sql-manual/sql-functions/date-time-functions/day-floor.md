@@ -1,6 +1,6 @@
 ---
 {
-  "title": "day_floor",
+  "title": "DAY_FLOOR",
   "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "mod",
+    "title": "MOD",
     "language": "en"
 }
 ---

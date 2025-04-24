@@ -1,6 +1,6 @@
 ---
 {
-    "title": "to_monday",
+    "title": "TO_MONDAY",
     "language": "en"
 }
 ---

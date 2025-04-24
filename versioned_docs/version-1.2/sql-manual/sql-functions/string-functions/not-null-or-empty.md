@@ -1,6 +1,6 @@
 ---
 {
-    "title": "not_null_or_empty",
+    "title": "NOT_NULL_OR_EMPTY",
     "language": "en"
 }
 ---

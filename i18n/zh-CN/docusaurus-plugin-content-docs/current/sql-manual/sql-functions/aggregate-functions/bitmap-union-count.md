@@ -1,6 +1,6 @@
 ---
 {
-"title": "bitmap_union_count",
+"title": "BITMAP_UNION_COUNT",
 "language": "zh-CN"
 }
 ---

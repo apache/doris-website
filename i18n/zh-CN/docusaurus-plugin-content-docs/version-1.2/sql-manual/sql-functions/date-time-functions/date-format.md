@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_format",
+    "title": "DATE_FORMAT",
     "language": "zh-CN"
 }
 ---

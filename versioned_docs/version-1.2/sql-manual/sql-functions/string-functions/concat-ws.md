@@ -1,6 +1,6 @@
 ---
 {
-    "title": "concat_ws",
+    "title": "CONCAT_WS",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "cbrt",
+    "title": "CBRT",
     "language": "en"
 }
 ---

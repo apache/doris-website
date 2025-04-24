@@ -1,6 +1,6 @@
 ---
 {
-    "title": "sqrt",
+    "title": "SQRT",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "sin",
+    "title": "SIN",
     "language": "en"
 }
 ---

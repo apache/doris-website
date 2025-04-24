@@ -1,6 +1,6 @@
 ---
 {
-    "title": "outer combinator",
+    "title": "OUTER COMBINATOR",
     "language": "en"
 }
 ---

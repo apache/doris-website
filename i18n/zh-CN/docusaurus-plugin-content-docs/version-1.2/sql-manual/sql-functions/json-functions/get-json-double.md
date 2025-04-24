@@ -1,6 +1,6 @@
 ---
 {
-    "title": "get_json_double",
+    "title": "GET_JSON_DOUBLE",
     "language": "zh-CN"
 }
 ---

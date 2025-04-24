@@ -1,6 +1,6 @@
 ---
 {
-    "title": "minutes_diff",
+    "title": "MINUTES_DIFF",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_map",
+    "title": "ARRAY_MAP",
     "language": "en"
 }
 ---

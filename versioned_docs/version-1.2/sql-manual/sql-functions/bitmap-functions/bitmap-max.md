@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_max",
+    "title": "BITMAP_MAX",
     "language": "en"
 }
 ---

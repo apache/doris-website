@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_AsText,ST_AsWKT",
+    "title": "ST_ASTEXT,ST_ASWKT",
     "language": "zh-CN"
 }
 ---

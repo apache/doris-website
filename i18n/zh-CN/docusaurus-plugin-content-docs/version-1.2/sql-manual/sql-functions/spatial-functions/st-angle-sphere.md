@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Angle_Sphere",
+    "title": "ST_ANGLE_SPHERE",
     "language": "zh-CN"
 }
 ---

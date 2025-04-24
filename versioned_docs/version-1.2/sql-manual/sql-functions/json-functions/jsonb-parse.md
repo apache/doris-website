@@ -1,6 +1,6 @@
 ---
 {
-    "title": "jsonb_parse",
+    "title": "JSONB_PARSE",
     "language": "en"
 }
 ---
