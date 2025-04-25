@@ -101,19 +101,20 @@ PROPERTIES (
 ## 2. Export BigQuery Data
 
 2.1. **Export to GCS Parquet format file through Export method**
-  ```sql
-    EXPORT DATA
-      OPTIONS (
-        uri = 'gs://mybucket/export/sales_data/*.parquet',
-        format = 'PARQUET')
-    AS (
-      SELECT *
-      FROM test.sales_data 
-    );
-  ```
+    ```sql
+      EXPORT DATA
+        OPTIONS (
+          uri = 'gs://mybucket/export/sales_data/*.parquet',
+          format = 'PARQUET')
+      AS (
+        SELECT *
+        FROM test.sales_data 
+      );
+    ```
 2.2. **View the exported files on GCS**
-  The above command will export the data of sales_data to GCS, and each partition will generate one or more files with increasing file names. For details, please refer to [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files), as follows:
-  ![img](/images/data-operate/gcs_export.png)
+
+    The above command will export the data of sales_data to GCS, and each partition will generate one or more files with increasing file names. For details, please refer to [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files), as follows:
+    ![img](/images/data-operate/gcs_export.png)
 
 
 ## 3. Load Data to Doris
@@ -126,95 +127,95 @@ This method is suitable for scenarios involving large volumes of data that requi
 
 3.1. **Loading data from a single file**
 
-  ```sql
-  LOAD LABEL sales_data_2025_04_08
-  (
-      DATA INFILE("s3://mybucket/export/sales_data/000000000000.parquet")
-      INTO TABLE sales_data
-      FORMAT AS "parquet"
-      (order_id, order_date, customer_name, amount, country)
-  )
-  WITH S3
-  (
-      "provider" = "GCP",
-      "s3.endpoint" = "storage.asia-southeast1.rep.googleapis.com",  
-      "s3.region" = "asia-southeast1",
-      "s3.access_key" = "<ak>",
-      "s3.secret_key" = "<sk>"
-  );
-  ```
+    ```sql
+    LOAD LABEL sales_data_2025_04_08
+    (
+        DATA INFILE("s3://mybucket/export/sales_data/000000000000.parquet")
+        INTO TABLE sales_data
+        FORMAT AS "parquet"
+        (order_id, order_date, customer_name, amount, country)
+    )
+    WITH S3
+    (
+        "provider" = "GCP",
+        "s3.endpoint" = "storage.asia-southeast1.rep.googleapis.com",  
+        "s3.region" = "asia-southeast1",
+        "s3.access_key" = "<ak>",
+        "s3.secret_key" = "<sk>"
+    );
+    ```
 
 3.2. **Check Load Status via SHOW LOAD**
 
-  Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
+    Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
 
-  ```yaml
-  mysql> show load where label = "label_sales_data_2025_04_08"\G
-  *************************** 1. row ***************************
-          JobId: 17956078
-          Label: label_sales_data_2025_04_08
-          State: FINISHED
-        Progress: 100.00% (1/1)
-            Type: BROKER
-        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
-        TaskInfo: cluster:storage.asia-southeast1.rep.googleapis.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
-        ErrorMsg: NULL
-      CreateTime: 2025-04-10 17:50:53
-    EtlStartTime: 2025-04-10 17:50:54
-  EtlFinishTime: 2025-04-10 17:50:54
-  LoadStartTime: 2025-04-10 17:50:54
-  LoadFinishTime: 2025-04-10 17:50:54
-            URL: NULL
-      JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
-  TransactionId: 766228
-    ErrorTablets: {}
-            User: root
-        Comment: 
-  1 row in set (0.00 sec)
-  ```
+    ```yaml
+    mysql> show load where label = "label_sales_data_2025_04_08"\G
+    *************************** 1. row ***************************
+            JobId: 17956078
+            Label: label_sales_data_2025_04_08
+            State: FINISHED
+          Progress: 100.00% (1/1)
+              Type: BROKER
+          EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
+          TaskInfo: cluster:storage.asia-southeast1.rep.googleapis.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
+          ErrorMsg: NULL
+        CreateTime: 2025-04-10 17:50:53
+      EtlStartTime: 2025-04-10 17:50:54
+    EtlFinishTime: 2025-04-10 17:50:54
+    LoadStartTime: 2025-04-10 17:50:54
+    LoadFinishTime: 2025-04-10 17:50:54
+              URL: NULL
+        JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
+    TransactionId: 766228
+      ErrorTablets: {}
+              User: root
+          Comment: 
+    1 row in set (0.00 sec)
+    ```
 
 3.3. **Handle Load Errors**
 
-  When there are multiple load tasks, you can use the following statement to query the dates and reasons for data load failures.
+    When there are multiple load tasks, you can use the following statement to query the dates and reasons for data load failures.
 
-  ```yaml
-  mysql> show load where state='CANCELLED' and label like "label_test%"\G
-  *************************** 1. row ***************************
-          JobId: 18312384
-          Label: label_test123
-          State: CANCELLED
-        Progress: 100.00% (3/3)
-            Type: BROKER
-        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
-        TaskInfo: cluster:storage.asia-southeast1.rep.googleapis.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
-        ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
-      CreateTime: 2025-04-15 17:32:59
-    EtlStartTime: 2025-04-15 17:33:02
-  EtlFinishTime: 2025-04-15 17:33:02
-  LoadStartTime: 2025-04-15 17:33:02
-  LoadFinishTime: 2025-04-15 17:33:02
-            URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
-      JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
-  TransactionId: 769213
-    ErrorTablets: {}
-            User: root
-        Comment: 
-  ```
+    ```yaml
+    mysql> show load where state='CANCELLED' and label like "label_test%"\G
+    *************************** 1. row ***************************
+            JobId: 18312384
+            Label: label_test123
+            State: CANCELLED
+          Progress: 100.00% (3/3)
+              Type: BROKER
+          EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
+          TaskInfo: cluster:storage.asia-southeast1.rep.googleapis.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
+          ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
+        CreateTime: 2025-04-15 17:32:59
+      EtlStartTime: 2025-04-15 17:33:02
+    EtlFinishTime: 2025-04-15 17:33:02
+    LoadStartTime: 2025-04-15 17:33:02
+    LoadFinishTime: 2025-04-15 17:33:02
+              URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
+        JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
+    TransactionId: 769213
+      ErrorTablets: {}
+              User: root
+          Comment: 
+    ```
 
-  As shown in the example above, the issue is a **data quality error**(ETL_QUALITY_UNSATISFIED). To view the detailed error, you need to visit the URL provided in the result. For example, the data exceeded the defined length of the country column in the table schema:
+    As shown in the example above, the issue is a **data quality error**(ETL_QUALITY_UNSATISFIED). To view the detailed error, you need to visit the URL provided in the result. For example, the data exceeded the defined length of the country column in the table schema:
 
-  ```python
-  [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
-  Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
-  Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
-  Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
-  Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
-  ```
+    ```python
+    [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
+    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
+    ```
 
-  For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Load Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
+    For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Load Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
   
 3.4. **Loading data from multiple files**
 
-   When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
+    When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
 
-   You can refer to the script [s3_load_file_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_file_demo.sh), which can split the file list under the specified directory on the object storage and submit multiple S3 Load tasks to Doris in batches to achieve the effect of batch load.
+    You can refer to the script [s3_load_file_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_file_demo.sh), which can split the file list under the specified directory on the object storage and submit multiple S3 Load tasks to Doris in batches to achieve the effect of batch load.
