@@ -33,7 +33,7 @@ Before migration, select Doris' [data model](../../../table-design/data-model/ov
 
 ## Data type mapping
 
-| SnowFlake                                        | Doris          | Comment                                            |
+| Snowflake                                        | Doris          | Comment                                            |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
 | NUMBER(p, s)/DECIMAL(p, s)/NUMERIC(p,s)          | DECIMAL(p, s)  |                                                    |
 | INT/INTEGER                                      | INT            |                                                    |
@@ -102,7 +102,7 @@ PROPERTIES (
 
 ## 2. Export Data from Snowflake
 
-1. **Export to S3 Parquet Files via COPY INTO**
+2.1. **Export to S3 Parquet Files via COPY INTO**
 
     Snowflake supports exporting to [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，**Export data partitioned by Doris' partition fields**. Example for AWS S3:
 
@@ -117,7 +117,7 @@ PROPERTIES (
     COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
     ```
 
-2. **Verify Exported Files on S3**
+2.2. **Verify Exported Files on S3**
 
     Exported files are organized into **subdirectories by partition** on S3:
 
@@ -133,7 +133,7 @@ This method is suitable for scenarios involving large volumes of data that requi
 
 *Note: For **Parquet/ORC format files that contain complex types (Struct/Array/Map)**, TVF Load must be used.*
 
-1. **Load a Single Partition**
+3.1. **Load a Single Partition**
 
    ```sql
    LOAD LABEL sales_data_2025_04_08
@@ -153,7 +153,7 @@ This method is suitable for scenarios involving large volumes of data that requi
    );
    ```
 
-2. **Check Load Status via SHOW LOAD**
+3.2. **Check Load Status via SHOW LOAD**
 
    Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
 
@@ -182,7 +182,7 @@ This method is suitable for scenarios involving large volumes of data that requi
    1 row in set (0.00 sec)
    ```
 
-3. **Handle Load Errors**
+3.3. **Handle Load Errors**
 
    When there are multiple load tasks, you can use the following statement to query the dates and reasons for data load failures.
 
@@ -221,7 +221,7 @@ This method is suitable for scenarios involving large volumes of data that requi
 
    For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
 
-4. **Load data for multiple partitions**
+3.4. **Load data for multiple partitions**
 
    When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
 

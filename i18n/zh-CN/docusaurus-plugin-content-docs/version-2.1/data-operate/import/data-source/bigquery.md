@@ -99,7 +99,7 @@ PROPERTIES (
 
 ## 2. 导出 BigQuery 数据
 
-1. **通过 Export 方式导出到 GCS Parquet 格式的文件**
+2.1. **通过 Export 方式导出到 GCS Parquet 格式的文件**
   ```sql
     EXPORT DATA
       OPTIONS (
@@ -110,7 +110,7 @@ PROPERTIES (
       FROM test.sales_data 
     );
   ```
-2. **查看 GCS 上的导出文件**
+2.2. **查看 GCS 上的导出文件**
   以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files)，如下
   ![img](/images/data-operate/gcs_export.png)
 
@@ -122,7 +122,7 @@ PROPERTIES (
 
 *注意：对于含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 TVF 导入*
 
-1. **导入单个文件的数据**
+3.1. **导入单个文件的数据**
 
   ```sql
   LOAD LABEL sales_data_2025_04_08
@@ -142,7 +142,7 @@ PROPERTIES (
   );
   ```
 
-2. **通过 Show Load 查看任务运行情况**
+3.2. **通过 Show Load 查看任务运行情况**
 
   由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
@@ -171,7 +171,7 @@ PROPERTIES (
   1 row in set (0.00 sec)
   ```
 
-3. **处理导入过程中的错误**
+3.3. **处理导入过程中的错误**
 
   当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
 
@@ -211,7 +211,7 @@ PROPERTIES (
 
   同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
 
-4. **导入多个文件的数据**
+3.4. **导入多个文件的数据**
 
   当需要迁移大数据量的存量数据时，建议使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
 

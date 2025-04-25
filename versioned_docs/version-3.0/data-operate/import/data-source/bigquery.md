@@ -100,7 +100,7 @@ PROPERTIES (
 
 ## 2. Export BigQuery Data
 
-1. **Export to GCS Parquet format file through Export method**
+2.1. **Export to GCS Parquet format file through Export method**
   ```sql
     EXPORT DATA
       OPTIONS (
@@ -111,7 +111,7 @@ PROPERTIES (
       FROM test.sales_data 
     );
   ```
-2. **View the exported files on GCS**
+2.2. **View the exported files on GCS**
   The above command will export the data of sales_data to GCS, and each partition will generate one or more files with increasing file names. For details, please refer to [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files), as follows:
   ![img](/images/data-operate/gcs_export.png)
 
@@ -124,7 +124,7 @@ This method is suitable for scenarios involving large volumes of data that requi
 
 *Note: For **Parquet/ORC format files that contain complex types (Struct/Array/Map)**, TVF Load must be used.*
 
-1. **Loading data from a single file**
+3.1. **Loading data from a single file**
 
   ```sql
   LOAD LABEL sales_data_2025_04_08
@@ -144,7 +144,7 @@ This method is suitable for scenarios involving large volumes of data that requi
   );
   ```
 
-2. **Check Load Status via SHOW LOAD**
+3.2. **Check Load Status via SHOW LOAD**
 
   Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
 
@@ -173,7 +173,7 @@ This method is suitable for scenarios involving large volumes of data that requi
   1 row in set (0.00 sec)
   ```
 
-3. **Handle Load Errors**
+3.3. **Handle Load Errors**
 
   When there are multiple load tasks, you can use the following statement to query the dates and reasons for data load failures.
 
@@ -213,7 +213,7 @@ This method is suitable for scenarios involving large volumes of data that requi
 
   For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Load Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
   
-1. **Loading data from multiple files**
+3.4. **Loading data from multiple files**
 
    When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
 

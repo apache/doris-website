@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在迁移 SnowFlake 的过程中，通常需要借助对象存储作为中间媒介。核心流程如下：首先通过 Snowflake 的 [COPY INTO](https://docs.snowflake.cn/zh/guides-overview-unloading-data) 语句将数据导出到对象存储；再利用 Doris 的 S3 Load 功能从对象存储中读取数据并导入到 Doris 中，具体可参考 [S3 导入](./amazon-s3.md)。
+在迁移 Snowflake 的过程中，通常需要借助对象存储作为中间媒介。核心流程如下：首先通过 Snowflake 的 [COPY INTO](https://docs.snowflake.cn/zh/guides-overview-unloading-data) 语句将数据导出到对象存储；再利用 Doris 的 S3 Load 功能从对象存储中读取数据并导入到 Doris 中，具体可参考 [S3 导入](./amazon-s3.md)。
 
 ## 注意事项
 
-在迁移之前，需要根据 SnowFlake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/overview.md)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
+在迁移之前，需要根据 Snowflake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/overview.md)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
 
 ## 数据类型映射
 
-| SnowFlake                                        | Doris          | 备注                                               |
+| Snowflake                                        | Doris          | 备注                                               |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
 | NUMBER(p, s)/DECIMAL(p, s)/NUMERIC(p,s)          | DECIMAL(p, s)  |                                                    |
 | INT/INTEGER                                      | INT            |                                                    |
@@ -46,7 +46,7 @@ under the License.
 | BOOLEAN                                          | BOOLEAN        |                                                    |
 | DATE                                             | DATE           |                                                    |
 | DATETIME/TIMESTAMP/TIMESTAMP_NTZ                 | DATETIME       | TIMESTAMP 是用户可配置的别名，默认为 TIMESTAMP_NTZ |
-| TIME                                             | STRING         | SnowFlake 导出时需要 Cast 成 String 类型                |
+| TIME                                             | STRING         | Snowflake 导出时需要 Cast 成 String 类型                |
 | VARIANT                                          | VARIANT        |                                                    |
 | ARRAY                                            | ARRAY<T>       |                                                    |
 | OBJECT                                           | JSON           |                                                    |
@@ -54,9 +54,9 @@ under the License.
 
 ## 1. 创建表
 
-在迁移 SnowFlake 表到 Doris 中的时候，需要先创建 Doris 表。
+在迁移 Snowflake 表到 Doris 中的时候，需要先创建 Doris 表。
 
-假设我们在 SnowFlake 中已存在如下表和数据
+假设我们在 Snowflake 中已存在如下表和数据
 
 ```sql
 CREATE OR REPLACE TABLE sales_data (
@@ -75,7 +75,7 @@ INSERT INTO sales_data VALUES
 (4, 'Diana', '2025-04-10', 200.00, 'Australia');
 ```
 
-根据这个表结构，可以创建 Doris 主键分区表，分区字段和 SnowFlake 的 Clustering Key 一致，同时按天分区
+根据这个表结构，可以创建 Doris 主键分区表，分区字段和 Snowflake 的 Clustering Key 一致，同时按天分区
 
 ```sql
 CREATE TABLE `sales_data` (
@@ -99,11 +99,11 @@ PROPERTIES (
 );
 ```
 
-## 2. 导出 SnowFlake 数据
+## 2. 导出 Snowflake 数据
 
-1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
+2.1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
 
-    SnowFlake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
+    Snowflake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
 
     ```sql
     CREATE FILE FORMAT my_parquet_format TYPE = parquet;
@@ -116,7 +116,7 @@ PROPERTIES (
     COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
     ```
 
-2. **查看 S3 上的导出文件**
+2.2. **查看 S3 上的导出文件**
 
     导出后，在 S3 上会按照**分区划分成具体的子目录**，每一个目录是对应的 如下
 
@@ -132,7 +132,7 @@ PROPERTIES (
 
 *注意：对于**含有**复杂类型（Struct/Array/Map）的**Parquet/ORC格式文件**导入，目前必须使用 TVF 导入*
 
-1. **导入一个分区的数据**
+3.1. **导入一个分区的数据**
 
     ```sql
     LOAD LABEL sales_data_2025_04_08
@@ -152,7 +152,7 @@ PROPERTIES (
     );
     ```
 
-2. **通过 Show Load 查看任务运行情况**
+3.2. **通过 Show Load 查看任务运行情况**
 
     由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
@@ -181,7 +181,7 @@ PROPERTIES (
     1 row in set (0.00 sec)
     ```
 
-3. **处理导入过程中的错误**
+3.3. **处理导入过程中的错误**
 
     当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
 
@@ -221,7 +221,7 @@ PROPERTIES (
 
     同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
 
-4. **导入多个分区的数据**
+3.4. **导入多个分区的数据**
 
     当需要迁移大数据量的存量数据时，建议使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
 
