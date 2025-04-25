@@ -146,7 +146,7 @@ PROPERTIES (
 ### 5. Create BOS storage vault
 
 ```sql
-CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
+CREATE STORAGE VAULT IF NOT EXISTS bos_demo_vault
 PROPERTIES (
     "type" = "S3",                                       -- required
     "s3.endpoint" = "s3.bj.bcebos.com",                  -- required
@@ -176,6 +176,9 @@ PROPERTIES (
     "use_path_style" = "false"                          -- optional,  S3 recommended to set false
 );
 ```
+
+Doris also suppoted `AWS Assume Role` for AWS S3 Storage Vault, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+
 
 ### 7. Create MinIO storage vault
 

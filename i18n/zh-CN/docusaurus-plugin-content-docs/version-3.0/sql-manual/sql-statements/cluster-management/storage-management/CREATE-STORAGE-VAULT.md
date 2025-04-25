@@ -144,7 +144,7 @@ PROPERTIES (
 ### 5. 创建百度云 BOS storage vault。
 
 ```sql
-CREATE STORAGE VAULT IF NOT EXISTS obs_demo_vault
+CREATE STORAGE VAULT IF NOT EXISTS bos_demo_vault
 PROPERTIES (
     "type" = "S3",                                       -- required
     "s3.endpoint" = "s3.bj.bcebos.com",                  -- required
@@ -174,6 +174,8 @@ PROPERTIES (
     "use_path_style" = "false"                          -- optional,  S3 建议设置 false
 );
 ```
+
+Doris也支持`AWS Assume Role`的方式创建Storage Vault，请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### 7. 创建 MinIO storage vault。
 

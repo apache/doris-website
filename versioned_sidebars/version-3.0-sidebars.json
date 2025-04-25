@@ -491,6 +491,13 @@
                                 },
                                 "admin-manual/auth/encryption-function"
                             ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
+                            ]
                         }
                     ]
                 }
