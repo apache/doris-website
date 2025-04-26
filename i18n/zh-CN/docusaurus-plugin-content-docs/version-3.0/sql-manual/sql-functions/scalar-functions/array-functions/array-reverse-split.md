@@ -24,7 +24,7 @@ under the License.
 
 ## 描述
 
-1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，按照 `cond` 中为 `true` 的位置右侧作为分割点，分割 `arr` 数组 。
+1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，按照 `cond` 中为 `true` 的位置右侧作为分割点，分割 `arr` 数组。
 2. 高阶函数，传入一个 lambda 表达式和至少一个 `arr`，则按照 lambda 表达式运算得到的 `Array<Boolean>` 结果，其中为 `true` 的位置右侧作为分割点，分割 `arg0` 。
 
 ## 语法
@@ -39,7 +39,7 @@ ARRAY_REVERSE_SPLIT(<lambda>, <arr> [, ...])
 | 参数 | 说明 | 
 | --- |---|
 | `<lambda>` | lambda 表达式，表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。 |
-| `<arr>` | ARRAY数组     |
+| `<arr>` | ARRAY 数组     |
 
 ## 返回值
 

@@ -26,11 +26,11 @@ under the License.
 
 # 检查连接缓存
 
-## Request
+## 请求路径
 
 `GET /api/check_rpc_channel/{host_to_check}/{remot_brpc_port}/{payload_size}`
 
-## Description
+## 描述
 
 该功能用于检查 brpc 的连接缓存。
 
@@ -48,11 +48,11 @@ under the License.
 
     负载大小，单位 B，取值范围 1~1024000。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```
     {
@@ -62,7 +62,7 @@ under the License.
         "count":0
     }
     ```
-## Examples
+## 示例
 
 
     ```

@@ -26,15 +26,15 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /metrics?type={enum}&with_tablet={bool}`
 
-## Description
+## 描述
 
 prometheus 监控采集接口
 
-## Query parameters
+## 请求参数
 
 * `type`
     输出方式，选填，默认全部输出，另有以下取值：
@@ -46,11 +46,11 @@ prometheus 监控采集接口
 * `with_tablet`
     是否输出 tablet 相关的采集项，选填，默认`false`。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     doris_be__max_network_receive_bytes_rate LONG 60757
@@ -60,7 +60,7 @@ prometheus 监控采集接口
     ，，，
 
     ```
-## Examples
+## 示例
 
 
     ```shell

@@ -16,15 +16,17 @@ interface PageBannerProps extends ComponentProps<JSXElementConstructor<any>> {
     bannerImgPhone?: string;
     buttons: ButtonProps[];
     className?: string;
+    event: any;
 }
 
 export default function PageBanner(props: PageBannerProps): JSX.Element {
-    const { title, subTitle, bannerImg, bannerImgPhone, buttons, className } = props;
+    const { title, subTitle, bannerImg, bannerImgPhone, buttons, className, event } = props;
 
     return (
         <section className={clsx('banner-section', className)}>
             <div className="banner-container container">
                 <div className="banner-info mb-10 lg:mb-20">
+                    { event }
                     <div className="banner-title-wrap">
                         <div className="banner-title">{title}</div>
                         <div className="banner-sub-title">{subTitle}</div>

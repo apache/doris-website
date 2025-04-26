@@ -61,7 +61,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### Step 3: Load data with S3 Load
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -187,3 +187,5 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+
+Doris also suppoted `AWS Assume Role` for S3 Load and TVF, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

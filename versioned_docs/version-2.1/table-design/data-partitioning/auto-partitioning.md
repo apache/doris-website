@@ -148,51 +148,48 @@ When the session variable `allow_partition_column_nullable` is enabled:
 
 - For Auto List Partition, the corresponding NULL value partition will be created automatically:
 ```sql
-mysql> create table auto_null_list(
-    -> k0 varchar null
-    -> )
-    -> auto partition by list (k0)
-    -> (
-    -> )
-    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
-    -> properties("replication_num" = "1");
-Query OK, 0 rows affected (0.10 sec)
+  create table auto_null_list(
+    k0 varchar null
+  )
+  auto partition by list (k0)
+  (
+  )
+  DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+  properties("replication_num" = "1");
 
-mysql> insert into auto_null_list values (null);
-Query OK, 1 row affected (0.28 sec)
 
-mysql> select * from auto_null_list;
-+------+
-| k0   |
-+------+
-| NULL |
-+------+
-1 row in set (0.20 sec)
+  insert into auto_null_list values (null);
 
-mysql> select * from auto_null_list partition(pX);
-+------+
-| k0   |
-+------+
-| NULL |
-+------+
-1 row in set (0.20 sec)
+  select * from auto_null_list;
+  +------+
+  | k0   |
+  +------+
+  | NULL |
+  +------+
+
+  select * from auto_null_list partition(pX);
+  +------+
+  | k0   |
+  +------+
+  | NULL |
+  +------+
 ```
 
 - For Auto Range Partition, **null columns are not supported to be partition columns**.
 ```sql
-mysql>  CREATE TABLE `range_table_nullable` (
-    ->      `k1` INT,
-    ->      `k2` DATETIMEV2(3),
-    ->      `k3` DATETIMEV2(6)
-    ->  ) ENGINE=OLAP
-    ->  DUPLICATE KEY(`k1`)
-    ->  AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
-    ->  (
-    ->  )
-    ->  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
-    ->  PROPERTIES (
-    ->  "replication_allocation" = "tag.location.default: 1"
-    ->  );
+  CREATE TABLE `range_table_nullable` (
+    `k1` INT,
+    `k2` DATETIMEV2(3),
+    `k3` DATETIMEV2(6)
+  ) ENGINE=OLAP
+  DUPLICATE KEY(`k1`)
+  AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
+  (
+  )
+  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 1"
+  );
 ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
 ```
 
@@ -220,17 +217,16 @@ PROPERTIES (
 Take the example of a table with only two columns, at which point the new table has no default partitions:
 
 ```sql
-mysql> show partitions from `DAILY_TRADE_VALUE`;
+show partitions from `DAILY_TRADE_VALUE`;
 Empty set (0.12 sec)
 ```
 
 After inserting data and checking again, it is found that the table has created the corresponding partitions:
 
 ```sql
-mysql> insert into `DAILY_TRADE_VALUE` values ('2012-12-13', 1), ('2008-02-03', 2), ('2014-11-11', 3);
-Query OK, 3 rows affected (0.88 sec)
+insert into `DAILY_TRADE_VALUE` values ('2012-12-13', 1), ('2008-02-03', 2), ('2014-11-11', 3);
 
-mysql> show partitions from `DAILY_TRADE_VALUE`;
+show partitions from `DAILY_TRADE_VALUE`;
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
 | PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
@@ -238,7 +234,6 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 | 180039      | p20120101000000 | 2              | 2023-09-18 21:49:29 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2012-01-01]; ..types: [DATEV2]; keys: [2013-01-01]; ) | TRADE_DATE      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      |
 | 180018      | p20140101000000 | 2              | 2023-09-18 21:49:29 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2014-01-01]; ..types: [DATEV2]; keys: [2015-01-01]; ) | TRADE_DATE      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      |
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
-3 rows in set (0.12 sec)
 ```
 
 It can be concluded that the partitions created by Auto Partition share the same functionality as partitions created by manual partitioning.
@@ -288,13 +283,12 @@ Since 2.1.6, Doris supports the `partitions` table function and the `auto_partit
 When Auto Partition is enabled, partition names can be mapped to partitions using the `auto_partition_name` function.The `partitions` table function generates detailed partition information from partition names. Let's take the `DAILY_TRADE_VALUE` table as an example to see its current partition after we insert data:
 
 ```sql
-mysql> select * from partitions("catalog"="internal","database"="optest","table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
+select * from partitions("catalog"="internal","database"="optest","table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
 | PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
 |      127095 | p20080101000000 |              2 | 2024-11-14 17:29:02 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 985.000 B |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
-1 row in set (0.18 sec)
 ```
 
 In this way the IDs and values of each partition can be precisely filtered for subsequent partition-specific operations (e.g. `insert overwrite partition`). 

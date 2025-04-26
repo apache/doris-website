@@ -1,7 +1,7 @@
 ---
 {
-    "title": "分析工具",
-    "language": "zh-CN"
+  "title": "分析工具",
+  "language": "zh-CN"
 }
 ---
 
@@ -98,7 +98,7 @@ Doris 中，每个 operator 根据用户设置的并发数并发执行，所以 
 
 ### Execution Profile
 
-区别于 Merged Profile，Execution Profile 展示的是具体的某个并发中的详细指标。依以 id=4 的这个 exchange operator 为例：
+区别于 Merged Profile，Execution Profile 展示的是具体的某个并发中的详细指标，以 id=4 的这个 exchange operator 为例：
 
 ```sql
 EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
@@ -133,28 +133,28 @@ EXCHANGE_OPERATOR  (id=4):(ExecTime:  706.351us)
 2. WaitWorkerTime：task 等待执行 worker 的时间。当 task 处于 runnable 状态时，他要等待一个空闲 worker 来执行，这个耗时主要取决于集群负载。
 3. 等待执行依赖的时间：一个 task 可以执行的依赖条件是每个 operator 的 dependency 全部满足执行条件，而 task 等待执行依赖的时间就是将这些依赖的等待时间相加。例如简化这个例子中的其中一个 task：
 
-```sql
-PipelineTask  (index=1):(ExecTime:  4.773ms)
-  -  ExecuteTime:  1.656ms
-      -  CloseTime:  90.402us
-      -  GetBlockTime:  11.235us
-      -  OpenTime:  1.448ms
-      -  PrepareTime:  1.555ms
-      -  SinkTime:  14.228us
-  -  WaitWorkerTime:  63.868us
-    DATA_STREAM_SINK_OPERATOR  (id=8,dst_id=8):(ExecTime:  1.688ms)
-      -  WaitForDependencyTime:  0ns
-          -  WaitForBroadcastBuffer:  0ns
-          -  WaitForRpcBufferQueue:  0ns
-    AGGREGATION_OPERATOR  (id=7  ,  nereids_id=648):(ExecTime:  398.12us)
-      -  WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time:  10.495ms
-```
+    ```sql
+    PipelineTask  (index=1):(ExecTime:  4.773ms)
+      -  ExecuteTime:  1.656ms
+          -  CloseTime:  90.402us
+          -  GetBlockTime:  11.235us
+          -  OpenTime:  1.448ms
+          -  PrepareTime:  1.555ms
+          -  SinkTime:  14.228us
+      -  WaitWorkerTime:  63.868us
+        DATA_STREAM_SINK_OPERATOR  (id=8,dst_id=8):(ExecTime:  1.688ms)
+          -  WaitForDependencyTime:  0ns
+              -  WaitForBroadcastBuffer:  0ns
+              -  WaitForRpcBufferQueue:  0ns
+        AGGREGATION_OPERATOR  (id=7  ,  nereids_id=648):(ExecTime:  398.12us)
+          -  WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time:  10.495ms
+    ```
 
-这个 task 包含了（DATA_STREAM_SINK_OPERATOR - AGGREGATION_OPERATOR）两个 operator，其中 DATA_STREAM_SINK_OPERATOR 有两个依赖（WaitForBroadcastBuffer 和 WaitForRpcBufferQueue），AGGREGATION_OPERATOR 有一个依赖（AGGREGATION_OPERATOR_DEPENDENCY），所以当前 task 的耗时分布如下：
+   这个 task 包含了（DATA_STREAM_SINK_OPERATOR - AGGREGATION_OPERATOR）两个 operator，其中 DATA_STREAM_SINK_OPERATOR 有两个依赖（WaitForBroadcastBuffer 和 WaitForRpcBufferQueue），AGGREGATION_OPERATOR 有一个依赖（AGGREGATION_OPERATOR_DEPENDENCY），所以当前 task 的耗时分布如下：
 
-1. 执行总时间：1.656ms（约等于两个 operator 的 ExecTime 总和）
-2. 等待 Worker 的时间：63.868us（说明当前集群负载不高，task 就绪以后立即就有 worker 来执行）
-3. 等待执行依赖的时间（WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time）：10.495ms。当前 task 的所有 dependency 相加得到总的等待时间。
+    1. 执行总时间：1.656ms（约等于两个 operator 的 ExecTime 总和）
+    2. 等待 Worker 的时间：63.868us（说明当前集群负载不高，task 就绪以后立即就有 worker 来执行）
+    3. 等待执行依赖的时间（WaitForBroadcastBuffer + WaitForRpcBufferQueue + WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time）：10.495ms。当前 task 的所有 dependency 相加得到总的等待时间。
 
 使用 Profile 进行执行层调优的案例详见[执行调优](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md)章节。
 

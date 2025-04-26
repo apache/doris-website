@@ -84,8 +84,8 @@ Before upgrading, conduct metadata compatibility testing to prevent failures cau
    arrow_flight_sql_port = 19040
    edit_log_port = 19010
 
-   ## modify clusterIP
-   clusterId=<a_new_clusterIP, such as 123456>
+   ## modify clusterID
+   clusterId=<a_new_clusterID, such as 123456>
    ...
    ```
 
@@ -95,7 +95,7 @@ Before upgrading, conduct metadata compatibility testing to prevent failures cau
    cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
    ```
 
-4. Edit the `VERSION` file in the copied metadata directory to update the `cluster_id` to a new cluster IP, for example, change it to `123456` as shown in the example:  
+4. Edit the `VERSION` file in the copied metadata directory to update the `cluster_id` to a new cluster ID, for example, change it to `123456` as shown in the example:  
 
    ```bash
    vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION

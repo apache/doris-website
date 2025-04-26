@@ -26,25 +26,23 @@ under the License.
 
 ## Description
 
-Used to synchronize metadata for fe non-master nodes. doris only master node can write fe metadata, other fe nodes write metadata operations will be forwarded to master. After master finishes metadata writing operation, there will be a short delay for non-master nodes to replay metadata, you can use this statement to synchronize metadata.
+This statement is used to synchronize metadata for non-master Frontend (FE) nodes. In Apache Doris, only the master FE node can write metadata, while other FE nodes forward metadata write operations to the master. After the master completes the metadata writing operation, non-master nodes may experience a short delay in replaying the metadata. You can use this statement to force synchronization of metadata.
 
-grammar:
+## Syntax
 
 ```sql
 SYNC;
 ```
 
-## Example
+## Access Control Requirements  
 
-1. Synchronized metadata:
+Any user or role can perform this operation.
+
+
+## Examples
+
+Synchronize metadata:
 
     ```sql
     SYNC;
     ```
-
-## Keywords
-
-    SYNC
-
-## Best Practice
-

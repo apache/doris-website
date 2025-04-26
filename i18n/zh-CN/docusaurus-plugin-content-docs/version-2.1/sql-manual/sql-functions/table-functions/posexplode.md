@@ -26,33 +26,30 @@ under the License.
 
 ## 描述
 
-表函数，需配合 Lateral View使用，并且支持多个Lateral View。它仅支持新的优化器。
+`posexplode`  表函数，将 array 列展开成多行, 并且增加一列标明位置的列，组成 struct类型返回。需配合 Lateral View 使用, 可以支持多个 Lateral view, 仅支持新优化器。
 
-该函数将数组列展开为多行，并添加一个表示位置的列，返回一个结构体类型。当数组为NULL或空时，posexplode_outer会返回 NULL。posexplode和posexplode_outer均会返回数组中的NULL元素。
+`posexplode_outer` 和 `posexplode` 类似，只是对于 NULL 值的处理不同。
 
 ## 语法
 ```sql
-POSEXPLODE(<array>)
-POSEXPLODE_OUTER(<array>)
+POSEXPLODE(<arr>)
+POSEXPLODE_OUTER(<arr>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<array>` | 需要被展开为多行的数组 |
+| `<arr>` | 待展开的 array 数组 |
 
 
 ## 返回值
 
-按照数组array展开的多行。特殊情况：
+当 array 为 NULL 或者为空时，`posexplode_outer` 返回NULL。 `posexplode` 和 `posexplode_outer` 均会返回 array 内部的NULL元素。
 
-- 当数组为NULL或空时，返回NULL。
-- 当数组存在NULL元素时，返回NULL元素。
+## 举例
 
-### 举例
-
-```sql
+``` sql
 CREATE TABLE IF NOT EXISTS `table_test`(
             `id` INT NULL,
             `name` TEXT NULL,
@@ -62,11 +59,13 @@ CREATE TABLE IF NOT EXISTS `table_test`(
     COMMENT 'OLAP'
     DISTRIBUTED BY HASH(`id`) BUCKETS 1
     PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+```
 
+```sql
 insert into table_test values (0, "zhangsan", ["Chinese","Math","English"]),(1, "lisi", ["null"]),(2, "wangwu", ["88a","90b","96c"]),(3, "lisi2", [null]),(4, "amory", NULL);
 ```
 
-```sql    
+```sql
 select * from table_test order by id;
 ```
 
@@ -82,7 +81,7 @@ select * from table_test order by id;
 +------+----------+--------------------------------+
 ```
 
-```sql  
+```sql
 select id,name,score, k,v from table_test lateral view posexplode(score) tmp as k,v order by id;
 ```
 
@@ -101,7 +100,7 @@ select id,name,score, k,v from table_test lateral view posexplode(score) tmp as 
 +------+----------+--------------------------------+------+---------+
 ```
 
-```sql  
+```sql
 select id,name,score, k,v from table_test lateral view posexplode_outer(score) tmp as k,v order by id;
 ```
 
@@ -120,6 +119,3 @@ select id,name,score, k,v from table_test lateral view posexplode_outer(score) t
 |    4 | amory    | NULL                           | NULL | NULL    |
 +------+----------+--------------------------------+------+---------+
 ```
-
-### Keywords
-POSEXPLODE,POSEXPLODE_OUTER

@@ -55,7 +55,7 @@ DELETE FROM table_name [table_alias]
   - 两种情况下，Doris 无法从条件中推断分区：
     1. 条件中不包含分区列
     2. 分区列的 `op` 为 `not in`
-  - 当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
+  - 如果分区表不是 Unique 表，当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
 
 ### 示例
 

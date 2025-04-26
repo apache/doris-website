@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-HLL is used for approximate deduplication and performs better than Count Distinct when dealing with large data volumes. The load of HLL needs to be combined with functions like hll_hash. For more documentation, refer to [HLL](../../../sql-manual/sql-data-types/aggregate/HLL.md).
+HLL is used for approximate deduplication and performs better than Count Distinct when dealing with large data volumes. The load of HLL needs to be combined with functions like hll_hash. For more documentation, refer to [HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL).
 
 ## Usage Example
 

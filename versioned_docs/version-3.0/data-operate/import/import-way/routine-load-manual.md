@@ -76,6 +76,24 @@ The specific import process of Routine Load is shown in the following diagram:
 
 5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
+### Auto Resume
+
+To ensure high availability of jobs, an auto-resume mechanism has been introduced. In the event of an unexpected pause, the Routine Load Scheduler thread will attempt to auto-resume the job. For unexpected Kafka outages or other scenarios where the system is unable to function, the auto-resume mechanism ensures that once Kafka is restored, the routine load job can continue running normally without manual intervention.
+
+Situations where auto-resume will not occur:
+
+- The user manually executes the PAUSE ROUTINE LOAD command.
+
+- There are issues with data quality.
+
+- Situations where resuming is not possible, such as when a database table is deleted.
+
+Apart from these three situations, other paused jobs will attempt to resume automatically.
+
+### FAQ
+
+Auto-resume may encounter some issues during cluster restarts or upgrades. Before version 3.0.2, there was similarly a high probability that tasks would not automatically resume after being paused due to cluster restarts or upgrades. Since version 3.0.2, even if tasks are paused due to cluster restarts or upgrades, auto-resume is expected to be achievable.
+
 ## Quick Start
 
 ### Create Job
@@ -89,7 +107,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Kafka, there is the following sample data:
 
     ```SQL
-    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
     1,Emily,25
     2,Benjamin,35
     3,Olivia,28
@@ -302,7 +320,7 @@ The modules for creating a loading job are explained as follows:
 | job_name               | Specifies the name of the created loading job. The job name must be unique within the same database. |
 | tbl_name               | Specifies the name of the table to be loaded. This parameter is optional. If not specified, the dynamic table mode will be used, where Kafka data should contain the table name information. |
 | merge_type             | Specifies the data merge type. The default value is APPEND. Possible merge_type options are: <ul><li>APPEND: Append load mode</li><li>MERGE: Merge load mode</li><li>DELETE: load data as delete records</li></ul> |
-| load_properties        | Describes the load properties, including:<ul><li>colum_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
+| load_properties        | Describes the load properties, including:<ul><li>column_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
 | job_properties         | Specifies the general load parameters for Routine Load.      |
 | data_source_properties | Describes the properties of Kafka data source.               |
 | comment                | Describes any additional comments for the loading job.       |
@@ -1573,8 +1591,8 @@ The columns in the result set provide the following information:
     | 2022-05-06 | 10001 | Test01   | Shanghai    | windows | NULL |
     | 2022-05-05 | 10002 | Test01   | Beijing     | linux   | NULL |
     | 2022-05-06 | 10002 | Test01   | Shanghai    | linux   | NULL |
-    | 2022-05-05 | 10004 | Test01   | Heibei      | windows | NULL |
-    | 2022-05-06 | 10004 | Test01   | Shanxi      | windows | NULL |
+    | 2022-05-05 | 10004 | Test01   | Hebei      | windows | NULL |
+    | 2022-05-06 | 10004 | Test01   | Shaanxi      | windows | NULL |
     | 2022-05-05 | 10003 | Test01   | Beijing     | macos   | NULL |
     | 2022-05-06 | 10003 | Test01   | Jiangsu     | macos   | NULL |
     +------------+-------+----------+----------+---------+------+

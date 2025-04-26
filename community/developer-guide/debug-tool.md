@@ -222,25 +222,28 @@ The output of this command is the same as the output and view mode of heap profi
 
 For the analysis of the principle of Heap Profile, please refer to [Analysis of the Principle of Heap Profiling](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/). It should be noted that Heap Profile records virtual memory
 
-It supports real-time and regular dumping of Heap Profile, and then uses `jeprof` to analyze Heap Profile.
+Supports both real-time and periodic Heap Dump, and then uses `jeprof` to parse the generated Heap Profile.
 
 ###### 1. realtime heap dump
 
-Change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true` and restart BE, then use the jemalloc heap dump http interface to generate a heap dump file on the corresponding BE machine.
+Change `prof:false` in `JEMALLOC_CONF` in `be.conf` to `prof:true`, change `prof_active:false` to `prof_active:true` and restart Doris BE, then use the Jemalloc Heap Dump HTTP interface to generate a Heap Profile file on the corresponding BE machine.
+
+> For Doris 2.1.8 and 3.0.4 and later versions, `prof` in `JEMALLOC_CONF` is already `true` by default, no need to modify.
+> For Doris versions before 2.1.8 and 3.0.4, there is no `prof_active` in `JEMALLOC_CONF`, just change `prof:false` to `prof:true`.
 
 ```shell
 curl http://be_host:be_webport/jeheap/dump
 ```
 
-The directory where the heap dump file is located can be configured through the ``jeprofile_dir`` variable in ``be.conf``, and the default is ``${DORIS_HOME}/log``
+The directory where the Heap Profile file is located can be configured in `be.conf` through the `jeprofile_dir` variable, which defaults to `${DORIS_HOME}/log`
 
-The default sampling interval is 512K, usually only 10% of memory is recorded by heap dump, and the impact on performance is usually less than 10%. You can modify `lg_prof_sample` of `JEMALLOC_CONF` in `be.conf`, and the default is `19` (2^19 B = 512K), reducing `lg_prof_sample` can sample more frequently to make the heap profile close to the real memory, but this will bring greater performance loss.
+The default sampling interval is 512K, which usually only records 10% of the memory, and the impact on performance is usually less than 10%. You can modify `lg_prof_sample` in `JEMALLOC_CONF` in `be.conf`, which defaults to `19` (2^19 B = 512K). Reducing `lg_prof_sample` can sample more frequently to make the Heap Profile closer to the real memory, but this will bring greater performance loss.
 
-If you are doing profiling, keep `prof:false` to avoid the performance penalty of heap dump.
+If you are doing performance testing, keep `prof:false` to avoid the performance loss of Heap Dump.
 
 ###### 2. regular heap dump
 
-First, change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true`. The default directory of the heap dump file is `${DORIS_HOME}/log`. The file name prefix is ​​`JEMALLOC_PROF_PRFIX` in `be.conf`, which is `jemalloc_heap_profile_` by default.
+First, change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true`. The directory where the Heap Profile file is located defaults to `${DORIS_HOME}/log`, and the file name prefix is ​​`JEMALLOC_PROF_PRFIX` in `be.conf`, which defaults to `jemalloc_heap_profile_`.
 
 > Before Doris 2.1.6, `JEMALLOC_PROF_PRFIX` is empty and needs to be changed to any value as the profile file name
 
@@ -265,14 +268,14 @@ Use `jeprof --alloc_space` to display the cumulative value of heap dump.
 
 ##### 3. `jeprof` parses Heap Profile
 
-Use `jeprof` to parse the Heap Profile of the above dump. If the process memory is too large, the parsing process may take several minutes, so please wait patiently. If the system does not have the `jeprof` command, you can package the `jeprof` binary in the `doris/tools` directory and upload it to the Heap Dump server.
+Use `be/bin/jeprof` to parse the Heap Profile of the above dump. If the process memory is too large, the parsing process may take several minutes, please wait patiently.
 
-```
-Addr2line version 2.35.2 or above is required, see QA-1 below
-Try to have Heap Dump and `jeprof` to parse Heap Profile on the same server, see QA-2 below
-```
+If there is no `jeprof` binary in the `be/bin` directory of the Doris BE deployment path, you can package the `jeprof` in the `doris/tools` directory and upload it to the server.
 
-1. Analyze a single heap dump file
+> Requires addr2line version 2.35.2 and above, see QA-1 below for details
+> Try to have Heap Dump and `jeprof` analyze Heap Profile on the same server, that is, analyze Heap Profile directly on the machine running Doris BE, see QA-2 below for details
+
+1. Analyze a single Heap Profile file
 
 ```shell
 jeprof --dot lib/doris_be heap_dump_file_1
@@ -287,7 +290,7 @@ yum install ghostscript graphviz
 jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
 ```
 
-2. Analyze the diff of two heap dump files
+2. Analyze the diff of two Heap Profile files
 
 ```shell
 jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
@@ -332,7 +335,74 @@ Note that you cannot use addr2line 2.3.9, which may be incompatible and cause me
 
 2. After running `jeprof`, many errors appear: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`. The parsed Heap stack is the memory address of the code, not the function name
 
-This is because the Heap Dump and the execution of `jeprof` to parse the Heap Profile are not on the same server, which causes `jeprof` to fail to parse the function name using the symbol table. Try to complete the Dump Heap and `jeprof` parsing operations on the same machine.
+Usually, it is because the execution of Heap Dump and the execution of `jeprof` to parse Heap Profile are not on the same server, which causes `jeprof` to fail to parse the function name using the symbol table. Try to complete the operation of Dump Heap and `jeprof` parsing on the same machine, that is, parse the Heap Profile directly on the machine running Doris BE as much as possible.
+
+Or confirm the Linux kernel version of the machine running Doris BE, download the `be/bin/doris_be` binary file and the Heap Profile file to the machine with the same kernel version to execute `jeprof`.
+
+3. If the Heap stack after directly parsing the Heap Profile on the machine running Doris BE is still the memory address of the code, not the function name
+
+Use the following script to manually parse the Heap Profile and modify these variables:
+
+- heap: the file name of the Heap Profile.
+- bin: `be/bin/doris_be` binary file name
+- llvm_symbolizer: Path to the llvm symbol table parser, preferably the version used to compile the `be/bin/doris_be` binary.
+
+```
+#!/bin/bash
+## @brief
+## @author zhoufei
+## @email  gavineaglechou@gmail.com
+## @date   2024-02-24-Sat
+
+# 1. jeprof --dot ${bin} ${heap} > heap.dot to generate calling profile
+# 2. find base addr and symbol
+# 3. get addr to symble table with llvm-symbolizer
+# 4. replace the addr with symbol
+
+# heap file name
+heap=jeheap_dump.1708694081.3443.945778264.heap
+# binary name
+bin=doris_be_aws.3.0.5
+# path to llvm symbolizer
+llvm_symbolizer=$HOME/opt/ldb-toolchain-16/bin/llvm-symbolizer
+# output file name
+out=out.dot
+vaddr_baddr_symbol=vaddr_baddr_symbol.txt
+program_name=doris_be
+
+jeprof --dot ${bin} ${heap} > ${out}
+
+baseaddr=$(grep ${program_name} ${heap} | head -n 1 | awk -F'-' '{print $1}')
+echo "$baseaddr: ${baseaddr}"
+
+function find_symbol() {
+  local addr="$1"
+  "${llvm_symbolizer}" --inlining --obj=${bin} ${addr} | head -n 1 | awk -F'(' '{print $1}'
+}
+
+if [ -f ${vaddr_baddr_symbol} ]; then
+  cat ${vaddr_baddr_symbol} | while read vaddr baddr; do
+    symbol=$(find_symbol ${baddr})
+    echo "${vaddr} ${baddr} ${symbol}"
+    sed -ri.orig "s/${vaddr}/${symbol}/g" ${out}
+  done
+else # recalculate the addr and
+  grep -oP '0x(\d|[a-f])+' ${out} | xargs -I {} python -c "print('{}', '0x{:x}'.format({} - 0x${baseaddr}))" \
+    | while read vaddr baddr; do
+    symbol=$(find_symbol ${baddr})
+    echo "${vaddr} ${baddr} ${symbol}"
+    sed -ri.orig "s/${vaddr}/${symbol}/g" ${out}
+  done | tee ${vaddr_baddr_symbol}
+fi
+
+# vim: et tw=80 ts=2 sw=2 cc=80:
+```
+
+4. If all the above methods do not work
+
+- Try to recompile the `be/bin/doris_be` binary on the machine running Doris BE, that is, compile, run, and `jeprof` analyze on the same machine.
+
+- After the above operation, if the Heap stack is still the memory address of the code, try `USE_JEMALLOC=OFF ./build.sh --be` to compile Doris BE using TCMalloc, and then refer to the above section to use TCMalloc Heap Profile to analyze memory.
 
 #### LSAN
 

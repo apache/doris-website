@@ -44,7 +44,7 @@ This new version highlights:
 
 In SSB-Flat and TPC-H benchmarking, Apache Doris 2.0.0 delivered **over 10-time faster query performance** compared to an early version of Apache Doris.
 
-![](/images/release-note-2.0.0-1.png)
+![SSB-Flat and TPC-H benchmarking](/images/release-note-2.0.0-1.png)
 
 This is realized by the introduction of a smarter query optimizer, inverted index, a parallel execution model, and a series of new functionalities to support high-concurrency point queries.
 
@@ -54,7 +54,7 @@ The brand new query optimizer, Nereids, has a richer statistical base and adopts
 
 TPC-H tests showed that Nereids, with no human intervention, outperformed the old query optimizer by a wide margin. Over 100 users have tried Apache Doris 2.0.0 in their production environment and the vast majority of them reported huge speedups in query execution.
 
-![](/images/release-note-2.0.0-2.png)
+![brand new query optimizer](/images/release-note-2.0.0-2.png)
 
 **Doc**: https://doris.apache.org/docs/dev/query-acceleration/nereids/
 
@@ -66,7 +66,7 @@ In Apache Doris 2.0.0, we introduced inverted index to better support fuzzy keyw
 
 A smartphone manufacturer tested Apache Doris 2.0.0 in their user behavior analysis scenarios. With inverted index enabled, v2.0.0 was able to finish the queries within milliseconds and maintain stable performance as the query concurrency level went up. In this case, it is 5 to 90 times faster than its old version. 
 
-![](/images/release-note-2.0.0-3.png)
+![Inverted Index](/images/release-note-2.0.0-3.png)
 
 ### 20 times higher concurrency capability
 

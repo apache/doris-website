@@ -65,7 +65,7 @@ mysql>
 ```Java
 String user = "user_name";
 String password = "user_password";
-String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo？useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
+String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo?useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
 try {
     Connection myCon = DriverManager.getConnection(newUrl, user, password);
     Statement stmt = myCon.createStatement();
@@ -80,6 +80,12 @@ try {
 } catch (SQLException e) {
     log.error("get JDBC connection exception.", e);
 }
+```
+
+如果需要在连接时初始换会话变量（Session Variables），可以使用下列格式：
+
+```
+jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
 ```
 
 ## DBeaver

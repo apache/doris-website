@@ -26,7 +26,7 @@ under the License.
 
 ## Creating tables
 
-Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. You can also use the [CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) or [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) clause to derive the table definition from another table.
+Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. You can also use the [CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) or [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md) clause to derive the table definition from another table.
 
 ## Table name
 
@@ -34,7 +34,7 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 ## Table property
 
-In Doris, the CREATE TABLE statement can specify [table properties](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties), including:
+In Doris, the CREATE TABLE statement can specify [table properties](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties), including:
 
 - **buckets**: Determines the distribution of data within the table.
 

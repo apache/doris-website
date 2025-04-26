@@ -53,12 +53,12 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   | Password | 是否设置密码 |
   | Roles | 拥有的角色 |
   | GlobalPrivs | 拥有的全局权限 |
-  | CatalogPrivs | 拥有的catalog权限 |
+  | CatalogPrivs | 拥有的 catalog 权限 |
   | DatabasePrivs | 拥有的数据库权限 |
   | TablePrivs | 拥有的表权限 |
   | ColPrivs | 拥有的列权限 |
   | ResourcePrivs | 拥有的资源权限 |
-  | WorkloadGroupPrivs | 拥有的WorkloadGroup权限 |
+  | WorkloadGroupPrivs | 拥有的 WorkloadGroup 权限 |
 
 ## 权限控制
 
@@ -72,6 +72,7 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   - `SHOW ALL GRANTS` 可以查看所有用户的权限，但需要有 `GRANT_PRIV` 权限。
   - 如果指定 `user_identity`，则查看该指定用户的权限。且该 `user_identity` 必须为通过 `CREATE USER` 命令创建的。
   - 如果不指定 `user_identity`，则查看当前用户的权限。
+  - Doris 基于 RBAC（Role-Based Access Control）的权限管理模型进行权限控制，因此这里展示出来的权限其实是用户所有角色的权限合集，如果想查看具体权限来源于哪个角色， 可以通过[SHOW ROLES](./SHOW-ROLES.md)查看
 
 ## 示例
 

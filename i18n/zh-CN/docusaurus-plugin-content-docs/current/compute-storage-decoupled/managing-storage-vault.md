@@ -74,6 +74,9 @@ PROPERTIES (
 
 更多云厂商示例和参数说明可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
+**注意**
+提供的对象存储路径必须具有head/get/list/put/multipartUpload/delete访问权限。
+
 ## 查看 Storage Vault 
 
 **语法**
@@ -115,6 +118,30 @@ PROPERTIES (
   "storage_vault_name" = "hdfs_demo_vault"
 );
 ```
+
+## 创建数据库时指定 Storage Vault 
+
+创建数据库时在 `PROPERTIES` 中指定 `storage_vault_name`。如果在数据库下建表时没有指定 `storage_vault_name`，则表会使用数据库的 `vault name` 对应的 Storage Vault 进行数据的存储。用户可以通过 [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md) 更改数据库的 `storage_vault_name`，该行为不会改变数据库下已经创建表的`storage_vault`，只有新创建的表会使用更改后的`storage_vault`。
+
+**示例**
+
+```sql
+CREATE DATABASE IF NOT EXIST `db_test`
+PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+);
+```
+
+:::info 备注
+
+从 3.0.5 版本支持创建库时指定 Storage Vault。
+
+创建表时使用 Storage Vault 的优先顺序为 表 -> 数据库 -> 默认 Storage Vault。即如果表的 PROPERTY 中没有指定 Storage Vault，则会搜索数据库是否指定了 Storage Vault；如果数据库也没有指定，则会继续搜索是否有默认 Storage Vault。
+
+如果 Storage Vault 的 `VAULT_NAME` 属性被修改，可能会导致数据库下设置的 Storage Vault 失效而报错，用户需要根据实际情况为数据库再配置一个可用的 `storage_vault_name`。
+
+:::
+
 
 ## 更改 Storage Vault 
 

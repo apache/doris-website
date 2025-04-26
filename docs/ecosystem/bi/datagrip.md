@@ -74,7 +74,7 @@ Currently verified using DataGrip version 2023.3.4
 
 5. Test data source connection
 
-    After filling in the connection information, click Test Connection in the lower left corner to verify the accuracy of the database connection information. If DBeaver returns the following pop-up window, the test connection is successful. Then click OK in the lower right corner to complete the connection configuration.
+    After filling in the connection information, click Test Connection in the lower left corner to verify the accuracy of the database connection information. If DataGrip returns the following pop-up window, the test connection is successful. Then click OK in the lower right corner to complete the connection configuration.
 
    ![test connection](/images/datagrip4.png)
 

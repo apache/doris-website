@@ -268,7 +268,7 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
   
   ```Java
   BEGIN WITH LABEL label_etl_1;
-  INTO table1 SELECT * FROM stage_table1;
+  INSERT INTO table1 SELECT * FROM stage_table1;
   INSERT INTO table SELECT * FROM stage_table;
   COMMIT;
   ```

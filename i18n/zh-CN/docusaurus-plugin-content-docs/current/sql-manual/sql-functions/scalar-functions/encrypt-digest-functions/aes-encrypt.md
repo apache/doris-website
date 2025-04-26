@@ -54,7 +54,7 @@ AES_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 
 ## 示例
 
-使用AES_128_ECB算法
+使用 AES_128_ECB 算法
 ```sql
 set block_encryption_mode='';
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -68,7 +68,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法
+使用 AES_256_CBC 算法
 ```sql
 set block_encryption_mode="AES_256_CBC";
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -82,7 +82,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法并设置初始向量
+使用 AES_256_CBC 算法并设置初始向量
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```

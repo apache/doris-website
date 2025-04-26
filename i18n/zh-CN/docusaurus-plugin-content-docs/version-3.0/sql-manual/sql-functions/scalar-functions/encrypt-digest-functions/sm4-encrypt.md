@@ -24,7 +24,7 @@ under the License.
 
 ## 描述
 
-SM4是一种国家标准的对称密钥加密算法，广泛应用于金融、通信、电子商务等领域。SM4_ENCRYPT函数用于对数据进行SM4加密。默认采用 `SM4_128_ECB` 算法。
+SM4 是一种国家标准的对称密钥加密算法，广泛应用于金融、通信、电子商务等领域。SM4_ENCRYPT 函数用于对数据进行 SM4 加密。默认采用 `SM4_128_ECB` 算法。
 
 :::warning
 截止 3.0.2，两参数版本，会无视 session variable `block_encryption_mode`，始终使用 `SM4_128_ECB` 算法进行加密。因此不推荐调用。
@@ -68,7 +68,7 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用SM4_128_CBC算法
+使用 SM4_128_CBC 算法
 
 ```sql
 set block_encryption_mode="SM4_128_CBC";
@@ -83,7 +83,7 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用SM4_128_CBC算法并设置初始向量
+使用 SM4_128_CBC 算法并设置初始向量
 
 ```sql
 set block_encryption_mode="SM4_128_CBC";

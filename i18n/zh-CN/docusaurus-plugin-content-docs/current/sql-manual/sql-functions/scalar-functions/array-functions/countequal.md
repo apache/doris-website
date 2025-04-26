@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-判断数组中包含value元素的个数
+判断数组中包含 value 元素的个数
 
 ## 语法
 
@@ -44,7 +44,7 @@ COUNTEQUAL(<arr>, <value>)
 
 ## 返回值
 
-返回判断的结果如下：num：value在array中的数量；0：value不存在数组arr中；NULL：如果数组为NULL。
+返回判断的结果如下：num：value 在 array 中的数量；0：value 不存在数组 arr 中；NULL：如果数组为 NULL。
 
 ## 举例
 

@@ -95,11 +95,15 @@ Create a client for interacting with the Doris Arrow Flight SQL service. Prerequ
 
 Configure parameters for Doris frontend (FE) and backend (BE):
 
-- In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 9090.
+- In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 8070.
 
-- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
+- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 8050.
 
-Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
+`Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
+
+After modifying the configuration and restarting the cluster, searching for `Arrow Flight SQL service is started` in the fe/log/fe.log file indicates that the Arrow Flight Server of FE has been successfully started; searching for `Arrow Flight Service bind to host` in the be/log/be.INFO file indicates that the Arrow Flight Server of BE has been successfully started.
+
+Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 8070 and 8050 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
 ```C++
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
@@ -249,8 +253,8 @@ import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
-# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 8070.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 8050.
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",

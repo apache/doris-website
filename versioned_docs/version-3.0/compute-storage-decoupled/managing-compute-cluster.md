@@ -71,8 +71,8 @@ SHOW COMPUTE GROUPS;
 
 ## Adding Compute Groups
 
-Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
-To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) command. For example:
+Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/account-management/GRANT-TO). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
+To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) command. For example:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");

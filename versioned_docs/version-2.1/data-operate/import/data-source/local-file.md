@@ -32,7 +32,7 @@ Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSO
 
 ### 2. Streamloader Tool
 
-The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and multi-concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
+The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
 
 ### 3. MySQL Load
 
@@ -120,7 +120,7 @@ Create the table in Doris with the same syntax as above.
 Use the Streamloader tool to load data:
 
 ```Bash
-doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamloader"
+doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamload"
 ```
 
 Example of load result:
@@ -136,7 +136,7 @@ Load Result: {
 ### Step 4: Check Loaded Data
 
 ```SQL
-mysql> SELECT COUNT(*) FROM testdb.test_streamloader;
+mysql> SELECT COUNT(*) FROM testdb.test_streamload;
 +----------+
 | count(*) |
 +----------+

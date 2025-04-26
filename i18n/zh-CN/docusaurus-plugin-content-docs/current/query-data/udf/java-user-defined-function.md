@@ -368,11 +368,11 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上 `_outer` 后缀，其中带后缀 `_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)。 
+2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上 `_outer` 后缀，其中带后缀 `_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers)。 
 更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLE FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

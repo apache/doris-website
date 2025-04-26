@@ -24,9 +24,9 @@ under the License.
 
 ## 描述
 
-计算输入字符串的64位xxhash值
+计算输入字符串的 64 位 xxhash 值
 
--注：经过测试xxhash_64的性能大约是murmur_hash3_64的2倍，所以在计算hash值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
+-注：经过测试 xxhash_64 的性能大约是 murmur_hash3_64 的 2 倍，所以在计算 hash 值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
 ## 语法
 
@@ -38,11 +38,11 @@ XXHASH_64( <str> [ , <str> ... ] )
 
 | 参数      | 说明               |
 |---------|------------------|
-| `<str>` | 需要被计算64位xxhash的值 |
+| `<str>` | 需要被计算 64 位 xxhash 的值 |
 
 ## 返回值
 
-返回输入字符串的64位xxhash值。
+返回输入字符串的 64 位 xxhash 值。
 
 ## 举例
 

@@ -26,11 +26,11 @@ under the License.
 
 
 
-## Request
+## 请求路径
 
 `GET /api/meta/header/{tablet_id}?byte_to_base64={bool}`
 
-## Description
+## 描述
 
 查询 tablet 元信息
 
@@ -39,16 +39,16 @@ under the License.
 * `tablet_id`
     table 的 id
 
-## Query parameters
+## 请求参数
 
 * `byte_to_base64`
     是否按 base64 编码，选填，默认`false`。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -63,7 +63,7 @@ under the License.
         ...
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

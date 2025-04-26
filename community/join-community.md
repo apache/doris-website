@@ -32,35 +32,7 @@ We have graduated from Apache incubator successfully and become an Top-Level Pro
 <hr />
 
 
-## 🌟 More Stars on Github
-<a href="https://star-history.com/#apache/doris&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-  </picture>
-</a>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**We deeply appreciate 🔗[community contributors](https://github.com/apache/doris/graphs/contributors) for their contribution to Apache Doris.**
-
-
-
-
-<hr />
 
 ## Don't Miss Out the Latest News and Events
 
@@ -73,7 +45,7 @@ Learn our latest techniques, get inspirations from our rich use cases, and see w
 
 - Come and connect with us - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
 
-- Events Videos - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
+- Events Videos - ▶️ [YouTube](https://www.youtube.com/hashtag/apachedoris) 📺 [Bilibili](https://space.bilibili.com/362350065) 
 
 
 

@@ -37,8 +37,8 @@ Equivalent to automatically adding the predicate set in the Row Policy for users
 Row Policy cannot be set for default users root and admin.
 
 ### Related Commands
-- View Row Permission Policies [SHOW ROW POLICY](../../../sql-manual/sql-statements/Show-Statements/SHOW-POLICY.md)
-- Create Row Permission Policy [CREATE ROW POLICY](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY.md)
+- View Row Permission Policies [SHOW ROW POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY)
+- Create Row Permission Policy [CREATE ROW POLICY](../../../sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY)
 
 ### Row Permission Example
 1. Restrict the test user to only query data in table1 where c1='a'
@@ -71,3 +71,5 @@ Data masking is a method to protect sensitive data by modifying, replacing, or h
 For example, administrators can choose to replace part or all of the digits of sensitive fields such as credit card numbers or ID numbers with asterisks * or other characters, or replace real names with pseudonyms.
 
 Starting from version 2.1.2, data masking is supported through Apache Ranger's Data Masking to set masking policies for certain columns, currently only through [Apache Ranger](ranger.md).
+
+> Data Masking settings for admin/root users will not take effect.

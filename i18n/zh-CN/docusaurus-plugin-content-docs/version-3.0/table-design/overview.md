@@ -26,7 +26,7 @@ under the License.
 
 ## 创建表
 
-使用 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语句在 Doris 中创建一个表，也可以使用 [CREATE TABKE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) 或 [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-AS-SELECT) 子句从另一个表派生表定义。
+使用 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语句在 Doris 中创建一个表，也可以使用 [CREATE TABKE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE-LIKE) 或 [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md) 子句从另一个表派生表定义。
 
 ## 表名
 
@@ -34,7 +34,7 @@ Doris 中表名默认是大小写敏感的，可以在第一次初始化集群�
 
 ## 表属性
 
-Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)，包括：
+Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties)，包括：
 
 - 分桶数 (buckets)：决定数据在表中的分布；
 

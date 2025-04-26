@@ -98,6 +98,8 @@ PROPERTIES
 );
 ```
 
+Doris also suppoted AWS assume role, please refer to[AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md).
+
 Create a repository named hdfs_repo.
 
 ```sql
@@ -157,3 +159,5 @@ PROPERTIES
     "s3.region" = "ap-beijing"
 );
 ```
+
+Doris also suppoted `AWS Assume Role` for creating S3 Repository , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

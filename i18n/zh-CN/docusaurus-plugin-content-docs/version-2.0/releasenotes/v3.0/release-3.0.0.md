@@ -415,7 +415,7 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
 
 参考文档：
 
-[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md)
+[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
 :::
 
 ## 8. 功能改进

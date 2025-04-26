@@ -440,7 +440,7 @@ Query OK, 0 rows affected (0.348 sec)
 
 #### 监控 Doris FE 节点配置
 
-添 Doris FE 节点之后，还需要监控这些后端节点。
+添加 Doris FE 节点之后，还需要监控这些后端节点。
 
 首先在 Doris 中创建一个用于监控的用户名：
 
@@ -456,7 +456,7 @@ Doris > grant ADMIN_PRIV on *.* to monitor@'192.168.0.100';
 Query OK, 0 rows affected (0.02 sec)
 ```
 
-然后回到 mysql-proxy 代理层节点上配置监控
+然后回到 ProxySQL 代理层节点上配置监控
 
 
 ```shell

@@ -88,7 +88,7 @@ Unable to find a suitable base table for partitioning
 
 出现该报错通常指的是物化视图的 SQL 定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报错。
 
-- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod)
+- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
 
 - 最新的代码可以提示分区构建失败的原因，原因摘要和说明见附录 2
 
@@ -186,6 +186,14 @@ BUILD IMMEDIATE REFRESH AUTO ON MANUAL
     ```
 
 2. 可能是构建物化的语句使用的 **关键词写错**或者物化定义 **SQL 语法有问题**，可以检查下物化定义 SQL 和创建物化语句是否正确。
+
+### Q14：物化视图刷新成功后，还是没有数据
+
+物化视图判断数据是否需要更新依赖于能够获取到基表或基表分区的版本信息。
+
+遇到目前不支持获取版本信息的数据湖， 例如jdbc catalog， 那么刷新的时候会认为物化视图是不需要更新的，因此创建或者刷新物化视图的时候应该指定 complete 而不是 auto
+
+物化视图支持数据湖的进度参考[数据湖支持情况](./overview.md)
 
 ## 查询和透明改写
 

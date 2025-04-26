@@ -28,7 +28,7 @@ Doris provides two ways to load files from Huawei Cloud OBS:
 - Use S3 Load to load Huawei Cloud OBS files into Doris, which is an asynchronous load method.
 - Use TVF to load Huawei Cloud OBS files into Doris, which is a synchronous load method.
 
-## load with S3 Load
+## Load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 
@@ -92,7 +92,7 @@ PROPERTIES
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Result:
 
 ```
 mysql> select * from test_s3load;

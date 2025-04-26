@@ -69,7 +69,7 @@ INSERT INTO response_times VALUES
 (9, 50.4, 'west'),
 (10, 100.6, 'east');
 
--- 按区域计算响应时间的50%分位数
+-- 按区域计算响应时间的 50% 分位数
 SELECT 
     region,
     QUANTILE_PERCENT(

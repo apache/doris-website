@@ -106,6 +106,11 @@ will turn on all BE verbose log.
 
 `sys_log_verbose_level` Indicates the level of DEBUG. The higher the number, the more detailed the DEBUG log. The value ranges from 1 to 10.
 
+In most situations, setting `sys_log_verbose_modules` and `sys_log_verbose_level` in `be.conf` is sufficient.
+Only in rare cases such as when debug logs do not appear as expected, you may also need to configure `sys_log_verbose_flags_v`, which is not limited by the module scope.
+
+`sys_log_verbose_flags_v` is the `FLAGS_v` in glog, which controls the global verbosity level for `VLOG(n)` logging, where messages with `n <= FLAGS_v` will be printed, allowing fine-grained control over log output detail.
+
 ### Dynamic Modification
 
 Since 2.1, the DEBUG log of BE supports dynamic modification via the following RESTful API:

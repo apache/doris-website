@@ -24,11 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文是 Doris 3.0 版本的统计信息使用指南，主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
+从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
 
 ## 统计信息的收集
 
-Doris 3.0 版本默认会开启内表的自动抽样收集，因此绝大多数情况下用户不用关注统计信息的收集。Doris 收集统计信息的对象是列，它会在表级别收集每一列的统计信息，收集的内容包括：
+Doris 默认会开启内表的自动抽样收集，因此绝大多数情况下用户不用关注统计信息的收集。Doris 收集统计信息的对象是列，它会在表级别收集每一列的统计信息，收集的内容包括：
 
 | 信息          | 描述               |
 | ------------- | ------------------ |
@@ -52,21 +52,7 @@ Doris 支持用户通过提交 ANALYZE 语句来手动触发统计信息的收�
 
 **1. 语法**
 
-```sql
-ANALYZE < TABLE table_name > | < DATABASE db_name > 
-    [ (column_name [, ...]) ]
-    [ [ WITH SYNC ] [ WITH SAMPLE PERCENT | ROWS ] ];
-```
-
-其中各参数解释如下：
-
-- `table_name`: 指定要收集统计信息的目标表。
-
-- `column_name`: 指定要收集统计信息的目标列。这些列必须存在于 table_name 中，多个列名称之间用逗号分隔。如果不指定列名，则会对表中的所有列进行统计信息的收集。
-
-- `sync`：选择同步收集统计信息。如果指定此选项，收集完成后才会返回结果；如果不指定，则会异步执行并返回一个 JOB ID，用户可以通过该 JOB ID 查看收集任务的状态。
-
-- `sample percent | rows`：选择抽样收集统计信息。可以指定抽样比例或者抽样行数。如果不指定 WITH SAMPLE，则会对表进行全量采样。对于较大的表（例如超过 5 GiB），从集群资源利用的角度出发，通常建议采用抽样收集。为了保证统计信息的准确性，采样的行数建议不低于 400 万行。
+具体可参阅SQL手册 [ANALYZE](../../sql-manual/sql-statements/statistics/ANALYZE)。
 
 **2. 示例**
 
@@ -119,7 +105,9 @@ SET GLOBAL auto_analyze_table_width_threshold = 350;
 
 2. 表的健康度低于阈值（默认为 90，可通过 `table_stats_health_threshold` 变量进行调整）。健康度表示从上次收集统计信息到当前时刻，表中数据保持不变的比例：100 表示完全没有变化；0 表示全部改变；当健康度低于 90 时，表示当前的统计信息已有较大偏差，需要重新收集。通过健康度评估，可以降低不必要的重复收集，从而节省系统资源。
 
-为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304`（2^22）`行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
+3. 对于内表，数据发生过变化，但在24小时之内没有收集过统计信息。
+
+为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304，即 2^22 行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
 
 如果担心自动收集作业会对业务造成干扰，可根据自身需求通过设置参数 `auto_analyze_start_time` 和 `auto_analyze_end_time` 来指定自动收集作业在业务负载较低的时间段内执行。此外，也可以通过将参数 `enable_auto_analyze` 设置为 `false` 来完全停用此功能。
 
@@ -130,22 +118,30 @@ SET GLOBAL auto_analyze_end_time = "14:00:00"; // 把终止时间设置为下午
 
 ### 外表收集
 
-外表通常为 Hive、Iceberg、JDBC 以及其他类型的表。
+外表通常为 Hive、Iceberg、JDBC 等类型的表。
 
 - 在手动收集方面，Hive, Iceberg 和 JDBC 表均支持手动收集统计信息。其中，Hive 表支持手动进行全量和采样收集，而 Iceberg 和 JDBC 表则仅支持手动全量收集。其他类型的外表则不支持手动收集统计信息。
 
 - 在自动收集方面，当前仅 Hive 表提供支持。
 
-需要注意的是，外部 Catalog 默认情况下不参与自动收集。这是因为外部 Catalog 通常包含大量历史数据，如果进行自动收集，可能会占用过多资源。然而，你可以通过设置 Catalog 的属性来启用或禁用外部 Catalog 的自动收集功能。
+需要注意的是，外部 Catalog 默认情况下不参与自动收集列统计信息，只收集表的行数信息。这是因为外部 Catalog 通常包含大量历史数据，如果全部自动收集列统计信息，可能会占用过多资源。在确有需求的情况下，用户可以通过设置 Catalog 的属性来打开外部 Catalog 的自动收集列统计信息功能。
 
 ```sql
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // 打开自动收集
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); // 关闭自动收集
+ALTER CATALOG <catalog_name> SET PROPERTIES ('enable.auto.analyze'='true'); // 打开自动收集列统计信息
+ALTER CATALOG <catalog_name> SET PROPERTIES ('enable.auto.analyze'='false'); // 关闭自动收集列统计信息
 ```
 
-外表没有健康度的概念。在启用了 Catalog 的自动收集属性后，为了避免频繁收集，对于一张外表，系统默认在 24 小时之内只对其进行一次自动收集。你可以通过 `external_table_auto_analyze_interval_in_millis` 变量来控制外表的最小收集时间间隔。
+如果控制整个 Catalog 的粒度太大，我们还支持在表级别打开和关闭自动列统计信息收集。
 
-在默认状态下，外表不会收集统计信息。但是对于 Hive 和 Iceberg 表，系统会尝试通过 Hive Metastore 和 Iceberg API 来获取行数信息。
+```sql
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "enable"); // 打开这张表自动收集列统计信息功能（优先级高于 Catalog 的 enable.auto.analyze 属性）
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "disable"); // 关闭这张表自动收集列统计信息功能（优先级高于 Catalog 的 enable.auto.analyze 属性）
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "base_on_catalog"); // 由 Catalog 的 enable.auto.analyze 属性来决定这张表是否自动收集列统计信息
+```
+
+外表没有健康度的概念。在启用了 Catalog 或 Table 的自动收集列统计信息功能后，为了避免频繁收集，对于一张外表，系统默认在 24 小时之内只对其进行一次自动收集。你可以通过 `external_table_auto_analyze_interval_in_millis` 变量来控制外表的最小收集时间间隔。
+
+在默认状态下，外表不会收集列统计信息，只收集行数信息。不同外表收集行数信息的方法如下：
 
 **1. 对于 Hive 表**
 
@@ -193,16 +189,7 @@ SHOW table stats table_name;
 
 **1. 语法：**
 
-```sql
-SHOW [AUTO] ANALYZE < table_name | job_id >
-    [ WHERE STATE = < "PENDING" | "RUNNING" | "FINISHED" | "FAILED" > ];
-```
-
-- `AUTO`：展示自动收集历史作业信息。如果不指定，则展示手动 `ANALYZE` 历史作业信息。
-
-- `table_name`：表名，指定后可查看该表对应的统计作业信息。可以是 `db_name.table_name` 形式。不指定时返回所有统计作业信息。
-
-- `job_id`：统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定 ID 时，此命令返回所有统计作业信息。
+具体可参阅SQL手册[SHOW ANALYZE](../../sql-manual/sql-statements/statistics/SHOW-ANALYZE)
 
 **2. 输出结果**
 
@@ -474,7 +461,7 @@ Set global auto_analyze_table_width_threshold=350
 
 ### Q3：为什么部分列没有统计信息？
 
-目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONV、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
+目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
 
 ### Q4：报错 "Stats table not available, please make sure your cluster status is normal"
 

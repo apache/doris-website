@@ -153,6 +153,8 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 ## 注意事项
 
+* 当前版本 nereids 优化器不支持并发Outfile，若开启了 nereids 优化器，并发 Outfile 将直接回退老优化器，由老优化器来进行并发 Outfile 导出。同时，当前版本 pipeline 引擎也不支持并发 Outfile，若开启了 pipeline 引擎, 并发 Outfile 将回退到单并发导出。
+
 * 如果不开启并发导出，查询结果是由单个 BE 节点，单线程导出的。因此导出时间和导出结果集大小正相关。开启并发导出可以降低导出的时间。
 
 * 导出命令不会检查文件及文件路径是否存在。是否会自动创建路径、或是否会覆盖已存在文件，完全由远端存储系统的语义决定。

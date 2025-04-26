@@ -70,7 +70,7 @@ SELECT json_valid('invalid json');
 
 ```
 
-3. NULL参数
+3. NULL 参数
 
 ```sql
 SELECT json_valid(NULL);

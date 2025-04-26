@@ -28,7 +28,7 @@ Doris provides the following methods to load data from Kafka:
 
 - **Using Routine Load to consume Kafka data**
 
-Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated.For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
+Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated. For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
 
 - **Doris Kafka Connector to consume Kafka data**
 
@@ -90,13 +90,12 @@ FROM KAFKA(
 **Step 4: Check Loaded Data**
 
 ```SQL
-mysql> select * from test_routineload_tbl;
+select * from test_routineload_tbl;
 +-----------+----------------+------+
 | user_id   | name           | age  |
 +-----------+----------------+------+
 |  1        | Emily          | 25   |
 +-----------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### Multi-Table Load
@@ -158,21 +157,19 @@ FROM KAFKA(
 **Step 4: Check Loaded Data**
 
 ```SQL
-mysql> select * from test_multi_table_load1;
+select * from test_multi_table_load1;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
 |  1   | Emily          | 25   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 
-mysql> select * from test_multi_table_load2;
+select * from test_multi_table_load2;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
 |  2   | Benjamin       | 35   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### **Configure Security Authentication**

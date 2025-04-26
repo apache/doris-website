@@ -45,7 +45,7 @@ SELECT /*+ USE_CBO_RULE(rule1, rule2, ...) */ ...
 
 此 Hint 紧跟在 `SELECT` 关键字之后，并在括号内指定要启用的规则名称（规则名称不区分大小写）。
 
-当前 Doris 优化器支持若干中代价改写，可以通过 `USE_CBO_RULE` hint 来显式启用，例如：
+当前 Doris 优化器支持若干种代价改写，可以通过 `USE_CBO_RULE` hint 来显式启用，例如：
 
 - PUSH_DOWN_AGG_THROUGH_JOIN
 - PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
@@ -70,7 +70,7 @@ explain shape plan
     ;
 ```
 
-在此示例中启用了一个聚合下推 CBO 规则。这一操作可以使表 a 能够在连接操作之前进行提前聚合，减少连接的开销，加速查询。下压后的计划如下：
+在此示例中启用了一个聚合下推 CBO 规则。这一操作可以使表 a 能够在连接操作之前进行提前聚合，减少连接的开销，加速查询。下推后的计划如下：
 
 ```sql
 PhysicalResultSink
@@ -85,4 +85,4 @@ PhysicalResultSink
 
 ## 总结
 
-合理使用 `USE_CBO_RULE` hint，可以帮助手动启用部分高级 CBO 优化规则，在特定场景下优化性能。但是使用 CBO 优化规则需要对查询优化过程和数据特性有深入的理解，在大多数情况下，依赖 Doris 优化器的自动决策仍然是最佳的选择。
+合理使用 `USE_CBO_RULE` hint，可以帮助手动启用部分高级 CBO 优化规则，在特定场景下优化性能。但使用 CBO 优化规则需要对查询优化过程和数据特性有深入的理解，在大多数情况下，依赖 Doris 优化器的自动决策仍然是最佳的选择。
