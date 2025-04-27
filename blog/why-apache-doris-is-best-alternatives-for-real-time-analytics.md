@@ -288,7 +288,7 @@ Elasticsearch does not support querying external data, and of course, it does no
 
 **Elasticsearch** is good at point queries (retrieving just a small amount of data). However, it might struggle with complex analytical workloads.
 
-[Elasticsearch httplogs](https://elasticsearch-benchmarks.elastic.co/) and the Microsoft Azure [logsbench](https://gigaom.com/report/log-data-analytics-testing/) are benchmarks for log storage and search. Both tests show that Doris is about 3~4 times faster than Elasticsearch in data writing, but only uses 1/6~1/4 of the storage space that Elasticsearch uses. Then for data queries, Doris is more than 2 times faster than Elasticsearch.
+[Elasticsearch httplogs](https://elasticsearch-benchmarks.elastic.co/) and the Microsoft Azure [logsbench](https://gigaom.com/report/log-data-analytics-testing/) are benchmarks for log storage and search. Both tests show that Doris is about 3 - 4 times faster than Elasticsearch in data writing, but only uses 1/6 - 1/4 of the storage space that Elasticsearch uses. Then for data queries, Doris is more than 2 times faster than Elasticsearch.
 
 ![Query performance.png](/images/es-alternatives/Query-performance.png)
 

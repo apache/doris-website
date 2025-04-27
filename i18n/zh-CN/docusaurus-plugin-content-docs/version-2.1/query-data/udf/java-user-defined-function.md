@@ -29,7 +29,7 @@ Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用
 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 1. Java UDF  是较为常见的自定义标量函数 (Scalar Function)，即每输入一行数据，就会有一行对应的结果输出，较为常见的有 ABS，LENGTH 等。值得一提的是对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 2. Java UDAF 即为自定义的聚合函数 (Aggregate Function)，即在输入多行数据进行聚合后，仅输出一行对应的结果，较为常见的有 MIN，MAX，COUNT 等。
-3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。
+3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。**该功能自 Doris 3.0 版本起开始支持。**
 
 ## 类型对应关系
 
@@ -349,51 +349,11 @@ public void destroy(State state) {
     ```
 
 ### Java-UDTF 实例介绍
+
 :::tip
 UDTF 自 Doris 3.0 版本开始支持
 :::
 
-1. 首先编写对应的 Java UDTF 代码，打包生成 JAR 包。
-UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，但是 UDTF 函数的返回值必须是 Array 类型。
-
-    ```JAVA
-    public class UDTFStringTest {
-        public ArrayList<String> evaluate(String value, String separator) {
-            if (value == null || separator == null) {
-                return null;
-            } else {
-                return new ArrayList<>(Arrays.asList(value.split(separator)));
-            }
-        }
-    }
-    ```
-
-2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上 `_outer` 后缀，其中带后缀 `_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers)。 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
-
-    ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-        "file"="file:///pathTo/java-udtf.jar",
-        "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-        "always_nullable"="true",
-        "type"="JAVA_UDF"
-    );
-    ```
-
-3. 使用 Java-UDTF, 在 Doris 中使用 UDTF 需要结合 [Lateral View](../lateral-view.md), 实现行转列的效果 :
-
-    ```sql
-    select id, str, e1 from test_table lateral view java_utdf(str,',') tmp as e1;
-    +------+-------+------+
-    | id   | str   | e1   |
-    +------+-------+------+
-    |    1 | a,b,c | a    |
-    |    1 | a,b,c | b    |
-    |    1 | a,b,c | c    |
-    |    6 | d,e   | d    |
-    |    6 | d,e   | e    |
-    +------+-------+------+
-    ```
 
 ## 最佳实践
 
