@@ -226,15 +226,15 @@ SQL Block Rule 是一种在规划时进行熔断的配置，但是由于规划�
 
 自 Doris 2.1 版本起，可以通过 Workload Policy 可以实现大查询的熔断。
 
-| 版本                 | 2.1 |
-|--------------------|-----|
-| select             | √   |
-| insert into select | √   |
-| insert into values | X   |
-| stream load        | √   |
-| routine load       | √   |
-| backup             | X   |
-| compaction         | X   |
+| 版本                 | 自2.1起 |
+|--------------------|-------|
+| select             | 支持    |
+| insert into select | 支持    |
+| insert into values | 不支持   |
+| stream load        | 支持    |
+| routine load       | 支持    |
+| backup             | 不支持   |
+| compaction         | 不支持   |
 
 ### 创建熔断策略
 使用 `CREATE WORKLOAD Policy` 命令可以创建资源管理策略。

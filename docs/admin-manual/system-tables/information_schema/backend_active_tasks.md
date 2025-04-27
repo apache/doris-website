@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-View the tasks of the currently running Pipeline in the Backend
+View the resource usage of Query or Load tasks currently running on Backends.
 
 ## Database
 
