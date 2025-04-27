@@ -38,9 +38,9 @@ under the License.
 
 都是有符号整数，xxINT 的差异是占用字节数和表示范围
 
-- TINYINT 占 1 字节，范围 [-128, 127], 更多信息参考 [TINYINT 文档](../../basic-element/sql-manual/sql-data-types/numeric/TINYINT.md)。
+- TINYINT 占 1 字节，范围 [-128, 127], 更多信息参考 [TINYINT 文档](../../basic-element/sql-data-types/numeric/TINYINT.md)。
 
-- SMALLINT 占 2 字节，范围 [-32768, 32767], 更多信息参考 [SMALLINT 文档](../../basic-element/sql-manual/sql-data-types/numeric/SMALLINT.md)。
+- SMALLINT 占 2 字节，范围 [-32768, 32767], 更多信息参考 [SMALLINT 文档](../../basic-element/sql-data-types/numeric/SMALLINT.md)。
 
 - INT 占 4 字节，范围 [-2147483648, 2147483647], 更多信息参考 [INT 文档](../../basic-element/sql-data-types/numeric/INT.md)。
 
