@@ -39,37 +39,26 @@ The following rapid deployment methods are intended solely for local development
 
 Starting from Doris version 2.1.8, Docker can be used for rapid deployment.
 
-### Step 1: Create the docker-compose.yaml File
+### Step 1: Download the Quick-Start script
 
-Copy the following content into the docker-compose.yaml file, and replace the `DORIS_QUICK_START_VERSION` parameter with the specified version, such as `3.0.1`.
-
-```text
-version: "3"
-services:
-  fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: fe
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - FE_ID=1
-    network_mode: host
-  be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: be
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - BE_ADDR=127.0.0.1:9050
-    depends_on:
-      - fe
-    network_mode: host
-```
-
-### Step 2: Start Cluster
-
-Start the cluster using the docker-compose command.
+[Download the script](/files/start-doris.sh), run the following command to grant it the corresponding execution permissions.
 
 ```shell
-docker-compose -f ./docker-compose.yaml up -d
+chmod 755 start-doris.sh
+```
+
+### Step 2: Start the cluster
+
+Run the script to start the cluster, using the `2.1.9` version by default
+
+```shell
+bash start-doris.sh
+```
+
+You can specify the startup version through the -v parameter, such as:
+
+```shell
+bash start-doris.sh -v 2.1.8
 ```
 
 ### Step 3: Connect to the cluster using MySQL client and check the cluster status
