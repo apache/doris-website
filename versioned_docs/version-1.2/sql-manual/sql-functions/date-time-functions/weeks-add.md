@@ -1,6 +1,6 @@
 ---
 {
-    "title": "weeks_add",
+    "title": "WEEKS_ADD",
     "language": "en"
 }
 ---

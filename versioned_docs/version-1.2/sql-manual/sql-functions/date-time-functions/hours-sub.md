@@ -1,6 +1,6 @@
 ---
 {
-    "title": "hours_sub",
+    "title": "HOURS_SUB",
     "language": "en"
 }
 ---

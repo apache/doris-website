@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_quote",
+    "title": "JSON_QUOTE",
     "language": "en"
 }
 ---

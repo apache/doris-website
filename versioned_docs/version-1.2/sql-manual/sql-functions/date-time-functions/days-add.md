@@ -1,6 +1,6 @@
 ---
 {
-    "title": "days_add",
+    "title": "DAYS_ADD",
     "language": "en"
 }
 ---

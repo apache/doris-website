@@ -187,3 +187,5 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+
+Doris也支持`AWS Assume Role`的方式使用S3 Load 和 TVF 请参考[AWS 集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

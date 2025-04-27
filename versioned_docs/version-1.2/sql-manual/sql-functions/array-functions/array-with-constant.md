@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_with_constant",
+    "title": "ARRAY_WITH_CONSTANT",
     "language": "en"
 }
 ---

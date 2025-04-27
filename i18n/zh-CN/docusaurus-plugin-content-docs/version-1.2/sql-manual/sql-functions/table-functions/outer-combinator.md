@@ -1,6 +1,6 @@
 ---
 {
-    "title": "outer组合器",
+    "title": "OUTER组合器",
     "language": "zh-CN"
 }
 ---

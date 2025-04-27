@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap-union-int",
+    "title": "BITMAP-UNION-INT",
     "language": "en"
 }
 ---

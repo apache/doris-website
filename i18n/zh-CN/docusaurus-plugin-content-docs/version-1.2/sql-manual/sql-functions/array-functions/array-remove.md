@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_remove",
+    "title": "ARRAY_REMOVE",
     "language": "zh-CN"
 }
 ---

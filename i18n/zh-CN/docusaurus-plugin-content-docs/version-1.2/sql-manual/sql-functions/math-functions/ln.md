@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ln",
+    "title": "LN",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "null_or_empty",
+    "title": "NULL_OR_EMPTY",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bit_length",
+    "title": "BIT_LENGTH",
     "language": "zh-CN"
 }
 ---

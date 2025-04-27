@@ -1,6 +1,6 @@
 ---
 {
-    "title": "tan",
+    "title": "TAN",
     "language": "en"
 }
 ---

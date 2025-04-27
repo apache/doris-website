@@ -1,6 +1,6 @@
 ---
 {
-    "title": "random",
+    "title": "RANDOM",
     "language": "en"
 }
 ---

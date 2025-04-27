@@ -1,6 +1,6 @@
 ---
 {
-    "title": "mask_first_n",
+    "title": "MASK_FIRST_N",
     "language": "zh-CN"
 }
 ---

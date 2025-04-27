@@ -1,6 +1,6 @@
 ---
 {
-    "title": "str_to_date",
+    "title": "STR_TO_DATE",
     "language": "zh-CN"
 }
 ---

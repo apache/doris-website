@@ -1,6 +1,6 @@
 ---
 {
-    "title": "jsonb_type",
+    "title": "JSONB_TYPE",
     "language": "zh-CN"
 }
 ---

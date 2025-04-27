@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_intersect",
+    "title": "BITMAP_INTERSECT",
     "language": "en"
 }
 ---

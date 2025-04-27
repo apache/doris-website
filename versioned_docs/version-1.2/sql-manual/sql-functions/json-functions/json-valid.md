@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_valid",
+    "title": "JSON_VALID",
     "language": "en"
 }
 ---

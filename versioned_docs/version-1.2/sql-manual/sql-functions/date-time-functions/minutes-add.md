@@ -1,6 +1,6 @@
 ---
 {
-    "title": "minutes_add",
+    "title": "MINUTES_ADD",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "find_in_set",
+    "title": "FIND_IN_SET",
     "language": "en"
 }
 ---

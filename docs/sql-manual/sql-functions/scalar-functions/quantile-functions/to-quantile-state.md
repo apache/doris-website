@@ -1,6 +1,6 @@
 ---
 {
-    "title": "to_quantile_state",
+    "title": "TO_QUANTILE_STATE",
     "language": "en"
 }
 ---

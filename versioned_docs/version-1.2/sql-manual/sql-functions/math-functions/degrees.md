@@ -1,6 +1,6 @@
 ---
 {
-    "title": "degrees",
+    "title": "DEGREES",
     "language": "en"
 }
 ---

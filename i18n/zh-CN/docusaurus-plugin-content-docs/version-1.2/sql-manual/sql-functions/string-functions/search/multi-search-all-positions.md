@@ -1,6 +1,6 @@
 ---
 {
-    "title": "multi_search_all_positions",
+    "title": "MULTI_SEARCH_ALL_POSITIONS",
     "language": "zh-CN"
 }
 ---

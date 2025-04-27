@@ -1,6 +1,6 @@
 ---
 {
-    "title": "month_floor",
+    "title": "MONTH_FLOOR",
     "language": "en"
 }
 ---

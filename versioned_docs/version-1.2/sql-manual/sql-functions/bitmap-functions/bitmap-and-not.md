@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_and_not",
+    "title": "BITMAP_AND_NOT",
     "language": "en"
 }
 ---

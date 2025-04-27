@@ -1,6 +1,6 @@
 ---
 {
-    "title": "approx_top_sum",
+    "title": "APPROX_TOP_SUM",
     "language": "zh-CN"
 }
 ---

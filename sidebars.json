@@ -158,6 +158,7 @@
                                 "data-operate/import/data-source/minio",
                                 "data-operate/import/data-source/s3-compatible",
                                 "data-operate/import/data-source/snowflake",
+                                "data-operate/import/data-source/bigquery",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
@@ -301,6 +302,7 @@
                         },
                         "query-acceleration/sql-cache-manual",
                         "query-acceleration/high-concurrent-point-query",
+                        "query-acceleration/dictionary",
                         {
                             "type": "category",
                             "label": "Distincting Counts",
@@ -457,7 +459,8 @@
                                 "lakehouse/best-practices/doris-lakesoul",
                                 "lakehouse/best-practices/doris-aws-s3tables",
                                 "lakehouse/best-practices/tpch",
-                                "lakehouse/best-practices/tpcds"
+                                "lakehouse/best-practices/tpcds",
+                                "lakehouse/best-practices/doris-maxcompute"
                             ]
                         }
                     ]
@@ -473,8 +476,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
-                        "compute-storage-decoupled/upgrade",
-                        "compute-storage-decoupled/meta-service-api"
+                        "compute-storage-decoupled/upgrade"
                     ]
                 },
                 {
@@ -520,6 +522,13 @@
                                     ]
                                 },
                                 "admin-manual/auth/encryption-function"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
                             ]
                         }
                     ]
@@ -957,6 +966,10 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/atan2",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/bin",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/sin",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/sinh",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/asinh",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/acosh",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/atanh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cos",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
@@ -1577,7 +1590,7 @@
                             "type": "category",
                             "label": "Analytic (Window) Functions",
                             "items": [
-                                "sql-manual/sql-functions/window-functions/window-function",
+                                "sql-manual/sql-functions/window-functions/overview",
                                 "sql-manual/sql-functions/window-functions/rank",
                                 "sql-manual/sql-functions/window-functions/dense-rank",
                                 "sql-manual/sql-functions/window-functions/percent-rank",
@@ -1887,7 +1900,8 @@
                                         "sql-manual/sql-statements/table-and-view/async-materialized-view/PAUSE-MATERIALIZED-VIEW-JOB",
                                         "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB"
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB",
+                                        "sql-manual/sql-statements/table-and-view/async-materialized-view/SHOW-CREATE-ASYNC-MATERIALIZED-VIEW"
                                     ]
                                 },
                                 {

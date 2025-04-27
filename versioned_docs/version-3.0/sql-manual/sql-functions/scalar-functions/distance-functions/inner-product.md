@@ -1,6 +1,6 @@
 ---
 {
-    "title": "inner_product",
+    "title": "INNER_PRODUCT",
     "language": "en"
 }
 ---

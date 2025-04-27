@@ -1,6 +1,6 @@
 ---
 {
-    "title": "jsonb_extract",
+    "title": "JSONB_EXTRACT",
     "language": "en"
 }
 ---

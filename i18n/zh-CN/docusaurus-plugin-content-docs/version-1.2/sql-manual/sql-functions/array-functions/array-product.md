@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_product",
+    "title": "ARRAY_PRODUCT",
     "language": "zh-CN"
 }
 ---

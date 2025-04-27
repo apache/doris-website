@@ -1,6 +1,6 @@
 ---
 {
-    "title": "weeks_diff",
+    "title": "WEEKS_DIFF",
     "language": "en"
 }
 ---

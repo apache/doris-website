@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Distance_Sphere",
+    "title": "ST_DISTANCE_SPHERE",
     "language": "zh-CN"
 }
 ---

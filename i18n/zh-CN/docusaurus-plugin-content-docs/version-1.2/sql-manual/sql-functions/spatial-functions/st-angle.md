@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Angle",
+    "title": "ST_ANGLE",
     "language": "zh-CN"
 }
 ---

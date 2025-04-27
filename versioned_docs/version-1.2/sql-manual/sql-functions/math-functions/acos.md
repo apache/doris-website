@@ -1,6 +1,6 @@
 ---
 {
-    "title": "acos",
+    "title": "ACOS",
     "language": "en"
 }
 ---

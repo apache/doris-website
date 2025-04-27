@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_compact",
+    "title": "ARRAY_COMPACT",
     "language": "en"
 }
 ---

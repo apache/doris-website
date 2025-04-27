@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_contains",
+    "title": "BITMAP_CONTAINS",
     "language": "en"
 }
 ---

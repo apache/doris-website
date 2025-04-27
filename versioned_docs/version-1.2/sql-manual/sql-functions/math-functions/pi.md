@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Pi",
+    "title": "PI",
     "language": "en"
 }
 ---

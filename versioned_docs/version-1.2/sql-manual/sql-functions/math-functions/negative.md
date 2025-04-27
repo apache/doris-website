@@ -1,6 +1,6 @@
 ---
 {
-    "title": "negative",
+    "title": "NEGATIVE",
     "language": "en"
 }
 ---

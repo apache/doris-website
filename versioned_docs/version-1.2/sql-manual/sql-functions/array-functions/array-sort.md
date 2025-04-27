@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_sort",
+    "title": "ARRAY_SORT",
     "language": "en"
 }
 ---

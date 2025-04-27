@@ -1,6 +1,6 @@
 ---
 {
-    "title": "hour_floor",
+    "title": "HOUR_FLOOR",
     "language": "zh-CN"
 }
 ---

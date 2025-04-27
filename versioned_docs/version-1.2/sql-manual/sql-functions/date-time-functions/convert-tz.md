@@ -1,6 +1,6 @@
 ---
 {
-    "title": "convert_tz",
+    "title": "CONVERT_TZ",
     "language": "en"
 }
 ---

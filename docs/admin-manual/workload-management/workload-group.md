@@ -732,7 +732,11 @@ After the upload is successful, you can use the command to view the schema infor
       You can create a test Workload Group that only stresses the query load and then check the CPU usage of the
       Workload Group through the system table ```information_schema.workload_group_resource_usage```.
       This table only records the CPU usage of the Workload Group and has been supported since version 2.1.6.
-    * Some users have configured the ```cpu_resource_limit```. After configuring this parameter, queries are handled by an independent thread pool that
+    * Some users have configured the ```cpu_resource_limit```.First, execute ```show property for jack like 'cpu_resource_limit'``` 
+      to check whether this parameter is set in the properties of the user jack.
+      Then, execute ```show variables like 'cpu_resource_limit'``` to verify whether this parameter is set in the session variables.
+      The default value of this parameter is -1, which indicates that it is not set. 
+      After configuring this parameter, queries are handled by an independent thread pool that
       is not managed by the Workload Group. Directly modifying this parameter may affect the stability of the production environment.
       It is recommended to gradually migrate the query loads that are configured with this parameter to be managed by the Workload Group.
       The current alternative to this parameter is the session variable ```num_scanner_threads```. The main process is as follows:

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "running_difference",
+    "title": "RUNNING_DIFFERENCE",
     "language": "zh-CN"
 }
 ---

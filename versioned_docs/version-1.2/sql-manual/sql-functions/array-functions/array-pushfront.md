@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_pushfront",
+    "title": "ARRAY_PUSHFRONT",
     "language": "en"
 }
 ---

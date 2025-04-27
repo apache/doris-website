@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ceil",
+    "title": "CEIL",
     "language": "zh-CN"
 }
 ---

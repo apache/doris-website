@@ -1,6 +1,6 @@
 ---
 {
-    "title": "log2",
+    "title": "LOG2",
     "language": "en"
 }
 ---

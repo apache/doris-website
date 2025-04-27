@@ -82,7 +82,7 @@ In most cases, each operator in a Pipeline corresponds to a PlanNode, but there 
 * SortNode is split into SortSinkOperator and SortSourceOperator.
 The basic principle is that for certain "breaking" operators (those that need to collect all the data before performing computation), the data ingestion part is split into a Sink, while the part that retrieves data from the operator is referred to as the Source.
 
-## Scan 并行化
+## Parallel Scan
 Scanning data is a very heavy I/O operation, as it requires reading large amounts of data from local disks (or from HDFS or S3 in the case of data lake scenarios, which introduces even longer latency), consuming a significant amount of time. Therefore, we have introduced parallel scanning technology in the ScanOperator. The ScanOperator dynamically generates multiple Scanners, each of which scans around 1 to 2 million rows of data. While performing the scan, each Scanner handles tasks such as data decompression, filtering, and other calculations, and then sends the data to a DataQueue for the ScanOperator to read.
 
 ![pip_exec_5](/images/pip_exec_5.png)

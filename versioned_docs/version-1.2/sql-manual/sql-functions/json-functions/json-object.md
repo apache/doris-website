@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_object",
+    "title": "JSON_OBJECT",
     "language": "en"
 }
 ---
