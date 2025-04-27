@@ -1356,11 +1356,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
-* Default: 10000
-
 ### Compute and Storage Disaggregated Mode
 
 #### `deploy_mode`

@@ -441,12 +441,6 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
    group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
    ```
 
-2. `group_commit_memory_rows_for_max_filter_ratio`
-
-   * 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作
-
-   * 默认值：10000
-
 ## 使用限制
 
 * **Group Commit 限制条件**
@@ -466,10 +460,6 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * **Unique 模型**
   - Group Commit 不保证提交顺序，建议使用 Sequence 列来保证数据一致性。
-
-* **max_filter_ratio 支持**
-  - 默认导入中，`filter_ratio` 通过失败行数和总行数计算。
-  - Group Commit 模式下，`max_filter_ratio` 在总行数不超过 `group_commit_memory_rows_for_max_filter_ratio` 时有效。
 
 * **WAL 限制**
   - `async_mode` 写入会将数据写入 WAL，成功后删除，失败时通过 WAL 恢复。
@@ -635,20 +625,20 @@ PROPERTIES (
 
 **30 并发 sync 模式 5 个 BE3 副本性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 321.5      | 307.3      | 285.8    | 224.3    |
 
 
 **100 并发 sync 模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 1175.2     | 1108.7     | 1016.3    | 704.5  |
 
 **500 并发 sync 模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 3289.8    | 3686.7      | 3280.7    | 2609.2   |
 
@@ -711,18 +701,18 @@ PROPERTIES (
 
 **30 并发 sync 模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
 **100 并发 sync 模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
 
 **500 并发 sync 模式性能测试**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |

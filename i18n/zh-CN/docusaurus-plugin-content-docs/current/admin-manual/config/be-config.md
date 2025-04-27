@@ -1336,11 +1336,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
-* 默认值：10000
-
 ### 存算分离模式
 
 #### `deploy_mode`
