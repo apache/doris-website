@@ -29,19 +29,19 @@ Returns the logarithm of `x` based on base `b`.
 ## Syntax
 
 ```sql
-LOG(<a>,<x>)
+LOG(<b>,<x>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-----------|------------|
-| `<a>`   | Base should be greater than 0 and not be exactly 1.0 |
-| `<x>`   | Antilogarithm should be greater than 0 |
+| `<b>`     | Base should be greater than 0 and not be exactly 1.0 |
+| `<x>`     | Antilogarithm should be greater than 0 |
 
 ## Return value
 
-Return a float point number. Special cases:
+Return b float point number. Special cases:
 
 - If a IS NULL or x IS NULL, return NULL
 
