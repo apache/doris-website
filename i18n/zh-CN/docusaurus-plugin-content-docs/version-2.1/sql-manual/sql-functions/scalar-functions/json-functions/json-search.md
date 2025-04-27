@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_search",
+    "title": "JSON_SEARCH",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "months_sub",
+    "title": "MONTHS_SUB",
     "language": "en"
 }
 ---

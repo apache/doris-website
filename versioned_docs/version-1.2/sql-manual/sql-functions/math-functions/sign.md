@@ -1,6 +1,6 @@
 ---
 {
-    "title": "sign",
+    "title": "SIGN",
     "language": "en"
 }
 ---

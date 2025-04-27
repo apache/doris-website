@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_shuffle",
+    "title": "ARRAY_SHUFFLE",
     "language": "en"
 }
 ---

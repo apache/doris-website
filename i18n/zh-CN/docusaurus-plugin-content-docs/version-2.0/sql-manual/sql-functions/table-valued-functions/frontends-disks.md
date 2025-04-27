@@ -1,6 +1,6 @@
 ---
 {
-    "title": "frontends_disks",
+    "title": "FRONTENDS_DISKS",
     "language": "zh-CN"
 }
 ---

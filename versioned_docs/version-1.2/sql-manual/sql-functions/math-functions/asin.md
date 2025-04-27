@@ -1,6 +1,6 @@
 ---
 {
-    "title": "asin",
+    "title": "ASIN",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "cosine_distance",
+    "title": "COSINE_DISTANCE",
     "language": "zh-CN"
 }
 ---

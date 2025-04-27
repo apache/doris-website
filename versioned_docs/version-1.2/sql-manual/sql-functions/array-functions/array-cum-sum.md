@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_cum_sum",
+    "title": "ARRAY_CUM_SUM",
     "language": "en"
 }
 ---

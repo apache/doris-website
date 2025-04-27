@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_distinct",
+    "title": "ARRAY_DISTINCT",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Polygon,ST_PolyFromText,ST_PolygonFromText",
+    "title": "ST_POLYGON,ST_POLYFROMTEXT,ST_POLYGONFROMTEXT",
     "language": "zh-CN"
 }
 ---

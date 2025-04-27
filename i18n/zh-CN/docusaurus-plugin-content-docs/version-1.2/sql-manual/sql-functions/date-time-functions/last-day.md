@@ -1,6 +1,6 @@
 ---
 {
-    "title": "last_day",
+    "title": "LAST_DAY",
     "language": "zh-CN"
 }
 ---

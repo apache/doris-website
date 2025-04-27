@@ -1,6 +1,6 @@
 ---
 {
-    "title": "radians",
+    "title": "RADIANS",
     "language": "zh-CN"
 }
 ---

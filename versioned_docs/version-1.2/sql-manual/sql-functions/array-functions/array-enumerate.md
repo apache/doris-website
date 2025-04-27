@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_enumerate",
+    "title": "ARRAY_ENUMERATE",
     "language": "en"
 }
 ---

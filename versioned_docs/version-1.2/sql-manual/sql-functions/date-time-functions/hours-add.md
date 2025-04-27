@@ -1,6 +1,6 @@
 ---
 {
-    "title": "hours_add",
+    "title": "HOURS_ADD",
     "language": "en"
 }
 ---

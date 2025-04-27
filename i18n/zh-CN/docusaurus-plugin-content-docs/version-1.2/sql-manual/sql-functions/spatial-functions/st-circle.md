@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Circle",
+    "title": "ST_CIRCLE",
     "language": "zh-CN"
 }
 ---

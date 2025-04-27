@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_subset_limit",
+    "title": "BITMAP_SUBSET_LIMIT",
     "language": "en"
 }
 ---

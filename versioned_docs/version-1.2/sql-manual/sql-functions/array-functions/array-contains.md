@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_contains",
+    "title": "ARRAY_CONTAINS",
     "language": "en"
 }
 ---

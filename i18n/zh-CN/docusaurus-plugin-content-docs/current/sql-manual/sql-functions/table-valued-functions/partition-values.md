@@ -1,6 +1,6 @@
 ---
 {
-    "title": "partition_values",
+    "title": "PARTITION_VALUES",
     "language": "zh-CN"
 }
 ---

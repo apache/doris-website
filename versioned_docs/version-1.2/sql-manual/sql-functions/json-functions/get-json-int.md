@@ -1,6 +1,6 @@
 ---
 {
-    "title": "get_json_int",
+    "title": "GET_JSON_INT",
     "language": "en"
 }
 ---

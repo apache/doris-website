@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_and_not_count",
+    "title": "BITMAP_AND_NOT_COUNT",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "least",
+    "title": "LEAST",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "current_timestamp",
+    "title": "CURRENT_TIMESTAMP",
     "language": "zh-CN"
 }
 ---

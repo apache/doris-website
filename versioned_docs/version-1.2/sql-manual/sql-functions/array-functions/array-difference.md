@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_difference",
+    "title": "ARRAY_DIFFERENCE",
     "language": "en"
 }
 ---

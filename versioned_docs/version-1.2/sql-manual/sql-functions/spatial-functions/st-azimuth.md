@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_Azimuth",
+    "title": "ST_AZIMUTH",
     "language": "en"
 }
 ---

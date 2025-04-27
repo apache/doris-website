@@ -1,6 +1,6 @@
 ---
 {
-    "title": "time_round",
+    "title": "TIME_ROUND",
     "language": "en"
 }
 ---

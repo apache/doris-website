@@ -1,6 +1,6 @@
 ---
 {
-    "title": "log",
+    "title": "LOG",
     "language": "zh-CN"
 }
 ---

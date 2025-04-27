@@ -1,6 +1,6 @@
 ---
 {
-    "title": "not like",
+    "title": "NOT LIKE",
     "language": "en"
 }
 ---

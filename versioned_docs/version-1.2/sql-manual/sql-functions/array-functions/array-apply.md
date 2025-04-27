@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_apply",
+    "title": "ARRAY_APPLY",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_max",
+    "title": "ARRAY_MAX",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_min",
+    "title": "ARRAY_MIN",
     "language": "en"
 }
 ---

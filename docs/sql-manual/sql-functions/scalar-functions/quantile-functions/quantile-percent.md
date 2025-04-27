@@ -1,6 +1,6 @@
 ---
 {
-    "title": "quantile_percent",
+    "title": "QUANTILE_PERCENT",
     "language": "en"
 }
 ---

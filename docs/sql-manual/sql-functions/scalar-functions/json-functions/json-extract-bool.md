@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_extract_bool",
+    "title": "JSON_EXTRACT_BOOL",
     "language": "en"
 }
 ---

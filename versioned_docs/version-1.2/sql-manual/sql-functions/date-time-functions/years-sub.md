@@ -1,6 +1,6 @@
 ---
 {
-    "title": "years_sub",
+    "title": "YEARS_SUB",
     "language": "en"
 }
 ---

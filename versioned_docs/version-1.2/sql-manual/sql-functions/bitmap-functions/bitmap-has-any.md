@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_has_any",
+    "title": "BITMAP_HAS_ANY",
     "language": "en"
 }
 ---

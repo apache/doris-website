@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_sub",
+    "title": "DATE_SUB",
     "language": "zh-CN"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "append_trailing_char_if_absent",
+    "title": "APPEND_TRAILING_CHAR_IF_ABSENT",
     "language": "zh-CN"
 }
 ---

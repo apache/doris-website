@@ -1,6 +1,6 @@
 ---
 {
-    "title": "hours_diff",
+    "title": "HOURS_DIFF",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_popfront",
+    "title": "ARRAY_POPFRONT",
     "language": "en"
 }
 ---

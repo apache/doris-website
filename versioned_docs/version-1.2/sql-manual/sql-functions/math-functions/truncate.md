@@ -1,6 +1,6 @@
 ---
 {
-    "title": "truncate",
+    "title": "TRUNCATE",
     "language": "en"
 }
 ---
