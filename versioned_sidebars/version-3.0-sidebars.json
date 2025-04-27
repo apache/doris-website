@@ -884,7 +884,7 @@
                 "faq/lakehouse-faq",
                 "faq/bi-faq",
                 "faq/correctness-faq",
-                "faq/routineload-faq"
+                "faq/load-faq"
             ]
         },
         {
