@@ -201,7 +201,7 @@ FROM KAFKA(
 );
 ```
 :::info 备注
-如果需要将JSON文件中根节点的JSON对象导入，jsonpaths需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
 :::
 
 ### 查看导入状态

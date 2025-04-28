@@ -203,7 +203,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
     ```
     :::info 备注
     若 JSON 文件内容不是 JSON Array，而是每行一个 JSON 对象，添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
-    如果需要将JSON文件中根节点的JSON对象导入，jsonpaths需要指定为$.，如：`-H "jsonpaths:[\"$.\"]"`
+    如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`-H "jsonpaths:[\"$.\"]"`
     :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
