@@ -437,6 +437,24 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.
 - Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
+- Reading a VARIANT column inherently involves scanning all its subfields. If the column contains numerous subfields, this can lead to substantial scan overhead and negatively impact query performance. To optimize performance when you need to retrieve the entire column, consider adding an additional column of type STRING or JSONB to store the raw JSON string. Example:
+``` sql
+-- Lead to scan all subfields of data_variant
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT,
+);
+SELECT * FROM example_table WHERE data_variant LIKE '%doris%'
+
+-- Better performance for `LIKE`
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT,
+  data_string STRING
+);
+SELECT * FROM example_table WHERE data_string LIKE '%doris%'
+```
+
 
 ### FAQ
 1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.

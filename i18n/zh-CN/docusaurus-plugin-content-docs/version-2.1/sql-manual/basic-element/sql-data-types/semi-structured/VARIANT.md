@@ -441,6 +441,23 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 - 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
 - 不支持作为主键或者排序键
 - 查询过滤、聚合需要带 cast，存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
+- 读取整个 VARIANT 列时，会扫描其所有子字段。如果该列包含大量子字段，这可能导致显著的扫描开销，从而影响查询性能。为了优化在需要检索整个列时的性能，建议添加一个 STRING 或 JSONB 类型的附加列，用于存储原始的 JSON 字符串。这种方法允许您直接查询整个 JSON 对象，从而减少扫描成本。
+``` sql
+-- 导致扫描 data_variant 的所有子字段
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT
+);
+SELECT * FROM example_table WHERE data_variant LIKE '%doris%';
+
+-- 对于 `LIKE` 查询，性能更佳
+CREATE TABLE example_table (
+  id INT,
+  data_string STRING,
+  data_variant VARIANT
+);
+SELECT * FROM example_table WHERE data_string LIKE '%doris%';
+```
 
 ### FAQ
 1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。

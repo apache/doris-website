@@ -1504,11 +1504,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
-* 默认值：10000
-
 #### `default_tzfiles_path`
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
