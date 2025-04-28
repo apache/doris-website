@@ -28,10 +28,16 @@ Tableau is a lightweight data visualization analysis platform that combines data
 ## Precondition
 Tableau Desktop via the following link to download: https://www.tableau.com/products/desktop/download
 ## Driver installation
-1. Install iODBC
-   1. Close the Tableau Desktop
-   2. Install iODBC Driver Manager. Obtain the latest version (mxkozzz.dmg) from iODBC.org
-   3. Click on the downloaded dmg file to install
+## Prerequisites
+Tableau Desktop (Mac version only) must be installed with the **Intel version**. Regardless of whether your Mac uses an Intel or Apple Silicon architecture, you must download the Intel version to ensure compatibility with the MySQL driver. You can select and download the Intel version from the "Support Releases" page at the following link:  
+https://www.tableau.com/support/releases  
+
+## Driver Installation
+1. iODBC Installation  
+    1. Close Tableau Desktop  
+    2. Download the latest Driver Manager (mxkozzz.dmg) from the official iODBC website:  
+       https://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/Downloads#Mac%20OS%20X  
+    3. Install the downloaded dmg file
 2. Install the MySQL driver
 
 When choosing the ODBC driver for MySQL to connect to Doris, you should install the MySQL 5.x ODBC driver. Using the latest MySQL driver may result in an "Unsupported command" error when connecting to Doris.
