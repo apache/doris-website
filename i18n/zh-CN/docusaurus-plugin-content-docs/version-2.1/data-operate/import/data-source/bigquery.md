@@ -84,13 +84,16 @@ CREATE TABLE `sales_data` (
   country       VARCHAR(48)
 ) ENGINE=OLAP
 UNIQUE KEY(`order_id`,`order_date`)
-PARTITION BY RANGE(`order_date`) ()
+PARTITION BY RANGE(`order_date`) (
+PARTITION p20250408 VALUES [('2025-04-08'), ('2025-04-09')),
+PARTITION p20250409 VALUES [('2025-04-09'), ('2025-04-10')),
+PARTITION p20250410 VALUES [('2025-04-10'), ('2025-04-11'))
+)
 DISTRIBUTED BY HASH(`order_id`) BUCKETS 16
 PROPERTIES (
  "dynamic_partition.enable" = "true",
  "dynamic_partition.time_unit" = "DAY",
- "dynamic_partition.start" = "-10",
- "dynamic_partition.end" = "10",
+ "dynamic_partition.end" = "5",
  "dynamic_partition.prefix" = "p",
  "dynamic_partition.buckets" = "16",
  "replication_num" = "1"
@@ -115,7 +118,7 @@ PROPERTIES (
 2.2. **查看 GCS 上的导出文件**
 
    以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquerydocs/exporting-data#exporting_data_into_one_or_more_files)，如下
-   ![img](/images/data-operate/gcs_export.png)
+   ![gcs_export](/images/data-operate/gcs_export.png)
 
 ## 3. 导入数据到 Doris
 

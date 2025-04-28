@@ -87,13 +87,16 @@ CREATE TABLE `sales_data` (
   country       VARCHAR(48)
 ) ENGINE=OLAP
 UNIQUE KEY(`order_id`,`order_date`)
-PARTITION BY RANGE(`order_date`) ()
+PARTITION BY RANGE(`order_date`) (
+PARTITION p20250408 VALUES [('2025-04-08'), ('2025-04-09')),
+PARTITION p20250409 VALUES [('2025-04-09'), ('2025-04-10')),
+PARTITION p20250410 VALUES [('2025-04-10'), ('2025-04-11'))
+)
 DISTRIBUTED BY HASH(`order_id`) BUCKETS 16
 PROPERTIES (
  "dynamic_partition.enable" = "true",
  "dynamic_partition.time_unit" = "DAY",
- "dynamic_partition.start" = "-10",
- "dynamic_partition.end" = "10",
+ "dynamic_partition.end" = "5",
  "dynamic_partition.prefix" = "p",
  "dynamic_partition.buckets" = "16",
  "replication_num" = "1"
