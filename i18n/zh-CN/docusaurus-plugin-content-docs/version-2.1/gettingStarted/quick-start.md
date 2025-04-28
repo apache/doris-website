@@ -39,37 +39,27 @@ under the License.
 
 自 Doris 2.1.8 版本后，可以使用 Docker 进行快速部署。
 
-### 第 1 步：创建 docker-compose.yaml 文件
+### 第 1 步：下载 Quick-Start 脚本
 
-复制以下内容到 docker-compose.yaml 文件中，并将 DORIS_QUICK_START_VERSION 替换为指定的 Doris 版本，例如 3.0.1。
+[下载脚本](/files/start-doris.sh)，运行以下命令，给其赋有相应的执行权限。
 
-```text
-version: "3"
-services:
-  fe:
-    image: apache/doris.fe-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: fe
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - FE_ID=1
-    network_mode: host
-  be:
-    image: apache/doris.be-ubuntu:${DORIS_QUICK_START_VERSION}
-    hostname: be
-    environment:
-     - FE_SERVERS=fe1:127.0.0.1:9010
-     - BE_ADDR=127.0.0.1:9050
-    depends_on:
-      - fe
-    network_mode: host
+```shell
+chmod 755 start-doris.sh
 ```
+
 
 ### 第 2 步：启动集群
 
-使用 docker-compose 命令启动集群
+运行脚本，启动集群，默认使用`2.1.9`版本
 
 ```shell
-docker-compose -f ./docker-compose.yaml up -d
+bash start-doris.sh
+```
+
+可通过 -v 参数指定启动版本，如：
+
+```shell
+bash start-doris.sh -v 2.1.8
 ```
 
 ### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
