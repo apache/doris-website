@@ -113,6 +113,7 @@ Doris 支持以下三种 JSON 格式：
 2. Broker Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
+5. 如果需要将JSON文件中根节点的JSON对象导入，jsonpaths需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
 :::
 
 ### 参数说明

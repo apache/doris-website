@@ -207,6 +207,8 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 :::info Note
 
 If the JSON file is not a JSON array but each line is a JSON object, add the headers `-H "strip_outer_array:false"` and `-H "read_json_by_line:true"`.
+
+If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `-H "jsonpaths:[\"$.\"]`"
 :::
 
 ​	Stream Load is a synchronous method, where the result is directly returned to the user.

@@ -113,6 +113,7 @@ The following table lists the JSON format parameters supported by various loadin
 2. Broker Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 4. TVF: Parameters are specified in TVF statements, e.g., `S3("jsonpaths"="$.data")`
+5. If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., PROPERTIES("jsonpaths"="$.")
 :::
 
 ### Parameter Description

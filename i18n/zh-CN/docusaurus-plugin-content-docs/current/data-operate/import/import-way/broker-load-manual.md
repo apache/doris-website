@@ -779,6 +779,9 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
     "hadoop.username"="user"
   );
   ```
+:::info 备注
+如果需要将JSON文件中根节点的JSON对象导入，jsonpaths需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+:::
 
 ### 从其他 Broker 导入
 
