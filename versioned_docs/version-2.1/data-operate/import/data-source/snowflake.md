@@ -107,7 +107,7 @@ PROPERTIES (
 
 2.1. **Export to S3 Parquet Files via COPY INTO**
 
-    Snowflake supports exporting to [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，**Export data partitioned by Doris' partition fields**. Example for AWS S3:
+   Snowflake supports exporting to [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，**Export data partitioned by Doris' partition fields**. Example for AWS S3:
 
     ```sql
     CREATE FILE FORMAT my_parquet_format TYPE = parquet;
@@ -122,7 +122,7 @@ PROPERTIES (
 
 2.2. **Verify Exported Files on S3**
 
-    Exported files are organized into **subdirectories by partition** on S3:
+   Exported files are organized into **subdirectories by partition** on S3:
 
     ![snowflake_s3_out_en](/images/data-operate/snowflake_s3_out_en.png)
 

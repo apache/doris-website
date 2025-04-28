@@ -106,22 +106,20 @@ PROPERTIES (
 
 2.1. **通过 COPY INFO 方式导出到 S3 Parquet 格式的文件**
 
-    Snowflake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
+   Snowflake 支持导出到 [AWS S3](https://docs.snowflake.com/en/user-guide/data-unload-s3)，[GCS](https://docs.snowflake.com/en/user-guide/data-unload-gcs)，[AZURE](https://docs.snowflake.com/en/user-guide/data-unload-azure)，导出时，建议按照**Doris 的分区字段**进行导出。以下为导出到 AWS S3 的示例：
 
-    ```sql
-    CREATE FILE FORMAT my_parquet_format TYPE = parquet;
-
-    CREATE OR REPLACE STAGE external_stage
-    URL='s3://mybucket/sales_data'
-    CREDENTIALS=(AWS_KEY_ID='<ak>' AWS_SECRET_KEY='<sk>')
-    FILE_FORMAT = my_parquet_format;
-
-    COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
-    ```
+   ```sql
+   CREATE FILE FORMAT my_parquet_format TYPE = parquet;   
+   CREATE OR REPLACE STAGE external_stage
+   URL='s3://mybucket/sales_data'
+   CREDENTIALS=(AWS_KEY_ID='<ak>' AWS_SECRET_KEY='<sk>')
+   FILE_FORMAT = my_parquet_format;   
+   COPY INTO @external_stage from sales_data PARTITION BY (CAST(order_date AS VARCHAR)) header=true;
+   ```
 
 2.2. **查看 S3 上的导出文件**
 
-    导出后，在 S3 上会按照**分区划分成具体的子目录**，每一个目录是对应的 如下
+   导出后，在 S3 上会按照**分区划分成具体的子目录**，每一个目录是对应的 如下
 
 ​   ![snowflake_s3_out](/images/data-operate/snowflake_s3_out.png)
 
@@ -137,95 +135,95 @@ PROPERTIES (
 
 3.1. **导入一个分区的数据**
 
-    ```sql
-    LOAD LABEL sales_data_2025_04_08
-    (
-        DATA INFILE("s3://mybucket/sales_data/2025_04_08/*")
-        INTO TABLE sales_data
-        FORMAT AS "parquet"
-        (order_id, order_date, customer_name, amount, country)
-    )
-    WITH S3
-    (
-        "provider" = "S3",
-        "s3.endpoint" = "s3.ap-southeast-1.amazonaws.com",
-        "s3.access_key" = "<ak>",
-        "s3.secret_key" = "<sk>",
-        "s3.region" = "ap-southeast-1"
-    );
-    ```
+   ```sql
+   LOAD LABEL sales_data_2025_04_08
+   (
+       DATA INFILE("s3://mybucket/sales_data/2025_04_08/*")
+       INTO TABLE sales_data
+       FORMAT AS "parquet"
+       (order_id, order_date, customer_name, amount, country)
+   )
+   WITH S3
+   (
+       "provider" = "S3",
+       "s3.endpoint" = "s3.ap-southeast-1.amazonaws.com",
+       "s3.access_key" = "<ak>",
+       "s3.secret_key" = "<sk>",
+       "s3.region" = "ap-southeast-1"
+   );
+   ```
 
 3.2. **通过 Show Load 查看任务运行情况**
 
-    由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
+   由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
-    ```yaml
-    mysql> show load where label = "label_sales_data_2025_04_08"\G
-    *************************** 1. row ***************************
-            JobId: 17956078
-            Label: label_sales_data_2025_04_08
-            State: FINISHED
-        Progress: 100.00% (1/1)
-            Type: BROKER
-        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
-        TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
-        ErrorMsg: NULL
-        CreateTime: 2025-04-10 17:50:53
-    EtlStartTime: 2025-04-10 17:50:54
-    EtlFinishTime: 2025-04-10 17:50:54
-    LoadStartTime: 2025-04-10 17:50:54
-    LoadFinishTime: 2025-04-10 17:50:54
-            URL: NULL
-        JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
-    TransactionId: 766228
-    ErrorTablets: {}
-            User: root
-        Comment: 
-    1 row in set (0.00 sec)
-    ```
+   ```yaml
+   mysql> show load where label = "label_sales_data_2025_04_08"\G
+   *************************** 1. row ***************************
+           JobId: 17956078
+           Label: label_sales_data_2025_04_08
+           State: FINISHED
+       Progress: 100.00% (1/1)
+           Type: BROKER
+       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2
+       TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL
+       ErrorMsg: NULL
+       CreateTime: 2025-04-10 17:50:53
+   EtlStartTime: 2025-04-10 17:50:54
+   EtlFinishTime: 2025-04-10 17:50:54
+   LoadStartTime: 2025-04-10 17:50:54
+   LoadFinishTime: 2025-04-10 17:50:54
+           URL: NULL
+       JobDetails: {"Unfinished backends":{"5eec1be8612d4872-91040ff1e7208a4f":[]},"ScannedRows":2,"TaskNumber":1,"LoadBytes":91,"All   backends":{"5eec1be8612d4872-91040ff1e7208a4f":[10022]},"FileNumber":1,"FileSize":1620}
+   TransactionId: 766228
+   ErrorTablets: {}
+           User: root
+       Comment: 
+   1 row in set (0.00 sec)
+   ```
 
 3.3. **处理导入过程中的错误**
 
-    当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
+   当有多个导入任务时，可以通过以下语句，查询数据导入失败的日期和原因。
 
-    ```SQL
-    mysql> show load where state='CANCELLED' and label like "label_test%"\G
-    *************************** 1. row ***************************
-            JobId: 18312384
-            Label: label_test123
-            State: CANCELLED
-        Progress: 100.00% (3/3)
-            Type: BROKER
-        EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
-        TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
-        ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
-        CreateTime: 2025-04-15 17:32:59
-    EtlStartTime: 2025-04-15 17:33:02
-    EtlFinishTime: 2025-04-15 17:33:02
-    LoadStartTime: 2025-04-15 17:33:02
-    LoadFinishTime: 2025-04-15 17:33:02
-            URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
-        JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
-    TransactionId: 769213
-    ErrorTablets: {}
-            User: root
-        Comment: 
-    ```
+   ```SQL
+   mysql> show load where state='CANCELLED' and label like "label_test%"\G
+   *************************** 1. row ***************************
+           JobId: 18312384
+           Label: label_test123
+           State: CANCELLED
+       Progress: 100.00% (3/3)
+           Type: BROKER
+       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0
+       TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL
+       ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel
+       CreateTime: 2025-04-15 17:32:59
+   EtlStartTime: 2025-04-15 17:33:02
+   EtlFinishTime: 2025-04-15 17:33:02
+   LoadStartTime: 2025-04-15 17:33:02
+   LoadFinishTime: 2025-04-15 17:33:02
+           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2   error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342
+       JobDetails: {"Unfinished backends":{"7602ccd7c3a4854-95307efca7bfe341":[]},"ScannedRows":4,"TaskNumber":1,"LoadBytes":188,"All   backends":{"7602ccd7c3a4854-95307efca7bfe341":[10022]},"FileNumber":3,"FileSize":4839}
+   TransactionId: 769213
+   ErrorTablets: {}
+           User: root
+       Comment: 
+   ```
 
-    如上面的例子是**数据质量错误**(ETL_QUALITY_UNSATISFIED)，具体错误需要通过访问返回的 URL 的链接进行查看，如下是数据超过了表中的 Schema 中 country 列的实际长度：
+   如上面的例子是**数据质量错误**(ETL_QUALITY_UNSATISFIED)，具体错误需要通过访问返回的 URL 的链接进行查看，如下是数据超过了表中的 Schema 中 country 列的实际长度：
 
-    ```python
-    [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
-    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
-    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
-    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
-    Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
-    ```
+   ```python
+   [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2   error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
+   Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual   length: 3; . src line []; 
+   Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual   length: 6; . src line []; 
+   Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual   length: 2; . src line []; 
+   Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1;   actual length: 9; . src line [];
+   ```
 
-    同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
+   同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)。
 
 3.4. **导入多个分区的数据**
 
-    当需要迁移大数据量的存量数据时，建议使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
+   当需要迁移大数据量的存量数据时，建议使用分批导入的策略。每批数据对应 Doris 的一个分区或少量几个分区，数据量建议不超过 100GB，以减轻系统压力并降低导入失败后的重试成本。
 
-    可参考脚本 [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh)，该脚本可以实现了轮询 S3 上的分区目录，同时提交 S3 Load 任务到 Doris 中，实现批量导入的效果。
+   可参考脚本 [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh)，该脚本可以实现了轮询 S3 上的分区目录，同时提交 S3 Load 任务到 Doris 中，实现批量导入的效果。
