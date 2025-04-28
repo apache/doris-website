@@ -124,9 +124,9 @@ PROPERTIES (
 
     Exported files are organized into **subdirectories by partition** on S3:
 
-    ![img](/images/data-operate/snowflake_s3_out_en.png)
+    ![snowflake_s3_out_en](/images/data-operate/snowflake_s3_out_en.png)
 
-    ![img](/images/data-operate/snowflake_s3_out2_en.png)
+    ![snowflake_s3_out2_en](/images/data-operate/snowflake_s3_out2_en.png)
 
 ## 3. Load Data to Doris
 
