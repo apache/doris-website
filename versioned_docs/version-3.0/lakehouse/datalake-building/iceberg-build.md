@@ -29,10 +29,6 @@ Since version 2.1.6, Apache Doris supports DDL and DML operations on Iceberg. Us
 This article introduces the Iceberg operations, syntax, and usage notes supported in Apache Doris.
 
 :::tip
-This is an experimental feature.
-:::
-
-:::tip
 Before using, please set:
 <br />
 set global enable_nereids_planner = true;
