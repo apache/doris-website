@@ -79,11 +79,11 @@ INSERT INTO sales_data VALUES
 
 ```sql
 CREATE TABLE `sales_data` (
-order_id      INT,
-order_date    DATE NOT NULL,
-customer_name VARCHAR(128),
-amount        DECIMAL(10,2),
-country       VARCHAR(48)
+  order_id      INT,
+  order_date    DATE NOT NULL,
+  customer_name VARCHAR(128),
+  amount        DECIMAL(10,2),
+  country       VARCHAR(48)
 ) ENGINE=OLAP
 UNIQUE KEY(`order_id`,`order_date`)
 PARTITION BY RANGE(`order_date`) (
@@ -93,12 +93,12 @@ PARTITION p20250410 VALUES [('2025-04-10'), ('2025-04-11'))
 )
 DISTRIBUTED BY HASH(`order_id`) BUCKETS 16
 PROPERTIES (
-"dynamic_partition.enable" = "true",
-"dynamic_partition.time_unit" = "DAY",
-"dynamic_partition.end" = "5",
-"dynamic_partition.prefix" = "p",
-"dynamic_partition.buckets" = "16",
-"replication_num" = "1"
+ "dynamic_partition.enable" = "true",
+ "dynamic_partition.time_unit" = "DAY",
+ "dynamic_partition.end" = "5",
+ "dynamic_partition.prefix" = "p",
+ "dynamic_partition.buckets" = "16",
+ "replication_num" = "1"
 );
 ```
 
