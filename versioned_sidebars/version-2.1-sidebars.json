@@ -2067,6 +2067,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
                         "releasenotes/v3.0/release-3.0.2",

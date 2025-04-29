@@ -30,7 +30,7 @@ export enum ToolsEnum {
 
 export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
-    Latest = '3.0.4',
+    Latest = '3.0.5',
     Prev = '2.1.9',
     Earlier = '2.0.15',
 }
@@ -40,36 +40,36 @@ export enum DownloadTypeEnum {
 }
 export const DORIS_VERSIONS: Option[] = [
     {
-        label: '3.0.4',
-        value: '3.0.4',
+        label: '3.0.5',
+        value: '3.0.5',
         majorVersion: '3.0',
         children: [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                gz: `${ORIGIN}apache-doris-3.0.4-bin-x64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-3.0.4-bin-x64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-3.0.4-bin-x64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/3.0/3.0.4-rc02/',
-                version: '3.0.4',
+                gz: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                version: '3.0.5',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                gz: `${ORIGIN}apache-doris-3.0.4-bin-x64-noavx2.tar.gz`,
-                asc: `${ORIGIN}apache-doris-3.0.4-bin-x64-noavx2.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-3.0.4-bin-x64-noavx2.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/3.0/3.0.4-rc02/',
-                version: '3.0.4',
+                gz: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                version: '3.0.5',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                gz: `${ORIGIN}apache-doris-3.0.4-bin-arm64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-3.0.4-bin-arm64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-3.0.4-bin-arm64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/3.0/3.0.4-rc02/',
-                version: '3.0.4',
+                gz: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                version: '3.0.5',
             },
         ],
     },
@@ -159,6 +159,40 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '3.0',
         value: '3.0',
         children: [
+            {
+                label: '3.0.5',
+                value: '3.0.5',
+                majorVersion: '3.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-3.0.5-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                        version: '3.0.5',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-3.0.5-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                        version: '3.0.5',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-3.0.5-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/3.0/3.0.5-rc01/',
+                        version: '3.0.5',
+                    },
+                ],
+            },
             {
                 label: '3.0.4',
                 value: '3.0.4',
