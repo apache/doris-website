@@ -29,10 +29,6 @@ under the License.
 本文介绍在 Apache Doris 中支持的 Iceberg 操作，语法和使用须知。
 
 :::tip
-这是一个实验功能。
-:::
-
-:::tip
 使用前，请先设置：
 <br />
 set global enable_nereids_planner = true;
