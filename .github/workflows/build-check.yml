@@ -48,7 +48,7 @@ jobs:
                 git config --global user.name "github-action-test"
                 git reset --soft origin/master
                 git commit -m "All this PR changed(for test)"
-                python check_move_new.py `git rev-parse HEAD`
+                python check_move.py `git rev-parse HEAD`
         
             - name: Check exit code
               run: |
