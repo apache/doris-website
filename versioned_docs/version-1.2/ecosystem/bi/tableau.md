@@ -27,16 +27,13 @@ under the License.
 Tableau is a lightweight data visualization analysis platform that combines data operations with beautiful charts perfectly. It seamlessly combines data computation with visually appealing charts, requiring no coding from the user. By simply dragging and dropping, users can quickly gain insights into the data. They can explore different views and even easily combine multiple data sources to complete tasks such as data visualization, exploration, and analysis.
 ## Precondition
 Tableau Desktop via the following link to download: https://www.tableau.com/products/desktop/download
-## Driver installation
 ## Prerequisites
-Tableau Desktop (Mac version only) must be installed with the **Intel version**. Regardless of whether your Mac uses an Intel or Apple Silicon architecture, you must download the Intel version to ensure compatibility with the MySQL driver. You can select and download the Intel version from the "Support Releases" page at the following link:  
-https://www.tableau.com/support/releases  
+Regardless of whether your Mac is based on an Intel chips or Apple Silicon Chips, for Tableau Desktop on Mac, you need to download and install the Intel version. This is to ensure compatibility with the MySQL driver. You can select and download the Intel version from the [Support Releases](https://www.tableau.com/support/releases) page.  
 
 ## Driver Installation
 1. iODBC Installation  
     1. Close Tableau Desktop  
-    2. Download the latest Driver Manager (mxkozzz.dmg) from the official iODBC website:  
-       https://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/Downloads#Mac%20OS%20X  
+    2. Download the latest Driver Manager (mxkozzz.dmg) from the official [iODBC website](https://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/Downloads#Mac%20OS%20X)
     3. Install the downloaded dmg file
 2. Install the MySQL driver
 
