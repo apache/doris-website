@@ -37,7 +37,7 @@ function(<args>) OVER(
 | 参数 | 说明 |
 |------|------|
 | `<args>` | 窗口函数的输入参数，具体参数根据所使用的函数而定 |
-| `<function>` | 支持的函数包括：AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM() 和所有聚合函数 |
+| `<function>` | 支持的函数包括：AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM(), NTH_VALUE() 和所有聚合函数 |
 | `<partition_by>` | 类似于 GROUP BY，按指定列对数据进行分组 |
 | `<order_by>` | 定义窗口内数据的排序方式 |
 | `<window_clause>` | 定义窗口范围，语法为：ROWS BETWEEN [ { m \| UNBOUNDED } PRECEDING \| CURRENT ROW] [ AND [CURRENT ROW \| { UNBOUNDED \| n } FOLLOWING] ] |
