@@ -26,7 +26,7 @@ under the License.
 
 ## 导入通用问题
 
-### 报错”[DATA_QUALITY_ERROR] Encountered unqualified data“
+### 报错"[DATA_QUALITY_ERROR] Encountered unqualified data"
 **问题描述**：导入报数据质量错误。
 
 **解决方案**：
@@ -34,26 +34,26 @@ under the License.
 - 通过浏览器或 curl 命令访问错误 URL 查看具体的数量质量错误原因。
 - 通过 strict_mode 和 max_filter_ratio 参数项来控制能容忍的错误率。
 
-### 报错“[E-235] Failed to init rowset builder”
+### 报错"[E-235] Failed to init rowset builder"
 **问题描述**：-235 错误是因为导入频率过高，数据未能及时 compaction，超过版本限制。
 
 **解决方案**：
 - 增加每批次导入数据量，降低导入频率。
 - 在 `be.conf` 中调大 `max_tablet_version_num` 参数, 建议不超过5000。
 
-### 报错“[E-238] Too many segments in rowset”
+### 报错"[E-238] Too many segments in rowset"
 **问题描述**：-238 错误是因为单个 rowset 下的 segment 数量超限。
 
 **常见原因**：
 - 建表时 bucket 数配置过小。
 - 数据出现倾斜，建议使用更均衡的分桶键。
 
-### 报错”Transaction commit successfully, BUT data will be visible later“
+### 报错"Transaction commit successfully, BUT data will be visible later"
 **问题描述**：数据导入成功但暂时不可见。
 
 **原因**：通常是由于系统资源压力导致事务 publish 延迟。
 
-### 报错”Failed to commit kv txn [...] Transaction exceeds byte limit“
+### 报错"Failed to commit kv txn [...] Transaction exceeds byte limit"
 **问题描述**：存算分离模式下，单次导入涉及的 partition 和 tablet 过多, 超过事务大小的限制。
 
 **解决方案**：
@@ -118,21 +118,21 @@ curl --location-trusted -u root:"" \
 | ----------------------- | -------- | ---------------------------------------------------------- |
 | 增加了可观测性相关的 Metrics 指标 | 3.0.5    | [#48209](https://github.com/apache/doris/pull/48209), [#48171](https://github.com/apache/doris/pull/48171), [#48963](https://github.com/apache/doris/pull/48963) |
 
-### 报错”failed to get latest offset“
+### 报错"failed to get latest offset"
 **问题描述**：Routine Load 无法获取 Kafka 最新的 Offset。
 
 **常见原因**：
 - 一般都是到kafka的网络不通, ping或者telnet kafka的域名确认下
 - 三方库的bug导致的获取超时，错误为:java.util.concurrent.TimeoutException: Waited X seconds
 
-### 报错”failed to get partition meta: Local:'Broker transport failure“ 
+### 报错"failed to get partition meta: Local:'Broker transport failure" 
 **问题描述**：Routine Load 无法获取 Kafka Topic 的 Partition Meta。
 
 **常见原因**：
 - 一般都是到kafka的网络不通, ping或者telnet kafka的域名确认下
 - 如果使用的是域名的方式，可以在/etc/hosts 配置域名映射
 
-### 报错“Broker: Offset out of range”
+### 报错"Broker: Offset out of range"
 **问题描述**：消费的 offset 在 kafka 中不存在，可能是因为该 offset 已经被 kafka 清理掉了。
 
 **解决方案**:
