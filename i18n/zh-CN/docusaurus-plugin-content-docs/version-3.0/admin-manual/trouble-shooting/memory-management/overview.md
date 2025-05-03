@@ -80,7 +80,7 @@ Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，支
 
 ![image](https://github.com/apache/doris/assets/13197424/f989f4d2-4cc5-4a8e-880e-93ae6073d17d)
 
-Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker 中除 `process resident memory`、`process virtual memory`、`sum of all trackers` 外，其他 `type=overview` 的 Memory Tracker 都可以通过 `http://{be_host}:{be_web_server_port}/mem_tracker?type=Lable` 查看详情。
+Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker 中除 `process resident memory`、`process virtual memory`、`sum of all trackers` 外，其他 `type=overview` 的 Memory Tracker 都可以通过 `http://{be_host}:{be_web_server_port}/mem_tracker?type=Label` 查看详情。
 
 Memory Tracker 拥有如下的属性：
 
