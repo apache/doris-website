@@ -196,7 +196,7 @@ Currently, two layout types are supported:
 
 |Property Name|Value Type|Meaning|Required|
 |-|-|-|-|
-|`date_lifetime`|Integer, unit in seconds|Data validity period. When the time since the last update of this dictionary exceeds this value, it will automatically initiate a import. The import logic is detailed in [Automatic Import](#automatic-import)|Yes|
+|`date_lifetime`|Integer, unit in seconds|Data validity period. When the time since the last update of this dictionary exceeds this value and the source table has data changes, it will automatically initiate a import. The import logic is detailed in [Automatic Import](#automatic-import)|Yes|
 |`skip_null_key`|Boolean|If the Key column contains null values when load to a dictionary, skip the row if the value is `true`, otherwise raise an error. The default value is `false`|No|
 |`memory_limit`|Integer, unit in bytes|The upper limit of memory occupied by this dictionary on a single BE. The deafult value is `2147483648`, which equals to 2GB.|No|
 
@@ -248,7 +248,11 @@ Automatic import occurs at the following times:
 
 1. After the dictionary is established
 2. When the dictionary data expires (see [Property](#property))
-3. When the BE state shows the loss of the dictionary data (new BE going online, or old BE restarting, etc.)
+3. When the BE state shows the lack of the dictionary data (new BE going online, or old BE restarting, etc.)
+
+Doris will check all dictionary data for expiration every `dictionary_auto_refresh_interval_seconds` seconds. When a dictionary has not been updated for more than `data_lifetime` seconds, and the source table data has changed compared to the last import, Doris will automatically submit the import for that dictionary.
+
+If some BEs are missing data and the source table data has not changed compared to the last import, Doris will only fill in the current version of the data on the corresponding BEs, will not submit the refresh task for all BEs, and the dictionary's version will not change.
 
 #### Manual Import
 
@@ -290,7 +294,7 @@ Among:
 - `<query_key_values>` is a STRUCT that contains all Key columns of the data to be queried in a dictionary.
 
 The return type of `dict_get` is the dictionary column type corresponding to `<query_column>`.
-The return type of `dict_get_many` is a [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT) corresponding to the types of various dictionary columns in `<query_columns>`。
+The return type of `dict_get_many` is a [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) corresponding to the types of various dictionary columns in `<query_columns>`。
 
 #### Query Example
 
@@ -347,6 +351,7 @@ returns type of `STRUCT<float, varchar>`。
 1. When the query Key data does not exist in the dictionary table, **or the Key data is null**, return null.
 2. For IP_TRIE type queries, **`<query_key_value>` type must be `IPV4` or `IPV6`**.
 3. When using an IP_TRIE type dictionary, the data in the Key column `<key_column>` and the `<query_key_value>` used for querying both support `IPV4` and `IPV6` format data.
+4. When a specific BE lacks dictionary data due to reasons such as new launch or restart, executing a query using corresponding dictionary on that BE will fail. Whether the query is scheduled to that BE depends on various factors. Reducing the value of the configuration item `dictionary_auto_refresh_interval_seconds` when the FE Master is not under heavy pressure can shorten the time when the dictionary is unavailable.
 
 ### Dictionary Management
 
@@ -379,7 +384,7 @@ The dictionary table supports the following configuration items, all of which ar
 1. `dictionary_task_queue_size` —— The queue length of the thread pool for all tasks in the dictionary is not dynamically adjustable. The default value is 1024, and it is generally not necessary to adjust it.
 2. `job_dictionary_task_consumer_thread_num` —— The number of threads in the thread pool for all tasks in the dictionary is not dynamically adjustable. Default value is 3.
 3. `dictionary_rpc_timeout_ms` —— The timeout duration for all related RPCs in the dictionary can be dynamically adjusted. The default is 5000 (i.e., 5 seconds), and it generally does not need to be adjusted.
-4. `dictionary_auto_refresh_interval_seconds` —— The interval for automatically checking if all dictionary data is up to date is default 60 (seconds), and it can be dynamically adjusted.
+4. `dictionary_auto_refresh_interval_seconds` —— The interval for automatically checking if all dictionary data is up to date is default 5 (seconds), and it can be dynamically adjusted.
 
 ### Status Display
 
