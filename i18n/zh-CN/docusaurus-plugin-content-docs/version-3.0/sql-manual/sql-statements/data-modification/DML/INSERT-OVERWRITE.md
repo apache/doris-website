@@ -25,7 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 ## 描述
 
 该语句的功能是重写表或表的某些分区
@@ -69,14 +68,33 @@ INSERT OVERWRITE table table_name
 1. 在当前版本中，会话变量 `enable_insert_strict` 默认为 `true`，如果执行 `INSERT OVERWRITE` 语句时，对于有不符合目标表格式的数据被过滤掉的话会重写目标表失败（比如重写分区时，不满足所有分区条件的数据会被过滤）。
 2. INSERT OVERWRITE 语句会首先创建一个新表，将需要重写的数据插入到新表中，最后原子性的用新表替换旧表并修改名称。因此，在重写表的过程中，旧表中的数据在重写完毕之前仍然可以正常访问。
 
-#### For Auto Partition Table
+### For Auto Partition Table
 
 如果 INSERT OVERWRITE 的目标表是自动分区表，那么行为受到 [Session Variable](../../session/variable/SET-VARIABLE.md) `enable_auto_create_when_overwrite` 的控制，具体行为如下：
+
 1. 若未指定 PARTITION（覆写整表），当 `enable_auto_create_when_overwrite` 为 `true`，在覆写整表已有数据的同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 2. 如果指定了覆写的 PARTITION，那么在此过程中，AUTO PARTITION 表表现得如同普通分区表一样，不满足现有分区条件的数据将被过滤，而非创建新的分区。
 3. 若指定 PARTITION 为 `partition(*)` （自动检测分区并覆写），当 `enable_auto_create_when_overwrite` 为 `true`，对于那些在表中有对应分区的数据，覆写它们对应的分区，其他已有分区不变。同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
 
 `enable_auto_create_when_overwrite` 自 3.0.3 引入，在没有 `enable_auto_create_when_overwrite` 的版本，行为如同该变量值为 `false`。
+
+速查结论如下：
+
+1. 对于开启 `enable_auto_create_when_overwrite` 的自动分区表：
+
+|    | 覆写的分区 | 清空其他分区 | 无分区的数据自动创建 |
+|-|-|-|-|
+| 无标识（全表） | 所有 | √ | √ |
+| 指定分区 | 写明的分区 | × | × |
+| `partition(*)` | 数据所属的分区 | × | √ |
+
+2. 对于普通表、关闭 `enable_auto_create_when_overwrite` 的自动分区表：
+
+|    | 覆写的分区 | 清空其他分区 | 无分区的数据自动创建 |
+|-|-|-|-|
+| 无标识（全表） | 所有 | √ | × |
+| 指定分区 | 写明的分区 | × | × |
+| `partition(*)` | 数据所属的分区 | × | × |
 
 示例如下：
 
@@ -151,7 +169,7 @@ PROPERTIES (
 );
 ```
 
-#### Overwrite Table
+### Overwrite Table
 
 1. VALUES 的形式重写`test`表
 
@@ -192,10 +210,10 @@ PROPERTIES (
 
 - 使用 label 会将此任务封装成一个**异步任务**，执行语句之后，相关操作都会异步执行，用户可以通过`SHOW LOAD;`命令查看此`label`导入作业的状态。需要注意的是 label 具有唯一性。
 
-
-#### Overwrite Table Partition
+### Overwrite Table Partition
 
 使用 INSERT OVERWRITE 重写分区时，实际我们是将如下三步操作封装为一个事务并执行，如果中途失败，已进行的操作将会回滚：
+
 1. 假设指定重写分区 p1，首先创建一个与重写的目标分区结构相同的空临时分区 `pTMP`
 2. 向 `pTMP` 中写入数据
 3. 使用 `pTMP` 原子替换 `p1` 分区
@@ -239,7 +257,7 @@ PROPERTIES (
     INSERT OVERWRITE table test PARTITION(p1,p2) WITH LABEL `label4` (c1, c2) SELECT * from test2;
     ```
 
-#### Overwrite Auto Detect Partition
+### Overwrite Auto Detect Partition
 
 当 INSERT OVERWRITE 命令指定的 PARTITION 子句为 `PARTITION(*)` 时，此次覆写将会自动检测分区数据所在的分区。例如：
 
@@ -290,5 +308,4 @@ mysql> select * from test order by k0;
 
 ## 关键词
 
-    INSERT OVERWRITE, OVERWRITE, AUTO DETECT
-
+INSERT OVERWRITE, OVERWRITE, AUTO DETECT

@@ -188,6 +188,9 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
         "kafka_broker_list" = "192.168.88.62:9092"
     );
     ```
+:::info Note
+If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`"
+:::
 
 ### Viewing Status
 

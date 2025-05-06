@@ -1,5 +1,11 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Note'],
+        title: "Apache Doris 3.0.5 Released",
+        content: `This version features improved Lakehouse, Asynchronous Materialized Views, Semi-structured Data Management and more. `,
+        image: '3.0.5.jpeg',
+    },
+    {
         tags: ['Best Practice'],
         title: "How Tencent Music saved 80% in costs by migrating from Elasticsearch to Apache Doris",
         content: `Handle full-text search, audience segmentation, and aggregation analysis directly within Apache Doris and slash their storage costs by 80% while boosting write performance by 4x`,
@@ -12,12 +18,6 @@ export const NEWSLETTER_DATA = [
         content: `Apache Doris compute-storage decoupled mode achieves 90% cost reduction and provides elasticity and workload isolation, while maintaining high performance in data ingestion and queries.`,
         to: '/blog/doris-compute-storage-decoupled',
         image: 'compute-storage-decoupled-banner.jpg',
-    },
-    {
-        tags: ['Release Note'],
-        title: "Apache Doris 2.1.9 Released",
-        content: `This version features improved SQLHash calculation, enhanced query results accuracy, and new metrics for better storage management. This update also resolves critical bugs across multiple areas for a more robust data management experience. `,
-        image: '2.1.9.jpg',
     },
     {
         tags: ['Tech Sharing'],

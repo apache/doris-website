@@ -785,6 +785,9 @@ The `jsonpaths` can also be used in conjunction with the column list and `SET (c
     "hadoop.username"="user"
   );
   ```
+:::info Note
+If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`"
+:::
 
 ### Load from other brokers
 

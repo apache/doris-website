@@ -54,6 +54,7 @@ under the License.
 | 1.6.1             | 1.15,1.16,1.17,1.18,1.19      | 1.0+          | 8            | -             |
 | 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
+| 25.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## 使用方式
 
@@ -81,7 +82,7 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>25.0.0</version>
+  <version>25.1.0</version>
 </dependency> 
 ```
 
