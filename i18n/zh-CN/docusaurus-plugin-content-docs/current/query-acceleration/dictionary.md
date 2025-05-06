@@ -196,7 +196,7 @@ PROPERTIES(
 
 |属性名|值类型|含义|必须项|
 |-|-|-|-|
-|`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值时，将会自动发起重新导入，导入逻辑详见[自动导入](#自动导入)|是|
+|`date_lifetime`|整数，单位为秒|数据有效期。当该字典上次更新距今时间超过该值且基表有数据变化时，将会自动发起重新导入，导入逻辑详见[自动导入](#自动导入)|是|
 |`skip_null_key`|布尔值|向字典导入时如果 Key 列中出现 null 值，如果该值为 `true`，跳过该行数据，否则报错。缺省值为 `false`|否|
 |`memory_limit`|整数，单位为 byte|该字典在单一 BE 上所占内存的上限，缺省值为 `2147483648` 即 2GB|否|
 
@@ -240,7 +240,7 @@ PROPERTIES('data_lifetime' = '600');
 
 ### 导入（刷新）数据
 
-字典支持自动与手动导入。字典的导入也称为”刷新“操作。
+字典支持自动与手动导入。字典的导入也被称为“刷新”操作。
 
 #### 自动导入
 
@@ -248,7 +248,11 @@ PROPERTIES('data_lifetime' = '600');
 
 1. 字典建立以后
 2. 字典数据过期时（见[属性](#属性)）
-3. BE 状态显示丢失该字典数据（有新 BE 上线，或旧 BE 重启等均有可能造成）
+3. BE 状态显示缺少该字典数据（有新 BE 上线，或旧 BE 重启等均有可能造成）
+
+Doris 将每隔 `dictionary_auto_refresh_interval_seconds` 秒检查所有字典数据是否过期。当某字典未更新数据超过 `data_lifetime` 秒，且**基表数据相比上次导入时有变化**时，Doris 将会自动提交对该字典的导入。
+
+如果部分 BE 缺少数据，且基表数据相比上次导入没有变化，则 Doris 仅会在对应 BE 上补齐当前版本的数据，不会提交全体 BE 的刷新任务，字典的 version 也不会变化。
 
 #### 手动导入
 
@@ -290,7 +294,7 @@ dict_get_many("<db_name>.<dict_name>", <query_columns>, <query_key_values>);
 - `<query_key_values>` 为一个包含该字典**所有 key 列**的需查询数据的 STRUCT
 
 `dict_get` 的返回类型为 `<query_column>` 对应的字典列类型。
-`dict_get_many` 的返回类型为 `<query_columns>` 对应的各个字典列类型所组成的 [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT)。
+`dict_get_many` 的返回类型为 `<query_columns>` 对应的各个字典列类型所组成的 [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT)。
 
 #### 查询示例
 
@@ -347,6 +351,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 1. 当查询的 Key 数据不存在于字典表内，**或 Key 数据为 null 时**，返回 null。
 2. IP_TRIE 类型进行查询时，**`<query_key_value>` 类型必须为 `IPV4` 或 `IPV6`**。
 3. 使用 IP_TRIE 类型字典时，key 列 `<key_column>` 内的数据和查询时使用的 `<query_key_value>` 同时支持 `IPV4` 和 `IPV6` 格式数据。
+4. 当特定 BE 因为新上线或宕机重启等原因没有字典数据时，如果在该 BE 上执行对应字典的查询将会失败。查询是否调度到该 BE 取决于多种因素。在 FE Master 压力不大时减小[配置项](#配置项) `dictionary_auto_refresh_interval_seconds` 的值可以缩短字典不可用时间。
 
 ### 字典表管理
 
@@ -379,7 +384,7 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 1. `dictionary_task_queue_size` —— 字典所有任务的线程池的队列长度，不可动态调整。默认值 1024，一般不需要调整。
 2. `job_dictionary_task_consumer_thread_num` —— 字典所有任务的线程池的线程数量，不可动态调整。默认值 3。
 3. `dictionary_rpc_timeout_ms` —— 字典所有相关 rpc 的超时时间，可以动态调整。默认 5000（即 5s），一般不需要调整。
-4. `dictionary_auto_refresh_interval_seconds` —— 自动检查所有字典数据是否过期的间隔，默认 60（秒），可以动态调整。
+4. `dictionary_auto_refresh_interval_seconds` —— 自动检查所有字典数据是否过期的间隔，默认 5（秒），可以动态调整。
 
 ### 状态显示
 
