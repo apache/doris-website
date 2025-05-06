@@ -1,7 +1,7 @@
 ---
 {
-    "title": "WEEKS_ADD",
-    "language": "en"
+   "title": "WEEKS_ADD",
+   "language": "en"
 }
 ---
 
@@ -24,27 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weeks_add
-### description
-#### Syntax
+## Description
+This function is used to add (or subtract) a certain number of weeks from a specified date or time value.
 
-`DATETIME WEEKS_ADD(DATETIME date, INT weeks)`
+## Syntax
 
-ADD a specified number of weeks from a datetime or date
-
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
-```
-mysql> select weeks_add("2020-02-02 02:02:02", 1);
-+-------------------------------------+
-| weeks_add('2020-02-02 02:02:02', 1) |
-+-------------------------------------+
-| 2020-02-09 02:02:02                 |
-+-------------------------------------+
+```sql
+WEEKS_ADD(<datetime_or_date_value>, <weeks_value>)
 ```
 
-### keywords
+## Required parameters
+| Parameter                  | Description                                                                                                                              |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| `<datetime_or_date_value>` | `DATETIME` or `DATE` type date input value                                                                                               |
+| `<weeks_value>`            | Integer, indicating the number of weeks to increase or decrease (positive number indicates increase, negative number indicates decrease) |
 
-    WEEKS_ADD
+
+## example
+
+
+1. Add one week to the time `2020-02-02 02:02:02`
+    ```sql
+    select weeks_add("2020-02-02 02:02:02", 1);
+    ```
+    ```text
+      +-------------------------------------+
+      | weeks_add('2020-02-02 02:02:02', 1) |
+      +-------------------------------------+
+      | 2020-02-09 02:02:02                 |
+      +-------------------------------------+
+    ```
+
+2. Subtract one week from the time `2020-02-02 02:02:02`
+    ```sql
+    select weeks_add("2020-02-02 02:02:02", -1);
+    ```
+    ```text
+    +-------------------------------------------------------------+
+    | weeks_add(cast('2020-02-02 02:02:02' as DATETIMEV2(0)), -1) |
+    +-------------------------------------------------------------+
+    | 2020-01-26 02:02:02                                         |
+    +-------------------------------------------------------------+
+    ```
+
+3. Add one week to the date `2020-02-02`
+    ```sql
+    select weeks_add("2020-02-02", 1);
+    ```
+    ```text
+    +--------------------------------------------+
+    | weeks_add(cast('2020-02-02' as DATEV2), 1) |
+    +--------------------------------------------+
+    | 2020-02-09                                 |
+    +--------------------------------------------+
+    ```
+
+
