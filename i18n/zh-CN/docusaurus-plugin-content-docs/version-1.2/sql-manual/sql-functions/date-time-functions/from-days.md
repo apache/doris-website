@@ -1,6 +1,6 @@
 ---
 {
-    "title": "from_days",
+    "title": "FROM_DAYS",
     "language": "zh-CN"
 }
 ---

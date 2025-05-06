@@ -26,7 +26,7 @@ under the License.
 
 ## 概述
 
-查看当前 Backend 正在运行的 Pipeline 的任务
+查看所有 Backend 正在运行中的查询或者导入任务的资源用量。
 
 ## 所属数据库
 

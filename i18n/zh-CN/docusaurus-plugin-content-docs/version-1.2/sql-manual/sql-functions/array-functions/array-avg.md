@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_avg",
+    "title": "ARRAY_AVG",
     "language": "zh-CN"
 }
 ---

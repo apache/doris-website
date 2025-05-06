@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_parse_error_to_null",
+    "title": "JSON_PARSE_ERROR_TO_NULL",
     "language": "zh-CN"
 }
 ---

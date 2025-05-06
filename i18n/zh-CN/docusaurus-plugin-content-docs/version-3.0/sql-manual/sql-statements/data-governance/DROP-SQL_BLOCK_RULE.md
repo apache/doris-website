@@ -1,7 +1,7 @@
 ---
 {
-    "title": "DROP SQL_BLOCK_RULE",
-    "language": "en"
+"title": "DROP SQL_BLOCK_RULE",
+"language": "zh-CN"
 }
 ---
 
@@ -24,32 +24,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-Deletes one or more SQL blocking rules. Multiple rules can be deleted at once by separating them with commas.
+删除一个或多个 SQL 阻止规则。支持同时删除多个规则，规则名称之间用逗号分隔。
 
-## Syntax
+## 语法
 
 ```sql
 DROP SQL_BLOCK_RULE <rule_name>[, ...]
 ```
 
-## Required Parameters
+## 必选参数
 
-<rule_name>
-The name of the SQL blocking rule to be deleted. Multiple rule names can be specified, separated by commas. 
+`<rule_name>`
+需要删除的 SQL 阻止规则名称，多个规则用逗号分隔。
 
-## Access Control Requirements
+## 权限控制
 
-Users executing this SQL command must have at least the following privileges:
-| Privilege | Object | Notes                |
-| :---------------- | :------------- | :---------------------------- |
-| ADMIN        | User or Role   | Only users or roles with the ADMIN privilege can perform the DROP operation. |
+执行此 SQL 命令的用户必须至少具有以下权限：
 
+| 权限     | 对象         | 说明                                      |
+|---------|------------|-----------------------------------------|
+| ADMIN  | 用户或角色 | 仅具有 ADMIN 权限的用户或角色可以执行 DROP 操作。 |
 
-## Example
+## 示例
 
-Delete `test_rule1` and `test_rule2` blocking rules
+删除 `test_rule1` 和 `test_rule2` 阻止规则：
 
 ```sql
 DROP SQL_BLOCK_RULE test_rule1, test_rule2;

@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Huawei Cloud OBS Access Parameters
-
 This document introduces the parameters required to access Huawei Cloud OBS, applicable to the following scenarios:
 
 - Catalog properties
@@ -35,7 +33,8 @@ This document introduces the parameters required to access Huawei Cloud OBS, app
 - Outfile properties
 
 **Doris uses the S3 Client to access Huawei Cloud OBS through the S3 compatible protocol.**
-### Parameter Overview
+
+## Parameter Overview
 
 | Property Name                     | Former Name      | Description                                | Default | Required |
 |-----------------------------------|------------------|--------------------------------------------|---------|----------|

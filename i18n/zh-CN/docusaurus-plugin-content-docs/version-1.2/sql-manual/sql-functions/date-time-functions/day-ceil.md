@@ -1,6 +1,6 @@
 ---
 {
-  "title": "day_ceil",
+  "title": "DAY_CEIL",
   "language": "zh-CN"
 }
 ---

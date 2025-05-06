@@ -200,6 +200,9 @@ FROM KAFKA(
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
+:::info 备注
+如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+:::
 
 ### 查看导入状态
 

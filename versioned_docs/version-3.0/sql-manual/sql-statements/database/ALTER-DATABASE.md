@@ -94,3 +94,21 @@ After renaming the database, use the REVOKE and GRANT commands to modify the cor
   ```sql
     ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
   ```
+
+- Modify the default Storage Vault of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "hdfs_demo_vault");
+  ```
+
+- Cancel the default Storage Vault of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "");
+  ```
+
+:::info Note
+
+Setting db's `storage_vault_name` is supported since version 3.0.5
+
+:::

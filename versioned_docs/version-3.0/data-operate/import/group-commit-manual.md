@@ -85,7 +85,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 * Through JDBC url by adding `sessionVariables=group_commit=async_mode`
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
 ```
 
 * Through SQL execution
@@ -100,7 +100,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -437,12 +437,6 @@ Recommend balancing based on system memory resources and data reliability requir
    group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
    ```
 
-2. `group_commit_memory_rows_for_max_filter_ratio`
-
-   * Description: `max_filter_ratio` works normally when group commit load total rows don't exceed this value, otherwise it doesn't work
-
-   * Default: 10000
-
 ## Usage Limitations
 
 * **Group Commit Limitations**
@@ -462,10 +456,6 @@ Recommend balancing based on system memory resources and data reliability requir
 
 * **Unique Model**
   - Group Commit doesn't guarantee commit order, recommend using Sequence column to ensure data consistency.
-
-* **max_filter_ratio Support**
-  - In default loads, `filter_ratio` is calculated through failed rows and total rows.
-  - In Group Commit mode, `max_filter_ratio` works when total rows don't exceed `group_commit_memory_rows_for_max_filter_ratio`.
 
 * **WAL Limitations**
   - `async_mode` writes data to WAL, deletes after success, recovers through WAL on failure.
@@ -554,7 +544,6 @@ Disable the printing of prepared statement audit logs to enhance performance.
 
 #### Test Results
 
-
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
 |-------------------|--------|--------------------|--------------------|
 | 100 | 10  | 160,758    | 17.21 |
@@ -614,18 +603,27 @@ JMeter Parameter Settings as Shown in the Images
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
 1. Set the Init Statement Before Testing:
-set group_commit=async_mode and set enable_nereids_planner=false.
+
+    ```
+    set group_commit=async_mode;
+    set enable_nereids_planner=false;
+    ```
 
 2. Enable JDBC Prepared Statement:
-Complete URL:
-jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
 
+    Complete URL:
+
+    ```
+    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false.
+    ```
+    
 3. Set the Import Type to Prepared Update Statement.
 
 4. Set the Import Statement.
 
 5. Set the Values to Be Imported:
-Ensure that the imported values match the data types one by one.
+
+    Ensure that the imported values match the data types one by one.
 
 **Testing Methodology**
 
@@ -637,26 +635,26 @@ Ensure that the imported values match the data types one by one.
 
 * The following tests are divided into 30, 100, and 500 concurrency.
 
-**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
-|enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
-
-**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
-|enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
-
-**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
-|enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
+    **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
+    |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
+    
+    **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
+    |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
+    
+    **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+    
+    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
+    |-----------------------|---------------|---------------|---------------|---------------|
+    |enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
+    |enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
 
 ### Insert into Sync Mode Large Batch Data
 
@@ -690,21 +688,21 @@ Ensure that the imported values match the data types one by one.
 
 **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
 |enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
 |enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
 |enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |

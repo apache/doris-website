@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bin",
+    "title": "BIN",
     "language": "zh-CN"
 }
 ---

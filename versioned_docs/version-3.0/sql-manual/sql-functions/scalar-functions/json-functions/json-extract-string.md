@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_extract_string",
+    "title": "JSON_EXTRACT_STRING",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_extract_largeint",
+    "title": "JSON_EXTRACT_LARGEINT",
     "language": "en"
 }
 ---

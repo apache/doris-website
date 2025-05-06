@@ -41,9 +41,10 @@ Here we illustrate how to analyze files on object storage using the S3 Table Val
 ```sql
 SELECT * FROM S3 (
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 )
 ```
@@ -154,9 +155,10 @@ You can use any SQL statement for file analysis, such as:
 ```sql
 SELECT * FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 )
 ORDER BY p_partkey LIMIT 5;
@@ -180,9 +182,10 @@ You can also create a logical view for a TVF using the `CREATE VIEW` statement. 
 CREATE VIEW tvf_view AS 
 SELECT * FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 );
 
@@ -216,9 +219,10 @@ INSERT INTO test_table (id,name,age)
 SELECT cast(id as INT) as id, name, cast (age as INT) as age
 FROM s3(
     'uri' = 's3://bucket/path/to/tvf_test/test.parquet',
+    'format' = 'parquet',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
-    's3.access_key' = 'ak'
+    's3.access_key' = 'ak',
     's3.secret_key'='sk'
 );
 ```

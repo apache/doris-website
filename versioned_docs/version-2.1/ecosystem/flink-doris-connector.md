@@ -51,6 +51,7 @@ Using the Flink Connector, you can perform the following operations:
 | 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 24.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
+| 25.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## Usage
 
@@ -67,8 +68,18 @@ To use it with Maven, simply add the following dependency to your Pom file:
 ```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
+  <artifactId>flink-doris-connector-${flink.version}</artifactId>
+  <version>${connector.version}</version>
+</dependency> 
+```
+
+For example:
+
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>25.0.0</version>
+  <version>25.1.0</version>
 </dependency> 
 ```
 
@@ -220,7 +231,7 @@ When Flink reads data from Doris, the Doris Source is currently a bounded stream
 ##### Thrift Method
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -228,18 +239,18 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '127.0.0.1:8030',  -- Fe的host:HttpPort
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 ##### ArrowFlightSQL
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -247,14 +258,14 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '{fe.conf:http_port}', 
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'source.use-flight-sql' = 'true',
       'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 #### Using DataStream API to Read Data
@@ -265,7 +276,7 @@ When using the DataStream API to read data, you need to include the dependencies
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 DorisOptions option = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("")
         .build();
@@ -324,7 +335,7 @@ CREATE TABLE student_sink (
     WITH (
       'connector' = 'doris',
       'fenodes' = '10.16.10.6:28737',
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = 'password',
       'sink.label-prefix' = 'doris_label'
@@ -337,6 +348,12 @@ INSERT INTO student_sink SELECT * FROM student_source;
 #### Using DataStream API to Write Data
 
 When using the DataStream API to write data, different serialization methods can be used to serialize the upstream data before writing it to the Doris table.
+
+:::info
+
+The Connector already contains the HttpClient4.5.13 version. If you reference HttpClient separately in your project, you need to ensure that the versions are consistent.
+
+:::
 
 ##### Standard String Format
 
@@ -406,7 +423,7 @@ properties.setProperty("format", "csv");
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder
         .setFenodes("10.16.10.6:28737")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("");
 DorisExecutionOptions.Builder executionBuilder = DorisExecutionOptions.builder();
@@ -467,7 +484,7 @@ props.setProperty("format", "json");
 props.setProperty("read_json_by_line", "true");
 DorisOptions dorisOptions = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("").build();
 
@@ -578,7 +595,7 @@ The Flink Doris Connector integrates **Flink CDC** ([Flink CDC Documentation](ht
 
 :::info Note
 
-1. When using full database synchronization, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory, such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC version 3.1 and later is not compatible with previous versions. You can download the dependencies from the following links: [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/), [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/).
+1. When using full database synchronization, you need to add the corresponding Flink CDC dependencies in the `$FLINK_HOME/lib` directory (Fat Jar), such as **flink-sql-connector-mysql-cdc-${version}.jar**, **flink-sql-connector-oracle-cdc-${version}.jar**. FlinkCDC version 3.1 and later is not compatible with previous versions. You can download the dependencies from the following links: [FlinkCDC 3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/), [FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/).
 2. For versions after Connector 24.0.0, the required Flink CDC version must be 3.1 or higher. You can download it [here](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/). If Flink CDC is used to synchronize MySQL and Oracle, you must also add the relevant JDBC drivers under `$FLINK_HOME/lib`.
 
 #### MySQL Whole Database Synchronization
@@ -889,13 +906,13 @@ After starting the Flink cluster, you can directly run the following command:
 | --table-suffix          | The suffix name of the Doris table, similar to the prefix.   |
 | --including-tables      | The MySQL tables that need to be synchronized. Multiple tables can be separated by \|, and regular expressions are supported. For example, --including-tables table1. |
 | --excluding-tables      | The tables that do not need to be synchronized. The usage is the same as that of --including-tables. |
-| --mysql-conf            | The configuration of the MySQL CDCSource, for example, --mysql-conf hostname=127.0.0.1. You can view all the configurations of MySQL-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/). Among them, hostname, username, password, and database-name are required. When the synchronized database and table contain non-primary key tables, scan.incremental.snapshot.chunk.key-column must be set, and only one non-null type field can be selected. For example: scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column..., and columns of different databases and tables are separated by commas. |
-| --oracle-conf           | The configuration of the Oracle CDCSource, for example, --oracle-conf hostname=127.0.0.1. You can view all the configurations of Oracle-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
-| --postgres-conf         | The configuration of the Postgres CDCSource, for example, --postgres-conf hostname=127.0.0.1. You can view all the configurations of Postgres-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/). Among them, hostname, username, password, database-name, schema-name, and slot.name are required. |
-| --sqlserver-conf        | The configuration of the SQLServer CDCSource, for example, --sqlserver-conf hostname=127.0.0.1. You can view all the configurations of SQLServer-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
-| --db2-conf              | The configuration of the SQLServer CDCSource, for example, --db2-conf hostname=127.0.0.1. You can view all the configurations of DB2-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
+| --mysql-conf            | The configuration of the MySQL CDCSource, for example, --mysql-conf hostname=127.0.0.1. You can view all the configurations of MySQL-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mysql-cdc/). Among them, hostname, username, password, and database-name are required. When the synchronized database and table contain non-primary key tables, scan.incremental.snapshot.chunk.key-column must be set, and only one non-null type field can be selected. For example: scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column..., and columns of different databases and tables are separated by commas. |
+| --oracle-conf           | The configuration of the Oracle CDCSource, for example, --oracle-conf hostname=127.0.0.1. You can view all the configurations of Oracle-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/oracle-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
+| --postgres-conf         | The configuration of the Postgres CDCSource, for example, --postgres-conf hostname=127.0.0.1. You can view all the configurations of Postgres-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/postgres-cdc/). Among them, hostname, username, password, database-name, schema-name, and slot.name are required. |
+| --sqlserver-conf        | The configuration of the SQLServer CDCSource, for example, --sqlserver-conf hostname=127.0.0.1. You can view all the configurations of SQLServer-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/sqlserver-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
+| --db2-conf              | The configuration of the SQLServer CDCSource, for example, --db2-conf hostname=127.0.0.1. You can view all the configurations of DB2-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/db2-cdc/). Among them, hostname, username, password, database-name, and schema-name are required. |
 | --sink-conf             | All the configurations of the Doris Sink can be viewed [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#General Configuration Items). |
-| --mongodb-conf          | The configuration of the MongoDB CDCSource, for example, --mongodb-conf hosts=127.0.0.1:27017. You can view all the configurations of Mongo-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/). Among them, hosts, username, password, and database are required. --mongodb-conf schema.sample-percent is the configuration for automatically sampling MongoDB data to create tables in Doris, and the default value is 0.2. |
+| --mongodb-conf          | The configuration of the MongoDB CDCSource, for example, --mongodb-conf hosts=127.0.0.1:27017. You can view all the configurations of Mongo-CDC [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mongodb-cdc/). Among them, hosts, username, password, and database are required. --mongodb-conf schema.sample-percent is the configuration for automatically sampling MongoDB data to create tables in Doris, and the default value is 0.2. |
 | --table-conf            | The configuration items of the Doris table, that is, the content included in properties (except for table-buckets, which is not a properties attribute). For example, --table-conf replication_num=1, and --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50" means specifying the number of buckets for different tables in the order of regular expressions. If there is no match, the BUCKETS AUTO method will be used to create tables. |
 | --schema-change-mode    | The modes for parsing schema change, including debezium_structure and sql_parser. The debezium_structure mode is used by default. The debezium_structure mode parses the data structure used when the upstream CDC synchronizes data and judges DDL change operations by parsing this structure. The sql_parser mode parses the DDL statements when the upstream CDC synchronizes data to judge DDL change operations, so this parsing mode is more accurate. Usage example: --schema-change-mode debezium_structure. This function will be available in versions after 24.0.0. |
 | --single-sink           | Whether to use a single Sink to synchronize all tables. After enabling, it can also automatically identify newly created tables upstream and create tables automatically. |

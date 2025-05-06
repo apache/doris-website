@@ -1,6 +1,6 @@
 ---
 {
-    "title": "year_floor",
+    "title": "YEAR_FLOOR",
     "language": "en"
 }
 ---

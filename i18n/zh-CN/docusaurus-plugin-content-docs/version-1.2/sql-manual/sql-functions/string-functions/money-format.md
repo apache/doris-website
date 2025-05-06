@@ -1,6 +1,6 @@
 ---
 {
-    "title": "money_format",
+    "title": "MONEY_FORMAT",
     "language": "zh-CN"
 }
 ---

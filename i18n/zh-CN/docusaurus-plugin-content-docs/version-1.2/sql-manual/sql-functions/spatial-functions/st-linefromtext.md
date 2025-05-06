@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_LineFromText,ST_LineStringFromText",
+    "title": "ST_LINEFROMTEXT,ST_LINESTRINGFROMTEXT",
     "language": "zh-CN"
 }
 ---

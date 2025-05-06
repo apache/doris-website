@@ -1,6 +1,6 @@
 ---
 {
-    "title": "pow",
+    "title": "POW",
     "language": "en"
 }
 ---

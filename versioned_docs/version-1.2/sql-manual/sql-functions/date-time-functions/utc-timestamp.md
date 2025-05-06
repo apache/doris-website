@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "UTC_TIMESTAMP",
     "language": "en"
 }
 ---

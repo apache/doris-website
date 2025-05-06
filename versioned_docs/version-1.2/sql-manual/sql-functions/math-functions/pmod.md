@@ -1,6 +1,6 @@
 ---
 {
-    "title": "pmod",
+    "title": "PMOD",
     "language": "en"
 }
 ---

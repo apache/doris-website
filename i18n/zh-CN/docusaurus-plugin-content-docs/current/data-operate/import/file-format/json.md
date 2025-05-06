@@ -106,12 +106,14 @@ Doris 支持以下三种 JSON 格式：
 | read json by line | false | read_json_by_line | 不支持配置，都为 true | 不支持 | read_json_by_line, 默认为 true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | 不支持 | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
+| 压缩格式 | plain | compress_type | PROPERTIES.compress_type | 不支持 | compress_type |
 
 :::tip 注意
 1. Stream Load：参数直接通过 HTTP Header 指定，如：`-H "jsonpaths: $.data"`
 2. Broker Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
+5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
 :::
 
 ### 参数说明

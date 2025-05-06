@@ -1513,11 +1513,6 @@ This configuration is supported since the Apache Doris 1.2 version
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
-* Default: 10000
-
 #### `default_tzfiles_path`
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "abs",
+    "title": "ABS",
     "language": "zh-CN"
 }
 ---

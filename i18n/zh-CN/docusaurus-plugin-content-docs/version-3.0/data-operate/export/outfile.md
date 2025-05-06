@@ -116,6 +116,16 @@ PROPERTIES(
 * csv\_with\_names
 * csv\_with\_names\_and\_types
 
+### 导出并发度
+
+可以通过会话参数 `enable_parallel_outfile` 开启并发导出。
+
+`SET enable_parallel_outfile=true;`
+
+并发导出会利用多节点、多线程导出结果数据，以提升整体的导出效率。但并发导出可能会产生更多的文件。
+
+注意，某些查询即使打开此参数，也无法执行并发导出，如包含全局排序的查询。如果导出命令返回的行数大于 1 行，则表示开启了并发导出。
+
 ## 导出示例
 
 ### 导出到开启了高可用的 HDFS 集群

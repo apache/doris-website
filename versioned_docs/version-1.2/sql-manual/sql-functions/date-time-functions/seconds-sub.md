@@ -1,6 +1,6 @@
 ---
 {
-    "title": "seconds_sub",
+    "title": "SECONDS_SUB",
     "language": "en"
 }
 ---

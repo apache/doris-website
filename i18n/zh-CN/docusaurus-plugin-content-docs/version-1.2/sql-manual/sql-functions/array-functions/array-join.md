@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_join",
+    "title": "ARRAY_JOIN",
     "language": "zh-CN"
 }
 ---

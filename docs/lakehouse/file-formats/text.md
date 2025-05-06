@@ -57,13 +57,24 @@ This document introduces the support for reading and writing text file formats i
 
 ## JSON
 
-* Catalog
+### Catalog
 
-  Supports reading Hive tables in the `org.apache.hive.hcatalog.data.JsonSerDe` format. (Supported from version 3.0.4)
+- Hive table in `org.apache.hive.hcatalog.data.JsonSerDe` format (supported since version 3.0.4)
 
-* Import
+  1. Supports both primitive and complex types.
+  2. Does not support the `timestamp.formats` SERDEPROPERTIES.
 
-  Import functionality supports JSON formats. See the import documentation for details.
+- Hive table in [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde) format (supported since version 3.0.6)
+
+  1. Supports both primitive and complex types.
+  2. SERDEPROPERTIES: Only [`ignore.malformed.json`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#importing-malformed-data) is supported and behaves the same as in this JsonSerDe. Other SERDEPROPERTIES are not effective.
+  3. Does not support [`Using Arrays`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#using-arrays) (similar to Text/CSV format, where all column data is placed into a single array).
+  4. Does not support [`Promoting a Scalar to an Array`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#promoting-a-scalar-to-an-array) (promoting a scalar to a single-element array).
+  5. By default, Doris can correctly recognize the table schema. However, due to the lack of support for certain parameters, automatic schema recognition might fail. In this case, you can set `read_hive_json_in_one_column = true` to place the entire JSON row into the first column to ensure the original data is fully read. Users can then process it manually. This feature requires the first column's data type to be `String`.
+
+### Import
+
+Import functionality supports JSON formats. See the import documentation for details.
 
 ## Character Set
 

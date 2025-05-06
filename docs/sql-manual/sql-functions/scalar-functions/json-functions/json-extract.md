@@ -29,6 +29,7 @@ under the License.
 JSON_EXTRACT is a series of functions that extract the field specified by json_path from JSON data and provide different series of functions according to the type of the field to be extracted.
 
 * JSON_EXTRACT returns the VARCHAR type for a json string of the VARCHAR type.
+* JSON_EXTRACT_NO_QUOTES returns the VARCHAR type for a json string of the VARCHAR type, if the value of a JSON field is a string, the double quotes will be removed.
 * JSON_EXTRACT_ISNULL returns the BOOLEAN type indicating whether it is a json null.
 * JSON_EXTRACT_BOOL returns the BOOLEAN type.
 * JSON_EXTRACT_INT returns the INT type.
@@ -37,8 +38,13 @@ JSON_EXTRACT is a series of functions that extract the field specified by json_p
 * JSON_EXTRACT_DOUBLE returns the DOUBLE type.
 * JSON_EXTRACT_STRING returns the STRING type.
 
+:::tip
+The `JSON_EXTRACT_NO_QUOTES` function is supported since version 3.0.6. 
+:::
+
 ## Alias
 * JSONB_EXTRACT is the same as JSON_EXTRACT.
+* JSON_EXTRACT_NO_QUOTES is the same as JSON_EXTRACT_NO_QUOTES.
 * JSONB_EXTRACT_ISNULL is the same as JSON_EXTRACT_ISNULL.
 * JSONB_EXTRACT_BOOL is the same as JSON_EXTRACT_BOOL.
 * JSONB_EXTRACT_INT is the same as JSON_EXTRACT_INT.
@@ -50,6 +56,9 @@ JSON_EXTRACT is a series of functions that extract the field specified by json_p
 ## Syntax
 ```sql
 JSON_EXTRACT (<json_str>, <path>[, path] ...)
+```
+```sql
+JSON_EXTRACT_NO_QUOTES (<json_str>, <path>[, path] ...)
 ```
 ```sql
 JSON_EXTRACT_ISNULL (<json_str>, <path>)
@@ -135,6 +144,16 @@ SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 +-----------------------------------------------------------------+
 | [null,"doris"]                                                  |
 +-----------------------------------------------------------------+
+```
+```sql
+SELECT json_extract_no_quotes('{"id": 123, "name": "doris"}', '$.name');
+```
+```text
++------------------------------------------------------------------+
+| json_extract_no_quotes('{"id": 123, "name": "doris"}', '$.name') |
++------------------------------------------------------------------+
+| doris                                                            |
++------------------------------------------------------------------+
 ```
 ```sql
 SELECT JSON_EXTRACT_ISNULL('{"id": 123, "name": "doris"}', '$.id');

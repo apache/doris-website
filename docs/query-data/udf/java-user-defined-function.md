@@ -33,7 +33,7 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 
 2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
 
-3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT.
+3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
 
 ## Type Correspondence
 

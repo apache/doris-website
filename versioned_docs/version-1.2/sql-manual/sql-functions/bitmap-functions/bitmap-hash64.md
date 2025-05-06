@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_hash64",
+    "title": "BITMAP_HASH64",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "seconds_diff",
+    "title": "SECONDS_DIFF",
     "language": "en"
 }
 ---

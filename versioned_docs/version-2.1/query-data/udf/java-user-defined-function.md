@@ -33,7 +33,7 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 
 2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
 
-3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT.
+3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
 
 ## Type Correspondence
 
@@ -362,47 +362,6 @@ public class MedianUDAF {
 :::tip
 UDTF is supported starting from Doris version 3.0.
 :::
-
-1. Similar to UDFs, UDTFs require users to implement an `evaluate` method. However, the return value of a UDTF must be of the Array type.
-
-    ```JAVA
-    public class UDTFStringTest {
-        public ArrayList<String> evaluate(String value, String separator) {
-            if (value == null || separator == null) {
-                return null;
-            } else {
-                return new ArrayList<>(Arrays.asList(value.split(separator)));
-            }
-        }
-    }
-    ```
-
-2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers).
-For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
-
-    ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-        "file"="file:///pathTo/java-udtf.jar",
-        "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-        "always_nullable"="true",
-        "type"="JAVA_UDF"
-    );
-    ```
-
-3. When using Java-UDTF, in Doris, UDTFs must be used with [`Lateral View`](../lateral-view.md) to achieve the row-to-column transformation effect:
-
-    ```sql
-    select id, str, e1 from test_table lateral view java_utdf(str,',') tmp as e1;
-    +------+-------+------+
-    | id   | str   | e1   |
-    +------+-------+------+
-    |    1 | a,b,c | a    |
-    |    1 | a,b,c | b    |
-    |    1 | a,b,c | c    |
-    |    6 | d,e   | d    |
-    |    6 | d,e   | e    |
-    +------+-------+------+
-    ```
 
 ## Best Practices
 

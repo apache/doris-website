@@ -1,6 +1,6 @@
 ---
 {
-    "title": "exp",
+    "title": "EXP",
     "language": "en"
 }
 ---

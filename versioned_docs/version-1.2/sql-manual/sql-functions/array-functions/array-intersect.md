@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_intersect",
+    "title": "ARRAY_INTERSECT",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_exists",
+    "title": "ARRAY_EXISTS",
     "language": "zh-CN"
 }
 ---

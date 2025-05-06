@@ -1,6 +1,6 @@
 ---
 {
-"title": "substring_index",
+"title": "SUBSTRING_INDEX",
 "language": "zh-CN"
 }
 ---

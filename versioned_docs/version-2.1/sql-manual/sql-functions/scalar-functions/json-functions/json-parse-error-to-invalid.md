@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_parse_error_to_invalid",
+    "title": "JSON_PARSE_ERROR_TO_INVALID",
     "language": "en"
 }
 ---

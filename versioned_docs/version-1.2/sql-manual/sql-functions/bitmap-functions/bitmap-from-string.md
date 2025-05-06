@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_from_string",
+    "title": "BITMAP_FROM_STRING",
     "language": "en"
 }
 ---

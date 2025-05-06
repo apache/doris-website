@@ -29,7 +29,7 @@ Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用
 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 1. Java UDF  是较为常见的自定义标量函数 (Scalar Function)，即每输入一行数据，就会有一行对应的结果输出，较为常见的有 ABS，LENGTH 等。值得一提的是对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 2. Java UDAF 即为自定义的聚合函数 (Aggregate Function)，即在输入多行数据进行聚合后，仅输出一行对应的结果，较为常见的有 MIN，MAX，COUNT 等。
-3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。
+3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。**该功能自 Doris 3.0 版本起开始支持。**
 
 ## 类型对应关系
 
@@ -350,7 +350,7 @@ public void destroy(State state) {
 
 ### Java-UDTF 实例介绍
 :::tip
-UDTF 自 Doris 3.0 版本开始支持
+UDTF 自 Doris 3.0 版本开始支持，
 :::
 
 1. 首先编写对应的 Java UDTF 代码，打包生成 JAR 包。

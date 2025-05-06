@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_first_index",
+    "title": "ARRAY_FIRST_INDEX",
     "language": "en"
 }
 ---

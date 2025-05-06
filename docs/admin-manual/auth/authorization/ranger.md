@@ -80,41 +80,41 @@ Equivalent to the internal Doris authorization statement `grant select_priv on *
 - The global option can be found in the dropdown box at the same level as the catalog.
 - Only `*` can be entered in the input box.
 
-  ![global](/images/ranger/global.png)
+  ![Global Permissions](/images/ranger/global.png)
 
 #### Catalog Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.*.* to user1`;
 
-![catalog](/images/ranger/catalog.png)
+![Catalog Permissions](/images/ranger/catalog.png)
 
 #### Database Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.db1.* to user1`;
 
-![database](/images/ranger/database.png)
+![Database Permissions](/images/ranger/database.png)
 
 #### Table Permissions
 > Here, the term "table" generally refers to tables, views, and asynchronous materialized views.
 
 Equivalent to the internal Doris authorization statement `grant select_priv on hive.db1.tbl1 to user1`;
 
-![table](/images/ranger/table.png)
+![Table Permissions](/images/ranger/table.png)
 
 #### Column Permissions
 Equivalent to the internal Doris authorization statement `grant select_priv(col1,col2) on hive.db1.tbl1 to user1`;
 
-![column](/images/ranger/column.png)
+![Column Permissions](/images/ranger/column.png)
 
 #### Resource Permissions
 Equivalent to the internal Doris authorization statement `grant usage_priv on resource 'resource1' to user1`;
 - The resource option can be found in the dropdown box at the same level as the catalog.
 
-![resource](/images/ranger/resource.png)
+![Resource Permissions](/images/ranger/resource.png)
 
 #### Workload Group Permissions
 Equivalent to the internal Doris authorization statement `grant usage_priv on workload group 'group1' to user1`;
 - The workload group option can be found in the dropdown box at the same level as the catalog.
 
-![group1](/images/ranger/group1.png)
+![ Workload Group Permissions](/images/ranger/group1.png)
 
 ### Row-Level Permissions Example
 
@@ -163,6 +163,11 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 2. A Row Level Filter policy has been configured, but the user encounters a permission denied error when querying.
 
    The Row Level Filter policy is solely used to restrict users from accessing specific records within a table's data; authorization for the user must still be granted through an ACCESS POLICY.
+3. After creating the service, only the 'admin' user has permission by default` Root 'user does not have permission
+
+   As shown in the image, when creating the service, add the configuration `default.policy.users`. If you need to configure multiple users with full permissions, separate them with `,`.
+   ![default policy](/images/ranger/default-policy.png)
+
 
 ## Install and Configure Doris Ranger Plugin
 

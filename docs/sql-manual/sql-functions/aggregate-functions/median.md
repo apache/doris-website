@@ -1,6 +1,6 @@
 ---
 {
-    "title": "median",
+    "title": "MEDIAN",
     "language": "en"
 }
 ---

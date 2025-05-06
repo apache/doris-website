@@ -72,6 +72,7 @@ Users executing this SQL command must have at least the following privileges:
   - `SHOW ALL GRANTS` can view all users' permissions, but requires the `GRANT_PRIV` permission.
   - If the `user_identity` is specified, the permissions of the specified user are viewed. And the `user_identity` must be created by the `CREATE USER` command.
   - If the `user_identity` is not specified, the permissions of the current user are viewed.
+  - Doris implements permission control based on the RBAC (Role-Based Access Control) model. Therefore, the permissions displayed here are actually the combined permissions of all roles assigned to the user. If you want to check which specific role a permission comes from, you can use the [SHOW ROLES](./SHOW-ROLES.md) command to view the details.
 
 ## Examples
 

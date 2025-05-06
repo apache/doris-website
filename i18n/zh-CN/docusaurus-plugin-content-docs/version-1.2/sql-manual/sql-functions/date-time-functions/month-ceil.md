@@ -1,6 +1,6 @@
 ---
 {
-  "title": "month_ceil",
+  "title": "MONTH_CEIL",
   "language": "zh-CN"
 }
 ---

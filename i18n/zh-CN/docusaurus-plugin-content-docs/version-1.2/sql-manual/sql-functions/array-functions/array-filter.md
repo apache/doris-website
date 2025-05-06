@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_filter",
+    "title": "ARRAY_FILTER",
     "language": "zh-CN"
 }
 ---

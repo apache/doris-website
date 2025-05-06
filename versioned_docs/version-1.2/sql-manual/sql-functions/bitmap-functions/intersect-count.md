@@ -1,6 +1,6 @@
 ---
 {
-"title": "intersect_count",
+"title": "INTERSECT_COUNT",
 "language": "en"
 }
 ---

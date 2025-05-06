@@ -34,6 +34,14 @@ Workload Group 是一种进程内实现的对负载进行逻辑隔离的机制�
 * 管理内存资源，支持内存硬限和内存软限;
 * 管理 IO 资源，包括读本地文件和远程文件产生的 IO。
 
+:::tip
+Workload Group 提供进程内的资源隔离能力，与进程间的资源隔离方式（ Resource Group, Compute Group ）存在以下区别：
+
+1. 进程内的资源隔离无法做到彻底的隔离性，比如高负载查询和低负载查询在同一个进程内运行，即使通过 Workload Group 对高负载分组的 CPU 使用进行限制使得整体的 CPU 使用在合理范围内，
+   那么低负载分组的延迟也难免会受到影响，但相比于不做 CPU 管控的情况会有更好的表现。这是由于进程内部难免存在一些无法隔离的公共组件，比如公共的缓存和公共的 RPC 线程池。
+2. 在做资源隔离方案的选择时，具体使用 Workload Group 还是基于进程的资源隔离方案（也就是把需要隔离的负载放到不同的进程），主要取决于隔离性和成本的权衡，可以容忍一定的延迟但是偏好低成本的场景，可以选择 Workload Group 的隔离方案；
+   期望完全的隔离性同时可以接受更高的成本，那么可以选择基于进程的资源隔离方案，例如 Resource Group 或者 Compute Group，把高优负载划分到独立的 BE 节点上就可以做到比较彻底的隔离。
+   :::
 
 ## 版本说明
 
@@ -708,7 +716,9 @@ BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把�
     * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
       比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以创建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
       CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
-    * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
+    * 有用户配置了参数```cpu_resource_limit```，首先通过执行```show property for jack like 'cpu_resource_limit';```确认用户 jack 属性中是否设置了该参数；
+      然后通过执行```show variables like 'cpu_resource_limit'``` 确认session变量中是否设置了该参数；该参数默认值为-1，代表未设置。
+      配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
       可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
       迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
       观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。

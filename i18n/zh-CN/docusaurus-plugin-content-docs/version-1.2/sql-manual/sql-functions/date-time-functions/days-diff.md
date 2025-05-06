@@ -1,6 +1,6 @@
 ---
 {
-    "title": "days_diff",
+    "title": "DAYS_DIFF",
     "language": "zh-CN"
 }
 ---

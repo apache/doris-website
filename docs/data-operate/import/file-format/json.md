@@ -106,12 +106,14 @@ The following table lists the JSON format parameters supported by various loadin
 | read json by line | false | read_json_by_line | Always true | Not supported | read_json_by_line, default true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | Not supported | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
+| compression format | plain | compress_type | PROPERTIES.compress_type | Not supported |  compress_type |
 
 :::tip Note
 1. Stream Load: Parameters are specified directly through HTTP Headers, e.g., `-H "jsonpaths: $.data"`
 2. Broker Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 4. TVF: Parameters are specified in TVF statements, e.g., `S3("jsonpaths"="$.data")`
+5. If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`
 :::
 
 ### Parameter Description

@@ -98,6 +98,11 @@ ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_B
 
 ## 使用索引
 
+使用 NGram BloomFilter 索引需设置如下参数（enable_function_pushdown 默认为 false）：
+```sql
+SET enable_function_pushdown = true;
+```
+
 NGram BloomFilter 索引用于加速 LIKE 查询，比如：
 ```sql
 SELECT count() FROM table1 WHERE message LIKE '%error%';
@@ -105,7 +110,7 @@ SELECT count() FROM table1 WHERE message LIKE '%error%';
 
 可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括 NGram）的加速效果。
 - RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
-- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
+- BlockConditionsFilteredBloomFilterTime BloomFilter 索引消耗的时间
 
 
 ## 使用示例

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "mask_last_n",
+    "title": "MASK_LAST_N",
     "language": "en"
 }
 ---

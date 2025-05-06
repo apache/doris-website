@@ -429,7 +429,7 @@ Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有�
 
 ### ClusterIP
 
-Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的。
+Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的被访问地址。
 
 #### 第 1 步：配置使用 ClusterIP 作为 Service 类型
 
@@ -902,3 +902,27 @@ spec:
     ```
 2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。  
 当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值( FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
+
+## 使用 Kerberos 认证
+Doris Operator 从 25.2.0 版本开始支持 Doris (2.1.9 和 3.0.4 及以后版本) 在 Kubernetes 使用 Kerberos 认证。 Doris 使用 Kerberos 认证需要使用 [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 和 [keytab 文件](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) 。
+Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret` 资源挂载 keytab 文件。使用 Kerberos 认证流程如下：
+1. 构建包含 krb5.conf 文件的 ConfigMap：
+    ```shell
+    kubectl create -n ${namespace} create configmap ${name} --from-file=krb5.conf
+    ```
+   ${namespace} 为 `DorisCluster` 部署的命名空间，${name} 为 ConfigMap 想要指定的名字。
+2. 构建包含 keytab 的 Secret:
+    ```shell
+    kubectl create -n ${namespace} secret generic ${name} --from-file= ${xxx.keytab}
+    ```
+   ${namespace} 为 `DorisCluster` 部署的命名空间，${name} 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)将多个 `keytab` 文件放到一个 Secret 中。
+3. 配置 DorisCluster 资源，指定包含 `krb5.conf` 的 ConfigMap, 以及包含 `keytab` 文件的 Secret。
+    ```yaml
+    spec:
+      kerberosInfo:
+        krb5ConfigMap: ${krb5ConfigMapName}
+        keytabSecretName: ${keytabSecretName}
+        keytabPath: ${keytabPath}
+    ```
+   ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
+   catalog 请参考配置 [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.md#配置-catalog) 文档。

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "url_decode",
+    "title": "URL_DECODE",
     "language": "zh-CN"
 }
 ---

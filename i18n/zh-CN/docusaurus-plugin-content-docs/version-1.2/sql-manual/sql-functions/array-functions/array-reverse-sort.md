@@ -1,6 +1,6 @@
 ---
 {
-    "title": "array_reverse_sort",
+    "title": "ARRAY_REVERSE_SORT",
     "language": "zh-CN"
 }
 ---

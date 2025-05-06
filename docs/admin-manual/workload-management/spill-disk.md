@@ -43,9 +43,10 @@ Currently, the operators that support spilling include:
 
 When a query triggers spilling, additional disk read/write operations may significantly increase query time. It is recommended to increase the FE Session variable query_timeout. Additionally, spilling can generate significant disk I/O, so it is advisable to configure a separate disk directory or use SSD disks to reduce the impact of query spilling on normal data ingestion or queries. The query spilling feature is currently disabled by default.
 
-##Memory Management Mechanism
+## Memory Management Mechanism
 Doris's memory management is divided into three levels: process level, Workload Group level, and Query level.
-![spill_disk_memory](/images/workload-management/spill_disk_memory.png)
+
+![Memory Management Mechanism Spill Disk Memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE Process Memory Configuration
 The memory of the entire BE process is controlled by the mem_limit parameter in be.conf. Once Doris's memory usage exceeds this threshold, Doris cancels the current query that is requesting memory. Additionally, a background task asynchronously kills some queries to release memory or cache. Therefore, Doris's internal management operations (such as spilling to disk, flushing memtable, etc.) need to run when approaching this threshold to avoid reaching it. Once the threshold is reached, to prevent the entire process from experiencing OOM, Doris takes some drastic self-protection measures.

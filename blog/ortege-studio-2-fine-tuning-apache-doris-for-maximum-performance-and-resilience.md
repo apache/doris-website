@@ -6,8 +6,6 @@
     'date': '2024-11-20',
     'author': 'Justin Trollip',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "3",
     "image": '/images/ortege-2.jpg'
 }
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_subset_in_range",
+    "title": "BITMAP_SUBSET_IN_RANGE",
     "language": "en"
 }
 ---

@@ -6,8 +6,6 @@
     'date': '2025-02-28',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/3.0.4.jpg'
 }
 ---
@@ -44,6 +42,7 @@ Dear community members, the Apache Doris 3.0.4 version was officially released o
 
   - For more information, please refer to documentation: [Export Overview - Apache Doris](https://doris.apache.org/docs/3.0/data-operate/export/export-overview)
 
+- When querying a data source with case-insensitive table names (such as Hive) through External Catalog, in previous versions, you can use any case to query the table name, but in version 3.0.4, Doris's own table name case sensitivity policy will be strictly followed.
 - The Hudi JNI Scanner has been replaced from Spark API to Hadoop API to enhance compatibility. Users can switch by setting the session variable `set hudi_jni_scanner=spark/hadoop`. [#44396](https://github.com/apache/doris/pull/44396) 
 - The use of `auto bucket` in Colocate tables is prohibited.  [#44396](https://github.com/apache/doris/pull/44396) 
 - Paimon cache has been added to the Catalog, eliminating real-time data queries.  [#44911 ](https://github.com/apache/doris/pull/44911)

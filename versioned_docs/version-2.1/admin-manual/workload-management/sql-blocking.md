@@ -226,15 +226,15 @@ SQL Block Rule is a configuration for circuit breaking during planning, but beca
 
 Since Doris version 2.1, Workload Policy can be used to implement circuit breaking for large queries.
 
-| Version                 | 2.1 |
-|--------------------|-----|
-| select             | √   |
-| insert into select | √   |
-| insert into values | X   |
-| stream load        | √   |
-| routine load       | √   |
-| backup             | X   |
-| compaction         | X   |
+| Version                 | since 2.1 |
+|--------------------|-----------|
+| select             | yes       |
+| insert into select | yes       |
+| insert into values | no        |
+| stream load        | yes       |
+| routine load       | yes       |
+| backup             | no        |
+| compaction         | no        |
 
 ### Creating Workload Policy
 Use the `CREATE WORKLOAD Policy` command to create a resource management policy.

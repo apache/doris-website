@@ -24,27 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## years_add
 ## 描述
+
+返回一个新的日期时间值，该值是在输入的日期时间上增加指定的年数。
+
 ## 语法
 
-`DATETIME YEARS_ADD(DATETIME date, INT years)`
+```sql
+YEARS_ADD(<date>, <years>)
+```
 
-从日期加上指定年数
+## 参数
 
-参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
+| 参数 | 说明 |
+| ---- | ---- |
+| `<date>` | 输入的日期时间值，类型为 DATETIME 或 DATE |
+| `<years>` | 要增加的年数，类型为 INT |
+
+## 返回值
+
+返回与输入 `<date>` 类型相同的值（DATETIME 或 DATE），表示在输入日期时间的基础上增加指定年数后的时间值。
 
 ## 举例
 
+```sql
+SELECT YEARS_ADD('2020-01-31 02:02:02', 1);
 ```
-mysql> select years_add("2020-01-31 02:02:02", 1);
+
+```text
 +-------------------------------------+
 | years_add('2020-01-31 02:02:02', 1) |
 +-------------------------------------+
 | 2021-01-31 02:02:02                 |
 +-------------------------------------+
 ```
-
-### keywords
-
-    YEARS_ADD

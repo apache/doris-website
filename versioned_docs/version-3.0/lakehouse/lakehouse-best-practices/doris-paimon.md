@@ -226,7 +226,7 @@ mysql> select * from customer where c_nationkey=1 limit 2;
 
 We conducted a simple test on the TPCDS 1000 dataset in Paimon (0.8) version, using Apache Doris 2.1.5 version and Trino 422 version, both with the Primary Key Table Read Optimized feature enabled.
 
-![](/images/quick-start/lakehouse-paimon-benchmark.PNG)
+![Lakehouse Paimon Benchmark](/images/quick-start/lakehouse-paimon-benchmark.PNG)
 
 From the test results, it can be seen that Doris' average query performance on the standard static test set is 3-5 times that of Trino. In the future, we will optimize the Deletion Vector to further improve query efficiency in real business scenarios.
 

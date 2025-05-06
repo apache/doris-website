@@ -1,6 +1,6 @@
 ---
 {
-    "title": "json_extract_double",
+    "title": "JSON_EXTRACT_DOUBLE",
     "language": "zh-CN"
 }
 ---

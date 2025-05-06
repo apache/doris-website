@@ -1,6 +1,6 @@
 ---
 {
-    "title": "date_trunc",
+    "title": "DATE_TRUNC",
     "language": "en"
 }
 ---

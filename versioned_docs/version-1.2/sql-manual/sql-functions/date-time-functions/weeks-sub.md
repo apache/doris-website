@@ -1,6 +1,6 @@
 ---
 {
-    "title": "weeks_sub",
+    "title": "WEEKS_SUB",
     "language": "en"
 }
 ---

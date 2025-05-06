@@ -54,6 +54,7 @@ under the License.
 | 1.6.1             | 1.15,1.16,1.17,1.18,1.19      | 1.0+          | 8            | -             |
 | 24.0.1            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+          | 8            | -             |
 | 25.0.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
+| 25.1.0            | 1.15,1.16,1.17,1.18,1.19,1.20 | 1.0+ | 8 |- |
 
 ## 使用方式
 
@@ -67,11 +68,21 @@ under the License.
 
 Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
 
-```SQL
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
+  <artifactId>flink-doris-connector-${flink.version}</artifactId>
+  <version>${connector.version}</version>
+</dependency> 
+```
+
+例如：
+
+```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>25.0.0</version>
+  <version>25.1.0</version>
 </dependency> 
 ```
 
@@ -223,7 +234,7 @@ Flink 读取 Doris 中数据时，目前 Doris Source 是有界流，不支持�
 ##### Thrift 方式
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -231,18 +242,18 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '127.0.0.1:8030',  -- Fe的host:HttpPort
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 ##### ArrowFlightSQL 方式
 
 ```SQL
-CREATE TABLE students (
+CREATE TABLE student (
     id INT,
     name STRING,
     age INT
@@ -250,14 +261,14 @@ CREATE TABLE students (
     WITH (
       'connector' = 'doris',
       'fenodes' = '{fe.conf:http_port}', 
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'source.use-flight-sql' = 'true',
       'source.flight-sql-port' = '{fe.conf:arrow_flight_sql_port}',
       'username' = 'root',
       'password' = ''
 );
 
-SELECT * FROM students;
+SELECT * FROM student;
 ```
 
 #### 使用 DataStream API 读取数据
@@ -268,7 +279,7 @@ SELECT * FROM students;
 final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 DorisOptions option = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("")
         .build();
@@ -327,7 +338,7 @@ CREATE TABLE student_sink (
     WITH (
       'connector' = 'doris',
       'fenodes' = '10.16.10.6:28737',
-      'table.identifier' = 'test.students',
+      'table.identifier' = 'test.student',
       'username' = 'root',
       'password' = 'password',
       'sink.label-prefix' = 'doris_label'
@@ -339,7 +350,13 @@ INSERT INTO student_sink SELECT * FROM student_source;
 
 #### 使用 DataStream API 写入数据
 
-通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表
+通过 DataStream api 写入的时候，可以使用不同的序列化方式对上游数据序列化后写入 Doris 表。
+
+:::info
+
+Connector 内部已经包含 HttpClient4.5.13 版本，如果项目中有单独引用 HttpClient，需要确保版本一致。
+
+:::
 
 ##### 普通 String 格式
 
@@ -409,7 +426,7 @@ properties.setProperty("format", "csv");
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder
         .setFenodes("10.16.10.6:28737")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("");
 DorisExecutionOptions.Builder executionBuilder = DorisExecutionOptions.builder();
@@ -470,7 +487,7 @@ props.setProperty("format", "json");
 props.setProperty("read_json_by_line", "true");
 DorisOptions dorisOptions = DorisOptions.builder()
         .setFenodes("127.0.0.1:8030")
-        .setTableIdentifier("test.students")
+        .setTableIdentifier("test.student")
         .setUsername("root")
         .setPassword("").build();
 
@@ -581,7 +598,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 
 :::info 注意
 
-1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 依赖，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
+1. 使用整库同步时需要在 `$FLINK_HOME/lib` 目录下添加对应的 Flink CDC 包依赖 (Fat Jar)，比如 **`flink-sql-connector-mysql-cdc-${version}.jar`**，**`flink-sql-connector-oracle-cdc-${version}.jar`**，FlinkCDC 从 3.1 版本与之前版本不兼容，下载地址分别为为[FlinkCDC3.x](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，[FlinkCDC 2.x](https://repo.maven.apache.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/)。
 2. Connector 24.0.0 之后依赖的 Flink CDC 版本需要在 3.1 以上，下载地址见[这里](https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-mysql-cdc/)，FlinkCDC 如果需使用 Flink CDC 同步 MySQL 和 Oracle，还需要在 `$FLINK_HOME/lib` 下增加相关的 JDBC 驱动。
 
 :::
@@ -893,11 +910,11 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --table-suffix          | 同上，Doris 表的后缀名。                                     |
 | --including-tables      | 需要同步的 MySQL 表，可以使用 \| 分隔多个表，并支持正则表达式。比如--including-tables table1 |
 | --excluding-tables      | 不需要同步的表，用法同上。                                   |
-| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用，隔开。 |
-| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
-| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
-| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
-| --db2-conf              | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜ |
+| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 scan.incremental.snapshot.chunk.key-column，且只能选择非空类型的一个字段。例如：scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...，不同的库表列之间用，隔开。 |
+| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
+| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
+| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
+| --db2-conf              | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜ |
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#通用配置项)查看完整的配置项。 |
 | --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样 mongodb 数据为 Doris 建表的配置，默认为 0.2 |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 --table-conf replication_num=1，而 --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |

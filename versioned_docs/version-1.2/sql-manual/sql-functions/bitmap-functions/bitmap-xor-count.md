@@ -1,6 +1,6 @@
 ---
 {
-    "title": "bitmap_xor_count",
+    "title": "BITMAP_XOR_COUNT",
     "language": "en"
 }
 ---

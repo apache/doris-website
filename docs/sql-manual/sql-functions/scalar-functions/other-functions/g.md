@@ -1,6 +1,6 @@
 ---
 {
-    "title": "g",
+    "title": "G",
     "language": "en"
 }
 ---

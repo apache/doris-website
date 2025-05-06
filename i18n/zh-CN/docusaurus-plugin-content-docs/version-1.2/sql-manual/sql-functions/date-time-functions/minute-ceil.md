@@ -1,6 +1,6 @@
 ---
 {
-  "title": "minute_ceil",
+  "title": "MINUTE_CEIL",
   "language": "zh-CN"
 }
 ---

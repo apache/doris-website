@@ -1,6 +1,6 @@
 ---
 {
-    "title": "cos",
+    "title": "COS",
     "language": "en"
 }
 ---

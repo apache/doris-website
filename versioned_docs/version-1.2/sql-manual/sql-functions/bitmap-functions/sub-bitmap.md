@@ -1,6 +1,6 @@
 ---
 {
-    "title": "sub_bitmap",
+    "title": "SUB_BITMAP",
     "language": "en"
 }
 ---
