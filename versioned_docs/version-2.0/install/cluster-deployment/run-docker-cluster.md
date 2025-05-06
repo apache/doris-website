@@ -77,7 +77,7 @@ The build environment directory is as follows:
 
 2. Download binary package
 
-Download the [official binary package](https://doris.apache.org/zh-CN/download/) or the compiled binary package, and replace the apache-doris package in `./docker-build/fe/resource` with it.
+Download the [official binary package](https://doris.apache.org/download/) or the compiled binary package, and replace the apache-doris package in `./docker-build/fe/resource` with it.
 
 3. Write Dockerfile
 
