@@ -96,7 +96,7 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 ### Step 1: Download the Binary Package
 
-Download the corresponding binary installation package from the Apache Doris website [here](https://doris.apache.org/en-us/download), and extract it.
+Download the corresponding binary installation package from the Apache Doris website [here](https://doris.apache.org/download), and extract it.
 
 ### Step 2: Modify the Environment Variables
 
