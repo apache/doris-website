@@ -153,6 +153,17 @@ jdbc:mysql://host:9030/iceberg_catalog.iceberg_db
 
 内置数据目录的固定名称为 `internal`。切换方式和外部数据目录一致。
 
+### 默认数据目录
+
+通过用户属性 `default_init_catalog`，为指定用户设置默认的数据目录。设置完成后，当指定用户连接 Doris 时，会自动切换到设置的数据目录。
+
+```sql
+SET PROPERTY default_init_catalog=hive_catalog;
+```
+
+注意1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
+注意2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
+
 ### 简单查询
 
 可以通过 Doris 支持的任意 SQL 语句查询外部数据目录中的表。
