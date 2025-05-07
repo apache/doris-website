@@ -34,7 +34,7 @@ under the License.
 
 ## 返回值
 
-所有匹配字符串组成的数组。
+String 类型。
 
 ## 举例
 
