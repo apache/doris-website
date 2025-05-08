@@ -197,7 +197,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Hudi 表的数量，适当调整这个参数。
 
@@ -217,7 +217,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 
@@ -236,7 +236,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 

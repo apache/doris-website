@@ -196,7 +196,7 @@ Each Hudi Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Hudi tables.
 
@@ -216,7 +216,7 @@ Each Iceberg Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Iceberg tables.
 
@@ -236,7 +236,7 @@ Each Iceberg Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Iceberg tables.
 
