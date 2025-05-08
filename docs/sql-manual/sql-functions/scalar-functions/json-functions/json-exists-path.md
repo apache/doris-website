@@ -1,4 +1,3 @@
-
 ---
 {
     "title": "JSON_EXISTS_PATH",
