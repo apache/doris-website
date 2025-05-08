@@ -541,6 +541,44 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
   * 对象存储
 
+## 系统表
+
+Doris 支持以下 Iceberg 系统表，用于查看 Iceberg 表的各类元数据信息。
+
+### snapshots
+
+查询指定 Iceberg 表的 Snapshot 信息。
+
+```sql
+SELECT * FROM iceberg_meta(
+    'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
+    'query_type' = 'snapshots'
+)
+```
+
+或（3.1.x 版本支持）：
+
+```
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$snapshost;
+```
+
+```
+*************************** 1. row ***************************
+ committed_at: 2024-11-28 11:07:29
+  snapshot_id: 8903826400153112036
+    parent_id: -1
+    operation: append
+manifest_list: oss://path/to/metadata/snap-8903826400153112036-1-3835e66d-9a18-4cb0-b9b0-9ec80527ad8d.avro
+      summary: {"added-data-files":"2","added-records":"3","added-files-size":"2742","changed-partition-count":"2","total-records":"3","total-files-size":"2742","total-data-files":"2","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
+*************************** 2. row ***************************
+ committed_at: 2024-11-28 11:10:11
+  snapshot_id: 6099853805930794326
+    parent_id: 8903826400153112036
+    operation: append
+manifest_list: oss://path/to/metadata/snap-6099853805930794326-1-dd46a1bd-219b-4fb0-bb46-ac441d8b3105.avro
+      summary: {"added-data-files":"1","added-records":"1","added-files-size":"1367","changed-partition-count":"1","total-records":"4","total-files-size":"4109","total-data-files":"3","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
+```
+
 ## 附录
 
 ### 版本更新记录
