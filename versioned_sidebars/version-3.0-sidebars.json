@@ -760,6 +760,7 @@
                                 "admin-manual/open-api/fe-http/get-load-state",
                                 "admin-manual/open-api/fe-http/get-log-file-action",
                                 "admin-manual/open-api/fe-http/get-small-file",
+                                "admin-manual/open-api/fe-http/get-wal-size-action",
                                 "admin-manual/open-api/fe-http/health-action",
                                 "admin-manual/open-api/fe-http/meta-info-action",
                                 "admin-manual/open-api/fe-http/meta-replay-state-action",
