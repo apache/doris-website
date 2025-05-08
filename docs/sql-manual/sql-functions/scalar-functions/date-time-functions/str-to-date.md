@@ -38,7 +38,15 @@ STR_TO_DATE(<datetime_str>, <format>)
 | Parameter        | Description                                                                                                      |
 |------------------|------------------------------------------------------------------------------------------------------------------|
 | `<datetime_str>` | Required. The input datetime string to be converted.                                                             |
-| `<format>`       | Required. The format string specifying the datetime structure, such as %Y-%m-%d %H:%i:%s or yyyy-MM-dd HH:mm:ss. |
+| `<format>`       | Required. The specified datetime format string, such as `%Y-%m-%d %H:%i:%s`, etc. for specific format parameters, see the [DATE_FORMAT](./date-format#parameters) documentation. |
+
+In addition, the `<format>` supports the following several alternative formats and interprets them to the regular format:
+
+|Alternative Input|Interpret as|
+|-|-|
+|`yyyyMMdd`|`%Y%m%d`|
+|`yyyy-MM-dd`|`%Y-%m-%d`|
+|`yyyy-MM-dd HH:mm:ss`|`%Y-%m-%d %H:%i:%s`|
 
 ## Return Value
 
