@@ -315,11 +315,12 @@ CREATE CATALOG hive PROPERTIES (
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 max_external_file_cache_num=0    // 关闭文件列表缓存
+max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // 针对某个 Catalog，关闭文件列表缓存
+"partition.cache.ttl-second" = "0" // 针对某个 Catalog，关闭分区列表缓存（2.1.11, 3.0.6 支持）
 ```
 
 设置以上参数后：

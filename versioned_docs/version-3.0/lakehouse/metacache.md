@@ -316,11 +316,12 @@ For Hive Catalog, if you want to disable the cache to query real-time updated da
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // Close partition list cache
 max_external_file_cache_num=0    // Close file list cache
+max_hive_partition_table_cache_num=0  // Close partition list cache
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // Close file list cache for certain catalog
+"partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
 ```
 
 After setting the above parameter:
