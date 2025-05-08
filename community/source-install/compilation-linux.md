@@ -26,12 +26,22 @@ under the License.
 
 This guide is about how to compile Doris on Linux using Ubuntu 16.04 or later versions.
 
-## Make sure you have the following system dependencies installed.
-
-GCC 10+, Oracle JDK 8+, Python 2.7+, Apache Maven 3.5+, CMake 3.19.2+, Bison 3.0+
+## Install JDK.
 
 ```Plain
-sudo apt install build-essential openjdk-8-jdk maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python
+# Oracle JDK 8 or OpenJDK 8 for Doris 2.1 and earlier versions
+sudo apt install openjdk-8-jdk
+# For versions later than 3.0 (inclusive), or the master branch, please use JDK 17
+sudo apt install openjdk-17-jdk
+```
+
+## Make sure you have the following system dependencies installed.
+
+GCC 10+, Python 2.7+, Apache Maven 3.5+, CMake 3.19.2+, Bison 3.0+
+
+```Plain
+sudo apt install build-essential maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python
+sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
 sudo apt update
 sudo apt install gcc-10 g++-10 
