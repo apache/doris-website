@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-这里使用 Ubuntu 16.04 及以上系统来直接编译。
+这里使用 Ubuntu 24.04 及以上系统来直接编译。
 
 ## 1 确保拥有以下系统依赖
 

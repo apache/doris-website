@@ -99,9 +99,9 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 :::info 环境建议：
 
-*   **操作系统：** 推荐使用 CentOS 7.1 或 Ubuntu 16.04 以上版本的 AMD/ARM 主流 Linux 环境。
+*   **操作系统：** 推荐使用 Ubuntu 等 AMD/ARM 主流 Linux 环境。
 
-*   **Java 环境：** 建议使用 Java 8 运行环境。如果是非 Oracle JDK 商业授权用户，请使用免费的 OpenJDK 8u300 以后版本。
+*   **Java 环境：** 建议使用 Java 17 运行环境。
 
 *   **用户权限：** 建议在 Linux 上新建一个 Doris 用户，避免使用 root 用户进行操作。
 
