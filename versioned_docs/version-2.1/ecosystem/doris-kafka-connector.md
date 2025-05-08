@@ -31,7 +31,7 @@ The Doris community provides the [doris-kafka-connector](https://github.com/apac
 ## Usage Doris Kafka Connector
 
 ### Download
-[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+[doris-kafka-connector](https://doris.apache.org/download)
 
 maven dependencies
 ```xml

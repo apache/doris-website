@@ -45,7 +45,7 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 
 ## Return value
 
-Value after extraction. It is `Array` type.
+Value after extraction. It is `String` type.
 
 ## Example
 

@@ -24,27 +24,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## to_days
-### Description
-#### Syntax
 
-`INT TO DAYS`
+## Description
+Date calculation function, which is used to convert a date into a day value, that is, to calculate the total number of days from December 31, 0 AD (the base date) to the specified date.
 
+## Syntax
 
-Days of returning date distance 0000-01-01
-
-The parameter is Date or Datetime type
-
-### example
-
-```
-mysql> select to_days('2007-10-07');
-+-----------------------+
-| to_days('2007-10-07') |
-+-----------------------+
-|                733321 |
-+-----------------------+
+```sql
+TO_DAYS(<datetime_or_date_value>)
 ```
 
-### keywords
-    TO_DAYS,TO,DAYS
+## Required parameters
+| Parameter                  | Description                       |
+|----------------------------|-----------------------------------|
+| `<datetime_or_date_value>` | `datetime` or `date` type date-time |
+
+## Example
+
+Query how many days are there since October 7, 2007
+```sql
+select to_days('2007-10-07');
+```
+```text
++---------------------------------------+
+| to_days(cast('2007-10-07' as DATEV2)) |
++---------------------------------------+
+|                                733321 |
++---------------------------------------+
+```
+
+```sql
+select to_days('2007-10-07 10:03:09');
+```
+```text
++------------------------------------------------+
+| to_days(cast('2007-10-07 10:03:09' as DATEV2)) |
++------------------------------------------------+
+|                                         733321 |
++------------------------------------------------+
+```
