@@ -29,7 +29,7 @@ under the License.
 Used to view the metric information related to data cache on each BE node. The metric information is sourced from the monitoring metrics related to BE's data cache.
 
 :::tip Tip
-This system table is supported from versions 2.1.6
+This system table is supported from versions 2.1.6 and 3.0.2.
 :::
 
 ## Database
@@ -74,16 +74,19 @@ Doris different version may have different metrics
 
 - `hits_ratio`
 
-    Overall cache hit ratio since BE startup.
+    Overall cache hit ratio since BE startup. Range 0-1.
 
 - `hits_ratio_5m`
 
-    Cache hit ratio in the last 5 minutes.
+    Cache hit ratio in the last 5 minutes. Range 0-1.
 
 - `hits_ratio_1h`
 
-    Cache hit ratio in the last 1 hour.
+    Cache hit ratio in the last 1 hour. Range 0-1.
 
+### 3.0.x Metrics
+
+TODO
 
 ## Examples
 

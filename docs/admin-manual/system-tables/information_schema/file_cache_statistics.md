@@ -74,15 +74,15 @@ Doris different version may have different metrics
 
 - `hits_ratio`
 
-    Overall cache hit ratio since BE startup.
+    Overall cache hit ratio since BE startup. Range 0-1.
 
 - `hits_ratio_5m`
 
-    Cache hit ratio in the last 5 minutes.
+    Cache hit ratio in the last 5 minutes. Range 0-1.
 
 - `hits_ratio_1h`
 
-    Cache hit ratio in the last 1 hour.
+    Cache hit ratio in the last 1 hour. Range 0-1.
 
 ### 3.0.x Metrics
 
