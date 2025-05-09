@@ -24,56 +24,48 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## yearweek
-### Description
-#### Syntax
+## Description
 
-`INT YEARWEEK(DATE date[, INT mode])`
+Returns the year and week number of the specified date. The default value of mode is 0. When the week of the date belongs to the previous year, the year and week number of the previous year are returned; when the week of the date belongs to the next year, the year of the next year and the week number are 1 are returned.
 
-Returns year and week for a date.The value of the mode argument defaults to 0.
-When the week of the date belongs to the previous year, the year and week of the previous year are returned; 
-when the week of the date belongs to the next year, the year of the next year is returned and the week is 1.
+## Syntax
 
-The following table describes how the mode argument works.
-
-|Mode |First day of week |Range   |Week 1 is the first week …    |
-|:----|:-----------------|:-------|:-----------------------------|
-|0    |Sunday            |1-53    |with a Sunday in this year    |
-|1    |Monday            |1-53    |with 4 or more days this year |
-|2    |Sunday            |1-53    |with a Sunday in this year    |
-|3    |Monday            |1-53    |with 4 or more days this year |
-|4    |Sunday            |1-53    |with 4 or more days this year |
-|5    |Monday            |1-53    |with a Monday in this year    |
-|6    |Sunday            |1-53    |with 4 or more days this year |
-|7    |Monday            |1-53    |with a Monday in this year    |
-
-The parameter is Date or Datetime type
-
-### example
-```
-mysql> select yearweek('2021-1-1');
-+----------------------+
-| yearweek('2021-1-1') |
-+----------------------+
-|               202052 |
-+----------------------+
-```
-```
-mysql> select yearweek('2020-7-1');
-+----------------------+
-| yearweek('2020-7-1') |
-+----------------------+
-|               202026 |
-+----------------------+
-```
-```
-mysql> select yearweek('2024-12-30',1);
-+------------------------------------+
-| yearweek('2024-12-30 00:00:00', 1) |
-+------------------------------------+
-|                             202501 |
-+------------------------------------+
+```sql
+YEARWEEK (<date>[, mode])
 ```
 
-### keywords
-    YEARWEEK
+## Parameters
+
+| Parameter | Description |
+|---|---|
+| `<date>` | Corresponding date value, Date or Datetime type |
+| `<mode>` | Optional parameter used to define the weekly calculation rule. The default value is 0 |
+
+## Return Value
+
+The year and week number of the specified date. When the week of the date belongs to the previous year, the year and week number of the previous year are returned; when the week of the date belongs to the next year, the year of the next year and the week number are returned as 1. The default value of mode is 0. The corresponding values are shown in the table below:
+
+|Mode |First day of week |Range  |Definition of the first week     |
+|:----|:-----------------|:------|:-----------------------------|
+|0    |Sunday            |0-53   |with a Sunday in this year    |
+|1    |Monday            |0-53   |with 4 or more days this year |
+|2    |Sunday            |1-53   |with a Sunday in this year    |
+|3    |Monday            |1-53   |with 4 or more days this year |
+|4    |Sunday            |0-53   |with 4 or more days this year |
+|5    |Monday            |0-53   |with a Monday in this year    |
+|6    |Sunday            |1-53   |with 4 or more days this year |
+|7    |Monday            |1-53   |with a Monday in this year    |
+
+## Example
+
+```sql
+SELECT YEARWEEK('2020-1-1'),YEARWEEK('2022-7-1',1);
+```
+
+```text
++---------------------------------------------+-----------------------------------------+
+| yearweek(cast('2020-1-1' as DATETIMEV2(0))) | yearweek(cast('2022-7-1' as DATEV2), 1) |
++---------------------------------------------+-----------------------------------------+
+|                                      201952 |                                  202226 |
++---------------------------------------------+-----------------------------------------+
+```
