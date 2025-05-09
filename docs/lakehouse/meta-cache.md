@@ -196,7 +196,7 @@ This cache has one for each Hudi Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Hudi tables.
 
@@ -216,7 +216,7 @@ This cache has one for each Iceberg Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Iceberg tables.
 
@@ -235,7 +235,7 @@ This cache has one for each Iceberg Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Iceberg tables.
 
@@ -315,11 +315,12 @@ For the Hive Catalog, if you want to disable the cache to query real-time update
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // Disable partition list cache
 max_external_file_cache_num=0    // Disable file list cache
+max_hive_partition_table_cache_num=0  // Disable partition list cache
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // Disable file list cache for a specific Catalog
+"partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
 ```
 
 After setting the above parameters:

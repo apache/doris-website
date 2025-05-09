@@ -196,7 +196,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Hudi 表的数量，适当调整这个参数。
 
@@ -216,7 +216,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 
@@ -235,7 +235,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 
@@ -315,11 +315,12 @@ CREATE CATALOG hive PROPERTIES (
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 max_external_file_cache_num=0    // 关闭文件列表缓存
+max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // 针对某个 Catalog，关闭文件列表缓存
+"partition.cache.ttl-second" = "0" // 针对某个 Catalog，关闭分区列表缓存（2.1.11, 3.0.6 支持）
 ```
 
 设置以上参数后：
