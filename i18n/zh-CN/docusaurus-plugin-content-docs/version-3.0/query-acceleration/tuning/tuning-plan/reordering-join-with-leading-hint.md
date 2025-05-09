@@ -105,7 +105,7 @@ mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t
 ## 案例 3：强制生成右深树
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
 +----------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                                  |
 +----------------------------------------------------------------------------------+
@@ -121,18 +121,18 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 | --------------PhysicalOlapScan[t3]                                               |
 |                                                                                  |
 | Hint log:                                                                        |
-| Used: leading(t1 { t2 t3 })                                                      |
+| Used: leading(t1 ( t2 t3 ))                                                      |
 | UnUsed:                                                                          |
 | SyntaxError:                                                                     |
 +----------------------------------------------------------------------------------+
 ```
 
-同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 { t2 t3 })`。
+同样，Hint log 展示了应用成功的 hint: `Used: leading(t1 ( t2 t3 ))`。
 
 ## 案例 4：强制生成 bushy 树
 
 ```sql
-mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
+mysql> explain shape plan select /*+ leading((t1 t2) (t3 t4)) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
 +-----------------------------------------------+
 | _Explain_ String                                |
 +-----------------------------------------------+
@@ -202,7 +202,7 @@ explain shape plan
     from
         (
             select
-                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                /*+ leading(orders [shuffle] (lineitem [shuffle] part) [shuffle] (supplier [broadcast] nation) [shuffle] partsupp) */
                 n_name as nation,
                 extract(year from o_orderdate) as o_year,
                 l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
@@ -230,7 +230,7 @@ explain shape plan
         o_year desc;
 ```
 
-上述 `/*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */` hint 指定方式，混用了 leading 和 distribute hint 两种格式。leading 用于控制总体的表之间的相对 join 顺序，而 `shuffle` 和 `broadcast` 分别用于指定特定 join 使用何种 shuffle 方式。通过两种结合使用，可以灵活的控制连接顺序和连接方式，便于手工控制用户期望的计划行为。
+上述 `/*+ leading(orders [shuffle] (lineitem [shuffle] part) [shuffle] (supplier [broadcast] nation) [shuffle] partsupp) */` hint 指定方式，混用了 leading 和 distribute hint 两种格式。leading 用于控制总体的表之间的相对 join 顺序，而 `shuffle` 和 `broadcast` 分别用于指定特定 join 使用何种 shuffle 方式。通过两种结合使用，可以灵活的控制连接顺序和连接方式，便于手工控制用户期望的计划行为。
 
 :::caution 使用建议
 - 建议使用 EXPLAIN 来仔细分析执行计划，以确保 Leading Hint 能达到预期的效果。
