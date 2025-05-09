@@ -348,11 +348,10 @@
                                     "items": [
                                         "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
                                         "query-acceleration/tuning/tuning-execution/data-skew-handling",
-                                        "query-acceleration/tuning/tuning-execution/parallelism-adjustment"
+                                        "query-acceleration/tuning/tuning-execution/parallelism-tuning"
                                     ]
                                 },
-                                "query-acceleration/tuning/tuning-parameters",
-                                "query-acceleration/tuning/parallelism-tuning"
+                                "query-acceleration/tuning/tuning-parameters"
                             ]
                         },
                         {
