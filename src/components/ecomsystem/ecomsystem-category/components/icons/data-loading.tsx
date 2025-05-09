@@ -26,16 +26,16 @@ export function DataLoadingIcon() {
                 d="M47.6322 37.8733C47.6322 43.121 43.3782 47.375 38.1306 47.375C32.8829 47.375 28.6289 43.121 28.6289 37.8733C28.6289 32.6257 32.8829 28.3717 38.1306 28.3717C43.3782 28.3717 47.6322 32.6257 47.6322 37.8733Z"
                 fill="white"
                 stroke="#444FD9"
-                stroke-width="3.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
             <path
                 d="M42.5957 37.8733L34.4993 37.8733M34.4993 37.8733L38.3094 41.2071M34.4993 37.8733L38.3094 34.5395"
                 stroke="#444FD9"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     );

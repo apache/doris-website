@@ -42,7 +42,7 @@ export function UserCaseCarousel() {
                 defaultActiveKey={['0']}
                 accordion
                 expandIcon={ArrowDownIcon}
-                expandIconPosition="right"
+                expandIconPosition="end"
                 items={VariousAnalyticsData.map(({ title, content, icon, links, backgroundClassName }, index) => {
                     return {
                         key: index,

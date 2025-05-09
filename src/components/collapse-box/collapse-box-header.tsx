@@ -49,8 +49,7 @@ export function CollapseBoxHeader({
                                         </div>
                                     </div>}
                                 placement="right"
-                                overlayStyle={{ width: 650, height: 180 }}
-                                overlayInnerStyle={{ padding: 16 }}
+                                styles={{ body: { padding: 16,width: 650, height: 180 } }} // ✅ Updated line
                                 trigger="hover">
                                 <span><InfoFilledIcon /></span>
                             </Popover>
