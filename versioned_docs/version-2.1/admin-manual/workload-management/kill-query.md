@@ -24,77 +24,151 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Retrieve the List of Queries
+You can cancel currently executing operations or disconnect current connection sessions using the `KILL` command. This document introduces related operations and considerations.
+
+## Getting Query Identifiers
+
+`KILL` requires a query identifier to cancel the corresponding query request. Query identifiers include: Query ID, Connection ID, and Trace ID.
+
+You can obtain query identifiers through the following methods.
+
+### PROCESSLIST
+
+Through the `processlist` system table, you can get all current session connections and query operations being executed in the connections. This includes the Query ID and Connection ID.
+
+```sql
+mysql> SHOW PROCESSLIST;
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
+| CurrentConnected | Id   | User | Host                | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             | FE            | CloudCluster |
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
+| No               |    2 | root | 172.20.32.136:54850 | 2025-05-11 10:41:52 | internal |      | Query   |    6 | OK    | 12ccf7f95c1c4d2c-b03fa9c652757c15 | select sleep(20) | 172.20.32.152 | NULL         |
+| Yes              |    3 | root | 172.20.32.136:54862 | 2025-05-11 10:41:55 | internal |      | Query   |    0 | OK    | b710ed990d4144ee-8b15bb53002b7710 | show processlist | 172.20.32.152 | NULL         |
+| No               |    1 | root | 172.20.32.136:47964 | 2025-05-11 10:41:54 | internal |      | Sleep   |   11 | EOF   | b60daa992bac4fe4-b29466aacce67d27 |                  | 172.20.32.153 | NULL         |
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
+```
+
+- `CurrentConnected`: `Yes` indicates the connection corresponding to the current session.
+- `Id`: The unique identifier of the connection, i.e., Connection ID.
+- `QueryId`: The unique identifier of the Query. Displays the Query Id of the most recently executed or currently executing SQL command.
+
+Note that by default, `SHOW PROCESSLIST` only displays all session connections on the FE node that the current session is connected to, and does not display session connections from other FE nodes.
+
+If you want to display session connections from all FE nodes, you need to set the following session variable:
+
+```
+SET show_all_fe_connection=true;
+```
+
+Then execute the `SHOW PROCESSLIST` command again to display session connections from all FE nodes.
+
+You can also view through the system table in `information_schema`:
+
+```
+SELECT * FROM information_schema.processlist;
+```
+
+By default, `processlist` displays session connections from all FE nodes without requiring additional settings.
+
+### TRACE ID
+
+> This feature is supported since versions 2.0.11 and 3.0.7.
+
+By default, the system automatically generates a Query ID for each query. Users need to first obtain the Query ID through the `processlist` system table before performing a KILL operation.
+
+In addition, users can also customize a Trace ID and perform KILL operations using the Trace ID.
+
+```
+SET session_context = "trace_id:your_trace_id";
+```
+
+Where `your_trace_id` is the user-defined Trace ID. It can be any string but cannot contain the `;` symbol.
+
+Trace ID is a session-level parameter and only applies to the current session. Doris will map subsequent query requests in the current session to this Trace ID.
+
+## Kill Requests
+
+The `KILL` statement supports canceling specified query operations as well as disconnecting specified session connections.
+
+Regular users can cancel queries sent by their own user through the `KILL` operation. ADMIN users can cancel queries sent by themselves and any other users.
+
+### Kill Query
 
 Syntax:
 
-
 ```sql
-SHOW PROCESSLIST;
+KILL QUERY "query_id" | "trace_id" | connection_id;
 ```
 
-This command displays all current connections to the FE and the list of queries being executed on each connection. For example:
+`KILL QUERY` is used to cancel a specified running query operation.
 
-```sql
-SHOW PROCESSLIST;
-+------------------+------+------+--------------------+---------------------+----------+---------+---------+------+-------+-----------------------------------+---------------------------------------------------------------------------------------+
-| CurrentConnected | Id   | User | Host               | LoginTime           | Catalog  | Db      | Command | Time | State | QueryId                           | Info                                                                                  |
-+------------------+------+------+--------------------+---------------------+----------+---------+---------+------+-------+-----------------------------------+---------------------------------------------------------------------------------------+
-| Yes              |   48 | root | 10.16.xx.xx:44834   | 2023-12-29 16:49:47 | internal | test | Query   |    0 | OK    | e6e4ce9567b04859-8eeab8d6b5513e38 | SHOW PROCESSLIST                                                                      |
-|                  |   50 | root | 192.168.xx.xx:52837 | 2023-12-29 16:51:34 | internal |      | Sleep   | 1837 | EOF   | deaf13c52b3b4a3b-b25e8254b50ff8cb | SELECT @@session.transaction_isolation                                                |
-|                  |   51 | root | 192.168.xx.xx:52843 | 2023-12-29 16:51:35 | internal |      | Sleep   |  907 | EOF   | 437f219addc0404f-9befe7f6acf9a700 | /* ApplicationName=DBeaver Ultimate 23.1.3 - Metadata */ SHOW STATUS                  |
-|                  |   55 | root | 192.168.xx.xx:55533 | 2023-12-29 17:09:32 | internal | test | Sleep   |  271 | EOF   | f02603dc163a4da3-beebbb5d1ced760c | /* ApplicationName=DBeaver Ultimate 23.1.3 - SQLEditor <Console> */ SELECT DATABASE() |
-|                  |   47 | root | 10.16.xx.xx:35678   | 2023-12-29 16:21:56 | internal | test | Sleep   | 3528 | EOF   | f4944c543dc34a99-b0d0f3986c8f1c98 | select * from test                                                                    |
-+------------------+------+------+--------------------+---------------------+----------+---------+---------+------+-------+-----------------------------------+---------------------------------------------------------------------------------------+
-5 rows in set (0.00 sec)
-```
+- `"query_id"`
 
+	The Query ID obtained through the `processlist` system table. Must be wrapped in quotes. For example:
+	
+	`KILL QUERY "d36417cc05ff41ab-9d3afe49be251055";`
+	
+	This operation will attempt to find the Query ID on all FE nodes and cancel the corresponding query.
+	
+- `"trace_id"`
 
-- Id is the unique identifier for the connection, also known as processlist_id.
-- QueryId is the unique identifier for the query.
+	The Trace ID customized through `session_context`. Must be wrapped in quotes. For example:
 
+	`KILL QUERY "your_trace_id";`
+	
+	This operation will attempt to find the Trace ID on all FE nodes and cancel the corresponding query.
 
+	> This feature is supported since versions 2.0.11 and 3.0.7.
 
-## Kill Query
+- `connection_id`
+
+	The Connection ID obtained through the `processlist` system table. Must be an integer greater than 0 and cannot be wrapped in quotes. For example:
+
+	`KILL QUERY 55;`
+	
+	This operation only applies to session connections on the currently connected FE, and will cancel the query currently being executed on the corresponding session connection.
+
+### Kill Connection
+
+Killing a connection will disconnect the specified session connection and also cancel any query operations being executed on the connection.
 
 Syntax:
 
-
 ```sql
-KILL QUERY query_id | processlist_id
+KILL [CONNECTION] connection_id;
 ```
 
-This command is used to terminate a specific query or the query being executed on a specific connection. For example:
+The `CONNECTION` keyword can be omitted.
 
-```sql
-kill query 55;
-Query OK, 0 rows affected (0.01 sec)
-```
+- `connection_id`
 
-This terminates the query currently running on the connection with Id=55, but the connection itself remains active.
+	The Connection ID obtained through the `processlist` system table. Must be an integer greater than 0 and cannot be wrapped in quotes. For example:
 
-```sql
-kill query 'f02603dc163a4da3-beebbb5d1ced760c';
-Query OK, 0 rows affected (0.01 sec)
-```
+	```sql
+	KILL CONNECTION 55;
+	KILL 55;
+	```
+	
+	Connection IDs on different FEs may be the same, but this operation only affects the session connection on the currently connected FE.
 
-This terminates the query with QueryId=f02603dc163a4da3-beebbb5d1ced760c, which is actually the same query as the one with processlist_id=55.
+## Best Practices
 
-## Kill Connection
+1. Implementing query management through custom Trace ID
 
-Syntax:
+	Custom Trace IDs allow you to specify unique identifiers for queries in advance, making it easier for management system to implement the [Cancel Query] function. You can customize Trace IDs in the following ways:
+	
+	- Set `session_context` before each query
 
+		Users generate their own Trace ID. It is recommended to use UUID to ensure the uniqueness of the Trace ID.
 
-```sql
-KILL CONNECTION processlist_id
-```
+		```sql
+		SET session_context="trace_id:your_trace_id";
+		SELECT * FROM table ...;
+		```
+		
+	- Add Trace ID in the query statement
 
-For example:
-
-
-```sql
-kill CONNECTION 55;
-Query OK, 0 rows affected (0.01 sec)
-```
-
-This command disconnects the connection with Id=55, and any query currently being executed on this connection will also be canceled.
+		```sql
+		SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+		```
+	
+	Afterward, management system can cancel running operations at any time using the Trace ID.
