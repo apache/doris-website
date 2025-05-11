@@ -48,7 +48,7 @@ Furthermore, this command also supports the following variations:
 ## Syntax
 
 ```sql
-CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
+CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     (<columns_definition> [ <indexes_definition> ])
     [ ENGINE = <table_engine_type> ]
     [ <key_type> KEY (<key_cols>)
