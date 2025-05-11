@@ -37,7 +37,7 @@ function(<args>) OVER(
 | Parameter | Description |
 |-----------|-------------|
 | `<args>` | Input parameters for the window function, specific to the function being used |
-| `<function>` | Supported functions include: AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM() and all aggregate functions |
+| `<function>` | Supported functions include: AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM(), NTH_VALUE() And ALL Aggregate Functions |
 | `<partition_by>` | Similar to GROUP BY, groups data by specified columns |
 | `<order_by>` | Defines the ordering of data within the window |
 | `<window_clause>` | Defines the window range, syntax: ROWS BETWEEN [ { m \| UNBOUNDED } PRECEDING \| CURRENT ROW] [ AND [CURRENT ROW \| { UNBOUNDED \| n } FOLLOWING] ] |
