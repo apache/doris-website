@@ -48,13 +48,14 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
-| `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
-| `map<Type1,Type2>` | `HashMap<Type1,Type2>`（支持嵌套）             |
-| `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持） |
+| `array<Type>`      | `ArrayList<Type>` `List<Type>` （支持嵌套）              |
+| `map<Type1,Type2>` | `HashMap<Type1,Type2>` `Map<Type1,Type2>`  （支持嵌套）          |
+| `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持）`List<Type>` |
 
 
 :::tip 提示
 `array`、`map`、`struct` 类型可以嵌套其它类型。例如，Doris 中的 `array<array<int>>` 对应 Java UDF 参数类型为 `ArrayList<ArrayList<Integer>>`，其他类型依此类推。
+`List<Type>` 和 `Map<Type1,Type2>` 类的支持从3.1.0 版本开始
 :::
 
 :::caution 注意

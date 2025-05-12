@@ -52,12 +52,13 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 | IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
-| `array<Type>`         | `ArrayList<Type>`            |
-| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`       |
-| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) |
+| `array<Type>`         | `ArrayList<Type>` or `List<Type>`          |
+| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`or`Map<Type1,Type2>`     |
+| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) or`List<Object>`|
 
 :::tip
 `array/map/struct` types can be nested with other types. For instance, Doris: `array<array<int>>` corresponds to JAVA UDF Argument Type: `ArrayList<ArrayList<Integer>>`. Other types follow the same pattern.
+And `List`,`Map` class is supported from version 3.1.0
 :::
 
 :::caution Warning
