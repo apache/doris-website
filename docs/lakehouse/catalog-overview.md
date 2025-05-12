@@ -163,6 +163,7 @@ SET PROPERTY default_init_catalog=hive_catalog;
 
 Note 1: If the catalog has been explicitly specified in the MySQL command line or JDBC connection strings, then the specified catalog will be used, and the `default_init_catalog` user attribute will not take effect.
 Note 2: If the catalog set by the user attribute `default_init_catalog` no longer exists, it will automatically switch to the default `internal` catalog.
+Note 3: This feature takes effect starting from version v3.1.x.
 
 ### Simple Query
 

@@ -163,6 +163,7 @@ SET PROPERTY default_init_catalog=hive_catalog;
 
 注意1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
 注意2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
+注意3：该功能从 v3.1.x 版本开始生效；
 
 ### 简单查询
 
