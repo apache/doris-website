@@ -330,12 +330,3 @@ After setting the above parameters:
 
 But it will increase the access pressure on external source data (such as Hive Metastore and HDFS), which may lead to unstable metadata access delays.
 
-## Version Behavior Changes
-
-In version 2.1.5, the `use_meta_cache` property was added to the Catalog properties, and the default is false.
-
-:::warning
-Do not set `use_meta_cache` to true in versions before 2.1.6.
-:::
-
-In version 2.1.6, the default for newly created Catalogs was changed to true to correspond to the cache behavior described in this document. It is recommended that users rebuild existing Catalogs after upgrading to version 2.1.6 to make the default behavior consistent with the description in this document.
