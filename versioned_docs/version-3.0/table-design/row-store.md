@@ -41,7 +41,7 @@ When creating a table, specify whether to enable row storage, which columns to e
 "store_row_column" = "true"
 ```
 
-2. Which columns to enable row storage for:if `"store_row_column" = "true"`, all columns are enabled by default. If you need to specify that only some columns are enabled for row storage, set the row_store_columns parameter, formatted as a comma-separated list of column names.
+2. Which columns to enable row storage for:if `"store_row_column" = "true"`, all columns are enabled by default. If you need to specify that only some columns are enabled for row storage, set the row_store_columns parameter (afer version 3.0), formatted as a comma-separated list of column names.
 ``` 
 "row_store_columns" = "column1,column2,column3"
 ```

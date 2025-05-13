@@ -79,7 +79,7 @@ PROPERTIES (
 
 4. It only supports equality queries on the key column of a single table and does not support joins or nested subqueries. The WHERE condition should consist of the key column alone and be an equality comparison. It can be considered as a type of key-value query.
 
-5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 2.1, it is recommended to use `"row_store_columns"="k1,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
+5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 3.0, it is recommended to use `"row_store_columns"="k1,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
 
    ```sql
    SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1
