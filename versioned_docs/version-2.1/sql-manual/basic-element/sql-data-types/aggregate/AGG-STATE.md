@@ -29,8 +29,8 @@ under the License.
       AGG_STATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table.
       User does not need to specify length and default value. The actual stored data size is related to the function implementation.
     
-  AGG_STATE can only be used with [state](../../sql-functions/combinators/state.md)
-     /[merge](../../sql-functions/combinators/merge.md)/[union](../..//sql-functions/combinators/union.md) function combiner usage.
+  AGG_STATE can only be used with [state](../../../../sql-manual/sql-functions/combinators/state)
+     /[merge](../../../../sql-manual/sql-functions/combinators/merge)/[union](../../../../sql-manual/sql-functions/combinators/union) function combiner usage.
     
   It should be noted that the signature of the aggregation function is also part of the type, and agg_state with different signatures cannot be mixed. For example, if the signature of the table creation statement is `max_by(int,int)`, then `max_by(bigint,int)` or `group_concat(varchar)` cannot be inserted.
    The nullable attribute here is also part of the signature. If you can confirm that you will not enter a null value, you can declare the parameter as not null, which can obtain a smaller storage size and reduce serialization/deserialization overhead.
@@ -69,7 +69,7 @@ Insert data example:
     insert into a_table values(1,max_by_state(2,2),group_concat_state('bb'));
     insert into a_table values(2,max_by_state(1,3),group_concat_state('ccc'));
 ```
-For the agg_state column, the insert statement must use the [state](../../sql-functions/combinators/state.md) function to generate the corresponding agg_state data, where the functions and input parameter types must completely correspond to agg_state.
+For the agg_state column, the insert statement must use the [state](../../../../sql-manual/sql-functions/combinators/state) function to generate the corresponding agg_state data, where the functions and input parameter types must completely correspond to agg_state.
 
 Select data example:
 ```sql
@@ -81,7 +81,7 @@ Select data example:
     |    2 |                  1 | ccc                      |
     +------+--------------------+--------------------------+
 ```
-If you need to get the actual result, you need to use the corresponding [merge](../../sql-functions/combinators/merge.md) function.
+If you need to get the actual result, you need to use the corresponding [merge](../../../../sql-manual/sql-functions/combinators/merge) function.
 
 ```sql
     mysql [test]>select max_by_merge(u2),group_concat_merge(u3) from (
@@ -93,7 +93,7 @@ If you need to get the actual result, you need to use the corresponding [merge](
     |                  1 | ccc,bb,a                 |
     +--------------------+--------------------------+
 ```
-If you want to aggregate only the agg_state without getting the actual result during the process, you can use the [union](../..//sql-functions/combinators/union.md) function.
+If you want to aggregate only the agg_state without getting the actual result during the process, you can use the [union](../../../../sql-manual/sql-functions/combinators/union) function.
 
 For more examples, see [datatype_p0/agg_state](https://github.com/apache/doris/tree/master/regression-test/suites/datatype_p0/agg_state)
 ### keywords

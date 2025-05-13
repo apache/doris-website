@@ -102,7 +102,7 @@ MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
 
 6. You can use [JOB](../../../admin-manual/workload-management/job-scheduler) make the INSERT operation execute asynchronously.
 
-7. Sources can be [tvf](../../../lakehouse/file-analysis) or tables in a [catalog](../../../lakehouse/catalog-overview).
+7. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/datalake-analytics/hudi.md).
 
 ### View INSERT INTO jobs
 

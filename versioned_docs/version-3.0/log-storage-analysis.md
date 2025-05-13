@@ -396,7 +396,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../../ecosystem/logstash.md).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](./ecosystem/logstash).
 
 **Integrating Filebeat**
 
@@ -464,7 +464,7 @@ headers:
     ./filebeat-doris-1.0.0 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](../../ecosystem/beats.md).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](./ecosystem/beats).
 
 **Integrating Kafka**
 
@@ -497,7 +497,7 @@ FROM KAFKA (
 <br />SHOW ROUTINE LOAD;
 ```
 
-For more information about Kafka, see [Routine Load](../../data-operate/import/import-way/routine-load-manual.md).
+For more information about Kafka, see [Routine Load](./data-operate/import/import-way/routine-load-manual).
 
 **Using customized programs to collect logs**
 

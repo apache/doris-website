@@ -74,7 +74,7 @@ under the License.
 
 - SQL 拦截功能现在支持外部表
 
-  - 更多内容，参考文档[SQL 拦截](../..//admin-manual/query-admin/sql-interception)
+  - 更多内容，参考文档[SQL 拦截](../../admin-manual/workload-management/sql-blocking.md)
 
 - Insert Overwrite 现在支持 Iceberg 表。[#37191](https://github.com/apache/doris/pull/37191)
 

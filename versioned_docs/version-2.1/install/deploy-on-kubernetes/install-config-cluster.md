@@ -517,7 +517,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 ```
 
 ## Configuring the username and password for the management cluster
-Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC]( ../../admin-manual/auth/authentication-and-authorization), where the user must have the [Node_priv](../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
+Managing Doris nodes requires connecting to the live FE nodes via the MySQL protocol using a username and password for administrative operations. Doris implements [a permission management mechanism similar to RBAC](../../admin-manual/auth/authentication-and-authorization), where the user must have the [Node_priv](../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) permission to perform node management. By default, the Doris Operator deploys the cluster with the root user in passwordless mode.
 
 The process of configuring the username and password can be divided into three scenarios:  
 - initializing the root user password during cluster deployment;

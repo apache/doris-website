@@ -29,8 +29,8 @@ under the License.
     AGG_STATE不能作为key列使用，建表时需要同时声明聚合函数的签名。
     用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
     
-  AGG_STATE 只能配合[state](../../sql-functions/combinators/state.md)
-    /[merge](../../sql-functions/combinators/merge.md)/[union](../..//sql-functions/combinators/union.md)函数组合器使用。
+  AGG_STATE 只能配合[state](../../../sql-functions/combinators/state)
+    /[merge](../../../sql-functions/combinators/merge)/[union](../../../sql-functions/combinators/union)函数组合器使用。
     
   需要注意的是，聚合函数的签名也是类型的一部分，不同签名的 agg_state 无法混合使用。比如如果建表声明的签名为`max_by(int,int)`,那就无法插入`max_by(bigint,int)`或者`group_concat(varchar)`。
   此处 nullable 属性也是签名的一部分，如果能确定不会输入 null 值，可以将参数声明为 not null，这样可以获得更小的存储大小和减少序列化/反序列化开销。
@@ -58,7 +58,7 @@ under the License.
   insert into a_table values(1,max_by_state(2,2),group_concat_state('bb'));
   insert into a_table values(2,max_by_state(1,3),group_concat_state('ccc'));
   ```
-  对于 agg_state 列，插入语句必须用[state](../../sql-functions/combinators/state.md)函数来生成对应的 agg_state 数据，这里的函数和入参类型都必须跟 agg_state 完全对应。
+  对于 agg_state 列，插入语句必须用[state](../../../../sql-manual/sql-functions/combinators/state)函数来生成对应的 agg_state 数据，这里的函数和入参类型都必须跟 agg_state 完全对应。
 
 查询数据示例：
 
@@ -72,7 +72,7 @@ under the License.
   +------+--------------------+--------------------------+
   ```
 
-  如果需要获取实际结果，则要用对应的[merge](../../sql-functions/combinators/merge.md)函数。
+  如果需要获取实际结果，则要用对应的[merge](../../../../sql-manual/sql-functions/combinators/merge)函数。
 
   ```sql
   mysql [test]>select max_by_merge(u2),group_concat_merge(u3) from (
@@ -85,7 +85,7 @@ under the License.
   +--------------------+--------------------------+
   ```
 
-如果想要在过程中只聚合 agg_state 而不获取实际结果，可以使用[union](../..//sql-functions/combinators/union.md)函数。
+如果想要在过程中只聚合 agg_state 而不获取实际结果，可以使用[union](../../../../sql-manual/sql-functions/combinators/union)函数。
 
 更多的例子参见[datatype_p0/agg_state](https://github.com/apache/doris/tree/master/regression-test/suites/datatype_p0/agg_state)
 

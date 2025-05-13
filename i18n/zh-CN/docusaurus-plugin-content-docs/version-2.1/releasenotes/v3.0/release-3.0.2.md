@@ -63,7 +63,7 @@ under the License.
 
 ### Lakehouse
 
-- 新增 Lakesoul Catalog。[Apache Doris Docs](../../lakehouse/datalake-analytics/lakesoul) 
+- 新增 Lakesoul Catalog。
 - 新增系统表 `catalog_meta_cache_statistics`，用于查看 External Catalog 中各类元数据缓存的使用情况。[#40155](https://github.com/apache/doris/pull/40155) 
 
 ### 查询优化器

@@ -175,7 +175,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](./install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 
 ### Step 3: Optimize FE and BE configurations
@@ -397,7 +397,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../../ecosystem/logstash.md).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](./ecosystem/logstash).
 
 **Integrating Filebeat**
 
@@ -465,7 +465,7 @@ headers:
     ./filebeat-doris-1.0.0 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](../../ecosystem/beats.md).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](./ecosystem/beats).
 
 **Integrating Kafka**
 
@@ -498,7 +498,7 @@ FROM KAFKA (
 <br />SHOW ROUTINE LOAD;
 ```
 
-For more information about Kafka, see [Routine Load](../../data-operate/import/import-way/routine-load-manual.md).
+For more information about Kafka, see [Routine Load](./data-operate/import/import-way/routine-load-manual).
 
 **Using customized programs to collect logs**
 

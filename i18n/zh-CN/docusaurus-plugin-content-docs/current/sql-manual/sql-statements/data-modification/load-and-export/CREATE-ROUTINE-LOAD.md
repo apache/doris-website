@@ -292,7 +292,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > 13. `<max_filter_ratio>`
 >
->     采样窗口内，允许的最大过滤率。必须在大于等于0到小于等于1之间。默认值是 0。
+>     采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 0。
 >
 >     采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。
 >
@@ -306,7 +306,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > 15. `<escape>`
 >
->     转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
+>     转义符。用于转义在 csv 字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 >
 **5. `<data_source_properties>` 中的可选属性**
 
@@ -340,7 +340,7 @@ FROM <data_source> [<data_source_properties>]
 >
 >     当参数的 value 为一个文件时，需要在 value 前加上关键词："FILE:"。
 >
->     关于如何创建文件，请参阅 [CREATE FILE](../../../Data-Definition-Statements/Create/CREATE-FILE) 命令文档。
+>     关于如何创建文件，请参阅 [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE) 命令文档。
 >
 >     更多支持的自定义参数，请参阅 librdkafka 的官方 CONFIGURATION 文档中，client 端的配置项。如：
 >

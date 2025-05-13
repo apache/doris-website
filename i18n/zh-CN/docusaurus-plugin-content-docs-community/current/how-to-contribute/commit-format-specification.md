@@ -110,7 +110,7 @@ Commit 分为“标题”和“内容”。原则上标题全部小写。内容�
     ```
     
     ```
-    [feat](log) extend logger interface, support structured log output(#6600)
+    [feat](log) extend logger interface, support structured log output(#6600)    
     
     Support structured logging.
     ```

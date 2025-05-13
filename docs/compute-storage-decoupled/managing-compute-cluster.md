@@ -164,7 +164,7 @@ You can scale compute groups by adding or removing BE using `ALTER SYSTEM ADD BA
 
 ## Renaming Compute Group
 
-You can use the `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` command to rename an existing compute group. Please refer to the SQL Manual on [Renaming Compute Groups](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-RENAME-COMPUTE-GROUP.md).
+You can use the `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` command to rename an existing compute group. Please refer to the SQL Manual on [Renaming Compute Groups](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP).
 
 Note
 After renaming a compute group, users who had permissions for the old name (old_name) or had set the old name as the default compute group (default_compute_group) will not have their permissions automatically updated to the new name (new_name). Permissions need to be reset by an account with administrative privileges. This is consistent with the permission system of MySQL databases.

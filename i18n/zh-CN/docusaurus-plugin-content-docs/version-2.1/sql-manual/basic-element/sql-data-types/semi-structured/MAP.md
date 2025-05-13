@@ -66,8 +66,6 @@ PROPERTIES (
 mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
-stream_load 示例：
-更多详细 stream_load 用法见 [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual) 
 
 ```shell
 # load the map data from json file

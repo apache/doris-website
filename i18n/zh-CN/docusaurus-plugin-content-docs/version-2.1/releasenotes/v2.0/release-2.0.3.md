@@ -39,7 +39,7 @@ under the License.
 
 在每次导入事务提交后，Apache Doris 将记录导入事务更新的表信息并估算表统计信息的健康度，对于健康度低于配置参数的表会认为统计信息已过时并自动触发表的统计信息收集作业。同时为了降低统计信息作业的资源开销，Apache Doris 会自动采取采样的方式收集统计信息，用户也可以调整参数来采样更多行以获得更准确的数据分布信息。
 
-更多信息请参考：[Statistics](../query/nereids/statistics.md)
+更多信息请参考：[Statistics](../../query-acceleration/optimization-technology-principle/statistics)
 
 
 ### 数据湖框架支持复杂数据类型

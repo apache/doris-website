@@ -65,5 +65,5 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 ## References
 
 
-- [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
-- [MANAGING FILE CACHE](../../../compute-storage-decoupled/file-cache.md)
+- [WARMUP CACHE](../storage-management/WARM-UP.md)
+- [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)

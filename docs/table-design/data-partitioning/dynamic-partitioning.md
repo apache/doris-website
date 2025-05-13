@@ -107,7 +107,7 @@ ALTER TABLE test_partition SET (
 
 ### 查看动态分区调度情况
 
-通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
+通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md) 可以查看当前数据库下，所有动态分区表的调度情况：
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES;
