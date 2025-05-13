@@ -77,7 +77,7 @@ PROPERTIES (
 
 4. 只支持单表 key 列等值查询不支持 join、嵌套子查询， **where 条件里需要有且仅有 key 列的等值**，可以认为是一种 key value 查询
 
-5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 2.1 后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
+5. 开启行存会导致空间膨胀，占用更多的磁盘空间，如果只需要查询部分列，在 Doris 3.0 后建议使用`"row_store_columns"="key,v1,v2"` 类似的方式指定部份列作为行存，查询的时候只查询这部份列，例如
 
     ```sql
     SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1
