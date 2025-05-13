@@ -72,7 +72,7 @@ mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
 stream_load examples:
-See [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual)  for syntax details.
+See [STREAM LOAD](../../../../data-operate/import/import-way/stream-load-manual)  for syntax details.
 
 ```shell
 # load the map data from json file

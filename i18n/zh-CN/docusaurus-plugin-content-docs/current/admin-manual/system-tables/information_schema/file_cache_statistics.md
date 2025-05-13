@@ -26,7 +26,7 @@ under the License.
 
 ## 概述
 
-用于查看各个 BE 节点 [数据缓存](../../../lakehouse/filecache.md) 相关的指标信息。
+用于查看各个 BE 节点 [数据缓存](../../../lakehouse/file-analysis.md) 相关的指标信息。
 
 指标信息来源于 BE 的数据缓存相关监控指标。
 

@@ -30,7 +30,7 @@ Metadata includes information such as databases, tables, columns, partition info
 
 This document provides a detailed introduction to the types, strategies, and related parameter configurations of cached metadata.
 
-For **data caching**, please refer to the [data cache documentation](./filecache.md).
+For **data caching**, please refer to the [data cache documentation](./file-analysis.md).
 
 :::notice
 This document applies to versions after 2.1.6.

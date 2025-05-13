@@ -62,7 +62,7 @@ under the License.
 
 - Support FE flame graph tool
   
-  For more information, see the [documentation](/community/developer-guide/fe-profiler.md)
+  For more information, see the [documentation](https://doris.apache.org/community/developer-guide/fe-profiler)
   
 - Support `SELECT DISTINCT` to be used with aggregation.
 
@@ -82,19 +82,19 @@ under the License.
 
 - Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
-- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../query/view-materialized-view/query-async-materialized-view.md).
+- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../query-acceleration/materialized-view/async-materialized-view/overview.md).
 
-- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../sql-manual/sql-types/Data-Types/AGG_STATE.md).
+- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../sql-manual/sql-types/Data-Types/AGG_STATE.md).
 
 ### Others
 
 - Added function `replace_empty`. 
 
-	For more information, see [documentation]../sql-manual/sql-functions/string-functions/replace_empty).
+	For more information, see [documentation](../../sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md).
 
 - Support `show storage policy using` statement.
 
-	For more information, see [documentation](../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md).
+	For more information, see [documentation](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING).
 
 - Support JVM metrics on the BE side.
 

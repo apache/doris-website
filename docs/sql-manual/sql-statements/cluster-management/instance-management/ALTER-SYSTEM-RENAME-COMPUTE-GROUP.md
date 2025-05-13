@@ -47,8 +47,8 @@ ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>
 
 Notes:
 1. The naming rules for compute groups are consistent with the naming rules for database and table names in DORIS.
-2. All compute groups in the current separation of storage and computing cluster can be viewed using [SHOW COMPUTE GROUPS](../Show-Statements/SHOW-COMPUTE-GROUPS.md)。
-3. After the renaming operation is completed, it can also be confirmed by using [SHOW COMPUTE GROUPS](../Show-Statements/SHOW-COMPUTE-GROUPS.md)。
+2. All compute groups in the current separation of storage and computing cluster can be viewed using [SHOW COMPUTE GROUPS](../compute-management/SHOW-COMPUTE-GROUPS)。
+3. After the renaming operation is completed, it can also be confirmed by using [SHOW COMPUTE GROUPS](../compute-management/SHOW-COMPUTE-GROUPS)。
 4. If the renaming operation fails, you can check the returned message for reasons, such as the original compute group not existing or the original and target compute group names being the same.
 
 ### Example

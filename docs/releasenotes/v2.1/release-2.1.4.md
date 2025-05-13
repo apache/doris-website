@@ -94,7 +94,7 @@ under the License.
 
 - Support `show storage policy using` statement.
 
-	For more information, see [documentation](../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md).
+	For more information, see [documentation](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING).
 
 - Support JVM metrics on the BE side.
 

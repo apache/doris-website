@@ -143,7 +143,7 @@ under the License.
 :::note
 - [演示 Demo](https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0)
 
-- 参考文档：[SQL 方言兼容](../../lakehouse/sql-dialect.md)
+- 参考文档：[SQL 方言兼容](../../lakehouse/sql-convertor)
 
 :::
 
@@ -408,7 +408,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](./table-design/data-partitioning/basic-concepts.mdx)
+参考文档：[数据划分](../../table-design/data-partitioning/basic-concepts.mdx)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%

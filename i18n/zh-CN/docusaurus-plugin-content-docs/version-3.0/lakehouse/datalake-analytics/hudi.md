@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-快速体验 [Apache Doris & Hudi](https://doris.apache.org/docs/gettingStarted/tutorials/doris-hudi)
+快速体验 [Apache Doris & Hudi](../../lakehouse/lakehouse-best-practices/doris-hudi.md)
 
 ## 使用限制
 
@@ -114,7 +114,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 ```
 `beginTime` 是必须的，时间格式和 hudi 官网 [hudi_table_changes](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#incremental-query) 保持一致，支持 "earliest"。`endTime` 选填，默认最新 commitTime。兼容 [Spark Read Options](https://hudi.apache.org/docs/0.14.0/configurations#Read-Options)。
 
-支持 Incremental Read 需要开启[新优化器](../../query/nereids/nereids-new)，新优化器默认打开。通过 `desc` 查看执行计划，可以发现 Doris 将 `@incr` 转化为 `predicates` 下推给 `VHUDI_SCAN_NODE`:
+支持 Incremental Read 需要开启[新优化器](../../query-acceleration/optimization-technology-principle/query-optimizer.md)，新优化器默认打开。通过 `desc` 查看执行计划，可以发现 Doris 将 `@incr` 转化为 `predicates` 下推给 `VHUDI_SCAN_NODE`:
 ```
 |   0:VHUDI_SCAN_NODE(113)                                                                                            |
 |      table: lineitem_mor                                                                                            |

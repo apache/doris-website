@@ -95,7 +95,7 @@ PROPERTIES
 );
 ```
 
-Doris也支持AWS assume role的方式访问，请参考[AWS集成](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+Doris 也支持 AWS assume role 的方式访问，请参考[AWS 集成](../../../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 创建名为 hdfs_repo 的仓库
 
@@ -157,4 +157,4 @@ PROPERTIES
 );
 ```
 
-Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris 支持使用`AWS Assume Role`的方式创建位于 AWS S3 上的 Repository，请参考[AWS 集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

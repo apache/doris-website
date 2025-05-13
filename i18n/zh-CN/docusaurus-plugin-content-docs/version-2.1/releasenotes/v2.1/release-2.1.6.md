@@ -61,7 +61,7 @@ under the License.
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 
-  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/query-admin/sql-interception)
+  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/workload-management/sql-blocking.md)
 
 - 新增系统表`file_cache_statistics`，用于查看 BE 节点的数据缓存性能指标。
 
