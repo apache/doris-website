@@ -312,7 +312,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 Regular expression matching on tokenized words, with a default limit of 50 matches (controlled by session variable inverted_index_max_expansions)
 -- Similar to MATCH_PHRASE_PREFIX but with regex instead of prefix
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 ```
 
 ```sql
