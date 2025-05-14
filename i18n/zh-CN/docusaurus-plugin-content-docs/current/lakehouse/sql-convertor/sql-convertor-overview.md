@@ -161,3 +161,48 @@ ORDER BY id;
 ## 版本变更记录
 
 [SQL Convertor 版本变更记录](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
+
+## 方言序列化
+
+不同系统针对不同的列类型可能有不同的显示方式。
+
+比如对于 NULL 值，Doris 和 Hive 显示为 `null`，而 Trino/Presto 显示为 `NULL`。
+
+对于 Map 类型，Hive 显示为 `{1:null,2:null}`，而 Trino/Presto 显示为 {1=NULL, 2=NULL}。
+
+为了最大程度保证用户迁移的行为一致性，Doris 提供了方言序列化模式选项，可以根据不同模式，返回不同的显示格式。
+
+```
+SET serde_diactor=<dialect>;
+```
+
+目前支持的序列化模式类型包括：
+
+- doris（默认）
+- hive
+- presto/trino
+
+> 注：该功能自 3.0.6 版本支持。
+
+### 序列化格式对照表
+
+以下表格显示了不同序列化模式下，各种数据类型的显示方式。未列举的类型表示显示方式一样。
+
+| Type | Doris | Hive | Presto/Trino |
+| --- | --- | --- | --- |
+| `Bool` | `1`, `0` | `1`, `0` | `1`, `0` |
+| `Integer` | `1`, `1000` | `1`, `1000` | `1`, `1000` |
+| `Float/Decimal` | `1.2`, `3.00` | `1.2`, `3.00` | `1.2`, `3.00` |
+| `Date/Datetime` | `2025-01-01`， `2025-01-01 10:11:11` |  `2025-01-01`， `2025-01-01 10:11:11` | `2025-01-01`， `2025-01-01 10:11:11` |
+| `String` | `abc`, `中国` | `abc`, `中国` | `abc`, `中国` |
+| `Null` | `null` | `null` | `NULL` |
+| `Array<bool>` | `[1, 0]` | `[true,false]` | `[1, 0]` |
+| `Array<int>` | `[1, 1000]` | `[1,1000]` | `[1, 1000]` |
+| `Array<string>` | `["abc", "中国"]` | `["abc","中国"]` | `["abc", "中国"]` |
+| `Array<date/datetime>` | `["2025-01-01", "2025-01-01 10:11:11"]` | `["2025-01-01","2025-01-01 10:11:11"]` | `["2025-01-01", "2025-01-01 10:11:11"]` |
+| `Array<null>` | `[null]` | `[null]` | `[NULL]` |
+| `Map<int, string>` | `{1:"abc", 2:"中国"}` |`{1:"abc",2:"中国"}` |`{1=abc, 2=中国}` |
+| `Map<string, date/datetime>` | `{"k1":"2022-10-01", "k2":"2022-10-01 10:10:10"}` | `{"k1":"2022-10-01","k2":"2022-10-01 10:10:10"}` | `{k1=2022-10-01, k2=2022-10-01 10:10:10}` |
+| `Map<int, null>` | `{1:null, 2:null}` | `{1:null,2:null}` | `{1=NULL, 2=NULL}` |
+| `Struct<>` | Same as map | Same as map | Same as map | Same as map | |
+
