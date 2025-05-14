@@ -707,6 +707,10 @@
     "message": "外部表",
     "description": "The label for category Lakehouse.External Table in sidebar docs"
   },
+  "sidebar.docs.category.Observability": {
+    "message": "可观测性",
+    "description": "Observability"
+  },
   "sidebar.docs.category.Use Case": {
     "message": "实践教程",
     "description": "The label for category Practical Guide in sidebar docs"
