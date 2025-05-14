@@ -189,7 +189,7 @@ Currently supported serialization mode types include:
 The following table shows how various data types are displayed in different serialization modes. Types not listed have the same display method.
 
 | Type | Doris | Hive | Presto/Trino |
-| --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | `Bool` | `1`, `0` | `1`, `0` | `1`, `0` |
 | `Integer` | `1`, `1000` | `1`, `1000` | `1`, `1000` |
 | `Float/Decimal` | `1.2`, `3.00` | `1.2`, `3.00` | `1.2`, `3.00` |
