@@ -28,12 +28,14 @@ under the License.
 ## 介绍
 Tableau 是一款轻量级数据可视化分析平台，它将数据运算与美观的图表完美地结合在一起，不要求用户编写代码，仅仅通过拖拽的方式就可以快速洞察数据；探索不同的视图，甚至可以轻松地将多个数据源组合在一起，完成数据展示、探索和分析工作。
 ## 前置条件
-Tableau Desktop 可通过如下链接进行下载：https://www.tableau.com/products/desktop/download
+无论你的 Mac 采用 Intel 还是 Apple Silicon 架构，Tableau Desktop Mac 版需下载安装 Intel 版本，这是为了保证与 MySQL 驱动的兼容性。可通过 [Support Releases](https://www.tableau.com/support/releases)页面选择并下载 Intel 版本。
+
 ## 驱动安装
-1. iODBC 安装
-    1. 关闭 Tableau Desktop
-    2. 安装 iODBC Driver Manager，可从 iODBC.org 网站获取最新版本 (mxkozzz.dmg)
-    3. 安装下载的dmg文件
+1. iODBC 安装  
+    1. 关闭 Tableau Desktop  
+    2. 从 [iODBC 官网](https://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/Downloads#Mac%20OS%20X)下载最新的 Driver Manager（mxkozzz.dmg）
+    3. 安装下载好的 dmg 文件
+
 2. MySQL 驱动安装
 
 选择 MySQL 5.x 的 ODBC 驱动安装，最新的 MySQL 驱动连接 Doris 会报错 Unsupported command 错误。

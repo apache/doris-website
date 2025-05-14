@@ -24,87 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-日志是系统运行的详细记录，包含各种事件发生的主体、时间、位置、内容等关键信息。出于运维可观测、网络安全监控及业务分析等多重需求，企业通常需要将分散的日志采集起来，进行集中存储、查询和分析，以进一步从日志数据里挖掘出有价值的内容。
-
-针对此场景，Apache Doris 提供了相应解决方案，针对日志场景的特点，增加了倒排索引和极速全文检索能力，极致优化写入性能和存储空间，使得用户可以基于 Apache Doris 构建开放、高性能、低成本、统一的日志存储与分析平台。
-
-本文将围绕这一解决方案，介绍以下内容：
-
-- **整体架构**：说明基于 Apache Doris 构建的日志存储与分析平台的核心组成部分和基础架构。
-- **特点与优势**：说明基于 Apache Doris 构建的日志存储与分析平台的特点和优势。
-- **操作指南**：说明如何基于 Apache Doris 构建日志存储分析平台。
-
-## 整体架构
-
-基于 Apache Doris 构建的日志存储与分析平台的架构如下图：
-
-![Overall architecture](/images/doris-overall-architecture.png)
-
-此架构主要由 3 大部分组成：
-
-- **日志采集和预处理**：多种日志采集工具可以通过 HTTP APIs 将日志数据写入 Apache Doris。
-- **日志存储和分析引擎**：Apache Doris 提供高性能、低成本的统一日志存储，通过 SQL 接口提供丰富的检索分析能力。
-- **日志分析和告警界面**：多种日志检索分析通工具通过标准 SQL 接口查询 Apache Doris，为用户提供简单易用的界面。
-
-## 特点与优势
-
-基于 Apache Doris 构建的日志存储与分析平台的特点和优势如下：
-
-- **高吞吐、低延迟日志写入**：支持每天百 TB 级、GB/s 级日志数据持续稳定写入，同时保持延迟 1s 以内。
-- **海量日志数据低成本存储**：支持 PB 级海量存储，相对于 Elasticsearch 存储成本节省 60% 到 80%，支持冷数据存储到 S3/HDFS，存储成本再降 50%。
-- **高性能日志全文检索分析**：支持倒排索引和全文检索，日志场景常见查询（关键词检索明细、趋势分析等）秒级响应。
-- **开放、易用的上下游生态**：上游通过 Stream Load 通用 HTTP APIs 对接常见的日志采集系统和数据源 Logstash、Filebeat、Fluentbit、Kafka 等，下游通过标准 MySQL 协议和语法对接各种可视化分析 UI，比如可观测性 Grafana、BI 分析 Superset、类 Kibana 的日志检索 Doris WebUI。
-
-### 高性能、低成本
-
-经过 Benchmark 测试及生产验证，基于 Apache Doris 构建的日志存储与分析平台，性价比相对于 Elasticsearch 具有 5～10 倍的提升。Apache Doris 的性能优势，主要得益于全球领先的高性能存储和查询引擎，以及下面一些针对日志场景的专门优化：
-
-- **写入吞吐提升**：Elasticsearch 写入的性能瓶颈在于解析数据和构建倒排索引的 CPU 消耗。相比之下，Apache Doris 进行了两方面的写入优化：一方面利用 SIMD 等 CPU 向量化指令提升了 JSON 数据解析速度和索引构建性能；另一方面针对日志场景简化了倒排索引结构，去掉日志场景不需要的正排等数据结构，有效降低了索引构建的复杂度。同样的资源，Apache Doris 的写入性能是 Elasticsearch 的 3～5 倍。
-- **存储成本降低**：Elasticsearch 存储瓶颈在于正排、倒排、Docvalue 列存多份存储和通用压缩算法压缩率较低。相比之下，Apache Doris 在存储上进行了以下优化：去掉正排，缩减了 30% 的索引数据量；采用列式存储和 Zstandard 压缩算法，压缩比可达到 5～10 倍，远高于 Elasticsearch 的 1.5 倍；日志数据中冷数据访问频率很低，Apache Doris 冷热分层功能可以将超过定义时间段的日志自动存储到更低的对象存储中，冷数据的存储成本可降低 70% 以上。同样的原始数据，Doris 的存储成本只需要 Elasticsearch 的 20% 左右。
-- **查询性能提升**：Apache Doris 将全文检索的流程简化，跳过了相关性打分等日志场景不需要的算法，加速基础的检索性能。同时针对日志场景常见的查询，比如查询包含某个关键字的最新 100 条日志，在查询规划和执行上做专门的 TopN 动态剪枝等优化。
-
-### 分析能力强
-
-Apache Doris 支持标准 SQL、兼容 MySQL 协议和语法，因此基于 Apache Doris 构建的日志系统能够使用 SQL 进行日志分析，这使得日志系统具备以下优势：
-
-- **简单易用**：工程师和数据分析师对于 SQL 非常熟悉，经验可以复用，不需要学习新的技术栈即可快速上手。
-- **生态丰富**：MySQL 生态是数据库领域使用最广泛的语言，因此可以与 MySQL 生态的集成和应用无缝衔接。Doris 可以利用 MySQL 命令行与各种 GUI 工具、BI 工具等大数据生态结合，实现更复杂及多样化的数据处理分析需求。
-- **分析能力强**：SQL 语言已经成为数据库和大数据分析的事实标准，它具有强大的表达能力和功能，支持检索、聚合、多表 JOIN、子查询、UDF、逻辑视图、物化视图等多种数据分析能力。
-
-### Flexible Schema
-
-下面是一个典型的 JSON 格式半结构化日志样例。顶层字段是一些比较固定的字段，比如日志时间戳（`timestamp`），日志来源（`source`），日志所在机器（`node`），打日志的模块（`component`），日志级别（`level`），客户端请求标识（`clientRequestId`），日志内容（`message`），日志扩展属性（`properties`），基本上每条日志都会有。而扩展属性 `properties` 的内部嵌套字段 `properties.size`、`properties.format` 等是比较动态的，每条日志的字段可能不一样。
-
-```JSON  
-{  
-  "timestamp": "2014-03-08T00:50:03.8432810Z",
-  "source": "ADOPTIONCUSTOMERS81",
-  "node": "Engine000000000405",
-  "level": "Information",
-  "component": "DOWNLOADER",
-  "clientRequestId": "671db15d-abad-94f6-dd93-b3a2e6000672",
-  "message": "Downloading file path: benchmark/2014/ADOPTIONCUSTOMERS81_94_0.parquet.gz",
-  "properties": {
-    "size": 1495636750,
-    "format": "parquet",
-    "rowCount": 855138,
-    "downloadDuration": "00:01:58.3520561"
-  }
-}
-```
-
-Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持：
-
-- 对于顶层字段的少量变化，可以通过 Light Schema Change 发起 ADD / DROP COLUMN 增加 / 删除列，ADD / DROP INDEX 增加 / 删除索引，能够在秒级完成 Schema 变更。用户在日志平台规划时只需考虑当前需要哪些字段创建索引。
-- 对于类似 `properties` 的扩展字段，提供了原生半结构化数据类型 `VARIANT`，可以写入任何 JSON 数据，自动识别 JSON 中的字段名和类型，并自动拆分频繁出现的字段采用列式存储，以便于后续的分析，还可以对 `VARIANT` 创建倒排索引，加快内部字段的查询和检索。
-
-相对于 Elasticsearch 的 Dynamic Mapping，Apache Doris 的 Flexible Schema 有以下优势：
-
-- 允许一个字段有多种类型，`VARIANT` 自动对字段类型做冲突处理和类型提升，更好地适应日志数据的迭代变化。
-- `VARIANT` 自动将不频繁出现的字段合并成一个列存储，可避免字段、元数据、列过多导致性能问题。
-- 不仅可以动态加列，还可以动态删列、动态增加索引、动态删索引，无需像 Elasticsearch 在一开始对所有字段建索引，减少不必要的成本。
-
-## 操作指南
 
 ### 第 1 步：评估资源
 
@@ -152,7 +71,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 ### 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../current/install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ### 第 3 步：优化 FE 和 BE 配置
 
@@ -208,7 +127,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 分区时，按照以下说明配置：
-- 使用时间字段上的 (./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶时，按照以下说明配置：

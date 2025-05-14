@@ -403,7 +403,14 @@
                         }
                     ]
                 },
-                "log-storage-analysis",
+                {
+                    "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "observability/overview",
+                        "observability/log"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Security",

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "日志存储与分析",
+    "title": "Log",
     "language": "zh-CN"
 }
 ---
@@ -24,8 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+本文介绍可观测性核心数之一 Log 的存储和分析实践，可观测性整体方案介绍请参考[概述](overview)。
 
-### 第 1 步：评估资源
+## 第 1 步：评估资源
 
 在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤：
 
@@ -38,42 +39,50 @@ under the License.
 2. **评估存储资源**：计算公式为 `所需存储空间 = 日增数据量 / 压缩率 * 副本数 * 数据存储周期`
 
 3. **评估查询资源**：查询的资源消耗随查询量和复杂度而异，建议初始预留 50% 的 CPU 资源用于查询，再根据实际测试情况进行调整。
-   
+
 4. **汇总整合资源**：由第 1 步和第 3 步估算出所需 CPU 核数后，除以单机 CPU 核数，估算出 BE 服务器数量，再根据 BE 服务器数量和第 2 步的结果，估算出每台 BE 服务器所需存储空间，然后分摊到 4～12 块数据盘，计算出单盘存储容量。
 
-以每天新增 100 TB 数据量（压缩前）、5 倍压缩率、1 副本、热数据存储 3 天、冷数据存储 30 天、写入吞吐峰值 / 均值比 200%、单核写入吞吐 10 MB/s、查询预留 50% CPU 资源为例，可估算出：
+以每天新增 100 TB 数据量（压缩前）、5 倍压缩率、2 副本、热数据存储 3 天、冷数据存储 30 天、写入吞吐峰值 / 均值比 200%、单核写入吞吐 10 MB/s、查询预留 50% CPU 资源为例，可估算出：
 
+**存算一体模式**
 - FE：3 台服务器，每台配置 16 核 CPU、64 GB 内存、1 块 100 GB SSD 盘
-- BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、10 块 600 GB SSD 盘
+- BE：30 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 625 GB SSD 盘
+- S3 对象存储空间：即为预估冷数据存储空间，540 TB
+
+**存算分离模式**
+- FE：3 台服务器，每台配置 16 核 CPU、64 GB 内存、1 块 100 GB SSD 盘
+- BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 680 GB SSD 盘
 - S3 对象存储空间：即为预估冷数据存储空间，600 TB
+
+使用存算分离模式，写入和热数据存储只需要 1副本，能够显著降低成本。
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
-| 关键指标（单位）                 | 值    | 说明                                                         |
-| :------------------------------- | :---- | :----------------------------------------------------------- |
-| 日增数据量（TB）                 | 100   | 根据实际需求填写                                             |
-| 压缩率                           | 5     | 一般为 3～10 倍（含索引），根据实际需求填写                  |
-| 副本数                           | 1     | 根据实际需求填写，默认 1 副本，可选值：1，2，3               |
-| 热数据存储周期（天）             | 3     | 根据实际需求填写                                             |
-| 冷数据存储周期（天）             | 30    | 根据实际需求填写                                             |
-| 总存储周期（天）                 | 33    | 算法：`热数据存储周期 + 冷数据存储周期`                      |
-| 预估热数据存储空间（TB）         | 60  | 算法：`日增数据量 / 压缩率 * 副本数 * 热数据存储周期`        |
-| 预估冷数据存储空间（TB）         | 600 | 算法：`日增数据量 / 压缩率 * 副本数 * 冷数据存储周期`        |
-| 写入吞吐峰值 / 均值比            | 200%  | 根据实际需求填写，默认 200%                                  |
-| 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
-| 平均写入吞吐（MB/s）             | 1214  | 算法：`日增数据量 / 86400 s`                                 |
-| 峰值写入吞吐（MB/s）             | 2427  | 算法：`平均写入吞吐 * 写入吞吐峰值 / 均值比`                 |
-| 峰值写入所需 CPU 核数            | 242.7 | 算法：`峰值写入吞吐 / 单核写入吞吐`                          |
-| 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
-| 预估 BE 服务器数                 | 15.2  | 算法：`峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比）` |
-| 预估 BE 服务器数取整             | 15    | 算法：`MAX (副本数，预估 BE 服务器数取整)`                   |
-| 预估每台 BE 服务器存储空间（TB） | 5.7  | 算法：`预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%）`，其中，30% 是存储空间预留值。建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。 |
+| 关键指标（单位）                 | 存算分离模式 | 存算一体模式    | 说明                                                         |
+| :------------------------------- | :---- | :---- | :----------------------------------------------------------- |
+| 日增数据量（TB）                 | 100   | 100 | 根据实际需求填写                                             |
+| 压缩率                           | 5     | 5 | 一般为 5～10 倍（含索引），默认为 5，根据实际需求填写                  |
+| 副本数                        | 1     | 2 | 根据实际需求填写，默认 1 副本，可选值：1，2，3               |
+| 热数据存储周期（天）            | 3     | 3 | 根据实际需求填写                                             |
+| 冷数据存储周期（天）            | 30    | 27 | 根据实际需求填写                                             |
+| 总存储周期（天）                | 30    | 30 | 算法：`热数据存储周期 + 冷数据存储周期`                      |
+| 预估热数据存储空间（TB）         | 60  | 120 | 算法：`日增数据量 / 压缩率 * 副本数 * 热数据存储周期`        |
+| 预估冷数据存储空间（TB）         | 600 | 540 | 算法：`日增数据量 / 压缩率 * 副本数 * 冷数据存储周期`        |
+| 写入吞吐峰值 / 均值比           | 200%  | 200% | 根据实际需求填写，默认 200%                                  |
+| 单机 CPU 核数                 | 32    | 32 | 根据实际需求填写，默认 32 核                                 |
+| 平均写入吞吐（MB/s）           | 1214  | 2427 | 算法：`日增数据量 / 86400 s`                                 |
+| 峰值写入吞吐（MB/s）           | 2427  | 4855 | 算法：`平均写入吞吐 * 写入吞吐峰值 / 均值比`                 |
+| 峰值写入所需 CPU 核数          | 242.7 | 485.5 | 算法：`峰值写入吞吐 / 单核写入吞吐`                          |
+| 查询预留 CPU 百分比            | 50%   | 50% | 根据实际需求填写，默认 50%                                   |
+| 预估 BE 服务器数              | 15.2  | 30.3 | 算法：`峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比）` |
+| 预估 BE 服务器数取整           | 15    | 30 | 算法：`MAX (副本数，预估 BE 服务器数取整)`                   |
+| 预估每台 BE 服务器存储空间（TB） | 5.33  | 5.33 | 算法：`预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%）`，其中，30% 是存储空间预留值。建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。 |
 
-### 第 2 步：部署集群
+## 第 2 步：部署集群
 
 完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
-### 第 3 步：优化 FE 和 BE 配置
+## 第 3 步：优化 FE 和 BE 配置
 
 完成集群部署后，需分别优化 FE 和 BE 配置参数，以更加契合日志存储与分析的场景。
 
@@ -126,11 +135,11 @@ under the License.
 
 **配置分区分桶参数**
 
-分区时，按照以下说明配置：
+分区按照以下说明配置：
 - 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
-- 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
+- 使用 Datetime 类型的时间字段作为排序 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
-分桶时，按照以下说明配置：
+分桶按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
@@ -145,11 +154,10 @@ under the License.
 
 - 使用 time_series 策略 (`"compaction_policy" = "time_series"`)，以减轻写放大效应，对于高吞吐日志写入的资源写入很重要。
 
-**建立和配置索引参数**
+**配置索引参数**
 
 按照以下说明操作：
-
-- 对经常查询的字段建立索引 (`USING INVERTED`)。
+- 对经常查询的字段建索引 (`USING INVERTED`)。
 - 对需要全文检索的字段，将分词器（parser）参数赋值为 unicode，一般能满足大部分需求。如有支持短语查询的需求，将 support_phrase 参数赋值为 true；如不需要，则设置为 false，以降低存储空间。
 
 **配置存储策略**
@@ -157,12 +165,13 @@ under the License.
 按照以下说明操作：
 
 - 对于热存储数据，如果使用云盘，可配置 1 副本；如果使用物理盘，则至少配置 2 副本 (`"replication_num" = "2"`)。
-- 配置 `log_s3` 的存储位置 (`CREATE RESOURCE "log_s3"`)，并设置 `log_policy_3day` 冷热数据分层策略 (`CREATE STORAGE POLICY log_policy_3day`)，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下代码：
+- 配置 `log_s3` 的存储位置 (`CREATE RESOURCE "log_s3"`)，并设置 `log_policy_3day` 冷热数据分层策略 (`CREATE STORAGE POLICY log_policy_3day`)，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下 SQL：
 
 ```sql
 CREATE DATABASE log_db;
 USE log_db;
 
+-- 存算分离模式不需要
 CREATE RESOURCE "log_s3"
 PROPERTIES
 (
@@ -175,6 +184,7 @@ PROPERTIES
     "s3.secret_key" = "your_sk"
 );
 
+-- 存算分离模式不需要
 CREATE STORAGE POLICY log_policy_3day
 PROPERTIES(
     "storage_resource" = "log_s3",
@@ -223,12 +233,12 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 1. 下载并安装 Logstash Doris Output 插件。你可选择以下两种方式之一：
 
-- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)。
+- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)。
   
 - 从源码编译，并运行下方命令安装：
 
 ```sql
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. 配置 Logstash。需配置以下参数：
@@ -291,7 +301,7 @@ output {
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-7.17.5.4) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -357,8 +367,8 @@ output {
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
 ```shell  
-chmod +x filebeat-doris-1.0.0  
-./filebeat-doris-1.0.0 -c filebeat_demo.yml
+chmod +x filebeat-doris-7.17.5.4
+./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
 ```
 
 更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
