@@ -161,3 +161,48 @@ ORDER BY id;
 ## Release Notes
 
 [SQL Convertor Release Notes](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
+
+## Serde Dialect
+
+Different systems may have different display methods for different column types.
+
+For example, for NULL values, Doris and Hive display as `null`, while Trino/Presto displays as `NULL`.
+
+For Map types, Hive displays as `{1:null,2:null}`, while Trino/Presto displays as {1=NULL, 2=NULL}.
+
+In order to ensure the consistency of user migration behavior to the greatest extent, Doris provides a dialect serialization mode option, which can return different display formats according to different modes.
+
+```
+SET serde_diactor=<dialect>;
+```
+
+Currently supported serialization mode types include:
+
+- doris (default)
+- hive
+- presto/trino
+
+> Note: This feature has been supported since version 3.0.6.
+
+### Serde Comparison Table
+
+The following table shows how various data types are displayed in different serialization modes. Types not listed have the same display method.
+
+| Type | Doris | Hive | Presto/Trino |
+| --- | --- | --- | --- | --- | --- |
+| `Bool` | `1`, `0` | `1`, `0` | `1`, `0` |
+| `Integer` | `1`, `1000` | `1`, `1000` | `1`, `1000` |
+| `Float/Decimal` | `1.2`, `3.00` | `1.2`, `3.00` | `1.2`, `3.00` |
+| `Date/Datetime` | `2025-01-01`， `2025-01-01 10:11:11` |  `2025-01-01`， `2025-01-01 10:11:11` | `2025-01-01`， `2025-01-01 10:11:11` |
+| `String` | `abc`, `中国` | `abc`, `中国` | `abc`, `中国` |
+| `Null` | `null` | `null` | `NULL` |
+| `Array<bool>` | `[1, 0]` | `[true,false]` | `[1, 0]` |
+| `Array<int>` | `[1, 1000]` | `[1,1000]` | `[1, 1000]` |
+| `Array<string>` | `["abc", "中国"]` | `["abc","中国"]` | `["abc", "中国"]` |
+| `Array<date/datetime>` | `["2025-01-01", "2025-01-01 10:11:11"]` | `["2025-01-01","2025-01-01 10:11:11"]` | `["2025-01-01", "2025-01-01 10:11:11"]` |
+| `Array<null>` | `[null]` | `[null]` | `[NULL]` |
+| `Map<int, string>` | `{1:"abc", 2:"中国"}` |`{1:"abc",2:"中国"}` |`{1=abc, 2=中国}` |
+| `Map<string, date/datetime>` | `{"k1":"2022-10-01", "k2":"2022-10-01 10:10:10"}` | `{"k1":"2022-10-01","k2":"2022-10-01 10:10:10"}` | `{k1=2022-10-01, k2=2022-10-01 10:10:10}` |
+| `Map<int, null>` | `{1:null, 2:null}` | `{1:null,2:null}` | `{1=NULL, 2=NULL}` |
+| `Struct<>` | Same as map | Same as map | Same as map | Same as map | |
+
