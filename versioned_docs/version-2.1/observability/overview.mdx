@@ -150,8 +150,9 @@ The observed business system simulates an [e-commerce website] (https://opentele
 
 The Load Generator tool sends continuous requests to the entry service, generating vast volumes of observability data (Logs, Traces, Metrics). These data are collected using OpenTelemetry SDKs in various languages, sent to the OpenTelemetry Collector, preprocessed by Processors, and finally written into Doris via the OpenTelemetry Doris Exporter. Observability visualization tools such as Grafana connects to Doris through the MySQL interface, providing visualized query and analysis capabilities.
 
-![Doris OpenTelemetry Demo](/images/observability/otel_demo_doris.png)
-
+<a href="https://youtu.be/LrR4SNyAlg8">
+  <img src="/images/observability/otel_demo_doris.png" alt="Doris OpenTelemetry Demo" />
+</a>
 
 Grafana connects to Doris via MySQL datasource, offering unified visualization and analysis of Logs, Traces, and Metrics, including cross-analysis between Logs and Traces.
 
