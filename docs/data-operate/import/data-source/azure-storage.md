@@ -64,10 +64,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using S3 Load
 
 :::caution Caution
-Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
+When using S3 Load to import Azure Storage data, the following issues need to be noted:
+
+- Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
 To access Azure Storage properly, you need to set `s3_client_http_scheme = https` in Doris's `be.conf`.
 
-The `s3.region` setting for Azure S3 properties can be omitted.
+- The `s3.region` setting for Azure S3 properties can be omitted.
 :::
 
 ```sql
@@ -154,10 +156,12 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using TVF
 
 :::caution Caution
-Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
+When using TVF to import Azure Storage data, the following issues need to be noted:
+
+- Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
 To access Azure Storage properly, you need to set `s3_client_http_scheme = https` in Doris's `be.conf`.
 
-The `s3.region` setting for Azure S3 properties can be omitted.
+- The `s3.region` setting for Azure S3 properties can be omitted.
 :::
 
 ```sql
