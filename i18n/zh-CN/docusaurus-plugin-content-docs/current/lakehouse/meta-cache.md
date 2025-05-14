@@ -30,7 +30,7 @@ under the License.
 
 本文详细介绍缓存的元数据的种类、策略和相关参数配置。
 
-关于**数据缓存**，可参阅[数据缓存文档](./filecache.md)。
+关于**数据缓存**，可参阅[数据缓存文档](../lakehouse/file-analysis.md)。
 
 :::tip
 该文档适用于 2.1.6 之后的版本。
@@ -196,7 +196,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Hudi 表的数量，适当调整这个参数。
 
@@ -216,7 +216,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 
@@ -235,7 +235,7 @@ under the License.
 
 - 最大缓存数量
 
-	由 FE 配置项 `max_hive_table_cache_num` 控制，默认为 1000。
+	由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
 
 	可以根据 Iceberg 表的数量，适当调整这个参数。
 
@@ -315,11 +315,12 @@ CREATE CATALOG hive PROPERTIES (
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 max_external_file_cache_num=0    // 关闭文件列表缓存
+max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // 针对某个 Catalog，关闭文件列表缓存
+"partition.cache.ttl-second" = "0" // 针对某个 Catalog，关闭分区列表缓存（2.1.11, 3.0.6 支持）
 ```
 
 设置以上参数后：
@@ -328,16 +329,4 @@ max_external_file_cache_num=0    // 关闭文件列表缓存
 - 分区数据文件变动可以实时查询到。
 
 但会增加外部源数据（如 Hive Metastore 和 HDFS）的访问压力，可能导致元数据访问延迟不稳定等现象。
-
-## 版本行为变更
-
-在 2.1.5 版本中，Catalog 属性中增加了 `use_meta_cache` 属性，默认为 false。
-
-:::warning
-不要在 2.1.6 之前的版本中将 `use_meta_cache` 设置为 true。
-:::
-
-2.1.6 版本中，新建的 Catalog，该属性默认修改为 true，以对应本文档描述的缓存行为。建议用户升级到 2.1.6 版本后，重建已有的 Catalog，以便让默认行为和本文档描述一致。
-
-
 

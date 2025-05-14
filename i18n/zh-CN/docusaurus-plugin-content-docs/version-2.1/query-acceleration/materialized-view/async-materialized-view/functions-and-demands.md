@@ -1085,7 +1085,7 @@ REPLACE WITH MATERIALIZED VIEW mv9_0
 PROPERTIES('swap' = 'false');
 ```
 
-详情参考 [ALTER ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW)
+
 
 
 ### 物化视图删除

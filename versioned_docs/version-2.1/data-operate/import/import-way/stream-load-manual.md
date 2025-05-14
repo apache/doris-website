@@ -66,7 +66,7 @@ The following figure shows the main flow of Stream Load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
+
 
 ### Prerequisite check
 
@@ -1015,6 +1015,4 @@ The strict_mode attribute is used to set whether the import task runs in strict 
 
 For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
 
-## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySQL client command line to get more help information.

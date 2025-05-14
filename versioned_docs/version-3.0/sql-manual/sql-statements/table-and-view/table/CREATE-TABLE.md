@@ -424,7 +424,7 @@ The [user](../../../../admin-manual/auth/authentication-and-authorization.md) ex
     ```
 
 - Partitioning and Bucketing
-  - A table must specify bucketing columns but can opt out of specifying partitions. For detailed information on partitioning and bucketing, refer to the [Data Partitioning](../../../../table-design/data-partition) documentation.
+  - A table must specify bucketing columns but can opt out of specifying partitions. For detailed information on partitioning and bucketing, refer to the [Data Partitioning](../../../../table-design/data-partitioning/auto-partitioning.md) documentation.
   - Tables in Doris can be either partitioned or non-partitioned. This attribute is determined at table creation and cannot be changed afterward. That is, for partitioned tables, partitions can be added or removed in subsequent use, while non-partitioned tables cannot have partitions added later.
   - Partition and bucket columns cannot be altered after table creation; neither the types of partition and bucket columns can be changed nor can these columns be added or removed.
 - Dynamic Partitioning

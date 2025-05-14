@@ -196,7 +196,7 @@ Each Hudi Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Hudi tables.
 
@@ -216,7 +216,7 @@ Each Iceberg Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Iceberg tables.
 
@@ -236,7 +236,7 @@ Each Iceberg Catalog has this cache.
 
 - Maximum Cache Count
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
 
 	This parameter can be adjusted based on the number of Iceberg tables.
 
@@ -316,11 +316,12 @@ For Hive Catalog, if you want to disable the cache to query real-time updated da
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // Close partition list cache
 max_external_file_cache_num=0    // Close file list cache
+max_hive_partition_table_cache_num=0  // Close partition list cache
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // Close file list cache for certain catalog
+"partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
 ```
 
 After setting the above parameter:
@@ -329,14 +330,4 @@ After setting the above parameter:
 - Changes in partition data files can be queried in real-time.
 
 However, this may increase the access pressure on external data sources (such as Hive Metastore and HDFS), which may lead to unstable metadata access delays and other phenomena.
-
-## Version Behavior Changes
-
-In version 2.1.5, the `use_meta_cache` attribute was added to the Catalog properties, defaulting to false.
-
-:::warning
-Do not set `use_meta_cache` to true before 2.1.6.
-:::
-
-In version 2.1.6, for newly created Catalogs, this attribute is default changed to true to correspond to the caching behavior described in this document. It is recommended that users upgrade to version 2.1.6 and rebuild existing Catalogs to align the default behavior with the description in this document.
 

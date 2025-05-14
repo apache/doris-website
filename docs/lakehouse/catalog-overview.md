@@ -154,6 +154,17 @@ jdbc:mysql://host:9030/iceberg_catalog.iceberg_db
 
 The fixed name for the built-in catalog is `internal`. The switching method is the same as for external catalogs.
 
+### Default Catalog
+The user attribute `default_init_catalog` is used to set the default catalog for a specific user. Once set, when the specified user connects to Doris, they will automatically switch to the set catalog.
+
+```sql
+SET PROPERTY default_init_catalog=hive_catalog;
+```
+
+Note 1: If the catalog has been explicitly specified in the MySQL command line or JDBC connection strings, then the specified catalog will be used, and the `default_init_catalog` user attribute will not take effect.
+Note 2: If the catalog set by the user attribute `default_init_catalog` no longer exists, it will automatically switch to the default `internal` catalog.
+Note 3: This feature takes effect starting from version v3.1.x.
+
 ### Simple Query
 
 You can query tables in external catalogs using any SQL statement supported by Doris.

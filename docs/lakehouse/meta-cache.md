@@ -30,7 +30,7 @@ Metadata includes information such as databases, tables, columns, partition info
 
 This document provides a detailed introduction to the types, strategies, and related parameter configurations of cached metadata.
 
-For **data caching**, please refer to the [data cache documentation](./filecache.md).
+For **data caching**, please refer to the [data cache documentation](./file-analysis.md).
 
 :::notice
 This document applies to versions after 2.1.6.
@@ -196,7 +196,7 @@ This cache has one for each Hudi Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Hudi tables.
 
@@ -216,7 +216,7 @@ This cache has one for each Iceberg Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Iceberg tables.
 
@@ -235,7 +235,7 @@ This cache has one for each Iceberg Catalog.
 
 - Maximum Cache Quantity
 
-	Controlled by the FE configuration item `max_hive_table_cache_num`, the default is 1000.
+	Controlled by the FE configuration item `max_external_table_cache_num`, the default is 1000.
 
 	This parameter can be adjusted appropriately according to the number of Iceberg tables.
 
@@ -315,11 +315,12 @@ For the Hive Catalog, if you want to disable the cache to query real-time update
 
 ```
 -- fe.conf
-max_hive_partition_table_cache_num=0  // Disable partition list cache
 max_external_file_cache_num=0    // Disable file list cache
+max_hive_partition_table_cache_num=0  // Disable partition list cache
 
 -- Catalog property
 "file.meta.cache.ttl-second" = "0" // Disable file list cache for a specific Catalog
+"partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
 ```
 
 After setting the above parameters:
@@ -329,12 +330,3 @@ After setting the above parameters:
 
 But it will increase the access pressure on external source data (such as Hive Metastore and HDFS), which may lead to unstable metadata access delays.
 
-## Version Behavior Changes
-
-In version 2.1.5, the `use_meta_cache` property was added to the Catalog properties, and the default is false.
-
-:::warning
-Do not set `use_meta_cache` to true in versions before 2.1.6.
-:::
-
-In version 2.1.6, the default for newly created Catalogs was changed to true to correspond to the cache behavior described in this document. It is recommended that users rebuild existing Catalogs after upgrading to version 2.1.6 to make the default behavior consistent with the description in this document.

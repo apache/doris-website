@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Each database object, such as tables, columns, and indexes, has a name. In SQL statements, these names are referred to as object identifiers. Identifiers can be quoted or unquoted. If an identifier contains special characters or reserved keywords, it must be quoted with backticks (`) each time it is referenced. For more details on reserved keywords, please refer to the [Reserved Keywords](../basic-elements/reserved-keywords.md) section.
+Each database object, such as tables, columns, and indexes, has a name. In SQL statements, these names are referred to as object identifiers. Identifiers can be quoted or unquoted. If an identifier contains special characters or reserved keywords, it must be quoted with backticks (`) each time it is referenced. For more details on reserved keywords, please refer to the [Reserved Keywords](../basic-element/reserved-keywords) section.
 
 ## Object Identifier Restrictions
 
@@ -36,7 +36,7 @@ In Doris, different objects have different restrictions on identifiers, and the 
 
 ## Description
 
-Each database object, such as tables, columns, and indexes, has a name. In SQL statements, these names are referred to as object identifiers. Identifiers can be quoted or unquoted. If an identifier contains special characters or reserved keywords, it must be quoted with backticks (`) each time it is referenced. For more details on reserved keywords, please refer to the [Reserved Keywords](../basic-elements/reserved-keywords.md) section.
+Each database object, such as tables, columns, and indexes, has a name. In SQL statements, these names are referred to as object identifiers. Identifiers can be quoted or unquoted. If an identifier contains special characters or reserved keywords, it must be quoted with backticks (`) each time it is referenced. For more details on reserved keywords, please refer to the [Reserved Keywords](../basic-element/reserved-keywords) section.
 
 ## Object Identifier Restrictions
 

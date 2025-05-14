@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Reserved keywords are words that have special meanings in SQL. Reserved keywords are a special category of keywords; if you want to use them as object identifiers, you must use backticks (`). For example, ```FROM```. For more details on object identifiers, please refer to the [Object Identifiers](../basic-elements/object-identifiers.md) section.
+Reserved keywords are words that have special meanings in SQL. Reserved keywords are a special category of keywords; if you want to use them as object identifiers, you must use backticks (`). For example, ```FROM```. For more details on object identifiers, please refer to the [Object Identifiers](./object-identifiers) section.
 
 ## List of Reserved Keywords
 

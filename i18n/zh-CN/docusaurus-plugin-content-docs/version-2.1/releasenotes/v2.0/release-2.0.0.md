@@ -44,7 +44,7 @@ under the License.
 
 以 TPC-H 为例，全新优化器在未进行任何手工调优和 SQL 改写的情况下，绝大多数 SQL 仍领先于旧优化器手工调优后的性能表现！而在超过百家 2.0 版本提前体验用户的真实业务场景中，绝大多数原始 SQL 执行效率得以极大提升！
 
-参考文档：[更智能的全新查询优化器](../../query/nereids/nereids-new)
+参考文档：[更智能的全新查询优化器](../../query-acceleration/optimization-technology-principle/query-optimizer.md)
 
 如何开启：`SET enable_nereids_planner=true` 在 Apache Doris 2.0-beta 版本中全新查询优化器已经默认开启
 

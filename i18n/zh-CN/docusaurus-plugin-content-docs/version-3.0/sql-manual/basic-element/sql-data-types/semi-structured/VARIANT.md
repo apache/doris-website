@@ -348,7 +348,7 @@ mysql> SELECT
   "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 }
 ```
-在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开，且需要在是object的子field。以下是一个示例：
+在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开，且需要在是 object 的子 field。以下是一个示例：
 ``` sql
 -- 注意：设置 variant_enable_flatten_nested 为 true
 -- 这样可以展开嵌套数组，将数组中的元素以列式存储
@@ -448,7 +448,7 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 其它限制如下：
 
 - VARIANT 列只能创建倒排索引或者 bloom filter 来加速过滤
-- **推荐使用 RANDOM 模式和[Group Commit](../../../data-operate/import/group-commit-manual.md) 模式，写入性能更高效**
+- **推荐使用 RANDOM 模式和[Group Commit](../../../../data-operate/import/group-commit-manual) 模式，写入性能更高效**
 - 日期、decimal 等非标准 JSON 类型会被默认推断成字符串类型，所以尽可能从 VARIANT 中提取出来，用静态类型，性能更好
 - 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
 - 不支持作为主键或者排序键

@@ -149,11 +149,7 @@ under the License.
 
 - 暂不支持从 2.1 版本原地升级至 3.0 存算分离模式，需要在存算分离集群部署完成后通过诸如 x2Doris 等工具进行数据迁移，后续也会支持通过 CCR 能力实现不停服迁移。
 
-:::info 备注
 
-参考文档：[存算分离](../../compute-storage-decoupled/overview)
-
-:::
 
 ## 2. 湖仓一体再进化
 
@@ -204,11 +200,11 @@ under the License.
 
 - [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
 
-- [Delta Lake](../../lakehouse/datalake-analytics/deltalake)
+- [Delta Lake](../../../version-3.0/lakehouse/datalake-analytics/deltalake)
 
-- [Kudu](../../lakehouse/datalake-analytics/kudu)
+- [Kudu](../../../version-3.0/lakehouse/datalake-analytics/kudu)
 
-- [BigQuery](../../lakehouse/datalake-analytics/bigquery)
+- [BigQuery](../../../../../../docs/data-operate/import/data-source/bigquery)
 :::
 
 ### 2-3 数据湖构建

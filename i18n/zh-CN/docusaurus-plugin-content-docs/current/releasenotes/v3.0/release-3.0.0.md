@@ -204,11 +204,11 @@ under the License.
 
 - [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
 
-- [Delta Lake](../../lakehouse/datalake-analytics/deltalake)
+- [Delta Lake](../../lakehouse/catalogs/delta-lake-catalog.md)
 
-- [Kudu](../../lakehouse/datalake-analytics/kudu)
+- [Kudu](../../lakehouse/catalogs/kudu-catalog.md)
 
-- [BigQuery](../../lakehouse/datalake-analytics/bigquery)
+- [BigQuery](../../data-operate/import/data-source/bigquery.md)
 :::
 
 ### 2-3 数据湖构建
@@ -415,7 +415,7 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
 
 参考文档：
 
-[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
+[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN.md)
 :::
 
 ## 8. 功能改进

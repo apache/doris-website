@@ -68,7 +68,7 @@ BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使�
     group by hour order by 1
     ) final;
 
-在查询时，可以设置[会话变量](../../sql-statements/session/variable/SET-VARIABLE.md)`return_object_data_as_binary`为 true，这样 bitmap 会以二进制的形式返回。
+在查询时，可以设置[会话变量](../../../../sql-manual/sql-statements/session/variable/SET-VARIABLE)`return_object_data_as_binary`为 true，这样 bitmap 会以二进制的形式返回。
 
 ### keywords
 

@@ -3846,10 +3846,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yang1666204/docusaurus-search-local@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@yang1666204/docusaurus-search-local/-/docusaurus-search-local-0.0.5.tgz#02c0df58d60d8a66e4dd4edd64e41789c7402abc"
-  integrity sha512-JeMS1tmHr7+UPLgATDWlbSDsZb6Pt2CbGGgTCBB7EwhvWImmzLscNcC9h22zX5DLAuVZiksazqmyaHHS1EaYVA==
+"@yang1666204/docusaurus-search-local@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@yang1666204/docusaurus-search-local/-/docusaurus-search-local-0.0.7.tgz#09adbf405414da87d4f6aa9b2dd582037b94729e"
+  integrity sha512-SquBAb4V5AYdp922YopyMExzBZEE6yMQFJ4HrmxCgXrZzStixL4PKCE/50Zeq/36RCOSzD6VPal9EBX8abWYyQ==
   dependencies:
     "@docusaurus/plugin-content-docs" "^2 || ^3"
     "@docusaurus/theme-translations" "^2 || ^3"

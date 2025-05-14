@@ -68,7 +68,7 @@ Query data example:
     group by hour order by 1
     ) final;
 
-You can set the [session variable](../../sql-statements/session/variable/SET-VARIABLE.md) `return_object_data_as_binary` to `true`. Consequently, the bitmap will be returned in binary format.
+You can set the [session variable](../../../../sql-manual/sql-statements/session/variable/SET-VARIABLE) `return_object_data_as_binary` to `true`. Consequently, the bitmap will be returned in binary format.
     
 ### keywords
 BITMAP
