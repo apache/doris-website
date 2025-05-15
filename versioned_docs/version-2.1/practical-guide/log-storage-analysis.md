@@ -243,7 +243,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
     - Use the Random strategy (`DISTRIBUTED BY RANDOM BUCKETS 60`) to optimize batch writing efficiency when paired with single tablet imports.
 
-For more information, refer to [Data Partitioning](../table-design/data-partitioning/basic-concepts.mdx).
+For more information, refer to [Data Partitioning](../table-design/data-partitioning/data-distribution).
 
 **Configure compression parameters**
 

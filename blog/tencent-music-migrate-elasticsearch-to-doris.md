@@ -5,9 +5,9 @@
     'description': 'Handle full-text search, audience segmentation, and aggregation analysis directly within Apache Doris and slash their storage costs by 80% while boosting write performance by 4x',
     'date': '2025-04-17',
     'author': 'Apache Doris',
-    'tags': ['Best Practices'],
+    'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/tencent-music-migrate-elasticsearch-to-doris.jpg'
 }
 ---
