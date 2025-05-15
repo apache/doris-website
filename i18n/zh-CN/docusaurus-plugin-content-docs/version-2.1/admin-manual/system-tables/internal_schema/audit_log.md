@@ -66,7 +66,7 @@ under the License.
 | peak_memory_bytes 				| bigint       | 语句执行所占用的 Backend 内存的峰值    |
 | workload_group    				| text         | 语句执行所使用的 Workload Group        |
 | compute_group	  				| string    | 存算分离模式下，执行语句所使用的计算组。3.0 版本开始支持。|
-| trace_id                    | string    | 执行语句时设置的 Trace ID |
+| trace_id                    | string    | 执行语句时设置的 Trace ID。2.1.7 版本后被移除。 |
 | stmt              				| text         | 语句文本                               |
 
 ## 说明

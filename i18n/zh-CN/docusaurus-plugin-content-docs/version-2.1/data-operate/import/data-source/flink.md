@@ -75,11 +75,10 @@ INSERT INTO student_sink values(1,'zhangsan',123)
 ### 第 3 步：检查导入数据
 
 ```sql
-mysql> select * from test.students;                                                                                                                        
+select * from test.students;                                                                                                                        
 +------+----------+------+      
 | id   | name     | age  |    
 +------+----------+------+                                                                                                                             
 |  1   | zhangsan |  123 |   
 +------+----------+------+    
-1 rows in set (0.05 sec)  
 ```
