@@ -227,3 +227,23 @@ Only Admin users have the authority to execute the `REVOKE` statement, which is 
 ```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
+
+## FAQ
+
+#### Q1. 如何查询特定storage vault被那些表引用？
+
+1. Use `show storage vault` to find the ​​storage vault id​​ corresponding to the storage vault name.
+
+2. Execute the following SQL statement:
+
+```sql
+mysql> select * from information_schema.table_properties where PROPERTY_NAME = "storage_vault_id" and PROPERTY_VALUE=3;
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| TABLE_CATALOG | TABLE_SCHEMA                    | TABLE_NAME                          | PROPERTY_NAME    | PROPERTY_VALUE |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| internal      | regression_test_vault_p0_create | s3_92ba28c209154d968e680e58dd54d0cc | storage_vault_id | 3              |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+1 row in set (0.04 sec)
+```
+
+Replace `PROPERTY_VALUE=3` with the corresponding ​​storage vault id​​ value.

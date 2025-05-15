@@ -246,12 +246,14 @@ Assumed Role 支持通过担任 AWS IAM Role 来实现对外部数据源的访�
 
 `目标账户(Target Account)`​: 拥有目标 S3 Bucket 的 AWS 账户;
 
-**注意：源账户和目标账户可以是同一个AWS账户**
-
 `ec2_role`:  源账户创建的Role，并且需要绑定到每一个部署Doris FE/BE 部署EC2机器上;
 
 `bucket_role`: 目标账户创建的Role，并且需要关联目标bucket权限;
 
+**注意:&#x20;**
+
+1. **源账户和目标账户可以是同一个AWS账户;**
+2. **请确保所有Doris FE/BE 部署所在的 EC2机器都绑定到了`ec_role`上，尤其是扩容的时候。**
 
 更详细的配置步骤如下：
 

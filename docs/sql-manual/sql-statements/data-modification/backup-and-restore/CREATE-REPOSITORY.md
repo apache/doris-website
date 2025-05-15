@@ -64,6 +64,9 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 | **fs.defaultFS**        | Hadoop default file system URI        |
 | **hadoop.username**     | Hadoop username                       |
 
+**Note:&#x20;**
+
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ## Access Control Requirements
 
@@ -97,8 +100,9 @@ PROPERTIES
     "s3.region" = "REGION"
 );
 ```
+**Note:&#x20;**
 
-Doris also suppoted AWS assume role, please refer to[AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md).
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 Create a repository named hdfs_repo.
 
@@ -160,4 +164,3 @@ PROPERTIES
 );
 ```
 
-Doris also suppoted `AWS Assume Role` for creating S3 Repository , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

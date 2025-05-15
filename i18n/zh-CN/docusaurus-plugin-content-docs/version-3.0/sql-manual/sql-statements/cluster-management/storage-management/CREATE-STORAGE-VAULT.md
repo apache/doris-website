@@ -62,6 +62,10 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 | `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境) 或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
 
+**注意:&#x20;**
+
+Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+
 ### HDFS vault
 
 | 参数                               | 是否必需 | 描述                                                    |
@@ -156,7 +160,7 @@ PROPERTIES (
     "provider" = "BOS",                                  -- required
     "use_path_style" = "false"                           -- optional,  BOS 建议设置 false
 );
-    ```
+```
 
 ### 6. 创建亚马逊云 S3 storage vault。
 
@@ -175,7 +179,9 @@ PROPERTIES (
 );
 ```
 
-Doris也支持`AWS Assume Role`的方式创建Storage Vault，请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+**注意:&#x20;**
+
+Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### 7. 创建 MinIO storage vault。
 

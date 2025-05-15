@@ -63,6 +63,9 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 | **fs.defaultFS**        | Hadoop 默认文件系统 URI                  |
 | **hadoop.username**     | Hadoop 用户名                         |
 
+**Note:&#x20;**
+
+Doris 支持使用`AWS Assume Role`的方式创建位于 AWS S3 上的 Repository，请参考[AWS 集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ## 权限控制
 | 权限	          | 对象       | 说明                            |
@@ -95,7 +98,9 @@ PROPERTIES
 );
 ```
 
-Doris 也支持 AWS assume role 的方式访问，请参考[AWS 集成](../../../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+**Note:&#x20;**
+
+Doris 支持使用`AWS Assume Role`的方式创建位于 AWS S3 上的 Repository，请参考[AWS 集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 创建名为 hdfs_repo 的仓库
 
@@ -156,5 +161,3 @@ PROPERTIES
     "s3.region" = "ap-beijing"
 );
 ```
-
-Doris 支持使用`AWS Assume Role`的方式创建位于 AWS S3 上的 Repository，请参考[AWS 集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
