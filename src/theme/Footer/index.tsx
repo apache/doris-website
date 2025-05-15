@@ -89,7 +89,7 @@ function Footer(): JSX.Element | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw"
+                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w"
                                     title="slack"
                                     target="_blank"
                                     className="item"

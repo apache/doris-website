@@ -99,7 +99,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                     <Link
                         className="toc-icon-content group"
                         to={
-                            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw'
+                            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w'
                         }
                     >
                         <div style={{ padding: '2px' }}>
