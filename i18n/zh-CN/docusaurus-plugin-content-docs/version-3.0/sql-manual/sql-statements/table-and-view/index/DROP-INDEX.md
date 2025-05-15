@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-该语句用于从一个表中删除指定名称的索引，目前仅支持 bitmap 索引。
+该语句用于从一个表中删除指定名称的索引，目前仅支持 bitmap, inverted index 索引。
 
 ## 语法
 

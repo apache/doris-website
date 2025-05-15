@@ -312,14 +312,31 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 Regular expression matching on tokenized words, with a default limit of 50 matches (controlled by session variable inverted_index_max_expansions)
 -- Similar to MATCH_PHRASE_PREFIX but with regex instead of prefix
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
-```
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 
-```sql
 -- 3. Normal equality, range, IN, and NOT IN queries using standard SQL syntax, for example:
 SELECT * FROM table_name WHERE id = 123;
 SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
+
+-- 4. Full-text search across multiple columns using the multi_match function
+-- Parameters:
+--   First N parameters are column names to search
+--   Second-to-last parameter specifies match mode: 'any'/'all'/'phrase'/'phrase_prefix'
+--   Last parameter is the keyword or phrase to search for
+
+-- 4.1 Rows where 'keyword1' appears in ANY of col1,col2,col3 (OR logic)
+select * FROM table_name WHERE multi_match(col1, col2, col3, 'any', 'keyword1');
+
+-- 4.2 Rows where 'keyword1' appears in ALL of col1,col2,col3 (AND logic)
+select * FROM table_name WHERE multi_match(col1, col2, col3, 'all', 'keyword1');
+
+-- 4.3 Rows where the exact phrase 'keyword1' appears in ANY of col1,col2,col3 (exact phrase match)
+select * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase', 'keyword1');
+
+-- 4.4 Rows where a phrase starting with 'keyword1' appears in ANY of col1,col2,col3 (phrase prefix match)
+-- For example, will match content like "keyword123"
+select * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase_prefix', 'keyword1');
 ```
 
 ### Analyzing Index Acceleration Effects Through Profiles

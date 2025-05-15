@@ -318,12 +318,31 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 对分词后的词进行正则匹配，默认匹配 50 个（session 变量 inverted_index_max_expansions 控制）
 -- 类似 MATCH_PHRASE_PREFIX 的匹配规则，只是前缀变成了正则
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 
 -- 3. 普通等值、范围、IN、NOT IN，正常的 SQL 语句即可，例如
 SELECT * FROM table_name WHERE id = 123;
 SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
 SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
+
+-- 4. 多列全文检索匹配，通过 multi_match 函数完成
+-- 参数说明：
+--   前N个参数是要匹配的列名
+--   倒数第二个参数指定匹配模式：'any'/'all'/'phrase'/'phrase_prefix'
+--   最后一个参数是要搜索的关键词或短语
+
+-- 4.1 在col1,col2,col3任意一列中包含'keyword1'的行（OR逻辑）
+SELECT * FROM table_name WHERE multi_match(col1, col2, col3, 'any', 'keyword1');
+
+-- 4.2 在col1,col2,col3所有列中都包含'keyword1'的行（AND逻辑）
+SELECT * FROM table_name WHERE multi_match(col1, col2, col3, 'all', 'keyword1');
+
+-- 4.3 在col1,col2,col3任意一列中包含完整短语'keyword1'的行（精确短语匹配）
+SELECT * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase', 'keyword1');
+
+-- 4.4 在col1,col2,col3任意一列中包含以'keyword1'开头的短语的行（短语前缀匹配）
+-- 例如会匹配"keyword123"这样的内容
+SELECT * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase_prefix', 'keyword1');
 ```
 
 ### 通过 profile 分析索引加速效果
