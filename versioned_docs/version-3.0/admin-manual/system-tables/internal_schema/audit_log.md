@@ -66,7 +66,7 @@ Store audit logs
 | peak_memory_bytes | bigint       | Peak memory usage of the Backend during statement execution  |
 | workload_group    | text         | Workload Group used for statement execution                  |
 | compute_group                 | string    | In storage and computation decouped mode, the compute group used by the execution statement. Supported since version 3.0.|
-| trace_id                    | string    | Trace ID set when executing the statement |
+| trace_id                    | string    | Trace ID set when executing the statement. Removed since version 3.0.3 |
 | stmt              | text         | Statement text                                               |
 
 
