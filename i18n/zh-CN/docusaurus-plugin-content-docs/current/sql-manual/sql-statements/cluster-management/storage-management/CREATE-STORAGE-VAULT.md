@@ -53,7 +53,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 
 | 参数              | 是否必需 | 描述                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`    | 必需   | 用于对象存储的端点。<br/>注意，请不要提供带有 http:// 或 https:// 开头的链接。对于 Azure Blob 存储，endpoint 是固定的 blob.core.windows.net。 |
+| `s3.endpoint`    | 必需   | 用于对象存储的端点。对于 Azure Blob 存储，endpoint 是固定的 blob.core.windows.net。 |
 | `s3.region`      | 必需   | 您的存储桶的区域。(如果您使用 GCP 或 AZURE,则可填us-east-1)。 |
 | `s3.root.path`   | 必需   | 存储数据的路径。 |
 | `s3.bucket`      | 必需   | 您的对象存储账户的存储桶。(如果您使用 Azure，则为 StorageAccount)。 |
@@ -61,6 +61,12 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 | `s3.secret_key`  | 必需   | 您的对象存储账户的秘密密钥。(如果您使用 Azure，则为 AccountKey)。 |
 | `provider`       | 必需   | 提供对象存储服务的云供应商。支持的值有`COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 | `use_path_style` | 可选   | 使用 `path-style URL`(私有化部署环境) 或者`virtual-hosted-style URL`(公有云环境建议), 默认值 `true` (path-style)                                                                                      |
+
+**注意:&#x20;**
+
+1. `s3.endpoint` 如果不提供`http://` 或 `https://` 前缀, 则默认使用http; 如提供，则会以前缀为准;
+
+2. Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)。
 
 ### HDFS vault
 
@@ -175,7 +181,9 @@ PROPERTIES (
 );
 ```
 
-Doris也支持`AWS Assume Role`的方式创建Storage Vault，请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+**注意:&#x20;**
+
+Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### 7. 创建 MinIO storage vault。
 
