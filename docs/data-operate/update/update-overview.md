@@ -81,7 +81,9 @@ PROPERTIES (
 From Doris version 2.1, MoW is the default implementation for the primary key model. Therefore, if using Doris version 2.1 and above, be sure to read the relevant table creation documentation.
 :::
 
-### Two Update Methods for the Primary Key Model
+### Primary key model update method
+
+The Doris primary key model supports Update statement updates and import based batch updates, where Update is suitable for small-scale data updates, while batch updates are based on UPSERT semantics and are suitable for efficiently handling large-scale data changes.
 
 #### Updating with the `UPDATE` Statement
 
@@ -99,6 +101,8 @@ We will introduce the two update methods in detail in the documents [Update of P
 
 ### Concurrency Control for Updates in the Primary Key Model
 
+Doris controls the update concurrency of the primary key model through table level locks and MVCC mechanisms. The Update statement is executed sequentially by default, and concurrency restrictions can be relaxed through configuration. The batch update based on imports relies on version control, supports atomic concurrent updates, and ensures the determinacy of update order through the sequence column.
+
 #### Updating Data with the `UPDATE` Statement
 
 By default, Doris does not allow multiple `UPDATE` operations on the same table at the same time. The `UPDATE` statement ensures isolation through table-level locks.
@@ -113,18 +117,21 @@ For concurrent load updates, Doris uses internal version control (assigned in th
 
 Since the submission order of multiple concurrent loading may be unpredictable, if these concurrent loading involve updates to the same primary key, the effective order will also be unpredictable, resulting in uncertainty in the final visible result. To solve this problem, Doris provides a sequence column mechanism, allowing users to specify a version for each row of data during concurrent load updates to clearly control the order of concurrent updates and achieve determinism.
 
-We will introduce the concurrency control mechanism for updates in detail in the document [Concurrency Control for Updates in the Primary Key Model](../update/unique-update-concurrent-control.md).
+Detailed principle reference document [Concurrency Control for Updates in the Primary Key Model](../update/unique-update-concurrent-control.md).
 
 ## Updates in the Aggregate Model
 
 Updates in the aggregate model mainly refer to producing new aggregate values using new column values and old aggregate values according to the requirements of the aggregate function.
 
-New Agg Value = Agg Func (Old Agg Value, New Column Value)
+`New Agg Value = Agg Func (Old Agg Value, New Column Value)`
 
 The aggregate model only supports updates based on load methods and does not support updates using the `UPDATE` statement. When defining an aggregate model table, if the aggregate function of the value column is defined as REPLACE_IF_NOT_NULL, it can indirectly achieve the ability to update partial columns similar to the primary key table. For more information, please refer to [Load Update of Aggregate Model](../update/update-of-aggregate-model).
 
 ## Recommendations for Choosing Between Primary Key and Aggregate Models
-- For most scenarios with data update requirements, it is recommended to **prefer the primary key model**. For example, synchronizing from TP databases to Doris, user profiling, audience selection, etc.
+
+When using the primary key model and aggregation model for updates, it is recommended to follow the following rules:
+
+- For most scenarios with data update requirements, **prefer the primary key model**. For example, synchronizing from TP databases to Doris, user profiling, audience selection, etc.
 - The following two scenarios are recommended to use the aggregate model:
   - Some fields need to be aggregated as metrics, and some fields need to be updated.
   - For scenarios with partial column update requirements, high sensitivity to write performance, and low query latency requirements, it is recommended to use the aggregate table + REPLACE_IF_NOT_NULL aggregate function.
