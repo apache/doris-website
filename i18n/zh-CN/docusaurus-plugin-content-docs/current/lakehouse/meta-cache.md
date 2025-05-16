@@ -309,19 +309,46 @@ CREATE CATALOG hive PROPERTIES (
 - 外部数据源新增分区，需要手动刷新缓存，或最多等待 10 分钟后，可以查询到新分区的数据。
 - 分区数据文件变动，需要手动刷新缓存，或最多等待 10 分钟后，可以查询到新分区的数据。
 
+### 关闭 Schema 缓存
+
+对于所有类型的 External Catalog，如果希望实时可见最新的 Table Schema，可以关闭 Schema Cache：
+
+- 全局关闭
+
+    ```
+    -- fe.conf
+    max_external_schema_cache_num=0 // 关闭 Schema 缓存。
+    ```
+
+- Catalog 级别关闭
+
+    ```
+    -- Catalog property
+    "schema.cache.ttl-second" = "0" // 针对某个 Catalog，关闭 Schema 缓存（2.1.11, 3.0.6 支持）
+    ```
+
+设置完成后，Doris 会实时可见最新的 Table Schema。但此设置可能会增加元数据服务的压力。
+
 ### 关闭 Hive Catalog 元数据缓存
 
 针对 Hive Catalog，如果想关闭缓存来查询到实时更新的数据，可以配置以下参数：
 
-```
--- fe.conf
-max_external_file_cache_num=0    // 关闭文件列表缓存
-max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
 
--- Catalog property
-"file.meta.cache.ttl-second" = "0" // 针对某个 Catalog，关闭文件列表缓存
-"partition.cache.ttl-second" = "0" // 针对某个 Catalog，关闭分区列表缓存（2.1.11, 3.0.6 支持）
-```
+- 全局关闭
+
+    ```
+    -- fe.conf
+    max_external_file_cache_num=0    // 关闭文件列表缓存
+    max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
+    ```
+    
+- Catalog 级别关闭
+
+    ```
+    -- Catalog property
+    "file.meta.cache.ttl-second" = "0" // 针对某个 Catalog，关闭文件列表缓存
+    "partition.cache.ttl-second" = "0" // 针对某个 Catalog，关闭分区列表缓存（2.1.11, 3.0.6 支持）
+    ```
 
 设置以上参数后：
 
