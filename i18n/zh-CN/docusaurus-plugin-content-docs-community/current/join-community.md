@@ -38,7 +38,7 @@ under the License.
 一起加入 Apache Doris 社区，了解头部企业如何基于 Apache Doris 构建统一实时数仓，从技术见解获得更多灵感！
 
 
-- 加入社群参与讨论 -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) 📇 [Github](https://github.com/apache/doris) 
+- 加入社群参与讨论 -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w) 📇 [Github](https://github.com/apache/doris) 
 
 - 用户案例与技术见解 -  📭 [Twitter](https://twitter.com/doris_apache) 
 

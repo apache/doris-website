@@ -42,10 +42,10 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
         <>
             <NavbarItems items={rightItems} />
             <Link
-                onMouseEnter={()=>{
+                onMouseEnter={() => {
                     document.getElementById('github-icon-new').firstChild.style.fill = '#444FD9';
                 }}
-                onMouseLeave={()=>{
+                onMouseLeave={() => {
                     document.getElementById('github-icon-new').firstChild.style.fill = '#1D1D1D';
                 }}
                 className="github-btn bg-[#F7F9FE] mr-1 group !no-underline  rounded-sm items-center justify-start desktop h-[2.25rem] w-[6.5rem] "
@@ -58,7 +58,7 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
             {star && <div className="gh-count text-[1rem]/[1rem]">{star}k</div>}
             <Link
                 className="slack-btn desktop header-right-button-slack"
-                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw"
+                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w"
                 target="_blank"
             ></Link>
         </>
