@@ -89,9 +89,32 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
+            detailTitle: '走进天翼云 | Apache Doris 企业行',
+            date: '2025-05-17（周六）14:00 - 17:00',
+            address: '广州市海珠区广报中心南塔 18 楼天翼云 1808 培训室',
+            description:
+                '5 月 17 日，相约广州，与天翼云、李锦记、货拉拉一同揭秘可观测、湖仓一体、用户画像等实时数仓前沿实践',
+            start_date: '2025-05-17T14:00:00.000Z',
+            end_date: '2025-05-17T17:00:00.000Z',
+            img: (
+                <img
+                    alt="走进天翼云 | Apache Doris 企业行"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/meetup-tianyiyun.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-meetup-20250517',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
             detailTitle: '阿里云 SelectDB x Apache Doris ｜企业行 Meetup',
             date: '2025-04-19（周六）13:30 - 17:00',
-            address: '阿里巴巴北京朝阳科技园 B 区-地下车库-B1F  B-B4-B03 雪月山庄',
+            address: '阿里巴巴北京朝阳科技园 B 区 - 地下车库-B1F  B-B4-B03 雪月山庄',
             description:
                 '4 月 19 日由阿里云联合飞轮科技共同发起的阿里云 SelectDB x Apache Doris 日志存储与分析解决方案联合 Meetup 将在北京正式开启，邀您共探日志分析新范式！本次活动邀请了来自阿里云、飞轮科技、AI 独角兽企业的多位技术专家，演讲涵盖阿里云数据库 SelectDB 版及 Apache Doris 在日志场景的技术特性、解决方案及落地实践。',
             start_date: '2025-04-19T13:30:00.000Z',
@@ -257,8 +280,8 @@ function formatEventList(eventList: Event[]) {
             new Date() >= new Date(event.end_date)
                 ? EventsStatusEnum.Complete
                 : new Date() >= new Date(event.start_date)
-                ? EventsStatusEnum.Processing
-                : EventsStatusEnum.Pre,
+                    ? EventsStatusEnum.Processing
+                    : EventsStatusEnum.Pre,
     }));
 }
 
@@ -295,9 +318,8 @@ export default function Events() {
                 )}
 
                 <div
-                    className={`border-r rounded-b-lg  border-l ${
-                        selectedLanguage === 'zh' ? 'lg:h-[18.625rem]' : ''
-                    } border-b border-[#DFE5F0] p-6`}
+                    className={`border-r rounded-b-lg  border-l ${selectedLanguage === 'zh' ? 'lg:h-[18.625rem]' : ''
+                        } border-b border-[#DFE5F0] p-6`}
                 >
                     <div
                         style={{ color: `${STATUS_COLOR_MAP[data.status]}` }}
@@ -355,31 +377,28 @@ export default function Events() {
                     <div className="h-[3.25rem] pb-4">Event Language Type:</div>
                     <div
                         onClick={() => setSelectedLanguage('en')}
-                        className={`h-[3.25rem] cursor-pointer pb-4 hover:text-[#1D1D1D] ${
-                            selectedLanguage === 'en'
-                                ? 'text-[#1D1D1D] border-b-[2px]  border-[#444FD9]'
-                                : 'text-[#4C576C]'
-                        }`}
+                        className={`h-[3.25rem] cursor-pointer pb-4 hover:text-[#1D1D1D] ${selectedLanguage === 'en'
+                            ? 'text-[#1D1D1D] border-b-[2px]  border-[#444FD9]'
+                            : 'text-[#4C576C]'
+                            }`}
                     >
                         English
                     </div>
 
                     <div
                         onClick={() => setSelectedLanguage('zh')}
-                        className={`h-[3.25rem] cursor-pointer hover:text-[#1D1D1D] pb-4 ${
-                            selectedLanguage === 'zh'
-                                ? 'text-[#1D1D1D] border-b-[2px] border-[#444FD9]'
-                                : 'text-[#4C576C]'
-                        }`}
+                        className={`h-[3.25rem] cursor-pointer hover:text-[#1D1D1D] pb-4 ${selectedLanguage === 'zh'
+                            ? 'text-[#1D1D1D] border-b-[2px] border-[#444FD9]'
+                            : 'text-[#4C576C]'
+                            }`}
                     >
                         Chinese
                     </div>
                 </div>
                 <div className="max-w-[75rem] pt-[5rem] border-t-[0.5px] border-[#E3E8F2] mx-auto ">
                     <div
-                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${
-                            !showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
-                        } `}
+                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
+                            } `}
                     >
                         {eventList.slice(0, 9).map((event: Event, index) => (
                             <EventCard data={event} key={index} />
