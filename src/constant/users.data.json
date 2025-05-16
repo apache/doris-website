@@ -819,15 +819,6 @@
         "image": "/images/user-logo/Telecom & Manufacturing/CTYun.jpg"
     },
     {
-        "story": "Cisco is a multinational technology conglomerate specialized in networking solutions. It enables seamless connectivity, digital transformation and secure communications for businesses and organizations worldwide.",
-        "name": "Cisco",
-        "category": "Telecom & Manufacturing",
-        "logo": "Cisco",
-        "order": 102,
-        "to": null,
-        "image": "/images/user-logo/Telecom & Manufacturing/Cisco.jpg"
-    },
-    {
         "story": "ZTE expertise in 5G technology, networking and mobile devices, offering innovative solutions that drive connectivity and digital transformation in the telecommunications industry.",
         "name": "ZTE",
         "category": "Telecom & Manufacturing",
