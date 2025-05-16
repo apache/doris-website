@@ -105,7 +105,7 @@ Similarly, the Hint log shows the successfully applied hint: `Used: leading(t1 t
 ## Case 3: Forcing the Generation of a Right-Deep Tree
 
 ```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
+mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3;
 +----------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                                  |
 +----------------------------------------------------------------------------------+
@@ -121,18 +121,18 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on
 | --------------PhysicalOlapScan[t3]                                               |
 |                                                                                  |
 | Hint log:                                                                        |
-| Used: leading(t1 { t2 t3 })                                                      |
+| Used: leading(t1 ( t2 t3 ))                                                      |
 | UnUsed:                                                                          |
 | SyntaxError:                                                                     |
 +----------------------------------------------------------------------------------+
 ```
 
-Similarly, the Hint log shows the successfully applied hint: `Used: leading(t1 { t2 t3 })`.
+Similarly, the Hint log shows the successfully applied hint: `Used: leading(t1 ( t2 t3 ))`.
 
 ## Case 4: Forcing the Generation of a Bushy Tree
 
 ```sql
-mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
+mysql> explain shape plan select /*+ leading((t1 t2) (t3 t4)) */ * from t1 join t2 on t1.c1 = t2.c2 join t3 on t2.c2 = t3.c3 join t4 on t3.c3 = t4.c4;
 +-----------------------------------------------+
 | _Explain_ String                                |
 +-----------------------------------------------+
@@ -202,7 +202,7 @@ explain shape plan
     from
         (
             select
-                /*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */
+                /*+ leading(orders [shuffle] (lineitem [shuffle] part) [shuffle] (supplier [broadcast] nation) [shuffle] partsupp) */
                 n_name as nation,
                 extract(year from o_orderdate) as o_year,
                 l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
@@ -230,7 +230,7 @@ explain shape plan
         o_year desc;
 ```
 
-The above hint specification `/*+ leading(orders shuffle {lineitem shuffle part} shuffle {supplier broadcast nation} shuffle partsupp) */` mixes the two formats of leading and distribute hint. Leading is used to control the relative join order among the overall tables, while shuffle and broadcast are used to specify the shuffle method for specific joins. By combining the two, the connection order and connection method can be flexibly controlled, making it convenient to manually control the expected plan behavior of the user.
+The above hint specification `/*+ leading(orders [shuffle] (lineitem [shuffle] part) [shuffle] (supplier [broadcast] nation) [shuffle] partsupp) */` mixes the two formats of leading and distribute hint. Leading is used to control the relative join order among the overall tables, while shuffle and broadcast are used to specify the shuffle method for specific joins. By combining the two, the connection order and connection method can be flexibly controlled, making it convenient to manually control the expected plan behavior of the user.
 
 :::caution Usage Suggestions
 - It is recommended to use EXPLAIN to carefully analyze the execution plan to ensure that the Leading Hint can achieve the expected effect.
