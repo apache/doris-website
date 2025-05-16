@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This guide is about how to compile Doris on Linux using Ubuntu 16.04 or later versions.
+This guide is about how to compile Doris on Linux using Ubuntu 24.04 or later versions.
 
 ## Install JDK.
 
