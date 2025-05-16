@@ -245,11 +245,14 @@ Terminology:
 
 `Target Account`: The AWS account owning the target S3 bucket;
 
-**Note: The source and target accounts can be the same AWS account**
-
 `ec2_role`: A role created in the source account, attached to EC2 instances running Doris FE/BE;
 
 `bucket_role`: A role created in the target account with permissions to access the target bucket;
+
+**Notes:&#x20;**
+
+1. **The source and target accounts can be the same AWS account;**
+2. **Ensure All EC2 instances which Doris FE/BE deployed have been attached on `ec_role​`​, especially during scaling operations.**
 
 ​​More detailed configuration steps are as follows:​
 

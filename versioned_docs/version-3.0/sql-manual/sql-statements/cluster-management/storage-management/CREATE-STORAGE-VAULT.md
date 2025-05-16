@@ -64,6 +64,10 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
 | `provider`       | Required   | The cloud provider offering the object storage service. Supported values are `COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 | `use_path_style` | Optional   | Use `path-style URL` (for private deployment environments) or `virtual-hosted-style URL`(recommended for public cloud environments). Default value is true (path-style).                                                                                   |
 
+**Note:&#x20;**
+
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+
 ### HDFS vault
 
 | Parameter                               | Required | Description                                                    |
@@ -177,7 +181,9 @@ PROPERTIES (
 );
 ```
 
-Doris also suppoted `AWS Assume Role` for AWS S3 Storage Vault, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+**Note:&#x20;**
+
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### 7. Create MinIO storage vault
 
