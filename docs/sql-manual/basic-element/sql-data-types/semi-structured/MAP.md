@@ -26,13 +26,26 @@ under the License.
 
 ## MAP
 
-### name
+### Name
 
 MAP
 
-### description
-
+### Syntax
 `MAP<K, V>`
+
+Where:
+
+* K is the type of the key for the map. You should must use one of the following types for keys:
+  * String Data Type(Char/Varchar/String)
+  * Numeric Data Type(except double and float)
+
+  Map keys always be nullable.
+
+* V is the type of the value in the map. And it is always nullable.
+
+The Map type does not support duplicate keys; Doris will automatically remove duplicates (only one entry is retained for each identical key).
+
+### Description
 
 A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
 
@@ -40,15 +53,7 @@ Need to manually enable the support, it is disabled by default.
 ```
 admin set frontend config("enable_map_type" = "true");
 ```
-
-K,V could be any of:
-
-```
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
-
-### example
+### Example
 
 Create table example:
 
@@ -269,6 +274,6 @@ mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
 
 ```
 
-### keywords
+### Keywords
 
     MAP
