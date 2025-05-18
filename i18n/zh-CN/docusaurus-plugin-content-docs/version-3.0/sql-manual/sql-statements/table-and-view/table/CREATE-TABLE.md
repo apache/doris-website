@@ -48,7 +48,7 @@ under the License.
 ## 语法
 
 ```sql
-CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
+CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     (<columns_definition> [ <indexes_definition> ])
     [ ENGINE = <table_engine_type> ]
     [ <key_type> KEY (<key_cols>)
