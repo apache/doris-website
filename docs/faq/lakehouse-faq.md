@@ -296,16 +296,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     Possible solutions include:
     - Use `hdfs fsck file -files -blocks -locations` to check if the file is healthy.
     - Check connectivity with datanodes using `telnet`.
+
+        The following error may be printed in the error log:
+        
+        ```
+        No live nodes contain current block Block locations: DatanodeInfoWithStorage[10.70.150.122:50010,DS-7bba8ffc-651c-4617-90e1-6f45f9a5f896,DISK]
+        ```
+        
+        You can first check the connectivity between the Doris cluster and `10.70.150.122:50010`.
+        
+        In addition, in some cases, the HDFS cluster uses dual network  with internal and external IPs. In this case, domain names are required for communication, and the following needs to be added to the Catalog properties: `"dfs.client.use.datanode.hostname" = "true"`.
+        
+        At the same time, please check whether the parameter is true in the `hdfs-site.xml` file placed under `fe/conf` and `be/conf`.
+
     - Check datanode logs.
 
-    If you encounter the following error:
+        If you encounter the following error:
 
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`
-    it means that the current hdfs has enabled encrypted transmission, but the client has not, causing the error.
+        ```
+        org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
+        ```
 
-    Use any of the following solutions:
-    - Copy hdfs-site.xml and core-site.xml to be/conf and fe/conf directories. (Recommended)
-    - In hdfs-site.xml, find the corresponding configuration `dfs.data.transfer.protection` and set this parameter in the catalog.
+        it means that the current hdfs has enabled encrypted transmission, but the client has not, causing the error.
+
+        Use any of the following solutions:
+        - Copy `hdfs-site.xml` and `core-site.xml` to `fe/conf` and `be/conf`. (Recommended)
+        - In `hdfs-site.xml`, find the corresponding configuration `dfs.data.transfer.protection` and set this parameter in the catalog.
 
 ## DLF Catalog
 

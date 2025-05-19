@@ -850,5 +850,31 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 
 ```
 
+### FAQ
+1. JSON类型中的null和SQL中的NULL(IS NULL)有区别吗
+
+是的，JSON中的null例如`{"key1" : nulll}`表示`key1`这个JSON键存在，并且值为null(作为一个特殊类型会被编码到JSON binary中)，而SQL中的NULL是指没有这个JSON键。例如
+``` sql 
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL;
++----------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL |
++----------------------------------------------------------+
+|                                                        0 |
++----------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL;
++-------------------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL |
++-------------------------------------------------------------------+
+|                                                                 1 |
++-------------------------------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+2. `GET_JSON_XXX` 函数和 `JSON_EXTRACT_XXX` 函数的区别，以及怎么选择
+
+`GET_JSON_XXX` 是针对字符串类型设计的函数，是直接在原生字符串上做提取操作，而 `JSON_EXTRACT_XXX` 是针对 JSON 类型实现的函数，针对 JSON 类型有特殊优化。一般建议使用 `JSON_EXTRACT_XXX` 性能会更好。
+
 ### keywords
 JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_String, json_exists_path, json_type

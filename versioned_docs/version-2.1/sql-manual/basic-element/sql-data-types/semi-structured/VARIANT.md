@@ -456,8 +456,14 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%'
 ```
 
 ### FAQ
-1.Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
+
+1. Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
+
 Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
+
+2. Is there a difference between null in the VARIANT type (e.g., `{"key": null}`) and SQL NULL (i.e., IS NULL)?
+
+No, there is no difference — in the VARIANT type, they are considered equivalent.
 
 ### Keywords
 

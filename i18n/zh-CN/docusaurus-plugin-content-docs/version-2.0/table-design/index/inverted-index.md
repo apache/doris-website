@@ -317,7 +317,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 对分词后的词进行正则匹配，默认匹配 50 个（session 变量 inverted_index_max_expansions 控制）
 -- 类似 MATCH_PHRASE_PREFIX 的匹配规则，只是前缀变成了正则
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 
 -- 3. 普通等值、范围、IN、NOT IN，正常的 SQL 语句即可，例如
 SELECT * FROM table_name WHERE id = 123;

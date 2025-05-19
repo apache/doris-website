@@ -329,16 +329,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     可能的处理方式有：
     - 通过 `hdfs fsck file -files -blocks -locations` 来查看具体该文件是否健康。
     - 通过 `telnet` 来检查与 datanode 的连通性。
+
+        在错误日志中可能会打印如下错误：
+
+        ```
+        No live nodes contain current block Block locations: DatanodeInfoWithStorage[10.70.150.122:50010,DS-7bba8ffc-651c-4617-90e1-6f45f9a5f896,DISK]
+        ```
+
+        可以先检查 Doris 集群与 `10.70.150.122:50010` 的连通性。
+
+        另外，某些情况下，HDFS 集群会使用双网卡，有对内和对外 IP。此时，需使用域名来进行通信，需要在 Catalog 属性中添加：`"dfs.client.use.datanode.hostname" = "true"`。
+
+        同时，请检查 `fe/conf` 和 `be/conf` 下放置的 `hdfs-site.xml` 文件中，该参数是否为 true。
+
     - 查看 datanode 日志。
 
-    如果出现以下错误：
+        如果出现以下错误：
 
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`
-    则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+        ```
+        org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
+        ```
 
-    使用下面的任意一种解决方案即可：
-    - 拷贝 hdfs-site.xml 以及 core-site.xml 到 be/conf 和 fe/conf 目录。(推荐)
-    - 在 hdfs-site.xml 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
+        则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+
+        使用下面的任意一种解决方案即可：
+        - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。(推荐)
+        - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
 
 ## DLF Catalog
 
