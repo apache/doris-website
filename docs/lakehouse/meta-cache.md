@@ -309,19 +309,45 @@ This section mainly introduces the cache behavior that users may be concerned ab
 - New partitions added to the external data source need to be manually refreshed or waited for up to 10 minutes to query the new partition data.
 - Changes in partition data files need to be manually refreshed or waited for up to 10 minutes to query the new partition data.
 
+### Disable Schema Cache
+
+For all kinds of external catalogs, if you want to access the latest schema immediately, you can disable the schema cache.
+
+- Disable globally
+
+    ```
+    -- fe.conf
+    max_external_schema_cache_num=0    // Disable schema cache globally
+    ```
+
+- Disable at catalog level
+
+    ```
+    -- Catalog property
+    "schema.cache.ttl-second" = "0" // Disable schema cache cache for a specific Catalog(Since 2.1.11, 3.0.6)
+    ```
+
+After setting the above parameters, Doris will always see the latest schema of tables, but it will increase the access pressure on external meta service.
+
 ### Disable Hive Catalog Metadata Cache
 
 For the Hive Catalog, if you want to disable the cache to query real-time updated data, you can configure the following parameters:
 
-```
--- fe.conf
-max_external_file_cache_num=0    // Disable file list cache
-max_hive_partition_table_cache_num=0  // Disable partition list cache
+- Disable globally
 
--- Catalog property
-"file.meta.cache.ttl-second" = "0" // Disable file list cache for a specific Catalog
-"partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
-```
+    ```
+    -- fe.conf
+    max_external_file_cache_num=0    // Disable file list cache
+    max_hive_partition_table_cache_num=0  // Disable partition list cache
+    ```
+    
+- Disable at catalog level
+
+    ```
+    -- Catalog property
+    "file.meta.cache.ttl-second" = "0" // Disable file list cache for a specific Catalog
+    "partition.cache.ttl-second" = "0" // Disable partition list cache for a specific Catalog(Since 2.1.11, 3.0.6)
+    ```
 
 After setting the above parameters:
 
