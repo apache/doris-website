@@ -1,9 +1,10 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris 3.0.5 Released",
-        content: `This version features improved Lakehouse, Asynchronous Materialized Views, Semi-structured Data Management and more. `,
-        image: '3.0.5.jpeg',
+        title: "Apache Doris 2.1.10 Released",
+        content: `This version introduces continuous upgrades and enhancements in Query Execution Engine and Lakehouse. It also resolves critical bugs to improve stability and performance.`,
+        to: '/blog/release-note-2.1.10',
+        image: '2.1.10.jpg',
     },
     {
         tags: ['Best Practice'],
