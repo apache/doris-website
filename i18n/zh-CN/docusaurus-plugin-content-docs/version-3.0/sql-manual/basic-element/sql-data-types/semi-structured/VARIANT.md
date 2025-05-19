@@ -473,7 +473,12 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 
 ### FAQ
 1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
+
 由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096
+
+2. VARIANT 类型中的 null（例如 `{"key": null}` ）和 SQL 中的 NULL（即 IS NULL）有区别吗？ 
+
+没有区别，在 VARIANT 类型中，它们被视为等价的。
 
 
 ### Keywords
