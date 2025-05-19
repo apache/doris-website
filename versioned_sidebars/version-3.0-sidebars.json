@@ -133,7 +133,6 @@
                             ]
                         },
                         "table-design/row-store",
-                        "table-design/temporary-table",
                         "table-design/best-practice"
                     ]
                 },
