@@ -48,3 +48,5 @@ Doris provides the following mechanisms to manage data security:
 
 **Fine-Grained Access Control:** Doris allows configuring data row and column access permissions based on rules to control user access at a granular level.
 
+**JAVA-UDF Security:** Doris supports user-defined function functionality, so root administrators need to review the implementation of user UDFs to ensure the operations in the logic are safe and prevent high-risk actions in UDFs, such as data deletion and system disruption.
+
