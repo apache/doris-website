@@ -851,9 +851,9 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 ```
 
 ### FAQ
-1. JSON类型中的null和SQL中的NULL(IS NULL)有区别吗
+1. JSON 类型中的 null 和 SQL 中的 NULL(IS NULL) 有区别吗
 
-是的，JSON中的null例如`{"key1" : nulll}`表示`key1`这个JSON键存在，并且值为null(作为一个特殊类型会被编码到JSON binary中)，而SQL中的NULL是指没有这个JSON键。例如
+是的，JSON 中的 null 例如 `{"key1" : null}` 表示`key1`这个 JSON 键存在，并且值为 null (作为一个特殊类型会被编码到 JSON binary 中)，而 SQL 中的 NULL 是指没有这个 JSON 键。例如
 ``` sql 
 mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL;
 +----------------------------------------------------------+
