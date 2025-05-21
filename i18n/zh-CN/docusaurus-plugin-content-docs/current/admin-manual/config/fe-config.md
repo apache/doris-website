@@ -1754,7 +1754,7 @@ HOUR: log 前缀是：yyyyMMddHH
 
 #### `default_db_data_quota_bytes`
 
-默认值：1PB
+默认值：8192PB
 
 是否可以动态配置：true
 
