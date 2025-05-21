@@ -163,7 +163,7 @@ Spark related parameters are as follows:
        - `s3.connection.request.timeout`: s3 request timeout, in milliseconds, the default is 3000
        - `s3.connection.timeout`: s3 connection timeout, in milliseconds, the default is 1000
 
-    Doris also suppoted `AWS Assume Role` for creating S3 Resource , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+    Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 **4. Create JDBC resource**
 
