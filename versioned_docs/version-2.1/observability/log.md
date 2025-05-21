@@ -392,15 +392,13 @@ You can refer to the example below, where `property.*` represents Librdkafka cli
 ```SQL  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
-PROPERTIES (  
-"max_batch_interval" = "10",  
-"max_batch_rows" = "1000000",  
-"max_batch_size" = "109715200",  
-"load_to_single_tablet" = "true",  
-"timeout" = "600",  
-"strict_mode" = "false",  
-"format" = "json"  
-)  
+PROPERTIES (
+"max_batch_interval" = "60",
+"max_batch_rows" = "20000000",
+"max_batch_size" = "1073741824", 
+"load_to_single_tablet" = "true",
+"format" = "json"
+) 
 FROM KAFKA (  
 "kafka_broker_list" = "host:port",  
 "kafka_topic" = "log__topic_",  
@@ -414,7 +412,7 @@ FROM KAFKA (
 <br />SHOW ROUTINE LOAD;
 ```
 
-For more information about Kafka, see [Routine Load](../../data-operate/import/import-way/routine-load-manual.md).
+For more information about Kafka, see [Routine Load](../data-operate/import/import-way/routine-load-manual.md).
 
 **Using customized programs to collect logs**
 
