@@ -99,7 +99,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
 
 2. At the same time, curly braces can be used to specify the shape of the Join tree:
     ```sql
-    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
+    mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
     +----------------------------------------------------------------------------------+
     | Explain String(Nereids Planner)                                                  |
     +----------------------------------------------------------------------------------+
@@ -115,7 +115,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
     | --------------PhysicalOlapScan[t3]                                               |
     |                                                                                  |
     | Hint log:                                                                        |
-    | Used: leading(t1 { t2 t3 })                                                      |
+    | Used: leading(t1 ( t2 t3 ))                                                      |
     | UnUsed:                                                                          |
     | SyntaxError:                                                                     |
     +----------------------------------------------------------------------------------+
@@ -262,7 +262,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
    When you need to make the shape of the plan a right-deep tree, Bushy tree, or zig-zag tree, you only need to add curly braces to limit the shape of the plan, without the need to use swap like Oracle to adjust step by step from the left-deep tree.
 
     ```sql
-    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
+    mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
     +-----------------------------------------------+
     | Explain String                                |
     +-----------------------------------------------+
@@ -277,7 +277,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
     | ------------PhysicalDistribute                |
     | --------------PhysicalOlapScan[t3]            |
     |                                               |
-    | Used: leading(t1 { t2 t3 })                   |
+    | Used: leading(t1 ( t2 t3 ))                   |
     | UnUsed:                                       |
     | SyntaxError:                                  |
     +-----------------------------------------------+
@@ -286,7 +286,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
 3. Bushy Tree
 
     ```sql
-    mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+    mysql> explain shape plan select /*+ leading((t1 t2) (t3 t4)) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
     +-----------------------------------------------+
     | Explain String                                |
     +-----------------------------------------------+
@@ -313,7 +313,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
 4. zig-zag tree
 
     ```sql
-    mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+    mysql> explain shape plan select /*+ leading(t1 (t2 t3) t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
     +--------------------------------------------------------------------------------------+
     | Explain String(Nereids Planner)                                                      |
     +--------------------------------------------------------------------------------------+
@@ -347,7 +347,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
     ```sql
     -------- test outer join which can not swap
     -- t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
-    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+    mysql> explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
     +--------------------------------------------------------------------------------+
     | Explain String(Nereids Planner)                                                |
     +--------------------------------------------------------------------------------+
@@ -364,7 +364,7 @@ When Leading Hint is not effective, the normal process will be used to generate 
     |                                                                                |
     | Hint log:                                                                      |
     | Used:                                                                          |
-    | UnUsed: leading(t1 { t2 t3 })                                                  |
+    | UnUsed: leading(t1 ( t2 t3 ))                                                  |
     | SyntaxError:                                                                   |
     +--------------------------------------------------------------------------------+
     ```
@@ -383,13 +383,13 @@ When Leading Hint is not effective, the normal process will be used to generate 
 
     -- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P23) = t1 leftjoin (t2  leftjoin t3 on (P23)) on (P12)
     select /*+ leading(t2 t3 t1) SWAP_INPUT(t1) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+    explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+    explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
 
     -------- test outer join which can not swap
     --  t1 leftjoin (t2  join t3 on (P23)) on (P12) != (t1 leftjoin t2  on (P12)) join t3 on (P23)
     -- eliminated to inner join
-    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+    explain shape plan select /*+ leading(t1 (t2 t3)) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
     explain graph select /*+ leading(t1 t2 t3) */ * from t1 left join (select * from t2 join t3 on c2 = c3) on c1 = c2;
 
     -- test semi join
