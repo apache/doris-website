@@ -775,3 +775,22 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabPath: ${keytabPath}
     ```
    ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.md#configuring-catalog) documentation.
+
+## Configure Shared Storage
+As of version 25.4.0, the Doris Operator supports mounting shared storage with the ReadWriteMany access mode to all pods across multiple components. Before using this feature, ensure that the shared storage PersistentVolume and PersistentVolumeClaim resources have been created. Configure the DorisCluster resource as shown below before deploying the Doris cluster:
+```yaml
+spec:
+  sharedPersistentVolumeClaims:
+  - mountPath: ${mountPath}
+    persistentVolumeClaimName: ${sharedPVCName}
+    supportComponents:
+    - fe
+    - be
+```
+- `${mountPath}` specifies the absolute path inside the container where the storage will be mounted.
+- `${sharedPVCName}` refers to the name of the `PersistentVolumeClaim` to be mounted.
+- `supportComponents` lists the names of the components that require the shared storage. In the example above, both the FE and BE components will mount the shared storage. If the supportComponents array is left empty, all deployed components will mount the shared storage by default.
+
+:::tip Tip
+The `mountPath` parameter can use `${DORIS_HOME}` as a prefix. When `${DORIS_HOME}` is used, it resolves to `/opt/apache-doris/fe` within FE containers and `/opt/apache-doris/be` within BE containers.
+:::
