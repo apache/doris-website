@@ -138,7 +138,6 @@ INTO OUTFILE "file_path"
 parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能够自动将Doris的数据类型导出到parquet/orc文件格式的对应数据类型，以下是Doris数据类型和parquet/orc文件格式的数据类型映射关系表：
 
 1. Doris导出到Orc文件格式的数据类型映射表：
-
     | Doris Type | Orc Type |
     | --- | --- |
     | boolean | boolean  |
@@ -161,7 +160,6 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
 
 
 2. Doris导出到Parquet文件格式时，会先将Doris内存数据转换为arrow内存数据格式，然后由arrow写出到parquet文件格式。Doris数据类型到arrow数据类的映射关系为：
-
     | Doris Type | Arrow Type |
     | --- | --- |
     | boolean  | boolean |
