@@ -54,8 +54,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 
 | Parameter              | Required | Description                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`    | Required   | The endpoint for object storage.
-Note: Do not provide a link starting with http:// or https://. For Azure Blob Storage, the endpoint is fixed as blob.core.windows.net.。 |
+| `s3.endpoint`    | Required   | The endpoint for object storage. For Azure Blob Storage, the endpoint is fixed as blob.core.windows.net.。 |
 | `s3.region`      | Required   | The region of your storage bucket. (Not required if using GCP or AZURE). |
 | `s3.root.path`   | Required   | The path to store data. |
 | `s3.bucket`      | Required   | The bucket of your object storage account. (For Azure, this is the StorageAccount). |
@@ -63,6 +62,12 @@ Note: Do not provide a link starting with http:// or https://. For Azure Blob St
 | `s3.secret_key`  | Required   | The secret key for your object storage account. (For Azure, this is the AccountKey). |
 | `provider`       | Required   | The cloud provider offering the object storage service. Supported values are `COS`，`OSS`，`S3`，`OBS`，`BOS`，`AZURE`，`GCP` |
 | `use_path_style` | Optional   | Use `path-style URL` (for private deployment environments) or `virtual-hosted-style URL`(recommended for public cloud environments). Default value is true (path-style).                                                                                   |
+
+**Note:&#x20;**
+
+1. `s3.endpoint` if neither `http://` nor `https://` prefix is not provided, ​​`http`​​ will be used by default. If a prefix is explicitly specified, it will take effect with the prefix;
+
+2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### HDFS vault
 
@@ -177,7 +182,9 @@ PROPERTIES (
 );
 ```
 
-Doris also suppoted `AWS Assume Role` for AWS S3 Storage Vault, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+**Note:&#x20;**
+
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ### 7. Create MinIO storage vault
 

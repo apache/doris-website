@@ -233,10 +233,10 @@ For JSON logs that are written into Kafka message queues, create [Routine Load](
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table
 COLUMNS(ts, clientip, request, status, size)
 PROPERTIES (
-    "max_batch_interval" = "10",
-    "max_batch_rows" = "1000000",
-    "max_batch_size" = "109715200",
-    "strict_mode" = "false",
+    "max_batch_interval" = "60",
+    "max_batch_rows" = "20000000",
+    "max_batch_size" = "1073741824", 
+    "load_to_single_tablet" = "true",
     "format" = "json"
 )
 FROM KAFKA (

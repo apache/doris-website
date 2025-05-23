@@ -225,3 +225,23 @@ REVOKE
 ```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
+
+## FAQ
+
+#### Q1. 如何查询特定storage vault被那些表引用？
+
+1. 通过`show storage vault`查看storage vault name对应的storage vault id
+
+2. 执行如下sql语句:
+
+```sql
+mysql> select * from information_schema.table_properties where PROPERTY_NAME = "storage_vault_id" and PROPERTY_VALUE=3;
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| TABLE_CATALOG | TABLE_SCHEMA                    | TABLE_NAME                          | PROPERTY_NAME    | PROPERTY_VALUE |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| internal      | regression_test_vault_p0_create | s3_92ba28c209154d968e680e58dd54d0cc | storage_vault_id | 3              |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+1 row in set (0.04 sec)
+```
+
+其中`PROPERTY_VALUE=3`替换为对应`storage vault id`的数值
