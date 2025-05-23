@@ -71,9 +71,9 @@ Doris 在数据导入过程中提供了多种机制来确保高可用性。本�
 
 ### 配置方法
 
-#### 1. 单表配置
+#### 单表配置
 
-a. 创建表时设置：
+1. 创建表时设置：
 
 ```sql
 CREATE TABLE example_table
@@ -90,14 +90,14 @@ PROPERTIES
 );
 ```
 
-b. 修改现有表：
+2. 修改现有表：
 
 ```sql
 ALTER TABLE example_table
 SET ( 'min_load_replica_num' = '2' );
 ```
 
-#### 2. 全局配置
+#### 全局配置
 通过 FE 配置项 `min_load_replica_num` 设置。
 
 - 有效值：大于 0
@@ -107,6 +107,7 @@ SET ( 'min_load_replica_num' = '2' );
 优先级：表属性 > 全局配置 > 默认多数派规则
 
 如果表属性未设置或无效，且全局配置有效，则表的最小写入副本数为：
+
 `min(FE 配置的 min_load_replica_num，表的副本数 / 2 + 1)`
 
 关于 FE 配置项的查看和修改，请参考[FE 配置项文档](../../admin-manual/config/fe-config.md)。
