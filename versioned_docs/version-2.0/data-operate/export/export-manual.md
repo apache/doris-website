@@ -64,7 +64,7 @@ PROPERTIES
     "label" = "mylabel",
     "column_separator"=",",
     "columns" = "col1,col2",
-    "parallelusm" = "3"
+    "parallelism" = "3"
 )
 WITH BROKER "hdfs"
 (
@@ -81,7 +81,7 @@ WITH BROKER "hdfs"
 
 * `line_delimiter`: Line separator. The default is `\n`. Supports invisible characters, such as'\x07'.
 
-* `parallelusm`：Exporting with 3 concurrent threads.
+* `parallelism`：Exporting with 3 concurrent threads.
 
 ### Export to Object Storage (Supports S3 Protocol)
 
