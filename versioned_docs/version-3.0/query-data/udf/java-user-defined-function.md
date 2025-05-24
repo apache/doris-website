@@ -33,7 +33,7 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 
 2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
 
-3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT.
+3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
 
 ## Type Correspondence
 
@@ -52,9 +52,9 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 | IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
-| `array<Type>`         | `ArrayList<Type>`  or `List<Type>`           |
-| `map<Type1,Type2>`    | `HashMap<Type1,Type2>` or`Map<Type1,Type2>`      |
-| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) or `List<Type>` |
+| `array<Type>`         | `ArrayList<Type>` or `List<Type>`          |
+| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`or`Map<Type1,Type2>`     |
+| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) or`List<Object>`|
 
 :::tip
 `array/map/struct` types can be nested with other types. For instance, Doris: `array<array<int>>` corresponds to JAVA UDF Argument Type: `ArrayList<ArrayList<Integer>>`. Other types follow the same pattern.
@@ -74,6 +74,11 @@ When creating functions, avoid using `varchar` in place of `string`, as this may
 
 3. Due to issues with JVM loading classes with the same name, do not use multiple classes with the same name as UDF implementations simultaneously. If you want to update a UDF with a class of the same name, you need to restart BE to reload the classpath.
 
+4. Same-named Functions
+
+    Users can create UDF with exactly the same signature as built-in functions. By default, the system will prioritize matching built-in functions. However, if you specify the `database` when using the function (i.e., `db.function()`), it will be forcibly considered as a user-defined function.
+
+    In version 3.0.7, a new session variable `prefer_udf_over_builtin` was added. When set to `true`, it will prioritize matching user-defined functions, making it easier for users to migrate from other systems to Doris while maintaining the original system's function behavior through custom functions without changing function names.
 
 ## Getting Started
 This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view details.
