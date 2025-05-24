@@ -1,0 +1,1350 @@
+<!doctype html><html lang=zh-Hans-CN dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-admin-manual/config/be-config" data-has-hydrated=false><meta charset=UTF-8><meta name=generator content="Docusaurus v3.6.3"><title data-rh=true>BE 配置项 - Apache Doris</title><meta data-rh=true name=viewport content="width=device-width,initial-scale=1.0"><meta data-rh=true name=twitter:card content=summary_large_image><meta data-rh=true property=og:url content=https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/be-config><meta data-rh=true property=og:locale content=zh_Hans-CN><meta data-rh=true property=og:locale:alternate content=en_US><meta data-rh=true name=docusaurus_locale content=zh-CN><meta data-rh=true name=docsearch:language content=zh-CN><meta data-rh=true name=docusaurus_version content=current><meta data-rh=true name=docusaurus_tag content=docs-default-current><meta data-rh=true name=docsearch:version content=current><meta data-rh=true name=docsearch:docusaurus_tag content=docs-default-current><meta data-rh=true property=og:title content="BE 配置项 - Apache Doris"><meta data-rh=true name=description content="<!--"><meta data-rh=true property=og:description content="<!--"><link data-rh=true rel=icon href=/zh-CN/images/favicon.ico><link data-rh=true rel=canonical href=https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/be-config><link data-rh=true rel=alternate href=https://doris.apache.org/docs/dev/admin-manual/config/be-config hreflang=en-US><link data-rh=true rel=alternate href=https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/be-config hreflang=zh-Hans-CN><link data-rh=true rel=alternate href=https://doris.apache.org/docs/dev/admin-manual/config/be-config hreflang=x-default><link rel=alternate type=application/rss+xml href=/zh-CN/blog/rss.xml title="Apache Doris RSS Feed"><link rel=alternate type=application/atom+xml href=/zh-CN/blog/atom.xml title="Apache Doris Atom Feed"><link rel=preconnect href=https://analytics.apache.org/><script>var _paq=window._paq=window._paq||[];_paq.push(["setRequestMethod","POST"]),_paq.push(["trackPageView"]),_paq.push(["enableLinkTracking"]),_paq.push(["enableHeartBeatTimer"]),function(){var e="https://analytics.apache.org/";_paq.push(["setRequestMethod","POST"]),_paq.push(["setTrackerUrl",e+"matomo.php"]),_paq.push(["setSiteId","43"]);var a=document,t=a.createElement("script"),p=a.getElementsByTagName("script")[0];t.type="text/javascript",t.async=!0,t.src=e+"matomo.js",p.parentNode.insertBefore(t,p)}()</script><script src=/js/custom-script.js></script><link rel=stylesheet href=/zh-CN/assets/css/styles.62a18149.css><script src=/zh-CN/assets/js/runtime~main.cf6558ef.js defer></script><script src=/zh-CN/assets/js/main.66d04a02.js defer></script><body class=navigation-with-keyboard><script>!function(){var t,e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t=null!==e?e:"light",document.documentElement.setAttribute("data-theme",t)}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id=__docusaurus><div role=region aria-label=跳到主要内容><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>跳到主要内容</a></div><div class=announcementBar_s0pr style=color:#4C576C role=banner><div class="content_zf74 announcementBarContent_dpRF"><a href=https://www.selectdb.com/resources/events/doris-meetup-20250517 target=_blank style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                <img style="width: 19px; height: 19px; margin-right: 3px;" src=/images/nav-star.svg>
+                <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+               <span>5 月 17 日，Apache Doris 企业行 —— 走进天翼云，揭秘可观测、湖仓一体、用户画像等实时数仓前沿实践</span> 
+               <p style=margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;>查看详情 -></p> 
+                   </a></div></div><nav aria-label=主导航 class="navbar navbar--fixed-top"><div class=navbar__inner><div class=navbar__items><div class=navbar-left><div class="navbar-logo-wrapper flex items-center"><div class="cursor-pointer docs"><svg width=127 height=30 fill=none viewBox="0 0 127 30"><g clip-path=url(#a)><path fill=#15A9CA d="m13.606 4.594-3.274-3.273A4.5 4.5 0 0 0 7.153 0a4.18 4.18 0 0 0-2.92 1.176 4.285 4.285 0 0 0-.06 6.107l5.94 5.94a.68.68 0 0 0 .933 0l2.556-2.557c.16-.192 2.834-3.245.003-6.072"/><path fill=#52CAA3 d="M18.97 9.823c-.624-.604-1.27-1.227-1.855-1.901v-.024q-.031.093-.047.189a6.73 6.73 0 0 1-2.003 3.747c-3.446 3.422-6.93 6.919-10.302 10.302l-.455.45a4.37 4.37 0 0 0-1.336 2.416 4.67 4.67 0 0 0 1.2 3.669 3.92 3.92 0 0 0 3.084 1.325c1.345.02 2-.157 2.98-1.11 3.92-3.837 7.84-7.706 10.807-10.646 1.4-1.392 1.72-3.697.729-5.25a18 18 0 0 0-2.803-3.167"/><path fill=#5268AD d="M-.004 7.774v14.457a.803.803 0 0 0 1.372.569l7.276-7.276a.74.74 0 0 0 0-1.042L1.368 7.206a.78.78 0 0 0-.56-.235.81.81 0 0 0-.812.803"/><path fill=#1D2434 d="M31.748 21.14V8.876h3.638c3.986 0 6.468 2.352 6.468 6.127s-2.481 6.139-6.468 6.139zm1.96-1.755h1.76c2.693 0 4.43-1.717 4.43-4.371s-1.737-4.371-4.43-4.371h-1.76zM50.612 21.33a6.326 6.326 0 1 1 0-12.652 6.326 6.326 0 0 1 0 12.652m0-10.835a4.512 4.512 0 0 0 0 9.016 4.555 4.555 0 0 0 4.45-4.532 4.473 4.473 0 0 0-4.45-4.484M75.056 8.875H73.04v12.254h2.015zM82.474 21.33a9.55 9.55 0 0 1-3.76-.804v-1.803a9.2 9.2 0 0 0 3.76.87c1.568 0 2.615-.717 2.615-1.78 0-1.195-1.278-1.67-2.63-2.171-2.121-.784-3.744-1.54-3.744-3.548 0-2.52 2.281-3.418 4.237-3.418 1.1 0 2.19.205 3.215.603v1.765a9.2 9.2 0 0 0-3.266-.651c-1.505 0-2.18.784-2.18 1.568 0 1.039 1.13 1.454 2.455 1.932 2.313.835 4.077 1.65 4.077 3.842-.008 2.125-1.968 3.595-4.779 3.595M66.026 16.174l.764-.33a3.63 3.63 0 0 0 2.2-3.327c0-2.211-1.592-3.638-4.054-3.638h-4.645V21.14h1.96V10.61h2.477a2.147 2.147 0 0 1 2.278 2.16 2.17 2.17 0 0 1-2.278 2.16h-1.042c-.459.067-.22.46-.22.46l3.956 5.75h2.214z"/></g><path fill=#484E5B d="M121.317 7.667h1.509v4.757h3.217v9.163h-1.463v-.747h-6.739v-1.403h6.739v-2.18h-6.175v-1.372h6.175v-2.043h-6.434v-1.418h3.171zm-3.781 8.477a34 34 0 0 0-.899-.808l-.336-.305v6.525h-1.418v-6.28q-.685 1.63-1.524 2.85l-.397-2.104q.489-.7.991-1.86.519-1.173.9-2.393h-1.647v-1.434h1.677V7.698h1.418v2.637h1.586v1.434h-1.586v1.433a69 69 0 0 1 2.089 1.707zm2.119-4.269a92 92 0 0 0-1.844-2.896l1.143-.824q.397.564.991 1.464t.93 1.463zm6.724-2.927a5 5 0 0 1-.198.32q-1.145 1.936-1.662 2.684l-1.235-.778q.442-.61.976-1.479.548-.87.899-1.494zM109.959 21.51a29 29 0 0 1-3.384-1.463 15.4 15.4 0 0 1-2.592-1.677 16.3 16.3 0 0 1-2.561 1.693 31 31 0 0 1-3.4 1.555l-.778-1.586a29 29 0 0 0 3.187-1.311q1.371-.67 2.378-1.448a12 12 0 0 1-1.845-2.607q-.762-1.464-1.296-3.37h-2.302V9.833h6.098a61 61 0 0 0-.686-2.028l1.662-.305q.213.488.61 1.677l.229.656h5.32v1.463h-2.378q-.488 1.905-1.235 3.37a11 11 0 0 1-1.829 2.607q2.043 1.539 5.595 2.622zm-8.644-10.214a13.3 13.3 0 0 0 1.052 2.76 9.5 9.5 0 0 0 1.601 2.18 8.8 8.8 0 0 0 1.539-2.165q.61-1.205 1.022-2.775z"/><defs><clipPath id=a><path fill=#fff d="M0 0h87.244v30H0z"/></clipPath></defs></svg></div></div><div class=undefined><div class="docs-search navbarSearchContainer_dCNk"><div class="navbar__search searchBarContainer_PzyC" dir=ltr><input placeholder=搜索 aria-label=Search class=navbar__search-input value=""><div class="loadingRing__K5d searchBarLoadingRing_e2f0"><div></div><div></div><div></div><div></div></div></div></div></div></div></div><div class="navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a href=# aria-haspopup=true aria-expanded=false role=button class=navbar__link><svg class=icon-language width=16 height=16 viewBox="0 0 16 16" fill=none><path d="M7.75756 14.3L10.5816 6.91667H11.8759L14.7 14.3H13.4057L12.7501 12.4167H9.74113L9.06873 14.3H7.75756ZM10.1109 11.35H12.3467L11.254 8.3H11.2036L10.1109 11.35ZM2.84908 12.45L1.97498 11.5833L5.11841 8.48333C4.72618 8.05 4.38439 7.60267 4.09302 7.14133C3.80165 6.68044 3.54389 6.19444 3.31976 5.68333H4.61412C4.80463 6.06111 5.00635 6.39711 5.21927 6.69133C5.43219 6.986 5.68434 7.29444 5.97571 7.61667C6.43519 7.12778 6.81621 6.62511 7.11879 6.10867C7.42137 5.59178 7.67352 5.03889 7.87523 4.45H1V3.23333H5.33694V2H6.58087V3.23333H10.9178V4.45H9.11916C8.89503 5.18333 8.59805 5.89155 8.22824 6.57467C7.85842 7.25822 7.39895 7.90555 6.84983 8.51667L8.3459 10.0167L7.87523 11.2833L5.95891 9.38333L2.84908 12.45Z" fill=#4C576C /></svg></a><ul class=dropdown__menu><li><a href=/docs/dev/admin-manual/config/be-config rel="noopener noreferrer" class=dropdown__link lang=en-US>English</a><li><a href=/zh-CN/docs/dev/admin-manual/config/be-config rel="noopener noreferrer" class="dropdown__link dropdown__link--active" lang=zh-Hans-CN>中文</a></ul></div><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a aria-current=page class="navbar__link active" aria-haspopup=true aria-expanded=false role=button href=/zh-CN/docs/dev/admin-manual/config/be-config><span class=text-sm>Versions: <!-- -->dev</span></a><ul class=dropdown__menu><li><a class=dropdown__link href=/zh-CN/docs/3.0/admin-manual/config/be-config>3.0</a><li><a class=dropdown__link href=/zh-CN/docs/admin-manual/config/be-config>2.1</a><li><a class=dropdown__link href=/zh-CN/docs/2.0/admin-manual/config/be-config>2.0</a><li><a aria-current=page class="dropdown__link dropdown__link--active" href=/zh-CN/docs/dev/admin-manual/config/be-config>dev</a><li><a class=dropdown__link href=/zh-CN/archive-docs>归档文档</a></ul></div><button aria-label=切换导航栏 aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class="header-right-button-primary navbar-download-desktop" href=/zh-CN/download>Download</a></div></div><div class=navbar__bottom><div class=docs-nav-version-locale><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a href=# aria-haspopup=true aria-expanded=false role=button class=navbar__link type=localeDropdown><svg class=icon-language width=16 height=16 viewBox="0 0 16 16" fill=none><path d="M7.75756 14.3L10.5816 6.91667H11.8759L14.7 14.3H13.4057L12.7501 12.4167H9.74113L9.06873 14.3H7.75756ZM10.1109 11.35H12.3467L11.254 8.3H11.2036L10.1109 11.35ZM2.84908 12.45L1.97498 11.5833L5.11841 8.48333C4.72618 8.05 4.38439 7.60267 4.09302 7.14133C3.80165 6.68044 3.54389 6.19444 3.31976 5.68333H4.61412C4.80463 6.06111 5.00635 6.39711 5.21927 6.69133C5.43219 6.986 5.68434 7.29444 5.97571 7.61667C6.43519 7.12778 6.81621 6.62511 7.11879 6.10867C7.42137 5.59178 7.67352 5.03889 7.87523 4.45H1V3.23333H5.33694V2H6.58087V3.23333H10.9178V4.45H9.11916C8.89503 5.18333 8.59805 5.89155 8.22824 6.57467C7.85842 7.25822 7.39895 7.90555 6.84983 8.51667L8.3459 10.0167L7.87523 11.2833L5.95891 9.38333L2.84908 12.45Z" fill=#4C576C /></svg></a><ul class=dropdown__menu><li><a href=/docs/dev/admin-manual/config/be-config rel="noopener noreferrer" class=dropdown__link lang=en-US>English</a><li><a href=/zh-CN/docs/dev/admin-manual/config/be-config rel="noopener noreferrer" class="dropdown__link dropdown__link--active" lang=zh-Hans-CN>中文</a></ul></div><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a aria-current=page class="navbar__link active" aria-haspopup=true aria-expanded=false role=button type=docsVersionDropdown href=/zh-CN/docs/dev/admin-manual/config/be-config><span class=text-sm>Versions: <!-- -->dev</span></a><ul class=dropdown__menu><li><a class=dropdown__link href=/zh-CN/docs/3.0/admin-manual/config/be-config>3.0</a><li><a class=dropdown__link href=/zh-CN/docs/admin-manual/config/be-config>2.1</a><li><a class=dropdown__link href=/zh-CN/docs/2.0/admin-manual/config/be-config>2.0</a><li><a aria-current=page class="dropdown__link dropdown__link--active" href=/zh-CN/docs/dev/admin-manual/config/be-config>dev</a><li><a class=dropdown__link href=/zh-CN/archive-docs>归档文档</a></ul></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="main-wrapper mainWrapper_eExm"><div class=docsWrapper_hBAB><button aria-label=回到顶部 class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=sidebar_mhZE><nav aria-label=文档侧边栏 class="menu thin-scrollbar menu_Y1UP menuWithAnnouncementBar_fPny"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/gettingStarted/what-is-apache-doris>快速开始</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=2 tabindex=0 href=/zh-CN/docs/dev/gettingStarted/what-is-apache-doris>Apache Doris 简介</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=2 tabindex=0 href=/zh-CN/docs/dev/gettingStarted/quick-start>快速体验 Apache Doris</a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/install/preparation/env-checking>使用指南</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/install/preparation/env-checking>安装部署</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/db-connect/database-connect>数据库连接</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/table-design/overview>数据表设计</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/data-operate/import/load-manual>数据导入</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/data-operate/update/update-overview>数据更新与删除</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/data-operate/export/export-overview>数据导出</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/query-data/mysql-compatibility>数据查询</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/query-acceleration/performance-tuning-overview/tuning-overview>查询加速</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/lakehouse/lakehouse-overview>湖仓一体</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/observability/overview>可观测性</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/compute-storage-decoupled/overview>存算分离</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/auth/security-overview>安全合规</a></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/benchmark/ssb>性能测试</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=3 tabindex=0 href=/zh-CN/docs/dev/benchmark/ssb>Star Schema Benchmark</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=3 tabindex=0 href=/zh-CN/docs/dev/benchmark/tpch>TPC-H Benchmark</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=3 tabindex=0 href=/zh-CN/docs/dev/benchmark/tpcds>TPC-DS Benchmark</a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/zh-CN/docs/dev/admin-manual/cluster-management/upgrade>管理指南</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/cluster-management/upgrade>集群管理</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/workload-management/workload-management-summary>负载管理</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/data-admin/overview>容灾管理</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/log-management/fe-log>日志管理</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/maint-monitor/metrics>运维监控</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true tabindex=0 href=/zh-CN/docs/dev/admin-manual/config/config-dir>配置管理</a></div><ul style=display:block;overflow:visible;height:auto class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class=menu__link length=4 tabindex=0 href=/zh-CN/docs/dev/admin-manual/config/config-dir>配置文件目录</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class=menu__link length=4 tabindex=0 href=/zh-CN/docs/dev/admin-manual/config/fe-config>FE 配置项</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current=page length=4 tabindex=0 href=/zh-CN/docs/dev/admin-manual/config/be-config>BE 配置项</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class=menu__link length=4 tabindex=0 href=/zh-CN/docs/dev/admin-manual/config/user-property>用户配置项</a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/system-tables/overview>系统表</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/admin-manual/trouble-shooting/memory-management/overview>故障诊断处理</a></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/ecosystem/spark-doris-connector>生态扩展</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=8 tabindex=0 href=/zh-CN/docs/dev/ecosystem/spark-doris-connector>Spark Doris Connector</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=8 tabindex=0 href=/zh-CN/docs/dev/ecosystem/flink-doris-connector>Flink Doris Connector</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=8 tabindex=0 href=/zh-CN/docs/dev/ecosystem/doris-kafka-connector>Doris Kafka Connector</a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/ecosystem/doris-operator/doris-operator-overview>Doris Operator</a></div><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=8 tabindex=0 href=/zh-CN/docs/dev/ecosystem/doris-streamloader>Doris Streamloader</a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/ecosystem/bi/apache-superset>BI</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/ecosystem/bi/dbeaver>SQL Clients</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/ecosystem/cloudcanal>More</a></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/faq/install-faq>常见问题</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/install-faq>常见运维问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/data-faq>数据操作问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/sql-faq>常见查询问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/lakehouse-faq>常见数据湖问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/bi-faq>常见 BI 问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/correctness-faq>数据正确性问题</a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=7 tabindex=0 href=/zh-CN/docs/dev/faq/load-faq>常见导入问题</a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/data-type-overview>SQL 手册</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/data-type-overview>基础元素</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/sql-manual/sql-functions/scalar-functions/numeric-functions/abs>SQL 函数</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/sql-manual/sql-statements/data-query/SELECT>SQL 语句</a></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/zh-CN/docs/dev/releasenotes/all-release>版本发布</a></div><ul style=display:block;overflow:visible;height:auto class="menu__list menu__list_level_2 community_level_2"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link length=6 tabindex=0 href=/zh-CN/docs/dev/releasenotes/all-release>最新发布</a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/releasenotes/v3.0/release-3.0.5>v3.0</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/releasenotes/v2.1/release-2.1.10>v2.1</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/releasenotes/v2.0/release-2.0.15>v2.0</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/releasenotes/v1.2/release-1.2.8>v1.2</a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/zh-CN/docs/dev/releasenotes/v1.1/release-1.1.5>v1.1</a></div></ul></ul></nav></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=row><div class="col docItemCol_z5aJ"><div class="theme-doc-version-banner alert alert--warning margin-bottom--md" role=alert><div>此处为 Apache Doris <b>尚未发布</b>的版本文档，不建议作为使用参考。</div><div class=margin-top--md>使用参考请跳转至 <b><a href=/zh-CN/docs/admin-manual/config/be-config>2.1</a></b> 或 <b><a href=/zh-CN/docs/3.0/gettingStarted/what-is-apache-doris>3.0</a></b> 正式版本文档进行查阅。</div></div><div class=docItemContainer_c0TR><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=页面路径><ul class=breadcrumbs itemscope itemtype=https://schema.org/BreadcrumbList><li class=breadcrumbs__item><a aria-label=主页面 class=breadcrumbs__link href=/zh-CN/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>管理指南</span><meta itemprop=position content=1><li class=breadcrumbs__item><span class=breadcrumbs__link>配置管理</span><meta itemprop=position content=2><li itemscope itemprop=itemListElement itemtype=https://schema.org/ListItem class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link itemprop=name>BE 配置项</span><meta itemprop=position content=3></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_bxCs"><button type=button class="clean-btn tocCollapsibleButton_TO0P">本页总览</button></div><div class="theme-doc-markdown markdown"><header><h1>BE 配置项</h1></header><p>该文档主要介绍 BE 的相关配置项。</p>
+<p>BE 的配置文件 <code>be.conf</code> 通常存放在 BE 部署路径的 <code>conf/</code> 目录下。而在 0.14 版本中会引入另一个配置文件 <code>be_custom.conf</code>。该配置文件用于记录用户在运行时动态配置并持久化的配置项。</p>
+<p>BE 进程启动后，会先读取 <code>be.conf</code> 中的配置项，之后再读取 <code>be_custom.conf</code> 中的配置项。<code>be_custom.conf</code> 中的配置项会覆盖 <code>be.conf</code> 中相同的配置项。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=查看配置项>查看配置项<a href=#查看配置项 class=hash-link aria-label=查看配置项的直接链接 title=查看配置项的直接链接>​</a></h2>
+<p>有两种方式能够查看 BE 配置项：</p>
+<ol>
+<li>
+<p>通过 BE 前端页面查看</p>
+<p>在浏览器中打开 BE 前端页面：<code>http://be_host:be_webserver_port/varz</code></p>
+</li>
+<li>
+<p>通过命令行查看</p>
+<p>可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照<a href=/zh-CN/docs/dev/sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG>SHOW-CONFIG</a>：</p>
+<p><code>SHOW BACKEND CONFIG;</code></p>
+<p>结果中各列含义如下：</p>
+<ol>
+<li>BackendId: backend 节点 ID。</li>
+<li>Host: backend 节点 IP。</li>
+<li>Key: 配置项名称。</li>
+<li>Value: 配置项的值。</li>
+<li>Type: 配置项值类型，如整型、字符串。</li>
+<li>是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 <code>be.conf</code> 中配置并且重启 FE 后生效。</li>
+</ol>
+</li>
+</ol>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=设置配置项>设置配置项<a href=#设置配置项 class=hash-link aria-label=设置配置项的直接链接 title=设置配置项的直接链接>​</a></h2>
+<p>BE 的配置项有两种方式进行配置：</p>
+<ol>
+<li>静态配置</li>
+</ol>
+<p>在 <code>conf/be.conf</code> 文件中添加和设置配置项。<code>be.conf</code> 中的配置项会在 BE 进行启动时被读取。没有在 <code>be.conf</code> 中的配置项将使用默认值。</p>
+<ol start=2>
+<li>动态配置</li>
+</ol>
+<p>BE 启动后，可以通过以下命令动态设置配置项。</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">curl -X POST http://{be_ip}:{be_http_port}/api/update_config?{key}={value}</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>在 0.13 版本及之前，通过该方式修改的配置项将在 BE 进程重启后失效。在 0.14 及之后版本中，可以通过以下命令持久化修改后的配置。修改后的配置项存储在 <code>be_custom.conf</code> 文件中。</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">curl -X POST http://{be_ip}:{be_http_port}/api/update_config?{key}={value}\&persist=true</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=应用举例>应用举例<a href=#应用举例 class=hash-link aria-label=应用举例的直接链接 title=应用举例的直接链接>​</a></h2>
+<ol>
+<li>静态方式修改 <code>max_base_compaction_threads</code></li>
+</ol>
+<p>通过在 <code>be.conf</code> 文件中添加：</p>
+<p><code>max_base_compaction_threads=5</code></p>
+<p>之后重启 BE 进程以生效该配置。</p>
+<ol start=2>
+<li>动态方式修改 <code>streaming_load_max_mb</code></li>
+</ol>
+<p>BE 启动后，通过下面命令动态设置配置项 <code>streaming_load_max_mb</code>:</p>
+<p><code>curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=1024</code></p>
+<p>返回值如下，则说明设置成功。</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">{</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">    "status": "OK",</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">    "msg": ""</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">}</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>BE 重启后该配置将失效。如果想持久化修改结果，使用如下命令：</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">curl -X POST http://{be_ip}:{be_http_port}/api/update_config?streaming_load_max_mb=1024\&persist=true</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=配置项列表>配置项列表<a href=#配置项列表 class=hash-link aria-label=配置项列表的直接链接 title=配置项列表的直接链接>​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=服务>服务<a href=#服务 class=hash-link aria-label=服务的直接链接 title=服务的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=be_port><code>be_port</code><a href=#be_port class=hash-link aria-label=be_port的直接链接 title=be_port的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：BE 上 Thrift Server 的端口号，用于接收来自 FE 的请求</li>
+<li>默认值：9060</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=heartbeat_service_port><code>heartbeat_service_port</code><a href=#heartbeat_service_port class=hash-link aria-label=heartbeat_service_port的直接链接 title=heartbeat_service_port的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：BE 上心跳服务端口（Thrift），用于接收来自 FE 的心跳</li>
+<li>默认值：9050</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=webserver_port><code>webserver_port</code><a href=#webserver_port class=hash-link aria-label=webserver_port的直接链接 title=webserver_port的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：BE 上的 HTTP Server 的服务端口</li>
+<li>默认值：8040</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=brpc_port><code>brpc_port</code><a href=#brpc_port class=hash-link aria-label=brpc_port的直接链接 title=brpc_port的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：BE 上的 brpc 的端口，用于 BE 之间通讯</li>
+<li>默认值：8060</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=arrow_flight_sql_port><code>arrow_flight_sql_port</code><a href=#arrow_flight_sql_port class=hash-link aria-label=arrow_flight_sql_port的直接链接 title=arrow_flight_sql_port的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：FE 上的 Arrow Flight SQL Server 的端口，用于从 Arrow Flight Client 和 BE 之间通讯</li>
+<li>默认值：-1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_https><code>enable_https</code><a href=#enable_https class=hash-link aria-label=enable_https的直接链接 title=enable_https的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否支持 https. 如果是，需要在 be.conf 中配置<code>ssl_certificate_path</code>和<code>ssl_private_key_path</code></li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=priority_networks><code>priority_networks</code><a href=#priority_networks class=hash-link aria-label=priority_networks的直接链接 title=priority_networks的直接链接>​</a></h4>
+<ul>
+<li>描述：为那些有很多 ip 的服务器声明一个选择策略。请注意，最多应该有一个 ip 与此列表匹配。这是一个以分号分隔格式的列表，用 CIDR 表示法，例如 10.10.10.0/24，如果没有匹配这条规则的 ip，会随机选择一个。</li>
+<li>默认值：空</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_root_path><code>storage_root_path</code><a href=#storage_root_path class=hash-link aria-label=storage_root_path的直接链接 title=storage_root_path的直接链接>​</a></h4>
+<ul>
+<li>
+<p>类型：string</p>
+</li>
+<li>
+<p>描述：BE 数据存储的目录，多目录之间用英文状态的分号<code>;</code>分隔。可以通过路径区别存储目录的介质，HDD 或 SSD。可以添加容量限制在每个路径的末尾，通过英文状态逗号<code>,</code>隔开。如果用户不是 SSD 和 HDD 磁盘混合使用的情况，不需要按照如下示例一和示例二的配置方法配置，只需指定存储目录即可；也不需要修改 FE 的默认存储介质配置</p>
+<p>示例 1 如下：</p>
+<p><strong>注意：如果是 SSD 磁盘要在目录后面加上<code>.SSD</code>,HDD 磁盘在目录后面加<code>.HDD</code></strong></p>
+<p><code>storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD;/home/disk2/doris</code></p>
+<p><strong>说明</strong></p>
+<ul>
+<li>/home/disk1/doris.HDD，表示存储介质是HDD;</li>
+<li>/home/disk2/doris.SSD，表示存储介质是SSD；</li>
+<li>/home/disk2/doris，存储介质默认为HDD</li>
+</ul>
+<p>示例 2 如下：</p>
+<p><strong>注意：不论 HHD 磁盘目录还是 SSD 磁盘目录，都无需添加后缀，storage_root_path 参数里指定 medium 即可</strong></p>
+<p><code>storage_root_path=/home/disk1/doris,medium:hdd;/home/disk2/doris,medium:ssd</code></p>
+<p><strong>说明</strong></p>
+<ul>
+<li>/home/disk1/doris,medium:hdd，表示存储介质是HHD;</li>
+<li>/home/disk2/doris,medium:ssd，表示存储介质是SSD;</li>
+</ul>
+</li>
+<li>
+<p>默认值：${DORIS_HOME}/storage</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=heartbeat_service_thread_count><code>heartbeat_service_thread_count</code><a href=#heartbeat_service_thread_count class=hash-link aria-label=heartbeat_service_thread_count的直接链接 title=heartbeat_service_thread_count的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：执行 BE 上心跳服务的线程数，默认为 1，不建议修改</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=ignore_broken_disk><code>ignore_broken_disk</code><a href=#ignore_broken_disk class=hash-link aria-label=ignore_broken_disk的直接链接 title=ignore_broken_disk的直接链接>​</a></h4>
+<ul>
+<li>
+<p>类型：bool</p>
+</li>
+<li>
+<p>描述：当 BE 启动时，会检查<code>storage_root_path</code> 配置下的所有路径。</p>
+<ul>
+<li><code>ignore_broken_disk=true</code></li>
+</ul>
+<p>如果路径不存在或路径下无法进行读写文件 (坏盘)，将忽略此路径，如果有其他可用路径则不中断启动。</p>
+<ul>
+<li><code>ignore_broken_disk=false</code></li>
+</ul>
+<p>如果路径不存在或路径下无法进行读写文件 (坏盘)，将中断启动失败退出。</p>
+</li>
+<li>
+<p>默认值：false</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=mem_limit><code>mem_limit</code><a href=#mem_limit class=hash-link aria-label=mem_limit的直接链接 title=mem_limit的直接链接>​</a></h4>
+<ul>
+<li>类型：string</li>
+<li>描述：限制 BE 进程使用服务器最大内存百分比。用于防止 BE 内存挤占太多的机器内存，该参数必须大于 0，当百分大于 100% 之后，该值会默认为 100%。</li>
+<li>默认值：90%</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=cluster_id><code>cluster_id</code><a href=#cluster_id class=hash-link aria-label=cluster_id的直接链接 title=cluster_id的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：配置 BE 的所属于的集群 id。
+<ul>
+<li>该值通常由 FE 通过心跳向 BE 下发，不需要额外进行配置。当确认某 BE 属于某一个确定的 Doris 集群时，可以进行配置，同时需要修改数据目录下的 cluster_id 文件，使二者相同。</li>
+</ul>
+</li>
+<li>默认值：-1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=custom_config_dir><code>custom_config_dir</code><a href=#custom_config_dir class=hash-link aria-label=custom_config_dir的直接链接 title=custom_config_dir的直接链接>​</a></h4>
+<ul>
+<li>描述：配置 <code>be_custom.conf</code> 文件的位置。默认为 <code>conf/</code> 目录下。
+<ul>
+<li>在某些部署环境下，<code>conf/</code>目录可能因为系统的版本升级被覆盖掉。这会导致用户在运行是持久化修改的配置项也被覆盖。这时，我们可以将 <code>be_custom.conf</code> 存储在另一个指定的目录中，以防止配置文件被覆盖。</li>
+</ul>
+</li>
+<li>默认值：空</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=trash_file_expire_time_sec><code>trash_file_expire_time_sec</code><a href=#trash_file_expire_time_sec class=hash-link aria-label=trash_file_expire_time_sec的直接链接 title=trash_file_expire_time_sec的直接链接>​</a></h4>
+<ul>
+<li>描述：回收站清理的间隔，24 个小时，当磁盘空间不足时，trash 下的文件保存期可不遵守这个参数</li>
+<li>默认值：86400</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=es_http_timeout_ms><code>es_http_timeout_ms</code><a href=#es_http_timeout_ms class=hash-link aria-label=es_http_timeout_ms的直接链接 title=es_http_timeout_ms的直接链接>​</a></h4>
+<ul>
+<li>描述：通过 http 连接 ES 的超时时间，默认是 5 秒</li>
+<li>默认值：5000 (ms)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=es_scroll_keepalive><code>es_scroll_keepalive</code><a href=#es_scroll_keepalive class=hash-link aria-label=es_scroll_keepalive的直接链接 title=es_scroll_keepalive的直接链接>​</a></h4>
+<ul>
+<li>描述：es scroll keep-alive 保持时间，默认 5 分钟</li>
+<li>默认值：5 (m)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=external_table_connect_timeout_sec><code>external_table_connect_timeout_sec</code><a href=#external_table_connect_timeout_sec class=hash-link aria-label=external_table_connect_timeout_sec的直接链接 title=external_table_connect_timeout_sec的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：和外部表建立连接的超时时间。</li>
+<li>默认值：5 秒</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=pipeline_status_report_interval><code>pipeline_status_report_interval</code><a href=#pipeline_status_report_interval class=hash-link aria-label=pipeline_status_report_interval的直接链接 title=pipeline_status_report_interval的直接链接>​</a></h4>
+<ul>
+<li>描述：配置文件报告之间的间隔；单位：秒</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=brpc_max_body_size><code>brpc_max_body_size</code><a href=#brpc_max_body_size class=hash-link aria-label=brpc_max_body_size的直接链接 title=brpc_max_body_size的直接链接>​</a></h4>
+<ul>
+<li>
+<p>描述：这个配置主要用来修改 brpc 的参数 <code>max_body_size</code>。</p>
+<ul>
+<li>有时查询失败，在 BE 日志中会出现 <code>body_size is too large</code> 的错误信息。这可能发生在 SQL 模式为 multi distinct + 无 group by + 超过 1T 数据量的情况下。这个错误表示 brpc 的包大小超过了配置值。此时可以通过调大该配置避免这个错误。</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=brpc_socket_max_unwritten_bytes><code>brpc_socket_max_unwritten_bytes</code><a href=#brpc_socket_max_unwritten_bytes class=hash-link aria-label=brpc_socket_max_unwritten_bytes的直接链接 title=brpc_socket_max_unwritten_bytes的直接链接>​</a></h4>
+<ul>
+<li>
+<p>描述：这个配置主要用来修改 brpc  的参数 <code>socket_max_unwritten_bytes</code>。</p>
+<ul>
+<li>有时查询失败，BE 日志中会出现 <code>The server is overcrowded</code> 的错误信息，表示连接上有过多的未发送数据。当查询需要发送较大的 bitmap 字段时，可能会遇到该问题，此时可能通过调大该配置避免该错误。</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=transfer_large_data_by_brpc><code>transfer_large_data_by_brpc</code><a href=#transfer_large_data_by_brpc class=hash-link aria-label=transfer_large_data_by_brpc的直接链接 title=transfer_large_data_by_brpc的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：该配置用来控制是否在 Tuple/Block data 长度大于 1.8G 时，将 protoBuf request 序列化后和 Tuple/Block data 一起嵌入到 controller attachment 后通过 http brpc 发送。为了避免 protoBuf request 的长度超过 2G 时的错误：Bad request, error_text=[E1003]Fail to compress request。在过去的版本中，曾将 Tuple/Block data 放入 attachment 后通过默认的 baidu_std brpc 发送，但 attachment 超过 2G 时将被截断，通过 http brpc 发送不存在 2G 的限制。</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=brpc_num_threads><code>brpc_num_threads</code><a href=#brpc_num_threads class=hash-link aria-label=brpc_num_threads的直接链接 title=brpc_num_threads的直接链接>​</a></h4>
+<ul>
+<li>
+<p>描述：该配置主要用来修改 brpc 中 bthreads 的数量。该配置的默认值被设置为 -1, 这意味着 bthreads 的数量将被设置为机器的 cpu 核数。</p>
+<ul>
+<li>用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考 <code>https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md</code>。</li>
+</ul>
+</li>
+<li>
+<p>默认值：-1</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=thrift_rpc_timeout_ms><code>thrift_rpc_timeout_ms</code><a href=#thrift_rpc_timeout_ms class=hash-link aria-label=thrift_rpc_timeout_ms的直接链接 title=thrift_rpc_timeout_ms的直接链接>​</a></h4>
+<ul>
+<li>描述：Thrift 默认超时时间</li>
+<li>默认值：60000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=thrift_client_retry_interval_ms><code>thrift_client_retry_interval_ms</code><a href=#thrift_client_retry_interval_ms class=hash-link aria-label=thrift_client_retry_interval_ms的直接链接 title=thrift_client_retry_interval_ms的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：用来为 be 的 thrift 客户端设置重试间隔，避免 FE 的 Thrift Server 发生雪崩问题，单位为 ms。</li>
+<li>默认值：1000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=thrift_connect_timeout_seconds><code>thrift_connect_timeout_seconds</code><a href=#thrift_connect_timeout_seconds class=hash-link aria-label=thrift_connect_timeout_seconds的直接链接 title=thrift_connect_timeout_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：默认 Thrift 客户端连接超时时间</li>
+<li>默认值：3 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=thrift_server_type_of_fe><code>thrift_server_type_of_fe</code><a href=#thrift_server_type_of_fe class=hash-link aria-label=thrift_server_type_of_fe的直接链接 title=thrift_server_type_of_fe的直接链接>​</a></h4>
+<ul>
+<li>
+<p>类型：string</p>
+</li>
+<li>
+<p>描述：该配置表示 FE 的 Thrift 服务使用的服务模型，类型为 string, 大小写不敏感，该参数需要和 FE 的 thrift_server_type 参数的设置保持一致。目前该参数的取值有两个，<code>THREADED</code>和<code>THREAD_POOL</code>。</p>
+<ul>
+<li>
+<p>若该参数为<code>THREADED</code>, 该模型为非阻塞式 I/O 模型，</p>
+</li>
+<li>
+<p>若该参数为<code>THREAD_POOL</code>, 该模型为阻塞式 I/O 模型。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=thrift_max_message_size><code>thrift_max_message_size</code><a href=#thrift_max_message_size class=hash-link aria-label=thrift_max_message_size的直接链接 title=thrift_max_message_size的直接链接>​</a></h4>
+<p>默认值：100MB</p>
+<p>Thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 Thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=txn_commit_rpc_timeout_ms><code>txn_commit_rpc_timeout_ms</code><a href=#txn_commit_rpc_timeout_ms class=hash-link aria-label=txn_commit_rpc_timeout_ms的直接链接 title=txn_commit_rpc_timeout_ms的直接链接>​</a></h4>
+<ul>
+<li>描述：txn 提交 rpc 超时</li>
+<li>默认值：60000 (ms)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=txn_map_shard_size><code>txn_map_shard_size</code><a href=#txn_map_shard_size class=hash-link aria-label=txn_map_shard_size的直接链接 title=txn_map_shard_size的直接链接>​</a></h4>
+<ul>
+<li>描述：txn_map_lock 分片大小，取值为 2^n，n=0,1,2,3,4。这是一项增强功能，可提高管理 txn 的性能</li>
+<li>默认值：128</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=txn_shard_size><code>txn_shard_size</code><a href=#txn_shard_size class=hash-link aria-label=txn_shard_size的直接链接 title=txn_shard_size的直接链接>​</a></h4>
+<ul>
+<li>描述：txn_lock 分片大小，取值为 2^n，n=0,1,2,3,4，这是一项增强功能，可提高提交和发布 txn 的性能</li>
+<li>默认值：1024</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=unused_rowset_monitor_interval><code>unused_rowset_monitor_interval</code><a href=#unused_rowset_monitor_interval class=hash-link aria-label=unused_rowset_monitor_interval的直接链接 title=unused_rowset_monitor_interval的直接链接>​</a></h4>
+<ul>
+<li>描述：清理过期 Rowset 的时间间隔</li>
+<li>默认值：30 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_client_cache_size_per_host><code>max_client_cache_size_per_host</code><a href=#max_client_cache_size_per_host class=hash-link aria-label=max_client_cache_size_per_host的直接链接 title=max_client_cache_size_per_host的直接链接>​</a></h4>
+<ul>
+<li>描述：每个主机的最大客户端缓存数，BE 中有多种客户端缓存，但目前我们使用相同的缓存大小配置。如有必要，使用不同的配置来设置不同的客户端缓存。</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=string_type_length_soft_limit_bytes><code>string_type_length_soft_limit_bytes</code><a href=#string_type_length_soft_limit_bytes class=hash-link aria-label=string_type_length_soft_limit_bytes的直接链接 title=string_type_length_soft_limit_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：String 类型最大长度的软限，单位是字节</li>
+<li>默认值：1048576</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=big_column_size_buffer><code>big_column_size_buffer</code><a href=#big_column_size_buffer class=hash-link aria-label=big_column_size_buffer的直接链接 title=big_column_size_buffer的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：当使用 odbc 外表时，如果 odbc 源表的某一列类型为 HLL, CHAR 或者 VARCHAR，并且列值长度超过该值，则查询报错'column value length longer than buffer length'. 可增大该值</li>
+<li>默认值：65535</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=small_column_size_buffer><code>small_column_size_buffer</code><a href=#small_column_size_buffer class=hash-link aria-label=small_column_size_buffer的直接链接 title=small_column_size_buffer的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：当使用 odbc 外表时，如果 odbc 源表的某一列类型不是 HLL, CHAR 或者 VARCHAR，并且列值长度超过该值，则查询报错'column value length longer than buffer length'. 可增大该值</li>
+<li>默认值：100</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=查询>查询<a href=#查询 class=hash-link aria-label=查询的直接链接 title=查询的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=fragment_mgr_asynic_work_pool_queue_size><code>fragment_mgr_asynic_work_pool_queue_size</code><a href=#fragment_mgr_asynic_work_pool_queue_size class=hash-link aria-label=fragment_mgr_asynic_work_pool_queue_size的直接链接 title=fragment_mgr_asynic_work_pool_queue_size的直接链接>​</a></h4>
+<ul>
+<li>描述：单节点上异步任务的队列上限</li>
+<li>默认值：4096</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=fragment_mgr_asynic_work_pool_thread_num_min><code>fragment_mgr_asynic_work_pool_thread_num_min</code><a href=#fragment_mgr_asynic_work_pool_thread_num_min class=hash-link aria-label=fragment_mgr_asynic_work_pool_thread_num_min的直接链接 title=fragment_mgr_asynic_work_pool_thread_num_min的直接链接>​</a></h4>
+<ul>
+<li>描述：处理异步任务的线程数，默认最小启动 16 个线程。</li>
+<li>默认值：16</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=fragment_mgr_asynic_work_pool_thread_num_max><code>fragment_mgr_asynic_work_pool_thread_num_max</code><a href=#fragment_mgr_asynic_work_pool_thread_num_max class=hash-link aria-label=fragment_mgr_asynic_work_pool_thread_num_max的直接链接 title=fragment_mgr_asynic_work_pool_thread_num_max的直接链接>​</a></h4>
+<ul>
+<li>描述：根据后续任务动态创建线程，最大创建 512 个线程。</li>
+<li>默认值：512</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_scanner_row_num><code>doris_scanner_row_num</code><a href=#doris_scanner_row_num class=hash-link aria-label=doris_scanner_row_num的直接链接 title=doris_scanner_row_num的直接链接>​</a></h4>
+<ul>
+<li>描述：每个扫描线程单次执行最多返回的数据行数</li>
+<li>默认值：16384</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_scanner_row_bytes><code>doris_scanner_row_bytes</code><a href=#doris_scanner_row_bytes class=hash-link aria-label=doris_scanner_row_bytes的直接链接 title=doris_scanner_row_bytes的直接链接>​</a></h4>
+<ul>
+<li>描述：每个扫描线程单次执行最多返回的数据字节
+<ul>
+<li>说明：如果表的列数太多，遇到 <code>select *</code> 卡主，可以调整这个配置</li>
+</ul>
+</li>
+<li>默认值：10485760</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_scanner_thread_pool_queue_size><code>doris_scanner_thread_pool_queue_size</code><a href=#doris_scanner_thread_pool_queue_size class=hash-link aria-label=doris_scanner_thread_pool_queue_size的直接链接 title=doris_scanner_thread_pool_queue_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Scanner 线程池的队列长度。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。</li>
+<li>默认值：102400</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_scanner_thread_pool_thread_num><code>doris_scanner_thread_pool_thread_num</code><a href=#doris_scanner_thread_pool_thread_num class=hash-link aria-label=doris_scanner_thread_pool_thread_num的直接链接 title=doris_scanner_thread_pool_thread_num的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。</li>
+<li>默认值：48</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_max_remote_scanner_thread_pool_thread_num><code>doris_max_remote_scanner_thread_pool_thread_num</code><a href=#doris_max_remote_scanner_thread_pool_thread_num class=hash-link aria-label=doris_max_remote_scanner_thread_pool_thread_num的直接链接 title=doris_max_remote_scanner_thread_pool_thread_num的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Remote scanner thread pool 的最大线程数。Remote scanner thread pool 用于除内表外的所有 scan 任务的执行。</li>
+<li>默认值：512</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=exchg_node_buffer_size_bytes><code>exchg_node_buffer_size_bytes</code><a href=#exchg_node_buffer_size_bytes class=hash-link aria-label=exchg_node_buffer_size_bytes的直接链接 title=exchg_node_buffer_size_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：ExchangeNode 节点 Buffer 队列的大小，单位为 byte。来自 Sender 端发送的数据量大于 ExchangeNode 的 Buffer 大小之后，后续发送的数据将阻塞直到 Buffer 腾出可写入的空间。</li>
+<li>默认值：10485760</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=doris_scan_range_max_mb><code>doris_scan_range_max_mb</code><a href=#doris_scan_range_max_mb class=hash-link aria-label=doris_scan_range_max_mb的直接链接 title=doris_scan_range_max_mb的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：每个 OlapScanner 读取的最大数据量</li>
+<li>默认值：1024</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=compaction>compaction<a href=#compaction class=hash-link aria-label=compaction的直接链接 title=compaction的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=disable_auto_compaction><code>disable_auto_compaction</code><a href=#disable_auto_compaction class=hash-link aria-label=disable_auto_compaction的直接链接 title=disable_auto_compaction的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：关闭自动执行 compaction 任务
+<ul>
+<li>一般需要为关闭状态，当调试或测试环境中想要手动操作 compaction 任务时，可以对该配置进行开启</li>
+</ul>
+</li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_vertical_compaction><code>enable_vertical_compaction</code><a href=#enable_vertical_compaction class=hash-link aria-label=enable_vertical_compaction的直接链接 title=enable_vertical_compaction的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否开启列式 compaction</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=vertical_compaction_num_columns_per_group><code>vertical_compaction_num_columns_per_group</code><a href=#vertical_compaction_num_columns_per_group class=hash-link aria-label=vertical_compaction_num_columns_per_group的直接链接 title=vertical_compaction_num_columns_per_group的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：在列式 compaction 中，组成一个合并组的列个数</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=vertical_compaction_max_row_source_memory_mb><code>vertical_compaction_max_row_source_memory_mb</code><a href=#vertical_compaction_max_row_source_memory_mb class=hash-link aria-label=vertical_compaction_max_row_source_memory_mb的直接链接 title=vertical_compaction_max_row_source_memory_mb的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：在列式 compaction 中，row_source_buffer 能使用的最大内存，单位是 MB。</li>
+<li>默认值：200</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=vertical_compaction_max_segment_size><code>vertical_compaction_max_segment_size</code><a href=#vertical_compaction_max_segment_size class=hash-link aria-label=vertical_compaction_max_segment_size的直接链接 title=vertical_compaction_max_segment_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：在列式 compaction 中，输出的 segment 文件最大值，单位是 m 字节。</li>
+<li>默认值：268435456</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_ordered_data_compaction><code>enable_ordered_data_compaction</code><a href=#enable_ordered_data_compaction class=hash-link aria-label=enable_ordered_data_compaction的直接链接 title=enable_ordered_data_compaction的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否开启有序数据的 compaction</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=ordered_data_compaction_min_segment_size><code>ordered_data_compaction_min_segment_size</code><a href=#ordered_data_compaction_min_segment_size class=hash-link aria-label=ordered_data_compaction_min_segment_size的直接链接 title=ordered_data_compaction_min_segment_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：在有序数据 compaction 中，满足要求的最小 segment 大小，单位是 m 字节。</li>
+<li>默认值：10485760</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_base_compaction_threads><code>max_base_compaction_threads</code><a href=#max_base_compaction_threads class=hash-link aria-label=max_base_compaction_threads的直接链接 title=max_base_compaction_threads的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Base Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。</li>
+<li>默认值：4</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=generate_compaction_tasks_interval_ms><code>generate_compaction_tasks_interval_ms</code><a href=#generate_compaction_tasks_interval_ms class=hash-link aria-label=generate_compaction_tasks_interval_ms的直接链接 title=generate_compaction_tasks_interval_ms的直接链接>​</a></h4>
+<ul>
+<li>描述：生成 compaction 作业的最小间隔时间</li>
+<li>默认值：10（ms）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=base_compaction_min_rowset_num><code>base_compaction_min_rowset_num</code><a href=#base_compaction_min_rowset_num class=hash-link aria-label=base_compaction_min_rowset_num的直接链接 title=base_compaction_min_rowset_num的直接链接>​</a></h4>
+<ul>
+<li>描述：BaseCompaction 触发条件之一：Cumulative 文件数目要达到的限制，达到这个限制之后会触发 BaseCompaction</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=base_compaction_min_data_ratio><code>base_compaction_min_data_ratio</code><a href=#base_compaction_min_data_ratio class=hash-link aria-label=base_compaction_min_data_ratio的直接链接 title=base_compaction_min_data_ratio的直接链接>​</a></h4>
+<ul>
+<li>描述：BaseCompaction 触发条件之一：Cumulative 文件大小达到 Base 文件的比例。</li>
+<li>默认值：0.3（30%）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=total_permits_for_compaction_score><code>total_permits_for_compaction_score</code><a href=#total_permits_for_compaction_score class=hash-link aria-label=total_permits_for_compaction_score的直接链接 title=total_permits_for_compaction_score的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：被所有的 compaction 任务所能持有的 "permits" 上限，用来限制 compaction 占用的内存。</li>
+<li>默认值：10000</li>
+<li>可动态修改：是</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_promotion_size_mbytes><code>compaction_promotion_size_mbytes</code><a href=#compaction_promotion_size_mbytes class=hash-link aria-label=compaction_promotion_size_mbytes的直接链接 title=compaction_promotion_size_mbytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：cumulative compaction 的输出 rowset 总磁盘大小超过了此配置大小，该 rowset 将用于 base compaction。单位是 m 字节。
+<ul>
+<li>一般情况下，配置在 2G 以内，为了防止 cumulative compaction 时间过长，导致版本积压。</li>
+</ul>
+</li>
+<li>默认值：1024</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_promotion_ratio><code>compaction_promotion_ratio</code><a href=#compaction_promotion_ratio class=hash-link aria-label=compaction_promotion_ratio的直接链接 title=compaction_promotion_ratio的直接链接>​</a></h4>
+<ul>
+<li>类型：double</li>
+<li>描述：cumulative compaction 的输出 rowset 总磁盘大小超过 base 版本 rowset 的配置比例时，该 rowset 将用于 base compaction。
+<ul>
+<li>一般情况下，建议配置不要高于 0.1，低于 0.02。</li>
+</ul>
+</li>
+<li>默认值：0.05</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_promotion_min_size_mbytes><code>compaction_promotion_min_size_mbytes</code><a href=#compaction_promotion_min_size_mbytes class=hash-link aria-label=compaction_promotion_min_size_mbytes的直接链接 title=compaction_promotion_min_size_mbytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：Cumulative compaction 的输出 rowset 总磁盘大小低于此配置大小，该 rowset 将不进行 base compaction，仍然处于 cumulative compaction 流程中。单位是 m 字节。
+<ul>
+<li>一般情况下，配置在 512m 以内，配置过大会导致 base 版本早期的大小过小，一直不进行 base compaction。</li>
+</ul>
+</li>
+<li>默认值：128</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_min_size_mbytes><code>compaction_min_size_mbytes</code><a href=#compaction_min_size_mbytes class=hash-link aria-label=compaction_min_size_mbytes的直接链接 title=compaction_min_size_mbytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：cumulative compaction 进行合并时，选出的要进行合并的 rowset 的总磁盘大小大于此配置时，才按级别策略划分合并。小于这个配置时，直接执行合并。单位是 m 字节。
+<ul>
+<li>一般情况下，配置在 128m 以内，配置过大会导致 cumulative compaction 写放大较多。</li>
+</ul>
+</li>
+<li>默认值：64</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=default_rowset_type><code>default_rowset_type</code><a href=#default_rowset_type class=hash-link aria-label=default_rowset_type的直接链接 title=default_rowset_type的直接链接>​</a></h4>
+<ul>
+<li>类型：string</li>
+<li>描述：标识 BE 默认选择的存储格式，可配置的参数为："<strong>ALPHA</strong>", "<strong>BETA</strong>"。主要起以下两个作用
+<ul>
+<li>当建表的 storage_format 设置为 Default 时，通过该配置来选取 BE 的存储格式。</li>
+<li>进行 Compaction 时选择 BE 的存储格式</li>
+</ul>
+</li>
+<li>默认值：BETA</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=cumulative_compaction_min_deltas><code>cumulative_compaction_min_deltas</code><a href=#cumulative_compaction_min_deltas class=hash-link aria-label=cumulative_compaction_min_deltas的直接链接 title=cumulative_compaction_min_deltas的直接链接>​</a></h4>
+<ul>
+<li>描述：cumulative compaction 策略：最小增量文件的数量</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=cumulative_compaction_max_deltas><code>cumulative_compaction_max_deltas</code><a href=#cumulative_compaction_max_deltas class=hash-link aria-label=cumulative_compaction_max_deltas的直接链接 title=cumulative_compaction_max_deltas的直接链接>​</a></h4>
+<ul>
+<li>描述：cumulative compaction 策略：最大增量文件的数量</li>
+<li>默认值：1000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=base_compaction_trace_threshold><code>base_compaction_trace_threshold</code><a href=#base_compaction_trace_threshold class=hash-link aria-label=base_compaction_trace_threshold的直接链接 title=base_compaction_trace_threshold的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：打印 base compaction 的 trace 信息的阈值，单位秒</li>
+<li>默认值：10</li>
+</ul>
+<p>base compaction 是一个耗时较长的后台操作，为了跟踪其运行信息，可以调整这个阈值参数来控制 trace 日志的打印。打印信息如下：</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">W0610 11:26:33.804431 56452 storage_engine.cpp:552] execute base compaction cost 0.00319222</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">BaseCompaction:546859:</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">  - filtered_rows: 0</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - input_row_num: 10</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - input_rowsets_count: 10</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - input_rowsets_data_size: 2.17 KB</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - input_segments_num: 10</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - merge_rowsets_latency: 100000.510ms</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - merged_rows: 0</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - output_row_num: 10</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - output_rowset_data_size: 224.00 B</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   - output_segments_num: 1</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:23:03.727535 (+     0us) storage_engine.cpp:554] start to perform base compaction</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:23:03.728961 (+  1426us) storage_engine.cpp:560] found best tablet 546859</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:23:03.728963 (+     2us) base_compaction.cpp:40] got base compaction lock</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:23:03.729029 (+    66us) base_compaction.cpp:44] rowsets picked</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:24:51.784439 (+108055410us) compaction.cpp:46] got concurrency lock and start to do compaction</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:24:51.784818 (+   379us) compaction.cpp:74] prepare finished</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.359265 (+101574447us) compaction.cpp:87] merge rowsets finished</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.484481 (+125216us) compaction.cpp:102] output rowset built</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.484482 (+     1us) compaction.cpp:106] check correctness finished</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.513197 (+ 28715us) compaction.cpp:110] modify rowsets finished</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.513300 (+   103us) base_compaction.cpp:49] compaction finished</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">0610 11:26:33.513441 (+   141us) base_compaction.cpp:56] unused rowsets have been moved to GC queue</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=cumulative_compaction_trace_threshold><code>cumulative_compaction_trace_threshold</code><a href=#cumulative_compaction_trace_threshold class=hash-link aria-label=cumulative_compaction_trace_threshold的直接链接 title=cumulative_compaction_trace_threshold的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：打印 cumulative compaction 的 trace 信息的阈值，单位秒
+<ul>
+<li>与 base_compaction_trace_threshold 类似。</li>
+</ul>
+</li>
+<li>默认值：2</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_task_num_per_disk><code>compaction_task_num_per_disk</code><a href=#compaction_task_num_per_disk class=hash-link aria-label=compaction_task_num_per_disk的直接链接 title=compaction_task_num_per_disk的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：每个磁盘（HDD）可以并发执行的 compaction 任务数量。</li>
+<li>默认值：4</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=compaction_task_num_per_fast_disk><code>compaction_task_num_per_fast_disk</code><a href=#compaction_task_num_per_fast_disk class=hash-link aria-label=compaction_task_num_per_fast_disk的直接链接 title=compaction_task_num_per_fast_disk的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：每个高速磁盘（SSD）可以并发执行的 compaction 任务数量。</li>
+<li>默认值：8</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=cumulative_compaction_rounds_for_each_base_compaction_round><code>cumulative_compaction_rounds_for_each_base_compaction_round</code><a href=#cumulative_compaction_rounds_for_each_base_compaction_round class=hash-link aria-label=cumulative_compaction_rounds_for_each_base_compaction_round的直接链接 title=cumulative_compaction_rounds_for_each_base_compaction_round的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Compaction 任务的生产者每次连续生产多少轮 cumulative compaction 任务后生产一轮 base compaction。</li>
+<li>默认值：9</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_cumu_compaction_threads><code>max_cumu_compaction_threads</code><a href=#max_cumu_compaction_threads class=hash-link aria-label=max_cumu_compaction_threads的直接链接 title=max_cumu_compaction_threads的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Cumulative Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。</li>
+<li>默认值：-1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_segcompaction><code>enable_segcompaction</code><a href=#enable_segcompaction class=hash-link aria-label=enable_segcompaction的直接链接 title=enable_segcompaction的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：在导入时进行 segment compaction 来减少 segment 数量，以避免出现写入时的 -238 错误</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_batch_size><code>segcompaction_batch_size</code><a href=#segcompaction_batch_size class=hash-link aria-label=segcompaction_batch_size的直接链接 title=segcompaction_batch_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：当 segment 数量超过此阈值时触发 segment compaction</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_candidate_max_rows><code>segcompaction_candidate_max_rows</code><a href=#segcompaction_candidate_max_rows class=hash-link aria-label=segcompaction_candidate_max_rows的直接链接 title=segcompaction_candidate_max_rows的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过</li>
+<li>默认值：1048576</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_batch_size-1><code>segcompaction_batch_size</code><a href=#segcompaction_batch_size-1 class=hash-link aria-label=segcompaction_batch_size-1的直接链接 title=segcompaction_batch_size-1的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：单个 segment compaction 任务中的最大原始 segment 数量。</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_candidate_max_rows-1><code>segcompaction_candidate_max_rows</code><a href=#segcompaction_candidate_max_rows-1 class=hash-link aria-label=segcompaction_candidate_max_rows-1的直接链接 title=segcompaction_candidate_max_rows-1的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：segment compaction 任务中允许的单个原始 segment 行数，过大的 segment 将被跳过。</li>
+<li>默认值：1048576</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_candidate_max_bytes><code>segcompaction_candidate_max_bytes</code><a href=#segcompaction_candidate_max_bytes class=hash-link aria-label=segcompaction_candidate_max_bytes的直接链接 title=segcompaction_candidate_max_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：segment compaction 任务中允许的单个原始 segment 大小（字节），过大的 segment 将被跳过。</li>
+<li>默认值：104857600</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_task_max_rows><code>segcompaction_task_max_rows</code><a href=#segcompaction_task_max_rows class=hash-link aria-label=segcompaction_task_max_rows的直接链接 title=segcompaction_task_max_rows的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：单个 segment compaction 任务中允许的原始 segment 总行数。</li>
+<li>默认值：1572864</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_task_max_bytes><code>segcompaction_task_max_bytes</code><a href=#segcompaction_task_max_bytes class=hash-link aria-label=segcompaction_task_max_bytes的直接链接 title=segcompaction_task_max_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：单个 segment compaction 任务中允许的原始 segment 总大小（字节）。</li>
+<li>默认值：157286400</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segcompaction_num_threads><code>segcompaction_num_threads</code><a href=#segcompaction_num_threads class=hash-link aria-label=segcompaction_num_threads的直接链接 title=segcompaction_num_threads的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：segment compaction 线程池大小。</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=disable_compaction_trace_log><code>disable_compaction_trace_log</code><a href=#disable_compaction_trace_log class=hash-link aria-label=disable_compaction_trace_log的直接链接 title=disable_compaction_trace_log的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：关闭 compaction 的 trace 日志
+<ul>
+<li>如果设置为 true，<code>cumulative_compaction_trace_threshold</code> 和 <code>base_compaction_trace_threshold</code> 将不起作用。并且 trace 日志将关闭。</li>
+</ul>
+</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=pick_rowset_to_compact_interval_sec><code>pick_rowset_to_compact_interval_sec</code><a href=#pick_rowset_to_compact_interval_sec class=hash-link aria-label=pick_rowset_to_compact_interval_sec的直接链接 title=pick_rowset_to_compact_interval_sec的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：选取 rowset 去合并的时间间隔，单位为秒</li>
+<li>默认值：86400</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_single_replica_compaction_threads><code>max_single_replica_compaction_threads</code><a href=#max_single_replica_compaction_threads class=hash-link aria-label=max_single_replica_compaction_threads的直接链接 title=max_single_replica_compaction_threads的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：Single Replica Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。</li>
+<li>默认值：-1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=update_replica_infos_interval_seconds><code>update_replica_infos_interval_seconds</code><a href=#update_replica_infos_interval_seconds class=hash-link aria-label=update_replica_infos_interval_seconds的直接链接 title=update_replica_infos_interval_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：更新 peer replica infos 的最小间隔时间</li>
+<li>默认值：60（s）</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=导入>导入<a href=#导入 class=hash-link aria-label=导入的直接链接 title=导入的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_stream_load_record><code>enable_stream_load_record</code><a href=#enable_stream_load_record class=hash-link aria-label=enable_stream_load_record的直接链接 title=enable_stream_load_record的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否开启 stream load 操作记录，默认是不启用</li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_data_reserve_hours><code>load_data_reserve_hours</code><a href=#load_data_reserve_hours class=hash-link aria-label=load_data_reserve_hours的直接链接 title=load_data_reserve_hours的直接链接>​</a></h4>
+<ul>
+<li>描述：用于 mini load。mini load 数据文件将在此时间后被删除</li>
+<li>默认值：4（h）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=push_worker_count_high_priority><code>push_worker_count_high_priority</code><a href=#push_worker_count_high_priority class=hash-link aria-label=push_worker_count_high_priority的直接链接 title=push_worker_count_high_priority的直接链接>​</a></h4>
+<ul>
+<li>描述：导入线程数，用于处理 HIGH 优先级任务</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=push_worker_count_normal_priority><code>push_worker_count_normal_priority</code><a href=#push_worker_count_normal_priority class=hash-link aria-label=push_worker_count_normal_priority的直接链接 title=push_worker_count_normal_priority的直接链接>​</a></h4>
+<ul>
+<li>描述：导入线程数，用于处理 NORMAL 优先级任务</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_single_replica_load><code>enable_single_replica_load</code><a href=#enable_single_replica_load class=hash-link aria-label=enable_single_replica_load的直接链接 title=enable_single_replica_load的直接链接>​</a></h4>
+<ul>
+<li>描述：是否启动单副本数据导入功能</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_error_log_reserve_hours><code>load_error_log_reserve_hours</code><a href=#load_error_log_reserve_hours class=hash-link aria-label=load_error_log_reserve_hours的直接链接 title=load_error_log_reserve_hours的直接链接>​</a></h4>
+<ul>
+<li>描述：load 错误日志将在此时间后删除</li>
+<li>默认值：48（h）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_error_log_limit_bytes><code>load_error_log_limit_bytes</code><a href=#load_error_log_limit_bytes class=hash-link aria-label=load_error_log_limit_bytes的直接链接 title=load_error_log_limit_bytes的直接链接>​</a></h4>
+<ul>
+<li>描述：load 错误日志大小超过此值将被截断</li>
+<li>默认值：209715200 (byte)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_process_max_memory_limit_percent><code>load_process_max_memory_limit_percent</code><a href=#load_process_max_memory_limit_percent class=hash-link aria-label=load_process_max_memory_limit_percent的直接链接 title=load_process_max_memory_limit_percent的直接链接>​</a></h4>
+<ul>
+<li>描述：单节点上所有的导入线程占据的内存上限比例
+<ul>
+<li>将这些默认值设置得很大，因为我们不想在用户升级 Doris 时影响负载性能。如有必要，用户应正确设置这些配置。</li>
+</ul>
+</li>
+<li>默认值：50（%）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_process_soft_mem_limit_percent><code>load_process_soft_mem_limit_percent</code><a href=#load_process_soft_mem_limit_percent class=hash-link aria-label=load_process_soft_mem_limit_percent的直接链接 title=load_process_soft_mem_limit_percent的直接链接>​</a></h4>
+<ul>
+<li>描述：soft limit 是指站单节点导入内存上限的比例。例如所有导入任务导入的内存上限是 20GB，则 soft limit 默认为该值的 50%，即 10GB。导入内存占用超过 soft limit 时，会挑选占用内存最大的作业进行下刷以提前释放内存空间。</li>
+<li>默认值：50（%）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=slave_replica_writer_rpc_timeout_sec><code>slave_replica_writer_rpc_timeout_sec</code><a href=#slave_replica_writer_rpc_timeout_sec class=hash-link aria-label=slave_replica_writer_rpc_timeout_sec的直接链接 title=slave_replica_writer_rpc_timeout_sec的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：单副本数据导入功能中，Master 副本和 Slave 副本之间通信的 RPC 超时时间。</li>
+<li>默认值：60</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_segment_num_per_rowset><code>max_segment_num_per_rowset</code><a href=#max_segment_num_per_rowset class=hash-link aria-label=max_segment_num_per_rowset的直接链接 title=max_segment_num_per_rowset的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：用于限制导入时，新产生的 rowset 中的 segment 数量。如果超过阈值，导入会失败并报错 -238。过多的 segment 会导致 compaction 占用大量内存引发 OOM 错误。</li>
+<li>默认值：200</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=high_priority_flush_thread_num_per_store><code>high_priority_flush_thread_num_per_store</code><a href=#high_priority_flush_thread_num_per_store class=hash-link aria-label=high_priority_flush_thread_num_per_store的直接链接 title=high_priority_flush_thread_num_per_store的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：每个存储路径所分配的用于高优导入任务的 flush 线程数量。</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=routine_load_consumer_pool_size><code>routine_load_consumer_pool_size</code><a href=#routine_load_consumer_pool_size class=hash-link aria-label=routine_load_consumer_pool_size的直接链接 title=routine_load_consumer_pool_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：routine load 所使用的 data consumer 的缓存数量。</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=multi_table_batch_plan_threshold><code>multi_table_batch_plan_threshold</code><a href=#multi_table_batch_plan_threshold class=hash-link aria-label=multi_table_batch_plan_threshold的直接链接 title=multi_table_batch_plan_threshold的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：一流多表使用该配置，表示攒多少条数据再进行规划。过小的值会导致规划频繁，多大的值会增加内存压力和导入延迟。</li>
+<li>默认值：200</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=multi_table_max_wait_tables><code>multi_table_max_wait_tables</code><a href=#multi_table_max_wait_tables class=hash-link aria-label=multi_table_max_wait_tables的直接链接 title=multi_table_max_wait_tables的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：一流多表使用该配置，如果等待执行的表的数量大于此阈值，将请求并执行所有相关表的计划。该参数旨在避免一次同时请求和执行过多的计划。将导入过程的多表进行小批处理，可以减少单次 rpc 的压力，同时可以提高导入数据处理的实时性。</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=single_replica_load_download_num_workers><code>single_replica_load_download_num_workers</code><a href=#single_replica_load_download_num_workers class=hash-link aria-label=single_replica_load_download_num_workers的直接链接 title=single_replica_load_download_num_workers的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：单副本数据导入功能中，Slave 副本通过 HTTP 从 Master 副本下载数据文件的工作线程数。导入并发增大时，可以适当调大该参数来保证 Slave 副本及时同步 Master 副本数据。必要时也应相应地调大<code>webserver_num_workers</code>来提高 IO 效率。</li>
+<li>默认值：64</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=load_task_high_priority_threshold_second><code>load_task_high_priority_threshold_second</code><a href=#load_task_high_priority_threshold_second class=hash-link aria-label=load_task_high_priority_threshold_second的直接链接 title=load_task_high_priority_threshold_second的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：当一个导入任务的超时时间小于这个阈值是，Doris 将认为他是一个高优任务。高优任务会使用独立的 flush 线程池。</li>
+<li>默认：120</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=min_load_rpc_timeout_ms><code>min_load_rpc_timeout_ms</code><a href=#min_load_rpc_timeout_ms class=hash-link aria-label=min_load_rpc_timeout_ms的直接链接 title=min_load_rpc_timeout_ms的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：load 作业中各个 rpc 的最小超时时间。</li>
+<li>默认：20</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=kafka_api_version_request><code>kafka_api_version_request</code><a href=#kafka_api_version_request class=hash-link aria-label=kafka_api_version_request的直接链接 title=kafka_api_version_request的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：如果依赖的 kafka 版本低于 0.10.0.0, 该值应该被设置为 false。</li>
+<li>默认：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=kafka_broker_version_fallback><code>kafka_broker_version_fallback</code><a href=#kafka_broker_version_fallback class=hash-link aria-label=kafka_broker_version_fallback的直接链接 title=kafka_broker_version_fallback的直接链接>​</a></h4>
+<ul>
+<li>描述：如果依赖的 kafka 版本低于 0.10.0.0, 当 kafka_api_version_request 值为 false 的时候，将使用回退版本 kafka_broker_version_fallback 设置的值，有效值为：0.9.0.x、0.8.x.y。</li>
+<li>默认：0.10.0</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_consumer_num_per_group><code>max_consumer_num_per_group</code><a href=#max_consumer_num_per_group class=hash-link aria-label=max_consumer_num_per_group的直接链接 title=max_consumer_num_per_group的直接链接>​</a></h4>
+<ul>
+<li>描述：一个数据消费者组中的最大消费者数量，用于 routine load。</li>
+<li>默认：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=streaming_load_max_mb><code>streaming_load_max_mb</code><a href=#streaming_load_max_mb class=hash-link aria-label=streaming_load_max_mb的直接链接 title=streaming_load_max_mb的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：用于限制数据格式为 csv 的一次 Stream load 导入中，允许的最大数据量。
+<ul>
+<li>Stream Load 一般适用于导入几个 GB 以内的数据，不适合导入过大的数据。</li>
+</ul>
+</li>
+<li>默认值：10240（MB）</li>
+<li>可动态修改：是</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=streaming_load_json_max_mb><code>streaming_load_json_max_mb</code><a href=#streaming_load_json_max_mb class=hash-link aria-label=streaming_load_json_max_mb的直接链接 title=streaming_load_json_max_mb的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：用于限制数据格式为 json 的一次 Stream load 导入中，允许的最大数据量。单位 MB。
+<ul>
+<li>一些数据格式，如 JSON，无法进行拆分处理，必须读取全部数据到内存后才能开始解析，因此，这个值用于限制此类格式数据单次导入最大数据量。</li>
+</ul>
+</li>
+<li>默认值：100</li>
+<li>可动态修改：是</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=olap_table_sink_send_interval_microseconds><code>olap_table_sink_send_interval_microseconds</code>.<a href=#olap_table_sink_send_interval_microseconds class=hash-link aria-label=olap_table_sink_send_interval_microseconds的直接链接 title=olap_table_sink_send_interval_microseconds的直接链接>​</a></h4>
+<ul>
+<li>描述：数据导入时，Coordinator 的 sink 节点有一个轮询线程持续向对应 BE 发送数据。该线程将每隔 <code>olap_table_sink_send_interval_microseconds</code> 微秒检查是否有数据要发送。</li>
+<li>默认值：1000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=olap_table_sink_send_interval_auto_partition_factor><code>olap_table_sink_send_interval_auto_partition_factor</code>.<a href=#olap_table_sink_send_interval_auto_partition_factor class=hash-link aria-label=olap_table_sink_send_interval_auto_partition_factor的直接链接 title=olap_table_sink_send_interval_auto_partition_factor的直接链接>​</a></h4>
+<ul>
+<li>描述：如果我们向一个启用了自动分区的表导入数据，那么 <code>olap_table_sink_send_interval_microseconds</code> 的时间间隔就会太慢。在这种情况下，实际间隔将乘以该系数。</li>
+<li>默认值：0.001</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=线程>线程<a href=#线程 class=hash-link aria-label=线程的直接链接 title=线程的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=delete_worker_count><code>delete_worker_count</code><a href=#delete_worker_count class=hash-link aria-label=delete_worker_count的直接链接 title=delete_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：执行数据删除任务的线程数</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=clear_transaction_task_worker_count><code>clear_transaction_task_worker_count</code><a href=#clear_transaction_task_worker_count class=hash-link aria-label=clear_transaction_task_worker_count的直接链接 title=clear_transaction_task_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：用于清理事务的线程数</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=clone_worker_count><code>clone_worker_count</code><a href=#clone_worker_count class=hash-link aria-label=clone_worker_count的直接链接 title=clone_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：用于执行克隆任务的线程数</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=be_service_threads><code>be_service_threads</code><a href=#be_service_threads class=hash-link aria-label=be_service_threads的直接链接 title=be_service_threads的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：BE 上 Thrift Server Service 的执行线程数，代表可以用于执行 FE 请求的线程数。</li>
+<li>默认值：64</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=download_worker_count><code>download_worker_count</code><a href=#download_worker_count class=hash-link aria-label=download_worker_count的直接链接 title=download_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：下载线程数</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=drop_tablet_worker_count><code>drop_tablet_worker_count</code><a href=#drop_tablet_worker_count class=hash-link aria-label=drop_tablet_worker_count的直接链接 title=drop_tablet_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：删除 tablet 的线程数</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=flush_thread_num_per_store><code>flush_thread_num_per_store</code><a href=#flush_thread_num_per_store class=hash-link aria-label=flush_thread_num_per_store的直接链接 title=flush_thread_num_per_store的直接链接>​</a></h4>
+<ul>
+<li>描述：每个 store 用于刷新内存表的线程数</li>
+<li>默认值：2</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=publish_version_worker_count><code>publish_version_worker_count</code><a href=#publish_version_worker_count class=hash-link aria-label=publish_version_worker_count的直接链接 title=publish_version_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：生效版本的线程数</li>
+<li>默认值：8</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=upload_worker_count><code>upload_worker_count</code><a href=#upload_worker_count class=hash-link aria-label=upload_worker_count的直接链接 title=upload_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：上传文件最大线程数</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=webserver_num_workers><code>webserver_num_workers</code><a href=#webserver_num_workers class=hash-link aria-label=webserver_num_workers的直接链接 title=webserver_num_workers的直接链接>​</a></h4>
+<ul>
+<li>描述：webserver 默认工作线程数</li>
+<li>默认值：48</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=send_batch_thread_pool_thread_num><code>send_batch_thread_pool_thread_num</code><a href=#send_batch_thread_pool_thread_num class=hash-link aria-label=send_batch_thread_pool_thread_num的直接链接 title=send_batch_thread_pool_thread_num的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：SendBatch 线程池线程数目。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 SendBatch 线程池的大小。</li>
+<li>默认值：64</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=send_batch_thread_pool_queue_size><code>send_batch_thread_pool_queue_size</code><a href=#send_batch_thread_pool_queue_size class=hash-link aria-label=send_batch_thread_pool_queue_size的直接链接 title=send_batch_thread_pool_queue_size的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：SendBatch 线程池的队列长度。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。</li>
+<li>默认值：102400</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=make_snapshot_worker_count><code>make_snapshot_worker_count</code><a href=#make_snapshot_worker_count class=hash-link aria-label=make_snapshot_worker_count的直接链接 title=make_snapshot_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：制作快照的线程数</li>
+<li>默认值：5</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=release_snapshot_worker_count><code>release_snapshot_worker_count</code><a href=#release_snapshot_worker_count class=hash-link aria-label=release_snapshot_worker_count的直接链接 title=release_snapshot_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：释放快照的线程数</li>
+<li>默认值：5</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=内存>内存<a href=#内存 class=hash-link aria-label=内存的直接链接 title=内存的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_memory_sink_batch_count><code>max_memory_sink_batch_count</code><a href=#max_memory_sink_batch_count class=hash-link aria-label=max_memory_sink_batch_count的直接链接 title=max_memory_sink_batch_count的直接链接>​</a></h4>
+<ul>
+<li>描述：最大外部扫描缓存批次计数，表示缓存 max_memory_cache_batch_count * batch_size row，默认为 20，batch_size 的默认值为 1024，表示将缓存 20 * 1024 行。</li>
+<li>默认值：20</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=memtable_mem_tracker_refresh_interval_ms><code>memtable_mem_tracker_refresh_interval_ms</code><a href=#memtable_mem_tracker_refresh_interval_ms class=hash-link aria-label=memtable_mem_tracker_refresh_interval_ms的直接链接 title=memtable_mem_tracker_refresh_interval_ms的直接链接>​</a></h4>
+<ul>
+<li>描述：memtable 主动下刷时刷新内存统计的周期（毫秒）</li>
+<li>默认值：100</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=zone_map_row_num_threshold><code>zone_map_row_num_threshold</code><a href=#zone_map_row_num_threshold class=hash-link aria-label=zone_map_row_num_threshold的直接链接 title=zone_map_row_num_threshold的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：如果一个 page 中的行数小于这个值就不会创建 zonemap，用来减少数据膨胀。</li>
+<li>默认值：20</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=memory_mode><code>memory_mode</code><a href=#memory_mode class=hash-link aria-label=memory_mode的直接链接 title=memory_mode的直接链接>​</a></h4>
+<ul>
+<li>类型：string</li>
+<li>描述：控制 tcmalloc 的回收。如果配置为 performance，内存使用超过 mem_limit 的 90% 时，doris 会释放 tcmalloc cache 中的内存，如果配置为 compact，内存使用超过 mem_limit 的 50% 时，doris 会释放 tcmalloc cache 中的内存。</li>
+<li>默认值：performance</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_sys_mem_available_low_water_mark_bytes><code>max_sys_mem_available_low_water_mark_bytes</code><a href=#max_sys_mem_available_low_water_mark_bytes class=hash-link aria-label=max_sys_mem_available_low_water_mark_bytes的直接链接 title=max_sys_mem_available_low_water_mark_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：系统<code>/proc/meminfo/MemAvailable</code> 的最大低水位线，单位字节，默认 1.6G，实际低水位线=min(1.6G，MemTotal * 10%)，避免在大于 16G 的机器上浪费过多内存。调大 max，在大于 16G 内存的机器上，将为 Full GC 预留更多的内存 buffer；反之调小 max，将尽可能充分使用内存。</li>
+<li>默认值：1717986918</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=memory_limitation_per_thread_for_schema_change_bytes><code>memory_limitation_per_thread_for_schema_change_bytes</code><a href=#memory_limitation_per_thread_for_schema_change_bytes class=hash-link aria-label=memory_limitation_per_thread_for_schema_change_bytes的直接链接 title=memory_limitation_per_thread_for_schema_change_bytes的直接链接>​</a></h4>
+<ul>
+<li>描述：单个 schema change 任务允许占用的最大内存。</li>
+<li>默认值：2147483648 (2GB)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=mem_tracker_consume_min_size_bytes><code>mem_tracker_consume_min_size_bytes</code><a href=#mem_tracker_consume_min_size_bytes class=hash-link aria-label=mem_tracker_consume_min_size_bytes的直接链接 title=mem_tracker_consume_min_size_bytes的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：TCMalloc Hook consume/release MemTracker 时的最小长度，小于该值的 consume size 会持续累加，避免频繁调用 MemTracker 的 consume/release，减小该值会增加 consume/release 的频率，增大该值会导致 MemTracker 统计不准，理论上一个 MemTracker 的统计值与真实值相差 = (mem_tracker_consume_min_size_bytes * 这个 MemTracker 所在的 BE 线程数)。</li>
+<li>默认值：1048576</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=min_buffer_size><code>min_buffer_size</code><a href=#min_buffer_size class=hash-link aria-label=min_buffer_size的直接链接 title=min_buffer_size的直接链接>​</a></h4>
+<ul>
+<li>描述：最小读取缓冲区大小</li>
+<li>默认值：1024 (byte)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=write_buffer_size><code>write_buffer_size</code><a href=#write_buffer_size class=hash-link aria-label=write_buffer_size的直接链接 title=write_buffer_size的直接链接>​</a></h4>
+<ul>
+<li>描述：刷写前缓冲区的大小
+<ul>
+<li>导入数据在 BE 上会先写入到一个内存块，当这个内存块达到阈值后才会写回磁盘。默认大小是 100MB。过小的阈值可能导致 BE 上存在大量的小文件。可以适当提高这个阈值减少文件数量。但过大的阈值可能导致 RPC 超时</li>
+</ul>
+</li>
+<li>默认值：104857600</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=remote_storage_read_buffer_mb><code>remote_storage_read_buffer_mb</code><a href=#remote_storage_read_buffer_mb class=hash-link aria-label=remote_storage_read_buffer_mb的直接链接 title=remote_storage_read_buffer_mb的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：读取 hdfs 或者对象存储上的文件时，使用的缓存大小。
+<ul>
+<li>增大这个值，可以减少远端数据读取的调用次数，但会增加内存开销。</li>
+</ul>
+</li>
+<li>默认值：16MB</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=path_gc_check><code>path_gc_check</code><a href=#path_gc_check class=hash-link aria-label=path_gc_check的直接链接 title=path_gc_check的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否启用回收扫描数据线程检查</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=path_gc_check_interval_second><code>path_gc_check_interval_second</code><a href=#path_gc_check_interval_second class=hash-link aria-label=path_gc_check_interval_second的直接链接 title=path_gc_check_interval_second的直接链接>​</a></h4>
+<ul>
+<li>描述：回收扫描数据线程检查时间间隔</li>
+<li>默认值：86400 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=path_gc_check_step><code>path_gc_check_step</code><a href=#path_gc_check_step class=hash-link aria-label=path_gc_check_step的直接链接 title=path_gc_check_step的直接链接>​</a></h4>
+<ul>
+<li>默认值：1000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=path_gc_check_step_interval_ms><code>path_gc_check_step_interval_ms</code><a href=#path_gc_check_step_interval_ms class=hash-link aria-label=path_gc_check_step_interval_ms的直接链接 title=path_gc_check_step_interval_ms的直接链接>​</a></h4>
+<ul>
+<li>默认值：10 (ms)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=scan_context_gc_interval_min><code>scan_context_gc_interval_min</code><a href=#scan_context_gc_interval_min class=hash-link aria-label=scan_context_gc_interval_min的直接链接 title=scan_context_gc_interval_min的直接链接>​</a></h4>
+<ul>
+<li>描述：此配置用于上下文 gc 线程调度周期</li>
+<li>默认值：5 (分钟)</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=存储>存储<a href=#存储 class=hash-link aria-label=存储的直接链接 title=存储的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=default_num_rows_per_column_file_block><code>default_num_rows_per_column_file_block</code><a href=#default_num_rows_per_column_file_block class=hash-link aria-label=default_num_rows_per_column_file_block的直接链接 title=default_num_rows_per_column_file_block的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：配置单个 RowBlock 之中包含多少行的数据。</li>
+<li>默认值：1024</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=disable_storage_page_cache><code>disable_storage_page_cache</code><a href=#disable_storage_page_cache class=hash-link aria-label=disable_storage_page_cache的直接链接 title=disable_storage_page_cache的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：是否进行使用 page cache 进行 index 的缓存，该配置仅在 BETA 存储格式时生效</li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=disk_stat_monitor_interval><code>disk_stat_monitor_interval</code><a href=#disk_stat_monitor_interval class=hash-link aria-label=disk_stat_monitor_interval的直接链接 title=disk_stat_monitor_interval的直接链接>​</a></h4>
+<ul>
+<li>描述：磁盘状态检查时间间隔。</li>
+<li>默认值：5（s）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_garbage_sweep_interval><code>max_garbage_sweep_interval</code><a href=#max_garbage_sweep_interval class=hash-link aria-label=max_garbage_sweep_interval的直接链接 title=max_garbage_sweep_interval的直接链接>​</a></h4>
+<ul>
+<li>描述：磁盘进行垃圾清理的最大间隔。</li>
+<li>默认值：3600 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_percentage_of_error_disk><code>max_percentage_of_error_disk</code><a href=#max_percentage_of_error_disk class=hash-link aria-label=max_percentage_of_error_disk的直接链接 title=max_percentage_of_error_disk的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：存储引擎允许存在损坏硬盘的百分比，损坏硬盘超过改比例后，BE 将会自动退出。</li>
+<li>默认值：0</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=min_garbage_sweep_interval><code>min_garbage_sweep_interval</code><a href=#min_garbage_sweep_interval class=hash-link aria-label=min_garbage_sweep_interval的直接链接 title=min_garbage_sweep_interval的直接链接>​</a></h4>
+<ul>
+<li>描述：磁盘进行垃圾清理的最小间隔</li>
+<li>默认值：180 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=pprof_profile_dir><code>pprof_profile_dir</code><a href=#pprof_profile_dir class=hash-link aria-label=pprof_profile_dir的直接链接 title=pprof_profile_dir的直接链接>​</a></h4>
+<ul>
+<li>描述：pprof profile 保存目录。</li>
+<li>默认值：${DORIS_HOME}/log</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=small_file_dir><code>small_file_dir</code><a href=#small_file_dir class=hash-link aria-label=small_file_dir的直接链接 title=small_file_dir的直接链接>​</a></h4>
+<ul>
+<li>描述：用于保存 SmallFileMgr 下载的文件的目录。</li>
+<li>默认值：${DORIS_HOME}/lib/small_file/</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=user_function_dir><code>user_function_dir</code><a href=#user_function_dir class=hash-link aria-label=user_function_dir的直接链接 title=user_function_dir的直接链接>​</a></h4>
+<ul>
+<li>描述：udf 函数目录。</li>
+<li>默认值：${DORIS_HOME}/lib/udf</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_flood_stage_left_capacity_bytes><code>storage_flood_stage_left_capacity_bytes</code><a href=#storage_flood_stage_left_capacity_bytes class=hash-link aria-label=storage_flood_stage_left_capacity_bytes的直接链接 title=storage_flood_stage_left_capacity_bytes的直接链接>​</a></h4>
+<ul>
+<li>描述：数据目录应该剩下的最小存储空间，默认 1G。</li>
+<li>默认值：1073741824</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_flood_stage_usage_percent><code>storage_flood_stage_usage_percent</code><a href=#storage_flood_stage_usage_percent class=hash-link aria-label=storage_flood_stage_usage_percent的直接链接 title=storage_flood_stage_usage_percent的直接链接>​</a></h4>
+<ul>
+<li>描述：storage_flood_stage_usage_percent 和 storage_flood_stage_left_capacity_bytes 两个配置限制了数据目录的磁盘容量的最大使用。如果这两个阈值都达到，则无法将更多数据写入该数据目录。数据目录的最大已用容量百分比</li>
+<li>默认值：90（90%）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_medium_migrate_count><code>storage_medium_migrate_count</code><a href=#storage_medium_migrate_count class=hash-link aria-label=storage_medium_migrate_count的直接链接 title=storage_medium_migrate_count的直接链接>​</a></h4>
+<ul>
+<li>描述：要克隆的线程数。</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_page_cache_limit><code>storage_page_cache_limit</code><a href=#storage_page_cache_limit class=hash-link aria-label=storage_page_cache_limit的直接链接 title=storage_page_cache_limit的直接链接>​</a></h4>
+<ul>
+<li>描述：缓存存储页大小。</li>
+<li>默认值：20%</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_page_cache_shard_size><code>storage_page_cache_shard_size</code><a href=#storage_page_cache_shard_size class=hash-link aria-label=storage_page_cache_shard_size的直接链接 title=storage_page_cache_shard_size的直接链接>​</a></h4>
+<ul>
+<li>描述：StoragePageCache 的分片大小，值为 2^n (n=0,1,2,...)。建议设置为接近 BE CPU 核数的值，可减少 StoragePageCache 的锁竞争。</li>
+<li>默认值：16</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=index_page_cache_percentage><code>index_page_cache_percentage</code><a href=#index_page_cache_percentage class=hash-link aria-label=index_page_cache_percentage的直接链接 title=index_page_cache_percentage的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：索引页缓存占总页面缓存的百分比，取值为[0, 100]。</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=segment_cache_capacity><code>segment_cache_capacity</code><a href=#segment_cache_capacity class=hash-link aria-label=segment_cache_capacity的直接链接 title=segment_cache_capacity的直接链接>​</a></h4>
+<ul>
+<li>Type: int32</li>
+<li>Description: segment 元数据缓存（以 rowset id 为 key）的最大 rowset 个数。-1 代表向后兼容取值为 fd_number * 2/5</li>
+<li>Default value: -1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=storage_strict_check_incompatible_old_format><code>storage_strict_check_incompatible_old_format</code><a href=#storage_strict_check_incompatible_old_format class=hash-link aria-label=storage_strict_check_incompatible_old_format的直接链接 title=storage_strict_check_incompatible_old_format的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：用来检查不兼容的旧版本格式时是否使用严格的验证方式。
+<ul>
+<li>配置用来检查不兼容的旧版本格式时是否使用严格的验证方式，当含有旧版本的 <code>hdr</code> 格式时，使用严谨的方式时，程序会打出 <code>fatal log</code> 并且退出运行；否则，程序仅打印 <code>warn log</code>.</li>
+</ul>
+</li>
+<li>默认值：true</li>
+<li>可动态修改：否</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sync_tablet_meta><code>sync_tablet_meta</code><a href=#sync_tablet_meta class=hash-link aria-label=sync_tablet_meta的直接链接 title=sync_tablet_meta的直接链接>​</a></h4>
+<ul>
+<li>描述：存储引擎是否开 sync 保留到磁盘上</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=pending_data_expire_time_sec><code>pending_data_expire_time_sec</code><a href=#pending_data_expire_time_sec class=hash-link aria-label=pending_data_expire_time_sec的直接链接 title=pending_data_expire_time_sec的直接链接>​</a></h4>
+<ul>
+<li>描述：存储引擎保留的未生效数据的最大时长</li>
+<li>默认值：1800 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=create_tablet_worker_count><code>create_tablet_worker_count</code><a href=#create_tablet_worker_count class=hash-link aria-label=create_tablet_worker_count的直接链接 title=create_tablet_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：BE 创建 tablet 的工作线程数</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=check_consistency_worker_count><code>check_consistency_worker_count</code><a href=#check_consistency_worker_count class=hash-link aria-label=check_consistency_worker_count的直接链接 title=check_consistency_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：计算 tablet 的校验和 (checksum) 的工作线程数</li>
+<li>默认值：1</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_tablet_version_num><code>max_tablet_version_num</code><a href=#max_tablet_version_num class=hash-link aria-label=max_tablet_version_num的直接链接 title=max_tablet_version_num的直接链接>​</a></h4>
+<ul>
+<li>类型：int</li>
+<li>描述：限制单个 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。</li>
+<li>默认值：2000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_map_shard_size><code>tablet_map_shard_size</code><a href=#tablet_map_shard_size class=hash-link aria-label=tablet_map_shard_size的直接链接 title=tablet_map_shard_size的直接链接>​</a></h4>
+<ul>
+<li>描述：tablet_map_lock 分片大小，值为 2^n, n=0,1,2,3,4，这是为了更好地管理 tablet</li>
+<li>默认值：4</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_meta_checkpoint_min_interval_secs><code>tablet_meta_checkpoint_min_interval_secs</code><a href=#tablet_meta_checkpoint_min_interval_secs class=hash-link aria-label=tablet_meta_checkpoint_min_interval_secs的直接链接 title=tablet_meta_checkpoint_min_interval_secs的直接链接>​</a></h4>
+<ul>
+<li>描述：TabletMeta Checkpoint 线程轮询的时间间隔</li>
+<li>默认值：600 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_meta_checkpoint_min_new_rowsets_num><code>tablet_meta_checkpoint_min_new_rowsets_num</code><a href=#tablet_meta_checkpoint_min_new_rowsets_num class=hash-link aria-label=tablet_meta_checkpoint_min_new_rowsets_num的直接链接 title=tablet_meta_checkpoint_min_new_rowsets_num的直接链接>​</a></h4>
+<ul>
+<li>描述：TabletMeta Checkpoint 的最小 Rowset 数目</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_rowset_stale_sweep_time_sec><code>tablet_rowset_stale_sweep_time_sec</code><a href=#tablet_rowset_stale_sweep_time_sec class=hash-link aria-label=tablet_rowset_stale_sweep_time_sec的直接链接 title=tablet_rowset_stale_sweep_time_sec的直接链接>​</a></h4>
+<ul>
+<li>类型：int64</li>
+<li>描述：用来表示清理合并版本的过期时间，当当前时间 now() 减去一个合并的版本路径中 rowset 最近创建创建时间大于 tablet_rowset_stale_sweep_time_sec 时，对当前路径进行清理，删除这些合并过的 rowset, 单位为 s。
+<ul>
+<li>当写入过于频繁，可能会引发 fe 查询不到已经合并过的版本，引发查询 -230 错误。可以通过调大该参数避免该问题。</li>
+</ul>
+</li>
+<li>默认值：300</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_writer_open_rpc_timeout_sec><code>tablet_writer_open_rpc_timeout_sec</code><a href=#tablet_writer_open_rpc_timeout_sec class=hash-link aria-label=tablet_writer_open_rpc_timeout_sec的直接链接 title=tablet_writer_open_rpc_timeout_sec的直接链接>​</a></h4>
+<ul>
+<li>描述：在远程 BE 中打开 tablet writer 的 rpc 超时。操作时间短，可设置短超时时间
+<ul>
+<li>导入过程中，发送一个 Batch（1024 行）的 RPC 超时时间。默认 60 秒。因为该 RPC 可能涉及多个 分片内存块的写盘操作，所以可能会因为写盘导致 RPC 超时，可以适当调整这个超时时间来减少超时错误（如 send batch fail 错误）。同时，如果调大 write_buffer_size 配置，也需要适当调大这个参数</li>
+</ul>
+</li>
+<li>默认值：60</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=tablet_writer_ignore_eovercrowded><code>tablet_writer_ignore_eovercrowded</code><a href=#tablet_writer_ignore_eovercrowded class=hash-link aria-label=tablet_writer_ignore_eovercrowded的直接链接 title=tablet_writer_ignore_eovercrowded的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：写入时可忽略 brpc 的'[E1011]The server is overcrowded'错误。
+<ul>
+<li>当遇到'[E1011]The server is overcrowded'的错误时，可以调整配置项<code>brpc_socket_max_unwritten_bytes</code>，但这个配置项不能动态调整。所以可通过设置此项为<code>true</code>来临时避免写失败。注意，此配置项只影响写流程，其他的 rpc 请求依旧会检查是否 overcrowded。</li>
+</ul>
+</li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=streaming_load_rpc_max_alive_time_sec><code>streaming_load_rpc_max_alive_time_sec</code><a href=#streaming_load_rpc_max_alive_time_sec class=hash-link aria-label=streaming_load_rpc_max_alive_time_sec的直接链接 title=streaming_load_rpc_max_alive_time_sec的直接链接>​</a></h4>
+<ul>
+<li>描述：TabletsChannel 的存活时间。如果此时通道没有收到任何数据，通道将被删除。</li>
+<li>默认值：1200</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=alter_tablet_worker_count><code>alter_tablet_worker_count</code><a href=#alter_tablet_worker_count class=hash-link aria-label=alter_tablet_worker_count的直接链接 title=alter_tablet_worker_count的直接链接>​</a></h4>
+<ul>
+<li>描述：进行 schema change 的线程数</li>
+<li>默认值：3</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=alter_index_worker_count><code>alter_index_worker_count</code><a href=#alter_index_worker_count class=hash-link aria-label=alter_index_worker_count的直接链接 title=alter_index_worker_count的直接链接>​</a></h3>
+<ul>
+<li>描述：进行 index change 的线程数</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=ignore_load_tablet_failure><code>ignore_load_tablet_failure</code><a href=#ignore_load_tablet_failure class=hash-link aria-label=ignore_load_tablet_failure的直接链接 title=ignore_load_tablet_failure的直接链接>​</a></h4>
+<ul>
+<li>类型：bool</li>
+<li>描述：用来决定在有 tablet 加载失败的情况下是否忽略错误，继续启动 be</li>
+<li>默认值：false</li>
+</ul>
+<p>BE 启动时，会对每个数据目录单独启动一个线程进行 tablet header 元信息的加载。默认配置下，如果某个数据目录有 tablet 加载失败，则启动进程会终止。同时会在 <code>be.INFO</code> 日志中看到如下错误信息：</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">load tablets from header failed, failed tablets size: xxx, path=xxx</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>表示该数据目录共有多少 tablet 加载失败。同时，日志中也会有加载失败的 tablet 的具体信息。此时需要人工介入来对错误原因进行排查。排查后，通常有两种方式进行恢复：</p>
+<ol>
+<li>tablet 信息不可修复，在确保其他副本正常的情况下，可以通过 <code>meta_tool</code> 工具将错误的 tablet 删除。</li>
+<li>将 <code>ignore_load_tablet_failure</code> 设置为 true，则 BE 会忽略这些错误的 tablet，正常启动。</li>
+</ol>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=report_disk_state_interval_seconds><code>report_disk_state_interval_seconds</code><a href=#report_disk_state_interval_seconds class=hash-link aria-label=report_disk_state_interval_seconds的直接链接 title=report_disk_state_interval_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：代理向 FE 报告磁盘状态的间隔时间</li>
+<li>默认值：60 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=result_buffer_cancelled_interval_time><code>result_buffer_cancelled_interval_time</code><a href=#result_buffer_cancelled_interval_time class=hash-link aria-label=result_buffer_cancelled_interval_time的直接链接 title=result_buffer_cancelled_interval_time的直接链接>​</a></h4>
+<ul>
+<li>描述：结果缓冲区取消时间</li>
+<li>默认值：300 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=snapshot_expire_time_sec><code>snapshot_expire_time_sec</code><a href=#snapshot_expire_time_sec class=hash-link aria-label=snapshot_expire_time_sec的直接链接 title=snapshot_expire_time_sec的直接链接>​</a></h4>
+<ul>
+<li>描述：快照文件清理的间隔</li>
+<li>默认值：172800 (48 小时)</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=日志>日志<a href=#日志 class=hash-link aria-label=日志的直接链接 title=日志的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_dir><code>sys_log_dir</code><a href=#sys_log_dir class=hash-link aria-label=sys_log_dir的直接链接 title=sys_log_dir的直接链接>​</a></h4>
+<ul>
+<li>类型：string</li>
+<li>描述：BE 日志数据的存储目录</li>
+<li>默认值：${DORIS_HOME}/log</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_level><code>sys_log_level</code><a href=#sys_log_level class=hash-link aria-label=sys_log_level的直接链接 title=sys_log_level的直接链接>​</a></h4>
+<ul>
+<li>描述：日志级别，INFO &lt; WARNING &lt; ERROR &lt; FATAL</li>
+<li>默认值：INFO</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_roll_mode><code>sys_log_roll_mode</code><a href=#sys_log_roll_mode class=hash-link aria-label=sys_log_roll_mode的直接链接 title=sys_log_roll_mode的直接链接>​</a></h4>
+<ul>
+<li>描述：日志拆分的大小，每 1G 拆分一个日志文件</li>
+<li>默认值：SIZE-MB-1024</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_roll_num><code>sys_log_roll_num</code><a href=#sys_log_roll_num class=hash-link aria-label=sys_log_roll_num的直接链接 title=sys_log_roll_num的直接链接>​</a></h4>
+<ul>
+<li>描述：日志文件保留的数目</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_verbose_level><code>sys_log_verbose_level</code><a href=#sys_log_verbose_level class=hash-link aria-label=sys_log_verbose_level的直接链接 title=sys_log_verbose_level的直接链接>​</a></h4>
+<ul>
+<li>描述：日志显示的级别，用于控制代码中 VLOG 开头的日志输出</li>
+<li>默认值：10</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=sys_log_verbose_modules><code>sys_log_verbose_modules</code><a href=#sys_log_verbose_modules class=hash-link aria-label=sys_log_verbose_modules的直接链接 title=sys_log_verbose_modules的直接链接>​</a></h4>
+<ul>
+<li>描述：日志打印的模块，写 olap 就只打印 olap 模块下的日志</li>
+<li>默认值：空</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=aws_log_level><code>aws_log_level</code><a href=#aws_log_level class=hash-link aria-label=aws_log_level的直接链接 title=aws_log_level的直接链接>​</a></h4>
+<ul>
+<li>类型：int32</li>
+<li>描述：AWS SDK 的日志级别
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">   Off = 0,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Fatal = 1,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Error = 2,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Warn = 3,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Info = 4,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Debug = 5,</span><br></span><span class=token-line style=color:#F8F8F2><span class="token plain">   Trace = 6</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+</li>
+<li>默认值：3</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=log_buffer_level><code>log_buffer_level</code><a href=#log_buffer_level class=hash-link aria-label=log_buffer_level的直接链接 title=log_buffer_level的直接链接>​</a></h4>
+<ul>
+<li>描述：日志刷盘的策略，默认保持在内存中</li>
+<li>默认值：空</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=其它>其它<a href=#其它 class=hash-link aria-label=其它的直接链接 title=其它的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=report_tablet_interval_seconds><code>report_tablet_interval_seconds</code><a href=#report_tablet_interval_seconds class=hash-link aria-label=report_tablet_interval_seconds的直接链接 title=report_tablet_interval_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：代理向 FE 报告 olap 表的间隔时间</li>
+<li>默认值：60 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=report_task_interval_seconds><code>report_task_interval_seconds</code><a href=#report_task_interval_seconds class=hash-link aria-label=report_task_interval_seconds的直接链接 title=report_task_interval_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：代理向 FE 报告任务签名的间隔时间</li>
+<li>默认值：10 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_metric_calculator><code>enable_metric_calculator</code><a href=#enable_metric_calculator class=hash-link aria-label=enable_metric_calculator的直接链接 title=enable_metric_calculator的直接链接>​</a></h4>
+<ul>
+<li>描述：如果设置为 true，metric calculator 将运行，收集 BE 相关指标信息，如果设置成 false 将不运行</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_system_metrics><code>enable_system_metrics</code><a href=#enable_system_metrics class=hash-link aria-label=enable_system_metrics的直接链接 title=enable_system_metrics的直接链接>​</a></h4>
+<ul>
+<li>描述：用户控制打开和关闭系统指标</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_token_check><code>enable_token_check</code><a href=#enable_token_check class=hash-link aria-label=enable_token_check的直接链接 title=enable_token_check的直接链接>​</a></h4>
+<ul>
+<li>描述：用于向前兼容，稍后将被删除</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_runnings_transactions_per_txn_map><code>max_runnings_transactions_per_txn_map</code><a href=#max_runnings_transactions_per_txn_map class=hash-link aria-label=max_runnings_transactions_per_txn_map的直接链接 title=max_runnings_transactions_per_txn_map的直接链接>​</a></h4>
+<ul>
+<li>描述：txn 管理器中每个 txn_partition_map 的最大 txns 数，这是一种自我保护，以避免在管理器中保存过多的 txns</li>
+<li>默认值：2000</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=max_download_speed_kbps><code>max_download_speed_kbps</code><a href=#max_download_speed_kbps class=hash-link aria-label=max_download_speed_kbps的直接链接 title=max_download_speed_kbps的直接链接>​</a></h4>
+<ul>
+<li>描述：最大下载速度限制</li>
+<li>默认值：50000（kb/s）</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=download_low_speed_time><code>download_low_speed_time</code><a href=#download_low_speed_time class=hash-link aria-label=download_low_speed_time的直接链接 title=download_low_speed_time的直接链接>​</a></h4>
+<ul>
+<li>描述：下载时间限制</li>
+<li>默认值：300 (s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=download_low_speed_limit_kbps><code>download_low_speed_limit_kbps</code><a href=#download_low_speed_limit_kbps class=hash-link aria-label=download_low_speed_limit_kbps的直接链接 title=download_low_speed_limit_kbps的直接链接>​</a></h4>
+<ul>
+<li>描述：下载最低限速</li>
+<li>默认值：50 (KB/s)</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_batch_download><code>enable_batch_download</code><a href=#enable_batch_download class=hash-link aria-label=enable_batch_download的直接链接 title=enable_batch_download的直接链接>​</a></h4>
+<ul>
+<li>描述：是否允许批量下载文件，建议只在开启 binlog 的情况下打开</li>
+<li>默认值：false</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=priority_queue_remaining_tasks_increased_frequency><code>priority_queue_remaining_tasks_increased_frequency</code><a href=#priority_queue_remaining_tasks_increased_frequency class=hash-link aria-label=priority_queue_remaining_tasks_increased_frequency的直接链接 title=priority_queue_remaining_tasks_increased_frequency的直接链接>​</a></h4>
+<ul>
+<li>描述：BlockingPriorityQueue 中剩余任务的优先级频率增加</li>
+<li>默认值:512</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=jdbc_drivers_dir><code>jdbc_drivers_dir</code><a href=#jdbc_drivers_dir class=hash-link aria-label=jdbc_drivers_dir的直接链接 title=jdbc_drivers_dir的直接链接>​</a></h4>
+<ul>
+<li>描述：存放 jdbc driver 的默认目录。</li>
+<li>默认值：<code>${DORIS_HOME}/jdbc_drivers</code></li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_simdjson_reader><code>enable_simdjson_reader</code><a href=#enable_simdjson_reader class=hash-link aria-label=enable_simdjson_reader的直接链接 title=enable_simdjson_reader的直接链接>​</a></h4>
+<ul>
+<li>描述：是否在导入 json 数据时用 simdjson 来解析。</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_query_memory_overcommit><code>enable_query_memory_overcommit</code><a href=#enable_query_memory_overcommit class=hash-link aria-label=enable_query_memory_overcommit的直接链接 title=enable_query_memory_overcommit的直接链接>​</a></h4>
+<ul>
+<li>描述：如果为 true，则当内存未超过 exec_mem_limit 时，查询内存将不受限制；当进程内存超过 exec_mem_limit 且大于 2GB 时，查询会被取消。如果为 false，则在使用的内存超过 exec_mem_limit 时取消查询。</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=user_files_secure_path><code>user_files_secure_path</code><a href=#user_files_secure_path class=hash-link aria-label=user_files_secure_path的直接链接 title=user_files_secure_path的直接链接>​</a></h4>
+<ul>
+<li>描述：<code>local</code> 表函数查询的文件的存储目录。</li>
+<li>默认值：<code>${DORIS_HOME}</code></li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=brpc_streaming_client_batch_bytes><code>brpc_streaming_client_batch_bytes</code><a href=#brpc_streaming_client_batch_bytes class=hash-link aria-label=brpc_streaming_client_batch_bytes的直接链接 title=brpc_streaming_client_batch_bytes的直接链接>​</a></h4>
+<ul>
+<li>描述：brpc streaming 客户端发送数据时的攒批大小（字节）</li>
+<li>默认值：262144</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=grace_shutdown_wait_seconds><code>grace_shutdown_wait_seconds</code><a href=#grace_shutdown_wait_seconds class=hash-link aria-label=grace_shutdown_wait_seconds的直接链接 title=grace_shutdown_wait_seconds的直接链接>​</a></h4>
+<ul>
+<li>描述：在云原生的部署模式下，为了节省资源一个 BE 可能会被频繁的加入集群或者从集群中移除。如果在这个 BE 上有正在运行的 Query，那么这个 Query 会失败。用户可以使用 stop_be.sh --grace 的方式来关闭一个 BE 节点，此时 BE 会等待当前正在这个 BE 上运行的所有查询都结束才会退出。同时，在这个时间范围内 FE 也不会分发新的 query 到这个机器上。如果超过 grace_shutdown_wait_seconds 这个阈值，那么 BE 也会直接退出，防止一些查询长期不退出导致节点没法快速下掉的情况。</li>
+<li>默认值：120</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_java_support><code>enable_java_support</code><a href=#enable_java_support class=hash-link aria-label=enable_java_support的直接链接 title=enable_java_support的直接链接>​</a></h4>
+<ul>
+<li>描述：BE 是否开启使用 java-jni，开启后允许 c++ 与 java 之间的相互调用。目前已经支持 hudi、java-udf、jdbc、max-compute、paimon、preload、avro</li>
+<li>默认值：true</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=group_commit_wal_path><code>group_commit_wal_path</code><a href=#group_commit_wal_path class=hash-link aria-label=group_commit_wal_path的直接链接 title=group_commit_wal_path的直接链接>​</a></h4>
+<ul>
+<li>描述：Group Commit 存放 WAL 文件的目录，请参考 <a href=/zh-CN/docs/dev/data-operate/import/group-commit-manual>Group Commit</a></li>
+<li>默认值：默认在用户配置的<code>storage_root_path</code>的各个目录下创建一个名为<code>wal</code>的目录。配置示例：
+<div class="codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#F8F8F2;--prism-background-color:#282A36><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#F8F8F2;background-color:#282A36><code class=codeBlockLines_e6Vv><span class=token-line style=color:#F8F8F2><span class="token plain">group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label=复制代码到剪贴板 title=复制 class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=存算分离模式>存算分离模式<a href=#存算分离模式 class=hash-link aria-label=存算分离模式的直接链接 title=存算分离模式的直接链接>​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=deploy_mode><code>deploy_mode</code><a href=#deploy_mode class=hash-link aria-label=deploy_mode的直接链接 title=deploy_mode的直接链接>​</a></h4>
+<ul>
+<li>
+<p>默认值：""</p>
+</li>
+<li>
+<p>描述：BE 运行的模式。<code>cloud</code> 表示算分离模式。</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=meta_service_endpoint><code>meta_service_endpoint</code><a href=#meta_service_endpoint class=hash-link aria-label=meta_service_endpoint的直接链接 title=meta_service_endpoint的直接链接>​</a></h4>
+<ul>
+<li>
+<p>默认值：""</p>
+</li>
+<li>
+<p>描述：Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=enable_file_cache><code>enable_file_cache</code><a href=#enable_file_cache class=hash-link aria-label=enable_file_cache的直接链接 title=enable_file_cache的直接链接>​</a></h4>
+<ul>
+<li>
+<p>默认值：在存算分离模式下为 true，在非存算分离模式下为 false。</p>
+</li>
+<li>
+<p>描述：是否使用文件缓存。</p>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=file_cache_path><code>file_cache_path</code><a href=#file_cache_path class=hash-link aria-label=file_cache_path的直接链接 title=file_cache_path的直接链接>​</a></h4>
+<ul>
+<li>
+<p>默认值： [{"path":"${DORIS_HOME}/file_cache"}]</p>
+</li>
+<li>
+<p>描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。<code>path</code> 指定磁盘路径，<code>total_size</code> 限制缓存的大小；-1 或 0 将使用整个磁盘空间。</p>
+</li>
+<li>
+<p>格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]</p>
+</li>
+</ul></div></article><div class="flex items-center text-sm lg:text-base justify-end lg:col mt-10"><a href="https://github.com/apache/doris-website/issues/new?title=Issue on docs&body=Path:false" target=_blank rel="noopener noreferrer" class="lg:mr-6 footerBtn_e3I8"><svg width=20 height=20 viewBox="0 0 20 20" fill=none><path d="M9.48038 2.9C9.71132 2.5 10.2887 2.5 10.5196 2.9L18.1406 16.1C18.3716 16.5 18.0829 17 17.621 17H2.37898C1.9171 17 1.62842 16.5 1.85936 16.1L9.48038 2.9Z" stroke=currentColor stroke-width=1.2 stroke-linecap=round /><path d="M10.5699 7.9516C10.5874 7.5628 10.2769 7.23804 9.88766 7.23804C9.49847 7.23804 9.18796 7.5628 9.20543 7.9516L9.41597 12.6385C9.42731 12.8908 9.63513 13.0895 9.88766 13.0895C10.1402 13.0895 10.348 12.8908 10.3593 12.6385L10.5699 7.9516ZM9.89338 13.7638C9.65338 13.7638 9.44766 13.8323 9.28766 13.9923C9.12766 14.1409 9.04766 14.3352 9.04766 14.5752C9.04766 14.8152 9.12766 15.0095 9.28766 15.1695C9.45909 15.318 9.6648 15.398 9.89338 15.398C10.1219 15.398 10.3162 15.318 10.4762 15.158C10.6477 14.998 10.7277 14.8038 10.7277 14.5752C10.7277 14.3352 10.6477 14.1409 10.4762 13.9923C10.3162 13.8323 10.1219 13.7638 9.89338 13.7638Z" fill=currentColor /></svg> <span class=ml-2>Report issue</span></a></div><nav class="pagination-nav docusaurus-mt-lg" aria-label=文件选项卡><a class="pagination-nav__link pagination-nav__link--prev" href=/zh-CN/docs/dev/admin-manual/config/fe-config><div class=pagination-nav__sublabel>上一页</div><div class=pagination-nav__label>FE 配置项</div></a><a class="pagination-nav__link pagination-nav__link--next" href=/zh-CN/docs/dev/admin-manual/config/user-property><div class=pagination-nav__sublabel>下一页</div><div class=pagination-nav__label>用户配置项</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_jeP5 thin-scrollbar toc-container theme-doc-toc-desktop"><div><a href=/zh-CN/><div class="toc-icon-content group"><svg width=21 height=20 fill=currentColor viewBox="0 0 21 20" class=group-hover:text-[#444FD9]><path fill-rule=evenodd d="M3.835 6.44a1 1 0 0 0-.445.832v8.939c0 .436.354.79.79.79H16.81a.79.79 0 0 0 .79-.79V7.272a1 1 0 0 0-.446-.832L11.05 2.37a1 1 0 0 0-1.11 0zm7.26 4.16a.6.6 0 1 0-1.2 0v3.3a.6.6 0 0 0 1.2 0z" clip-rule=evenodd /></svg><span class=group-hover:text-[#444FD9]>Doris 首页</span></div></a><div class="toc-icon-content group"><svg class=group-hover:text-[#444FD9] width=21 height=20 fill=currentColor viewBox="0 0 21 20"><path d="M15.944 3H5.056C4.2 3 3.5 3.7 3.5 4.556v10.888C3.5 16.3 4.2 17 5.056 17h10.888c.856 0 1.556-.7 1.556-1.556V4.557C17.5 3.7 16.8 3 15.944 3m-5.791 5.998c-.179.575-.384 1.466-.686 2.197-.156.396-.149.327-.266.577l.101-.033c1.04-.29 1.767-.363 2.444-.487-.136-.107-.254-.19-.348-.276-.464-.515-.627-.611-1.245-1.978m5.1 3.297c-.133.147-.366.233-.708.233-.591 0-1.129-.163-1.906-.56-1.338.148-2.761.304-3.562.561q-.06.02-.14.055c-.965 1.648-1.68 2.347-2.31 2.32-.2-.01-.49-.125-.583-.18l-.116-.109-.04-.077a.7.7 0 0 1-.039-.42c.086-.412.529-1.065 1.462-1.649.148-.109.485-.281.796-.429.236-.374.345-.614.643-1.278a23 23 0 0 0 .84-2.443V8.31c-.288-.941-.459-1.58-.171-2.614.07-.296.327-.6.614-.6h.187c.179 0 .35.063.475.188.513.513.272 1.836.015 2.87q-.02.072-.031.109c.311.879.803 1.747 1.293 2.151.202.156.4.335.65.475a9 9 0 0 1 .982-.073c.964 0 1.547.17 1.773.536a.63.63 0 0 1 .093.428.75.75 0 0 1-.218.513m-.492-.65c-.078-.078-.301-.3-1.39-.3-.055 0-.188-.014-.258.064.568.249 1.111.438 1.469.438q.08-.002.148-.016h.03c.04-.015.063-.023.07-.1-.015-.024-.03-.055-.07-.086m-6.846 1.114a3 3 0 0 0-.374.242c-.552.505-.902 1.019-.94 1.314.35-.117.808-.63 1.314-1.556m2.22-5.266.04-.031c.054-.25.092-.517.139-.688l.023-.124c.078-.444.048-.703-.084-.89l-.117-.038q-.03.045-.054.093c-.133.327-.125.978.053 1.678"/></svg><span class=group-hover:text-[#444FD9]>下载 PDF</span></div><a href=https://doris-forum.org.cn target=_blank rel="noopener noreferrer"><div class="toc-icon-content group"><svg width=20 height=20 fill=none viewBox="0 0 20 20" class=group-hover:text-[#444FD9]><g clip-path=url(#a)><path fill=currentColor fill-rule=evenodd d="M3.75 3a.75.75 0 0 0-.75.75v9.519c0 .414.336.75.75.75h1.884v2.3a.4.4 0 0 0 .595.349l4.577-2.554a.75.75 0 0 1 .366-.095h5.078a.75.75 0 0 0 .75-.75V3.75a.75.75 0 0 0-.75-.75zM7.5 8.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3.5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m2.5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" clip-rule=evenodd /></g><defs><clipPath id=a><path fill=#fff d="M0 0h20v20H0z"/></clipPath></defs></svg> <span class=group-hover:text-[#444FD9]>技术论坛</span></div></a></div><div><span class="ml-4 title-text">本页导航</span><ul class="table-of-contents table-of-contents__left-border"><li><a href=#查看配置项 class="table-of-contents__link toc-highlight">查看配置项</a><li><a href=#设置配置项 class="table-of-contents__link toc-highlight">设置配置项</a><li><a href=#应用举例 class="table-of-contents__link toc-highlight">应用举例</a><li><a href=#配置项列表 class="table-of-contents__link toc-highlight">配置项列表</a><ul><li><a href=#服务 class="table-of-contents__link toc-highlight">服务</a><ul><li><a href=#be_port class="table-of-contents__link toc-highlight"><code>be_port</code></a><li><a href=#heartbeat_service_port class="table-of-contents__link toc-highlight"><code>heartbeat_service_port</code></a><li><a href=#webserver_port class="table-of-contents__link toc-highlight"><code>webserver_port</code></a><li><a href=#brpc_port class="table-of-contents__link toc-highlight"><code>brpc_port</code></a><li><a href=#arrow_flight_sql_port class="table-of-contents__link toc-highlight"><code>arrow_flight_sql_port</code></a><li><a href=#enable_https class="table-of-contents__link toc-highlight"><code>enable_https</code></a><li><a href=#priority_networks class="table-of-contents__link toc-highlight"><code>priority_networks</code></a><li><a href=#storage_root_path class="table-of-contents__link toc-highlight"><code>storage_root_path</code></a><li><a href=#heartbeat_service_thread_count class="table-of-contents__link toc-highlight"><code>heartbeat_service_thread_count</code></a><li><a href=#ignore_broken_disk class="table-of-contents__link toc-highlight"><code>ignore_broken_disk</code></a><li><a href=#mem_limit class="table-of-contents__link toc-highlight"><code>mem_limit</code></a><li><a href=#cluster_id class="table-of-contents__link toc-highlight"><code>cluster_id</code></a><li><a href=#custom_config_dir class="table-of-contents__link toc-highlight"><code>custom_config_dir</code></a><li><a href=#trash_file_expire_time_sec class="table-of-contents__link toc-highlight"><code>trash_file_expire_time_sec</code></a><li><a href=#es_http_timeout_ms class="table-of-contents__link toc-highlight"><code>es_http_timeout_ms</code></a><li><a href=#es_scroll_keepalive class="table-of-contents__link toc-highlight"><code>es_scroll_keepalive</code></a><li><a href=#external_table_connect_timeout_sec class="table-of-contents__link toc-highlight"><code>external_table_connect_timeout_sec</code></a><li><a href=#pipeline_status_report_interval class="table-of-contents__link toc-highlight"><code>pipeline_status_report_interval</code></a><li><a href=#brpc_max_body_size class="table-of-contents__link toc-highlight"><code>brpc_max_body_size</code></a><li><a href=#brpc_socket_max_unwritten_bytes class="table-of-contents__link toc-highlight"><code>brpc_socket_max_unwritten_bytes</code></a><li><a href=#transfer_large_data_by_brpc class="table-of-contents__link toc-highlight"><code>transfer_large_data_by_brpc</code></a><li><a href=#brpc_num_threads class="table-of-contents__link toc-highlight"><code>brpc_num_threads</code></a><li><a href=#thrift_rpc_timeout_ms class="table-of-contents__link toc-highlight"><code>thrift_rpc_timeout_ms</code></a><li><a href=#thrift_client_retry_interval_ms class="table-of-contents__link toc-highlight"><code>thrift_client_retry_interval_ms</code></a><li><a href=#thrift_connect_timeout_seconds class="table-of-contents__link toc-highlight"><code>thrift_connect_timeout_seconds</code></a><li><a href=#thrift_server_type_of_fe class="table-of-contents__link toc-highlight"><code>thrift_server_type_of_fe</code></a><li><a href=#thrift_max_message_size class="table-of-contents__link toc-highlight"><code>thrift_max_message_size</code></a><li><a href=#txn_commit_rpc_timeout_ms class="table-of-contents__link toc-highlight"><code>txn_commit_rpc_timeout_ms</code></a><li><a href=#txn_map_shard_size class="table-of-contents__link toc-highlight"><code>txn_map_shard_size</code></a><li><a href=#txn_shard_size class="table-of-contents__link toc-highlight"><code>txn_shard_size</code></a><li><a href=#unused_rowset_monitor_interval class="table-of-contents__link toc-highlight"><code>unused_rowset_monitor_interval</code></a><li><a href=#max_client_cache_size_per_host class="table-of-contents__link toc-highlight"><code>max_client_cache_size_per_host</code></a><li><a href=#string_type_length_soft_limit_bytes class="table-of-contents__link toc-highlight"><code>string_type_length_soft_limit_bytes</code></a><li><a href=#big_column_size_buffer class="table-of-contents__link toc-highlight"><code>big_column_size_buffer</code></a><li><a href=#small_column_size_buffer class="table-of-contents__link toc-highlight"><code>small_column_size_buffer</code></a></ul><li><a href=#查询 class="table-of-contents__link toc-highlight">查询</a><ul><li><a href=#fragment_mgr_asynic_work_pool_queue_size class="table-of-contents__link toc-highlight"><code>fragment_mgr_asynic_work_pool_queue_size</code></a><li><a href=#fragment_mgr_asynic_work_pool_thread_num_min class="table-of-contents__link toc-highlight"><code>fragment_mgr_asynic_work_pool_thread_num_min</code></a><li><a href=#fragment_mgr_asynic_work_pool_thread_num_max class="table-of-contents__link toc-highlight"><code>fragment_mgr_asynic_work_pool_thread_num_max</code></a><li><a href=#doris_scanner_row_num class="table-of-contents__link toc-highlight"><code>doris_scanner_row_num</code></a><li><a href=#doris_scanner_row_bytes class="table-of-contents__link toc-highlight"><code>doris_scanner_row_bytes</code></a><li><a href=#doris_scanner_thread_pool_queue_size class="table-of-contents__link toc-highlight"><code>doris_scanner_thread_pool_queue_size</code></a><li><a href=#doris_scanner_thread_pool_thread_num class="table-of-contents__link toc-highlight"><code>doris_scanner_thread_pool_thread_num</code></a><li><a href=#doris_max_remote_scanner_thread_pool_thread_num class="table-of-contents__link toc-highlight"><code>doris_max_remote_scanner_thread_pool_thread_num</code></a><li><a href=#exchg_node_buffer_size_bytes class="table-of-contents__link toc-highlight"><code>exchg_node_buffer_size_bytes</code></a><li><a href=#doris_scan_range_max_mb class="table-of-contents__link toc-highlight"><code>doris_scan_range_max_mb</code></a></ul><li><a href=#compaction class="table-of-contents__link toc-highlight">compaction</a><ul><li><a href=#disable_auto_compaction class="table-of-contents__link toc-highlight"><code>disable_auto_compaction</code></a><li><a href=#enable_vertical_compaction class="table-of-contents__link toc-highlight"><code>enable_vertical_compaction</code></a><li><a href=#vertical_compaction_num_columns_per_group class="table-of-contents__link toc-highlight"><code>vertical_compaction_num_columns_per_group</code></a><li><a href=#vertical_compaction_max_row_source_memory_mb class="table-of-contents__link toc-highlight"><code>vertical_compaction_max_row_source_memory_mb</code></a><li><a href=#vertical_compaction_max_segment_size class="table-of-contents__link toc-highlight"><code>vertical_compaction_max_segment_size</code></a><li><a href=#enable_ordered_data_compaction class="table-of-contents__link toc-highlight"><code>enable_ordered_data_compaction</code></a><li><a href=#ordered_data_compaction_min_segment_size class="table-of-contents__link toc-highlight"><code>ordered_data_compaction_min_segment_size</code></a><li><a href=#max_base_compaction_threads class="table-of-contents__link toc-highlight"><code>max_base_compaction_threads</code></a><li><a href=#generate_compaction_tasks_interval_ms class="table-of-contents__link toc-highlight"><code>generate_compaction_tasks_interval_ms</code></a><li><a href=#base_compaction_min_rowset_num class="table-of-contents__link toc-highlight"><code>base_compaction_min_rowset_num</code></a><li><a href=#base_compaction_min_data_ratio class="table-of-contents__link toc-highlight"><code>base_compaction_min_data_ratio</code></a><li><a href=#total_permits_for_compaction_score class="table-of-contents__link toc-highlight"><code>total_permits_for_compaction_score</code></a><li><a href=#compaction_promotion_size_mbytes class="table-of-contents__link toc-highlight"><code>compaction_promotion_size_mbytes</code></a><li><a href=#compaction_promotion_ratio class="table-of-contents__link toc-highlight"><code>compaction_promotion_ratio</code></a><li><a href=#compaction_promotion_min_size_mbytes class="table-of-contents__link toc-highlight"><code>compaction_promotion_min_size_mbytes</code></a><li><a href=#compaction_min_size_mbytes class="table-of-contents__link toc-highlight"><code>compaction_min_size_mbytes</code></a><li><a href=#default_rowset_type class="table-of-contents__link toc-highlight"><code>default_rowset_type</code></a><li><a href=#cumulative_compaction_min_deltas class="table-of-contents__link toc-highlight"><code>cumulative_compaction_min_deltas</code></a><li><a href=#cumulative_compaction_max_deltas class="table-of-contents__link toc-highlight"><code>cumulative_compaction_max_deltas</code></a><li><a href=#base_compaction_trace_threshold class="table-of-contents__link toc-highlight"><code>base_compaction_trace_threshold</code></a><li><a href=#cumulative_compaction_trace_threshold class="table-of-contents__link toc-highlight"><code>cumulative_compaction_trace_threshold</code></a><li><a href=#compaction_task_num_per_disk class="table-of-contents__link toc-highlight"><code>compaction_task_num_per_disk</code></a><li><a href=#compaction_task_num_per_fast_disk class="table-of-contents__link toc-highlight"><code>compaction_task_num_per_fast_disk</code></a><li><a href=#cumulative_compaction_rounds_for_each_base_compaction_round class="table-of-contents__link toc-highlight"><code>cumulative_compaction_rounds_for_each_base_compaction_round</code></a><li><a href=#max_cumu_compaction_threads class="table-of-contents__link toc-highlight"><code>max_cumu_compaction_threads</code></a><li><a href=#enable_segcompaction class="table-of-contents__link toc-highlight"><code>enable_segcompaction</code></a><li><a href=#segcompaction_batch_size class="table-of-contents__link toc-highlight"><code>segcompaction_batch_size</code></a><li><a href=#segcompaction_candidate_max_rows class="table-of-contents__link toc-highlight"><code>segcompaction_candidate_max_rows</code></a><li><a href=#segcompaction_batch_size-1 class="table-of-contents__link toc-highlight"><code>segcompaction_batch_size</code></a><li><a href=#segcompaction_candidate_max_rows-1 class="table-of-contents__link toc-highlight"><code>segcompaction_candidate_max_rows</code></a><li><a href=#segcompaction_candidate_max_bytes class="table-of-contents__link toc-highlight"><code>segcompaction_candidate_max_bytes</code></a><li><a href=#segcompaction_task_max_rows class="table-of-contents__link toc-highlight"><code>segcompaction_task_max_rows</code></a><li><a href=#segcompaction_task_max_bytes class="table-of-contents__link toc-highlight"><code>segcompaction_task_max_bytes</code></a><li><a href=#segcompaction_num_threads class="table-of-contents__link toc-highlight"><code>segcompaction_num_threads</code></a><li><a href=#disable_compaction_trace_log class="table-of-contents__link toc-highlight"><code>disable_compaction_trace_log</code></a><li><a href=#pick_rowset_to_compact_interval_sec class="table-of-contents__link toc-highlight"><code>pick_rowset_to_compact_interval_sec</code></a><li><a href=#max_single_replica_compaction_threads class="table-of-contents__link toc-highlight"><code>max_single_replica_compaction_threads</code></a><li><a href=#update_replica_infos_interval_seconds class="table-of-contents__link toc-highlight"><code>update_replica_infos_interval_seconds</code></a></ul><li><a href=#导入 class="table-of-contents__link toc-highlight">导入</a><ul><li><a href=#enable_stream_load_record class="table-of-contents__link toc-highlight"><code>enable_stream_load_record</code></a><li><a href=#load_data_reserve_hours class="table-of-contents__link toc-highlight"><code>load_data_reserve_hours</code></a><li><a href=#push_worker_count_high_priority class="table-of-contents__link toc-highlight"><code>push_worker_count_high_priority</code></a><li><a href=#push_worker_count_normal_priority class="table-of-contents__link toc-highlight"><code>push_worker_count_normal_priority</code></a><li><a href=#enable_single_replica_load class="table-of-contents__link toc-highlight"><code>enable_single_replica_load</code></a><li><a href=#load_error_log_reserve_hours class="table-of-contents__link toc-highlight"><code>load_error_log_reserve_hours</code></a><li><a href=#load_error_log_limit_bytes class="table-of-contents__link toc-highlight"><code>load_error_log_limit_bytes</code></a><li><a href=#load_process_max_memory_limit_percent class="table-of-contents__link toc-highlight"><code>load_process_max_memory_limit_percent</code></a><li><a href=#load_process_soft_mem_limit_percent class="table-of-contents__link toc-highlight"><code>load_process_soft_mem_limit_percent</code></a><li><a href=#slave_replica_writer_rpc_timeout_sec class="table-of-contents__link toc-highlight"><code>slave_replica_writer_rpc_timeout_sec</code></a><li><a href=#max_segment_num_per_rowset class="table-of-contents__link toc-highlight"><code>max_segment_num_per_rowset</code></a><li><a href=#high_priority_flush_thread_num_per_store class="table-of-contents__link toc-highlight"><code>high_priority_flush_thread_num_per_store</code></a><li><a href=#routine_load_consumer_pool_size class="table-of-contents__link toc-highlight"><code>routine_load_consumer_pool_size</code></a><li><a href=#multi_table_batch_plan_threshold class="table-of-contents__link toc-highlight"><code>multi_table_batch_plan_threshold</code></a><li><a href=#multi_table_max_wait_tables class="table-of-contents__link toc-highlight"><code>multi_table_max_wait_tables</code></a><li><a href=#single_replica_load_download_num_workers class="table-of-contents__link toc-highlight"><code>single_replica_load_download_num_workers</code></a><li><a href=#load_task_high_priority_threshold_second class="table-of-contents__link toc-highlight"><code>load_task_high_priority_threshold_second</code></a><li><a href=#min_load_rpc_timeout_ms class="table-of-contents__link toc-highlight"><code>min_load_rpc_timeout_ms</code></a><li><a href=#kafka_api_version_request class="table-of-contents__link toc-highlight"><code>kafka_api_version_request</code></a><li><a href=#kafka_broker_version_fallback class="table-of-contents__link toc-highlight"><code>kafka_broker_version_fallback</code></a><li><a href=#max_consumer_num_per_group class="table-of-contents__link toc-highlight"><code>max_consumer_num_per_group</code></a><li><a href=#streaming_load_max_mb class="table-of-contents__link toc-highlight"><code>streaming_load_max_mb</code></a><li><a href=#streaming_load_json_max_mb class="table-of-contents__link toc-highlight"><code>streaming_load_json_max_mb</code></a><li><a href=#olap_table_sink_send_interval_microseconds class="table-of-contents__link toc-highlight"><code>olap_table_sink_send_interval_microseconds</code>.</a><li><a href=#olap_table_sink_send_interval_auto_partition_factor class="table-of-contents__link toc-highlight"><code>olap_table_sink_send_interval_auto_partition_factor</code>.</a></ul><li><a href=#线程 class="table-of-contents__link toc-highlight">线程</a><ul><li><a href=#delete_worker_count class="table-of-contents__link toc-highlight"><code>delete_worker_count</code></a><li><a href=#clear_transaction_task_worker_count class="table-of-contents__link toc-highlight"><code>clear_transaction_task_worker_count</code></a><li><a href=#clone_worker_count class="table-of-contents__link toc-highlight"><code>clone_worker_count</code></a><li><a href=#be_service_threads class="table-of-contents__link toc-highlight"><code>be_service_threads</code></a><li><a href=#download_worker_count class="table-of-contents__link toc-highlight"><code>download_worker_count</code></a><li><a href=#drop_tablet_worker_count class="table-of-contents__link toc-highlight"><code>drop_tablet_worker_count</code></a><li><a href=#flush_thread_num_per_store class="table-of-contents__link toc-highlight"><code>flush_thread_num_per_store</code></a><li><a href=#publish_version_worker_count class="table-of-contents__link toc-highlight"><code>publish_version_worker_count</code></a><li><a href=#upload_worker_count class="table-of-contents__link toc-highlight"><code>upload_worker_count</code></a><li><a href=#webserver_num_workers class="table-of-contents__link toc-highlight"><code>webserver_num_workers</code></a><li><a href=#send_batch_thread_pool_thread_num class="table-of-contents__link toc-highlight"><code>send_batch_thread_pool_thread_num</code></a><li><a href=#send_batch_thread_pool_queue_size class="table-of-contents__link toc-highlight"><code>send_batch_thread_pool_queue_size</code></a><li><a href=#make_snapshot_worker_count class="table-of-contents__link toc-highlight"><code>make_snapshot_worker_count</code></a><li><a href=#release_snapshot_worker_count class="table-of-contents__link toc-highlight"><code>release_snapshot_worker_count</code></a></ul><li><a href=#内存 class="table-of-contents__link toc-highlight">内存</a><ul><li><a href=#max_memory_sink_batch_count class="table-of-contents__link toc-highlight"><code>max_memory_sink_batch_count</code></a><li><a href=#memtable_mem_tracker_refresh_interval_ms class="table-of-contents__link toc-highlight"><code>memtable_mem_tracker_refresh_interval_ms</code></a><li><a href=#zone_map_row_num_threshold class="table-of-contents__link toc-highlight"><code>zone_map_row_num_threshold</code></a><li><a href=#memory_mode class="table-of-contents__link toc-highlight"><code>memory_mode</code></a><li><a href=#max_sys_mem_available_low_water_mark_bytes class="table-of-contents__link toc-highlight"><code>max_sys_mem_available_low_water_mark_bytes</code></a><li><a href=#memory_limitation_per_thread_for_schema_change_bytes class="table-of-contents__link toc-highlight"><code>memory_limitation_per_thread_for_schema_change_bytes</code></a><li><a href=#mem_tracker_consume_min_size_bytes class="table-of-contents__link toc-highlight"><code>mem_tracker_consume_min_size_bytes</code></a><li><a href=#min_buffer_size class="table-of-contents__link toc-highlight"><code>min_buffer_size</code></a><li><a href=#write_buffer_size class="table-of-contents__link toc-highlight"><code>write_buffer_size</code></a><li><a href=#remote_storage_read_buffer_mb class="table-of-contents__link toc-highlight"><code>remote_storage_read_buffer_mb</code></a><li><a href=#path_gc_check class="table-of-contents__link toc-highlight"><code>path_gc_check</code></a><li><a href=#path_gc_check_interval_second class="table-of-contents__link toc-highlight"><code>path_gc_check_interval_second</code></a><li><a href=#path_gc_check_step class="table-of-contents__link toc-highlight"><code>path_gc_check_step</code></a><li><a href=#path_gc_check_step_interval_ms class="table-of-contents__link toc-highlight"><code>path_gc_check_step_interval_ms</code></a><li><a href=#scan_context_gc_interval_min class="table-of-contents__link toc-highlight"><code>scan_context_gc_interval_min</code></a></ul><li><a href=#存储 class="table-of-contents__link toc-highlight">存储</a><ul><li><a href=#default_num_rows_per_column_file_block class="table-of-contents__link toc-highlight"><code>default_num_rows_per_column_file_block</code></a><li><a href=#disable_storage_page_cache class="table-of-contents__link toc-highlight"><code>disable_storage_page_cache</code></a><li><a href=#disk_stat_monitor_interval class="table-of-contents__link toc-highlight"><code>disk_stat_monitor_interval</code></a><li><a href=#max_garbage_sweep_interval class="table-of-contents__link toc-highlight"><code>max_garbage_sweep_interval</code></a><li><a href=#max_percentage_of_error_disk class="table-of-contents__link toc-highlight"><code>max_percentage_of_error_disk</code></a><li><a href=#min_garbage_sweep_interval class="table-of-contents__link toc-highlight"><code>min_garbage_sweep_interval</code></a><li><a href=#pprof_profile_dir class="table-of-contents__link toc-highlight"><code>pprof_profile_dir</code></a><li><a href=#small_file_dir class="table-of-contents__link toc-highlight"><code>small_file_dir</code></a><li><a href=#user_function_dir class="table-of-contents__link toc-highlight"><code>user_function_dir</code></a><li><a href=#storage_flood_stage_left_capacity_bytes class="table-of-contents__link toc-highlight"><code>storage_flood_stage_left_capacity_bytes</code></a><li><a href=#storage_flood_stage_usage_percent class="table-of-contents__link toc-highlight"><code>storage_flood_stage_usage_percent</code></a><li><a href=#storage_medium_migrate_count class="table-of-contents__link toc-highlight"><code>storage_medium_migrate_count</code></a><li><a href=#storage_page_cache_limit class="table-of-contents__link toc-highlight"><code>storage_page_cache_limit</code></a><li><a href=#storage_page_cache_shard_size class="table-of-contents__link toc-highlight"><code>storage_page_cache_shard_size</code></a><li><a href=#index_page_cache_percentage class="table-of-contents__link toc-highlight"><code>index_page_cache_percentage</code></a><li><a href=#segment_cache_capacity class="table-of-contents__link toc-highlight"><code>segment_cache_capacity</code></a><li><a href=#storage_strict_check_incompatible_old_format class="table-of-contents__link toc-highlight"><code>storage_strict_check_incompatible_old_format</code></a><li><a href=#sync_tablet_meta class="table-of-contents__link toc-highlight"><code>sync_tablet_meta</code></a><li><a href=#pending_data_expire_time_sec class="table-of-contents__link toc-highlight"><code>pending_data_expire_time_sec</code></a><li><a href=#create_tablet_worker_count class="table-of-contents__link toc-highlight"><code>create_tablet_worker_count</code></a><li><a href=#check_consistency_worker_count class="table-of-contents__link toc-highlight"><code>check_consistency_worker_count</code></a><li><a href=#max_tablet_version_num class="table-of-contents__link toc-highlight"><code>max_tablet_version_num</code></a><li><a href=#tablet_map_shard_size class="table-of-contents__link toc-highlight"><code>tablet_map_shard_size</code></a><li><a href=#tablet_meta_checkpoint_min_interval_secs class="table-of-contents__link toc-highlight"><code>tablet_meta_checkpoint_min_interval_secs</code></a><li><a href=#tablet_meta_checkpoint_min_new_rowsets_num class="table-of-contents__link toc-highlight"><code>tablet_meta_checkpoint_min_new_rowsets_num</code></a><li><a href=#tablet_rowset_stale_sweep_time_sec class="table-of-contents__link toc-highlight"><code>tablet_rowset_stale_sweep_time_sec</code></a><li><a href=#tablet_writer_open_rpc_timeout_sec class="table-of-contents__link toc-highlight"><code>tablet_writer_open_rpc_timeout_sec</code></a><li><a href=#tablet_writer_ignore_eovercrowded class="table-of-contents__link toc-highlight"><code>tablet_writer_ignore_eovercrowded</code></a><li><a href=#streaming_load_rpc_max_alive_time_sec class="table-of-contents__link toc-highlight"><code>streaming_load_rpc_max_alive_time_sec</code></a><li><a href=#alter_tablet_worker_count class="table-of-contents__link toc-highlight"><code>alter_tablet_worker_count</code></a></ul><li><a href=#alter_index_worker_count class="table-of-contents__link toc-highlight"><code>alter_index_worker_count</code></a><ul><li><a href=#ignore_load_tablet_failure class="table-of-contents__link toc-highlight"><code>ignore_load_tablet_failure</code></a><li><a href=#report_disk_state_interval_seconds class="table-of-contents__link toc-highlight"><code>report_disk_state_interval_seconds</code></a><li><a href=#result_buffer_cancelled_interval_time class="table-of-contents__link toc-highlight"><code>result_buffer_cancelled_interval_time</code></a><li><a href=#snapshot_expire_time_sec class="table-of-contents__link toc-highlight"><code>snapshot_expire_time_sec</code></a></ul><li><a href=#日志 class="table-of-contents__link toc-highlight">日志</a><ul><li><a href=#sys_log_dir class="table-of-contents__link toc-highlight"><code>sys_log_dir</code></a><li><a href=#sys_log_level class="table-of-contents__link toc-highlight"><code>sys_log_level</code></a><li><a href=#sys_log_roll_mode class="table-of-contents__link toc-highlight"><code>sys_log_roll_mode</code></a><li><a href=#sys_log_roll_num class="table-of-contents__link toc-highlight"><code>sys_log_roll_num</code></a><li><a href=#sys_log_verbose_level class="table-of-contents__link toc-highlight"><code>sys_log_verbose_level</code></a><li><a href=#sys_log_verbose_modules class="table-of-contents__link toc-highlight"><code>sys_log_verbose_modules</code></a><li><a href=#aws_log_level class="table-of-contents__link toc-highlight"><code>aws_log_level</code></a><li><a href=#log_buffer_level class="table-of-contents__link toc-highlight"><code>log_buffer_level</code></a></ul><li><a href=#其它 class="table-of-contents__link toc-highlight">其它</a><ul><li><a href=#report_tablet_interval_seconds class="table-of-contents__link toc-highlight"><code>report_tablet_interval_seconds</code></a><li><a href=#report_task_interval_seconds class="table-of-contents__link toc-highlight"><code>report_task_interval_seconds</code></a><li><a href=#enable_metric_calculator class="table-of-contents__link toc-highlight"><code>enable_metric_calculator</code></a><li><a href=#enable_system_metrics class="table-of-contents__link toc-highlight"><code>enable_system_metrics</code></a><li><a href=#enable_token_check class="table-of-contents__link toc-highlight"><code>enable_token_check</code></a><li><a href=#max_runnings_transactions_per_txn_map class="table-of-contents__link toc-highlight"><code>max_runnings_transactions_per_txn_map</code></a><li><a href=#max_download_speed_kbps class="table-of-contents__link toc-highlight"><code>max_download_speed_kbps</code></a><li><a href=#download_low_speed_time class="table-of-contents__link toc-highlight"><code>download_low_speed_time</code></a><li><a href=#download_low_speed_limit_kbps class="table-of-contents__link toc-highlight"><code>download_low_speed_limit_kbps</code></a><li><a href=#enable_batch_download class="table-of-contents__link toc-highlight"><code>enable_batch_download</code></a><li><a href=#priority_queue_remaining_tasks_increased_frequency class="table-of-contents__link toc-highlight"><code>priority_queue_remaining_tasks_increased_frequency</code></a><li><a href=#jdbc_drivers_dir class="table-of-contents__link toc-highlight"><code>jdbc_drivers_dir</code></a><li><a href=#enable_simdjson_reader class="table-of-contents__link toc-highlight"><code>enable_simdjson_reader</code></a><li><a href=#enable_query_memory_overcommit class="table-of-contents__link toc-highlight"><code>enable_query_memory_overcommit</code></a><li><a href=#user_files_secure_path class="table-of-contents__link toc-highlight"><code>user_files_secure_path</code></a><li><a href=#brpc_streaming_client_batch_bytes class="table-of-contents__link toc-highlight"><code>brpc_streaming_client_batch_bytes</code></a><li><a href=#grace_shutdown_wait_seconds class="table-of-contents__link toc-highlight"><code>grace_shutdown_wait_seconds</code></a><li><a href=#enable_java_support class="table-of-contents__link toc-highlight"><code>enable_java_support</code></a><li><a href=#group_commit_wal_path class="table-of-contents__link toc-highlight"><code>group_commit_wal_path</code></a></ul><li><a href=#存算分离模式 class="table-of-contents__link toc-highlight">存算分离模式</a><ul><li><a href=#deploy_mode class="table-of-contents__link toc-highlight"><code>deploy_mode</code></a><li><a href=#meta_service_endpoint class="table-of-contents__link toc-highlight"><code>meta_service_endpoint</code></a><li><a href=#enable_file_cache class="table-of-contents__link toc-highlight"><code>enable_file_cache</code></a><li><a href=#file_cache_path class="table-of-contents__link toc-highlight"><code>file_cache_path</code></a></ul></ul></ul></div></div></div></div></div></main></div></div></div><div class="footer pt-16 pb-10"><div class=container><div class=footer-box><div class=left><img src=/zh-CN/images/asf_logo_apache.svg alt="" class="footer__logo themedComponent_mlkZ themedComponent--light_NVdE"><img src=/zh-CN/images/asf_logo_apache.svg alt="" class="footer__logo themedComponent_mlkZ themedComponent--dark_xIcU"><div class="row footer__links"><div class="col footer__col"><div class=footer__title>ASF</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.apache.org/ target=_blank rel="noopener noreferrer" class=footer__link-item>Foundation<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/licenses/ target=_blank rel="noopener noreferrer" class=footer__link-item>License<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/events/current-event target=_blank rel="noopener noreferrer" class=footer__link-item>Events<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/foundation/sponsorship.html target=_blank rel="noopener noreferrer" class=footer__link-item>Sponsorship<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://privacy.apache.org/policies/privacy-policy-public.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/security/ target=_blank rel="noopener noreferrer" class=footer__link-item>Security<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/foundation/thanks.html target=_blank rel="noopener noreferrer" class=footer__link-item>Thanks<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a></ul></div><div class="col footer__col"><div class=footer__title>Resources</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/zh-CN/download>Download</a><li class=footer__item><a class=footer__link-item href=/zh-CN/blog>Blog</a><li class=footer__item><a class=footer__link-item href=/zh-CN/ecosystem/cluster-management>Ecosystem</a><li class=footer__item><a class=footer__link-item href=/zh-CN/users>Users</a><li class=footer__item><a href=https://github.com/apache/doris/discussions target=_blank rel="noopener noreferrer" class=footer__link-item>Discussions<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a></ul></div><div class="col footer__col"><div class=footer__title>Community</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/zh-CN/community/how-to-contribute/>How to contribute</a><li class=footer__item><a href=https://github.com/apache/doris/ target=_blank rel="noopener noreferrer" class=footer__link-item>Source code<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a class=footer__link-item href=/zh-CN/community/team>Doris team</a><li class=footer__item><a href=https://github.com/apache/doris/issues/30669 target=_blank rel="noopener noreferrer" class=footer__link-item>Roadmap<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals target=_blank rel="noopener noreferrer" class=footer__link-item>Improvement proposal<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a></ul></div></div></div><div class=right><div class=footer__title>Join the community</div><div class=social-list><div class=social><a href=mailto:dev@doris.apache.org target=_blank title=mail class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><path d="M5.6003 6H26.3997C27.8186 6 28.982 7.10964 29 8.46946L16.0045 15.454L3.01202 8.47829C3.02405 7.11258 4.1784 6 5.6003 6ZM3.01202 11.1508L3 23.5011C3 24.8756 4.16938 26 5.6003 26H26.3997C27.8306 26 29 24.8756 29 23.5011V11.145L16.3111 17.8028C16.1157 17.9058 15.8813 17.9058 15.6889 17.8028L3.01202 11.1508Z" fill=currentColor /></svg></a><a href=https://github.com/apache/doris target=_blank title=github class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><path d="M16.0001 2.66675C8.63342 2.66675 2.66675 8.63341 2.66675 16.0001C2.66524 18.7991 3.54517 21.5276 5.1817 23.7983C6.81824 26.0691 9.12828 27.7668 11.7841 28.6508C12.4508 28.7668 12.7001 28.3668 12.7001 28.0161C12.7001 27.7001 12.6828 26.6508 12.6828 25.5334C9.33342 26.1508 8.46675 24.7174 8.20008 23.9668C8.04942 23.5828 7.40008 22.4001 6.83342 22.0828C6.36675 21.8334 5.70008 21.2161 6.81608 21.2001C7.86675 21.1828 8.61608 22.1668 8.86675 22.5668C10.0668 24.5828 11.9841 24.0161 12.7494 23.6668C12.8668 22.8001 13.2161 22.2174 13.6001 21.8841C10.6334 21.5508 7.53342 20.4001 7.53342 15.3001C7.53342 13.8494 8.04942 12.6507 8.90008 11.7161C8.76675 11.3827 8.30008 10.0161 9.03342 8.18275C9.03342 8.18275 10.1494 7.83342 12.7001 9.55075C13.7855 9.2495 14.907 9.09787 16.0334 9.10008C17.1668 9.10008 18.3001 9.24942 19.3668 9.54942C21.9161 7.81608 23.0334 8.18408 23.0334 8.18408C23.7668 10.0174 23.3001 11.3841 23.1668 11.7174C24.0161 12.6507 24.5334 13.8334 24.5334 15.3001C24.5334 20.4174 21.4174 21.5508 18.4508 21.8841C18.9334 22.3001 19.3508 23.1001 19.3508 24.3508C19.3508 26.1334 19.3334 27.5668 19.3334 28.0174C19.3334 28.3668 19.5841 28.7828 20.2508 28.6494C22.8975 27.7558 25.1973 26.0547 26.8266 23.7856C28.4559 21.5165 29.3327 18.7936 29.3334 16.0001C29.3334 8.63341 23.3668 2.66675 16.0001 2.66675V2.66675Z" fill=currentColor /></svg></a><a href=https://twitter.com/doris_apache target=_blank title=twitter class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><path d="M4.625 4.625H11.2809L27.375 27.375H20.7191L4.625 4.625ZM7.52549 6.10639L21.5236 25.8936H24.4746L10.4764 6.10639H7.52549Z" fill=currentColor /><path d="M14.4268 18.4803L6.53447 27.375H4.625L13.5581 17.2525L14.4268 18.4803ZM18.1299 14.3066L26.7203 4.625H24.7017L17.2525 13.0662L18.1299 14.3066Z" fill=currentColor /></svg></a><a href=https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w title=slack target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><g clip-path=url(#clip0_125_278)><path d="M12.5875 16.6906C11.0844 16.6906 9.86562 17.9094 9.86562 19.4125V26.2375C9.86562 26.9594 10.1524 27.6517 10.6628 28.1622C11.1733 28.6726 11.8656 28.9594 12.5875 28.9594C13.3094 28.9594 14.0017 28.6726 14.5122 28.1622C15.0226 27.6517 15.3094 26.9594 15.3094 26.2375V19.4531C15.3094 17.9094 14.0906 16.6906 12.5875 16.6906ZM3 19.4531C3 20.175 3.28677 20.8673 3.79722 21.3778C4.30767 21.8882 4.99999 22.175 5.72187 22.175C6.44376 22.175 7.13608 21.8882 7.64653 21.3778C8.15698 20.8673 8.44375 20.175 8.44375 19.4531V16.7312H5.7625C4.25938 16.6906 3 17.9094 3 19.4531ZM12.5875 3C11.8656 3 11.1733 3.28677 10.6628 3.79722C10.1524 4.30767 9.86562 4.99999 9.86562 5.72187C9.86562 6.44376 10.1524 7.13608 10.6628 7.64653C11.1733 8.15698 11.8656 8.44375 12.5875 8.44375H15.3094V5.72187C15.3094 4.21875 14.0906 3 12.5875 3ZM5.72187 15.3094H12.5469C13.2688 15.3094 13.9611 15.0226 14.4715 14.5122C14.982 14.0017 15.2688 13.3094 15.2688 12.5875C15.2688 11.8656 14.982 11.1733 14.4715 10.6628C13.9611 10.1524 13.2688 9.86562 12.5469 9.86562H5.72187C4.99999 9.86562 4.30767 10.1524 3.79722 10.6628C3.28677 11.1733 3 11.8656 3 12.5875C3 13.3094 3.28677 14.0017 3.79722 14.5122C4.30767 15.0226 4.99999 15.3094 5.72187 15.3094ZM26.2375 9.86562C24.7344 9.86562 23.5156 11.0844 23.5156 12.5875V15.3094H26.2375C26.9594 15.3094 27.6517 15.0226 28.1622 14.5122C28.6726 14.0017 28.9594 13.3094 28.9594 12.5875C28.9594 11.8656 28.6726 11.1733 28.1622 10.6628C27.6517 10.1524 26.9594 9.86562 26.2375 9.86562ZM16.6906 5.72187V12.5875C16.6906 13.3094 16.9774 14.0017 17.4878 14.5122C17.9983 15.0226 18.6906 15.3094 19.4125 15.3094C20.1344 15.3094 20.8267 15.0226 21.3372 14.5122C21.8476 14.0017 22.1344 13.3094 22.1344 12.5875V5.72187C22.1344 4.99999 21.8476 4.30767 21.3372 3.79722C20.8267 3.28677 20.1344 3 19.4125 3C18.6906 3 17.9983 3.28677 17.4878 3.79722C16.9774 4.30767 16.6906 4.99999 16.6906 5.72187ZM22.1344 26.2781C22.1344 24.775 20.9156 23.5562 19.4125 23.5562H16.6906V26.2781C16.6906 27 16.9774 27.6923 17.4878 28.2028C17.9983 28.7132 18.6906 29 19.4125 29C20.1344 29 20.8267 28.7132 21.3372 28.2028C21.8476 27.6923 22.1344 27 22.1344 26.2781ZM26.2781 16.6906H19.4125C18.6906 16.6906 17.9983 16.9774 17.4878 17.4878C16.9774 17.9983 16.6906 18.6906 16.6906 19.4125C16.6906 20.1344 16.9774 20.8267 17.4878 21.3372C17.9983 21.8476 18.6906 22.1344 19.4125 22.1344H26.2375C27.7406 22.1344 28.9594 20.9156 28.9594 19.4125C29 17.9094 27.7812 16.6906 26.2781 16.6906Z" fill=currentColor /></g><defs><clipPath id=clip0_125_278><rect width=26 height=26 fill=currentColor transform="translate(3 3)"/></clipPath></defs></svg></a></div><div class=social><a href=https://www.youtube.com/hashtag/apachedoris title=youtube target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><path d="M28.5167 7.83429C28.9436 8.25423 29.2532 8.77539 29.4154 9.34742C29.8205 11.5462 30.0159 13.7775 29.999 16.0121C30.0144 18.2382 29.819 20.4609 29.4154 22.6515C29.2532 23.2235 28.9436 23.7446 28.5167 24.1645C28.0898 24.5845 27.5601 24.889 26.9785 25.0486C24.7728 25.625 16.0124 25.625 16.0124 25.625C16.0124 25.625 7.22652 25.625 5.04638 25.0486C4.46489 24.889 3.9351 24.5845 3.5082 24.1645C3.08132 23.7446 2.77176 23.2235 2.60948 22.6515C2.19736 20.4617 1.9934 18.239 2.00025 16.0121C1.9918 13.7767 2.19577 11.5455 2.60948 9.34742C2.77176 8.77539 3.08132 8.25423 3.5082 7.83429C3.9351 7.41436 4.46489 7.10985 5.04638 6.95021C7.25103 6.36354 16.0124 6.37502 16.0124 6.37502C16.0124 6.37502 24.796 6.37502 26.9785 6.95021C27.5601 7.10985 28.0898 7.41436 28.5167 7.83429ZM12.5 21.25L21.25 16.008L12.5 10.75V21.25Z" fill=currentColor /></svg></a><a href=https://www.linkedin.com/company/doris-apache/ title=linkedin target=_blank class=item><svg width=2rem height=2rem viewBox="0 0 32 32" fill=none><path d="M4.29925 26.9996H9.66738V11.6781H4.29925V26.9996ZM22.1628 11.1949C19.9409 11.1949 18.7157 11.9388 17.3054 13.7407V11.6777H11.9459V26.9996H17.305V18.6738C17.305 16.9168 18.145 15.1982 20.1535 15.1982C22.162 15.1982 22.6559 16.9164 22.6559 18.632V27H28V18.2902C28 12.2386 24.3854 11.1949 22.1628 11.1949ZM6.99325 4C5.3395 4 4 5.21047 4 6.7046C4 8.19759 5.3395 9.40617 6.99325 9.40617C8.6455 9.40617 9.985 8.19722 9.985 6.7046C9.985 5.21047 8.6455 4 6.99325 4Z" fill=white /></svg></a><a href=https://medium.com/@ApacheDoris title=medium target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><g id=Frame><path id=Vector d="M17.7967 16.5385C17.8029 18.53 16.9746 20.4425 15.4937 21.8559C14.0128 23.2693 12.0004 24.0681 9.89836 24.0769C7.79633 24.0681 5.78391 23.2693 4.30302 21.8559C2.82212 20.4425 1.99383 18.53 2.00003 16.5385C1.99383 14.5469 2.82212 12.6344 4.30302 11.221C5.78391 9.80759 7.79633 9.00878 9.89836 9C12.0004 9.00878 14.0128 9.80759 15.4937 11.221C16.9746 12.6344 17.8029 14.5469 17.7967 16.5385ZM26.4533 16.5385C26.4533 20.4514 24.6917 23.6348 22.51 23.6348C20.3283 23.6348 18.555 20.4514 18.555 16.5385C18.555 12.6255 20.3283 9.44214 22.51 9.44214C24.6917 9.44214 26.4533 12.6255 26.4533 16.5385ZM30 16.5385C30 20.0424 29.3817 22.8942 28.6117 22.8942C27.8417 22.8942 27.2233 20.0424 27.2233 16.5385C27.2233 13.0345 27.8417 10.1827 28.6117 10.1827C29.3817 10.1827 30 13.0345 30 16.5385Z" fill=currentColor /></g></svg></a><a class="item wechat"><svg width=2em height=2em viewBox="0 0 32 32" fill=none><path d="M20.7578 11.5169C21.0708 11.5169 21.3795 11.5398 21.6851 11.573C20.8524 7.73517 16.7052 4.88306 11.9718 4.88306C6.67951 4.88306 2.34412 8.45283 2.34412 12.9854C2.34412 15.6013 3.78679 17.7498 6.19667 19.4161L5.2339 22.2827L8.59917 20.6122C9.80411 20.8478 10.7698 21.0906 11.9718 21.0906C12.2738 21.0906 12.5728 21.0759 12.8703 21.0523C12.682 20.4159 12.5728 19.7485 12.5728 19.0566C12.5728 14.8947 16.1847 11.5169 20.7578 11.5169ZM15.5822 8.9335C16.3072 8.9335 16.7871 9.40601 16.7871 10.1229C16.7871 10.8369 16.3072 11.3153 15.5822 11.3153C14.8601 11.3153 14.1365 10.8369 14.1365 10.1229C14.1365 9.40601 14.8601 8.9335 15.5822 8.9335ZM8.84429 11.3153C8.12218 11.3153 7.3942 10.8368 7.3942 10.1229C7.3942 9.40597 8.12218 8.93346 8.84429 8.93346C9.56559 8.93346 10.0463 9.40597 10.0463 10.1229C10.0463 10.8369 9.56559 11.3153 8.84429 11.3153ZM29.5453 18.9422C29.5453 15.1332 25.6935 12.0285 21.3677 12.0285C16.7871 12.0285 13.1797 15.1332 13.1797 18.9422C13.1797 22.7567 16.7871 25.8547 21.3677 25.8547C22.326 25.8547 23.2932 25.6169 24.2559 25.3777L26.897 26.8086L26.1726 24.4282C28.1056 22.993 29.5453 21.0906 29.5453 18.9422ZM18.7126 17.7498C18.2335 17.7498 17.7499 17.278 17.7499 16.7966C17.7499 16.3219 18.2335 15.8442 18.7126 15.8442C19.4406 15.8442 19.9176 16.3219 19.9176 16.7966C19.9176 17.278 19.4406 17.7498 18.7126 17.7498ZM24.0079 17.7498C23.5324 17.7498 23.0518 17.278 23.0518 16.7966C23.0518 16.3219 23.5324 15.8442 24.0079 15.8442C24.73 15.8442 25.2128 16.3219 25.2128 16.7966C25.2128 17.278 24.73 17.7498 24.0079 17.7498Z" fill=currentColor /></svg><div class=wechat-dropdown><p class="text-[#4c576c] text-xs">Connect on WeChat</p><img src=/zh-CN/assets/images/doris-wechat-b949e908a3bc2776d824f79a9100bd4b.png alt=""></div></a></div></div></div></div><div class=footer__copyright>Copyright © 2025 The Apache Software Foundation,Licensed under the <a href=https://www.apache.org/licenses/LICENSE-2.0 target=_blank>Apache License, Version 2.0</a>. Apache, Doris, Apache Doris, the Apache feather logo and the Apache Doris logo are trademarks of The Apache Software Foundation.</div></div></div></div>
