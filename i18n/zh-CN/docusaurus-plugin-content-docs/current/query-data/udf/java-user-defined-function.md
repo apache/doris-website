@@ -67,7 +67,11 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 1. 不支持复杂数据类型（HLL，Bitmap）。
 2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 3. 由于 jvm 加载同名类的问题，不要同时使用多个同名类作为 udf 实现，如果想更新某个同名类的 udf，需要重启 be 重新加载 classpath。
+4. 同名函数
 
+    用户可以创建和内置函数签名完全相同的自定义函数。默认情况下，系统会优先匹配内置函数。但如果使用函数时，指定了 `database`（即 `db.function()`），则会被强制认为是用户自定义函数。
+
+    在 3.0.7 版本中，新增了会话变量 `prefer_udf_over_builtin`。当设置为 `true` 时，会优先匹配用户自定义函数，以便于用户从其他系统迁移到 Doris 时，在不改变函数名称的情况下，通过自定义函数保持原有系统的函数行为。
 
 ## 快速上手
 本节主要介绍如何开发 Java UDF。在 `samples/doris-demo/java-udf-demo/` 目录下提供了示例代码，供您参考。您也可以查看 [demo](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)。
