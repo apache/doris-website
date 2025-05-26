@@ -296,6 +296,18 @@ To stop and delete the `testdb.example_routine_load_csv` load job, you can use t
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
+### Choosing Compute Group
+In the storage-computation separation mode, the priority logic for Routine Load to select a Compute Group is as follows:
+1. Select the Compute Group specified by the ```use db@cluster statement```;
+2. Select the Compute Group specified by the user properties ```default_compute_group```;
+3. Select one from the Compute Groups that the current user has permissions to access;
+
+In the integrated storage-computation mode, select the Compute Group specified in the user properties ```resource_tags.location```;
+if not specified in the user properties, use the Compute Group named ```default```;
+
+It should be noted that the Compute Group for a Routine Load job can only be specified at the time of creation. 
+Once the Routine Load job is created, the Compute Group bound to the Routine Load cannot be modified.
+
 ## Reference Manual
 
 ### Load Commands

@@ -581,7 +581,8 @@
                             "items": [
                                 "admin-manual/workload-management/resource-group",
                                 "admin-manual/workload-management/compute-group",
-                                "admin-manual/workload-management/workload-group"
+                                "admin-manual/workload-management/workload-group",
+                                "admin-manual/workload-management/workload-group-bind-compute-group"
                             ]
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
