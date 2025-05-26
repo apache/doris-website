@@ -69,7 +69,7 @@ There are two ways to configure BE configuration items:
 
 1. Static configuration
 
-   Add and set configuration items in the `conf/be.conf` file. The configuration items in `be.conf` will be read when BE starts. Configuration items not in `be.conf` will use default values.
+   Add and set configuration items in the `conf/be.conf` file. The configuration items in `be.conf` will be read when BE starts. Configuration items not in `be.conf` will use default values. 
 
 2. Dynamic configuration
 
@@ -84,6 +84,10 @@ There are two ways to configure BE configuration items:
     ```
     curl -X POST http://{be_ip}:{be_http_port}/api/update_config?{key}={value}\&persist=true
     ```
+
+** ​Note:​​**
+
+In the `be.conf` configuration file, the value of configuration items supports the use of the `$` symbol to dynamically retrieve values from system environment variables. For example, `storage_root_path` can be set to `${DORIS_HOME}/storage` or `$DORIS_HOME/storage`. Valid characters for variable names are uppercase/lowercase letters (`[a-zA-Z]`), underscores (`_`), and digits (`[0-9]`). The first character can be any of the above (no restrictions). ​To use a literal `$` (avoiding variable substitution), escape it with two consecutive dollar signs: `$$`.
 
 ## Examples
 
