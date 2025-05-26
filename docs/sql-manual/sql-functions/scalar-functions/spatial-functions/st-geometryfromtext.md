@@ -53,7 +53,9 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 
 ## Return Value
 
-The corresponding geometric storage form of WKB, returns NULL when the input WKT format does not conform to specifications.
+The corresponding geometric storage form of WKB
+
+Returns NULL when the input WKT format does not conform to specifications or when the input is NULL.
 
 ## Examples
 
@@ -185,4 +187,17 @@ SELECT ST_AsText(ST_GeometryFromText("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 
 +----------------------------------------------------------------------------------------------------------------------+
 | NULL                                                                                                                 |
 +----------------------------------------------------------------------------------------------------------------------+
+```
+
+```sql
+-- input NULL
+SELECT ST_AsText(ST_GeometryFromText(NULL));
+```
+
+```text
++--------------------------------------+
+| ST_AsText(ST_GeometryFromText(NULL)) |
++--------------------------------------+
+| NULL                                 |
++--------------------------------------+
 ```
