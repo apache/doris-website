@@ -67,7 +67,7 @@ There are two ways to configure FE configuration items:
 
 1. Static configuration
 
-    Add and set configuration items in the `conf/fe.conf` file. The configuration items in `fe.conf` will be read when the FE process starts. Configuration items not in `fe.conf` will use default values.
+    Add and set configuration items in the `conf/fe.conf` file. The configuration items in `fe.conf` will be read when the FE process starts. Configuration items not in `fe.conf` will use default values. In the `fe.conf` configuration file, the values of configuration items support the use of the `$` symbol to dynamically retrieve values from system environment variables. For example, `meta_dir` can be set to `${DORIS_HOME}/doris-meta` or `$DORIS_HOME/doris-meta`. Note that the naming convention for system variables requires the use of uppercase/lowercase letters (`[a-zA-Z]`), underscores (`_`), or digits (`[0-9]`), with no restrictions on the first character. Additionally, to escape the `$` symbol (use it literally), two consecutive backslashes followed by `$` (`\\$`) are required.
 
 2. Dynamic configuration via MySQL protocol
 
