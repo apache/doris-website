@@ -62,7 +62,7 @@ PROPERTIES
     "label" = "mylabel",
     "column_separator"=",",
     "columns" = "col1,col2",
-    "parallelusm" = "3"
+    "parallelism" = "3"
 )
 WITH BROKER "hdfs"
 (
@@ -79,7 +79,7 @@ WITH BROKER "hdfs"
 
 * `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 `\x07`。
 
-* `parallelusm`：并发 3 个线程去导出。
+* `parallelism`：并发 3 个线程去导出。
 
 ### 导出到对象存储
 
