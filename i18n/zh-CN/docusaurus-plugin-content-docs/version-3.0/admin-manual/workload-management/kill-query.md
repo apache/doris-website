@@ -71,7 +71,7 @@ SELECT * FROM information_schema.processlist;
 
 ### TRACE ID
 
-> 该功能自 2.0.11 和 3.0.7 版本支持。
+> 该功能自 2.1.11 和 3.0.7 版本支持。
 
 默认情况下，系统会为每个查询自动生成 Query ID。用户需先通过 `processlist` 系统表获取到 Query ID 后，再进行 KILL 操作。
 
@@ -117,7 +117,7 @@ KILL QUERY "query_id" | "trace_id" | connection_id;
 	
 	该操作会尝试在所有 FE 节点查找 Trace ID 并取消对应的查询。
 
-	> 该功能自 2.0.11 和 3.0.7 版本支持。
+	> 该功能自 2.1.11 和 3.0.7 版本支持。
 
 - `connection_id`
 

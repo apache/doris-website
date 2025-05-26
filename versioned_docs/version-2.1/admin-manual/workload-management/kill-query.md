@@ -71,7 +71,7 @@ By default, `processlist` displays session connections from all FE nodes without
 
 ### TRACE ID
 
-> This feature is supported since versions 2.0.11 and 3.0.7.
+> This feature is supported since versions 2.1.11 and 3.0.7.
 
 By default, the system automatically generates a Query ID for each query. Users need to first obtain the Query ID through the `processlist` system table before performing a KILL operation.
 
@@ -117,7 +117,7 @@ KILL QUERY "query_id" | "trace_id" | connection_id;
 	
 	This operation will attempt to find the Trace ID on all FE nodes and cancel the corresponding query.
 
-	> This feature is supported since versions 2.0.11 and 3.0.7.
+	> This feature is supported since versions 2.1.11 and 3.0.7.
 
 - `connection_id`
 
