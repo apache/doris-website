@@ -43,6 +43,17 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 |-------|---------|
 | `<wkt>` | 图形的内存形式 |
 
+## 支持的WKT格式
+
+- `POINT` - 空间中的单个点
+- `LINESTRING` - 连接的线段序列
+- `POLYGON` - 由一个或多个环定义的封闭区域
+- `MULTIPOLYGON` - 多边形的集合
+
+:::info 备注
+从 Apache Doris 2.1.10 开始支持 MULTIPOLYGON 格式解析
+:::
+
 ## 返回值
 
 WKB 的对应的几何存储形式

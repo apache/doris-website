@@ -44,6 +44,13 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 |------------|---------|
 | `<wkt>`    | The memory form of the graph |
 
+## Support WKT Formats
+
+- `POINT` - A single point in space
+- `LINESTRING` - A sequence of connected line segments
+- `POLYGON` - A closed area defined by one or more rings
+- `MULTIPOLYGON` - A collection of polygons
+
 ## Return Value
 
 The corresponding geometric storage form of WKB
