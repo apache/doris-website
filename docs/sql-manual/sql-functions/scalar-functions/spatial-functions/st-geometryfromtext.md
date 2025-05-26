@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Convert a linear WKT (Well Known Text) to the corresponding memory geometry
+Convert a WKT (Well Known Text) to the corresponding memory geometry
 
 
 ## Alias
@@ -53,7 +53,7 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 
 ## Return Value
 
-The corresponding geometric storage form of WKB
+The corresponding geometric storage form of WKB, returns NULL when the input WKT format does not conform to specifications.
 
 ## Examples
 

@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Convert a linear WKT (Well Known Text) to the corresponding memory geometry
+Convert a WKT (Well Known Text) to the corresponding memory geometry
 
 
 ## Alias
@@ -57,7 +57,7 @@ Supported MULTIPOLYGON format parsing since Apache Doris 2.1.10
 
 ## Return Value
 
-The corresponding geometric storage form of WKB
+The corresponding geometric storage form of WKB, returns NULL when the input WKT format does not conform to specifications.
 
 ## Examples
 

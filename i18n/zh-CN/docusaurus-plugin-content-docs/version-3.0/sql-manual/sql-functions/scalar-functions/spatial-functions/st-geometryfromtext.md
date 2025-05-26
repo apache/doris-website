@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-将一个线型 WKT（Well Known Text）转化为对应的内存的几何形式
+WKB 的对应的几何存储形式, 当输入 WKT 格式不符合规范时返回 NULL。
 
 ## 别名
 
@@ -55,7 +55,7 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 
 ## 返回值
 
-WKB 的对应的几何存储形式
+WKB 的对应的几何存储形式, 当输入的 WKT 格式不符合规范时返回 NULL。
 
 ## 举例
 
