@@ -28,6 +28,10 @@ under the License.
 
 判断几何图形 shape1 是否与几何图形 shape2 相交
 
+:::info 备注
+从 Apache Doris 3.0.6 开始支持该函数
+:::
+
 ## 语法
 
 ```sql

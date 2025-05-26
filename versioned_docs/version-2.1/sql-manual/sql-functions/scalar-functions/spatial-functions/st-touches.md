@@ -28,6 +28,10 @@ under the License.
 
 Determines whether the geometry shape1 touches the geometry shape2. (i.e., whether the boundaries of the two geometries intersect but their interiors do not)
 
+:::info Note
+Supported since Apache Doris 2.1.10.
+:::
+
 ## Syntax
 
 ```sql

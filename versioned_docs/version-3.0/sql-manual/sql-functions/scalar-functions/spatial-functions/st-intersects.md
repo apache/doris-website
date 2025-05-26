@@ -28,6 +28,10 @@ under the License.
 
 Determines whether the geometry shape1 intersects with the geometry shape2.
 
+:::info Note
+Supported since Apache Doris 3.0.6.
+:::
+
 ## Syntax
 
 ```sql
