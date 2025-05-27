@@ -89,6 +89,75 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
+            detailTitle: '可观测系列直播（第三期） | Trace 监控场景',
+            date: '2025 年 05 月 28 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '直播第三场将带来 Apache Doris 在监控场景下的 Benchmark 性能实测与云上实时采集能力对比，带领用户直观感受监控场景的落地方案。',
+            start_date: '2025-05-28T19:00:00.000Z',
+            end_date: '2025-05-28T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测系列直播第三期"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-250528.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250528',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '可观测系列直播（第二期） | Log 日志场景',
+            date: '2025 年 05 月 14 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '直播第二场将带来 Apache Doris 在可观测性解决方案日志场景下的资源评估、集群部署、配置优化、建表、查询等具体介绍，为用户提供全面的日志场景解读与落地方案。',
+            start_date: '2025-05-14T19:00:00.000Z',
+            end_date: '2025-05-14T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测系列直播第二期"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-250514.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250514',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '可观测系列直播（第一期） | 解决方案概览',
+            date: '2025 年 05 月 07 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '首期直播由 Apache Doris PMC 成员肖康将带来可观测性的重点需求场景介绍、以及如何基于 SelectDB 和 Apache Doris 打造可观测性解决方案',
+            start_date: '2025-05-07T19:00:00.000Z',
+            end_date: '2025-05-07T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测系列直播第一期"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-250507.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250507',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
             detailTitle: '走进天翼云 | Apache Doris 企业行',
             date: '2025-05-17（周六）14:00 - 17:00',
             address: '广州市海珠区广报中心南塔 18 楼天翼云 1808 培训室',
