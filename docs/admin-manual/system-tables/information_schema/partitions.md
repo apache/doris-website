@@ -36,7 +36,7 @@ Show the Partition status of all tables in the database.
 
 | Column Name                   | Type          | Description                          |
 | ----------------------------- | ------------- | ------------------------------------ |
-| PARTITION_ID	                | bigint	      | Partitinon ID                        |
+| PARTITION_ID	                | bigint	    | Partitinon ID                        |
 | TABLE_CATALOG                 | varchar(64)   | Catalog name                         |
 | TABLE_SCHEMA                  | varchar(64)   | Database name                        |
 | TABLE_NAME                    | varchar(64)   | Table name                           |
@@ -62,17 +62,17 @@ Show the Partition status of all tables in the database.
 | PARTITION_COMMENT             | text          |                                      |
 | NODEGROUP                     | varchar(256)  |                                      |
 | TABLESPACE_NAME               | varchar(268)  |                                      |
-| DATA_SIZE                     |	text	        | Partition local data size            |
-| STATE                         |	text	        | Partition state                      |
-| REPLICA_ALLOCATION	          | text	        | distribution of replicas of a tablet |
-| REPLICA_NUM	                  | int 	        | replicas num                         |
-| STORAGE_POLICY	              | text          | Storage policy                       |
-| STORAGE_MEDIUM	              | text          | Storage medium                       |
+| DATA_SIZE                     | text	        | Partition local data size            |
+| STATE                         | text	        | Partition state                      |
+| REPLICA_ALLOCATION	        | text	        | distribution of replicas of a tablet |
+| REPLICA_NUM	                | int 	        | replicas num                         |
+| STORAGE_POLICY	            | text          | Storage policy                       |
+| STORAGE_MEDIUM	            | text          | Storage medium                       |
 | COOLDOWN_TIME_MS	            | text          | Cooldown time                        |
-| LAST_CONSISTENCY_CHECK_TIME	  | text          | Last consistency check time          |
-| BUCKET_NUM	                  | int           | Partition bucket num                 |
+| LAST_CONSISTENCY_CHECK_TIME   | text          | Last consistency check time          |
+| BUCKET_NUM	                | int           | Partition bucket num                 |
 | COMMITTED_VERSION	            | bigint        | Last commited version                |
-| VISIBLE_VERSION	              | bigint        | Current visible version              |
+| VISIBLE_VERSION	            | bigint        | Current visible version              |
 | PARTITION_KEY	                | text          | Partition key                        |
 | RANGE	                        | text          | Partition range(min max value)       |
 | DISTRIBUTION	                | text          | Distribution type                    |
