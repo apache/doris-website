@@ -1517,6 +1517,8 @@
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/nullif",
+                                        "sql-manual/sql-functions/scalar-functions/conditional-functions/isnull",
+                                        "sql-manual/sql-functions/scalar-functions/conditional-functions/isnotnull",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/greatest",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/least"
                                     ]
