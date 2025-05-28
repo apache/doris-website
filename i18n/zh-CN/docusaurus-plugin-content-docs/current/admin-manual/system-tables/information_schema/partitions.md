@@ -68,7 +68,7 @@ under the License.
 | REPLICA_NUM	                | int 	        | Partition 的副本数    |
 | STORAGE_POLICY	            | text          | 存储策略              |
 | STORAGE_MEDIUM	            | text          | 存储介质              |
-| COOLDOWN_TIME_MS	            | text          | 冷热分层时间           |
+| COOLDOWN_TIME_MS	            | text          | 冷却时间              |
 | LAST_CONSISTENCY_CHECK_TIME   | text          | 最后检查一致性的时间    |
 | BUCKET_NUM	                | int           | 桶数                 |
 | COMMITTED_VERSION	            | bigint        | 最近一次被提交的版本    |
