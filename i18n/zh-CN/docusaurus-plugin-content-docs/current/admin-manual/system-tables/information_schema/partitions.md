@@ -36,7 +36,7 @@ under the License.
 
 | 列名                          | 类型          | 说明                 |
 | :---------------------------- | :------------ | :------------------- |
-| PARTITION_ID	                | bigint	      |                      |
+| PARTITION_ID	                | bigint	    |                      |
 | TABLE_CATALOG                 | varchar(64)   | Catalog 名字         |
 | TABLE_SCHEMA                  | varchar(64)   | Database 名字        |
 | TABLE_NAME                    | varchar(64)   | Table 名字           |
@@ -62,17 +62,17 @@ under the License.
 | PARTITION_COMMENT             | text          |                      |
 | NODEGROUP                     | varchar(256)  |                      |
 | TABLESPACE_NAME               | varchar(268)  |                      |
-| DATA_SIZE                     |	text	        | Partition 本地数据大小 |
-| STATE                         |	text	        | Partition 的状态      |
-| REPLICA_ALLOCATION	          | text	        | 描述Partition 的 tablet 的副本分布 |
-| REPLICA_NUM	                  | int 	        | Partition 的副本数    |
-| STORAGE_POLICY	              | text          | 存储策略              |
-| STORAGE_MEDIUM	              | text          | 存储介质              |
+| DATA_SIZE                     | text	        | Partition 本地数据大小 |
+| STATE                         | text	        | Partition 的状态      |
+| REPLICA_ALLOCATION	        | text	        | 描述 tablet 的副本分布 |
+| REPLICA_NUM	                | int 	        | Partition 的副本数    |
+| STORAGE_POLICY	            | text          | 存储策略              |
+| STORAGE_MEDIUM	            | text          | 存储介质              |
 | COOLDOWN_TIME_MS	            | text          | 冷热分层时间           |
-| LAST_CONSISTENCY_CHECK_TIME	  | text          | 最后检查一致性的时间    |
-| BUCKET_NUM	                  | int           | 桶数                 |
+| LAST_CONSISTENCY_CHECK_TIME   | text          | 最后检查一致性的时间    |
+| BUCKET_NUM	                | int           | 桶数                 |
 | COMMITTED_VERSION	            | bigint        | 最近一次被提交的版本    |
-| VISIBLE_VERSION	              | bigint        | 当前可见版本           |
+| VISIBLE_VERSION	            | bigint        | 当前可见版本           |
 | PARTITION_KEY	                | text          | Partition 的键       |
 | RANGE	                        | text          | 分区的范围（最大最小值）|
 | DISTRIBUTION	                | text          | 分区方式              |
