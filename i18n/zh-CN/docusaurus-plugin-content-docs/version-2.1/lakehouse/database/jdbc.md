@@ -26,6 +26,10 @@ under the License.
 
 Doris JDBC Catalog 支持通过标准 JDBC 接口连接不同支持 JDBC 协议的数据库。本文档介绍 JDBC Catalog 的通用配置和使用方法。
 
+:::info 备注
+Doris 的 JDBC Catalog 功能依赖 Java 层读取和处理数据，整体性能在一定程度上会受到 JDK 版本的影响，比如一些内部库的实现在老版本 JDK（如 JDK 8）中效率较低，可能会导致资源消耗偏高。如果对性能有更高要求，推荐使用 Doris 3.0 版本，由于默认使用 JDK 17 编译，整体性能更优。
+:::
+
 ## 支持的数据库
 
 Doris JDBC Catalog 支持连接以下数据库：
