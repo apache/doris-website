@@ -1750,6 +1750,30 @@ FROM KAFKA
 );
 ```
 
+## Connect to the SASL Kafka service
+
+Here we take accessing the StreamNative message service as an example:
+
+```
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age)
+FROM KAFKA (
+"kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+"kafka_topic" = "my_topic",
+"property.security.protocol" = "SASL_SSL",
+"property.sasl.mechanism" = "PLAIN",
+"property.sasl.username" = "user",
+"property.sasl.password" = "token:eyJhbxxx",
+"property.group.id" = "my_group_id_1",
+"property.client.id" = "my_client_id_1",
+"property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+Note that if the trusted CA certificate path is not configured on the BE side, you need to set `"property.enable.ssl.certificate.verification" = "false"` to not verify whether the server certificate is credible.
+
+Otherwise, you need to configure the trusted CA certificate path: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
+
 ## More Details
 
 Refer to the SQL manual on [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.
