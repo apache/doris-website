@@ -1758,6 +1758,30 @@ FROM KAFKA
 );
 ```
 
+## 连接加密认证的 Kafka 服务
+
+这里我们以访问 StreamNative 消息服务为例说明：
+
+```
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age) 
+FROM KAFKA (
+    "kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+    "kafka_topic" = "my_topic",
+    "property.security.protocol" = "SASL_SSL",
+    "property.sasl.mechanism" = "PLAIN",
+    "property.sasl.username" = "user",
+    "property.sasl.password" = "token:eyJhbxxx",
+    "property.group.id" = "my_group_id_1",
+    "property.client.id" = "my_client_id_1",
+    "property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+注意，如果没有在 BE 端配置信任的 CA 证书路径，需设置 `"property.enable.ssl.certificate.verification" = "false"`，不验证服务器证书是否可信。
+
+否则，需配置信任的 CA 证书路径：`"property.ssl.ca.location" = "/path/to/ca-cert.pem"`。
+
 ## 更多帮助
 
 参考 SQL 手册 [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)。也可以在客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。
