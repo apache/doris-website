@@ -75,4 +75,4 @@ under the License.
 | VISIBLE_VERSION	            | bigint        | 当前可见版本           |
 | PARTITION_KEY	                | text          | Partition 的键       |
 | RANGE	                        | text          | 分区的范围（最大最小值）|
-| DISTRIBUTION	                | text          | 分区方式              |
+| DISTRIBUTION	                | text          | 分区类型              |
