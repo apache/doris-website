@@ -68,6 +68,9 @@ Audit log variables can be modified using `set [global] <var_name> = <var_value>
 | `audit_plugin_max_batch_bytes`         | 50MB          | Maximum data volume per batch for the audit log table. |
 | `audit_plugin_max_sql_length`          | 4096          | Maximum length of SQL statements recorded in the audit log table. |
 | `audit_plugin_load_timeout`            | 600 seconds   | Default timeout for audit log import jobs.      |
+| `audit_plugin_max_insert_stmt_length` | 0 | The maximum length limit for `INSERT` statements. If set <= 0, the value of `audit_plugin_max_sql_length` is used. This parameter is supported since 3.0.7. |
+
+Because some `INSERT INTO VALUES` statements may be too long and submitted frequently, causing the audit log too large. Therefore, Doris added `audit_plugin_max_insert_stmt_length` in version 3.0.7 to limit the audit length of `INSERT` statements separately. This avoids the expansion of the audit log and ensures that the SQL statements are fully audited.
 
 **FE Configuration Items:**
 
