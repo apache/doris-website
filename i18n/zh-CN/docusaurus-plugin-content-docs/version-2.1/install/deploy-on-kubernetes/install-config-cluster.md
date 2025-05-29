@@ -925,4 +925,23 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabPath: ${keytabPath}
     ```
     ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
-      atalog 请参考配置 [Hive Catalog](../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
+      catalog 请参考配置 [Hive Catalog](../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
+
+## 配置共享存储
+Doris Operator 从 25.4.0 版本开始支持为多个组件的所有 Pod 挂载一个 `ReadWriteMany` 的共享存储。使用前请提前创建好共享存储 `PersistentVolume` 和 `PersistentVolumeClaim` 资源，在部署 Doris 集群之前按照如下配置 `DorisCluster` 资源：
+```yaml
+spec:
+  sharedPersistentVolumeClaims:
+  - mountPath: ${mountPath}
+    persistentVolumeClaimName: ${sharedPVCName}
+    supportComponents:
+    - fe
+    - be
+```
+- ${mountPath} 指定挂载到容器内的绝对路径。
+- ${sharedPVCName} 表示被挂载的 `PersistentVolumeClaim` 的名称。
+- `supportComponents` 指定需要挂载该共享存储的组件名称，上述实例中，指定 FE，BE 两种组件挂载该共享存储，如果 `supportComponents` 数组为空，表示所有组件部署的的组件都挂载该共享存储。
+
+:::tip 提示
+`mountPath` 支持使用 `${DORIS_HOME}` 作为路径前缀。当 `mountPath` 使用 `${DORIS_HOME}` 作为前缀使用时，在 FE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/fe`; 在 BE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/be`。
+:::

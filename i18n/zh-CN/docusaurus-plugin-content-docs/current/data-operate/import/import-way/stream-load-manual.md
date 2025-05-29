@@ -249,6 +249,28 @@ mysql> show stream load from testdb;
 
 用户无法手动取消 Stream Load，Stream Load 在超时或者导入错误后会被系统自动取消。
 
+### 绑定 Compute Group
+用户可以指定 Stream Load 在具体的某个 Compute Group上运行；
+
+存算分离模式下指定 Compute Group的方式如下：
+1. 通过 HTTP Header 参数指定。
+```
+-H "cloud_cluster:cluster1"
+```
+
+2. 在 Stream Load 绑定的 user 属性中指定 Compute Group。如果 user 属性和 HTTP header 同时指定了 Compute Group，那么以 Header 中指定的 Compute Group 为准。
+```
+set property for user1 'default_compute_group'='cluster1';
+```
+
+3. 如果 user 属性中和 HTTP Header 中均未指定 Compute Group，那么会从 Stream Load 绑定的 user 有权限访问的 Compute Group 中选择一个。
+如果 user 没有任何有权限访问的 Compute Group，那么导入就会失败。
+
+存算一体模式下，只支持通过 Stream Load 绑定的 user 属性指定 Compute Group，如果 user 属性中未指定，那么就会选择名为 ```default``` 的 Compute Group。
+```
+set property for user1 'resource_tags.location'='group_1';
+```
+
 ## 参考手册
 
 ### 导入命令

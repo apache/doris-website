@@ -133,6 +133,7 @@
                             ]
                         },
                         "table-design/row-store",
+                        "table-design/temporary-table",
                         "table-design/best-practice"
                     ]
                 },
@@ -580,7 +581,8 @@
                             "items": [
                                 "admin-manual/workload-management/resource-group",
                                 "admin-manual/workload-management/compute-group",
-                                "admin-manual/workload-management/workload-group"
+                                "admin-manual/workload-management/workload-group",
+                                "admin-manual/workload-management/workload-group-bind-compute-group"
                             ]
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
@@ -1219,6 +1221,9 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary",

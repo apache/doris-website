@@ -26,6 +26,10 @@ under the License.
 
 Doris JDBC Catalog supports connecting to different databases that support the JDBC protocol through the standard JDBC interface. This document introduces the general configuration and usage of JDBC Catalog.
 
+:::info Note
+The JDBC Catalog feature in Doris relies on the Java layer to read and process data, and its overall performance can be affected by the JDK version. Some internal libraries in older versions of the JDK (such as JDK 8) are less efficient and may lead to higher resource consumption. If higher performance is required, it is recommended to use Doris 3.0, which is compiled with JDK 17 by default and offers better overall performance.
+:::
+
 ## Supported databases
 
 Doris JDBC Catalog supports connecting to the following databases:

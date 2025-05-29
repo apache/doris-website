@@ -74,6 +74,11 @@ When creating functions, avoid using `varchar` in place of `string`, as this may
 
 3. Due to issues with JVM loading classes with the same name, do not use multiple classes with the same name as UDF implementations simultaneously. If you want to update a UDF with a class of the same name, you need to restart BE to reload the classpath.
 
+4. Same-named Functions
+
+    Users can create UDF with exactly the same signature as built-in functions. By default, the system will prioritize matching built-in functions. However, if you specify the `database` when using the function (i.e., `db.function()`), it will be forcibly considered as a user-defined function.
+
+    In version 3.0.7, a new session variable `prefer_udf_over_builtin` was added. When set to `true`, it will prioritize matching user-defined functions, making it easier for users to migrate from other systems to Doris while maintaining the original system's function behavior through custom functions without changing function names.
 
 ## Getting Started
 This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view details.

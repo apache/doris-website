@@ -5,7 +5,7 @@
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -38,8 +38,6 @@ SUBSTRING_INDEX(<content>, <delimiter>, <field>)
 | `<content>` | The string to be extracted from. Type: VARCHAR                                                                  |
 | `<delimiter>` | The delimiter string, case-sensitive and multi-byte safe. Type: VARCHAR                                         |
 | `<field>` | Number of delimiter occurrences. Positive numbers count from left, negative numbers count from right. Type: INT |
-
-Note: The delimiter and field parameters must be constants, variables are not supported.
 
 ## Return Value
 
