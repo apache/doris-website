@@ -53,3 +53,5 @@ View the information of talbet on Backends.
 | COMPRESS_KIND      | varchar(256) | Compression 的类型    |
 | IS_USED            | bool         | Tablet 数据目录是否打开 |
 | IS_ALTER_FAILED    | bool         | Alter 操作是否失败     |
+| CREATE_TIME        | bigint       | Tablet 创建时间        |
+| UPDATE_TIME        | bigint       | Tablet 更新时间        |

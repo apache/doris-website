@@ -53,3 +53,5 @@ View the information of talbet on Backends.
 | COMPRESS_KIND      | varchar(256) | The Kind of Compression          |
 | IS_USED            | bool         | Is the tablet datadir opened     |
 | IS_ALTER_FAILED    | bool         | Wether the alter operate failed  |
+| CREATE_TIME        | bigint       | Tablet Create Time               |
+| UPDATE_TIME        | bigint       | Last Tablet Writted Time         |
