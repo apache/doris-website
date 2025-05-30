@@ -407,7 +407,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 * 类型：int32
 * 描述：Scanner线程池线程数目。在Doris的扫描任务之中，每一个Scanner会作为一个线程task提交到线程池之中等待被调度，该参数决定了Scanner线程池的大小。
-* 默认值：取决于 CPU 核心数量。等于 `max(48, num_of_cpu_cores)`
+* 默认值：48
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
