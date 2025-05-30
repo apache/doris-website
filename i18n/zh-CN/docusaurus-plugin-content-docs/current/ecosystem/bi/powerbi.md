@@ -37,7 +37,7 @@ Apache Doris 社区提供了基于 Mysql ODBC 的 Power BI DirectQuery 自定义
 - 未安装 Mysql ODBC 需要下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 。
 
 :::info Note
-选择 MySQL ODBC Driver 5.2
+选择 MySQL ODBC Driver 5.3
 :::
 
 ## Power BI 与 Doris 的自定义连接器配置

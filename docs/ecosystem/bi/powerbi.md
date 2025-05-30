@@ -37,7 +37,7 @@ The Apache Doris community provides a Power BI DirectQuery custom connector base
 - If you don't have Mysql ODBC installed, you need to download and install [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/) and configure it.
 
 :::info Note
-Use MySQL ODBC Driver 5.2
+Use MySQL ODBC Driver 5.3
 :::
 
 ## Power BI and Doris custom connector configuration
