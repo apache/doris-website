@@ -399,7 +399,7 @@ thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
-* 默认值：48
+* 默认值：取决于 CPU 核心数量。等于 `max(48, num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
