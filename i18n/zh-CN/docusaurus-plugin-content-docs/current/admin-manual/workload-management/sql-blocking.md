@@ -61,7 +61,7 @@ under the License.
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select \\* from t",
+  "sql"="select \\* from t",
   "global" = "true",
   "enable" = "true"
 )
@@ -81,7 +81,7 @@ MySQL root@127.0.0.1:test> select * from t;
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select * from t",
+  "sql"="select * from t",
   "global" = "false",
   "enable" = "true"
 )
@@ -185,7 +185,7 @@ PROPERTIES
 ```sql
 CREATE SQL_BLOCK_RULE rule_abs
 PROPERTIES(
-  "SQL"="(?i)abs\\s*\\(.+\\)",
+  "sql"="(?i)abs\\s*\\(.+\\)",
   "global"="true",
   "enable"="true"
 );
