@@ -31,7 +31,7 @@ under the License.
 
 该语句用于展示例行导入作业的创建语句。
 
-结果中的 kafka partition 和 offset 展示的当前消费的 partition，以及对应的待消费的 offset。
+结果中的 kafka partition 和 offset 展示的当前消费的 partition，以及对应的待消费的 offset。该结果不一定是实时的消费位点，应以[show routine load](./SHOW-ROUTINE-LOAD.md)的结果为准。
 
 ## 语法
 
