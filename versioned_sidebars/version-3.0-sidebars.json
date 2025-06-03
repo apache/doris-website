@@ -55,6 +55,7 @@
                                     "label": "Separating Storage Compute",
                                     "items": [
                                         "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-cluster",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
