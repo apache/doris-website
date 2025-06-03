@@ -52,6 +52,7 @@ View the information of talbet on Backends.
 | COMPACTION_SCORE   | int          | Compaction Score                 |
 | COMPRESS_KIND      | varchar(256) | The Kind of Compression          |
 | IS_USED            | bool         | Is the tablet datadir opened     |
-| IS_ALTER_FAILED    | bool         | Wether the alter operate failed  |
-| CREATE_TIME        | bigint       | Tablet Create Time               |
-| UPDATE_TIME        | bigint       | Last Tablet Writted Time         |
+| IS_ALTER_FAILED    | bool         | Whether the alter operate failed |
+| CREATE_TIME        | datetime     | Tablet Create Time               |
+| UPDATE_TIME        | datetime     | Last Tablet Writted Time         |
+| IS_OVERLAP         | bool         | Whether tablets overlap          |
