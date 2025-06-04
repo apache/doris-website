@@ -148,7 +148,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/doris-meetup-250614.JPEGs').default}`}
+                    src={`${require('@site/static/images/events/doris-meetup-250614.JPEG').default}`}
                 />
             ),
             isCover: true,
