@@ -89,6 +89,98 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
+            detailTitle: '可观测性系列直播（第六期）| GenAI & LLM',
+            date: '2025 年 06 月 25 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '第六期将介绍 Apache Doris 可观测性平台与 GenAI 结合应用实践，聚焦在 AI 时代下如何从现代实时数仓演进为支撑分析与 AI 的实时分析型数据库。',
+            start_date: '2025-06-25T19:00:00.000Z',
+            end_date: '2025-06-25T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测性系列直播（第六期）"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-20250625.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250625',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '可观测系列直播（第五期） | Ecosystem 生态联合',
+            date: '2025 年 06 月 18 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '第五期将展示 Apache Doris 如何与众多生态集成，包括 ELK、OpenTelementry、Grafana、Vector、ilogtail 等',
+            start_date: '2025-06-18T19:00:00.000Z',
+            end_date: '2025-06-18T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测系列直播（第五期）"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-20250618.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250618',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '湖仓数智融合、AI 洞见未来',
+            date: '2025 年 06 月 14 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '此次活动为 Apache Doris 社区首场 AI 主题线下 Meetup，邀请了来自飞轮科技、阿里云、汇付天下、某头部物流公司的多位技术专家，深度解析 Apache Doris 与阿里云 SelectDB 在 AI 分析融合、湖仓一体等场景下的技术突破与落地案例。',
+            start_date: '2025-06-14T19:00:00.000Z',
+            end_date: '2025-06-14T20:30:00.000Z',
+            img: (
+                <img
+                    alt="湖仓数智融合、AI 洞见未来"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-meetup-250614.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-meetup-20250614',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '可观测系列直播（第四期） | Metrics 监控场景',
+            date: '2025 年 06 月 05 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                '直播第四场将带来 Apache Doris 可观测性解决方案之链路指标场景下的 Benchmark 性能实测。',
+            start_date: '2025-06-05T19:00:00.000Z',
+            end_date: '2025-06-05T20:30:00.000Z',
+            img: (
+                <img
+                    alt="可观测系列直播第四期"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/observability-webinar-20250605.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250605',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
             detailTitle: '可观测系列直播（第三期） | Trace 监控场景',
             date: '2025 年 05 月 28 日 19:30-20:30',
             address: '线上直播',
