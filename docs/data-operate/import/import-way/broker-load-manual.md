@@ -200,6 +200,15 @@ For example: To cancel the import job with the label "broker_load_2022_04_01" on
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
+### Choosing Compute Group
+In the storage-computation separation mode, the priority logic for Broker Load to select a Compute Group is as follows:
+1. Select the Compute Group specified by the ```use db@cluster statement```;
+2. Select the Compute Group specified by the user properties ```default_compute_group```;
+3. Select one from the Compute Groups that the current user has permissions to access;
+
+In the integrated storage-computation mode, select the Compute Group specified in the user properties ```resource_tags.location```; 
+if not specified in the user properties, use the Compute Group named ```default```;
+
 ## Reference Manual
 
 ### SQL syntax for broker load

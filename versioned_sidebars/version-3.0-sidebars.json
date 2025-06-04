@@ -55,6 +55,7 @@
                                     "label": "Separating Storage Compute",
                                     "items": [
                                         "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+                                        "install/deploy-on-kubernetes/separating-storage-compute/config-cluster",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
                                         "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
@@ -1265,6 +1266,9 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary",

@@ -38,6 +38,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 | Connector | Spark               | Doris       | Java | Scala      |
 |-----------|---------------------|-------------|------|------------|
+| 25.1.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.1    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 1.3.2     | 3.4 - 3.1, 2.4, 2.3 | 1.0 - 2.1.6 | 8    | 2.12, 2.11 |
@@ -54,7 +55,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.0.1</version>
+    <version>25.1.0</version>
 </dependency>
 ```
 
@@ -77,7 +78,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 编译时，可直接运行 `sh build.sh`，具体可参考这里。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-25.0.1.jar。 将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。 例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-25.1.0.jar。将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 也可以
 
 
@@ -85,20 +86,20 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
    `sh build.sh`
    根据提示输入你需要的 Scala 与 Spark 版本进行编译。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：`spark-doris-connector-spark-3.5-25.0.1.jar`。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：`spark-doris-connector-spark-3.5-25.1.0.jar`。
 将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。
 
 例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 
-例如将 `spark-doris-connector-spark-3.5-25.0.1.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar包路径
+例如将 `spark-doris-connector-spark-3.5-25.1.0.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar 包路径
 ```shell
-1. 上传 `spark-doris-connector-spark-3.5-25.0.1.jar` 到 hdfs。
+1. 上传 `spark-doris-connector-spark-3.5-25.1.0.jar` 到 hdfs。
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.0.1.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.1.0.jar /spark-jars/
 
-2. 在集群中添加 `spark-doris-connector-spark-3.5-25.0.1.jar` 依赖。
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.0.1.jar
+2. 在集群中添加 `spark-doris-connector-spark-3.5-25.1.0.jar` 依赖。
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.1.0.jar
 
 ```
 
