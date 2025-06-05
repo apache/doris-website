@@ -24,27 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## Description
 
-## year
-### Description
-#### Syntax
+Returns the year in a date value, ranging from 1000-9999
 
-`INT YEAR(DATETIME date)`
+## Syntax
 
-
-Returns the year part of the date type, ranging from 1000 to 9999
-
-The parameter is Date or Datetime type
-
-### example
-
+```sql
+YEAR(<date>)
 ```
-mysql> select year('1987-01-01');
-+-----------------------------+
-| year('1987-01-01 00:00:00') |
-+-----------------------------+
-|                        1987 |
-+-----------------------------+
+
+## Parameters
+
+| Parameter | Description |
+|--|--|
+| `<date>` | Corresponding date value, Date or Datetime type |
+
+## Return Value
+
+year in a date value, ranging from 1000-9999
+
+## Example
+
+```sql
+SELECT YEAR('1987-01-01'),YEAR('2013-02-11' 10:10:34);
 ```
-### keywords
-    YEAR
+
+```text
++-------------------------------------------+----------------------------------------------------+
+| year(cast('1987-01-01' as DATETIMEV2(0))) | year(cast('2013-02-11 10:10:34' as DATETIMEV2(0))) |
++-------------------------------------------+----------------------------------------------------+
+|                                      1987 |                                               2013 |
++-------------------------------------------+----------------------------------------------------+
+```
