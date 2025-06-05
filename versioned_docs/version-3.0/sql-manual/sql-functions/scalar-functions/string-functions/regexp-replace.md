@@ -33,7 +33,7 @@ Regular matching of STR strings, replacing the part hitting pattern with a new s
 ## Syntax
 
 ```sql
-REGEXP_REPLACE(<str>, <pattern>, <repl>)
+REGEXP_REPLACE(<str>, <pattern>, <repl>, [flag])
 ```
 
 ## Parameters
@@ -43,6 +43,7 @@ REGEXP_REPLACE(<str>, <pattern>, <repl>)
 | `<str>` | The column need to do regular matching.|
 | `<pattern>` | Target pattern.|
 | `<repl>` | The string to replace the matched pattern.|
+| [flag] | Optional parameter used to specify whether to allow ignoring invalid escape characters. For example, `\{` is equivalent to `{`. since 3.0.7 version supported |
 
 ## Return Value
 
@@ -71,4 +72,18 @@ mysql> select regexp_replace('这是一段中文 This is a passage in English 12
 +---------------------------------------------------------------------------------------------+
 | 123This is a passage in English 1234567                                                     |
 +---------------------------------------------------------------------------------------------+
+
+mysql> select regexp_replace('{"abc":5},{"def":78}', '\\}\\,\\{', '\\}&&\\{');
++-----------------------------------------------------------------+
+| regexp_replace('{"abc":5},{"def":78}', '\\}\\,\\{', '\\}&&\\{') |
++-----------------------------------------------------------------+
+| {"abc":5"def":78}                                               |
++-----------------------------------------------------------------+
+
+mysql> select regexp_replace('{"abc":5},{"def":78}', '\\}\\,\\{', '\\}&&\\{', 'IGNORE_INVALID_ESCAPE');
++------------------------------------------------------------------------------------------+
+| regexp_replace('{"abc":5},{"def":78}', '\\}\\,\\{', '\\}&&\\{', 'IGNORE_INVALID_ESCAPE') |
++------------------------------------------------------------------------------------------+
+| {"abc":5}&&{"def":78}                                                                    |
++------------------------------------------------------------------------------------------+
 ```
