@@ -211,8 +211,8 @@ SET serde_diactor=<dialect>;
     | `sql_converter_service_url` | `set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"` | 全局变量，用于指定 sql convetor 服务地址 |
     | `sql_dialect` | `set sql_dialect=presto` | 会话变量，用于指定当前会话的方言 |
     | `serde_dialect` | `set serde_dialect=hive` | 会话变量，用于指定当前会话的序列化方言格式 |
-    | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | 会话变量，用户指定开启 sql convertor 的某些特殊功能。`ctas`: 允许对 `CTAS` 语句中的 `SELECT` 部分进行转换。（该参数自 Doris 3.0.7 和 SQL Convertor 1.0.8.10 支持）|
-    | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | 会话变量，用于指定 SQL Convertor 忽略一些 UDF。在列表中的函数，SQL Convertor 不会进行转换，否则可能报错 "Unknown Function" （该参数自 Doris 3.0.7 和 SQL Convertor 1.0.8.10 支持）|
+    | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | 会话变量，用户指定开启 sql convertor 的某些特殊功能。`ctas`: 允许对 `CTAS` 语句中的 `SELECT` 部分进行转换。（该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
+    | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | 会话变量，用于指定 SQL Convertor 忽略一些 UDF。在列表中的函数，SQL Convertor 不会进行转换，否则可能报错 "Unknown Function" （该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
 
 ## 版本变更记录
 
