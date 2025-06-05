@@ -1,7 +1,7 @@
 ---
 {
     "title": "FILE",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述
+## Description
 
-File 表函数（table-valued-function,tvf）是对 [S3](./s3.md)、[HDFS](./hdfs.md) 和 [LOCAL](local.md) 等表函数的封装，提供了一个统一的接口来访问不同存储系统上的文件内容。
+The File table-valued-function (tvf) is a wrapper around table functions like [S3](./s3.md), [HDFS](./hdfs.md), and [LOCAL](local.md), providing a unified interface to access file contents on different storage systems.
 
-该函数自 3.1.0 版本支持。
+This function is supported since version 3.1.0.
 
-## 语法
+## Syntax
 
 ```sql
 FILE(
@@ -41,13 +41,13 @@ FILE(
 
 - `{StorageProperties}`
 
-    StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
+    The StorageProperties section is used to fill in connection and authentication information related to the storage system. For details, please refer to the [Supported Storage Systems] section.
 
 - `{FileFormatProperties}`
 
-    FileFormatProperties 部分用于填写文件格式相关的属性，如 CSV 的分割符等。具体可参阅【支持的文件格式】部分。
+    The FileFormatProperties section is used to fill in properties related to file formats, such as CSV delimiters. For details, please refer to the [Supported File Formats] section.
 
-## 支持的存储系统
+## Supported Storage Systems
 
 * [ hdfs](../../../lakehouse/storages/hdfs.md)
 
@@ -55,15 +55,15 @@ FILE(
 
 * [ google cloud storage](../../../lakehouse/storages/gcs.md)
 
-* [ 阿里云 OSS](../../../lakehouse/storages/aliyun-oss.md)
+* [ Alibaba Cloud OSS](../../../lakehouse/storages/aliyun-oss.md)
 
-* [ 腾讯云 COS](../../../lakehouse/storages/tencent-cos.md)
+* [ Tencent Cloud COS](../../../lakehouse/storages/tencent-cos.md)
 
-* [ 华为云 OBS](../../../lakehouse/storages/huawei-obs.md)
+* [ Huawei Cloud OBS](../../../lakehouse/storages/huawei-obs.md)
 
 * [ MINIO](../../../lakehouse/storages/minio.md)
 
-## 支持的文件格式
+## Supported File Formats
 
 * [Parquet](../../../lakehouse/file-formats/parquet.md)
 
@@ -71,9 +71,9 @@ FILE(
 
 * [Text/CSV/JSON](../../../lakehouse/file-formats/text.md)
 
-## 示例
+## Examples
 
-### 访问 S3 存储
+### Accessing S3 Storage
 
 ```sql
 select * from file(
@@ -87,7 +87,7 @@ select * from file(
 );
 ```
 
-### 访问 HDFS 存储
+### Accessing HDFS Storage
 
 ```sql
 select * from file(
@@ -99,7 +99,7 @@ select * from file(
 );
 ```
 
-### 访问本地存储
+### Accessing Local Storage
 
 ```sql
 select * from file(
@@ -110,7 +110,7 @@ select * from file(
 );
 ```
 
-### 使用 desc function 查看表结构
+### Using desc function to View Table Structure
 
 ```sql
 desc function file(
@@ -123,3 +123,4 @@ desc function file(
     "format" = "csv"
 );
 ``` 
+
