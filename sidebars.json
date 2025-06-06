@@ -1640,6 +1640,7 @@
                             "type": "category",
                             "label": "Table Valued Functions",
                             "items": [
+                                "sql-manual/sql-functions/table-valued-functions/file",
                                 "sql-manual/sql-functions/table-valued-functions/s3",
                                 "sql-manual/sql-functions/table-valued-functions/hdfs",
                                 "sql-manual/sql-functions/table-valued-functions/local",
