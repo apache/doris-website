@@ -5,6 +5,7 @@
     'date': '2023-08-17',
     'author': 'Jianbo Liu',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/136',
     "image": '/images/financial-risk.png'
 }
 

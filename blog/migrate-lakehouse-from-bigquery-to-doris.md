@@ -6,6 +6,7 @@
     'date': '2024-07-19',
     'author': 'Dien, Tran Thanh',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/689',
     "image": '/images/migrate-lakehouse-from-bigquery-to-apache-doris.jpg'
 }
 

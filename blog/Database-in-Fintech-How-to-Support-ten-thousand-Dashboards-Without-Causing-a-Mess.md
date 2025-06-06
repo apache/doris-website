@@ -5,6 +5,7 @@
     'date': '2023-08-05',
     'author': 'Hou Lan',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/133',
     "image": '/images/fintech-service.png'
 }
 
