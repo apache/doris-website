@@ -327,6 +327,28 @@ SELECT * FROM iceberg_table FOR TIME AS OF '2023-01-01 00:00:00';
 SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 ```
 
+### Branch and Tag
+
+> This feature is supported since version 3.1.0
+
+Reading specific branches and tags of Iceberg tables is supported.
+
+Multiple syntax forms are supported to be compatible with systems such as Spark/Trino.
+
+```sql
+-- BRANCH
+SELECT * FROM iceberg_tbl@brand(branch1);
+SELECT * FROM iceberg_tbl@brand("name" = "branch1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'branch1';
+
+-- TAG
+SELECT * FROM iceberg_tbl@tag(tag1);
+SELECT * FROM iceberg_tbl@tag("name" = "tag1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
+```
+
+For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether the parameter is a timestamp or a Branch/Tag name.
+
 ## Write Operations
 
 ### INSERT INTO

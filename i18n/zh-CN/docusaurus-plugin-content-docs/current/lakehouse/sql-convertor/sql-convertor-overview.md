@@ -214,6 +214,12 @@ SET serde_diactor=<dialect>;
     | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | 会话变量，用户指定开启 sql convertor 的某些特殊功能。`ctas`: 允许对 `CTAS` 语句中的 `SELECT` 部分进行转换。（该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
     | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | 会话变量，用于指定 SQL Convertor 忽略一些 UDF。在列表中的函数，SQL Convertor 不会进行转换，否则可能报错 "Unknown Function" （该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
 
+## 最佳实践
+
+- `sql_convertor_config`
+
+    在某些情况下，可能无法在 Doris 中找到和原系统完全对应的函数，或者部分经过转换后的函数，在一些特殊参数下行为和原函数不完全一致。此时，用户可以先通过 UDF 来实现和原系统完全一致的函数，注册到 Doris 中。之后，在 `sql_convertor_config` 的 `ignore_udf` 中添加这个 UDF。这样，SQL Convetor 将不会对这个函数进行转换，以便用户可以使用 UDF 来控制函数行为。
+
 ## 版本变更记录
 
 [SQL Convertor 版本变更记录](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
