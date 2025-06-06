@@ -3,7 +3,8 @@
     'title': 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
     'description': "The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.",
     'date': '2023-12-27',
-    'author': 'Apache Doris',
+    'author': 'VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/152',
     'tags': ['Best Practice'],
     "image": '/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg'
 }

@@ -4,6 +4,7 @@
     'description': "This article describes a large-scale data warehousing use case to provide reference for data engineers who are looking for log analytic solutions. It introduces the log processing architecture and real case practice in data ingestion, storage, and queries.",
     'date': '2023-09-16',
     'author': 'Yuqi Liu',
+    'externalLink': 'https://www.velodb.io/blog/137',
     'tags': ['Best Practice'],
     "image": '/images/telegram.jpeg'
 }
