@@ -45,8 +45,8 @@ Apache Doris 已支持的数据类型列表如下：
 
 | 类型名                | 存储空间（字节） | 描述                                                                                       |  
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------ |  
-| [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 16               | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。         |  
-| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 16               | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<br />取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 |
+| [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 4               | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。         |  
+| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 8               | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<br />取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 |
 
 ### [字符串类型](../sql-manual/basic-element/sql-data-types/data-type-overview#字符串类型)
 

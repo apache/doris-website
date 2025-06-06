@@ -31,7 +31,7 @@ under the License.
 
 This statement is used to display the creation statement of a routine load job.
 
-The result shows the current consuming Kafka partitions and their corresponding offsets to be consumed.
+The result shows the current consuming Kafka partitions and their corresponding offsets to be consumed. The result may not be a real-time consumption point, and should be based on the result of [show routine load](./SHOW-ROUTINE-LOAD.md).
 
 ## Syntax
 

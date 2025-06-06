@@ -46,8 +46,8 @@ The list of data types supported by Doris is as follows:
 
 | Type name      | Storeage (bytes)| Description                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
-|  [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)             | 16              | DATE holds values for a calendar year, month and day, the  supported range is ['0000-01-01', '9999-12-31'].  Default print format: 'yyyy-MM-dd'. |
-| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME)        | 16              | A DATE and TIME combination  Format: DATETIME ([P]).   The optional parameter P represents time precision, with a value range of [0,6], supporting up to 6 decimal places (microseconds). When not set, it is 0.   The supported range is ['0000-01-01 00:00:00 [.000000]', '9999-12-31 23:59:59 [.999999]'].   Default print format: 'yyy-MM-dd HH: mm: ss. SSSSSS '. |
+|  [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)             | 4              | DATE holds values for a calendar year, month and day, the  supported range is ['0000-01-01', '9999-12-31'].  Default print format: 'yyyy-MM-dd'. |
+| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME)        | 8              | A DATE and TIME combination  Format: DATETIME ([P]).   The optional parameter P represents time precision, with a value range of [0,6], supporting up to 6 decimal places (microseconds). When not set, it is 0.   The supported range is ['0000-01-01 00:00:00 [.000000]', '9999-12-31 23:59:59 [.999999]'].   Default print format: 'yyy-MM-dd HH: mm: ss. SSSSSS '. |
 
 ## [String data type](../sql-manual/basic-element/sql-data-types/data-type-overview#string-types)
 | Type name      | Storeage (bytes)| Description                                                  |
