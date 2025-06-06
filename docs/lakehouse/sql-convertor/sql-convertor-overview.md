@@ -216,7 +216,7 @@ The following table shows how various data types are displayed in different seri
 
 ## Best Practices
 
-- `sql_convertor_config`
+- Specify functions that do not need to be converted
 
     In some cases, you may not be able to find a function in Doris that is completely consistent with the original system, or some functions after conversion may not behave exactly the same as the original function under some special parameters. In this case, the user can first use UDF to implement a function that is completely consistent with the original system and register it in Doris. Then, add this UDF in `ignore_udf` of `sql_convertor_config`. In this way, SQL Convertor will not convert this function, so that users can use UDF to control the function behavior.
 
