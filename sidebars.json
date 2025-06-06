@@ -1141,6 +1141,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/extract",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/makedate",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/time",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timediff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
