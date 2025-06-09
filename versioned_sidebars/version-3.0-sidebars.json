@@ -626,6 +626,7 @@
                             "items": [
                                 "admin-manual/system-tables/information_schema/active_queries",
                                 "admin-manual/system-tables/information_schema/backend_active_tasks",
+                                "admin-manual/system-tables/information_schema/backend_configuration",
                                 "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
                                 "admin-manual/system-tables/information_schema/character_sets",
                                 "admin-manual/system-tables/information_schema/collations",
