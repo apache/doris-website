@@ -7,10 +7,6 @@
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
-  "sidebar.docs.category.Tech Alternatives": {
-    "message": "技术对比",
-    "description": "The label for category Getting Started in sidebar docs"
-  },
   "sidebar.docs.category.Guides": {
     "message": "使用指南",
     "description": "The label for category Guides in sidebar docs"

@@ -6,16 +6,7 @@
             "collapsed": false,
             "items": [
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start",
-                {
-                    "type": "category",
-                    "label": "Tech Alternatives",
-                    "items": [
-                        "gettingStarted/alternatives/alternative-to-clickhouse",
-                        "gettingStarted/alternatives/alternative-to-elasticsearch",
-                        "gettingStarted/alternatives/alternative-to-trino"
-                    ]
-                }
+                "gettingStarted/quick-start"
             ]
         },
         {
