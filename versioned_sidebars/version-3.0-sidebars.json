@@ -1072,6 +1072,7 @@
                                     "type": "category",
                                     "label": "String Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/to-base64",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/from-base64",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ascii",
