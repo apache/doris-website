@@ -6,7 +6,16 @@
             "collapsed": false,
             "items": [
                 "gettingStarted/what-is-apache-doris",
-                "gettingStarted/quick-start"
+                "gettingStarted/quick-start",
+                {
+                    "type": "category",
+                    "label": "Tech Alternatives",
+                    "items": [
+                        "gettingStarted/alternatives/alternative-to-clickhouse",
+                        "gettingStarted/alternatives/alternative-to-elasticsearch",
+                        "gettingStarted/alternatives/alternative-to-trino"
+                    ]
+                }
             ]
         },
         {
@@ -1022,6 +1031,7 @@
                                     "type": "category",
                                     "label": "String Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/to-base64",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/from-base64",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ascii",
