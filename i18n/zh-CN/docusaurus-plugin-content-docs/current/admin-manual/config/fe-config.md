@@ -2149,11 +2149,6 @@ tablet 状态更新间隔
 
 删除数据库（表/分区）后，您可以使用 RECOVER stmt 恢复它。这指定了最大数据保留时间。一段时间后，数据将被永久删除。
 
-#### `storage_cooldown_second`
-
-默认值：`30 * 24 * 3600L`  （30 天）
-
-创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果设置为 SSD，这将指定 tablet 在 SSD 上停留的默认时间。之后，tablet 将自动移动到 HDD。您可以在 `CREATE TABLE stmt` 中设置存储冷却时间。
 
 #### `default_storage_medium`
 
