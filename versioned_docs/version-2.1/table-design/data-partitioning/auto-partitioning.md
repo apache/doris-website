@@ -297,7 +297,7 @@ For a detailed grammar description, see: [auto_partition_name](../../sql-manual/
 
 ## Key points
 
-- Similar to regular partitioned tables, aoto List Partition supports multi-column partitioning with no syntax differences. 
+- Similar to regular partitioned tables, auto List Partition supports multi-column partitioning with no syntax differences. 
 - If partitions are created during data insertion or import processes, and the entire import process is not completed (fails or is canceled), the created partitions will not be automatically deleted. 
 - Tables using Auto Partition only differ in the method of partition creation, switching from manual to automatic. The original usage of the table and its created partitions remains the same as non-Auto Partition tables or partitions. 
 - To prevent the accidental creation of too many partitions, Apache Doris controls the maximum number of partitions an Auto Partition table can accommodate through the `max_auto_partition_num setting` in the FE configuration. This value can be adjusted if needed.
