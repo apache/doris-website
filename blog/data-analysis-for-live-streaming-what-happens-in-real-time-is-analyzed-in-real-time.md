@@ -5,6 +5,7 @@
     'date': '2023-10-30',
     'author': 'He Gong',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/139',
     "image": '/images/live-streaming.png'
 }
 

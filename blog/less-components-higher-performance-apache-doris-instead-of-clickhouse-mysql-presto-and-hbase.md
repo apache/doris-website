@@ -5,6 +5,7 @@
     'date': '2023-11-22',
     'author': 'CIGNA & CMB',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/140',
     "image": '/images/cigna-cmb.png'
 }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import { IBlog } from '../blogs.type';
-import BlogItem from './blog-item';
 import BlogListItem from '@site/src/theme/BlogListItem';
 
 function getHeadData() {

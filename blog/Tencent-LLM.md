@@ -5,6 +5,7 @@
     'date': '2023-08-29',
     'author': 'Jun Zhang & Lei Luo',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/131',
     "image": '/images/tme.png'
 }
 

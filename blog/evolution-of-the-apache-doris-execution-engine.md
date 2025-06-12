@@ -4,7 +4,8 @@
     'summary': "From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.",
     'description': "From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.",
     'date': '2024-06-18',
-    'author': 'Apache Doris',
+    'author': 'VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/573',
     'tags': ['Tech Sharing'],
     "image": '/images/evolution-of-the-apache-doris-execution-engine.jpg'
 }
