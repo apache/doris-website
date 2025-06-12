@@ -84,29 +84,61 @@ Apache Doris 提供以下三种不同的数据导出方式：
 Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出功能能够自动将 Apache Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型。CSV 格式没有类型，所有数据都以文本形式输出。
 
 以下是 Apache Doris 数据类型和 Parquet、ORC 文件格式的数据类型映射关系表：
-| Doris Type | Arrow Type | Orc Type |
-| ---------- | ---------- | -------- |
-| boolean    | boolean | boolean |
-| tinyint    | int8 | tinyint |
-| smallint   | int16 | smallint |
-| int        | int32 | int |
-| bigint     | int64 | bigint |
-| largeInt   | utf8 | string |
-| date       | utf8 | string |
-| datev2     | Date32Type | string |
-| datetime   | utf8 | string |
-| datetimev2 | TimestampType | timestamp |
-| float      | float32 | float |
-| double     | float64 | double |
-| char / varchar / string| utf8 | string |
-| decimal    | decimal128 | decimal |
-| struct     | struct | struct |
-| map        | map | map |
-| array      | list | array |
-| json       | utf8 | string |
-| variant    | utf8 | string |
-| bitmap     | binary | binary |
-| quantile_state| binary | binary |
-| hll        | binary | binary |
 
-> 注意：Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。
+- ORC
+
+    | Doris Type | Orc Type |
+    | ---------- | -------- |
+    | boolean    | boolean |
+    | tinyint    | tinyint |
+    | smallint   | smallint |
+    | int        | int |
+    | bigint     | bigint |
+    | largeInt   | string |
+    | date       | string |
+    | datev2     | string |
+    | datetime   | string |
+    | datetimev2 | timestamp |
+    | float      | float |
+    | double     | double |
+    | char / varchar / string| string |
+    | decimal    | decimal |
+    | struct     | struct |
+    | map        | map |
+    | array      | array |
+    | json       | string |
+    | variant    | string |
+    | bitmap     | binary |
+    | quantile_state| binary |
+    | hll        | binary |
+
+- Parquet
+
+    Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。
+
+    | Doris Type | Arrow Type | Parquet Physical Type | Parquet Logical Type |
+    | ---------- | ---------- | -------- | ------- |
+    | boolean    | boolean | BOOLEAN | |
+    | tinyint    | int8 | INT32 | INT_8 |
+    | smallint   | int16 | INT32 | INT_16 |
+    | int        | int32 | INT32 | INT_32 |
+    | bigint     | int64 | INT64 | INT_64 |
+    | largeInt   | utf8 | BYTE_ARRAY | UTF8 |
+    | date       | utf8 | BYTE_ARRAY | UTF8 |
+    | datev2     | date32 | INT32 | DATE |
+    | datetime   | utf8 | BYTE_ARRAY | UTF8 |
+    | datetimev2 | timestamp | INT96/INT64 | TIMESTAMP(MICROS/MILLIS/SECONDS) |
+    | float      | float32 | FLOAT | |
+    | double     | float64 | DOUBLE | |
+    | char / varchar / string| utf8 | BYTE_ARRAY | UTF8 |
+    | decimal    | decimal128 | FIXED_LEN_BYTE_ARRAY | DECIMAL(scale, precision) |
+    | struct     | struct |  | Parquet Group |
+    | map        | map | | Parquet Map |
+    | array      | list | | Parquet List |
+    | json       | utf8 | BYTE_ARRAY | UTF8 |
+    | variant    | utf8 | BYTE_ARRAY | UTF8 |
+    | bitmap     | binary | BYTE_ARRAY | |
+    | quantile_state| binary | BYTE_ARRAY | |
+    | hll        | binary | BYTE_ARRAY | |
+
+    > 注：在 2.1.11 和 3.0.7 版本中，支持指定 `parquet.enable_int96_timestamps` 属性，来决定 Doris 的 datetimev2 类型，是使用 Parquet 的 INT96 存储还是 INT64。默认使用 INT96。但 INT96 在 Parquet 标准中已经废弃，仅用于兼容一些旧系统（如 Hive 4.0 之前的版本）。
