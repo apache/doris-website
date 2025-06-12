@@ -337,6 +337,28 @@ SELECT * FROM iceberg_tbl FOR TIME AS OF "2022-10-07 17:20:37";
 SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 ```
 
+### Branch 和 Tag
+
+> 该功能自 3.1.0 版本支持
+
+支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
+
+支持多种不同的语法形式，以兼容 Spark/Trino 等系统的语法。
+
+```sql
+-- BRANCH
+SELECT * FROM iceberg_tbl@brand(branch1);
+SELECT * FROM iceberg_tbl@brand("name" = "branch1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'branch1';
+
+-- TAG
+SELECT * FROM iceberg_tbl@tag(tag1);
+SELECT * FROM iceberg_tbl@tag("name" = "tag1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
+```
+
+对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Branch/Tag 名称。
+
 ## 写入操作
 
 ### INSERT INTO
