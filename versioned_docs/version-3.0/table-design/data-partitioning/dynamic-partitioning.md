@@ -45,6 +45,10 @@ When using dynamic partitioning, the following rules must be followed:
 * Dynamic partitioning only supports Range type partitions on DATE/DATETIME columns.
 * Dynamic partitioning only supports a single partition key.
 
+:::caution Note: 
+The dynamic partitioning feature will become invalid when synchronized by CCR. If this table is replicated via CCR, meaning the PROPERTIES include is_being_synced=true, the SHOW CREATE TABLE command will display it as enabled, but it will not actually take effect. When is_being_synced is set to false, these features will resume functionality. However, the is_being_synced property is exclusively for use by CCR peripheral modules—do not manually modify it during the CCR synchronization process. 
+:::
+
 ## Creating Dynamic Partitions
 
 When creating a table, you can create a dynamic partitioned table by specifying the `dynamic_partition` property.
