@@ -183,7 +183,7 @@ FROM all_types WHERE smallint_u > 10 GROUP BY smallint_u;
 
     在 2.1.11 和 3.0.7 后续版本中，Doris 支持了更加灵活的函数下推和改写规则，用户可以在 Catalog 属性中设置针对某个 Catalog 的函数下推和改写规则：
 
-    ```
+    ```sql
     create catalog jdbc properties (
     ...
     'function_rules' = '{"pushdown" : {"supported": ["to_date"], "unsupported" : ["abs"]}, "rewrite" : {"to_date" : "date2"}}'

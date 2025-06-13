@@ -182,7 +182,7 @@ For predicate conditions, the semantics or behavior in Doris and external data s
 
     In subsequent versions after 2.1.11 and 3.0.7, Doris supports more flexible function pushdown and rewrite rules. Users can set function pushdown and rewrite rules for a specific Catalog in the Catalog properties:
 
-    ```
+    ```sql
     create catalog jdbc properties (
     ...
     'function_rules' = '{"pushdown" : {"supported": ["to_date"], "unsupported" : ["abs"]}, "rewrite" : {"to_date" : "date2"}}'
