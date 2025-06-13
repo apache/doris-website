@@ -1111,7 +1111,9 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/printf",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string"
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/regexp_count"
+                                        
                                     ]
                                 },
                                 {
