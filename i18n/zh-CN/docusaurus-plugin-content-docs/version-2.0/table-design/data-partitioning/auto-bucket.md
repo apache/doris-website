@@ -42,7 +42,7 @@ DISTRIBUTED BY HASH(site) BUCKETS AUTO
 properties("estimate_partition_size" = "2G")
 ```
 
-新增的配置参数 estimate_partition_size 表示一个单分区的数据量。该参数是可选的，如果没有给出则 Doris 会将 estimate_partition_size 的默认值取为 10GB。从上文中已经得知，一个分桶在物理层面就是一个 Tablet，为了获得最好的性能，建议 Tablet 的大小在 1GB - 10GB 的范围内。
+新增的配置参数 estimate_partition_size 用于指定单个分区的数据量。该参数为可选项，若未设置，Doris 会默认将 estimate_partition_size 取值为 10GB。如前文所述，在物理层面上，一个分桶对应一个 Tablet。为了获得最佳性能，建议每个 Tablet 的大小控制在 1GB 至 15GB 之间。
 
 那么自动分桶推算是如何保证 Tablet 大小处于这个范围内的呢？
 
@@ -51,13 +51,12 @@ properties("estimate_partition_size" = "2G")
 - 若是整体数据量较大，则应使桶数跟总的磁盘块数相关，充分利用每台 BE 机器和每块磁盘的能力 
 
 ## 初始分桶推算 
-
-1.  先根据数据量得出一个桶数 N。首先使用 estimate_partition_size 的值除以 5（按文本格式存入 Doris 中有 5 比 1 的数据压缩比计算），得到的结果为：
+1.  首先根据数据量计算桶数 N。具体做法是将 estimate_partition_size 的数值除以 5（因为以文本格式存储时，Doris 通常有 5:1 的数据压缩比），然后根据分区大小估算桶数。在存算一体架构下，默认每 5GB 分区大小对应一个分桶；在存算分离架构下，默认每 10GB 分区大小对应一个分桶。该默认值可通过 FE 配置项 autobucket_partition_size_per_bucket_gb 进行调整。最终得到的结果如下：
 
   ```Plain
   (, 100MB)，则取 N=1
   [100MB, 1GB)，则取 N=2
-  [1GB, )，则每 GB 一个分桶
+  [1GB, )，则每(autobucket_partition_size_per_bucket_gb) GB 一个分桶
   ```
 
 2. 根据 BE 节点数以及每个 BE 节点的磁盘容量，计算出桶数 M。
