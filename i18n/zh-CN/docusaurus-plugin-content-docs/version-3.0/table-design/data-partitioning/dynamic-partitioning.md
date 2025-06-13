@@ -47,6 +47,10 @@ under the License.
 
 * 动态分区只支持单一分区键。
 
+:::caution 注意：动态分区功能在被 CCR 同步时将会失效。
+如果这个表是被 CCR复制而来的，即 PROPERTIES 中包含 is being synced=true 时，在 show create table 一中会显示开启状态，但不会实际生效。当 is_being_synced 被设置为 false 时，这些功能将会恢复生效但 is_being_synced 属性仅供 CCR外围模块使用，在 CCR 同步的过程中不要手动设置。
+:::
+
 ## 创建动态分区
 
 在建表时，通过指定 `dynamic_partition` 属性，可以创建动态分区表。
