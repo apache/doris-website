@@ -149,7 +149,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
       feSpec:
         service:
           type: NodePort
-          servicePorts:
+          portMaps:
           - nodePort: 31001
             targetPort: 8030
           - nodePort: 31002
