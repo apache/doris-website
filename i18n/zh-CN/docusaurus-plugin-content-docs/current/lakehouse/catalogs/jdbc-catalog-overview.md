@@ -141,15 +141,68 @@ FROM all_types WHERE smallint_u > 10 GROUP BY smallint_u;
 
 #### 函数下推
 
-默认不会下推带函数的谓词条件。因为对一同一个函数，可能在 Doris 和外部数据源中的语义或行为是不一致的。如果用户明确知晓函数的语义，可以通过将会话变量 `enable_ext_func_pred_pushdown` 设为 `true` 来开启函数下推功能。
+对于谓词条件，Doris 和外部数据源中的语义或行为可能是不一致的。所以 Doris 通过以下参数变量对 JDBC 外表查询中的谓词条件下推进行限制和控制：
 
-同时，不同的数据源有不同的函数黑名单，黑名单中的函数不会被下推。
+> 注：目前 Doris 只支持对 MySQL、Clickhouse、Oracle 三个数据源进行谓词下推。后续将开放更多数据源。
 
-| 数据源        | 函数黑名单 | 说明                                                                                                                                  |
-| ---------- | ----- | ---------------------------- |
-| MySQL      | - `DATE_TRUNC`<br>- `MONEY_FORMAT`<br>- `NEGTIVE`    | MySQL 还可以通过 FE 配置项 `jdbc_mysql_unsupported_pushdown_functions` 来设置额外的黑名单，如：`jdbc_mysql_unsupported_pushdown_functions==func1,func2` |
-| Clickhouse | - `FROM_UNIXTIME`<br>- `UNIX_TIMESTAMP` |       |
-| Oracle     | - `NVL`<br>- `IFNULL`   |          |
+- `enable_jdbc_oracle_null_predicate_push_down`
+
+    会话变量。默认为 `false`。即当谓词条件中包含 `NULL` 值时，该谓词条件不会下推给 Oracle 数据源。因为在 Oracle 21 版本之前，Oracle 不支持 `NULL` 作为操作符。
+
+    该参数自 2.1.7 和 3.0.3 支持。
+
+- `enable_jdbc_cast_predicate_push_down`
+
+    会话变量。默认为 `false`。即当谓词条件中存在显式或隐式 CAST 时，该谓词条件不会下推给 JDBC 数据源。因为 CAST 的行为在不同数据库中不一致，为确保结果正确性，默认不下推 CAST。但用户可以手动验证 CAST 的行为是否一致，如果一致，可以将此参数设置为 `true`，让更多的谓词下推已获得更好的性能。
+
+    该参数自 2.1.7 和 3.0.3 支持。
+
+- 函数下推黑白名单
+
+    签名相同的函数，在 Doris 和外部数据源中的语义可能是不一致的。Doris 中预定义了一些函数下推的黑白名单：
+
+    | 数据源        | 黑名单 | 白名单 | 说 明     |
+    | ---------- | ----- | --- | --------- |
+    | MySQL      | - `DATE_TRUNC`<br>- `MONEY_FORMAT`<br>- `NEGTIVE`  |  | MySQL 还可以通过 FE 配置项 `jdbc_mysql_unsupported_pushdown_functions` 来设置额外的黑名单，如：`jdbc_mysql_unsupported_pushdown_functions==func1,func2` |
+    | Clickhouse | | - `FROM_UNIXTIME`<br>- `UNIX_TIMESTAMP` |       |
+    | Oracle     |  | - `NVL`<br>- `IFNULL`   |          |
+
+- 函数改写规则
+
+    Doris 和外部数据源中存在一些行为一致但名称不一样函数。Doris 支持在函数下推时对这些函数进行改写。目前内置了以下改写规则：
+
+    | 数据源        | Doris 函数 | 目的端函数 |
+    | ---------- | ----- | --- |
+    | MySQL | nvl | ifnull |
+    | MySQL | to_date | date |
+    | Clickhouse | from_unixtime | FROM_UNIXTIME |
+    | Clickhouse | unix_timestamp | toUnixTimestamp |
+    | Oracle | ifnull | nvl |
+
+- 自定义函数下推和改写规则
+
+    在 2.1.11 和 3.0.7 后续版本中，Doris 支持了更加灵活的函数下推和改写规则，用户可以在 Catalog 属性中设置针对某个 Catalog 的函数下推和改写规则：
+
+    ```
+    create catalog jdbc properties (
+    ...
+    'function_rules' = '{"pushdown" : {"supported": ["to_date"], "unsupported" : ["abs"]}, "rewrite" : {"to_date" : "date2"}}'
+    )
+    ```
+
+    通过 `function_rules` 可以指定以下规则：
+
+    - `pushdown`
+
+        指定函数下推规则，其中 `supported` 和 `unsupported` 数组中分别指定可以下推和不能下推的函数名称。如果同时存在于两个数组中，以 `supported` 优先。
+
+        Doris 会先应用上述系统中预定义的黑白名单，再应用用户指定的黑白名单。
+
+    - `rewrite`
+
+        定义函数改写规则，如上述示例中，会将 `to_date` 函数名称改写为 `date2` 并下推。
+
+        注意，只会改写允许下推的函数。
 
 #### 行数限制
 
