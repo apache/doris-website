@@ -101,12 +101,12 @@ partition_list
 - 在 table1 整个表上构建索引 index1
 
     ```sql
-    BUILD INDEX index1 ON TABLE table1
+    BUILD INDEX index1 ON table1
     ```
 
 - 在 table1 的分区 p1 和 p2 上构建索引 index1
 
     ```sql
-    BUILD INDEX index1 ON TABLE table1 PARTITION(p1, p2)
+    BUILD INDEX index1 ON table1 PARTITION(p1, p2)
     ```
 

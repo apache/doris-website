@@ -106,11 +106,11 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 - 在 table1 上创建倒排索引 index1
 
     ```sql
-    CREATE INDEX index1 ON TABLE table1 USING INVERTED;
+    CREATE INDEX index1 ON table1 USING INVERTED;
     ```
 
 - 在 table1 上创建 NGram BloomFilter 索引 index2
 
     ```sql
-    CREATE INDEX index2 ON TABLE table1 USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
+    CREATE INDEX index2 ON table1 USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
     ```
