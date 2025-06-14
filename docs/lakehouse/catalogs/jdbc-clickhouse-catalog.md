@@ -96,6 +96,12 @@ When mapping ClickHouse, a Database in Doris corresponds to a Database in ClickH
 | array                     | array                   |                                  |
 | other                     | UNSUPPORTED             |                                  |
 
+## Related Parameters
+
+- `jdbc_clickhouse_query_final`
+
+  Session variable, default is false. When set to true, `SETTINGS final = 1` will be appended to the SQL statements sent to Clickhouse.
+
 ## Common Issues
 
 1. Encountering `NoClassDefFoundError: net/jpountz/lz4/LZ4Factory` error message when reading Clickhouse data
