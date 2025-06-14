@@ -643,7 +643,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * Type: int32
-* Description: Max number of segments allowed in a single segcompaction task.
+* Description: Segment compaction is triggered when the number of segments exceeds this threshold. This configuration also limits the maximum number of raw segments in a single segment compaction task.
 * Default value: 10
 
 #### `segcompaction_candidate_max_rows`

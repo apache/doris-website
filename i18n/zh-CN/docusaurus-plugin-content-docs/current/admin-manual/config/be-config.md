@@ -606,7 +606,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * 类型：int32
-* 描述：当 segment 数量超过此阈值时触发 segment compaction
+* 描述：当 segment 数量超过此阈值时触发 segment compaction，该配置也限制了单个 segment compaction 任务中的最大原始 segment 数量。
 * 默认值：10
 
 #### `segcompaction_candidate_max_rows`
@@ -614,12 +614,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过
 * 默认值：1048576
-
-#### `segcompaction_batch_size`
-
-* 类型：int32
-* 描述：单个 segment compaction 任务中的最大原始 segment 数量。
-* 默认值：10
 
 #### `segcompaction_candidate_max_rows`
 
