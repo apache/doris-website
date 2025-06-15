@@ -520,6 +520,8 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 
   * Parquet
 
+    注意，DATETIME 类型写入到 Parquet 文件时，物理类型使用的是 INT96 而非 INT64。目的是兼容 Hive 4.0 版本之前的逻辑。
+
   * Text（自 2.1.7 和 3.0.3 版本开始支持）
 
   * Text 格式还支持以下表属性：

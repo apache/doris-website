@@ -85,48 +85,60 @@ Parquet and ORC file formats have their own data types. Doris's export function 
 
 The following table shows the mapping between Doris data types and Parquet, ORC file format data types:
 
-1. Doris export to ORC file format data type mapping table:
-   
-    |Doris Type|Orc Type|
-    | -------- | ------- |
-    |boolean|boolean|
-    |tinyint|tinyint|
-    |smallint|smallint|
-    |int|int|
-    |bigint|bigint|
-    |largeInt|string|
-    |date|string|
-    |datev2|string|
-    |datetime|string|
-    |datetimev2|timestamp|
-    |float|float|
-    |double|double|
-    |char / varchar / string|string|
-    |decimal|decimal|
-    |struct|struct|
-    |map|map|
-    |array|array|
-    |json| Not supported|
+- ORC
 
-2. When Doris exports to Parquet file format, it first converts Doris in-memory data to Arrow in-memory data format, then writes out to Parquet file format. The mapping relationship between Doris data types and Arrow data types is:
+    | Doris Type | Orc Type |
+    | ---------- | -------- |
+    | boolean    | boolean |
+    | tinyint    | tinyint |
+    | smallint   | smallint |
+    | int        | int |
+    | bigint     | bigint |
+    | largeInt   | string |
+    | date       | string |
+    | datev2     | string |
+    | datetime   | string |
+    | datetimev2 | timestamp |
+    | float      | float |
+    | double     | double |
+    | char / varchar / string| string |
+    | decimal    | decimal |
+    | struct     | struct |
+    | map        | map |
+    | array      | array |
+    | json       | string |
+    | variant    | string |
+    | bitmap     | binary |
+    | quantile_state| binary |
+    | hll        | binary |
 
-    | Doris Type | Arrow Type |
-    | ----- | ----- |
-    | boolean | boolean |
-    | tinyint | int8 |
-    | smallint | int16 |
-    | int | int32 |
-    | bigint | int64 |
-    | largeInt | utf8 |
-    | date | utf8 |
-    | datev2 | Date32Type |
-    | datetime | utf8 |
-    | datetimev2 | TimestampType |
-    | float | float32 |
-    | double | float64 |
-    | char / varchar / string | utf8 |
-    | decimal | decimal128 |
-    | struct | struct |
-    | map | map |
-    | array | list |
-    |json| utf8 |
+- Parquet
+
+    When Doris is exported to the Parquet file format, the Doris memory data is first converted to the Arrow memory data format, and then written out to the Parquet file format by Arrow.
+
+    | Doris Type | Arrow Type | Parquet Physical Type | Parquet Logical Type |
+    | ---------- | ---------- | -------- | ------- |
+    | boolean    | boolean | BOOLEAN | |
+    | tinyint    | int8 | INT32 | INT_8 |
+    | smallint   | int16 | INT32 | INT_16 |
+    | int        | int32 | INT32 | INT_32 |
+    | bigint     | int64 | INT64 | INT_64 |
+    | largeInt   | utf8 | BYTE_ARRAY | UTF8 |
+    | date       | utf8 | BYTE_ARRAY | UTF8 |
+    | datev2     | date32 | INT32 | DATE |
+    | datetime   | utf8 | BYTE_ARRAY | UTF8 |
+    | datetimev2 | timestamp | INT96/INT64 | TIMESTAMP(MICROS/MILLIS/SECONDS) |
+    | float      | float32 | FLOAT | |
+    | double     | float64 | DOUBLE | |
+    | char / varchar / string| utf8 | BYTE_ARRAY | UTF8 |
+    | decimal    | decimal128 | FIXED_LEN_BYTE_ARRAY | DECIMAL(scale, precision) |
+    | struct     | struct |  | Parquet Group |
+    | map        | map | | Parquet Map |
+    | array      | list | | Parquet List |
+    | json       | utf8 | BYTE_ARRAY | UTF8 |
+    | variant    | utf8 | BYTE_ARRAY | UTF8 |
+    | bitmap     | binary | BYTE_ARRAY | |
+    | quantile_state| binary | BYTE_ARRAY | |
+    | hll        | binary | BYTE_ARRAY | |
+
+    > Note: In versions 2.1.11 and 3.0.7, you can specify the `parquet.enable_int96_timestamps` property to determine whether Doris's datetimev2 type uses Parquet's INT96 storage or INT64. INT96 is used by default. However, INT96 has been deprecated in the Parquet standard and is only used for compatibility with some older systems (such as versions before Hive 4.0).
