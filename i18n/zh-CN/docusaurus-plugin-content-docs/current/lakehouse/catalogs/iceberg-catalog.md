@@ -337,6 +337,28 @@ SELECT * FROM iceberg_tbl FOR TIME AS OF "2022-10-07 17:20:37";
 SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 ```
 
+### Branch 和 Tag
+
+> 该功能自 3.1.0 版本支持
+
+支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
+
+支持多种不同的语法形式，以兼容 Spark/Trino 等系统的语法。
+
+```sql
+-- BRANCH
+SELECT * FROM iceberg_tbl@brand(branch1);
+SELECT * FROM iceberg_tbl@brand("name" = "branch1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'branch1';
+
+-- TAG
+SELECT * FROM iceberg_tbl@tag(tag1);
+SELECT * FROM iceberg_tbl@tag("name" = "tag1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
+```
+
+对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Branch/Tag 名称。
+
 ## 写入操作
 
 ### INSERT INTO
@@ -526,6 +548,12 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 * **文件格式**
 
   * Parquet（默认）
+
+    注意，由 Doris 创建的 Iceberg 表，Datetime 对应的是 `timestamp_ntz` 类型。
+
+    2.1.11 和 3.0.7 之后的版本中，Datetime 类型写入到 Parquet 文件时，物理类型使用的是 INT64 而非 INT96。
+
+    此外，如果是其他系统创建的 Iceberg 表，虽然 `timestamp` 和 `timestamp_ntz` 类型都映射为 Doris 的 Datetime 类型。但在写入时，会根据实际类型判断是否需要处理时区。
 
   * ORC
 
