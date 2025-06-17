@@ -25,7 +25,7 @@ under the License.
 -->
 
 ## Cluster planning
-In the default DorisCluster resource deployment, the FE and BE images may not be the latest versions, and  the default replica count for both FE and BE is set to 3. Additionally, Additionally, the default resource configuration for FE is 6 CPUs and 12Gi of memory, while for BE, it is 8 CPUs and 16Gi of memory. This section describes how to modify these default configurations according to your requirements.
+In the default DorisCluster resource deployment, the FE and BE images may not be the latest versions, and  the default replica count for both FE and BE is set to 3. Additionally, the default resource configuration for FE is 6 CPUs and 12Gi of memory, while for BE, it is 8 CPUs and 16Gi of memory. This section describes how to modify these default configurations according to your requirements.
 
 ### Image configuration
 Doris Operator is decoupled from the Doris version and supports deploying Doris versions 2.0 and above.
