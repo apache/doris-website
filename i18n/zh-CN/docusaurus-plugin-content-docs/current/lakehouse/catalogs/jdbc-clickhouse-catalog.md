@@ -96,6 +96,12 @@ CREATE CATALOG clickhouse PROPERTIES (
 | array                     | array                   |                                  |
 | other                     | UNSUPPORTED             |                                  |
 
+## 相关参数
+
+- `jdbc_clickhouse_query_final`
+
+  会话变量，默认为 false。当设置为 true 时，发送给 Clickhouse 的 SQL 语句后会添加 `SETTINGS final = 1`。
+
 ## 常见问题
 
 1. 读取 Clickhouse 数据出现 `NoClassDefFoundError: net/jpountz/lz4/LZ4Factory` 错误信息

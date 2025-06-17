@@ -140,15 +140,68 @@ FROM all_types WHERE smallint_u > 10 GROUP BY smallint_u;
 
 #### Function Pushdown
 
-By default, predicate conditions involving functions will not be pushed down. This is because the semantics or behavior of the same function might differ between Doris and the external data source. If the user is confident about the function's semantics, they can enable function pushdown by setting the session variable `enable_ext_func_pred_pushdown` to `true`.
+For predicate conditions, the semantics or behavior in Doris and external data sources may be inconsistent. Therefore, Doris restricts and controls predicate pushdown in JDBC external table queries through the following parameter variables:
 
-Additionally, different data sources have specific function blacklists. Functions in these blacklists will not be pushed down.
+> Note: Currently, Doris only supports predicate pushdown for MySQL, Clickhouse, and Oracle data sources. More data sources will be supported in the future.
 
-| Data Source   | Function Blacklist                                            | Notes                                                                                                           |
-| ------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| MySQL         | - `DATE_TRUNC`<br>- `MONEY_FORMAT`<br>- `NEGTIVE`             | MySQL also allows additional blacklisted functions to be configured via the FE parameter `jdbc_mysql_unsupported_pushdown_functions`, e.g., `jdbc_mysql_unsupported_pushdown_functions=func1,func2`. |
-| ClickHouse    | - `FROM_UNIXTIME`<br>- `UNIX_TIMESTAMP`                       |                                                                                                                 |
-| Oracle        | - `NVL`<br>- `IFNULL`                                         |                                                                                                                 |
+- `enable_jdbc_oracle_null_predicate_push_down`
+
+    Session variable. The default is `false`. That is, when the predicate condition contains a `NULL` value, the predicate will not be pushed down to the Oracle data source. This is because, before Oracle version 21, Oracle does not support `NULL` as an operator.
+
+    This parameter is supported since 2.1.7 and 3.0.3.
+
+- `enable_jdbc_cast_predicate_push_down`
+
+    Session variable. The default is `false`. That is, when there is an explicit or implicit CAST in the predicate condition, the predicate will not be pushed down to the JDBC data source. Since the behavior of CAST is inconsistent across different databases, to ensure correctness, CAST is not pushed down by default. However, users can manually verify whether the behavior of CAST is consistent. If so, this parameter can be set to `true` to allow more predicates to be pushed down for better performance.
+
+    This parameter is supported since 2.1.7 and 3.0.3.
+
+- Function pushdown blacklist and whitelist
+
+    Functions with the same signature may have inconsistent semantics in Doris and external data sources. Doris has predefined some blacklists and whitelists for function pushdown:
+
+    | Data Source   | Blacklist | Whitelist | Description     |
+    | ---------- | ----- | --- | --------- |
+    | MySQL      | - `DATE_TRUNC`<br>- `MONEY_FORMAT`<br>- `NEGTIVE`  |  | MySQL can also set additional blacklist items through the FE configuration item `jdbc_mysql_unsupported_pushdown_functions`, e.g.: `jdbc_mysql_unsupported_pushdown_functions==func1,func2` |
+    | Clickhouse | | - `FROM_UNIXTIME`<br>- `UNIX_TIMESTAMP` |       |
+    | Oracle     |  | - `NVL`<br>- `IFNULL`   |          |
+
+- Function rewrite rules
+
+    There are some functions in Doris and external data sources that have consistent behavior but different names. Doris supports rewriting these functions during function pushdown. The following rewrite rules are currently built-in:
+
+    | Data Source   | Doris Function | Target Function |
+    | ---------- | ----- | --- |
+    | MySQL | nvl | ifnull |
+    | MySQL | to_date | date |
+    | Clickhouse | from_unixtime | FROM_UNIXTIME |
+    | Clickhouse | unix_timestamp | toUnixTimestamp |
+    | Oracle | ifnull | nvl |
+
+- Custom function pushdown and rewrite rules
+
+    In subsequent versions after 3.0.7, Doris supports more flexible function pushdown and rewrite rules. Users can set function pushdown and rewrite rules for a specific Catalog in the Catalog properties:
+
+    ```sql
+    create catalog jdbc properties (
+    ...
+    'function_rules' = '{"pushdown" : {"supported": ["to_date"], "unsupported" : ["abs"]}, "rewrite" : {"to_date" : "date2"}}'
+    )
+    ```
+
+    Through `function_rules`, the following rules can be specified:
+
+    - `pushdown`
+
+        Specifies function pushdown rules. The `supported` and `unsupported` arrays specify the function names that can and cannot be pushed down, respectively. If a function exists in both arrays, `supported` takes precedence.
+
+        Doris will first apply the system's predefined blacklists and whitelists, and then apply the user-specified blacklists and whitelists.
+
+    - `rewrite`
+
+        Defines function rewrite rules. As in the example above, the function name `to_date` will be rewritten as `date2` and pushed down.
+
+        Note: Only functions that are allowed to be pushed down will be rewritten.
 
 #### Row Count Limitation
 
