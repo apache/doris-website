@@ -42,6 +42,28 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'Apache Doris: Fastest Analtyics & Search Database for AI Era',
+            detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
+            tag: 'Apache Doris Webinar',
+            date: 'June 26, 2025 7-8pm EDT',
+            cardDate: 'June 26, 2025',
+            address: 'Virtual',
+            description: 'Join Rayner Chen, Apache Doris PMC Chair and Tech VP at VeloDB, as he breaks down why Doris is purpose-built for the AI era. Hear directly from the expert shaping the future of real-time analytics.',
+            start_date: '2025-06-26T21:00:00.000Z',
+            end_date: '2025-06-26T22:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-webinar-20250625.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-webinar-20250625',
+        },
+        {
             cardTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
             detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
             tag: 'Apache Doris Webinar',
