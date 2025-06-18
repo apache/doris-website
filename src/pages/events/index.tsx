@@ -42,8 +42,8 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
-            cardTitle: 'Apache Doris: Fastest Analtyics & Search Database for AI Era',
-            detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
+            cardTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
+            detailTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
             tag: 'Apache Doris Webinar',
             date: 'June 26, 2025 7-8pm EDT',
             cardDate: 'June 26, 2025',
