@@ -144,3 +144,14 @@ doriscluster-sample-be-service    LoadBalancer   10.152.183.244   ac4828493dgrft
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
 ```
+
+## StreamLoad 访问部署在 Kubernetes 的 Doris
+Doris 提供使用 StreamLoad 模式导入数据。客户端和 Doris 集群在同一个局域网内，客户端可直接使用 FE 的地址作为请求地址，FE 服务接收请求并返回 HTTP 301 的状态码以及 BE 的可访问地址，告诉客户端请求 BE 的地址导入数据。在 Kubernetes 上部署的 Doris 集群使用只在 Kubernetes 内部可访问的地址通信，当使用 StreamLoad 方式配置 FE 的可访问地址时，
+FE 通过 301 机制返回的是 BE 只在 Kubernetes 内部可访问的地址，导致在 Kubernetes 外部的客户端导入数据失败。
+
+在 Kubernetes 外部的客户端使用 StreamLoad 模式向部署在 Kubernetes 上的 Doris 集群导入数据时，需要配置可从外部访问的 BE 地址作为 StreamLoad 的导入地址。
+### 配置 BE Service 外部可访问
+按照 [NodePort](install-config-cluster.md#nodeport) 或者 [LoadBalancer](install-config-cluster.md#loadbalancer) 配置 BE 服务的 `Service` 可以从 Kubernetes 集群外部访问。更新部署 Doris 集群的 `DorisCluster` 资源。
+
+### 配置 BE 代理地址
+根据 [NodePort](#nodeport-模式) 或者 [LoadBalancer](#loadbalancer-模式) 获取访问地址的方式，获取可在 Kubernetes 外部访问的地址以及对应的可访问 web_server 服务的端口。将获取到的地址和访问端口配置到使用 StreamLoad 导入数据的请求地址中。
