@@ -42,33 +42,33 @@ This document introduces the support for reading and writing Parquet file format
 * lzo
 * brotli
 
-## parameter
+## Parameters
 
-### session variable
+### Session Variables
 
 * `enable_parquet_lazy_mat` (2.1+, 3.0+)
 
-Controls whether to use lazy materialization technology in parquet reader. The default value is true.
+    Controls whether the Parquet Reader enables lazy materialization. Default is true.
 
 * `hive_parquet_use_column_names` (2.1.6+, 3.0.3+)
 
-When Doris reads the Parquet data type of the Hive table, it will find the column with the same name from the Parquet file to read the data according to the column name of the Hive table by default. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct. 
+    When reading Parquet data types from Hive tables, Doris will, by default, read data from columns in the Parquet file that have the same name as the columns in the Hive table. When this variable is set to `false`, Doris will read data from the Parquet file based on the column order in the Hive table, regardless of column names. This is similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to top-level column names and is ineffective for columns inside Structs.
 
-### be.conf
+### BE Configuration
 
 * `enable_parquet_page_index` (2.1.5+, 3.0+)
 
-Whether the Parquet Reader uses page index to filter data. This is only for debug purpose, in case sometimes the page index filters wrong data. The default value is false.
+    Determines whether the Parquet Reader uses the Page Index to filter data. This is only for debugging purposes, in case the page index sometimes filters incorrect data. Default value is false.
 
 * `parquet_header_max_size_mb` (2.1+, 3.0+)
 
-The maximum buffer size allocated when reading the Parquet Page header. The default value is 1M.
+    The maximum buffer size allocated when reading the Parquet Page header. Default is 1M.
 
 * `parquet_rowgroup_max_buffer_mb` (2.1+, 3.0+)
 
-The maximum buffer size allocated when reading Parquet Row Group. The default value is 128M.
+    The maximum buffer size allocated when reading a Parquet Row Group. Default is 128M.
 
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
-The maximum buffer size allocated when reading columns in a Parquet Row Group. The default value is 8M.
+    The maximum buffer size allocated when reading a Column within a Parquet Row Group. Default is 8M.
 

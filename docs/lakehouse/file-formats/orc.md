@@ -41,41 +41,40 @@ This document introduces the support for reading and writing ORC file formats in
 * lzo
 * zlib
 
-## parameter
+## Parameters
 
-### session variable
+### Session Variables
 
 * `enable_orc_lazy_mat` (2.1+, 3.0+)
 
-Controls whether to use lazy materialization technology in orc reader. The default value is true.
+    Controls whether the ORC Reader enables lazy materialization. Default is true.
 
 * `hive_orc_use_column_names` (2.1.6+, 3.0.3+)
 
-When Doris reads the Orc data type of the Hive table, it will find the column with the same name from the Orc file according to the column name of the Hive table by default to read the data. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `orc.force.positional.evolution` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct.
+    When reading ORC data types from Hive tables, Doris will, by default, read data from columns in the ORC file that have the same name as the columns in the Hive table. When this variable is set to `false`, Doris will read data from the ORC file based on the column order in the Hive table, regardless of column names. This is similar to the `orc.force.positional.evolution` variable in Hive. This parameter only applies to top-level column names and is ineffective for columns inside Structs.
 
-* `orc_tiny_stripe_threshold_bytes` (2.1.8+, 3.0.3+) 
+* `orc_tiny_stripe_threshold_bytes` (2.1.8+, 3.0.3+)
 
-In an orc file, if the byte size of a stripe is less than `orc_tiny_stripe_threshold`, we consider the stripe to be a tiny stripe. For multiple consecutive tiny stripes, we will perform read optimization, that is, read multiple tiny stripes at a time. If you do not want to use this optimization, you can set this value to 0. The default is 8M.
+    In ORC files, if the byte size of a Stripe is less than `orc_tiny_stripe_threshold`, it is considered a Tiny Stripe. For multiple consecutive Tiny Stripes, read optimization will be performed, i.e., multiple Tiny Stripes will be read at once to reduce the number of IO operations. If you do not want to use this optimization, you can set this value to 0. Default is 8M.
 
-* `orc_once_max_read_bytes` (2.1.8+, 3.0.3+) 
+* `orc_once_max_read_bytes` (2.1.8+, 3.0.3+)
 
-When using tiny stripe read optimization, multiple tiny stripes will be merged into one IO. This parameter is used to control the maximum byte size of each IO request. You should not set the value less than `orc_tiny_stripe_threshold`. The default is 8M.    
+    When using Tiny Stripe read optimization, multiple Tiny Stripes will be merged into a single IO operation. This parameter controls the maximum number of bytes for each IO request. You should not set this value smaller than `orc_tiny_stripe_threshold`. Default is 8M.
 
-* `orc_max_merge_distance_bytes` (2.1.8+, 3.0.3+) 
+* `orc_max_merge_distance_bytes` (2.1.8+, 3.0.3+)
 
-When using tiny stripe read optimization, since the two tiny stripes to be read are not necessarily continuous, when the distance between two tiny stripes is greater than this parameter, we will not merge them into one IO. The default is 1M.
+    When using Tiny Stripe read optimization, since two Tiny Stripes to be read may not be consecutive, if the distance between two Tiny Stripes is greater than this parameter, they will not be merged into a single IO operation. Default is 1M.
 
-* `check_orc_init_sargs_success` (dev)
+* `orc_tiny_stripe_amplification_factor` (3.1.0+)
 
-Check if orc predicate pushdown succeeded, for debugging purposes. Defaults to false.
+    In Tiny Stripe optimization, if there are many columns in the ORC file but only a few are used in the query, Tiny Stripe optimization may cause severe read amplification. When the proportion of actually read bytes to the entire Stripe exceeds this parameter, Tiny Stripe read optimization will be used. The default value is 0.4, and the minimum value is 0.
 
-* `orc_tiny_stripe_amplification_factor` (dev)
+* `check_orc_init_sargs_success` (3.1.0+)
 
-In the tiny stripe optimization, if there are many columns in the orc file and only a few of them are used in the query, the tiny stripe optimization will cause serious read amplification. When the proportion of the number of bytes actually read to the entire stripe is greater than this parameter, the tiny stripe read optimization will be used. The default value of this parameter is 0.4 and the minimum value is 0.
+    Checks whether ORC predicate pushdown is successful, used for debugging. Default is false.
 
-
-### be.conf
+### BE Configuration
 
 * `orc_natural_read_size_mb` (2.1+, 3.0+)
 
-The maximum size in bytes that Orc Reader can read at one time.
+    The maximum number of bytes that the ORC Reader reads at one time. Default is 8 MB.
