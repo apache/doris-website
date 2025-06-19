@@ -482,7 +482,8 @@
                     "label": "Observability",
                     "items": [
                         "observability/overview",
-                        "observability/log"
+                        "observability/log",
+                        "observability/trace"
                     ]
                 },
                 {
