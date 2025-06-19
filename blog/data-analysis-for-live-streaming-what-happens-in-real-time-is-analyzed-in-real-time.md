@@ -3,8 +3,9 @@
     'title': 'Data analysis for live streaming: what happens in real time is analyzed in real time',
     'description': "As live streaming emerges as a way of doing business, the need for data analysis follows up. This post is about how a live streaming service provider with 800 million end users found the right database to support its analytic solution.",
     'date': '2023-10-30',
-    'author': 'He Gong',
+    'author': 'velodb.io · He Gong',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/139',
     "image": '/images/live-streaming.png'
 }
 

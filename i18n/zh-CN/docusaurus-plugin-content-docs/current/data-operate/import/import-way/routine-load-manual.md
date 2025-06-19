@@ -308,6 +308,16 @@ FROM KAFKA(
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
+### 绑定 Compute Group
+在存算分离模式下，Routine Load 的 Compute Group 选择逻辑按优先级如下：
+1. 选择 ```use db@cluster ``` 语句指定的Compute Group；
+2. 选择用户属性 ```default_compute_group``` 指定的 Compute Group；
+3. 从当前用户有权限的 Compute Group 中选择一个；
+
+在存算一体模式下，选择用户属性 ```resource_tags.location``` 中指定的 Compute Group；如果用户属性中未指定，那么就使用名为 default 的 Compute Group；
+
+需要注意的是，Routine Load 作业的 Compute Group 只能在创建时指定，一旦 Routine Load 作业被创建后，其绑定的 Compute Group 就无法修改。
+
 ## 参考手册
 
 ### 导入命令
@@ -1747,6 +1757,30 @@ FROM KAFKA
     "kafka_topic" = "my_topic"
 );
 ```
+
+## 连接加密认证的 Kafka 服务
+
+这里我们以访问 StreamNative 消息服务为例说明：
+
+```
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age) 
+FROM KAFKA (
+    "kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+    "kafka_topic" = "my_topic",
+    "property.security.protocol" = "SASL_SSL",
+    "property.sasl.mechanism" = "PLAIN",
+    "property.sasl.username" = "user",
+    "property.sasl.password" = "token:eyJhbxxx",
+    "property.group.id" = "my_group_id_1",
+    "property.client.id" = "my_client_id_1",
+    "property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+注意，如果没有在 BE 端配置信任的 CA 证书路径，需设置 `"property.enable.ssl.certificate.verification" = "false"`，不验证服务器证书是否可信。
+
+否则，需配置信任的 CA 证书路径：`"property.ssl.ca.location" = "/path/to/ca-cert.pem"`。
 
 ## 更多帮助
 

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Power BI",
-    "language": "zh-CN"
+   "title": "Power BI",
+   "language": "zh-CN"
 }
 ---
 
@@ -28,21 +28,23 @@ under the License.
 
 Power BI 是软件服务、应用连接器的集合，其可以连接到多种数据源，包括 Excel、SQL Server、Azure、Google Analytics 等，以便用户可以轻松得整合和清洗数据。通过 Power BI 的数据建模，用户可以创建关系模型、数据分析表达式和数据关系，以支持高级的数据分析和可视化。Power BI 提供了丰富的可视化选项，包括图标、地图、仪表盘和自定义可视化工具，以帮助用户更直观地理解数据。
 
-Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接 Power BI，当前 Power BI 中已经正式支持了 Apache Doris 的内部数据建模以及数据查询与可视化处理。
+Apache Doris 社区提供了基于 Mysql ODBC 的 Power BI DirectQuery 自定义连接器，支持了 Apache Doris 的内部数据建模以及数据查询与可视化处理。
 
 ## 前置条件
 
-未安装 Power BI Desktop 可以访问 https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop 下载安装 Power BI。
-
-## Power BI 与 Doris 的 Connector 配置
+- 未安装 Power BI Desktop 可以访问 [此处](https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop)，下载安装 Power BI。
+- 需要获取 [power-bi-doris](https://github.com/velodb/power-bi-doris/blob/master/Doris.mez) 自定义连接器。
+- 未安装 Mysql ODBC 需要下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 。
 
 :::info Note
-选择 8.0.26 版本的 MySQL JDBC Connector
+选择 MySQL ODBC Driver 5.3
 :::
 
-MySQL Connector 下载
+## Power BI 与 Doris 的自定义连接器配置
 
-下载链接：https://downloads.mysql.com/archives/c-net/ 
+1. 参考此处路径：`\Power BI Desktop\Custom Connectors folder`，放置 `Doris.mez` 自定义连接器文件（如果路径不存在，按需手动创建）。
+2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。
+3. 选择 `ok` ，然后重启 Power BI Desktop。
 
 ## 本地加载数据与创建模型
 
@@ -51,17 +53,17 @@ MySQL Connector 下载
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)
 
-3. 点击获取数据，在弹出窗口中选择 MySQL 数据库
+3. 点击获取数据，在弹出窗口中选择 Doris 数据库
 
-   ![get data](/images/powerbi/bi-powerbi-en-3.png)
+   ![get data](/images/powerbi/bi-powerbi-en-3-new.png)
 
-4. 配置数据库连接信息，在服务器输入框中输入 ip:port。Doris 默认的端口号为 9030
+4. 配置数据库连接信息，在服务器输入框中输入 host:port。Doris 默认的端口号为 9030
 
-   ![connection information](/images/powerbi/bi-powerbi-en-4.png)
+   ![connection information](/images/powerbi/bi-powerbi-en-4-new.png)
 
-5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写 Doris 的连接信息。
+5. 上一步点击确定后在新的连接窗口处填写 Doris 的连接信息。
 
-   ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
+   ![uname and pwd](/images/powerbi/bi-powerbi-en-5-new.png)
 
 6. 加载选中的表，使其表中数据至 Power BI Desktop
 

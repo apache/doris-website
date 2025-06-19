@@ -28,20 +28,23 @@ under the License.
 
 Power BI is a collection of software services and application connectors that can connect to multiple data sources, including Excel, SQL Server, Azure, Google Analytics, etc., so that users can easily consolidate and clean their data. With Power BI's data modeling, users can create relational models, data analysis expressions, and data relationships to support advanced data analysis and visualization. Power BI offers a wealth of visualization options, including ICONS, maps, dashboards, and custom visualization tools to help users make a more intuitive sense of data.
 
-Apache Doris is highly compatible with MySQL protocol and can be connected to Power BI through MySQL Driver. At present, internal data modeling, data query and visualization processing of Apache Doris have been officially supported in Power BI.
+The Apache Doris community provides a Power BI DirectQuery custom connector based on MySQL ODBC, which supports Apache Doris's internal data modeling, data query, and visualization processing.
 
 ## Precondition
 
-If you do not have Power BI desktop installed, you can download it from https://www.microsoft.com/en-us/power-platform/products/power-bi/desktop
+- If you don't have Power BI Desktop installed, you can visit [here](https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop) to download and install Power BI.
+- You need to obtain the [power-bi-doris](https://github.com/velodb/power-bi-doris/blob/master/Doris.mez) custom connector.
+- If you don't have Mysql ODBC installed, you need to download and install [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/) and configure it.
 
-## Connector configuration of Power BI and Doris
 :::info Note
-Currently verified using MySQL JDBC Connector version 8.0.26
+Use MySQL ODBC Driver 5.3
 :::
 
-Download and installation MySQL Connector
-Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.26. There are incompatibilities in higher versions
+## Power BI and Doris custom connector configuration
 
+1. Refer to the path here: `\Power BI Desktop\Custom Connectors folder`, place the `Doris.mez` custom connector file (if the path does not exist, create it manually as needed).
+2. In Power BI Desktop, select `File` > `Options and settings` > `Options` > `Security`, under `Data Extensions`, check `(Not Recommended) Allow any extension to load without validation or warning`.
+3. Select `ok` and restart Power BI Desktop.
 
 ## Load data locally and create models
 
@@ -50,17 +53,17 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)
 
-3. Click get data. In the dialog box that is displayed, select MySQL database.
+3. Click Get Data and select the Doris database in the pop-up window.
 
-   ![get data](/images/powerbi/bi-powerbi-en-3.png)
+   ![get data](/images/powerbi/bi-powerbi-en-3-new.png)
 
-4. Configure the database connection information and enter ip:port in the server text box. The default port number for Doris is 9030.
+4. Configure the database connection information and enter host:port in the server input box. The default port number of Doris is 9030
 
-   ![connection information](/images/powerbi/bi-powerbi-en-4.png)
+   ![connection information](/images/powerbi/bi-powerbi-en-4-new.png)
 
-5. Click OK in the previous step and select "Database" in the new connection window to connect, and fill in the connection information of Doris in the username and password.
+5. After clicking OK in the previous step, fill in Doris’ connection information in the new connection window.
 
-   ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
+   ![uname and pwd](/images/powerbi/bi-powerbi-en-5-new.png)
 
 6. Load the selected table to the Power BI Desktop
 

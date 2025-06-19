@@ -510,6 +510,9 @@ For a Hive Database, you must first delete all tables under that Database before
 
   - ORC (default)
   - Parquet
+
+    Note that when the DATETIME type is written to a Parquet file, the physical type used is INT96 instead of INT64. This is to be compatible with the logic of Hive versions prior to 4.0.
+
   - Text (supported from versions 2.1.7 and 3.0.3)
 
       Text format supports the following table properties:

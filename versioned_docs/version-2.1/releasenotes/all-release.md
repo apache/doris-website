@@ -28,7 +28,7 @@ This document presents a summary of Apache Doris versions released within one ye
 
 :::tip Latest Release
 
-🎉 Version 3.0.5 released now. Check out the 🔗[Release Notes](../releasenotes/v3.0/release-3.0.5) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
+🎉 Version 3.0.6 released now. Check out the 🔗[Release Notes](../releasenotes/v3.0/release-3.0.6) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
 
 <br />
 
@@ -38,6 +38,9 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
+
+- [2025-06-16, Apache Doris 3.0.6 is released](../releasenotes/v3.0/release-3.0.6.md)
+
 
 - [2025-05-17, Apache Doris 2.1.10 is released](../releasenotes/v2.1/release-2.1.10.md)
 

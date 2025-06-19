@@ -197,6 +197,14 @@ LoadFinishTime: 2022-04-01 18:59:11
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
+### 绑定 Compute Group
+在存算分离模式下，Broker Load 的 Compute Group 选择逻辑按优先级如下：
+1. 选择 ```use db@cluster ``` 语句指定的Compute Group；
+2. 选择用户属性 ```default_compute_group``` 指定的 Compute Group；
+3. 从当前用户有权限的 Compute Group 中选择一个；
+
+在存算一体模式下，选择用户属性 ```resource_tags.location``` 中指定的 Compute Group；如果用户属性中未指定，那么就使用名为 default 的 Compute Group；
+
 ## 参考手册
 
 ### 导入命令

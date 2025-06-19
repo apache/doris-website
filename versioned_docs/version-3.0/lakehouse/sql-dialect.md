@@ -163,3 +163,59 @@ mysql> select  toString(start_time) as col1,
 1 row in set (0.02 sec)
 ```
 
+## Serde Dialect
+
+Different systems may have different display methods for different column types.
+
+For example, for NULL values, Doris and Hive display as `null`, while Trino/Presto displays as `NULL`.
+
+For Map types, Hive displays as `{1:null,2:null}`, while Trino/Presto displays as {1=NULL, 2=NULL}.
+
+In order to ensure the consistency of user migration behavior to the greatest extent, Doris provides a dialect serialization mode option, which can return different display formats according to different modes.
+
+```
+SET serde_diactor=<dialect>;
+```
+
+Currently supported serialization mode types include:
+
+- doris (default)
+- hive
+- presto/trino
+
+> Note: This feature has been supported since version 3.0.6.
+
+### Serde Comparison Table
+
+The following table shows how various data types are displayed in different serialization modes. Types not listed have the same display method.
+
+| Type | Doris | Hive | Presto/Trino |
+| --- | --- | --- | --- |
+| `Bool` | `1`, `0` | `1`, `0` | `1`, `0` |
+| `Integer` | `1`, `1000` | `1`, `1000` | `1`, `1000` |
+| `Float/Decimal` | `1.2`, `3.00` | `1.2`, `3.00` | `1.2`, `3.00` |
+| `Date/Datetime` | `2025-01-01`， `2025-01-01 10:11:11` |  `2025-01-01`， `2025-01-01 10:11:11` | `2025-01-01`， `2025-01-01 10:11:11` |
+| `String` | `abc`, `中国` | `abc`, `中国` | `abc`, `中国` |
+| `Null` | `null` | `null` | `NULL` |
+| `Array<bool>` | `[1, 0]` | `[true,false]` | `[1, 0]` |
+| `Array<int>` | `[1, 1000]` | `[1,1000]` | `[1, 1000]` |
+| `Array<string>` | `["abc", "中国"]` | `["abc","中国"]` | `["abc", "中国"]` |
+| `Array<date/datetime>` | `["2025-01-01", "2025-01-01 10:11:11"]` | `["2025-01-01","2025-01-01 10:11:11"]` | `["2025-01-01", "2025-01-01 10:11:11"]` |
+| `Array<null>` | `[null]` | `[null]` | `[NULL]` |
+| `Map<int, string>` | `{1:"abc", 2:"中国"}` |`{1:"abc",2:"中国"}` |`{1=abc, 2=中国}` |
+| `Map<string, date/datetime>` | `{"k1":"2022-10-01", "k2":"2022-10-01 10:10:10"}` | `{"k1":"2022-10-01","k2":"2022-10-01 10:10:10"}` | `{k1=2022-10-01, k2=2022-10-01 10:10:10}` |
+| `Map<int, null>` | `{1:null, 2:null}` | `{1:null,2:null}` | `{1=NULL, 2=NULL}` |
+| `Struct<>` | Same as map | Same as map | Same as map | Same as map | |
+
+## Configurations
+
+- Variables
+
+    | Variable name | Example | Description |
+    | --- | --- | --- |
+    | `sql_converter_service_url` | `set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"` | Global variable, used to specify the sql converter service address |
+    | `sql_dialect` | `set sql_dialect=presto` | Session variable, used to specify the dialect of the current session |
+    | `serde_dialect` | `set serde_dialect=hive` | Session variable, used to specify the serialization dialect format of the current session |
+    | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | Session variable, user-specified to enable certain special features of sql converter. `ctas`: Allows conversion of the `SELECT` part of a `CTAS` statement. (This variable is supported since Doris 3.0.7 and SQL Convertor 1.0.8.10)|
+    | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | Session variable used to specify that SQL Convertor ignore some UDFs. SQL Convertor will not convert the functions in the list, otherwise it may report an error "Unknown Function". (This variable is supported since Doris 3.0.7 and SQL Convertor 1.0.8.10)|
+

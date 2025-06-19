@@ -374,14 +374,12 @@ chmod +x filebeat-doris-1.0.0
 -- 创建 routine load，从 kafka log__topic_将数据导入 log_table 表  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
-PROPERTIES (  
-"max_batch_interval" = "10",  
-"max_batch_rows" = "1000000",  
-"max_batch_size" = "109715200",  
-"load_to_single_tablet" = "true",  
-"timeout" = "600",  
-"strict_mode" = "false",  
-"format" = "json"  
+PROPERTIES (
+"max_batch_interval" = "60",
+"max_batch_rows" = "20000000",
+"max_batch_size" = "1073741824", 
+"load_to_single_tablet" = "true",
+"format" = "json"
 )  
 FROM KAFKA (  
 "kafka_broker_list" = "host:port",  
@@ -397,7 +395,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](./data-operate/import/import-way/routine-load-manual)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../data-operate/import/import-way/routine-load-manual.md)。
 
 **使用自定义程序采集日志**
 

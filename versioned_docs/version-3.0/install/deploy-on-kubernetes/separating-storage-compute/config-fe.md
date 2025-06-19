@@ -153,7 +153,7 @@ To access Doris from outside the Kubernetes cluster, you can use the [NodePort s
       feSpec:
         service:
           type: NodePort
-          servicePorts:
+          portMaps:
           - nodePort: 31001
             targetPort: 8030
           - nodePort: 31002

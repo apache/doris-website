@@ -133,8 +133,7 @@ INTO OUTFILE "file_path"
 
 Parquet and ORC file formats have their own data types. The export function of Doris can automatically export the Doris data types to the corresponding data types of the Parquet/ORC file format. The following are the data type mapping relationship of the Doris data types and the Parquet/ORC file format data types:
 
-1. The mapping relationship between the Doris data types to the ORC data types is: 
-
+1. The mapping relationship between the Doris data types to the ORC data types is:
     | Doris Type | Orc Type |
     | --- | --- |
     | boolean | boolean  |
@@ -155,8 +154,7 @@ Parquet and ORC file formats have their own data types. The export function of D
     | map | map  |
     | array | array |
 
-2. When Doris exports data to the Parquet file format, the Doris memory data will be converted to Arrow memory data format first, and then the paraquet file format is written by Arrow. The mapping relationship between the Doris data types to the ARROW data types is: 
-
+2. When Doris exports data to the Parquet file format, the Doris memory data will be converted to Arrow memory data format first, and then the paraquet file format is written by Arrow. The mapping relationship between the Doris data types to the ARROW data types is:
     | Doris Type | Arrow Type |
     | --- | --- |
     | boolean  | boolean |

@@ -26,7 +26,7 @@ Deploying the Doris Operator involves three steps: install the CustomResourceDef
 ## Step 1: Install CustomResourceDefinitions
 Add the custom resource (CRD) of Doris Operator using the following command:
 ```shell
-kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
 ```
 ## Step 2: Install Doris Operator and RBAC rules
 Install Doris Operator using the following command:

@@ -4,7 +4,8 @@
     'language': 'en',
     'description': 'The value-added report provided by Linkedcare to customers was initially provided by ClickHouse, which was later replaced by Apache Doris',
     'date': '2023-01-28',
-    'author': 'Yi Yang',
+    'author': 'velodb.io · Yi Yang',
+    'externalLink': 'https://www.velodb.io/blog/1373',
     'tags': ['Best Practice'],
     "image": '/images/clickhouse-kudu-to-doris.png'
 }

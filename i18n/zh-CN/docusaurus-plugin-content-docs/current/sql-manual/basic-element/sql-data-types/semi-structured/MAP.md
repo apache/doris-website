@@ -26,21 +26,37 @@ under the License.
 
 ## MAP
 
-### name
+### Name
 
 MAP
 
-## 描述
-
+### 语法
 `MAP<K, V>`
+
+其中:
+
+* K 是 Map 的键类型。键必须使用以下类型之一：
+	*	字符串类型（Char/Varchar/String）
+	*	数值类型（不包括浮点数类型：double 和 float）1
+  * 日期类型
+  * IP 地址类型(IPV4/IPV6)
+
+  Map 的 Key 类型 始终为 nullable。
+  
+  **因为支持 nullable 类型作为 map 的 key，map 中的 key 比较使用的是 “null-safe equal”（即 null 和 null 被认为是相等的），这与标准 SQL 的定义不同。**
+
+*	V 是 Map 中值的类型，始终为 nullable。
+
+Map 类型不支持重复的键；Doris 会自动删除重复的项。
+
+### 描述
 
 由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
 
-K,V 支持的类型有：
 
+Map 类型支持默认情况下是没有开启的，需要设置参数：
 ```
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
+admin set frontend config("enable_map_type" = "true");
 ```
 
 ## 举例

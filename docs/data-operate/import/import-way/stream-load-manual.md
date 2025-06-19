@@ -251,6 +251,29 @@ mysql> show stream load from testdb;
 1 row in set (0.00 sec)
 ```
 
+### Choosing Compute Group
+Users can specify a particular Compute Group for Stream Load to run on.
+
+Under the storage-computation separation mode, Compute Groups can be specified in the following ways:
+1. Specify via an HTTP Header parameter.
+```
+-H "cloud_cluster:cluster1"
+```
+
+2. Specify Compute Group in the user properties bound to Stream Load. If both user properties and the HTTP header specify a Compute Group, the Compute Group specified in the Header takes precedence.
+```
+set property for user1 'default_compute_group'='cluster1';
+```
+
+3. If neither user properties nor the HTTP Header specify a Compute Group, a Compute Group that the user bound to Stream Load has permission to access will be selected.
+   If the user does not have permission to access any Compute Group, the Load will fail.
+
+Under the integrated storage-computation mode, specifying a Compute Group is only supported through the user properties bound to Stream Load. 
+If not specified in the user properties, the Compute Group named ```default``` will be selected.
+```
+set property for user1 'resource_tags.location'='group_1';
+```
+
 ### Cancel load job
 
 Users cannot manually cancel a Stream Load operation. A Stream Load job will be automatically canceled by the system if it encounters a timeout (set to 0) or an import error.

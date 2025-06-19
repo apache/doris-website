@@ -188,4 +188,4 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-Doris also suppoted `AWS Assume Role` for S3 Load and TVF, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris also supported `AWS Assume Role` for S3 Load and TVF, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

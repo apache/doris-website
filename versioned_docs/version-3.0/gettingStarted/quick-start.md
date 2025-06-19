@@ -80,9 +80,9 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 
 :::info Environment Recommendations:
 
-* **Operating System**: It is recommended to use AMD/ARM mainstream Linux environments such as CentOS 7.1 or Ubuntu 16.04 and above.
+* **Operating System**: It is recommended to use AMD/ARM mainstream Linux environments such as Ubuntu and above.
   
-* **Java Environment**: It is advised to use the Java 8 runtime environment. For non-Oracle JDK commercial license users, please use the free Oracle JDK 8u300 or later versions.
+* **Java Environment**: It is advised to use the Java 17 runtime environment.
 
 * **User Permissions**: It is recommended to create a new Doris user on Linux and avoid using the root user for operations.
   

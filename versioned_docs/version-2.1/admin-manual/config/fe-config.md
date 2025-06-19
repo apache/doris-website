@@ -1768,7 +1768,7 @@ Used to set maximal number of replication per tablet.
 
 #### `default_db_data_quota_bytes`
 
-Default：1PB
+Default：8192PB
 
 IsMutable：true
 
