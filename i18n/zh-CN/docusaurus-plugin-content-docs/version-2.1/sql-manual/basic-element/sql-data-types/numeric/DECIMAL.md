@@ -327,7 +327,8 @@ select f1, f2, f1 * f2 from test_decimal_mul_overflow1;
 | 12345678901234.12345 | 12345678901234.123456 | 152415787532377393748917544.09724464320 |
 +----------------------+-----------------------+-----------------------------------------+
 ```
-####### 乘法溢出时开启decimal256
+
+###### 乘法溢出时开启decimal256
 ```sql
 create table test_decimal_mul_overflow_dec256(f1 decimal(38, 19), f2 decimal(38, 19)) properties('replication_num'='1');
 insert into test_decimal_mul_overflow_dec256 values('9999999999999999999.9999999999999999999', '9999999999999999999.9999999999999999999');
