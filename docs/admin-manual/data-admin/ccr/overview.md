@@ -101,9 +101,9 @@ requirement: glibc >= 2.28
 
 | Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
 |---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc01-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc01-arm64.tar.xz) | 36ea7d1be8a26e4cfcbceea389026f7987bc6fd02902d0095fbea2e2da7811ef |
-| 2.1     | X64   | [ccr-syncer-2.1.10-rc01-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc01-x64.tar.xz)     | 370cadf29abb862258c0c67c668737a4033e224f2f624e29893ef1b2b3b61501 |
-| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc01-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc01-arm64.tar.xz) | b315bc4da08546181f84f028930be99c8eac5d0c520c8282b0e075384a31a2a6 |
-| 3.0     | X64   | [ccr-syncer-3.0.6-rc01-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc01-x64.tar.xz)   | 75d89a357a40b3655cd2a897631622b12735718a777b70d8dd47167dfe918b00 |
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-arm64.tar.xz) | 8ee7bd72baae87f2f226a5effbe4b10a8fac4b1fa25c9cc027e183e5f4c04bcc |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-x64.tar.xz)     | 3c36dd4a807931b00b191c3d9f3541f2e5732acb6d1d9fc83b8cb3fb334046a2 |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-arm64.tar.xz) | 7225cf8bc2acc37c09712a3655b0ff1939d574f42ed7bba29344a50742d7dcff |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-x64.tar.xz)   | 9fdafb90fdb337e3842dc690be40c77d64c1c1ea3b7b688b74bb9aeaf955681c |
 
 
