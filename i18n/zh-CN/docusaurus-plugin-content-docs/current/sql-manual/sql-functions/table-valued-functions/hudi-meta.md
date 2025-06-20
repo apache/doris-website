@@ -27,7 +27,9 @@ under the License.
 
 ## 描述
 
-hudi_meta 表函数（table-valued-function,tvf），可以用于读取 hudi 表的各类元数据信息，如操作历史、表的时间线、文件元数据等。
+`hudi_meta` 表函数（table-valued-function,tvf），可以用于读取 hudi 表的各类元数据信息，如操作历史、表的时间线、文件元数据等。
+
+该函数自 3.1.0 版本支持。
 
 ## 语法
 
