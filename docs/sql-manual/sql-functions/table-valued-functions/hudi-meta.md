@@ -27,7 +27,9 @@ under the License.
 
 ## Description
 
-hudi_meta table-valued-function(tvf), using for read hudi metadata, operation history, timeline of table, instant state etc.
+`hudi_meta` table-valued-function(tvf), using for read hudi metadata, operation history, timeline of table, instant state etc.
+
+Supported since 3.1.0.
 
 ## Syntax
 
