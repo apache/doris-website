@@ -56,6 +56,12 @@ The audit log table is a dynamically partitioned table, partitioned daily by def
 
 In `fe.conf`, `LOG_DIR` defines the storage path for FE logs. All database operations executed by this FE node are recorded in `${LOG_DIR}/fe.audit.log`. To view all operations in the cluster, you need to traverse the audit logs of each FE node.
 
+## Audit Log Format
+
+In versions before 3.0.7, the symbols `\n`, `\t`, and `\r` in statements would be replaced with `\\n`, `\\t`, and `\\r`. These modified statements were then stored in the `fe.audit.log` file and the `audit_log` table.
+
+Starting from version 3.0.7, for the `fe.audit.log` file, only `\n` in statements will be replaced with `\\n`. The `audit_log` table, stores the original format of statements.
+
 ## Audit Log Configuration
 
 **Global Variables:**

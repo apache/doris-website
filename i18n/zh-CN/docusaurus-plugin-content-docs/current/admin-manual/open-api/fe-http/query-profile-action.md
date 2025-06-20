@@ -46,6 +46,8 @@ under the License.
 
 `GET /rest/v2/manager/query/kill/{query_id}`
 
+`GET /rest/v2/manager/query/statistics/{trace_id}` (4.0.0+)
+
 ## 获取查询信息
 
 `GET /rest/v2/manager/query/query_info`
@@ -476,4 +478,43 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+
+## 通过 Trace ID 获取查询进度
+
+`GET /rest/v2/manager/query/statistics/{trace_id}` (4.0.0+)
+
+### Description
+
+通过 Trace ID，获取指定的当前正在运行的查询的统计信息。可以通过间隔调用这个接口来获取查询的进度。
+
+### Path parameters
+
+* `{trace_id}`
+
+    Trace ID。通过 `SET session_context="trace_id:xxxx"` 设置的用户自定义 Trace ID。
+
+### Response
+
+```json
+{
+    "msg": "success",
+    "code": 0,
+    "data": {
+        "scanRows": 1234567,
+        "scanBytes": 987654321,
+        "returnedRows": 12345,
+        "cpuMs": 15600,
+        "maxPeakMemoryBytes": 536870912,
+        "currentUsedMemoryBytes": 268435456,
+        "shuffleSendBytes": 104857600,
+        "shuffleSendRows": 50000,
+        "scanBytesFromLocalStorage": 734003200,
+        "scanBytesFromRemoteStorage": 253651121,
+        "spillWriteBytesToLocalStorage": 0,
+        "spillReadBytesFromLocalStorage": 0
+    },
+    "count": 0
+}
+```
+
 

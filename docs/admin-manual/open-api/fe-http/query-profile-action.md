@@ -46,6 +46,8 @@ under the License.
 
 `GET /rest/v2/manager/query/kill/{query_id}`
 
+`GET /rest/v2/manager/query/statistics/{trace_id}` (4.0.0+)
+
 ## Get the query information
 
 `GET /rest/v2/manager/query/query_info`
@@ -496,6 +498,44 @@ Cancel query of specified connection.
     "msg": "success",
     "code": 0,
     "data": null,
+    "count": 0
+}
+```
+
+## Get Query Progress by Trace ID
+
+`GET /rest/v2/manager/query/statistics/{trace_id}` (4.0.0+)
+
+### Description
+
+Retrieve the statistics of a currently running query by Trace ID. You can call this API periodically to obtain the progress of the query.
+
+### Path parameters
+
+* `{trace_id}`
+
+    Trace ID. The user-defined Trace ID set via `SET session_context="trace_id:xxxx"`.
+
+### Response
+
+```json
+{
+    "msg": "success",
+    "code": 0,
+    "data": {
+        "scanRows": 1234567,
+        "scanBytes": 987654321,
+        "returnedRows": 12345,
+        "cpuMs": 15600,
+        "maxPeakMemoryBytes": 536870912,
+        "currentUsedMemoryBytes": 268435456,
+        "shuffleSendBytes": 104857600,
+        "shuffleSendRows": 50000,
+        "scanBytesFromLocalStorage": 734003200,
+        "scanBytesFromRemoteStorage": 253651121,
+        "spillWriteBytesToLocalStorage": 0,
+        "spillReadBytesFromLocalStorage": 0
+    },
     "count": 0
 }
 ```
