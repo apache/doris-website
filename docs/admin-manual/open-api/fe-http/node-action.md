@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
+
 ## Request
 
 `GET /rest/v2/manager/node/frontends`
@@ -48,7 +50,7 @@ under the License.
 
 `POST /rest/v2/manager/node/{action}/broker` (3.0.7+)
 
-## Get fe, be, broker node information
+## Get fe, be, broker Node Information
 
 `GET /rest/v2/manager/node/frontends`
 
@@ -164,7 +166,7 @@ brokers:
 }
 ```
 
-## Get node configuration information
+## Get Node Configuration Information
 
 `GET /rest/v2/manager/node/configuration_name`
 
@@ -175,7 +177,7 @@ brokers:
 ### Description
 
 - `configuration_name` is used to get node configuration item names.  
-- `node_list` is used to get node list.  
+- `node_list` is used to get the node list.  
 - `configuration_info` is used to get detailed node configuration information.
 
 ### Query Parameters
@@ -192,7 +194,7 @@ None
 
 * type 
 
-  Value is fe or be, used to specify whether to get fe configuration information or be configuration information.
+  Value is fe or be, used to specify getting fe configuration information or be configuration information.
 
 ### Request Body
 
@@ -218,9 +220,9 @@ None
 
 If no body is provided, all parameters in the body use default values.  
 
-conf_name is used to specify which configuration items to return information for, defaults to all configuration items;
+conf_name is used to specify which configuration items' information to return, defaults to returning all configuration items' information;
 
-node is used to specify which nodes' configuration information to return, defaults to all fe nodes or be nodes configuration information.
+node is used to specify which nodes' configuration item information to return, defaults to all fe nodes or be nodes configuration item information.
 ```
 
 ### Response
@@ -269,13 +271,13 @@ node is used to specify which nodes' configuration information to return, defaul
     "code": 0,
     "data": {
         "column_names": [
-            "Config Item",
-            "Node",
-            "Node Type",
-            "Config Value Type",
+            "配置项",
+            "节点",
+            "节点类型",
+            "配置值类型",
             "MasterOnly",
-            "Config Value",
-            "Modifiable"
+            "配置值",
+            "可修改"
         ],
         "rows": [
             [
@@ -294,12 +296,12 @@ node is used to specify which nodes' configuration information to return, defaul
     "code": 0,
     "data": {
         "column_names": [
-            "Config Item",
-            "Node",
-            "Node Type",
-            "Config Value Type",
-            "Config Value",
-            "Modifiable"
+            "配置项",
+            "节点",
+            "节点类型",
+            "配置值类型",
+            "配置值",
+            "可修改"
         ],
         "rows": [
             [
@@ -335,13 +337,13 @@ node is used to specify which nodes' configuration information to return, defaul
         "code": 0,
         "data": {
             "column_names": [
-                "Config Item",
-                "Node",
-                "Node Type",
-                "Config Value Type",
+                "配置项",
+                "节点",
+                "节点类型",
+                "配置值类型",
                 "MasterOnly",
-                "Config Value",
-                "Modifiable"
+                "配置值",
+                "可修改"
             ],
             "rows": [
                 [
@@ -359,7 +361,7 @@ node is used to specify which nodes' configuration information to return, defaul
     }
     ```
 
-## Modify configuration values
+## Modify Configuration Values
 
 `POST /rest/v2/manager/node/set_config/fe`
 
@@ -384,7 +386,7 @@ Used to modify fe or be node configuration values
 ```
 
 - `config_name` is the corresponding configuration item;  
-- `node` is a keyword indicating the list of nodes to be modified;  
+- `node` is a keyword, indicating the list of nodes to be modified;  
 - `value` is the configuration value;  
 - `persist` is true for permanent modification, false for temporary modification. Permanent modification takes effect after restart, temporary modification becomes invalid after restart.
 
@@ -411,11 +413,11 @@ Used to modify fe or be node configuration values
 
 ```
 
-- `failed` indicates configuration information that failed to be modified.
+- `failed` indicates configuration information that failed to modify.
     
 ### Examples
 
-1. Modify fe 127.0.0.1:8030 node's `agent_task_resend_wait_time_ms` and `alter_table_timeout_second` configuration values:
+1. Modify `agent_task_resend_wait_time_ms` and `alter_table_timeout_second` configuration values in fe 127.0.0.1:8030 node:
 
     `POST /rest/v2/manager/node/set_config/fe`
 
@@ -461,9 +463,9 @@ Used to modify fe or be node configuration values
 
     ```
 
-    The `agent_task_resend_wait_time_ms` configuration value was modified successfully, `alter_table_timeout_second` modification failed.
+    `agent_task_resend_wait_time_ms` configuration value was modified successfully, `alter_table_timeout_second` modification failed.
    
-## Operate be nodes
+## Operate be Nodes
 
 `POST /rest/v2/manager/node/{action}/be`
 
@@ -483,8 +485,8 @@ action：ADD/DROP/DECOMMISSION
 }
 ```
 
-- `hostPorts` is a group of be node addresses to be operated `ip:heartbeat_port`
-- `properties` is the configuration passed when adding nodes, currently only used for configuring tag, uses default tag if not passed
+- `hostPorts` a group of be node addresses to operate `ip:heartbeat_port`
+- `properties` configuration passed when adding nodes, currently only used for configuring tag, uses default tag if not passed
 
 ### Response
 
@@ -567,7 +569,7 @@ action：ADD/DROP/DECOMMISSION
    }
    ```
 
-## Operate fe nodes
+## Operate fe Nodes
 
 `POST /rest/v2/manager/node/{action}/fe`
 
@@ -585,7 +587,7 @@ action：ADD/DROP
 }
 
 role FOLLOWER/OBSERVER
-hostPort is the fe node address to be operated ip:edit_log_port
+hostPort fe node address to operate ip:edit_log_port
 ```
 
 ### Response
@@ -648,7 +650,7 @@ hostPort is the fe node address to be operated ip:edit_log_port
    }
    ```
 
-## Operate broker nodes
+## Operate broker Nodes
 
 `POST /rest/v2/manager/node/{action}/broker`
 
