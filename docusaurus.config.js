@@ -44,6 +44,7 @@ const config = {
     markdown: {
         format: 'detect',
     },
+    trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
