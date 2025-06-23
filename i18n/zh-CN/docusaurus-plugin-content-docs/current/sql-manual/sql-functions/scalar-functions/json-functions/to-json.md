@@ -173,7 +173,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ```
 
 ```sql
--- 可以先转换成string再去执行to_json
+-- 可以先转换成 string 再去执行 to_json
 SELECT to_json(cast(makedate(2025,5) as string));
 ```
 
