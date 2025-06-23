@@ -257,6 +257,11 @@ const config = {
                         to: '/community/join-community',
                         position: 'left',
                     },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
+                        position: 'left',
+                    },
                     // {
                     //     type: 'search',
                     //     position: 'right',
@@ -373,6 +378,11 @@ const config = {
                     {
                         label: 'Community',
                         to: '/community/join-community',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
                         position: 'left',
                     },
                     {
