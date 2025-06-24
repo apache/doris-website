@@ -6,25 +6,6 @@
 
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 EXPLAIN 语句用于展示 Doris 对于给定的查询所规划的查询计划。Doris 查询优化器的核心目标在于，针对任意给定的查询，生成一个高效且优化的执行计划。该优化器充分利用统计信息、数据特性以及 Doris 本身的功能优势，例如 HASH JOIN、分区和分桶等，来精心制定执行计划。然而，由于路径搜索的固有理论限制以及优化器实现过程中的实际情况，有时生成的执行计划可能无法达到预期的执行效果。为了进一步提升执行性能，我们的首要任务是深入分析优化器当前生成的执行计划。本文将介绍如何使用 EXPLAIN 语句，以便为后续的优化工作奠定坚实基础。

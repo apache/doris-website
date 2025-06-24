@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在 Doris 中，自增列（Auto Increment Column）是一种自动生成唯一数字值的功能，常用于为每一行数据生成唯一的标识符，如主键。每当插入新记录时，自增列会自动分配一个递增的值，避免了手动指定数字的繁琐操作。使用 Doris 自增列，可以确保数据的唯一性和一致性，简化数据插入过程，减少人为错误，并提高数据管理的效率。这使得自增列成为处理需要唯一标识的场景（如用户 ID 等）时的理想选择。
 
 ## 功能

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，Apache Doris 2.0.2  版本已于 2023 年 10 月 6 日正式发布，该版本对多个功能进行了更新优化，旨在更好地满足用户的需求。有 92 位贡献者为 Apache Doris 2.0.2 版本提交了功能优化项以及问题修复，进一步提升了系统的稳定性和性能，欢迎大家下载体验。
 
 **GitHub 下载**：https://github.com/apache/doris/releases/tag/2.0.2-rc05

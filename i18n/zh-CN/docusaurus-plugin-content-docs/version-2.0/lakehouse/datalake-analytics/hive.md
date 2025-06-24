@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 通过连接 Hive Metastore，Doris 可以自动获取 Hive 的库表信息，进行数据查询、分析。除了 Hive 外，例如 Iceberg、Hudi 等其他系统也会使用 Hive Metastore 存储元数据。通过 Hive Catalog，能轻松集成 Hive 及使用 Hive Metastore 作为元数据存储的系统。
 
 ## 注意事项

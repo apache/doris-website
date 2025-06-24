@@ -44,7 +44,6 @@ const config = {
     markdown: {
         format: 'detect',
     },
-    trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
@@ -166,6 +165,10 @@ const config = {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
                         for (let item of items) {
+                            if (item.url.includes('docs')) {
+                                item.changefreq = 'daily';
+                                item.priority = 0.8;
+                            }
                             if (item.url.includes('docs/1.2')) {
                                 item.priority = 0.2;
                             }

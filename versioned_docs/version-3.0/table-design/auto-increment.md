@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 In Doris, the auto increment column is a feature that automatically generates a unique numeric value, commonly used to create unique identifiers for each row of data, such as primary keys. Each time a new record is inserted, the auto increment column automatically assigns an incrementing value, eliminating the need for manually specifying the number. By using Doris's auto increment column, data uniqueness and consistency are ensured, simplifying the data insertion process, reducing human error, and improving data management efficiency. This makes the auto increment column an ideal choice for scenarios requiring unique identifiers, such as user IDs and more.
 
 ## Functionality
