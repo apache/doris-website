@@ -168,6 +168,8 @@ SELECT * FROM hudi_ctl.hudi_db.hudi_tbl LIMIT 10;
 
 可以通过 `hudi_meta()` 表函数查询查询指定 Hudi 表的 Timeline：
 
+该函数自 3.1.0 版本支持。
+
 ```sql
 SELECT * FROM hudi_meta(
     'table' = 'hudi_ctl.hudi_db.hudi_tbl',

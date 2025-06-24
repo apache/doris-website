@@ -114,6 +114,182 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据转换，使用 `WHERE
 - 源数据与目标表的列顺序不一致
 - 源数据与目标表的列数量不匹配
 
+### 实现原理
+
+列映射的实现可以分为两个核心步骤：
+
+**步骤 1：数据源解析** - 根据数据格式将原始数据解析为中间变量
+**步骤 2：通过列映射进行赋值** - 将中间变量按列名映射到目标表字段
+
+以下是三种不同数据格式的处理流程：
+
+#### 导入 CSV 格式数据
+
+![](/images/load-data-convert-csv.png)
+
+#### 指定 jsonpaths 导入JSON 格式数据
+
+![](/images/load-data-convert-json1.png)
+
+#### 不指定 jsonpaths 导入JSON 格式数据
+
+![](/images/load-data-convert-json2.png)
+
+### 指定 jsonpaths 导入 JSON 数据
+假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### 创建目标表
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### 导入数据
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:col1, col3, col2, col4" \
+    -H "jsonpaths:[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (col1, col3, col2, col4)
+    PROPERTIES
+    (
+        "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]"
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(col1, col3, col2, col4)
+PROPERTIES
+(
+    "format" = "json",
+    "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### 查询结果
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
+### 不指定jsonpaths导入 JSON 数据
+假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### 创建目标表
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### 导入数据
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:k1, k3, k2, k4,col1 = k1, col2 = k3, col3 = k2, col4 = k4" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (k1, k3, k2, k4)
+    SET (
+        col1 = k1,
+        col2 = k3,
+        col3 = k2,
+        col4 = k4
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4, col1 = k1, col2 = k3, col3 = k2, col4 = k4),
+PROPERTIES
+(
+    "format" = "json",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+
+##### 查询结果
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
 ### 调整列顺序
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain

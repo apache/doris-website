@@ -44,6 +44,7 @@ const config = {
     markdown: {
         format: 'detect',
     },
+    trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
@@ -257,6 +258,11 @@ const config = {
                         to: '/community/join-community',
                         position: 'left',
                     },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
+                        position: 'left',
+                    },
                     // {
                     //     type: 'search',
                     //     position: 'right',
@@ -373,6 +379,11 @@ const config = {
                     {
                         label: 'Community',
                         to: '/community/join-community',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
                         position: 'left',
                     },
                     {

@@ -4,7 +4,7 @@
     'summary': 'A side-by-side comparison of observability solutions in terms of performance, cost, usability, and ecosystem openness. This article also introduces Apache Doris as a powerful observability solution, supported by live demos and real-world user success stories.',
     'description': 'A side-by-side comparison of observability solutions in terms of performance, cost, usability, and ecosystem openness. This article also introduces Apache Doris as a powerful observability solution, supported by live demos and real-world user success stories.',
     'date': '2025-06-17',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Tech Sharing'],
     'externalLink': 'https://www.velodb.io/blog/1406',
     'picked': "true",

@@ -161,6 +161,8 @@ Every write operation to a Hudi table creates a new snapshot. Doris supports rea
 
 You can query the timeline of a specified Hudi table using the `hudi_meta()` table function:
 
+This table function is supported since 3.1.0.
+
 ```sql
 SELECT * FROM hudi_meta(
     'table' = 'hudi_ctl.hudi_db.hudi_tbl',

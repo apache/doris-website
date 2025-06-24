@@ -109,3 +109,16 @@ To access Doris through the LoadBalancer, use the external IP (provided in the E
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
 ```
+
+## StreamLoad Access to Doris Deployed on Kubernetes
+Doris supports data import using the StreamLoad method. When the client and the Doris cluster are within the same local network, the client can directly use the Frontend (FE) address as the request endpoint. The FE service responds with an HTTP 301 status code and provides the Backend (BE) address, instructing the client to redirect the request to the BE for data import.
+
+However, when Doris is deployed on Kubernetes, internal communication uses addresses that are only accessible within the Kubernetes cluster. If the FE returns a BE address that is only reachable internally via the 301 redirect mechanism, data import attempts from clients outside the Kubernetes cluster will fail.
+
+To import data using StreamLoad from a client located outside the Kubernetes environment, you must configure the import address with a BE address that is externally accessible.
+
+### Configure External Access to the BE Service
+To enable access to the BE service from outside the Kubernetes cluster, configure the service as either a [NodePort](install-config-cluster.md#nodeport) or a [LoadBalancer](install-config-cluster.md#loadbalancer). Update the `DorisCluster` resource accordingly to apply these changes.
+
+### Configure the BE Proxy Address
+As the description of [NodePort](#nodeport) or [LoadBalancer](#loadbalancer) to get an externally accessible address and the corresponding `web_server` port. Use this address and port as the request endpoint when importing data via StreamLoad.
