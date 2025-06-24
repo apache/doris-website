@@ -26,7 +26,7 @@ under the License.
 
 ## Overview
 
-View the information of talbet on Backends.(added on doris 3.0.7)
+View the information of talbet on Backends.(added by doris 3.0.7)
 
 ## Database
 
