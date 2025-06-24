@@ -93,11 +93,11 @@ Users executing this SQL command must have at least the following privileges:
 - Build index index1 on the entire table1.
 
   ```sql
-  BUILD INDEX index1 ON TABLE table1
+  BUILD INDEX index1 ON table1
   ```
 
 - Build index index1 on partitions p1 and p2 of table1.
 
   ```sql
-  BUILD INDEX index1 ON TABLE table1 PARTITION(p1, p2)
+  BUILD INDEX index1 ON table1 PARTITION(p1, p2)
   ```

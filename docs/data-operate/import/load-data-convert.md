@@ -114,6 +114,181 @@ Column mapping is used to define the correspondence between source data columns 
 - The order of source data columns and target table columns is inconsistent
 - The number of source data columns and target table columns is inconsistent
 
+### Implementation Principle
+
+Column mapping implementation can be divided into two steps:
+
+**Step 1: Data Source Parsing** - Parse raw data into intermediate variables based on data format
+**Step 2: Column Mapping and Assignment** - Map intermediate variables to target table fields by column name
+
+The following are processing flows for three different data formats:
+
+#### Load CSV Format Data
+
+![](/images/load-data-convert-csv-en.png)
+
+#### Load JSON Format Data with Specified jsonpaths
+
+![](/images/load-data-convert-json1-en.png)
+
+#### Load JSON Format Data without Specified jsonpaths
+
+![](/images/load-data-convert-json2-en.png)
+
+### Load JSON Data with Specified jsonpaths
+Assume the following source data (column headers are for illustration only, no actual headers exist):
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### Create Target Table
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### Load Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:col1, col3, col2, col4" \
+    -H "jsonpaths:[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (col1, col3, col2, col4)
+    PROPERTIES
+    (
+        "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]"
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(col1, col3, col2, col4)
+PROPERTIES
+(
+    "format" = "json",
+    "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### Query Results
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
+### Load JSON Data without Specified jsonpaths
+Assume the following source data (column headers are for illustration only, no actual headers exist):
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### Create Target Table
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### Load Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:k1, k3, k2, k4,col1 = k1, col2 = k3, col3 = k2, col4 = k4" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (k1, k3, k2, k4)
+    SET (
+        col1 = k1,
+        col2 = k3,
+        col3 = k2,
+        col4 = k4
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4, col1 = k1, col2 = k3, col3 = k2, col4 = k4),
+PROPERTIES
+(
+    "format" = "json",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### Query Results
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+``` 
+
 ### Adjusting Column Order
 
 Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):

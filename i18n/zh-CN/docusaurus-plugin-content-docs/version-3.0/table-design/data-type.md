@@ -39,14 +39,14 @@ Apache Doris 已支持的数据类型列表如下：
 | [LARGEINT](../sql-manual/basic-element/sql-data-types/numeric/LARGEINT)       | 16        | 有符号整数，范围 [-2^127 + 1 ~ 2^127 - 1]。                  |
 | [FLOAT](../sql-manual/basic-element/sql-data-types/numeric/FLOAT)          | 4         | 浮点数，范围 [-3.4*10^38 ~ 3.4*10^38]。                      |
 | [DOUBLE](../sql-manual/basic-element/sql-data-types/numeric/DOUBLE)         | 8         | 浮点数，范围 [-1.79*10^308 ~ 1.79*10^308]。                  |
-| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)        | 4/8/16    | 高精度定点数，格式：DECIMAL(M[,D])。其中，M 代表一共有多少个有效数字（precision），D 代表小数位有多少数字（scale）。有效数字 M 的范围是 [1, 38]，小数位数字数量 D 的范围是 [0, precision]。0 < precision <= 9 的场合，占用 4 字节。9 < precision <= 18 的场合，占用 8 字节。16 < precision <= 38 的场合，占用 16 字节。|
+| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)        | 4/8/16/32    | 高精度定点数，格式：DECIMAL(P[,S])。其中，P 代表一共有多少个有效数字（precision），S 代表小数位有多少数字（scale）。有效数字 P 的范围是 [1, MAX_P]，`enable_decimal256`=false时，MAX_P=38，`enable_decimal256`=true时，MAX_P=76。小数位数字数量 S 的范围是 [0, P]。<br>`enable_decimal256` 的默认值是false，设置为true 可以获得更加精确的结果，但是会带来一些性能损失。<br>存储空间：<ul><li>0 < precision <= 9 时，占用 4 字节。<li>9 < precision <= 18 时，占用 8 字节。<li>16 < precision <= 38 时，占用 16 字节。<li>38 < precision <= 76 的场合，占用 32 字节。<ul>|
 
 ### [日期类型](../sql-manual/basic-element/sql-data-types/data-type-overview#日期类型)
 
 | 类型名                | 存储空间（字节） | 描述                                                                                       |  
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------ |  
-| [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 16               | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。         |  
-| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 16               | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<br />取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 |
+| [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 4               | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。         |  
+| [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 8               | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<br />取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 |
 
 ### [字符串类型](../sql-manual/basic-element/sql-data-types/data-type-overview#字符串类型)
 

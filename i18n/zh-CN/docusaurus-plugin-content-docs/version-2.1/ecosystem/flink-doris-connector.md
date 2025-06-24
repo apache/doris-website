@@ -1122,7 +1122,7 @@ from KAFKA_SOURCE;
 
 2. **errCode = 2, detailMessage = transaction [19650] not found**
 
-    发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 `streaming_label_keep_max_second` 配置来延长过期时间，默认 12 小时。Doris2.0 版本后还会受到 fe.conf 中 `label_num_threshold` 配置的限制 (默认 2000) ，可以调大或者改为 -1（-1 表示只受时间限制）。
+   发生在 Commit 阶段，checkpoint 里面记录的事务 ID，在 FE 侧已经过期，此时再次 commit 就会出现上述错误。此时无法从 checkpoint 启动，后续可通过修改 fe.conf 的 `streaming_label_keep_max_second` 配置来延长过期时间，默认 12 小时。Doris2.0 版本后还会受到 fe.conf 中 `label_num_threshold` 配置的限制 (默认 2000) ，可以调大或者改为 -1（-1 表示只受时间限制）。
 
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
@@ -1132,7 +1132,7 @@ from KAFKA_SOURCE;
 
 4. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
 
-通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在 Connector1.1.0 之后，默认写入时机是由 Checkpoint 控制，可以通过增加 Checkpoint 间隔来降低写入频率。频率。
+   通常发生在 Connector1.1.0 之前，是由于写入频率过快，导致版本过多。可以通过设置 sink.batch.size 和 sink.batch.interval 参数来降低 Streamload 的频率。在 Connector1.1.0 之后，默认写入时机是由 Checkpoint 控制，可以通过增加 Checkpoint 间隔来降低写入频率。频率。
 
 5. **Flink 导入有脏数据，如何跳过？**
 
@@ -1140,4 +1140,8 @@ from KAFKA_SOURCE;
 
 6. **Flink 机器与 BE 机器的网络不通，如何配置？**
 
-Flink 向 Doris 发起写入时，Doris 会重定向到 BE 进行写入，此时返回的地址是 BE 的内网 IP，即通过即通过`show backends`看到的 IP，此时 Flink 与 Doris 网络不通的，会报错。这时可以在 benodes 中配置 BE 的外网 IP 即可。
+   Flink 向 Doris 发起写入时，Doris 会重定向到 BE 进行写入，此时返回的地址是 BE 的内网 IP，即通过即通过`show backends`看到的 IP，此时 Flink 与 Doris 网络不通的，会报错。这时可以在 benodes 中配置 BE 的外网 IP 即可。
+
+7. **stream load error: HTTP/1.1 307 Temporary Redirect**
+   
+   Flink 会先向 FE 请求，收到 307 后会向重定向后的 BE 请求。当 FE 在 FullGC/压力大/网络延迟的时候，HttpClient 默认会在一定时间 (3 秒) 没有等到响应会发送数据，由于默认情况下请求体是 InputStream，当收到 307 响应时，数据无法重放，会直接报错。有三种方式可以解决：1.升级到 Connector25.1.0 以上，调长了默认时间；2.修改 auto-redirect=false，直接向 BE 发起请求（不适用部分云上场景）；3.主键模型可以开启攒批模式。

@@ -158,10 +158,6 @@ ORDER BY id;
 +---------------------+-----------+-----------+------------+------+---------------------+-------------+------+------+---------------------+
 ```
 
-## 版本变更记录
-
-[SQL Convertor 版本变更记录](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
-
 ## 方言序列化
 
 不同系统针对不同的列类型可能有不同的显示方式。
@@ -205,4 +201,26 @@ SET serde_diactor=<dialect>;
 | `Map<string, date/datetime>` | `{"k1":"2022-10-01", "k2":"2022-10-01 10:10:10"}` | `{"k1":"2022-10-01","k2":"2022-10-01 10:10:10"}` | `{k1=2022-10-01, k2=2022-10-01 10:10:10}` |
 | `Map<int, null>` | `{1:null, 2:null}` | `{1:null,2:null}` | `{1=NULL, 2=NULL}` |
 | `Struct<>` | Same as map | Same as map | Same as map | Same as map | |
+
+## 相关参数
+
+- 变量
+
+    | 变量名 | 示例 | 说明 |
+    | ---    | ---  | ---  |
+    | `sql_converter_service_url` | `set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"` | 全局变量，用于指定 sql convetor 服务地址 |
+    | `sql_dialect` | `set sql_dialect=presto` | 会话变量，用于指定当前会话的方言 |
+    | `serde_dialect` | `set serde_dialect=hive` | 会话变量，用于指定当前会话的序列化方言格式 |
+    | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | 会话变量，用户指定开启 sql convertor 的某些特殊功能。`ctas`: 允许对 `CTAS` 语句中的 `SELECT` 部分进行转换。（该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
+    | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | 会话变量，用于指定 SQL Convertor 忽略一些 UDF。在列表中的函数，SQL Convertor 不会进行转换，否则可能报错 "Unknown Function" （该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
+
+## 最佳实践
+
+- 指定不需要转换的函数
+
+    在某些情况下，可能无法在 Doris 中找到和原系统完全对应的函数，或者部分经过转换后的函数，在一些特殊参数下行为和原函数不完全一致。此时，用户可以先通过 UDF 来实现和原系统完全一致的函数，注册到 Doris 中。之后，在 `sql_convertor_config` 的 `ignore_udf` 中添加这个 UDF。这样，SQL Convetor 将不会对这个函数进行转换，以便用户可以使用 UDF 来控制函数行为。
+
+## 版本变更记录
+
+[SQL Convertor 版本变更记录](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
 

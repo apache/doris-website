@@ -158,10 +158,6 @@ ORDER BY id;
 +---------------------+-----------+-----------+------------+------+---------------------+-------------+------+------+---------------------+
 ```
 
-## Release Notes
-
-[SQL Convertor Release Notes](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
-
 ## Serde Dialect
 
 Different systems may have different display methods for different column types.
@@ -205,4 +201,26 @@ The following table shows how various data types are displayed in different seri
 | `Map<string, date/datetime>` | `{"k1":"2022-10-01", "k2":"2022-10-01 10:10:10"}` | `{"k1":"2022-10-01","k2":"2022-10-01 10:10:10"}` | `{k1=2022-10-01, k2=2022-10-01 10:10:10}` |
 | `Map<int, null>` | `{1:null, 2:null}` | `{1:null,2:null}` | `{1=NULL, 2=NULL}` |
 | `Struct<>` | Same as map | Same as map | Same as map | Same as map | |
+
+## Configurations
+
+- Variables
+
+    | Variable name | Example | Description |
+    | --- | --- | --- |
+    | `sql_converter_service_url` | `set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert"` | Global variable, used to specify the sql converter service address |
+    | `sql_dialect` | `set sql_dialect=presto` | Session variable, used to specify the dialect of the current session |
+    | `serde_dialect` | `set serde_dialect=hive` | Session variable, used to specify the serialization dialect format of the current session |
+    | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | Session variable, user-specified to enable certain special features of sql converter. `ctas`: Allows conversion of the `SELECT` part of a `CTAS` statement. (This variable is supported since Doris 3.0.6 and SQL Convertor 1.0.8.10)|
+    | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | Session variable used to specify that SQL Convertor ignore some UDFs. SQL Convertor will not convert the functions in the list, otherwise it may report an error "Unknown Function". (This variable is supported since Doris 3.0.6 and SQL Convertor 1.0.8.10)|
+
+## Best Practices
+
+- Specify functions that do not need to be converted
+
+    In some cases, you may not be able to find a function in Doris that is completely consistent with the original system, or some functions after conversion may not behave exactly the same as the original function under some special parameters. In this case, the user can first use UDF to implement a function that is completely consistent with the original system and register it in Doris. Then, add this UDF in `ignore_udf` of `sql_convertor_config`. In this way, SQL Convertor will not convert this function, so that users can use UDF to control the function behavior.
+
+## Release Notes
+
+[SQL Convertor Release Notes](https://docs.selectdb.com/docs/ecosystem/sql-converter/sql-converter-release-node)
 

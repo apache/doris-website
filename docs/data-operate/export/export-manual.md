@@ -320,6 +320,10 @@ PROPERTIES (
 
 By setting `"max_file_size" = "512MB"`, the maximum size of a single exported file is 512MB.
 
+`max_file_size` cannot be less than 5MB and cannot be greater than 2GB.
+
+In versions 2.1.11 and 3.0.7, the maximum limit of 2GB was removed, leaving only the minimum limit of 5MB.
+
 ## Notice
 
 * Export Data Volume

@@ -29,7 +29,7 @@ under the License.
 通过以下命令添加 Doris Operator 的自定义资源（CRD）：
 
 ```shell
-kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/doris.apache.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
 ```
 
 ## 第 2 步：部署 Doris Operator

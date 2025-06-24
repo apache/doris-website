@@ -1,7 +1,7 @@
 ---
 {
 "title": "Workload Group Bind Compute Group",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Workload Group Bind Compute Group",
+"title": "Workload Group 绑定 Compute Group",
 "language": "zh-CN"
 }
 ---

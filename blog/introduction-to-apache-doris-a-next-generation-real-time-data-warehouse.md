@@ -3,7 +3,8 @@
     'title': 'Introduction to Apache Doris: a next-generation real-time data warehouse',
     'description': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
     'date': '2023-10-03',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink':'https://www.velodb.io/blog/127',
     'tags': ['Tech Sharing'],
     "image": '/images/doris-intro.png'
 }

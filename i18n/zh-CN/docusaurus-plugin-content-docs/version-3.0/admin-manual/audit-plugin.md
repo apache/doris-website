@@ -54,7 +54,7 @@ Doris 提供了对于数据库操作的审计能力，可以记录用户对数�
 
 ## 审计日志文件
 
-在 fe.conf 中，LOG\_DIR 定义了 FE 日志的存储路径。在 ${LOG\_DIR}/fe.audit.log 中记录了这台 FE 节点执行的所有数据库操作。如果需要查看集群所有的操作，需要便利每一台 FE 的审计日志。
+在 fe.conf 中，`LOG_DIR` 定义了 FE 日志的存储路径。在 `${LOG_DIR}/fe.audit.log` 中记录了这台 FE 节点执行的所有数据库操作。如果需要查看集群所有的操作，需要遍历每一台 FE 的审计日志。
 
 ## 审计日志相关配置
 
@@ -68,6 +68,9 @@ Doris 提供了对于数据库操作的审计能力，可以记录用户对数�
 | `audit_plugin_max_batch_bytes`        | 50MB  | 审计日志表每批次最大写入数据量  |
 | `audit_plugin_max_sql_length`         | 4096  | 审计日志表里记录的语句的最大长度 |
 | `audit_plugin_load_timeout`           | 600 秒 | 审计日志导入作业的默认超时时间  |
+| `audit_plugin_max_insert_stmt_length` | Int.MAX | 针对 `INSERT` 语句最大长度限制。如果大于 `audit_plugin_max_sql_length`，则使用 `audit_plugin_max_sql_length` 的值。该参数自 3.0.6 支持。 |
+
+因为某些 `INSERT INTO VALUES` 语句可能过长切提交频繁，导致设计日志膨胀。因此，Doris 在 3.0.6 版本新增了 `audit_plugin_max_insert_stmt_length` 用于单独限制 `INSERT` 语句的审计长度。避免审计日志膨胀，同时可以保证 SQL 语句被完整审计。
 
 **FE 配置项：**
 
