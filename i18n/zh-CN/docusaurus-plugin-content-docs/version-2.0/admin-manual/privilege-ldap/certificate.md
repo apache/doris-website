@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Doris 开启 SSL 功能需要配置 CA 密钥证书和 Server 端密钥证书，如需开启双向认证，还需生成 Client 端密钥证书：
 
 * 默认的 CA 密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/ca_certificate.p12`，默认密码为`doris`，您可以通过修改 FE 配置文件`conf/fe.conf`，添加`mysql_ssl_default_ca_certificate = /path/to/your/certificate`修改 CA 密钥证书文件，同时也可以通过`mysql_ssl_default_ca_certificate_password = your_password`添加对应您自定义密钥证书文件的密码。
