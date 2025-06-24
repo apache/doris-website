@@ -26,7 +26,7 @@ under the License.
 
 ## 概述
 
-View the information of talbet on Backends.
+在 Backends 上查看 talbet 的信息。（doris 3.0.7添加）
 
 ## 所属数据库
 
