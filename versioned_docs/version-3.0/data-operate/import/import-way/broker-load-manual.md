@@ -208,6 +208,7 @@ CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 LOAD LABEL load_label
 (
 data_desc1[, data_desc2, ...]
+[format_properties]
 )
 WITH [S3|HDFS|BROKER broker_name] 
 [broker_properties]
@@ -235,10 +236,37 @@ The WITH clause specifies how to access the storage system, and `broker_properti
 | "load_parallelism" | Integer | 8 | Limits the maximum parallel instances on each backend. |
 | "send_batch_parallelism" | Integer | 1 | The parallelism for sink node to send data, when memtable_on_sink_node is disabled. |
 | "load_to_single_tablet" | Boolean | "false" | Used to specify whether to load data only to a single tablet corresponding to the partition. This parameter is only available when loading to an OLAP table with random bucketing. |
-| "skip_lines" | Integer | "0" | It will skip some lines in the head of a csv file. It will be ignored when the format is csv_with_names or csv_with_names_and_types. |
-| "trim_double_quotes" | Boolean | "false" | Used to specify whether to trim the outermost double quotes of each field in the source files. |
 | "priority" | oneof "HIGH", "NORMAL", "LOW" | "NORMAL" | The priority of the task. |
 
+**Format Properties**
+
+| Property Name       | Type     | Default Value | Description |
+|---------------------|----------|----------------|-------------|
+| `skip_lines`        | Integer  | `0`            | Number of lines to skip at the start of a CSV file. Ignored if using `csv_with_names` or `csv_with_names_and_types`. |
+| `trim_double_quotes`| Boolean  | `false`        | If `true`, trims outermost double quotes from each field. |
+| `enclose`           | String   | `""`           | Enclosure character for fields containing delimiters or newlines. E.g., if delimiter is `,` and encloser is `'`, then `'b,c'` is parsed as one field. |
+| `escape`            | String   | `""`           | Escape character to include enclosure characters in field content. E.g., `'b,\'c'` keeps `'b,'c'` as one field when `'` is the enclosure and `\` is the escape. |
+
+Note: Format properties define how to parse the source file (e.g., delimiters, quote handling) and must be set inside the LOAD clause. Load properties control the execution behavior (e.g., timeout, retries) and must be set outside, in the outer PROPERTIES block.
+
+```sql
+LOAD LABEL s3_load_example (
+    DATA INFILE("s3://bucket/path/file.csv")
+    INTO TABLE users
+    COLUMNS TERMINATED BY ","
+    FORMAT AS "CSV"
+    (user_id, name, age)
+    PROPERTIES (
+        "trim_double_quotes" = "true"  -- format property
+    )
+)
+WITH S3 (
+    ...
+)
+PROPERTIES (
+    "timeout" = "3600"  -- load property
+);
+```
 
 **fe.conf**
 
