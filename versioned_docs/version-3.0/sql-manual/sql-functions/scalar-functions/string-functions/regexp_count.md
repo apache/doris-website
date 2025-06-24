@@ -50,8 +50,11 @@ REGEXP_COUNT(<str>, <pattern>)
 
 ## Examples
 
+
+### test with  Escape Character 
+
 ```sql
-SELECT regexp_count('a.b:c;d', '[\\\\.:;]');;
+SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
 ```
 
 ```text
@@ -60,4 +63,31 @@ SELECT regexp_count('a.b:c;d', '[\\\\.:;]');;
 +--------------------------------------+
 |                                    3 |
 +--------------------------------------+
+```
+
+### test with comman character match
+
+```sql
+SELECT regexp_count('a.b:c;d', ':');
+```
+
+```text
++------------------------------+
+| regexp_count('a.b:c;d', ':') |
++------------------------------+
+|                            1 |
++------------------------------+
+```
+```sql
+SELECT regexp_count('Hello, World!', '[[:punct:]]');
+```
+
+### test with double Square Brackets
+
+```text
++----------------------------------------------+
+| regexp_count('Hello, World!', '[[:punct:]]') |
++----------------------------------------------+
+|                                            2 |
++----------------------------------------------+
 ```
