@@ -206,10 +206,10 @@ const config = {
             announcementBar: {
                 id: 'join_us',
                 content: JSON.stringify({
-                    zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250619" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250703" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
                 <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
                 <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-               <span>6 月 19 日 可观测性系列直播第五期 —— Ecosystem 生态联合</span> 
+               <span>7 月 3 日 可观测性系列直播第六期 —— GenAI & LLM 人工智能与大模型</span> 
                <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
                    </a>`,
                     en: `<a href="https://www.velodb.io/events/apache-doris-webinar-20250625" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
