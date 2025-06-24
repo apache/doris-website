@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1395',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "3",
     "image": '/images/tencent-music-migrate-elasticsearch-to-doris.jpg'
 }
 ---

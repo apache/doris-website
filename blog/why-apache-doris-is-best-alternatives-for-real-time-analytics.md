@@ -7,8 +7,6 @@
     'author': 'Medium · Kang, Apache Doris PMC Member',
     'externalLink': 'https://medium.com/@kxiao.tiger/apache-doris-vs-elasticsearch-6f7c8232e012',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/es-alternatives/Alternative-to-Elasticsearch.jpg'
 }
 ---
