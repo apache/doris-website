@@ -24,27 +24,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weekofyear
-### Description
-#### Syntax
+## Description
 
-`INT WEEKOFYEAR (DATETIME DATE)`
+Get the week of the year
 
+## Syntax
 
-
-Get the Weeks of the Year
-
-The parameter is Date or Datetime type
-
-### example
-
+```sql
+WEEKOFYEAR (<date>)
 ```
-mysql> select weekofyear('2008-02-20 00:00:00');
-+-----------------------------------+
-| weekofyear('2008-02-20 00:00:00') |
-+-----------------------------------+
-|                                 8 |
-+-----------------------------------+
+
+## Parameters
+
+| Parameter | Description |
+|---|--|
+| `<date>` | The corresponding date value is Date or Datetime type |
+
+## Return Value
+
+Returns the week number of the year
+
+## Example
+
+```sql
+SELECT WEEKOFYEAR('2019-06-25'),WEEKOFYEAR('2024-09-10 10:29:30');
 ```
-### keywords
-    WEEKOFYEAR
+
+```text
++-------------------------------------------------+----------------------------------------------------------+
+| weekofyear(cast('2019-06-25' as DATETIMEV2(0))) | weekofyear(cast('2024-09-10 10:29:30' as DATETIMEV2(0))) |
++-------------------------------------------------+----------------------------------------------------------+
+|                                              26 |                                                       37 |
++-------------------------------------------------+----------------------------------------------------------+
+```

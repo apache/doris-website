@@ -24,18 +24,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## weekday
-### Description
-#### Syntax
+## Description
 
-`INT WEEKDAY (DATETIME date)`
+Returns the weekday index of a date, i.e. Monday is 0, Tuesday is 1, and Sunday is 6
 
+## Syntax
 
-The WEEKDAY function returns the index value of the working day of the date, that is, 0 on Monday, 1 on Tuesday, and 6 on Sunday.
+```sql
+WEEKDAY (<date>)
+```
 
-The parameter is Date or Datetime type
+## Parameters
 
-Notice the difference between WEEKDAY and DAYOFWEEK:
+| Parameter | Description |
+|---|--|
+| `<date>` | Corresponding date value, of Date or Datetime type or a number that can be cast to Date or Datetime type |
+
+## Return Value
+
+The weekday index of the date, i.e. Monday is 0, Tuesday is 1, and Sunday is 6
+
+## Example
+
+```sql
+SELECT WEEKDAY('2019-06-25'),WEEKDAY(cast(20190625 as date));
+```
+
+```text
++----------------------------------------------+-----------------------------------+
+| weekday(cast('2019-06-25' as DATETIMEV2(0))) | weekday(cast(20190625 as DATEV2)) |
++----------------------------------------------+-----------------------------------+
+|                                            1 |                                 1 |
++----------------------------------------------+-----------------------------------+
+```
+
+## Precautions
+
+Note the difference between WEEKDAY and DAYOFWEEK:
+
 ```
           +-----+-----+-----+-----+-----+-----+-----+
           | Sun | Mon | Tues| Wed | Thur| Fri | Sat |
@@ -45,22 +71,3 @@ Notice the difference between WEEKDAY and DAYOFWEEK:
 dayofweek |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
           +-----+-----+-----+-----+-----+-----+-----+
 ```
-
-### example
-```
-mysql> select weekday('2019-06-25');
-+--------------------------------+
-| weekday('2019-06-25 00:00:00') |
-+--------------------------------+
-|                              1 |
-+--------------------------------+
-
-mysql> select weekday(cast(20190625 as date)); 
-+---------------------------------+
-| weekday(CAST(20190625 AS DATE)) |
-+---------------------------------+
-|                               1 |
-+---------------------------------+
-```
-### keywords
-    WEEKDAY

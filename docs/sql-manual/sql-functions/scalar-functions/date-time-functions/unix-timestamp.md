@@ -24,63 +24,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## unix_timestamp
-### Description
-#### Syntax
+## Description
 
-`INT UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])`
+Converts a Date or Datetime type to a unix timestamp (the conversion is affected by the time zone). If there is no parameter, the current time is converted to a timestamp. For times before 1970-01-01 00:00:00 or after 2038-01-19 03:14:07, the function returns 0.
 
-Converting a Date or Datetime type to a UNIX timestamp.
+## Syntax
 
-If there are no parameters, the current time is converted into a timestamp.
-
-The parameter needs to be Date or Datetime type.
-
-Any date before 1970-01-01 00:00:00 or after 2038-01-19 03:14:07 will return 0.
-
-See `date_format` function to get Format explanation.
-
-This function is affected by time zone.
-
-### example
-
-```
-mysql> select unix_timestamp();
-+------------------+
-| unix_timestamp() |
-+------------------+
-|       1558589570 |
-+------------------+
-
-mysql> select unix_timestamp('2007-11-30 10:30:19');
-+---------------------------------------+
-| unix_timestamp('2007-11-30 10:30:19') |
-+---------------------------------------+
-|                            1196389819 |
-+---------------------------------------+
-
-mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
-+---------------------------------------+
-| unix_timestamp('2007-11-30 10:30-19') |
-+---------------------------------------+
-|                            1196389819 |
-+---------------------------------------+
-
-mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d %H:%i%%3A%s');
-+---------------------------------------+
-| unix_timestamp('2007-11-30 10:30%3A19') |
-+---------------------------------------+
-|                            1196389819 |
-+---------------------------------------+
-
-mysql> select unix_timestamp('1969-01-01 00:00:00');
-+---------------------------------------+
-| unix_timestamp('1969-01-01 00:00:00') |
-+---------------------------------------+
-|                                     0 |
-+---------------------------------------+
+```sql
+UNIX_TIMESTAMP (<date>[, <fmt>])
 ```
 
-### keywords
+## Parameters
 
-    UNIX_TIMESTAMP,UNIX,TIMESTAMP
+| Parameter | Description |
+|--|--|
+| `<date>` | The corresponding date value is Date or Datetime type |
+| `<fmt>` | Specifies the output format of date/time. For the format, see[date_format](./date-format.md)the format specification of the function. |
+
+## Return Value
+
+Converts a Date or Datetime type to a Unix timestamp (the conversion is affected by the time zone). If there is no parameter, the current time is converted to a timestamp. For times before 1970-01-01 00:00:00 or after 2038-01-19 03:14:07, the function returns 0.
+
+## Example
+
+```sql
+SELECT UNIX_TIMESTAMP(),UNIX_TIMESTAMP('2007-11-30'),UNIX_TIMESTAMP('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
+```
+
+```text
++------------------+-----------------------------------------------------+------------------------------------------------------------+
+| unix_timestamp() | unix_timestamp(cast('2007-11-30' as DATETIMEV2(0))) | unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s') |
++------------------+-----------------------------------------------------+------------------------------------------------------------+
+|       1742357008 |                                          1196352000 |                                          1196389819.000000 |
++------------------+-----------------------------------------------------+------------------------------------------------------------+
+```
