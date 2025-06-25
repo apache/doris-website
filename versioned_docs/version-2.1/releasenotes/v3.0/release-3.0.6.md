@@ -37,7 +37,7 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 - `xpath_string` 
 	- For detailed information, please refer to [documentation](https://doris.apache.org/docs/3.0/sql-manual/sql-functions/scalar-functions/string-functions/xpath-string)
 - `str_to_map`
-- For detailed information, please refer to [documentation](https://doris.apache.org/docs/3.0/sql-manual/sql-functions/scalar-functions/map-functions/str-to-map)
+    - For detailed information, please refer to [documentation](https://doris.apache.org/docs/3.0/sql-manual/sql-functions/scalar-functions/map-functions/str-to-map)
 - `months_between`
 	- For detailed information, please refer to [documentation](https://doris.apache.org/docs/3.0/sql-manual/sql-functions/scalar-functions/date-time-functions/months-between)
 - `next_day`

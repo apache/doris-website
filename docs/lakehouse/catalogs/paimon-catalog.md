@@ -221,5 +221,48 @@ SELECT * FROM paimon_tbl LIMIT 10;
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
 
+### Batch Incremental Query
+
+> This feature is supported since version 3.1.0
+
+Supports [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) queries for Paimon, similar to Flink.
+
+Supports querying incremental data within specified snapshot or timestamp intervals. The interval is left-closed and right-open.
+
+```sql
+-- read from snapshot 2
+SELECT * FROM paimon_table@incr('startSnapshotId'='2');
+
+-- between snapshots [0, 5)
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
+
+-- between snapshots [0, 5) with specified scan mode
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
+
+-- read from start timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+
+-- read between timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+```
+
+Parameter:
+
+| Parameter | Description | Example |
+| --- | --- | -- |
+| `startSnapshotId` | Starting snapshot ID, must be greater than 0 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Optional, if not specified, reads from `startSnapshotId` to the latest snapshot | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | Specifies the incremental read mode, default is `auto`, supports `delta`, `changelog` and `diff` |  `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0 | `'startTimestamp'='1750844949'` |
+| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot | `'endTimestamp'='1750944949'` |
+
+> `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+
+> `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
+
+> `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+
+Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
+
 ## Appendix
 
