@@ -41,6 +41,7 @@ const config = {
     onBrokenMarkdownLinks: 'ignore',
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
+    trailingSlash: false,
     markdown: {
         format: 'detect',
     },
