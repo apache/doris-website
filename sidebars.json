@@ -1509,7 +1509,8 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-set",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-unquote",
-                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-valid"
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/to-json"
                                     ]
                                 },
                                 {
