@@ -1117,7 +1117,11 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/mod",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket"
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/even",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/signbit",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/gcd",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/lcm"
                                     ]
                                 },
                                 {
