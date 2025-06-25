@@ -333,6 +333,7 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
 | memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
 |unique_key_update_mode        | The update modes on Unique tables, currently are only effective for Merge-On-Write Unique tables. Supporting three types: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: Indicates that data is loaded with upsert semantics; `UPDATE_FIXED_COLUMNS`: Indicates that data is loaded through partial updates; `UPDATE_FLEXIBLE_COLUMNS`: Indicates that data is loaded through flexible partial updates.|
+| partial_update_new_key_behavior | When performing partial column updates or flexible column updates on Unique tables, this parameter controls how new rows are handled. There are two types: `APPEND` and `ERROR`.<br/>- `APPEND`: Allows inserting new row data<br/>- `ERROR`: Fails and reports an error when inserting new rows |
 
 ### Load return value
 
@@ -1013,7 +1014,7 @@ Doris supports a very rich set of column transformations and filtering operation
 
 ### Enable strict mode import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial column updates. For specific instructions on strict mode, please refer to the [Handling Messy Data](../../../data-operate/import/handling-messy-data) documentation.
+The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering. For specific instructions on strict mode, please refer to the [Handling Messy Data](../../../data-operate/import/handling-messy-data) documentation.
 
 ### Perform partial column updates/flexible partial update during import
 
