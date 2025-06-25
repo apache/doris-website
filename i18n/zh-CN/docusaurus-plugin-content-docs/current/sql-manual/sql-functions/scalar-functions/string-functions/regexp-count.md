@@ -45,7 +45,7 @@ REGEXP_COUNT(<str>, <pattern>)
 
 - 返回正则表达式 “pattern” 在字符串 “str” 中的匹配字符数量，返回类型为 “int”。若没有字符匹配，则返回 0。
 
-### 测试转义字符匹配
+### 测试字符串区匹配包含转义字符的表达式返回结果
 
 ```sql
 SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
@@ -59,8 +59,7 @@ SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
 +--------------------------------------+
 ```
 
-### 测试普通字符匹配
-
+### 测试普通的字符':'的正则表达式的字符串匹配结果
 ```sql
 SELECT regexp_count('a.b:c;d', ':');
 ```
@@ -72,7 +71,7 @@ SELECT regexp_count('a.b:c;d', ':');
 |                            1 |
 +------------------------------+
 ```
-### 测试双中括号匹配
+### 测试字符串去匹配包含有两个中括号的正则表达式的返回结果
 
 ```sql
 SELECT regexp_count('Hello, World!', '[[:punct:]]');
@@ -86,7 +85,7 @@ SELECT regexp_count('Hello, World!', '[[:punct:]]');
 +----------------------------------------------+
 ```
 
-### 测试插入值之后匹配
+### 测试插入一定变量值，从存储行取出变量去匹配的返回结果
 
 ```sql
 
@@ -129,7 +128,7 @@ SELECT id, regexp_count(text_data, pattern) as count_result FROM test_table_for_
 +------+--------------+
 
 ```
-### 测试插入值之后，一个常量，一个变量匹配
+### 测试插入一定变量值，从存储行取出变量去匹配的返回结果，但正则表达式为常量
 
 ```sql
 CREATE TABLE test_table_for_regexp_count (
