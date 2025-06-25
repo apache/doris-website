@@ -26,9 +26,9 @@ under the License.
 ## Description
 This is a function to count the number of characters in a string that match a given regular expression pattern. The input consists of a user-provided string and a regular expression pattern. The return value is n the total count of matching characters; if no matches are found, it returns 0.
 
-1. <str> paratemer is 'string' type,it is the string of usr want to match by a regexp expression.
+1. 'str' paratemer is 'string' type,it is the string of usr want to match by a regexp expression.
 
-2. <patter> paratemer is 'string' type, it is the string of a regexp regular which will be used to match the string;
+2. 'pattern' paratemer is 'string' type, it is the string of a regexp regular which will be used to match the string;
 
 3. return value is 'int' type,it represent the number of the characters which be matched successfully;
 
