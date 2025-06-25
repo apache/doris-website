@@ -47,7 +47,7 @@ REGEXP_COUNT(<str>, <pattern>)
 
 ## Examples
 
-### test with  Escape Character 
+### Test the string region matching against an expression containing escape characters and return the result
 
 ```sql
 SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
@@ -61,7 +61,7 @@ SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
 +--------------------------------------+
 ```
 
-### test with comman character match
+### Test the string matching result of the regular expression for the ordinary character ':'.
 
 ```sql
 SELECT regexp_count('a.b:c;d', ':');
@@ -74,7 +74,7 @@ SELECT regexp_count('a.b:c;d', ':');
 |                            1 |
 +------------------------------+
 ```
-### test with double Square Brackets
+### Test the return result when matching a string against a regular expression containing two square brackets.
 
 ```sql
 SELECT regexp_count('Hello, World!', '[[:punct:]]');
@@ -88,7 +88,7 @@ SELECT regexp_count('Hello, World!', '[[:punct:]]');
 +----------------------------------------------+
 ```
 
-### test with insert value;
+### Test the return result of inserting certain variable values and then retrieving the variables from the stored rows for matching.
 
 ```sql
 
@@ -131,7 +131,7 @@ SELECT id, regexp_count(text_data, pattern) as count_result FROM test_table_for_
 +------+--------------+
 
 ```
-### test with insert value with one is const,one not;
+### Test the return result of inserting certain variable values, retrieving the variables from stored rows for matching, with the regular expression being a constant.
 
 ```sql
 CREATE TABLE test_table_for_regexp_count (
