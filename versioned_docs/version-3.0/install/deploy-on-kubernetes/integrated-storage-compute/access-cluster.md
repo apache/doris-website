@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Kubernetes provides the use of Service as VIP (Virtual IP) and load balancer. There are three external exposure modes for Service: ClusterIP, NodePort, and LoadBalancer.
 ## ClusterIP
 Doris provides the ClusterIP access mode by default on Kubernetes. The ClusterIP access mode provides an internal IP address within the Kubernetes cluster to expose services through this internal IP. With the ClusterIP mode, services can only be accessed within the cluster.
@@ -109,3 +92,16 @@ To access Doris through the LoadBalancer, use the external IP (provided in the E
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
 ```
+
+## StreamLoad Access to Doris Deployed on Kubernetes
+Doris supports data import using the StreamLoad method. When the client and the Doris cluster are within the same local network, the client can directly use the Frontend (FE) address as the request endpoint. The FE service responds with an HTTP 301 status code and provides the Backend (BE) address, instructing the client to redirect the request to the BE for data import.
+
+However, when Doris is deployed on Kubernetes, internal communication uses addresses that are only accessible within the Kubernetes cluster. If the FE returns a BE address that is only reachable internally via the 301 redirect mechanism, data import attempts from clients outside the Kubernetes cluster will fail.
+
+To import data using StreamLoad from a client located outside the Kubernetes environment, you must configure the import address with a BE address that is externally accessible.
+
+### Configure External Access to the BE Service
+To enable access to the BE service from outside the Kubernetes cluster, configure the service as either a [NodePort](install-config-cluster.md#nodeport) or a [LoadBalancer](install-config-cluster.md#loadbalancer). Update the `DorisCluster` resource accordingly to apply these changes.
+
+### Configure the BE Proxy Address
+As the description of [NodePort](#nodeport) or [LoadBalancer](#loadbalancer) to get an externally accessible address and the corresponding `web_server` port. Use this address and port as the request endpoint when importing data via StreamLoad.

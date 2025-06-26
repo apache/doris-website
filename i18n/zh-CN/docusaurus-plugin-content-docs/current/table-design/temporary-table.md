@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在进行复杂的数据处理任务时，将大型 SQL 查询拆分为多个步骤，并将每个步骤的计算结果临时保存为实体表，是一种有效的策略。这种方法能够显著降低 SQL 查询的复杂度，并提升数据的可调试性。然而，需要注意的是，实体表在完成其使用目的后，需要手动进行清理。若选择使用非实体临时表，当前 Doris 仅支持通过 `WITH` 子句进行定义。
 
 为了解决上述问题，Doris 引入了临时表功能。临时表是一种临时存在的物化内表，具备以下关键特性：

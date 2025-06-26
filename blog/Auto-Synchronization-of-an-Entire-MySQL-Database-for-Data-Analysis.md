@@ -3,7 +3,7 @@
     'title': 'Auto synchronization of an entire MySQL database for data analysis',
     'description': "Flink-Doris-Connector 1.4.0 allows users to ingest a whole database (MySQL or Oracle) that contains thousands of tables into Apache Doris, in one step.",
     'date': '2023-08-16',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Tech Sharing'],
     'externalLink': 'https://www.velodb.io/blog/135',
     "image": '/images/auto-synchronize.png'

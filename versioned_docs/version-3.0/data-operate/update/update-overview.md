@@ -5,24 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 Data update refers to modifying the value columns in data records with the same key. The approach to handling data updates varies depending on the data model:
 
 - **Primary Key (Unique) Model**: This model is designed specifically for data updates. Doris supports two storage implementations: Merge-on-Read (MoR) and Merge-on-Write (MoW). MoR optimizes write performance, while MoW enhances analytical performance. From Doris version 2.1, MoW is the default storage implementation. The primary key model supports the `UPDATE` statement for small data updates and batch updates through data loading methods such as Stream Load, Broker Load, Routine Load, and Insert Into, all following "UPSERT" semantics. This means if the record does not exist, it is inserted; if it exists, it is updated. Both whole row updates (default) and partial column updates are supported.
