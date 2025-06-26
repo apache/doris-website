@@ -256,11 +256,13 @@ SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1
 | `startTimestamp` | 起始快照时间，必须大于等于 0 | `'startTimestamp'='1750844949'` |
 | `endTimestamp` | 结束快照时间，必须大于 `startTimestamp`。可选，如不指定，则表示从 `startTimestamp` 开始读取到最新的快照 | `'endTimestamp'='1750944949'` |
 
-> `startSnapshotId` 和 `endSnapshotId` 会组成 Paimon 参数 `'incremental-between'='3,10'`
+> 注：
 
-> `startTimestamp` 和 `endTimestamp` 会组成 Paimon 参数 `'incremental-between-timestamp'='1750844949,1750944949'`
+> - `startSnapshotId` 和 `endSnapshotId` 会组成 Paimon 参数 `'incremental-between'='3,10'`
 
-> `incrementalBetweenScanMode` 对应 Paimon 参数 `incremental-between-scan-mode`。
+> - `startTimestamp` 和 `endTimestamp` 会组成 Paimon 参数 `'incremental-between-timestamp'='1750844949,1750944949'`
+
+> - `incrementalBetweenScanMode` 对应 Paimon 参数 `incremental-between-scan-mode`。
 
 可参阅 [Paimon 文档](https://paimon.apache.org/docs/master/maintenance/configurations/) 进一步了解这些参数。
 
