@@ -6,15 +6,17 @@
 ---
 
 Analytic functions, also known as window functions, are functions in SQL queries that perform complex calculations on rows in a data set. The characteristic of window functions is that they do not reduce the number of rows in the query result, but instead add a new computed result for each row. Window functions are applicable to various analysis scenarios, such as calculating running totals, rankings, and moving averages.
+The specific syntax can be [refer](../sql-manual/sql-functions/window-functions/overview.md)
 
 Below is an example of using a window function to calculate the three-day moving average of sales for each store before and after a given date:
 
 ```sql
-CREATE TABLE daily_sales
-(store_id INT, sales_date DATE, sales_amount DECIMAL(10, 2))
-PROPERTIES (
-  "replication_num" = "1"
-);
+CREATE TABLE daily_sales (
+    store_id INT,
+    sales_date DATE,
+    sales_amount DECIMAL(10, 2)
+) PROPERTIES ("replication_num" = "1");
+
 INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES (1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00), (1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00), (1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00), (2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00), (2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00), (2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
 
 SELECT
@@ -61,7 +63,7 @@ The query result is as follows:
 
 The processing of queries using analytic functions can be divided into three stages.
 
-1. Execute all joins, WHERE, GROUP BY, and HAVING clauses.
+1. Execute all JOIN, WHERE, GROUP BY, and HAVING clauses.
 
 2. Provide the result set to the analytic functions and perform all necessary calculations.
 
@@ -83,23 +85,23 @@ The term "partition" used in analytic functions is unrelated to the table partit
 
 ### Window
 
-For each row in a partition, you can define a sliding data window. This window determines the range of rows involved in performing calculations for the current row. A window has a starting row and an ending row, and depending on its definition, the window can slide at one or both ends. For example, for a cumulative sum function, the starting row is fixed at the first row of its partition, while the ending row slides from the start to the last row of the partition. Conversely, for a moving average, both the start and end points slide.
+For each row in a partition, you can define a sliding data window. This window determines the range of rows involved in performing calculations for the current row. A window has a starting row and an ending row, and depending on its definition, the window can slide at one or both ends. For example ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW, for a cumulative sum function, the starting row is fixed at the first row of its partition, while the ending row slides from the start to the last row of the partition. Conversely ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING, for a moving average, both the start and end points slide.
 
 The size of the window can be set to be as large as all rows in the partition or as small as a sliding window that only includes one row within the partition. It should be noted that when the window is near the boundaries of the partition, due to boundary restrictions, the range of calculations may be reduced, and the function only returns the computed results of the available rows.
 
-When using window functions, the current row is included in the calculation. Therefore, when processing n items, it should be specified as (n-1). For example, if you need to calculate a five-day average, the window should be specified as "rows between 4 preceding and current row," which can also be abbreviated as "rows 4 preceding."
+When using window functions, the current row is included in the calculation. Therefore, when processing n items, it should be specified as (n-1). For example, if you need to calculate a five-day average, the window should be specified as "ROWS BETWEEN 4 PRECEDING AND CURRENT ROW," which can also be abbreviated as "ROWS 4 PRECEDING."
 
 ### Current Row
 
 Each calculation performed using analytic functions is based on the current row within the partition. The current row serves as the reference point for determining the start and end of the window, as illustrated below.
 
-For instance, a window can be used to define a centered moving average calculation that includes the current row, the 6 rows before the current row, and the 6 rows after the current row. This creates a sliding window containing 13 rows.
+For example ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING, a window can be used to define a centered moving average calculation that includes the current row, the 6 rows before the current row, and the 6 rows after the current row. This creates a sliding window containing 13 rows.
 
 ![Current Row](/images/window-function-rows.jpg)
 
 ## Sorting Function
 
-In a sorting function, query results are deterministic only when the specified sorting column is unique; if the sorting column contains duplicate values, the query results may vary each time.
+In a sorting function, query results are deterministic only when the specified sorting column is unique; if the sorting column contains duplicate values, the query results may vary each time. The more functions can be [refer](../sql-manual/sql-functions/window-functions/overview.md)
 
 ### NTILE Function
 
@@ -489,75 +491,48 @@ The query results are as follows:
 8 rows in set (0.16 sec)
 ```
 
-## Unique Ordering for Analytic Function Data
 
-**1. Issue of Inconsistent Return Results**
+## Examples
 
-When the `ORDER BY` clause of a window function fails to produce a unique ordering of the data, such as when the `ORDER BY` expression results in duplicate values, the order of the rows becomes indeterminate. This means that the return order of these rows may vary across multiple query executions, leading to inconsistent results from the window function.
-
-The following example illustrates how the query returns different results on successive runs. The inconsistency arises primarily because `ORDER BY dateid` does not provide a unique ordering for the `SUM` window function.
+1. Assume we have the following stock data, with stock symbol JDR and daily closing prices:
 
 ```sql
-CREATE TABLE test_window_order 
-    (item_id int,
-    date_time date,
-    sales double)
-distributed BY hash(item_id)
-properties("replication_num" = 1);
-
-INSERT INTO test_window_order VALUES
-(1, '2024-07-01', 100),
-(2, '2024-07-01', 100),
-(3, '2024-07-01', 140);
-
-SELECT
-    item_id, date_time, sales,
-    sum(sales) OVER (ORDER BY date_time ROWS BETWEEN 
-        UNBOUNDED PRECEDING AND CURRENT ROW) sum
-FROM
-    test_window_order;
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+...load some data...    
+select * from stock_ticker order by stock_symbol, closing_date
 ```
 
-Due to duplicate values in the sorting column `date_time`, the following two query results may be observed:
-
-```sql
-+---------+------------+-------+------+
-| item_id | date_time  | sales | sum  |
-+---------+------------+-------+------+
-|       1 | 2024-07-01 |   100 |  100 |
-|       3 | 2024-07-01 |   140 |  240 |
-|       2 | 2024-07-01 |   100 |  340 |
-+---------+------------+-------+------+
-3 rows in set (0.03 sec)
+```text
+ | stock_symbol | closing_price | closing_date        |
+ |--------------|---------------|---------------------|
+ | JDR          | 12.86         | 2014-10-02 00:00:00 |
+ | JDR          | 12.89         | 2014-10-03 00:00:00 |
+ | JDR          | 12.94         | 2014-10-04 00:00:00 |
+ | JDR          | 12.55         | 2014-10-05 00:00:00 |
+ | JDR          | 14.03         | 2014-10-06 00:00:00 |
+ | JDR          | 14.75         | 2014-10-07 00:00:00 |
+ | JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-**2. Solution**
-
-To address this issue, you can add a unique value column, such as `item_id`, to the `ORDER BY` clause to ensure the uniqueness of the ordering.
+2. This query uses an analytic function to generate a moving_average column, which calculates the 3-day average stock price (previous day, current day, and next day). The first day has no previous day value, and the last day has no next day value, so these rows only calculate a two-day average. The Partition By clause has no effect here since all data is for JDR, but if there were other stock information, Partition By would ensure the analytic function only operates within its own partition.
 
 ```sql
-SELECT
-        item_id,
-        date_time,
-        sales,
-        sum(sales) OVER (
-        ORDER BY item_id,
-        date_time ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) sum
-FROM
-        test_window_order;
+select stock_symbol, closing_date, closing_price,    
+avg(closing_price) over (partition by stock_symbol order by closing_date    
+rows between 1 preceding and 1 following) as moving_average    
+from stock_ticker;
 ```
 
-This results in a consistent query output:
-
-```sql
-+---------+------------+-------+------+
-| item_id | date_time  | sales | sum  |
-+---------+------------+-------+------+
-|       1 | 2024-07-01 |   100 |  100 |
-|       2 | 2024-07-01 |   100 |  200 |
-|       3 | 2024-07-01 |   140 |  340 |
-+---------+------------+-------+------+
-3 rows in set (0.03 sec)
+```text
+| stock_symbol | closing_date        | closing_price | moving_average |
+|--------------|---------------------|---------------|----------------|
+| JDR          | 2014-10-02 00:00:00 | 12.86         | 12.87          |
+| JDR          | 2014-10-03 00:00:00 | 12.89         | 12.89          |
+| JDR          | 2014-10-04 00:00:00 | 12.94         | 12.79          |
+| JDR          | 2014-10-05 00:00:00 | 12.55         | 13.17          |
+| JDR          | 2014-10-06 00:00:00 | 14.03         | 13.77          |
+| JDR          | 2014-10-07 00:00:00 | 14.75         | 14.25          |
+| JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
 For more information on analytic functions, refer to the Oracle official documentation  [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
