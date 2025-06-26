@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Elastic compute nodes, as a special type of BE node, do not have data storage capabilities and are only responsible for data computation. Therefore, compute nodes can be regarded as stateless BE nodes, which can be easily added and removed.
 
 In lakehouse data analysis scenarios, elastic compute nodes can be used to query external data sources such as Hive, Iceberg, Hudi, Paimon, JDBC, etc. Doris does not handle the storage of external data source data, so elastic compute nodes can be used to easily expand the computing power for external data sources. Additionally, compute nodes can also be configured with cache directories to cache hot data from external data sources, further accelerating data reading.

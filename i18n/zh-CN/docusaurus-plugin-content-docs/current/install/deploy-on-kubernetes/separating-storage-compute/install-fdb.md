@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 [FoundationDB](https://apple.github.io/foundationdb/#overview) 是 Apple 公司开发的分布式强一致性存储结构化数据的数据库，Doris 存算分离模式使用 FoundationDB 作为元数据存储。Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
 - 在机器（包括物理机）上直接部署。机器直接部署 FoundationDB 请参考 Doris 存算分离官方文档[部署前准备部分](../../../compute-storage-decoupled/before-deployment)搭建 FoundationDB 集群。部署前请确保 FoundationDB 部署的机器和 Doris 所在的 Kubernetes 在同一个局域网内。
 - 在 Kubernetes 上部署 FoundationDB。FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。

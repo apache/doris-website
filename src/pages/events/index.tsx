@@ -112,23 +112,23 @@ const EVENTS_PAGE_DATA = {
             cardDate: '',
             tag: '',
             detailTitle: '可观测性系列直播（第六期）| GenAI & LLM',
-            date: '2025 年 06 月 25 日 19:30-20:30',
+            date: '2025 年 07 月 03 日 19:30-20:30',
             address: '线上直播',
             description:
                 '第六期将介绍 Apache Doris 可观测性平台与 GenAI 结合应用实践，聚焦在 AI 时代下如何从现代实时数仓演进为支撑分析与 AI 的实时分析型数据库。',
-            start_date: '2025-06-25T19:00:00.000Z',
-            end_date: '2025-06-25T20:30:00.000Z',
+            start_date: '2025-07-03T19:00:00.000Z',
+            end_date: '2025-07-03T20:30:00.000Z',
             img: (
                 <img
                     alt="可观测性系列直播（第六期）"
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/observability-webinar-20250625.jpg').default}`}
+                    src={`${require('@site/static/images/events/observability-webinar-20250703.jpg').default}`}
                 />
             ),
             isCover: true,
-            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250625',
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250703',
         },
         {
             cardTitle: '',
