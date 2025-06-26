@@ -256,11 +256,13 @@ Parameter:
 | `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0 | `'startTimestamp'='1750844949'` |
 | `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot | `'endTimestamp'='1750944949'` |
 
-> `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+> Notice:
 
-> `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
+> - `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
 
-> `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+> - `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
+
+> - `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
 
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
