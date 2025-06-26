@@ -226,9 +226,9 @@ Trace 查询通常使用可视化的查询界面，比如 Grafana。
 
 - 通过时间段和服务名筛选，展示 Trace 概览，包括延迟分布图和最细的一些 Trace
 
-  ![Trace 查询](./assets/Trace-Querying.png)
+  ![Trace 列表](/images/observability/trace-list.png)
 
 - 点击链接可以查看 Trace detail
 
-  ![Trace 查询](./assets/Trace-Querying-2.png)
+  ![Trace 查询](/images/observability/trace-detail.png)
 

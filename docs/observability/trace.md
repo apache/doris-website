@@ -225,8 +225,8 @@ Trace querying typically uses visual query interfaces such as Grafana.
 
 - Filter by time range and service name to display Trace summaries, including latency distribution charts and detailed individual Traces.
 
-  ![Trace Querying](./assets/Trace-Querying.png)
+  ![Trace List](/images/observability/trace-list.png)
 
 - Click on the link to view the Trace detail.
 
-  ![Trace Detail](./assets/Trace-Querying-2.png)
+  ![Trace Detail](/images/observability/trace-detail.png)
