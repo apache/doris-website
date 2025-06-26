@@ -58,7 +58,7 @@ WHERE
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes）               |
 |:--------------|:-----------|:------------------------|
-| ADMIN_PRIV    | Database   | 只有拥有 ADMIN_PRIV 的用户才能操作 |
+| LOAD_PRIV     | Database   |  |
 
 
 ## 示例
