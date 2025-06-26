@@ -26,8 +26,8 @@ under the License.
 
 The `PERCENTILE_APPROX` function is used to calculate approximate percentiles, primarily for large datasets. Compared to the `PERCENTILE` function, it has the following features:
 
-1. Memory Efficiency: Uses fixed-size memory, maintaining low memory consumption even when processing high-cardinality columns (large data volumes)
-2. Performance Advantage: Suitable for processing large-scale datasets with faster computation
+1. Memory Efficiency: Uses fixed-size memory, maintaining low memory consumption even when processing low-cardinality columns (large data volumes but the number of different elements is small)
+2. Performance Advantage: Suitable for processing low-cardinality large-scale datasets with faster computation
 3. Adjustable Precision: Balance between precision and performance through the compression parameter
 
 

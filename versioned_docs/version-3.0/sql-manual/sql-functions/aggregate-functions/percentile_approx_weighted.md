@@ -28,7 +28,7 @@ The `PERCENTILE_APPROX_WEIGHTED` function calculates weighted approximate percen
 
 Key features:
 1. Weight Support: Each value can be assigned a corresponding weight, affecting the final percentile calculation
-2. Memory Efficiency: Uses fixed-size memory, suitable for processing large-scale data
+2. Memory Efficiency: Uses fixed-size memory, maintaining low memory consumption even when processing low-cardinality columns (large data volumes but the number of different elements is small)
 3. Adjustable Precision: Balance between precision and performance through the compression parameter
 
 ## Syntax
