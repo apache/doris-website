@@ -1,7 +1,7 @@
 ---
 {
     "title": "REGEXP_REPLACE_ONE",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,51 +24,113 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 描述
+## Description
 
-对字符串 STR 进行正则匹配, 将命中 pattern 的部分使用 repl 来进行替换，仅替换第一个匹配项。
+The `REGEXP_REPLACE_ONE` function is a powerful tool designed to perform regular expression matching on a given string. It allows you to find and replace the first occurrence of a specific pattern within the string. 
 
-- 字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
+When working with text data, you often need to manipulate strings based on certain rules. Regular expressions provide a flexible and efficient way to define these rules. This function takes a string (`str`), a regular expression pattern (`pattern`), and a replacement string (`repl`). It then searches for the first part of the `str` that matches the `pattern` and substitutes it with the `repl`.
 
-## 语法
+It's important to note that when dealing with character set matching, you should use Unicode standard character classes. For example, if you want to match Chinese characters, you can use `\p{Han}` in your regular expression pattern. This ensures that the function can correctly identify and process different types of characters from various languages.
+
+## Syntax
 
 ```sql
 REGEXP_REPLACE_ONE(<str>, <pattern>, <repl>)
 ```
 
-## 参数
+## Parameters
 
-| 参数 | 描述 |
+| Parameter | Description |
 | -- | -- |
-| `<str>` | 需要进行正则匹配的列。|
-| `<pattern>` | 目标模式。|
-| `<repl>` | 用于替换匹配模式的字符串。|
+| `<str>` | This parameter is of type string. It represents the string on which the regular expression matching will be performed. This is the target string that you want to modify.|
+| `<pattern>` | This parameter is also of type string. It is a regular expression pattern. The function will search for the first occurrence of this pattern within the <str> string.|
+| `<repl>` | This is a string parameter as well. It contains the string that will replace the first part of <str> that matches the <pattern>.|
 
-## 返回值
+## Return Value
 
-替换之后的结果，类型是 `Varchar`。
+The function returns the result string after the replacement operation. The return type is Varchar. If no part of the <str> matches the <pattern>, the original <str> will be returned.
 
-## 举例
+## Example
+
+### Example 1: Replace the first space with a hyphen
+### Explanation: In this example, the input string <str> is 'a b c', the regular expression pattern <pattern> is a single space ' ', and the replacement string <repl> is a hyphen '-'. The function searches for the first occurrence of a space in the string 'a b c' and replaces it with a hyphen. So the output is 'a-b c'.
 
 ```sql
 mysql> SELECT regexp_replace_one('a b c', ' ', '-');
+
 +-----------------------------------+
 | regexp_replace_one('a b c', ' ', '-') |
 +-----------------------------------+
 | a-b c                             |
 +-----------------------------------+
+```
 
+### Example 2: Replace the first matched group
+### Explanation: Here, the input string <str> is 'a b b', the regular expression pattern <pattern> is '(b)', which is a capturing group that matches the character 'b'. The replacement string <repl> is '<\1>', where \1 refers to the first capturing group (in this case, the matched 'b'). The function finds the first occurrence of 'b' in the string 'a b b' and replaces it with '<b>'. Thus, the output is 'a <b> b'.
+
+
+```sql
 mysql> SELECT regexp_replace_one('a b b', '(b)', '<\\1>');
 +----------------------------------------+
 | regexp_replace_one('a b b', '(b)', '<\1>') |
 +----------------------------------------+
 | a <b> b                                |
 +----------------------------------------+
+```
+### Example 3: Replace the first Chinese character
+### Explanation: The input string <str> is a long string containing Chinese characters and English text. The regular expression pattern <pattern> is '\p{Han}', which is a Unicode character class that matches any Chinese character. The replacement string <repl> is '123'. The function searches for the first Chinese character in the string and replaces it with '123'. So the output is '123是一段中文This is a passage in English 1234567'.
 
-mysql> select regexp_replace_one('这是一段中文This is a passage in English 1234567', '\\p{Han}', '123');
+```sql
+mysql> select regexp_replace_one('这是一段中文 This is a passage in English 1234567', '\\p{Han}', '123');
 +------------------------------------------------------------------------------------------------+
-| regexp_replace_one('这是一段中文This is a passage in English 1234567', '\p{Han}', '123')       |
+| regexp_replace_one('这是一段中文 This is a passage in English 1234567', '\p{Han}', '123')       |
 +------------------------------------------------------------------------------------------------+
 | 123是一段中文This is a passage in English 1234567                                              |
 +------------------------------------------------------------------------------------------------+
+```
+
+### Example 4: Insert data into a table and perform replacement
+### explain is under
+### 1. First, a table named test_table_for_regexp_replace_one is created with four columns: id (an integer), text_data (a string where the replacement will be performed), pattern (the regular expression pattern for matching), and repl (the replacement string).
+### 2. Then, ten rows of data are inserted into the table, each containing different values for the four columns.
+### 3. Finally, a SELECT statement is used to query the table. For each row, the REGEXP_REPLACE_ONE function is applied to the text_data column using the corresponding pattern and repl values. The result of the replacement is aliased as replaced_result. The rows are ordered by the id column.
+
+```sql
+CREATE TABLE test_table_for_regexp_replace_one (
+        id INT,
+        text_data VARCHAR(500),
+        pattern VARCHAR(100),
+        repl VARCHAR(100)
+    ) PROPERTIES ("replication_num"="1");
+
+INSERT INTO test_table_for_regexp_replace_one VALUES
+    (1, 'Hello World', ' ', '-'),    
+    (2, 'apple123', '[0-9]', 'X'),    
+    (3, 'aabbcc', '(aa)', 'AA'),         
+    (4, '123-456-7890', '[0-9][0-9][0-9]', 'XXX'), 
+    (5, 'test,data', ',', ';'),              
+    (6, 'a1b2c3', '[a-z][0-9]', 'X'),         
+    (7, 'book keeper', 'oo', 'OO'),        
+    (8, 'ababab', '(ab)', 'AB'),       
+    (9, 'aabbcc', '(bb)', 'BB'),         
+    (10, 'apple,banana', '[aeiou]', 'X');
+
+SELECT id, regexp_replace_one(text_data, pattern, repl) as replaced_result FROM test_table_for_regexp_replace_one ORDER BY id;
+```
+
+```text
++------+-----------------+
+| id   | replaced_result |
++------+-----------------+
+|    1 | Hello-World     |
+|    2 | appleX23        |
+|    3 | AAbbcc          |
+|    4 | XXX-456-7890    |
+|    5 | test;data       |
+|    6 | Xb2c3           |
+|    7 | BOOk keeper     |
+|    8 | ABabab          |
+|    9 | aaBBcc          |
+|   10 | Xpple,banana    |
++------+-----------------+
 ```

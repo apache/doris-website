@@ -1,7 +1,7 @@
 ---
 {
     "title": "REGEXP",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,41 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Description
+## 描述
 
-Perform regular matching on the string str, return true if it matches, return false or not. Pattern is a regular expression.
+对字符串 str 执行正则匹配，匹配时返回 true，否则返回 false。pattern 为正则表达式。
 
-- Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+- 字符集匹配需要使用 Unicode 标准字符类。例如，匹配中文使用\p{Han}。
 
-## Syntax
+## 语法
 
 ```sql
 REGEXP(<str>, <pattern>)
 ```
 
-## Parameters
+## 参数
 
-| Parameter | Description |
+| 参数 | 描述 |
 | -- | -- |
-| `<str>` | The column need to do regular matching.|
-| `<pattern>` | Target pattern.|
+| `<str>` | 此参数为字符串类型。表示要执行正则表达式匹配的字符串，可以是表中的列或字面值字符串。|
+| `<pattern>` | 此参数也为字符串类型。是用于与字符串<str>匹配的正则表达式模式。正则表达式提供了定义复杂搜索模式的强大方式，包括字符类、量词和锚点。|
 
-## Return Value
+## 返回值
 
-A `BOOLEAN` value indicating whether the match was successful
+REGEXP 函数返回 BOOLEAN 值。如果字符串<str>匹配正则表达式模式<pattern>，函数返回 true（在 SQL 中表示为 1）；如果不匹配，返回 false（在 SQL 中表示为 0）
 
-## Example
-Lets prepare some data.
+## 示例
+
 ```sql
 CREATE TABLE test ( k1 VARCHAR(255) ) properties("replication_num"="1")
 
 INSERT INTO test (k1) VALUES ('billie eillish'), ('It\'s ok'), ('billie jean'), ('hello world');
 ```
 
-Do `REGEXP` now
 
 ```sql
---- Find all data starting with 'billie' in the k1 field
+--- 查找k1字段中以'billie'开头的所有数据
 SELECT k1 FROM test WHERE k1 REGEXP '^billie'
 --------------
 
@@ -70,7 +69,7 @@ SELECT k1 FROM test WHERE k1 REGEXP '^billie'
 +----------------+
 2 rows in set (0.02 sec)
 
---- Find all data ending with 'ok' in the k1 field:
+--- 查找k1字段中以'ok'结尾的数据：
 SELECT k1 FROM test WHERE k1 REGEXP 'ok$'
 --------------
 
@@ -81,7 +80,7 @@ SELECT k1 FROM test WHERE k1 REGEXP 'ok$'
 +---------+
 1 row in set (0.03 sec)
 ```
-Example for Chinese character
+### 中文字符示例
 
 ```sql
 mysql> select regexp('这是一段中文 This is a passage in English 1234567', '\\p{Han}');
@@ -90,4 +89,64 @@ mysql> select regexp('这是一段中文 This is a passage in English 1234567', 
 +-----------------------------------------------------------------------------+
 |                                                                           1 |
 +-----------------------------------------------------------------------------+
+```
+
+### 简单字符串匹配的插入和测试
+
+```sql
+CREATE TABLE test_regexp (
+    id INT,
+    name VARCHAR(255)
+) PROPERTIES("replication_num"="1");
+
+INSERT INTO test_regexp (id, name) VALUES
+    (1, 'Alice'),
+    (2, 'Bob'),
+    (3, 'Charlie'),
+    (4, 'David');
+
+-- 查找以'A'开头的所有名字
+SELECT id, name FROM test_regexp WHERE name REGEXP '^A';
+```
+
+```text
++------+-------+
+| id   | name  |
++------+-------+
+|    1 | Alice |
++------+-------+
+```
+
+### 特殊字符匹配测试
+
+```sql
+-- 插入特殊字符
+INSERT INTO test_regexp (id, name) VALUES
+    (5, 'Anna-Maria'),
+    (6, 'John_Doe');
+
+-- 查找包含'-'字符的名字
+SELECT id, name FROM test_regexp WHERE name REGEXP '-';
+```
+```text
++------+------------+
+| id   | name       |
++------+------------+
+|    5 | Anna-Maria |
++------+------------+
+```
+
+### Test for Ending String Matching
+```sql
+-- 查找以'e'结尾的名字
+SELECT id, name FROM test_regexp WHERE name REGEXP 'e$';
+```
+
+```text
++------+---------+
+| id   | name    |
++------+---------+
+|    1 | Alice   |
+|    3 | Charlie |
++------+---------+
 ```
