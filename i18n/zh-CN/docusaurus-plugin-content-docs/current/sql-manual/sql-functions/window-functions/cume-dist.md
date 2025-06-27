@@ -8,6 +8,7 @@
 ## 描述
 
 CUME_DIST (Cumulative Distribution) 是一种窗口函数，它计算当前行值在排序后结果集中的相对排名。它返回的是当前行值在结果集中的累积分布值，范围从 0 到 1。对于给定的行，其累积分布值等于：(小于或等于当前行值的行数) / (窗口分区中的总行数)。
+如果未显示指定窗口，会隐式生成`RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` 类型，且当前仅支持此类。
 
 ## 语法
 
