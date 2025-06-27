@@ -53,7 +53,7 @@ The matching part of the pattern. It is of Varchar type. If no match is found, a
 ## Example
 
 ### Example 1: Extract the first matching part
-### In this example, the regular expression ([[:lower:]]+)C([[:lower:]]+) matches the part of the string where one or more lowercase letters are followed by 'C' and then one or more lowercase letters. The first capturing group ([[:lower:]]+) before 'C' matches 'b', so the result is 'b'.
+Explain: In this example, the regular expression ([[:lower:]]+)C([[:lower:]]+) matches the part of the string where one or more lowercase letters are followed by 'C' and then one or more lowercase letters. The first capturing group ([[:lower:]]+) before 'C' matches 'b', so the result is 'b'.
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
@@ -64,7 +64,7 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
 +-------------------------------------------------------------+
 ```
 ### Example 2: Extract the second matching part
-### Here, the second capturing group ([[:lower:]]+) after 'C' matches 'd', so the result is 'd'.
+Explain: Here, the second capturing group ([[:lower:]]+) after 'C' matches 'd', so the result is 'd'.
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
@@ -75,7 +75,7 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
 +-------------------------------------------------------------+
 ```
 ### Example 3: Match Chinese characters
-### The pattern (\p{Han}+)(.+) first matches one or more Chinese characters (\p{Han}+) and then matches the remaining part of the string ((.+)). The second capturing group matches the non - Chinese part of the string, so the result is 'This is a passage in English 1234567'.
+Explain: The pattern (\p{Han}+)(.+) first matches one or more Chinese characters (\p{Han}+) and then matches the remaining part of the string ((.+)). The second capturing group matches the non - Chinese part of the string, so the result is 'This is a passage in English 1234567'.
 
 ```sql
 mysql> select regexp_extract('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);
@@ -87,7 +87,7 @@ mysql> select regexp_extract('这是一段中文 This is a passage in English 12
 ```
 
 ### Example 4: Insert variable values and perform matching
-### This example inserts data into a table and then uses the REGEXP_EXTRACT function to extract matching parts from the stored strings based on the stored patterns and positions.
+Explain: This example inserts data into a table and then uses the REGEXP_EXTRACT function to extract matching parts from the stored strings based on the stored patterns and positions.
 
 ```sql
 

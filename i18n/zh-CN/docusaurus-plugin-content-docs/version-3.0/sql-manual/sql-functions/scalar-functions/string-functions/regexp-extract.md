@@ -53,7 +53,7 @@ REGEXP_EXTRACT(<str>, <pattern>, <pos>)
 ## 示例
 
 ### 示例 1：提取第一个匹配部分
-### 在此示例中，正则表达式([[:lower:]]+)C([[:lower:]]+)匹配字符串中一个或多个小写字母后跟 'C' 再跟一个或多个小写字母的部分。'C' 之前的第一个捕获组([[:lower:]]+)匹配 'b'，因此结果为 'b'
+解释：在此示例中，正则表达式([[:lower:]]+)C([[:lower:]]+)匹配字符串中一个或多个小写字母后跟 'C' 再跟一个或多个小写字母的部分。'C' 之前的第一个捕获组([[:lower:]]+)匹配 'b'，因此结果为 'b'
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
@@ -64,7 +64,7 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
 +-------------------------------------------------------------+
 ```
 ### 示例 2：提取第二个匹配部分
-### 这里，'C' 之后的第二个捕获组([[:lower:]]+)匹配 'd'，因此结果为 'd'。
+解释：这里，'C' 之后的第二个捕获组([[:lower:]]+)匹配 'd'，因此结果为 'd'。
 
 ```sql
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
@@ -75,7 +75,7 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
 +-------------------------------------------------------------+
 ```
 ### 示例 3：匹配中文字符
-### 模式(\p{Han}+)(.+)首先匹配一个或多个中文字符(\p{Han}+)，然后匹配字符串的剩余部分((.+))。第二个捕获组匹配字符串的非中文部分，因此结果为 'This is a passage in English 1234567'。
+解释：模式(\p{Han}+)(.+)首先匹配一个或多个中文字符(\p{Han}+)，然后匹配字符串的剩余部分((.+))。第二个捕获组匹配字符串的非中文部分，因此结果为 'This is a passage in English 1234567'。
 
 ```sql
 mysql> select regexp_extract('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);
@@ -87,7 +87,7 @@ mysql> select regexp_extract('这是一段中文 This is a passage in English 12
 ```
 
 ### 示例 4：插入变量值并执行匹配
-### 此示例向表中插入数据，然后使用 REGEXP_EXTRACT 函数根据存储的模式和位置从存储的字符串中提取匹配部分。
+解释：此示例向表中插入数据，然后使用 REGEXP_EXTRACT 函数根据存储的模式和位置从存储的字符串中提取匹配部分。
 
 ```sql
 
@@ -117,7 +117,7 @@ SELECT id, regexp_extract(text_data, pattern, pos) as extract_result FROM test_t
 ```
 
 ### 示例 5：测试无匹配的模式
-### 由于模式([[:digit:]]+)（一个或多个数字）与字符串 'AbCdE' 的任何部分都不匹配，因此返回空字符串
+解释：由于模式([[:digit:]]+)（一个或多个数字）与字符串 'AbCdE' 的任何部分都不匹配，因此返回空字符串
 
 ```sql
 SELECT regexp_extract('AbCdE', '([[:digit:]]+)', 1);

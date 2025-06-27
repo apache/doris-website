@@ -51,7 +51,7 @@ The function returns the result string after the replacement operation. The retu
 ## Example
 
 ### Test Basic replacement example
-### In this example, all spaces in the string 'a b c' are replaced with hyphens.
+Explain: In this example, all spaces in the string 'a b c' are replaced with hyphens.
 
 ```sql
 mysql> SELECT regexp_replace('a b c', ' ', '-');
@@ -62,7 +62,7 @@ mysql> SELECT regexp_replace('a b c', ' ', '-');
 +-----------------------------------+
 ```
 ### Test Using captured groups
-### Here, the character 'b' is captured by the group (b) in the pattern, and then it is replaced with <b> using the backreference \1 in the replacement string.
+Explain: Here, the character 'b' is captured by the group (b) in the pattern, and then it is replaced with <b> using the backreference \1 in the replacement string.
 
 ```sql
 mysql> SELECT regexp_replace('a b c', '(b)', '<\\1>');
@@ -74,7 +74,7 @@ mysql> SELECT regexp_replace('a b c', '(b)', '<\\1>');
 ```
 
 ### Test Matching Chinese characters
-### This example replaces all consecutive Chinese characters in the string with '123'.
+Explain: This example replaces all consecutive Chinese characters in the string with '123'.
 
 ```sql
 mysql> select regexp_replace('这是一段中文 This is a passage in English 1234567', '\\p{Han}+', '123');
@@ -86,7 +86,7 @@ mysql> select regexp_replace('这是一段中文 This is a passage in English 12
 ```
 
 ### Insert and test cases
-### In this set of test cases, we create a table to store original strings, patterns, and replacement strings. Then we insert various test data and perform REGEXP_REPLACE operations on the original strings using the corresponding patterns and replacement strings. Finally, we retrieve and display the replaced strings.
+Explain: In this set of test cases, we create a table to store original strings, patterns, and replacement strings. Then we insert various test data and perform REGEXP_REPLACE operations on the original strings using the corresponding patterns and replacement strings. Finally, we retrieve and display the replaced strings.
 
 ```sql
 -- Create a table to store test data

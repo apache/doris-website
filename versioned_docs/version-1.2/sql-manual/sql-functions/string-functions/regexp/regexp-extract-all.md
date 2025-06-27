@@ -50,7 +50,7 @@ The function returns an array of strings that represent the parts of the input s
 ## Example
 
 ### Example 1: Basic matching of lowercase letters around 'C'.
-### In this example, the pattern ([[:lower:]]+)C([[:lower:]]+) matches the part of the string where one or more lowercase letters are followed by 'C' and then one or more lowercase letters. The first sub - pattern ([[:lower:]]+) before 'C' matches 'b', so the result is ['b'].
+Explain: In this example, the pattern ([[:lower:]]+)C([[:lower:]]+) matches the part of the string where one or more lowercase letters are followed by 'C' and then one or more lowercase letters. The first sub - pattern ([[:lower:]]+) before 'C' matches 'b', so the result is ['b'].
 
 ```sql
 mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
@@ -62,7 +62,7 @@ mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
 ```
 
 ### Example 2: Multiple matches in a string
-### Here, the pattern matches two parts in the string. The first match has the first sub - pattern matching 'b', and the second match has the first sub - pattern matching 'f'. So the result is ['b', 'f'].
+Explain: Here, the pattern matches two parts in the string. The first match has the first sub - pattern matching 'b', and the second match has the first sub - pattern matching 'f'. So the result is ['b', 'f'].
 
 ```sql
 mysql> SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
@@ -74,7 +74,7 @@ mysql> SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
 ```
 
 ### Example 3: Extracting keys from key - value pairs
-### The pattern matches key - value pairs in the string. The first sub - pattern captures the keys, so the result is an array of the keys ['abc', 'def', 'ghi'].
+Explain: The pattern matches key - value pairs in the string. The first sub - pattern captures the keys, so the result is an array of the keys ['abc', 'def', 'ghi'].
 
 ```sql
 mysql> SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[^"]+"|\\w+)');
@@ -85,7 +85,7 @@ mysql> SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[
 +--------------------------------------------------------------------------------+
 ```
 ### Example 4: Matching Chinese characters
-### The pattern (\p{Han}+)(.+) first matches one or more Chinese characters with the first sub - pattern (\p{Han}+), so the result is ['这是一段中文'].
+Explain: The pattern (\p{Han}+)(.+) first matches one or more Chinese characters with the first sub - pattern (\p{Han}+), so the result is ['这是一段中文'].
 
 ```sql
 mysql> select regexp_extract_all('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)');

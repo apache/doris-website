@@ -57,7 +57,7 @@ REGEXP_EXTRACT_OR_NULL(<str>, <pattern>, <pos>)
 ## 例子
 
 ### 测试从匹配中提取特定组
-### 解释：正则表达式([[:lower:]]+)C([[:lower:]]+)查找由 'C' 分隔的一个或多个小写字母序列。索引为 1 的组对应第一个小写字母序列，因此返回 'b'。
+解释：正则表达式([[:lower:]]+)C([[:lower:]]+)查找由 'C' 分隔的一个或多个小写字母序列。索引为 1 的组对应第一个小写字母序列，因此返回 'b'。
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 1);
@@ -72,7 +72,7 @@ SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 1)
 ```
 
 ### 测试返回整个匹配的子字符串
-### 解释：当<pos>为 0 时，返回匹配模式的整个第一个子字符串。
+解释：当<pos>为 0 时，返回匹配模式的整个第一个子字符串。
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 0);
@@ -87,7 +87,7 @@ SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 0)
 ```
 
 ### 测试无效的组索引
-### 解释：由于模式只有 2 个组，索引 5 超出范围，因此返回 NULL。
+解释：由于模式只有 2 个组，索引 5 超出范围，因此返回 NULL。
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 5);
@@ -101,7 +101,7 @@ SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[:lower:]]+)', 5)
 +---------------------------------------------------------------------------+
 ```
 ### 测试不匹配的正则表达式
-### 解释：字符串 'AbCdE' 中没有部分完全匹配模式
+解释：字符串 'AbCdE' 中没有部分完全匹配模式
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('AbCdE', '([[:lower:]]+)C([[:upper:]]+)', 1);
@@ -116,7 +116,7 @@ SELECT REGEXP_EXTRACT_OR_NULL('AbCdE', '([[:lower:]]+)C([[:upper:]]+)', 1);
 ```
 
 ### 测试中文字符匹配
-### 解释：模式(\p{Han}+)(.+)首先匹配一个或多个中文字符，然后匹配任何剩余字符。索引为 2 的组表示中文字符后的非中文部分。
+解释：模式(\p{Han}+)(.+)首先匹配一个或多个中文字符，然后匹配任何剩余字符。索引为 2 的组表示中文字符后的非中文部分。
 
 ```sql
 select REGEXP_EXTRACT_OR_NULL('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);

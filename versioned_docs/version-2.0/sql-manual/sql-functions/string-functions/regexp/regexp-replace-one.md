@@ -53,7 +53,7 @@ The function returns the result string after the replacement operation. The retu
 ## Example
 
 ### Example 1: Replace the first space with a hyphen
-### Explanation: In this example, the input string <str> is 'a b c', the regular expression pattern <pattern> is a single space ' ', and the replacement string <repl> is a hyphen '-'. The function searches for the first occurrence of a space in the string 'a b c' and replaces it with a hyphen. So the output is 'a-b c'.
+ Explanation: In this example, the input string <str> is 'a b c', the regular expression pattern <pattern> is a single space ' ', and the replacement string <repl> is a hyphen '-'. The function searches for the first occurrence of a space in the string 'a b c' and replaces it with a hyphen. So the output is 'a-b c'.
 
 ```sql
 mysql> SELECT regexp_replace_one('a b c', ' ', '-');
@@ -66,7 +66,7 @@ mysql> SELECT regexp_replace_one('a b c', ' ', '-');
 ```
 
 ### Example 2: Replace the first matched group
-### Explanation: Here, the input string <str> is 'a b b', the regular expression pattern <pattern> is '(b)', which is a capturing group that matches the character 'b'. The replacement string <repl> is '<\1>', where \1 refers to the first capturing group (in this case, the matched 'b'). The function finds the first occurrence of 'b' in the string 'a b b' and replaces it with '<b>'. Thus, the output is 'a <b> b'.
+ Explanation: Here, the input string <str> is 'a b b', the regular expression pattern <pattern> is '(b)', which is a capturing group that matches the character 'b'. The replacement string <repl> is '<\1>', where \1 refers to the first capturing group (in this case, the matched 'b'). The function finds the first occurrence of 'b' in the string 'a b b' and replaces it with '<b>'. Thus, the output is 'a <b> b'.
 
 
 ```sql
@@ -78,7 +78,7 @@ mysql> SELECT regexp_replace_one('a b b', '(b)', '<\\1>');
 +----------------------------------------+
 ```
 ### Example 3: Replace the first Chinese character
-### Explanation: The input string <str> is a long string containing Chinese characters and English text. The regular expression pattern <pattern> is '\p{Han}', which is a Unicode character class that matches any Chinese character. The replacement string <repl> is '123'. The function searches for the first Chinese character in the string and replaces it with '123'. So the output is '123是一段中文This is a passage in English 1234567'.
+Explanation: The input string <str> is a long string containing Chinese characters and English text. The regular expression pattern <pattern> is '\p{Han}', which is a Unicode character class that matches any Chinese character. The replacement string <repl> is '123'. The function searches for the first Chinese character in the string and replaces it with '123'. So the output is '123是一段中文This is a passage in English 1234567'.
 
 ```sql
 mysql> select regexp_replace_one('这是一段中文 This is a passage in English 1234567', '\\p{Han}', '123');
@@ -90,10 +90,10 @@ mysql> select regexp_replace_one('这是一段中文 This is a passage in Englis
 ```
 
 ### Example 4: Insert data into a table and perform replacement
-### explain is under
-### 1. First, a table named test_table_for_regexp_replace_one is created with four columns: id (an integer), text_data (a string where the replacement will be performed), pattern (the regular expression pattern for matching), and repl (the replacement string).
-### 2. Then, ten rows of data are inserted into the table, each containing different values for the four columns.
-### 3. Finally, a SELECT statement is used to query the table. For each row, the REGEXP_REPLACE_ONE function is applied to the text_data column using the corresponding pattern and repl values. The result of the replacement is aliased as replaced_result. The rows are ordered by the id column.
+Explain:
+ 1. First, a table named test_table_for_regexp_replace_one is created with four columns: id (an integer), text_data (a string where the replacement will be performed), pattern (the regular expression pattern for matching), and repl (the replacement string).
+ 2. Then, ten rows of data are inserted into the table, each containing different values for the four columns.
+ 3. Finally, a SELECT statement is used to query the table. For each row, the REGEXP_REPLACE_ONE function is applied to the text_data column using the corresponding pattern and repl values. The result of the replacement is aliased as replaced_result. The rows are ordered by the id column.
 
 ```sql
 CREATE TABLE test_table_for_regexp_replace_one (
