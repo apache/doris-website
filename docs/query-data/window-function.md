@@ -535,8 +535,6 @@ from stock_ticker;
 | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-For more information on analytic functions, refer to the Oracle official documentation  [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
-
 ## Reference
 
 The table creation statement used in the example is as follows:

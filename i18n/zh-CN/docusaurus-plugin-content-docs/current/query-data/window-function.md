@@ -516,9 +516,6 @@ from stock_ticker;
 | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-
-了解更多有关分析函数信息，可以参考 Oracle 官网文档 [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
-
 ## 附录
 
 示例中使用到的表的建表语句如下：

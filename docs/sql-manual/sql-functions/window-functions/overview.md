@@ -59,10 +59,12 @@ windowFrameClause ::=
 > Optional. Similar to GROUP BY, it groups data by specified columns, then performs calculations within each partition.
 
 `<ORDER_BY>`
-> Optional. Used to sort data within each partition. If no partition is specified, sorts the entire dataset. Note: This ORDER BY differs from the ORDER BY at the end of SQL statements. The ORDER BY in the OVER clause only sorts data within its partition, while the SQL-ending ORDER BY controls the final output order of all rows. Additionally, duplicate values from sorting may cause unstable results. See the [example](#section1) below for details.
+> Optional. Used to sort data within each partition. If no partition is specified, it will sort the entire dataset. However, this `ORDER BY` is different from the common `ORDER BY` that appears at the end of an SQL statement. The sorting specified in the `OVER` clause only applies to the data within that partition, whereas the `ORDER BY` at the end of an SQL statement controls the order of all rows in the final query results. These two can coexist.
+> Additionally, if `ORDER BY` is not explicitly specified in the `OVER` clause, the data within the partition may be random, potentially leading to unpredictable final results. If sorting columns are explicitly provided but contain duplicate values, the results may still be unstable. For specific examples, refer to the [case study](#section1) below.
 
 `<windowFrameClause>`
-> Optional. Defines the window frame scope. Currently supports RANGE/ROWS types. Note: RANGE has limitations - it must be either BOTH UNBOUNDED BOUNDARY OR ONE UNBOUNDED BOUNDARY AND ONE CURRENT ROW. If no frame is specified, it defaults to implicit RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+> Optional. Used to define the window frame. Currently, two types are supported: `RANGE` and `ROWS`.
+> For `N PRECEDING/FOLLOWING`, where `N` is a positive integer, it represents the sliding window range relative to the current row. Currently, this is only supported in `ROWS` windows, so it indicates a physical offset relative to the current row. The `RANGE` type currently has some limitations: it must be either `BOTH UNBOUNDED BOUNDARY` or `ONE UNBOUNDED BOUNDARY AND ONE CURRENT ROW`. If no frame is specified, the default implicit frame is `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`.
 
 ## Return Value
 

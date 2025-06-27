@@ -8,6 +8,8 @@
 ## 描述
 
 ROW_NUMBER() 是一个窗口函数，用于为分区内的每一行分配一个唯一的序号。序号从 1 开始连续递增。与 RANK() 和 DENSE_RANK() 不同，ROW_NUMBER() 即使对于相同的值也会分配不同的序号，确保每行都有唯一的编号。
+如果未显示指定窗口，会隐式生成`ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` 类型，且当前仅支持此类。
+
 
 ## 语法
 
