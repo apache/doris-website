@@ -1437,7 +1437,8 @@
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-match-all",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-match-any",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-repeat",
-                                        "sql-manual/sql-functions/scalar-functions/array-functions/countequal"
+                                        "sql-manual/sql-functions/scalar-functions/array-functions/countequal",
+                                        "sql-manual/sql-functions/scalar-functions/array-functions/array-reduce"
                                     ]
                                 },
                                 {
