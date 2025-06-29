@@ -2126,11 +2126,6 @@ MasterOnly：true
 
 After dropping database(table/partition), you can recover it by using RECOVER stmt. And this specifies the maximal data retention time. After time, the data will be deleted permanently.
 
-#### `storage_cooldown_second`
-
-Default：`30 * 24 * 3600L`  （30 day）
-
-When create a table(or partition), you can specify its storage medium(HDD or SSD). If set to SSD, this specifies the default duration that tablets will stay on SSD.  After that, tablets will be moved to HDD automatically.  You can set storage cooldown time in CREATE TABLE stmt.
 
 #### `default_storage_medium`
 
