@@ -9,7 +9,16 @@
 
 Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
 
-## Doris Kafka Connector 使用
+## 版本说明
+
+| Connector Version | Kafka Version                 | Doris Version | Java Version | 
+| ----------------- | ----------------------------- | ------------- | ------------ |
+| 1.0.0             | 2.4+                          | 2.0+          | 8            | 
+| 1.1.0             | 2.4+                          | 2.0+          | 8            | 
+| 24.0.0            | 2.4+                          | 2.0+          | 8            | 
+| 25.0.0            | 2.4+                          | 2.0+          | 8            | 
+
+## 使用方式
 
 ### 下载
 [doris-kafka-connector](https://doris.apache.org/zh-CN/download)
@@ -19,7 +28,7 @@ maven 依赖
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 

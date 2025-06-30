@@ -9,7 +9,16 @@
 
 The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
-## Usage Doris Kafka Connector
+## Version Description
+
+| Connector Version | Kafka Version                 | Doris Version | Java Version | 
+| ----------------- | ----------------------------- | ------------- | ------------ |
+| 1.0.0             | 2.4+                          | 2.0+          | 8            | 
+| 1.1.0             | 2.4+                          | 2.0+          | 8            | 
+| 24.0.0            | 2.4+                          | 2.0+          | 8            | 
+| 25.0.0            | 2.4+                          | 2.0+          | 8            | 
+
+## Usage
 
 ### Download
 [doris-kafka-connector](https://doris.apache.org/download)
@@ -19,7 +28,7 @@ maven dependencies
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 
