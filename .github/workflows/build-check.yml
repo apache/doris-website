@@ -54,6 +54,9 @@ jobs:
                 git reset --soft origin/master
                 git commit -m "All this PR changed(for test)"
                 python check_move.py `git rev-parse HEAD`
+            
+            - name: Run Node.js dead link checker
+              run: |
                 node ./scripts/check_move.js `git rev-parse HEAD`
         
             - name: Check exit code
