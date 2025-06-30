@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 move_pairs = []
 deletes = []
 change_detected = False
-search_dirs = ["docs", "i18n", "versioned_docs"]
+search_dirs = ["docs", "i18n", "versioned_docs", "community"]
 
 def is_same_file(path1, path2):
     return os.path.normpath(path1) == os.path.normpath(path2)
