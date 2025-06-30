@@ -1,3 +1,14 @@
+# 核心逻辑：
+# 遍历所有文档，匹配文档中的链接，通过链接地址判断是否是死链；
+# 如果是死链，尝试修正，修正失败会打印出： ❌ xxxx/xxxx.md: Could not fix broken link ${target_link}
+# 修正成功，会打印出：🛠️ xxxx/xxxx.md: Fixed broken link ${dead_link} -> ${link}
+#
+# 修正逻辑：
+# 从当前有死链的文档目录一层一层的向上遍历所有目录下的文档，看文档名是否和死链中的文档名一致，如果一致则认为当前目录是死链的正确目录
+# 这种情况是原链接文档目录被迁移的情况，如果文档被删除则会修正失败
+# 
+# 绝对路径或者 http/https 开头的死链没法判断
+
 import argparse
 import subprocess
 import re
@@ -92,11 +103,14 @@ def process_md_file(file_path):
                     relative_to_path = os.path.relpath(found_path, os.path.dirname(file_path))
                     relative_to_path = remove_suffix(relative_to_path, ".md")
                     relative_to_path = remove_suffix(relative_to_path, ".mdx")
-                    print(f"🛠️ {file_path}: Fixed broken link {link} -> {relative_to_path}")
+                    if "version-1.2" not in file_path and "version-2.0" not in file_path:
+                        print(f"🛠️ {file_path}: Fixed broken link {link} -> {relative_to_path}")
+        
                     new_content = new_content.replace(f"({link})", f"({relative_to_path})")
                     change_detected = True
                 else:
-                    print(f"❌ {file_path}: Could not fix broken link {link}")
+                    if "version-1.2" not in file_path and "version-2.0" not in file_path:
+                        print(f"❌ {file_path}: Could not fix broken link {link}")
                     change_detected = True
 
     if new_content != content:
