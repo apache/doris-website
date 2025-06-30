@@ -49,6 +49,8 @@ REGEXP_COUNT(<str>, <pattern>)
 ## Return Value
 
 - Returns number of matches for a regular expression 'pattern' within a 'str',it is 'int',if no character can be matched, return 0;
+- 1. if pattern is NULL or str is NULL or both are NULL,return NULL;
+- 2. if pattern is not allowed regexp regular , it will throw error,it`s a wrong for this action;
 
 ## Examples
 
@@ -91,6 +93,48 @@ SELECT regexp_count('Hello, World!', '[[:punct:]]');
 +----------------------------------------------+
 |                                            2 |
 +----------------------------------------------+
+```
+
+
+### Test pattern is NULL case
+
+```sql
+SELECT regexp_count("abc",NULL);
+```
+```text
++------------------------+
+| regexp_count("abc",NULL) |
++------------------------+
+|                   NULL |
++------------------------+
+```
+
+
+### Test str is NULL case
+
+```sql
+SELECT regexp_count(NULL,"abc");
+```
+```text
++------------------------+
+| regexp_count(NULL,"abc") |
++------------------------+
+|                   NULL |
++------------------------+
+```
+
+### Test both are NULL
+
+
+```sql
+SELECT regexp_count(NULL,NULL);
+```
+```text
++------------------------+
+| regexp_count(NULL,NULL) |
++------------------------+
+|                   NULL |
++------------------------+
 ```
 
 ### Test the return result of inserting certain variable values and then retrieving the variables from the stored rows for matching.
