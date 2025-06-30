@@ -7,7 +7,10 @@
 
 ## 描述
 
-显示用户正在运行的线程
+显示用户正在运行的线程。该命令只能看到当前FE的连接信息，如果需要看到整个集群的连接信息，则需要添加session variable:
+```
+SET SHOW_ALL_FE_CONNECTION = TRUE;
+```
 
 ## 语法
 

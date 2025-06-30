@@ -8,7 +8,12 @@
 
 ## Description
 
-Displays the thread that the user is running
+Displays the thread that the user is running.  
+This command can only display the connection information of the current FE.  
+If you need to view the connection information of the entire cluster, you need to add a session variable:
+```
+SET SHOW_ALL_FE_CONNECTION = TRUE;
+```
 
 ## Syntax
 
