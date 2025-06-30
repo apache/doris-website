@@ -1,13 +1,16 @@
-# 核心逻辑：
-# 遍历所有文档，匹配文档中的链接，通过链接地址判断是否是死链；
-# 如果是死链，尝试修正，修正失败会打印出： ❌ xxxx/xxxx.md: Could not fix broken link ${target_link}
-# 修正成功，会打印出：🛠️ xxxx/xxxx.md: Fixed broken link ${dead_link} -> ${link}
+# Detect global dead links
 #
-# 修正逻辑：
-# 从当前有死链的文档目录一层一层的向上遍历所有目录下的文档，看文档名是否和死链中的文档名一致，如果一致则认为当前目录是死链的正确目录
-# 这种情况是原链接文档目录被迁移的情况，如果文档被删除则会修正失败
+# Core logic:
+# Traverse all documents, match the links in the documents, and determine whether it is a dead link by the link address; 
+# if it is a dead link, try to fix it. If the fix fails, it will print: ❌ xxxx/xxxx.md: Could not fix broken link ${target_link}; 
+# if the fix is ​​successful, it will print: 🛠️ xxxx/xxxx.md: Fixed broken link ${dead_link} -> ${link}
+#
+# Repair the logic of broken links：
+# Traverse all the documents in the directory with the current broken link layer by layer to see if the document name is consistent with the document name in the broken link. 
+# If they are consistent, the current directory is considered to be the correct directory of the broken link. 
+# The above situation is the case where the original link document directory has been migrated. If the document is deleted, the correction will fail.
 # 
-# 绝对路径或者 http/https 开头的死链没法判断
+# Absolute paths or broken links starting with http/https cannot be judged
 
 import argparse
 import subprocess
@@ -32,10 +35,10 @@ def remove_suffix(text: str, suffix: str):
 
 def find_nearest_file(file_base, start_dir):
     """
-    在 start_dir 向上查找最近的 file_base(.md/.mdx)，否则全局搜索
+    Look for the nearest file_base (.md/.mdx) in start_dir upwards, otherwise search globally
     """
     cur_dir = start_dir
-    # 向上搜索最多 10 层，避免卡死
+    # Search up to 10 levels upwards to avoid stuck
     for _ in range(10):
         for ext in [".md", ".mdx"]:
             candidate = os.path.join(cur_dir, file_base + ext)
@@ -46,7 +49,7 @@ def find_nearest_file(file_base, start_dir):
             break
         cur_dir = parent
 
-    # 全局搜索
+    # Global Search
     for base_dir in search_dirs:
         for root, dirs, files in os.walk(base_dir):
             for file in files:
@@ -70,7 +73,7 @@ def process_md_file(file_path):
             if not full_path.endswith(".md") and not full_path.endswith(".mdx"):
                 full_path += ".md"
 
-            # 处理 rename 情况
+            # Handling rename situations
             for [from_path, to_path] in move_pairs:
                 from_base, from_ext = os.path.splitext(from_path)
                 to_base, to_ext = os.path.splitext(to_path)
@@ -85,15 +88,15 @@ def process_md_file(file_path):
                     new_content = new_content.replace(f"({link})", f"({relative_to_path})")
                     change_detected = True
 
-            # 处理 delete 情况
+            # Handling delete cases
             for deleted_path in deletes:
                 if is_same_file(full_path, deleted_path):
                     print(f"⚠️ {file_path}: Link to deleted file {link}")
                     change_detected = True
 
-            # 处理死链修复
+            # Dealing with broken link repair
             if not os.path.exists(full_path):
-                # 说明当前 link 是坏的
+                # Indicates that the current link is broken
                 file_base = os.path.basename(link)
                 file_base = remove_suffix(file_base, ".md")
                 file_base = remove_suffix(file_base, ".mdx")

@@ -7,14 +7,14 @@ const path = require("path");
 const commitHash = process.argv[2];
 
 if (!commitHash) {
-  console.error("❌ 请提供 commit hash，如：node check-dead-links.js <commit-hash>");
+  console.error("❌ Please provide the commit hash, such as: node check-dead-links.js <commit-hash>");
   process.exit(1);
 }
 
 const linkRegex = /\[.*?\]\((.*?)\)/g;
 let hasBrokenLinks = false;
 
-// 获取提交中修改或新增的 .md/.mdx 文件
+// Get the modified or newly added .md/.mdx files in the commit
 function getModifiedMarkdownFiles(commit) {
   const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
   const lines = output.split("\n");
@@ -33,7 +33,7 @@ function getModifiedMarkdownFiles(commit) {
   return files;
 }
 
-// 检查链接是否指向一个存在的本地文件
+// Checks if the link points to an existing local file
 function isLocalLink(link) {
   return !link.startsWith("http://") &&
          !link.startsWith("https://") &&
@@ -42,19 +42,19 @@ function isLocalLink(link) {
          !path.isAbsolute(link);
 }
 
-// 检查文件中的链接
+// Check links in files
 function checkFileLinks(filePath) {
   const content = fs.readFileSync(filePath, "utf-8");
   const dir = path.dirname(filePath);
   const matches = [...content.matchAll(linkRegex)];
 
   for (const match of matches) {
-    const rawLink = match[1].split("#")[0]; // 去掉锚点
+    const rawLink = match[1].split("#")[0]; // Remove anchor point
     if (!isLocalLink(rawLink)) continue;
 
     let fullPath = path.resolve(dir, rawLink);
     if (!fs.existsSync(fullPath)) {
-      // 尝试加上 .md/.mdx 后缀重试
+      // Try adding a .md/.mdx suffix and try again
       if (fs.existsSync(fullPath + ".md")) continue;
       if (fs.existsSync(fullPath + ".mdx")) continue;
 
@@ -64,11 +64,11 @@ function checkFileLinks(filePath) {
   }
 }
 
-// 主函数
+// Main function
 function main() {
   const files = getModifiedMarkdownFiles(commitHash);
   if (files.length === 0) {
-    console.log("✅ 没有修改的 Markdown 文件");
+    console.log("✅ Unmodified Markdown files");
     return;
   }
 
@@ -77,13 +77,13 @@ function main() {
       checkFileLinks(file);
     }
   }
-  
+
 
   if (hasBrokenLinks) {
-    console.error("❗ 检测到死链，请修复后提交");
+    console.error("❗ A broken link was detected. Please fix it and submit.");
     process.exit(1);
   } else {
-    console.log("✅ 所有链接正常");
+    console.log("✅ All links are OK");
   }
 }
 
