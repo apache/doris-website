@@ -45,7 +45,7 @@ REGEXP_COUNT(<str>, <pattern>)
 | Parameter | Description |
 | -- | -- |
 | `<str>` | The parameter is 'string' type,it is the dest value which matched by the regexp expression |
-| `<pattern>` | The parameter is 'string' type, it is a regexp expression and it is used to match the string which meet the regular |of the pattern
+| `<pattern>` | The parameter is 'string' type, it is a regexp expression and it is used to match the string which meet the regular of the pattern |
 ## Return Value
 
 - Returns number of matches for a regular expression 'pattern' within a 'str',it is 'int',if no character can be matched, return 0;
