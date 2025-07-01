@@ -5,30 +5,13 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 The `PERCENTILE_APPROX_WEIGHTED` function calculates weighted approximate percentiles, primarily used in scenarios where value importance needs to be considered. It is a weighted version of `PERCENTILE_APPROX`, allowing a weight to be specified for each value.
 
 Key features:
 1. Weight Support: Each value can be assigned a corresponding weight, affecting the final percentile calculation
-2. Memory Efficiency: Uses fixed-size memory, suitable for processing large-scale data
+2. Memory Efficiency: Uses fixed-size memory, maintaining low memory consumption even when processing low-cardinality columns (large data volumes but the number of different elements is small)
 3. Adjustable Precision: Balance between precision and performance through the compression parameter
 
 ## Syntax

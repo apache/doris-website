@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## Request
 
 `GET /rest/v2/manager/node/frontends`
@@ -47,6 +26,8 @@ under the License.
 `POST /rest/v2/manager/node/{action}/be`
 
 `POST /rest/v2/manager/node/{action}/fe`
+
+`POST /rest/v2/manager/node/{action}/broker` (3.0.7+)
 
 ## 获取 fe, be, broker 节点信息
 
@@ -174,31 +155,38 @@ brokers:
 
 ### Description
 
-configuration_name 用于获取节点配置项名称。  
-node_list 用于获取节点列表。  
-configuration_info 用于获取节点配置详细信息。
+- `configuration_name` 用于获取节点配置项名称。  
+- `node_list` 用于获取节点列表。  
+- `configuration_info` 用于获取节点配置详细信息。
 
 ### Query parameters
+
 `GET /rest/v2/manager/node/configuration_name`   
+
 无
 
 `GET /rest/v2/manager/node/node_list`  
+
 无
 
 `POST /rest/v2/manager/node/configuration_info`
 
 * type 
+
   值为 fe 或 be，用于指定获取 fe 的配置信息或 be 的配置信息。
 
 ### Request body
 
 `GET /rest/v2/manager/node/configuration_name`   
+
 无
 
 `GET /rest/v2/manager/node/node_list`  
+
 无
 
 `POST /rest/v2/manager/node/configuration_info`
+
 ```
 {
 	"conf_name": [
@@ -210,12 +198,16 @@ configuration_info 用于获取节点配置详细信息。
 }
 
 若不带body，body中的参数都使用默认值。  
+
 conf_name 用于指定返回哪些配置项的信息， 默认返回所有配置项信息；
+
 node 用于指定返回哪些节点的配置项信息，默认为全部fe节点或be节点配置项信息。
 ```
 
 ### Response
+
 `GET /rest/v2/manager/node/configuration_name`  
+
 ``` 
 {
     "msg": "success",
@@ -233,6 +225,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 ```
 
 `GET /rest/v2/manager/node/node_list` 
+
 ``` 
 {
     "msg": "success",
@@ -250,6 +243,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 ```
 
 `POST /rest/v2/manager/node/configuration_info?type=fe`
+
 ```
 {
     "msg": "success",
@@ -300,10 +294,12 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     
 ### Examples
 
-1. 获取 fe agent_task_resend_wait_time_ms 配置项信息：
+1. 获取 fe `agent_task_resend_wait_time_ms` 配置项信息：
 
-    POST /rest/v2/manager/node/configuration_info?type=fe  
-    body:
+    `POST /rest/v2/manager/node/configuration_info?type=fe`
+
+    Body:
+
     ```
     {
         "conf_name":[
@@ -313,6 +309,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     ```
     
     Response:
+
     ```
     {
         "msg": "success",
@@ -354,6 +351,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 用于修改 fe 或 be 节点配置值
 
 ### Request body
+
 ```
 {
 	"config_name":{
@@ -364,15 +362,17 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 		"persist":
 	}
 }
-
-config_name为对应的配置项；  
-node为关键字，表示要修改的节点列表;  
-value为配置的值；  
-persist为 true 表示永久修改， false 表示临时修改。永久修改重启后能生效， 临时修改重启后失效。
 ```
 
+- `config_name` 为对应的配置项；  
+- `node` 为关键字，表示要修改的节点列表;  
+- `value` 为配置的值；  
+- `persist` 为 true 表示永久修改， false 表示临时修改。永久修改重启后能生效， 临时修改重启后失效。
+
 ### Response
+
 `GET /rest/v2/manager/node/configuration_name`  
+
 ``` 
 {
 	"msg": "",
@@ -390,15 +390,18 @@ persist为 true 表示永久修改， false 表示临时修改。永久修改重
 	"count": 0
 }
 
-failed 表示修改失败的配置信息。
 ```
+
+- `failed` 表示修改失败的配置信息。
     
 ### Examples
 
-1. 修改 fe 127.0.0.1:8030 节点中 agent_task_resend_wait_time_ms 和 alter_table_timeout_second 配置值：
+1. 修改 fe 127.0.0.1:8030 节点中 `agent_task_resend_wait_time_ms` 和 `alter_table_timeout_second` 配置值：
 
-    POST /rest/v2/manager/node/set_config/fe
-    body:
+    `POST /rest/v2/manager/node/set_config/fe`
+
+    Body:
+
     ```
     {
         "agent_task_resend_wait_time_ms":{
@@ -419,6 +422,7 @@ failed 表示修改失败的配置信息。
     ```
     
     Response:
+
     ```
     {
         "msg": "success",
@@ -436,8 +440,9 @@ failed 表示修改失败的配置信息。
         "count": 0
     }
 
-    agent_task_resend_wait_time_ms 配置值修改成功，alter_table_timeout_second 修改失败。
     ```
+
+    `agent_task_resend_wait_time_ms` 配置值修改成功，`alter_table_timeout_second` 修改失败。
    
 ## 操作 be 节点
 
@@ -457,12 +462,13 @@ action：ADD/DROP/DECOMMISSION
         "tag.location": "test"
     }
 }
-
-hostPorts 需要操作的一组 be 节点地址 ip:heartbeat_port
-properties 添加节点时传入的配置，目前只用于配置 tag, 不传使用默认 tag
 ```
 
+- `hostPorts` 需要操作的一组 be 节点地址 `ip:heartbeat_port`
+- `properties` 添加节点时传入的配置，目前只用于配置 tag, 不传使用默认 tag
+
 ### Response
+
 ```
 {
     "msg": "Error",
@@ -470,73 +476,77 @@ properties 添加节点时传入的配置，目前只用于配置 tag, 不传使
     "data": "errCode = 2, detailMessage = Same backend already exists[127.0.0.1:9050]",
     "count": 0
 }
-
-msg Success/Error
-code 0/1
-data ""/报错信息
 ```
 
 ### Examples
 
 1. 添加 be 节点
 
-   post /rest/v2/manager/node/ADD/be
-   Request body
-    ```
-    {
-        "hostPorts": ["127.0.0.1:9050"]
-    }
-    ```
+   `POST /rest/v2/manager/node/ADD/be`
+
+   Request
+
+   ```
+   {
+       "hostPorts": ["127.0.0.1:9050"]
+   }
+   ```
 
    Response
-    ```
-    {
-        "msg": "success",
-        "code": 0,
-        "data": null,
-        "count": 0
-    }
-    ```
+
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
 
 2. 删除 be 节点
 
-   post /rest/v2/manager/node/DROP/be
-   Request body
-    ```
-    {
-        "hostPorts": ["127.0.0.1:9050"]
-    }
-    ```
+   `POST /rest/v2/manager/node/DROP/be`
+
+   Request
+
+   ```
+   {
+       "hostPorts": ["127.0.0.1:9050"]
+   }
+   ```
 
    Response
-    ```
-    {
-        "msg": "success",
-        "code": 0,
-        "data": null,
-        "count": 0
-    }
-    ```
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
 
 3. 下线 be 节点
 
-   post /rest/v2/manager/node/DECOMMISSION/be
-   Request body
-    ```
-    {
-        "hostPorts": ["127.0.0.1:9050"]
-    }
-    ```
+   `POST /rest/v2/manager/node/DECOMMISSION/be`
+
+   Request
+
+   ```
+   {
+       "hostPorts": ["127.0.0.1:9050"]
+   }
+   ```
 
    Response
-    ```
-    {
-        "msg": "success",
-        "code": 0,
-        "data": null,
-        "count": 0
-    }
-    ```
+
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
 
 ## 操作 fe 节点
 
@@ -560,6 +570,7 @@ hostPort 需要操作的 fe 节点地址 ip:edit_log_port
 ```
 
 ### Response
+
 ```
 {
     "msg": "Error",
@@ -567,18 +578,15 @@ hostPort 需要操作的 fe 节点地址 ip:edit_log_port
     "data": "errCode = 2, detailMessage = frontend already exists name: 127.0.0.1:9030_1670495889415, role: FOLLOWER, 127.0.0.1:9030",
     "count": 0
 }
-
-msg Success/Error
-code 0/1
-data ""/报错信息
 ```
 
 ### Examples
 
 1. 添加 FOLLOWER 节点
 
-    post /rest/v2/manager/node/ADD/fe
-    Request body
+    `POST /rest/v2/manager/node/ADD/fe`
+
+    Request
     ```
     {
         "role": "FOLLOWER",
@@ -587,6 +595,7 @@ data ""/报错信息
     ```
    
     Response
+
     ```
     {
         "msg": "success",
@@ -598,16 +607,77 @@ data ""/报错信息
 
 2. 删除 FOLLOWER 节点
 
-   post /rest/v2/manager/node/DROP/fe
-   Request body
-    ```
-    {
-        "role": "FOLLOWER",
-        "hostPort": "127.0.0.1:9030"
-    }
-    ```
+   `POST /rest/v2/manager/node/DROP/fe`
+
+   Request
+
+   ```
+   {
+       "role": "FOLLOWER",
+       "hostPort": "127.0.0.1:9030"
+   }
+   ```
 
    Response
+
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
+
+## 操作 broker 节点
+
+`POST /rest/v2/manager/node/{action}/broker`
+
+自 3.0.7 支持。
+
+### Description
+
+用于添加/删除 broker 节点
+
+action：ADD/DROP/DROP_ALL
+
+### Request body
+
+```
+{
+    "brokerName": "your_broker_name",
+    "hostPortList": "broker_ip:broker_port"
+}
+```
+
+### Response
+
+```
+{
+    "msg": "Error",
+    "code": 1,
+    "data": "errCode = 2, detailMessage = xxxx",
+    "count": 0
+}
+```
+
+### Examples
+
+1. 添加 BROKER 节点
+
+    `POST /rest/v2/manager/node/ADD/broker`
+
+    Request
+
+    ```
+    {
+        "brokerName": "hdfs_broker",
+        "hostPortList": "127.0.0.1:8001"
+    }
+    ```
+   
+    Response
+
     ```
     {
         "msg": "success",
@@ -616,3 +686,52 @@ data ""/报错信息
         "count": 0
     }
     ```
+
+2. 删除 BROKER 节点
+
+   `POST /rest/v2/manager/node/DROP/broker`
+
+   Request
+
+   ```
+   {
+       "brokerName": "hdfs_broker",
+       "hostPortList": "127.0.0.1:8001"
+   }
+   ```
+
+   Response
+
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
+
+3. 删除一组 BROKER 节点
+
+   `POST /rest/v2/manager/node/DROP_ALL/broker`
+
+   Request
+
+   ```
+   {
+       "brokerName": "hdfs_broker",
+       "hostPortList": ""
+   }
+   ```
+
+   Response
+
+   ```
+   {
+       "msg": "success",
+       "code": 0,
+       "data": null,
+       "count": 0
+   }
+   ```
+

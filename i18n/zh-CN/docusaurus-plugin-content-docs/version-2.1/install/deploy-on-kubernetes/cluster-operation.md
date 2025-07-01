@@ -5,25 +5,6 @@
 }
 ---
 
-  <!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-    
-    http://www.apache.org/licenses/LICENSE-2.0
-    
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-    -->
-
 ## 服务 Crash 情况下如何进入容器
 
 在 K8s 环境中服务因为一些预期之外的事情会进入 `CrashLoopBackOff` 状态，通过 `kubectl get pod --namespace ${namespace}` 命令可以查看指定 namespace 下的 pod 状态和 pod_name。
@@ -39,7 +20,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 1. **通过以下命令给运行有问题的 pod 进行添加 annnotation**
 
   ```shell
-  kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
+  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.com.doris/runmode=debug
   ```
 
   当服务进行下一次重启时候，服务会检测到标识 `Debug` 模式启动的 annotation 就会进入 `Debug` 模式启动，pod 状态为 `running`。
@@ -188,7 +169,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 
 1. 修改 `spec.beSpec.image`
 
-   将 `selectdb/doris.be-ubuntu:2.0.4` 变为 `selectdb/doris.be-ubuntu:2.1.0`
+   将 `apache/doris:be-2.1.8` 变为 `apache/doris:be-2.1.9`
   
 2. 保存修改后应用本次修改进行 BE 升级：
 
@@ -212,7 +193,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    kubectl edit dcr doriscluster-sample -n doris
    ```
   
-   进入文本编辑器后，将找到 `spec.beSpec.image` ，将 `selectdb/doris.be-ubuntu:2.0.4` 修改为 `selectdb/doris.be-ubuntu:2.1.0`
+   进入文本编辑器后，将找到 `spec.beSpec.image` ，将 `apache/doris:be-2.1.8` 修改为 `apache/doris:be-2.1.9`
 
 3. 查看升级过程和结果：
 
@@ -228,7 +209,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 
 1. 修改 `spec.feSpec.image`
 
-   将 `selectdb/doris.fe-ubuntu:2.0.4` 变为 `selectdb/doris.fe-ubuntu:2.1.0`
+   将 `apache/doris:fe-2.1.8` 变为 `apache/doris:fe-2.1.9`
 
    ```shell
    vim doriscluster-sample.yaml
@@ -248,7 +229,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
    kubectl edit dcr doriscluster-sample -n doris
    ```
 
-   进入文本编辑器后，将找到`spec.feSpec.image`，将 `selectdb/doris.fe-ubuntu:2.0.4` 修改为 `selectdb/doris.fe-ubuntu:2.1.0`
+   进入文本编辑器后，将找到`spec.feSpec.image`，将 `apache/doris:fe-2.1.8` 修改为 `apache/doris:be-2.1.9`
 
 2. 查看升级过程和结果
    ```shell

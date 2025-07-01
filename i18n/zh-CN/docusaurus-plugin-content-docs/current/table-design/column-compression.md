@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 采用 **列式存储** 模型来组织和存储数据，这种存储模型特别适合分析型负载，能够显著提高查询效率。在列式存储中，表的每一列会独立存储，这为压缩技术的应用提供了便利，从而提高了存储效率。Doris 提供多种压缩算法，用户可以根据工作负载的需求，选择合适的压缩方式来优化存储和查询性能。
 
 ## 为什么需要压缩

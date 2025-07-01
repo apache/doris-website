@@ -482,7 +482,8 @@
                     "label": "Observability",
                     "items": [
                         "observability/overview",
-                        "observability/log"
+                        "observability/log",
+                        "observability/trace"
                     ]
                 },
                 {
@@ -671,6 +672,7 @@
                             "items": [
                                 "admin-manual/system-tables/information_schema/active_queries",
                                 "admin-manual/system-tables/information_schema/backend_active_tasks",
+                                "admin-manual/system-tables/information_schema/backend_configuration",
                                 "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
                                 "admin-manual/system-tables/information_schema/character_sets",
                                 "admin-manual/system-tables/information_schema/collations",
@@ -772,6 +774,98 @@
                         "admin-manual/trouble-shooting/tablet-local-debug",
                         "admin-manual/trouble-shooting/tablet-meta-tool",
                         "admin-manual/trouble-shooting/repairing-data"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "OPEN API",
+                    "items": [
+                        "admin-manual/open-api/overview",
+                        {
+                            "type": "category",
+                            "label": "FE HTTP API",
+                            "items": [
+                                "admin-manual/open-api/fe-http/config-action",
+                                "admin-manual/open-api/fe-http/ha-action",
+                                "admin-manual/open-api/fe-http/hardware-info-action",
+                                "admin-manual/open-api/fe-http/help-action",
+                                "admin-manual/open-api/fe-http/log-action",
+                                "admin-manual/open-api/fe-http/login-action",
+                                "admin-manual/open-api/fe-http/logout-action",
+                                "admin-manual/open-api/fe-http/query-profile-action-controller",
+                                "admin-manual/open-api/fe-http/session-action",
+                                "admin-manual/open-api/fe-http/system-action",
+                                "admin-manual/open-api/fe-http/colocate-meta-action",
+                                "admin-manual/open-api/fe-http/meta-action",
+                                "admin-manual/open-api/fe-http/cluster-action",
+                                "admin-manual/open-api/fe-http/node-action",
+                                "admin-manual/open-api/fe-http/query-profile-action",
+                                "admin-manual/open-api/fe-http/backends-action",
+                                "admin-manual/open-api/fe-http/bootstrap-action",
+                                "admin-manual/open-api/fe-http/cancel-load-action",
+                                "admin-manual/open-api/fe-http/check-decommission-action",
+                                "admin-manual/open-api/fe-http/check-storage-type-action",
+                                "admin-manual/open-api/fe-http/connection-action",
+                                "admin-manual/open-api/fe-http/extra-basepath-action",
+                                "admin-manual/open-api/fe-http/fe-version-info-action",
+                                "admin-manual/open-api/fe-http/get-ddl-stmt-action",
+                                "admin-manual/open-api/fe-http/get-load-info-action",
+                                "admin-manual/open-api/fe-http/get-load-state",
+                                "admin-manual/open-api/fe-http/get-log-file-action",
+                                "admin-manual/open-api/fe-http/get-small-file",
+                                "admin-manual/open-api/fe-http/get-wal-size-action",
+                                "admin-manual/open-api/fe-http/health-action",
+                                "admin-manual/open-api/fe-http/meta-info-action",
+                                "admin-manual/open-api/fe-http/meta-replay-state-action",
+                                "admin-manual/open-api/fe-http/metrics-action",
+                                "admin-manual/open-api/fe-http/profile-action",
+                                "admin-manual/open-api/fe-http/query-detail-action",
+                                "admin-manual/open-api/fe-http/query-schema-action",
+                                "admin-manual/open-api/fe-http/query-stats-action",
+                                "admin-manual/open-api/fe-http/row-count-action",
+                                "admin-manual/open-api/fe-http/set-config-action",
+                                "admin-manual/open-api/fe-http/show-data-action",
+                                "admin-manual/open-api/fe-http/show-meta-info-action",
+                                "admin-manual/open-api/fe-http/show-proc-action",
+                                "admin-manual/open-api/fe-http/show-runtime-info-action",
+                                "admin-manual/open-api/fe-http/show-table-data-action",
+                                "admin-manual/open-api/fe-http/statement-execution-action",
+                                "admin-manual/open-api/fe-http/table-query-plan-action",
+                                "admin-manual/open-api/fe-http/table-row-count-action",
+                                "admin-manual/open-api/fe-http/table-schema-action",
+                                "admin-manual/open-api/fe-http/upload-action",
+                                "admin-manual/open-api/fe-http/import-action",
+                                "admin-manual/open-api/fe-http/meta-info-action-V2",
+                                "admin-manual/open-api/fe-http/debug-point-action",
+                                "admin-manual/open-api/fe-http/statistic-action"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "BE HTTP API",
+                            "items": [
+                                "admin-manual/open-api/be-http/check-rpc-channel",
+                                "admin-manual/open-api/be-http/reset-rpc-channel",
+                                "admin-manual/open-api/be-http/compaction-status",
+                                "admin-manual/open-api/be-http/compaction-run",
+                                "admin-manual/open-api/be-http/meta",
+                                "admin-manual/open-api/be-http/snapshot",
+                                "admin-manual/open-api/be-http/check-tablet-segment",
+                                "admin-manual/open-api/be-http/config",
+                                "admin-manual/open-api/be-http/metrics",
+                                "admin-manual/open-api/be-http/tablet-distribution",
+                                "admin-manual/open-api/be-http/tablet-migration",
+                                "admin-manual/open-api/be-http/tablet-info",
+                                "admin-manual/open-api/be-http/checksum",
+                                "admin-manual/open-api/be-http/download",
+                                "admin-manual/open-api/be-http/pad-rowset",
+                                "admin-manual/open-api/be-http/version-info",
+                                "admin-manual/open-api/be-http/health",
+                                "admin-manual/open-api/be-http/tablet-reload",
+                                "admin-manual/open-api/be-http/tablet-restore",
+                                "admin-manual/open-api/be-http/be-vlog"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -2146,6 +2240,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
                         "releasenotes/v3.0/release-3.0.3",
