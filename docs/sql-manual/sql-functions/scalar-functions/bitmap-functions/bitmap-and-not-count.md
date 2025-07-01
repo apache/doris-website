@@ -29,12 +29,12 @@ BITMAP_AND_NOT_COUNT(<bitmap1>, <bitmap2>)
 ## Return Value
 
 Returns an integer.
-- If the parameter has a null value, returns NULL
+- If the parameter has a NULL value, returns 0
 
 ## Examples
 
 ```sql
-select bitmap_and_not_count(null, bitmap_from_string('1,2,3')) banc1, bitmap_and_not_count(bitmap_from_string('1,2,3') ,null) banc2;
+select bitmap_and_not_count(NULL, bitmap_from_string('1,2,3')) banc1, bitmap_and_not_count(bitmap_from_string('1,2,3'), NULL) banc2;
 ```
 
 ```text

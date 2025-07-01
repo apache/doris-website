@@ -24,7 +24,7 @@ BITMAP_MAX(<bitmap>)
 ## Return Value
 
 The maximum value in the Bitmap.  
-Returns `NULL` if the Bitmap is empty.
+Returns `NULL` if the Bitmap is empty or NULL value.
 
 ## Examples
 
@@ -58,4 +58,18 @@ The result will be:
 +------------+
 | 9999999999 |
 +------------+
+```
+
+```sql
+select bitmap_max(bitmap_empty()) res1, bitmap_max(NULL) res2;
+```
+
+The result will be:
+
+```text
++------+------+
+| res1 | res2 |
++------+------+
+| NULL | NULL |
++------+------+
 ```
