@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 存算分离集群存在集群级别的配置，比如管控账号的用户名密码用于管理集群中各个组件的节点等。
 
 ## 配置管理用户名和密码
@@ -269,3 +250,27 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 :::tip 提示
 - 部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。
   :::
+
+## 使用 Kerberos 认证
+Doris Operator 从 25.5.1 版本开始支持 Doris 存算分离集群(2.1.10 和 3.0.6 及以后版本) 在 Kubernetes 使用 Kerberos 认证。 Doris 使用 Kerberos 认证需要使用 [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 和 [keytab 文件](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) 。
+Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret` 资源挂载 keytab 文件。使用 Kerberos 认证流程如下：
+1. 构建包含 krb5.conf 文件的 ConfigMap：
+    ```shell
+    kubectl create -n ${namespace} create configmap ${name} --from-file=krb5.conf
+    ```
+   ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${name} 为 ConfigMap 想要指定的名字。
+2. 构建包含 keytab 的 Secret:
+    ```shell
+    kubectl create -n ${namespace} secret generic ${name} --from-file= ${xxx.keytab}
+    ```
+   ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${name} 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)将多个 `keytab` 文件放到一个 Secret 中。
+3. 配置 DorisDisaggregatedCluster 资源，指定包含 `krb5.conf` 的 ConfigMap, 以及包含 `keytab` 文件的 Secret。
+    ```yaml
+    spec:
+      kerberosInfo:
+        krb5ConfigMap: ${krb5ConfigMapName}
+        keytabSecretName: ${keytabSecretName}
+        keytabPath: ${keytabPath}
+    ```
+   ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
+   catalog 请参考配置 [Hive Catalog](../../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。

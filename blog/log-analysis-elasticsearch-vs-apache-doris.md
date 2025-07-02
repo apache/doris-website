@@ -3,7 +3,7 @@
     'title': 'Log analysis: Elasticsearch vs Apache Doris',
     'description': "As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.",
     'date': '2023-09-28',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/132',
     'tags': ['Tech Sharing'],
     "image": '/images/es-vs-doris.png'
