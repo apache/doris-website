@@ -9,6 +9,12 @@
 
 ## Request
 
+:::caution 注意：
+
+使用该接口需要 admin_priv，建议使用 [query profile action](./query-profile-action.md) 来查看 profile
+
+:::
+
 `GET /api/profile`
 `GET /api/profile/text`
 
