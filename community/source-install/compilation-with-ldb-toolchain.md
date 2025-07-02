@@ -70,7 +70,7 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
     > It is recommended to install Java 8 or Java 17 using the package management tools provided by your Linux distribution, such as yum(java-1.8.0/17-openjdk-devel) or apt(openjdk-8/17-jdk). and verify with java -version
 
 
-- Download [Apache Maven 3.9.9](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) and install it to /path/to/maven.
+- Download [Apache Maven 3.9.10](https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz) and install it to /path/to/maven.
 - Download [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) and install it to /path/to/node.
 - Different Linux distributions may include different default components. Therefore, you may need to install some additional components. The following takes CentOS 6 as an example. Similar steps may apply to other distributions:
 
