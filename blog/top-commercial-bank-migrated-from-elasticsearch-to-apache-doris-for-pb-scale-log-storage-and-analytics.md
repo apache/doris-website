@@ -8,7 +8,7 @@
     'externalLink': 'https://www.velodb.io/blog/1410',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/blogs/top-commercial-bank.jpeg'
 }
 ---
