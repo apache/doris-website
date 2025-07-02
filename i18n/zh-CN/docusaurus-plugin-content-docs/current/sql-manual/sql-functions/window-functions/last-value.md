@@ -7,7 +7,7 @@
 
 ## 描述
 
-LAST_VALUE() 是一个窗口函数，用于返回窗口范围内的最后一个值。可以通过 IGNORE NULLS 选项来控制是否忽略NULL值。
+LAST_VALUE() 是一个窗口函数，用于返回窗口范围内的最后一个值。可以通过 IGNORE NULL 选项来控制是否忽略NULL值。
 
 ## 语法
 
@@ -18,8 +18,8 @@ LAST_VALUE(<expr>[, <ignore_null>])
 ## 参数
 | 参数        | 说明                                                    |
 | ----------- | ------------------------------------------------------- |
-| expr        | 需要获取最后一个值的表达式                              |
-| ignore_null | 可选。参数 ignore_null 默认值为 false, 设置后会忽略NULL值 |
+| expr        | 需要获取最后一个值的表达式，支持类型：tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                              |
+| ignore_null | 可选 boolean 类型。参数 ignore_null 默认值为 false, 设置后会忽略NULL值 |
 
 ## 返回值
 

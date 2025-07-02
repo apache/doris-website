@@ -479,7 +479,17 @@ where year in (1999, 2000, 2001, 2002)
 
 ```sql
 create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
-...load some data...    
+
+INSERT INTO stock_ticker VALUES 
+    ("JDR", 12.86, "2014-10-02 00:00:00"), 
+    ("JDR", 12.89, "2014-10-03 00:00:00"), 
+    ("JDR", 12.94, "2014-10-04 00:00:00"), 
+    ("JDR", 12.55, "2014-10-05 00:00:00"), 
+    ("JDR", 14.03, "2014-10-06 00:00:00"), 
+    ("JDR", 14.75, "2014-10-07 00:00:00"), 
+    ("JDR", 13.98, "2014-10-08 00:00:00")
+;
+
 select * from stock_ticker order by stock_symbol, closing_date
 ```
 
