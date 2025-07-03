@@ -8,7 +8,7 @@
     'tags': ['Tech Sharing'],
     'externalLink': 'https://www.velodb.io/blog/1406',
     'picked': "true",
-    'order': "2",
+    'order': "3",
     "image": '/images/which-powers-observability-better.jpg'
 }
 ---
