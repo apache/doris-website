@@ -799,9 +799,9 @@ For an Iceberg Database, you must first drop all tables under the database befor
   ```
 
   * **Reorder Columns**
-  Use `REORDER COLUMNS` to reorder columns by specifying the new column order.
+  Use `ORDER BY` to reorder columns by specifying the new column order.
   ```sql
-  ALTER TABLE iceberg_table REORDER COLUMNS (col_name1, col_name2, ...);
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
 
 ## Appendix
