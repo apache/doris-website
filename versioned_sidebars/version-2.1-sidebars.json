@@ -394,8 +394,8 @@
                             ]
                         },
                         "lakehouse/file",
-                        "lakehouse/filecache",
-                        "lakehouse/metacache",
+                        "lakehouse/data-cache",
+                        "lakehouse/meta-cache",
                         "lakehouse/compute-node",
                         "lakehouse/external-statistics",
                         "lakehouse/cloud-auth",

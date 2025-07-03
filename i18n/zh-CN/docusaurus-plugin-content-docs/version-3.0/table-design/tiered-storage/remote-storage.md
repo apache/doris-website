@@ -186,7 +186,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考 (../../lakehouse/filecache)。
+具体配置请参考 (../../lakehouse/data-cache)。
 
 ## 常见问题
 
