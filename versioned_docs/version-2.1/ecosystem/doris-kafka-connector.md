@@ -9,7 +9,16 @@
 
 The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
-## Usage Doris Kafka Connector
+## Version Description
+
+| Connector Version | Kafka Version                 | Doris Version | Java Version | 
+| ----------------- | ----------------------------- | ------------- | ------------ |
+| 1.0.0             | 2.4+                          | 2.0+          | 8            | 
+| 1.1.0             | 2.4+                          | 2.0+          | 8            | 
+| 24.0.0            | 2.4+                          | 2.0+          | 8            | 
+| 25.0.0            | 2.4+                          | 2.0+          | 8            | 
+
+## Usage
 
 ### Download
 [doris-kafka-connector](https://doris.apache.org/download)
@@ -19,7 +28,7 @@ maven dependencies
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 
@@ -203,6 +212,7 @@ errors.deadletterqueue.topic.replication.factor=1
 | database.time_zone          | -                                    | UTC                                                                                  | N            | When `converter.mode` is not `normal` mode, it provides a way to specify time zone conversion for date data types (such as datetime, date, timestamp, etc.). The default is UTC time zone.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | By reading the locally provided Avro Schema file, the Avro file content in the Topic is parsed to achieve decoupling from the Schema registration center provided by Confluent. <br/> This configuration needs to be used with the `key.converter` or `value.converter` prefix. For example, the local Avro Schema file for configuring avro-user and avro-product Topic is as follows: `"value.converter.avro.topic2schema. filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> For specific usage, please refer to: [#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                                                  |
 | record.tablename.field      | -                                    | -                                                                                    | N            | Configure this parameter, data from one kafka topic can flow to multiple doris tables. For configuration details, refer to: [#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| enable.combine.flush | `true`,<br/> `false` | false | N | Whether to merge data from all partitions together and write them. The default value is false. When enabled, only at_least_once semantics are guaranteed.|
 
 For other Kafka Connect Sink common configuration items, please refer to: [connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
