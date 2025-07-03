@@ -26,11 +26,11 @@ under the License.
 ## Description
 This is a function to count the number of characters in a string that match a given regular expression pattern. The input consists of a user-provided string and a regular expression pattern. The return value is n the total count of matching characters; if no matches are found, it returns 0.
 
-1. 'str' paratemer is 'string' type,it is the string of usr want to match by a regexp expression.
+'str' paratemer is 'string' type,it is the string of usr want to match by a regexp expression.
 
-2. 'pattern' paratemer is 'string' type, it is the string of a regexp regular which will be used to match the string;
+'pattern' paratemer is 'string' type, it is the string of a regexp regular which will be used to match the string;
 
-3. return value is 'int' type,it represent the number of the characters which be matched successfully;
+It should be noted that when handling character set matching, Utf-8 standard character classes should be used. This ensures that functions can correctly identify and process various characters from different languages.
 
 
 
@@ -44,15 +44,17 @@ REGEXP_COUNT(<str>, <pattern>)
 
 | Parameter | Description |
 | -- | -- |
-| `<str>` | The parameter is 'string' type,it is the dest value which matched by the regexp expression
-| `<pattern>` | The parameter is 'string' type, it is a regexp expression and it is used to match the string which meet the regular of the pattern
+| `<str>` | The parameter is 'string' type,it is the dest value which matched by the regexp expression. |
+| `<pattern>` | The parameter is 'string' type, it is a regexp expression and it is used to match the string which meet the regular  of the pattern. |
 ## Return Value
 
 - Returns number of matches for a regular expression 'pattern' within a 'str',it is 'int',if no character can be matched, return 0;
+If pattern is NULL or str is NULL or both are NULL,return NULL;
+If pattern is not allowed regexp regular , it will throw error,it`s a wrong for this action;
 
 ## Examples
 
-### Test the string region matching against an expression containing escape characters and return the result
+The string region matching against an expression containing escape characters and return the result
 
 ```sql
 SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
@@ -66,7 +68,7 @@ SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
 +--------------------------------------+
 ```
 
-### Test the string matching result of the regular expression for the ordinary character ':'.
+The string matching result of the regular expression for the ordinary character ':'.
 
 ```sql
 SELECT regexp_count('a.b:c;d', ':');
@@ -79,7 +81,7 @@ SELECT regexp_count('a.b:c;d', ':');
 |                            1 |
 +------------------------------+
 ```
-### Test the return result when matching a string against a regular expression containing two square brackets.
+The return result when matching a string against a regular expression containing two square brackets.
 
 ```sql
 SELECT regexp_count('Hello, World!', '[[:punct:]]');
@@ -93,7 +95,49 @@ SELECT regexp_count('Hello, World!', '[[:punct:]]');
 +----------------------------------------------+
 ```
 
-### Test the return result of inserting certain variable values and then retrieving the variables from the stored rows for matching.
+
+Pattern is NULL case
+
+```sql
+SELECT regexp_count("abc",NULL);
+```
+```text
++------------------------+
+| regexp_count("abc",NULL) |
++------------------------+
+|                   NULL |
++------------------------+
+```
+
+
+Str is NULL case
+
+```sql
+SELECT regexp_count(NULL,"abc");
+```
+```text
++------------------------+
+| regexp_count(NULL,"abc") |
++------------------------+
+|                   NULL |
++------------------------+
+```
+
+Both are NULL
+
+
+```sql
+SELECT regexp_count(NULL,NULL);
+```
+```text
++------------------------+
+| regexp_count(NULL,NULL) |
++------------------------+
+|                   NULL |
++------------------------+
+```
+
+The return result of inserting certain variable values and then retrieving the variables from the stored rows for matching.
 
 ```sql
 
@@ -136,7 +180,7 @@ SELECT id, regexp_count(text_data, pattern) as count_result FROM test_table_for_
 +------+--------------+
 
 ```
-### Test the return result of inserting certain variable values, retrieving the variables from stored rows for matching, with the regular expression being a constant.
+The return result of inserting certain variable values, retrieving the variables from stored rows for matching, with the regular expression being a constant.
 
 ```sql
 CREATE TABLE test_table_for_regexp_count (
@@ -175,4 +219,18 @@ SELECT id, regexp_count(text_data, 'e') as count_e FROM test_table_for_regexp_co
 |    9 |       0 |
 |   10 |       1 |
 +------+---------+
+```
+
+Emoji regexp count
+
+```sql
+SELECT regexp_count('🍔🍟🍕🌍', '🍔|🍟|🍕');
+```
+
+```text
++----------------------------------------------------+
+| regexp_count('🍔🍟🍕🌍', '🍔|🍟|🍕')                             |
++----------------------------------------------------+
+|                                                  3 |
++----------------------------------------------------+
 ```
