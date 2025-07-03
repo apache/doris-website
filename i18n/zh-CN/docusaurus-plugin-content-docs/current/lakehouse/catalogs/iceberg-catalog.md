@@ -780,10 +780,10 @@ ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_va
 ```
 
 * **添加多列**
-通过 `ADD COLUMNS` 添加多列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
+可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
 每一列的语法和添加单列时一样。
 ```sql
-ALTER TABLE iceberg_table ADD COLUMNS (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
+ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
 ```
 
 * **删除列**
@@ -792,14 +792,27 @@ ALTER TABLE iceberg_table ADD COLUMNS (col_name1 col_type1 [nullable, [default d
 ALTER TABLE iceberg_table DROP COLUMN col_name;
 ```
 
+* **修改列**
+通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值和注释。
+注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
+```sql
+ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+示例：
+```sql
+CREATE TABLE iceberg_table (
+    id INT,
+    name STRING
+);
+-- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
+ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+```
+
 * **重新排序**
 通过 `REORDER COLUMNS` 重新排序列，指定新的列顺序。
 ```sql
 ALTER TABLE iceberg_table REORDER COLUMNS (col_name1, col_name2, ...);
 ```
-
-* **修改列类型**
-目前尚不支持 `Modify Column` 语法，预计在未来支持。
 
 ## 附录
 
