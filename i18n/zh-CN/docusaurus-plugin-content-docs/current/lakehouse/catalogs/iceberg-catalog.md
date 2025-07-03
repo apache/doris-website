@@ -756,6 +756,51 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
   * 对象存储
 
+### Schema 变更
+
+Doris 支持 Iceberg 表的 Schema 变更（Schema Change），可以通过 `ALTER TABLE` 语句来修改表的 Schema。
+
+支持的 Schema 变更操作包括：
+
+* **修改列名称**
+通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+```sql
+ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+```
+
+* **添加一列**
+通过 `ADD COLUMN` 添加新列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
+在添加新列时，可以指定nullable属性、默认值和注释。
+```sql
+ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+示例：
+```sql
+ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
+```
+
+* **添加多列**
+通过 `ADD COLUMNS` 添加多列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
+每一列的语法和添加单列时一样。
+```sql
+ALTER TABLE iceberg_table ADD COLUMNS (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
+```
+
+* **删除列**
+通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+```sql
+ALTER TABLE iceberg_table DROP COLUMN col_name;
+```
+
+* **重新排序**
+通过 `REORDER COLUMNS` 重新排序列，指定新的列顺序。
+```sql
+ALTER TABLE iceberg_table REORDER COLUMNS (col_name1, col_name2, ...);
+```
+
+* **修改列类型**
+目前尚不支持 `Modify Column` 语法，预计在未来支持。
+
 ## 附录
 
 ### 版本更新记录
