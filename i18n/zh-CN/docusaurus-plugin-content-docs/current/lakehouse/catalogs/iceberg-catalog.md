@@ -809,9 +809,9 @@ ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'Th
 ```
 
 * **重新排序**
-通过 `REORDER COLUMNS` 重新排序列，指定新的列顺序。
+通过 `ORDER BY` 重新排序列，指定新的列顺序。
 ```sql
-ALTER TABLE iceberg_table REORDER COLUMNS (col_name1, col_name2, ...);
+ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 ```
 
 ## 附录
