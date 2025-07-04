@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## introduce
+## Introduce
 Starting from Doris version 3.1.0, the Arthas tool (version 4.0.5) is included in the FE deployment directory `${DORIS_FE_HOME}/arthas`. Arthas can be used to generate flame graphs, trace method call paths, output method execution times, observe method parameters and return values, and more. This makes it easier to diagnose various runtime issues in the FE process.
 For detailed usage instructions, please refer to the [official Arthas documentation](https://arthas.aliyun.com/en/doc/)
 
