@@ -26,7 +26,7 @@ PROPERTIES (<storage_vault_property>)
 >
 >- s3.access_key: ak for s3 vault
 >- s3.secret_key: sk for s3 vault
->- vault_name: The name of the vault.
+>- vault_name: The name of the vault. When a vault is set as the default storage vault using the statement `SET <original_vault_name> DEFAULT STORAGE VAULT`, its name cannot be modified. To rename the vault, you must first unset the default storage vault by executing the `UNSET DEFAULT STORAGE VAULT` command, and then modify its name. Finally, if you need to set the renamed vault as the default storage vault, you can use the statement `SET <new_vault_name> DEFAULT STORAGE VAULT`.
 >- use_path_style: Whether to allow path style url, optional values are true, false. The default value is false.
 
 >When type is hdfs, the following fields are prohibited:

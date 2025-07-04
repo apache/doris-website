@@ -7,7 +7,7 @@
 
 ## Description
 
-FIRST_VALUE() is a window function that returns the first value in an ordered set of values within a window partition. The handling of null values can be controlled using the IGNORE NULLS options.
+FIRST_VALUE() is a window function that returns the first value in an ordered set of values within a window partition. The handling of null values can be controlled using the IGNORE NULL options.
 
 ## Syntax
 
@@ -18,8 +18,8 @@ FIRST_VALUE(expr[, ignore_null])
 ## Parameters
 | Parameter           | Description                                                                                                         |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| expr                | The expression from which to get the first value                                                                    |
-| ignore_null         | Optional. When set, null values are ignored, returning the first non-null value                                     |
+| expr                | The expression from which to get the first value,supported: tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                                                                    |
+| ignore_null         | Optional boolean Type. When set, null values are ignored, returning the first non-null value                                     |
 
 ## Return Value
 

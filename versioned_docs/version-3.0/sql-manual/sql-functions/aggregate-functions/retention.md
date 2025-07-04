@@ -26,11 +26,12 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 | `<event_n>` | The `n`th event condition, of type `UInt8` and value 1 or 0. |
 
 ## Returned value
-
-An array of 1 and 0 with a maximum length of 32, where the final output array length matches the input parameter length.
-
 - 1: Condition is met.
 - 0: Condition is not met.
+
+An array of 1 and 0 with a maximum length of 32, where the final output array length matches the input parameter length.
+If no data is involved in the aggregation, a NULL value will be returned.
+
 
 ## Examples
 
@@ -73,4 +74,17 @@ ORDER BY uid ASC;
 |    1 | [1]  | [1, 1] | [1, 1, 0] |
 |    2 | [1]  | [1, 0] | [1, 0, 0] |
 +------+------+--------+-----------+
+```
+
+
+```sql
+SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL;
+```
+
+```text
++------+
+| r    |
++------+
+| NULL |
++------+
 ```
