@@ -5,12 +5,6 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
 NTH_VALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第 N 个值，当 N 超出窗口有效大小时，返回结果 NULL。
@@ -24,8 +18,8 @@ NTH_VALUE(<expr>, <offset>)
 ## 参数
 | 参数                | 说明                                                                                    |
 | ------------------- | --------------------------------------------------------------------------------------- |
-| expr                | 需要获取值的表达式                                                                |
-| offset         | 参数 offset 的值为大于0的正整数，用于表示获取的第N的元素值，起始值从1开始                                              |
+| expr                | 需要获取值的表达式，支持类型：tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                                                                |
+| offset         | 类型: bigint， 参数 offset 的值为大于0的正整数，用于表示获取的第N的元素值，起始值从1开始                                              |
 
 ## 返回值
 

@@ -3,7 +3,7 @@
     'title': 'Database in fintech: how to support 10,000 dashboards without causing a mess',
     'description': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
     'date': '2023-08-05',
-    'author': 'Hou Lan',
+    'author': 'velodb.io · Hou Lan',
     'tags': ['Best Practice'],
     'externalLink': 'https://www.velodb.io/blog/133',
     "image": '/images/fintech-service.png'

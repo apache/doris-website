@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 自 1.2.1 版本开始，Doris 支持了计算节点（Compute Node）功能。
 
 从这个版本开始，BE 节点可以分为两类：
@@ -127,7 +108,7 @@ under the License.
 	
 3. 计算节点和混合节点是否可以配置文件缓存目录
 
-	[文件缓存](../lakehouse/filecache) 通过缓存最近访问的远端存储系统 (HDFS 或对象存储) 的数据文件，加速后续访问相同数据的查询。
+	[文件缓存](./data-cache.md) 通过缓存最近访问的远端存储系统 (HDFS 或对象存储) 的数据文件，加速后续访问相同数据的查询。
 	
 	计算节点和混合节点均可设置文件缓存目录。文件缓存目录需事先创建。
 	

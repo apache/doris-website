@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Apache Doris 简介
 
 Apache Doris 是一款基于 MPP 架构的高性能、实时分析型数据库。它以高效、简单和统一的特性著称，能够在亚秒级的时间内返回海量数据的查询结果。Doris 既能支持高并发的点查询场景，也能支持高吞吐的复杂分析场景。
@@ -39,7 +19,7 @@ Apache Doris 最初是百度广告报表业务的 Palo 项目。2017 年正式�
 
 ### 应用现状
 
-Apache Doris 在中国乃至全球范围内拥有广泛的用户群体。截至目前，Apache Doris 已经在全球超过 4000 家中大型企业的生产环境中得到应用。在中国市值或估值排行前 50 的互联网公司中，有超过 80% 长期使用 Apache Doris，包括百度、美团、小米、京东、字节跳动、阿里巴巴、腾讯、网易、快手、微博等。同时，在金融、消费、电信、工业制造、能源、医疗、政务等传统行业也有着丰富的应用。
+Apache Doris 在中国乃至全球范围内拥有广泛的用户群体。截至目前，Apache Doris 已经在全球超过 5000 家中大型企业的生产环境中得到应用。在中国市值或估值排行前 50 的互联网公司中，有超过 80% 长期使用 Apache Doris，包括百度、美团、小米、京东、字节跳动、阿里巴巴、腾讯、网易、快手、微博等。同时，在金融、消费、电信、工业制造、能源、医疗、政务等传统行业也有着丰富的应用。
 
 在中国，几乎所有的云厂商，如阿里云、华为云、天翼云、腾讯云、百度云、火山引擎等，都在提供托管的 Apache Doris 云服务。
 

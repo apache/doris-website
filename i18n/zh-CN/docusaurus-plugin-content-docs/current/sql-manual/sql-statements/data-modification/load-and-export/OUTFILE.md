@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## 描述
 
  `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
@@ -141,9 +120,8 @@ Outfile 语句返回的结果，各个列的含义如下：
 - Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出到 Parquet/ORC 文件格式的对应数据类型。以下是 Apache Doris 数据类型和 Parquet/ORC 文件格式的数据类型映射关系表：
 
 1. **Doris 导出到 ORC 文件格式的数据类型映射表：**
-
    | Doris Type              | Orc Type  |
-       |-------------------------|-----------|
+   |-------------------------|-----------|
    | boolean                 | boolean   |
    | tinyint                 | tinyint   |
    | smallint                | smallint  |
@@ -165,9 +143,8 @@ Outfile 语句返回的结果，各个列的含义如下：
 2. **Doris 导出到 Parquet 文件格式的数据类型映射表：**
 
    Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。Doris 数据类型到 Arrow 数据类的映射关系为：
-
    | Doris Type              | Arrow Type |
-       |-------------------------|------------|
+   |-------------------------|------------|
    | boolean                 | boolean    |
    | tinyint                 | int8       |
    | smallint                | int16      |

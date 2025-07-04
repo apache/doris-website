@@ -4,7 +4,7 @@
     'summary': "Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.",
     'description': "Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.",
     'date': '2024-08-14',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/882',
     'tags': ['Tech Sharing'],
     "image": '/images/auto-partition-in-apache-doris.jpg'

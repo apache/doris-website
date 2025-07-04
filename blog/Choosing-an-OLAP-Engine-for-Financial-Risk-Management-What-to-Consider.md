@@ -3,7 +3,7 @@
     'title': 'Choosing an OLAP engine for financial risk management: what to consider?',
     'description': "This post provides reference for what you should take into account when choosing an OLAP engine in a financial scenario.",
     'date': '2023-08-17',
-    'author': 'Jianbo Liu',
+    'author': 'velodb.io · Jianbo Liu',
     'tags': ['Best Practice'],
     'externalLink': 'https://www.velodb.io/blog/136',
     "image": '/images/financial-risk.png'

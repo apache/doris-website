@@ -3,7 +3,7 @@
     'title': "Auto-increment columns in databases: a simple magic that makes a big difference",
     'description': "Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.",
     'date': '2024-04-08',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/252',
     'tags': ['Tech Sharing'],
     "image": '/images/auto-increment-columns-in-databases.png'

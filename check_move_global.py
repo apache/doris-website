@@ -1,3 +1,17 @@
+# Detect global dead links
+#
+# Core logic:
+# Traverse all documents, match the links in the documents, and determine whether it is a dead link by the link address; 
+# if it is a dead link, try to fix it. If the fix fails, it will print: ❌ xxxx/xxxx.md: Could not fix broken link ${target_link}; 
+# if the fix is ​​successful, it will print: 🛠️ xxxx/xxxx.md: Fixed broken link ${dead_link} -> ${link}
+#
+# Repair the logic of broken links：
+# Traverse all the documents in the directory with the current broken link layer by layer to see if the document name is consistent with the document name in the broken link. 
+# If they are consistent, the current directory is considered to be the correct directory of the broken link. 
+# The above situation is the case where the original link document directory has been migrated. If the document is deleted, the correction will fail.
+# 
+# Absolute paths or broken links starting with http/https cannot be judged
+
 import argparse
 import subprocess
 import re
@@ -9,7 +23,7 @@ from urllib.parse import urlparse
 move_pairs = []
 deletes = []
 change_detected = False
-search_dirs = ["docs", "i18n", "versioned_docs"]
+search_dirs = ["docs", "i18n", "versioned_docs", "community"]
 
 def is_same_file(path1, path2):
     return os.path.normpath(path1) == os.path.normpath(path2)
@@ -21,10 +35,10 @@ def remove_suffix(text: str, suffix: str):
 
 def find_nearest_file(file_base, start_dir):
     """
-    在 start_dir 向上查找最近的 file_base(.md/.mdx)，否则全局搜索
+    Look for the nearest file_base (.md/.mdx) in start_dir upwards, otherwise search globally
     """
     cur_dir = start_dir
-    # 向上搜索最多 10 层，避免卡死
+    # Search up to 10 levels upwards to avoid stuck
     for _ in range(10):
         for ext in [".md", ".mdx"]:
             candidate = os.path.join(cur_dir, file_base + ext)
@@ -35,7 +49,7 @@ def find_nearest_file(file_base, start_dir):
             break
         cur_dir = parent
 
-    # 全局搜索
+    # Global Search
     for base_dir in search_dirs:
         for root, dirs, files in os.walk(base_dir):
             for file in files:
@@ -59,7 +73,7 @@ def process_md_file(file_path):
             if not full_path.endswith(".md") and not full_path.endswith(".mdx"):
                 full_path += ".md"
 
-            # 处理 rename 情况
+            # Handling rename situations
             for [from_path, to_path] in move_pairs:
                 from_base, from_ext = os.path.splitext(from_path)
                 to_base, to_ext = os.path.splitext(to_path)
@@ -74,15 +88,15 @@ def process_md_file(file_path):
                     new_content = new_content.replace(f"({link})", f"({relative_to_path})")
                     change_detected = True
 
-            # 处理 delete 情况
+            # Handling delete cases
             for deleted_path in deletes:
                 if is_same_file(full_path, deleted_path):
                     print(f"⚠️ {file_path}: Link to deleted file {link}")
                     change_detected = True
 
-            # 处理死链修复
+            # Dealing with broken link repair
             if not os.path.exists(full_path):
-                # 说明当前 link 是坏的
+                # Indicates that the current link is broken
                 file_base = os.path.basename(link)
                 file_base = remove_suffix(file_base, ".md")
                 file_base = remove_suffix(file_base, ".mdx")
@@ -92,11 +106,14 @@ def process_md_file(file_path):
                     relative_to_path = os.path.relpath(found_path, os.path.dirname(file_path))
                     relative_to_path = remove_suffix(relative_to_path, ".md")
                     relative_to_path = remove_suffix(relative_to_path, ".mdx")
-                    print(f"🛠️ {file_path}: Fixed broken link {link} -> {relative_to_path}")
+                    if "version-1.2" not in file_path and "version-2.0" not in file_path:
+                        print(f"🛠️ {file_path}: Fixed broken link {link} -> {relative_to_path}")
+        
                     new_content = new_content.replace(f"({link})", f"({relative_to_path})")
                     change_detected = True
                 else:
-                    print(f"❌ {file_path}: Could not fix broken link {link}")
+                    if "version-1.2" not in file_path and "version-2.0" not in file_path:
+                        print(f"❌ {file_path}: Could not fix broken link {link}")
                     change_detected = True
 
     if new_content != content:

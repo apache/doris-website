@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris currently supports accessing Paimon table metadata through various metadata services and querying Paimon data.
 
 At present, only read operations on Paimon tables are supported. Write operations to Paimon tables will be supported in the future.
@@ -239,6 +220,51 @@ SELECT * FROM paimon_tbl LIMIT 10;
 -- 3. Use fully qualified name to query
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
+
+### Batch Incremental Query
+
+> This feature is supported since version 3.1.0
+
+Supports [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) queries for Paimon, similar to Flink.
+
+Supports querying incremental data within specified snapshot or timestamp intervals. The interval is left-closed and right-open.
+
+```sql
+-- read from snapshot 2
+SELECT * FROM paimon_table@incr('startSnapshotId'='2');
+
+-- between snapshots [0, 5)
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
+
+-- between snapshots [0, 5) with specified scan mode
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
+
+-- read from start timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+
+-- read between timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+```
+
+Parameter:
+
+| Parameter | Description | Example |
+| --- | --- | -- |
+| `startSnapshotId` | Starting snapshot ID, must be greater than 0 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Optional, if not specified, reads from `startSnapshotId` to the latest snapshot | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | Specifies the incremental read mode, default is `auto`, supports `delta`, `changelog` and `diff` |  `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0 | `'startTimestamp'='1750844949'` |
+| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot | `'endTimestamp'='1750944949'` |
+
+> Notice:
+
+> - `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+
+> - `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
+
+> - `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+
+Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
 ## Appendix
 

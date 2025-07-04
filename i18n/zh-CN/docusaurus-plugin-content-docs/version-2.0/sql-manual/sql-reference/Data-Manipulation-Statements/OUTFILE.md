@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## OUTFILE
 
 ### Name
@@ -138,7 +119,6 @@ INTO OUTFILE "file_path"
 parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能够自动将Doris的数据类型导出到parquet/orc文件格式的对应数据类型，以下是Doris数据类型和parquet/orc文件格式的数据类型映射关系表：
 
 1. Doris导出到Orc文件格式的数据类型映射表：
-
     | Doris Type | Orc Type |
     | --- | --- |
     | boolean | boolean  |
@@ -161,7 +141,6 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
 
 
 2. Doris导出到Parquet文件格式时，会先将Doris内存数据转换为arrow内存数据格式，然后由arrow写出到parquet文件格式。Doris数据类型到arrow数据类的映射关系为：
-
     | Doris Type | Arrow Type |
     | --- | --- |
     | boolean  | boolean |
