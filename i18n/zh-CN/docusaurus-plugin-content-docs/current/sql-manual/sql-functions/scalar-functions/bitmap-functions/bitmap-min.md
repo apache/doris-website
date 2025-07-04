@@ -24,7 +24,7 @@ bitmap_min(<bitmap>)
 ## 返回值
 
 Bitmap 中的最小值。  
-若 Bitmap 为空则返回 `NULL`。
+若 Bitmap 为空或者为NULL则返回 `NULL`。
 
 ## 示例
 
@@ -58,4 +58,18 @@ select bitmap_min(bitmap_from_string('1,9999999999')) value;
 +-------+
 |     1 |
 +-------+
+```
+
+```sql
+select bitmap_min(bitmap_empty()) res1,bitmap_min(NULL) res2;
+```
+
+结果如下：
+
+```text
++------+------+
+| res1 | res2 |
++------+------+
+| NULL | NULL |
++------+------+
 ```

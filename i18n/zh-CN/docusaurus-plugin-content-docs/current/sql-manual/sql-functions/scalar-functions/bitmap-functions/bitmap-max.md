@@ -24,7 +24,7 @@ bitmap_max(<bitmap>)
 ## 返回值
 
 Bitmap 中的最大值。  
-若 Bitmap 为空则返回 `NULL`。
+若 Bitmap 为空或者为NULL则返回 `NULL`。
 
 ## 示例
 
@@ -58,4 +58,18 @@ select bitmap_max(bitmap_from_string('1,9999999999')) value;
 +------------+
 | 9999999999 |
 +------------+
+```
+
+```sql
+select bitmap_max(bitmap_empty()) res1,bitmap_max(NULL) res2;
+```
+
+结果如下：
+
+```text
++------+------+
+| res1 | res2 |
++------+------+
+| NULL | NULL |
++------+------+
 ```

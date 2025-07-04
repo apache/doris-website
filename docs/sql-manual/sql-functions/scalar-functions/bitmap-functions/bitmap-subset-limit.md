@@ -26,6 +26,7 @@ BITMAP_SUBSET_LIMIT(<bitmap>, <position>, <cardinality_limit>)
 ## Return Value
 
 A subset Bitmap within the specified range and limit.
+- If the parameter has a NULL value or invalid value, it returns NULL
 
 ## Examples
 
@@ -58,5 +59,48 @@ The result will be:
 | value |
 +-------+
 | 4,5   |
++-------+
+```
+
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, NULL)) value;
+```
+
+The result will be:
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), -4, 3)) value;
+```
+
+The result will be:
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, -3)) value;
+```
+
+The result will be:
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
 +-------+
 ```

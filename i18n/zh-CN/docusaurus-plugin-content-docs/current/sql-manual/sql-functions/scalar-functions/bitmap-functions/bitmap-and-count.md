@@ -24,55 +24,55 @@ BITMAP_AND_COUNT(<bitmap>, <bitmap>,[, <bitmap>...])
 ## 返回值
 
 返回整数
-- 当参数存在空值时，返回 NULL
+- 当参数存在NULL时，返回 0
 
 ## 举例
 
 ```sql
-select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'));
+select bitmap_and_count(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5')) as res;
 ```
 
 ```text
-+----------------------------------------------------------------------------+
-| bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5')) |
-+----------------------------------------------------------------------------+
-|                                                                          1 |
-+----------------------------------------------------------------------------+
++------+
+| res  |
++------+
+|    1 |
++------+
 ```
 
 ```sql
-select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'));
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5')) as res;
 ```
 
 ```text
-+-------------------------------------------------------------------------------------------------------------+
-| (bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) |
-+-------------------------------------------------------------------------------------------------------------+
-|                                                                                                           2 |
-+-------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+|    2 |
++------+
 ```
 
 ```sql
-select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty());
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty()) as res;
 ```
 
 ```text
-+-----------------------------------------------------------------------------------------------------------------------------+
-| (bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), bitmap_empty())) |
-+-----------------------------------------------------------------------------------------------------------------------------+
-|                                                                                                                           0 |
-+-----------------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+|    0 |
++------+
 ```
 
 ```sql
-select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL);
+select bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL) as res;
 ```
 
 ```text
-+-------------------------------------------------------------------------------------------------------------------+
-| (bitmap_and_count(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL)) |
-+-------------------------------------------------------------------------------------------------------------------+
-|                                                                                                              NULL |
-+-------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+|    0 |
++------+
 ```
 

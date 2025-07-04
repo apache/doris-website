@@ -26,6 +26,7 @@ BITMAP_SUBSET_IN_RANGE(<bitmap>, <range_start_include>, <range_end_exclude>)
 ## Return Value
 
 A subset Bitmap within the specified range.
+- If the parameter has a NULL value or invalid range, it returns NULL
 
 ## Examples
 
@@ -60,3 +61,34 @@ The result will be:
 | 2     |
 +-------+
 ```
+
+
+```sql
+select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 2, NULL)) value;
+```
+
+The result will be:
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+
+```sql
+select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 2, -10000)) value;
+```
+
+The result will be:
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
