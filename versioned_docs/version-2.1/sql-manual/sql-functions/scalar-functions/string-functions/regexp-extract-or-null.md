@@ -52,6 +52,8 @@ Return a string type, with the result being the part that matches `<pattern>`.
 If the input `<pos>` is 0, return the entire first matching substring.
 If the input `<pos>` is invalid (negative or exceeds the number of expression groups), return NULL.
 If the regular expression fails to match, return NULL.
+If the `<pos>` < 0,return NULL;
+If the `pos` > the length of `<str>`,return NULL;
 
 ## Example
 

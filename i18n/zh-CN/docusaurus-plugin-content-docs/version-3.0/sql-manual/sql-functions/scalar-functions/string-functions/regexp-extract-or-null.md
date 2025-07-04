@@ -54,6 +54,8 @@ REGEXP_EXTRACT_OR_NULL(<str>, <pattern>, <pos>)
  如果输入的<pos>为 0，则返回整个第一个匹配的子字符串。
  如果输入的<pos>无效（负数或超过表达式组数量），则返回 NULL。
  如果正则表达式匹配失败，则返回 NULL。
+ 如果 `<pos>` < 0,则返回NULL;
+ 如果 `pos` > 参数字符串`<str>`的长度,返回 NULL;
 
 ## 例子
 
