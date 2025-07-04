@@ -13,7 +13,7 @@ This statement is used to set the default storage vault in Doris. The default st
 ## Syntax
 
 ```sql
-SET <vault_name> DEFAULT STORAGE VAULT
+SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
 ## Required Parameters
