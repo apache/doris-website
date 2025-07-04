@@ -27,7 +27,7 @@ under the License.
 ## 描述
 
 对字符串 str 执行正则表达式匹配，匹配成功时返回 true，否则返回 false。pattern 为正则表达式模式。
-需要注意的是，在处理字符集匹配时，应使用 Unicode 标准字符类。表情包不能使用Unicode的\U等转义字符代替，只能使用原有表情包字符。这确保函数能够正确识别和处理来自不同语言的各种字符。
+需要注意的是，在处理字符集匹配时，应使用 Utf-8 标准字符类。这确保函数能够正确识别和处理来自不同语言的各种字符。
 
 
 ## 语法
@@ -138,7 +138,7 @@ SELECT id, name FROM test_regexp WHERE name REGEXP '-';
 
 结尾字符匹配
 ```sql
-
+-- Find names ending with 'e'
 SELECT id, name FROM test_regexp WHERE name REGEXP 'e$';
 ```
 
@@ -163,4 +163,37 @@ SELECT 'Hello' REGEXP '😀';
 +-----------------------+
 |                     0 |
 +-----------------------+
+```
+
+'str' 是NULL值，则返回NULL值
+
+```sql
+mysql> SELECT REGEXP(NULL, '^billie');
++-------------------------+
+| REGEXP(NULL, '^billie') |
++-------------------------+
+|                    NULL |
++-------------------------+
+```
+
+'pattern' 是NULL值，则返回NULL值
+
+```sql
+mysql> SELECT REGEXP('billie eillish', NULL);
++--------------------------------+
+| REGEXP('billie eillish', NULL) |
++--------------------------------+
+|                           NULL |
++--------------------------------+
+```
+
+所有参数都是NULL值，则返回NULL值
+
+```sql
+mysql> SELECT REGEXP(NULL, NULL);
++--------------------+
+| REGEXP(NULL, NULL) |
++--------------------+
+|               NULL |
++--------------------+
 ```
