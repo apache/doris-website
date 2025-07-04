@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Paimon 数据查询。
 
 目前只支持 Paimon 表的读操作，未来会支持的写入 Paimon 表。
@@ -239,6 +220,51 @@ SELECT * FROM paimon_tbl LIMIT 10;
 -- 3. use full qualified name to query
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
+
+### 增量查询
+
+> 该功能自 3.1.0 版本支持
+
+支持类似 Flink 针对 Paimon 的 [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) 查询。
+
+支持查询指定的快照或时间戳区间内的增量数据。区间为左闭右开区间。
+
+```sql
+-- read from snapshot 2
+SELECT * FROM paimon_table@incr('startSnapshotId'='2');
+
+-- between snapshots [0, 5)
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
+
+-- between snapshots [0, 5) with specified scan mode
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
+
+-- read from start timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+
+-- read between timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+```
+
+参数说明：
+
+| 参数 | 说明 | 示例 |
+| --- | --- | -- |
+| `startSnapshotId` | 起始快照 ID，必须大于 0 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | 结束快照 ID，必须大于 `startSnapshotId`。可选，如不指定，则表示从 `startSnapshotId` 开始读取到最新的快照 | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | 指定增量读取的模式，默认 `auto`，支持 `delta`， `changelog` 和 `diff` |  `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | 起始快照时间，必须大于等于 0 | `'startTimestamp'='1750844949'` |
+| `endTimestamp` | 结束快照时间，必须大于 `startTimestamp`。可选，如不指定，则表示从 `startTimestamp` 开始读取到最新的快照 | `'endTimestamp'='1750944949'` |
+
+> 注：
+
+> - `startSnapshotId` 和 `endSnapshotId` 会组成 Paimon 参数 `'incremental-between'='3,10'`
+
+> - `startTimestamp` 和 `endTimestamp` 会组成 Paimon 参数 `'incremental-between-timestamp'='1750844949,1750944949'`
+
+> - `incrementalBetweenScanMode` 对应 Paimon 参数 `incremental-between-scan-mode`。
+
+可参阅 [Paimon 文档](https://paimon.apache.org/docs/master/maintenance/configurations/) 进一步了解这些参数。
 
 ## 附录
 

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 支持两种 AWS 认证、鉴权方式访问 AWS 服务，`IAM User`和`Assumed Role`，本文介绍如何配置这两种认证、鉴权方式的 AWS 安全凭证并通过安全凭证使用Doris相关的功能来访问AWS的服务资源。
 
 # 认证方式介绍
@@ -125,7 +106,7 @@ S3 Bucket写策略模板, 适用于需要读取、列出和写入bucket对象的
 
 完成上述Step1中的所有配置后，可获得`access_key`和`secret_key`访问密钥，通过访问密钥可以使用Doris对应的功能，具体例子如下：
 
-S3 Load
+#### S3 Load
 ```SQL
   LOAD LABEL s3_load_2022_04_01
   (
@@ -149,7 +130,7 @@ S3 Load
   );
 ```
 
-TVF
+#### TVF
 ```SQL
   SELECT * FROM S3 (
       'uri' = 's3://your_bucket/path/to/tvf_test/test.parquet',
@@ -161,7 +142,7 @@ TVF
   )
 ```
 
-External Catalog
+#### External Catalog
 ```SQL
   CREATE CATALOG iceberg_catalog PROPERTIES (
       'type' = 'iceberg',
@@ -174,7 +155,7 @@ External Catalog
   );
 ```
 
-Storage Vault
+#### Storage Vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
@@ -190,7 +171,7 @@ PROPERTIES (
 );
 ```
 
-Export
+#### Export
 ```SQL
 EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
 PROPERTIES (
@@ -204,7 +185,7 @@ PROPERTIES (
 )
 ```
 
-Repository
+#### Repository
 ```SQL
 CREATE REPOSITORY `s3_repo`
 WITH S3
@@ -218,7 +199,7 @@ PROPERTIES
 );
 ```
 
-Resource
+#### Resource
 ```SQL
 CREATE RESOURCE "remote_s3"
 PROPERTIES
@@ -391,7 +372,7 @@ S3 Bucket写策略模板, 适用于需要往bucket中读取和写入对象的Dor
 }
 ```
 
-#### Step4 通过`role_arn`和`external_id`字段使用Doris对应SQL功能
+### Step4 通过`role_arn`和`external_id`字段使用Doris对应SQL功能
 
 通过上述配置步骤完成assume role需要的权限配置后，可得到一个目标账户的`role_arn`信息和`external_id` (如有)，
 
@@ -402,7 +383,7 @@ S3 Bucket写策略模板, 适用于需要往bucket中读取和写入对象的Dor
 "s3.external_id" = "<your-external-id>"      -- 可选参数
 ```
 
-S3 Load
+#### S3 Load
 ```SQL
   LOAD LABEL s3_load_2022_04_01
   (
@@ -426,7 +407,7 @@ S3 Load
   );
 ```
 
-TVF
+#### TVF
 ```SQL
   SELECT * FROM S3 (
       "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
@@ -438,7 +419,7 @@ TVF
   )
 ```
 
-External Catalog
+#### External Catalog
 ```SQL
   CREATE CATALOG iceberg_catalog PROPERTIES (
       "type" = "iceberg",
@@ -451,7 +432,7 @@ External Catalog
   );
 ```
 
-Storage Vault
+#### Storage Vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
@@ -467,7 +448,7 @@ PROPERTIES (
 );
 ```
 
-Export
+#### Export
 ```SQL
 EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
 PROPERTIES (
@@ -481,7 +462,7 @@ PROPERTIES (
 )
 ```
 
-Repository
+#### Repository
 ```SQL
 CREATE REPOSITORY `s3_repo`
 WITH S3
@@ -495,7 +476,7 @@ PROPERTIES
 );
 ```
 
-Resource
+#### Resource
 ```SQL
 CREATE RESOURCE "remote_s3"
 PROPERTIES

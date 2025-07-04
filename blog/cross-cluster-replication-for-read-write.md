@@ -3,7 +3,7 @@
     'title': "Cross-cluster replication for read-write separation: story of a grocery store brand",
     'description': "Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.",
     'date': '2024-04-25',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/339',
     'tags': ['Best Practice'],
     "image": '/images/ccr-for-read-write-separation.jpg'

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 查询性能调优是一个系统工程，需要从多层次、多维度对数据库系统进行调优。以下是调优流程和方法论概述：
 
 1. 首先，业务人员和数据库管理员（DBA）需要对所使用的数据库系统有全面的了解，包括业务系统使用的硬件、集群的规模、使用的数据库软件版本，以及具体软件版本所提供的特性等。

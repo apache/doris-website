@@ -5,15 +5,10 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
 CUME_DIST (Cumulative Distribution) 是一种窗口函数，它计算当前行值在排序后结果集中的相对排名。它返回的是当前行值在结果集中的累积分布值，范围从 0 到 1。对于给定的行，其累积分布值等于：(小于或等于当前行值的行数) / (窗口分区中的总行数)。
+如果未显示指定窗口，会隐式生成`RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` 类型，且当前仅支持此类。
 
 ## 语法
 

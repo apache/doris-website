@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The Doris JDBC Catalog supports connecting to the ClickHouse database via the standard JDBC interface. This document describes how to configure the ClickHouse database connection.
 
 For an overview of the JDBC Catalog, please refer to: [JDBC Catalog Overview](./jdbc-catalog-overview.md)
@@ -95,6 +76,12 @@ When mapping ClickHouse, a Database in Doris corresponds to a Database in ClickH
 | enum/ipv4/ipv6/uuid       | string                  |                                  |
 | array                     | array                   |                                  |
 | other                     | UNSUPPORTED             |                                  |
+
+## Related Parameters
+
+- `jdbc_clickhouse_query_final`
+
+  Session variable, default is false. When set to true, `SETTINGS final = 1` will be appended to the SQL statements sent to Clickhouse.
 
 ## Common Issues
 

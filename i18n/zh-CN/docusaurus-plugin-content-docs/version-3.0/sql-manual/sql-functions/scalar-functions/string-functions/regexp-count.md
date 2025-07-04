@@ -24,6 +24,7 @@ under the License.
 -->
 ## 描述
 这是一个用于统计字符串中匹配给定正则表达式模式的字符数量的函数。输入包括用户提供的字符串和正则表达式模式。返回值为匹配字符的总数量；如果未找到匹配项，则返回 0。
+
 需要注意的是，在处理字符集匹配时，应使用 Utf-8 标准字符类。这确保函数能够正确识别和处理来自不同语言的各种字符。
 
 'str' 参数为 “string” 类型，是用户希望通过正则表达式进行匹配的字符串。
@@ -31,7 +32,6 @@ under the License.
  'pattern' 参数为 “string” 类型，是用于匹配字符串的正则表达式模式字符串。
 
  返回值为 “int” 类型，表示成功匹配的字符数量。
-
 
 
 ## 语法
@@ -50,10 +50,12 @@ REGEXP_COUNT(<str>, <pattern>)
 ## 返回值
 
 - 返回正则表达式 “pattern” 在字符串 “str” 中的匹配字符数量，返回类型为 “int”。若没有字符匹配，则返回 0。
+
 - 如果'str' 或者 'parttern' 为NULL ,或者他们都为NULL，返回NULL;
 - 如果 'pattern' 不符合正则表达式规则，则是错误的用法，抛出error;
 
 字符串区匹配包含转义字符的表达式返回结果
+
 
 ```sql
 SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
@@ -67,7 +69,9 @@ SELECT regexp_count('a.b:c;d', '[\\\\.:;]');
 +--------------------------------------+
 ```
 
+
 普通的字符':'的正则表达式的字符串匹配结果
+
 
 ```sql
 SELECT regexp_count('a.b:c;d', ':');
@@ -80,7 +84,9 @@ SELECT regexp_count('a.b:c;d', ':');
 |                            1 |
 +------------------------------+
 ```
+
 字符串去匹配包含有两个中括号的正则表达式的返回结果
+
 
 ```sql
 SELECT regexp_count('Hello, World!', '[[:punct:]]');
@@ -93,6 +99,7 @@ SELECT regexp_count('Hello, World!', '[[:punct:]]');
 |                                            2 |
 +----------------------------------------------+
 ```
+
 
 
  'patter' 为 NULL值的情况
@@ -123,6 +130,7 @@ SELECT regexp_count(NULL,"abc");
 ```
 
 都为NULL值的情况
+
 
 
 ```sql
@@ -180,6 +188,7 @@ SELECT id, regexp_count(text_data, pattern) as count_result FROM test_table_for_
 +------+--------------+
 
 ```
+
 插入一定变量值，从存储行取出变量去匹配的返回结果，但正则表达式为常量
 
 ```sql
@@ -219,6 +228,7 @@ SELECT id, regexp_count(text_data, 'e') as count_e FROM test_table_for_regexp_co
 |    9 |       0 |
 |   10 |       1 |
 +------+---------+
+
 ```
 
 表情包匹配

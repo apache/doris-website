@@ -3,7 +3,7 @@
     'title': 'How big data is saving lives in real time: IoV data analytics helps prevent accidents',
     'description': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
     'date': '2023-11-29',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Best Practice'],
     'externalLink': 'https://www.velodb.io/blog/141',
     "image": '/images/Iov.png'

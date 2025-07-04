@@ -6,27 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Doris 支持在线弹性扩容，通过动态添加或移除节点，用户无需中断服务即可满足业务增长需求或降低空闲资源的浪费。扩缩容 BE 节点时，不影响集群可用性，但会涉及到数据搬迁，建议在业务闲时进行扩缩容操作。
 
 ## 扩缩容 FE 集群

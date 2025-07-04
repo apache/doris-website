@@ -3,7 +3,7 @@
     'title': 'Replacing Apache Hive, Elasticsearch and PostgreSQL with Apache Doris',
     'description': "How does a data service company build its data warehouse? Simplicity is the best policy. See how a due diligence platform increased data writing efficiency by 75%.",
     'date': '2023-07-01',
-    'author': 'Tao Wang',
+    'author': 'velodb.io · Tao Wang',
     'externalLink': 'https://www.velodb.io/blog/1372',
     'tags': ['Best Practice'],
     "image": '/images/replacing-apache-hive-es-and-postgresql-with-apache-doris.png'

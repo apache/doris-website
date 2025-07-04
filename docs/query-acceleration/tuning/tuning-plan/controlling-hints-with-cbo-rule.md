@@ -1,35 +1,13 @@
 ---
-{
-    "title": "Control CBO Rules With Hint",
-    "language": "en"
-}
+{ 'title': 'Control CBO Rules With Hint', 'language': 'en' }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## Overview
 
 The query optimizer applies a series of rules when generating execution plans. These rules are mainly categorized into two types: Rule-Based Optimizer (RBO) and Cost-Based Optimizer (CBO).
 
-- RBO: This type of optimization improves query plans by applying a set of predefined heuristic rules without considering specific data statistics. Strategies such as predicate pushdown and projection pushdown fall into this category.
-- CBO: This type of optimization leverages data statistics to estimate the cost of different execution plans and selects the plan with the lowest cost for execution. This includes choices of access paths and join algorithms.
+-   RBO: This type of optimization improves query plans by applying a set of predefined heuristic rules without considering specific data statistics. Strategies such as predicate pushdown and projection pushdown fall into this category.
+-   CBO: This type of optimization leverages data statistics to estimate the cost of different execution plans and selects the plan with the lowest cost for execution. This includes choices of access paths and join algorithms.
 
 In some cases, database administrators or developers may need more granular control over the query optimization process. Based on this, this document will introduce how to use query hints to manage CBO rules.
 
@@ -47,9 +25,9 @@ This hint immediately follows the `SELECT` keyword and specifies the names of th
 
 Currently, the Doris optimizer supports several cost-based rewrites, which can be explicitly enabled using the `USE_CBO_RULE` hint, such as:
 
-- PUSH_DOWN_AGG_THROUGH_JOIN
-- PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
-- PUSH_DOWN_DISTINCT_THROUGH_JOIN
+-   PUSH_DOWN_AGG_THROUGH_JOIN
+-   PUSH_DOWN_AGG_THROUGH_JOIN_ONE_SIDE
+-   PUSH_DOWN_DISTINCT_THROUGH_JOIN
 
 ## Case
 

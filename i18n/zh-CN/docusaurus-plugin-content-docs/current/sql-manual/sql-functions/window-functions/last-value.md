@@ -5,15 +5,9 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
-LAST_VALUE() 是一个窗口函数，用于返回窗口范围内的最后一个值。可以通过 IGNORE NULLS 选项来控制是否忽略空值。
+LAST_VALUE() 是一个窗口函数，用于返回窗口范围内的最后一个值。可以通过 IGNORE NULL 选项来控制是否忽略NULL值。
 
 ## 语法
 
@@ -24,8 +18,8 @@ LAST_VALUE(<expr>[, <ignore_null>])
 ## 参数
 | 参数        | 说明                                                    |
 | ----------- | ------------------------------------------------------- |
-| expr        | 需要获取最后一个值的表达式                              |
-| ignore_null | 可选。参数 ignore_null 默认值为 false, 设置后会忽略空值 |
+| expr        | 需要获取最后一个值的表达式，支持类型：tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                              |
+| ignore_null | 可选 boolean 类型。参数 ignore_null 默认值为 false, 设置后会忽略NULL值 |
 
 ## 返回值
 

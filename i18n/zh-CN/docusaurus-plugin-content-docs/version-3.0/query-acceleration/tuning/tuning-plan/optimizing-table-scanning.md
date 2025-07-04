@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 
 Doris 作为一款高性能实时分析数据库，提供了强大的分区裁剪（Partition Pruning）功能，可以显著提升查询性能。分区裁剪是一种查询优化技术，它通过分析查询条件，智能识别与查询相关的分区，并仅扫描这些分区的数据，从而避免了对无关分区的不必要扫描。这种优化方式能够大幅减少 I/O 操作和计算量，进而加速查询执行。

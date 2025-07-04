@@ -26,6 +26,7 @@ under the License.
 ## Description
 This is a function to count the number of characters in a string that match a given regular expression pattern. The input consists of a user-provided string and a regular expression pattern. The return value is n the total count of matching characters; if no matches are found, it returns 0.
 
+
 'str' paratemer is 'string' type,it is the string of usr want to match by a regexp expression.
 
 'pattern' paratemer is 'string' type, it is the string of a regexp regular which will be used to match the string;
@@ -81,6 +82,7 @@ SELECT regexp_count('a.b:c;d', ':');
 |                            1 |
 +------------------------------+
 ```
+
 The return result when matching a string against a regular expression containing two square brackets.
 
 ```sql
@@ -112,6 +114,7 @@ SELECT regexp_count("abc",NULL);
 
 Str is NULL case
 
+
 ```sql
 SELECT regexp_count(NULL,"abc");
 ```
@@ -125,7 +128,6 @@ SELECT regexp_count(NULL,"abc");
 
 Both are NULL
 
-
 ```sql
 SELECT regexp_count(NULL,NULL);
 ```
@@ -136,6 +138,7 @@ SELECT regexp_count(NULL,NULL);
 |                   NULL |
 +------------------------+
 ```
+
 
 The return result of inserting certain variable values and then retrieving the variables from the stored rows for matching.
 
@@ -180,6 +183,7 @@ SELECT id, regexp_count(text_data, pattern) as count_result FROM test_table_for_
 +------+--------------+
 
 ```
+
 The return result of inserting certain variable values, retrieving the variables from stored rows for matching, with the regular expression being a constant.
 
 ```sql

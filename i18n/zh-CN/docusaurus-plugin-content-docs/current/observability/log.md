@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文介绍可观测性核心数之一 Log 的存储和分析实践，可观测性整体方案介绍请参考[概述](overview)。
+本文介绍可观测性核心数据之一 Log 的存储和分析实践，可观测性整体方案介绍请参考[概述](overview)。
 
 ## 第 1 步：评估资源
 

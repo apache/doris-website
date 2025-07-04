@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## How to enter the container when the pod crashes
 
 In the k8s environment, the service will enter the `CrashLoopBackOff` state due to some unexpected things. You can view the pod status and pod_name under the specified namespace through the `kubectl get pod --namespace ${namespace}` command.
@@ -39,7 +20,7 @@ When a pod of the service enters CrashLoopBackOff or cannot be started normally 
 
 1. **Use the following command to add annotation to the pod with problems.**
   ```shell
-  $ kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
+  $ kubectl annotate pod ${pod_name} --namespace ${namespace} apache.com.doris/runmode=debug
   ```
   When the service is restarted next time, the service will detect the annotation that identifies the `Debug` mode startup, and will enter the `Debug` mode to start, and the pod status will be `running`.
 
@@ -102,7 +83,7 @@ If you retain the cluster's crd (Doris Operator defines the abbreviation of `Dor
 
 1. Modify `spec.beSpec.image`
 
-  Change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
+  Change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`
   ```shell
   $ vim doriscluster-sample.yaml
   ```
@@ -125,7 +106,7 @@ It can also be modified directly through `kubectl edit dcr`.
   ```shell
   $ kubectl edit dcr doriscluster-sample -n doris
   ```
-  After entering the text editor, you will find `spec.beSpec.image` and change `selectdb/doris.be-ubuntu:2.0.4` to `selectdb/doris.be-ubuntu:2.1.0`
+  After entering the text editor, you will find `spec.beSpec.image` and change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`
   
 3. View the upgrade process and results:
   ```shell
@@ -140,7 +121,7 @@ If you retain the cluster's crd (Doris Operator defines the abbreviation of the 
 
 1. Modify `spec.feSpec.image`
 
-  Change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
+  Change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`
   ```shell
   $ vim doriscluster-sample.yaml
   ```
@@ -156,7 +137,7 @@ It can also be modified directly through `kubectl edit dcr`.
   ```shell
   $ kubectl edit dcr doriscluster-sample -n doris
   ```
-  After entering the text editor, you will find `spec.feSpec.image` and change `selectdb/doris.fe-ubuntu:2.0.4` to `selectdb/doris.fe-ubuntu:2.1.0`
+  After entering the text editor, you will find `spec.feSpec.image` and change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`
 
 2. View the upgrade process and results:
   ```shell

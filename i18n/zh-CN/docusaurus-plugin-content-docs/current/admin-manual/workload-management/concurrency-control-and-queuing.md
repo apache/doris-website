@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 并发控制与排队是一种资源管理机制，当多个查询同时请求资源，达到系统并发能力的上限时，Doris 会根据预设的策略和限制条件对查询进行排队管理，确保系统在高负载情况下仍能平稳运行，避免 OOM、系统卡死等问题。
 
 Doris 的并发控制与排队机制主要通过 workload group 来实现。workload group 定义了查询的资源使用上限，包括最大并发数、排队队列长度和超时时间等参数。通过合理配置这些参数，可以达到资源管控的目的。

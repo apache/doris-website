@@ -5,12 +5,6 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
 NTILE() 是一个窗口函数，用于将有序数据集平均分配到指定数量的桶中。桶的编号从 1 开始顺序编号，直到指定的桶数。当数据无法平均分配时，优先将多出的记录分配给编号较小的桶，使得各个桶中的行数最多相差 1。

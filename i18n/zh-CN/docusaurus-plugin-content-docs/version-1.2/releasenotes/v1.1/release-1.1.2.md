@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 在 Apache Doris 1.1.2 版本中，我们引入了新的 Memtracker、极大程度上避免 OOM 类问题的发生，提升了向量化执行引擎在多数查询场景的性能表现，修复了诸多导致 BE 和 FE 发生异常的问题，优化了在湖仓联邦查询场景的部分体验问题并提升访问外部数据的性能。
 
 相较于 1.1.1 版本，在 1.1.2 版本中有超过 170 个 Issue 和性能优化项被合入，系统稳定性和性能都得到进一步加强。与此同时，1.1.2 版本还将作为 Apache Doris 首个 LTS （Long-term Support）长周期支持版本，后续长期维护和支持，推荐所有用户下载和升级。

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 更改 Storage Vault 的可修改属性值
@@ -47,7 +28,7 @@ PROPERTIES (<storage_vault_property>)
 >
 > - s3.access_key：s3 vault 的 ak
 > - s3.secret_key：s3 vault 的 sk
-> - vault_name：vault 的 名字。
+> - vault_name：vault 的名字。当一个 vault 通过`SET <original_vault_name> DEFAULT STORAGE VAULT`语句被设为默认存储 vault 时，不能修改其名称。若需修改名称，需首先通过`UNSET DEFAULT STORAGE VAULT`命令取消默认存储 vault 设置，再执行重命名操作。最后，若要将重命名后的 vault 设为默认存储 vault，可通过执行`SET <new_vault_name> AS DEFAULT STORAGE VAULT`语句完成设置。
 > - use_path_style：是否允许 path style url，可选值为 true，false。默认值是 false。
 >
 > 

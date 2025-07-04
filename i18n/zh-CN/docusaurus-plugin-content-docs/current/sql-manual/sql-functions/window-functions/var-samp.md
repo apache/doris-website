@@ -1,0 +1,1 @@
+../aggregate-functions/var-samp.md

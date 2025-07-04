@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hive 的库表信息，并进行数据查询。
 
 除了 Hive 外，很多其他系统也会使用 Hive Metastore 存储元数据。所以通过 Hive Catalog，我们不仅能访问 Hive 表，也能访问使用 Hive Metastore 作为元数据存储的其他表格式，如 Iceberg、Hudi 等。
@@ -519,6 +500,8 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
   * ORC（默认）
 
   * Parquet
+
+    注意，DATETIME 类型写入到 Parquet 文件时，物理类型使用的是 INT96 而非 INT64。目的是兼容 Hive 4.0 版本之前的逻辑。
 
   * Text（自 2.1.7 和 3.0.3 版本开始支持）
 

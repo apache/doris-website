@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## 描述
 此函数用于对给定字符串STR执行正则匹配，并提取符合指定模式的第POS个匹配部分。若函数要返回匹配结果，该模式必须与STR的某些部分完全匹配。
 

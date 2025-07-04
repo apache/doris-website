@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 负载管理是 Doris 一项非常重要的功能，在整个系统运行中起着非常重要的作用。通过合理的负载管理策略，可以优化资源使用，提高系统的稳定性，降低响应时间。它具备以下功能：
 
 - 资源隔离：通过划分多个 Group，并且为每个 Group 都设置一定的资源（CPU, Memory, IO）限制，确保多个用户之间、同一用户不同的任务（例如读写操作）之间互不干扰；
