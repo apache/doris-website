@@ -1718,16 +1718,16 @@
                             "label": "Analytic (Window) Functions",
                             "items": [
                                 "sql-manual/sql-functions/window-functions/overview",
-                                "sql-manual/sql-functions/window-functions/rank",
-                                "sql-manual/sql-functions/window-functions/dense-rank",
-                                "sql-manual/sql-functions/window-functions/percent-rank",
                                 "sql-manual/sql-functions/window-functions/cume-dist",
+                                "sql-manual/sql-functions/window-functions/dense-rank",
                                 "sql-manual/sql-functions/window-functions/first-value",
+                                "sql-manual/sql-functions/window-functions/lag",
                                 "sql-manual/sql-functions/window-functions/last-value",
                                 "sql-manual/sql-functions/window-functions/lead",
-                                "sql-manual/sql-functions/window-functions/lag",
-                                "sql-manual/sql-functions/window-functions/row-number",
-                                "sql-manual/sql-functions/window-functions/ntile"
+                                "sql-manual/sql-functions/window-functions/ntile",
+                                "sql-manual/sql-functions/window-functions/percent-rank",
+                                "sql-manual/sql-functions/window-functions/rank",
+                                "sql-manual/sql-functions/window-functions/row-number"
                             ]
                         },
                         {

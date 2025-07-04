@@ -8,6 +8,8 @@
 ## 描述
 
 PERCENT_RANK() 是一个窗口函数，用于计算分区或结果集中行的相对排名，返回值范围从 0.0 到 1.0。对于给定的行，其计算公式为：(rank - 1) / (total_rows - 1)，其中 rank 是当前行的排名，total_rows 是分区中的总行数。
+如果未显示指定窗口，会隐式生成`RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` 类型，且当前仅支持此类。
+
 
 ## 语法
 
