@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STDDEV,STDDEV_POP",
+    "title": "STD,STDDEV,STDDEV_POP",
     "language": "zh-CN"
 }
 ---
@@ -29,6 +29,7 @@ under the License.
 ## 别名
 
 - STDDEV_POP
+- STD
 
 ## 语法
 
@@ -40,7 +41,7 @@ STDDEV(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 需要被计算标准差的值 |
+| `<expr>` | 需要被计算标准差的值, 支持所有的数值类型 |
 
 ## 返回值
 

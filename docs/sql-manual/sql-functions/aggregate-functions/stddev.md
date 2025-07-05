@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STDDEV,STDDEV_POP",
+    "title": "STD,STDDEV,STDDEV_POP",
     "language": "en"
 }
 ---
@@ -28,6 +28,7 @@ Returns the standard deviation of the expr expression
 
 ## Alias
 
+- STD
 - STDDEV_POP
 
 ## Syntax
@@ -40,7 +41,7 @@ STDDEV(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The value to be calculated standard deviation |
+| `<expr>` | The value to be calculated standard deviation, support all numeric type |
 
 ## Return Value
 
