@@ -9,7 +9,16 @@
 
 Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
 
-## Doris Kafka Connector 使用
+## 版本说明
+
+| Connector Version | Kafka Version                 | Doris Version | Java Version | 
+| ----------------- | ----------------------------- | ------------- | ------------ |
+| 1.0.0             | 2.4+                          | 2.0+          | 8            | 
+| 1.1.0             | 2.4+                          | 2.0+          | 8            | 
+| 24.0.0            | 2.4+                          | 2.0+          | 8            | 
+| 25.0.0            | 2.4+                          | 2.0+          | 8            | 
+
+## 使用方式
 
 ### 下载
 [doris-kafka-connector](https://doris.apache.org/zh-CN/download)
@@ -19,7 +28,7 @@ maven 依赖
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 
@@ -204,6 +213,7 @@ errors.deadletterqueue.topic.replication.factor=1
 | database.time_zone          | -                                    | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | 通过读取本地提供的 Avro Schema 文件，来解析 Topic 中的 Avro 文件内容，实现与 Confluent 提供 Schema 注册中心解耦。<br/> 此配置需要与 `key.converter` 或 `value.converter` 前缀一起使用，例如配置 avro-user、avro-product Topic 的本地 Avro Schema 文件如下： `"value.converter.avro.topic2schema.filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> 具体使用可以参考：[#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                 |
 | record.tablename.field      | -                                    | -                                                                                    | N            | 开启该参数后，可实现一个 Topic 的数据流向多个 Doris 表。配置详情参考：[#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                          |
+| enable.combine.flush | `true`,<br/> `false` | false | N | 是否将所有分区的数据合并在一起写入。默认值为 false。开启后只能保证 at_least_once 语义。|
 
 其他 Kafka Connect Sink 通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 

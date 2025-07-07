@@ -18,9 +18,9 @@ LEAD ( <expr> [ , <offset> [ , <default> ] ] )
 ## Parameters
 | Parameter           | Description                                                                                                                                               |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| expr                | The expression whose value needs to be retrieved                                                                                                          |
-| offset              | Optional. Number of rows to look backward. Default is 1. |
-| default             | Optional. Default value to return when the offset goes beyond the window range. Default is NULL                                                           |
+| expr                | The expression whose value needs to be retrieved, supported type: tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/                                                                                                          |
+| offset              | Optional bigInt type. Number of rows to look backward. Default is 1. |
+| default             | Optional type is same as first param. Default value to return when the offset goes beyond the window range. Default is NULL                                                           |
 
 ## Return Value
 

@@ -18,9 +18,9 @@ LAG ( <expr> [, <offset> [, <default> ] ] )
 ## Parameters
 | Parameter           | Description                                                                                        |
 | ------------------- | -------------------------------------------------------------------------------------------------- |
-| expr                | The expression whose value is to be retrieved                                                      |
-| offset              | Optional. Number of rows to look ahead. Default is 1. |
-| default             | Optional. Value to return when the offset goes beyond window bounds. Default is NULL               |
+| expr                | The expression whose value is to be retrieved, supported type: tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/                                                      |
+| offset              | Optional Bigint Type. Number of rows to look ahead. Default is 1. |
+| default             | Optional Type is same as first param. Value to return when the offset goes beyond window bounds. Default is NULL               |
 
 ## Return Value
 
