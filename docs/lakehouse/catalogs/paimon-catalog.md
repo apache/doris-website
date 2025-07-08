@@ -267,7 +267,7 @@ Parameter:
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
 
-# System Tables
+## System Tables
 
 > This feature is supported since version 3.1.0
 
@@ -287,7 +287,8 @@ SELECT * FROM my_table$audit_log;
 
 > Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.
 
-## schemas
+
+### schemas
 
 Shows current and historical schema information of the table. When modifying table schema using `ALTER TABLE`, `CREATE TABLE AS`, or `CREATE DATABASE AS` statements, each modification generates a record in the schemas table:
 
@@ -304,7 +305,7 @@ Result:
 +-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
 ```
 
-## snapshots
+### snapshots
 
 Shows all valid snapshot information of the table, including snapshot creation time, commit user, operation type, etc.:
 
@@ -326,7 +327,7 @@ Result:
 +-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
 ```
 
-## options
+### options
 
 Shows current configuration options of the table. If a table option is not included in the table, that option is set to its default value:
 
@@ -343,70 +344,7 @@ Result:
 +------------------------+--------------------+
 ```
 
-## audit_log
-
-Shows audit log information of the table. To understand the specific operations on each record in a Paimon table, you can read data from the corresponding audit log table. Compared to the original Paimon table, the audit log table inserts a column named `rowkind` at the beginning of each record to store the operation type. Valid values in the `rowkind` column are: +I (insert), -U (update before), +U (update after), -D (delete):
-
-```sql
-SELECT * FROM my_table$audit_log;
-```
-
-Result:
-```text
-+---------+------+------+------+
-| rowkind | k    | f0   | f1   |
-+---------+------+------+------+
-| +I      |    1 |   11 | 111  |
-| +I      |    3 |    4 | k3   |
-| +I      |    4 |    5 | k5   |
-| +U      |    5 |   10 | k6   |
-| +I      |    6 |    7 | k7   |
-+---------+------+------+------+
-```
-
-## binlog
-
-Shows binary log information of the table, used to capture change operations on the table. Unlike `audit_log`, `binlog` records the underlying binary change log, while `audit_log` inserts a `rowkind` column at the beginning of each record to identify operation types (+I, -U, +U, -D):
-
-```sql
-SELECT * FROM my_table$binlog;
-```
-
-Result:
-```text
-+---------+------+------+---------+
-| rowkind | k    | f0   | f1      |
-+---------+------+------+---------+
-| +I      | [1]  | [11] | ["111"] |
-| +I      | [3]  | [4]  | ["k3"]  |
-| +I      | [4]  | [5]  | ["k5"]  |
-| +U      | [5]  | [10] | ["k6"]  |
-| +I      | [6]  | [7]  | ["k7"]  |
-+---------+------+------+---------+
-```
-
-## ro
-
-Shows read-optimized information of the table. For primary key tables, if you want to improve the efficiency of batch reading or ad-hoc OLAP queries, you can read data from the corresponding read-optimized table. The read-optimized table only reads files that do not require compaction, eliminating the compaction process and improving query efficiency:
-
-```sql
-SELECT * FROM my_table$ro;
-```
-
-Result:
-```text
-+------+------+------+
-| k    | f0   | f1   |
-+------+------+------+
-|    1 |   11 | 111  |
-|    3 |    4 | k3   |
-|    4 |    5 | k5   |
-|    5 |   10 | k6   |
-|    6 |    7 | k7   |
-+------+------+------+
-```
-
-## files
+### files
 
 Shows information about all data files pointed to by the current snapshot, including file format, record count, file size, etc.:
 
@@ -424,7 +362,7 @@ mysql> SELECT * FROM my_table$files;
 +-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
 ```
 
-## tags
+### tags
 
 Shows all tag information of the table, including tag names and associated snapshots:
 
@@ -442,7 +380,7 @@ Result:
 +----------+-------------+-----------+-------------------------+--------------+--------------+
 ```
 
-## branches
+### branches
 
 Shows all known branch information of the table:
 
@@ -460,7 +398,7 @@ Result:
 +----------------------+-------------------------+
 ```
 
-## consumers
+### consumers
 
 Shows consumer information of the table, used to track data consumption:
 
@@ -478,7 +416,7 @@ Result:
 +-------------+------------------+
 ```
 
-## manifests
+### manifests
 
 Shows manifest file information of the table's current snapshot:
 
@@ -500,7 +438,7 @@ Result:
 +-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
 ```
 
-## aggregation_fields
+### aggregation_fields
 
 Shows aggregation field information of the table, used for field configuration in aggregate tables:
 
@@ -519,7 +457,7 @@ Result:
 +------------+--------------+----------+------------------+---------+
 ```
 
-## partitions
+### partitions
 
 Shows partition information of the table, including total record count and total file size for each partition:
 
@@ -536,7 +474,7 @@ Result:
 +-----------+--------------+--------------------+------------+-------------------------+
 ```
 
-## buckets
+### buckets
 
 Shows bucket information of the table, including statistics for each bucket:
 
@@ -553,7 +491,7 @@ Result:
 +-----------+--------+--------------+--------------------+------------+-------------------------+
 ```
 
-## statistics
+### statistics
 
 Shows statistical information of the table, including row count, data size, and other statistics:
 
@@ -570,7 +508,7 @@ Result:
 +--------------+------------+-----------------------+------------------+----------+
 ```
 
-## table_indexes
+### table_indexes
 
 Shows index information of the table:
 
@@ -588,11 +526,11 @@ Result:
 +--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
 ```
 
-## System Table Use Cases
+### System Table Use Cases
 
-Through system tables, you can easily accomplish the following operations and monitoring tasks:
+Through system tables, you can easily accomplish the following operations and monitoring tasks.
 
-### View the latest snapshot information of a table to understand its current state
+#### View the latest snapshot information of a table to understand its current state
 
 ```sql
 SELECT snapshot_id, commit_time, commit_kind, total_record_count FROM catalog_sales$snapshots ORDER BY snapshot_id DESC;
@@ -607,7 +545,7 @@ Result:
 +-------------+-------------------------+-------------+--------------------+
 ```
 
-### View table information for snapshots
+#### View table information for snapshots
 
 ```sql
 SELECT s.snapshot_id, t.schema_id, t.fields FROM store_sales$snapshots s JOIN store_sales$schemas t ON s.schema_id=t.schema_id;
@@ -624,7 +562,7 @@ Result:
 +-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-### View data distribution of buckets
+#### View data distribution of buckets
 
 ```sql
 SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb from paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket`  ORDER BY total_size_mb;
