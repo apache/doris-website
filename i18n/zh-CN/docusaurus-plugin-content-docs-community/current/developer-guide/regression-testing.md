@@ -661,7 +661,7 @@ Doris 支持一些外部署数据源的查询。所以回归框架也提供了�
         * `gen_env.sh`：初始化配置文件的脚本，可以在其中修改：`FS_PORT` 和 `HMS_PORT` 两个对外端口，分别对应 defaultFs 和 Hive metastore 的端口。默认为 8120 和 9183。`run-thirdparties-docker.sh` 启动时会自动调用这个脚本。
         * `scripts/` 目录会在 container 启动后挂载到 container 中。其中的文件内容无需修改。但须注意，在启动 container 之前，需要先下载预制文件：
 
-            将 `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/tpch1_parquet/tpch1.db.tar.gz` 文件下载到 `scripts/` 目录并解压即可。 
+            将 `https://doris-regression-hk.oss-cn-hongkong.aliyuncs.com/regression/datalake/pipeline_data/tpch1.db.tar.gz` 文件下载到 `scripts/` 目录并解压即可。 
 
     4. Elasticsearch
 
