@@ -7,7 +7,7 @@
 
 ## Description
 
-Returns the secant of x, where x is the value in radians.
+Returns the secant of x, where x is the value in radians, only input and output are supported as double.
 
 ## Syntax
 
