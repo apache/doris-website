@@ -66,6 +66,7 @@
                 "developer-guide/pipeline-tracing",
                 "developer-guide/fe-eclipse-dev",
                 "developer-guide/fe-profiler",
+                "developer-guide/arthas",
                 "developer-guide/fe-idea-dev",
                 "developer-guide/fe-vscode-dev",
                 "developer-guide/be-vscode-dev",
