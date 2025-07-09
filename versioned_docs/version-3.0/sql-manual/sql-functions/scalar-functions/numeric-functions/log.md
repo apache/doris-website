@@ -12,7 +12,7 @@ Returns the logarithm of `x` based on base `b`.
 ## Syntax
 
 ```sql
-LOG(<b>,<x>)
+LOG(<b>[, <x>])
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ LOG(<b>,<x>)
 | Parameter | Description |
 |-----------|------------|
 | `<b>`     | Base should be greater than 0 and not be exactly 1.0 |
-| `<x>`     | Antilogarithm should be greater than 0 |
+| `<x>`     | optional, Antilogarithm should be greater than 0, default value is e |
 
 ## Return value
 
@@ -40,6 +40,18 @@ select log(5,1);
 +---------------+
 |             0 |
 +---------------+
+```
+
+```sql
+select log(3),ln(3);
+```
+
+```text
++--------------------+--------------------+
+| log(3)             | ln(3)              |
++--------------------+--------------------+
+| 1.0986122886681098 | 1.0986122886681098 |
++--------------------+--------------------+
 ```
 
 ```sql
