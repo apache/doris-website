@@ -26,37 +26,52 @@ bitmap_has_any(<bitmap1>, <bitmap2>)
 
 如果两个 Bitmap 存在相同元素，返回 true；  
 如果两个 Bitmap 不存在相同元素，返回 false。
+- 当参数存在NULL时，返回 NULL
 
 ## 示例
 
 检查一个 Bitmap 是否包含另一个 Bitmap 的任意元素：
 
 ```sql
-mysql> select bitmap_has_any(to_bitmap(1), to_bitmap(2));
+select bitmap_has_any(to_bitmap(1), to_bitmap(2)) as res;
 ```
 
 结果如下：
 
 ```text
-+--------------------------------------------+
-| bitmap_has_any(to_bitmap(1), to_bitmap(2)) |
-+--------------------------------------------+
-|                                          0 |
-+--------------------------------------------+
++------+
+| res  |
++------+
+|    0 |
++------+
 ```
 
 检查一个 Bitmap 是否包含自身的任意元素：
 
 ```sql
-mysql> select bitmap_has_any(to_bitmap(1), to_bitmap(1));
+select bitmap_has_any(bitmap_from_string('1,2,3'), to_bitmap(1)) as res;
 ```
 
 结果如下：
 
 ```text
-+--------------------------------------------+
-| bitmap_has_any(to_bitmap(1), to_bitmap(1)) |
-+--------------------------------------------+
-|                                          1 |
-+--------------------------------------------+
++------+
+| res  |
++------+
+|    1 |
++------+
+```
+
+```sql
+select bitmap_has_any(bitmap_from_string('1,2,3'), NULL) as res;
+```
+
+结果如下：
+
+```text
++------+
+| res  |
++------+
+| NULL |
++------+
 ```

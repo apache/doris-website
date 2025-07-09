@@ -24,44 +24,44 @@ BITMAP_AND(<bitmap>, <bitmap>,[, <bitmap>...])
 ## 返回值
 
 返回一个 BITMAP  
-- 当参数存在空值时，返回 NULL
+- 当参数存在NULL时，返回 NULL
 
 ## 举例
 
 ```sql
-select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5')));
+select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) as res;
 ```
 
 ```text
-+-----------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) |
-+-----------------------------------------------------------------------------------------------------------------------+
-| 1,2                                                                                                                   |
-+-----------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+| 1,2  |
++------+
 ```
 
 ```sql
-select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty()));
+select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),bitmap_empty())) as res;
 ```
 
 ```text
-+---------------------------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), bitmap_empty())) |
-+---------------------------------------------------------------------------------------------------------------------------------------+
-|                                                                                                                                       |
-+---------------------------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+|      |
++------+
 ```
 
 ```sql
-select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),NULL));
+select bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'),NULL)) as res;
 ```
 
 ```text
-+-----------------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and(bitmap_from_string('1,2,3'), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'), NULL)) |
-+-----------------------------------------------------------------------------------------------------------------------------+
-| NULL                                                                                                                        |
-+-----------------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+| NULL |
++------+
 ```
 
 

@@ -42,7 +42,31 @@ select bitmap_to_string(bitmap_from_string("0, 1, 2")) bts;
 ```
 
 ```sql
-select bitmap_from_string("-1, 0, 1, 2") bfs;
+select bitmap_to_string(bitmap_from_string("-1, 0, 1, 2")) bfs;
+```
+
+```text
++------+
+| bfs  |
++------+
+| NULL |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_string(NULL)) bfs;
+```
+
+```text
++------+
+| bfs  |
++------+
+| NULL |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_string("18446744073709551616, 1")) bfs;
 ```
 
 ```text

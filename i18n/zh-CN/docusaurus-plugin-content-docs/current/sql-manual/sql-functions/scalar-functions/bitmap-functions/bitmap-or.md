@@ -97,47 +97,47 @@ select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2)));
 计算多个 Bitmap（包括 `NULL` 值）的并集：
 
 ```sql
-select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), NULL));
+select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), NULL)) as res;
 ```
 
 结果如下：
 
 ```text
-+--------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), NULL)) |
-+--------------------------------------------------------------------------------------------+
-| 0,1,2,10                                                                                   |
-+--------------------------------------------------------------------------------------------+
++----------+
+| res      |
++----------+
+| 0,1,2,10 |
++----------+
 ```
 
 计算多个 Bitmap（包括空 Bitmap）的并集：
 
 ```sql
-select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), bitmap_empty()));
+select bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), bitmap_empty())) as res;
 ```
 
 结果如下：
 
 ```text
-+------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_or(to_bitmap(1), to_bitmap(2), to_bitmap(10), to_bitmap(0), bitmap_empty())) |
-+------------------------------------------------------------------------------------------------------+
-| 0,1,2,10                                                                                             |
-+------------------------------------------------------------------------------------------------------+
++----------+
+| res      |
++----------+
+| 0,1,2,10 |
++----------+
 ```
 
 计算由字符串和单个值创建的 Bitmap 的并集：
 
 ```sql
-select bitmap_to_string(bitmap_or(to_bitmap(10), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5')));
+select bitmap_to_string(bitmap_or(to_bitmap(10), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) as res;
 ```
 
 结果如下：
 
 ```text
-+--------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_or(to_bitmap(10), bitmap_from_string('1,2'), bitmap_from_string('1,2,3,4,5'))) |
-+--------------------------------------------------------------------------------------------------------+
-| 1,2,3,4,5,10                                                                                           |
-+--------------------------------------------------------------------------------------------------------+
++--------------+
+| res          |
++--------------+
+| 1,2,3,4,5,10 |
++--------------+
 ```

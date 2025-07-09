@@ -29,6 +29,18 @@
 ## 举例
 
 ```sql
+select bitmap_to_string(bitmap_from_base64("invalid")) bts;
+```
+
+```text
++------+
+| bts  |
++------+
+| NULL |
++------+
+```
+
+```sql
 select bitmap_to_string(bitmap_from_base64("AA==")) bts;
 ```
 
