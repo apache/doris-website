@@ -55,6 +55,8 @@ This feature is currently experimental. If you encounter any issues during use, 
 
   - `127.0.0.1:5001` is the IP and port of the SQL dialect conversion service deployment node.
 
+  - Starting from version 3.0.7, you can set multiple URL addresses to provide high availability for SQL dialect conversion services. See the **Related Parameters** section for details.
+
 ## Use SQL Dialects
 
 Currently supported dialect types include:
@@ -194,6 +196,14 @@ The following table shows how various data types are displayed in different seri
     | `serde_dialect` | `set serde_dialect=hive` | Session variable, used to specify the serialization dialect format of the current session |
     | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | Session variable, user-specified to enable certain special features of sql converter. `ctas`: Allows conversion of the `SELECT` part of a `CTAS` statement. (This variable is supported since Doris 3.0.6 and SQL Convertor 1.0.8.10)|
     | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | Session variable used to specify that SQL Convertor ignore some UDFs. SQL Convertor will not convert the functions in the list, otherwise it may report an error "Unknown Function". (This variable is supported since Doris 3.0.6 and SQL Convertor 1.0.8.10)|
+
+    Starting from version 3.0.7, you can set multiple URL addresses separated by commas:
+
+    ```
+    set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert,http://127.0.0.2:5001/api/v1/convert"
+    ```
+
+    Doris will prioritize the local service address `127.0.0.1`. When the preferred address is unavailable, it will automatically switch to other available addresses to ensure service availability.
 
 ## Best Practices
 

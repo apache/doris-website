@@ -55,6 +55,8 @@
 
   - `127.0.0.1:5001` 是 SQL 方言转换服务的部署节点 ip 和端口。
 
+  - 自 3.0.7 版本开始，允许设置多个 url 地址，已提供高可用的 SQL 方言转换服务。详见 **相关参数** 部分介绍。
+
 ## 使用 SQL 方言
 
 目前支持的方言类型包括：
@@ -194,6 +196,14 @@ SET serde_diactor=<dialect>;
     | `serde_dialect` | `set serde_dialect=hive` | 会话变量，用于指定当前会话的序列化方言格式 |
     | `enable_sql_convertor_features` | `set enable_sql_convertor_features="ctas"` | 会话变量，用户指定开启 sql convertor 的某些特殊功能。`ctas`: 允许对 `CTAS` 语句中的 `SELECT` 部分进行转换。（该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
     | `sql_convertor_config` | `set sql_convertor_config = '{"ignore_udf": ["func1", "func2", "fucn3"]}'` | 会话变量，用于指定 SQL Convertor 忽略一些 UDF。在列表中的函数，SQL Convertor 不会进行转换，否则可能报错 "Unknown Function" （该参数自 Doris 3.0.6 和 SQL Convertor 1.0.8.10 支持）|
+
+    自 3.0.7 版本开始，允许设置多个 url 地址，以逗号分隔：
+
+    ```
+    set global sql_converter_service_url = "http://127.0.0.1:5001/api/v1/convert,"http://127.0.0.2:5001/api/v1/convert""
+    ```
+
+    Doris 会优先选择 `127.0.0.1` 的本地服务地址，当优先选择的地址不可用时，会自动切换到其他可用地址，以保证服务的可用性。
 
 ## 最佳实践
 
