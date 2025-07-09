@@ -9,7 +9,7 @@ Heap Profile 支持实时查看进程内存使用，并可以看到调用栈，�
 
 Doris 使用 Jemalloc 作为默认的 Allocator，参照下面的方法使用 Heap Profile。
 
-1. 将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_active:false` 修改为 `prof_active:true` 并重启 Doris BE。
+1. 将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false,prof_active:false` 修改为 `prof:true,prof_active:true` 并重启 Doris BE。
 
 2. 执行 `curl http://be_host:8040/jeheap/dump` 后会在 `${DORIS_HOME}/log` 目录看到生成的 `profile` 文件。
 
