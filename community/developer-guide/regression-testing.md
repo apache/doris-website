@@ -691,7 +691,7 @@ Doris supports queries on external data sources, so the regression testing frame
 
       * The `scripts/` directory will be mounted to the container once it is started. Files in this directory require no modifications. Note that you need to download the pre-built files before you start the container: 
 
-        Download files from  `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/tpch1_parquet/tpch1.db.tar.gz`  to the `scripts/` directory and decompress.
+        Download files from  `https://doris-regression-hk.oss-cn-hongkong.aliyuncs.com/regression/datalake/pipeline_data/tpch1.db.tar.gz`  to the `scripts/` directory and decompress.
 
    4. Elasticsearch
 
