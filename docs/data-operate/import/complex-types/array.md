@@ -5,17 +5,7 @@
 }
 ---
 
-`ARRAY<T>` An array of T-type items, it cannot be used as a key column.
-
-- Before version 2.0, it was only supported in the Duplicate model table.
-- Starting from version 2.0, it is supported in the non-key columns of the Unique model table.
-
-T-type could be any of:
-
-```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
+`ARRAY<T>` An array of T-type items. Click [ARRAY](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) to learn more.
 
 ## CSV format import
 
