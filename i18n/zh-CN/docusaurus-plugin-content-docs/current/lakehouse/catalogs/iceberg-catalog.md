@@ -758,47 +758,63 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 ### Schema 变更
 
-Doris 支持 Iceberg 表的 Schema 变更（Schema Change），可以通过 `ALTER TABLE` 语句来修改表的 Schema。
+自 3.1.0 版本开始，Doris 支持 Iceberg 表的 Schema 变更（Schema Change），可以通过 `ALTER TABLE` 语句来修改表的 Schema。
 
 支持的 Schema 变更操作包括：
 
 * **修改列名称**
+
 通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+
 ```sql
 ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
 ```
 
 * **添加一列**
-通过 `ADD COLUMN` 添加新列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
-在添加新列时，可以指定nullable属性、默认值和注释。
+
+通过 `ADD COLUMN` 添加新列，新列会被添加到表的末尾，不支持为嵌套类型添加新列。
+
+在添加新列时，可以指定 nullable 属性、默认值和注释。
+
 ```sql
 ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
 ```
+
 示例：
+
 ```sql
 ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
 ```
 
 * **添加多列**
-可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾, 不支持为嵌套类型添加新列。
+
+可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾，不支持为嵌套类型添加新列。
+
 每一列的语法和添加单列时一样。
+
 ```sql
 ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
 ```
-
 * **删除列**
+
 通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+
 ```sql
 ALTER TABLE iceberg_table DROP COLUMN col_name;
 ```
 
 * **修改列**
+
 通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值和注释。
+
 注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
+
 ```sql
 ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
 ```
+
 示例：
+
 ```sql
 CREATE TABLE iceberg_table (
     id INT,
@@ -809,17 +825,11 @@ ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'Th
 ```
 
 * **重新排序**
+
 通过 `ORDER BY` 重新排序列，指定新的列顺序。
+
 ```sql
 ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 ```
 
 ## 附录
-
-### 版本更新记录
-
-| Doris 版本 | 功能支持                           |
-| -------- | ------------------------------ |
-| 2.1.3    | 支持 ORC 文件格式，支持 Equality Delete |
-| 2.1.6    | 支持 DDL，DML                     |
-

@@ -747,68 +747,81 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
   * Object storage
 
-  ### Schema Change
+### Schema Change
 
-  Doris supports schema changes for Iceberg tables, which can be modified using the `ALTER TABLE` statement.
+Start from 3.1.0, Doris supports schema changes for Iceberg tables, which can be modified using the `ALTER TABLE` statement.
 
-  Supported schema change operations include:
+Supported schema change operations include:
 
-  * **Rename Column**
-  Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
-  ```sql
-  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-  ```
+* **Rename Column**
 
-  * **Add a Column**
-  Use `ADD COLUMN` to add a new column. The new column will be added to the end of the table. Adding new columns to nested types is not supported.
-  When adding a new column, you can specify nullable attributes, default values, and comments.
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-  ```
-  Example:
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
-  ```
+Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
 
-  * **Add Columns**
-  You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Adding new columns to nested types is not supported.
-  The syntax for each column is the same as adding a single column.
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
-  ```
+```sql
+ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+```
 
-  * **Drop Column**
-  Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
-  ```sql
-  ALTER TABLE iceberg_table DROP COLUMN col_name;
-  ```
-  * **Modify Column**
-  Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, and comment.
-  Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
-  ```sql
-  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-  ```
-  Example:
-  ```sql
-  CREATE TABLE iceberg_table (
-      id INT,
-      name STRING
-  );
-  -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
-  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
-  ```
+* **Add a Column**
 
-  * **Reorder Columns**
-  Use `ORDER BY` to reorder columns by specifying the new column order.
-  ```sql
-  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-  ```
+Use `ADD COLUMN` to add a new column. The new column will be added to the end of the table. Adding new columns to nested types is not supported.
+
+When adding a new column, you can specify nullable attributes, default values, and comments.
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+
+Example:
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
+```
+
+* **Add Columns**
+
+You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Adding new columns to nested types is not supported.
+
+The syntax for each column is the same as adding a single column.
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
+```
+
+* **Drop Column**
+
+Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+
+```sql
+ALTER TABLE iceberg_table DROP COLUMN col_name;
+```
+
+* **Modify Column**
+
+Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, and comment.
+
+Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
+
+```sql
+ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+
+Example:
+
+```sql
+CREATE TABLE iceberg_table (
+    id INT,
+    name STRING
+);
+-- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
+ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+```
+
+* **Reorder Columns**
+
+Use `ORDER BY` to reorder columns by specifying the new column order.
+
+```sql
+ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+```
 
 ## Appendix
-
-### Change Log
-
-| Doris Version | Feature Support                        |
-| -------------- | -------------------------------------- |
-| 2.1.3          | Support for ORC file format, Equality Delete |
-| 2.1.6          | Support for DDL, DML                   |
