@@ -832,4 +832,98 @@ ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'Th
 ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 ```
 
-## 附录
+## Iceberg 表优化
+
+### 查看数据文件分布
+
+通过以下 SQL 可以分析 Iceberg 表的数据分布和 delete 文件数量等，从而判断是否需要进行优化，如 Compaction。
+
+- 显示数据文件大小分布。可以判断是否有过多的小文件。
+
+  ```sql
+  SELECT
+    CASE
+      WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
+      WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
+      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+      WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
+      WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
+      ELSE 'Unknown'
+    END AS SizeRange,
+    COUNT(*) AS FileNum
+  FROM store_sales$data_files
+  GROUP BY
+    SizeRange;
+
+  +-----------+---------+
+  | SizeRange | FileNum |
+  +-----------+---------+
+  | 0-8M      |       8 |
+  | 8-32M     |       6 |
+  +-----------+---------+
+  ```
+
+- 显示数据文件、Delete 文件的数量
+
+  ```sql
+  SELECT
+    CASE
+      WHEN content = 0 THEN 'DataFile'
+      WHEN content = 1 THEN 'PositionDeleteFile'
+      WHEN content = 2 THEN 'EqualityDeleteFile'
+      ELSE 'Unknown'
+    END AS ContentType,
+    SUM(file_size_in_bytes) AS SizeInBytes,
+    SUM(record_count) AS Records
+  FROM
+    iceberg_table$files
+  GROUP BY
+    ContentType;
+
+  +--------------------+-------------+---------+
+  | ContentType        | SizeInBytes | Records |
+  +--------------------+-------------+---------+
+  | EqualityDeleteFile |        1786 |       4 |
+  | DataFile           |        1981 |       5 |
+  | PositionDeleteFile |         809 |       1 |
+  +--------------------+-------------+---------+
+  ```
+
+### 查看快照和分支对应情况
+
+```sql
+SELECT
+  refs_data.snapshot_id,
+  snapshots.committed_at,
+  snapshots.operation,
+  ARRAY_SORT(refs_data.refs)
+FROM (
+  SELECT
+    snapshot_id,
+    ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+  FROM
+    iceberg_table$refs
+  GROUP BY
+    snapshot_id
+) AS refs_data
+JOIN (
+  SELECT
+    snapshot_id,
+    committed_at,
+    operation
+  FROM
+    iceberg_table$snapshots
+) AS snapshots
+ON refs_data.snapshot_id = snapshots.snapshot_id
+ORDER BY
+  snapshots.committed_at;
+
++---------------------+----------------------------+-----------+-------------------------------------+
+| snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
++---------------------+----------------------------+-----------+-------------------------------------+
+| 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
+| 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
+|   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
+| 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
++---------------------+----------------------------+-----------+-------------------------------------+
+```
