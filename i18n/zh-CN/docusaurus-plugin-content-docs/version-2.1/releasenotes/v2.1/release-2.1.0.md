@@ -123,7 +123,7 @@
 :::note
 - [演示 Demo](https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0)
 
-- 参考文档：[SQL 方言兼容](../../lakehouse/sql-dialect.md)
+- 参考文档：[SQL 方言兼容](../../lakehouse/sql-convertor/sql-convertor-overview.md)
 
 :::
 

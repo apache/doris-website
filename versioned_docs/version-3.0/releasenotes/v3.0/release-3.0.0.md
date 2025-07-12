@@ -195,15 +195,15 @@ See doc:
 
 - Trino Connector: https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/
 
-- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpch/
+- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpch/
 
-- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpcds/
+- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpcds/
 
-- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/deltalake/
+- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/catalogs/delta-lake-catalog/
 
-- Kudu: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/kudu/
+- Kudu: https://doris.apache.org/docs/3.0/lakehouse/catalogs/kudu-catalog/
 
-- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/bigquery/
+- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/catalogs/bigquery-catalog/
 :::
 
 
@@ -214,7 +214,7 @@ In V3.0, we have introduced data writeback functionality for Hive and Iceberg. T
 In future iterations, Apache Doris will further enhance support for data lake table formats and improve the openness of storage APIs.
 
 :::info Note
-See doc: https://doris.apache.org/docs/3.0/lakehouse/datalake-building/hive-build/
+See doc: https://doris.apache.org/docs/3.0/lakehouse/catalogs/hive-catalog/
 :::
 
 ## 3. Upgraded semi-structured data analysis capabilities
