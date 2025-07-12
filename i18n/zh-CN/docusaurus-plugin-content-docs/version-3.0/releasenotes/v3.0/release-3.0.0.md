@@ -181,15 +181,15 @@
 
 - [接入 Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide)
 
-- [TPC-H](../../lakehouse/datalake-analytics/tpch/)
+- [TPC-H](../../lakehouse/best-practices/tpch)
 
-- [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
+- [TPC-DS](../../lakehouse/best-practices/tpcds)
 
-- [Delta Lake](../../lakehouse/datalake-analytics/deltalake)
+- [Delta Lake](../../lakehouse/catalogs/delta-lake-catalog)
 
-- [Kudu](../../lakehouse/datalake-analytics/kudu)
+- [Kudu](../../lakehouse/catalogs/kudu-catalog)
 
-- [BigQuery](../../lakehouse/datalake-analytics/bigquery)
+- [BigQuery](../../lakehouse/catalogs/bigquery-catalog)
 :::
 
 ### 2-3 数据湖构建
@@ -200,7 +200,7 @@
 
 :::info 备注
 
-参考文档：[数据湖构建](../../lakehouse/datalake-building/hive-build/)
+参考文档：[数据湖构建](../../lakehouse/catalogs/hive-catalog)
 
 :::
 

@@ -15,7 +15,7 @@ Doris supports the following methods to load CSV format data:
 - [Broker Load](../import-way/broker-load-manual)
 - [Routine Load](../import-way/routine-load-manual)
 - [MySQL Load](../import-way/mysql-load-manual)
-- [INSERT INTO FROM S3 TVF](../../../lakehouse/file.md)
+- [INSERT INTO FROM S3 TVF](../../../lakehouse/file-analysis.md)
 - [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## Parameter Configuration
