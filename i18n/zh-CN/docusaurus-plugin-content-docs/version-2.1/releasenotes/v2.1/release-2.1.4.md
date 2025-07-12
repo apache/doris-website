@@ -51,7 +51,7 @@
   
 -  **支持在表值函数（TVF）中使用 Resource**：TVF 功能为 Apache Doris 提供了直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析的能力。通过在 TVF 中引用 Resource，可以避免重复填写连接信息，提升使用体验。  [#35139](https://github.com/apache/doris/pull/35139)
 
-	关于更多信息，请参考文档：[表函数 - HDFS](../../lakehouse/file.md)
+	关于更多信息，请参考文档：[表函数 - HDFS](../../lakehouse/file-analysis.md)
 
 - **支持通过 Ranger 插件实现数据脱敏**：开启 Ranger 鉴权功能后，支持使用 Ranger 中的 Data Mask 功能进行数据脱敏。
 
