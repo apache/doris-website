@@ -747,11 +747,175 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
   * Object storage
 
-## Appendix
+### Schema Change
 
-### Change Log
+Start from 3.1.0, Doris supports schema changes for Iceberg tables, which can be modified using the `ALTER TABLE` statement.
 
-| Doris Version | Feature Support                        |
-| -------------- | -------------------------------------- |
-| 2.1.3          | Support for ORC file format, Equality Delete |
-| 2.1.6          | Support for DDL, DML                   |
+Supported schema change operations include:
+
+* **Rename Column**
+
+Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
+
+```sql
+ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+```
+
+* **Add a Column**
+
+Use `ADD COLUMN` to add a new column. The new column will be added to the end of the table. Adding new columns to nested types is not supported.
+
+When adding a new column, you can specify nullable attributes, default values, and comments.
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+
+Example:
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
+```
+
+* **Add Columns**
+
+You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Adding new columns to nested types is not supported.
+
+The syntax for each column is the same as adding a single column.
+
+```sql
+ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
+```
+
+* **Drop Column**
+
+Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+
+```sql
+ALTER TABLE iceberg_table DROP COLUMN col_name;
+```
+
+* **Modify Column**
+
+Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, and comment.
+
+Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
+
+```sql
+ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
+```
+
+Example:
+
+```sql
+CREATE TABLE iceberg_table (
+    id INT,
+    name STRING
+);
+-- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
+ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+```
+
+* **Reorder Columns**
+
+Use `ORDER BY` to reorder columns by specifying the new column order.
+
+```sql
+ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+```
+
+## Iceberg Table Optimization
+
+### View Data File Distribution
+
+You can use the following SQL to analyze the data distribution and delete file count of Iceberg tables, helping determine whether optimization like Compaction is needed.
+
+- Display data file size distribution. This can help identify if there are too many
+
+  ```sql
+  SELECT
+    CASE
+      WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
+      WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
+      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+      WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
+      WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
+      ELSE 'Unknown'
+    END AS SizeRange,
+    COUNT(*) AS FileNum
+  FROM store_sales$data_files
+  GROUP BY
+    SizeRange;
+
+  +-----------+---------+
+  | SizeRange | FileNum |
+  +-----------+---------+
+  | 0-8M      |       8 |
+  | 8-32M     |       6 |
+  +-----------+---------+
+  ```
+
+- Display the number of data files and delete files
+
+  ```sql
+  SELECT
+    CASE
+      WHEN content = 0 THEN 'DataFile'
+      WHEN content = 1 THEN 'PositionDeleteFile'
+      WHEN content = 2 THEN 'EqualityDeleteFile'
+      ELSE 'Unknown'
+    END AS ContentType,
+    SUM(file_size_in_bytes) AS SizeInBytes,
+    SUM(record_count) AS Records
+  FROM
+    iceberg_table$files
+  GROUP BY
+    ContentType;
+
+  +--------------------+-------------+---------+
+  | ContentType        | SizeInBytes | Records |
+  +--------------------+-------------+---------+
+  | EqualityDeleteFile |        1786 |       4 |
+  | DataFile           |        1981 |       5 |
+  | PositionDeleteFile |         809 |       1 |
+  +--------------------+-------------+---------+
+  ```
+
+### View Snapshot and Branch
+
+```sql
+SELECT
+  refs_data.snapshot_id,
+  snapshots.committed_at,
+  snapshots.operation,
+  ARRAY_SORT(refs_data.refs)
+FROM (
+  SELECT
+    snapshot_id,
+    ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+  FROM
+    iceberg_table$refs
+  GROUP BY
+    snapshot_id
+) AS refs_data
+JOIN (
+  SELECT
+    snapshot_id,
+    committed_at,
+    operation
+  FROM
+    iceberg_table$snapshots
+) AS snapshots
+ON refs_data.snapshot_id = snapshots.snapshot_id
+ORDER BY
+  snapshots.committed_at;
+
++---------------------+----------------------------+-----------+-------------------------------------+
+| snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
++---------------------+----------------------------+-----------+-------------------------------------+
+| 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
+| 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
+|   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
+| 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
++---------------------+----------------------------+-----------+-------------------------------------+
+```
