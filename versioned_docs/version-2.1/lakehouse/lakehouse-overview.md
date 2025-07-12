@@ -1,373 +1,157 @@
 ---
 {
-    "title": "Data Lakehouse Overview",
+    "title": "Lakehouse Overview",
     "language": "en"
 }
 ---
 
-Before the integration of data lake and data warehouse, the history of data analysis went through three eras: database, data warehouse, and data lake analytics.
+**The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses**. It integrates the low cost and high scalability of data lakes with the high performance and strong data governance capabilities of data warehouses, enabling efficient, secure, and quality-controlled storage and processing analysis of various data in the big data era. Through standardized open data formats and metadata management, it unifies **real-time** and **historical** data, **batch processing**, and **stream processing**, gradually becoming the new standard for enterprise big data solutions.
 
-- Database, the fundamental concept, was primarily responsible for online transaction processing and providing basic data analysis capabilities.
+## Doris Lakehouse Solution
 
-- As data volumes grew, data warehouses emerged. They store valuable data that has been cleansed, processed, and modeled, providing analytics capabilities for business.
+Doris provides an excellent lakehouse solution for users through an extensible connector framework, a compute-storage decoupled architecture, a high-performance data processing engine, and data ecosystem openness.
 
-- The advent of data lakes was to serve the needs of enterprises for storing, managing, and reprocessing raw data. They required low-cost storage for structured, semi-structured, and even unstructured data, and they also needed an integrated solution encompassing data processing, data management, and data governance.
+![doris lakehouse architecture](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
-Data warehouses addresses the need for fast data analysis, while data lakes are good at data storage and management. The integration of them, known as "lakehouse", is to facilitate the seamless integration and free flow of data between the data lake and data warehouse. It enables users to leverage the analytic capabilities of the data warehouse while harnessing the data management power of the data lake.
+### Flexible Data Access
 
-## Applicable scenarios
+Doris supports mainstream data systems and data format access through an extensible connector framework and provides unified data analysis capabilities based on SQL, allowing users to easily perform cross-platform data queries and analysis without moving existing data. For details, refer to [Catalog Overview](./catalog-overview.md)
 
-We design the Doris Data Lakehouse solution for the following four applicable scenarios:
+### Data Source Connectors
 
-- Lakehouse query acceleration: As a highly efficient OLAP query engine, Doris has excellent MPP-based vectorized distributed query capabilities. Data lake analysis with Doris will benefit from the efficient query engine.
+Whether it's Hive, Iceberg, Hudi, Paimon, or database systems supporting the JDBC protocol, Doris can easily connect and efficiently access data.
 
-- Unified data analysis gateway: Doris provides data query and writing capabilities for various and heterogeneous data sources. Users can unify these external data sources onto Doris' data mapping structure, allowing for a consistent query experience when accessing external data sources through Doris.
+For lakehouse systems, Doris can obtain the structure and distribution information of data tables from metadata services such as Hive Metastore, AWS Glue, and Unity Catalog, perform reasonable query planning, and utilize the MPP architecture for distributed computing.
 
-- Unified data integration: Doris, through its data lake integration capabilities, enables incremental or full data synchronization from multiple data sources to Doris. Doris processes the synchronized data and makes it available for querying. The processed data can also be exported to downstream systems as full or incremental data services. Using Doris, you can have less reliance on external tools and enable end-to-end connectivity from ata synchronization to data processing.
+For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.md)
 
+#### Extensible Connector Framework
 
-- More open data platform: Many data warehouses have their own storage formats. They require external data to be imported into themselve before the data queryable. This creates a closed ecosystem where data in the data warehouse can only be accessed by the data warehouse itself. In this case, users might concern if data will be locked into a specific data warehouse or wonder if there are any other easy way for data export. The Doris lakehouse solution provides open data formats, such as Parquet/ORC, to allow data access by various external systems. Additionally, just like Iceberg and Hudi providing open metadata management capabilities, metadata, whether stored in Doris, Hive Metastore, or other unified metadata centers, can be accessed through publicly available APIs. An open data ecosystem makes it easy for enterprises to migrate to new data management systems and reduces the costs and risks in this process.
+Doris provides a good extensibility framework to help developers quickly connect to unique data sources within enterprises, achieving fast data interoperability.
 
-## Doris-based data lakehouse architecture
+Doris defines three levels of standard Catalog, Database, and Table, allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata service and storage service accessing, and developers only need to implement the corresponding interface to complete the data source connection.
 
-Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon, LakeSoul, Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
+Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide).
 
-![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
+#### Convenient Cross-Source Data Processing
 
-**Data access steps:**
+Doris supports creating multiple data catalogs at runtime and using SQL to perform federated queries on these data sources. For example, users can associate query fact table data in Hive with dimension table data in MySQL:
 
-1. Create metadata mapping: Apache Doris fetches metadata via Catalog and caches it for metadata management. For metadata mapping, it supports JDBC username-password authentication, Kerberos/Ranger-based authentication, and KMS-based data encryption. 
-
-2. Launch query request: When the user launches a query request from the Doris frontend (FE), Doris generates a query plan based on its cached metadata. Then, it utilizes the Native Reader to fetch data from external storage (HDFS, S3) for data computation and analysis. During query execution, it caches the hot data to prepare for similar queries in the future.
-
-3. Return result: When a query is finished, it returns the query result on the frontend.
-
-4. Write result to data lake: For users who need to write the result back to the data lake instead of returning it on the frontend, Doris supports result writeback in CSV, Parquet, and ORC formats via the export method to the data lake. 
-
-## Core technologies
-
-Apache Doris empowers data lake analytics with its extensible connection framework, metadata caching, data caching, NativeReader, I/O optimization, and statistics collection capabilities.
-
-### Extensible connection framework
-
-The data connection framework in Apache Doris includes metadata connection and data reading.
-
-- Metadata connection: Metadata connection is conducted in the frontend of Doris. The MetaData Manager in the frontend can access and manage metadata from Hive Metastore, JDBC, and data files.
-
-- Data reading: Apache Doris has a NativeReader for efficient data reading from HDFS and object storage. It supports Parquet, ORC, and text data. You can also connect Apache Doris to the Java big data ecosystem via its JNI Connector.
-
-![extensible-connection-framework](/images/extensible-connection-framework.png)
-
-### Efficient caching strategy
-
-Apache Doris caches metadata, data, and query results to improve query performance.
-
-**Metadata caching**
-
-Apache Doris supports metadata synchronization by three methods: auto synchronization, periodic synchronization, and metadata subscription (for Hive Metastore only). It accesses metadata from the data lake and stores it in the memory of its frontend. When a user issues a query request, Doris can quickly fetch metadata from its own memory and generate a query plan accordingly. Apache Doris improves synchronization efficiency by merging the concurrent metadata events. It can process over 100 metadata events per second. 
-
-![metadata-caching](/images/metadata-caching.png)
-
-**Data caching**
-
-- File caching: Apache Doris caches hot data from the data lake onto its local disks to reduce data transfer via the network and increase data access efficiency.
-
-- Cache distribution: Apache Doris distributes the cached data across all backend nodes via consistent hashing to avoid cache expiration caused by cluster scaling.
-
-- Cache eviction(update): When Apache Doris detects changes in the metadata of a data file, it promptly updates its cached data to ensure data consistency.
-
-![data-caching](/images/data-caching.png)
-
-**Query result caching & partition caching**
-
-- Query result caching: Apache Doris caches the results of previous SQL queries, so it can reuse them when similar queries are launched. It will read the corresponding result from the cache directly and return it to the client. This increases query efficiency and concurrency.
-
-- Partition caching: Apache Doris allows you to cache part of your data partitions in the backend to increase query efficiency. For example, if you need the data from the past 7 days (counting today), you can cache the data from the previous 6 days and merge it with today's data. This can largely reduce real-time computation burden and increase speed.
-
-![query-result-caching-and-partition-caching](/images/query-result-caching-and-partition-caching.png)
-
-### Native Reader
-
-- Self-developed Native Reader to avoid data conversion: Apache Doris has its own columnar storage format, which is different from Parquet and ORC. To avoid overheads caused by data format conversion, we have built our own Native Reader for Parquet and ORC files.
-
-- Lazy materialization: The Native Reader can utilize indexes and filters to improve data reading. For example, when the user needs to do filtering based on the ID column, what the Native Reader does is to read and filter the ID column, take note of the relevant row numbers, and then read the corresponding rows of the other columns based on the row numbers recorded. This reduces data scanning and speeds up data reading.
-
-![native-reader](/images/native-reader.png)
-
-- Vectorized data reading: We have vectorized data file reading in Apache Doris to increase reading speed.
-
-![vectorized-data-reading](/images/vectorized-data-reading.png)
-
-### Merge I/O
-
-A large number of small file network I/O requests can reduce I/O performance. To solve that, we introduce an I/O merging mechanism. 
-
-For example, if you decide to merge any I/O requests smaller than 3MB, then instead of dealing with all 8 small I/O requests separately, the system only needs to read 5 timess. That's how it improves data access efficiency.
-
-The downside of I/O merging is that it might read some irrelevant data, because it merges and reads together some intermediate data that might not be needed. Despite that, I/O merging can still bring a significant increase in overall throughput, especially for use cases with a large number of small files (1KB~1MB). Besides, users can mitigate the downside by adjusting the size of I/O merging.
-
-![merge-io](/images/merge-io.png)
-
-### Statistics collection
-
-Apache Doris collects statistical information to help the CBO understand data distribution, so that the CBO can evaluate the feasibility of each predicate and the cost of each execution plan. This helps the CBO figure out the most efficient query plan. It is also applicable in data lake analytics scenarios.
-
-Methods of statistics collection include manual collection and auto collection.
-
-Meanwhile, to avoid pressure on the Doris backend, we have enabled sampling collection of statistics.
-
-In some cases, some data is frequently accessed while others are not, so Apache Doris allows partition-based statistics collection, so it can ensure high efficiency in hot data queries while mitigating the impact of statistics collection on the backend.
-
-![statistics-collection](/images/statistics-collection.png)
-
-## Multi-Catalog
-
-Multi-Catalog is designed to facilitate connection to external data catalogs and enhance the data lake analysis and federated data query capabilities of Doris.
-
-In older versions of Doris, user data is in a two-tiered structure: database and table. Thus, connections to external catalogs could only be done at the database or table level. For example, users could create a mapping to a table in an external catalog via `create external table`, or to a database via `create external database`. If there are large amounts of databases or tables in the external catalog, users will need to create mappings to them one by one, which could be tedious.
-
-With Multi-Catalog, Doris now has a new three-tiered metadata hierarchy (catalog -> database -> table), which means users can connect to external data at the catalog level directly.
-
-Multi-Catalog works as an additional and enhanced external table connection method. It helps users conduct multi-catalog federated queries quickly.
-
-### Basic concepts
-
-- Internal Catalog
-
-Existing databases and tables in Doris are all under the Internal Catalog, which is the default catalog in Doris and cannot be modified or deleted.
-
-- External Catalog
-
-Users can create an External Catalog using the [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG/) command.
-
-- Switch Catalog
-
-After logging in to Doris, you will enter the Internal Catalog by default. Then, you can view or switch to your target database via `SHOW DATABASES` and `USE DB` . 
-
-Example:
-
-```Plain
-SWITCH internal;
-SWITCH hive_catalog;
+```sql
+SELECT h.id, m.name
+FROM hive.db.hive_table h JOIN mysql.db.mysql_table m
+ON h.id = m.id;
 ```
 
-After switching catalog, you can view or switch to your target database in that catalog via `SHOW DATABASES` and `USE DB`. You can view and access data in External Catalogs the same way as doing that in the Internal Catalog.
+Combined with Doris's built-in [job scheduling](../admin-manual/workload-management/job-scheduler.md) capabilities, you can also create scheduled tasks to further simplify system complexity. For example, users can set the result of the above query as a routine task executed every hour and write each result into an Iceberg table:
 
-- Delete Catalog
-
-You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-statements/catalog/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
-
-### Examples
-
-### Connect to Hive
-
-The following is the instruction on how to connect to a Hive catalog using the Catalog feature.
-
-For more information about connecting to Hive, please see [Hive](../lakehouse/datalake-analytics/hive).
-
-1. Create Catalog
-
-```SQL
-CREATE CATALOG hive PROPERTIES (
-    'type'='hms',
-    'hive.metastore.uris' = 'thrift://172.21.0.1:7004'
-);
+```sql
+CREATE JOB schedule_load
+ON SCHEDULE EVERY 1 HOUR DO
+INSERT INTO iceberg.db.ice_table
+SELECT h.id, m.name
+FROM hive.db.hive_table h JOIN mysql.db.mysql_table m
+ON h.id = m.id;
 ```
 
-Syntax help: [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG/)
+### High-Performance Data Processing
 
-2. View Catalog
+As an analytical data warehouse, Doris has made numerous optimizations in lakehouse data processing and computation and provides rich query acceleration features:
 
-3. View existing Catalogs via the `SHOW CATALOGS` command:
+* Execution Engine
 
-```Plain
-mysql> SHOW CATALOGS;
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-| CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-|     10024 | hive        | hms      | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-|         0 | internal    | internal |           | UNRECORDED              | NULL                | Doris internal catalog |
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-```
+    The Doris execution engine is based on the MPP execution framework and Pipeline data processing model, capable of quickly processing massive data in a multi-machine, multi-core distributed environment. Thanks to fully vectorized execution operators, Doris leads in computing performance in standard benchmark datasets like TPC-DS.
 
-- [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG/)
+* Query Optimizer
 
-- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG).
+    Doris can automatically optimize and process complex SQL requests through the query optimizer. The query optimizer deeply optimizes various complex SQL operators such as multi-table joins, aggregation, sorting, and pagination, fully utilizing cost models and relational algebra transformations to automatically obtain better or optimal logical and physical execution plans, greatly reducing the difficulty of writing SQL and improving usability and performance.
 
-- You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-statements/catalog/ALTER-CATALOG).
+* Data Cache and IO Optimization
 
-4. Switch Catalog
+    Access to external data sources is usually network access, which can have high latency and poor stability. Apache Doris provides rich caching mechanisms and has made numerous optimizations in cache types, timeliness, and strategies, fully utilizing memory and local high-speed disks to enhance the analysis performance of hot data. Additionally, Doris has made targeted optimizations for network IO characteristics such as high throughput, low IOPS, and high latency, providing external data source access performance comparable to local data.
 
-Switch to the Hive Catalog using the `SWITCH` command, and view the databases in it:
+* Materialized Views and Transparent Acceleration
 
-```Plain
-mysql> SWITCH hive;
-Query OK, 0 rows affected (0.00 sec)
+    Doris provides rich materialized view update strategies, supporting full and partition-level incremental refresh to reduce construction costs and improve timeliness. In addition to manual refresh, Doris also supports scheduled refresh and data-driven refresh, further reducing maintenance costs and improving data consistency. Materialized views also have transparent acceleration capabilities, allowing the query optimizer to automatically route to appropriate materialized views for seamless query acceleration. Additionally, Doris's materialized views use high-performance storage formats, providing efficient data access capabilities through column storage, compression, and intelligent indexing technologies, serving as an alternative to data caching and improving query efficiency.
 
-mysql> SHOW DATABASES;
-+-----------+
-| Database  |
-+-----------+
-| default   |
-| random    |
-| ssb100    |
-| tpch1     |
-| tpch100   |
-| tpch1_orc |
-+-----------+
-```
+As shown below, on a 1TB TPCDS standard test set based on the Iceberg table format, Doris's overall execution of 99 queries is only 1/3 of Trino's.
 
-Syntax help: [SWITCH](../sql-manual/sql-statements/session/context/SWITCH-CATALOG)
+![doris-tpcds](/images/Lakehouse/tpcds1000.jpeg)
 
-5. Use the Catalog
+In actual user scenarios, Doris reduces average query latency by 20% and 95th percentile latency by 50% compared to Presto while using half the resources, significantly reducing resource costs while enhancing user experience.
 
-After switching to the Hive Catalog, you can use the relevant features.
+![doris-performance](/images/Lakehouse/performance.jpeg)
 
-For example, you can switch to Database tpch100, and view the tables in it:
+### Convenient Service Migration
 
-```Plain
-mysql> USE tpch100;
-Database changed
+In the process of integrating multiple data sources and achieving lakehouse transformation, migrating SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
 
-mysql> SHOW TABLES;
-+-------------------+
-| Tables_in_tpch100 |
-+-------------------+
-| customer          |
-| lineitem          |
-| nation            |
-| orders            |
-| part              |
-| partsupp          |
-| region            |
-| supplier          |
-+-------------------+
-```
+To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility of over 99% in some actual user scenarios.
 
-You can view the schema of Table lineitem:
+### Modern Deployment Architecture
 
-```Plain
-mysql> DESC lineitem;
-+-----------------+---------------+------+------+---------+-------+
-| Field           | Type          | Null | Key  | Default | Extra |
-+-----------------+---------------+------+------+---------+-------+
-| l_shipdate      | DATE          | Yes  | true | NULL    |       |
-| l_orderkey      | BIGINT        | Yes  | true | NULL    |       |
-| l_linenumber    | INT           | Yes  | true | NULL    |       |
-| l_partkey       | INT           | Yes  | true | NULL    |       |
-| l_suppkey       | INT           | Yes  | true | NULL    |       |
-| l_quantity      | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_extendedprice | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_discount      | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_tax           | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_returnflag    | TEXT          | Yes  | true | NULL    |       |
-| l_linestatus    | TEXT          | Yes  | true | NULL    |       |
-| l_commitdate    | DATE          | Yes  | true | NULL    |       |
-| l_receiptdate   | DATE          | Yes  | true | NULL    |       |
-| l_shipinstruct  | TEXT          | Yes  | true | NULL    |       |
-| l_shipmode      | TEXT          | Yes  | true | NULL    |       |
-| l_comment       | TEXT          | Yes  | true | NULL    |       |
-+-----------------+---------------+------+------+---------+-------+
-```
+Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../compute-storage-decoupled/overview.md). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
 
-You can perform a query:
+![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
 
-```Plain
-mysql> SELECT l_shipdate, l_orderkey, l_partkey FROM lineitem limit 10;
-+------------+------------+-----------+
-| l_shipdate | l_orderkey | l_partkey |
-+------------+------------+-----------+
-| 1998-01-21 |   66374304 |    270146 |
-| 1997-11-17 |   66374304 |    340557 |
-| 1997-06-17 |   66374400 |   6839498 |
-| 1997-08-21 |   66374400 |  11436870 |
-| 1997-08-07 |   66374400 |  19473325 |
-| 1997-06-16 |   66374400 |   8157699 |
-| 1998-09-21 |   66374496 |  19892278 |
-| 1998-08-07 |   66374496 |   9509408 |
-| 1998-10-27 |   66374496 |   4608731 |
-| 1998-07-14 |   66374592 |  13555929 |
-+------------+------------+-----------+
-```
+The above diagram shows the system architecture of Doris's compute-storage separation, decoupling compute and storage. Compute nodes no longer store primary data, and the underlying shared storage layer (HDFS and object storage) serves as the unified primary data storage space, supporting independent scaling of compute and storage resources. The compute-storage separation architecture brings significant advantages to the lakehouse solution:
 
-Or you can conduct a join query:
+* **Low-Cost Storage**: Storage and compute resources can be independently scaled, allowing enterprises to increase storage capacity without increasing compute resources. Additionally, by using cloud object storage, enterprises can enjoy lower storage costs and higher availability, while still using local high-speed disks for caching relatively low-proportion hot data.
 
-```Plain
-mysql> SELECT l.l_shipdate FROM hive.tpch100.lineitem l WHERE l.l_partkey IN (SELECT p_partkey FROM internal.db1.part) LIMIT 10;
-+------------+
-| l_shipdate |
-+------------+
-| 1993-02-16 |
-| 1995-06-26 |
-| 1995-08-19 |
-| 1992-07-23 |
-| 1998-05-23 |
-| 1997-07-12 |
-| 1994-03-06 |
-| 1996-02-07 |
-| 1997-06-01 |
-| 1996-08-23 |
-+------------+
-```
+* **Single Source of Truth**: All data is stored in a unified storage layer, allowing the same data to be accessed and processed by different compute clusters, ensuring data consistency and integrity, and reducing the complexity of data synchronization and duplicate storage.
 
-- The table is identified in the format of `catalog.database.table`. For example, `internal.db1.part` in the above snippet.
+* **Workload Diversity**: Users can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
 
-- If the target table is in the current Database of the current Catalog, `catalog` and `database` in the format can be omitted.
+In addition, under the storage-computing coupled architecture, [elastic computing nodes](./compute-node.md) can still be used to provide elastic computing capabilities in lake warehouse data query scenarios.
 
-- You can use the `INSERT INTO` command to insert table data from the Hive Catalog into a table in the Internal Catalog. This is how you can import data from External Catalogs to the Internal Catalog:
+### Openness
 
-```Plain
-mysql> SWITCH internal;
-Query OK, 0 rows affected (0.00 sec)
+Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
 
-mysql> USE db1;
-Database changed
+Compared to open file formats, the open storage API abstracts the specific implementation of the underlying file format, allowing Doris to accelerate data access through advanced features in its storage format, such as rich indexing mechanisms. Additionally, upper-layer compute engines do not need to adapt to changes or new features in the underlying storage format, allowing all supported compute engines to simultaneously benefit from new features.
 
-mysql> INSERT INTO part SELECT * FROM hive.tpch100.part limit 1000;
-Query OK, 1000 rows affected (0.28 sec)
-{'label':'insert_212f67420c6444d5_9bfc184bf2e7edb8', 'status':'VISIBLE', 'txnId':'4'}
-```
+## Lakehouse Best Practices
 
-### Column type mapping
+In the lakehouse solution, Doris is mainly used for **lakehouse query acceleration**, **multi-source federated analysis**, and **lakehouse data processing**.
 
-After you create a Catalog, Doris will automatically synchronize the databases and tables from the corresponding external catalog to it. The following shows how Doris maps different types of catalogs and tables.
+### Lakehouse Query Acceleration
 
-As for types that cannot be mapped to a Doris column type, such as `UNION` and `INTERVAL` , Doris will map them as the UNSUPPORTED type. Here are examples of queries in a table containing UNSUPPORTED types:
+In this scenario, Doris acts as a **compute engine**, accelerating query analysis on lakehouse data.
 
-Suppose the table is of the following schema:
+![lakehouse query acceleration](/images/Lakehouse/query-acceleration.jpeg)
 
-```Plain
-k1 INT,
-k2 INT,
-k3 UNSUPPORTED,
-k4 INT
-select * from table;                // Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3
-select * except(k3) from table;     // Query OK.
-select k1, k3 from table;           // Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3
-select k1, k4 from table;           // Query OK.
-```
+#### Cache Acceleration
 
-You can find more details of the mapping of various data sources (Hive, Iceberg, Hudi, Elasticsearch, and JDBC) in the corresponding pages.
+For lakehouse systems like Hive and Iceberg, users can configure local disk caching. Local disk caching automatically stores query-designed data files in local cache directories and manages cache eviction using the LRU strategy. For details, refer to the [Data Cache](./data-cache.md) document.
 
-### Privilege management
+#### Materialized Views and Transparent Rewrite
 
-When using Doris to access the data in the External Catalog, by default, it relies on Doris's own permission access management function.
+Doris supports creating materialized views for external data sources. Materialized views store pre-computed results as Doris internal table formats based on SQL definition statements. Additionally, Doris's query optimizer supports a transparent rewrite algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern. This algorithm can analyze the structure information of SQL, automatically find suitable materialized views for transparent rewrite, and select the optimal materialized view to respond to query SQL.
 
-Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for details).
+This feature can significantly improve query performance by reducing runtime computation. It also allows access to data in materialized views through transparent rewrite without business awareness. For details, refer to the [Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview.md) document.
 
-Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
+### Multi-Source Federated Analysis
 
-`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Ranger to perform authentication management on Hive Catalog. For more information see: [Hive Catalog](../lakehouse/datalake-analytics/hive)
+Doris can act as a **unified SQL query engine**, connecting different data sources for federated analysis, solving data silos.
 
-### Database synchronization management
+![federated analysis](/images/Lakehouse/federation-query.png)
 
-Set `include_database_list` and `exclude_database_list` in Catalog properties to specify the databases to synchronize.
+Users can dynamically create multiple catalogs in Doris to connect different data sources. They can use SQL statements to perform arbitrary join queries on data from different data sources. For details, refer to the [Catalog Overview](catalog-overview.md).
 
-`include_database_list`: only synchronize the specified databases, split with `,`. The default setting is to synchronize all databases. The database names are case-sensitive.
+### Lakehouse Data Processing
 
-`exclude_database_list`: databases that do not need to synchronize, split with `,`. The default setting is to exclude no databases. The database names are case-sensitive.
+In this scenario, **Doris acts as a data processing engine**, processing lakehouse data.
 
-> If there is overlap between `include_database_list` and `exclude_database_list`, `exclude_database_list`will take precedence over `include_database_list`.
->
-> To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](../lakehouse/database/jdbc) for more details.
+![lakehouse data processing](/images/Lakehouse/data-management.jpeg)
 
+#### Task Scheduling
+
+Doris introduces the Job Scheduler feature, enabling efficient and flexible task scheduling, reducing dependency on external systems. Combined with data source connectors, users can achieve periodic processing and storage of external data. For details, refer to the [Job Scheduler](../admin-manual/workload-management/job-scheduler.md).
+
+#### Data Modeling
+
+User typically use data lakes to store raw data and perform layered data processing on this basis, making different layers of data available to different business needs. Doris's materialized view feature supports creating materialized views for external data sources and supports further processing based on materialized views, reducing system complexity and improving data processing efficiency.
+
+#### Data Write-Back
+
+The data write-back feature forms a closed loop of Doris's lakehouse data processing capabilities. Users can directly create databases and tables in external data sources through Doris and write data. Currently, JDBC, Hive, and Iceberg data sources are supported, with more data sources to be added in the future. For details, refer to the documentation of the corresponding data source.
