@@ -295,7 +295,7 @@ PROPERTIES (
 );
 ```
 
-2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE/).
+2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md).
 
 3. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
 

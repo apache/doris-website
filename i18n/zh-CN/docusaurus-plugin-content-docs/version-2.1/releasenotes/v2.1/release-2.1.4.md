@@ -47,7 +47,7 @@
 
 - **支持 Paimon 的原生读取器来处理 Deletion Vector：** Deletion Vector 主要用于标记或追踪哪些数据已被删除或标记为删除，通常应用在需要保留历史数据的场景，基于本优化可以提升大量数据更新或删除时的处理效率。 [#35241](https://github.com/apache/doris/pull/35241)
   
-  关于更多信息，请参考文档：[数据湖分析 - Paimon](../../lakehouse/datalake-analytics/paimon.md)
+  关于更多信息，请参考文档：[数据湖分析 - Paimon](../../lakehouse/catalogs/paimon-catalog.md)
   
 -  **支持在表值函数（TVF）中使用 Resource**：TVF 功能为 Apache Doris 提供了直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析的能力。通过在 TVF 中引用 Resource，可以避免重复填写连接信息，提升使用体验。  [#35139](https://github.com/apache/doris/pull/35139)
 

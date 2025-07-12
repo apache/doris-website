@@ -29,7 +29,7 @@ Doris JDBC Catalog supports connections to the following databases:
 | [ SQL Server](./jdbc-mysql-catalog.md) |
 | [ IBM DB2](./jdbc-mysql-catalog.md)    |
 | [ ClickHouse](./jdbc-clickhouse-catalog.md) |
-| [ SAP HANA](./jdbc-sap-hana-catalog.md)   |
+| [ SAP HANA](./jdbc-saphana-catalog.md)   |
 | [ Oceanbase](./jdbc-oceanbase-catalog.md) |
 
 ## Configuring Catalog
