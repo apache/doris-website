@@ -5,6 +5,25 @@
 }
 ---
 
+## 加密连接 FE
+
+Doris支持基于SSL的加密连接，当前支持TLS1.2，TLS1.3协议，可以通过以下配置开启Doris的SSL模式：
+修改FE配置文件`conf/fe.conf`，添加`enable_ssl = true`即可。
+
+接下来通过`mysql`客户端连接Doris，mysql支持三种SSL模式：
+
+1.`mysql -uroot -P9030 -h127.0.0.1`与`mysql --ssl-mode=PREFERRED -uroot -P9030 -h127.0.0.1`一样，都是一开始试图建立SSL加密连接，如果失败，则尝试使用普通连接。
+
+2.`mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1`，不使用SSL加密连接，直接使用普通连接。
+
+3.`mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1`，强制使用SSL加密连接。
+
+>注意：
+>`--ssl-mode`参数是mysql5.7.11版本引入的，低于此版本的mysql客户端请参考[这里](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html)。
+Doris开启SSL加密连接需要密钥证书文件验证，默认的密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/certificate.p12`，默认密码为`doris`，您可以通过修改FE配置文件`conf/fe.conf`，添加`mysql_ssl_default_certificate = /path/to/your/certificate`修改密钥证书文件，同时也可以通过`mysql_ssl_default_certificate_password = your_password`添加对应您自定义密钥书文件的密码。
+
+## SSL密钥证书配置
+
 Doris 开启 SSL 功能需要配置 CA 密钥证书和 Server 端密钥证书，如需开启双向认证，还需生成 Client 端密钥证书：
 
 * 默认的 CA 密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/ca_certificate.p12`，默认密码为`doris`，您可以通过修改 FE 配置文件`conf/fe.conf`，添加`mysql_ssl_default_ca_certificate = /path/to/your/certificate`修改 CA 密钥证书文件，同时也可以通过`mysql_ssl_default_ca_certificate_password = your_password`添加对应您自定义密钥证书文件的密码。
