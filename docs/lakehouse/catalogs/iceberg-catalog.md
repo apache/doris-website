@@ -865,6 +865,7 @@ You can use the following SQL to analyze the data distribution and delete file c
       WHEN content = 2 THEN 'EqualityDeleteFile'
       ELSE 'Unknown'
     END AS ContentType,
+    COUNT(*) AS FileNum,
     SUM(file_size_in_bytes) AS SizeInBytes,
     SUM(record_count) AS Records
   FROM
@@ -872,13 +873,13 @@ You can use the following SQL to analyze the data distribution and delete file c
   GROUP BY
     ContentType;
 
-  +--------------------+-------------+---------+
-  | ContentType        | SizeInBytes | Records |
-  +--------------------+-------------+---------+
-  | EqualityDeleteFile |        1786 |       4 |
-  | DataFile           |        1981 |       5 |
-  | PositionDeleteFile |         809 |       1 |
-  +--------------------+-------------+---------+
+  +--------------------+---------+-------------+---------+
+  | ContentType        | FileNum | SizeInBytes | Records |
+  +--------------------+---------+-------------+---------+
+  | EqualityDeleteFile |    2787 |     1432518 |   27870 |
+  | DataFile           |    2787 |     4062416 |   38760 |
+  | PositionDeleteFile |      11 |       36608 |   10890 |
+  +--------------------+---------+-------------+---------+
   ```
 
 ### View Snapshot and Branch

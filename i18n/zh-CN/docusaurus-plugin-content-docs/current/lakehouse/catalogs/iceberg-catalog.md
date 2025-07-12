@@ -873,6 +873,7 @@ ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
       WHEN content = 2 THEN 'EqualityDeleteFile'
       ELSE 'Unknown'
     END AS ContentType,
+    COUNT(*) AS FileNum,
     SUM(file_size_in_bytes) AS SizeInBytes,
     SUM(record_count) AS Records
   FROM
@@ -880,13 +881,13 @@ ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   GROUP BY
     ContentType;
 
-  +--------------------+-------------+---------+
-  | ContentType        | SizeInBytes | Records |
-  +--------------------+-------------+---------+
-  | EqualityDeleteFile |        1786 |       4 |
-  | DataFile           |        1981 |       5 |
-  | PositionDeleteFile |         809 |       1 |
-  +--------------------+-------------+---------+
+  +--------------------+---------+-------------+---------+
+  | ContentType        | FileNum | SizeInBytes | Records |
+  +--------------------+---------+-------------+---------+
+  | EqualityDeleteFile |    2787 |     1432518 |   27870 |
+  | DataFile           |    2787 |     4062416 |   38760 |
+  | PositionDeleteFile |      11 |       36608 |   10890 |
+  +--------------------+---------+-------------+---------+
   ```
 
 ### 查看快照和分支对应情况
