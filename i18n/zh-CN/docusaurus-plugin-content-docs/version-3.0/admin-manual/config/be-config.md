@@ -1499,3 +1499,9 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
 
 * 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `time_series_max_tablet_version_num`
+
+* 类型：int
+* 描述：限制time series compaction 策略的 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。
+* 默认值：20000

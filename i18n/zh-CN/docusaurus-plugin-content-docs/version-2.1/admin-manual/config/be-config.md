@@ -1483,3 +1483,9 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
+
+#### `time_series_max_tablet_version_num`
+
+* 类型：int
+* 描述：限制time series compaction 策略的 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。
+* 默认值：20000
