@@ -22,7 +22,7 @@ Starting from Doris version 2.1.8, Docker can be used for rapid deployment.
 
 ### Step 1: Download the Quick-Start script
 
-[Download the script](/files/start-doris.sh), run the following command to grant it the corresponding execution permissions.
+<a target="_blank" download rel="noopener noreferrer" href="/files/start-doris.sh"> Download the script </a>, run the following command to grant it the corresponding execution permissions.
 
 ```shell
 chmod 755 start-doris.sh
@@ -30,10 +30,16 @@ chmod 755 start-doris.sh
 
 ### Step 2: Start the cluster
 
-Run the script to start the cluster. The default version is `2.1.9`. You can specify the startup version through the -v parameter, such as:
+Run the script to start the cluster, using the `2.1.9` version by default
 
 ```shell
-bash start-doris.sh -v 3.0.4
+bash start-doris.sh
+```
+
+You can specify the startup version through the -v parameter, such as:
+
+```shell
+bash start-doris.sh -v 2.1.8
 ```
 
 ### Step 3: Connect to the cluster using MySQL client and check the cluster status
