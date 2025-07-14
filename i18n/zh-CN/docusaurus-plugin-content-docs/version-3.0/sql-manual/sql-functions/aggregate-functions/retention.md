@@ -13,6 +13,9 @@
 
 简单来讲，返回值数组第 1 位表示`event_1`的真假，第二位表示`event_1`真假与`event_2`真假相与，第三位表示`event_1`真假与`event_3`真假相与，等等。如果`event_1`为假，则返回全是 0 的数组。
 
+当有多个列参与计算时，如果任意一列出现了NULL值，则NULL值的当前行不会参与聚合计算，被直接丢弃
+可以在计算列上加IF NULL函数处理NULL值，详情见后续示例。
+
 ## 语法
 
 ```sql
@@ -85,4 +88,65 @@ SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL
 +------+
 | NULL |
 +------+
+```
+
+```sql
+CREATE TABLE retention_test2(
+    `uid` int, 
+    `flag` boolean,
+    `flag2` boolean
+) DUPLICATE KEY(uid) 
+DISTRIBUTED BY HASH(uid) BUCKETS AUTO
+PROPERTIES ( 
+    "replication_allocation" = "tag.location.default: 1"
+);
+
+INSERT into retention_test2 values (0, false, false), (1, true,  NULL);
+
+SELECT * from retention_test2;
+```
+
+```text
++------+------+-------+
+| uid  | flag | flag2 |
++------+------+-------+
+|    0 |    1 |  NULL |
+|    1 |    0 |     0 |
++------+------+-------+
+```
+
+```sql
+select retention(flag) from retention_test2;
+```
+
+```text
++-----------------+
+| retention(flag) |
++-----------------+
+| [1]             |
++-----------------+
+```
+
+```sql
+select retention(flag,flag2) from retention_test2;
+```
+
+```text
++-----------------------+
+| retention(flag,flag2) |
++-----------------------+
+| [0, 0]                | // uid = 0 的行，由于NULL值存在，所以未参与聚合计算
++-----------------------+
+```
+
+```sql
+select retention(flag,IFNULL(flag2,false)) from retention_test2;;
+```
+
+```text
++-------------------------------------+
+| retention(flag,IFNULL(flag2,false)) |
++-------------------------------------+
+| [1, 0]                              | // 用IFNULL 函数将NULL转换成false
++-------------------------------------+
 ```

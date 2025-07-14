@@ -32,6 +32,10 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 An array of 1 and 0 with a maximum length of 32, where the final output array length matches the input parameter length.
 If no data is involved in the aggregation, a NULL value will be returned.
 
+When multiple columns are involved in a calculation, if any column contains a NULL value, the current row with the NULL value will not participate in the aggregate calculation and will be directly discarded.
+
+You can use the IFNULL function on the calculation column to handle NULL values. For details, refer to the subsequent examples.
+
 ## Examples
 
 ```sql
@@ -85,4 +89,65 @@ SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL
 +------+
 | NULL |
 +------+
+```
+
+```sql
+CREATE TABLE retention_test2(
+    `uid` int, 
+    `flag` boolean,
+    `flag2` boolean
+) DUPLICATE KEY(uid) 
+DISTRIBUTED BY HASH(uid) BUCKETS AUTO
+PROPERTIES ( 
+    "replication_allocation" = "tag.location.default: 1"
+);
+
+INSERT into retention_test2 values (0, false, false), (1, true,  NULL);
+
+SELECT * from retention_test2;
+```
+
+```text
++------+------+-------+
+| uid  | flag | flag2 |
++------+------+-------+
+|    0 |    1 |  NULL |
+|    1 |    0 |     0 |
++------+------+-------+
+```
+
+```sql
+select retention(flag) from retention_test2;
+```
+
+```text
++-----------------+
+| retention(flag) |
++-----------------+
+| [1]             |
++-----------------+
+```
+
+```sql
+select retention(flag,flag2) from retention_test2;
+```
+
+```text
++-----------------------+
+| retention(flag,flag2) |
++-----------------------+
+| [0, 0]                | // uid = 0，as the NULL value of flag2, so current row is not aggregate
++-----------------------+
+```
+
+```sql
+select retention(flag,IFNULL(flag2,false)) from retention_test2;;
+```
+
+```text
++-------------------------------------+
+| retention(flag,IFNULL(flag2,false)) |
++-------------------------------------+
+| [1, 0]                              | // IFNULL function could convert NULL value to false
++-------------------------------------+
 ```
