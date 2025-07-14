@@ -140,7 +140,7 @@ create catalog regression properties (
 
 Hadoop 环境配置复杂，某些情况下可能出现无法连通、访问性能不佳等问题。这里提供一些第三方工具帮助用户快速排查连通性问题和基础的性能问题。
 
-### HDFS Clinet
+### HDFS Client
 
 - Java：[https://github.com/morningman/hdfs-client-java](https://github.com/morningman/hdfs-client-java)
 
