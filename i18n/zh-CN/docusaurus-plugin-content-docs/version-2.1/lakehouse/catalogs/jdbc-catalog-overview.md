@@ -48,36 +48,36 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * 必须属性
 
-	    | 参数名称          | 说明                                | 示例                     |
-	    | ------------- | --------------------------------- | ---------------------- |
-	    | `user`          | 数据源用户名                            |                        |
-	    | `password`      | 数据源密码                             |                        |
-	    | `jdbc_url`     | 数据源连接 URL                         | `jdbc:mysql://host:3306` |
-	    | `driver_url`   | 数据源 JDBC 驱动程序文件的路径。关于驱动包安全性，详见附录。 | 驱动程序支持三种方式，详见下面说明。           |
-	    | `driver_class` | 数据源 JDBC 驱动程序的类名                  |                        |
+      | 参数名称          | 说明                                | 示例                     |
+      | ------------- | --------------------------------- | ---------------------- |
+      | `user`          | 数据源用户名                            |                        |
+      | `password`      | 数据源密码                             |                        |
+      | `jdbc_url`     | 数据源连接 URL                         | `jdbc:mysql://host:3306` |
+      | `driver_url`   | 数据源 JDBC 驱动程序文件的路径。关于驱动包安全性，详见附录。 | 驱动程序支持三种方式，详见下面说明。           |
+      | `driver_class` | 数据源 JDBC 驱动程序的类名                  |                        |
 
-		  `driver_url` 支持以下三种指定方式：
-		
-		  1. 文件名。如 `mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在 FE 和 BE 部署目录下的 `jdbc_drivers/` 目录下。系统会自动在这个目录下寻找。该目录的位置，也可以由 `fe.conf` 和 `be.conf` 中的 `jdbc_drivers_dir` 配置修改。
-		  
-		  2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
-		  
-		  3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
+      `driver_url` 支持以下三种指定方式：
+      
+      1. 文件名。如 `mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在 FE 和 BE 部署目录下的 `jdbc_drivers/` 目录下。系统会自动在这个目录下寻找。该目录的位置，也可以由 `fe.conf` 和 `be.conf` 中的 `jdbc_drivers_dir` 配置修改。
+      
+      2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
+      
+      3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
 
 
   * 可选属性
 
-		| 参数名称                              | 默认值     | 说明                                                                                                                |
-		| --------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
-		| `lower_case_meta_names`          | false   | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                                         |
-		| `meta_names_mapping`              |         | 当外部数据源存在名称相同只有大小写不同的情况，例如 `MY_TABLE` 和 `my_table`，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
-		| `only_specified_database`         | false   | 是否只同步 `jdbc_url` 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                         |
-		| `connection_pool_min_size`       | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                                                                   |
-		| `connection_pool_max_size`       | 30      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                                                               |
-		| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                                                                     |
-		| `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。                                       |
-		| `connection_pool_keep_alive`     | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。                                                    |
-	
+      | 参数名称                              | 默认值     | 说明                                                                                                                |
+      | --------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+      | `lower_case_meta_names`          | false   | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                                         |
+      | `meta_names_mapping`              |         | 当外部数据源存在名称相同只有大小写不同的情况，例如 `MY_TABLE` 和 `my_table`，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
+      | `only_specified_database`         | false   | 是否只同步 `jdbc_url` 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                         |
+      | `connection_pool_min_size`       | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                                                                   |
+      | `connection_pool_max_size`       | 30      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                                                               |
+      | `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                                                                     |
+      | `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。                    |
+      | `connection_pool_keep_alive`     | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。                                                    |
+    
 * `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
