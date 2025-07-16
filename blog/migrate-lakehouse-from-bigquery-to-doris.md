@@ -4,7 +4,7 @@
     'summary': "Dien Tran Thanh shares his firsthand experience, proven best practices, and insightful suggestions for migrating from BigQuery to Apache Doris to build a more cost-efficient data warehouse.",
     'description': "Dien Tran Thanh shares his firsthand experience, proven best practices, and insightful suggestions for migrating from BigQuery to Apache Doris to build a more cost-efficient data warehouse.",
     'date': '2024-07-19',
-    'author': 'Dien, Tran Thanh',
+    'author': 'velodb.io · Dien, Tran Thanh',
     'tags': ['Best Practice'],
     'externalLink': 'https://www.velodb.io/blog/689',
     "image": '/images/migrate-lakehouse-from-bigquery-to-apache-doris.jpg'

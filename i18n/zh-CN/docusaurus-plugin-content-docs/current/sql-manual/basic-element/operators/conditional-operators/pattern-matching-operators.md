@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 模式匹配操作符用于比较字符类型的数据。
@@ -42,13 +23,14 @@ LIKE 条件指定一个涉及模式匹配的测试。等值比较运算符（=�
 语法如下：
 
 ```sql
-<char1> [ NOT ] LIKE <char2>
+<char1> [ NOT ] LIKE <char2> [ ESCAPE 'char_escape' ]
 ```
 
 其中：
 
-- char1 是一个字符表达式（如字符列），称为搜索值。
-- char2 是一个字符表达式，通常是一个字面量，称为模式。
+- char1 是一个字符表达式（如字符列），称为搜索串。
+- char2 是一个字符表达式，通常是一个字面量，称为模式串。
+- char_escape (可选) 是一个字符表达式，必须是一个长度为1的字符 ( ascii 编码下 )。 它允许您定义转义字符，如果您不提供char_escape，则默认 ‘ \ ’是转义字符。
 
 所有字符表达式（char1、char2）都可以是 CHAR、VARCHAR 或 STRING 数据类型中的任何一种。如果它们不同，则 Doris 会将它们全部转换为 VARCHAR 或者 STRING。
 
@@ -56,6 +38,38 @@ LIKE 条件指定一个涉及模式匹配的测试。等值比较运算符（=�
 
 - 模式中的下划线 (_) 与值中的一个字符完全匹配。
 - 模式中的百分号 (%) 可以与值中的零个或多个字符匹配。模式 '%' 不能与 NULL 匹配。
+
+### 示例
+
+```sql
+select "%a" like "\%_";
+```
+
+结果如下，因为 "%" 是特殊字符，所以需要用 "\%" 进行转义才能正确匹配。
+
+```text
++-----------------+
+| "%a" like "\%_" |
++-----------------+
+|               1 |
++-----------------+
+```
+
+
+```sql
+select "%a" like "a%_" ESCAPE "a";
+```
+
+与之前的例子的区别在于有指定 "a" 作为转义字符。
+
+```text
++----------------------------+
+| "%a" like "a%_" ESCAPE "a" |
++----------------------------+
+|                          1 |
++----------------------------+
+```
+
 
 ### REGEXP（RLIKE）
 

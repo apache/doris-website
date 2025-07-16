@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 研发背景
 
 在当前的信息技术环境中，查询优化器面临着多重挑战：一方面，它们需要处理用户日益复杂的查询语句和多样化的查询场景；另一方面，用户对查询实时性的要求愈发严格，渴望能够即时获取所需结果。此外，为了应对不断出现的新需求，查询优化器必须具备快速迭代与灵活适应的能力。

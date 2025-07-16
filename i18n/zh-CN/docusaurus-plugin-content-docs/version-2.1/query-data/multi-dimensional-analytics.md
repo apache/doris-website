@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在数据库中，ROLLUP、CUBE 和 GROUPING SETS 是用于多维数据聚合的高级 SQL 语句。这些功能显著增强了 GROUP BY 子句的能力，使得用户可以在单一查询中获得多种层次的汇总结果，这在语义上等价于使用 UNION ALL 连接多个聚合语句。
 
 - **ROLLUP**：ROLLUP 是一种用于生成层次化汇总的操作。它按照指定的列顺序进行汇总，从最细粒度的数据逐步汇总到最高层次。例如，在销售数据中，可以使用 ROLLUP 按地区、时间进行汇总，得到每个地区每个月的销售额、每个地区的总销售额以及整体总销售额。ROLLUP 适用于需要逐级汇总的场景。

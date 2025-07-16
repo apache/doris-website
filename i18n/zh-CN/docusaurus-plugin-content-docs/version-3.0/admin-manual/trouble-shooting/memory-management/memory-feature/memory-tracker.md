@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，包括查询、导入、Compaction、Schema Change 等任务生命周期中使用的内存，以及各项缓存。支持 Web 页面实时查看，并在内存相关报错时打印到 BE 日志中，用于内存分析和排查内存问题。
 
 有关 Memory Tracker 的查看方法，以及不同 Memory Tracker 所代表内存占用过大的原因以及减少其内存使用的分析方法在 [Overview](./../overview.md) 中已结合 Doris BE 内存结构一起介绍。本文只介绍 Memory Tracker 原理、结构，以及一些常见问题。

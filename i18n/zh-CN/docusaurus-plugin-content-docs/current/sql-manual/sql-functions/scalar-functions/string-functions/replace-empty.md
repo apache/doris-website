@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 REPLACE_EMPTY 函数用于将字符串中的一部分字符替换为其他字符。和 [REPLACE](./repeat.md) 函数不同的是，当 `old` 为空字符串时，会将 `new` 字符串插入到 `str` 字符串的每个字符前，以及 `str` 字符串的最后。

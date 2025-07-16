@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 当需要更新数据时，可以选择主键模型（Unique Key Model）。该模型保证 Key 列的唯一性，插入或更新数据时，新数据会覆盖具有相同 Key 的旧数据，确保数据记录为最新。与其他数据模型相比，主键模型适用于数据的更新场景，在插入过程中进行主键级别的更新覆盖。
 
 主键模型有以下特点：

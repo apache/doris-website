@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The workload analysis for clusters is primarily divided into two stages:
 - The first stage is runtime workload analysis, when the cluster's availability declines, queries with significant resource consumption can be identified through monitoring and downgraded accordingly.
 - The second stage involves analyzing historical data, such as audit logs, to identify unreasonable workloads and optimize them.

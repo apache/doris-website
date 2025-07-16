@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在 Doris 中建表时需要指定表模型，以定义数据存储与管理方式。在 Doris 中提供了明细模型、聚合模型以及主键模型三种表模型，可以应对不同的应用场景需求。不同的表模型具有相应的数据去重、聚合及更新机制。选择合适的表模型有助于实现业务目标，同时保证数据处理的灵活性和高效性。
 
 ## 表模型分类

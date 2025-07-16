@@ -102,6 +102,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
         "hadoop.password"="hive",
+        "root_path"="/my/root/path",
         "dfs.nameservices" = "my_ha",
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -205,7 +206,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考(../../lakehouse/filecache)。
+具体配置请参考(../../lakehouse/data-cache)。
 
 ## 常见问题
 

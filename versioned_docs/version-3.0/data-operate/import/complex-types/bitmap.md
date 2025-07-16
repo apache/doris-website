@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Key type, not as a Value column. When using the BITMAP type in an Aggregate table, the table must be created with the aggregate type BITMAP_UNION. Users do not need to specify length and default values. The length is controlled by the system based on the degree of data aggregation. For more documentation, refer to [Bitmap](../../../sql-manual/basic-element/sql-data-types/aggregate/BITMAP).
 
 ## Usage Example

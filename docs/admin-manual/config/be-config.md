@@ -7,27 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-<!-- Please sort the configuration alphabetically -->
-
 # BE Configuration
 
 This document mainly introduces the relevant configuration items of BE.
@@ -389,7 +368,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 * Type: int32
 * Description: The number of threads in the Scanner thread pool. In Doris' scanning tasks, each Scanner will be submitted as a thread task to the thread pool to be scheduled. This parameter determines the size of the Scanner thread pool.
-* Default value: 48
+* Default value: Depending on cpu cores. Equal to `max(48, 2 * num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -603,7 +582,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * Type: int32
-* Description: Max number of segments allowed in a single segment compaction task.
+* Description: Segment compaction is triggered when the number of segments exceeds this threshold. This configuration also limits the maximum number of raw segments in a single segment compaction task.
 * Default value: 10
 
 #### `segcompaction_candidate_max_rows`

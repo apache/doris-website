@@ -3,7 +3,7 @@
     'title': "Financial data warehousing: fast, secure, and highly available with Apache Doris",
     'description': "A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.",
     'date': '2024-01-08',
-    'author': 'VeloDB Engineering Team',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/155',
     'tags': ['Best Practice'],
     "image": '/images/apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png'

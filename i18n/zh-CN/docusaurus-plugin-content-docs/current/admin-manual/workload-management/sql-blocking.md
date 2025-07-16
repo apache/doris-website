@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 查询熔断是一种保护机制，用于防止长时间运行或消耗过多资源的查询对系统产生负面影响。当查询超过预设的资源或时间限制时，熔断机制会自动终止该查询，以避免对系统性能、资源使用以及其他查询造成不利影响。这种机制确保了集群在多用户环境下的稳定性，防止单个查询导致系统资源耗尽、响应变慢，从而提高整体的可用性和效率。
 
 在 Doris 内，有两种熔断策略：
@@ -61,7 +42,7 @@ under the License.
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select \\* from t",
+  "sql"="select \\* from t",
   "global" = "true",
   "enable" = "true"
 )
@@ -81,7 +62,7 @@ MySQL root@127.0.0.1:test> select * from t;
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select * from t",
+  "sql"="select * from t",
   "global" = "false",
   "enable" = "true"
 )
@@ -185,7 +166,7 @@ PROPERTIES
 ```sql
 CREATE SQL_BLOCK_RULE rule_abs
 PROPERTIES(
-  "SQL"="(?i)abs\\s*\\(.+\\)",
+  "sql"="(?i)abs\\s*\\(.+\\)",
   "global"="true",
   "enable"="true"
 );

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Doris support standard SQL syntax, using MySQL Network Connection Protocol, highly compatible with MySQL syntax protocol. Therefore, in terms of data type support, Apache Doris aligns as closely as possible with MySQL-related data types
 
 The list of data types supported by Doris is as follows:
@@ -40,7 +21,7 @@ The list of data types supported by Doris is as follows:
 | [LARGEINT](../sql-manual/basic-element/sql-data-types/numeric/LARGEINT)     | 16              | Integer value, range is [-2^127 + 1 to 2^127 - 1].               |  
 | [FLOAT](../sql-manual/basic-element/sql-data-types/numeric/FLOAT)           | 4               | Single precision floating point number, range is [-3.4 * 10^38 to 3.4 * 10^38]. |  
 | [DOUBLE](../sql-manual/basic-element/sql-data-types/numeric/DOUBLE)         | 8               | Double precision floating point number, range is [-1.79 * 10^308 to 1.79 * 10^308]. |  
-| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)       | 4/8/16          | An exact fixed-point number defined by precision (total number of digits) and scale (number of digits to the right of the decimal point). Format: DECIMAL(M[,D]), where M is precision and D is scale. The range for M is [1, 38], and for D is [0, precision]. Storage requirements: - 4 bytes for 0 < precision <= 9, - 8 bytes for 9 < precision <= 18, - 16 bytes for 18 < precision <= 38. |
+| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)       | 4/8/16/32          | An exact fixed-point number defined by precision (total number of digits) and scale (number of digits to the right of the decimal point). Format: DECIMAL(P[,S]), where P is precision and S is scale. The range for P is [1, MAX_P], where MAX_P=38 when `enable_decimal256`=false, and MAX_P=76 when `enable_decimal256`=true, and for S is [0, P]. <br>The default value of `enable_decimal256` is false. Setting it to true can get more accurate results, but it will bring some performance loss. <br>Storage requirements: <ul> <li>4 bytes for 0 < precision <= 9.</li><li>8 bytes for 9 < precision <= 18.<li>16 bytes for 18 < precision <= 38.<li>32 bytes for 38 < precision <= 76.</ul> |
 
 ## [Datetime data type](../sql-manual/basic-element/sql-data-types/data-type-overview#date-types)
 

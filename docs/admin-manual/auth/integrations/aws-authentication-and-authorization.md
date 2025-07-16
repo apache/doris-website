@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris supports accessing AWS service resources through two authentication methods: ​​`IAM User`​​ and `​​Assumed Role`​​. This article explains how to configure security credentials for both methods and use Doris features to interact with AWS services.
 
 # Authentication Methods Overview
@@ -32,7 +13,7 @@ Doris supports accessing AWS service resources through two authentication method
 
 Doris enables access to external data sources by configuring `AWS IAM User` credentials(equal to `access_key` and `secret_key`), below are the detailed configuration steps(for more information, refer to the AWS doc [IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html)):
 
-### Step1 create an IAM User and configure policies
+### Step1 Create an IAM User and configure policies
 
 1. Login to the `AWS Console` and create an `IAM User`​
 
@@ -125,7 +106,7 @@ S3 write policy template​​ (Applies to Doris features requiring read/write a
 
 After completing all configurations in Step 1, you will obtain `access_key` and `secret_key`. Use these credentials to access doris features as shown in the following examples:
 
-S3 Load
+#### S3 Load
 ```SQL
   LOAD LABEL s3_load_2022_04_01
   (
@@ -149,7 +130,7 @@ S3 Load
   );
 ```
 
-TVF
+#### TVF
 ```SQL
   SELECT * FROM S3 (
       'uri' = 's3://your_bucket/path/to/tvf_test/test.parquet',
@@ -161,7 +142,7 @@ TVF
   )
 ```
 
-External Catalog
+#### External Catalog
 ```SQL
   CREATE CATALOG iceberg_catalog PROPERTIES (
       'type' = 'iceberg',
@@ -174,7 +155,7 @@ External Catalog
   );
 ```
 
-Storage Vault
+#### Storage Vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
@@ -190,7 +171,7 @@ PROPERTIES (
 );
 ```
 
-Export
+#### Export
 ```SQL
 EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
 PROPERTIES (
@@ -204,7 +185,7 @@ PROPERTIES (
 )
 ```
 
-Repository
+#### Repository
 ```SQL
 CREATE REPOSITORY `s3_repo`
 WITH S3
@@ -218,7 +199,7 @@ PROPERTIES
 );
 ```
 
-Resource
+#### Resource
 ```SQL
 CREATE RESOURCE "remote_s3"
 PROPERTIES
@@ -391,7 +372,7 @@ S3 write policy template​​ (Applies to Doris features requiring read/write a
 }
 ```
 
-#### Step4 Use doris features with Assumed Role via SQL, according to `role_arn` and `external_id` fields;
+### Step4 Use doris features with Assumed Role via SQL, according to `role_arn` and `external_id` fields
 
 After completing the above configurations, obtain the target account's `role_arn` and `external_id` (if applicable). 
 Use these parameters in doris SQL statements as shown below:
@@ -402,7 +383,7 @@ Common important key parameters:​​
 "s3.external_id" = "<your-external-id>"      -- option parameter
 ```
 
-S3 Load
+#### S3 Load
 ```SQL
   LOAD LABEL s3_load_2022_04_01
   (
@@ -426,7 +407,7 @@ S3 Load
   );
 ```
 
-TVF
+#### TVF
 ```SQL
   SELECT * FROM S3 (
       "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
@@ -438,7 +419,7 @@ TVF
   )
 ```
 
-External Catalog
+#### External Catalog
 ```SQL
   CREATE CATALOG iceberg_catalog PROPERTIES (
       "type" = "iceberg",
@@ -451,7 +432,7 @@ External Catalog
   );
 ```
 
-Storage Vault
+#### Storage Vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
@@ -467,7 +448,7 @@ PROPERTIES (
 );
 ```
 
-Export
+#### Export
 ```SQL
 EXPORT TABLE s3_test TO "s3://your_bucket/a/b/c" 
 PROPERTIES (
@@ -481,7 +462,7 @@ PROPERTIES (
 )
 ```
 
-Repository
+#### Repository
 ```SQL
 CREATE REPOSITORY `s3_repo`
 WITH S3
@@ -495,7 +476,7 @@ PROPERTIES
 );
 ```
 
-Resource
+#### Resource
 ```SQL
 CREATE RESOURCE "remote_s3"
 PROPERTIES

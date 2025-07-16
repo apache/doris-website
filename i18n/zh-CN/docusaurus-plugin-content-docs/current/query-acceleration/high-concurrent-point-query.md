@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 :::tip
 高并发点查功能自 Doris 2.0 版本起具有重大性能提升
 :::
@@ -182,3 +162,23 @@ A：Prepared Statement 目前只在主键点查的情况下生效
 #### Q5. 优化器选择需要进行全局设置吗
 
 A：在使用 prepared statement 进行查询时，Doris 会选择性能最好的查询方式，不需要手动设置优化器
+
+#### Q6. FE 成为瓶颈怎么处理？
+
+A：如果占用过高 cpu，%CPU 过高，则在 jdbc url 开启以下配置
+
+```
+jdbc:mysql:loadbalance://[host1][:port],[host2][:port][,[host3][:port]]/${tbl_name}?useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=500&prepStmtCacheSqlLimit=1024
+```
+- 打开 loadbalance 确保多个 FE 都能提供服务，并且 FE 数量越多越好 (每个实例都部署一个)
+- 打开 useServerPrepStmts，减少 fe 解析、规划开销
+- 打开 cachePrepStmts 客户端缓存 prepared statement，不用频繁向 FE 发送 prepared 请求
+- 调整 prepStmtCacheSize，设置最大可缓存的查询模版数量 ()
+- 调整 prepStmtCacheSqlLimit，设置单条缓存的 SQL 模版的最大长度
+
+#### Q7. 存算分离下怎么优化查询性能？
+
+A：
+
+- `set global enable_snapshot_point_query = false`, 点查从 meta service 获取 version 会多一次额外的 RPC，并且 meta service 在高 QPS 场景下容易成为瓶颈，设置成 false 可以加速查询但是会降低数据可见性（需权衡性能和可见性）
+- 配置 BE 参数 enable_file_cache_keep_base_compaction_output=1，使得 Base Compact 后的结果数据放入缓存，避免远程访问导致的查询抖动。

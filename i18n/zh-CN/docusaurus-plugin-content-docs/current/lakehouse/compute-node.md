@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 弹性计算节点作为一种特殊类型的 BE 节点，没有数据存储能力，只负责数据计算。因此，可以将计算节点看做是无状态的 BE 节点，可以方便的进行节点的增加和删除。
 
 在湖仓数据分析场景中，弹性计算节点可用于查询外部数据源，如 Hive、Iceberg、Hudi、Paimon、JDBC 等。Doris 不负责外部数据源数据的存储，因此，可以使用弹性计算节点方便的扩展对外部数据源的计算能力。同时，计算节点也可以配置缓存目录，用于缓存外部数据源的热点数据，进一步加速数据读取。

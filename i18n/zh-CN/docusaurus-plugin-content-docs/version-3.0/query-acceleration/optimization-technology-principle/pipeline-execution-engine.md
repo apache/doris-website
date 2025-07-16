@@ -7,27 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Doris 的并行执行模型是一种 Pipeline 执行模型，主要参考了[Hyper](https://db.in.tum.de/~leis/papers/morsels.pdf)论文中 Pipeline 的实现方式，Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，从而解决 Doris 的执行线程膨胀的问题。它的具体设计、实现和效果可以参阅 [DSIP-027](DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation) 以及 [DSIP-035](DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation)。
 Doris 3.0 之后，Pipeline 执行模型彻底替换了原有的火山模型，基于 Pipeline 执行模型，Doris 实现了 Query、DDL、DML 语句的并行处理。
 
