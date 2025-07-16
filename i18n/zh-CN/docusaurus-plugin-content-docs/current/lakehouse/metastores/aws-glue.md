@@ -55,6 +55,7 @@ CREATE CATALOG hive_glue_catalog WITH (
 
 ---
 
+<!--
 ## 四、Hive Glue Catalog 专属参数
 
 以下配置 **仅适用于 Hive Glue Catalog**，用于控制 Hive 使用 AWS Glue Metastore 客户端的行为。
@@ -83,7 +84,7 @@ Glue 客户端提供元数据缓存（**仅支持 Hive Glue**）：
 参考：
 - [GetTable API](https://docs.aws.amazon.com/glue/latest/webapi/API_GetTable.html)
 - [GetDatabase API](https://docs.aws.amazon.com/glue/latest/webapi/API_GetDatabase.html)
-
+-->
 
 ## 注意事项
 
