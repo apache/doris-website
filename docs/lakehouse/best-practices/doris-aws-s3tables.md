@@ -42,8 +42,8 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
     'warehouse' = 'arn:aws:s3tables:us-east-1:169698000000:bucket/doris-s3-table-bucket',
     's3.region' = 'us-east-1',
     's3.endpoint' = 's3.us-east-1.amazonaws.com',
-    's3.access_key' = 'AKIASPAWQE3ITEXAMPLE',
-    's3.secret_key' = 'l4rVnn3hCmwEXAMPLE/lht4rMIfbhVfEXAMPLE'
+    's3.access_key' = 'ACCESS_KEY',
+    's3.secret_key' = 'SECRET_KEY'
 );
 ```
 
