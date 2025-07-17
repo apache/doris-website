@@ -77,6 +77,8 @@ SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
 
+> **Note:** Doris currently has limited support for the required and optional attributes of external table columns, uniformly parsing them as `optional` attributes. This means that the `required` attribute of columns in external data catalogs will be ignored, and Doris will not perform strict validation of column `null` values during query and write-back operations. Users need to ensure data integrity and consistency themselves.
+
 ## Using Catalog
 
 ### Viewing Catalog

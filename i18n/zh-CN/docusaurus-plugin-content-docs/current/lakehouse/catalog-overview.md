@@ -76,6 +76,9 @@ SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
 
+> **注意：** Doris 目前对外表列的 required 和 optional 属性支持有限，统一解析为 `optional` 属性。这意味着外部数据目录中列的 `required` 属性将被忽略，Doris 在查询和写回操作时不会对列的 `null` 值进行严格校验。用户需要自行保证数据的完整性和一致性。
+
+
 ## 使用数据目录
 
 ### 查看数据目录
