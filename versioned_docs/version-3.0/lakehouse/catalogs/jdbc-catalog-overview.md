@@ -48,35 +48,35 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * Required Properties
 
-		| Parameter Name   | Description                              | Example                       |
-		| ---------------- | ---------------------------------------- | ----------------------------- |
-		| `user`           | Data source username                     |                               |
-		| `password`       | Data source password                     |                               |
-		| `jdbc_url`       | Data source connection URL               | `jdbc:mysql://host:3306`      |
-		| `driver_url`     | Path to the JDBC driver file. For driver package security, see the appendix. | Supports three methods, see below. |
-		| `driver_class`   | Class name of the JDBC driver            |                               |
+      | Parameter Name   | Description                              | Example                       |
+      | ---------------- | ---------------------------------------- | ----------------------------- |
+      | `user`           | Data source username                     |                               |
+      | `password`       | Data source password                     |                               |
+      | `jdbc_url`       | Data source connection URL               | `jdbc:mysql://host:3306`      |
+      | `driver_url`     | Path to the JDBC driver file. For driver package security, see the appendix. | Supports three methods, see below. |
+      | `driver_class`   | Class name of the JDBC driver            |                               |
 
-    	`driver_url` supports the following three specifications:
+      `driver_url` supports the following three specifications:
     
-	    1. Filename. For example, `mysql-connector-j-8.3.0.jar`. The Jar file must be pre-placed in the `jdbc_drivers/` directory under the FE and BE deployment directories. The system will automatically search in this directory. The location can also be modified by the `jdbc_drivers_dir` configuration in `fe.conf` and `be.conf`.
-	    
-	    2. Local absolute path. For example, `file:///path/to/mysql-connector-j-8.3.0.jar`. The Jar file must be pre-placed in the specified path on all FE/BE nodes.
-	    
-	    3. HTTP URL. For example: `http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar`. The system will download the driver file from this HTTP address. Only supports HTTP services without authentication.
+      1. Filename. For example, `mysql-connector-j-8.3.0.jar`. The Jar file must be pre-placed in the `jdbc_drivers/` directory under the FE and BE deployment directories. The system will automatically search in this directory. The location can also be modified by the `jdbc_drivers_dir` configuration in `fe.conf` and `be.conf`.
+      
+      2. Local absolute path. For example, `file:///path/to/mysql-connector-j-8.3.0.jar`. The Jar file must be pre-placed in the specified path on all FE/BE nodes.
+      
+      3. HTTP URL. For example: `http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar`. The system will download the driver file from this HTTP address. Only supports HTTP services without authentication.
 
   * Optional Properties
 
-		| Parameter Name                | Default Value | Description                                                                                                                                   |
-		| ----------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-		| `lower_case_meta_names`       | false         | Whether to synchronize the database, table, and column names from the external data source in lowercase                                        |
-		| `meta_names_mapping`          |               | When the external data source has names that differ only in case, such as `MY_TABLE` and `my_table`, Doris will report an error due to ambiguity when querying the Catalog. You need to configure the `meta_names_mapping` parameter to resolve conflicts. |
-		| `only_specified_database`     | false         | Whether to synchronize only the database specified in the `jdbc_url` (this Database maps to the Database level in Doris)                       |
-		| `connection_pool_min_size`    | 1             | Defines the minimum number of connections in the connection pool, used to initialize the pool and ensure at least this number of active connections when keep-alive is enabled. |
-		| `connection_pool_max_size`    | 30            | Defines the maximum number of connections in the connection pool. Each FE or BE node corresponding to each Catalog can hold up to this number of connections. |
-		| `connection_pool_max_wait_time`| 5000         | Defines the maximum wait time in milliseconds for a client to wait for a connection if none are available in the pool.                         |
-		| `connection_pool_max_life_time`| 1800000      | Sets the maximum active duration (in milliseconds) for a connection in the pool. Connections exceeding this time will be recycled. Additionally, half of this value is used as the minimum eviction idle time for the pool, making connections reaching this time eligible for eviction. |
-		| `connection_pool_keep_alive`  | false         | Effective only on BE nodes, it determines whether to keep connections active that have reached the minimum eviction idle time but not the maximum lifetime. Disabled by default to reduce unnecessary resource usage. |
-		
+      | Parameter Name                | Default Value | Description                                                                                                                                   |
+      | ----------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+      | `lower_case_meta_names`       | false         | Whether to synchronize the database, table, and column names from the external data source in lowercase                                        |
+      | `meta_names_mapping`          |               | When the external data source has names that differ only in case, such as `MY_TABLE` and `my_table`, Doris will report an error due to ambiguity when querying the Catalog. You need to configure the `meta_names_mapping` parameter to resolve conflicts. |
+      | `only_specified_database`     | false         | Whether to synchronize only the database specified in the `jdbc_url` (this Database maps to the Database level in Doris)                       |
+      | `connection_pool_min_size`    | 1             | Defines the minimum number of connections in the connection pool, used to initialize the pool and ensure at least this number of active connections when keep-alive is enabled. |
+      | `connection_pool_max_size`    | 30            | Defines the maximum number of connections in the connection pool. Each FE or BE node corresponding to each Catalog can hold up to this number of connections. |
+      | `connection_pool_max_wait_time`| 5000         | Defines the maximum wait time in milliseconds for a client to wait for a connection if none are available in the pool.                         |
+      | `connection_pool_max_life_time`| 1800000      | Sets the maximum active duration (in milliseconds) for a connection in the pool. Connections exceeding this time will be recycled. Additionally, half of this value is used as the minimum eviction idle time for the pool, making connections reaching this time eligible for eviction. |
+      | `connection_pool_keep_alive`  | false         | Effective only on BE nodes, it determines whether to keep connections active that have reached the minimum eviction idle time but not the maximum lifetime. Disabled by default to reduce unnecessary resource usage. |
+        
 * `{CommonProperties}`
 
   The CommonProperties section is used to configure common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on **Common Properties**.
@@ -443,15 +443,15 @@ SQL Server: Login is locked out
 
        * Increase the maximum number of connections in the pool:
 
-	       ```sql
-	       ALTER CATALOG catalog_name SET PROPERTIES ('connection_pool_max_size' = '100');
-	       ```
+           ```sql
+           ALTER CATALOG catalog_name SET PROPERTIES ('connection_pool_max_size' = '100');
+           ```
 
        * Increase the connection timeout:
 
-	       ```sql
-	       ALTER CATALOG catalog_name SET PROPERTIES ('connection_pool_max_wait_time' = '10000');
-	       ```
+           ```sql
+           ALTER CATALOG catalog_name SET PROPERTIES ('connection_pool_max_wait_time' = '10000');
+           ```
 
      * If there are additional error messages besides `Connection is not available, request timed out after 5000ms`, check these additional errors:
 
