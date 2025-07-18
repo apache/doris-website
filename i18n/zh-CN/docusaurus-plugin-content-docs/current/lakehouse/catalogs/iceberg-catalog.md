@@ -764,73 +764,74 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **修改列名称**
 
-通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+  通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
 
-```sql
-ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+  ```
 
 * **添加一列**
 
-通过 `ADD COLUMN` 添加新列，不支持为嵌套类型添加新列。
+  通过 `ADD COLUMN` 添加新列，不支持为嵌套类型添加新列。
 
-在添加新列时，可以指定 nullable 属性、默认值、注释和列位置。
+  在添加新列时，可以指定 nullable 属性、默认值、注释和列位置。
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-示例：
+  示例：
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+  ```
 
 * **添加多列**
 
-可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾，不支持指定列位置，不支持为嵌套类型添加新列。
+  可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾，不支持指定列位置，不支持为嵌套类型添加新列。
 
-每一列的语法和添加单列时一样。
+  每一列的语法和添加单列时一样。
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+  ```
+
 * **删除列**
 
-通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+  通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
 
-```sql
-ALTER TABLE iceberg_table DROP COLUMN col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table DROP COLUMN col_name;
+  ```
 
 * **修改列**
 
-通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值、注释和列位置。
+  通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值、注释和列位置。
 
-注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
+  注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
 
-```sql
-ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
-```
+  ```sql
+  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-示例：
+  示例：
 
-```sql
-CREATE TABLE iceberg_table (
-    id INT,
-    name STRING
-);
--- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
-ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column' FIRST;
-```
+  ```sql
+  CREATE TABLE iceberg_table (
+      id INT,
+      name STRING
+  );
+  -- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
+  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column' FIRST;
+  ```
 
 * **重新排序**
 
-通过 `ORDER BY` 重新排序列，指定新的列顺序。
+  通过 `ORDER BY` 重新排序列，指定新的列顺序。
 
-```sql
-ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+  ```
 
 ## Iceberg 表优化
 

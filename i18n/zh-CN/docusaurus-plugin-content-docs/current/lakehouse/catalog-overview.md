@@ -76,8 +76,14 @@ SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
 
-> **注意：** Doris 目前对外表列的 required 和 optional 属性支持有限，统一解析为 `optional` 属性。这意味着外部数据目录中列的 `required` 属性将被忽略，Doris 在查询和写回操作时不会对列的 `null` 值进行严格校验。用户需要自行保证数据的完整性和一致性。
+### Nullable 属性
 
+Doris 目前对外表列的 Nullable 属性支持有特殊限制，具体行为如下：
+
+| 源类型 | Doris 读取行为 | Doris 写入行为 |
+| ---   | ------------  | ------------ |
+| Nullable | Nullable  | 允许写入 Null 值 |
+| Not Null | Nullable，即依然当做可允许为 NULL 的列进行读取 | 允许写入 Null 值，即不对 Null 值进行严格检查。用户需要自行保证数据的完整性和一致性。|
 
 ## 使用数据目录
 
@@ -145,9 +151,9 @@ jdbc:mysql://host:9030/iceberg_catalog.iceberg_db
 SET PROPERTY default_init_catalog=hive_catalog;
 ```
 
-注意1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
-注意2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
-注意3：该功能从 v3.1.x 版本开始生效；
+注意 1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
+注意 2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
+注意 3：该功能从 v3.1.x 版本开始生效；
 
 ### 简单查询
 
