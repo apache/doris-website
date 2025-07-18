@@ -20,7 +20,7 @@ JSON_SEARCH( <json_object>, <one_or_all>, <search_value> )
 - `<search_value>`: String 类型，需要查找的值，搜索目标。
 
 ## 返回值
-Nullable(JSON)： 根据参数 `<one_or_all>` 不同有两种情况：
+`Nullable(JSON)`： 根据参数 `<one_or_all>` 不同有两种情况：
 
     1. 'one' 如果找到匹配的值，返回一个 JSON 路径，指向匹配的值。 如果没有找到匹配的值，返回 NULL。
     2. 'all' 返回所有匹配值的路径，如果有多个值，以 JSON 数组的形式返回，如果没有匹配返回 NULL。
@@ -28,7 +28,7 @@ Nullable(JSON)： 根据参数 `<one_or_all>` 不同有两种情况：
 ## 注意事项
 - `one_or_all` 参数决定了是否查找所有匹配的值。'one' 会返回第一个匹配的路径，'all' 会返回所有匹配的路径。 如果是其他值，会得到报错。
 - 如果没有找到匹配值，函数会返回 NULL。
-- `<json_object>`, `<one_or_all>`, `<search_value>` 任意一个为 NULL 值时返回 NULL.
+- `<json_object>`, `<one_or_all>`, `<search_value>` 任意一个为 NULL 时返回 NULL.
 
 ## 示例
 

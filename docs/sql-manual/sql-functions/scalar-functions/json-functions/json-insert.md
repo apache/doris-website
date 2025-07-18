@@ -19,7 +19,7 @@ JSON_INSERT (<json_object>, <path>,  <value>[, <path>,  <value>, ...])
 - `<value>`: JSON type or other types supported by [`TO_JSON`](./to-json.md), the value to be inserted.
 
 ## Return Value
-- Nullable(JSON) Returns the modified JSON object
+- `Nullable(JSON)` Returns the modified JSON object
 
 ## Usage Notes
 1. Note that path-value pairs are evaluated from left to right.

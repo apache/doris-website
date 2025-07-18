@@ -19,7 +19,7 @@ JSON_REPLACE (<json_object>, <path>,  <value>[, <path>,  <value>, ...])
 - `<value>` JSON 类型或其他 [`TO_JSON`](./to-json.md) 支持的类型，要替换的值。
 
 ## 返回值
-- Nullable(JSON) 返回被修改后的 JSON 对象
+- `Nullable(JSON)` 返回被修改后的 JSON 对象
 
 ## 使用说明
 1. 需要注意的是，路径值对按从左到右的顺序进行评估。
