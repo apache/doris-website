@@ -24,6 +24,7 @@ BITMAP_HASH64(<expr>)
 ## Return Value
 
 Returns a Bitmap containing the 64-bit hash value of the parameter `<expr>`.
+- If the parameter has a NULL value, it returns Empty Bitmap
 
 ## Examples
 
@@ -41,4 +42,18 @@ The result will be:
 +------------------------------------------+
 | 15231136565543391023                     |
 +------------------------------------------+
+```
+
+```sql
+select bitmap_to_string(bitmap_hash64(NULL));
+```
+
+The result will be:
+
+```text
++---------------------------------------+
+| bitmap_to_string(bitmap_hash64(NULL)) |
++---------------------------------------+
+|                                       |
++---------------------------------------+
 ```

@@ -27,6 +27,7 @@ BITMAP_XOR(<bitmap1>, <bitmap2>, ..., <bitmapN>)
 ## Return Value
 
 A Bitmap representing the symmetric difference of multiple Bitmaps.
+- If the parameter has a NULL value, it returns NULL
 
 ## Examples
 
@@ -49,63 +50,63 @@ The result will be:
 To convert the symmetric difference of two Bitmaps to a string:
 
 ```sql
-select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4')));
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'))) res;
 ```
 
 The result will be:
 
 ```text
-+----------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'))) |
-+----------------------------------------------------------------------------------------+
-| 1,4                                                                                    |
-+----------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+| 1,4  |
++------+
 ```
 
 To compute the symmetric difference of three Bitmaps:
 
 ```sql
-select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5')));
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'))) res;
 ```
 
 The result will be:
 
 ```text
-+---------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'))) |
-+---------------------------------------------------------------------------------------------------------------------+
-| 1,3,5                                                                                                               |
-+---------------------------------------------------------------------------------------------------------------------+
++-------+
+| res   |
++-------+
+| 1,3,5 |
++-------+
 ```
 
 To compute the symmetric difference of multiple Bitmaps, including an empty Bitmap:
 
 ```sql
-select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), bitmap_empty()));
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), bitmap_empty())) res;
 ```
 
 The result will be:
 
 ```text
-+-------------------------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), bitmap_empty())) |
-+-------------------------------------------------------------------------------------------------------------------------------------+
-| 1,3,5                                                                                                                               |
-+-------------------------------------------------------------------------------------------------------------------------------------+
++-------+
+| res   |
++-------+
+| 1,3,5 |
++-------+
 ```
 
 To compute the symmetric difference of multiple Bitmaps, including a `NULL` value:
 
 ```sql
-select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), NULL));
+select bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), NULL)) res;
 ```
 
 The result will be:
 
 ```text
-+---------------------------------------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_xor(bitmap_from_string('2,3'), bitmap_from_string('1,2,3,4'), bitmap_from_string('3,4,5'), NULL)) |
-+---------------------------------------------------------------------------------------------------------------------------+
-| NULL                                                                                                                      |
-+---------------------------------------------------------------------------------------------------------------------------+
++------+
+| res  |
++------+
+| NULL |
++------+
 ```

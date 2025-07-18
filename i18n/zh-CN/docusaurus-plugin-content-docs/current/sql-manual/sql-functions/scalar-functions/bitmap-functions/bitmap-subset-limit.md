@@ -26,6 +26,7 @@ bitmap_subset_limit(<bitmap>, <position>, <cardinality_limit>)
 ## 返回值
 
 指定范围的子集 Bitmap。
+- 当参数存在NULL时或者指定范围为非法取值时，返回 NULL
 
 ## 示例
 
@@ -58,5 +59,47 @@ select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, 
 | value |
 +-------+
 | 4,5   |
++-------+
+```
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, NULL)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), -4, 3)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+```sql
+select bitmap_to_string(bitmap_subset_limit(bitmap_from_string('1,2,3,4,5'), 4, -3)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
 +-------+
 ```
