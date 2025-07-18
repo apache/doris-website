@@ -39,3 +39,15 @@ select bitmap_count(to_bitmap(1)) cnt;
 +------+
 ```
 
+```sql
+select bitmap_count(bitmap_empty()) cnt;
+```
+
+```text
++------+
+| cnt  |
++------+
+|    0 |
++------+
+```
+

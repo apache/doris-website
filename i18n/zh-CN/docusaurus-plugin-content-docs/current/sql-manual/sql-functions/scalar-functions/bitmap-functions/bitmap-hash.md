@@ -24,6 +24,7 @@ bitmap_hash(<expr>)
 ## 返回值
 
 包含参数 `<expr>` 的 64 位 hash 值的 Bitmap。
+- 当参数存在NULL时，返回 Empty Bitmap
 
 ::: note
 
@@ -65,4 +66,19 @@ select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 +-------------------------------------------------+
 |                                        33263478 |
 +-------------------------------------------------+
+```
+
+
+```sql
+select bitmap_to_string(bitmap_hash(NULL));
+```
+
+结果如下：
+
+```text
++------+
+| res  |
++------+
+|      |
++------+
 ```

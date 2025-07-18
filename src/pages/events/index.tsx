@@ -42,6 +42,28 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'Migrating from Snowflake to Apache Doris',
+            detailTitle: 'Migrating from Snowflake to Apache Doris',
+            tag: 'Apache Doris Webinar',
+            date: 'July 22, 2025 11:00 AM–12:00 PM IST',
+            cardDate: 'July 22, 2025',
+            address: 'Virtual',
+            description: 'If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! ',
+            start_date: '2025-07-22T13:30:00.000Z',
+            end_date: '2025-07-22T14:30:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/migrating-snowflake-to-doris.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-webinar-20250722',
+        },
+        {
             cardTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
             detailTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
             tag: 'Apache Doris Webinar',

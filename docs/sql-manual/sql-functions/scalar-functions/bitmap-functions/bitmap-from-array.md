@@ -39,3 +39,28 @@ SELECT bitmap_to_string(bitmap_from_array(array(1, 0, 1, 1, 0, 1, 0))) AS bs;
 | 0,1  |
 +------+
 ```
+
+
+```sql
+SELECT bitmap_to_string(bitmap_from_array(NULL)) AS bs;
+```
+
+```text
++------+
+| bs   |
++------+
+| NULL |
++------+
+```
+
+```sql
+select bitmap_to_string(bitmap_from_array([1,2,3,-1]));
+```
+
+```text
++-------------------------------------------------+
+| bitmap_to_string(bitmap_from_array([1,2,3,-1])) |
++-------------------------------------------------+
+| NULL                                            |
++-------------------------------------------------+
+```

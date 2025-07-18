@@ -5,13 +5,9 @@
 }
 ---
 
-# 通过 `CREATE CATALOG` 使用 AWS Glue 的参数说明
-
 本文档介绍通过 `CREATE CATALOG` 使用 **AWS Glue Catalog** 访问 **Iceberg 表** 或 **Hive 表** 时的参数配置。
 
----
-
-## 一、通用连接参数（适用于 Hive & Iceberg）
+## 通用连接参数（适用于 Hive & Iceberg）
 
 以下参数适用于 **Iceberg Glue Catalog** 和 **Hive Glue Catalog**：
 
@@ -25,9 +21,7 @@
 | `glue.role_arn`    | 用于访问 Glue 的 IAM Role ARN（尚未支持）                           | 否       |        |
 | `glue.external_id` | 与 IAM Role 配合使用的 External ID（尚未支持）                      | 否       |        |
 
----
-
-## 二、Iceberg 表配置（使用 Glue Catalog）
+## Iceberg 表配置（使用 Glue Catalog）
 
 配置示例：
 
@@ -37,8 +31,8 @@ CREATE CATALOG iceberg_glue_catalog WITH (
   'iceberg.catalog.type' = 'glue',
   'glue.region' = 'us-east-1',
   'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
-  'glue.access_key' = 'YOUR_ACCESS_KEY',
-  'glue.secret_key' = 'YOUR_SECRET_KEY'
+  'glue.access_key' = '<YOUR_ACCESS_KEY>',
+  'glue.secret_key' = '<YOUR_SECRET_KEY>'
 );
 ```
 
