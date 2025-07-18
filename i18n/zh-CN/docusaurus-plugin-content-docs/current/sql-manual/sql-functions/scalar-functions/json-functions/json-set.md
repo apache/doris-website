@@ -19,7 +19,7 @@ JSON_SET (<json_object>, <path>,  <value>[, <path>,  <value>, ...])
 - `<value>` JSON 类型或其他 [`TO_JSON`](./to-json.md) 支持的类型，要插入的值。
 
 ## 返回值
-- Nullable(JSON) 返回被修改后的 JSON 对象
+- `Nullable(JSON)` 返回被修改后的 JSON 对象
 
 ## 使用说明
 1. 当 `<path>` 指向的对象存在时，其行为和 [`JSON_REPLACE`](./json-replace.md) 一致，否则其行为和 [`JSON_INSERT`](./json-insert.md) 一致

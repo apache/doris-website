@@ -15,17 +15,18 @@
 sub_bitmap(<bitmap>, <position>, <cardinality_limit>)
 ```
 
-## 返回值
-
-指定范围的子集 Bitmap。
-
 ## 参数
 
 | 参数        | 描述          |
 |-----------|-------------|
 | `<bitmap>` | Bitmap 值    |
-| `<position>` | 范围开始的位置（包含） |
+| `<position>` | 范围开始的位置（包含），若为负数时，则最后一个元素为-1 |
 | `<cardinality_limit>` | 基数上限        |
+
+## 返回值
+
+指定范围的子集 Bitmap。
+- 当参数存在NULL值时，返回 NULL
 
 ## 示例
 
@@ -74,5 +75,19 @@ select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 2, 100))
 | value |
 +-------+
 | 2,3,5 |
++-------+
+```
+
+```sql
+select bitmap_to_string(sub_bitmap(bitmap_from_string('1,0,1,2,3,1,5'), 2, NULL)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
 +-------+
 ```
