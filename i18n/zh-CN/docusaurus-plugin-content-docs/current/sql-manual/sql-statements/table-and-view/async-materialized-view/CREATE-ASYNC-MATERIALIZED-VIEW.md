@@ -82,9 +82,14 @@ refresh_trigger
 
 > 刷新方式
 >
-> COMPLETE：刷新所有分区
+> COMPLETE：无论分区数据是否有变更，强制刷新所有分区
 >
-> AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区
+> AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果是分区物化视图建议用此刷新方式
+
+:::caution 注意
+如果是分区物化视图，刷新方式使用 COMPLETE，物化视图会全量刷新所有分区数据，退化成全量物化视图。
+
+:::
 
 **4.` <refresh_trigger>`**
 
@@ -118,6 +123,13 @@ refresh_trigger
 
 **9. `<table_property>`**
 
+:::caution 注意
+`DISTRIBUTED BY` 这个子句如果不写，在 Apache Doris 2.1.10 之前会报错，在 Apache Doris 2.1.10 及以后
+如果不写，默认是 RANDOM 分布。
+
+:::
+
+
 内表使用的属性，物化视图基本都可以使用，还有一些是物化视图特有的属性，列举如下
 
 | 属性名                           | 作用                                                         |
@@ -131,6 +143,13 @@ refresh_trigger
 | partition_date_format            | 当基表的分区字段为字符串时，如果想使用 `partition_sync_limit`的能力，可以设置日期的格式，将按照 `partition_date_format`的设置解析分区时间 |
 | enable_nondeterministic_function | 物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random() 等，如果 是 true, 允许包含，否则不允许包含，默认不允许包含。 |
 | use_for_rewrite                  | 标识此物化视图是否参与到透明改写中，如果为 false，不参与到透明改写，默认是 true。数据建模场景中，如果物化视图只是用于直查，物化视图可以设置此属性，从而不参与透明改写，提高查询响应速度。 |
+
+:::caution 注意
+excluded_trigger_tables 属性只支持写表名，如果想要写 catalog 和 database，比如 internal.db1.table1
+自 Apache Doris 2.1.10 和 3.0.6 版本起支持此功能。
+
+:::
+
 
 ## 权限控制
 
@@ -212,7 +231,7 @@ refresh_trigger
     )
     DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
     PROPERTIES (
-    "replication_num" = "1"
+    "replication_num" = "3"
     );
     ```
     
@@ -224,7 +243,7 @@ refresh_trigger
     PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
     DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
     PROPERTIES 
-    ("replication_num" = "1") 
+    ("replication_num" = "3") 
     AS 
     SELECT 
     o_orderdate, 
@@ -236,3 +255,53 @@ refresh_trigger
     LEFT JOIN partsupp ON ps_partkey = l_partkey 
     and l_suppkey = ps_suppkey;
     ```
+   
+如下用例就不能创建分区物化视图，因为分区字段使用了非 date_trunc 函数，报错信息是
+
+`because column to check use invalid implicit expression, invalid expression is min(o_orderdate#4)
+`
+
+```sql
+    CREATE MATERIALIZED VIEW partition_mv_2
+    BUILD IMMEDIATE 
+    REFRESH AUTO 
+    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    PARTITION BY (DATE_TRUNC(min_orderdate, 'MONTH'))
+    DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
+    PROPERTIES 
+    ("replication_num" = "3") 
+    AS
+    SELECT 
+    min(o_orderdate) AS min_orderdate, 
+    l_orderkey, 
+    l_partkey 
+    FROM 
+    orders 
+    LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    LEFT JOIN partsupp ON ps_partkey = l_partkey 
+    and l_suppkey = ps_suppkey
+    GROUP BY 
+    o_orderdate, 
+    l_orderkey, 
+    l_partkey;
+```
+
+3. 修改物化视图属性
+
+    使用 ALTER MATERIALIZED VIEW 语句。例如：
+
+    ```sql
+    ALTER MATERIALIZED VIEW partition_mv
+    SET (
+        "grace_period" = "10",
+        "excluded_trigger_tables" = "lineitem,partsupp"
+    );
+    ```
+
+3. 修改物化视图刷新方式
+   使用 ALTER MATERIALIZED VIEW 语句。例如：
+
+    ```sql
+    ALTER MATERIALIZED VIEW partition_mv REFRESH COMPLETE;
+    ```
+   再运行 `SHOW CREATE MATERIALIZED VIEW partition_mv;` 可以看到物化视图的刷新方式已经变成了 COMPLETE。
