@@ -7,7 +7,7 @@
 
 ## Overview
 
-View the configurations on Backends.
+View the configurations on Backends.(added by doris 3.0.7)
 
 ## Database
 
