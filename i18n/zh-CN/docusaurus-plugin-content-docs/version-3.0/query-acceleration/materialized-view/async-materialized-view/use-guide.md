@@ -1,7 +1,7 @@
 ---
 {
-    "title": "最佳实践",
-    "language": "zh-CN"
+   "title": "最佳实践",
+   "language": "zh-CN"
 }
 ---
 
@@ -12,9 +12,9 @@
 
 -  **物化视图定义与构建成本考虑：**
 
-    - 物化视图定义和原查询越接近，查询加速效果越好，但物化的通用性和复用性越差，意味着构建成本越高。
+   - 物化视图定义和原查询越接近，查询加速效果越好，但物化的通用性和复用性越差，意味着构建成本越高。
 
-    - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
+   - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
 
 :::caution 注意
 - **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写，CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
@@ -149,6 +149,147 @@ CREATE MATERIALIZED VIEW rollup_partition_mv
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
 partition by(order_date) 
 DISTRIBUTED BY RANDOM BUCKETS 2 
+AS 
+SELECT 
+  l_linestatus, 
+  sum(
+    l_extendedprice * (1 - l_discount)
+  ) AS revenue, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey 
+GROUP BY 
+  l_linestatus, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day');
+```
+
+## 创建包含 UNION ALL 的分区物化视图
+目前 Doris 有限制，分区物化定义中不能包含 UNION ALL 子句。
+如果想要创建包含 UNION ALL 的物化视图，可以使用采用如下的方式创建。对于 UNION ALL 的每部分输入
+尝试创建分区物化视图，之后针对整个 UNION ALL 结果集创建一个普通视图。
+
+例如：
+物化视图定义如下，要使用如下 sql 语句构建分区物化视图，可以看到 sql 语句包含 UNION ALL 子句。
+```sql
+SELECT 
+  l_linestatus, 
+  sum(
+    l_extendedprice * (1 - l_discount)
+  ) AS revenue, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey 
+GROUP BY 
+  l_linestatus, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day')
+UNION ALL
+SELECT
+  l_linestatus, 
+  l_extendedprice, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey;
+```
+
+可以将上述 SQL 语句拆分成两个部分，分别创建两个分区物化视图。
+
+```sql
+CREATE MATERIALIZED VIEW union_sub_mv1
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
+partition by(order_date) 
+DISTRIBUTED BY RANDOM BUCKETS 2 
+AS
+SELECT 
+  l_linestatus, 
+  sum(
+    l_extendedprice * (1 - l_discount)
+  ) AS revenue, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey 
+GROUP BY 
+  l_linestatus, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day');
+```
+
+
+```sql
+CREATE MATERIALIZED VIEW union_sub_mv2
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
+partition by(order_date) 
+DISTRIBUTED BY RANDOM BUCKETS 2 
+       
+AS
+SELECT
+  l_linestatus, 
+  l_extendedprice, 
+  ps_partkey, 
+  date_trunc(l_ordertime, 'day') as order_date 
+FROM 
+  lineitem 
+  LEFT JOIN partsupp ON l_partkey = ps_partkey 
+  and l_suppkey = ps_suppkey;
+```
+
+然后创建一个普通视图，将两个分区物化视图的结果集进行 UNION ALL。对外可以提供这个视图 union_all_view
+
+```sql
+CREATE VIEW union_all_view
+AS
+SELECT * 
+FROM
+union_sub_mv1
+UNION ALL
+SELECT * 
+FROM
+union_sub_mv2;
+
+```
+
+
+## 分区物化视图只保留最近分区数据
+
+:::tip 提示
+自 Apache Doris 2.1.1 版本起支持此功能。
+:::
+
+物化视图可以只保留最近几个分区的数据，每次刷新时，自动删除过期的分区数据。
+可以通过设置物化视图的属性 `partition_sync_limit`，`partition_sync_time_unit`，`partition_sync_date_format` 来实现。
+
+partition_sync_limit： 基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 partition_sync_time_unit 一起使用。例如设置为 3，
+partition_sync_time_unit 设置为 DAY，代表仅同步基表近 3 天的分区和数据。
+
+partition_sync_time_unit： 分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）。
+
+partition_date_format：当基表的分区字段为字符串时，如果想使用 partition_sync_limit的能力，可以设置日期的格式。
+
+例如：
+物化视图定义如下，物化视图只保留最近 3 天的数据，如果最近 3 天没有数据，直查如下物化视图，就不会返回数据。
+```sql
+CREATE MATERIALIZED VIEW latest_partition_mv 
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
+partition by(order_date) 
+DISTRIBUTED BY RANDOM BUCKETS 2 
+PROPERTIES (
+  "partition_sync_limit" = "3", 
+  "partition_sync_time_unit" = "DAY", 
+  "partition_date_format" = "yyyy-MM-dd"
+)       
 AS 
 SELECT 
   l_linestatus, 
@@ -676,13 +817,13 @@ BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
 AS
 SELECT
-l_linestatus,
-l_extendedprice * (1 - l_discount),
-o_orderdate,
-o_shippriority
+   l_linestatus,
+   l_extendedprice * (1 - l_discount),
+   o_orderdate,
+   o_shippriority
 FROM
-orders
-LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+   orders
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 透明改写能够对查询 SQL 的改写，实现了查询加速，同时也能对导入 SQL 进行改写，从而提升导入效率。
@@ -691,13 +832,13 @@ LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 1. 创建 Insert Into 数据的目标表
 ```sql
 CREATE TABLE IF NOT EXISTS target_table  (
-orderdate      DATE NOT NULL,
-shippriority   INTEGER NOT NULL,
-linestatus     CHAR(1) NOT NULL,
-sale           DECIMALV3(15,2) NOT NULL
-)
-DUPLICATE KEY(orderdate, shippriority)
-DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
+                                            orderdate      DATE NOT NULL,
+                                            shippriority   INTEGER NOT NULL,
+                                            linestatus     CHAR(1) NOT NULL,
+   sale           DECIMALV3(15,2) NOT NULL
+   )
+   DUPLICATE KEY(orderdate, shippriority)
+   DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
 ```
 
 2. common_schedule_join_mv
@@ -707,26 +848,26 @@ BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
 AS
 SELECT
-l_linestatus,
-l_extendedprice * (1 - l_discount),
-o_orderdate,
-o_shippriority
+   l_linestatus,
+   l_extendedprice * (1 - l_discount),
+   o_orderdate,
+   o_shippriority
 FROM
-orders
-LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+   orders
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 未经改写的导入语句如下：
 ```sql
 INSERT INTO target_table
 SELECT
-o_orderdate,
-o_shippriority,
-l_linestatus,
-l_extendedprice * (1 - l_discount)
+   o_orderdate,
+   o_shippriority,
+   l_linestatus,
+   l_extendedprice * (1 - l_discount)
 FROM
-orders
-LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+   orders
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 经过透明改写后，语句如下：
