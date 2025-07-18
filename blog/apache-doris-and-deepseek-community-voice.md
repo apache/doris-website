@@ -7,8 +7,6 @@
     'author': 'Medium · DarrenXu',
     'externalLink': 'https://medium.com/%40xudarren1023/apache-doris-and-deepseek-redefining-intelligent-data-analytics-2b6b778e1034',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/blogs/doris-deepseek.jpg'
 }
 ---
