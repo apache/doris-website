@@ -30,6 +30,8 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 - 0: 条件不满足。
 由 1 和 0 组成的最大长度为 32 位的数组，最终输出数组的长度与输入参数长度相同。
 如果在没有任何数据参与聚合的情况下，会返回NULL值
+当有多个列参与计算时，如果任意一列出现了NULL值，则NULL值的当前行不会参与聚合计算，被直接丢弃
+可以在计算列上加IF NULL函数处理NULL值，详情见后续示例。
 
 ## 举例
 
@@ -84,4 +86,65 @@ SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL
 +------+
 | NULL |
 +------+
+```
+
+```sql
+CREATE TABLE retention_test2(
+    `uid` int, 
+    `flag` boolean,
+    `flag2` boolean
+) DUPLICATE KEY(uid) 
+DISTRIBUTED BY HASH(uid) BUCKETS AUTO
+PROPERTIES ( 
+    "replication_allocation" = "tag.location.default: 1"
+);
+
+INSERT into retention_test2 values (0, false, false), (1, true,  NULL);
+
+SELECT * from retention_test2;
+```
+
+```text
++------+------+-------+
+| uid  | flag | flag2 |
++------+------+-------+
+|    0 |    1 |  NULL |
+|    1 |    0 |     0 |
++------+------+-------+
+```
+
+```sql
+select retention(flag) from retention_test2;
+```
+
+```text
++-----------------+
+| retention(flag) |
++-----------------+
+| [1]             |
++-----------------+
+```
+
+```sql
+select retention(flag,flag2) from retention_test2;
+```
+
+```text
++-----------------------+
+| retention(flag,flag2) |
++-----------------------+
+| [0, 0]                | // uid = 0 的行，由于NULL值存在，所以未参与聚合计算
++-----------------------+
+```
+
+```sql
+select retention(flag,IFNULL(flag2,false)) from retention_test2;;
+```
+
+```text
++-------------------------------------+
+| retention(flag,IFNULL(flag2,false)) |
++-------------------------------------+
+| [1, 0]                              | // 用IFNULL 函数将NULL转换成false
++-------------------------------------+
 ```
