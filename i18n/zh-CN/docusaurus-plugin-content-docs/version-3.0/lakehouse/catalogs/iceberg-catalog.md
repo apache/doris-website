@@ -562,13 +562,27 @@ INSERT INTO iceberg_tbl(col1, col2) values (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "beijing", "2023-12-12");
 ```
 
+自 3.1.0 版本，支持写入数据到指定分支：
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+
 ### INSERT OVERWRITE
 
 INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
 
 ```sql
-INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
+INSERT OVERWRITE TABLE iceberg_tbl VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+自 3.1.0 版本，支持写入数据到指定分支：
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
 ### CTAS

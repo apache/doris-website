@@ -553,6 +553,13 @@ INSERT INTO iceberg_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, 'beijing', '2023-12-12');
 ```
 
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+
 ### INSERT OVERWRITE
 
 The INSERT OVERWRITE operation completely replaces the existing data in the table with new data.
@@ -560,6 +567,13 @@ The INSERT OVERWRITE operation completely replaces the existing data in the tabl
 ```sql
 INSERT OVERWRITE TABLE iceberg_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
 ### CTAS
