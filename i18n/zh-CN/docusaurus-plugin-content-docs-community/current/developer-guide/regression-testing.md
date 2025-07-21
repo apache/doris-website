@@ -603,6 +603,10 @@ Doris 支持一些外部署数据源的查询。所以回归框架也提供了�
 
     之后的启动脚本会，将 docker compose 中对应的名称进行替换，这样可以保证多套 containers 环境的容器名称和网络不会冲突。
 
+    启动容器前，需要检查服务器/云主机的网络配置，确认/etc/hosts中是否配置了主机名（hostname）和主机 IP 地址（hostname -i）的映射关系。
+
+    形如：`10.0.0.46    iZj6cbwlx5pl6y0681t6scZ    iZj6cbwlx5pl6y0681t6scZ`，分别为 IP 地址（hostname -i命令输出，一般为eth0的IP）、主机名（hostname命令输出）、别名（同前）。
+
 1. 启动 Container
 
     Doris 目前支持 es, mysql, pg, hive, sqlserver, oracle, iceberg, hudi, trino 等数据源的 Docker compose。相关文件存放在 `docker/thirdparties/docker-compose` 目录下。
@@ -615,6 +619,8 @@ Doris 支持一些外部署数据源的查询。所以回归框架也提供了�
     ```
 
     该命令需要 root 或 sudo 权限。命令返回成功，则代表所有 container 启动完成。可以通过 `docker ps -a` 命令查看。
+    
+    container 启动过程中，可以通过 `docker logs -f <container-name>` 命令查看 container 的日志。
 
     可以通过以下命令停止所有 container：
 
@@ -654,11 +660,12 @@ Doris 支持一些外部署数据源的查询。所以回归框架也提供了�
 
     3. Hive
 
-        Hive 相关的 Docker compose 文件存放在 docker/thirdparties/docker-compose/hive 下。
+        Hive 相关的 Docker compose 文件存放在 docker/thirdparties/docker-compose/hive 下，支持Hive2和Hive3。
 
-        * `hive-2x.yaml.tpl`：Docker compose 文件模板，无需修改。
-        * `hadoop-hive.env.tpl`：配置文件的模板，无需修改。
-        * `gen_env.sh`：初始化配置文件的脚本，可以在其中修改：`FS_PORT` 和 `HMS_PORT` 两个对外端口，分别对应 defaultFs 和 Hive metastore 的端口。默认为 8120 和 9183。`run-thirdparties-docker.sh` 启动时会自动调用这个脚本。
+        * `hive-2x.yaml.tpl`、`hive-3x.yaml.tpl`：Docker compose 文件模板，无需修改。
+        * `hadoop-hive.env.tpl`、`hadoop-hive-2x.env.tpl`和`hadoop-hive-3x.env.tpl`：配置文件的模板，无需修改。
+        * `hive-2x_settings.env`：Hive2初始化配置文件的脚本，`run-thirdparties-docker.sh` 启动时会自动调用这个脚本。可以在其中修改：`FS_PORT`、`HMS_PORT`、`HS_PORT`和`PG_PORT` 四个对外端口，分别与`regression-conf.groovy`中的`hive2HdfsPort`、`hive2HmsPort`、`hive2ServerPort`和`hive2PgPort`相对应。前两个为hadoop配置的 defaultFs 和 Hive metastore 端口，默认为 8020 和 9083。
+        * `hive-3x_settings.env`：Hive3初始化配置文件的脚本，`run-thirdparties-docker.sh` 启动时会自动调用这个脚本。可以在其中修改：`FS_PORT`、`HMS_PORT`、`HS_PORT`和`PG_PORT` 四个对外端口，分别与`regression-conf.groovy`中的`hive3HdfsPort`、`hive3HmsPort`、`hive3ServerPort`和`hive3PgPort`相对应。前两个为hadoop配置的 defaultFs 和 Hive metastore 端口，默认为 8320 和 9383。        
         * `scripts/` 目录会在 container 启动后挂载到 container 中。其中的文件内容无需修改。但须注意，在启动 container 之前，需要先下载预制文件：
 
             将 `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/tpch1_parquet/tpch1.db.tar.gz` 文件下载到 `scripts/` 目录并解压即可。 
@@ -811,12 +818,13 @@ Doris 支持一些外部署数据源的查询。所以回归框架也提供了�
 
 2. 运行回归测试
 
-    外表相关的回归测试默认是关闭的，可以修改 `regression-test/conf/regression-conf.groovy` 中的以下配置来开启：
+    外表相关的回归测试默认是关闭的，可以修改 `regression-test/conf/regression-conf.groovy` 中的配置来开启，相关配置举例如下：
 
     * `enableJdbcTest`：开启 jdbc 外表测试，需要启动 MySQL 和 Postgresql 的 container。
     * `mysql_57_port` 和 `pg_14_port` 分别对应 MySQL 和 Postgresql 的对外端口，默认为 3316 和 5442。
     * `enableHiveTest`：开启 hive 外表测试，需要启动 hive 的 container。
-    * `hms_port` 对应 hive metastore 的对外端口，默认为 9183。
+    * `hive2HmsPort` 对应 hive2 metastore 的对外端口，默认为 9083。
+    * `hive2HdfsPort` 对应 hive2 hdfs namenode 的对外端口，默认为 8020。
     * `enableEsTest`：开启 es 外表测试。需要启动 es 的 container。
     * `es_6_port`：ES6 的端口。
     * `es_7_port`：ES7 的端口。
