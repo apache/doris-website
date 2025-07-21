@@ -5,3 +5,5 @@
 }
 ---
 
+## Description
+A variant of the [`JSON_PARSE`](./json-parse.md) function.

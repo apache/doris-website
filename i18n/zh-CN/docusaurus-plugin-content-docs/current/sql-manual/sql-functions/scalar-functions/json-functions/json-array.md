@@ -5,9 +5,9 @@
 }
 ---
 
-# JSON_ARRAY
-## 功能
+## 描述
 生成一个包含指定元素的 json 数组，未传入参数时返回空数组。
+
 ## 语法
 ```sql
 JSON_ARRAY([<expression>, ...]) 

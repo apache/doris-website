@@ -7,8 +7,6 @@
     'author': 'velodb.io · Rayner Chen, Apache Doris PMC Chair',
     'externalLink': 'https://www.velodb.io/blog/1411',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/blogs/apache-doris-the-data-lakehouse-evolution.jpg'
 }
 ---

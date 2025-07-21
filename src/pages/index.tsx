@@ -70,7 +70,7 @@ export default function Home(): JSX.Element {
         ),
         event: (
             <Link
-                to={'https://www.velodb.io/events/apache-doris-webinar-20250625'}
+                to={'https://www.velodb.io/events/apache-doris-webinar-20250722'}
                 style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
                 onMouseEnter={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
@@ -87,7 +87,7 @@ export default function Home(): JSX.Element {
                     </span>
                 </div>
                 <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    Deep Dive Session: Fastest Analytics & Search Database for the AI Era on June 26.
+                    Migrating from Snowflake to Apache Doris: Real-World Case Study on July 22nd
                 </p>
             </Link>
         ),
