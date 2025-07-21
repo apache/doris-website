@@ -12,7 +12,8 @@ Use the first parameter sep as the connector to concatenate the second parameter
 - If the separator is NULL, NULL is returned.
 
 - The `CONCAT_WS` function does not skip empty strings, but skips NULL values.
-- The `CONCAT_WS` function does not skip empty strings in any `ARRAY` parameters, but skips NULL values in `ARRAY` or - - parameters.
+- The `CONCAT_WS` function does not skip empty strings in any `ARRAY` parameters, but skips NULL values in `ARRAY`.
+- The `CONCAT_WS` function does not skip NULL parameter if input multi arrays,return empty string.
 - The first parameters must be a `string` type, and the others must be the same type ,belong to the `string` or `ARRAY` type 
 ## Syntax
 

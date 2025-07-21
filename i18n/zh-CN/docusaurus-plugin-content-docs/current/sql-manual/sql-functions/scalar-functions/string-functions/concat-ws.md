@@ -11,7 +11,8 @@
 
 - 若分隔符为 NULL，则返回 NULL。​
 - CONCAT_WS函数不跳过空字符串（""），但会跳过 NULL 值。​
-- CONCAT_WS函数不跳过任何数组参数中的空字符串，但会跳过数组或参数中的 NULL 值。​
+- CONCAT_WS函数不跳过任何数组参数中的空字符串，但会跳过数组中的NULL 值。​
+- ​CONCAT_WS函数不会跳过NULL如果输入多个数组参数，会返回空字符串。
 - 第一个参数必须为字符串类型（string 或 varchar），其他参数必须为相同类型，即均为字符串类型（string 或 varchar）或均为数组类型（ARRAY）。
 ## 语法
 
