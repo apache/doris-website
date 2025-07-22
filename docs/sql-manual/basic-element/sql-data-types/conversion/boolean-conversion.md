@@ -9,6 +9,11 @@ The BOOLEAN type represents true or false values, with only two possible states:
 
 ## FROM String
 
+:::caution Behavior Change
+Previously, strings like '1.11' could be cast to boolean type 'true', starting from 4.0, they will be converted to null (in non-strict mode) or report an error (in strict mode).
+Previously, values like 'on', 'off', 'yes', 'no' would be converted to null, starting from 4.0, they can be converted to their corresponding boolean values.
+:::
+
 ### Strict Mode
 
 #### BNF Definition
@@ -93,6 +98,10 @@ For formats that do not conform, null is returned.
 
 ## FROM Numeric
 
+:::caution Behavior Change
+Previously, non-numeric types like date/datetime were allowed to be converted to boolean type, starting from 4.0, this is not supported.
+:::
+
 ### Strict Mode
 
 #### Rule Description
@@ -172,9 +181,3 @@ If the boolean value is true, output 1, otherwise output 0.
 | --- | --- | --- |
 | true | 1 | |
 | false | 0 | |
-
-## Behavior Changes
-
-- Previously, strings like '1.11' could be cast to boolean type 'true', now they will be converted to null.
-- Previously, values like 'on', 'off', 'yes', 'no' would be converted to null, now they can be converted to their corresponding boolean values.
-- Previously, non-numeric types like date/datetime were allowed to be converted to boolean type, now this is not supported.
