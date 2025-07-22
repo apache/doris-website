@@ -22,8 +22,10 @@ Doris支持基于SSL的加密连接，当前支持TLS1.2，TLS1.3协议，可以
 >`--ssl-mode`参数是mysql5.7.11版本引入的，低于此版本的mysql客户端请参考[这里](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html)。
 Doris开启SSL加密连接需要密钥证书文件验证，默认的密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/certificate.p12`，默认密码为`doris`，您可以通过修改FE配置文件`conf/fe.conf`，添加`mysql_ssl_default_certificate = /path/to/your/certificate`修改密钥证书文件，同时也可以通过`mysql_ssl_default_certificate_password = your_password`添加对应您自定义密钥书文件的密码。
 
+Doris还支持mTLS：
+修改FE配置文件`conf/fe.conf`，添加`ssl_force_client_auth=true`即可。
 
-Doris还支持mTLS，可以通过`mysql`客户端连接Doris：
+接下来可以通过`mysql`客户端连接Doris：
 
 `mysql -ssl-mode=VERIFY_CA -uroot -P9030 -h127.0.0.1 --tls-version=TLSv1.2 --ssl-ca=/path/to/your/ca --ssl-cert=/path/to/your/cert --ssl-key=/path/to/your/key`
 
