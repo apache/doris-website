@@ -1024,6 +1024,7 @@
                                     "type": "category",
                                     "label": "Conversion",
                                     "items": [
+                                        "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
