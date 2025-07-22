@@ -38,8 +38,9 @@ You can use the IFNULL function on the calculation column to handle NULL values.
 
 ## Examples
 
+1. Create sample table and Insert sample data
+
 ```sql
--- Create sample table
 CREATE TABLE retention_test(
     `uid` int COMMENT 'user id', 
     `date` datetime COMMENT 'date time' 
@@ -49,7 +50,6 @@ PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
 
--- Insert sample data
 INSERT into retention_test values 
 (0, '2022-10-12'),
 (0, '2022-10-13'),
@@ -57,8 +57,11 @@ INSERT into retention_test values
 (1, '2022-10-12'),
 (1, '2022-10-13'),
 (2, '2022-10-12');
+```
 
--- Calculate user retention
+2. Calculate user retention
+
+```sql
 SELECT 
     uid,     
     RETENTION(date = '2022-10-12') AS r,
@@ -79,19 +82,7 @@ ORDER BY uid ASC;
 +------+------+--------+-----------+
 ```
 
-
-```sql
-SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL;
-```
-
-```text
-+------+
-| r    |
-+------+
-| NULL |
-+------+
-```
-
+3. Handling NULL values in special cases, recreating the table and inserting data
 
 ```sql
 CREATE TABLE retention_test2(
@@ -118,6 +109,23 @@ SELECT * from retention_test2;
 +------+------+-------+
 ```
 
+
+4. When performing calculations on an empty table, no data participates in aggregation, and NULL values are returned.
+
+```sql
+SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test2 where uid is NULL;
+```
+
+```text
++------+
+| r    |
++------+
+| NULL |
++------+
+```
+
+5. Only the flag column is involved in the calculation. Since flag is true when uid = 0, it returns 1.
+
 ```sql
 select retention(flag) from retention_test2;
 ```
@@ -130,6 +138,8 @@ select retention(flag) from retention_test2;
 +-----------------+
 ```
 
+6. When the columns flag and flag2 are involved in the calculation, the row with uid = 0 is excluded from the aggregate computation because flag2 is NULL. Only the row with uid = 1 participates in the aggregation, resulting in a return value of 0.
+
 ```sql
 select retention(flag,flag2) from retention_test2;
 ```
@@ -138,9 +148,11 @@ select retention(flag,flag2) from retention_test2;
 +-----------------------+
 | retention(flag,flag2) |
 +-----------------------+
-| [0, 0]                | // uid = 0，as the NULL value of flag2, so current row is not aggregate
+| [0, 0]                |
 +-----------------------+
 ```
+
+7. To resolve NULL value issues, you can use the IFNULL function to convert NULL to false, ensuring that both rows with uid = 0 and uid = 1 are included in the aggregate calculation.
 
 ```sql
 select retention(flag,IFNULL(flag2,false)) from retention_test2;;
@@ -150,6 +162,6 @@ select retention(flag,IFNULL(flag2,false)) from retention_test2;;
 +-------------------------------------+
 | retention(flag,IFNULL(flag2,false)) |
 +-------------------------------------+
-| [1, 0]                              | // IFNULL function could convert NULL value to false
+| [1, 0]                              |
 +-------------------------------------+
 ```
