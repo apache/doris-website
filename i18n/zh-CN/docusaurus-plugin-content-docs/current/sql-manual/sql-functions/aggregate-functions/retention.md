@@ -35,8 +35,9 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 
 ## 举例
 
+1. 创建示例表， 插入示例数据
+
 ```sql
--- 创建示例表
 CREATE TABLE retention_test(
     `uid` int COMMENT 'user id', 
     `date` datetime COMMENT 'date time' 
@@ -46,7 +47,6 @@ PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
 
--- 插入示例数据
 INSERT into retention_test values 
 (0, '2022-10-12'),
 (0, '2022-10-13'),
@@ -54,8 +54,11 @@ INSERT into retention_test values
 (1, '2022-10-12'),
 (1, '2022-10-13'),
 (2, '2022-10-12');
+```
 
--- 计算用户留存
+2. 正常计算用户留存
+
+```sql
 SELECT 
     uid,     
     RETENTION(date = '2022-10-12') AS r,
@@ -76,17 +79,7 @@ ORDER BY uid ASC;
 +------+------+--------+-----------+
 ```
 
-```sql
-SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL;
-```
-
-```text
-+------+
-| r    |
-+------+
-| NULL |
-+------+
-```
+3. 特殊情况NULL值处理，重新建表以及插入数据
 
 ```sql
 CREATE TABLE retention_test2(
@@ -113,6 +106,23 @@ SELECT * from retention_test2;
 +------+------+-------+
 ```
 
+
+4. 空表计算时，没有任何数据参与聚合，返回 NULL 值
+
+```sql
+SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test2 where uid is NULL;
+```
+
+```text
++------+
+| r    |
++------+
+| NULL |
++------+
+```
+
+5. 仅flag一列参与计算，由于 uid = 0 时， flag 为真，返回 1
+
 ```sql
 select retention(flag) from retention_test2;
 ```
@@ -125,6 +135,8 @@ select retention(flag) from retention_test2;
 +-----------------+
 ```
 
+6. 当flag,flag2 两列参与计算时，uid = 0 的行，由于flag2 为NULL值，所以这行未参与聚合计算， 仅uid = 1 参与聚合计算，返回结果为0
+
 ```sql
 select retention(flag,flag2) from retention_test2;
 ```
@@ -133,9 +145,11 @@ select retention(flag,flag2) from retention_test2;
 +-----------------------+
 | retention(flag,flag2) |
 +-----------------------+
-| [0, 0]                | // uid = 0 的行，由于NULL值存在，所以未参与聚合计算
+| [0, 0]                |
 +-----------------------+
 ```
+
+7. 如果需要解决NULL值问题，可以用IFNULL 函数将NULL转换成false，这样 uid = 0,1 两行都会参与聚合计算
 
 ```sql
 select retention(flag,IFNULL(flag2,false)) from retention_test2;;
@@ -145,6 +159,6 @@ select retention(flag,IFNULL(flag2,false)) from retention_test2;;
 +-------------------------------------+
 | retention(flag,IFNULL(flag2,false)) |
 +-------------------------------------+
-| [1, 0]                              | // 用IFNULL 函数将NULL转换成false
+| [1, 0]                              |
 +-------------------------------------+
 ```
