@@ -1,6 +1,6 @@
 ---
 {
-    "title": "COSEC",
+    "title": "CSC",
     "language": "en"
 }
 ---
@@ -12,7 +12,7 @@ Returns the cosecant of x, where x is the value in radians, only input and outpu
 ## Syntax
 
 ```sql
-COSEC(<x>)
+CSC(<x>)
 ```
 
 ## Parameters
@@ -28,12 +28,12 @@ Returns the cosecant of x.
 ## Example
 
 ```sql
-select cosec(1),cosec(2),cosec(1000);
+select csc(1),csc(2),csc(1000);
 ```
 
 ```text
 +--------------------+--------------------+------------------+
-| cosec(1)           | cosec(2)           | cosec(1000)      |
+| csc(1)             | csc(2)             | csc(1000)        |
 +--------------------+--------------------+------------------+
 | 1.1883951057781212 | 1.0997501702946164 | 1.20936599707935 |
 +--------------------+--------------------+------------------+
