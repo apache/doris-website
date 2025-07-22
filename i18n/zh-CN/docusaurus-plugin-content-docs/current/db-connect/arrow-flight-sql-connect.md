@@ -15,7 +15,6 @@
 
 安装 Apache Arrow 你可以去官方文档 [Apache Arrow](https://arrow.apache.org/install/) 找到详细的安装教程。更多关于 Doris 实现 Arrow Flight 协议的原理可以参考 [Doris support Arrow Flight SQL protocol](https://github.com/apache/doris/issues/25514)。
 
-
 ## Python 使用方法
 
 使用 Python 的 ADBC Driver 连接 Doris 实现数据的极速读取，下面的步骤使用 Python（版本 >= 3.9）的 ADBC Driver 执行一系列常见的数据库语法操作，包括 DDL、DML、设置 Session 变量以及 Show 语句等。
@@ -33,6 +32,7 @@ pip install adbc_driver_flightsql
 
 ```Python
 import adbc_driver_manager
+import adbc_driver_flightsql
 import adbc_driver_flightsql.dbapi as flight_sql
 
 >>> print(adbc_driver_manager.__version__)
@@ -264,6 +264,7 @@ cursor.close()
 Arrow Flight SQL 协议的开源 JDBC 驱动兼容标准的 JDBC API，可用于大多数 BI 工具通过 JDBC 访问 Doris，并支持高速传输 Apache Arrow 数据。使用方法与通过 MySQL 协议的 JDBC 驱动连接 Doris 类似，只需将链接 URL 中的 jdbc:mysql 协议换成 jdbc:arrow-flight-sql 协议，查询返回的结果依然是 JDBC 的 ResultSet 数据结构。
 
 POM dependency:
+
 ```Java
 <properties>
     <arrow.version>17.0.0</arrow.version>
@@ -321,6 +322,7 @@ conn.close();
 除了使用 JDBC，与 Python 类似，Java 也可以创建 Driver 读取 Doris 并返回 Arrow 格式的数据，下面分别是使用 AdbcDriver 和 JdbcDriver 连接 Doris Arrow Flight Server。
 
 POM dependency:
+
 ```Java
 <properties>
     <adbc.version>0.15.0</adbc.version>

@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS example_db.my_table(
 DISTRIBUTED BY HASH(col1) BUCKETS 10;
 ```
 
-2. 从 `example_db.my_table` 删除`col3`列
+2. 从 `example_db.my_table` 删除`col4`列
 
 ```sql
 ALTER TABLE example_db.my_table DROP COLUMN col4;
@@ -248,7 +248,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 注意：无论是修改 Key 列还是 Value 列都需要声明完整的 Column 信息
 
-2. 修改 Base Table 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")
+2. 修改 Base Table 的 val5 列最大长度。原 val5 为 (val5 VARCHAR(32) REPLACE DEFAULT "abc")
 
 ```sql
 ALTER TABLE example_db.my_table 

@@ -185,7 +185,7 @@ To optimize query performance and save object storage resources, local Cache has
 
 -   The Cache is managed through LRU and does not support TTL.
 
-For specific configurations, please refer to (../../lakehouse/data-cache).
+For specific configurations, please refer to [Data Cache](../../lakehouse/filecache).
 
 ## FAQ
 

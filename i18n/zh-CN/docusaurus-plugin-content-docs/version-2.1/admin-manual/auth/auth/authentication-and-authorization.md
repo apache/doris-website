@@ -110,9 +110,9 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 - 设置用户属性：[SET PROPERTY](../../../sql-manual/sql-statements/account-management/SET-PROPERTY)
 - 查看用户属性：[SHOW PROPERTY](../../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
 - 修改密码：[SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD)
-- 查看支持的所有权限项：[SHOW PRIVILEGES]
-- 查看行权限策略 [SHOW ROW POLICY]
-- 创建行权限策略 [CREATE ROW POLICY]
+- 查看支持的所有权限项：[SHOW PRIVILEGES](../../../../sql-manual/sql-statements/account-management/SHOW-PRIVILEGES)
+- 查看行权限策略：[SHOW ROW POLICY](../../../../sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY)
+- 创建行权限策略：[CREATE ROW POLICY](../../../../sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY)
 
 ### 权限类型
 

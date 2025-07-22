@@ -79,7 +79,7 @@ Orphan Memory Tracker 是默认 Memory Tracker，值为正数或负数都意味�
 
 - 如果线程开始时 TLS 中没有绑定 Memory Tracker，那么 Doris Allocator 会默认将内存记录到 Orphan Memory Tracker 中，意味着这部分内存不知所属，有关 Doris Allocator 记录内存的原理参考上文 [内存跟踪原理]。
 
-- Query 或 Load 等任务 Memory Tracker 析构时如果值不等于 0，，通常意味着这部分内存没有释放，将把这部分剩余的内存记录到 Orphan Memory Tracker 中，相当于将剩余内存交由 Orphan Memory Tracker 继续跟踪。从而保证 Orphan Memory Tracker 和其他 Memory Tracker 之和等于 Doris Allocator 分配出去的所有内存。
+- Query 或 Load 等任务 Memory Tracker 析构时如果值不等于 0，通常意味着这部分内存没有释放，将把这部分剩余的内存记录到 Orphan Memory Tracker 中，相当于将剩余内存交由 Orphan Memory Tracker 继续跟踪。从而保证 Orphan Memory Tracker 和其他 Memory Tracker 之和等于 Doris Allocator 分配出去的所有内存。
 
 理想情况下，期望 Orphan Memory Tracker 的值接近 0。所以我们希望所有线程开始时都 Attach 一个 Orphan 之外的 Memory Tracker，比如 Query 或 Load Memory Tracker。并且所有 Query 或 Load Memory Tracker 析构时都等于 0，这意味着 Query 或 Load 执行过程中使用的内存在析构时都已经被释放。
 

@@ -241,7 +241,7 @@ ALTER TABLE table_name DROP INDEX idx_name;
 SHOW CREATE TABLE table_name;
 
 -- Syntax 2: IndexType as INVERTED indicates an inverted index
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 
 ## Using Indexes
 
@@ -392,7 +392,7 @@ PROPERTIES ("replication_num" = "1");
 ```
 wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
 
-curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
+curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz -XPUT http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
 {
     "TxnId": 2,
     "Label": "a8a3e802-2329-49e8-912b-04c800a461a6",
