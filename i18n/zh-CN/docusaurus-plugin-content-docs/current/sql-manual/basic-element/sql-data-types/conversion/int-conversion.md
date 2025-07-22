@@ -131,6 +131,10 @@ true转成1，false转成0。
 
 ### 非严格模式
 
+:::caution 行为变更
+自 4.0 起，溢出时结果不再是未定义值，而是NULL。
+:::
+
 溢出时返回NULL值。
 
 如果源类型是nullable，返回nullable类型。
@@ -157,6 +161,10 @@ true转成1，false转成0。
 
 ### 规则描述
 
+:::caution 行为变更
+自 4.0 起，不再支持date类型转换成tinyint和smallint。
+:::
+
 * 不支持cast到tinyint和smallint，因为一定会溢出。
 
 * 支持cast成int, bigint和largeint。将date的年月日的数字按顺序拼成整数，月、日都当成两位数，不足10的在前面补一个0。
@@ -174,6 +182,10 @@ true转成1，false转成0。
 如果源类型是非nullable，返回非nullable类型。
 
 ### 规则描述
+
+:::caution 行为变更
+自 4.0 起，不再支持datetime类型转换成tinyint、smallint和int类型。
+:::
 
 * 不支持cast到tinyint, smallint, int，因为一定会溢出；
 
@@ -216,6 +228,10 @@ true转成1，false转成0。
 始终返回nullable类型。
 
 #### 规则描述
+
+:::caution 行为变更
+自 4.0 起，溢出时结果不再是未定义值，而是NULL。
+:::
 
 * 溢出时转成NULL值；
 
@@ -291,6 +307,10 @@ true转成1，false转成0。
 | 838:59:58 | 报错      | 溢出      |
 
 ### 非严格模式
+
+:::caution 行为变更
+自 4.0 起，溢出时结果不再是未定义值，而是NULL。
+:::
 
 溢出时转成NULL值。
 

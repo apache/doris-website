@@ -131,6 +131,10 @@ If the source type is non-nullable, returns non-nullable type.
 
 ### Non-strict mode
 
+:::caution Behavior Change
+Since version 4.0, the result of overflow is no longer undefined value, but NULL.
+:::
+
 Returns NULL when overflow occurs.
 
 If the source type is nullable, returns nullable type.
@@ -157,6 +161,10 @@ If the source type is non-nullable, returns non-nullable type.
 
 ### Rule description
 
+:::caution Behavior Change
+Since version 4.0, does not support casting date to tinyint and smallint anymore.
+:::
+
 * Does not support casting to tinyint and smallint, as overflow will definitely occur.
 
 * Supports casting to int, bigint and largeint. Concatenates the year, month, and day numbers of the date in order to form an integer, with month and day treated as two digits, padding with a leading 0 if less than 10.
@@ -174,6 +182,10 @@ If the source type is nullable, returns nullable type.
 If the source type is non-nullable, returns non-nullable type.
 
 ### Rule description
+
+:::caution Behavior Change
+Since version 4.0, does not support casting datetime to tinyint, smallint and int anymore.
+:::
 
 * Does not support casting to tinyint, smallint, int, as overflow will definitely occur;
 
@@ -216,6 +228,10 @@ If the source type is non-nullable, returns non-nullable type.
 Always returns nullable type.
 
 #### Rule description
+
+:::caution Behavior Change
+Since version 4.0, the result of overflow is no longer undefined value, but NULL.
+:::
 
 * Converts to NULL when overflow occurs;
 
@@ -291,6 +307,10 @@ If the source type is non-nullable, returns non-nullable type.
 | 838:59:58 | Error   | Overflow |
 
 ### Non-strict mode
+
+:::caution Behavior Change
+Since version 4.0, the result of overflow is no longer undefined value, but NULL.
+:::
 
 Converts to NULL when overflow occurs.
 

@@ -7,6 +7,10 @@
 
 ## From string
 
+:::caution 行为变更
+自 4.0 起，溢出时结果不再是NULL，而是+/-Infinity。
+:::
+
 ### 严格模式
 
 如果源类型是nullable，返回nullable类型；

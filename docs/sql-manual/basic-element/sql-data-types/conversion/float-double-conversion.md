@@ -7,6 +7,10 @@
 
 ## From string
 
+:::caution Behavior Change
+Since version 4.0, the result of overflow is no longer NULL, but +/-Infinity.
+:::
+
 ### Strict mode
 
 If the source type is nullable, returns nullable type;
