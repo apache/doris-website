@@ -96,7 +96,11 @@ If the format doesn't conform, null is returned.
 ### FROM String
 
 :::caution Behavior Change
-Previously, expressions like '1:1:::1' and '1:1:1::1:1:1:1:1' could be successfully converted, but starting from version 4.0, these non-standard formats are no longer supported and will result in an error in strict mode or return null in non-strict mode.
+Before version 4.0, Doris had more relaxed requirements for IPv6 address formats, for example:
+- Allowing multiple consecutive colons (like '1:1:::1')
+- Allowing double colons without actually abbreviating anything (like '1:1:1::1:1:1:1:1')
+
+Starting from version 4.0, these two non-standard formats will result in an error in strict mode or return null in non-strict mode.
 :::
 
 #### Strict Mode
