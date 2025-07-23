@@ -5,377 +5,154 @@
 }
 ---
 
-湖仓一体之前，数据分析经历了数据库、数据仓库和数据湖分析三个时代。
+**湖仓一体是将数据湖和数据仓库的优势相结合的现代化大数据解决方案**。其融合了数据湖的低成本、高扩展性与数据仓库的高性能、强数据治理能力，从而实现对大数据时代各类数据的高效、安全、质量可控的存储和处理分析。同时通过标准化的数据格式和元数据管理，统一了实时、历史数据，批处理和流处理，正在逐步成为企业大数据解决方案新的标准。
 
-- 首先是数据库，它是一个最基础的概念，主要负责联机事务处理，也提供基本的数据分析能力。
+## Doris 湖仓一体解决方案
 
-- 随着数据量的增长，出现了数据仓库，它存储的是经过清洗、加工以及建模后的高价值的数据，供业务人员进行数据分析。
+Doris 通过可扩展的连接器框架、存算分离架构、高性能的数据处理引擎和数据生态开放性，为用户提供了优秀的湖仓一体解决方案。
 
-- 数据湖的出现，主要是为了去满足企业对原始数据的存储、管理和再加工的需求。这里的需求主要包括两部分，首先要有一个低成本的存储，用于存储结构化、半结构化，甚至非结构化的数据；另外，就是希望有一套包括数据处理、数据管理以及数据治理在内的一体化解决方案。
+![doris-lakehouse-arch](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
-数据仓库解决了数据快速分析的需求，数据湖解决了数据的存储和管理的需求，而湖仓一体要解决的就是如何让数据能够在数据湖和数据仓库之间进行无缝的集成和自由的流转，从而帮助用户直接利用数据仓库的能力来解决数据湖中的数据分析问题，同时又能充分利用数据湖的数据管理能力来提升数据的价值。
+### 灵活的数据接入
 
-## 适用场景
+Doris 通过可扩展的连接器框架，支持主流数据系统和数据格式接入，并提供基于 SQL 的统一数据分析能力，用户能够在不移动现有数据的情况下，轻松实现跨平台的数据查询与分析。具体可参阅 [数据目录概述](./catalog-overview.md)
 
-Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
+### 数据源连接器
 
-- 湖仓查询加速：Doris 作为一个非常高效的 OLAP 查询引擎，有着非常好的 MPP 向量化的分布式的查询层，可以直接利用 Doris 非常高效的查询引擎，对湖上数据进行加速分析。
+无论是 Hive、Iceberg、Hudi、Paimon，还是支持 JDBC 协议的数据库系统，Doris 均能轻松连接并高效访问数据。
 
-- 统一数据分析网关：提供各类异构数据源的查询和写入能力，支持用户将这些外部数据源统一到 Doris 的元数据映射结构上，当用户通过 Doris 查询这些外部数据源时，能够提供一致的查询体验。
+对于湖仓系统，Doris 可从元数据服务，如 Hive Metastore，AWS Glue、Unity Catalog 中获取数据表的结构和分布信息，进行合理的查询规划，并利用 MPP 架构进行分布式计算。
 
-- 统一数据集成：首先通过数据湖的数据源连接能力，能够让多数据源的数据以增量或全量的方式同步到 Doris，并且利用 Doris 的数据处理能力对这些数据进行加工。加工完的数据一方面可以直接通过 Doris 对外提供查询，另一方面也可以通过 Doris 的数据导出能力，继续为下游提供全量或增量数据服务。通过 Doris 可以减少对外部工具的依赖，可以直接将上下游数据，以及包括同步、加工、处理在内的整条链路打通。
+具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog.md)
 
-- 更加开放的数据平台：众多数据仓库有着各自的存储格式，用户如果想要使用一个数据仓库，第一步就需要把外部数据通过某种方式导入到数据仓库中才能进行查询。这样就是一个比较封闭的生态，数据仓库中数据除了数仓自己本身可以查询以外，其它外部工具是无法进行直接访问的。一些企业在使用包括 Doris 在内的一些数仓产品的时候就会有一些顾虑，比如数据是否会被锁定到某一个数据仓库里，是否还有便捷的方式进行导出。通过湖仓一体生态的接入，可以用更加开放的数据格式来管理数据，比如可以用 Parquet/ORC 格式来去存储数据，这样开放开源的数据格式可以被很多外部系统去访问。另外，Iceberg，Hudi 等都提供了开放式的元数据管理能力，不管元数据是存储在 Doris 本身，还是存储在 Hive Meta store，或者存储在其它统一元数据中心，都可以通过一些对外公开的 API 对这些数据进行管理。通过更加开放的数据生态，可以帮助企业更快地接入一个新的数据管理系统，降低企业数据迁移的成本和风险。
+#### 可扩展的连接器框架
 
-## 基于 Doris 的湖仓一体架构
+Doris 提供良好的扩展性框架，帮助开发人员快速对接企业内部特有的数据源，实现数据快速互通。
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon、LakeSoul、Elasticsearch、MySQL、Oracle、SQL Server 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
+Doris 定义了标准的数据目录（Catalog）、数据库（Database）、数据表（Table）三个层级，开发人员可以方便的映射到所需对接的数据源层级。Doris 同时提供标准的元数据服务和数据读取服务的接口，开发人员只需按照接口定义实现对应的访问逻辑，即可完成数据源的对接。
 
+Doris 兼容 Trino Connector 插件，可直接将 Trino 插件包部署到 Doris 集群，经过少量配置即可访问对应的数据源。Doris 目前已经完成了 [Kudu](./catalogs/kudu-catalog.md)、[BigQuery](./catalogs/bigquery-catalog.md)、[Delta Lake](./catalogs/delta-lake-catalog.md) 等数据源的对接。也可以 [自行适配新的插件](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide)。
 
-![基于 Doris 的湖仓一体架构](/images/doris-based-data-lakehouse-architecture.png)
+#### 便捷的跨源数据处理
 
-其数据湖的主要对接流程为：
-
-1. 创建元数据映射：Doris 通过 Catalog 获取数据湖元数据并缓存在 Doris 中，用于数据湖元数据的管理。在元数据映射过程中 Doris 除了支持传统 JDBC 的用户名密码认证外，还支持基于 Kerberos 和 Ranger 的权限认证，基于 KMS 的数据加密。
-
-2. 发起查询操作：当用户从 FE 发起数据湖查询时，Doris 使用自身存储的数据湖元数生成造查询计划，利用 Native 的 Reader 组件从外部存储（HDFS、S3）上获取数据进行数据计算和分析。在数据查询过程中 Doris 会将数据湖热点数据缓存在本地，当下次相同查询到来时数据缓存能很好起到查询加速的效果。
-
-3. 结果返回：当查询完成后将查询结果通过 FE 返回给用户。
-
-4. 计算结果入湖：当用户并不想将计算结果返回，而是需要将计算结果进一步写入数据湖时可以通过 export 的方式以标准数据格式（CSV、Parquet、ORC）将数据写回数据湖。
-
-## 核心技术
-
-在多源数据连接上 Doris 通过可扩展连接器读取外部数据。同时通过元数据缓存、数据缓存、Native Reader、IO 优化、统计信息优化等一些措施，极大加速了数据湖分析能力。
-
-### 可扩展的连接框架
-
-在数据的对接中包括元数据的对接和数据的读取。
-
-- 元数据对接：元数据对接在 FE 完成，通过 FE 的 MetaData 管理器来实现基于 HiveMetastore、JDBC 和文件的元数据对接和管理工作。
-
-- 数据读取：通过 NativeReader 可以高效的读取存放在 HDFS、对象存储上的 Parquet、ORC、Text 格式数据。也可以通过 JniConnector 对接 Java 大数据生态。
-
-
-![可扩展的连接框架](/images/extensible-connection-framework.png)
-
-### 高效缓存策略
-
-Doris 通过元数据缓存、数据缓存和查询结果缓存来提升查询性能。
-
-**元数据缓存**
-
-Doris 提供了手动同步元数据、定期自动同步元数据、元数据订阅（只支持 HiveMetastore）三种方式来同步数据湖的元数据信息到 Doris，并将元数据存储在 Doris 的 FE 的内存中。当用户发起查询后 Doris 直接从内存中获取元数据并快速生成查询规划。保障了元数据的实时和高效。在元数据同步上 Doris 通过并发的元数据事件合并实现高效的元数据同步，其每秒可以处理 100 个以上的元数据事件。
-
-![元数据缓存](/images/metadata-caching.png)
-
-**高效的数据缓存**
-
-- 文件缓存：Doris 通过将数据湖中的热点数据存储在本地磁盘上，减少数据扫描过程中网络数据的传输，提高数据访问的性能。
-
-- 缓存分布策略：在数据缓存中 Doris 通过一致性哈希将数据分布在各个 BE 节点上，尽量避免节点扩缩容带来的缓存失效问题。
-
-- 缓存淘汰（更新）策略：同时当 Doris 发现数据文件对应的元数据更新后，会及时淘汰缓存以保障数据的一致性。
-
-![元数据缓存](/images/data-caching.png)
-
-
-**查询结果缓存和分区缓存**
-
-- 查询结果缓存：Doris 根据 SQL 语句将之前查询的结果缓存起来，当下次相同的查询再次发起时可以直接从缓存中获取数据返回到客户端，极大的提高了查询的效率和并发。
-
-- 分区缓存：Doris 还支持将部分分区数据缓存在 BE 端提升查询效率。比如查询最近 7 天的数据，可以将前 6 天的计算后的缓存结果，和当天的事实计算结果进行合并，得到最终查询结果，最大限度减少实时计算的数据量，提升查询效率。
-
-![查询结果缓存和分区缓存](/images/query-result-caching-and-partition-caching.png)
-
-### 高效的 Native Reader
-
-- 自研 Native Reader 避免数据转换：Doris 在数据分析时有其自身的列存方式，同时 Parquet、ORC 也有自身的列存格式。如果直接使用开源的 Parquet 或者 ORC Reader 的话就会存在一个 Doris 列存和 Parquet/ORC 列存的转换过程。这样的话就会多一次格式转换的开销，为了解决这个问题 我们自研了一套 Parquet/ORC NativeReader，直接读取 Parquet、ORC 文件来提高查询效率。
-
-- 延迟物化：同时我们实现的 Native Reader 还能很好的利用智能索引和过滤器提高数据读取效率。比如说在某些场景下我可能只针对 ID 列去做一个过滤。我们的优化做法是首先第一步我会把 ID 列单独读出来。然后在这一列上做完过滤以后，我会把这个过滤后的剩余下来的这个行号记录下来。拿这个行号再去读剩下两列，这样来进一步的减少数据扫描，加速文件的分析性能。
-
-![高效的 Native Reader](/images/native-reader.png)
-
-- 向量化读取数据：同时在文件数据的读取过程中我们引入向量化的方式读取数据，极大加速了数据读取效率。
-
-![向量化读取数据](/images/vectorized-data-reading.png)
-
-### Merge IO
-
-在网络中难免会出现大量小文件的网络 IO 请求取影响 IO 性能，在这种情况下我们采用 IO 合并去优化这种情况。
-
-比如我们设置一个策略将小于 3MB 的 IO 请求合并（Merge IO）在一次请求中处理。那么之前可能是有 8 次的小的 IO 请求，我们可以把 8 次合并成 5 次 IO 请求去去读取数据。这样减少了网络 IO 请求的速度，提高了网络访问数据的效率。
-
-Merge IO 的确定是它可能会读取一些不必要的数据，因为它把中间可能不必要读取的数据合并起来一块读过来了。但是从整体的吞吐上来讲其性能有很大的提高，在碎文件（比如：1KB - 1MB）较多的场景优化效果很明显。同时我们通过控制 Merge IO 的大小来达到整体的平衡。
-
-![Merge IO](/images/merge-io.png)
-
-### 统计信息提高查询规划效果
-
-Doris 通过收集统计信息有助于优化器了解数据分布特性，在进行 CBO（基于成本优化）时优化器会利用这些统计信息来计算谓词的选择性，并估算每个执行计划的成本。从而选择更优的计划以大幅提升查询效率。在数据湖场景我们可以通过收集外表的统计信息来提升查询规划器的效果。
-
-统计信息的收集方式包括手动收集和自动收集。
-
-同时为了保证收集统计信息不会对 BE 产生压力，我们支持了采样收集统计信息。
-
-在一些场景下用户历史数据可能很少查找，但是热数据会被经常访问，因此我们也提供了基于分区的统计信息收集在保障热数据高效的查询效率和统计信息收集对 BE 产生负载的中间取得平衡。
-
-![统计信息提高查询规划效果](/images/statistics-collection.png)
-
-## 多源数据目录
-
-多源数据目录（Multi-Catalog）功能，旨在能够更方便对接外部数据目录，以增强 Doris 的数据湖分析和联邦数据查询能力。
-
-在之前的 Doris 版本中，用户数据只有两个层级：Database 和 Table。当我们需要连接一个外部数据目录时，我们只能在 Database 或 Table 层级进行对接。比如通过 `create external table` 的方式创建一个外部数据目录中的表的映射，或通过 `create external database` 的方式映射一个外部数据目录中的 Database。如果外部数据目录中的 Database 或 Table 非常多，则需要用户手动进行一一映射，使用体验不佳。
-
-而新的 Multi-Catalog 功能在原有的元数据层级上，新增一层 Catalog，构成 Catalog -> Database -> Table 的三层元数据层级。
-
-该功能将作为之前外表连接方式（External Table）的补充和增强，帮助用户进行快速的多数据目录联邦查询。
-
-### 基础概念
-
-- Internal Catalog
-
-    Doris 原有的 Database 和 Table 都将归属于 Internal Catalog。Internal Catalog 是内置的默认 Catalog，用户不可修改或删除。
-
-- External Catalog
-
-    可以通过 [CREATE CATALOG](../sql-manual/sql-statements/catalog/CREATE-CATALOG) 命令创建一个 External Catalog。创建后，可以通过 [SHOW CATALOGS](../sql-manual/sql-statements/catalog/SHOW-CATALOG) 命令查看已创建的 Catalog。
-
-- 切换 Catalog
-
-    用户登录 Doris 后，默认进入 Internal Catalog，因此默认的使用和之前版本并无差别，可以直接使用 `SHOW DATABASES`，`USE DB` 等命令查看和切换数据库。
-
-    用户可以通过 [SWITCH](../sql-manual/sql-statements/session/context/SWITCH-CATALOG) 命令切换 Catalog。如：
-
-    ```Plain
-    SWITCH internal;
-    SWITCH hive_catalog;
-    ```
-
-    切换后，可以直接通过 `SHOW DATABASES`，`USE DB` 等命令查看和切换对应 Catalog 中的 Database。Doris 会自动通过 Catalog 中的 Database 和 Table。用户可以像使用 Internal Catalog 一样，对 External Catalog 中的数据进行查看和访问。
-
-- 删除 Catalog
-
-    可以通过 [DROP CATALOG](../sql-manual/sql-statements/catalog/DROP-CATALOG) 命令删除一个 External Catalog，Internal Catalog 无法删除。该操作仅会删除 Doris 中该 Catalog 的映射信息，并不会修改或变更任何外部数据目录的内容。
-
-### 连接示例
-
-**连接 Hive**
-
-这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
-
-更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
-
-**1. 创建 Catalog**
+Doris 支持在运行时直接创建多个数据源连接器，并使用 SQL 对这些数据源进行联邦查询。比如用户可以将 Hive 中的事实表数据与 MySQL 中的维度表数据进行关联查询：
 
 ```sql
-CREATE CATALOG hive PROPERTIES (
-    'type'='hms',
-    'hive.metastore.uris' = 'thrift://172.21.0.1:7004'
-);
+SELECT h.id, m.name
+FROM hive.db.hive_table h JOIN mysql.db.mysql_table m
+ON h.id = m.id;
 ```
 
-更多查看：[CREATE CATALOG 语法帮助](../sql-manual/sql-statements/catalog/CREATE-CATALOG)
+结合 Doris 内置的 [作业调度](../admin-manual/workload-management/job-scheduler.md) 能力，还可以创建定时任务，进一步简化系统复杂度。比如用户可以将上述查询的结果，设定为每小时执行一次的例行任务，并将每次的结果，写入一张 Iceberg 表：
 
-**2. 查看 Catalog**
-
-**3. 创建后，可以通过 `SHOW CATALOGS` 命令查看 catalog：**
-
-```Plain
-mysql> SHOW CATALOGS;
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-| CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-|     10024 | hive        | hms      | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-|         0 | internal    | internal |           | UNRECORDED              | NULL                | Doris internal catalog |
-+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
+```sql
+CREATE JOB schedule_load
+ON SCHEDULE EVERY 1 HOUR DO
+INSERT INTO iceberg.db.ice_table
+SELECT h.id, m.name
+FROM hive.db.hive_table h JOIN mysql.db.mysql_table m
+ON h.id = m.id;
 ```
 
-- [SHOW CATALOGS 语法帮助](../sql-manual/sql-statements/catalog/SHOW-CATALOG)
+### 高性能的数据处理
 
-- 可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
+Doris 作为分析型数据仓库，在湖仓数据处理和计算方面做了大量优化，并提供了丰富的查询加速功能：
 
-- 可以通过 [ALTER CATALOG](../sql-manual/sql-statements/catalog/ALTER-CATALOG) 修改 Catalog 的属性。
+* 执行引擎
 
-**4. 切换 Catalog**
+    Doris 执行引擎基于 MPP 执行框架和 Pipeline 数据处理模型，能够很好的在多机多核的分布式环境下快速处理海量数据。同时，得益于完全的向量化执行算子，在计算性能方面，Doris 在 TPC-DS 等标准评测数据集中处于领先地位。
 
-通过 `SWITCH` 命令切换到 hive catalog，并查看其中的数据库：
+* 查询优化器
 
-```Plain
-mysql> SWITCH hive;
-Query OK, 0 rows affected (0.00 sec)
+    Doris 能通过查询优化器自动优化和处理复杂的 SQL 请求。查询优化器针对多表关联、聚合、排序、分页等多种复杂 SQL 算子进行了深度优化，充分利用代价模型和关系代数变化，自动获取较优或最优的逻辑执行计划和物理执行计划，极大降低用户编写 SQL 的难度，提升易用性和性能。
 
-mysql> SHOW DATABASES;
-+-----------+
-| Database  |
-+-----------+
-| default   |
-| random    |
-| ssb100    |
-| tpch1     |
-| tpch100   |
-| tpch1_orc |
-+-----------+
-```
+* 缓存加速与 IO 优化
 
-查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/session/context/SWITCH-CATALOG)
+    外部数据源的访问，通常是网络访问，因此存在延迟高、稳定性差等问题。Apache Doris 提供了丰富的缓存机制，并在缓存的类型、时效性、策略方面都做了大量的优化，充分利用内存和本地高速磁盘，提升热点数据的分析性能。同时，针对网络 IO 高吞吐、低 IOPS、高延迟的特性，Doris 也进行了针对性的优化，可以提供媲美本地数据的外部数据源访问性能。
 
-**5. 使用 Catalog**
+* 物化视图与透明加速
 
-切换到 Catalog 后，则可以正常使用内部数据源的功能。
+    Doris 提供丰富的物化视图更新策略，支持全量和分区级别的增量刷新，以降低构建成本并提升时效性。除手动刷新外，Doris 还支持定时刷新和数据驱动刷新，进一步降低维护成本并提高数据一致性。物化视图还具备透明加速功能，查询优化器能够自动路由到合适的物化视图，实现无缝查询加速。此外，Doris 的物化视图采用高性能存储格式，通过列存、压缩和智能索引技术，提供高效的数据访问能力，能够作为数据缓存的替代方案，提升查询效率。
 
-如切换到 tpch100 数据库，并查看其中的表：
+如下所示，在基于 Iceberg 表格式的 1TB 的 TPCDS 标准测试集上，Doris 执行 99 个查询的总体运行仅为 Trino 的 1/3。
 
-```Plain
-mysql> USE tpch100;
-Database changed
+![doris-tpcds](/images/Lakehouse/tpcds1000.jpeg)
 
-mysql> SHOW TABLES;
-+-------------------+
-| Tables_in_tpch100 |
-+-------------------+
-| customer          |
-| lineitem          |
-| nation            |
-| orders            |
-| part              |
-| partsupp          |
-| region            |
-| supplier          |
-+-------------------+
-```
+实际用户场景中，Doris 在使用一半资源的情况下，相比 Presto 平均查询延迟降低了 20%，95 分位延迟更是降低 50%。在提升用户体验的同时，极大降低了资源成本。
 
-查看 lineitem 表的 schema：
+![doris-performance](/images/Lakehouse/performance.jpeg)
 
-```Plain
-mysql> DESC lineitem;
-+-----------------+---------------+------+------+---------+-------+
-| Field           | Type          | Null | Key  | Default | Extra |
-+-----------------+---------------+------+------+---------+-------+
-| l_shipdate      | DATE          | Yes  | true | NULL    |       |
-| l_orderkey      | BIGINT        | Yes  | true | NULL    |       |
-| l_linenumber    | INT           | Yes  | true | NULL    |       |
-| l_partkey       | INT           | Yes  | true | NULL    |       |
-| l_suppkey       | INT           | Yes  | true | NULL    |       |
-| l_quantity      | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_extendedprice | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_discount      | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_tax           | DECIMAL(15,2) | Yes  | true | NULL    |       |
-| l_returnflag    | TEXT          | Yes  | true | NULL    |       |
-| l_linestatus    | TEXT          | Yes  | true | NULL    |       |
-| l_commitdate    | DATE          | Yes  | true | NULL    |       |
-| l_receiptdate   | DATE          | Yes  | true | NULL    |       |
-| l_shipinstruct  | TEXT          | Yes  | true | NULL    |       |
-| l_shipmode      | TEXT          | Yes  | true | NULL    |       |
-| l_comment       | TEXT          | Yes  | true | NULL    |       |
-+-----------------+---------------+------+------+---------+-------+
-```
+### 便捷的业务迁移
 
-查询示例：
+在企业整合多个数据源并实现湖仓一体转型的过程中，迁移业务的 SQL 查询到 Doris 是一项挑战，因为不同系统的 SQL 方言在语法和函数支持上存在差异。若没有合适的迁移方案，业务侧可能需要进行大量改造以适应新系统的 SQL 语法。
 
-```Plain
-mysql> SELECT l_shipdate, l_orderkey, l_partkey FROM lineitem limit 10;
-+------------+------------+-----------+
-| l_shipdate | l_orderkey | l_partkey |
-+------------+------------+-----------+
-| 1998-01-21 |   66374304 |    270146 |
-| 1997-11-17 |   66374304 |    340557 |
-| 1997-06-17 |   66374400 |   6839498 |
-| 1997-08-21 |   66374400 |  11436870 |
-| 1997-08-07 |   66374400 |  19473325 |
-| 1997-06-16 |   66374400 |   8157699 |
-| 1998-09-21 |   66374496 |  19892278 |
-| 1998-08-07 |   66374496 |   9509408 |
-| 1998-10-27 |   66374496 |   4608731 |
-| 1998-07-14 |   66374592 |  13555929 |
-+------------+------------+-----------+
-```
+为了解决这个问题，Doris 提供了 [SQL 方言转换服务](sql-convertor/sql-convertor-overview.md)，允许用户直接使用其他系统的 SQL 方言进行数据查询。转换服务会将这些 SQL 方言转换为 Doris SQL，极大降低了用户的迁移成本。目前，Doris 支持 Presto/Trino、Hive、PostgreSQL 和 Clickhouse 等常见查询引擎的 SQL 方言转换，在某些实际用户场景中，兼容率可达到 99% 以上。
 
-也可以和其他数据目录中的表进行关联查询：
+### 现代化的部署架构
 
-```Plain
-mysql> SELECT l.l_shipdate FROM hive.tpch100.lineitem l WHERE l.l_partkey IN (SELECT p_partkey FROM internal.db1.part) LIMIT 10;
-+------------+
-| l_shipdate |
-+------------+
-| 1993-02-16 |
-| 1995-06-26 |
-| 1995-08-19 |
-| 1992-07-23 |
-| 1998-05-23 |
-| 1997-07-12 |
-| 1994-03-06 |
-| 1996-02-07 |
-| 1997-06-01 |
-| 1996-08-23 |
-+------------+
-```
+自 3.0 版本以来，Doris 支持面向云原生的 [存算分离架构](../compute-storage-decoupled/overview.md)。这一架构凭借低成本和高弹性的特点，能够有效提高资源利用率，实现计算和存储的独立扩展。
 
-- 这里我们通过 `catalog.database.table` 这种全限定的方式标识一张表，如：`internal.db1.part`。
+![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
 
-- 其中 `catalog` 和 `database` 可以省略，缺省使用当前 SWITCH 和 USE 后切换的 Catalog 和 Database。
+上图是 Doris 存算分离的系统架构，对计算与存储进行了解耦，计算节点不再存储主数据，底层共享存储层（HDFS 与对象存储）作为统一的数据主存储空间，并支持计算资源和存储资源独立扩缩容。存算分离架构为湖仓一体解决方案带来了显著的优势：
 
-- 可以通过 INSERT INTO 命令，将 Hive Catalog 中的表数据，插入到 Interal Catalog 中的内部表，从而达到导入外部数据目录数据的效果：
+* **低成本存储**：储和计算资源可独立扩展，企业可以根据需要增加存储容量而不必增加计算资源。同时，通过使用云上的对象存储，企业可以享受更低的存储成本和更高的可用性，对于比例相对较低的热点数据，依然可以使用本地高速磁盘进行缓存。
 
-```Plain
-mysql> SWITCH internal;
-Query OK, 0 rows affected (0.00 sec)
+* **唯一可信来源**：有数据都存储在统一的存储层中，同一份数据供不同的计算集群访问和处理，确保数据的一致性和完整性，也减少数据同步和重复存储的复杂性。
 
-mysql> USE db1;
-Database changed
+* **负载多样性**：以根据不同的工作负载需求动态调配计算资源，支持批处理、实时分析和机器学习等多种应用场景。通过分离存储和计算，企业可以更灵活地优化资源使用，确保在不同负载下的高效运行。
 
-mysql> INSERT INTO part SELECT * FROM hive.tpch100.part limit 1000;
-Query OK, 1000 rows affected (0.28 sec)
-{'label':'insert_212f67420c6444d5_9bfc184bf2e7edb8', 'status':'VISIBLE', 'txnId':'4'}
-```
+此外，在存算一体架构下，依然可以通过 [弹性计算节点](./compute-node.md) 在湖仓数据查询场景提供弹性计算能力。
 
-### 列类型映射
+### 开放性
 
-用户创建 Catalog 后，Doris 会自动同步数据目录的数据库和表，针对不同的数据目录和数据表格式，Doris 会进行以下列映射关系。
+Doris 不仅支持开放湖表格式的访问，其自身存储的数据同样拥有良好的开放性。Doris 提供了开放存储 API，并[基于 Arrow Flight SQL 协议实现了高速数据链路](../db-connect/arrow-flight-sql-connect.md)，具备 Arrow Flight 的速度优势以及 JDBC/ODBC 的易用性。基于该接口，用户可以使用 Python/Java/Spark/Flink 的 ABDC 客户端访问 Doris 中存储的数据。
 
-对于当前无法映射到 Doris 列类型的外表类型，如 `UNION`, `INTERVAL` 等。Doris 会将列类型映射为 UNSUPPORTED 类型。对于 UNSUPPORTED 类型的查询，示例如下：
+与开放文件格式相比，开放存储 API 屏蔽了底层的文件格式的具体实现，Doris 可以通过自身存储格式中的高级特性，如丰富的索引机制来加速数据访问。同时，上层的计算引擎无需对底层存储格式的变更或新特性进行适配，所有支持的该协议的计算引擎都可以同步享受到新特性带来的收益。
 
-假设同步后的表 schema 为：
+## 湖仓一体最佳实践
 
-```Plain
-k1 INT,
-k2 INT,
-k3 UNSUPPORTED,
-k4 INT
-select * from table;                // Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3
-select * except(k3) from table;     // Query OK.
-select k1, k3 from table;           // Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3
-select k1, k4 from table;           // Query OK.
-```
+Doris 在湖仓一体方案中，主要用于 **湖仓查询加速**、**多源联邦分析** 和 **湖仓数据处理**。
 
-不同的数据源的列映射规则，请参阅不同数据源的文档。
+### 湖仓查询加速
 
-### 权限管理
+在该场景中，Doris 作为 **计算引擎**，对湖仓中数据进行查询分析加速。
 
-使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
+![query-acceleration](/images/Lakehouse/query-acceleration.jpeg)
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization) 文档。
+#### 缓存加速
 
-用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
+针对 Hive、Iceberg 等湖仓系统，用户可以配置本地磁盘缓存。本地磁盘缓存会自动将查询设计的数据文件存储在本地缓存目录中，并使用 LRU 策略管理缓存的汰换。具体可参阅 [数据缓存](./data-cache.md) 文档。
 
-```
-"access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"
-```
+#### 物化视图与透明改写
 
-则可以使用 Apache Ranger 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
+Doris 支持对外部数据源创建物化视图。物化视图根据 SQL 定义语句，预先将计算结果存储为 Doris 内表格式。同时，Doris 的查询优化器支持基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式的透明改写算法。该算法能够分析 SQL 的结构信息，自动寻找合适的物化视图进行透明改写，并选择最优的物化视图来响应查询 SQL。
 
-### 指定需要同步的数据库
+该功能通过减少运行时的计算量，可显著提升查询性能。同时可以在业务无感知的情况下，通过透明改写访问到物化视图中的数据。具体可参阅 [物化视图](../query-acceleration/materialized-view/async-materialized-view/overview.md) 文档。
 
-通过在 Catalog 配置中设置 `include_database_list` 和 `exclude_database_list` 可以指定需要同步的数据库。
+### 多源联邦分析
 
-`include_database_list`: 支持只同步指定的多个 database，以 `,` 分隔。默认同步所有 database。db 名称是大小写敏感的。
+Doris 可以作为 **统一 SQL 查询引擎**，连接不同数据源进行联邦分析，解决数据孤岛。
 
-`exclude_database_list`: 支持指定不需要同步的多个 database，以 `,` 分割。默认不做任何过滤，同步所有 database。db 名称是大小写敏感的。
+![federation-query](/images/Lakehouse/federation-query.png)
 
-:::tip
-- 当 `include_database_list` 和 `exclude_database_list` 有重合的 database 配置时，`exclude_database_list`会优先生效。
+用户可以在 Doris 中动态创建多个 Catalog 连接不同的数据源。并使用 SQL 语句对不同数据源中的数据进行任意关联查询。具体可参阅 [数据目录概述](catalog-overview.md)。
 
-- 连接 JDBC 时，上述 2 个配置需要和配置 `only_specified_database` 搭配使用，详见 [JDBC](../lakehouse/database/jdbc)
-:::
+### 湖仓数据处理
+
+在该场景中，**Doris 作为数据处理引擎**，对湖仓数据进行加工处理。
+
+![data-management](/images/Lakehouse/data-management.jpeg)
+
+#### 定时任务调度
+
+Doris 通过引入 Job Scheduler 功能，可以实现高效灵活的任务调度，减少了对外部系统的依赖。结合数据源连接器，用户可以实现外部数据的定期加工入库。具体可参阅 [作业调度](../admin-manual/workload-management/job-scheduler.md)。
+
+#### 数据分层加工
+
+企业通常会使用数据湖存储原始数据，在此基础上进行数据分层加工，将不同层的数据开放给不同的业务需求方。Doris 的物化视图功能支持对外部数据源创建物化视图，并支持在基于物化视图在加工，降低了分层加工的系统复杂度，提升数据处理效率。
+
+#### 数据写回
+
+数据写回功能将 Doris 的湖仓数据处理能力形成闭环。户可以直接通过 Doris 在外部数据源中创建数据库、表，并写入数据。当前支持 JDBC、Hive 和 Iceberg 三类数据源，后续会增加更多的数据源支持。具体可以参阅对应数据源的文档。
 

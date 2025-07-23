@@ -137,3 +137,20 @@ Note:
 
 In summary, properly configuring `dfs.client.socket-timeout` can improve I/O response time while ensuring system stability and reliability.
 
+## Debugging HDFS
+
+Hadoop environment configuration is complex, and in some cases, connectivity issues or poor access performance may occur. Here are some third-party tools to help users quickly troubleshoot connectivity issues and basic performance problems.
+
+### HDFS Client
+
+- Java: [https://github.com/morningman/hdfs-client-java](https://github.com/morningman/hdfs-client-java)
+
+- CPP: [https://github.com/morningman/hdfs-client-cpp](https://github.com/morningman/hdfs-client-cpp)
+
+These two tools can be used to quickly verify HDFS connectivity and read performance. Most of the Hadoop dependencies in these tools are the same as Doris's own Hadoop dependencies, so they can simulate Doris's access to HDFS scenarios to the greatest extent.
+
+The Java version accesses HDFS through Java, which can simulate the logic of Doris FE side accessing HDFS.
+
+The CPP version accesses HDFS through C++ & libhdfs, which can simulate the logic of Doris BE side accessing HDFS.
+
+For specific usage instructions, please refer to the README of each.

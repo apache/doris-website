@@ -14,7 +14,7 @@ Apache Doris 社区提供了基于 Mysql ODBC 的 Power BI DirectQuery 自定义
 ## 前置条件
 
 - 未安装 Power BI Desktop 可以访问 [此处](https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop)，下载安装 Power BI。
-- 需要获取 [power-bi-doris](https://github.com/velodb/power-bi-doris/blob/master/Doris.mez) 自定义连接器。
+- 需要获取 [power-bi-doris](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) 自定义连接器。
 - 未安装 Mysql ODBC 需要下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 。
 
 :::info Note

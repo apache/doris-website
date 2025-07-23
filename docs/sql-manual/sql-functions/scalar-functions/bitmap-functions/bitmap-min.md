@@ -24,7 +24,7 @@ BITMAP_MIN(<bitmap>)
 ## Return Value
 
 The minimum value in the Bitmap.  
-Returns `NULL` if the Bitmap is empty.
+Returns `NULL` if the Bitmap is empty or is NULL value.
 
 ## Examples
 
@@ -58,4 +58,18 @@ The result will be:
 +-------+
 |     1 |
 +-------+
+```
+
+```sql
+select bitmap_min(bitmap_empty()) res1,bitmap_min(NULL) res2;
+```
+
+The result will be:
+
+```text
++------+------+
+| res1 | res2 |
++------+------+
+| NULL | NULL |
++------+------+
 ```
