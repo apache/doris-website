@@ -424,7 +424,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }
 ```
 
-假设我们想在 Kafka 消息中硬编码新增一个列，我们可以使用 InsertField 。另外, 我们也可以使用 TimestampConverter 将 Bigint 类型 timestamp 转换成时间字符串。
+假设需要在 Kafka 消息中硬编码新增一个列，可以使用 InsertField。另外，也可以使用 TimestampConverter 将 Bigint 类型 timestamp 转换成时间字符串。
 
 ```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{

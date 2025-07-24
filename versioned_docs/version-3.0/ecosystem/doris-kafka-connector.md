@@ -431,7 +431,8 @@ For example, consider data in the following format:
   "gender": "MALE"
 }
 ```
-If we want to add a hard-coded column that doesn't exist in the Kafka topic data, we can use InsertField to accomplish this. Additionally, if we need to convert a bigint timestamp to a formatted time string, we can use TimestampConverter.
+
+To add a hard-coded column to Kafka messages, InsertField can be used. Additionally, TimestampConverter can be used to convert Bigint type timestamps to time strings.
 
 ```shell
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
