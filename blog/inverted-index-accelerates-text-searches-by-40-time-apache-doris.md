@@ -336,7 +336,7 @@ WHERE product_id='B002DMK1R0' AND customer_id=13916588;
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
 | product_title                                                   | review_headline      | review_body                                                                                                                 | star_rating |
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
-| Magellan Maestro 4700 4.7-Inch Bluetooth Portable GPS Navigator | Nice Features But... | This is a great GPS. Gets you where you are going. Don't forget to buy the seperate (grr!) cord for the traffic kit though! |           4 |
+| Magellan Maestro 4700 4.7-Inch Bluetooth Portable GPS Navigator | Nice Features But... | This is a great GPS. Gets you where you are going. Don't forget to buy the separate (grr!) cord for the traffic kit though! |           4 |
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
 1 row in set (1.81 sec)
 ```
@@ -361,7 +361,7 @@ mysql> SELECT product_title,review_headline,review_body,star_rating FROM amazon_
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
 | product_title                                                   | review_headline      | review_body                                                                                                                 | star_rating |
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
-| Magellan Maestro 4700 4.7-Inch Bluetooth Portable GPS Navigator | Nice Features But... | This is a great GPS. Gets you where you are going. Don't forget to buy the seperate (grr!) cord for the traffic kit though! |           4 |
+| Magellan Maestro 4700 4.7-Inch Bluetooth Portable GPS Navigator | Nice Features But... | This is a great GPS. Gets you where you are going. Don't forget to buy the separate (grr!) cord for the traffic kit though! |           4 |
 +-----------------------------------------------------------------+----------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------+
 1 row in set (0.06 sec)
 ```
