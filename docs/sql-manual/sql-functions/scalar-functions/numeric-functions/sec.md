@@ -7,7 +7,7 @@
 
 ## Description
 
-Returns the secant of x, where x is the value in radians, only input and output are supported as double.
+Returns the secant of x, where x is the value in radians, only input and output are supported as double. Input null value will return null value.
 
 ## Syntax
 
@@ -37,4 +37,18 @@ select sec(1),sec(2),sec(1000);
 +--------------------+--------------------+--------------------+
 | 1.8508157176809255 | -2.402997961722381 | 1.7781600385912715 |
 +--------------------+--------------------+--------------------+
+```
+
+Input null value.
+
+```sql
+select csc(null);
+```
+
+```text
++--------------------+
+| csc(null)          |
++--------------------+
+|      NULL          |
++--------------------+
 ```

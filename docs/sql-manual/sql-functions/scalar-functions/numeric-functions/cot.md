@@ -7,7 +7,7 @@
 
 ## Description
 
-Returns the cotangent of x, where x is the value in radians, only input and output are supported as double.
+Returns the cotangent of x, where x is the value in radians, only input and output are supported as double. Input null value will return null value.
 
 ## Syntax
 
@@ -37,4 +37,18 @@ select cot(1),cot(2),cot(1000);
 +--------------------+----------------------+--------------------+
 | 0.6420926159343306 | -0.45765755436028577 | 0.6801221323348698 |
 +--------------------+----------------------+--------------------+
+```
+
+Input null value.
+
+```sql
+select csc(null);
+```
+
+```text
++--------------------+
+| csc(null)          |
++--------------------+
+|      NULL          |
++--------------------+
 ```
