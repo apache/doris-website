@@ -420,6 +420,68 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
+### 使用 Kafka Connect SMT 转换数据
+
+数据样例如下:
+```shell
+{
+  "registertime": 1513885135404,
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE"
+}
+```
+
+假设需要在 Kafka 消息中硬编码新增一个列，可以使用 InsertField。另外，也可以使用 TimestampConverter 将 Bigint 类型 timestamp 转换成时间字符串。
+
+```shell
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+  "name": "insert_field_tranform",
+  "config": {
+    "connector.class": "org.apache.doris.kafka.connector.DorisSinkConnector",
+    "tasks.max": "1",  
+    "topics": "users",  
+    "doris.topic2table.map": "users:kf_users",  
+    "buffer.count.records": "10",    
+    "buffer.flush.time": "11",       
+    "buffer.size.bytes": "5000000",  
+    "doris.urls": "127.0.0.1:8030", 
+    "doris.user": "root",                
+    "doris.password": "123456",           
+    "doris.http.port": "8030",           
+    "doris.query.port": "9030",          
+    "doris.database": "testdb",          
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",  
+    "transforms": "InsertField,TimestampConverter",  
+    // Insert Static Field
+    "transforms.InsertField.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.InsertField.static.field": "repo",    
+    "transforms.InsertField.static.value": "Apache Doris",  
+    // Convert Timestamp Format
+    "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.TimestampConverter.field": "registertime",  
+    "transforms.TimestampConverter.format": "yyyy-MM-dd HH:mm:ss.SSS",
+    "transforms.TimestampConverter.target.type": "string"
+  }
+}'
+```
+
+样例数据经过 SMT 的处理之后，变成如下所示：
+```shell
+{
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE",
+  "repo": "Apache Doris",// Static field added   
+  "registertime": "2017-12-21 03:38:55.404"  // Unix timestamp converted to string
+}
+```
+
+更多关于 Kafka Connect Single Message Transforms (SMT) 使用案例, 可以参考文档 [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html).
+
+
 ## 常见问题
 **1. 读取 JSON 类型的数据报如下错误：**
 ```shell
