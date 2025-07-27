@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Description
 
 Converts a standard figure WKB (Well-known binary) to the corresponding memory geometry
@@ -40,8 +41,8 @@ ST_GEOMETRYFROMWKB( <wkb>)
 ## Parameters
 
 | Parameters | Instructions |
-|------------|---------|
-| `<wkb>`    | The memory form of the graph |
+| -- |---------|
+| `<wkb>` | The memory form of the graph |
 
 ## Return Value
 

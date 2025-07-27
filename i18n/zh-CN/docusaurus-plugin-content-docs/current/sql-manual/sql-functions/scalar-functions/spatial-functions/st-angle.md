@@ -5,28 +5,9 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
-
-输入三个点，它们表示两条相交的线。返回这些线之间的夹角。
+ 
+输入三个点，第一条线表示是 `point1` 点为第一个端点，`point2` 点为第二个端点相连的直线，第二条线表示对是 `point1` 为第一个端点，`point2` 为第二个端点相连的直线，它们表示两条相交的线。返回第一条直线顺时针到第二条直线的夹角，每个端点坐标的 `x` 为纬度，都要求范围在[-180,180] ，每个坐标的 `y` 轴要求范围在[-90,90]。
 
 ## 语法
 
@@ -38,13 +19,13 @@ ST_ANGLE( <point1>, <point2>, <point3>)
 
 | 参数       | 说明                       |
 |----------|--------------------------|
-| `<point1>` | 第一条直线的第一个端点              |
-| `<point2>` | 第一条直线的第二个端点且是第二条直线的第一个端点 |
-| `<point3>` | 第二条直线的第二个端点              |
+| `<point1>` | 第一条直线的第一个端点 ,类型为 `GeoPoint`             |
+| `<point2>` | 第一条直线的第二个端点且是第二条直线的第一个端点, 类型为 `GeoPoint` |
+| `<point3>` | 第二条直线的第二个端点, 类型为 `GeoPint` |
 
 ## 返回值
 
-这些线之间的夹角以弧度表示，范围为 [0, 2pi)。夹角按顺时针方向从第一条线开始测量，直至第二条线。
+这些线之间的夹角以弧度表示，范围为 [0, 2pi)，为一个double类型浮点数。夹角按顺时针方向从第一条线开始测量，直至第二条线。
 
 ST_ANGLE 存在以下边缘情况：
 
@@ -52,13 +33,16 @@ ST_ANGLE 存在以下边缘情况：
 - 如果点 2 和点 1 相同，则返回 NULL。
 - 如果点 2 和点 3 是完全对映点，则返回 NULL。
 - 如果点 2 和点 1 是完全对映点，则返回 NULL。
-- 如果任何输入地理位置不是单点或为空地理位置，则会抛出错误。
+- 如果某个点超过 `x` 和 `y`的范围，则返回NULL
+- 任意坐标为NULL,返回NULL
 
 ## 举例
 
 ```sql
 SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 1));
 ```
+
+第一条线到第二条线顺时针弧度为4.7
 
 ```text
 +----------------------------------------------------------------------+
@@ -72,6 +56,8 @@ SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 1));
 SELECT ST_Angle(ST_Point(0, 0),ST_Point(1, 0),ST_Point(0, 1));
 ```
 
+第一条线到第二条线顺时针弧度为0.78
+
 ```text
 +----------------------------------------------------------------------+
 | st_angle(st_point(0.0, 0.0), st_point(1.0, 0.0), st_point(0.0, 1.0)) |
@@ -84,6 +70,8 @@ SELECT ST_Angle(ST_Point(0, 0),ST_Point(1, 0),ST_Point(0, 1));
 SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(1, 0));
 ```
 
+两线重叠，顺时针角度为0,返回0
+
 ```text
 +----------------------------------------------------------------------+
 | st_angle(st_point(1.0, 0.0), st_point(0.0, 0.0), st_point(1.0, 0.0)) |
@@ -92,9 +80,12 @@ SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(1, 0));
 +----------------------------------------------------------------------+
 ```
 
+点2和点3是同一点，返回NULL
+
 ```sql
 SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 0));
 ```
+
 
 ```text
 +----------------------------------------------------------------------+
@@ -103,6 +94,8 @@ SELECT ST_Angle(ST_Point(1, 0),ST_Point(0, 0),ST_Point(0, 0));
 |                                                                 NULL |
 +----------------------------------------------------------------------+
 ```
+
+两点对映，返回NULL
 
 ```sql
 SELECT ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(150, 0));
@@ -116,3 +109,37 @@ SELECT ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(150, 0));
 +--------------------------------------------------------------------------+
 ```
 
+任意一点是NULL，则返回NULL
+
+```sql
+mysql> SELECT ST_Angle(NULL,ST_Point(-30, 0),ST_Point(-150, 0)) ;
++---------------------------------------------------+
+| ST_Angle(NULL,ST_Point(-30, 0),ST_Point(-150, 0)) |
++---------------------------------------------------+
+|                                              NULL |
++---------------------------------------------------+
+```
+
+任意坐标超过规定点的范围，返回NULL
+
+```sql
+
+mysql> SELECT ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(180, 91));
++-------------------------------------------------------------+
+| ST_Angle(ST_Point(0, 0),ST_Point(-30, 0),ST_Point(180, 91)) |
++-------------------------------------------------------------+
+|                                                        NULL |
++-------------------------------------------------------------+
+
+```
+
+任一坐标为NULL,返回NULL
+
+```sql
+mysql> SELECT ST_Angle(NULL,ST_Point(-30, 0),ST_Point(150, 90));
++---------------------------------------------------+
+| ST_Angle(NULL,ST_Point(-30, 0),ST_Point(150, 90)) |
++---------------------------------------------------+
+|                                              NULL |
++---------------------------------------------------+
+```
