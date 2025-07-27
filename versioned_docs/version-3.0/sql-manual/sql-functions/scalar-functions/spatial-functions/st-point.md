@@ -26,27 +26,31 @@ under the License.
 
 ## Description
 
-With the given X coordinate value, the Y coordinate value returns the corresponding Point.
+Creates a Point geometry object from the given X and Y coordinates.
+In geospatial contexts, X/Y typically represent longitude and latitude respectively,
 
-The current value is only meaningful in the sphere set, X/Y corresponds to longitude/latitude;
-
-## Syntax
+## Sytax
 
 ```sql
 ST_POINT( <x>, <y>)
 ```
 ## Parameters
 
-| Parameters | Instructions |
-|-----|--------------|
-| `<x>` | x-coordinate |
-| `<y>` | y-coordinate |
+| Parameter  | Description  |
+|-----|-----|
+| `<x>` | X-coordinate (longitude) of the point, range: -180.0 to 180.0 (degrees) |
+| `<y>` | Y-coordinate (latitude) of the point, range: -90.0 to 90.0 (degrees)） |
 
-## Return Value
+## Return value
 
-Given horizontal coordinate and vertical coordinate corresponding position information
+Returns a Point geometry object representing a 2D coordinate.
 
-## Examples
+- Returns NULL if <x> or <y> exceeds valid longitude/latitude ranges.
+- Returns NULL if either parameter is NULL.
+
+## Example
+
+Valid Coordinates
 
 ```sql
 SELECT ST_AsText(ST_Point(24.7, 56.7));
@@ -59,3 +63,47 @@ SELECT ST_AsText(ST_Point(24.7, 56.7));
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
+
+Invalid Longitude (Out of Range)
+
+```sql
+mysql> SELECT ST_Point(200, 50);
++-------------------+
+| ST_Point(200, 50) |
++-------------------+
+| NULL              |
++-------------------+
+```
+
+Invalid Latitude (Out of Range)
+
+```sql
+mysql> SELECT ST_Point(116, -100);
++---------------------+
+| ST_Point(116, -100) |
++---------------------+
+| NULL                |
++---------------------+
+```
+
+Any parameter NULL
+
+```sql
+mysql> SELECT ST_Point(NULL, 50);
++--------------------+
+| ST_Point(NULL, 50) |
++--------------------+
+| NULL               |
++--------------------+
+```
+
+```sql
+mysql> SELECT ST_Point(50, NULL);
++--------------------+
+| ST_Point(50, NULL) |
++--------------------+
+| NULL               |
++--------------------+
+
+```
+
