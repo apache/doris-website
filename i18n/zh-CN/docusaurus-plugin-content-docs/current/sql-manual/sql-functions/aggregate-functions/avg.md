@@ -24,30 +24,98 @@ AVG([DISTINCT] <expr>)
 
 ## 返回值
 
-返回所选列或表达式的平均值，如果组内的所有记录均为 NULL，则该函数返回 NULL
+返回所选列或表达式的平均值，如果组内的所有记录均为 NULL，则该函数返回 NULL 。
+对于 Decimal 类型的输入，返回值类型为 Decimal 。其他数值类型的返回值为 Double 。
 
 ## 举例
 
 ```sql
-SELECT datetime, AVG(cost_time) FROM log_statis group by datetime;
+-- setup
+create table t1(
+        k1 int,
+        kd decimalv3(10, 5),
+        kstr varchar(100),
+        kstr_invalid varchar(100),
+        knull int
+) distributed by hash (k1) buckets 1
+properties ("replication_num"="1");
+insert into t1 values 
+    (1, 222.222, '1.5', 'test', null),
+    (2, 444.444, '2.5', '1', null),
+    (3, null, '3.5', '2', null);
 ```
 
+
+```sql
+select avg(k1) from t1;
+```
+
+[1,2,3]的平均值为2。
+
 ```text
-+---------------------+--------------------+
-| datetime            | avg(`cost_time`)   |
-+---------------------+--------------------+
-| 2019-07-03 21:01:20 | 25.827794561933533 |
-+---------------------+--------------------+
++---------+
+| avg(k1) |
++---------+
+|       2 |
++---------+
+```
+
+
+```sql
+select avg(kd) from t1;
+```
+
+[222.222,444.444,null]的平均值为333.333。
+
+```text
++-----------+
+| avg(kd)   |
++-----------+
+| 333.33300 |
++-----------+
 ```
 
 ```sql
-SELECT datetime, AVG(distinct cost_time) FROM log_statis group by datetime;
+select avg(kstr) from t1;
 ```
 
+输入的 Varchar 类型会被隐式转换为 Double。
+[1.5,2.5,3.5]的平均值为2.5。
+
 ```text
-+---------------------+---------------------------+
-| datetime            | avg(DISTINCT `cost_time`) |
-+---------------------+---------------------------+
-| 2019-07-04 02:23:24 |        20.666666666666668 |
-+---------------------+---------------------------+
++-----------+
+| avg(kstr) |
++-----------+
+|       2.5 |
++-----------+
 ```
+
+```sql
+select avg(kstr_invalid) from t1;
+```
+
+非法的字符串会在隐式转换中变成 NULL 值。
+[null,1,2]的平均值为1.5。
+
+```text
++-------------------+
+| avg(kstr_invalid) |
++-------------------+
+|               1.5 |
++-------------------+
+```
+
+```sql
+select avg(knull) from t1;
+```
+
+对于输入数据均为 NULL 值的情况，返回 NULL 值。
+
+```text
++------------+
+| avg(knull) |
++------------+
+|       NULL |
++------------+
+```
+
