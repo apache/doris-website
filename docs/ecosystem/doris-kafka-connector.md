@@ -420,6 +420,67 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
+### Loading Data with Kafka Connect Single Message Transforms
+
+For example, consider data in the following format:
+```shell
+{
+  "registertime": 1513885135404,
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE"
+}
+```
+To add a hard-coded column to Kafka messages, InsertField can be used. Additionally, TimestampConverter can be used to convert Bigint type timestamps to time strings.
+
+```shell
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+  "name": "insert_field_tranform",
+  "config": {
+    "connector.class": "org.apache.doris.kafka.connector.DorisSinkConnector",
+    "tasks.max": "1",  
+    "topics": "users",  
+    "doris.topic2table.map": "users:kf_users",  
+    "buffer.count.records": "10",    
+    "buffer.flush.time": "11",       
+    "buffer.size.bytes": "5000000",  
+    "doris.urls": "127.0.0.1:8030", 
+    "doris.user": "root",                
+    "doris.password": "123456",           
+    "doris.http.port": "8030",           
+    "doris.query.port": "9030",          
+    "doris.database": "testdb",          
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",  
+    "transforms": "InsertField,TimestampConverter",  
+    // Insert Static Field
+    "transforms.InsertField.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.InsertField.static.field": "repo",    
+    "transforms.InsertField.static.value": "Apache Doris",  
+    // Convert Timestamp Format
+    "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.TimestampConverter.field": "registertime",  
+    "transforms.TimestampConverter.format": "yyyy-MM-dd HH:mm:ss.SSS",
+    "transforms.TimestampConverter.target.type": "string"
+  }
+}'
+```
+
+After InsertField and TimestampConverter transformations, the data becomes:
+```shell
+{
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE",
+  "repo": "Apache Doris",// Static field added   
+   "registertime": "2017-12-21 03:38:55.404"  // Unix timestamp converted to string
+}
+```
+
+For more examples of Kafka Connect Single Message Transforms (SMT), please refer to the [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html).
+
+
 ## FAQ
 **1. The following error occurs when reading Json type data:**
 ```shell

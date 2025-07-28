@@ -307,6 +307,7 @@
                                         "query-acceleration/materialized-view/async-materialized-view/overview",
                                         "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
                                         "query-acceleration/materialized-view/async-materialized-view/use-guide",
+                                        "query-acceleration/materialized-view/async-materialized-view/use-advice",
                                         "query-acceleration/materialized-view/async-materialized-view/faq"
                                     ]
                                 }
@@ -673,6 +674,7 @@
                                 "admin-manual/system-tables/information_schema/active_queries",
                                 "admin-manual/system-tables/information_schema/backend_active_tasks",
                                 "admin-manual/system-tables/information_schema/backend_configuration",
+                                "admin-manual/system-tables/information_schema/backend_tablets",
                                 "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
                                 "admin-manual/system-tables/information_schema/character_sets",
                                 "admin-manual/system-tables/information_schema/collations",
@@ -1024,8 +1026,13 @@
                                     "type": "category",
                                     "label": "Conversion",
                                     "items": [
+                                        "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/decimal-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
                                     ]
                                 }
@@ -1504,7 +1511,8 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-set",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-unquote",
-                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-valid"
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/to-json"
                                     ]
                                 },
                                 {

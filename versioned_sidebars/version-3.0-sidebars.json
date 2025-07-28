@@ -306,6 +306,7 @@
                                         "query-acceleration/materialized-view/async-materialized-view/overview",
                                         "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
                                         "query-acceleration/materialized-view/async-materialized-view/use-guide",
+                                        "query-acceleration/materialized-view/async-materialized-view/use-advice",
                                         "query-acceleration/materialized-view/async-materialized-view/faq"
                                     ]
                                 }
