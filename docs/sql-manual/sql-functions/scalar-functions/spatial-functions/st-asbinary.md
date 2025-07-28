@@ -5,13 +5,31 @@
 }
 ---
 
-## Description
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-Convert a geometric figure to a standard WKB (Well-known binary) representation.
+  http://www.apache.org/licenses/LICENSE-2.0
 
-At present, the supported geometry is: Point, LineString, Polygon.
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
-## Syntax
+##  Description 
+
+Converts a geometric object into a standard WKB (Well-Known Binary) binary representation. WKB is a binary format for representing geospatial data, widely used in Geographic Information Systems (GIS).
+
+Currently supported geometric types include: Point, LineString, and Polygon.
+## Sytax
 
 ```sql
 ST_ASBINARY( <geo>)
@@ -19,15 +37,23 @@ ST_ASBINARY( <geo>)
 
 ## Parameters
 
-| Parameters | Instructions |
+| Parameter | Description       |
 | -- |----------|
-| `<geo>` | The graph that needs to be converted |
+| `<geo>` | 	The geometric object to be converted to WKB format, including: Point, LineString, Polygon.） |
 
-## Return Value
+## Retuen value
 
-The WKB representation of the geometry:
+Returns the WKB binary representation of the geometric object, displayed as a hexadecimal string (e.g., \x01010000...).
 
-## Examples
+ST_ASBINARY has the following edge cases:
+
+- If the input parameter is NULL, returns NULL.
+- If the input geometric type is not supported, returns NULL.
+
+## Example
+
+
+Point object conversion
 
 ```sql
 select ST_AsBinary(st_point(24.7, 56.7));
@@ -41,6 +67,8 @@ select ST_AsBinary(st_point(24.7, 56.7));
 +----------------------------------------------+
 ```
 
+LineString object conversion
+
 ```sql
 select ST_AsBinary(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
 ```
@@ -53,6 +81,8 @@ select ST_AsBinary(ST_GeometryFromText("LINESTRING (1 1, 2 2)"));
 +--------------------------------------------------------------------------------------+
 ```
 
+Polygon object conversion
+
 ```sql
 select ST_AsBinary(ST_Polygon("POLYGON ((114.104486 22.547119,114.093758 22.547753,114.096504 22.532057,114.104229 22.539826,114.106203 22.542680,114.104486 22.547119))"));
 ```
@@ -63,5 +93,28 @@ select ST_AsBinary(ST_Polygon("POLYGON ((114.104486 22.547119,114.093758 22.5477
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | \x01030000000100000006000000f3380ce6af865c402d05a4fd0f8c364041ef8d2100865c403049658a398c3640b9fb1c1f2d865c409d9b36e334883640de921cb0ab865c40cf876709328a36402cefaa07cc865c407b319413ed8a3640f3380ce6af865c402d05a4fd0f8c3640 |
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+Unsupported type (MultiPolygon) returns NULL
+
+```sql
+mysql> SELECT ST_AsBinary(ST_GeometryFromText("MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((2 2, 3 2, 3 3, 2 3, 2 2)))"));
++-------------------------------------------------------------------------------------------------------------+
+| ST_AsBinary(ST_GeometryFromText("MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((2 2, 3 2, 3 3, 2 3, 2 2)))")) |
++-------------------------------------------------------------------------------------------------------------+
+| NULL                                                                                                        |
++-------------------------------------------------------------------------------------------------------------+
+```
+
+NULL input
+
+
+```sql
+mysql> SELECT ST_AsBinary(NULL);
++-------------------+
+| ST_AsBinary(NULL) |
++-------------------+
+| NULL              |
++-------------------+
 ```
 
