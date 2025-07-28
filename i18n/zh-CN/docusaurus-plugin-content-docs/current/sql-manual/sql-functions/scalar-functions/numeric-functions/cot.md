@@ -23,7 +23,7 @@ COT(<x>)
 
 ## 返回值
 
-返回 x 的余切值
+返回一个 Double 类型的值表示 x 的余切值。
 
 ## 举例
 
@@ -43,12 +43,12 @@ select cot(1),cot(2),cot(1000);
 输入null值。
 
 ```sql
-select csc(null);
+select cot(null);
 ```
 
 ```text
 +--------------------+
-| csc(null)          |
+| cot(null)          |
 +--------------------+
 |      NULL          |
 +--------------------+

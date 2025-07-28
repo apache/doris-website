@@ -23,7 +23,7 @@ SEC(<x>)
 
 ## Return Value
 
-Returns the secant of x.
+Returns a Double type value means the secant of x.
 
 ## Example
 
@@ -42,12 +42,12 @@ select sec(1),sec(2),sec(1000);
 Input null value.
 
 ```sql
-select csc(null);
+select sec(null);
 ```
 
 ```text
 +--------------------+
-| csc(null)          |
+| sec(null)          |
 +--------------------+
 |      NULL          |
 +--------------------+

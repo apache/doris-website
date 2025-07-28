@@ -23,7 +23,7 @@ CSC(<x>)
 
 ## Return Value
 
-Returns the cosecant of x.
+Returns a Double type value means the cosecant of x.
 
 ## Example
 

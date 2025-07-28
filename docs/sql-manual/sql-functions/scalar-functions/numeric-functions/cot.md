@@ -23,7 +23,7 @@ COT(<x>)
 
 ## Return Value
 
-Returns the cotangent of x.
+Returns a Double type value means the cotangent of x.
 
 ## Example
 
@@ -42,12 +42,12 @@ select cot(1),cot(2),cot(1000);
 Input null value.
 
 ```sql
-select csc(null);
+select cot(null);
 ```
 
 ```text
 +--------------------+
-| csc(null)          |
+| cot(null)          |
 +--------------------+
 |      NULL          |
 +--------------------+

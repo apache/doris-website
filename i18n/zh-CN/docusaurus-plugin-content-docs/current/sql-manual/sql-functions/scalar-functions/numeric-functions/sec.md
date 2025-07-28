@@ -23,7 +23,7 @@ SEC(<x>)
 
 ## 返回值
 
-返回 x 的正割值
+返回一个 Double 类型的值表示 x 的正割值。
 
 ## 举例
 
@@ -42,12 +42,12 @@ select sec(1),sec(2),sec(1000);
 输入null值。
 
 ```sql
-select csc(null);
+select sec(null);
 ```
 
 ```text
 +--------------------+
-| csc(null)          |
+| sec(null)          |
 +--------------------+
 |      NULL          |
 +--------------------+
