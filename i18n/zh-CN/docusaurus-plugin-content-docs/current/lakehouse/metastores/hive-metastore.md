@@ -151,7 +151,7 @@ CREATE CATALOG iceberg_catalog WITH (
 # 四、常见问题 FAQ
 
 **Q1:** hive-site.xml 是必须的吗？  
-不是，仅当需要从中读取认证配置时使用。
+不是，仅当需要从中读取链接配置时使用。
 
 **Q2:** keytab 文件是否必须每个节点都存在？  
 是的，所有 FE 节点必须可访问指定路径。
