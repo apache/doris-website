@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to int",
+    "title": "Cast to INT",
     "language": "en"
 }
 ---
