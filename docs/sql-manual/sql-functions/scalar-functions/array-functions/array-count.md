@@ -5,114 +5,187 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## array_count
 
-  http://www.apache.org/licenses/LICENSE-2.0
+<version since="2.0.0">
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
-## Description
+</version>
 
-Use lambda expressions as input parameters to perform corresponding expression calculations on the internal data of other input ARRAY parameters. 
-Returns the number of elements such that the return value of `lambda(array1[i], ...)` is not 0. Returns 0 if no element is found that satisfies this condition.
+### Description
 
-There are one or more parameters are input in the lambda expression, which must be consistent with the number of input array columns later.The number of elements of all input arrays must be the same. Legal scalar functions can be executed in lambda, aggregate functions, etc. are not supported.
+Applies a lambda expression to elements in an array and counts the number of elements whose return value is not 0.
 
-## Syntax
+### Syntax
 
 ```sql
-ARRAY_COUNT(<arr>),
-ARRAY_COUNT(<lambda>, <arr>[, ... ])
+array_count(lambda, array1, ...)
 ```
 
-## Parameters
+### Parameters
 
-| Parameter | Description | 
-| --- | --- |
-| `<lambda>` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
-| `<arr>` | ARRAY array |
+- `lambda`：lambda expression, used to evaluate and calculate array elements
+- `array1, ...`：one or more ARRAY\<T> type parameters
 
-## Return Value
+**T supported types:**
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
+- String types: CHAR, VARCHAR, STRING
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Boolean type: BOOLEAN
+- IP types: IPV4, IPV6
+- Complex data types: ARRAY, MAP, STRUCT
 
-After applying the lambda expression, returns the number of non-zero elements in the ARRAY. If no such elements are found, returns 0.
+### Return Value
 
-## Example
+Return type: BIGINT
+
+Return value meaning:
+- Returns the number of elements whose lambda expression result is not 0
+- 0: if no elements satisfy the condition, or the input array is NULL
+
+Usage notes:
+- The number of parameters in the lambda expression must match the number of array parameters
+- All input arrays must have the same length
+- Supports counting on multiple arrays and complex type arrays
+- Empty array returns 0, NULL array returns 0
+- Lambda expressions can call other higher-order functions, but the return types must be compatible
+- The function is nullsafe
+- For null values in array elements: null elements will be passed to the lambda expression for processing, and the lambda can evaluate null values
+
+### Examples
 
 ```sql
-select array_count(x -> x, [0, 1, 2, 3]);
+CREATE TABLE array_count_test (
+    id INT,
+    int_array ARRAY<INT>,
+    double_array ARRAY<DOUBLE>,
+    string_array ARRAY<STRING>
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 3
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO array_count_test VALUES
+(1, [1, 2, 3, 4, 5], [1.1, 2.2, 3.3, 4.4, 5.5], ['a', 'bb', 'ccc', 'dddd', 'eeeee']),
+(2, [1, null, 3, null, 5], [1.1, null, 3.3, null, 5.5], ['a', null, 'ccc', null, 'eeeee']),
+(3, [], [], []),
+(4, NULL, NULL, NULL);
 ```
 
-```text
-+--------------------------------------------------------+
-| array_count(array_map([x] -> x(0), ARRAY(0, 1, 2, 3))) |
-+--------------------------------------------------------+
-|                                                      3 |
-+--------------------------------------------------------+
-```
+**Query examples:**
 
+Count elements in int_array that are greater than 2:
 ```sql
-select array_count(x -> x > 2, [0, 1, 2, 3]);
+SELECT array_count(x -> x > 2, int_array) FROM array_count_test WHERE id = 1;
++-------------------------------------+
+| array_count(x -> x > 2, int_array)  |
++-------------------------------------+
+|                                   3 |
++-------------------------------------+
 ```
 
-```text
-+------------------------------------------------------------+
-| array_count(array_map([x] -> x(0) > 2, ARRAY(0, 1, 2, 3))) |
-+------------------------------------------------------------+
-|                                                          1 |
-+------------------------------------------------------------+
-```
-
+Count elements in double_array that are greater than or equal to 3:
 ```sql
-select array_count(x -> x is null, [null, null, null, 1, 2]);
+SELECT array_count(x -> x >= 3, double_array) FROM array_count_test WHERE id = 1;
++------------------------------------------+
+| array_count(x -> x >= 3, double_array)   |
++------------------------------------------+
+|                                        3 |
++------------------------------------------+
 ```
 
-```text
-+----------------------------------------------------------------------------+
-| array_count(array_map([x] -> x(0) IS NULL, ARRAY(NULL, NULL, NULL, 1, 2))) |
-+----------------------------------------------------------------------------+
-|                                                                          3 |
-+----------------------------------------------------------------------------+
-```
-
+Count elements in string_array with length greater than 2:
 ```sql
-select array_count(x -> power(x,2)>10, [1, 2, 3, 4, 5]);
+SELECT array_count(x -> length(x) > 2, string_array) FROM array_count_test WHERE id = 1;
++--------------------------------------------------+
+| array_count(x -> length(x) > 2, string_array)    |
++--------------------------------------------------+
+|                                              3   |
++--------------------------------------------------+
 ```
 
-```text
-+------------------------------------------------------------------------------+
-| array_count(array_map([x] -> power(x(0), 2.0) > 10.0, ARRAY(1, 2, 3, 4, 5))) |
-+------------------------------------------------------------------------------+
-|                                                                            2 |
-+------------------------------------------------------------------------------+
-```
-
+For empty array calculation:
 ```sql
-select *, array_count((x, y) -> x>y, c_array1, c_array2) from array_test;
+SELECT array_count(x -> x > 0, int_array) FROM array_count_test WHERE id = 3;
++-------------------------------------+
+| array_count(x -> x > 0, int_array)  |
++-------------------------------------+
+|                                   0 |
++-------------------------------------+
 ```
 
-```text
-+------+-----------------+-------------------------+-----------------------------------------------------------------------+
-| id   | c_array1        | c_array2                | array_count(array_map([x, y] -> x(0) > y(1), `c_array1`, `c_array2`)) |
-+------+-----------------+-------------------------+-----------------------------------------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] |                                                                     2 |
-|    2 | [6, 7, 8]       | [10, 12, 13]            |                                                                     0 |
-|    3 | [1]             | [-100]                  |                                                                     1 |
-|    4 | [1, NULL, 2]    | [NULL, 3, 1]            |                                                                     1 |
-|    5 | []              | []                      |                                                                     0 |
-|    6 | NULL            | NULL                    |                                                                     0 |
-+------+-----------------+-------------------------+-----------------------------------------------------------------------+
+For NULL array calculation:
+```sql
+SELECT array_count(x -> x > 0, int_array) FROM array_count_test WHERE id = 4;
++-------------------------------------+
+| array_count(x -> x > 0, int_array)  |
++-------------------------------------+
+|                                   0 |
++-------------------------------------+
 ```
 
+Count null elements in an array containing null values:
+```sql
+SELECT array_count(x -> x is null, int_array) FROM array_count_test WHERE id = 2;
++------------------------------------------+
+| array_count(x -> x is null, int_array)   |
++------------------------------------------+
+|                                        2 |
++------------------------------------------+
+```
+
+Count non-null elements in an array containing null values:
+```sql
+SELECT array_count(x -> x is not null, int_array) FROM array_count_test WHERE id = 2;
++----------------------------------------------+
+| array_count(x -> x is not null, int_array)   |
++----------------------------------------------+
+|                                            3 |
++----------------------------------------------+
+```
+
+Multiple array parameters example:
+```sql
+SELECT array_count((x, y) -> x > y, [1, 2, 3], [0, 3, 2]);
++--------------------------------------------------+
+| array_count((x, y) -> x > y, [1, 2, 3], [0, 3, 2]) |
++--------------------------------------------------+
+|                                              2   |
++--------------------------------------------------+
+```
+
+Complex type example - count arrays with more than 2 elements:
+```sql
+SELECT array_count(x -> array_length(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]);
++--------------------------------------------------+
+| array_count(x -> array_length(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]) |
++--------------------------------------------------+
+|                                              2   |
++--------------------------------------------------+
+```
+
+Nested higher-order function example - count arrays that contain elements greater than 5:
+```sql
+SELECT array_count(x -> array_exists(y -> y > 5, x), [[1,2,3],[4,5,6],[7,8,9]]);
++--------------------------------------------------+
+| array_count(x -> array_exists(y -> y > 5, x), [[1,2,3],[4,5,6],[7,8,9]]) |
++--------------------------------------------------+
+|                                              2   |
++--------------------------------------------------+
+```
+
+Literal array example:
+```sql
+SELECT array_count(x -> x % 2 = 0, [1, 2, 3, 4, 5, 6]);
++------------------------------------------+
+| array_count(x -> x % 2 = 0, [1, 2, 3, 4, 5, 6]) |
++------------------------------------------+
+|                                        3 |
++------------------------------------------+
+```
+
+### Keywords
+
+ARRAY, COUNT, ARRAY_COUNT 
