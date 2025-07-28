@@ -83,6 +83,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
         "hadoop.password"="hive",
+        "root_path"="/my/root/path",
         "dfs.nameservices" = "my_ha",
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -184,7 +185,7 @@ To optimize query performance and save object storage resources, local Cache has
 
 -   The Cache is managed through LRU and does not support TTL.
 
-For specific configurations, please refer to (../../lakehouse/filecache).
+For specific configurations, please refer to (../../lakehouse/data-cache).
 
 ## FAQ
 

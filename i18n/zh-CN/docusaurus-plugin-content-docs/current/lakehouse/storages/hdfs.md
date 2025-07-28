@@ -122,7 +122,7 @@ create catalog regression properties (
 
 注意，这里的值是单个 HDFS Client 的累计值，而不是单个查询的数值。同一个 HDFS Client 会被多个查询复用。
 
-### `dfs.client.socket-timeout`
+### dfs.client.socket-timeout
 
 `dfs.client.socket-timeout` 是 Hadoop HDFS 中的一个客户端配置参数，用于设置客户端与 DataNode 或 NameNode 之间建立连接或读取数据时的套接字（socket）超时时间，单位为毫秒。该参数的默认值通常为 60,000 毫秒。
 
@@ -136,3 +136,20 @@ create catalog regression properties (
 
 总之，合理配置 `dfs.client.socket-timeout` 参数，可以在提高 I/O 响应速度的同时，确保系统的稳定性和可靠性。
 
+## 调试 HDFS
+
+Hadoop 环境配置复杂，某些情况下可能出现无法连通、访问性能不佳等问题。这里提供一些第三方工具帮助用户快速排查连通性问题和基础的性能问题。
+
+### HDFS Client
+
+- Java：[https://github.com/morningman/hdfs-client-java](https://github.com/morningman/hdfs-client-java)
+
+- CPP: [https://github.com/morningman/hdfs-client-cpp](https://github.com/morningman/hdfs-client-cpp)
+
+这两个工具可以用于快速验证 HDFS 连通性和读取性能。其中的大部分 Hadoop 依赖项和 Doris 本身的 Hadoop 依赖相同，因此可以最大程度模拟 Doris 访问 HDFS 的场景。
+
+Java 版本使用通过 Java 访问 HDFS，可以模拟 Doris FE 侧访问 HDFS 的逻辑。
+
+CPP 版本通过 C++ 调用 libhdfs 访问 HDFS，可以模拟 Doris BE 侧访问 HDFS 的逻辑。
+
+具体使用方式可以各自代码库的 README。

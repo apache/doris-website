@@ -669,6 +669,10 @@
   },
   "sidebar.docs.category.IP Data Type": {
     "message": "IP 类型",
+    "description": "The label for Data Types' conversion in sidebar docs"
+  },
+  "sidebar.docs.category.Conversion": {
+    "message": "类型转换",
     "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.Literal": {

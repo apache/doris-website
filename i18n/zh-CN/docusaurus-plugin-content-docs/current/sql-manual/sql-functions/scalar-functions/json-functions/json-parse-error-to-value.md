@@ -5,3 +5,5 @@
 }
 ---
 
+## 描述
+函数 [`JSON_PARSE`](./json-parse.md) 的变种。

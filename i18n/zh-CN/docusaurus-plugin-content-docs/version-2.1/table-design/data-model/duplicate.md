@@ -43,7 +43,7 @@ DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 
 ## 数据插入与存储
 
-在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列指做为排序。
+在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列只作为排序。
 
 ![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
 

@@ -26,57 +26,83 @@ JSON_TYPE( <json>, <json_path> )
 ```
 
 ## Alias
+- `JSONB_TYPE`
 
-- JSONB_TYPE
+## Parameters
 
-## Required Parameters
-
-
-| Parameter | Description |
-|------|------|
-| `<json>` | The JSON string to check the type of. |
-| `<json_path>` | JSON path, which specifies the location of the field in JSON. The path is usually given in $. At the beginning, use. to represent the hierarchical structure. |
-
+- `<json>` The JSON string to check the type of.
+- `<json_path>` String type, which specifies the location of the field in JSON. The path is usually given in $. At the beginning, use. to represent the hierarchical structure.
 
 ## Return Value
-Returns the type of the JSON string. Possible values include:
-- "NULL": Indicates that the value in the JSON document is null.
-- "BOOLEAN": Indicates that the value in the JSON document is of boolean type (true or false).
-- "NUMBER": Indicates that the value in the JSON document is a number.
-- "STRING": Indicates that the value in the JSON document is a string.
-- "OBJECT": Indicates that the value in the JSON document is a JSON object.
-- "ARRAY": Indicates that the value in the JSON document is a JSON array.
+
+`Nullable<String>`: Returns the type of the corresponding field.
 
 ## Usage Notes
-
-JSON_TYPE returns the type of the outermost value in the JSON document. If the JSON document contains multiple different types of values, it will return the type of the outermost value. For invalid JSON strings, JSON_TYPE returns NULL. Refer to [json tutorial](../../../basic-element/sql-data-types/semi-structured/JSON)
+- If `<json_object>` or `<json_path>` is NULL, returns NULL.
+- If `<json_path>` is not a valid path, the function reports an error.
+- If the field specified by `<json_path>` does not exist, returns NULL.
 
 ## Examples
 1. JSON is of string type:
-
-```sql
-SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
-```
-
-```sql
-+-------------------------------------------------------------------+
-| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
-+-------------------------------------------------------------------+
-| string                                                            |
-+-------------------------------------------------------------------+
-```
+    ```sql
+    SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
+    ```
+    ```text
+    +-------------------------------------------------------------------+
+    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
+    +-------------------------------------------------------------------+
+    | string                                                            |
+    +-------------------------------------------------------------------+
+    ```
 
 2. JSON is of number type:
-
-```sql
-SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
-```
-
-```sql
-+------------------------------------------------------------------+
-| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
-+------------------------------------------------------------------+
-| int                                                              |
-+------------------------------------------------------------------+
-```
-
+    ```sql
+    SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
+    ```
+    ```text
+    +------------------------------------------------------------------+
+    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
+    +------------------------------------------------------------------+
+    | int                                                              |
+    +------------------------------------------------------------------+
+    ```
+3. NULL parameters
+    ```sql
+    select json_type(NULL, '$.key1');
+    ```
+    ```text
+    +---------------------------+
+    | json_type(NULL, '$.key1') |
+    +---------------------------+
+    | NULL                      |
+    +---------------------------+
+    ```
+4. NULL parameters 2
+    ```sql
+    select json_type('{"key1": true}', NULL);
+    ```
+    ```text
+    +-----------------------------------+
+    | json_type('{"key1": true}', NULL) |
+    +-----------------------------------+
+    | NULL                              |
+    +-----------------------------------+
+    ```
+5. Field specified by `json_path` parameter does not exist
+    ```sql
+    select json_type('{"key1": true}', '$.key2');
+    ```
+    ```text
+    +---------------------------------------+
+    | json_type('{"key1": true}', '$.key2') |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```
+6. Invalid `json_path` parameter
+    ```sql
+    select json_type('{"key1": true}', '$.');
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Json path error: Invalid Json Path for value: $.
+    ```

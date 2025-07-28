@@ -42,6 +42,28 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'Migrating from Snowflake to Apache Doris',
+            detailTitle: 'Migrating from Snowflake to Apache Doris',
+            tag: 'Apache Doris Webinar',
+            date: 'July 22, 2025 11:00 AM–12:00 PM IST',
+            cardDate: 'July 22, 2025',
+            address: 'Virtual',
+            description: 'If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! ',
+            start_date: '2025-07-22T13:30:00.000Z',
+            end_date: '2025-07-22T14:30:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/migrating-snowflake-to-doris.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-webinar-20250722',
+        },
+        {
             cardTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
             detailTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
             tag: 'Apache Doris Webinar',
@@ -107,6 +129,75 @@ const EVENTS_PAGE_DATA = {
         },
     ],
     eventListZh: [
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'CommunityOverCode Asia 2025',
+            date: '2025 年 07 月 25 日 - 27 日',
+            address: '北京市海淀区中关村国家自主创新示范区会议中心',
+            description:
+                '飞轮科技作为本届峰会的开源市集赞助商，携手菜鸟、中国电信翼支付、小米、中国联通等多位资深技术专家，于 AI、OLAP & Data Analysis、Cloud Native 等多个论坛为大家分享基于 Apache Doris 的最新研究成果、实践经验和技术发展，欢迎报名并前往 Apache Doris x SelectDB 展区参与互动！',
+            start_date: '2025-07-25T00:00:00.000Z',
+            end_date: '2025-07-27T20:30:00.000Z',
+            img: (
+                <img
+                    alt="CommunityOverCode Asia 2025"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/community-over-code-asia2025.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://mp.weixin.qq.com/s/v3TTeNRf-QONXQXQsZ4kJA',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '走进小米@武汉',
+            date: '2025 年 08 月 02 日',
+            address: '武汉市洪山区 · 小米武汉总部大楼 1 楼展厅',
+            description:
+                '由小米公司、飞轮科技和 Apache Doris 社区联合主办的 走进小米 —— Apache Doris 企业行@武汉 Meetup 火热筹备中，本次 Meetup 将带来 Doris x AI、Doris on Paimon，以及数据中台与车联网更多场景实践，展现 Doris 作为现代化统一数据仓库，如何有效应对多样的分析场景，简化数据的使用和管理。',
+            start_date: '2025-08-02T14:00:00.000Z',
+            end_date: '2025-08-02T17:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250717"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/202508102-meetup-banner.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/apache-doris-meetup-20250802',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '实时分析系列直播（第一期）| 数据导入',
+            date: '2025 年 07 月 17 日 19:30-20:30',
+            address: '线上直播',
+            description:
+                'Apache Doris 作为一款高性能的实时分析引擎，凭其强大的实时更新能力，支持多种数据源的快速接入与处理，使企业能够即时获取最新信息，从而做出更快速、更准确的决策。7 月 17 日 19:30-20:30，本期直播将深入解析 Doris 在数据导入场景下的技术原理以及进阶实践',
+            start_date: '2025-07-17T19:30:00.000Z',
+            end_date: '2025-07-17T20:30:00.000Z',
+            img: (
+                <img
+                    alt="data-loading"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/20250717banner.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250717',
+        },
         {
             cardTitle: '',
             cardDate: '',

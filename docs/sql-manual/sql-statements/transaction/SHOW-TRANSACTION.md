@@ -58,8 +58,8 @@ The database whose transaction details need to be viewed.
 ## Access Control Requirements
 
 | Privilege | Object | Notes |
-| :-------------- | :----------- | :------------------------ |
-| ADMIN_PRIV | Database | Only users with ADMIN_PRIV can perform this operation. |
+|:----------| :----------- | :------------------------ |
+| LOAD_PRIV | Database |  |
 
 ## Examples
 

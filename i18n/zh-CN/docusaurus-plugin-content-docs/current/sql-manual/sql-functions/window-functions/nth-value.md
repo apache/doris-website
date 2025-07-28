@@ -18,8 +18,8 @@ NTH_VALUE(<expr>, <offset>)
 ## 参数
 | 参数                | 说明                                                                                    |
 | ------------------- | --------------------------------------------------------------------------------------- |
-| expr                | 需要获取值的表达式                                                                |
-| offset         | 参数 offset 的值为大于0的正整数，用于表示获取的第N的元素值，起始值从1开始                                              |
+| expr                | 需要获取值的表达式，支持类型：tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                                                                |
+| offset         | 类型: bigint， 参数 offset 的值为大于0的正整数，用于表示获取的第N的元素值，起始值从1开始                                              |
 
 ## 返回值
 

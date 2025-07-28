@@ -24,18 +24,31 @@ ARRAYS_OVERLAP(<left>, <right>)
 
 ## Return Value
 
-Returns the judgment result: 1: left and right arrays have common elements; 0: left and right arrays do not have common elements; NULL: left or right array is NULL; or any element in left and right array is NULL
+Returns if left and right have any non-null elements in common. Returns null if there are no non-null elements in common but either array contains null.
 
 ## Example
 
-```sql
-SELECT ARRAYS_OVERLAP(['a', 'b', 'c'], [1, 2, 'b']);
 ```
+select arrays_overlap([1, 2, 3], [1, null]);
++--------------------------------------+
+| arrays_overlap([1, 2, 3], [1, null]) |
++--------------------------------------+
+|                                    1 |
++--------------------------------------+
 
-```text
-+--------------------------------------------------+
-| arrays_overlap(['a', 'b', 'c'], ['1', '2', 'b']) |
-+--------------------------------------------------+
-|                                                1 |
-+--------------------------------------------------+
+
+select arrays_overlap([2, 3], [1, null]);
++-----------------------------------+
+| arrays_overlap([2, 3], [1, null]) |
++-----------------------------------+
+|                              NULL |
++-----------------------------------+
+
+select arrays_overlap([2, 3], [1]);
++-----------------------------+
++-----------------------------+
+| arrays_overlap([2, 3], [1]) |
++-----------------------------+
+|                           0 |
++-----------------------------+
 ```

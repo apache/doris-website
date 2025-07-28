@@ -29,7 +29,7 @@ BITMAP_AND_NOT(<bitmap1>, <bitmap2>)
 ## Return Value
 
 Returns a BITMAP.
-- If the parameter has a null value, returns NULL
+- If the parameter has a NULL value, returns NULL
 
 ## Examples
 
@@ -46,37 +46,37 @@ select bitmap_count(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_strin
 ```
 
 ```sql
-select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5')));
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_from_string('3,4,5'))) as cnt;
 ```
 
 ```text
-+--------------------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), bitmap_from_string('3,4,5'))) |
-+--------------------------------------------------------------------------------------------+
-| 1,2                                                                                        |
-+--------------------------------------------------------------------------------------------+
++------+
+| cnt  |
++------+
+| 1,2  |
++------+
 ```
 
 ```sql
-select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_empty()));
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),bitmap_empty())) cnt;
 ```
 
 ```text
-+-------------------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), bitmap_empty())) |
-+-------------------------------------------------------------------------------+
-| 1,2,3                                                                         |
-+-------------------------------------------------------------------------------+
++-------+
+| cnt   |
++-------+
+| 1,2,3 |
++-------+
 ```
 
 ```sql
-select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),NULL));
+select bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'),NULL)) as res;
 ```
 
 ```text
-+---------------------------------------------------------------------+
-| bitmap_to_string(bitmap_and_not(bitmap_from_string('1,2,3'), NULL)) |
-+---------------------------------------------------------------------+
-| NULL                                                                |
-+---------------------------------------------------------------------+
++------+
+| res  |
++------+
+| NULL |
++------+
 ```

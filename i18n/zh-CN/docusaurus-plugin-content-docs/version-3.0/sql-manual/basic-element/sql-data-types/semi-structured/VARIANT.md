@@ -323,95 +323,6 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
-### 嵌套数组类型
-```json
-{
-  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
-}
-```
-在上面的 JSON 中，数组 nested 包含的对象（object）被称为嵌套数组类型。需要注意的是，目前仅支持一层数组的展开，且需要在是 object 的子 field。以下是一个示例：
-``` sql
--- 注意：设置 variant_enable_flatten_nested 为 true
--- 这样可以展开嵌套数组，将数组中的元素以列式存储
--- 如果设置为 false，嵌套数组会存储为 JSON 类型
-CREATE TABLE `simple_nested_test` (
-  `k` bigint NULL,
-  `v` variant NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`k`)
-DISTRIBUTED BY HASH(`k`) BUCKETS 8
-PROPERTIES (
-"file_cache_ttl_seconds" = "0",
-"is_being_synced" = "false",
-"storage_medium" = "hdd",
-"storage_format" = "V2",
-"inverted_index_storage_format" = "V2",
-"light_schema_change" = "true",
-"disable_auto_compaction" = "false",
-"variant_enable_flatten_nested" = "true",
-"enable_single_replica_compaction" = "false",
-"group_commit_interval_ms" = "10000",
-"group_commit_data_bytes" = "134217728"
-);
-
-insert into simple_nested_test values(1, '{
-  "eventId": 1,
-  "firstName": "Name1",
-  "lastName": "Eric",
-  "body": {
-    "phoneNumbers": [
-      {
-        "number": "1111111111",
-        "type": "GSM",
-        "callLimit": 5
-      },
-      {
-        "number": "222222222",
-        "type": "HOME",
-        "callLimit": 3
-      },
-      {
-        "number": "33333333",
-        "callLimit": 2,
-        "type": "WORK"
-      }
-    ]
-  }
-}');
-
--- 设置为展示扩展列的描述信息
-set describe_extend_variant_column = true;  
-
--- 使用 DESC 命令将展示如下的扩展列，v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, v.body.phoneNumbers.type
--- 是从 v.body.phoneNumbers 中展开的字段
-mysql> desc simple_nested_test;
-+-------------------------------+----------------+------+-------+---------+-------+
-| Field                         | Type           | Null | Key   | Default | Extra |
-+-------------------------------+----------------+------+-------+---------+-------+
-| k                             | bigint         | Yes  | true  | NULL    |       |
-| v                             | variant        | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
-| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
-| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
-| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
-+-------------------------------+----------------+------+-------+---------+-------+
-8 rows in set (0.00 sec)
-
--- 使用 lateral view (explode_variant_array) 来展开数组，并查询符合条件的电话号码及事件 ID
-mysql> select v['eventId'], phone_numbers
-    from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
-    where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;                                                                                                               
-+--------------------------+----------------------------------------------------+
-| element_at(v, 'eventId') | phone_numbers                                      |
-+--------------------------+----------------------------------------------------+
-| 1                        | {"callLimit":5,"number":"1111111111","type":"GSM"} |
-| 1                        | {"callLimit":3,"number":"222222222","type":"HOME"} |
-+--------------------------+----------------------------------------------------+
-2 rows in set (0.02 sec)
-```
-
 ### 使用限制和最佳实践
 
 **VARIANT 类型的使用有以下限制：**
@@ -452,10 +363,24 @@ CREATE TABLE example_table (
 SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 ```
 
+**针对列数限制的调优手段：**
+
+**针对列数限制的调优手段：**
+
+注意如果是 超过 5000 子列，对内存和配置有比较高的要求，单机尽可能 128G 以上内存，核数 32C 以上
+1. BE 配置`variant_max_merged_tablet_schema_size=n` n 大于实际的列数（不推荐超过 10000）
+2. 需要注意的是，提取的列数过多会导致 compaction 的压力过大（需要控制导入的吞吐）。根据内存使用情况增大客户端导入的 batch_size 可以降低 compaction 的写放大（或者推荐使用 group_commit，表 properties 配置，适当增加`group_commit_interval_ms` 和 `group_commit_data_bytes`）
+3. 如果查询没有分桶裁剪的需求，可以使用 random 分桶，开启 [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) 导入（导入的配置），可以减少 compaction 写放大
+4. BE 配置 根据导入压力调整 `max_cumu_compaction_threads`，至少保证 8 个线程
+5. BE 配置`vertical_compaction_num_columns_per_group=500`提升分组 compaction 效率，但是会增加内存开销销
+6. BE 配置`segment_cache_memory_percentage=20`增加 segment 缓存的容量，提升元数据缓存效率率
+7. 注意关注 Compaction Score，如果 Score 持续增加会导致，Score 过高反应 Compaction 做不过来（需要适当降低导入压力）
+8. `SELECT *` 或者 `SELECT variant` 会导致集群整体压力明显上升，甚至出现超时或者内存超限。建议查询带上 Path 信息例如 `SELECT variant['path_1']`。
+
 ### FAQ
 1. Stream Load 报错： [CANCELLED][INTERNAL_ERROR]tablet error: [DATA_QUALITY_ERROR]Reached max column size limit 2048。
 
-    由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096
+    由于 Compaction 和元信息存储限制，VARIANT 类型会限制列数，默认 2048 列，可以适当调整 BE 配置 `variant_max_merged_tablet_schema_size` ，但是不建议超过 4096（依赖较高配置机型）
 
 2. VARIANT 类型中的 null（例如 `{"key": null}` ）和 SQL 中的 NULL（即 IS NULL）有区别吗？ 
 

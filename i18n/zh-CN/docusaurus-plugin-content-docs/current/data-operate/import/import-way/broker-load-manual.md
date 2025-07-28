@@ -194,6 +194,7 @@ CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 LOAD LABEL load_label
 (
 data_desc1[, data_desc2, ...]
+[format_properties]
 )
 WITH [S3|HDFS|BROKER broker_name] 
 [broker_properties]
@@ -209,7 +210,7 @@ WITH [S3|HDFS|BROKER broker_name]
 
 ### 导入配置参数
 
-**load properties**
+**导入参数（Load Properties）**
 
 | Property 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -221,9 +222,37 @@ WITH [S3|HDFS|BROKER broker_name]
 | "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
 | "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
 | "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
-| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names 或 csv_with_names_and_types 时，该参数会失效。 |
-| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
 | "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**格式参数（Format Properties）**
+
+| 参数名 | 类型 | 默认值 | 描述 |
+|---------------------|----------|----------------|-------------|
+| `skip_lines` | Integer | `0` | 跳过 CSV 文件开头的若干行。当格式为 `csv_with_names` 或 `csv_with_names_and_types` 时，此参数无效。 |
+| `trim_double_quotes` | Boolean | `false` | 是否去除字段外层的双引号。 |
+| `enclose` | String | `""` | 字段包含换行符或分隔符时的包裹字符。例如，分隔符为 `,`，包裹字符为 `'` 时，`'b,c'` 会被解析为一个字段。 |
+| `escape` | String | `""` | 用于转义包裹字符的转义字符。例如转义字符为 `\`，包裹字符为 `'`，字段 `'b,\'c'` 会被正确解析为 `'b,'c'`。 |
+
+**注意：**格式参数用于定义如何解析源文件（如分隔符、引号处理），应在 `LOAD` 语句内部的 `PROPERTIES` 中设置。导入参数用于控制导入行为（如超时、重试），应在 `LOAD` 语句外部的最外层 `PROPERTIES` 块中设置。
+
+```sql
+LOAD LABEL s3_load_example (
+    DATA INFILE("s3://bucket/path/file.csv")
+    INTO TABLE users
+    COLUMNS TERMINATED BY ","
+    FORMAT AS "CSV"
+    (user_id, name, age)
+    PROPERTIES (
+        "trim_double_quotes" = "true"  -- 格式参数
+    )
+)
+WITH S3 (
+    ...
+)
+PROPERTIES (
+    "timeout" = "3600"  -- 导入参数
+);
+```
 
 **fe.conf**
 
