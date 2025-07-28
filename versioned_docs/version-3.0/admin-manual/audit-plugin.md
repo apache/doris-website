@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris provides auditing capabilities for database operations, allowing the recording of user logins, queries, and modification operations on the database. In Doris, audit logs can be queried directly through built-in system tables or by viewing Doris's audit log files.
 
 ## Enabling Audit Logs
@@ -55,6 +36,12 @@ The audit log table is a dynamically partitioned table, partitioned daily by def
 ## Audit Log Files
 
 In `fe.conf`, `LOG_DIR` defines the storage path for FE logs. All database operations executed by this FE node are recorded in `${LOG_DIR}/fe.audit.log`. To view all operations in the cluster, you need to traverse the audit logs of each FE node.
+
+## Audit Log Format
+
+In versions before 3.0.7, the symbols `\n`, `\t`, and `\r` in statements would be replaced with `\\n`, `\\t`, and `\\r`. These modified statements were then stored in the `fe.audit.log` file and the `audit_log` table.
+
+Starting from version 3.0.7, for the `fe.audit.log` file, only `\n` in statements will be replaced with `\\n`. The `audit_log` table, stores the original format of statements.
 
 ## Audit Log Configuration
 

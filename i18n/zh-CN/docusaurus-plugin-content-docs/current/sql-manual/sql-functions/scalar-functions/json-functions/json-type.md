@@ -5,99 +5,98 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## 描述
-
-用来判断 json_path 指定的字段在 JSONB 数据中的类型，如果字段不存在返回 NULL，如果存在返回下面的类型之一
-
-- object
-- array
-- null
-- bool
-- int
-- bigint
-- largeint
-- double
-- string
+用来判断 JSON 对象中 `<json_path>` 指定的字段的类型，如果字段不存在返回 NULL，如果存在返回下面的类型之一：
+* object
+* array
+* null
+* bool
+* int
+* bigint
+* largeint
+* double
+* string
 
 ## 语法
-
 ```sql
-STRING JSON_TYPE( <json> )
+JSON_TYPE(<json_object>, <json_path>)
 ```
 
 ## 别名
+- `JSONB_TYPE`
 
-- JSONB_TYPE
-
-## 必选参数
-
-| 参数 | 描述 |
-|------|------|
-| `<json>` | 需要检查类型的 JSON 字符串。 |
-
+## 参数
+- `<json_object>`: [JSON 类型](../../../basic-element/sql-data-types/semi-structured/JSON.md) 的表达式。
+- `<json_path>`: String 类型，比如 `"$.key"`。
 
 ## 返回值
-返回 JSON 字符串的类型，可能的值包括：
-- "NULL"：表示 JSON 文档的值为 null。
-- "BOOLEAN"：表示 JSON 文档的值为布尔类型（true 或 false）。
-- "NUMBER"：表示 JSON 文档的值为数字类型。
-- "STRING"：表示 JSON 文档的值为字符串类型。
-- "OBJECT"：表示 JSON 文档的值为 JSON 对象。
-- "ARRAY"：表示 JSON 文档的值为 JSON 数组。
+`Nullable<String>`: 返回对应字段的类型。
 
-## 注意事项
-
-JSON_TYPE 返回的是 JSON 文档中最外层的值的类型。如果 JSON 文档包含多个不同类型的值，则返回最外层值的类型。
-对于无效的 JSON 字符串，JSON_TYPE 会返回 NULL。
-参考 [json tutorial](../../../basic-element/sql-data-types/semi-structured/JSON) 中的示例
-
+## 使用说明
+- 如果 `<json_object>` 或者 `<json_path>` 是 NULL，返回 NULL。
+- 如果 `<json_path>` 不是一个合法路径，函数报错。
+- 如果 `<json_path>` 指定的字段，返回 NULL。
 
 ## 示例
-1. JSON 为字符串类型
-
-```sql
-SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
-```
-
-```sql
-+-------------------------------------------------------------------+
-| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
-+-------------------------------------------------------------------+
-| string                                                            |
-+-------------------------------------------------------------------+
-```
-
-2. JSON 为数字类型
-
-```sql
-SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
-```
-
-```sql
-+------------------------------------------------------------------+
-| jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
-+------------------------------------------------------------------+
-| int                                                              |
-+------------------------------------------------------------------+
-```
+1. Double 类型
+    ```sql
+    select json_type('{"key1": 1234.44}', '$.key1');
+    ```
+    ```
+    +------------------------------------------+
+    | json_type('{"key1": 1234.44}', '$.key1') |
+    +------------------------------------------+
+    | double                                   |
+    +------------------------------------------+
+    ```
+2. BOOLEAN 类型
+    ```sql
+    select json_type('{"key1": true}', '$.key1');
+    ```
+    ```
+    +---------------------------------------+
+    | json_type('{"key1": true}', '$.key1') |
+    +---------------------------------------+
+    | bool                                  |
+    +---------------------------------------+
+    ```
+3. NULL 参数
+    ```sql
+    select json_type(NULL, '$.key1');
+    ```
+    ```
+    +---------------------------+
+    | json_type(NULL, '$.key1') |
+    +---------------------------+
+    | NULL                      |
+    +---------------------------+
+    ```
+4. NULL 参数 2
+    ```sql
+    select json_type('{"key1": true}', NULL);
+    ```
+    ```
+    +-----------------------------------+
+    | json_type('{"key1": true}', NULL) |
+    +-----------------------------------+
+    | NULL                              |
+    +-----------------------------------+
+    ```
+5. `json_path` 参数指定的字段不存在
+    ```sql
+    select json_type('{"key1": true}', '$.key2');
+    ```
+    ```
+    +---------------------------------------+
+    | json_type('{"key1": true}', '$.key2') |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```
+6. 错误的 `json_path` 参数
+    ```sql
+    select json_type('{"key1": true}', '$.');
+    ```
+    ```
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Json path error: Invalid Json Path for value: $.
+    ```

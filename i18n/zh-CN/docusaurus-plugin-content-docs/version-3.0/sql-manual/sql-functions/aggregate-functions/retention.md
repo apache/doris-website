@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 留存函数将一组条件作为参数，类型为 1 到 32 个`UInt8`类型的参数，用来表示事件是否满足特定条件。任何条件都可以指定为参数。
@@ -43,12 +26,11 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 | `<event_n>` | 第`n`个事件条件，类型为`UInt8`，取值为 1 或 0 |
 
 ## 返回值
+- 1: 条件满足。
+- 0: 条件不满足。
 
 由 1 和 0 组成的最大长度为 32 位的数组，最终输出数组的长度与输入参数长度相同。
-
-- 1: 条件满足。
-
-- 0: 条件不满足。
+如果在没有任何数据参与聚合的情况下，会返回NULL值
 
 ## 举例
 
@@ -91,4 +73,16 @@ ORDER BY uid ASC;
 |    1 | [1]  | [1, 1] | [1, 1, 0] |
 |    2 | [1]  | [1, 0] | [1, 0, 0] |
 +------+------+--------+-----------+
+```
+
+```sql
+SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test where uid is NULL;
+```
+
+```text
++------+
+| r    |
++------+
+| NULL |
++------+
 ```

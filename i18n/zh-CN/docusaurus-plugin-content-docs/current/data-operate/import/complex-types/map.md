@@ -5,35 +5,7 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-`MAP<K, V>` 表示由 K, V 类型元素组成的 map，不能作为 key 列使用。
-
-- 目前支持在 Duplicate，Unique 模型的表中使用。
-
-K, V 支持的类型有：
-
-```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3,
-DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
+`MAP<K, V>` 表示由`K,V`类型元素组成的`MAP`。 点击[MAP 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/MAP.md) 了解具体信息。
 
 ## CSV 格式导入
 

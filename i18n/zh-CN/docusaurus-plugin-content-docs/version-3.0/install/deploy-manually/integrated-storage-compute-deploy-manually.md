@@ -5,24 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在完成前置检查及规划后，如[环境检查](../preparation/env-checking.md)、[操作系统检查](../preparation/os-checking.md)、[集群规划](../preparation/cluster-planning.md)，可以开始部署集存算一体集群。
 
 存算一体集群架构如下，部署存算一体集群分为四步：
@@ -195,7 +177,7 @@ under the License.
 
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
-   | [priority_networks](../../admin-manual/config/be-config#priority_networks) | 网络 CIDR，更具网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
+   | [priority_networks](../../admin-manual/config/be-config#priority_networks) | 网络 CIDR，根据网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
    | JAVA_OPTS                                                    | 指定参数 `-Xmx` 调整 Java Heap，生产环境建议 2G 以上。   |
    | JAVA_HOME                                                    | 建议 Doris 使用独立于操作系统的 JDK 环境。                |
 

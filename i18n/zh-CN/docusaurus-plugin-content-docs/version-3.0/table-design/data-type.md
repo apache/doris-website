@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Doris 已支持的数据类型列表如下：
 
 ### [数值类型](../sql-manual/basic-element/sql-data-types/data-type-overview#数值类型)
@@ -39,7 +20,7 @@ Apache Doris 已支持的数据类型列表如下：
 | [LARGEINT](../sql-manual/basic-element/sql-data-types/numeric/LARGEINT)       | 16        | 有符号整数，范围 [-2^127 + 1 ~ 2^127 - 1]。                  |
 | [FLOAT](../sql-manual/basic-element/sql-data-types/numeric/FLOAT)          | 4         | 浮点数，范围 [-3.4*10^38 ~ 3.4*10^38]。                      |
 | [DOUBLE](../sql-manual/basic-element/sql-data-types/numeric/DOUBLE)         | 8         | 浮点数，范围 [-1.79*10^308 ~ 1.79*10^308]。                  |
-| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)        | 4/8/16    | 高精度定点数，格式：DECIMAL(M[,D])。其中，M 代表一共有多少个有效数字（precision），D 代表小数位有多少数字（scale）。有效数字 M 的范围是 [1, 38]，小数位数字数量 D 的范围是 [0, precision]。0 < precision <= 9 的场合，占用 4 字节。9 < precision <= 18 的场合，占用 8 字节。16 < precision <= 38 的场合，占用 16 字节。|
+| [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)        | 4/8/16/32    | 高精度定点数，格式：DECIMAL(P[,S])。其中，P 代表一共有多少个有效数字（precision），S 代表小数位有多少数字（scale）。有效数字 P 的范围是 [1, MAX_P]，`enable_decimal256`=false时，MAX_P=38，`enable_decimal256`=true时，MAX_P=76。小数位数字数量 S 的范围是 [0, P]。<br>`enable_decimal256` 的默认值是false，设置为true 可以获得更加精确的结果，但是会带来一些性能损失。<br>存储空间：<ul><li>0 < precision <= 9 时，占用 4 字节。<li>9 < precision <= 18 时，占用 8 字节。<li>16 < precision <= 38 时，占用 16 字节。<li>38 < precision <= 76 的场合，占用 32 字节。<ul>|
 
 ### [日期类型](../sql-manual/basic-element/sql-data-types/data-type-overview#日期类型)
 

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 明细模型是 Doris 中的默认建表模型，用于保存每条原始数据记录。在建表时，通过 `DUPLICATE KEY` 指定数据存储的排序列，以优化常用查询。一般建议选择三列或更少的列作为排序键，具体选择方式参考[排序键](../index/prefix-index)。明细模型具有以下特点：
 
 * **保留原始数据**：明细模型保留了全量的原始数据，适合于存储与查询原始数据。对于需要进行详细数据分析的应用场景，建议使用明细模型，以避免数据丢失的风险；

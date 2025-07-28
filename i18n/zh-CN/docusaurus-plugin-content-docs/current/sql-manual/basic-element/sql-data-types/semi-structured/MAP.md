@@ -5,281 +5,206 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## 类型描述
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## MAP
-
-### Name
-
-MAP
-
-### 语法
-`MAP<K, V>`
-
-其中:
-
-* K 是 Map 的键类型。键必须使用以下类型之一：
-	*	字符串类型（Char/Varchar/String）
-	*	数值类型（不包括浮点数类型：double 和 float）1
-  * 日期类型
-  * IP 地址类型(IPV4/IPV6)
-
-  Map 的 Key 类型 始终为 nullable。
+- `MAP<key_type, value_type>`类型用于表示键值对集合的复合类型,每个键（key）唯一地对应一个值（value）。
+  - `key_type` 表征键的类型，支持的类型为`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING，IPTV4, IPV6`，key值是Nullable的，不支持指定NOT NULL。
+- `value_type` 表征值的类型，支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING，IPV4, IPV6, ARRAY, MAP, STRUCT`，值是 Nullable 的，不支持指定 NOT NULL。
   
-  **因为支持 nullable 类型作为 map 的 key，map 中的 key 比较使用的是 “null-safe equal”（即 null 和 null 被认为是相等的），这与标准 SQL 的定义不同。**
+## 类型约束
+- `MAP<key_type, value_type>`类型允许的最大嵌套深度是9。
+- `MAP<key_type, value_type>` 的**Key可以是 NULL，并且允许相同的Key（NULL和NULL也被认为是相同的Key）**。
+- `MAP<key_type, value_type>` 类型之间的转换取决于`key_type`之间以及`value_type`之间是否能转换，`MAP<key_type, value_type>`类型不能转成其他类型。
+  - 例如: `MAP<INT,INT>`可以转换为`MAP<BIGINT,BIGINT>`，因为`INT`和`BIGINT`可以转换。
+  - 字符串类型可以转换成`MAP<key_type, value_type>`类型（通过解析的形式，解析失败返回 NULL）。
+- `MAP<key_type, value_type>` 类型在`AGGREGATE`表模型中只支持`REPLACE`和`REPLACE_IF_NOT_NULL`，**在任何表模型中都无法作为`Key`列，无法作为分区分桶列**。
+- `MAP<key_type, value_type>`类型的列不支持比较或者算数运算，**不支持`ORDER BY`和`GROUP BY`操作，不支持作为`JOIN KEY`，不支持在`DELETE`语句中使用**。
+- `MAP<key_type, value_type>`类型的列不支持建立任何索引。
 
-*	V 是 Map 中值的类型，始终为 nullable。
+## 类型构造
+- `MAP()` 函数可以返回一个`MAP`类型的值。
 
-Map 类型不支持重复的键；Doris 会自动删除重复的项。
+  ````SQL
+  SELECT MAP('Alice', 21, 'Bob', 23);
 
-### 描述
+  +-----------------------------+
+  | map('Alice', 21, 'Bob', 23) |
+  +-----------------------------+
+  | {"Alice":21, "Bob":23}      |
+  +-----------------------------+
+  ````
+- `{}`可以构造一个`MAP`类型的值。
+  ```SQL
+  SELECT {'Alice': 20};
 
-由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
+  +---------------+
+  | {'Alice': 20} |
+  +---------------+
+  | {"Alice":20}  |
+  +---------------+
+  ```
 
+## 修改类型
 
-Map 类型支持默认情况下是没有开启的，需要设置参数：
-```
-admin set frontend config("enable_map_type" = "true");
-```
+- 当`MAP<key_type, value_type>`的`key_type`或`value_type`为`VARCHAR`时，才允许进行修改。
+   - 只允许将`VARCHAR`的参数从小改到大。反之不行。
 
-## 举例
+    ```SQL
+    CREATE TABLE `map_table` (
+      `k` INT NOT NULL,
+      `map_varchar_int` MAP<VARCHAR(10), INT>,
+      `map_int_varchar` MAP<INT, VARCHAR(10)>,
+      `map_varchar_varchar` MAP<VARCHAR(10), VARCHAR(10)>
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`k`)
+    DISTRIBUTED BY HASH(`k`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1"
+    );
 
-建表示例如下：
+    ALTER TABLE map_table MODIFY COLUMN map_varchar_int MAP<VARCHAR(20), INT>;
 
-```sql
-CREATE TABLE IF NOT EXISTS test.simple_map (
-  `id` INT(11) NULL COMMENT "",
-  `m` Map<STRING, INT> NULL COMMENT ""
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"storage_format" = "V2"
-);
-```
+    ALTER TABLE map_table MODIFY COLUMN map_int_varchar MAP<INT, VARCHAR(20)>;
 
-插入数据示例：
+    ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
+    ```
+- `MAP<key_type, value_type>`类型的列默认值只能指定为NULL，如果指定后不能修改。
 
-```sql
-mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
-```
+## 元素访问
+- 使用`[key]`的方式访问`MAP`的`Key`对应的`Value`。
+  ```SQL
+  SELECT {'Alice': 20}['Alice'];
 
+  +------------------------+
+  | {'Alice': 20}['Alice'] |
+  +------------------------+
+  |                     20 |
+  +------------------------+`
+  ```
 
+- 使用 `ELEMENT_AT(MAP, Key) `的方式访问 `MAP`的`Key`对应的`Value`。
+  ```SQL
+  SELECT ELEMENT_AT({'Alice': 20}, 'Alice');
 
-```shell
-# load the map data from json file
-curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_by_line: true" http://fe_host:8030/api/test/simple_map/_stream_load
-# 返回结果
-{
-    "TxnId": 106134,
-    "Label": "5666e573-9a97-4dfc-ae61-2d6b61fdffd2",
-    "Comment": "",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 10293125,
-    "NumberLoadedRows": 10293125,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 2297411459,
-    "LoadTimeMs": 66870,
-    "BeginTxnTimeMs": 1,
-    "StreamLoadPutTimeMs": 80,
-    "ReadDataTimeMs": 6415,
-    "WriteDataTimeMs": 10550,
-    "CommitAndPublishTimeMs": 38
-}
-```
+  +------------------------------------+
+  | ELEMENT_AT({'Alice': 20}, 'Alice') |
+  +------------------------------------+
+  |                                 20 |
+  +------------------------------------+
+  ```
 
+## 示例
 
-查询数据示例：
+- 多层`MAP`嵌套
 
-```sql
-mysql> SELECT * FROM simple_map;
-+------+-----------------------------+
-| id   | m                           |
-+------+-----------------------------+
-|    1 | {'a':100, 'b':200}          |
-|    2 | {'b':100, 'c':200, 'd':300} |
-|    3 | {'a':10, 'd':200}           |
-+------+-----------------------------+
-```
+  ```SQL
+  -- 建表
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_nested MAP<STRING, MAP<STRING, INT>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-查询 map 列示例：
+  --插入
+  INSERT INTO map_table VALUES (1, MAP('key1', MAP('key2', 1, 'key3', 2)));
+  INSERT INTO map_table VALUES (2, MAP('key1', MAP('key2', 3, 'key3', 4)));
 
-```sql
-mysql> SELECT m FROM simple_map;
-+-----------------------------+
-| m                           |
-+-----------------------------+
-| {'a':100, 'b':200}          |
-| {'b':100, 'c':200, 'd':300} |
-| {'a':10, 'd':200}           |
-+-----------------------------+
-```
+  -- 查询
+  SELECT map_nested['key1']['key2'] FROM map_table order by id;
+  +----------------------------+
+  | map_nested['key1']['key2'] |
+  +----------------------------+
+  |                          1 |
+  |                          3 |
+  +----------------------------+
 
-map 取值示例：
+  ```
+- 复杂类型嵌套
 
-```sql
-mysql> SELECT m['a'] FROM simple_map;
-+-----------------------------+
-| %element_extract%(`m`, 'a') |
-+-----------------------------+
-|                         100 |
-|                        NULL |
-|                          10 |
-+-----------------------------+
-```
+  ```SQL
+  -- 建表
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_array MAP<STRING, ARRAY<INT>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-map 支持的 functions 示例：
+  -- 插入
+  INSERT INTO map_table VALUES (1, MAP('key1', [1, 2, 3])), (2, MAP('key1', [4, 5, 6]));
 
-```sql
-# map construct
+  -- 查询
+  SELECT map_array['key1'][1] FROM map_table order by id;
+  +----------------------+
+  | map_array['key1'][1] |
+  +----------------------+
+  |                    1 |
+  |                    4 |
+  +----------------------+
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['k11'];
-+---------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'k11') |
-+---------------------------------------------------------+
-|                                                    1000 |
-+---------------------------------------------------------+
+  -- 建表
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_struct MAP<STRING, STRUCT<id: INT, name: STRING>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['nokey'];
-+-----------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'nokey') |
-+-----------------------------------------------------------+
-|                                                      NULL |
-+-----------------------------------------------------------+
-1 row in set (0.06 sec)
+  -- 插入
+  INSERT INTO map_table VALUES (1, MAP('key1', STRUCT(1, 'John'), 'key2', STRUCT(3, 'Jane')));
 
-# map size
+  -- 查询
+  SELECT STRUCT_ELEMENT(map_struct['key1'], 1), STRUCT_ELEMENT(map_struct['key1'], 'name') FROM map_table order by id;
+  +---------------------------------------+--------------------------------------------+
+  | STRUCT_ELEMENT(map_struct['key1'], 1) | STRUCT_ELEMENT(map_struct['key1'], 'name') |
+  +---------------------------------------+--------------------------------------------+
+  |                                     1 | John                                       |
+  +---------------------------------------+--------------------------------------------+
+  ```
 
-mysql> SELECT map_size(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_size(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-|                                       2 |
-+-----------------------------------------+
+- 修改类型
 
-mysql> SELECT id, m, map_size(m) FROM simple_map ORDER BY id;
-+------+-----------------------------+---------------+
-| id   | m                           | map_size(`m`) |
-+------+-----------------------------+---------------+
-|    1 | {"a":100, "b":200}          |             2 |
-|    2 | {"b":100, "c":200, "d":300} |             3 |
-|    2 | {"a":10, "d":200}           |             2 |
-+------+-----------------------------+---------------+
-3 rows in set (0.04 sec)
+  ```SQL
+  -- 建表
+  CREATE TABLE `map_table` (
+    `k` INT NOT NULL,
+    `map_varchar_int` MAP<VARCHAR(10), INT>,
+    `map_int_varchar` MAP<INT, VARCHAR(10)>,
+    `map_varchar_varchar` MAP<VARCHAR(10), VARCHAR(10)>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(`k`)
+  DISTRIBUTED BY HASH(`k`) BUCKETS 1
+  PROPERTIES (
+      "replication_num" = "1"
+  );
 
-# map_contains_key
+  -- 修改 KEY
+  ALTER TABLE map_table MODIFY COLUMN map_varchar_int MAP<VARCHAR(20), INT>;
 
-mysql> SELECT map_contains_key(map('k11', 1000, 'k22', 2000), 'k11');
-+--------------------------------------------------------+
-| map_contains_key(map('k11', 1000, 'k22', 2000), 'k11') |
-+--------------------------------------------------------+
-|                                                      1 |
-+--------------------------------------------------------+
-1 row in set (0.08 sec)
+  -- 修改 VALUE
+  ALTER TABLE map_table MODIFY COLUMN map_int_varchar MAP<INT, VARCHAR(20)>;
 
-mysql> SELECT id, m, map_contains_key(m, 'k1') FROM simple_map ORDER BY id;
-+------+-----------------------------+-----------------------------+
-| id   | m                           | map_contains_key(`m`, 'k1') |
-+------+-----------------------------+-----------------------------+
-|    1 | {"a":100, "b":200}          |                           0 |
-|    2 | {"b":100, "c":200, "d":300} |                           0 |
-|    2 | {"a":10, "d":200}           |                           0 |
-+------+-----------------------------+-----------------------------+
-3 rows in set (0.10 sec)
+  -- 修改 KEY VALUE
+  ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
 
-mysql> SELECT id, m, map_contains_key(m, 'a') FROM simple_map ORDER BY id;
-+------+-----------------------------+----------------------------+
-| id   | m                           | map_contains_key(`m`, 'a') |
-+------+-----------------------------+----------------------------+
-|    1 | {"a":100, "b":200}          |                          1 |
-|    2 | {"b":100, "c":200, "d":300} |                          0 |
-|    2 | {"a":10, "d":200}           |                          1 |
-+------+-----------------------------+----------------------------+
-3 rows in set (0.17 sec)
-
-# map_contains_value
-
-mysql> SELECT map_contains_value(map('k11', 1000, 'k22', 2000), NULL);
-+---------------------------------------------------------+
-| map_contains_value(map('k11', 1000, 'k22', 2000), NULL) |
-+---------------------------------------------------------+
-|                                                       0 |
-+---------------------------------------------------------+
-1 row in set (0.04 sec)
-
-mysql> SELECT id, m, map_contains_value(m, '100') FROM simple_map ORDER BY id;
-+------+-----------------------------+------------------------------+
-| id   | m                           | map_contains_value(`m`, 100) |
-+------+-----------------------------+------------------------------+
-|    1 | {"a":100, "b":200}          |                            1 |
-|    2 | {"b":100, "c":200, "d":300} |                            1 |
-|    2 | {"a":10, "d":200}           |                            0 |
-+------+-----------------------------+------------------------------+
-3 rows in set (0.11 sec)
-
-# map_keys
-
-mysql> SELECT map_keys(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_keys(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-| ["k11", "k22"]                          |
-+-----------------------------------------+
-1 row in set (0.04 sec)
-
-mysql> SELECT id, map_keys(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_keys(`m`)   |
-+------+-----------------+
-|    1 | ["a", "b"]      |
-|    2 | ["b", "c", "d"] |
-|    2 | ["a", "d"]      |
-+------+-----------------+
-3 rows in set (0.19 sec)
-
-# map_values
-
-mysql> SELECT map_values(map('k11', 1000, 'k22', 2000));
-+-------------------------------------------+
-| map_values(map('k11', 1000, 'k22', 2000)) |
-+-------------------------------------------+
-| [1000, 2000]                              |
-+-------------------------------------------+
-1 row in set (0.03 sec)
-
-mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_values(`m`) |
-+------+-----------------+
-|    1 | [100, 200]      |
-|    2 | [100, 200, 300] |
-|    2 | [10, 200]       |
-+------+-----------------+
-3 rows in set (0.18 sec)
-
-```
-
-### keywords
-
-    MAP
+  -- 查看列类型
+  DESC map_table;
+  +---------------------+------------------------------+------+-------+---------+-------+
+  | Field               | Type                         | Null | Key   | Default | Extra |
+  +---------------------+------------------------------+------+-------+---------+-------+
+  | k                   | int                          | No   | true  | NULL    |       |
+  | map_varchar_int     | map<varchar(20),int>         | Yes  | false | NULL    | NONE  |
+  | map_int_varchar     | map<int,varchar(20)>         | Yes  | false | NULL    | NONE  |
+  | map_varchar_varchar | map<varchar(20),varchar(20)> | Yes  | false | NULL    | NONE  |
+  +---------------------+------------------------------+------+-------+---------+-------+
+  ```

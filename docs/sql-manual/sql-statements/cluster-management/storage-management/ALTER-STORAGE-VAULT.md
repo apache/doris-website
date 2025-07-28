@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 Modify the mutable properties of a Storage Vault.
@@ -45,7 +26,7 @@ PROPERTIES (<storage_vault_property>)
 >
 >- s3.access_key: ak for s3 vault
 >- s3.secret_key: sk for s3 vault
->- vault_name: The name of the vault.
+>- vault_name: The name of the vault. When a vault is set as the default storage vault using the statement `SET <original_vault_name> DEFAULT STORAGE VAULT`, its name cannot be modified. To rename the vault, you must first unset the default storage vault by executing the `UNSET DEFAULT STORAGE VAULT` command, and then modify its name. Finally, if you need to set the renamed vault as the default storage vault, you can use the statement `SET <new_vault_name> DEFAULT STORAGE VAULT`.
 >- use_path_style: Whether to allow path style url, optional values are true, false. The default value is false.
 
 >When type is hdfs, the following fields are prohibited:

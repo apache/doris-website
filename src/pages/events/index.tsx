@@ -42,6 +42,50 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'Migrating from Snowflake to Apache Doris',
+            detailTitle: 'Migrating from Snowflake to Apache Doris',
+            tag: 'Apache Doris Webinar',
+            date: 'July 22, 2025 11:00 AM–12:00 PM IST',
+            cardDate: 'July 22, 2025',
+            address: 'Virtual',
+            description: 'If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! ',
+            start_date: '2025-07-22T13:30:00.000Z',
+            end_date: '2025-07-22T14:30:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/migrating-snowflake-to-doris.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-webinar-20250722',
+        },
+        {
+            cardTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
+            detailTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
+            tag: 'Apache Doris Webinar',
+            date: 'June 26, 2025 7-8pm EDT',
+            cardDate: 'June 26, 2025',
+            address: 'Virtual',
+            description: 'Join Rayner Chen, Apache Doris PMC Chair and Tech VP at VeloDB, as he breaks down why Doris is purpose-built for the AI era. Hear directly from the expert shaping the future of real-time analytics.',
+            start_date: '2025-06-26T21:00:00.000Z',
+            end_date: '2025-06-26T22:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-webinar-20250625.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-webinar-20250625',
+        },
+        {
             cardTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
             detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
             tag: 'Apache Doris Webinar',
@@ -90,23 +134,23 @@ const EVENTS_PAGE_DATA = {
             cardDate: '',
             tag: '',
             detailTitle: '可观测性系列直播（第六期）| GenAI & LLM',
-            date: '2025 年 06 月 25 日 19:30-20:30',
+            date: '2025 年 07 月 03 日 19:30-20:30',
             address: '线上直播',
             description:
                 '第六期将介绍 Apache Doris 可观测性平台与 GenAI 结合应用实践，聚焦在 AI 时代下如何从现代实时数仓演进为支撑分析与 AI 的实时分析型数据库。',
-            start_date: '2025-06-25T19:00:00.000Z',
-            end_date: '2025-06-25T20:30:00.000Z',
+            start_date: '2025-07-03T19:00:00.000Z',
+            end_date: '2025-07-03T20:30:00.000Z',
             img: (
                 <img
                     alt="可观测性系列直播（第六期）"
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/observability-webinar-20250625.jpg').default}`}
+                    src={`${require('@site/static/images/events/observability-webinar-20250703.jpg').default}`}
                 />
             ),
             isCover: true,
-            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250625',
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250703',
         },
         {
             cardTitle: '',

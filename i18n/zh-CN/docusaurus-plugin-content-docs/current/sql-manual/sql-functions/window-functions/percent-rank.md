@@ -5,15 +5,11 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
 PERCENT_RANK() 是一个窗口函数，用于计算分区或结果集中行的相对排名，返回值范围从 0.0 到 1.0。对于给定的行，其计算公式为：(rank - 1) / (total_rows - 1)，其中 rank 是当前行的排名，total_rows 是分区中的总行数。
+如果未显示指定窗口，会隐式生成`RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` 类型，且当前仅支持此类。
+
 
 ## 语法
 

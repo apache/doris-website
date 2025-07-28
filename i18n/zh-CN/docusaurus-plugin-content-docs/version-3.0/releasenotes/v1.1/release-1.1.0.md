@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在 1.1 版本中，**我们实现了计算层和存储层的全面向量化、正式将向量化执行引擎作为稳定功能进行全面启用**，所有查询默认通过向量化执行引擎来执行，**性能较之前版本有 3-5 倍的巨大提升**；增加了直接访问 Apache Iceberg 外部表的能力，支持对 Doris 和 Iceberg 中的数据进行联邦查询，**扩展了 Apache Doris 在数据湖上的分析能力**；在原有的 LZ4 基础上增加了 ZSTD 压缩算法，进一步提升了数据压缩率；**修复了诸多之前版本存在的性能与稳定性问题**，使系统稳定性得到大幅提升。欢迎大家下载使用。
 
 ## 升级说明

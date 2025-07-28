@@ -5,85 +5,90 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
-将 json_value 用双引号（"）括起来，跳过其中包含的特殊转义字符。
+将输入的字符串参数用双引号包围，并对字符串中的特殊字符和控制字符进行转译，该函数的主要用途是将字符串转换为合法的 json 字符串。
+
+特殊字符包括：
+* 引号 (`"`)
+* 反斜杠 (`\`)
+* Backspace	(`\b`)
+* 换行 (`\n`)
+* 回车 (`\r`)
+* 水平制表符 (`\t`)
+
+控制字符包括：
+* `CHAR(0)` 被转义为 `\u0000`
 
 ## 语法
 ```sql
-JSON_QUOTE (<a>)
+JSON_QUOTE (<str>)
 ```
 
 ## 参数
-| 参数 | 描述                  |
-|------|---------------------|
-| `<a>` | 要括起来的 json_value 的值 |
-
+`<str>` 字符串类型，要括起来的值。
 
 ## 返回值
-返回一个 json_value。特殊情况如下：
-* 如果传入的参数为 NULL，返回 NULL。
+返回被双引号括起来的字符串
 
-## 举例
+## 使用说明
+- 如果参数是 NULL 返回 NULL。
+- 如果参数中的字符是 转义符号(`\`) + 非转义字符的情况，转义符号会被删除，参考示例 4 和 5.
 
-```sql
-SELECT json_quote('null'), json_quote('"null"');
-```
+## 示例
+1. 双引号被转义
+    ```sql
+    select json_quote('I am a "string" that contains double quotes.');
+    ```
+    ```
+    +------------------------------------------------------------+
+    | json_quote('I am a "string" that contains double quotes.') |
+    +------------------------------------------------------------+
+    | "I am a \"string\" that contains double quotes."           |
+    +------------------------------------------------------------+
+    ```
+2. 特殊字符的转义
+    ```sql
+    select json_quote("\\ \b \n \r \t");
+    ```
+    ```
+    +------------------------------+
+    | json_quote("\\ \b \n \r \t") |
+    +------------------------------+
+    | "\\ \b \n \r \t"             |
+    +------------------------------+
+    ```
 
-```text
-+--------------------+----------------------+
-| json_quote('null') | json_quote('"null"') |
-+--------------------+----------------------+
-| "null"             | "\"null\""           |
-+--------------------+----------------------+
-```
+3. 控制字符字符转义
+    ```sql
+    select json_quote("\0");
+    ```
+    ```
+    +------------------+
+    | json_quote("\0") |
+    +------------------+
+    | "\u0000"         |
+    +------------------+
+    ```
 
-```sql
-SELECT json_quote('[1, 2, 3]');
-```
-```text
-+-------------------------+
-| json_quote('[1, 2, 3]') |
-+-------------------------+
-| "[1, 2, 3]"             |
-+-------------------------+
-```
-```sql
-SELECT json_quote(null);
-```
-```text
-+------------------+
-| json_quote(null) |
-+------------------+
-| NULL             |
-+------------------+
-```
-
-```sql
-select json_quote("\n\b\r\t");
-```
-```text
-+------------------------+
-| json_quote('\n\b\r\t') |
-+------------------------+
-| "\n\b\r\t"             |
-+------------------------+
-```
+4. 转义符号 + 非转义字符的情况
+    ```sql
+    select json_quote("\a");
+    ```
+    ```
+    +------------------+
+    | json_quote("\a") |
+    +------------------+
+    | "a"              |
+    +------------------+
+    ```
+5. 非 0 的不可打印字符
+    ```sql
+    select json_quote("\1");
+    ```
+    ```
+    +------------------+
+    | json_quote("\1") |
+    +------------------+
+    | "1"              |
+    +------------------+
+    ```

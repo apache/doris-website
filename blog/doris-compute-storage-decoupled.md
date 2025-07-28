@@ -4,11 +4,9 @@
     'summary': 'Apache Doris compute-storage decoupled mode achieves 90% cost reduction and provides elasticity and workload isolation, while maintaining high performance in data ingestion and queries.',
     'description': 'Apache Doris compute-storage decoupled mode achieves 90% cost reduction and provides elasticity and workload isolation, while maintaining high performance in data ingestion and queries.',
     'date': '2025-03-21',
-    'author': 'Thomas Yang, Apache Doris PMC Member',
+    'author': 'velodb.io · Thomas Yang, Apache Doris PMC Member',
     'externalLink': 'https://www.velodb.io/blog/1384',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "2",
     "image": '/images/compute-storage-decoupled-banner.jpg'
 }
 ---

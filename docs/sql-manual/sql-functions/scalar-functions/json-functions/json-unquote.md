@@ -5,128 +5,97 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
-This function unquotes a JSON value and returns the result as a utf8mb4 string. If the argument is NULL, it will return NULL.
+This function removes quotes from JSON values and returns the result as a string. If the parameter is NULL, it returns NULL.
+
+Special characters include:
+* Quote (`"`)
+* Backslash (`\`)
+* Backspace	(`\b`)
+* Newline (`\n`)
+* Carriage return (`\r`)
+* Horizontal tab (`\t`)
+
+Control characters include:
+* `CHAR(0)` is escaped as `\u0000`
+
 
 ## Syntax
 ```sql
-JSON_UNQUOTE (<a>)
+JSON_UNQUOTE (<str>)
 ```
+
 ## Parameters
-| Parameters | Description                                                    |
-|------|-------------------------------------------------------|
-| `<a>` | The element to be unquoted. |
+- `<str>` The string from which quotes are to be removed.
 
-## Return Values
+## Return Value
+Returns a string. Special cases are as follows:
+* If the input parameter is NULL, returns NULL.
+* If the input parameter is not a value enclosed in double quotes, it returns the value itself.
+* If the input parameter is not a string, it will be automatically converted to a string and then return the value itself.
 
-Returns a utf8mb4 string. Special cases are as follows:
-* If the passed parameter is NULL, return NULL.
-* If the passed parameter is not a value with double quotes, the value itself will be returned.
-* If the passed parameter is not a string, it will be automatically converted to a string and then the value itself will be returned.
-
-Escape sequences within a string as shown in the following table will be recognized. Backslashes will be ignored for all other escape sequences.
-
-| Escape Sequence | Character Represented by Sequence  |
-|-----------------|------------------------------------|
-| \"              | A double quote (") character       |
-| \b              | A backspace character              |
-| \f              | A formfeed character               |
-| \n              | A newline (linefeed) character     |
-| \r              | A carriage return character        |
-| \t              | A tab character                    |
-| \\              | A backslash (\) character          |
-| \uxxxx          | UTF-8 bytes for Unicode value XXXX |
-
-
-### Examples
-
-```sql
-SELECT json_unquote('"doris"');
-```
-
-```text
-+-------------------------+
-| json_unquote('"doris"') |
-+-------------------------+
-| doris                   |
-+-------------------------+
-```
-```sql
-SELECT json_unquote('[1, 2, 3]');
-```
-```text
-+---------------------------+
-| json_unquote('[1, 2, 3]') |
-+---------------------------+
-| [1, 2, 3]                 |
-+---------------------------+
-```
-```sql
-SELECT json_unquote(null);
-```
-```text
-+--------------------+
-| json_unquote(NULL) |
-+--------------------+
-| NULL               |
-+--------------------+
-```
-```sql
-SELECT json_unquote('"\\ttest"');
-```
-```text
-+--------------------------+
-| json_unquote('"\ttest"') |
-+--------------------------+
-|       test                    |
-+--------------------------+
-```
-```sql
-select json_unquote('"doris');
-```
-```text
-+------------------------+
-| json_unquote('"doris') |
-+------------------------+
-| "doris                 |
-+------------------------+
-```
-```sql
-select json_unquote('doris');
-```
-```text
-+-----------------------+
-| json_unquote('doris') |
-+-----------------------+
-| doris                 |
-+-----------------------+
-```
-```sql
-select json_unquote(1);
-```
-```text
-+-----------------------------------------+
-| json_unquote(cast(1 as VARCHAR(65533))) |
-+-----------------------------------------+
-| 1                                       |
-+-----------------------------------------+
-```
+## Examples
+1. Escape characters in strings are removed
+    ```sql
+    select json_unquote('"I am a \\"string\\" that contains double quotes."');
+    ```
+    ```
+    +--------------------------------------------------------------------+
+    | json_unquote('"I am a \\"string\\" that contains double quotes."') |
+    +--------------------------------------------------------------------+
+    | I am a "string" that contains double quotes.                       |
+    +--------------------------------------------------------------------+
+    ```
+2. Escaping special characters
+    ```sql
+    select json_unquote('"\\\\ \\b \\n \\r \\t"');
+    ```
+    ```
+    +----------------------------------------+
+    | json_unquote('"\\\\ \\b \\n \\r \\t"') |
+    +----------------------------------------+
+    | \ 
+                                        |
+    +----------------------------------------+
+    ```
+    > Because escape characters are removed, some whitespace characters (newline, backspace, tab, etc.) will be printed
+3. Control character escaping
+    ```sql
+    select json_unquote('"\\u0000"');
+    ```
+    ```
+    +---------------------------+
+    | json_unquote('"\\u0000"') |
+    +---------------------------+
+    |                           |
+    +---------------------------+
+    ```
+4. Invalid JSON string
+    ```sql
+    select json_unquote('"I am a "string" that contains double quotes."');
+    ```
+    ```
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [RUNTIME_ERROR]Invalid JSON text in argument 1 to function json_unquote: "I am a "string" that contains double quotes."
+    ```
+5. Case where it starts with quotes but doesn't end with quotes
+    ```sql
+    select json_unquote('"I am a "string" that contains double quotes.');
+    ```
+    ```
+    +---------------------------------------------------------------+
+    | json_unquote('"I am a "string" that contains double quotes.') |
+    +---------------------------------------------------------------+
+    | "I am a "string" that contains double quotes.                 |
+    +---------------------------------------------------------------+
+    ```
+6. Case where it ends with quotes
+    ```sql
+    select json_unquote('I am a "string" that contains double quotes."');
+    ```
+    ```
+    +---------------------------------------------------------------+
+    | json_unquote('I am a "string" that contains double quotes."') |
+    +---------------------------------------------------------------+
+    | I am a "string" that contains double quotes."                 |
+    +---------------------------------------------------------------+
+    ```
