@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Calculates the least common multiple (LCM) of two integers.
+Calculates the least common multiple (LCM) of two integers.Note that the result may overflow.
 
 ## Syntax
 
@@ -82,4 +82,16 @@ select lcm(-4, 6);
 +------------+
 |          12|
 +------------+
+```
+
+```sql
+select lcm(-170141183460469231731687303715884105728, 6);
+```
+
+```text
++-----------------------------------------------------------+
+| lcm(-170141183460469231731687303715884105728, 6)          |
++-----------------------------------------------------------+
+|                   -170141183460469231731687303715884105728|
++-----------------------------------------------------------+
 ```
