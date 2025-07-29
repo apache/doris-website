@@ -1,25 +1,22 @@
 ---
 {
-    "title": "SHOW CATALOGS",
+    "title": "SHOW CATALOG",
     "language": "en"
 }
 ---
 
 ## Description
 
-This statement is used for view created catalogs
+Shows properties of specified catalog
 
 ## Syntax
 
 ```sql
-SHOW CATALOGS [LIKE <catalog_name>]
+SHOW CATALOG <catalog_name>
 ```
 
-illustrate:
 
-1. LIKE: Fuzzy query can be performed according to the catalog name
-
-## Optional Parameters
+## Required Parameters
 
 **1. `<catalog_name>`**
 
@@ -27,48 +24,34 @@ The name of the catalog to be displayed.
 
 ## Return Value
 
-| Column Name    | Description |
-|---|---|
-| CatalogId      | Unique ID of the data catalog |
-| CatalogName    | Name of the data catalog. The default built-in catalog is named "internal" and cannot be modified. |
-| Type           | Type of the data catalog |
-| IsCurrent      | Indicates whether it is the currently active data catalog |
-| CreateTime     | Creation time  |
-| LastUpdateTime | Last updated time |
-| Comment        | comments about the catalog |
+| Column Name | Description                   |
+|-------------|-------------------------------|
+| Key         | Configuration property name.  |
+| Value       | Configuration property value. |
 
 ## Access Control Requirements
+
 | Privilege                                                                                    | Object  | Notes                                     |
 |:---------------------------------------------------------------------------------------------|:--------|:------------------------------------------|
 | ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog | One of the above permissions is required. |
 
-
 ## Examples
 
-1. View the data catalogs that have been created currently
+1. View specific catalog configuration details
 
    ```sql
-   SHOW CATALOGS;
+   mysql> show catalog test_mysql;
+   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+   | Key            | Value                                                                                                                                               |
+   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+   | checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |
+   | create_time    | 2025-02-17 17:21:13.099                                                                                                                             |
+   | driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |
+   | driver_url     | mysql-connector-java-8.0.25.jar                                                                                                                     |
+   | jdbc_url       | jdbc:mysql://127.0.0.1:23306/tpch?yearIsDateType=false&tinyInt1isBit=false&useUnicode=true&rewriteBatchedStatements=true&characterEncoding=utf-8 |
+   | password       | *XXX                                                                                                                                                |
+   | type           | jdbc                                                                                                                                                |
+   | use_meta_cache | true                                                                                                                                                |
+   | user           | root                                                                                                                                                |
+   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
-   ```sql
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-    |         0 | internal    | internal | yes       | UNRECORDED              | NULL                | Doris internal catalog |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    ```
-
-2. Fuzzy query by catalog name
-
-   ```sql
-   SHOW CATALOGS LIKE 'hi%';
-   ```
-    ```sql
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-   ```
-
