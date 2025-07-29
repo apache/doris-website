@@ -279,11 +279,6 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 SELECT * FROM my_table$system_table_name;
 ```
 
-For example, to view the audit log of a table, execute:
-
-```sql
-SELECT * FROM my_table$audit_log;
-```
 
 > Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.
 
