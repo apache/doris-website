@@ -8,6 +8,7 @@
 ## 描述
 
 LAG() 是一个窗口函数，用于访问当前行之前的行数据，而无需进行自连接。它可以获取分区内当前行之前第 N 行的值。
+不需要未显示指定窗口，会隐式生成`ROWS BETWEEN UNBOUNDED PRECEDING AND N PRECEDING` 类型，且当前仅支持此类。
 
 ## 语法
 
@@ -18,9 +19,9 @@ LAG ( <expr> [, <offset> [, <default> ] ] )
 ## 参数
 | 参数                | 说明                                                                   |
 | ------------------- | ---------------------------------------------------------------------- |
-| expr                | 需要获取值的表达式                                                     |
-| offset              | 可选。向前偏移的行数。默认值为 1。|
-| default             | 可选。当偏移超出窗口范围时返回的默认值。默认为 NULL                    |
+| expr                | 需要获取值的表达式: 支持类型：tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/                                                      |
+| offset              | 可选, 类型: bigint。向前偏移的行数。默认值为 1。|
+| default             | 可选, 类型和第一个参数保持一致。当偏移超出窗口范围时返回的默认值。默认为 NULL                    |
 
 ## 返回值
 

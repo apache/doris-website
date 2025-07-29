@@ -12,7 +12,7 @@
 ## 语法
 
 ```sql
-SET <vault_name> DEFAULT STORAGE VAULT
+SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
 ## 必选参数

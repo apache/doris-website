@@ -9,7 +9,7 @@
 
 ## Description
 
-Converts an input HLL to a base64-encoded string. If the input is `<null>`, the function returns `<null>`.
+Converts an input HLL to a base64-encoded string.
 
 ## Syntax
 
@@ -21,7 +21,18 @@ HLL_TO_BASE64(<hll_input>)
 
 | Parameter    | Description                                          |
 | ------------ | ---------------------------------------------------- |
-| `<hll_input>` | The HyperLogLog (HLL) data to be converted to a base64-encoded string. If the input is `<null>`, the function returns `<null>`. |
+| `<hll_input>` | The HyperLogLog (HLL) data to be converted to a base64-encoded string. |
+
+## Return Value
+
+A Base64 encoded string of the HLL.
+Returns `NULL` if the HLL is `NULL`.
+
+::: note
+
+Due to the non-guaranteed order of elements in a HLL, the generated Base64 string may not always be the same for the same content. However, the decoded HLL from `hll_from_base64` will be the same.
+
+:::
 
 ## Examples
 

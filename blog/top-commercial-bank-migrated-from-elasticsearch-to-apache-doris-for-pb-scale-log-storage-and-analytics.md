@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1410',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/blogs/top-commercial-bank.jpeg'
 }
 ---

@@ -5,17 +5,7 @@
 }
 ---
 
-`ARRAY<T>` 表示由 T 类型元素组成的数组，不能作为 key 列使用。
-
-- 2.0 之前仅支持在 Duplicate 模型的表中使用。
-- 从 2.0 版本开始支持在 Unique 模型的表中的非 key 列使用。
-
-T 支持的类型有：
-
-```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL,
-DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
+`ARRAY<T>` 表示由 T 类型元素组成的数组。点击 [ARRAY 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) 了解具体信息。
 
 ## CSV 格式导入
 

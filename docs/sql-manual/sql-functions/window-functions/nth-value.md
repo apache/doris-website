@@ -18,8 +18,8 @@ NTH_VALUE(<expr>, <offset>)
 ## Parameters
 | Parameter           | Description                                                                                                         |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| expr                | The expression from which will get the value value                                                                    |
-| offset         | The parameter offset must be a positive integer greater than 0, indicating the Nth element value to retrieve, with the starting index at 1.                                    |
+| expr                | The expression from which will get the value value,supported: tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                                                                    |
+| offset         | Bigint type and The parameter offset must be a positive integer greater than 0, indicating the Nth element value to retrieve, with the starting index at 1.                                    |
 
 ## Return Value
 

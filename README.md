@@ -84,7 +84,7 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 For how to submit pull requests, please refer to
 
-- [How to Contribute](https://doris.apache.org/zh-CN/community/how-to-contribute/)
+- [How to Contribute](https://doris.apache.org/zh-CN/community/how-to-contribute/contribute-to-doris)
 
 - [How to contribute docs](https://doris.apache.org/community/how-to-contribute/contribute-doc)
 

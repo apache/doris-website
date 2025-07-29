@@ -7,7 +7,7 @@
 
 ## Description
 
-LAST_VALUE() is a window function that returns the last value within the window frame. The handling of null values can be controlled using the IGNORE NULLS options.
+LAST_VALUE() is a window function that returns the last value within the window frame. The handling of null values can be controlled using the IGNORE NULL options.
 
 ## Syntax
 
@@ -18,8 +18,8 @@ LAST_VALUE(<expr>[, <ignore_null>])
 ## Parameters
 | Parameter           | Description                                                                                                 |
 | ------------------- | ----------------------------------------------------------------------------------------------------------- |
-| expr                | The expression from which to get the last value                                                             |
-| ignore_null         | Optional. When set, null values are ignored, returning the last non-null value                              |
+| expr                | The expression from which to get the last value,supported: tinyint/smallint/int/bigint/float/double/decimal/string/date/datetime/array/struct/map/bitmap                                                             |
+| ignore_null         | Optional Boolean Type. When set, null values are ignored, returning the last non-null value                              |
 
 ## Return Value
 
