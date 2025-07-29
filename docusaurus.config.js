@@ -471,7 +471,7 @@ const config = {
                         items: [
                             {
                                 label: 'How to contribute',
-                                href: '/community/how-to-contribute/contribute-to-doriscontributor-guide',
+                                href: '/community/how-to-contribute/contribute-to-doris',
                             },
                             {
                                 label: 'Source code',
