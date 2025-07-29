@@ -36,13 +36,14 @@ create table t1(
         kd decimalv3(10, 5),
         kstr varchar(100),
         kstr_invalid varchar(100),
-        knull int
+        knull int,
+        kbigint bigint
 ) distributed by hash (k1) buckets 1
 properties ("replication_num"="1");
 insert into t1 values 
-    (1, 222.222, '1.5', 'test', null),
-    (2, 444.444, '2.5', '1', null),
-    (3, null, '3.5', '2', null);
+    (1, 222.222, '1.5', 'test', null, 100),
+    (2, 444.444, '2.5', '1', null, 100),
+    (3, null, '3.5', '2', null, 1);
 ```
 
 
@@ -117,5 +118,19 @@ select avg(knull) from t1;
 +------------+
 |       NULL |
 +------------+
+```
+
+```sql
+select avg(distinct kbigint) from t1;
+```
+
+[100,100,1]去重之后为[100,1]，平均值为50.5。
+
+```text
++-----------------------+
+| avg(distinct kbigint) |
++-----------------------+
+|                  50.5 |
++-----------------------+
 ```
 
