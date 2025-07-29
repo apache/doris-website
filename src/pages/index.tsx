@@ -68,29 +68,29 @@ export default function Home(): JSX.Element {
                 </p>
             </div>
         ),
-        // event: (
-        //     <Link
-        //         to={'https://www.velodb.io/events/apache-doris-compute-storage-decoupled-mode-and-velo-db-cloud-demo'}
-        //         style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
-        //         onMouseEnter={() => {
-        //             document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
-        //         }}
-        //         onMouseLeave={() => {
-        //             document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
-        //         }}
-        //         className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
-        //     >
-        //         <div className="lg:mb-0 mb-4 flex items-center">
-        //             <HomeEvenStarIcon id="event-star-icon" />
-        //             <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
-        //                 NEW
-        //             </span>
-        //         </div>
-        //         <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-        //             Join our live webinar to discover Doris' compute-storage decoupled mode !
-        //         </p>
-        //     </Link>
-        // ),
+        event: (
+            <Link
+                to={'https://www.velodb.io/events/apache-doris-webinar-20250722'}
+                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+                onMouseEnter={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+                }}
+                onMouseLeave={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+                }}
+                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+            >
+                <div className="lg:mb-0 mb-4 flex items-center">
+                    <HomeEvenStarIcon id="event-star-icon" />
+                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+                        NEW EVENT
+                    </span>
+                </div>
+                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+                    Migrating from Snowflake to Apache Doris: Real-World Case Study on July 22nd
+                </p>
+            </Link>
+        ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,
     };

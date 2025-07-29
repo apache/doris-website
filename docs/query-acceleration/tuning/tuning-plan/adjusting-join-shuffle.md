@@ -1,28 +1,6 @@
 ---
-{
-    "title": "Adjusting Join Shuffle Mode with Hint",
-    "language": "en"
-}
+{ 'title': 'Adjusting Join Shuffle Mode with Hint', 'language': 'en' }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## Overview
 
@@ -52,20 +30,20 @@ EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 The plan for the original SQL is as follows, showing that the join between t1 and t2 uses the hash distribute method, indicated by `DistributionSpecHash`.
 
 ```sql
-+----------------------------------------------------------------------------------+  
-| Explain String (Nereids Planner)                                                 |  
-+----------------------------------------------------------------------------------+  
-| PhysicalResultSink                                                               |  
-| --hashAgg [GLOBAL]                                                               |  
-| ----PhysicalDistribute [DistributionSpecGather]                                  |  
-| ------hashAgg [LOCAL]                                                            |  
-| --------PhysicalProject                                                          |  
-| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|  
-| ------------PhysicalProject                                                      |  
-| --------------PhysicalOlapScan [t1]                                              |  
-| ------------PhysicalDistribute [DistributionSpecHash]                            |  
-| --------------PhysicalProject                                                    |  
-| ----------------PhysicalOlapScan [t2]                                            |  
++----------------------------------------------------------------------------------+
+| Explain String (Nereids Planner)                                                 |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --hashAgg [GLOBAL]                                                               |
+| ----PhysicalDistribute [DistributionSpecGather]                                  |
+| ------hashAgg [LOCAL]                                                            |
+| --------PhysicalProject                                                          |
+| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|
+| ------------PhysicalProject                                                      |
+| --------------PhysicalOlapScan [t1]                                              |
+| ------------PhysicalDistribute [DistributionSpecHash]                            |
+| --------------PhysicalProject                                                    |
+| ----------------PhysicalOlapScan [t2]                                            |
 +----------------------------------------------------------------------------------+
 ```
 
@@ -78,20 +56,20 @@ EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
 It can be seen that the distribution method for the join between t1 and t2 has been changed to the broadcast method, indicated by `DistributionSpecReplicated`.
 
 ```sql
-+----------------------------------------------------------------------------------+  
-| Explain String (Nereids Planner)                                                 |  
-+----------------------------------------------------------------------------------+  
-| PhysicalResultSink                                                               |  
-| --hashAgg [GLOBAL]                                                               |  
-| ----PhysicalDistribute [DistributionSpecGather]                                  |  
-| ------hashAgg [LOCAL]                                                            |  
-| --------PhysicalProject                                                          |  
-| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|  
-| ------------PhysicalProject                                                      |  
-| --------------PhysicalOlapScan [t1]                                              |  
-| ------------PhysicalDistribute [DistributionSpecReplicated]                      |  
-| --------------PhysicalProject                                                    |  
-| ----------------PhysicalOlapScan [t2]                                            | 
++----------------------------------------------------------------------------------+
+| Explain String (Nereids Planner)                                                 |
++----------------------------------------------------------------------------------+
+| PhysicalResultSink                                                               |
+| --hashAgg [GLOBAL]                                                               |
+| ----PhysicalDistribute [DistributionSpecGather]                                  |
+| ------hashAgg [LOCAL]                                                            |
+| --------PhysicalProject                                                          |
+| ----------hashJoin [INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()|
+| ------------PhysicalProject                                                      |
+| --------------PhysicalOlapScan [t1]                                              |
+| ------------PhysicalDistribute [DistributionSpecReplicated]                      |
+| --------------PhysicalProject                                                    |
+| ----------------PhysicalOlapScan [t2]                                            |
 +----------------------------------------------------------------------------------+
 ```
 

@@ -5,12 +5,6 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## Description
 
 The WINDOW_FUNNEL function analyzes user behavior sequences by searching for event chains within a specified time window and calculating the maximum number of completed steps in the event chain. This function is particularly useful for conversion funnel analysis, such as analyzing user conversion from website visits to final purchases.
@@ -37,9 +31,13 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 | `<event_n>` | evnet_n is boolean expression like eventID = 1004 |
 
 **Mode**
+
     - `default`: Defualt mode.
+
     - `deduplication`: If the same event holds for the sequence of events, then such repeating event interrupts further processing. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is "A-B-C-B-D". Since event B repeats, the filtered event chain can only be "A-B-C" and the max event level is 3.
+
     - `fixed`: Don't allow interventions of other events. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is A->B->D->C, it stops finding A->B->C at the D and the max event level is 2.
+
     - `increase`: Apply conditions only to events with strictly increasing timestamps.
 
 ## Return Value

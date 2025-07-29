@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 Doris 的计算层是一个 MPP 的架构，所有的计算任务都是在 BE 的内存中完成的，各个 BE 之间也是通过内存来完成数据交换，所以内存管理对查询的稳定性有至关重要的影响，从线上查询统计看，有一大部分的查询报错也是跟内存相关。当前越来越多的用户将 ETL 数据加工，多表物化视图处理，复杂的 AdHoc 查询等任务迁移到 Doris 上运行，所以，需要将中间操作结果卸载到磁盘上，使那些所需内存量超出每个查询或每个节点限制的查询能够得以执行。具体来说，当处理大型数据集或执行复杂查询时，内存消耗可能会迅速增加，超出单个节点或整个查询处理过程中可用的内存限制。Doris 通过将其中的中间结果（如聚合的中间状态、排序的临时数据等）写入磁盘，而不是完全依赖内存来存储这些数据，从而缓解了内存压力。这样做有几个好处：
 - 扩展性：允许 Doris 处理比单个节点内存限制大得多的数据集。

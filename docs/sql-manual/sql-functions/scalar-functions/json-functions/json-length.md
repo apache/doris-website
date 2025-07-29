@@ -5,88 +5,116 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
-The JSON_LENGTH function returns the length or number of elements of a given JSON document. If the JSON document is an array, the number of elements in the array is returned; if the JSON document is an object, the number of key-value pairs in the object is returned. Returns NULL if the JSON document is empty or invalid.
+The `JSON_LENGTH` function is used to return the length or number of elements in a given JSON document. If the JSON document is an array, it returns the number of elements in the array; if the JSON document is an object, it returns the number of key-value pairs in the object. If the JSON document is invalid, it returns `NULL`.
 
 ## Syntax
 
 ```sql
-JSON_LENGTH(<json_str> [ , <json_path> ])
+JSON_LENGTH(<json_object> [, <path>])
 ```
 
-## Required Parameters
+## Parameters
+### Required Parameters
+- `<json_object>` JSON type, the JSON document whose length is to be returned.
 
-| parameters| described|
-|------|------|
-| `<json_str>`| The length of the JSON string needs to be checked. |
+### Optional Parameters
+- `<path>` String type, used to return the length of a specific object in the document.
 
-## Optional Parameters
-| parameters| described|
-|------|------|
-| `<json_path>`| If a path is specified, the JSON_LENGTH() function returns the length of the data that matches the path in the JSON document, otherwise it returns the length of the JSON document|
-
-## Usage Notes
-This function calculates the length of a JSON document based on the following rules:
-- The length of the scalar is 1. For example: '1','"x "','true',' false', and 'null' are all of length 1.
-- The length of an array is the number of array elements. For example: '[1,2]' has length 2.
-- The length of an object is the number of object members. For example: '{"x": 1}' has length 1
+## Notes
+This function calculates the length of a JSON document according to the following rules:
+- The length of a scalar is 1. For example: '1', '"x"', 'true', 'false', 'null' all have a length of 1.
+- The length of an array is the number of array elements. For example: '[1, 2]' has a length of 2.
+- The length of an object is the number of object members. For example: '{"x": 1, "y": [1, 2, 3]}' has a length of 2.
 
 ## Return Value
-
-- For a JSON array, returns the number of elements in the array.
+- For JSON arrays, returns the number of elements in the array.
 - For JSON objects, returns the number of key-value pairs in the object.
-- Returns NULL for invalid JSON strings.
-- For other types (such as strings, numbers, booleans, null, etc.), NULL is returned.
+- For JSON scalar types (such as strings, numbers, booleans, null, etc.), returns 1.
+- For invalid JSON strings, returns NULL.
 
 ## Examples
-
-```sql
-SELECT json_length('{"k1":"v31","k2":300}');
-```
-
-```sql
-+--------------------------------------+
-| json_length('{"k1":"v31","k2":300}') |
-+--------------------------------------+
-| 2                                    |
-+--------------------------------------+
-```
-```sql
-SELECT json_length('"abc"');
-```
-```sql
-+----------------------+
-| json_length('"abc"') |
-+----------------------+
-| 1                    |
-+----------------------+
-```
-```sql
-SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
-```
-```sql
-+---------------------------------------------+
-| json_length('{"x": 1, "y": [1, 2]}', '$.y') |
-+---------------------------------------------+
-| 2                                           |
-+---------------------------------------------+
-```
+1. Example 1
+    ```sql
+    SELECT json_length('{"k1":"v31","k2":300}');
+    ```
+    ```text
+    +--------------------------------------+
+    | json_length('{"k1":"v31","k2":300}') |
+    +--------------------------------------+
+    |                                    2 |
+    +--------------------------------------+
+    ```
+    ```sql
+    SELECT json_length('[1, 2, 3, 4, 5, 6]');
+    ```
+    ```text
+    +-----------------------------------+
+    | json_length('[1, 2, 3, 4, 5, 6]') |
+    +-----------------------------------+
+    |                                 6 |
+    +-----------------------------------+
+    ```
+2. Length of scalar types
+    ```sql
+    SELECT json_length('"abc"');
+    ```
+    ```text
+    +----------------------+
+    | json_length('"abc"') |
+    +----------------------+
+    |                    1 |
+    +----------------------+
+    ```
+    ```sql
+    SELECT json_length('123');
+    ```
+    ```text
+    +--------------------+
+    | json_length('123') |
+    +--------------------+
+    |                  1 |
+    +--------------------+
+    ```
+    ```sql
+    SELECT json_length('{"k": null}');
+    ```
+    ```text
+    +----------------------------+
+    | json_length('{"k": null}') |
+    +----------------------------+
+    |                          1 |
+    +----------------------------+
+    ```
+3. Specify path
+    ```sql
+    SELECT json_length('{"x": 1, "y": [1, 2]}', '$.y');
+    ```
+    ```text
+    +---------------------------------------------+
+    | json_length('{"x": 1, "y": [1, 2]}', '$.y') |
+    +---------------------------------------------+
+    |                                           2 |
+    +---------------------------------------------+
+    ```
+4. NULL parameters
+    ```sql
+    SELECT json_length('{"x": 1, "y": [1, 2]}', NULL);
+    ```
+    ```text
+    +--------------------------------------------+
+    | json_length('{"x": 1, "y": [1, 2]}', NULL) |
+    +--------------------------------------------+
+    |                                       NULL |
+    +--------------------------------------------+
+    ```
+    ```sql
+    SELECT json_length(NULL, '$.y');
+    ```
+    ```text
+    +--------------------------+
+    | json_length(NULL, '$.y') |
+    +--------------------------+
+    |                     NULL |
+    +--------------------------+
+    ```

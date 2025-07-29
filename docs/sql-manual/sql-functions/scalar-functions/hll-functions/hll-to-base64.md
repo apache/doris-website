@@ -7,26 +7,9 @@
 
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
-Converts an input HLL to a base64-encoded string. If the input is `<null>`, the function returns `<null>`.
+Converts an input HLL to a base64-encoded string.
 
 ## Syntax
 
@@ -38,7 +21,18 @@ HLL_TO_BASE64(<hll_input>)
 
 | Parameter    | Description                                          |
 | ------------ | ---------------------------------------------------- |
-| `<hll_input>` | The HyperLogLog (HLL) data to be converted to a base64-encoded string. If the input is `<null>`, the function returns `<null>`. |
+| `<hll_input>` | The HyperLogLog (HLL) data to be converted to a base64-encoded string. |
+
+## Return Value
+
+A Base64 encoded string of the HLL.
+Returns `NULL` if the HLL is `NULL`.
+
+::: note
+
+Due to the non-guaranteed order of elements in a HLL, the generated Base64 string may not always be the same for the same content. However, the decoded HLL from `hll_from_base64` will be the same.
+
+:::
 
 ## Examples
 

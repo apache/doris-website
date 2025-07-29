@@ -5,57 +5,43 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
-Enter two points and return the azimuth of the line segment formed by points 1 and 2. Azimuth is the arc of the Angle between the true north line of point 1 and the line segment formed by points 1 and 2.
+Calculates the azimuth (in radians) between two points on the Earth's surface. The azimuth is the angle from the true north direction line at the starting point (point 1) to the line connecting the two points, measured clockwise.
 
-## Syntax
+Azimuth is widely used in navigation and geographic information systems (GIS) to represent the direction from one point to another.
+
+## Sytax
 
 ```sql
 ST_AZIMUTH( <point1>, <point2>)
 ```
 ## Parameters
 
-| Parameters | Instructions                                   |
-|----------|------------------------------------------------|
-| `<point1>` | The first point used to calculate the azimuth  |
-| `<point2>` | The second point used to calculate the azimuth |
+| Parameter       | Description           |
+|----------|--------------|
+| `<point1>` | The starting point, of type GeoPoint, serving as the reference point for azimuth calculation. |
+| `<point2>` | The ending point, of type GeoPoint, for which the direction relative to the starting point is calculated. |
 
-## Return Value
+## Retuen value
 
-Positive angles are measured clockwise on the sphere. For example, the azimuth of a line segment:
+Returns the azimuth between the two points in radians, with a range of [0, 2π). The azimuth is measured clockwise from true north, with specific direction correspondences:
 
-- North is 0
-- East is PI/2
-- The guide is PI
-- The west is 3PI/2
+- True north: 0 radians
+- True east: π/2 radians (approximately 1.5708)
+- True south: π radians (approximately 3.1416)
+- True west: 3π/2 radians (approximately 4.7124)
 
-ST_Azimuth has the following edge cases:
+Edge cases for ST_AZIMUTH:
 
-- Return NULL if both input points are the same.
-- NULL is returned if the two input points are perfect mapping points.
-- An error is thrown if any of the input geographies are not a single point or are empty geographies
+- Returns NULL if the two input points are identical (same longitude and latitude).
+- Returns NULL if the two input points are antipodal (diametrically opposite on the Earth).
+- Returns NULL if any input geographic location is not a single point or is an empty geographic object.
 
-## Examples
+## Example
+
+
+True west (from (1,0) to (0,0))
 
 ```sql
 SELECT st_azimuth(ST_Point(1, 0),ST_Point(0, 0));
@@ -69,6 +55,9 @@ SELECT st_azimuth(ST_Point(1, 0),ST_Point(0, 0));
 +----------------------------------------------------+
 ```
 
+True east (from (0,0) to (1,0))
+
+
 ```sql
 SELECT st_azimuth(ST_Point(0, 0),ST_Point(1, 0));
 ```
@@ -80,6 +69,8 @@ SELECT st_azimuth(ST_Point(0, 0),ST_Point(1, 0));
 |                                 1.5707963267948966 |
 +----------------------------------------------------+
 ```
+
+True north (from (0,0) to (0,1))
 
 ```sql
 SELECT st_azimuth(ST_Point(0, 0),ST_Point(0, 1));
@@ -93,6 +84,8 @@ SELECT st_azimuth(ST_Point(0, 0),ST_Point(0, 1));
 +----------------------------------------------------+
 ```
 
+Antipodal points
+
 ```sql
 SELECT st_azimuth(ST_Point(-30, 0),ST_Point(150, 0));
 ```
@@ -103,5 +96,39 @@ SELECT st_azimuth(ST_Point(-30, 0),ST_Point(150, 0));
 +--------------------------------------------------------+
 |                                                   NULL |
 +--------------------------------------------------------+
+```
+
+Northeast direction (from (0,0) to (1,1))
+
+```sql
+mysql> SELECT st_azimuth(ST_Point(0, 0), ST_Point(1, 1));
++--------------------------------------------+
+| st_azimuth(ST_Point(0, 0), ST_Point(1, 1)) |
++--------------------------------------------+
+|                         0.7854743216187384 |
++--------------------------------------------+
+```
+
+East direction crossing 180° longitude (from (170, 0) to (-170, 0))
+
+```sql
+mysql> SELECT st_azimuth(ST_Point(170, 0), ST_Point(-170, 0));
++-------------------------------------------------+
+| st_azimuth(ST_Point(170, 0), ST_Point(-170, 0)) |
++-------------------------------------------------+
+|                              1.5707963267948966 |
++-------------------------------------------------+
+```
+
+Non-point type input returns NULL
+
+```sql
+
+mysql> SELECT st_azimuth(ST_LineFromText("LINESTRING (0 0, 1 1)"), ST_Point(1, 0));
++----------------------------------------------------------------------+
+| st_azimuth(ST_LineFromText("LINESTRING (0 0, 1 1)"), ST_Point(1, 0)) |
++----------------------------------------------------------------------+
+|                                                                 NULL |
++----------------------------------------------------------------------+
 ```
 

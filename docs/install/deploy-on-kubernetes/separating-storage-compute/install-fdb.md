@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended:
 - Deploying FoundationDB directly on virtual machines (including physical machines).
 - Using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.
@@ -46,7 +27,7 @@ kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-
 
 ### Step 2: Deploy fdb-kubernetes-operator service
 
-The fdb-kubernetes-operator repository provides deployment samples for setting up an FoundationDB cluster in IP mode. The Doris-operator repository offers FoundationDB cluster deployment examples in [FQDN mode](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded as needed.
+The fdb-kubernetes-operator repository provides deployment samples for setting up an FoundationDB cluster in IP mode. The Doris-operator repository offers FoundationDB cluster deployment examples in `FQDN` mode, which can be downloaded as needed.
 
 1. Download the deployment sample:
 
@@ -99,7 +80,7 @@ Deployment examples for FoundationDB are available in the fdb-kubernetes-operato
 
       Customize the final deployment state according to the [User Manual](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md) provided by the official website. If you use FQDN deployment, please set the `routing.useDNSInClusterFile` field to true and configure as follows:
 
-      Doris Operator's official repository provides a sample for deploying FoundationDB with [FQDN](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded directly from [here](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/cluster.yaml).
+      Doris Operator's official repository provides a sample for deploying FoundationDB with [FQDN](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded directly from [here](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/).
 
       ```yaml
       spec:
@@ -112,7 +93,7 @@ Deployment examples for FoundationDB are available in the fdb-kubernetes-operato
       If the environment cannot directly access Docker Hub, download the necessary images from the official FoundationDB repository and push them to a private registry.  
       The fdb-kubernetes-operator depends on the following Docker images:  [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator),[foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).
 
-      The FoundationDB images include: [foundationdb/foundationdb](https://hub.docker.com/r/foundationdb/foundationdb), [foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).
+      The FoundationDB images include: [foundationdb/fdb-kubernetes-monitor](https://hub.docker.com/r/foundationdb/fdb-kubernetes-monitor).
 
       After pushing the images to your private registry, follow the official fdb-kubernetes-operator documentation to [customize the image configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image).
 
@@ -130,9 +111,9 @@ Deployment examples for FoundationDB are available in the fdb-kubernetes-operato
             tag: 7.1.36-1
         version: 7.1.38
       ```
+   The Doris Operator repository provides four deployment configurations for FoundationDB: [Minimal single-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster-single.yaml), [Minimal two-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster.yaml), [Production-grade two-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/fdb_product.yaml), [Production-grade two-replica deployment using a private image registry](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/fdb_product_private_env.yaml).
 
 :::tip Tip
-- In a private environment, when FoundationDB is pushed to a private repository, the tag must be consistent with the official one, for example: 7.1.38.
 - When deploying FoundationDB, FoundationDBCluster resources, `.spec.version` must be configured.
 - When FoundationDB is deployed based on fdb-kubernetes-operator, at least three hosts are required to meet the high availability requirements of the production environment.  
   :::

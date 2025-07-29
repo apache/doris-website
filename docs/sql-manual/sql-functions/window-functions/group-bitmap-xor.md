@@ -1,0 +1,1 @@
+../aggregate-functions/group-bitmap-xor.md

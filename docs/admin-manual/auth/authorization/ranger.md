@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Ranger is a security framework used for monitoring, enabling services, and comprehensive data security access management on the Hadoop platform. After using Ranger, permissions configured on the Ranger side replace the execution of Grant statements in Doris for authorization. For Ranger installation and configuration, see below: Installing and Configuring Doris Ranger Plugin.
 
 ## Ranger Example
@@ -115,6 +96,25 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 - The workload group option can be found in the dropdown box at the same level as the catalog.
 
 ![ Workload Group Permissions](/images/ranger/group1.png)
+
+#### Compute Group Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on compute group 'group1' to user1`;
+- The compute group option can be found in the dropdown box at the same level as the catalog.
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on storage vault 'vault1' to user1`;
+- The storage vault option can be found in the dropdown box at the same level as the catalog.
+
+![storage vault](/images/ranger/storage-vault.png)
+
 
 ### Row-Level Permissions Example
 

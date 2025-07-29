@@ -5,26 +5,6 @@
 }
 --- 
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 :::tip Tips
 This feature is supported since the Apache Doris 2.0 version
 :::
@@ -183,3 +163,24 @@ A: Prepared Statement currently only takes effect when primary key is checked.
 #### **5. Does optimizer selection require global settings?**
 
 A: When using prepared statement for query, Doris will choose the query method with the best performance, and there is no need to manually set the optimizer.
+
+#### **6. What should we do when the FE becomes a bottleneck?**
+
+A: If the FE is consuming too much CPU (i.e., high %CPU usage), enable the following configuration in the JDBC URL:
+
+```
+jdbc:mysql:loadbalance://[host1][:port],[host2][:port][,[host3][:port]]/${tbl_name}?useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=500&prepStmtCacheSqlLimit=1024
+```
+- Enable loadbalance to ensure multiple FEs can serve requests, and the more FE instances, the better (deploy one per instance).
+- Enable useServerPrepStmts to reduce parsing and planning overhead on the FE.
+- Enable cachePrepStmts so the client caches prepared statements, reducing the need to frequently send prepare requests to the FE.
+- Adjust prepStmtCacheSize to set the maximum number of cached query templates.
+- Adjust prepStmtCacheSqlLimit to set the maximum length of a single cached SQL template.
+
+#### **7. How to optimize query performance under a compute-storage separation architecture?**
+
+A:
+
+- `set global enable_snapshot_point_query = false`. Point queries require an additional RPC to the meta service to obtain the version, which can easily become a bottleneck under high QPS. Setting it to false can speed up queries but reduces data visibility (requires a trade-off between performance and consistency).
+
+- Configure the BE parameter enable_file_cache_keep_base_compaction_output=1 so that the result data after base compaction is stored in the cache, avoiding query jitter caused by remote access.

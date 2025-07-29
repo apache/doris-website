@@ -5,28 +5,10 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-计算地球表面两点之间的圆心角，单位为 度。传入的参数分别为 X 点的经度，X 点的纬度，Y 点的经度，Y 点的纬度。
+计算地球表面上两点之间的圆心角（单位为度）。输入参数依次为点 X 的经度、点 X 的纬度、点 Y 的经度、点 Y 的纬度。
+圆心角是指地球球心处，连接两点的弧所对的角度。
 
 ## 语法
 
@@ -38,16 +20,25 @@ ST_ANGLE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<x_lng>` | 经度数据，合理的取值范围是 [-180, 180] |
-| `<y_lng>` | 经度数据，合理的取值范围是 [-180, 180] |
-| `<x_lat>` | 纬度数据，合理的取值范围是 [-90, 90] |
-| `<y_lat>` | 纬度数据，合理的取值范围是 [-90, 90] |
+| `<x_lng>` | 经度数据，类型为`DOUBLE`，合理的取值范围是 [-180, 180] |
+| `<y_lng>` | 经度数据，类型为`DOUBLE`,合理的取值范围是 [-180, 180] |
+| `<x_lat>` | 纬度数据，类型为`DOUBLE`,合理的取值范围是 [-90, 90] |
+| `<y_lat>` | 纬度数据，类型为`DOUBLE`,合理的取值范围是 [-90, 90] |
 
 ## 返回值
 
-两点之间的圆心角角度
+返回两点之间的圆心角，单位为度，类型为 DOUBLE，范围为 [0, 180]。
+
+ST_ANGLE_SPHERE 存在以下边缘情况：
+
+- 若任何输入参数为 NULL，返回 NULL。
+- 若任何坐标超出范围（如经度 > 180、纬度 <-90），返回 NULL。
+- 若两点为同一点（经纬度完全相同），返回 0。
+- 若两点为对映点（地球上直径相对的点），返回 180。
 
 ## 举例
+
+两个邻近点的圆心角计算
 
 ```sql
 select ST_Angle_Sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
@@ -61,6 +52,8 @@ select ST_Angle_Sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
 +---------------------------------------------------------------------------+
 ```
 
+赤道上经度差 45° 的两点
+
 ```sql
 select ST_Angle_Sphere(0, 0, 45, 0);
 ```
@@ -73,3 +66,80 @@ select ST_Angle_Sphere(0, 0, 45, 0);
 +----------------------------------------+
 ```
 
+两点坐标完全相同
+
+```sql
+
+mysql> SELECT ST_ANGLE_SPHERE(30, 60, 30, 60);
++---------------------------------+
+| ST_ANGLE_SPHERE(30, 60, 30, 60) |
++---------------------------------+
+|                               0 |
++---------------------------------+
+
+```
+
+对映点（直径相对的点）
+
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(0, 0, 180, 0);
++-------------------------------+
+| ST_ANGLE_SPHERE(0, 0, 180, 0) |
++-------------------------------+
+|                           180 |
++-------------------------------+
+```
+
+跨东西经度的两点（如 170°E 和 - 170°W）
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(170, 30, -170, 30);
++------------------------------------+
+| ST_ANGLE_SPHERE(170, 30, -170, 30) |
++------------------------------------+
+|                 17.298330210575152 |
++------------------------------------+
+```
+
+跨赤道的南北两点
+
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(0, 45, 0, -45);
++--------------------------------+
+| ST_ANGLE_SPHERE(0, 45, 0, -45) |
++--------------------------------+
+|              89.99999999999999 |
++--------------------------------+
+```
+
+无效经度（超出范围）
+
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(190, 30, 10, 30);
++----------------------------------+
+| ST_ANGLE_SPHERE(190, 30, 10, 30) |
++----------------------------------+
+|                             NULL |
++----------------------------------+
+```
+
+任意参数为 NULL
+
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(NULL, 30, 10, 30);
++-----------------------------------+
+| ST_ANGLE_SPHERE(NULL, 30, 10, 30) |
++-----------------------------------+
+|                              NULL |
++-----------------------------------+
+```
+
+纬度超出范围（如 91°N）
+
+```sql
+mysql> SELECT ST_ANGLE_SPHERE(0, 0, 180, 91);
++--------------------------------+
+| ST_ANGLE_SPHERE(0, 0, 180, 91) |
++--------------------------------+
+|                           NULL |
++--------------------------------+
+```

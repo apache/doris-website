@@ -1,6 +1,6 @@
 ---
 {
-    "title": "如何接入一个新的 Trino Connector插件",
+    "title": "Trino Connector 开发指南",
     "language": "zh-CN"
 }
 ---
@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 如何接入一个新的 Trino Connector 插件
-
 ## 背景
 
 从 3.0 版本开始，Doris 支持对接 Trino Connector 插件。通过丰富的 Trino Connector 插件以及 Doris 的 `Trino-Connector` Catalog 功能可以让 Doris 支持更多的数据源。
@@ -39,7 +37,7 @@ Trino Connector 兼容框架的目的在于帮助 Doris 快速对接更多的数
 
 > 注：Trino 是一款由 [Trino 软件基金会](https://trino.io/foundation) 提供的 Apache License 2.0 协议开源软件，详情可访问 [Trino 官网](https://trino.io/docs/current/)。
 
-## 步骤一：编译 Kakfa Connector 插件
+## Step 1：编译 Kakfa Connector 插件
 
 Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己编译所需 Connector 插件。
 
@@ -58,7 +56,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
 
 > 注意：每一个 Connector 插件都是一个子目录，而不是一个 jar 包。
 
-## 步骤二：设置 Doris 的 fe.conf / be.conf
+## Step 2：设置 Doris 的 fe.conf / be.conf
 
 准备好 Kafka Connector 插件后，需要配置 Doris 的 fe.conf 、be.conf 从而使得 Doris 能够找到该插件。
 
@@ -74,7 +72,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
 
 > 注意：Doris 采用懒加载的方式加载 Trino Connector 插件，这意味着如果是第一次在 Doris 中使用 Trino-Connector Catalog 功能，是无需重启 FE / BE 节点的，Doris 会自动加载插件。但是插件只会加载一次，所以如果 `/path/to/connectors/` 目录下插件发生了变化，需要重启 FE / BE 节点，才可以加载变化后的插件。
 
-## 步骤三：使用 Trino-Connector Catalog 功能
+## Step 3：使用 Trino-Connector Catalog 功能
 
 完成前面两个步骤后，我们就可以在 Doris 中使用 Trino-Connector Catalog 功能了。
 

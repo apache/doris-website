@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 FE is primarily responsible for query parsing, planning, and related tasks in decoupled storage and compute mode.
 
 ## Configuring Compute Resources
@@ -39,6 +20,21 @@ spec:
       memory: 8Gi
 ```
 Update the above configuration in the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#step-3-deploy-the-compute-storage-decoupled-cluster) that you intend to deploy.
+
+## Configuring the Number of Follower Nodes
+In a Doris Frontend (FE) service, there are two types of roles: Follower and Observer. Follower nodes are responsible for SQL parsing, metadata management, and storage. Observer nodes primarily handle SQL parsing to offload query and write traffic from Followers. Doris uses the bdbje storage system for metadata management, which implements an algorithm similar to the Paxos protocol.
+
+In a distributed deployment, multiple Follower nodes must be configured to participate in metadata management within the distributed environment.
+
+When deploying a compute-storage disaggregated Doris cluster using the `DorisDisaggregatedCluster` resource, the default number of Follower nodes is set to 1. You can configure the number of Followers using the following setting. The example below configures three Follower nodes:
+```yaml
+spec:
+  feSpec:
+    electionNumber: 3
+```
+:::tip Note
+Once the disaggregated cluster is deployed, the `electionNumber` setting cannot be modified.
+:::
 
 ## Custom Startup Configuration
 The Doris Operator mounts the FE startup configuration using a Kubernetes ConfigMap. Follow these steps to configure it:
@@ -153,7 +149,7 @@ To access Doris from outside the Kubernetes cluster, you can use the [NodePort s
       feSpec:
         service:
           type: NodePort
-          servicePorts:
+          portMaps:
           - nodePort: 31001
             targetPort: 8030
           - nodePort: 31002

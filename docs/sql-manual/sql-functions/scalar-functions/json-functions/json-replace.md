@@ -5,90 +5,86 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
-The JSON_REPLACE function is used to update data in a JSON and return the result.
+The `JSON_REPLACE` function is used to replace data in JSON and return the result.
 
 ## Syntax
 ```sql
-JSON_REPLACE (<json_str>, <path>, <val>[, <jsonPath>, <val>, ...])
+JSON_REPLACE (<json_object>, <path>,  <value>[, <path>,  <value>, ...])
 ```
 
 ## Parameters
-| Parameter           | Description                                                                                          |
-|--------------|---------------------------------------------------------------------------------------------|
-| `<json_str>`  | The JSON data to be replaced. It can be a JSON object with elements of any type, including NULL. If no elements are specified, an empty array is returned. If json_str is not a valid JSON, an error will be returned. |
-| `<path>` | The JSON path to be replaced.                                                          |
-| `<val>`      | The value to replace the value corresponding to the JSON_PATH Key. If it is NULL, then a NULL value will be inserted at the corresponding position.                     |
+- `<json_object>`: JSON type expression, the target to be modified.
+- `<path>`: String type expression, specifies the path where the value is to be replaced
+- `<value>`: JSON type or other types supported by [`TO_JSON`](./to-json.md), the value to be replaced.
 
-## Return Values
+## Return Value
+- Nullable(JSON) Returns the modified JSON object
 
-`json_replace` function updates data in a JSON and returns the result.Returns NULL if `json_str` or `path` is NULL. Otherwise, an error occurs if the `json_str` argument is not a valid JSON or any path argument is not a valid path expression or contains a * wildcard.
+## Usage Notes
+1. Note that path-value pairs are evaluated from left to right.
+2. If the value pointed to by `<path>` does not exist in the JSON object, it will have no effect.
+3. `<path>` cannot contain wildcards, if it contains wildcards an error will be reported.
+4. When `<json_object>` or `<path>` is NULL, NULL will be returned. If `<value>` is NULL, a JSON null value will be inserted.
 
-The path-value pairs are evaluated left to right.
-
-A path-value pair for an existing path in the json overwrites the existing json value with the new value.
-
-Otherwise, a path-value pair for a nonexisting path in the json is ignored and has no effect.
-
-### Examples
-
-```sql
-select json_replace(null, null, null);
-```
-```text
-+----------------------------------+
-| json_replace(NULL, NULL, 'NULL') |
-+----------------------------------+
-| NULL                             |
-+----------------------------------+
-```
-```sql
-select json_replace('{"k": 1}', "$.k", 2);
-```
-```text
-+----------------------------------------+
-| json_replace('{\"k\": 1}', '$.k', '2') |
-+----------------------------------------+
-| {"k":2}                                |
-+----------------------------------------+
-```
-```sql
-select json_replace('{"k": 1}', "$.j", 2);
-```
-```text
-+----------------------------------------+
-| json_replace('{\"k\": 1}', '$.j', '2') |
-+----------------------------------------+
-| {"k":1}                                |
-+----------------------------------------+
-```
-```sql
-select json_replace(null, null, 's');
-```
-```text
-+--------------------------------------+
-| json_replace(NULL, NULL, 's', '006') |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
-```
+## Examples
+1. Path-value pairs are evaluated from left to right
+    ```sql
+    select json_replace('{"k": {"k2": "v2"}}', '$.k', json_parse('{"k2": 321, "k3": 456}'), '$.k.k2', 123);
+    ```
+    ```text
+    +-------------------------------------------------------------------------------------------------+
+    | json_replace('{"k": {"k2": "v2"}}', '$.k', json_parse('{"k2": 321, "k3": 456}'), '$.k.k2', 123) |
+    +-------------------------------------------------------------------------------------------------+
+    | {"k":{"k2":123,"k3":456}}                                                                       |
+    +-------------------------------------------------------------------------------------------------+
+    ```
+2. Value pointed to by `<path>` does not exist in the JSON object
+    ```sql
+    select json_replace('{"k": 1}', "$.k2", 2);
+    ```
+    ```text
+    +-------------------------------------+
+    | json_replace('{"k": 1}', "$.k2", 2) |
+    +-------------------------------------+
+    | {"k":1}                             |
+    +-------------------------------------+
+    ```
+3. `<path>` cannot contain wildcards
+    ```sql
+    select json_replace('{"k": 1}', "$.*", 2);
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT] In this situation, path expressions may not contain the * and ** tokens or an array range, argument index: 1, row index: 0
+    ```
+4. NULL parameters
+    ```sql
+    select json_replace(NULL, '$[1]', 123);
+    ```
+    ```text
+    +---------------------------------+
+    | json_replace(NULL, '$[1]', 123) |
+    +---------------------------------+
+    | NULL                            |
+    +---------------------------------+
+    ```
+    ```sql
+    select json_replace('{"k": "v"}', NULL, 123);
+    ```
+    ```text
+    +---------------------------------------+
+    | json_replace('{"k": "v"}', NULL, 123) |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```
+    ```sql
+    select json_replace('{"k": "v"}', '$.k', NULL);
+    ```
+    ```text
+    +-----------------------------------------+
+    | json_replace('{"k": "v"}', '$.k', NULL) |
+    +-----------------------------------------+
+    | {"k":null}                              |
+    +-----------------------------------------+
+    ```

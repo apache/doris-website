@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 将一个无符号的长整型数转换为 Bitmap。
@@ -38,43 +19,88 @@ under the License.
 
 | 参数        | 描述                                     |
 |-----------|----------------------------------------|
-| `<expr>` | 无符号的长整型数，范围为 0 ~ 18446744073709551615 |
+| `<expr>` | 无符号的长整型数或者字符串表示的数字，范围为 0 ~ 18446744073709551615 |
 
 ## 返回值
 
 包含对应长整型数的 Bitmap。  
-当输入值不在对应范围内时，则返回 `NULL`。
+当输入整型值不在对应范围内时或者字符串无法解析成数字时，则返回一个empty bitmap。
 
 ## 示例
 
 将一个整数转换为 Bitmap 并计算 Bitmap 中的元素数量：
 
 ```sql
-select bitmap_count(to_bitmap(10));
+select bitmap_to_string(to_bitmap(10)),bitmap_count(to_bitmap(10));
 ```
 
 结果如下：
 
 ```text
-+-----------------------------+
-| bitmap_count(to_bitmap(10)) |
-+-----------------------------+
-|                           1 |
-+-----------------------------+
++---------------------------------+-----------------------------+
+| bitmap_to_string(to_bitmap(10)) | bitmap_count(to_bitmap(10)) |
++---------------------------------+-----------------------------+
+| 10                              |                           1 |
++---------------------------------+-----------------------------+
+```
+
+```sql
+select bitmap_to_string(to_bitmap("123")),bitmap_count(to_bitmap("123"));
+```
+
+结果如下：
+
+```text
++------------------------------------+--------------------------------+
+| bitmap_to_string(to_bitmap("123")) | bitmap_count(to_bitmap("123")) |
++------------------------------------+--------------------------------+
+| 123                                |                              1 |
++------------------------------------+--------------------------------+
 ```
 
 将一个负整数转换为 Bitmap（该整数在有效范围之外），并将其转换为字符串：
 
 ```sql
-select bitmap_to_string(to_bitmap(-1));
+select bitmap_to_string(to_bitmap(-1)),bitmap_count(to_bitmap(-1));
 ```
 
 结果如下：
 
 ```text
-+---------------------------------+
-| bitmap_to_string(to_bitmap(-1)) |
-+---------------------------------+
-|                                 |
-+---------------------------------+
++---------------------------------+-----------------------------+
+| bitmap_to_string(to_bitmap(-1)) | bitmap_count(to_bitmap(-1)) |
++---------------------------------+-----------------------------+
+|                                 |                           0 |
++---------------------------------+-----------------------------+
+```
+
+非法的数字字符串:
+
+```sql
+select bitmap_to_string(to_bitmap("123ABC")),bitmap_count(to_bitmap("123ABC"));
+```
+
+结果如下：
+
+```text
++---------------------------------------+-----------------------------------+
+| bitmap_to_string(to_bitmap("123ABC")) | bitmap_count(to_bitmap("123ABC")) |
++---------------------------------------+-----------------------------------+
+|                                       |                                 0 |
++---------------------------------------+-----------------------------------+
+```
+
+
+```sql
+select bitmap_to_string(to_bitmap(NULL)),bitmap_count(to_bitmap(NULL));
+```
+
+The result will be:
+
+```text
++-----------------------------------+-------------------------------+
+| bitmap_to_string(to_bitmap(NULL)) | bitmap_count(to_bitmap(NULL)) |
++-----------------------------------+-------------------------------+
+|                                   |                             0 |
++-----------------------------------+-------------------------------+
 ```

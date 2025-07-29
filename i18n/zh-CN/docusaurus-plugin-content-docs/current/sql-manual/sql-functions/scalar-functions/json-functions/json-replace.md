@@ -5,89 +5,86 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
-`JSON_REPLACE` 函数用于在 JSON 中更新数据并返回结果。
+`JSON_REPLACE` 函数用于在 JSON 中插入数据并返回结果。
 
 ## 语法
 ```sql
-JSON_REPLACE (<json_str>, <path>, <val>[, <jsonPath>, <val>, ...])
+JSON_REPLACE (<json_object>, <path>,  <value>[, <path>,  <value>, ...])
 ```
-## 参数
-| 参数           | 描述                                                                                          |
-|--------------|---------------------------------------------------------------------------------------------|
-| `<json_str>`  | 要替换的 JSON 数据。可以是任意类型元素的 JSON 对象，包括`NULL`，如果没有指定元素，则返回一个空数组。如果 `json_str` 不是有效的 JSON，则会返回错误 |
-| `<path>` | 要替换的 JSON 路径。                                                          |
-| `<val>`      | 要替换 JSON_PATH Key 对应 value 的值。如果是 `NULL` ，则会在对应的位置插入 `NULL` 的 value 值。                      |
 
+## 参数
+- `<json_object>` JSON 类型表达式，被修改的目标。
+- `<path>` String 类型表达式，指定替换值的路径
+- `<value>` JSON 类型或其他 [`TO_JSON`](./to-json.md) 支持的类型，要替换的值。
 
 ## 返回值
+- `Nullable(JSON)` 返回被修改后的 JSON 对象
 
-如果 `json_str` 和 `path` 都为 NULL，则返回 NULL。
-
-否则，如果 `json_str` 不是有效的 JSON 或任何 `path` 参数不是有效的路径表达式或包含了 * 通配符，则会返回错误。
-
-路径值对按从左到右的顺序进行评估。
-
-如果 JSON 中已存在某个路径，则路径值对会将现有 JSON 值覆盖为新值。否则，对于 JSON 中不存在的某个路径的路径值对将被忽略且不会产生任何影响。
+## 使用说明
+1. 需要注意的是，路径值对按从左到右的顺序进行评估。
+2. 如果 `<path>` 指向的值在 JSON 对象中不存在，不会产生任何影响。
+3. `<path>` 中不能包含通配符，如果包含通配符会报错。
+4. `<json_object>` 或者 `<path>` 为 NULL 时，会得到 NULL，如果 `<value>` 为 NULL 会插入一个 JSON 的 null 值。
 
 ## 示例
-
-```sql
-select json_replace(null, null, null);
-```
-```text
-+----------------------------------+
-| json_replace(NULL, NULL, 'NULL') |
-+----------------------------------+
-| NULL                             |
-+----------------------------------+
-```
-```sql
-select json_replace('{"k": 1}', "$.k", 2);
-```
-```text
-+----------------------------------------+
-| json_replace('{\"k\": 1}', '$.k', '2') |
-+----------------------------------------+
-| {"k":2}                                |
-+----------------------------------------+
-```
-```sql
-select json_replace('{"k": 1}', "$.j", 2);
-```
-```text
-+----------------------------------------+
-| json_replace('{\"k\": 1}', '$.j', '2') |
-+----------------------------------------+
-| {"k":1}                                |
-+----------------------------------------+
-```
-```sql
-select json_replace(null, null, 's');
-```
-```text
-+--------------------------------------+
-| json_replace(NULL, NULL, 's', '006') |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
-```
+1. 路径值对按从左到右的顺序进行评估
+    ```sql
+    select json_replace('{"k": {"k2": "v2"}}', '$.k', json_parse('{"k2": 321, "k3": 456}'), '$.k.k2', 123);
+    ```
+    ```text
+    +-------------------------------------------------------------------------------------------------+
+    | json_replace('{"k": {"k2": "v2"}}', '$.k', json_parse('{"k2": 321, "k3": 456}'), '$.k.k2', 123) |
+    +-------------------------------------------------------------------------------------------------+
+    | {"k":{"k2":123,"k3":456}}                                                                       |
+    +-------------------------------------------------------------------------------------------------+
+    ```
+2. `<path>` 指向的值在 JSON 对象中不存在
+    ```sql
+    select json_replace('{"k": 1}', "$.k2", 2);
+    ```
+    ```text
+    +-------------------------------------+
+    | json_replace('{"k": 1}', "$.k2", 2) |
+    +-------------------------------------+
+    | {"k":1}                             |
+    +-------------------------------------+
+    ```
+3. `<path>` 不能包含通配符
+    ```sql
+    select json_replace('{"k": 1}', "$.*", 2);
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT] In this situation, path expressions may not contain the * and ** tokens or an array range, argument index: 1, row index: 0
+    ```
+4. NULL 参数
+    ```sql
+    select json_replace(NULL, '$[1]', 123);
+    ```
+    ```text
+    +---------------------------------+
+    | json_replace(NULL, '$[1]', 123) |
+    +---------------------------------+
+    | NULL                            |
+    +---------------------------------+
+    ```
+    ```sql
+    select json_replace('{"k": "v"}', NULL, 123);
+    ```
+    ```text
+    +---------------------------------------+
+    | json_replace('{"k": "v"}', NULL, 123) |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```
+    ```sql
+    select json_replace('{"k": "v"}', '$.k', NULL);
+    ```
+    ```text
+    +-----------------------------------------+
+    | json_replace('{"k": "v"}', '$.k', NULL) |
+    +-----------------------------------------+
+    | {"k":null}                              |
+    +-----------------------------------------+
+    ```

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 FE 在存算分离模式下主要负责查询解析和规划等相关工作。
 
 ## 配置计算资源
@@ -39,6 +20,19 @@ spec:
       memory: 8Gi
 ```
 将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+
+## 配置 Follower 数量
+FE 服务有 Follower 和 Observer 两种角色，Follower 负责 sql 解析任务和元数据的管理和存储。Observer 主要负责 sql 解析任务，分担 Follower 的查询和写入负载任务。Doris 使用 bdbje 存储系统管理元数据，bdbje 底层实现类似 paxos 协议算法。
+分布式部署中，需要配置多个 Follower 节点参与分布式环境下元数据管理工作。
+使用 `DorisDisaggregatedCluster` 资源部署 Doris 存算分离集群，Follower 默认的数量为 1。可通过如下配置设置 Follower 节点的数量。设置 Follower 节点数量为 3 的配置示例如下：
+```yaml
+spec:
+  feSpec:
+    electionNumber: 3
+```
+:::tip 提示
+存算分离集群部署后，`electionNumber` 不允许修改。
+:::
 
 ## 自定义启动配置
 Doris Operator 通过 Kubernetes 的 ConfigMap 挂载 FE 启动配置。配置步骤如下：
@@ -149,7 +143,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
       feSpec:
         service:
           type: NodePort
-          servicePorts:
+          portMaps:
           - nodePort: 31001
             targetPort: 8030
           - nodePort: 31002

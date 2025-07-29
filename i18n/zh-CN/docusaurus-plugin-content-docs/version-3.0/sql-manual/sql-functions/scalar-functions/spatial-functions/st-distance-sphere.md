@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 计算地球两点之间的球面距离，单位为 米。传入的参数分别为 X 点的经度，X 点的纬度，Y 点的经度，Y 点的纬度。
@@ -38,16 +19,24 @@ ST_DISTANCE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<x_lng>` | 经度数据，合理的取值范围是 [-180, 180] |
-| `<y_lng>` | 经度数据，合理的取值范围是 [-180, 180] |
-| `<x_lat>` | 纬度数据，合理的取值范围是 [-90, 90] |
-| `<y_lat>` | 纬度数据，合理的取值范围是 [-90, 90] |
+| `<x_lng>` | 点 X 的经度，类型为 DOUBLE，取值范围 [-180, 180]（超出范围返回 NULL）。|
+| `<y_lng>` | 点 X 的纬度，类型为 DOUBLE，取值范围 [-90, 90]（超出范围返回 NULL）。 |
+| `<x_lat>` | 点 Y 的经度，类型为 DOUBLE，取值范围 [-180, 180]（超出范围返回 NULL） |
+| `<y_lat>` | 点 Y 的纬度，类型为 DOUBLE，取值范围 [-90, 90]（超出范围返回 NULL |
 
 ## 返回值
 
-两点之间的球面距离
+返回两点之间的球面最短距离，单位为米（DOUBLE类型）
+
+ST_DISTANCE_SPHERE 存在以下边缘情况：
+
+- 若任一输入参数为 NULL，返回 NULL。
+- 若经度超出 [-180, 180] 或纬度超出 [-90, 90]，返回 NULL。
+- 若两点完全相同（经纬度数值一致），返回 0（距离为 0）。
 
 ## 举例
+
+两点相同（返回 0）
 
 ```sql
 select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);
@@ -61,3 +50,60 @@ select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219
 +----------------------------------------------------------------------------+
 ```
 
+赤道上两点（经度差 1°，纬度 0°）
+
+```sql
+mysql> SELECT ST_DISTANCE_SPHERE(0, 0, 1, 0);
++--------------------------------+
+| ST_DISTANCE_SPHERE(0, 0, 1, 0) |
++--------------------------------+
+|             111195.10117748393 |
++--------------------------------+
+```
+
+实际跨经度 20° 的近距点
+
+```sql
+
+-- 点X(170, 0)，点Y(-170, 0)（经度差20°，而非340°，取最短路径）
+mysql> SELECT ST_DISTANCE_SPHERE(170, 0, -170, 0);
++-------------------------------------+
+| ST_DISTANCE_SPHERE(170, 0, -170, 0) |
++-------------------------------------+
+|                   2223902.023549678 |
++-------------------------------------+
+```
+
+无效参数（纬度超出范围）
+
+```sql
+mysql> SELECT ST_DISTANCE_SPHERE(116, 39, 120, 91);
++--------------------------------------+
+| ST_DISTANCE_SPHERE(116, 39, 120, 91) |
++--------------------------------------+
+|                                 NULL |
++--------------------------------------+
+```
+
+NULL 参数返回 NULL
+
+```sql
+mysql> SELECT ST_DISTANCE_SPHERE(NULL, 39.9, 116.4, 30);
++-------------------------------------------+
+| ST_DISTANCE_SPHERE(NULL, 39.9, 116.4, 30) |
++-------------------------------------------+
+|                                      NULL |
++-------------------------------------------+
+```
+
+两个坐标完全一样，返回0
+
+```sql
+
+mysql>  SELECT ST_DISTANCE_SPHERE(1,1 , 1, 1);
++--------------------------------+
+| ST_DISTANCE_SPHERE(1,1 , 1, 1) |
++--------------------------------+
+|                              0 |
++--------------------------------+
+```

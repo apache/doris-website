@@ -44,6 +44,7 @@ const config = {
     markdown: {
         format: 'detect',
     },
+    trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
@@ -165,6 +166,10 @@ const config = {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
                         for (let item of items) {
+                            if (item.url.includes('docs')) {
+                                item.changefreq = 'daily';
+                                item.priority = 0.8;
+                            }
                             if (item.url.includes('docs/1.2')) {
                                 item.priority = 0.2;
                             }
@@ -205,13 +210,18 @@ const config = {
             announcementBar: {
                 id: 'join_us',
                 content: JSON.stringify({
-                    zh: `<a href="https://www.selectdb.com/resources/events/doris-meetup-20250614" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    zh: `<a href="https://www.selectdb.com/resources/events/apache-doris-meetup-20250802" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
                 <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
                 <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-               <span>6 月 14 日·上海｜Apache Doris <strong>线下首场 AI 主题 Meetup</strong> —— 湖仓数智融合、AI 洞见未来</span> 
+               <span>走进小米 —— Apache Doris 企业行@武汉 Meetup</span> 
                <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
                    </a>`,
-                    en: null,
+                    en: `<a href="https://www.velodb.io/events/apache-doris-webinar-20250722" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                    <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
+                   <span>July 22, join our live case study webinar about  <strong>migrating from Snowflake to Apache Doris!</strong> 🔥</span> 
+                   <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                       </a>`,
                 }),
                 textColor: '#4C576C',
                 isCloseable: false,
@@ -250,6 +260,11 @@ const config = {
                     {
                         label: 'Community',
                         to: '/community/join-community',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
                         position: 'left',
                     },
                     // {
@@ -371,6 +386,11 @@ const config = {
                         position: 'left',
                     },
                     {
+                        label: 'Vendors',
+                        to: '/vendors',
+                        position: 'left',
+                    },
+                    {
                         href: '/download',
                         className: 'header-right-button-primary navbar-download-mobile',
                         label: 'Download',
@@ -451,7 +471,7 @@ const config = {
                         items: [
                             {
                                 label: 'How to contribute',
-                                href: '/community/how-to-contribute/',
+                                href: '/community/how-to-contribute/contribute-to-doris',
                             },
                             {
                                 label: 'Source code',

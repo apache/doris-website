@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 Convert a WKT (Well Known Text) to the corresponding memory geometry
@@ -41,8 +22,8 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 ## Parameters
 
 | Parameters | Instructions |
-|------------|---------|
-| `<wkt>`    | The memory form of the graph |
+| -- |---------|
+| `<wkt>` | The memory form of the graph |
 
 ## Support WKT Formats
 
@@ -50,6 +31,10 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 - `LINESTRING` - A sequence of connected line segments
 - `POLYGON` - A closed area defined by one or more rings, requiring at least three distinct points and closed ends.
 - `MULTIPOLYGON` - A collection of polygons, requiring polygons in a multipolygon can only share discrete points.
+
+:::info Note
+Supported MULTIPOLYGON format parsing since Apache Doris 3.0.6
+:::
 
 ## Return Value
 

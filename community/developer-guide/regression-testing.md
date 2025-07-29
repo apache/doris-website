@@ -629,6 +629,10 @@ Doris supports queries on external data sources, so the regression testing frame
 
    To begin with, modify `CONTAINER_UID` in `docker/thirdparties/custom_settings.env`. For example, `doris-10002-18sda1-`. The follow-up startup scripts will replace the corresponding names in Docker Compose to ensure consistency across multiple containers environment.
 
+   Before starting the containers, you need to check the network configuration of your server/cloud host to ensure that the mapping relationship between hostname and host IP address (hostname -i) is configured in /etc/hosts.
+
+   It should look like: `10.0.0.46    iZj6cbwlx5pl6y0681t6scZ    iZj6cbwlx5pl6y0681t6scZ`, which are IP address (output of hostname -i command, usually the IP of eth0), hostname (output of hostname command), and alias (same as the previous one).
+
 1. Start the Container
 
    So far, Doris has supported Docker Compose for data sources including Elasticsearch, MySQL, PostgreSQL, Hive, SQLServer, Oracle, Iceberg, Hudi, and Trino. The relevant files can be found in the directory `docker/thirdparties/docker-compose`.
@@ -641,7 +645,9 @@ Doris supports queries on external data sources, so the regression testing frame
    cd docker/thirdparties && sh run-thirdparties-docker.sh
    ```
 
-   Executing this command requires root or sudo privilege. If the command returns, that means all containers are started. You can check on them by inputing a `docker ps -a` command. 
+   Executing this command requires root or sudo privilege. If the command returns, that means all containers are started. You can check on them by inputing a `docker ps -a` command.
+   
+   During the container startup process, you can use the `docker logs -f <container-name>` command to view the container logs.
 
    To stop all containers, you can use the following command:
 
@@ -681,14 +687,12 @@ Doris supports queries on external data sources, so the regression testing frame
 
    3. Hive
 
-      You can find the Hive-related Docker Compose files in `docker/thirdparties/docker-compose/hive` .
+      You can find the Hive-related Docker Compose files in `docker/thirdparties/docker-compose/hive`, supporting both Hive2 and Hive3.
 
-      * `hive-2x.yaml.tpl`: Docker Compose file template, no modification required.
-
-      * `hadoop-hive.env.tpl`: The configuration file template, no modification required.
-
-      * `gen_env.sh`: The script for initializing the configuration file. In this script, you can modify the two external ports: `FS_PORT` for defaultFs and `HMS_PORT` for Hive metastore (default numbers: 8120 and 9183, respectively). This script will be called once `run-thirdparties-docker.sh`  is started.
-
+      * `hive-2x.yaml.tpl`, `hive-3x.yaml.tpl`: Docker Compose file templates, no modification required.
+      * `hadoop-hive.env.tpl`, `hadoop-hive-2x.env.tpl` and `hadoop-hive-3x.env.tpl`: Configuration file templates, no modification required.
+      * `hive-2x_settings.env`: Hive2 initialization configuration script, which will be automatically called when `run-thirdparties-docker.sh` starts. You can modify four external ports in this file: `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive2HdfsPort`, `hive2HmsPort`, `hive2ServerPort`, and `hive2PgPort` in `regression-conf.groovy`. The first two are for Hadoop's defaultFs and Hive metastore ports, with defaults of 8020 and 9083.
+      * `hive-3x_settings.env`: Hive3 initialization configuration script, which will be automatically called when `run-thirdparties-docker.sh` starts. You can modify four external ports in this file: `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive3HdfsPort`, `hive3HmsPort`, `hive3ServerPort`, and `hive3PgPort` in `regression-conf.groovy`. The first two are for Hadoop's defaultFs and Hive metastore ports, with defaults of 8320 and 9383.
       * The `scripts/` directory will be mounted to the container once it is started. Files in this directory require no modifications. Note that you need to download the pre-built files before you start the container: 
 
         Download files from  `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/tpch1_parquet/tpch1.db.tar.gz`  to the `scripts/` directory and decompress.
@@ -857,7 +861,8 @@ Doris supports queries on external data sources, so the regression testing frame
    * `enableJdbcTest`: This is to enable test for JDBC external tables. For this purpose, you need to start the MySQL and PostgreSQL containers.
    * `mysql_57_port` and `pg_14_port` are the external port of MySQL and PostgreSQL, respectively. Default port numbers: 3316 and 5442.
    * `enableHiveTest`: This is to enable test for Hive external tables. For this purpose, you need to start the Hive container.
-   * `hms_port` is the external port for Hive metastore. Default number: 9183.
+   * `hive2HmsPort` is the external port for Hive2 metastore. Default number: 9083.
+   * `hive2HdfsPort` is the external port for Hive2 HDFS namenode. Default number: 8020.
    * `enableEsTest`: This is to enable test for Elasticsearch external tables. For this purpose, you need to start the Elasticsearch container.
    * `es_6_port`: Port for Elasticsearch 6.
    * `es_7_port`: Port for Elasticsearch 7.
