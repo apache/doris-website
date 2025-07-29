@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 int",
+    "title": "转换为 INT",
     "language": "zh-CN"
 }
 ---

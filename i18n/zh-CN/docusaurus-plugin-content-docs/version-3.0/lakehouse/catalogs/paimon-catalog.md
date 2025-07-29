@@ -279,12 +279,6 @@ Doris 支持查询 Paimon 系统表，用来查询表的相关元信息。支持
 SELECT * FROM my_table$system_table_name;
 ```
 
-例如，要查看表的审计记录，可以执行：
-
-```sql
-SELECT * FROM my_table$audit_log;
-```
-
 > 注意点：Doris 不支持读取 Paimon 全局系统表，其只在 Flink 中支持。
 
 ### schemas

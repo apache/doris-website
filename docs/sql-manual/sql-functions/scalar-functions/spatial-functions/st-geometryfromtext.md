@@ -22,8 +22,8 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 ## Parameters
 
 | Parameters | Instructions |
-|------------|---------|
-| `<wkt>`    | The memory form of the graph |
+| -- |---------|
+| `<wkt>` | The memory form of the graph |
 
 ## Support WKT Formats
 
@@ -31,6 +31,10 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 - `LINESTRING` - A sequence of connected line segments
 - `POLYGON` - A closed area defined by one or more rings, requiring at least three distinct points and closed ends.
 - `MULTIPOLYGON` - A collection of polygons, requiring polygons in a multipolygon can only share discrete points.
+
+:::info Note
+Supported MULTIPOLYGON format parsing since Apache Doris 3.0.6
+:::
 
 ## Return Value
 

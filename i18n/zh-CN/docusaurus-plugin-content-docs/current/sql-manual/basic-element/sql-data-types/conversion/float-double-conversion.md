@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 float/double",
+    "title": "转换为 FLOAT/DOUBLE",
     "language": "zh-CN"
 }
 ---

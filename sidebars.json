@@ -998,6 +998,7 @@
                                     "label": "Semi-Structured Data Type",
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/GEO",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
