@@ -1574,6 +1574,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/group-concat",
                                 "sql-manual/sql-functions/aggregate-functions/grouping",
                                 "sql-manual/sql-functions/aggregate-functions/grouping-id",
+                                "sql-manual/sql-functions/aggregate-functions/geomean",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
