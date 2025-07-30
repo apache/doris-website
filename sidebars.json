@@ -1939,6 +1939,7 @@
                                 "sql-manual/sql-statements/account-management/SHOW-ROLES",
                                 "sql-manual/sql-statements/account-management/GRANT-TO",
                                 "sql-manual/sql-statements/account-management/REVOKE-FROM",
+                                "sql-manual/sql-statements/account-management/SHOW-CREATE-USER",
                                 "sql-manual/sql-statements/account-management/SHOW-PRIVILEGES",
                                 "sql-manual/sql-statements/account-management/SHOW-GRANTS",
                                 "sql-manual/sql-statements/account-management/REFRESH-LDAP",
