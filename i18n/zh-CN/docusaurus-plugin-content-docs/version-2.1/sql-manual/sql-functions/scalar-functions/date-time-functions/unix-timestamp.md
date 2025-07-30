@@ -27,10 +27,10 @@ Format 的格式请参阅 `date_format` 函数的格式说明。
 
 ## 返回值
 根据输入返回两种类型
-1.若是输入的 datetime 标度不为零
+1.若是输入的 datetime scale 不为0
 返回一个时间戳，类型为 Decimal，最高六位小数精度
 
-2.若是输入的 datetime 标度为0
+2.若是输入的 datetime scale 为0
 返回一个时间戳，类型为 INT
 
 ## 举例
@@ -72,7 +72,7 @@ mysql> select unix_timestamp('1969-01-01 00:00:00');
 +---------------------------------------+
 ```
 
-输入时间标度不为0
+输入时间并且 scale 不为0
 
 ```
 mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.123');
