@@ -9,14 +9,13 @@
 
 <version since="2.0.0">
 
-
 </version>
 
-### Description
+## Description
 
 Calculates the cumulative sum of an array. The function traverses the array from left to right, calculating the sum of all elements from the beginning to the current position (including the current position), and returns a new array with the same length as the original array.
 
-### Syntax
+## Syntax
 
 ```sql
 array_cum_sum(ARRAY<T> arr)

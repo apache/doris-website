@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 提供两种方式从 Azure Storage 导入文件：
 - 使用 S3 Load 将 Azure Storage 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 Azure Storage 文件导入到 Doris 中，这是一个同步的导入方式。
@@ -64,7 +45,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### 第 3 步：使用 S3 Load 导入数据
 
 :::caution Caution
-Azure Storage 默认要求 HTTPs 传输，对应的存储账户配置是 `需要安全传输：已启用`。
+Azure Storage 默认要求 HTTPS 传输，对应的存储账户配置是 `需要安全传输：已启用`。
 必须在 Doris `be.conf` 中设置 `s3_client_http_scheme = https` 才能正常访问 Azure Storage。
 
 Azure S3 properties 中的 `s3.region` 可以省略。

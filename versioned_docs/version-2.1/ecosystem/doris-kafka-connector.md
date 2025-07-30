@@ -5,40 +5,30 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) is a scalable and reliable tool for data transmission between Apache Kafka and other systems. Connectors can be defined Move large amounts of data in and out of Kafka.
 
 The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
-## Usage Doris Kafka Connector
+## Version Description
+
+| Connector Version | Kafka Version                 | Doris Version | Java Version | 
+| ----------------- | ----------------------------- | ------------- | ------------ |
+| 1.0.0             | 2.4+                          | 2.0+          | 8            | 
+| 1.1.0             | 2.4+                          | 2.0+          | 8            | 
+| 24.0.0            | 2.4+                          | 2.0+          | 8            | 
+| 25.0.0            | 2.4+                          | 2.0+          | 8            | 
+
+## Usage
 
 ### Download
-[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+[doris-kafka-connector](https://doris.apache.org/download)
 
 maven dependencies
 ```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 
@@ -207,15 +197,14 @@ errors.deadletterqueue.topic.replication.factor=1
 | doris.password              | -                                    | -                                                                                    | Y            | Doris password                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | doris.database              | -                                    | -                                                                                    | Y            | The database to write to. It can be empty when there are multiple libraries. At the same time, the specific library name needs to be configured in topic2table.map.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | doris.topic2table.map       | -                                    | -                                                                                    | N            | The corresponding relationship between topic and table table, for example: topic1:tb1,topic2:tb2<br />The default is empty, indicating that topic and table names correspond one to one. <br />The format of multiple libraries is topic1:db1.tbl1,topic2:db2.tbl2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| buffer.count.records        | -                                    | 10000                                                                                | N            | The number of records each Kafka partition buffers in memory before flushing to doris. Default 10000 records                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| buffer.count.records        | -                                    | 50000                                                                                | N            | The number of records each Kafka partition buffers in memory before flushing to doris. Default 50000 records                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | buffer.flush.time           | -                                    | 120                                                                                  | N            | Buffer refresh interval, in seconds, default 120 seconds                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| buffer.size.bytes           | -                                    | 5000000(5MB)                                                                         | N            | The cumulative size of records buffered in memory for each Kafka partition, in bytes, default 5MB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| buffer.size.bytes           | -                                    | 10485760(100MB)                                                                      | N            | The cumulative size of records buffered in memory for each Kafka partition, in bytes, default 100MB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | jmx                         | -                                    | true                                                                                 | N            | To obtain connector internal monitoring indicators through JMX, please refer to: [Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/en/Doris-Connector-JMX.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | enable.2pc                  | -                                    | true                                                                                 | N            | Whether to enable two-phase commit (TwoPhaseCommit) of Stream Load, the default is true.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | enable.delete               | -                                    | false                                                                                | N            | Whether to delete records synchronously, default false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | label.prefix                | -                                    | ${name}                                                                              | N            | Stream load label prefix when importing data. Defaults to the Connector application name.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | auto.redirect               | -                                    | true                                                                                 | N            | Whether to redirect StreamLoad requests. After being turned on, StreamLoad will redirect to the BE where data needs to be written through FE, and the BE information will no longer be displayed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| load.model                  | `stream_load`,<br/> `copy_into`      | stream_load                                                                          | N            | How to import data. Supports `stream_load` to directly import data into Doris; also supports `copy_into` to import data into object storage, and then load the data into Doris.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | sink.properties.*           | -                                    | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Import parameters for Stream Load. <br />For example: define column separator `'sink.properties.column_separator':','` <br />Detailed parameter reference [here](https://doris.apache.org/docs/data-operate/import/stream-load-manual)  <br/><br/> **Enable Group Commit**, for example, enable group commit in sync_mode mode: `"sink.properties.group_commit":"sync_mode"`. Group Commit can be configured with three modes: `off_mode`, `sync_mode`, and `async_mode`. For specific usage, please refer to: [Group-Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)<br/><br/>  **Enable partial column update**, for example, enable update of partial columns of specified col2: `"sink.properties.partial_columns":"true"`, `"sink.properties.columns": " col2",` |
 | delivery.guarantee          | `at_least_once`,<br/> `exactly_once` | at_least_once                                                                        | N            | How to ensure data consistency when consuming Kafka data is imported into Doris. Supports `at_least_once` `exactly_once`, default is `at_least_once`. Doris needs to be upgraded to 2.1.0 or above to ensure data `exactly_once`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | converter.mode              | `normal`,<br/> `debezium_ingestion`  | normal                                                                               | N            | Type conversion mode of upstream data when using Connector to consume Kafka data. <br/> ```normal``` means consuming data in Kafka normally without any type conversion. <br/> ```debezium_ingestion``` means that when Kafka upstream data is collected through CDC (Changelog Data Capture) tools such as Debezium, the upstream data needs to undergo special type conversion to support it.                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -223,6 +212,10 @@ errors.deadletterqueue.topic.replication.factor=1
 | database.time_zone          | -                                    | UTC                                                                                  | N            | When `converter.mode` is not `normal` mode, it provides a way to specify time zone conversion for date data types (such as datetime, date, timestamp, etc.). The default is UTC time zone.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | By reading the locally provided Avro Schema file, the Avro file content in the Topic is parsed to achieve decoupling from the Schema registration center provided by Confluent. <br/> This configuration needs to be used with the `key.converter` or `value.converter` prefix. For example, the local Avro Schema file for configuring avro-user and avro-product Topic is as follows: `"value.converter.avro.topic2schema. filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> For specific usage, please refer to: [#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                                                  |
 | record.tablename.field      | -                                    | -                                                                                    | N            | Configure this parameter, data from one kafka topic can flow to multiple doris tables. For configuration details, refer to: [#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| enable.combine.flush        | `true`,<br/> `false`                 | false                                                                                | N            | Whether to merge data from all partitions together and write them. The default value is false. When enabled, only at_least_once semantics are guaranteed.|
+| max.retries                 | -                                    | 10                                                                                   | N            | The maximum number of times to retry on errors before failing the task.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| retry.interval.ms           | -                                    | 6000                                                                                 | N            | The time in milliseconds to wait following an error before attempting a retry.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| behavior.on.null.values     | `ignore`,<br/> `fail`                | ignore                                                                               | N            | Defined how to handle records with null values.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 For other Kafka Connect Sink common configuration items, please refer to: [connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
@@ -426,6 +419,68 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
   } 
 }'
 ```
+
+### Loading Data with Kafka Connect Single Message Transforms
+
+For example, consider data in the following format:
+```shell
+{
+  "registertime": 1513885135404,
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE"
+}
+```
+
+To add a hard-coded column to Kafka messages, InsertField can be used. Additionally, TimestampConverter can be used to convert Bigint type timestamps to time strings.
+
+```shell
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+  "name": "insert_field_tranform",
+  "config": {
+    "connector.class": "org.apache.doris.kafka.connector.DorisSinkConnector",
+    "tasks.max": "1",  
+    "topics": "users",  
+    "doris.topic2table.map": "users:kf_users",  
+    "buffer.count.records": "10",    
+    "buffer.flush.time": "11",       
+    "buffer.size.bytes": "5000000",  
+    "doris.urls": "127.0.0.1:8030", 
+    "doris.user": "root",                
+    "doris.password": "123456",           
+    "doris.http.port": "8030",           
+    "doris.query.port": "9030",          
+    "doris.database": "testdb",          
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",  
+    "transforms": "InsertField,TimestampConverter",  
+    // Insert Static Field
+    "transforms.InsertField.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.InsertField.static.field": "repo",    
+    "transforms.InsertField.static.value": "Apache Doris",  
+    // Convert Timestamp Format
+    "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.TimestampConverter.field": "registertime",  
+    "transforms.TimestampConverter.format": "yyyy-MM-dd HH:mm:ss.SSS",
+    "transforms.TimestampConverter.target.type": "string"
+  }
+}'
+```
+
+After InsertField and TimestampConverter transformations, the data becomes:
+```shell
+{
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE",
+  "repo": "Apache Doris",// Static field added   
+   "registertime": "2017-12-21 03:38:55.404"  // Unix timestamp converted to string
+}
+```
+
+For more examples of Kafka Connect Single Message Transforms (SMT), please refer to the [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html).
+
 
 ## FAQ
 **1. The following error occurs when reading Json type data:**

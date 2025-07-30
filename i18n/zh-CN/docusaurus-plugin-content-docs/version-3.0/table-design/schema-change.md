@@ -5,30 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 用户可以通过[Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) 操作来修改 Doris 表的 Schema。Schema 变更主要涉及列的修改和索引的变化。本文主要介绍列相关的 Schema 变更，关于索引相关的变更，请参考[表索引](./index/index-overview.md) 了解不同索引的变更方法。
 
 ## 原理介绍
 
-Doris支持两种类型的 Schema Change 操作：轻量级 Schema Change和重量级 Schema Change。它们的区别主要体现在执行过程的复杂性、执行速度和资源消耗上。
+Doris 支持两种类型的 Schema Change 操作：轻量级 Schema Change 和重量级 Schema Change。它们的区别主要体现在执行过程的复杂性、执行速度和资源消耗上。
 
 | 特性               | 轻量级 Schema Change | 重量级 Schema Change |
 |--------------------|----------------------|----------------------|
@@ -48,12 +29,12 @@ Doris支持两种类型的 Schema Change 操作：轻量级 Schema Change和重�
 
 ### 重量级 Schema Change
 
-重量级 Schema Change 涉及到数据文件的重写或转换，这些操作相对复杂，通常需要借助 Doris 的Backend（BE）进行数据的实际修改或重新组织。重量级 Schema Change 操作通常涉及对表数据结构的深度变更，可能会影响到存储的物理布局。所有不支持轻量级 Schema Change 的操作，均属于重量级 Schema Change，比如：
+重量级 Schema Change 涉及到数据文件的重写或转换，这些操作相对复杂，通常需要借助 Doris 的 Backend（BE）进行数据的实际修改或重新组织。重量级 Schema Change 操作通常涉及对表数据结构的深度变更，可能会影响到存储的物理布局。所有不支持轻量级 Schema Change 的操作，均属于重量级 Schema Change，比如：
 
 - 更改列的数据类型
 - 修改列的排序顺序
 
-重量级操作会在后台启动一个任务进行数据转换。后台任务会对表的每个tablet进行转换，按tablet为单位，将原始数据重写到新的数据文件中。数据转换过程中，可能会出现数据"双写"现象，即在转换期间，新数据同时写入新 tablet 旧 tablet 中。完成数据转换后，旧 tablet 会被删除，新 tablet 将取而代之。
+重量级操作会在后台启动一个任务进行数据转换。后台任务会对表的每个 tablet 进行转换，按 tablet 为单位，将原始数据重写到新的数据文件中。数据转换过程中，可能会出现数据"双写"现象，即在转换期间，新数据同时写入新 tablet 旧 tablet 中。完成数据转换后，旧 tablet 会被删除，新 tablet 将取而代之。
 
 ## 作业管理
 ### 查看作业
@@ -94,7 +75,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 ```sql
 ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 ```
-具体语法参考[ALTER TABLE RENAME](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME.md)。
+具体语法参考[ALTER TABLE RENAME](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME)。
 
 ### 添加一列
 

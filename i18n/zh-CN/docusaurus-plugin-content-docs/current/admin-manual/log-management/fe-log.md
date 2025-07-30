@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文主要介绍 Frontend(FE) 进程的日志管理。
 
 该文档适用于 2.1.4 及之后的 Doris 版本。
@@ -67,7 +48,7 @@ under the License.
 | `sys_log_enable_compress` | false | true, false | 是否开启历史 `fe.log` 和 `fe.warn.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
 | `log_rollover_strategy` | `age` | `age`, `size` | 日志保留策略，默认为 `age`，即根据时间策略保留历史日志。`size` 为按日志大小保留历史日志  |
 | `sys_log_delete_age` | 7d | 支持格式如 7d, 10h, 60m, 120s | 仅当 `log_rollover_strategy` 为 `age` 时生效。控制 `fe.log` 和 `fe.warn.log` 文件的保留天数。默认 7 天。会自动删除 7 天前的日志 |
-| `audit_log_delete_age` | 7d | 支持格式如 7d, 10h, 60m, 120s | 仅当 `log_rollover_strategy` 为 `age` 时生效。控制 `fe.audit.log` 文件的保留天数。默认 30 天。会自动删除 30 天前的日志 |
+| `audit_log_delete_age` | 30d | 支持格式如 7d, 10h, 60m, 120s | 仅当 `log_rollover_strategy` 为 `age` 时生效。控制 `fe.audit.log` 文件的保留天数。默认 30 天。会自动删除 30 天前的日志 |
 | `info_sys_accumulated_file_size` | 4 | | 仅当 `log_rollover_strategy` 为 `size` 时生效。控制 `fe.log` 文件的累计大小。默认为 4GB。当累计日志大小超过这个阈值后，会删除历史日志文件 |
 | `warn_sys_accumulated_file_size` | 2 | | 仅当 `log_rollover_strategy` 为 `size` 时生效。控制 `fe.warn.log` 文件的累计大小。默认为 2GB。当累计日志大小超过这个阈值后，会删除历史日志文件 |
 | `audit_sys_accumulated_file_size` | 4 | | 仅当 `log_rollover_strategy` 为 `size` 时生效。控制 `fe.audit.log` 文件的累计大小。默认为 4GB。当累计日志大小超过这个阈值后，会删除历史日志文件 |
@@ -82,7 +63,7 @@ under the License.
 | `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`ASYNC` 默认是日志异步输出且包含位置信息。 `BRIEF` 模式是日志异步输出但不包含位置信息。三种日志输出模式的性能依次递增 |
 
 ::: note
-从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `AYSNC`。
+从 3.0.2 版本开始，`sys_log_mode` 配置默认改为 `ASYNC`。
 :::
 
 :::tip

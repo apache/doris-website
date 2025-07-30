@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 `QUANTILE_UNION` 函数用于合并多个分位数计算的中间结果。这个函数通常与 `QUANTILE_STATE` 配合使用，特别适用于需要分阶段计算分位数的场景。
@@ -69,7 +52,7 @@ INSERT INTO response_times VALUES
 (9, 50.4, 'west'),
 (10, 100.6, 'east');
 
--- 按区域计算响应时间的50%分位数
+-- 按区域计算响应时间的 50% 分位数
 SELECT 
     region,
     QUANTILE_PERCENT(

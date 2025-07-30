@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 AES 加密函数。该函数与 MySQL 中的 `AES_ENCRYPT` 函数行为一致。默认采用 `AES_128_ECB` 算法，padding 模式为 `PKCS7`。
@@ -54,7 +37,7 @@ AES_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 
 ## 示例
 
-使用AES_128_ECB算法
+使用 AES_128_ECB 算法
 ```sql
 set block_encryption_mode='';
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -68,7 +51,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法
+使用 AES_256_CBC 算法
 ```sql
 set block_encryption_mode="AES_256_CBC";
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -82,7 +65,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 +----------------------------------------------------------+
 ```
 
-使用AES_256_CBC算法并设置初始向量
+使用 AES_256_CBC 算法并设置初始向量
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```

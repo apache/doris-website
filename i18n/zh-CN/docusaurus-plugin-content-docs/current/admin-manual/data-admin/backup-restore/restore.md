@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 前提条件
 
 1. 确保您拥有**管理员**权限以执行恢复操作。
@@ -31,7 +12,7 @@ under the License.
 
 ## 1. 获取快照的备份时间戳
 
-以下SQL语句可用于查看名为`example_repo`的 Repository 中的现有备份。
+以下 SQL 语句可用于查看名为`example_repo`的 Repository 中的现有备份。
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
@@ -47,7 +28,7 @@ under the License.
 
 ### Option 1：恢复快照到当前数据库
 
-以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到当前数据库。
+以下 SQL 语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到当前数据库。
 
 ```sql
 RESTORE SNAPSHOT `restore_label1`
@@ -60,7 +41,7 @@ PROPERTIES
 
 ### Option 2：恢复快照到指定数据库
 
-以下SQL语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
+以下 SQL 语句从名为`example_repo`的 Repository 中恢复标签为 `restore_label1` 和时间戳为 `2022-04-08-15-52-29` 的快照到名为 `destdb` 的数据库。
 
 ```sql
 RESTORE SNAPSHOT destdb.`restore_label1`
@@ -87,7 +68,7 @@ PROPERTIES
 
 ### Option 4：从快照恢复分区和表
 
-从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区p1和p2，以及表`backup_tbl2`到当前数据库`example_db1`，并将其重命名为`new_tbl`，快照标签为时间版本为`"2018-05-04-17-11-01"`。
+从`example_repo`中的备份快照`snapshot_2`恢复表`backup_tbl`的分区 p1 和 p2，以及表`backup_tbl2`到当前数据库`example_db1`，并将其重命名为`new_tbl`，快照标签为时间版本为`"2018-05-04-17-11-01"`。
 
    ```sql
    RESTORE SNAPSHOT `restore_label1`
@@ -105,43 +86,43 @@ PROPERTIES
 
 ## 3. 查看恢复作业的执行情况
 
-      ```sql
-   mysql> SHOW RESTORE\G;
-   *************************** 1. row ***************************
+    ```sql
+    mysql> SHOW RESTORE\G;
+    *************************** 1. row ***************************
                   JobId: 17891851
                   Label: snapshot_label1
               Timestamp: 2022-04-08-15-52-29
-                 DbName: default_cluster:example_db1
+                  DbName: default_cluster:example_db1
                   State: FINISHED
               AllowLoad: false
-         ReplicationNum: 3
+          ReplicationNum: 3
             RestoreObjs: {
-     "name": "snapshot_label1",
-     "database": "example_db",
-     "backup_time": 1649404349050,
-     "content": "ALL",
-     "olap_table_list": [
-       {
-         "name": "backup_tbl",
-         "partition_names": [
-           "p1",
-           "p2"
-         ]
-       }
-     ],
-     "view_list": [],
-     "odbc_table_list": [],
-     "odbc_resource_list": []
-   }
-             CreateTime: 2022-04-08 15:59:01
-       MetaPreparedTime: 2022-04-08 15:59:02
-   SnapshotFinishedTime: 2022-04-08 15:59:05
-   DownloadFinishedTime: 2022-04-08 15:59:12
-           FinishedTime: 2022-04-08 15:59:18
+      "name": "snapshot_label1",
+      "database": "example_db",
+      "backup_time": 1649404349050,
+      "content": "ALL",
+      "olap_table_list": [
+        {
+          "name": "backup_tbl",
+          "partition_names": [
+            "p1",
+            "p2"
+          ]
+        }
+      ],
+      "view_list": [],
+      "odbc_table_list": [],
+      "odbc_resource_list": []
+    }
+              CreateTime: 2022-04-08 15:59:01
+        MetaPreparedTime: 2022-04-08 15:59:02
+    SnapshotFinishedTime: 2022-04-08 15:59:05
+    DownloadFinishedTime: 2022-04-08 15:59:12
+            FinishedTime: 2022-04-08 15:59:18
         UnfinishedTasks:
-               Progress:
-             TaskErrMsg:
-                 Status: [OK]
+                Progress:
+              TaskErrMsg:
+                  Status: [OK]
                 Timeout: 86400
-   1 row in set (0.01 sec)
-   ```
+    1 row in set (0.01 sec)
+    ```

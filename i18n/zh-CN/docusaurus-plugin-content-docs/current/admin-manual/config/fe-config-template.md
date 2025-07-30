@@ -8,25 +8,6 @@
 
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Doris FE 配置参数
 
 该文档主要介绍 FE 的相关配置项。
@@ -91,7 +72,7 @@ FE 的配置项有两种方式进行配置：
 
 3. 通过 HTTP 协议动态配置
 
-   具体请参阅 [Set Config Action](../../admin-manual/fe/set-config-action.md)
+   具体请参阅 [Set Config Action](../../admin-manual/open-api/fe-http/set-config-action)
 
    该方式也可以持久化修改后的配置项。配置项将持久化在 `fe_custom.conf` 文件中，在 FE 重启后仍会生效。
 

@@ -1,19 +1,20 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 2.1.8 just released`,
-        link: 'https://doris.apache.org/blog/release-note-2.1.8',
+        label: `Apache Doris 3.0.5 Released`,
+        link: 'https://doris.apache.org/blog/release-note-3.0.5',
     },
     {
-        label: 'Automatic and flexible data sharding: Auto Partition in Apache Doris',
-        link: 'https://doris.apache.org/blog/auto-partition-in-apache-doris',
+        label: 'How Tencent Music saved 80% in costs by migrating from Elasticsearch to Apache Doris',
+        link: 'https://www.velodb.io/blog/1395',
     },
     {
-        label: 'Migrate data lakehouse from BigQuery to Apache Doris, saving $4,500 per month',
-        link: 'https://doris.apache.org/blog/migrate-lakehouse-from-bigquery-to-doris',
+        label: 'Slash your cost by 90% with Apache Doris Compute-Storage Decoupled Mode',
+        link: 'https://www.velodb.io/blog/1384',
     },
     {
-        label: 'Why Apache Doris is the Best Open Source Alternative to Rockset',
-        link: 'https://doris.apache.org/blog/apache-doris-vs-rockset',
+        label: 'Why Apache Doris is a Better Alternative to Elasticsearch for Real-Time Analytics',
+        link: 'https://www.velodb.io/blog/1379',
     },
+
 
 ];

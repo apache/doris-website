@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 为满足用户在 Kubernetes 平台上对 Doris 的高效部署和运维需求诞生的 [Kubernetes Operator](https://github.com/apache/doris-operator)（简称：Doris Operator），
 集成了原生 Kubernetes 资源的复杂管理能力，并融合了 Doris 组件间的分布式协同、用户集群形态的按需定制等经验，为用户提供了一个更简洁、高效、易用的容器化部署方案。
 旨在实现 Doris 在 Kubernetes 上的高效管控，帮助用户减少运维管理和学习成本的同时，提供强大的功能和灵活的配置能力。  
@@ -34,14 +15,14 @@ Doris Operator 基于 Kubernetes CustomResourceDefinitions（CRD）实现了 Dor
 
 Doris Operator 的设计基于二层调度器的原理。每个组件的第一层调度使用原生的 StatefulSet 和 Service 资源直接管理相应的 Pod 服务，这使其能够完全兼容开源 Kubernetes 集群，包括公有云、私有云以及自建的 Kubernetes 平台。
 
-基于 Doris Operator 提供的部署定义，用户可自定义 Doris 部署状态，并通过 Kubernetes 的kubectl管理命令将其下发到 Kubernetes 集群中。Doris Operator 会根据自定义状态将每个服务的部署转换为 StatefulSet 及其附属资源（如 Service），再通过 StatefulSet 调度出期望的 Pods。它通过抽象 Doris 集群的终态，简化了 StatefulSet 规格中不必要的配置，从而降低了用户的学习成本。
+基于 Doris Operator 提供的部署定义，用户可自定义 Doris 部署状态，并通过 Kubernetes 的 kubectl 管理命令将其下发到 Kubernetes 集群中。Doris Operator 会根据自定义状态将每个服务的部署转换为 StatefulSet 及其附属资源（如 Service），再通过 StatefulSet 调度出期望的 Pods。它通过抽象 Doris 集群的终态，简化了 StatefulSet 规格中不必要的配置，从而降低了用户的学习成本。
 
 ## 关键能力
 
 - **终态部署**：  
 
   Kubernetes 采用终态运维模式来管理服务，而 Doris Operator 则定义了一种能够描述 Doris 集群的资源类型——DorisCluster。用户可以参考相关文档和使用示例，轻松配置所需的集群。
-  用户通过 Kubernetes 的命令行工具kubectl，可以将配置下发到 Kubernetes 集群中。Doris Operator 会自动构建所需集群，并实时更新集群状态至相应的资源中。这一过程确保了集群的高效管理与监控，极大地简化了运维操作。
+  用户通过 Kubernetes 的命令行工具 kubectl，可以将配置下发到 Kubernetes 集群中。Doris Operator 会自动构建所需集群，并实时更新集群状态至相应的资源中。这一过程确保了集群的高效管理与监控，极大地简化了运维操作。
 
 - **易扩展**：
 
@@ -67,8 +48,8 @@ Doris Operator 的设计基于二层调度器的原理。每个组件的第一�
 
 - **运行时调试**：  
 
-  容器化服务对于 Trouble Shorting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过kubectl提供的exec命令进入容器，使用内置工具进行故障排查。
-  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation.md#服务-crash-情况下如何进入容器)
+  容器化服务对于 Trouble Shooting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过 kubectl 提供的 exec 命令进入容器，使用内置工具进行故障排查。
+  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/deploy-on-kubernetes/compute-storage-coupled/cluster-operation.md#服务-crash-情况下如何进入容器)
 
 ## 兼容性  
 
@@ -90,16 +71,16 @@ Doris Operator 开发按照标准的 K8s 规范进行，兼容所有标准 K8s �
 
 ### 部署 Doris Operator
 
-在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD 。
+在 Kubernetes 上部署 Doris Operator 前，需要先安装 Doris Operator CRD。
 
-* 详细安装文档可参考：[Doris Operator 安装](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-operator.md)
+* 详细安装文档可参考：[Doris Operator 安装](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
 
 ### 部署 Doris 集群
 
-* 集群配置文档可参考：[Doris Operator 集群配置](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster.md)
-* 安装文档可参考：[Doris Cluster 安装](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster.md)
+* 集群配置文档可参考：[Doris Operator 集群配置](../../install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster)
+* 安装文档可参考：[Doris Cluster 安装](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster)
 
 ### 集群运维
 
-* 集群运维文档可参考：[Doris Operator 集群运维](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/cluster-operation.md)
-* 集群访问文档可参考：[Doris Operator 集群访问](../../install/cluster-deployment/k8s-deploy/compute-storage-coupled/access-cluster.md)
+* 集群运维文档可参考：[Doris Operator 集群运维](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation)
+* 集群访问文档可参考：[Doris Operator 集群访问](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/access-cluster)

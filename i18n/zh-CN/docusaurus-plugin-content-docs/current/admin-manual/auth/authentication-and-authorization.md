@@ -1,30 +1,11 @@
 ---
 {
-    "title": "概述",
+    "title": "认证与鉴权概述",
     "language": "zh-CN"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris 的权限管理系统参照了 Mysql 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
+Doris 的权限管理系统参照了 MySQL 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
 
 ## 名词解释
 
@@ -321,7 +302,11 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
     - root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
     - admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
 
-2. 不支持删除或更改默认创建的角色或用户的权限。
+2. 不支持删除或更改默认创建的用户，角色或用户的权限。
+    - 不支持删除 root@'%' 和 admin@'%' 用户，但是允许创建和删除 root@'xxx' 和 admin@'xxx' 用户（xxx 指的是除了 % 之外的 host）（Doris 会把这些用户视为普通用户）
+    - 不支持撤销 root@'%' 和 admin@'%' 的默认角色
+    - 不支持删除角色 operator 和 admin
+    - 不支持操作角色 operator 和 admin 的权限
 
 3. operator 角色的用户有且只有一个，即 Root。admin 角色的用户可以创建多个。
 

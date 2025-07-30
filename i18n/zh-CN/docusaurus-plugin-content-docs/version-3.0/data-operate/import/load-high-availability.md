@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 导入高可用性
 
 ## 概述
@@ -67,7 +48,7 @@ Doris 在数据导入过程中提供了多种机制来确保高可用性。本�
 
 - 在部分节点不可用时，仍需要保证数据能够成功导入。
 
-- 对数据导入速度有较高要求，愿意在一定程度上牺牲可靠性来换取更高的可用性。
+- 对数据导入速度有较高要求，愿意在一定程度上牺牲一致性来换取更高的可用性。
 
 ### 配置方法
 
@@ -107,7 +88,7 @@ SET ( 'min_load_replica_num' = '2' );
 优先级：表属性 > 全局配置 > 默认多数派规则
 
 如果表属性未设置或无效，且全局配置有效，则表的最小写入副本数为：
-`min(FE配置的min_load_replica_num，表的副本数/2 + 1)`
+`min(FE 配置的 min_load_replica_num，表的副本数 / 2 + 1)`
 
 关于 FE 配置项的查看和修改，请参考[FE 配置项文档](../../admin-manual/config/fe-config.md)。
 

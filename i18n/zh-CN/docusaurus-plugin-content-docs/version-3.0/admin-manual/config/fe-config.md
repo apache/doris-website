@@ -8,25 +8,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Doris FE 配置参数
 
 该文档主要介绍 FE 的相关配置项。
@@ -84,7 +65,7 @@ FE 的配置项有两种方式进行配置：
 
 3. 通过 HTTP 协议动态配置
 
-   具体请参阅 [Set Config Action](../../admin-manual/fe/set-config-action.md)
+   具体请参阅 [Set Config Action](../../admin-manual/open-api/fe-http/set-config-action)
 
    该方式也可以持久化修改后的配置项。配置项将持久化在 `fe_custom.conf` 文件中，在 FE 重启后仍会生效。
 
@@ -415,7 +396,7 @@ FE https 端口，当前所有 FE https 端口都必须相同
 
 默认值：false
 
-FE https 使能标志位，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
+是否开启 FE https 的支持，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
 如果 enable_https 为 true，需要在 fe.conf 中配置 ssl 证书信息
 
 #### `enable_ssl`
@@ -1499,9 +1480,9 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 #### `label_regex_length`
 
-默认值: 128 (字符)
+默认值：128 (字符)
 
-导入 label 的最大字符长度，默认128个字符。
+导入 label 的最大字符长度，默认 128 个字符。
 
 #### `transaction_clean_interval_second`
 
@@ -1750,7 +1731,7 @@ HOUR: log 前缀是：yyyyMMddHH
 
 #### `default_db_data_quota_bytes`
 
-默认值：1PB
+默认值：8192PB
 
 是否可以动态配置：true
 

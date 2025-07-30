@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 该语句用于将 BE 节点安全地从集群中下线。该操作为异步操作。
@@ -75,7 +56,7 @@ be_identifier
 3. 当前 BE 如果存储的数据量比较大，那么 DECOMMISSION 操作可能持续几个小时甚至是几天
 4. 如果 DECOMMISSION 操作的进度卡住不动，具体表现为[SHOW BACKENDS](./SHOW-BACKENDS.md)语句中的`TabletNum`列一直固定在某个值，那么可能是以下的一些情况：
    - 当前 BE 上的 tablet 找不到合适的其他 BE 去迁移，比如在一个 3 节点的集群有一张 3 副本的表，要下线其中一个节点，那么该节点找不到其他 BE 可用来迁移数据（其他两个 BE 已经各有一个副本了）
-   - 当前 BE 上的 tablet 还在[回收站](../../recycle/SHOW-CATALOG-RECYCLE-BIN.md)中，可以[清空回收站](../../recycle/DROP-CATALOG-RECYCLE-BIN.md)后，再等待
+   - 当前 BE 上的 tablet 还在[回收站](../../recycle/SHOW-CATALOG-RECYCLE-BIN.md)中，可以清空回收站后，再等待
    - 当前 BE 上的 tablet 太大，导致在迁移单个 tablet 时，一直因为超时而无法将这个 tablet 迁移走，可以调整 FE Master 的配置`max_clone_task_timeout_sec`为一个更大的值（默认为 7200 秒）
    - 当前 BE 上的 tablet 存在未完成的事务，可以等事务完成或手动中止事务
    - 其他情况可以在 FE Master 的日志过滤`replicas to decommission`关键字，找出异常的 tablet，使用[SHOW TABLET](../../table-and-view/data-and-status-management/SHOW-TABLET.md)语句找到该 tablet 所属的表，然后重新建一张新的表，将数据从旧表迁移至新表，最后使用[DROP TABLE FORCE](../../table-and-view/table/DROP-TABLE.md)的方式将旧表删除掉

@@ -5,31 +5,12 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
-Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 语言进行自定义函数的执行。
+Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用 Java 语言进行自定义函数的执行。
 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 1. Java UDF  是较为常见的自定义标量函数 (Scalar Function)，即每输入一行数据，就会有一行对应的结果输出，较为常见的有 ABS，LENGTH 等。值得一提的是对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 2. Java UDAF 即为自定义的聚合函数 (Aggregate Function)，即在输入多行数据进行聚合后，仅输出一行对应的结果，较为常见的有 MIN，MAX，COUNT 等。
-3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。
+3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。**该功能自 Doris 3.0 版本起开始支持。**
 
 ## 类型对应关系
 
@@ -48,13 +29,14 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
-| `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
-| `map<Type1,Type2>` | `HashMap<Type1,Type2>`（支持嵌套）             |
-| `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持） |
+| `array<Type>`      | `ArrayList<Type>` `List<Type>` （支持嵌套）              |
+| `map<Type1,Type2>` | `HashMap<Type1,Type2>` `Map<Type1,Type2>`  （支持嵌套）          |
+| `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持）`List<Type>` |
 
 
 :::tip 提示
 `array`、`map`、`struct` 类型可以嵌套其它类型。例如，Doris 中的 `array<array<int>>` 对应 Java UDF 参数类型为 `ArrayList<ArrayList<Integer>>`，其他类型依此类推。
+`List<Type>` 和 `Map<Type1,Type2>` 类的支持从3.1.0 版本开始
 :::
 
 :::caution 注意
@@ -66,10 +48,14 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 1. 不支持复杂数据类型（HLL，Bitmap）。
 2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 3. 由于 jvm 加载同名类的问题，不要同时使用多个同名类作为 udf 实现，如果想更新某个同名类的 udf，需要重启 be 重新加载 classpath。
+4. 同名函数
 
+    用户可以创建和内置函数签名完全相同的自定义函数。默认情况下，系统会优先匹配内置函数。但如果使用函数时，指定了 `database`（即 `db.function()`），则会被强制认为是用户自定义函数。
+
+    在 3.0.7 版本中，新增了会话变量 `prefer_udf_over_builtin`。当设置为 `true` 时，会优先匹配用户自定义函数，以便于用户从其他系统迁移到 Doris 时，在不改变函数名称的情况下，通过自定义函数保持原有系统的函数行为。
 
 ## 快速上手
-本小节主要介绍如何开发一个 Java UDF。在 `samples/doris-demo/java-udf-demo/` 下提供了示例，可供参考，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
+本节主要介绍如何开发 Java UDF。在 `samples/doris-demo/java-udf-demo/` 目录下提供了示例代码，供您参考。您也可以查看 [demo](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)。
 
 UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。
 所以如果当前链接 session 位于数据库 DB 内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName.funcName`。
@@ -105,7 +91,7 @@ insert into test_table values (6, 666.66, "d,e");
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UDF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -117,7 +103,7 @@ insert into test_table values (6, 666.66, "d,e");
     ```
 
 3. 用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
-    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/Show-Statements/SHOW-FUNCTIONS.md) 命令。
+    如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) 命令。
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -129,7 +115,7 @@ insert into test_table values (6, 666.66, "d,e");
     +------+----------------------+
     ```
 
-4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+4. 当不再需要 UDF 函数时，可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION)
 
 另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 static 变量，可以参照文档下方的 static 变量加载方式。
 
@@ -316,7 +302,7 @@ public void destroy(State state) {
 </details>
 
 
-2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -350,7 +336,7 @@ public void destroy(State state) {
 
 ### Java-UDTF 实例介绍
 :::tip
-UDTF 自 Doris 3.0 版本开始支持
+UDTF 自 Doris 3.0 版本开始支持，
 :::
 
 1. 首先编写对应的 Java UDTF 代码，打包生成 JAR 包。
@@ -368,8 +354,8 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
     }
     ```
 
-2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上`_outer`后缀，其中带后缀`_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)。 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. 在 Doris 中注册创建 Java-UDTF 函数。此时会注册两个 UTDF 函数，另外一个是在函数名后面加上 `_outer` 后缀，其中带后缀 `_outer` 的是针对结果为 0 行时的特殊处理，具体可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers)。 
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
@@ -408,7 +394,7 @@ UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，�
 
 *解决方案 1:*
 
-是可以将资源加载代码拆分开，单独生成一个 JAR 包文件，然后其他包直接引用该资源 JAR 包。 
+可以将资源加载代码拆分开，单独生成一个 JAR 包文件，然后其他包直接引用该资源 JAR 包。 
 
 假设已经将代码拆分为了 DictLibrary 和 FunctionUdf 两个文件。
 
@@ -451,7 +437,7 @@ public class FunctionUdf {
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
 
-2. 编译 FunctionUdf 文件，需要引用上一步的到的资源包最为库使用，这样打包后可以得到 UDF 的 FunctionUdf.jar 包。
+2. 编译 FunctionUdf 文件，需要引用上一步得到的资源包作为库使用，这样打包后可以得到 UDF 的 FunctionUdf.jar 包。
 
     ```shell
     javac -cp ./DictLibrary.jar  ./FunctionUdf.java

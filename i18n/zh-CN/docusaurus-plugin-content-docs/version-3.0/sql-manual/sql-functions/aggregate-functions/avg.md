@@ -5,28 +5,9 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-计算指定列或表达式的所有非NULL值的平均值。
+计算指定列或表达式的所有非 NULL 值的平均值。
 
 ## 语法
 
@@ -39,11 +20,11 @@ AVG([DISTINCT] <expr>)
 | 参数 | 说明 |
 | -- | -- |
 | `<expr>` | 是一个表达式或列，通常是一个数值列或者能够转换为数值的表达式 |
-| `[DISTINCT]` | 是一个可选的关键字，表示对expr中的重复值进行去重后再计算平均值 |
+| `[DISTINCT]` | 是一个可选的关键字，表示对 expr 中的重复值进行去重后再计算平均值 |
 
 ## 返回值
 
-返回所选列或表达式的平均值，如果组内的所有记录均为NULL，则该函数返回NULL
+返回所选列或表达式的平均值，如果组内的所有记录均为 NULL，则该函数返回 NULL
 
 ## 举例
 

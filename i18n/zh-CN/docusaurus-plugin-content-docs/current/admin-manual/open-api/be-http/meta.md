@@ -5,32 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-## Request
+## 请求路径
 
 `GET /api/meta/header/{tablet_id}?byte_to_base64={bool}`
 
-## Description
+## 描述
 
 查询 tablet 元信息
 
@@ -39,16 +18,16 @@ under the License.
 * `tablet_id`
     table 的 id
 
-## Query parameters
+## 请求参数
 
 * `byte_to_base64`
     是否按 base64 编码，选填，默认`false`。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -63,7 +42,7 @@ under the License.
         ...
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

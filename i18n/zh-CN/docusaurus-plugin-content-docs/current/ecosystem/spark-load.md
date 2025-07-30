@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 # Spark Load
 
 Spark Load 通过外部的 Spark 资源实现对导入数据的预处理，提高 Doris 大数据量的导入性能并且节省 Doris
@@ -61,7 +41,7 @@ Spark Load 任务的执行主要分为以下 5 个阶段：
 1. 用户编写配置文件，配置读取的源文件/表，以及目标表等信息
 2. Spark Load 客户端向 FE 创建导入作业并开启事务，FE 向客户端返回目标表元数据
 3. Spark Load 客户端提交 ETL 任务到 Spark 集群执行。
-4. Spark 集群执行 ETL 完成对导入数据的预处理，包括全局字典构建（ Bitmap 类型）、分区、排序、聚合等。
+4. Spark 集群执行 ETL 完成对导入数据的预处理，包括全局字典构建（Bitmap 类型）、分区、排序、聚合等。
 5. ETL 任务完成后，Spark Load 客户端向 FE 同步预处理过的每个分片的数据路径，并调度相关的 BE 执行 Push 任务。
 6. BE 读取数据，转化为 Doris 底层存储格式。
 7. FE 调度生效版本，完成导入任务。
@@ -79,7 +59,7 @@ Bitmap 列的预计算，那么就需要将输入数据的类型转换成整型�
 
 1. 读取上游数据源的数据，生成一张 Hive 临时表，记为 hive_table。
 2. 从 hive_table 中抽取待去重字段的去重值，生成一张新的 Hive 表，记为 distinct_value_table。
-3. 新建一张全局字典表，记为 dict_table ，一列为原始值，一列为编码后的值。
+3. 新建一张全局字典表，记为 dict_table，一列为原始值，一列为编码后的值。
 4. 将 distinct_value_table 与 dict_table 做 Left Join，计算出新增的去重值集合，然后对这个集合使用窗口函数进行编码，此时去重列原始值就多了一列编码后的值，最后将这两列的数据写回
    dict_table。
 5. 将 dict_table 与 hive_table 进行 Join，完成 hive_table 中原始值替换成整型编码值的工作。
@@ -90,7 +70,7 @@ Bitmap 列的预计算，那么就需要将输入数据的类型转换成整型�
 8. 对读取到的数据进行字段映射，表达式计算以及根据分区信息生成分桶字段 bucket_id。
 9. 根据 Doris 表的 Rollup 元数据生成 RollupTree。
 10. 遍历 RollupTree，进行分层的聚合操作，下一个层级的 Rollup 可以由上一个层的 Rollup 计算得来。
-11. 每次完成聚合计算后，会对数据根据 bucket_id进行分桶然后写入 HDFS 中。
+11. 每次完成聚合计算后，会对数据根据 bucket_id 进行分桶然后写入 HDFS 中。
 12. 后续 Broker 会拉取 HDFS 中的文件然后导入 Doris Be 中。
 
 #### Hive Bitmap UDF
@@ -333,15 +313,15 @@ Spark 支持将 Hive 生成的 Bitmap 数据直接导入到 Doris。详见 hive-
 
 #### 任务配置
 
-| 参数名称      | 子参数-1 | 子参数-2             | 是否必须 | 默认值   | 参数说明                                             |
+| 参数名称      | 子参数 -1 | 子参数 -2             | 是否必须 | 默认值   | 参数说明                                             |
 |-----------|-------|-------------------|------|-------|--------------------------------------------------|
 | loadTasks |       |                   | 是    | -     | 导入任务作业                                           |
 |           | 目标表名称 |                   | 是    | -     | 导入的 Doris 表名称                                    |
 |           |       | type              | 是    | -     | 任务类型：file - 读取文件任务，hive - 读取 Hive 表任务            |
 |           |       | paths             | 是    | -     | 文件路径数组，仅读取文件任务有效（type=file）                      |
 |           |       | format            | 是    | -     | 文件类型，支持的类型有：csv、parquet、orc，仅读取文件任务有效（type=file） |
-|           |       | fieldSep          | 否    | `\t`  | 列分隔符，仅读取文件任务有效（type=file）且文件类型为 csv （format=csv） |
-|           |       | lineDelim         | 否    | `\n`  | 行分隔符，仅读取文件任务有效（type=file）且文件类型为 csv （format=csv） |
+|           |       | fieldSep          | 否    | `\t`  | 列分隔符，仅读取文件任务有效（type=file）且文件类型为 csv（format=csv） |
+|           |       | lineDelim         | 否    | `\n`  | 行分隔符，仅读取文件任务有效（type=file）且文件类型为 csv（format=csv） |
 |           |       | hiveMetastoreUris | 是    | -     | Hive 元数据服务地址                                     |
 |           |       | hiveDatabase      | 是    | -     | Hive 数据库名称                                       |
 |           |       | hiveTable         | 是    | -     | Hive 数据表名称                                       |
@@ -352,7 +332,7 @@ Spark 支持将 Hive 生成的 Bitmap 数据直接导入到 Doris。详见 hive-
 
 #### Spark 参数配置
 
-| 参数名称   | 子参数-1      | 是否必须 | 默认值    | 参数说明                                      |
+| 参数名称   | 子参数 -1      | 是否必须 | 默认值    | 参数说明                                      |
 |--------|------------|------|--------|-------------------------------------------|
 | spark  |            | 是    | -      | 导入任务作业                                    |
 |        | sparkHome  | 是    | -      | Spark 部署路径                                |

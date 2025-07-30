@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 日志是系统运行的详细记录，包含各种事件发生的主体、时间、位置、内容等关键信息。出于运维可观测、网络安全监控及业务分析等多重需求，企业通常需要将分散的日志采集起来，进行集中存储、查询和分析，以进一步从日志数据里挖掘出有价值的内容。
 
 针对此场景，Apache Doris 提供了相应解决方案，针对日志场景的特点，增加了倒排索引和极速全文检索能力，极致优化写入性能和存储空间，使得用户可以基于 Apache Doris 构建开放、高性能、低成本、统一的日志存储与分析平台。
@@ -208,14 +189,14 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](../../table-design/data-partition/#range-%E5%88%86%E5%8C%BA) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../../table-design/data-partition) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 (./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [数据划分](../../table-design/data-partitioning/basic-concepts)。
+更多关于分区分桶的信息，可参考 [数据划分](./table-design/data-partitioning/data-distribution)。
 
 **配置压缩参数**
 - 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
@@ -455,15 +436,13 @@ chmod +x filebeat-doris-1.0.0
 -- 创建 routine load，从 kafka log__topic_将数据导入 log_table 表  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
-PROPERTIES (  
-"max_batch_interval" = "10",  
-"max_batch_rows" = "1000000",  
-"max_batch_size" = "109715200",  
-"load_to_single_tablet" = "true",  
-"timeout" = "600",  
-"strict_mode" = "false",  
-"format" = "json"  
-)  
+PROPERTIES (
+"max_batch_interval" = "60",
+"max_batch_rows" = "20000000",
+"max_batch_size" = "1073741824", 
+"load_to_single_tablet" = "true",
+"format" = "json"
+) 
 FROM KAFKA (  
 "kafka_broker_list" = "host:port",  
 "kafka_topic" = "log__topic_",  
@@ -478,7 +457,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](../../data-operate/import/import-way/routine-load-manual)。
+更多关于 Kafka 配置和使用的说明，可参考 [Routine Load](./data-operate/import/routine-load-manual.md)。
 
 **使用自定义程序采集日志**
 

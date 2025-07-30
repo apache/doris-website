@@ -5,26 +5,15 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 SM4 is a national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce and other fields. The SM4_ENCRYPT function is used to encrypt data with SM4. The default algorithm is `SM4_128_ECB`.
+
+:::warning
+Until 3.0.2, function with two arguments will ignore session variable `block_encryption_mode` and always use `SM4_128_ECB` to do encryption.  So it's not recommended to use it.
+
+Since 3.0.3, it works as expected.
+:::
 
 ## Syntax
 
@@ -41,7 +30,6 @@ SM4_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 | `<init_vector>`     | It is the initial vector used in the algorithm. It is only effective under specific algorithms. If not specified, Doris uses the built-in vector                                                                                                                                                          |
 | `<encryption_mode>` | For encryption algorithms, optional values are given in variables                                                                                                                                                                                       |
 
-
 ## Return Value
 
 Returns the encrypted binary data
@@ -49,6 +37,7 @@ Returns the encrypted binary data
 ## Examples
 
 Using the default algorithm
+
 ```sql
 set block_encryption_mode='';
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -63,6 +52,7 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 Using SM4_128_CBC algorithm
+
 ```sql
 set block_encryption_mode="SM4_128_CBC";
 select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -77,10 +67,12 @@ select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 Use the SM4_128_CBC algorithm and set the initial vector
+
 ```sql
 set block_encryption_mode="SM4_128_CBC";
 select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```
+
 ```text
 +--------------------------------------------------------------------+
 | to_base64(sm4_encrypt('text', '***', '0123456789', 'SM4_128_CBC')) |

@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 This article introduces how to enable the use of Apache Doris based on FQDN (Fully Qualified Domain Name). FQDN is the complete domain name of a specific computer or host on the Internet.
 
 After Doris supports FQDN, communication between nodes is entirely based on FQDN. When adding various types of nodes, the FQDN should be directly specified. For example, the command to add a BE node is' ALTER SYSTEM ADD BACKEND "be_host:heartbeat_service_port",
@@ -56,14 +35,14 @@ After Doris supports FQDN, communication between nodes is entirely based on FQDN
    ```
 4. Verification: It can 'ping fe2' on FE1, and can resolve the correct IP address and ping it, indicating that the network environment is available.
 5. fe.conf settings for each FE node ` enable_ fqdn_ mode = true`.
-6. Refer to[Standard deployment](../../install/cluster-deployment/standard-deployment)
+6. Refer to[Standard deployment](../../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually)
 7. Select several machines to deploy broker on six machines as needed, and execute `ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`.
 
 ### Deployment of Doris for K8S
 
 After an unexpected restart of the Pod, K8s cannot guarantee that the Pod's IP will not change, but it can ensure that the domain name remains unchanged. Based on this feature, when Doris enables FQDN, it can ensure that the Pod can still provide services normally after an unexpected restart.
 
-Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/cluster-deployment/k8s-deploy/install-operator)
+Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
 
 ### Server change IP
 

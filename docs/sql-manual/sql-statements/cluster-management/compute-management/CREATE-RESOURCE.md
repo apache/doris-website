@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 This statement is used to create a resource. Only the root or admin user can create resources. Currently supports Spark, ODBC, S3 external resources.
@@ -134,7 +115,7 @@ Spark related parameters are as follows:
    );
    ```
 
-   If S3 resource is used for [cold hot separation](../../../../../docs/advanced/cold_hot_separation.md), we should add more required fields.
+   If S3 resource is used for [cold hot separation](../../../../table-design/tiered-storage/overview), we should add more required fields.
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES
@@ -162,6 +143,8 @@ Spark related parameters are as follows:
        - `s3.connection.maximum`: the maximum number of s3 connections, the default is 50
        - `s3.connection.request.timeout`: s3 request timeout, in milliseconds, the default is 3000
        - `s3.connection.timeout`: s3 connection timeout, in milliseconds, the default is 1000
+
+    Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 **4. Create JDBC resource**
 
@@ -207,7 +190,7 @@ Spark related parameters are as follows:
 
 **6. Create HMS resource**
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/multi-catalog/multi-catalog.md)
+   HMS resource is used to create [hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

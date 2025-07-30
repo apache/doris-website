@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文介绍 Meta Service 提供的所有 API。
 
 ## API 版本
@@ -45,7 +26,7 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 | 字段            | 描述                                                         | 备注                                                       |
 | --------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
 | instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+` | 例如 `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`                |
-| cloud_unique_id | 存算分离架构下 `be.conf fe.conf` 的一个配置，创建计算集群请求时也需提供，格式为 `1:<instance_id>:<string>`, 其中string要求匹配模式`[0-9a-zA-Z_-]+` 要求每个节点值不相同 | 示例 `1:regression_instance0:regression-cloud-unique-id-1` |
+| cloud_unique_id | 存算分离架构下 `be.conf fe.conf` 的一个配置，创建计算集群请求时也需提供，格式为 `1:<instance_id>:<string>`, 其中 string 要求匹配模式`[0-9a-zA-Z_-]+` 要求每个节点值不相同 | 示例 `1:regression_instance0:regression-cloud-unique-id-1` |
 | cluster_name    | 存算分离架构下描述一个计算集群时需要传入的字段，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 实例 `write_cluster` 或者 `read_cluster0`                  |
 
 ## 创建存储后端的 Instance
@@ -94,7 +75,7 @@ Content-Type: text/plain
 | 参数名                                   | 描述                          | 是否必须 | 备注                                             |
 | ---------------------------------------- | ----------------------------- | -------- | ------------------------------------------------ |
 | instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`            |是    | 例如 `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8` |
-| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| name                                     | Instance 别名，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
 | user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault                                    | Storage Vault 的信息          | 是       |                                                  |
 | vault.hdfs_info                          | 描述 HDFS 存储后端的信息      | 是       |                                                  |
@@ -169,7 +150,7 @@ Content-Type: text/plain
 | 参数名                     | 描述                                                         | 是否必须 | 备注                                                         |
 | -------------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
 | instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`       |是           | 例如 `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8` |
-| name       | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| name       | Instance 别名，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
 | user_id    | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault.obj_info             | S3 链接配置信息                                              | 是       |                                                              |
 | vault.obj_info.ak          | S3 的 Access Key                                             | 是       |                                                              |
@@ -281,7 +262,7 @@ Content-Type: text/plain
 | 参数名                     | 描述                                | 是否必须 | 备注                                             |
 | -------------------------- | ----------------------------------- | -------- | ------------------------------------------------ |
 | instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`                |是  | 例如 `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8` |
-| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| name                                     | Instance 别名，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
 | user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | obj_info                   | S3 链接配置信息                     | 是       |                                                  |
 | obj_info.ak                | S3 的 Access Key                    | 是       |                                                  |

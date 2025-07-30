@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # DBT Doris Adapter
 
 [DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) is a component that focuses on doing T (Transform) in ELT (extraction, loading, transformation) - the "transformation data" link
@@ -114,7 +95,7 @@ When using the `table` materialization mode, your model is rebuilt as a table at
 For the tablet materialization of dbt, dbt-doris uses the following steps to ensure the atomicity of data changes:
 1. first create a temporary table: `create table this_table_temp as {{ model sql}}`.
 2. Determine whether `this_table` does not exist, that is, it is created for the first time, execute `rename`, and change the temporary table to the final table.
-3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table,[this](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE.md) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
+3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table,[this](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
 
 ``` 
 Advantages: table query speed will be faster than view.

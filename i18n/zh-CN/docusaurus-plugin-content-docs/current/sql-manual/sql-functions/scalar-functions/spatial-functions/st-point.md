@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 通过给定的 X 坐标值，Y 坐标值返回对应的 Point。
@@ -39,14 +20,19 @@ ST_POINT( <x>, <y>)
 
 | 参数  | 说明  |
 |-----|-----|
-| `<x>` | 横坐标 |
-| `<y>` | 纵坐标 |
+| `<x>` | 点的 X 坐标值（经度），取值范围：-180.0 至 180.0（单位：度） |
+| `<y>` | 点的 Y 坐标值（纬度），取值范围：-90.0 至 90.0（单位：度） |
 
 ## 返回值
 
-给定横坐标以及纵坐标对应的位置信息
+返回 Point 类型的几何对象，表示一个二维坐标点。
+
+- 若 <x> 或 <y> 超出有效经纬度范围，函数可能返回 NULL 或生成无效点（取决于 Doris 版本）。
+- 若任一参数为 NULL，则返回 NULL。
 
 ## 举例
+
+正常经纬度点
 
 ```sql
 SELECT ST_AsText(ST_Point(24.7, 56.7));
@@ -59,3 +45,47 @@ SELECT ST_AsText(ST_Point(24.7, 56.7));
 | POINT (24.7 56.7)               |
 +---------------------------------+
 ```
+
+无效经度（超出范围）
+
+```sql
+mysql> SELECT ST_Point(200, 50);
++-------------------+
+| ST_Point(200, 50) |
++-------------------+
+| NULL              |
++-------------------+
+```
+
+无效纬度（超出范围）
+
+```sql
+mysql> SELECT ST_Point(116, -100);
++---------------------+
+| ST_Point(116, -100) |
++---------------------+
+| NULL                |
++---------------------+
+```
+
+任一参数为 NULL
+
+```sql
+mysql> SELECT ST_Point(NULL, 50);
++--------------------+
+| ST_Point(NULL, 50) |
++--------------------+
+| NULL               |
++--------------------+
+```
+
+```sql
+mysql> SELECT ST_Point(50, NULL);
++--------------------+
+| ST_Point(50, NULL) |
++--------------------+
+| NULL               |
++--------------------+
+
+```
+

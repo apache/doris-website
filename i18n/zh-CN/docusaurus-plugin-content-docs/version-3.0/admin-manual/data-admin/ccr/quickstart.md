@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 1. 打开源和目标集群的 binlog 配置
 
 在源集群和目标集群的 fe.conf 和 be.conf 中配置如下信息：
@@ -36,7 +17,7 @@ enable_feature_binlog=true
 
 2.1. 从如下链接下载最新的包
 
-`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-syncer-2.1.4-x64.tar.xz`
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.4-rc02-x64.tar.xz`
 
 2.2. 启动和停止 Syncer
 
@@ -48,7 +29,7 @@ cd bin && sh start_syncer.sh --daemon
 sh stop_syncer.sh
 ```
 
-## 第三步. 打开源集群中同步库/表的 Binlog
+## 3. 打开源集群中同步库/表的 Binlog
 
 ```shell
 -- 如果是整库同步，可以执行如下脚本，使得该库下面所有的表都要打开 binlog.enable
@@ -58,7 +39,7 @@ sh stop_syncer.sh
 ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 ```
 
-## 第四步. 向 Syncer 发起同步任务
+## 4. 向 Syncer 发起同步任务
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{

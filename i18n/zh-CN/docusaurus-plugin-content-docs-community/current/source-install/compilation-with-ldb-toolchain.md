@@ -38,7 +38,7 @@ LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于
 
 **1. 下载`ldb_toolchain_gen.sh`**
 
-可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载最新的 `ldb_toolchain_gen.sh`。该脚本用于生成 LDB Toolchain
+可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载最新的 `ldb_toolchain_gen.sh`，对于ARM架构，需要下载最新的`ldb_toolchain_gen.aarch64.sh`。该脚本用于生成 LDB Toolchain
 
 :::tip
 更多信息，可访问 <https://github.com/amosbird/ldb_toolchain_gen>
@@ -66,8 +66,9 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 - 下载 [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz)，安装到 /path/to/java
 
     > 3.0（含）之后的版本，或 master 分支，请使用 [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz)。
+    > 也可以直接通过Linux发行版的包管理工具（yum或apt等）安装Java8或Java17
 
-- 下载 [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)，安装到 /path/to/maven
+- 下载 [Apache Maven 3.9.9](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz)，安装到 /path/to/maven
 
 - 下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
 
@@ -136,7 +137,7 @@ $ BUILD_TYPE=Debug sh build.sh
 ```
 
 该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE、MS）。编译产出在 `output/` 目录下。
-MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此连接](../compute-storage-decoupled/compilation-and-deployment.md)
+MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此连接](../../../docusaurus-plugin-content-docs/current/compute-storage-decoupled/compilation-and-deployment)
 
 ## 预编译三方库
 

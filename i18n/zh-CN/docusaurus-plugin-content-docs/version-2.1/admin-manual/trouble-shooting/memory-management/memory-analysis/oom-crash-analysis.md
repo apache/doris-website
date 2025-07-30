@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 如果 BE 进程 Crash 后 `log/be.out` 中没有报错信息，执行 `dmesg -T` 如果看到下面的日志，说明触发了 OOM Killer，可见 `20240718 15:03:59` 时 pid 为 360303 的 doris_be 进程物理内存（anon-rss）约 60 GB。
 
 ```
@@ -38,7 +19,7 @@ under the License.
 
 触发 OOM Killer 时意味着进程可用内存不足，参考 [内存日志分析](./memory-log-analysis.md) 在 `be/log/be.INFO` 触发 OOM Killer 时间点自下而上找到最后一次打印的 `Memory Tracker Summary` 关键词并分析 BE 进程的主要内存位置。
 
-> `less be/log/be.INFO` 打开文件后，首先跳转到触发 OOM Killer 对应时间的日志，以上面 `dmesg -T` 的结果为例，输入 `/20240718 15:03:59` 后回车搜索对应时间，如果搜不到，可能是触发 OOM Killer 的时间有些偏差，可以搜索 `/20240718 15:03:`。 日志跳转到对应时间后，输入 `/Memory Tracker Summary` 后回车搜素关键词，默认会在日志向下搜索，如果搜索不到或时间对应不上，需要 `shift + n` 先上搜索，找到最后一次打印的 `Memory Tracker Summary` 以及同时打印的 `Process Memory Summary` 内存日志。
+> `less be/log/be.INFO` 打开文件后，首先跳转到触发 OOM Killer 对应时间的日志，以上面 `dmesg -T` 的结果为例，输入 `/20240718 15:03:59` 后回车搜索对应时间，如果搜不到，可能是触发 OOM Killer 的时间有些偏差，可以搜索 `/20240718 15:03:`。日志跳转到对应时间后，输入 `/Memory Tracker Summary` 后回车搜素关键词，默认会在日志向下搜索，如果搜索不到或时间对应不上，需要 `shift + n` 先上搜索，找到最后一次打印的 `Memory Tracker Summary` 以及同时打印的 `Process Memory Summary` 内存日志。
 
 ## 集群内存压力过大导致触发 OOM Killer
 
@@ -46,13 +27,13 @@ under the License.
 
 > Doris 2.1 之前 Memory GC 还不完善，内存持续紧张时往往更容易触发 OOM Killer。
 
-- 对 `Memory Tracker Summary` 的分析发现查询和其他任务、各个Cache、元数据等内存使用都合理。
+- 对 `Memory Tracker Summary` 的分析发现查询和其他任务、各个 Cache、元数据等内存使用都合理。
 
 - 对应时间段的 BE 进程内存监控显示长时间维持在较高的内存使用率，不存在内存泄漏的迹象
 
 - 定位 `be/log/be.INFO` 中 OOM Killer 时间点前的内存日志，自下而上搜索 `GC` 关键字，发现 BE 进程频繁执行内存 GC。
 
-此时参考 [BE 配置项](../../../admin-manual/config/be-config.md) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
+此时参考 [BE 配置项](../../../config/be-config) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
 
 此外还可以调节其他参数控制内存状态刷新和 GC，包括 `memory_gc_sleep_time_ms`，`soft_mem_limit_frac`，`memory_maintenance_sleep_time_ms`，`process_minor_gc_size`，`process_full_gc_size`，`enable_query_memory_overcommit`，`thread_wait_gc_max_milliseconds` 等。
 
@@ -66,7 +47,7 @@ under the License.
 
 ### Query Cancel 过程中卡住
 
-再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](./memory-issue-faq.md) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
+再 `be/log/be.INFO` 日志中定位到 OOM Killer 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存较大的 Query。执行 `grep {queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 已经被 Cancel，且 Query 被 Cancel 的时间点和触发 OOM Killer 的时间点相隔较久，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中对 [Query Cancel 过程中卡住] 的分析。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ### Jemalloc Metadata 内存占用大
 

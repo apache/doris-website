@@ -5,28 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
 ## Description
 
 The change statement is to complete the data insertion operation.
@@ -212,12 +190,11 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 2. Timeout time
 
+   The timeout for an INSERT operation is governed by max(insert_timeout, query_timeout). Both are environment variables, with insert_timeout defaulting to 4 hours and query_timeout defaulting to 5 minutes. If the operation exceeds the timeout, the job will be canceled. The introduction of insert_timeout is to ensure that INSERT statements have a longer default timeout, allowing import tasks to be unaffected by the shorter default timeout typically applied to regular queries.
     
-   The timeout for INSERT operations is controlled by [session variable](../../../../advanced/variables.md) `insert_timeout`. The default is 4 hours. If it times out, the job will be canceled.
-
 3. Label and atomicity
 
-   The INSERT operation also guarantees the atomicity of imports, see the [Import Transactions and Atomicity](../../../../data-operate/import/import-scenes/load-atomicity.md) documentation.
+   The INSERT operation also guarantees the atomicity of imports, see the [Import Transactions and Atomicity](../../../../data-operate/transaction.md) documentation.
 
    When using `CTE(Common Table Expressions)` as the query part in an insert operation, the `WITH LABEL` and `column` parts must be specified.
 
@@ -225,7 +202,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
    Unlike other import methods, INSERT operations cannot specify a filter threshold (`max_filter_ratio`). The default filter threshold is 1, which means that rows with errors can be ignored.
 
-   For business scenarios that require data not to be filtered, you can set [session variable](../../../../advanced/variables.md) `enable_insert_strict` to `true` to ensure that when there is data When filtered out, `INSERT` will not be executed successfully.
+   For business scenarios that require data not to be filtered, you can set [session variable](../../session/variable/SET-VARIABLE) `enable_insert_strict` to `true` to ensure that when there is data When filtered out, `INSERT` will not be executed successfully.
 
 5. Performance issues
 

@@ -1,39 +1,22 @@
 ---
 {
-    "title": "分析函数 (窗口函数）",
+    "title": "分析函数（窗口函数）",
     "language": "zh-CN"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
+具体的语法介绍可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
 
 下面是一个使用窗口函数计算每个商店的前后三天的销售移动平均值的例子：
 
 ```sql
-CREATE TABLE daily_sales
-(store_id INT, sales_date DATE, sales_amount DECIMAL(10, 2))
-PROPERTIES (
-  "replication_num" = "1"
-);
+CREATE TABLE daily_sales (
+    store_id INT,
+    sales_date DATE,
+    sales_amount DECIMAL(10, 2)
+) PROPERTIES ("replication_num" = "1");
+
 INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES (1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00), (1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00), (1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00), (2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00), (2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00), (2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
 
 SELECT
@@ -80,7 +63,7 @@ FROM
 
 使用分析函数的查询处理可以分为三个阶段。
 
-1. 执行所有的连接、WHERE、GROUP BY 和 HAVING 子句。
+1. 执行所有的JOIN、WHERE、GROUP BY 和 HAVING 子句。
 
 2. 将结果集提供给分析函数，并进行所有必要的计算。
 
@@ -92,7 +75,7 @@ FROM
 
 ### 结果集分区
 
-分区是在使用 PARTITION BY 子句定义的组之后创建的。分析函数允许用户将查询结果集划分为称为分区的行组。
+分区是在使用 PARTITION BY 子句定义的组之后创建的。
 
 :::caution 注意
 分析函数中使用的术语“分区”与表分区功能无关。在本章中，术语“分区”仅指与分析函数相关的含义。
@@ -100,23 +83,23 @@ FROM
 
 ### 窗口
 
-对于分区中的每一行，你可以定义一个滑动数据窗口。此窗口确定了用于执行当前行计算所涉及的行范围。窗口具有一个起始行和一个结束行，根据其定义，窗口可以在一端或两端进行滑动。例如，为累积和函数定义的窗口，其起始行固定在其分区的第一行，而其结束行则从起点一直滑动到分区的最后一行。相反，为移动平均值定义的窗口，其起点和终点都会进行滑动。
+对于分区中的每一行，你可以定义一个滑动数据窗口，此窗口确定了用于执行当前行计算所涉及的行范围。窗口具有一个起始行和一个结束行，根据其定义，窗口可以在一端或两端进行滑动。例如ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW，为累积和函数定义的窗口，其起始行固定在其分区的第一行，而其结束行则从起点一直滑动到分区的最后一行。相反ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING，为移动平均值定义的窗口，其起点和终点都会进行滑动。
 
 窗口的大小可以设置为与分区中的所有行一样大，也可以设置为在分区内仅包含一行的滑动窗口。需要注意的是，当窗口靠近分区的边界时，由于边界的限制，计算的范围可能会缩减行数，此时函数仅返回可用行的计算结果。
 
-在使用窗口函数时，当前行会被包含在计算之中。因此，在处理 n 个项目时，应指定为 (n-1)。例如，如果您需要计算五天的平均值，窗口应指定为“rows between 4 preceding and current row”，这也可以简写为“rows 4 preceding”。
+在使用窗口函数时，当前行会被包含在计算之中。因此，在处理 n 个项目时，应指定为 (n-1)。例如，如果您需要计算五天的平均值，窗口应指定为“ROWS BETWEEN 4 PRECEDING AND CURRENT ROW”，这也可以简写为“ROWS 4 PRECEDING”。
 
 ### 当前行
 
 使用分析函数执行的每个计算都是基于分区内的当前行。当前行作为确定窗口开始和结束的参考点，具体如图所示。
 
-例如，可以使用一个窗口来定义中心移动平均值计算，该窗口包含当前行、当前行之前的 6 行以及当前行之后的 6 行。这样就创建了一个包含 13 行的滑动窗口。
+例如: ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING，可以使用一个窗口来定义中心移动平均值计算，该窗口包含当前行、当前行之前的 6 行以及当前行之后的 6 行。这样就创建了一个包含 13 行的滑动窗口。
 
 ![当前行](/images/window-function-rows.jpg)
 
 ## 排序函数
 
-排序函数中，只有当指定的排序列是唯一值列时，查询结果才是确定的；如果排序列包含重复值，则每次的查询结果可能不同。
+排序函数中，只有当指定的排序列是唯一值列时，查询结果才是确定的；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
 
 ### NTILE 函数
 
@@ -378,7 +361,7 @@ GROUP BY
 
 ## 报告函数
 
-报告函数是指每一行的窗口范围都是整个 Partition。报告函数的主要优点是能够在单个查询块中多次传递数据，从而提高查询性能。例如，“对于每一年，找出其销售额最高的商品类别”之类的查询，使用报告函数则不需要进行 JOIN 操作。示例如下：
+报告函数是指每一行的窗口范围都是整个 partition。报告函数的主要优点是能够在单个查询块中多次传递数据，从而提高查询性能。例如，“对于每一年，找出其销售额最高的商品类别”之类的查询，使用报告函数则不需要进行 JOIN 操作。示例如下：
 
 ```sql
 select year,category,total_sum from (
@@ -427,7 +410,7 @@ where total_sum=max_sales;
 2 rows in set (0.12 sec)
 ```
 
-你可以将报告聚合与嵌套查询结合使用，以解决一些复杂的问题，比如查找重要商品子类别中销量最好的产品。以“查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出其中销量最高的五种商品。为例，查询语句如下：
+你可以将报告聚合与嵌套查询结合使用，以解决一些复杂的问题，比如查找重要商品子类别中销量最好的产品。以“查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出其中销量最高的五种商品”为例，查询语句如下：
 
 ```sql
 select i_category as categ, i_class as sub_categ, i_item_id 
@@ -449,7 +432,7 @@ where sub_cat_sales>0.2*cat_sales and rank_in_line<=5;
 
 ## LAG / LEAD 函数
 
-LAG 和 LEAD 函数适用于值之间的比较。两个函数无需进行自连接，皆可以同时访问表中的多个行，从而可以提高查询处理的速度。具体来说，LAG 函数能够提供对当**前行之前**给定偏移处的行的访问，而 LEAD 函数则提供对当**前行之后**给定偏移处的行的访问。
+LAG 和 LEAD 函数适用于值之间的比较。两个函数无需进行自连接，均可以同时访问表中的多个行，从而可以提高查询处理的速度。具体来说，LAG 函数能够提供对当**前行之前**给定偏移处的行的访问，而 LEAD 函数则提供对当**前行之后**给定偏移处的行的访问。
 
 以下是一个使用 LAG 函数的 SQL 查询示例，该查询希望选取特定年份（1999, 2000, 2001, 2002）中，每个商品类别的总销售额、前一年的总销售额以及两者之间的差异：
 
@@ -492,86 +475,56 @@ where year in (1999, 2000, 2001, 2002)
 8 rows in set (0.16 sec)
 ```
 
-## 分析函数数据的唯一排序
-
-**1. 存在返回结果不一致的问题**
-
-当使用窗口函数的 `ORDER BY` 子句未能产生数据的唯一排序时，例如当 `ORDER BY` 表达式导致重复值时，行的顺序会变得不确定。这意味着在多次执行查询时，这些行的返回顺序可能会有所不同，进而导致窗口函数返回不一致的结果。
-
-通过以下示例可以看出，该查询在多次运行时返回了不同的结果。出现不一致性的情况主要由于 `ORDER BY dateid` 没有为 `SUM` 窗口函数提供产生数据的唯一排序。
+1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ```sql
-CREATE TABLE test_window_order 
-    (item_id int,
-    date_time date,
-    sales double)
-distributed BY hash(item_id)
-properties("replication_num" = 1);
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
 
-INSERT INTO test_window_order VALUES
-(1, '2024-07-01', 100),
-(2, '2024-07-01', 100),
-(3, '2024-07-01', 140);
+INSERT INTO stock_ticker VALUES 
+    ("JDR", 12.86, "2014-10-02 00:00:00"), 
+    ("JDR", 12.89, "2014-10-03 00:00:00"), 
+    ("JDR", 12.94, "2014-10-04 00:00:00"), 
+    ("JDR", 12.55, "2014-10-05 00:00:00"), 
+    ("JDR", 14.03, "2014-10-06 00:00:00"), 
+    ("JDR", 14.75, "2014-10-07 00:00:00"), 
+    ("JDR", 13.98, "2014-10-08 00:00:00")
+;
 
-SELECT
-    item_id, date_time, sales,
-    sum(sales) OVER (ORDER BY date_time ROWS BETWEEN 
-        UNBOUNDED PRECEDING AND CURRENT ROW) sum
-FROM
-    test_window_order;
+select * from stock_ticker order by stock_symbol, closing_date
 ```
 
-由于排序列 `date_time`存在重复值，可能呈现以下两种查询结果：
+```text
+| stock_symbol | closing_price | closing_date        |
+|--------------|---------------|---------------------|
+| JDR          | 12.86         | 2014-10-02 00:00:00 |
+| JDR          | 12.89         | 2014-10-03 00:00:00 |
+| JDR          | 12.94         | 2014-10-04 00:00:00 |
+| JDR          | 12.55         | 2014-10-05 00:00:00 |
+| JDR          | 14.03         | 2014-10-06 00:00:00 |
+| JDR          | 14.75         | 2014-10-07 00:00:00 |
+| JDR          | 13.98         | 2014-10-08 00:00:00 |
+```
+
+2. 这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
 
 ```sql
-+---------+------------+-------+------+
-| item_id | date_time  | sales | sum  |
-+---------+------------+-------+------+
-|       1 | 2024-07-01 |   100 |  100 |
-|       3 | 2024-07-01 |   140 |  240 |
-|       2 | 2024-07-01 |   100 |  340 |
-+---------+------------+-------+------+
-3 rows in set (0.03 sec)
-+---------+------------+-------+------+
-| item_id | date_time  | sales | sum  |
-+---------+------------+-------+------+
-|       2 | 2024-07-01 |   100 |  100 |
-|       1 | 2024-07-01 |   100 |  200 |
-|       3 | 2024-07-01 |   140 |  340 |
-+---------+------------+-------+------+
-3 rows in set (0.02 sec)
+select stock_symbol, closing_date, closing_price,    
+avg(closing_price) over (partition by stock_symbol order by closing_date    
+rows between 1 preceding and 1 following) as moving_average    
+from stock_ticker;
 ```
 
-**2. 解决方法**
-
-为了解决这个问题，可以在 `ORDER BY` 子句中添加一个唯一值列，如 `item_id`，以确保排序的唯一性。
-
-```sql
-SELECT
-        item_id,
-        date_time,
-        sales,
-        sum(sales) OVER (
-        ORDER BY item_id,
-        date_time ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) sum
-FROM
-        test_window_order;
+```text
+| stock_symbol | closing_date        | closing_price | moving_average |
+|--------------|---------------------|---------------|----------------|
+| JDR          | 2014-10-02 00:00:00 | 12.86         | 12.87          |
+| JDR          | 2014-10-03 00:00:00 | 12.89         | 12.89          |
+| JDR          | 2014-10-04 00:00:00 | 12.94         | 12.79          |
+| JDR          | 2014-10-05 00:00:00 | 12.55         | 13.17          |
+| JDR          | 2014-10-06 00:00:00 | 14.03         | 13.77          |
+| JDR          | 2014-10-07 00:00:00 | 14.75         | 14.25          |
+| JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
-
-则查询结果固定为：
-
-```sql
-+---------+------------+-------+------+
-| item_id | date_time  | sales | sum  |
-+---------+------------+-------+------+
-|       1 | 2024-07-01 |   100 |  100 |
-|       2 | 2024-07-01 |   100 |  200 |
-|       3 | 2024-07-01 |   140 |  340 |
-+---------+------------+-------+------+
-3 rows in set (0.03 sec)
-```
-
-了解更多有关分析函数信息，可以参考 Oracle 官网文档 [SQL for Analysis and Reporting](https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/sql-analysis-reporting-data-warehouses.html#GUID-20EFBF1E-F79D-4E4A-906C-6E496EECA684)
 
 ## 附录
 
@@ -700,7 +653,7 @@ PROPERTIES (
 );
 ```
 
-在终端执行如下命令，下载数据到本地，并使用Stream Load的方式加载数据：
+在终端执行如下命令，下载数据到本地，并使用 Stream Load 的方式加载数据：
 
 ```shell
 curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -

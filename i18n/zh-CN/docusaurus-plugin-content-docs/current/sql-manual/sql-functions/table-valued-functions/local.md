@@ -5,28 +5,9 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 ## 语法
 
@@ -42,7 +23,7 @@ LOCAL(
 ## Required Parameters
 | 参数            | 说明                                                                                                                                                                                                | 备注                                              |
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径, 其中 `user_files_secure_path` 参数是 [be的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
+| `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径，其中 `user_files_secure_path` 参数是 [be 的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
 | `backend_id`    |  文件所在的 BE 节点的 ID，可以通过 `show backends` 命令得到                                                                                               | 在 2.1.1 之前的版本中，Doris 仅支持指定某个 BE 节点读取该节点上的本地数据文件 |
 | `format`        | 文件格式，必填，当前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`                                                                  |                                                 |
 
@@ -53,12 +34,12 @@ LOCAL(
 | `column_separator` | 列分隔符，选填，默认为 `\t`                                                                                                           |                                                                             |
 | `line_delimiter`   | 行分隔符，选填，默认为 `\n`                                                                                                           |                                                                             |
 | `compress_type`    | 压缩类型，选填，目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`，默认值为 `UNKNOWN`，将根据 `uri` 后缀自动推断类型                     |                                                                     |
-| `read_json_by_line`| 对于 JSON 格式的导入，选填，默认为 `true`                                                                                                | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `strip_outer_array`| 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_root`        | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_paths`       | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `num_as_string`    | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `fuzzy_parse`      | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `read_json_by_line`| 对于 JSON 格式的导入，选填，默认为 `true`                                                                                                | 参照：[Json Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array`| 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/file-format/json) |
+| `json_root`        | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/file-format/json) |
+| `json_paths`       | 对于 JSON 格式的导入，选填，默认为空                                                                                                      | 参照：[Json Load](../../../data-operate/import/file-format/json) |
+| `num_as_string`    | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse`      | 对于 JSON 格式的导入，选填，默认为 `false`                                                                                               | 参照：[Json Load](../../../data-operate/import/file-format/json) |
 | `trim_double_quotes`| 对于 CSV 格式的导入，选填，默认为 `false`，为 `true` 时表示裁剪掉 CSV 文件每个字段最外层的双引号                                                              | csv 格式                                                                      |
 | `skip_lines`       | 对于 CSV 格式的导入，选填，默认为 0，表示跳过 CSV 文件的前几行。当设置格式为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效                        | csv 格式                                                                      |
 | `path_partition_keys`| 选填，指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`，则填写 `path_partition_keys="city,date"`，将从路径中自动读取相应的列名和列值进行导入 |                                                                             |
@@ -95,14 +76,14 @@ select * from local(
 +--------------------------------------------------------+
 | c1                                                     |
 +--------------------------------------------------------+
-| start time: 2023年 08月 07日 星期一 23:20:32 CST       |
-| start time: 2023年 08月 07日 星期一 23:32:10 CST       |
-| start time: 2023年 08月 08日 星期二 00:20:50 CST       |
-| start time: 2023年 08月 08日 星期二 00:29:15 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
 +--------------------------------------------------------+
 ```
 
-读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv格式文件：
+读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv 格式文件：
 ```sql
 select * from local(
       "file_path" = "student.csv", 

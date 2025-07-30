@@ -5,94 +5,149 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
-Generate a json object containing the specified Key-Value,
-an exception error is returned when Key is NULL or the number of parameters are odd.
+
+Generate one JSON object containing specified Key-Value pairs. Returns an error when the Key value is NULL or when an odd number of parameters is passed.
 
 ## Syntax
+
 ```sql
-JSON_OBJECT (<key>, <value>[,<key>, <value>, ...])
+JSON_OBJECT (<key>, <value>[, <key>, <value>, ...])
 ```
 
 ## Parameters
+### Variable parameters:
+- `<key>`: String type
+- `<value>`: Multiple types, Doris will automatically convert non-JSON type parameters to JSON type through the [`TO_JSON`](./to-json.md) function.
 
-| Parameter      | Description                                       |
-|---------|------------------------------------------|
-| `<key>`   | The Key value in the Key-Value of the generated json object.   |
-| `<value>` | The Value value in the Key-Value of the generated json object. |                                                                                                  |
+## Notes
+- The number of parameters must be even, can be 0 parameters (returns an empty JSON object).
+- By convention, the parameter list consists of alternating keys and values.
+- Keys are forcibly converted to text according to JSON definition.
+- If the passed Key is NULL, returns an exception error.
+- Value parameters are converted in a way that can be converted to JSON, must be types supported by [`TO_JSON`](./to-json.md).
+- If the passed Value is NULL, the Value in the returned JSON object for that Key-Value pair will be JSON null value.
+- If you want to support other types as values, you can use CAST to convert them to JSON/String.
+- Doris currently does not deduplicate JSON objects, which means duplicate keys are allowed. However, duplicate keys may cause unexpected results:
+    1. Other systems may drop values corresponding to duplicate keys, or report errors.
+    2. The result returned by [`JSON_EXTRACT`](./json-extract.md) is uncertain.
 
-## Return Values
-Return a json object. Special cases are as follows:
-* If no parameters are passed, return an empty json object.
-* If the number of parameters passed is odd, return an exception error.
-* If the passed Key is NULL, return an exception error.
-* If the passed Value is NULL, the Value value of the Key-Value pair in the returned json object is NULL.
+## Return Value
+
+[`JSON`](../../../basic-element/sql-data-types/semi-structured/JSON.md): Returns a JSON object composed of the parameter list.
 
 ## Examples
+1. Case with no parameters
+    ```sql
+    select json_object();
+    ```
+    ```text
+    +---------------+
+    | json_object() |
+    +---------------+
+    | {}            |
+    +---------------+
+    ```
+2. Unsupported value types 
+    ```sql
+    select json_object('time',curtime());
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: to_json(TIMEV2(0))
+    ```
+    Can be converted to String through cast
+    ```sql
+    select json_object('time', cast(curtime() as string));
+    ```
+    ```text
+    +------------------------------------------------+
+    | json_object('time', cast(curtime() as string)) |
+    +------------------------------------------------+
+    | {"time":"17:09:42"}                            |
+    +------------------------------------------------+
+    ```
+3. Non-String type keys will be converted to String
+    ```sql
+    SELECT json_object(123, 456);
+    ```
+    ```text
+    +-----------------------+
+    | json_object(123, 456) |
+    +-----------------------+
+    | {"123":456}           |
+    +-----------------------+
+    ```
+4. Null cannot be used as key
+    ```sql
+    select json_object(null, 456);
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = json_object key can't be NULL: json_object(NULL, 456)
+    ```
+    Null can be used as value
+    ```sql
+    select json_object('key', null);
+    ```
+    ```text
+    +--------------------------+
+    | json_object('key', null) |
+    +--------------------------+
+    | {"key":null}             |
+    +--------------------------+
+    ```
 
-```sql
-select json_object();
-```
-```text
-+---------------+
-| json_object() |
-+---------------+
-| {}            |
-+---------------+
-```
-```sql
-select json_object('time',curtime());
-```
-```text
-+--------------------------------+
-| json_object('time', curtime()) |
-+--------------------------------+
-| {"time": "10:49:18"}           |
-+--------------------------------+
-```
-```sql
-SELECT json_object('id', 87, 'name', 'carrot');
-```
-```text
-+-----------------------------------------+
-| json_object('id', 87, 'name', 'carrot') |
-+-----------------------------------------+
-| {"id": 87, "name": "carrot"}            |
-+-----------------------------------------+
-```
-```sql
-select json_object('username',null);
-```
-```text
-+---------------------------------+
-| json_object('username', 'NULL') |
-+---------------------------------+
-| {"username": NULL}              |
-+---------------------------------+
-```
-```sql
-select json_object(null,null);
-```
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = json_object key can't be NULL: json_object(NULL)
-```
+5. JSON strings can be parsed into JSON objects via [`JSON_PARSE`](./json-parse.md) before being passed to `JSON_OBJECT`
+    ```sql
+    select json_object(123, json_parse('{"key": "value"}'));
+    ```
+    ```text
+    +--------------------------------------------------+
+    | json_object(123, json_parse('{"key": "value"}')) |
+    +--------------------------------------------------+
+    | {"123":{"key":"value"}}                          |
+    +--------------------------------------------------+
+    ```
+    Otherwise it will be treated as a string
+    ```sql
+    select json_object(123,'{"key": "value"}');
+    ```
+    ```text
+    +-------------------------------------+
+    | json_object(123,'{"key": "value"}') |
+    +-------------------------------------+
+    | {"123":"{\"key\": \"value\"}"}      |
+    +-------------------------------------+
+    ```
+6. Types not supported by [`TO_JSON`](./to-json.md)
+    ```sql
+    select json_object('key', map('abc', 'efg'));
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: to_json(MAP<VARCHAR(3),VARCHAR(3)>)
+    ```
 
+    Can be converted to JSON via CAST statement before passing in:
+    ```sql
+    select json_object('key', cast(map('abc', 'efg') as json));
+    ```
+    ```text
+    +-----------------------------------------------------+
+    | json_object('key', cast(map('abc', 'efg') as json)) |
+    +-----------------------------------------------------+
+    | {"key":{"abc":"efg"}}                               |
+    +-----------------------------------------------------+
+    ```
+7. Case with duplicate keys
+    ```sql
+    select
+        json_object('key', 123, 'key', 4556) v1
+        , jsonb_extract(json_object('key', 123, 'key', 4556), '$.key') v2
+        , jsonb_extract(json_object('key', 123, 'key', 4556), '$.*') v3;
+    ```
+    ```text
+    +------------------------+------+------------+
+    | v1                     | v2   | v3         |
+    +------------------------+------+------------+
+    | {"key":123,"key":4556} | 123  | [123,4556] |
+    +------------------------+------+------------+
+    ```

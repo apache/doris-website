@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 这篇文档主要介绍 Doris 主键模型基于导入的更新。
 
 ## 整行更新
@@ -39,7 +20,7 @@ under the License.
 1. 2.0 版本仅在 Unique Key 的 Merge-on-Write 实现中支持部分列更新能力。
 2. 从 2.0.2 版本开始，支持使用 INSERT INTO 进行部分列更新。
 3. 不支持在有同步物化视图的表上进行部分列更新。
-
+4. 不支持在进行 Schema Change 的表上进行部分列更新。
 :::
 
 ### 适用场景
@@ -138,14 +119,14 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1, '待发货');
 
 目前，同一批次数据写入任务（无论是导入任务还是 `INSERT INTO`）的所有行只能更新相同的列。如果需要更新不同列的数据，则需要分不同批次进行写入。
 
-## 灵活部分列更新
+## 灵活部分列更新（实验性功能）
 
-在 x.x.x 版本之前，doris 支持的部分列更新功能限制了一次导入中每一行必须更新相同的列，从 x.x.x 版本开始，doris 支持一种更加灵活的更新方式，它使得一次导入中的每一行可以更新不同的列。
+此前，doris 支持的部分列更新功能限制了一次导入中每一行必须更新相同的列。现在，doris 支持一种更加灵活的更新方式，它使得一次导入中的每一行可以更新不同的列（仅 master 分支支持）。
 
-:::caution 注意:
+:::caution 注意：
 
-1. 灵活列更新这一功能从 x.x.x 版本开始支持
-2. 目前只有 stream load 这一种导入方式以及使用 stream load 作为其导入方式的工具(如 doris-flink-connector)支持灵活列更新功能
+1. 灵活列更新这一功能还在内测中
+2. 目前只有 stream load 这一种导入方式以及使用 stream load 作为其导入方式的工具 (如 doris-flink-connector) 支持灵活列更新功能
 3. 在使用灵活列更新时导入文件必须为 json 格式的数据
 :::
 
@@ -267,7 +248,7 @@ MySQL root@127.1:d1> select * from t1;
 
 1. 和之前的部分列更新相同，灵活列更新要求导入的每一行数据需要包括所有的 Key 列，不满足这一要求的行数据将被过滤掉，同时计入 `filter rows` 的计数中，如果 `filtered rows` 的数量超过了本次导入 `max_filter_ratio` 所能容忍的上限，则整个导入将会失败。同时，被过滤的数据会在 error log 留下一条日志。
 
-2. 灵活列更新导入中每一个 json 对象中的键值对只有当它的 Key 和目标表中某一列的列名一致时才是有效的，不满足这一要求的键值对将被忽略 。同时，Key 为 `__DORIS_VERSION_COL__`/`__DORIS_ROW_STORE_COL__`/`__DORIS_SKIP_BITMAP_COL__` 的键值对也将被忽略。
+2. 灵活列更新导入中每一个 json 对象中的键值对只有当它的 Key 和目标表中某一列的列名一致时才是有效的，不满足这一要求的键值对将被忽略。同时，Key 为 `__DORIS_VERSION_COL__`/`__DORIS_ROW_STORE_COL__`/`__DORIS_SKIP_BITMAP_COL__` 的键值对也将被忽略。
 
 3. 当目标表的表属性中设置了 `function_column.sequence_type` 这一属性时，灵活列更新的导入可以通过在 json 对象中包括 Key 为 `__DORIS_SEQUENCE_COL__` 的键值对来指定目标表中 `__DORIS_SEQUENCE_COL__` 列的值。对于不指定 `__DORIS_SEQUENCE_COL__` 列的值的行，如果这一行的 Key 在原表中存在，则这一行 `__DORIS_SEQUENCE_COL__` 列的值将被填充为旧行中对应的值，否则该列的值将被填充为 `null` 值
 

@@ -5,36 +5,15 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-## Request
+## 请求路径
 
 `GET /api/tablets_distribution?group_by={enum}&partition_id={int}`
 
-## Description
+## 描述
 
 获取 BE 节点上每一个 partition 下的 tablet 在不同磁盘上的分布情况
 
-## Query parameters
+## 请求参数
 
 * `group_by`
     分组，当前只支持`partition`
@@ -42,11 +21,11 @@ under the License.
 * `partition_id`
     指定 partition 的 id，选填，默认返回所有 partition。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
     ```json
     {
@@ -82,7 +61,7 @@ under the License.
         count: ***
     }
     ```
-## Examples
+## 示例
 
 
     ```shell

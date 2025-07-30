@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Overview
 
 The [Sync-Materialized View](../../materialized-view/sync-materialized-view.md) is a special kind of table that pre-computes and stores data according to a predefined SELECT statement. Its main purpose is to meet users' needs for analyzing raw detailed data from any dimension and also enable quick analysis and queries on fixed dimensions.
@@ -31,14 +12,14 @@ The [Sync-Materialized View](../../materialized-view/sync-materialized-view.md) 
 The applicable scenarios for synchronous materialized views are as follows:
 
 1. The analysis requirements cover both detailed data queries and fixed-dimension queries.
-2. The queries only involve a small number of columns or rows in the table.
-3. The queries include time-consuming processing operations, such as long-duration aggregation operations, etc.
+2. The queries involve *only* a small number of columns or rows in the table.
+3. The queries include time-consuming processing operations, such as long-duration aggregation operations.
 4. The queries need to match different prefix indexes.
 
 For queries that frequently and repeatedly use the results of the same subqueries, synchronous materialized views can significantly improve performance. Doris will automatically maintain the data of materialized views to ensure data consistency between the base table and the materialized view table, without requiring additional manual maintenance costs. During a query, the system will automatically match the optimal materialized view and directly read data from it.
 
 :::tip Precautions
-- In Doris 2.0 and subsequent versions, materialized views have some enhanced functions. It is recommended that users confirm in the test environment whether the expected queries can hit the materialized views they want to create before using materialized views in the formal production environment.
+- In Doris 2.0 and *later* versions, materialized views have some enhanced functions. It is recommended that users confirm in the test environment whether the expected queries can hit the materialized views they want to create before using materialized views in the formal production environment.
 - It is not recommended to create multiple materialized views with similar forms on the same table, as this may lead to conflicts among multiple materialized views and thus cause query hit failures.
   :::
 

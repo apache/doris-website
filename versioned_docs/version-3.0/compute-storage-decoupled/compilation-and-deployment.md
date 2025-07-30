@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 1. Overview
 
 This document details the compilation and deployment process of Doris in a decoupled storage-compute model, highlighting the differences from the integrated storage-compute model, especially the compilation, configuration, and management of the newly added Meta Service (MS) module.
@@ -95,8 +76,29 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
+```text
+LIBHDFS3_CONF=
+starts doris_cloud with args: --meta-service
+wait and check doris_cloud start successfully
+successfully started brpc listening on port=5000 time_elapsed_ms=11
+doris_cloud start successfully
+```
+
 The startup script returns a value of 0 to indicate that the startup was successful; otherwise, the startup fails.
-Upon successful startup, the last line of the standard output text will be "doris_cloud start successfully."
+
+:::info
+In 3.0.4, the startup script will output more information:
+```text
+2024-12-26 15:31:53 start with args: --meta-service
+wait and check MetaService and Recycler start successfully
+process working directory: "/mnt/disk1/doris/ms"
+pid=1666015 written to file=./bin/doris_cloud.pid
+version:{doris-3.0.4-release} code_version:{commit=fd44740fadabebfedb5da201d7ce427a5dd47c44 time=2025-01-16 18:53:00 +0800} build_info: ...
+
+MetaService has been started successfully
+successfully started service listening on port=5000 time_elapsed_ms=19
+```
+:::
 
 *Stop Command*
 

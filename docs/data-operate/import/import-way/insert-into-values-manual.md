@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The INSERT INTO VALUES statement supports importing values from SQL into a Doris table. INSERT INTO VALUES is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO VALUES ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
 
 ## Applicable scenarios
@@ -182,7 +163,7 @@ Query OK, 4 rows affected, 1 warning (0.04 sec)
 
 `Query OK` indicates successful execution. `4 rows affected` indicates that a total of 4 rows of data have been imported. `1 warnings` indicates the number of rows that were filtered out. 
 
-You can use the [SHOW LOAD](../../../sql-statements/data-modification/load-and-export/SHOW-LOAD.md) statement to view the filtered rows.
+You can use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) statement to view the filtered rows.
 
 The result of this statement will include a URL that can be used to query the error data. For more details, refer to the "View error rows" section below.
 
@@ -288,4 +269,4 @@ You can control whether INSERT INTO ignores error rows by configuring the enviro
 
 ## More help
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-statements/data-modification/DML/INSERT.md) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.

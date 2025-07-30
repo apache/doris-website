@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 构建和刷新
 
 ### Q1：物化视图是如何判断需要刷新哪些分区的？
@@ -38,7 +19,7 @@ Doris 内部会计算物化视图和基表的分区对应关系，并且记录�
 
 ### Q2：物化视图占用资源过多，影响其他业务怎么办？
 
-可以通过物化视图的属性指定 [workload_group](../../../admin-manual/resource-admin/workload-group) 来控制物化视图刷新任务的资源。
+可以通过物化视图的属性指定 [workload_group](../../../admin-manual/workload-management/workload-group) 来控制物化视图刷新任务的资源。
 
 使用时需要注意，如果内存设置的太小，单个分区刷新又需要的内存较多，任务会刷新失败。需要根据业务情况进行权衡。
 
@@ -88,11 +69,11 @@ Unable to find a suitable base table for partitioning
 
 出现该报错通常指的是物化视图的 SQL 定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报错。
 
-- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod)
+- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
 
 - 最新的代码可以提示分区构建失败的原因，原因摘要和说明见附录 2
 
-**举例如下：**
+**例如：**
 
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -108,7 +89,7 @@ CREATE TABLE IF NOT EXISTS orders (
 ) DUPLICATE KEY(o_orderkey, o_custkey) PARTITION BY RANGE(o_orderdate) (
   FROM 
     ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
-) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
 
 
 CREATE TABLE IF NOT EXISTS lineitem (
@@ -131,7 +112,7 @@ CREATE TABLE IF NOT EXISTS lineitem (
 ) DUPLICATE KEY(
   l_orderkey, l_partkey, l_suppkey, 
   l_linenumber
-) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
 ```
 
 物化视图定义如下，可以进行分区增量更新。如果选择`orders.o_orderdate`作为物化视图的分区字段，那么它是可以支持增量分区更新的。相反，如果使用了`lineitem.l_shipdate`，则不能实现增量更新。
@@ -143,7 +124,12 @@ CREATE TABLE IF NOT EXISTS lineitem (
 2. `lineitem.l_shipdate`是`outer join`操作中产生`null`值那一端的列。
 
 ```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL partition by(o_orderdate) DISTRIBUTED BY RANDOM BUCKETS 2 PROPERTIES ('replication_num' = '1') AS 
+CREATE MATERIALIZED VIEW mv_1 
+       BUILD IMMEDIATE 
+       REFRESH AUTO ON MANUAL 
+       partition by(o_orderdate) 
+       DISTRIBUTED BY RANDOM BUCKETS 2
+       AS 
 SELECT 
   l_linestatus, 
   sum(
@@ -182,6 +168,14 @@ BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 
 2. 可能是构建物化的语句使用的 **关键词写错**或者物化定义 **SQL 语法有问题**，可以检查下物化定义 SQL 和创建物化语句是否正确。
 
+### Q14：物化视图刷新成功后，还是没有数据
+
+物化视图判断数据是否需要更新依赖于能够获取到基表或基表分区的版本信息。
+
+遇到目前不支持获取版本信息的数据湖， 例如jdbc catalog， 那么刷新的时候会认为物化视图是不需要更新的，因此创建或者刷新物化视图的时候应该指定 complete 而不是 auto
+
+物化视图支持数据湖的进度参考[数据湖支持情况](./overview.md)
+
 ## 查询和透明改写
 
 ### Q1：如何确认是否命中，如果不命中如何查看原因？
@@ -193,7 +187,6 @@ CREATE MATERIALIZED VIEW mv11
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 partition by(l_shipdate)
 DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
-PROPERTIES ('replication_num' = '1') 
 AS
 SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
 FROM lineitem  
@@ -221,7 +214,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 - 如果 explain 最后没有出现 `MaterializedView` 等信息，那么意味着此物化视图状态不可用，因此不能参与透明改写。（关于什么情况下会导致物化视图状态不可用，可详细参考使用与实践 - 查看物化视图状态）。
 
-举例如下：
+例如：
 
 ```sql
 | MaterializedView                                                                   |
@@ -362,19 +355,7 @@ Explain 显示的信息如下：
 
 ## 附录
 
-### 1 物化视图相关开关介绍
-
-| 开关                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SET enable_nereids_planner = true;                           | 异步物化视图只有在新优化器下才支持，所以物化视图透明改写没有生效时，需要开启新优化器 |
-| SET enable_materialized_view_rewrite = true;                 | 开启或者关闭查询透明改写，默认开启                           |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许，如果物化视图的定义 SQL 中包含外表，也想参与到透明改写，可以打开此开关。 |
-| SET materialized_view_rewrite_success_candidate_num = 3;     | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3。如果发现透明改写的性能很慢，可以考虑把这个值调小。 |
-| SET enable_materialized_view_union_rewrite = true;           | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许。如果发现命中物化视图时数据错误，可以把这个开关关闭。 |
-| SET enable_materialized_view_nest_rewrite = true;            | 是否允许嵌套改写，默认不允许。如果查询 SQL 很复杂，需要构建嵌套物化视图才可以命中，那么需要打开此开关。 |
-| SET materialized_view_relation_mapping_max_count = 8;        | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8。如果发现透明改写时间很长，可以把这个值调低 |
-
-### 2 透明改写失败摘要信息和说明
+### 1 透明改写失败摘要信息和说明
 
 | 摘要信息                                                     | 说明                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -405,7 +386,7 @@ Explain 显示的信息如下：
 | Both query and view have group sets, or query doesn't have but view has, not supported | 查询和物化视图都有 group sets 查询没有 group sets，但是物化视图有，这种不支持透明改写 |
 |                                                              |                                                              |
 
-### 3 异步物化视图分区构建物化视图失败原因和说明
+### 2 异步物化视图分区构建物化视图失败原因和说明
 
 分区物化视图的刷新原理是分区增量更新：
 

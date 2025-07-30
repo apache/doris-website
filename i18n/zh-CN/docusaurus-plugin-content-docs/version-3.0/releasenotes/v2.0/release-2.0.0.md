@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，Apache Doris 2.0.0 Release 版本已于 2023 年 8 月 11 日正式发布，有超过 275 位贡献者为 Apache Doris 提交了超过 4100 个优化与修复。
 
 在 2.0.0 版本中，Apache Doris 在标准 Benchmark 数据集上盲测查询性能得到超过 10 倍的提升、在日志分析和湖仓一体场景能力得到全面加强、数据更新效率和写入效率都更加高效稳定、支持了更加完善的多租户和资源隔离机制、在资源弹性与存算分离方向踏上了新的台阶、增加了一系列面向企业用户的易用性特性。在经过近半年的开发、测试与稳定性调优后，这一版本已经正式稳定可用，欢迎大家下载使用！
@@ -44,7 +24,7 @@ under the License.
 
 以 TPC-H 为例，全新优化器在未进行任何手工调优和 SQL 改写的情况下，绝大多数 SQL 仍领先于旧优化器手工调优后的性能表现！而在超过百家 2.0 版本提前体验用户的真实业务场景中，绝大多数原始 SQL 执行效率得以极大提升！
 
-参考文档：[更智能的全新查询优化器](../../query/nereids/nereids-new)
+参考文档：[更智能的全新查询优化器](../../query-acceleration/optimization-technology-principle/query-optimizer.md)
 
 如何开启：`SET enable_nereids_planner=true` 在 Apache Doris 2.0-beta 版本中全新查询优化器已经默认开启
 
@@ -70,7 +50,7 @@ under the License.
 
 在实现极速分析体验的同时，为了保证多个混合分析负载的执行效率以及查询的稳定性，在 2.0.0 版本中我们引入了 Pipeline 执行模型作为查询执行引擎。在 Pipeline 执行引擎中，查询的执行是由数据来驱动控制流变化的，各个查询执行过程之中的阻塞算子被拆分成不同 Pipeline，各个 Pipeline 能否获取执行线程调度执行取决于前置数据是否就绪，实现了阻塞操作的异步化、可以更加灵活地管理系统资源，同时减少了线程频繁创建和销毁带来的开销，并提升了 Apache Doris 对于 CPU 的利用效率。因此 Apache Doris 在混合负载场景中的查询性能和稳定性都得到了全面提升。
 
-参考文档：[查询执行引擎](../../query/pipeline-execution-engine)
+参考文档：[查询执行引擎](../../query-acceleration/optimization-technology-principle/pipeline-execution-engine)
 
 如何开启：` Set enable_pipeline_engine = true  `
 - 该功能在 Apache Doris 2.0 版本中将默认开启，BE 在进行查询执行时默认将 SQL 的执行模型转变 Pipeline 的执行方式。

@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-主要讲述如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
+主要介绍如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。
 
 ## 适用场景
 
@@ -44,9 +25,9 @@ Update 语法在 Doris 中是一个同步语法，即 Update 语句执行成功�
 
 Update 语句的性能和待更新的行数以及查询条件的检索效率密切相关。
 
-- 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。 对于小范围更新，Doris支持的频率与`INSERT INTO`语句类似， 对于大范围更新，由于单个update执行的时间较长， 仅适用于低频调用。
+- 待更新的行数：待更新的行数越多，Update 语句的速度就会越慢。对于小范围更新，Doris 支持的频率与`INSERT INTO`语句类似，对于大范围更新，由于单个 update 执行的时间较长，仅适用于低频调用。
 
-- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要扫全表，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
+- 查询条件的检索效率：Update 实现原理是先将满足查询条件的行做读取处理，所以如果查询条件的检索效率高，则 Update 的速度也会快。条件列最好能命中索引或者分区分桶裁剪，这样 Doris 就不需要全表扫描，可以快速定位到需要更新的行，从而提升更新效率。强烈不推荐条件列中包含 value 列。
 
 ## 使用示例
 
@@ -61,16 +42,16 @@ CREATE TABLE transaction_details (
     transaction_amount DECIMAL(18, 2),     -- 交易金额
     transaction_device STRING,             -- 交易设备
     transaction_region STRING,             -- 交易地区
-    average_daily_amount DECIMAL(18, 2),   -- 最近3个月日均交易金额
-    recent_transaction_count INT,          -- 最近7天交易次数
+    average_daily_amount DECIMAL(18, 2),   -- 最近 3 个月日均交易金额
+    recent_transaction_count INT,          -- 最近 7 天交易次数
     has_dispute_history BOOLEAN,           -- 是否有拒付记录
     risk_level STRING                      -- 风险等级
 )
 UNIQUE KEY(transaction_id)
 DISTRIBUTED BY HASH(transaction_id) BUCKETS 16
 PROPERTIES (
-    "replication_num" = "3",               -- 副本数量，默认3
-    "enable_unique_key_merge_on_write" = "true"  -- 启用MOW模式，支持合并更新
+    "replication_num" = "3",               -- 副本数量，默认 3
+    "enable_unique_key_merge_on_write" = "true"  -- 启用 MOW 模式，支持合并更新
 );
 ```
 
@@ -108,7 +89,7 @@ SET risk_level = CASE
     -- 突然异常交易金额
     WHEN transaction_amount > 5 * average_daily_amount THEN 'high'
 
-    -- 最近7天交易频率很高
+    -- 最近 7 天交易频率很高
     WHEN recent_transaction_count > 50 THEN 'high'
     WHEN recent_transaction_count BETWEEN 20 AND 50 THEN 'medium'
 

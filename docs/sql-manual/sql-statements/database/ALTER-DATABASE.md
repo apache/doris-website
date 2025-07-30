@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
 
 This statement is used to set the properties of a specified db, change the db name, and set various quotas for the db.
@@ -94,3 +74,21 @@ After renaming the database, use the REVOKE and GRANT commands to modify the cor
   ```sql
     ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
   ```
+
+- Modify the default Storage Vault of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "hdfs_demo_vault");
+  ```
+
+- Cancel the default Storage Vault of the table under db (this operation is only effective for newly created tables and will not modify existing tables under db)
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "");
+  ```
+
+:::info Note
+
+Setting db's `storage_vault_name` is supported since version 3.0.5
+
+:::

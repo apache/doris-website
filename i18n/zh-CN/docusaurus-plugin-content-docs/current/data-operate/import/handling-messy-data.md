@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在导入过程中，源数据列与目标列的数据类型可能存在不一致的情况。导入过程会对这些类型不一致的数据进行转换，但在转换过程中可能会出现字段类型不匹配、字段超长、精度不匹配等问题，从而导致转换失败。
 
 为了处理这些异常情况，Doris 提供了两个重要的控制参数：
@@ -204,7 +185,7 @@ INSERT INTO test_table ...;
 
 ### 过滤比例计算方法
 
-- Filtered Rows 因数据质量不合格而被过滤掉的数据。数据质量不合格包括类型错误、精度错误、字符串长度超长、文件列数不匹配等数据格式问题，以及因没有对应的分区而被过滤掉的数据行。
+- Filtered Rows 因数据质量不合格而被过滤掉的行。数据质量不合格包括类型错误、精度错误、字符串长度超长、文件列数不匹配等数据格式问题，以及因没有对应的分区而被过滤掉的数据行。
 
 - Unselected Rows 这部分为因 [前置过滤](./load-data-convert.md#前置过滤) 或 [后置过滤](./load-data-convert.md#后置过滤) 条件而被过滤掉的数据行。
 

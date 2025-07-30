@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model. You can configure one or more Storage Vaults to store different tables in different Storage Vaults.
 
 ## Create an Storage Vault
@@ -75,6 +56,9 @@ PROPERTIES (
 
 More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md).
 
+**Note**
+The provided object storage path must have head/get/list/put/multipartUpload/delete access permissions.
+
 ## View Storage Vaults
 
 **Syntax**
@@ -116,6 +100,29 @@ PROPERTIES (
 "storage_vault_name" = "hdfs_demo_vault"
 );
 ```
+
+## Specify Storage Vault When Creating a Database
+
+When creating a database, specify `storage_vault_name` in `PROPERTIES`. If `storage_vault_name` is not specified when creating a table under the database, the table will use the Storage Vault corresponding to the database's `vault name` for data storage. Users can change the `storage_vault_name` of the database via [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md). However, this action will not affect the `storage_vault` of tables that have already been created under the database, and only newly created tables will use the updated `storage_vault`.
+
+**Example**
+
+```sql
+CREATE DATABASE IF NOT EXIST `db_test`
+PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+);
+```
+
+:::info Note
+
+This feature is supported since version 3.0.5.
+
+The priority order for using Storage Vault when creating a table is: Table -> Database -> Default Storage Vault. If Storage Vault is not specified in the table's PROPERTY, it will check if Storage Vault is specified in the database; if the database also does not specify it, it will further check if there is a default Storage Vault.
+
+If the `VAULT_NAME` attribute of Storage Vault is modified, it may cause the Storage Vault set in the database to become invalid, resulting in an error. Users will need to configure a valid `storage_vault_name` for the database based on the actual situation.
+
+:::
 
 ## Alter Storage Vault
 
@@ -201,3 +208,23 @@ Only Admin users have the authority to execute the `REVOKE` statement, which is 
 ```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
+
+## FAQ
+
+#### Q1. 如何查询特定storage vault被那些表引用？
+
+1. Use `show storage vault` to find the ​​storage vault id​​ corresponding to the storage vault name.
+
+2. Execute the following SQL statement:
+
+```sql
+mysql> select * from information_schema.table_properties where PROPERTY_NAME = "storage_vault_id" and PROPERTY_VALUE=3;
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| TABLE_CATALOG | TABLE_SCHEMA                    | TABLE_NAME                          | PROPERTY_NAME    | PROPERTY_VALUE |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| internal      | regression_test_vault_p0_create | s3_92ba28c209154d968e680e58dd54d0cc | storage_vault_id | 3              |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+1 row in set (0.04 sec)
+```
+
+Replace `PROPERTY_VALUE=3` with the corresponding ​​storage vault id​​ value.

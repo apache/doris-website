@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 返回 struct 数据列内的某一 field
@@ -36,9 +19,9 @@ STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<struct>` | 输入的struct列，如果是null，则返回null |
-| `<filed_location>` | field的位置，起始位置从1开始，仅支持常量 |
-| `<filed_name>` | field的名字，仅支持常量 |
+| `<struct>` | 输入的 struct 列，如果是 null，则返回 null |
+| `<filed_location>` | field 的位置，起始位置从 1 开始，仅支持常量 |
+| `<filed_name>` | field 的名字，仅支持常量 |
 
 ## 返回值
 

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements. See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership. The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 In a decoupled architecture, data is stored in remote storage. The Doris database accelerates data access by utilizing a cache on local disks and employs an advanced multi-queue LRU (Least Recently Used) strategy to efficiently manage cache space. This strategy particularly optimizes the access paths for indexes and metadata, aiming to maximize the caching of frequently accessed user data. For multi-compute group (Compute Group) scenarios, Doris also provides a cache warming feature to quickly load specific data (such as tables or partitions) into the cache when a new compute group is established, thereby enhancing query performance.
 
 ## Multi-Queue LRU
@@ -80,7 +61,108 @@ When scaling Compute Groups, to avoid cache fluctuations, Doris will first remap
 
 ### Hotspot Information
 
-Doris collects cache hotspot information from each compute group every 10 minutes into an internal system table. You can view hotspot information using the `SHOW CACHE HOTSPOT '/'` command.
+Doris collects cache hotspot information for each compute group every 10 minutes and stores it in an internal system table. You can view this hotspot information using query statements. Users can better plan their cache usage based on this information.
+
+:::info Note
+Before version 3.0.4, the `SHOW CACHE HOTSPOT` statement could be used to query cache hotspot information statistics. Starting from version 3.0.4, the `SHOW CACHE HOTSPOT` statement is no longer supported for querying cache hotspot information statistics. Please directly query the system table `__internal_schema.cloud_cache_hotspot`.
+:::
+
+Users typically focus on cache usage information at two levels: compute groups and database tables. The following provides some commonly used query statements and examples.
+
+#### Viewing the Most Frequently Accessed Tables Across All Compute Groups
+
+```sql
+-- Equivalent to SHOW CACHE HOTSPOT "/" before version 3.0.4
+WITH t1 AS (
+  SELECT
+    cluster_id,
+    cluster_name,
+    table_id,
+    table_name,
+    insert_day,
+    SUM(query_per_day) AS query_per_day_total,
+    SUM(query_per_week) AS query_per_week_total
+  FROM __internal_schema.cloud_cache_hotspot
+  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+  cluster_id AS ComputeGroupId,
+  cluster_name AS ComputeGroupName,
+  table_id AS TableId,
+  table_name AS TableName
+FROM (
+  SELECT
+    ROW_NUMBER() OVER (
+      PARTITION BY cluster_id
+      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+    ) AS dr2,
+    *
+  FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+#### Viewing the Most Frequently Accessed Tables Under a Specific Compute Group
+
+Viewing the most frequently accessed tables under compute group `compute_group_name0`.
+
+Note: Replace the condition `cluster_name = "compute_group_name0"` with the actual compute group name.
+
+```sql
+-- Equivalent to SHOW CACHE HOTSPOT '/compute_group_name0' before version 3.0.4
+WITH t1 AS (
+  SELECT
+    cluster_id,
+    cluster_name,
+    table_id,
+    table_name,
+    insert_day,
+    SUM(query_per_day) AS query_per_day_total,
+    SUM(query_per_week) AS query_per_week_total
+  FROM __internal_schema.cloud_cache_hotspot
+  WHERE cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g., "default_compute_group"
+  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+  cluster_id AS ComputeGroupId,
+  cluster_name AS ComputeGroupName,
+  table_id AS TableId,
+  table_name AS TableName
+FROM (
+  SELECT
+    ROW_NUMBER() OVER (
+      PARTITION BY cluster_id
+      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+    ) AS dr2,
+    *
+  FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+#### Viewing the Most Frequently Accessed Partitions for a Specific Compute Group and Table
+
+Viewing the most frequently accessed partitions for table `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` under compute group `compute_group_name0`.
+
+Note: Replace the conditions `cluster_name = "compute_group_name0"` and `table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer"` with the actual compute group name and database table name.
+
+```sql
+-- Equivalent to SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer' before version 3.0.4
+SELECT
+  partition_id AS PartitionId,
+  partition_name AS PartitionName
+FROM __internal_schema.cloud_cache_hotspot
+WHERE
+  cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g., "default_compute_group"
+  AND table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer" -- Replace with the actual database table name, e.g., "db1.t1"
+GROUP BY
+  cluster_id,
+  cluster_name,
+  table_id,
+  table_name,
+  partition_id,
+  partition_name;
+```
 
 ### Cache Space and Hit Rate
 
@@ -127,7 +209,7 @@ Cache-related metrics in the SQL profile are found under SegmentIterator, includ
 | RemoteIOUseTimer                 | Time taken to read from remote storage       |
 | WriteCacheIOUseTimer             | Time taken to write to the File Cache        |
 
-You can view query performance analysis through [Query Performance Analysis](../query-acceleration/tuning/query-profile).
+You can view query performance analysis through [Query Performance Analysis](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
 ## Usage
 
@@ -170,9 +252,7 @@ If no TTL is set when creating the table, users can also modify the table's TTL 
 
 ### Cache Warming
 
-Currently, three cache warming modes are supported:
-
-- Warm the cache data of `compute_group_name0` to `compute_group_name1`.
+- Inter-Compute Group Warming. Warm the cache data of `compute_group_name0` to `compute_group_name1`.
 
 When executing the following SQL, the `compute_group_name1` compute group will obtain the access information of the `compute_group_name0` compute group to restore the cache as closely as possible to that of `compute_group_name0`.
 
@@ -180,31 +260,13 @@ When executing the following SQL, the `compute_group_name1` compute group will o
 WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
 ```
 
-View the most frequently accessed tables in all current compute groups.
-
-```sql
-SHOW CACHE HOTSPOT '/';
-```
-
-View the most frequently accessed partitions among all tables under `compute_group_name0`.
-
-```sql
-SHOW CACHE HOTSPOT '/compute_group_name0';
-```
-
-View the access information of the table `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` under `compute_group_name0`.
-
-```sql
-SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
-```
-
-- Warm the data of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that table from remote storage to local.
+- Table Data Warming. Warm the data of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that table from remote storage to local.
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
 ```
 
-- Warm the data of partition `p1` of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that partition from remote storage to local.
+- Partition Data Warming. Warm the data of partition `p1` of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that partition from remote storage to local.
 
 ```sql
 WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1

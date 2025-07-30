@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
 
 该语句用于将之前通过 BACKUP 命令备份的数据，恢复到指定数据库下。该命令为异步操作。提交成功后，需通过 [SHOW RESTORE](./SHOW-RESTORE.md)命令查看进度。
@@ -65,6 +45,12 @@ FROM `<repository_name>`
 - "reserve_dynamic_partition_enable" = "true"：默认为 false。当该属性为 true 时，恢复的表会保留该表备份之前的'dynamic_partition_enable'属性值。该值不为 true 时，则恢复出来的表的'dynamic_partition_enable'属性值会设置为 false。
 - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
 - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。
+- "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。
+- "clean_tables": 表示是否清理不属于恢复目标的表。例如，如果恢复之前的目标数据库有备份中不存在的表，指定 `clean_tables` 就可以在恢复期间删除这些额外的表并将其移入回收站。该功能自 Apache Doris  2.1.6 版本起支持。
+- "clean_partitions"：表示是否清理不属于恢复目标的分区。例如，如果恢复之前的目标表有备份中不存在的分区，指定 `clean_partitions` 就可以在恢复期间删除这些额外的分区并将其移入回收站。该功能自 Apache Doris  2.1.6 版本起支持。
+- "atomic_restore"：先将数据加载到临时表中，再以原子方式替换原表，确保恢复过程中不影响目标表的读写。
+- "force_replace"：当表存在且架构与备份表不同时，强制替换。
+  - 注意，要启用 "force_replace"，必须启用 "atomic_restore"
 
 ## 可选参数
 
@@ -85,7 +71,7 @@ FROM `<repository_name>`
 
 ## 权限控制
 
-执行此SQL命令的用户必须至少具有以下权限：
+执行此 SQL 命令的用户必须至少具有以下权限：
 | 权限         | 对象         | 说明          |
 |:------------|:------------|:--------------|
 | LOAD_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 LOAD_PRIV 权限才能进行此操作 |
@@ -97,7 +83,7 @@ FROM `<repository_name>`
 - 可以将仓库中备份的表恢复替换数据库中已有的同名表，但须保证两张表的表结构完全一致。表结构包括：表名、列、分区、Rollup 等等。
 - 可以指定恢复表的部分分区，系统会检查分区 Range 或者 List 是否能够匹配。
 - 可以通过 AS 语句将仓库中备份的表名恢复为新的表。但新表名不能已存在于数据库中。分区名称不能修改。
-- 恢复操作的效率： 在集群规模相同的情况下，恢复操作的耗时基本等同于备份操作的耗时。如果想加速恢复操作，可以先通过设置 `replication_num` 参数，仅恢复一个副本，之后在通过调整副本数 [ALTER TABLE PROPERTY](../../../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md)，将副本补齐。
+- 恢复操作的效率：在集群规模相同的情况下，恢复操作的耗时基本等同于备份操作的耗时。如果想加速恢复操作，可以先通过设置 `replication_num` 参数，仅恢复一个副本，之后在通过调整副本数 [ALTER TABLE PROPERTY](../../../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md)，将副本补齐。
 
 ## 示例
 

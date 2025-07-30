@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，在近期我们迎来了 Apache Doris 3.0 版本的正式发布，欢迎大家下载使用体验！
 
 **从 3.0 系列版本开始，Apache Doris 开始支持存算分离模式，用户可以在集群部署时选择采用存算一体模式或存算分离模式。基于云原生存算分离的架构，用户可以通过多计算集群实现查询负载间的物理隔离以及读写负载隔离，并借助对象存储或 HDFS 等低成本的共享存储系统来大幅降低存储成本。**
@@ -204,11 +185,11 @@ under the License.
 
 - [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
 
-- [Delta Lake](../../lakehouse/datalake-analytics/deltalake)
+- [Delta Lake](../../lakehouse/catalogs/delta-lake-catalog.md)
 
-- [Kudu](../../lakehouse/datalake-analytics/kudu)
+- [Kudu](../../lakehouse/catalogs/kudu-catalog.md)
 
-- [BigQuery](../../lakehouse/datalake-analytics/bigquery)
+- [BigQuery](../../data-operate/import/data-source/bigquery.md)
 :::
 
 ### 2-3 数据湖构建
@@ -268,7 +249,7 @@ Variant 数据类型在经过大规模生产打磨后，已具备充分的稳定
   
   ```Java
   BEGIN WITH LABEL label_etl_1;
-  INTO table1 SELECT * FROM stage_table1;
+  INSERT INTO table1 SELECT * FROM stage_table1;
   INSERT INTO table SELECT * FROM stage_table;
   COMMIT;
   ```
@@ -415,7 +396,7 @@ Runtime Filter 是否能够准确生成对查询性能的影响至关重要，�
 
 参考文档：
 
-[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN/)
+[CREATE TABLE AND GENERATED COLUMN](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN.md)
 :::
 
 ## 8. 功能改进

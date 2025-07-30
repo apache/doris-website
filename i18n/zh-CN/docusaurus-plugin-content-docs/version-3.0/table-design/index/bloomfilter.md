@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 索引原理
 
 
@@ -108,7 +89,7 @@ BloomFilter 索引用于加速 WHERE 条件中的等值查询，能加速时自�
 
 可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引的加速效果。
 - RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
-- BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
+- BlockConditionsFilteredBloomFilterTime BloomFilter 索引消耗的时间
 
 ## 使用示例
 

@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 亲爱的社区小伙伴们，**Apache Doris 2.1.6 版本已于 2024 年 9 月 10 日正式发布。**2.1.6 版本在湖仓一体、异步物化视图、半结构化数据管理持续升级改进，同时在查询优化器、执行引擎、存储管理、数据导入与导出以及权限管理等方面完成了若干修复。欢迎大家下载使用。
 
 - 官网下载：https://doris.apache.org/download
@@ -61,7 +41,7 @@ under the License.
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 
-  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/query-admin/sql-interception)
+  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/workload-management/sql-blocking.md)
 
 - 新增系统表`file_cache_statistics`，用于查看 BE 节点的数据缓存性能指标。
 

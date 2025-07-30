@@ -68,7 +68,7 @@ Codename:	AltArch
 
 ## Software Environment
 
-### Software Environment List
+### Software Environment List (Taking JDK8 as an example)
 
 | Component Name                                               | Component Version              |
 | ------------------------------------------------------------ | ------------------------------ |
@@ -110,6 +110,7 @@ mkdir /opt/software
 - JDK8 (2 methods)
 
 ```shell
+  # Oracle JDK 8 or OpenJDK 8 for Doris 2.1 and earlier versions
   # 1. yum install, which can avoid additional download and configuration. Installing the devel package is to get tools such as the jps command.
   yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
   
@@ -120,14 +121,21 @@ mkdir /opt/software
   mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
+- JDK17
+
+```shell
+  # For versions later than 3.0 (inclusive), or the master branch, please use JDK 17
+  yum install -y java-17-openjdk java-17-openjdk-devel
+```
+
   - Maven
 
 ```shell
   cd /opt/tools
   # Download the wget tool, decompress it, and configure the environment variables.
-  wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-    tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
-    mv apache-maven-3.6.3 /opt/software/maven
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
 ```
 
   - NodeJS
@@ -145,13 +153,13 @@ mkdir /opt/software
 ```shell
   cd /opt/tools
   # Download LDB-Toolchain ARM version
-  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
     <div>
 
-3. Configure environment variables
+3. Configure environment variables (Taking JDK8 as an example)
 
 ```shell
 # Configure environment variables
@@ -165,11 +173,11 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # Save, exit, and refresh environment variables
 source /etc/profile.d/doris.sh
 
-# Test
+# Test (Taking JDK8 as an example)
 java -version
 > java version "1.8.0_291"
 mvn -version
-> Apache Maven 3.6.3
+> Apache Maven 3.9.9
 node --version
 > v16.3.0
 gcc --version
@@ -254,14 +262,21 @@ sudo dpkg-reconfigure dash
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
+- JDK17
+
+```shell
+  # For versions later than 3.0 (inclusive), or the master branch, please use JDK 17
+  apt-get -y install openjdk-17-jdk
+```
+
   - Maven
 
 ```shell
   cd /opt/tools
   # Download the wget tool, decompress it, and configure the environment variables.
-  wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-    tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
-    mv apache-maven-3.6.3 /opt/software/maven
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
 ```
 
   - NodeJS
@@ -279,7 +294,7 @@ sudo dpkg-reconfigure dash
 ```shell
   cd /opt/tools
   # Download ldb-toolchain ARM version
-  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh && \
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
     sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
@@ -288,7 +303,7 @@ sudo dpkg-reconfigure dash
 5. Configure environment variables
 
 ```shell
-# Configure environment variables
+# Configure environment variables (Taking JDK8 as an example)
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -299,11 +314,11 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # Save, exit, and refresh environment variables
 source /etc/profile.d/doris.sh
 
-# Test
+# Test (Taking JDK8 as an example)
 java -version
 > java version "1.8.0_291"
 mvn -version
-> Apache Maven 3.6.3
+> Apache Maven 3.9.9
 node --version
 > v16.3.0
 gcc --version
@@ -324,6 +339,7 @@ sudo apt-get install -y byacc
 sudo apt-get install -y automake
 sudo apt-get install -y libtool
 sudo apt-get install -y bzip2
+sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
 sudo apt update
 sudo apt install gcc-11 g++-11
@@ -349,24 +365,22 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 Currently the only recommended method for ARM environments is to compile with ldb-toolchain, which works for [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) for Doris releases after that.
 :::
 
-Download [ldb\_toolchain\_gen.aarch64.sh](https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.9.1/ldb_toolchain_gen.aarch64.sh)
+For more detailed instructions about LDB toolchain download and install, please refer to the earlier section of this document.
 
 See [Compilation with LDB toolchain](./compilation-with-ldb-toolchain) for the steps then.
 
-The jdk and nodejs should be replaced with the corresponding aarch64 versions:
-
-1. [Java8-aarch64](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz)
-2. [Node v16.3.0-aarch64](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz)
+The jdk and nodejs should be replaced with the corresponding aarch64 versions, which has introduced the earlier section of this document.
 
 If you have problems compiling with the downloaded precompiled third-party libraries, please use `tools/build_thirdparty.sh` to compile them by yourself. When compiling the thirdparty library, use gcc:
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-When compiling Doris on ARM platforms, **please disable AVX2 and LIBUNWIND tripartite libraries**:
+When compiling Doris on ARM platforms, **please disable AVX2, LIBUNWIND and AZURE tripartite libraries**:
 ```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
+export DISABLE_BUILD_AZURE=ON
 ```
 
 If you still encounter problems when compiling or starting, please consult the [FAQ](#faq). If there is no relevant solution, feel free to [raise an issue](https://github.com/apache/doris/issues).

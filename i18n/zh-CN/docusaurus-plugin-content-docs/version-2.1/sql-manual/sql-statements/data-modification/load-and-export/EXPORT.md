@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
@@ -135,7 +116,7 @@ under the License.
   - `dfs.ha.namenodes.[nameservice ID]`: namenode 的 id 列表，与 hdfs-site.xml 保持一致
   - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保持一致   
 
-  **对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性:**
+  **对于开启 kerberos 认证的 Hadoop 集群，还需要额外设置如下 PROPERTIES 属性：**
   - `dfs.namenode.kerberos.principal`: HDFS namenode 服务的 principal 名称
   - `hadoop.security.authentication`: 认证方式设置为 kerberos
   - `hadoop.kerberos.principal`: 设置 Doris 连接 HDFS 时使用的 Kerberos 主体

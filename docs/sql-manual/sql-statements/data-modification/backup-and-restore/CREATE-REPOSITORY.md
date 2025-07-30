@@ -6,25 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 This statement is used to create a repository. Repositories are used for backup or restore.
@@ -64,6 +45,9 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 | **fs.defaultFS**        | Hadoop default file system URI        |
 | **hadoop.username**     | Hadoop username                       |
 
+**Note:&#x20;**
+
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ## Access Control Requirements
 
@@ -77,7 +61,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 - The properties (PROPERTIES) vary depending on whether it is S3 or HDFS, as shown in the example.
 - For ON LOCATION, if it is S3, the following should be the S3 Bucket Name.
 - When performing data migration, the same repository must be created in both the source and destination clusters so that the destination cluster can view the data snapshot from the source cluster's backup.
-- Any user can view the repositories that have been created by using the [SHOW REPOSITORIES](../../Show-Statements/SHOW-REPOSITORIES.md) command.
+- Any user can view the repositories that have been created by using the [SHOW REPOSITORIES](./SHOW-REPOSITORIES) command.
 
 
 ## Examples
@@ -97,6 +81,9 @@ PROPERTIES
     "s3.region" = "REGION"
 );
 ```
+**Note:&#x20;**
+
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 Create a repository named hdfs_repo.
 
@@ -157,3 +144,4 @@ PROPERTIES
     "s3.region" = "ap-beijing"
 );
 ```
+

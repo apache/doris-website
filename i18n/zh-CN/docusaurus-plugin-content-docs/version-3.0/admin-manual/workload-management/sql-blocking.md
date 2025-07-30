@@ -5,38 +5,19 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 查询熔断是一种保护机制，用于防止长时间运行或消耗过多资源的查询对系统产生负面影响。当查询超过预设的资源或时间限制时，熔断机制会自动终止该查询，以避免对系统性能、资源使用以及其他查询造成不利影响。这种机制确保了集群在多用户环境下的稳定性，防止单个查询导致系统资源耗尽、响应变慢，从而提高整体的可用性和效率。
 
 在 Doris 内，有两种熔断策略：
 
 - 规划时熔断，即 SQL Block Rule，用于阻止符合特定模式的语句执行。阻止规则对任意的语句生效，包括 DDL 和 DML。通常，阻止规则由数据库管理员（DBA）进行配置，用以提升集群的稳定性。比如，
-
-  - 阻止一个查询扫描过多行的数据
-
-  - 阻止一个查询扫描过多的分区
-
-  - 阻止一个修改全局变量的语句，以防止集群配置被意外的修改。
-
-  - 阻止一个通常会占用非常多资源的查询模式
+    
+    - 阻止一个查询扫描过多行的数据
+    
+    - 阻止一个查询扫描过多的分区
+    
+    - 阻止一个修改全局变量的语句，以防止集群配置被意外的修改。
+    
+    - 阻止一个通常会占用非常多资源的查询模式
 
 - 运行时熔断，即 Workload Policy，它是在运行时，实时监测查询的执行时间，扫描的数据量，消耗的内存，实现基于规则的查询熔断。
 
@@ -61,7 +42,7 @@ under the License.
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select \\* from t",
+  "sql"="select \\* from t",
   "global" = "true",
   "enable" = "true"
 )
@@ -81,7 +62,7 @@ MySQL root@127.0.0.1:test> select * from t;
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select * from t",
+  "sql"="select * from t",
   "global" = "false",
   "enable" = "true"
 )
@@ -95,7 +76,7 @@ PROPERTIES (
 set property for 'root' 'SQL_block_rules' = 'rule_001';
 ```
 
-这样，经过上面的配置，root 用户在执行查询时，将被应用名字为 rule_001 的阻止规则。
+这样，经过上面的配置，root 用户在执行查询时，将被应用名为 rule_001 的阻止规则。
 
 ```sql
 MySQL root@127.0.0.1:test> set property for 'root' 'SQL_block_rules' = '';
@@ -134,7 +115,7 @@ MySQL root@127.0.0.1:test> select * from t;
 * 阻止特定模式的查询
 
 #### 阻止扫描超过指定行数的数据
-由于扫描数据会显著的消耗 BE 的 IO 资源和 CPU 资源。所以，不必要的数据扫描会对集群的稳定性带来比较大的挑战。日常使用中，经常会出现盲目的全表扫描操作。例如 `SELECT * FROM t`。为了防止这种查询对集群产生破坏。可以设置单个查询扫描单表行数的上限。
+由于扫描数据会显著消耗 BE 的 IO 资源和 CPU 资源。所以，不必要的数据扫描会对集群的稳定性带来比较大的挑战。日常使用中，经常会出现盲目的全表扫描操作。例如 `SELECT * FROM t`。为了防止这种查询对集群产生破坏。可以设置单个查询扫描单表行数的上限。
 
 ```sql
 CREATE SQL_BLOCK_RULE rule_card 
@@ -145,8 +126,8 @@ PROPERTIES
    "enable" = "true"
 );
 ```
-当设置了如上的规则，当单表扫描超过 1000 行时，则禁止此查询的执行。
-需要注意的是，由于扫描行数的计算是在规划阶段，而非执行阶段完成的。所以计算行数时，只会考虑分区和分桶裁剪，而不会考虑其他过滤条件对于扫描行数的影响。也就是考虑最坏情况。所以，实际扫描的行数小于设置值的查询也有可能被阻止。
+当设置了如上的规则，当单表扫描超过 1000 行时，将禁止此查询的执行。
+需要注意，由于扫描行数的计算是在规划阶段，而非执行阶段完成的。所以计算行数时，只会考虑分区和分桶裁剪，而不会考虑其他过滤条件对于扫描行数的影响。也就是考虑最坏情况。所以，实际扫描的行数小于设置值的查询也有可能被阻止。
 
 #### 阻止扫描超过指定分区数量的数据
 对过多分区的扫描会显著的增加 BE 的 CPU 消耗。同时，如果查询的外表，那更有可能带来显著的网络开销和元数据拉取的开销。在日常使用中，这多是由于忘记写分区列上的过滤条件或者写错导致的。为了防止这种查询对集群产生破坏。可以设置单个查询扫描单表的分区数的上限。
@@ -185,7 +166,7 @@ PROPERTIES
 ```sql
 CREATE SQL_BLOCK_RULE rule_abs
 PROPERTIES(
-  "SQL"="(?i)abs\\s*\\(.+\\)",
+  "sql"="(?i)abs\\s*\\(.+\\)",
   "global"="true",
   "enable"="true"
 );
@@ -218,23 +199,23 @@ A：阻止规则的正则表达式使用 java 的正则表达式规范。常用�
 SQL Block Rule 是一种在规划时进行熔断的配置，但是由于规划中代价的计算可能不准确（尤其是针对一些非常复杂的查询时，更加难以准确估算），所以会导致规则不生效或者误判。Workload Policy 弥补了这个缺陷，它可以在查询运行时对一些指标进行实时的监测，对运行时状态不符合预期的查询进行熔断，避免不符合预期的大查询占用过多资源从而影响集群的稳定性，常用的运行时监控指标如下：
 
 * 查询执行时间
-* 查询在单BE上的扫描行数
-* 查询在单BE上的扫描行数扫描字节数
-* 查询的在单BE上的内存使用
+* 查询在单 BE 上的扫描行数
+* 查询在单 BE 上的扫描行数扫描字节数
+* 查询的在单 BE 上的内存使用
 
 ### 版本说明
 
 自 Doris 2.1 版本起，可以通过 Workload Policy 可以实现大查询的熔断。
 
-| 版本                 | 2.1 |
-|--------------------|-----|
-| select             | √   |
-| insert into select | √   |
-| insert into values | X   |
-| stream load        | √   |
-| routine load       | √   |
-| backup             | X   |
-| compaction         | X   |
+| 版本                 | 自2.1起 |
+|--------------------|-------|
+| select             | 支持    |
+| insert into select | 支持    |
+| insert into values | 不支持   |
+| stream load        | 支持    |
+| routine load       | 支持    |
+| backup             | 不支持   |
+| compaction         | 不支持   |
 
 ### 创建熔断策略
 使用 `CREATE WORKLOAD Policy` 命令可以创建资源管理策略。
@@ -253,7 +234,7 @@ properties('enabled'='true');
 
 | Conditions            | 说明                                                                  |
 |-----------------------|---------------------------------------------------------------------|
-| username              | 查询携带的用户名，只会在FE触发 set_session_variable Action                        |
+| username              | 查询携带的用户名，只会在 FE 触发 set_session_variable Action                        |
 | be_scan_rows          | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。      |
 | be_scan_bytes         | 一个 SQL 在单个 BE 进程内 scan 的字节数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。 |
 | query_time            | 一个 SQL 在单个 BE 进程上的运行时间，时间单位是毫秒。                                     |

@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform.
 
 In version 2.1.0, Doris supports unified permission management by integrating Apache Ranger.
@@ -70,7 +49,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 
 	The service address port can be viewed in the `ranger.service.http.port` configuration item of the `ranger-admin-site.xml` configuration file.
 
-	If the execution is successful, the service definition in Json format will be returned, such as:
+	If the execution is successful, the service definition in JSON format will be returned, such as:
 	
 	```
 	{
@@ -114,11 +93,11 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 
 After the installation is complete, open the Ranger WebUI and you can see the Apache Doris plug-in in the Service Manger interface:
 
-![ranger1](/images/ranger/ranger1.png)
+![Apache Doris plug-in in the Service Manger interface](/images/ranger/ranger1.png)
 
 Click the `+` button next to the plugin to add a Doris service:
 
-![ranger2](/images/ranger/ranger2.png)
+![Apache Doris plug-in in the Service Manger interface](/images/ranger/ranger2.png)
 
 The meaning of some parameters of Config Properties is as follows:
 
@@ -243,44 +222,44 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 2. Using the `admin` user in Doris, create a Catalog named `hive`.
 3. Create `user1` in Ranger.
 
-#### Global Priv
+#### Global Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on *.*.* to user1`;
 - The global option can be found in the dropdown menu of the same level in the catalog
 - Only `*` can be entered in the input box 
 
-  ![global](/images/ranger/global.png)
+  ![Global Privileges](/images/ranger/global.png)
 
-#### Catalog Priv
+#### Catalog Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.*.* to user1`;
 
-![catalog](/images/ranger/catalog.png)
+![Catalog Privileges](/images/ranger/catalog.png)
 
-#### Database Priv
+#### Database Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.* to user1`;
 
-![database](/images/ranger/database.png)
+![Database Privileges](/images/ranger/database.png)
 
-#### Table Priv
+#### Table Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv on hive.tpch.user to user1`;
 
-![table](/images/ranger/table.png)
+![Table Privileges](/images/ranger/table.png)
 
-#### Column Priv
+#### Column Privileges
 Equivalent to Doris' internal authorization statement `grant select_priv(name,age) on hive.tpch.user to user1`;
 
-![column](/images/ranger/column.png)
+![Column Privileges](/images/ranger/column.png)
 
-#### Resource Priv
+#### Resource Privileges
 Equivalent to Doris' internal authorization statement `grant usage_priv on resource 'resource1' to user1`;
 - The resource option can be found in the dropdown menu of the same level in the catalog
 
-![resource](/images/ranger/resource.png)
+![Resource Privileges](/images/ranger/resource.png)
 
-#### Workload Group Priv
+#### Workload Group Privileges
 Equivalent to Doris' internal authorization statement `grant usage_priv on workload group 'group1' to user1`;
 - The workload group option can be found in the dropdown menu of the same level in the catalog
 
-![group1](/images/ranger/group1.png)
+![Workload Group Privileges](/images/ranger/group1.png)
 
 ### Row Policy Example
 

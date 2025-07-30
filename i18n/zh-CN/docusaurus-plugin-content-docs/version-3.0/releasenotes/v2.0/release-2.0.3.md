@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，Apache Doris 2.0.3  版本已于 2023 年 12 月 14 日正式发布，该版本对复杂数据类型、统计信息收集、倒排索引、数据湖分析、分布式副本管理等多个功能进行了优化，有 104 位贡献者为 Apache Doris 2.0.3 版本提交了超过 1000 个功能优化项以及问题修复，进一步提升了系统的稳定性和性能，欢迎大家下载体验。
 
 **GitHub 下载**：https://github.com/apache/doris/releases
@@ -39,7 +20,7 @@ under the License.
 
 在每次导入事务提交后，Apache Doris 将记录导入事务更新的表信息并估算表统计信息的健康度，对于健康度低于配置参数的表会认为统计信息已过时并自动触发表的统计信息收集作业。同时为了降低统计信息作业的资源开销，Apache Doris 会自动采取采样的方式收集统计信息，用户也可以调整参数来采样更多行以获得更准确的数据分布信息。
 
-更多信息请参考：[Statistics](../query/nereids/statistics.md)
+更多信息请参考：[Statistics](../../query-acceleration/optimization-technology-principle/statistics)
 
 
 ### 数据湖框架支持复杂数据类型

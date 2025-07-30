@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
 
 该语句用于新建数据库（database）
@@ -65,6 +45,20 @@ CREATE DATABASE [IF NOT EXISTS] <db_name>
   )
   ```
 
+如果要为 db 下的 table 指定默认的 Storage Vault，需要指定`<storage_vault_name>`（table 的`<storage_vault_name>`属性优先级会高于 db）:
+
+  ```sql
+  PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+  )
+  ```
+
+:::info 备注
+
+从 3.0.5 版本支持指定 db 的 `storage_vault_name`。
+
+:::
+
 ## 示例
 
 - 新建数据库 db_test
@@ -79,5 +73,14 @@ CREATE DATABASE [IF NOT EXISTS] <db_name>
    CREATE DATABASE `db_test`
    PROPERTIES (
    	"replication_allocation" = "tag.location.group_1:3"
+   );
+   ```
+
+- 新建数据库并设置默认的 Storage Vault：
+
+   ```sql
+   CREATE DATABASE `db_test`
+   PROPERTIES (
+   	"storage_vault_name" = "hdfs_demo_vault"
    );
    ```

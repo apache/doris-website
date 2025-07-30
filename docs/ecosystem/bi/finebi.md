@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## FineBI Introduction
 
 As a business intelligence product, FineBI has a system architecture of data processing, real-time analysis, multidimensional analysis Dashboard and other functions. FineBI supports rich data source connection and analysis and management of tables with multiple views. FineBI can successfully support the modeling and visualization of internal and external data of Apache Doris.
@@ -38,7 +19,7 @@ Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
    ![login page](/images/bi-finebi-en-1.png)
 
-2. Select the Built-in database, If you need to select an external database configuration, the documentation is available：https://help.fanruan.com/finebi-en/doc-view-4437.html
+2. Select the Built-in database, If you need to select an external database configuration, the documentation is available: https://help.fanruan.com/finebi-en/doc-view-4437.html
 
    :::info Note
    It is recommended to select the built-in database as the information repository of FineBI. The database type selected here is not the target database for querying and analyzing data, but the database for storing and maintaining FineBI model, dashboard and other information. FineBI needs to add, delete, modify and check it.
@@ -56,19 +37,19 @@ Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
 5. Fill in the link information of the Doris database
 
-    - Parameters are described as follows：
+    - Parameters are described as follows:
 
-        - Username：The username for logging into Doris。
+        - Username: The username for logging into Doris.
 
-        - Password：Password of the current user。
+        - Password: Password of the current user.
 
-        - Host：IP address of the FE host in the Doris cluster。
+        - Host: IP address of the FE host in the Doris cluster.
 
-        - Port：FE query port of the Doris cluster。
+        - Port: FE query port of the Doris cluster.
 
-        - Coding：Encoding format of the Doris cluster。
+        - Coding: Encoding format of the Doris cluster.
 
-        - Name Database：Target database in Doris cluster。
+        - Name Database: Target database in Doris cluster.
 
    ![connection information](/images/bi-finebi-en-5-1.png)
 

@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
 
 该语句用于设置指定 db 的属性和改动 db 名字以及设定 db 的多种 quota。
@@ -61,7 +41,7 @@ ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
 
 ## 注意事项
 
-重命名数据库后，如需要，请使用 REVOKE 和 GRANT 命令修改相应的用户权限。 数据库的默认数据量配额为 1024GB，默认副本数量配额为 1073741824。
+重命名数据库后，如需要，请使用 REVOKE 和 GRANT 命令修改相应的用户权限。数据库的默认数据量配额为 8192PB，默认副本数量配额为 1073741824。
 
 ## 示例
 
@@ -94,3 +74,21 @@ ALTER DATABASE <db_name> SET <PROPERTIES> ("<key>" = "<value>" [, ...])
   ```sql
     ALTER DATABASE example_db SET PROPERTIES("replication_allocation" = "");
   ```
+
+- 修改 db 下 table 的默认 Storage Vault（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "hdfs_demo_vault");
+  ```
+
+- 取消 db 下 table 的默认 Storage Vault（该操作仅对新建的 table 生效，不会修改 db 下已存在的 table）
+
+  ```sql
+    ALTER DATABASE example_db SET PROPERTIES("storage_vault_name" = "");
+  ```
+
+:::info 备注
+
+从 3.0.5 版本支持指定 db 的 `storage_vault_name`。
+
+:::

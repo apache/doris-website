@@ -9,14 +9,13 @@
 
 <version since="2.0.0">
 
-
 </version>
 
-### Description
+## Description
 
 Removes duplicate elements from an array and returns a new array containing unique elements. The function maintains the original order of elements, keeping only the first occurrence of each element.
 
-### Syntax
+## Syntax
 
 ```sql
 array_distinct(ARRAY<T> arr)

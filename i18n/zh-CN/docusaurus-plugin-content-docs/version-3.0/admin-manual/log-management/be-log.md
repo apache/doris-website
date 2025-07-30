@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文主要介绍 Backend(BE) 进程的日志管理。
 
 该文档适用于 2.1.4 及之后的 Doris 版本。
@@ -104,6 +85,11 @@ sys_log_verbose_modules=*
 表示开启所有 DEBUG 日志。
 
 `sys_log_verbose_level` 表示 DEBUG 的级别。数字越大，则 DEBUG 日志越详细。取值范围在 1-10。
+
+通常情况下，只需在 `be.conf` 中配置 `sys_log_verbose_modules` 和 `sys_log_verbose_level` 即可满足需求。
+只有在特殊情况下，比如发现某些调试日志没有按预期输出时，才需要额外设置 `sys_log_verbose_flags_v`，它的作用范围不受 modules 限制。
+
+`sys_log_verbose_flags_v` 表示 glog 中的 `FLAGS_v`，用于控制全局的日志详细程度。数字越大，则 DEBUG 日志越详细。只有当 `n <= FLAGS_v` 时，`VLOG(n)` 的日志信息才会被输出，从而实现对日志输出粒度的精细控制。
 
 ### 动态调整
 

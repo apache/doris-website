@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 In high-frequency small batch write scenarios, traditional loading methods have the following issues:
 
 - Each load creates an independent transaction, requiring FE to parse SQL and generate execution plans, affecting overall performance
@@ -437,12 +418,6 @@ Recommend balancing based on system memory resources and data reliability requir
    group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
    ```
 
-2. `group_commit_memory_rows_for_max_filter_ratio`
-
-   * Description: `max_filter_ratio` works normally when group commit load total rows don't exceed this value, otherwise it doesn't work
-
-   * Default: 10000
-
 ## Usage Limitations
 
 * **Group Commit Limitations**
@@ -462,10 +437,6 @@ Recommend balancing based on system memory resources and data reliability requir
 
 * **Unique Model**
   - Group Commit doesn't guarantee commit order, recommend using Sequence column to ensure data consistency.
-
-* **max_filter_ratio Support**
-  - In default loads, `filter_ratio` is calculated through failed rows and total rows.
-  - In Group Commit mode, `max_filter_ratio` works when total rows don't exceed `group_commit_memory_rows_for_max_filter_ratio`.
 
 * **WAL Limitations**
   - `async_mode` writes data to WAL, deletes after success, recovers through WAL on failure.
@@ -618,7 +589,7 @@ set group_commit=async_mode and set enable_nereids_planner=false.
 
 2. Enable JDBC Prepared Statement:
 Complete URL:
-jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
+jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false.
 
 3. Set the Import Type to Prepared Update Statement.
 
@@ -687,18 +658,18 @@ Ensure that the imported values match the data types one by one.
 
 **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |

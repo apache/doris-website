@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 物化视图是既包含计算逻辑也包含数据的实体。它不同于视图，因为视图仅包含计算逻辑，本身不存储数据。
 
 ## 物化视图的使用场景
@@ -36,11 +17,11 @@ under the License.
 
 ### 轻量化 ETL（数据建模）
 
-在数据分层场景中，可以通过嵌套物化视图来构建 DWD 和 DWM 层，利用物化视图的调度刷新能力。
+在数据分层场景中，可以使用物化视图的嵌套来构建 DWD 和 DWM 层，利用物化视图的调度刷新能力。
 
 ### 湖仓一体
 
-针对多种外部数据源，可以将这些数据源所使用的表进行物化视图构建，以此来节省从外部表导入到内部表的成本，并且加速查询过程。
+针对多种外部数据源，可以将这些数据源所使用的表进行物化视图构建，以此来节省从外部表导入数据到内部表的成本，并且加速查询过程。
 
 ## 物化视图的分类
 
@@ -66,8 +47,8 @@ under the License.
 
 - 全量刷新：计算物化视图定义 SQL 的所有数据。
 
-- 分区增量刷新：当物化视图基表的分区数据发生变化时，识别出物化视图对应变化的分区，并仅刷新这些分区，从而实现分区增量刷新，而无需刷新整个物化视图。
+- 分区增量刷新：当物化视图基表的分区数据发生变化时，识别出对应变化的分区并刷新这些分区，从而实现分区增量刷新，而无需刷新整个物化视图。
 
 **对于同步物化视图**
 
-- 可以理解为实时更新，保持与基表的数据一致。
+- 可以理解为实时刷新，保持与基表的数据一致。

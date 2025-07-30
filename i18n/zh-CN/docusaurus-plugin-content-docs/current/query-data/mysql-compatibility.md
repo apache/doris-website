@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还是有很多不同的地方，下面给出了它们的差异点介绍。
 
 ## 数据类型
@@ -37,8 +17,8 @@ Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还�
 | Bit          | - 支持 <br />- 范围：1 ~ 64                                     | 不支持                                                 |
 | Tinyint      | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -128 ~ 127，unsigned 的范围是 0 ~ 255 | - 支持 <br />- 只支持 signed <br />- 范围：-128 ~ 127 |
 | Smallint     | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^15 ~ 2^15-1，unsigned 的范围是 0 ~ 2^16-1 | - 支持 <br />- 只支持 signed <br />- 范围：-32768 ~ 32767           |
-| Mediumint    | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^23 ~ 2^23-1，unsigned 的范围是 0 ~ -2^24-1 | - 不支持                  |
-| int          | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^31 ~ 2^31-1，unsigned 的范围是 0 ~ -2^32-1 | - 支持 <br />- 只支持 signed <br />- 范围： -2147483648~ 2147483647 |
+| Mediumint    | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^23 ~ 2^23-1，unsigned 的范围是 0 ~ 2^24-1 | - 不支持                  |
+| int          | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^31 ~ 2^31-1，unsigned 的范围是 0 ~ 2^32-1 | - 支持 <br />- 只支持 signed <br />- 范围： -2147483648~ 2147483647 |
 | Bigint       | - 支持 <br />- 支持 signed,unsigned <br />- 范围：signed 的范围是 -2^63 ~ 2^63-1，unsigned 的范围是 0 ~ 2^64-1 | - 支持 <br />- 只支持 signed <br />- 范围： -2^63 ~ 2^63-1      |
 | Largeint     | - 不支持                                                     | - 支持 <br />- 只支持 signed <br />- 范围：-2^127 ~ 2^127-1       |
 | Decimal      | - 支持 <br />- 支持 signed,unsigned（8.0.17 以前支持，该版本以上标记为 deprecated）<br />- 默认值：Decimal(10, 0)| - 支持 <br />- 只支持 signed <br />- 默认值：Decimal(9, 0)        |
@@ -94,9 +74,9 @@ Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还�
 
   QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对相同的 Key，不同 Value 进行预聚合，当 Value 数量不超过 2048 时，会采用明细记录所有数据，当 Value 数量大于 2048 时采用 [TDigest](https://github.com/tdunning/t-digest/blob/main/docs/t-digest-paper/histo.pdf) 算法，对数据进行聚合（聚类），并保存聚类后的质心点。
 
-- **Array<T\>**
+- **Array<T>**
 
-  Array 由 T 类型元素组成的数组，不能作为 Key 列使用。
+  Array<T> 由 T 类型元素组成的数组，不能作为 Key 列使用。
 
 - **MAP<K, V>**
 
@@ -176,7 +156,7 @@ CREATE VIEW [IF NOT EXISTS]
  (column1[ COMMENT "col comment"][, column2, ...])
 AS query_stmt
 
-CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] mvName=multipartIdentifier
         (LEFT_PAREN cols=simpleColumnDefs RIGHT_PAREN)? buildMode?
         (REFRESH refreshMethod? refreshTrigger?)?
         (KEY keys=identifierList)?

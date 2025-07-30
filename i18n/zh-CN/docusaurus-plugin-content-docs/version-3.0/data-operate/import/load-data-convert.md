@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 在数据导入时提供了强大的数据转换能力，可以简化部分数据处理流程，减少对额外 ETL 工具的依赖。主要支持以下四种转换方式：
 
 - **列映射**：将源数据列映射到目标表的不同列。
@@ -32,7 +13,7 @@ Doris 在数据导入时提供了强大的数据转换能力，可以简化部�
 
 - **前置过滤**：在列映射和列变换前过滤掉不需要的原始数据。
 
-- **后置过滤**：在列映射和列变换后数据对最终结果进行过滤。
+- **后置过滤**：在列映射和列变换后对数据最终结果进行过滤。
 
 通过这些内置的数据转换功能，可以提高导入效率，并确保数据处理逻辑的一致性。
 
@@ -114,10 +95,186 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据转换，使用 `WHERE
 - 源数据与目标表的列顺序不一致
 - 源数据与目标表的列数量不匹配
 
+### 实现原理
+
+列映射的实现可以分为两个核心步骤：
+
+- **步骤 1：数据源解析** - 根据数据格式将原始数据解析为中间变量
+- **步骤 2：通过列映射进行赋值** - 将中间变量按列名映射到目标表字段
+
+以下是三种不同数据格式的处理流程：
+
+#### 导入 CSV 格式数据
+
+![](/images/load-data-convert-csv.png)
+
+#### 指定 jsonpaths 导入JSON 格式数据
+
+![](/images/load-data-convert-json1.png)
+
+#### 不指定 jsonpaths 导入JSON 格式数据
+
+![](/images/load-data-convert-json2.png)
+
+### 指定 jsonpaths 导入 JSON 数据
+假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### 创建目标表
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### 导入数据
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:col1, col3, col2, col4" \
+    -H "jsonpaths:[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (col1, col3, col2, col4)
+    PROPERTIES
+    (
+        "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]"
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(col1, col3, col2, col4)
+PROPERTIES
+(
+    "format" = "json",
+    "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### 查询结果
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
+### 不指定jsonpaths导入 JSON 数据
+假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### 创建目标表
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### 导入数据
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:k1, k3, k2, k4,col1 = k1, col2 = k3, col3 = k2, col4 = k4" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (k1, k3, k2, k4)
+    SET (
+        col1 = k1,
+        col2 = k3,
+        col3 = k2,
+        col4 = k4
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4, col1 = k1, col2 = k3, col3 = k2, col4 = k4),
+PROPERTIES
+(
+    "format" = "json",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+
+##### 查询结果
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
 ### 调整列顺序
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -126,10 +283,10 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据转换，使用 `WHERE
 
 目标表有 k1, k2, k3, k4 四列，要实现如下映射：
 ```plain
-列1 -> k1
-列2 -> k3
-列3 -> k2
-列4 -> k4
+列 1 -> k1
+列 2 -> k3
+列 3 -> k2
+列 4 -> k4
 ```
 
 ##### 创建目标表
@@ -192,17 +349,17 @@ mysql> select * from example_table;
 ### 源文件列数量多于表列数
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
 4,\N,chongqing,1.4
 ```
-目标表有 k1, k2, k3 三列，而源文件包含四列数据。我们只需要源文件的第1、第2、第4列，映射关系如下：
+目标表有 k1, k2, k3 三列，而源文件包含四列数据。我们只需要源文件的第 1、第 2、第 4 列，映射关系如下：
 ```plain
-列1 -> k1
-列2 -> k2
-列4 -> k3
+列 1 -> k1
+列 2 -> k2
+列 4 -> k3
 ```
 要跳过源文件中的某些列，只需在列映射时使用任意不存在于目标表的列名。这些列名可以自定义，不受限制，导入时会自动忽略这些列的数据。
 
@@ -221,7 +378,7 @@ DISTRIBUTED BY HASH(k1) BUCKETS 1;
 #### 导入数据
 - Stream Load
 ```sql
-curl --location-trusted -u usr:passwd \
+curl --location-trusted -u user:password \
     -H "column_separator:," \
     -H "columns: k1,k2,tmp_skip,k3" \
     -T data.csv \
@@ -275,18 +432,18 @@ mysql> select * from example_table;
 ### 源文件列数量少于表列数
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
 4,\N,chongqing,1.4
 ```
-目标表有 k1, k2, k3, k4, k5 五列，而源文件包含四列数据。我们只需要源文件的第1、第2、第3、第4列，映射关系如下：
+目标表有 k1, k2, k3, k4, k5 五列，而源文件包含四列数据。我们只需要源文件的第 1、第 2、第 3、第 4 列，映射关系如下：
 ```plain
-列1 -> k1
-列2 -> k3
-列3 -> k2
-列4 -> k4
+列 1 -> k1
+列 2 -> k3
+列 3 -> k2
+列 4 -> k4
 k5 使用默认值
 ```
 
@@ -365,7 +522,7 @@ mysql> select * from example_table;
 ### 将源文件中的列值经变换后导入表中
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -373,10 +530,10 @@ mysql> select * from example_table;
 ```
 表中有 k1,k2,k3,k4 4 列，导入映射和变换关系如下：
 ```plain
-列1       -> k1
-列2 * 100 -> k3
-列3       -> k2
-列4       -> k4
+列 1       -> k1
+列 2 * 100 -> k3
+列 3       -> k2
+列 4       -> k4
 ```
 
 #### 创建示例表
@@ -442,7 +599,7 @@ mysql> select * from example_table;
 ### 通过 case when 函数，有条件的进行列变换
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -450,10 +607,10 @@ mysql> select * from example_table;
 ```
 表中有 k1,k2,k3,k4 4 列。对于源数据中 beijing, shanghai, guangzhou, chongqing 分别转换为对应的地区 id 后导入：
 ```plain
-列1                  -> k1
-列2                  -> k2
-列3 进行地区id转换后    -> k3
-列4                  -> k4
+列 1                  -> k1
+列 2                  -> k2
+列 3 进行地区 id 转换后    -> k3
+列 4                  -> k4
 ```
 
 #### 创建示例表
@@ -518,7 +675,7 @@ mysql> select * from example_table;
 ### 源文件中的 NULL 值处理
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -606,16 +763,28 @@ mysql> select * from example_table;
 
 比如源数据中存储了多张表的数据（或者多张表的数据写入了同一个 Kafka 消息队列）。数据中每行有一列表名来标识该行数据属于哪个表。用户可以通过前置过滤条件来筛选对应的表数据进行导入。
 
-### 示例
+前置过滤有以下限制：
+- 过滤列限制。
+
+前置过滤只能对列表中的独立简单列进行过滤，无法对带有表达式的列进行过滤。如：在列映射为（a, tmp, b = tmp + 1）时，b 列无法作为过滤条件。
+
+- 数据处理限制
+
+前置过滤发生在数据转换之前，使用原始数据值进行比较，原始数据会视为字符串类型。如：对于 `\N` 这样的数据，会直接用 `\N` 字符串进行比较，而不会转换为 NULL 后再比较。
+
+### 示例一：使用数值条件进行前置过滤
+
+本示例展示如何使用简单的数值比较条件来过滤源数据。通过设置 k1 > 1 的过滤条件，实现在数据转换前过滤掉不需要的记录。
+
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
 4,\N,chongqing,1.4
 ```
-前置过滤条件为:
+前置过滤条件为：
 ```
 列1>1，即只导入 列1>1 的数据，其他数据过滤掉。
 ```
@@ -668,6 +837,64 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
+### 示例二：使用中间列过滤无效数据
+
+本示例展示如何处理包含无效数据的导入场景。
+
+源数据为：
+```plain text
+1,1
+2,abc
+3,3
+```
+
+#### 建表语句
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT NOT NULL
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+对于k2列，类型为int，`abc`是不合法的脏数据，想要过滤该数据，可以引入中间列来过滤。
+
+#### 导入语句
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp, k2 = tmp)
+    PRECEDING FILTER tmp != "abc"
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp, k2 = tmp),
+COLUMNS TERMINATED BY ","
+PRECEDING FILTER tmp != "abc"
+FROM KAFKA (...);
+```
+
+#### 导入结果
+```sql
+mysql> select * from example_table;
++------+----+
+| k1   | k2 |
++------+----+
+|    1 |  1 |
+|    3 |  3 |
++------+----+
+```
 
 ## 后置过滤
 
@@ -677,7 +904,7 @@ mysql> select * from example_table;
 ### 在列映射和转换缺省的情况下，直接过滤
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -746,7 +973,7 @@ mysql> select * from example_table;
 ### 对经过列变换的数据进行过滤
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3
@@ -822,7 +1049,7 @@ mysql> select * from example_table;
 ### 多条件过滤
 假设有以下源数据（表头列名仅为方便表述，实际并无表头）：
 ```plain
-列1,列2,列3,列4
+列 1，列 2，列 3，列 4
 1,100,beijing,1.1
 2,200,shanghai,1.2
 3,300,guangzhou,1.3

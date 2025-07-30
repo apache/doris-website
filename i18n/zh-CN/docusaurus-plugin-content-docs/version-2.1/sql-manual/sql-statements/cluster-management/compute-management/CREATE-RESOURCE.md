@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 该语句用于创建资源。仅 root 或 admin 用户可以创建资源。目前支持 Spark, ODBC, S3, JDBC, HDFS, HMS, ES 外部资源。
@@ -132,7 +113,7 @@ ODBC 的相关参数如下：
    );
    ```
 
-   如果 s3 reource 在[冷热分层](../../../../../docs/advanced/cold_hot_separation.md)中使用，需要添加额外的字段。
+   如果 s3 reource 在[冷热分层](../../../../table-design/tiered-storage/overview)中使用，需要添加额外的字段。
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES

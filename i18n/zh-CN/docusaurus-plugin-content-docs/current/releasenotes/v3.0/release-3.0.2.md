@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，**Apache Doris 3.0.2 版本已于 2024 年 10 月 15 日正式发布。** 3.0.2 版本在存算分离、存储、湖仓一体、查询优化器以及执行引擎持续升级改进，欢迎大家下载使用。
 
 - GitHub 下载：https://github.com/apache/doris/releases
@@ -63,7 +44,7 @@ under the License.
 
 ### Lakehouse
 
-- 新增 Lakesoul Catalog。[Apache Doris Docs](../../lakehouse/datalake-analytics/lakesoul) 
+- 新增 Lakesoul Catalog。[Apache Doris Docs](../../lakehouse/catalogs/lakesoul-catalog.md) 
 - 新增系统表 `catalog_meta_cache_statistics`，用于查看 External Catalog 中各类元数据缓存的使用情况。[#40155](https://github.com/apache/doris/pull/40155) 
 
 ### 查询优化器

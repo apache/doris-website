@@ -102,6 +102,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
         "hadoop.password"="hive",
+        "root_path"="/my/root/path",
         "dfs.nameservices" = "my_ha",
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -158,7 +159,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY)、 [CREATE TABLE](../../sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档。
+具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档。
 :::
 
 ### 配置 compaction
@@ -205,7 +206,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Cache 是通过 LRU 管理的，不支持 TTL。
 
-具体配置请参考(../../lakehouse/filecache)。
+具体配置请参考(../../lakehouse/data-cache)。
 
 ## 常见问题
 

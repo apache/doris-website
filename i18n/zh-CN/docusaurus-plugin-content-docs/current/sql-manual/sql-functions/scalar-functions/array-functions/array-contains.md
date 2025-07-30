@@ -12,11 +12,11 @@
 
 </version>
 
-### 描述
+## 描述
 
 检查数组中是否包含指定的值。如果找到则返回 true，否则返回 false。如果数组为 NULL，则返回 NULL。
 
-### 语法
+## 语法
 
 ```sql
 array_contains(ARRAY<T> arr, T value)

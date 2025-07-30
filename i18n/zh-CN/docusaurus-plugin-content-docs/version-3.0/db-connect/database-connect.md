@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行工具、JDBC/ODBC 和各种可视化工具。同时 Apache Doris 也内置了一个简单的 Web UI，方便使用。下面分别介绍如何通过 MySQL Client、MySQL JDBC Connector、DBeaver 和 Doris 内置的 Web UI 来连接 Doris。
 
 ## MySQL Client
@@ -34,7 +14,7 @@ Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行�
 解压下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
 ```shell
-# FE_IP 为 FE 的监听地址， FE_QUERY_PORT 为 FE 的 MYSQL 协议服务的端口，在 fe.conf 中对应 query_port, 默认为 9030.
+# FE_IP 为 FE 的监听地址，FE_QUERY_PORT 为 FE 的 MYSQL 协议服务的端口，在 fe.conf 中对应 query_port, 默认为 9030.
 mysql -h FE_IP -P FE_QUERY_PORT -u USER_NAME 
 ```
 
@@ -65,7 +45,7 @@ mysql>
 ```Java
 String user = "user_name";
 String password = "user_password";
-String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo？useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
+String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo?useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
 try {
     Connection myCon = DriverManager.getConnection(newUrl, user, password);
     Statement stmt = myCon.createStatement();
@@ -80,6 +60,12 @@ try {
 } catch (SQLException e) {
     log.error("get JDBC connection exception.", e);
 }
+```
+
+如果需要在连接时初始换会话变量（Session Variables），可以使用下列格式：
+
+```
+jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
 ```
 
 ## DBeaver

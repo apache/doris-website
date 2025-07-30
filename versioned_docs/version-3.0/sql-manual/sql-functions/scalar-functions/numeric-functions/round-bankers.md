@@ -5,90 +5,145 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+## Description
 
-## round_bankers
+Round x using the banker's rounding method and keep d decimal places. The default value of d is 0.
 
-### description
-#### Syntax
+If d is negative, the |d| digits to the left of the decimal point will be set to 0.
 
-`T round_bankers(T x[, d])`
-Rounds the argument `x` to `d` specified decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
+If x or d is null, return null.
 
-If `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
+If d represents a column and the first parameter is of the Decimal type, then the resulting Decimal will have the same number of decimal places as the input Decimal.
 
-+ If the rounding number is halfway between two numbers, the function uses banker’s rounding.
-+ In other cases, the function rounds numbers to the nearest integer.
+According to the rules of the banker's rounding algorithm, when rounding to a specified decimal place:
 
+- If the digit to be rounded is 5 and there are no other non - zero digits following it, the digit immediately preceding it will be checked:
+   - If the preceding digit is even, the 5 will be simply dropped.
+   - If the preceding digit is odd, the number will be rounded up.
 
+- If the digit to be rounded is greater than 5 or there are non - zero digits following it, the traditional rounding rules will apply: round up if the digit is greater than or equal to 5, otherwise round down.
 
-### example
+For example:
 
+- For the value 2.5, since the digit 2 before 5 is even, the result will be rounded to 2.
+
+- For the value 3.5, since the digit 3 before 5 is odd, the result will be rounded to 4.
+
+- For the value 2.51, since the digit after 5 is not 0, it will be rounded up directly, and the result is 3.
+
+## Syntax
+
+```sql
+ROUND_BANKERS(<x> [ , <d>])
 ```
-mysql> select round_bankers(0.4);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|------------|
+| `<x>` | The number to be rounded |
+| `<d>` | Optional, the number of decimal places to round to, with a default value of 0. |
+
+## Return value
+
+Returns an integer or a float-point number:
+
+- By default, when the parameter d = 0, it returns an integer obtained by calculating x using the banker's rounding algorithm.
+
+- If d is negative, it returns an integer with the first digit to the left of the decimal point being 0.
+
+- If both x and d are NULL, it returns NULL.
+
+- If d represents a column and x is of the Decimal type, it returns a floating-point number with the same precision.
+
+## Example
+
+```sql
+select round_bankers(0.4);
+```
+
+```text
 +--------------------+
 | round_bankers(0.4) |
 +--------------------+
 |                  0 |
 +--------------------+
-mysql> select round_bankers(-3.5);
+```
+
+```sql
+select round_bankers(-3.5);
+```
+
+```text
 +---------------------+
 | round_bankers(-3.5) |
 +---------------------+
 |                  -4 |
 +---------------------+
-mysql> select round_bankers(-3.4);
+```
+
+```sql
+select round_bankers(-3.4);
+```
+
+```text
 +---------------------+
 | round_bankers(-3.4) |
 +---------------------+
 |                  -3 |
 +---------------------+
-mysql> select round_bankers(10.755, 2);
+```
+
+```sql
+select round_bankers(10.755, 2);
+```
+
+```text
 +--------------------------+
 | round_bankers(10.755, 2) |
 +--------------------------+
 |                    10.76 |
 +--------------------------+
-mysql> select round_bankers(1667.2725, 2);
-+-----------------------------+
-| round_bankers(1667.2725, 2) |
-+-----------------------------+
-|                     1667.27 |
-+-----------------------------+
-mysql> select round_bankers(1667.2725, -2);
+```
+
+```sql
+select round_bankers(10.745, 2);
+```
+
+```text
++--------------------------+
+| round_bankers(10.745, 2) |
++--------------------------+
+|                    10.74 |
++--------------------------+
+```
+
+```sql
+select round_bankers(1667.2725, -2);
+```
+
+```text
 +------------------------------+
 | round_bankers(1667.2725, -2) |
 +------------------------------+
 |                         1700 |
 +------------------------------+
-mysql> SELECT number
-    -> , round_bankers(number * 2.5, number - 1) AS rb_decimal_column
-    -> , round_bankers(number * 2.5, 0) AS rb_decimal_literal
-    -> , round_bankers(cast(number * 2.5 AS DOUBLE), number - 1) AS rb_double_column
-    -> , round_bankers(cast(number * 2.5 AS DOUBLE), 0) AS rb_double_literal
-    -> FROM test_enhanced_round
-    -> WHERE rid = 1;
+```
+
+```sql
+SELECT number
+, round_bankers(number * 2.5, number - 1) AS rb_decimal_column
+, round_bankers(number * 2.5, 0) AS rb_decimal_literal
+, round_bankers(cast(number * 2.5 AS DOUBLE), number - 1) AS rb_double_column
+, round_bankers(cast(number * 2.5 AS DOUBLE), 0) AS rb_double_literal
+FROM test_enhanced_round
+WHERE rid = 1;
+```
+
+```text
 +--------+-------------------+--------------------+------------------+-------------------+
 | number | rb_decimal_column | rb_decimal_literal | rb_double_column | rb_double_literal |
 +--------+-------------------+--------------------+------------------+-------------------+
 |      1 |               2.0 |                  2 |                2 |                 2 |
 +--------+-------------------+--------------------+------------------+-------------------+
 ```
-
-### keywords
-	round_bankers

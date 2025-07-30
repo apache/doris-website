@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Batch Deletion Based on Load
 
 The delete operation is a special form of data update. In the primary key model (Unique Key) table, Doris supports deletion by adding a delete sign when loading data.
@@ -137,7 +118,7 @@ There are several merge types when loading data:
 
 The `Stream Load` syntax is to add a field for setting the delete sign column in the header's columns field, for example: `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`.
 
-For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../load/load-way/stream-load-manual.md).
+For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../import/import-way/stream-load-manual.md).
 
 ### Broker Load
 

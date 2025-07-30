@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content. To meet the diverse needs of observability in operations, network security monitoring, and business analysis, enterprises might need to collect scattered logs for centralized storage, querying, and analysis to extract valuable content from the log data further.
 
 In this scenario, Apache Doris provides a corresponding solution. With the characteristics of log scenarios in mind, Apache Doris added inverted-index and ultra-fast full-text search capabilities, optimizing write performance and storage space to the extreme. This allows users to build an open, high-performance, cost-effective, and unified log storage and analysis platform based on Apache Doris.
@@ -223,7 +204,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](../../table-design/data-partition#range-partition) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../../table-design/data-partition#dynamic-partition)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](../table-design/data-partitioning/manual-partitioning#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../../table-design/data-partition#dynamic-partition)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 
@@ -233,7 +214,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
     - Use the Random strategy (`DISTRIBUTED BY RANDOM BUCKETS 60`) to optimize batch writing efficiency when paired with single tablet imports.
 
-For more information, refer to [Data Partitioning](../../table-design/data-partitioning/basic-concepts).
+For more information, refer to [Data Partitioning](../table-design/data-partitioning/auto-partitioning).
 
 **Configure compression parameters**
 
@@ -465,15 +446,13 @@ You can refer to the example below, where `property.*` represents Librdkafka cli
 ```SQL  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
-PROPERTIES (  
-"max_batch_interval" = "10",  
-"max_batch_rows" = "1000000",  
-"max_batch_size" = "109715200",  
-"load_to_single_tablet" = "true",  
-"timeout" = "600",  
-"strict_mode" = "false",  
-"format" = "json"  
-)  
+PROPERTIES (
+"max_batch_interval" = "60",
+"max_batch_rows" = "20000000",
+"max_batch_size" = "1073741824", 
+"load_to_single_tablet" = "true",
+"format" = "json"
+) 
 FROM KAFKA (  
 "kafka_broker_list" = "host:port",  
 "kafka_topic" = "log__topic_",  
@@ -487,7 +466,7 @@ FROM KAFKA (
 <br />SHOW ROUTINE LOAD;
 ```
 
-For more information about Kafka, see [Routine Load](../../data-operate/import/import-way/routine-load-manual.md).
+For more information about Kafka, see [Routine Load](../data-operate/import/routine-load-manual.md).
 
 **Using customized programs to collect logs**
 

@@ -5,49 +5,31 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## GROUPING
-
-### Name
-
-GROUPING
-
 ## 描述
 
-用在含有 CUBE、ROLLUP 或 GROUPING SETS 的 SQL 语句中，用于表示进行 CUBE、ROLLUP 或 GROUPING SETS 操作的列是否汇总。当结果集中的数据行是 CUBE、ROLLUP 或 GROUPING SETS 操作产生的汇总结果时，该函数返回 1，否则返回 0。GROUPING 函数可以在 `SELECT`、`HAVING` 和 `ORDER BY` 子句当中使用。
+用于在包含 CUBE、ROLLUP 或 GROUPING SETS 的 SQL 语句中，判断某个在 GROUP BY 子句中的列或表达式是否为汇总结果。当结果集中的数据行是由 CUBE、ROLLUP 或 GROUPING SETS 操作产生的汇总行时，该函数返回 1；否则返回 0。GROUPING 函数可在 SELECT、HAVING 和 ORDER BY 子句中使用。
 
-`ROLLUP`、`CUBE` 或 `GROUPING SETS` 操作返回的汇总结果，会用 NULL 充当被分组的字段的值。因此，`GROUPING` 通常用于区分 `ROLLUP`、`CUBE` 或 `GROUPING SETS` 返回的空值与表中的空值。
+ROLLUP、CUBE 或 GROUPING SETS 操作产生的汇总结果会以 NULL 作为被分组列的值，因此 GROUPING 函数通常用于区分这些 NULL 值与表中实际存在的 NULL 值。
+
+## 语法
 
 ```sql
 GROUPING( <column_expression> )
 ```
 
-`<column_expression>`
-是在 `GROUP BY` 子句中包含的列或表达式。
+## 参数
 
-返回值：BIGINT
+| 参数                  | 说明                                          |
+|-----------------------|-----------------------------------------------|
+| `<column_expression>` | 在 GROUP BY 子句中包含的列或表达式。            |
+
+## 返回值
+
+返回 BIGINT 值。若该列或表达式对应的数据行为汇总行，则返回 1；否则返回 0。
 
 ## 举例
 
-下面的例子使用 `camp` 列进行分组操作，并对 `occupation` 的数量进行汇总，`GROUPING` 函数作用于 `camp` 列。
+下面的例子使用 `camp` 列进行分组操作，并统计 `occupation` 的数量，同时利用 GROUPING 函数区分汇总行与表中实际存在的 NULL 值。
 
 ```sql
 CREATE TABLE `roles` (
@@ -75,19 +57,17 @@ INSERT INTO `roles` VALUES
 
 SELECT 
   camp, 
-  COUNT(occupation) AS 'occ_cnt',
-  GROUPING(camp)    AS 'grouping'
+  COUNT(occupation) AS occ_cnt,
+  GROUPING(camp) AS grouping
 FROM
-   `roles`
+  `roles`
 GROUP BY
-  ROLLUP(camp); -- CUBE(camp) 和 GROUPING SETS((camp)) 同样也有效;
+  ROLLUP(camp);
 ```
 
-结果集在 `camp` 列下有两个 NULL 值，第一个 NULL 值表示 `ROLLUP` 操作的列的汇总结果，这一行的 `occ_cnt` 列表示所有 `camp` 的 `occupation` 的计数结果，在 `grouping` 函数中返回 1。第二个 NULL 表示 `camp` 列中本来就存在的 NULL 值。
+在上述查询中，结果集中 `camp` 列出现了两个 NULL 值。其中，第一个 NULL（GROUPING 返回 1）表示该行为 ROLLUP 操作产生的汇总行，其 `occ_cnt` 为所有 `camp` 的 `occupation` 计数；第二个 NULL（GROUPING 返回 0）表示表中实际存在的 NULL 值。
 
-结果集如下：
-
-```log
+```text
 +----------+---------+----------+
 | camp     | occ_cnt | grouping |
 +----------+---------+----------+
@@ -96,12 +76,4 @@ GROUP BY
 | alliance |       4 |        0 |
 | horde    |       4 |        0 |
 +----------+---------+----------+
-4 rows in set (0.01 sec)
 ```
-### Keywords
-
-GROUPING
-
-### Best Practice
-
-还可参阅 [GROUPING_ID](./grouping_id.md)

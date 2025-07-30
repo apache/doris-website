@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 从其他 AP 系统迁移数据到 Doris，可以有多种方式：
 
 - Hive/Iceberg/Hudi等，可以使用Multi-Catalog来映射为外表，然后使用Insert Into，来将数据导入
@@ -37,7 +17,7 @@ under the License.
 
 - [X2Doris](https://www.selectdb.com/tools/x2doris)
 
-    X2Doris 专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集 `自动建 Doris 表` 和 `数据迁移` 为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
+    X2Doris 专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集“自动建 Doris 表”和“数据迁移”为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
 
 :::info NOTE
 如果有其他迁移工具可以加入此列表，可以联系 dev@doris.apache.org
@@ -61,7 +41,7 @@ X2Doris 为此场景做了适配，在此以 Hive 表迁移为例。在迁移 Hi
 
 ### 极速稳定
 
-在数据写入方面，X2Doris 特别针对读取数据进行了优化。通过优化数据攒批逻辑进一步减小了内存的使用，同时对 Stream Load 写入请求进行了大量改进和增强，对内存使用和释放进行优化，进一步提升数据迁移的速度和稳定性。
+在数据写入方面，X2Doris 特别针对读取数据进行了优化。通过优化数据攒批逻辑进一步减少了内存的使用，同时对 Stream Load 写入请求进行了大量改进和增强，对内存使用和释放进行优化，进一步提升数据迁移的速度和稳定性。
 
 对比其他同类型的迁移工具，X2Doris 性能约比同类工具快 2-10 倍。比如，在单机 1G 内存情况下，其他工具对 5000w 条数据进行全量数据同步，耗时约为 90s，而 X2Doris 仅需 50s 不到、性能提升接近 100%。
 

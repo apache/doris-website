@@ -5,31 +5,18 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 ## 背景
+
 在数据管理愈加精细化的需求背景下，定时调度在其中扮演着重要的角色。它通常被应用于以下场景：
+
 - 定期数据更新，如周期性数据导入和 ETL 操作，减少人工干预，提高数据处理的效率和准确性。
+
 - 结合 Catalog 实现外部数据源数据定期同步，确保多源数据高效、准确的整合到目标系统中，满足复杂的业务分析需求。
+
 - 定期清理过期/无效数据，释放存储空间，避免过多过期/无效数据对系统性能产生影响。
 
 在 Apache Doris 之前版本中，通常需要依赖于外部调度系统，如通过业务代码定时调度或者引入第三方调度工具、分布式调度平台来满足上述需求。然而，因受限于外部系统自身能力，可能无法满足 Doris 对调度策略及资源管理灵活性的要求。此外，如果外部调度系统出现故障，这不仅会增加业务风险，还需投入额外的运维时间和人力来应对。
+
 ## Job Scheduler
 为解决上述问题，Apache Doris 在 2.1 版本中引入了 Job Scheduler 功能，实现了自主任务调度能力，调度的精准度可达到秒级。该功能的推出不仅保障了数据导入的完整性和一致性，更让用户能够灵活、便捷调整调度策略。同时，因减少了对外部系统的依赖，也降低了系统故障的风险和运维成本，为社区用户带来更加统一、可靠的使用体验。
 
@@ -40,7 +27,7 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
 - 调度记录可追溯：Job Scheduler 会存储最新的 Task 执行记录（可配置），通过简单的命令即可查看任务执行记录，确保过程可追溯。
 - 高可用：依托于 Doris 自身的高可用机制，Job Schedule 可以很轻松的做到自恢复、高可用。
 
-**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB.md)
 
 ## 语法说明
 一条有效的 Job 语句需包含以下内容：
@@ -77,6 +64,7 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
     interval:
         quantity { WEEK |DAY | HOUR | MINUTE}
     ```
+
 下方为简单的示例：
 
 ```sql
@@ -87,25 +75,30 @@ CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FR
 
 ## 使用示例
 创建一次性的 Job：在 2025-01-01 00:00:00 时执行一次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
+
 ```sql
 CREATE JOB my_job ON SCHEDULE AT '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
 创建周期性的 Job，未指定结束时间：在 22025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
+
 ```sql
 CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE  create_time >=  days_add(now(),-1);
 ```
 创建周期性的 Job，指定结束时间：在 2025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中的数据导入到 db1.tbl1 中，在 2026-01-01 00:10:00 时结束。
+
 ```sql
 CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '2026-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE create_time >=  days_add(now(),-1);
 ```
 借助 Job 实现异步执行：由于 Job 在 Doris 中是以同步任务的形式创建的，但其执行过程却是异步进行的，这一特性使得 Job 非常适合用于实现异步任务，例如常见的 insert into select 任务。
 
 假设需要将 db2.tbl2 中的数据导入到 db1.tbl1 中，这里只需要指定 JOB 为一次性任务，且开始时间设置为当前时间即可。
+
 ```sql
 CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
 
 ## 基于 Catalog 与 Job Scheduler 的数据自动同步
+
 以某电商场景为例，用户常常需要从 MySQL 中提取业务数据，并将这些数据同步到 Doris 中进行数据分析，从而支持精准的营销活动。而 Job Scheduler 可与数据湖能力 Multi Catalog 配合，高效完成跨数据源的定期数据同步。
 
 ```sql
@@ -143,28 +136,28 @@ INSERT INTO user.activity VALUES
 以上表为例，用户希望查询符合总消费金额、最后一次访问时间、性别、所在城市这几个数值条件的用户，并将满足条件的用户信息导入到 Doris 中，以便后续的定向推送。
 
 1. 首先，创建一张 Doris 表
-  
-  ```sql
-  CREATE TABLE IF NOT EXISTS user_activity
-    (
-    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-    )
-    AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-    DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-    PROPERTIES (
-    "replication_allocation" = "tag.location.default: 1"
-    );
-  ```  
+
+    ```sql
+    CREATE TABLE IF NOT EXISTS user_activity
+      (
+      `user_id` LARGEINT NOT NULL COMMENT "用户 id",
+      `date` DATE NOT NULL COMMENT "数据灌入日期时间",
+      `city` VARCHAR(20) COMMENT "用户所在城市",
+      `age` SMALLINT COMMENT "用户年龄",
+      `sex` TINYINT COMMENT "用户性别",
+      `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+      `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
+      `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
+      `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+      )
+      AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
+      DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+      PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+      );
+    ```  
 2. 其次，创建对应 MySQL 库的 Catalog
-  
+
     ```sql    
     CREATE CATALOG activity PROPERTIES (
       "type"="jdbc",

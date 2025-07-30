@@ -5,26 +5,17 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+Heap Profile supports real-time viewing of process memory usage and call stacks, so this usually requires some understanding of the code. It should be noted that Heap Profile records virtual memory. You need to modify the configuration and restart the Doris BE process, and the phenomenon can be reproduced.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Doris uses Jemalloc as the default Allocator. Refer to the following method to use Heap Profile.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+1. Change `prof_active:false` of `JEMALLOC_CONF` in `be.conf` to `prof_active:true` and restart Doris BE.
 
-Heap Profile supports real-time viewing of process memory usage and call stacks, so this usually requires some understanding of the code. Doris uses Jemalloc as the default Allocator. For the usage of Jemalloc Heap Profile, refer to [Jemalloc Heap Profile](https://doris.apache.org/community/developer-guide/debug-tool/?_highlight=debug#jemalloc-1). It should be noted that Heap Profile records virtual memory. You need to modify the configuration and restart the Doris BE process, and the phenomenon can be reproduced.
+2. After executing `curl http://be_host:8040/jeheap/dump`, you will see the generated `profile` file in the `${DORIS_HOME}/log` directory.
+
+3. After executing `jeprof --dot ${DORIS_HOME}/lib/doris_be ${DORIS_HOME}/log/profile_file`, paste the text output by the terminal to the [online dot drawing website](http://www.webgraphviz.com/) to generate a memory allocation graph.
+
+The above process is based on Doris 2.1.8 and 3.0.4 and later versions, which are used for real-time memory analysis. If you need to observe memory for a long time or observe the cumulative value of memory application, please refer to [Jemalloc Heap Profile](https://doris.apache.org/community/developer-guide/debug-tool/?_highlight=debug#jemalloc-1) for more information about the use of Jemalloc Heap Profile.
 
 If you see the `Segment`, `TabletSchema`, and `ColumnReader` fields in the call stack with a large memory share of Heap Profile, it means that the metadata occupies a large amount of memory.
 

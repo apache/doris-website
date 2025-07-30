@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 证书问题
 
 1. 查询时报错 `curl 77: Problem with the SSL CA cert.`。说明当前系统证书过旧，需要更新本地证书。
@@ -128,17 +109,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 ## Hive Catalog
 
-1. 通过 Hive Metastore 访问 Iceberg 表报错：`failed to get schema` 或 `Storage schema reading not supported`
+1. 通过 Hive Catalog 访问 Iceberg 或 Hive 表报错：`failed to get schema` 或 `Storage schema reading not supported`
 
-   在 Hive 的 lib/ 目录放上 `iceberg` 运行时有关的 jar 包。
+   可以尝试以下方法：
 
-   在 `hive-site.xml` 配置：
+   * 在 Hive 的 lib/ 目录放上 `iceberg` 运行时有关的 jar 包。
 
-   ```
-   metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
-   ```
+   * 在 `hive-site.xml` 配置：
 
-   配置完成后需要重启 Hive Metastore。
+       ```
+       metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
+       ```
+
+       配置完成后需要重启 Hive Metastore。
+
+   * 在 Catalog 属性中添加 `"get_schema_from_table" = "true"`
+
+       该参数自 2.1.10 和 3.0.6 版本支持。
 
 2. 连接 Hive Catalog 报错：`Caused by: java.lang.NullPointerException`
 
@@ -272,6 +259,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
+12. 在插入 hive 数据的时候报错：`HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`。
+
+    因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
@@ -285,22 +276,20 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     注意：该功能可能会增加 HDFS 集群的负载，请酌情使用。
 
-    可以通过以下两种方式开启这个功能：
+    可以通过以下方式开启这个功能：
 
-    - 在创建 Catalog 的参数中指定：
+    ```
+    create catalog regression properties (
+        'type'='hms',
+        'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
+        'dfs.client.hedged.read.threadpool.size' = '128',
+        'dfs.client.hedged.read.threshold.millis' = "500"
+    );
+    ```
 
-        ```
-        create catalog regression properties (
-            'type'='hms',
-            'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
-            'dfs.client.hedged.read.threadpool.size' = '128',
-            'dfs.client.hedged.read.threshold.millis' = "500"
-        );
-        ```
+    `dfs.client.hedged.read.threadpool.size` 表示用于 Hedged Read 的线程数，这些线程由一个 HDFS Client 共享。通常情况下，针对一个 HDFS 集群，BE 节点会共享一个 HDFS Client。
 
-        `dfs.client.hedged.read.threadpool.size` 表示用于 Hedged Read 的线程数，这些线程由一个 HDFS Client 共享。通常情况下，针对一个 HDFS 集群，BE 节点会共享一个 HDFS Client。
-
-        `dfs.client.hedged.read.threshold.millis` 是读取阈值，单位毫秒。当一个读请求超过这个阈值未返回时，会触发 Hedged Read。
+    `dfs.client.hedged.read.threshold.millis` 是读取阈值，单位毫秒。当一个读请求超过这个阈值未返回时，会触发 Hedged Read。
 
     开启后，可以在 Query Profile 中看到相关参数：
 
@@ -321,16 +310,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     可能的处理方式有：
     - 通过 `hdfs fsck file -files -blocks -locations` 来查看具体该文件是否健康。
     - 通过 `telnet` 来检查与 datanode 的连通性。
+
+        在错误日志中可能会打印如下错误：
+
+        ```
+        No live nodes contain current block Block locations: DatanodeInfoWithStorage[10.70.150.122:50010,DS-7bba8ffc-651c-4617-90e1-6f45f9a5f896,DISK]
+        ```
+
+        可以先检查 Doris 集群与 `10.70.150.122:50010` 的连通性。
+
+        另外，某些情况下，HDFS 集群会使用双网卡，有对内和对外 IP。此时，需使用域名来进行通信，需要在 Catalog 属性中添加：`"dfs.client.use.datanode.hostname" = "true"`。
+
+        同时，请检查 `fe/conf` 和 `be/conf` 下放置的 `hdfs-site.xml` 文件中，该参数是否为 true。
+
     - 查看 datanode 日志。
 
-    如果出现以下错误：
+        如果出现以下错误：
 
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`
-    则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+        ```
+        org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
+        ```
 
-    使用下面的任意一种解决方案即可：
-    - 拷贝 hdfs-site.xml 以及 core-site.xml 到 be/conf 和 fe/conf 目录。(推荐)
-    - 在 hdfs-site.xml 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
+        则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+
+        使用下面的任意一种解决方案即可：
+        - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。(推荐)
+        - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
 
 ## DLF Catalog
 

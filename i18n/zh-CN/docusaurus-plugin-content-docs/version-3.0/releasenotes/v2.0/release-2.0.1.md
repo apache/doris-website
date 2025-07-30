@@ -5,29 +5,10 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，Apache Doris 2.0.1 Release 版本已于 2023 年 9 月 4 日正式发布，有超过 71 位贡献者为 Apache Doris 提交了超过 380 个优化与修复。
 
 # 行为变更
-- 将varchar默认长度1修改为65533
+- 将 varchar 默认长度 1 修改为 65533
 
 # 功能改进
 

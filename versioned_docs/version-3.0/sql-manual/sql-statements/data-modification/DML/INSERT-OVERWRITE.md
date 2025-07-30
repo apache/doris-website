@@ -7,28 +7,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
 ## Description
 
 The function of this statement is to overwrite a table or some partitions of a table
@@ -72,15 +50,33 @@ Notice:
 1. In the current version, the session variable `enable_insert_strict` is set to `true` by default. If some data that does not conform to the format of the target table is filtered out during the execution of the `INSERT OVERWRITE` statement, such as when overwriting a partition and not all partition conditions are satisfied, overwriting the target table will fail.
 2. The `INSERT OVERWRITE` statement first creates a new table, inserts the data to be overwritten into the new table, and then atomically replaces the old table with the new table and modifies its name. Therefore, during the process of overwriting the table, the data in the old table can still be accessed normally until the overwriting is completed.
 
-#### For Auto Partition Table
+### For Auto Partition Table
 
-If the target table of the INSERT OVERWRITE is an autopartitioned table, the behaviour is controlled by the [Session Variable](../#variable)  `enable_auto_create_when_overwrite` controls the behaviour as follows:
+If the target table of the INSERT OVERWRITE is an autopartitioned table, the behaviour is controlled by the [Session Variable](../../session/variable/SET-VARIABLE.md)  `enable_auto_create_when_overwrite` controls the behaviour as follows:
 
 1. If PARTITION is not specified (overwrite the whole table), when `enable_auto_create_when_overwrite` is `true`, the table is overwritten and partitions are created according to the table's auto-partitioning rules for data that does not have a corresponding partition, and those datas is admit. If `enable_auto_create_when_overwrite` is `false`, data for which no partition is found will accumulate error rows until it fails.
 2. If an overwrite PARTITION is specified, the AUTO PARTITION table behaves as a normal partitioned table during this process, and data that does not satisfy the conditions of an existing partition is filtered instead of creating a new partition.
 3. If you specify PARTITION as `partition(*)` (auto detect partition and overwrite), when `enable_auto_create_when_overwrite` is `true`, for the data that have corresponding partitions in the table, overwrite their corresponding partitions, and leave the other existing partitions unchanged. At the same time, for data without corresponding partitions, create partitions according to the table's auto-partitioning rules, and accommodate the data without corresponding partitions. If `enable_auto_create_when_overwrite` is `false`, data for which no partition is found will accumulate error rows until it fails.
 
-`enable_auto_create_when_overwrite` was introduced since 2.1.6. In versions without `enable_auto_create_when_overwrite`, the behaviour is as if the variable had a value of `false`.
+`enable_auto_create_when_overwrite` was introduced since 3.0.3. In versions without `enable_auto_create_when_overwrite`, the behaviour is as if the variable had a value of `false`.
+
+The quick check conclusion is as follows:
+
+1. For auto-partition tables that have `enable_auto_create_when_overwrite` enabled:
+
+|    | Partitions to Overwrite | Clear Other Partitions | Auto Create for Unpartitioned Data |
+|-|-|-|-|
+| Unlabeled (Full Table) | All | √ | √ |
+| Designated Partition | Explicit partition | × | × |
+| `partition(*)` | The partition that the data belongs to | × | √ |
+
+2. For trivial tables, auto-partition tables disabled `enable_auto_create_when_overwrite`:
+
+|    | Partitions to Overwrite | Clear Other Partitions | Auto Create for Unpartitioned Data |
+|-|-|-|-|
+| Unlabeled (Full Table) | All | √ | × |
+| Designated Partition | Explicit partition | × | × |
+| `partition(*)` | The partition that the data belongs to | × | × |
 
 Examples are shown below:
 
@@ -155,7 +151,7 @@ PROPERTIES (
 );
 ```
 
-#### Overwrite Table
+### Overwrite Table
 
 1. Overwrite the `test` table using the form of `VALUES`.
 
@@ -195,8 +191,7 @@ PROPERTIES (
 
 - Users can use the `SHOW LOAD;` command to check the status of the job imported by this `label`. It should be noted that the label is unique.
 
-
-#### Overwrite Table Partition
+### Overwrite Table Partition
 
 When using INSERT OVERWRITE to rewrite partitions, we actually encapsulate the following three steps into a single transaction and execute it. If it fails halfway through, the operations that have been performed will be rolled back:
 
@@ -243,8 +238,7 @@ The following is examples:
    INSERT OVERWRITE table test PARTITION(p1,p2) WITH LABEL `label4` (c1, c2) SELECT * from test2;
    ```
 
-
-#### Overwrite Auto Detect Partition
+### Overwrite Auto Detect Partition
 
 > This feature is available since version 2.1.3.
 
@@ -297,4 +291,4 @@ As you can see, all data in partitions `p10` and `pMAX`, where data 3 and 1234 a
 
 ## Keywords
 
-    INSERT OVERWRITE, OVERWRITE, AUTO DETECT
+INSERT OVERWRITE, OVERWRITE, AUTO DETECT

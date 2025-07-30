@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) 是一款可扩展、可靠的在 Apache Kafka 和其他系统之间进行数据传输的工具，可以定义 Connectors 将大量数据迁入迁出 Kafka。
 
 Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
@@ -38,7 +19,7 @@ maven 依赖
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>doris-kafka-connector</artifactId>
-  <version>1.0.0</version>
+  <version>25.0.0</version>
 </dependency>
 ```
 
@@ -208,9 +189,9 @@ errors.deadletterqueue.topic.replication.factor=1
 | doris.password              | -                                    | -                                                                                    | Y            | Doris 密码                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | doris.database              | -                                    | -                                                                                    | Y            | 要写入的数据库。多个库时可以为空，同时在 topic2table.map 需要配置具体的库名称                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | doris.topic2table.map       | -                                    | -                                                                                    | N            | topic 和 table 表的对应关系，例：topic1:tb1,topic2:tb2<br />默认为空，表示 topic 和 table 名称一一对应。 <br />  多个库的格式为 topic1:db1.tbl1,topic2:db2.tbl2                                                                                                                                                                                                                                                                                                                                                                                                                |
-| buffer.count.records        | -                                    | 10000                                                                                | N            | 在 flush 到 doris 之前，每个 Kafka 分区在内存中缓冲的记录数。默认 10000 条记录                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| buffer.flush.time           | -                                    | 120                                                                                  | N            | buffer 刷新间隔，单位秒，默认 120 秒                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| buffer.size.bytes           | -                                    | 5000000(5MB)                                                                         | N            | 每个 Kafka 分区在内存中缓冲的记录的累积大小，单位字节，默认 5MB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| buffer.count.records        | -                                    | 50000                                                                                | N            | 在 flush 到 doris 之前，每个 Kafka 分区在内存中缓冲的记录数。默认 50000 条记录                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| buffer.flush.time           | -                                    | 120                                                                                  | N            | buffer 刷新间隔，单位秒，默认 120 秒                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| buffer.size.bytes           | -                                    | 10485760(100MB)                                                                      | N            | 每个 Kafka 分区在内存中缓冲的记录的累积大小，单位字节，默认 100MB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | jmx                         | -                                    | true                                                                                 | N            | 通过 JMX 获取 Connector 内部监控指标，请参考：[Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/zh-CN/Doris-Connector-JMX.md)                                                                                                                                                                                                                                                                                                                                                                                            |
 | enable.2pc                  | -                                    | true                                                                                 | N            | 是否开启 Stream Load 的两阶段提交 (TwoPhaseCommit)，默认为 true。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | enable.delete               | -                                    | false                                                                                | N            | 是否同步删除记录，默认 false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -224,6 +205,10 @@ errors.deadletterqueue.topic.replication.factor=1
 | database.time_zone          | -                                    | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | 通过读取本地提供的 Avro Schema 文件，来解析 Topic 中的 Avro 文件内容，实现与 Confluent 提供 Schema 注册中心解耦。<br/> 此配置需要与 `key.converter` 或 `value.converter` 前缀一起使用，例如配置 avro-user、avro-product Topic 的本地 Avro Schema 文件如下： `"value.converter.avro.topic2schema.filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> 具体使用可以参考：[#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                 |
 | record.tablename.field      | -                                    | -                                                                                    | N            | 开启该参数后，可实现一个 Topic 的数据流向多个 Doris 表。 配置详情参考: [#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| enable.combine.flush        | `true`,<br/> `false`                 | false                                                                                | N            | 是否将所有分区的数据合并在一起写入。默认值为false。仅支持主键模型的表启用此选项（设置为true）。如果topic包含大量分区，启用此功能可以减少资源消耗。                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| max.retries                 | -                                    | 10                                                                                   | N            | 任务失败前重试错误的最大次数。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| retry.interval.ms           | -                                    | 6000                                                                                 | N            | 发生错误后，尝试重试之前的等待时间，单位为毫秒，默认6000毫秒。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| behavior.on.null.values     | `ignore`,<br/> `fail`                | ignore                                                                               | N            | 如何处理null值的记录，默认跳过不处理。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
@@ -426,6 +411,68 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
   } 
 }'
 ```
+
+### 使用 Kafka Connect SMT 转换数据
+
+数据样例如下:
+```shell
+{
+  "registertime": 1513885135404,
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE"
+}
+```
+
+假设需要在 Kafka 消息中硬编码新增一个列，可以使用 InsertField。另外，也可以使用 TimestampConverter 将 Bigint 类型 timestamp 转换成时间字符串。
+
+```shell
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
+  "name": "insert_field_tranform",
+  "config": {
+    "connector.class": "org.apache.doris.kafka.connector.DorisSinkConnector",
+    "tasks.max": "1",  
+    "topics": "users",  
+    "doris.topic2table.map": "users:kf_users",  
+    "buffer.count.records": "10",    
+    "buffer.flush.time": "11",       
+    "buffer.size.bytes": "5000000",  
+    "doris.urls": "127.0.0.1:8030", 
+    "doris.user": "root",                
+    "doris.password": "123456",           
+    "doris.http.port": "8030",           
+    "doris.query.port": "9030",          
+    "doris.database": "testdb",          
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",  
+    "transforms": "InsertField,TimestampConverter",  
+    // Insert Static Field
+    "transforms.InsertField.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.InsertField.static.field": "repo",    
+    "transforms.InsertField.static.value": "Apache Doris",  
+    // Convert Timestamp Format
+    "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.TimestampConverter.field": "registertime",  
+    "transforms.TimestampConverter.format": "yyyy-MM-dd HH:mm:ss.SSS",
+    "transforms.TimestampConverter.target.type": "string"
+  }
+}'
+```
+
+样例数据经过 SMT 的处理之后，变成如下所示：
+```shell
+{
+  "userid": "User_9",
+  "regionid": "Region_3",
+  "gender": "MALE",
+  "repo": "Apache Doris",// Static field added   
+  "registertime": "2017-12-21 03:38:55.404"  // Unix timestamp converted to string
+}
+```
+
+更多关于 Kafka Connect Single Message Transforms (SMT) 使用案例, 可以参考文档 [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html).
+
 
 ## 常见问题
 **1. 读取 JSON 类型的数据报如下错误：**

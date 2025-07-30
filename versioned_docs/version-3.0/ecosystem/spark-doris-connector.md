@@ -1,28 +1,9 @@
 ---
 {
-  "title": "Spark Doris Connector",
-  "language": "en"
+   "title": "Spark Doris Connector",
+   "language": "en"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 # Spark Doris Connector
 
@@ -39,7 +20,10 @@ Github: https://github.com/apache/doris-spark-connector
 
 | Connector | Spark               | Doris       | Java | Scala      |
 |-----------|---------------------|-------------|------|------------|
-| 24.0.0    | 3.5 ~ 3.0, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
+| 25.1.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
+| 25.0.1    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
+| 25.0.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
+| 24.0.0    | 3.5 ~ 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 1.3.2     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.6 | 8    | 2.12, 2.11 |
 | 1.3.1     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.0 | 8    | 2.12, 2.11 |
 | 1.3.0     | 3.4 ~ 3.1, 2.4, 2.3 | 1.0 ~ 2.1.0 | 8    | 2.12, 2.11 |
@@ -53,10 +37,20 @@ Github: https://github.com/apache/doris-spark-connector
 ```
 <dependency>
     <groupId>org.apache.doris</groupId>
-    <artifactId>spark-doris-connector-3.4_2.12</artifactId>
-    <version>24.0.0</version>
+    <artifactId>spark-doris-connector-spark-3.5</artifactId>
+    <version>25.1.0</version>
 </dependency>
 ``` 
+
+::: tip
+
+Starting from version 24.0.0, the naming rules of the Doris connector package have been adjusted:
+1. No longer contains Scala version information.
+2. For Spark 2.x versions, use the package named `spark-doris-connector-spark-2` uniformly, and by default only compile based on Scala 2.11 version. If you need Scala 2.12 version, please compile it yourself.
+3. For Spark 3.x versions, use the package named `spark-doris-connector-spark-3.x` according to the specific Spark version. Applications based on Spark 3.0 version can use the package `spark-doris-connector-spark-3.1`.
+
+:::
+
 **Note**
 
 1. Please replace the corresponding Connector version according to different Spark and Scala versions.
@@ -67,7 +61,7 @@ Github: https://github.com/apache/doris-spark-connector
 
 When compiling, you can directly run `sh build.sh`, for details, please refer to here.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-25.1.0.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
 You can also
 
 Execute in the source code directory:
@@ -76,21 +70,21 @@ Execute in the source code directory:
 
 Enter the Scala and Spark versions you need to compile according to the prompts.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar`.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-25.1.0.jar`.
 Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`.
 
 For example, if `Spark` is running in `Local` mode, put this file in the `jars/` folder. If `Spark` is running in `Yarn` cluster mode, put this file in the pre-deployment package.
 
-For example, upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
+For example, upload `spark-doris-connector-spark-3.5-25.1.0.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
 ```shell
 
-1. Upload `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` to hdfs.
+1. Upload `spark-doris-connector-spark-3.5-25.1.0.jar` to hdfs.
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.1.0.jar /spark-jars/
 
-2. Add the `spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar` dependency in the cluster.
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-3.2_2.12-1.2.0-SNAPSHOT.jar
+2. Add the `spark-doris-connector-spark-3.5-25.1.0.jar` dependency in the cluster.
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.1.0.jar
 
 ```
 
@@ -198,7 +192,7 @@ mockDataDF.write.format("doris")
   //specify the fields to write
   .option("doris.write.fields", "$YOUR_FIELDS_TO_WRITE")
   // Support setting Overwrite mode to overwrite data
-  // .option("save_mode", SaveMode.Overwrite)
+  // .mode(SaveMode.Overwrite)
   .save()
 ```
 
@@ -374,17 +368,17 @@ show databases;
 -- use databases
 use your_doris_db;
 
-// show tables in test
+-- show tables in test
 show tables;
 
-// query table
+-- query table
 select * from your_doris_table;
 
-// write data
+-- write data
 insert into your_doris_table values(xxx);
 insert into your_doris_table select * from your_source_table;
 
-// access table with full name
+-- access table with full name
 select * from your_catalog_name.your_doris_db.your_doris_table;
 insert into your_catalog_name.your_doris_db.your_doris_table values(xxx);
 insert into your_catalog_name.your_doris_db.your_doris_table select * from your_source_table;
@@ -398,31 +392,31 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 |----------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | doris.fenodes                    | --            | Doris FE http address, support multiple addresses, separated by commas                                                                                                                                                                                                                                                                                                                                                                                                          |
 | doris.table.identifier           | --            | Doris table identifier, eg, db1.tbl1                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| doris.user                       | --            | Doris username                                                                                                                                                                                 |
+| doris.password                   | Empty string  | Doris password                                                                                                                                                                                 |
 | doris.request.retries            | 3             | Number of retries to send requests to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | doris.request.connect.timeout.ms | 30000         | Connection timeout for sending requests to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | doris.request.read.timeout.ms    | 30000         | Read timeout for sending request to Doris                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| doris.request.query.timeout.s    | 3600          | Query the timeout time of doris, the default is 1 hour, -1 means no timeout limit                                                                                                                                                                                                                                                                                                                                                                                               |
+| doris.request.query.timeout.s    | 21600          | Query the timeout time of doris, the default is 6 hour, -1 means no timeout limit                                                                                                                                                                                                                                                                                                                                                                                               |
 | doris.request.tablet.size        | 1             | The number of Doris Tablets corresponding to an RDD Partition. The smaller this value is set, the more partitions will be generated. This will increase the parallelism on the Spark side, but at the same time will cause greater pressure on Doris.                                                                                                                                                                                                                           |
 | doris.read.field                 | --            | List of column names in the Doris table, separated by commas                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | doris.batch.size                 | 4064          | The maximum number of rows to read data from BE at one time. Increasing this value can reduce the number of connections between Spark and Doris. Thereby reducing the extra time overhead caused by network delay.                                                                                                                                                                                                                                                              |
-| doris.exec.mem.limit             | 2147483648    | Memory limit for a single query. The default is 2GB, in bytes.                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| doris.deserialize.arrow.async    | false         | Whether to support asynchronous conversion of Arrow format to RowBatch required for spark-doris-connector iteration                                                                                                                                                                                                                                                                                                                                                             |
-| doris.deserialize.queue.size     | 64            | Asynchronous conversion of the internal processing queue in Arrow format takes effect when doris.deserialize.arrow.async is true                                                                                                                                                                                                                                                                                                                                                |
+| doris.exec.mem.limit             | 8589934592    | Memory limit for a single query. The default is 8GB, in bytes.                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | doris.write.fields               | --            | Specifies the fields (or the order of the fields) to write to the Doris table, fileds separated by commas.<br/>By default, all fields are written in the order of Doris table fields.                                                                                                                                                                                                                                                                                           |
-| doris.sink.batch.size            | 100000        | Maximum number of lines in a single write BE                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| doris.sink.batch.size            | 500000        | Maximum number of lines in a single write BE                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | doris.sink.max-retries           | 0             | Number of retries after writing BE, Since version 1.3.0, the default value is 0, which means no retries are performed by default. When this parameter is set greater than 0, batch-level failure retries will be performed, and data of the configured size of `doris.sink.batch.size` will be cached in the Spark Executor memory. The memory allocation may need to be appropriately increased.                                                                               |
-| doris.sink.properties.format     | --            | Data format of the stream load.<br/>Supported formats: csv, json, arrow <br/> [More Multi-parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                                                                                                                      |
-| doris.sink.properties.*          | --            | Import parameters for Stream Load. <br/>For example:<br/>Specify column separator: `'doris.sink.properties.column_separator' = ','`.<br/>[More parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                                                                 |
+| doris.sink.retry.interval.ms           | 10000             | After configuring the number of retries, the interval between each retry, in ms    |      
+| doris.sink.properties.format     | --            | Data format of the stream load.<br/>Supported formats: csv, json, arrow <br/> [More Multi-parameter details](../data-operate/import/import-way/stream-load-manual)                                                                                                                                                                                                                                                                                                                      |
+| doris.sink.properties.*          | --            | Import parameters for Stream Load. <br/>For example:<br/>Specify column separator: `'doris.sink.properties.column_separator' = ','`.<br/>[More parameter details](../data-operate/import/import-way/stream-load-manual)                                                                                                                                                                                                                                                                 | 
 | doris.sink.task.partition.size   | --            | The number of partitions corresponding to the Writing task. After filtering and other operations, the number of partitions written in Spark RDD may be large, but the number of records corresponding to each Partition is relatively small, resulting in increased writing frequency and waste of computing resources. The smaller this value is set, the less Doris write frequency and less Doris merge pressure. It is generally used with doris.sink.task.use.repartition. |
 | doris.sink.task.use.repartition  | false         | Whether to use repartition mode to control the number of partitions written by Doris. The default value is false, and coalesce is used (note: if there is no Spark action before the write, the whole computation will be less parallel). If it is set to true, then repartition is used (note: you can set the final number of partitions at the cost of shuffle).                                                                                                             |
-| doris.sink.batch.interval.ms     | 50            | The interval time of each batch sink, unit ms.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| doris.sink.batch.interval.ms     | 0            | The interval time of each batch sink, unit ms.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | doris.sink.enable-2pc            | false         | Whether to enable two-stage commit. When enabled, transactions will be committed at the end of the job, and all pre-commit transactions will be rolled back when some tasks fail.                                                                                                                                                                                                                                                                                               |
 | doris.sink.auto-redirect         | true          | Whether to redirect StreamLoad requests. After being turned on, StreamLoad will write through FE and no longer obtain BE information explicitly.                                                                                                                                                                                                                                                                                                                                |
 | doris.enable.https               | false         | Whether to enable FE Https request.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | doris.https.key-store-path       | -             | Https key store path.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | doris.https.key-store-type       | JKS           | Https key store type.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | doris.https.key-store-password   | -             | Https key store password.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| doris.sink.mode                  | stream_load   | Doris sink mode, with optional `stream_load` and `copy_into`.                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | doris.read.mode                  | thrift        | Doris read mode, with optional `thrift` and `arrow`.                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | doris.read.arrow-flight-sql.port | -             | Arrow Flight SQL port of Doris FE. When `doris.read.mode` is `arrow`, it is used to read data via Arrow Flight SQL. For server configuration, see [High-speed data transmission link based on Arrow Flight SQL](https://doris.apache.org/zh-CN/docs/dev/db-connect/arrow-flight-sql-connect)                                                                                                                                                                                    |
 | doris.sink.label.prefix          | spark-doris   | The import label prefix when writing in Stream Load mode.                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -437,10 +431,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 
 | Key                             | Default Value | Comment                                                                                                                                                                                        |
 |---------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| user                            | --            | Doris username                                                                                                                                                                                 |
-| password                        | --            | Doris password                                                                                                                                                                                 |
 | doris.filter.query.in.max.count | 100           | In the predicate pushdown, the maximum number of elements in the in expression value list. If this number is exceeded, the in-expression conditional filtering is processed on the Spark side. |
-| doris.ignore-type               | --            | In a temporary view, specify the field types to ignore when reading the schema. <br/> eg: when 'doris.ignore-type'='bitmap,hll'                                                                |
 
 ### Structured Streaming Configuration
 
@@ -459,30 +450,34 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 
 ## Doris & Spark Column Type Mapping
 
-| Doris Type | Spark Type                       |
-|------------|----------------------------------|
-| NULL_TYPE  | DataTypes.NullType               |
-| BOOLEAN    | DataTypes.BooleanType            |
-| TINYINT    | DataTypes.ByteType               |
-| SMALLINT   | DataTypes.ShortType              |
-| INT        | DataTypes.IntegerType            |
-| BIGINT     | DataTypes.LongType               |
-| FLOAT      | DataTypes.FloatType              |
-| DOUBLE     | DataTypes.DoubleType             |
-| DATE       | DataTypes.DateType               |
-| DATETIME   | DataTypes.StringType<sup>1</sup> |
-| DECIMAL    | DecimalType                      |
-| CHAR       | DataTypes.StringType             |
-| LARGEINT   | DecimalType                      |
-| VARCHAR    | DataTypes.StringType             |
-| STRING     | DataTypes.StringType             |
-| JSON       | DataTypes.StringType             |
-| VARIANT    | DataTypes.StringType             |
-| TIME       | DataTypes.DoubleType             |
-| HLL        | Unsupported datatype             |
-| Bitmap     | Unsupported datatype             |
+| Doris Type | Spark Type              |
+|------------|-------------------------|
+| NULL_TYPE  | DataTypes.NullType      |
+| BOOLEAN    | DataTypes.BooleanType   |
+| TINYINT    | DataTypes.ByteType      |
+| SMALLINT   | DataTypes.ShortType     |
+| INT        | DataTypes.IntegerType   |
+| BIGINT     | DataTypes.LongType      |
+| FLOAT      | DataTypes.FloatType     |
+| DOUBLE     | DataTypes.DoubleType    |
+| DATE       | DataTypes.DateType      |
+| DATETIME   | DataTypes.TimestampType |
+| DECIMAL    | DecimalType             |
+| CHAR       | DataTypes.StringType    |
+| LARGEINT   | DecimalType             |
+| VARCHAR    | DataTypes.StringType    |
+| STRING     | DataTypes.StringType    |
+| JSON       | DataTypes.StringType    |
+| VARIANT    | DataTypes.StringType    |
+| TIME       | DataTypes.DoubleType    |
+| HLL        | DataTypes.StringType    |
+| Bitmap     | DataTypes.StringType    |
 
-* Note: In Connector, ` DATETIME` is mapped to `String`. Due to the processing logic of the Doris underlying storage engine, when the time type is used directly, the time range covered cannot meet the demand. So use `String` type to directly return the corresponding time readable text.
+:::tip
+
+Since version 24.0.0, the return type of the Bitmap type is string type, and the default return value is string value `Read unsupported`.
+
+:::
 
 ## FAQ
 
@@ -532,7 +527,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
     resultDf.format("doris")
       .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT")
       // your own options
-      .option("save_mode", SaveMode.Overwrite)
+      .mode(SaveMode.Overwrite)
       .save()
     ```
 
@@ -569,4 +564,15 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
    .option("password", "$YOUR_DORIS_PASSWORD")
    .option("doris.read.bitmap-to-base64","true")
    .load()
+   ```
+
+4. **An error occurs when writing in DataFrame mode: `org.apache.spark.sql.AnalysisException: TableProvider implementation doris cannot be written with ErrorIfExists mode, please use Append or Overwrite modes instead.`**
+
+   Need to add save mode to append.
+    ```scala 
+    resultDf.format("doris")
+      .option("doris.fenodes","$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_RESFUL_PORT") 
+      // your own options 
+      .mode(SaveMode.Append)
+      .save() 
    ```

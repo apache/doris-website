@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage in Doris 3.0, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
+Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage for unreleased development version, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
 
 ## Collection of Statistics
 
@@ -52,21 +33,7 @@ Doris allows users to manually trigger the collection and update of statistics b
 
 **1. Syntax**
 
-```sql
-ANALYZE < TABLE table_name > | < DATABASE db_name > 
-    [ (column_name [, ...]) ]
-    [ [ WITH SYNC ] [ WITH SAMPLE PERCENT | ROWS ] ];
-```
-
-Parameters Explanation:
-
-- `table_name`: Specifies the target table for which statistics will be collected.
-
-- `column_name`: Specifies the target columns for which statistics will be collected. These columns must exist in `table_name`, and multiple column names are separated by commas. If no column names are specified, statistics will be collected for all columns in the table.
-
-- `sync`: Optional parameter to collect statistics synchronously. If specified, the result will be returned after collection is complete; if not specified, the operation will be performed asynchronously, and a JOB ID will be returned, which can be used to check the status of the collection task.
-
-- `sample percent | rows`: Optional parameter for sampling during statistics collection. Allows specifying a sampling percentage or number of rows. If `WITH SAMPLE` is not specified, a full table scan will be performed. For large tables (e.g., over 5 GiB), sampling is generally recommended from a cluster resource utilization perspective. To ensure the accuracy of statistics, it is recommended to sample at least 4 million rows.
+Please refer to SQL manual [ANALYZE](../../sql-manual/sql-statements/statistics/ANALYZE)
 
 **2. Examples**
 
@@ -113,6 +80,8 @@ When a table is polled, the system first determines if statistical collection is
 
 2. The table's health is below the threshold (default 90, adjustable via `table_stats_health_threshold`). Health indicates the percentage of data that has remained unchanged since the last statistics collection: 100 indicates no change; 0 indicates all changes; a health below 90 indicates significant deviation in current statistics, necessitating re-collection.
 
+3. For internal tables, the data has changed, but no statistical information has been collected within the last 24 hours
+
 To reduce background job overhead and improve collection speed, automatic collection uses sampling by default, sampling 4,194,304 (`2^22`) rows. Users can adjust the sampling size by modifying `huge_table_default_sample_rows` for more accurate data distribution information.
 
 To prevent automatic collection jobs from interfering with business operations, users can specify the execution window for automatic collection based on their requirements by setting `auto_analyze_start_time` and `auto_analyze_end_time`:
@@ -130,16 +99,24 @@ External tables typically include Hive, Iceberg, JDBC, and other types.
 
 - Automatic Collection: Currently, only Hive tables are supported.
 
-External Catalogs do not participate in automatic collection by default because they often contain large amounts of historical data, which could consume excessive resources during automatic collection. However, you can enable or disable automatic collection for an external Catalog by setting its properties:
+External Catalogs do not participate in automatic column statistics collection by default because they often contain large amounts of historical data, which could consume excessive resources during automatic collection. In cases where there is indeed a need, you can enable or disable automatic column statistics collection for an external Catalog by setting its properties:
 
 ```sql
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // Enable automatic collection  
-ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); // Disable automatic collection
+ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // Enable automatic column statistics collection
+ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); // Disable automatic column statistics collection
 ```
 
-External tables do not have the concept of health. When automatic collection is enabled for a Catalog, the system defaults to collecting statistics for an external table only once every 24 hours to avoid frequent collection. You can adjust the minimum collection interval for external tables using the `external_table_auto_analyze_interval_in_millis` variable.
+If the granularity of controlling the entire Catalog is too large, we also support enable and disable column statistical collection at the table level.
 
-By default, external tables do not collect statistics, but for Hive and Iceberg tables, the system attempts to obtain row count information through the Hive Metastore and Iceberg API.
+ ```sql
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "enable"); // Enable automatic collection of column statistical for this table (the priority is higher than the enable.auto.analyze property of the Catalog).
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "disable"); // Disnable automatic collection of column statistical for this table (the priority is higher than the enable.auto.analyze property of the Catalog).
+ALTER TABLE <table_name> SET ("auto_analyze_policy" = "base_on_catalog"); // It is determined by the enable.auto.analyze property of the table's Catalog.
+ ```
+
+External tables do not have the concept of health. When automatic collection column statistic is enabled for a Catalog/Table, the system defaults to collecting statistics for an external table at most once every 24 hours to avoid frequent collection. You can adjust the minimum collection interval for external tables using the `external_table_auto_analyze_interval_in_millis` variable.
+
+By default, external tables do not collect column statistics, the system only attempts to obtain table's row count information. The methods for collecting row count information for different external tables are as follows.
 
 **1. For Hive Tables:**
 
@@ -165,7 +142,7 @@ Doris calls Paimon's scan API to obtain the number of rows contained in each Spl
 
 **4. For JDBC Tables:**
 
-Doris sends SQL of reading table statistics to remote database to get table row count. This can only be achieved when the remote database has collected the row count information of the table. Currently, Doris supports retrieving the row count of tables in MySQL, Oracle, Postgresql and SQLServer.
+Doris sends SQL of reading table statistics to remote database to get table row count. This can only be achieved when the remote database has collected the row count information of the table. Currently, Doris supports retrieving the row count of tables in MySQL, Oracle, PostgreSQL and SQLServer.
 
 **5. For Other External Tables:**
 
@@ -187,16 +164,7 @@ Use `SHOW ANALYZE` to view information about statistics collection jobs. Current
 
 **1. Syntax**:
 
-```sql
-SHOW [AUTO] ANALYZE < table_name | job_id >
-    [ WHERE STATE = < "PENDING" | "RUNNING" | "FINISHED" | "FAILED" > ];
-```
-
-- `AUTO`: Displays information about historical automatic collection jobs. If unspecified, displays information about manual `ANALYZE` historical jobs.
-
-- `table_name`: Table name, specifying which allows you to view statistics job information for that table. Can be in the form `db_name.table_name`. If unspecified, returns information about all statistics jobs.
-
-- `job_id`: Statistics job ID, obtained when executing an asynchronous `ANALYZE` collection. If unspecified, the command returns information about all statistics jobs.
+Please refer to SQL manual [SHOW ANALYZE](../../sql-manual/sql-statements/statistics/SHOW-ANALYZE)
 
 **2. Output**:
 
@@ -474,7 +442,7 @@ If the number of columns does not exceed the threshold, execute `show auto analy
 
 ### Q3: Why are statistics not available for some columns?
 
-Currently, the system only supports collecting statistics for columns of basic data types. For complex types such as JSONV, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, and TIMEV2, the system skips them.
+Currently, the system only supports collecting statistics for columns of basic data types. For complex types such as JSONB, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, and TIMEV2, the system skips them.
 
 ### Q4: Error: "Stats table not available, please make sure your cluster status is normal"
 

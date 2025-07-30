@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris provides two ways to load files from AWS S3:
 - Use S3 Load to load S3 files into Doris, which is an asynchronous load method.
 - Use TVF to load S3 files into Doris, which is a synchronous load method.
@@ -61,7 +42,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### Step 3: Load data with S3 Load
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -187,3 +168,5 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+
+Doris also supported `AWS Assume Role` for S3 Load and TVF, please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).

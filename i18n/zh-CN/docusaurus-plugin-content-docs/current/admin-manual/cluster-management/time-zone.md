@@ -5,32 +5,13 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 支持自定义时区设置
 
 ## 基本概念
 
 Doris 内部存在以下两个时区相关参数：
 
-- system_time_zone : 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
+- system_time_zone : 当服务器启动时，系统会根据机器设置时区自动设置，设置后不可修改。
 
 - time_zone : 集群当前时区，可以修改。集群启动时，该变量会设置为与 `system_time_zone` 相同，之后不再变动，除非用户手动修改。
 

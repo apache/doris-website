@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
  该语句用于展示一个表中索引的相关信息，目前只支持 bitmap 索引
@@ -62,7 +43,7 @@ SHOW KEY[ S ] FROM [ <db_name>. ] <table_name> [ FROM <db_name> ];
 | Sub_part     | int    | 索引所使用的前缀长度。如果索引列为字符串类型，`Sub_part` 表示索引的前几个字符长度。                                                          |
 | Packed       | string | 索引是否压缩。                                                                                                  |
 | Null         | string | 是否允许 `NULL` 值：<br> - `YES`：允许 `NULL` 值<br> - `NO`：不允许 `NULL` 值                                           |
-| Index_type   | string | 索引的类型：<br> - `BTREE`：B+树索引（MySQL 默认类型）<br> - `HASH`：哈希索引<br> - `RTREE`：R树索引<br> - `INVERTED`：倒排索引（如全文索引） |
+| Index_type   | string | 索引的类型：<br> - `BTREE`：B+ 树索引（MySQL 默认类型）<br> - `HASH`：哈希索引<br> - `RTREE`：R 树索引<br> - `INVERTED`：倒排索引（如全文索引） |
 | Comment      | string | 索引的注释或描述，通常为自定义的备注信息。                                                                                    |
 | Properties   | string | 索引的附加属性。                                                                                                 |
 

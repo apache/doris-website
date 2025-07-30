@@ -5,28 +5,8 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+一个分区可以根据业务需求进一步划分为多个数据分桶（bucket）。每个分桶都作为一个物理数据分片（tablet）存储。合理的分桶策略可以有效降低查询时的数据扫描量，提升查询性能并增加并发处理能力。
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-一个分区可以进一步根据业务逻辑被划分为不同的数据分桶（bucket）。每个分桶会被存储为一个物理的数据分片（tablet）。一个合理的分桶策略能够有效减少查询过程中数据的扫描量，从而提升查询性能并增加查询并发能力。
 
 ## 分桶方式
 
@@ -38,11 +18,11 @@ Doris 支持两种分桶方式：Hash 分桶与 Random 分桶。
 
 ![hash-bucket](/images/table-desigin/hash-bucket.png)
 
-在以下场景中，推荐使用 Hash 分桶：
+推荐在以下场景中使用 Hash 分桶：
 
-* 当业务需求频繁根据某个字段进行过滤时，可将该字段作为分桶键进行 Hash 分桶，以提高查询效率。
+* 业务需求频繁基于某个字段进行过滤时，可将该字段作为分桶键，利用 Hash 分桶提高查询效率。
 
-* 当表中数据分布相对均匀时，Hash 分桶同样是一个合适的选择。
+* 当表中的数据分布较为均匀时，Hash 分桶同样是一种有效的选择。
 
 以下示例展示了如何创建带有 Hash 分桶的表。详细语法请参考 CREATE TABLE 语句。
 
@@ -71,7 +51,7 @@ DISTRIBUTED BY HASH(region) BUCKETS 8;
 
 ![random-bucket](/images/table-desigin/random-bucket.png)
 
-在使用 Random 分桶时，可以开启单分片导入模式（将 `load_to_single_tablet` 设置为 `true`）。在进行大规模数据导入时，一个批次的数据只会写入到一个数据分片，这有助于提高数据导入的并发度和吞吐量，减少因数据导入和 Compaction 导致的写放大问题，从而保障集群的稳定性。
+在使用 Random 分桶时，可以启用单分片导入模式（通过设置 `load_to_single_tablet` 为 `true`）。这样，在大规模数据导入过程中，单个批次的数据仅写入一个数据分片，能够提高数据导入的并发度和吞吐量，减少因数据导入和压缩（Compaction）操作造成的写放大问题，从而确保集群稳定性。
 
 在以下场景中，建议使用 Random 分桶：
 
@@ -142,9 +122,9 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 在决定分桶数量时，通常遵循数量与大小两个原则，当发生冲突时，优先考虑大小原则：
 
-* 大小原则：建议一个 tablet 的大小在 1-10G 范围内。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价；
+* **大小原则**：建议一个 tablet 的大小在 1-10G 范围内。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价；
 
-* 数量原则：在不考虑扩容的情况下，一个表的 tablet 数量建议略多于整个集群的磁盘数量。
+* **数量原则**：在不考虑扩容的情况下，一个表的 tablet 数量建议略多于整个集群的磁盘数量。
 
 例如，假设有 10 台 BE 机器，每个 BE 一块磁盘，可以按照以下建议进行数据分桶：
 

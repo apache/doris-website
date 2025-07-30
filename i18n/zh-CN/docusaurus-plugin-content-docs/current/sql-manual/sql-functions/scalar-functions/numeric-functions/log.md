@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 返回基于底数`b`的`x`的对数。
@@ -29,21 +12,21 @@ under the License.
 ## 语法
 
 ```sql
-LOG(<a>,<x>)
+LOG(<b>[, <x>])
 ```
 
 ## 参数
 
-| 参数 | 说明 |
-| -- | -- |
-| `<a>`   | 底数 必须大于0且不等于1 |
-| `<x>`   | 真数 必须大于0         |
+| 参数    | 说明 |
+|-------| -- |
+| `<b>` | 底数 必须大于 0 且不等于 1 |
+| `<x>` | 可选，真数必须大于 0，默认为自然数e |
 
 ## 返回值
 
 返回一个浮点数。特殊情况：
 
-- 当a为NULL 或 x为NULL时，返回`NULL`
+- 当 b 为 NULL 或 x 为 NULL 时，返回`NULL`
 
 ## 举例
 
@@ -57,6 +40,18 @@ select log(5,1);
 +---------------+
 |             0 |
 +---------------+
+```
+
+```sql
+select log(3),ln(3);
+```
+
+```text
++--------------------+--------------------+
+| log(3)             | ln(3)              |
++--------------------+--------------------+
+| 1.0986122886681098 | 1.0986122886681098 |
++--------------------+--------------------+
 ```
 
 ```sql

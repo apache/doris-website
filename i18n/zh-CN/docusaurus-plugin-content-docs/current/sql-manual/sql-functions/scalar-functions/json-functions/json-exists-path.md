@@ -5,78 +5,66 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-用来判断 `json_path` 指定的字段在 JSON 数据中是否存在，如果存在返回 TRUE，不存在返回 FALSE
+用来判断 `<path>` 指定的字段在 JSON 数据中是否存在，如果存在返回 TRUE，不存在返回 FALSE
 
 ## 语法
 
 ```sql
-JSON_EXISTS_PATH (<json_str>,  <path>)
+JSON_EXISTS_PATH (<json_object>, <path>)
 ```
-
-## 别名
-
-* JSONB_EXISTS_PATH
 
 ## 参数
-| 参数           | 描述                                                     |
-|--------------|--------------------------------------------------------|
-| `<json_str>` | 要包含在 JSON 数组中的元素。可以是任意类型的值，包括`NULL`。如果没有指定元素，则返回一个空数组。 
-| `<path>`     | 要插入的 JSON 路径。如果是 `NULL` ，则返回 NULL                      |
+- `<json_object>` JSON 类型，在其中判断 `<path>` 指定的路径是否存在。
+- `<path>` String 类型，指定路径。
 
 ## 返回值
-如果存在返回 TRUE，不存在返回 FALSE
+- BOOL 类型，如果存在返回 TRUE，不存在返回 FALSE
+- NULL 如果 `<json_object>` 和 `<path>` 任意一个为 NULL，返回 NULL。
 
-## 举例
-
-```sql
-SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.name');
-```
-```text
-+---------------------------------------------------------------------------+
-| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
-+---------------------------------------------------------------------------+
-|                                                                         1 |
-+---------------------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age');
-```
-```text
-+--------------------------------------------------------------------------+
-| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.age') |
-+--------------------------------------------------------------------------+
-|                                                                        0 |
-+--------------------------------------------------------------------------+
-```
-```sql
-SELECT JSONB_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age');
-```
-```text
-+--------------------------------------------------------------------------+
-| jsonb_exists_path(cast('{"id": 123, "name": "doris"}' as JSON), '$.age') |
-+--------------------------------------------------------------------------+
-|                                                                        0 |
-+--------------------------------------------------------------------------+
-```
+## 示例
+1. 示例 1
+    ```sql
+    SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.name');
+    ```
+    ```text
+    +------------------------------------------------------------+
+    | JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.name') |
+    +------------------------------------------------------------+
+    |                                                          1 |
+    +------------------------------------------------------------+
+    ```
+2. 示例 2
+    ```sql
+    SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age');
+    ```
+    ```text
+    +-----------------------------------------------------------+
+    | JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', '$.age') |
+    +-----------------------------------------------------------+
+    |                                                         0 |
+    +-----------------------------------------------------------+
+    ```
+3. NULL 参数
+    ```sql
+    SELECT JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', NULL);
+    ```
+    ```text
+    +--------------------------------------------------------+
+    | JSON_EXISTS_PATH('{"id": 123, "name": "doris"}', NULL) |
+    +--------------------------------------------------------+
+    |                                                   NULL |
+    +--------------------------------------------------------+
+    ```
+    ```sql
+    SELECT JSON_EXISTS_PATH(NULL, '$.age');
+    ```
+    ```text
+    +---------------------------------+
+    | JSON_EXISTS_PATH(NULL, '$.age') |
+    +---------------------------------+
+    |                            NULL |
+    +---------------------------------+
+    ```
 

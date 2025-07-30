@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Doris 提供了多种导入和集成数据的方法，您可以使用合适的导入方式从各种源将数据导入到数据库中。Apache Doris 提供的数据导入方式可以分为四类：
 
 - **实时写入**：应用程序通过 HTTP 或者 JDBC 实时写入数据到 Doris 表中，适用于需要实时分析和查询的场景。
@@ -45,12 +26,12 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 - **批量导入**：将数据从外部存储系统（如对象存储、HDFS、本地文件、NAS）批量加载到 Doris 表中，适用于非实时数据导入的需求。
     - 可以使用 [Broker Load](./import-way/broker-load-manual.md) 将对象存储和 HDFS 中的文件写入到 Doris 中。
 
-    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
+    - 可以使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将对象存储、HDFS 和 NAS 中的文件同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 
     - 可以使用 [Stream Load](./import-way/stream-load-manual) 或者 [Doris Streamloader](../../ecosystem/doris-streamloader.md) 将本地文件写入 Doris 中。
 
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
-    - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../scheduler/job-scheduler.md) 可以异步写入。
+    - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 
     - 可以使用 [X2Doris](data-source/migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
 
@@ -63,9 +44,9 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 | 导入方式                                      | 使用场景                                   | 支持的文件格式          | 导入模式 |
 | :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
 | [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入         | csv、json、parquet、orc | 同步     |
-| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS等导入                     | csv、json、parquet、orc | 异步     |
-| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过JDBC等接口导入 | SQL                     | 同步     |
-| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 同步     |
-| [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 异步     |
+| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS 等导入                     | csv、json、parquet、orc | 异步     |
+| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过 JDBC 等接口导入 | SQL                     | 同步     |
+| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS 中的文件      | SQL                     | 同步     |
+| [Routine Load](./import-way/routine-load-manual.md)      | 从 kakfa 实时导入                            | csv、json               | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 同步     |
 | [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定  | -     |

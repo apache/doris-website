@@ -1,28 +1,9 @@
 ---
 {
-    "title": "Leading Hint",
-    "language": "zh-CN"
+  "title": "Leading Hint",
+  "language": "zh-CN"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 Leading Hint 是一种强大的查询优化技术，允许用户指导 Doris 优化器确定查询计划中的表连接顺序。正确使用 Leading Hint 可以显著提高复杂查询的性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 join 顺序。
 
@@ -65,371 +46,374 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 +------------------------------------------------------------------------------+
 ```
 
-当 Leading Hint 不生效的时候会走正常的流程生成计划，EXPLAIN 会显示使用的 Hint 是否生效，主要分三种来显示:
+当 Leading Hint 不生效的时候会走正常的流程生成计划，EXPLAIN 会显示使用的 Hint 是否生效，主要分三种来显示：
 
-   - `Used`：Leading Hint 正常生效
-   - `Unused`：这里不支持的情况包含 Leading Hint 指定的 join order 与原 SQL 不等价或本版本暂不支持特性（详见限制）
-   - `SyntaxError`：指 Leading Hint 语法错误，如找不到对应的表等 
+| 状态            | 描述                                                                |
+|---------------|-------------------------------------------------------------------|
+| `Used`        | Leading Hint 正常生效                                                 |
+| `Unused`      | 这里不支持的情况包含 Leading Hint 指定的 join order 与原 SQL 不等价或本版本暂不支持特性（详见限制） |
+| `SyntaxError` | 指 Leading Hint 语法错误，如找不到对应的表等                                     |
 
-1. Leading Hint 语法默认构造出左深树:
-```sql
-mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
-+--------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                |
-+--------------------------------------------------------------------------------+
-| PhysicalResultSink                                                             |
-| --PhysicalDistribute[DistributionSpecGather]                                   |
-| ----PhysicalProject                                                            |
-| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
-| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ----------PhysicalOlapScan[t1]                                                 |
-| ----------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------PhysicalOlapScan[t2]                                               |
-| --------PhysicalDistribute[DistributionSpecHash]                               |
-| ----------PhysicalOlapScan[t3]                                                 |
-|                                                                                |
-| Hint log:                                                                      |
-| Used: leading(t1 t2 t3)                                                        |
-| UnUsed:                                                                        |
-| SyntaxError:                                                                   |
-+--------------------------------------------------------------------------------+
-```
+
+1. Leading Hint 语法默认构造出左深树：
+    ```sql
+    mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
+    +--------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                |
+    +--------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                             |
+    | --PhysicalDistribute[DistributionSpecGather]                                   |
+    | ----PhysicalProject                                                            |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+    | --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+    | ----------PhysicalOlapScan[t1]                                                 |
+    | ----------PhysicalDistribute[DistributionSpecHash]                             |
+    | ------------PhysicalOlapScan[t2]                                               |
+    | --------PhysicalDistribute[DistributionSpecHash]                               |
+    | ----------PhysicalOlapScan[t3]                                                 |
+    |                                                                                |
+    | Hint log:                                                                      |
+    | Used: leading(t1 t2 t3)                                                        |
+    | UnUsed:                                                                        |
+    | SyntaxError:                                                                   |
+    +--------------------------------------------------------------------------------+
+    ```
 
 2. 同时允许使用大括号指定 Join 树形状：
-```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
-+----------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                  |
-+----------------------------------------------------------------------------------+
-| PhysicalResultSink                                                               |
-| --PhysicalDistribute[DistributionSpecGather]                                     |
-| ----PhysicalProject                                                              |
-| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
-| --------PhysicalOlapScan[t1]                                                     |
-| --------PhysicalDistribute[DistributionSpecHash]                                 |
-| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-| ------------PhysicalOlapScan[t2]                                                 |
-| ------------PhysicalDistribute[DistributionSpecHash]                             |
-| --------------PhysicalOlapScan[t3]                                               |
-|                                                                                  |
-| Hint log:                                                                        |
-| Used: leading(t1 { t2 t3 })                                                      |
-| UnUsed:                                                                          |
-| SyntaxError:                                                                     |
-+----------------------------------------------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on c1 = c2 join t3 on c2=c3;
+    +----------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                  |
+    +----------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                               |
+    | --PhysicalDistribute[DistributionSpecGather]                                     |
+    | ----PhysicalProject                                                              |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
+    | --------PhysicalOlapScan[t1]                                                     |
+    | --------PhysicalDistribute[DistributionSpecHash]                                 |
+    | ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+    | ------------PhysicalOlapScan[t2]                                                 |
+    | ------------PhysicalDistribute[DistributionSpecHash]                             |
+    | --------------PhysicalOlapScan[t3]                                               |
+    |                                                                                  |
+    | Hint log:                                                                        |
+    | Used: leading(t1 { t2 t3 })                                                      |
+    | UnUsed:                                                                          |
+    | SyntaxError:                                                                     |
+    +----------------------------------------------------------------------------------+
+    ```
 
 3. 当有 View 作为别名参与 JoinReorder 的时候可以指定对应的 View 作为 Leading Hint 的参数。例：
-```sql
-mysql> explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
-  +--------------------------------------------------------------------------------------+
-  | Explain String(Nereids Planner)                                                      |
-  +--------------------------------------------------------------------------------------+
-  | PhysicalResultSink                                                                   |
-  | --hashAgg[GLOBAL]                                                                    |
-  | ----PhysicalDistribute[DistributionSpecGather]                                       |
-  | ------hashAgg[LOCAL]                                                                 |
-  | --------PhysicalProject                                                              |
-  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
-  | ------------PhysicalProject                                                          |
-  | --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-  | ----------------PhysicalProject                                                      |
-  | ------------------PhysicalOlapScan[t2]                                               |
-  | ----------------PhysicalDistribute[DistributionSpecHash]                             |
-  | ------------------PhysicalProject                                                    |
-  | --------------------PhysicalOlapScan[t3]                                             |
-  | ------------PhysicalDistribute[DistributionSpecHash]                                 |
-  | --------------PhysicalProject                                                        |
-  | ----------------PhysicalOlapScan[t1]                                                 |
-  |                                                                                      |
-  | Hint log:                                                                            |
-  | Used: leading(alias t1)                                                              |
-  | UnUsed:                                                                              |
-  | SyntaxError:                                                                         |
-  +--------------------------------------------------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
+      +--------------------------------------------------------------------------------------+
+      | Explain String(Nereids Planner)                                                      |
+      +--------------------------------------------------------------------------------------+
+      | PhysicalResultSink                                                                   |
+      | --hashAgg[GLOBAL]                                                                    |
+      | ----PhysicalDistribute[DistributionSpecGather]                                       |
+      | ------hashAgg[LOCAL]                                                                 |
+      | --------PhysicalProject                                                              |
+      | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
+      | ------------PhysicalProject                                                          |
+      | --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+      | ----------------PhysicalProject                                                      |
+      | ------------------PhysicalOlapScan[t2]                                               |
+      | ----------------PhysicalDistribute[DistributionSpecHash]                             |
+      | ------------------PhysicalProject                                                    |
+      | --------------------PhysicalOlapScan[t3]                                             |
+      | ------------PhysicalDistribute[DistributionSpecHash]                                 |
+      | --------------PhysicalProject                                                        |
+      | ----------------PhysicalOlapScan[t1]                                                 |
+      |                                                                                      |
+      | Hint log:                                                                            |
+      | Used: leading(alias t1)                                                              |
+      | UnUsed:                                                                              |
+      | SyntaxError:                                                                         |
+      +--------------------------------------------------------------------------------------+
+    ```
 
 ### 案例
 
 #### 基础场景
 
-建表语句如下：
+1. 建表语句如下：
 
-```sql
-CREATE DATABASE testleading;
-USE testleading;
+    ```sql
+    CREATE DATABASE testleading;
+    USE testleading;
+    
+    create table t1 (c1 int, c11 int) distributed by hash(c1) buckets 3 properties('replication_num' = '1');
+    create table t2 (c2 int, c22 int) distributed by hash(c2) buckets 3 properties('replication_num' = '1');
+    create table t3 (c3 int, c33 int) distributed by hash(c3) buckets 3 properties('replication_num' = '1');
+    create table t4 (c4 int, c44 int) distributed by hash(c4) buckets 3 properties('replication_num' = '1');
+    ```
 
-create table t1 (c1 int, c11 int) distributed by hash(c1) buckets 3 properties('replication_num' = '1');
-create table t2 (c2 int, c22 int) distributed by hash(c2) buckets 3 properties('replication_num' = '1');
-create table t3 (c3 int, c33 int) distributed by hash(c3) buckets 3 properties('replication_num' = '1');
-create table t4 (c4 int, c44 int) distributed by hash(c4) buckets 3 properties('replication_num' = '1');
-```
+2. 原始 plan：
 
-原始 plan：
+    ```sql
+    mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
+    +-------------------------------------------+
+    | Explain String                            |
+    +-------------------------------------------+
+    | PhysicalResultSink                        |
+    | --PhysicalDistribute                      |
+    | ----PhysicalProject                       |
+    | ------hashJoin[INNER_JOIN](t1.c1 = t2.c2) |
+    | --------PhysicalOlapScan[t2]              |
+    | --------PhysicalDistribute                |
+    | ----------PhysicalOlapScan[t1]            |
+    +-------------------------------------------+
+    ```
 
-```sql
-mysql> explain shape plan select * from t1 join t2 on t1.c1 = c2;
-+-------------------------------------------+
-| Explain String                            |
-+-------------------------------------------+
-| PhysicalResultSink                        |
-| --PhysicalDistribute                      |
-| ----PhysicalProject                       |
-| ------hashJoin[INNER_JOIN](t1.c1 = t2.c2) |
-| --------PhysicalOlapScan[t2]              |
-| --------PhysicalDistribute                |
-| ----------PhysicalOlapScan[t1]            |
-+-------------------------------------------+
-```
+3. 当我们需要交换 t1 和 t2 的 join 顺序时，只需在前面加上 `leading(t2 t1)` 即可。在执行 `explain` 时，会显示是否使用了这个 hint。如下 Leading plan：`Used` 表示 Hint 正常生效
 
-当我们需要交换 t1 和 t2 的 join 顺序时，只需在前面加上 `leading(t2 t1)` 即可。在执行 `explain` 时，会显示是否使用了这个 hint。如下 Leading plan：`Used` 表示 Hint 正常生效
+    ```sql
+    mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
+    +------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                              |
+    +------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                           |
+    | --PhysicalDistribute[DistributionSpecGather]                                 |
+    | ----PhysicalProject                                                          |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+    | --------PhysicalOlapScan[t2]                                                 |
+    | --------PhysicalDistribute[DistributionSpecHash]                             |
+    | ----------PhysicalOlapScan[t1]                                               |
+    |                                                                              |
+    | Hint log:                                                                    |
+    | Used: leading(t2 t1)                                                         |
+    | UnUsed:                                                                      |
+    | SyntaxError:                                                                 |
+    +------------------------------------------------------------------------------+
+    ```
 
-```sql
-mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
-+------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                              |
-+------------------------------------------------------------------------------+
-| PhysicalResultSink                                                           |
-| --PhysicalDistribute[DistributionSpecGather]                                 |
-| ----PhysicalProject                                                          |
-| ------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| --------PhysicalOlapScan[t2]                                                 |
-| --------PhysicalDistribute[DistributionSpecHash]                             |
-| ----------PhysicalOlapScan[t1]                                               |
-|                                                                              |
-| Hint log:                                                                    |
-| Used: leading(t2 t1)                                                         |
-| UnUsed:                                                                      |
-| SyntaxError:                                                                 |
-+------------------------------------------------------------------------------+
-```
+4. 如果 Leading Hint 存在语法错误，`explain` 时会在 `SyntaxError` 里显示相应信息，但计划仍能照常生成，只是不会使用 Leading 而已。例如：
 
-如果 Leading Hint 存在语法错误，`explain` 时会在 `SyntaxError` 里显示相应信息，但计划仍能照常生成，只是不会使用 Leading 而已。例如：
-
-```sql
-mysql> explain shape plan select /*+ leading(t2 t3) */ * from t1 join t2 on t1.c1 = c2;
-+--------------------------------------------------------+
-| Explain String                                         |
-+--------------------------------------------------------+
-| PhysicalResultSink                                     |
-| --PhysicalDistribute                                   |
-| ----PhysicalProject                                    |
-| ------hashJoin[INNER_JOIN](t1.c1 = t2.c2)              |
-| --------PhysicalOlapScan[t1]                           |
-| --------PhysicalDistribute                             |
-| ----------PhysicalOlapScan[t2]                         |
-|                                                        |
-| Used:                                                  |
-| UnUsed:                                                |
-| SyntaxError: leading(t2 t3) Msg:can not find table: t3 |
-+--------------------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(t2 t3) */ * from t1 join t2 on t1.c1 = c2;
+    +--------------------------------------------------------+
+    | Explain String                                         |
+    +--------------------------------------------------------+
+    | PhysicalResultSink                                     |
+    | --PhysicalDistribute                                   |
+    | ----PhysicalProject                                    |
+    | ------hashJoin[INNER_JOIN](t1.c1 = t2.c2)              |
+    | --------PhysicalOlapScan[t1]                           |
+    | --------PhysicalDistribute                             |
+    | ----------PhysicalOlapScan[t2]                         |
+    |                                                        |
+    | Used:                                                  |
+    | UnUsed:                                                |
+    | SyntaxError: leading(t2 t3) Msg:can not find table: t3 |
+    +--------------------------------------------------------+
+    ```
 
 #### 扩展场景
 
 1. 左深树
 
-上文我们提及，Doris 在查询语句不使用任何括号的情况下，Leading 会默认生成左深树。
+   上文我们提及，Doris 在查询语句不使用任何括号的情况下，Leading 会默认生成左深树。
 
-```sql
-mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
-+--------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                |
-+--------------------------------------------------------------------------------+
-| PhysicalResultSink                                                             |
-| --PhysicalDistribute[DistributionSpecGather]                                   |
-| ----PhysicalProject                                                            |
-| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
-| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ----------PhysicalOlapScan[t1]                                                 |
-| ----------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------PhysicalOlapScan[t2]                                               |
-| --------PhysicalDistribute[DistributionSpecHash]                               |
-| ----------PhysicalOlapScan[t3]                                                 |
-|                                                                                |
-| Hint log:                                                                      |
-| Used: leading(t1 t2 t3)                                                        |
-| UnUsed:                                                                        |
-| SyntaxError:                                                                   |
-+--------------------------------------------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(t1 t2 t3) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
+    +--------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                |
+    +--------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                             |
+    | --PhysicalDistribute[DistributionSpecGather]                                   |
+    | ----PhysicalProject                                                            |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+    | --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+    | ----------PhysicalOlapScan[t1]                                                 |
+    | ----------PhysicalDistribute[DistributionSpecHash]                             |
+    | ------------PhysicalOlapScan[t2]                                               |
+    | --------PhysicalDistribute[DistributionSpecHash]                               |
+    | ----------PhysicalOlapScan[t3]                                                 |
+    |                                                                                |
+    | Hint log:                                                                      |
+    | Used: leading(t1 t2 t3)                                                        |
+    | UnUsed:                                                                        |
+    | SyntaxError:                                                                   |
+    +--------------------------------------------------------------------------------+
+    ```
 
 2. 右深树
 
-当需要将计划的形状做成右深树、Bushy 树或者 zig-zag 树时，只需加上大括号来限制 plan 的形状即可，无需像 Oracle 使用 swap 从左深树一步步调整。
+   当需要将计划的形状做成右深树、Bushy 树或者 zig-zag 树时，只需加上大括号来限制 plan 的形状即可，无需像 Oracle 使用 swap 从左深树一步步调整。
 
-```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
-+-----------------------------------------------+
-| Explain String                                |
-+-----------------------------------------------+
-| PhysicalResultSink                            |
-| --PhysicalDistribute                          |
-| ----PhysicalProject                           |
-| ------hashJoin[INNER_JOIN](t1.c1 = t2.c2)     |
-| --------PhysicalOlapScan[t1]                  |
-| --------PhysicalDistribute                    |
-| ----------hashJoin[INNER_JOIN](t2.c2 = t3.c3) |
-| ------------PhysicalOlapScan[t2]              |
-| ------------PhysicalDistribute                |
-| --------------PhysicalOlapScan[t3]            |
-|                                               |
-| Used: leading(t1 { t2 t3 })                   |
-| UnUsed:                                       |
-| SyntaxError:                                  |
-+-----------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3;
+    +-----------------------------------------------+
+    | Explain String                                |
+    +-----------------------------------------------+
+    | PhysicalResultSink                            |
+    | --PhysicalDistribute                          |
+    | ----PhysicalProject                           |
+    | ------hashJoin[INNER_JOIN](t1.c1 = t2.c2)     |
+    | --------PhysicalOlapScan[t1]                  |
+    | --------PhysicalDistribute                    |
+    | ----------hashJoin[INNER_JOIN](t2.c2 = t3.c3) |
+    | ------------PhysicalOlapScan[t2]              |
+    | ------------PhysicalDistribute                |
+    | --------------PhysicalOlapScan[t3]            |
+    |                                               |
+    | Used: leading(t1 { t2 t3 })                   |
+    | UnUsed:                                       |
+    | SyntaxError:                                  |
+    +-----------------------------------------------+
+    ```
 
 3. Bushy 树
 
-```sql
-mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
-+-----------------------------------------------+
-| Explain String                                |
-+-----------------------------------------------+
-| PhysicalResultSink                            |
-| --PhysicalDistribute                          |
-| ----PhysicalProject                           |
-| ------hashJoin[INNER_JOIN](t2.c2 = t3.c3)     |
-| --------hashJoin[INNER_JOIN](t1.c1 = t2.c2)   |
-| ----------PhysicalOlapScan[t1]                |
-| ----------PhysicalDistribute                  |
-| ------------PhysicalOlapScan[t2]              |
-| --------PhysicalDistribute                    |
-| ----------hashJoin[INNER_JOIN](t3.c3 = t4.c4) |
-| ------------PhysicalOlapScan[t3]              |
-| ------------PhysicalDistribute                |
-| --------------PhysicalOlapScan[t4]            |
-|                                               |
-| Used: leading({ t1 t2 } { t3 t4 })            |
-| UnUsed:                                       |
-| SyntaxError:                                  |
-+-----------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading({t1 t2} {t3 t4}) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+    +-----------------------------------------------+
+    | Explain String                                |
+    +-----------------------------------------------+
+    | PhysicalResultSink                            |
+    | --PhysicalDistribute                          |
+    | ----PhysicalProject                           |
+    | ------hashJoin[INNER_JOIN](t2.c2 = t3.c3)     |
+    | --------hashJoin[INNER_JOIN](t1.c1 = t2.c2)   |
+    | ----------PhysicalOlapScan[t1]                |
+    | ----------PhysicalDistribute                  |
+    | ------------PhysicalOlapScan[t2]              |
+    | --------PhysicalDistribute                    |
+    | ----------hashJoin[INNER_JOIN](t3.c3 = t4.c4) |
+    | ------------PhysicalOlapScan[t3]              |
+    | ------------PhysicalDistribute                |
+    | --------------PhysicalOlapScan[t4]            |
+    |                                               |
+    | Used: leading({ t1 t2 } { t3 t4 })            |
+    | UnUsed:                                       |
+    | SyntaxError:                                  |
+    +-----------------------------------------------+
+    ```
 
 4. zig-zag 树
 
-```sql
-mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
-+--------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                      |
-+--------------------------------------------------------------------------------------+
-| PhysicalResultSink                                                                   |
-| --PhysicalDistribute[DistributionSpecGather]                                         |
-| ----PhysicalProject                                                                  |
-| ------hashJoin[INNER_JOIN] hashCondition=((t3.c3 = t4.c4)) otherCondition=()         |
-| --------PhysicalDistribute[DistributionSpecHash]                                     |
-| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
-| ------------PhysicalOlapScan[t1]                                                     |
-| ------------PhysicalDistribute[DistributionSpecHash]                                 |
-| --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-| ----------------PhysicalOlapScan[t2]                                                 |
-| ----------------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------------PhysicalOlapScan[t3]                                               |
-| --------PhysicalDistribute[DistributionSpecHash]                                     |
-| ----------PhysicalOlapScan[t4]                                                       |
-|                                                                                      |
-| Hint log:                                                                            |
-| Used: leading(t1 { t2 t3 } t4)                                                       |
-| UnUsed:                                                                              |
-| SyntaxError:                                                                         |
-+--------------------------------------------------------------------------------------+
-```
+    ```sql
+    mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2 on t1.c1 = c2 join t3 on c2 = c3 join t4 on c3 = c4;
+    +--------------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                      |
+    +--------------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                                   |
+    | --PhysicalDistribute[DistributionSpecGather]                                         |
+    | ----PhysicalProject                                                                  |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t3.c3 = t4.c4)) otherCondition=()         |
+    | --------PhysicalDistribute[DistributionSpecHash]                                     |
+    | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=()     |
+    | ------------PhysicalOlapScan[t1]                                                     |
+    | ------------PhysicalDistribute[DistributionSpecHash]                                 |
+    | --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+    | ----------------PhysicalOlapScan[t2]                                                 |
+    | ----------------PhysicalDistribute[DistributionSpecHash]                             |
+    | ------------------PhysicalOlapScan[t3]                                               |
+    | --------PhysicalDistribute[DistributionSpecHash]                                     |
+    | ----------PhysicalOlapScan[t4]                                                       |
+    |                                                                                      |
+    | Hint log:                                                                            |
+    | Used: leading(t1 { t2 t3 } t4)                                                       |
+    | UnUsed:                                                                              |
+    | SyntaxError:                                                                         |
+    +--------------------------------------------------------------------------------------+
+    ```
 
 5. Non-inner Join
 
-当遇到非 inner-join（如 Outer Join 或 Semi/Anti Join）时，Leading Hint 会根据原始 SQL 语义自动推导各个 Join 的方式。若 Leading Hint 与原始 SQL 语义不同或无法生成，则会将其放入 `UnUsed` 中，但这并不影响计划正常流程的生成。
+   当遇到非 inner-join（如 Outer Join 或 Semi/Anti Join）时，Leading Hint 会根据原始 SQL 语义自动推导各个 Join 的方式。若 Leading Hint 与原始 SQL 语义不同或无法生成，则会将其放入 `UnUsed` 中，但这并不影响计划正常流程的生成。
 
-以下是一个不能交换的例子：
+   以下是一个不能交换的例子：
 
-```sql
--------- test outer join which can not swap
--- t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
-mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
-+--------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                |
-+--------------------------------------------------------------------------------+
-| PhysicalResultSink                                                             |
-| --PhysicalDistribute[DistributionSpecGather]                                   |
-| ----PhysicalProject                                                            |
-| ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
-| --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ----------PhysicalOlapScan[t1]                                                 |
-| ----------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------PhysicalOlapScan[t2]                                               |
-| --------PhysicalDistribute[DistributionSpecHash]                               |
-| ----------PhysicalOlapScan[t3]                                                 |
-|                                                                                |
-| Hint log:                                                                      |
-| Used:                                                                          |
-| UnUsed: leading(t1 { t2 t3 })                                                  |
-| SyntaxError:                                                                   |
-+--------------------------------------------------------------------------------+
-```
+    ```sql
+    -------- test outer join which can not swap
+    -- t1 leftjoin (t2 join t3 on (P23)) on (P12) != (t1 leftjoin t2 on (P12)) join t3 on (P23)
+    mysql> explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+    +--------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                |
+    +--------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                             |
+    | --PhysicalDistribute[DistributionSpecGather]                                   |
+    | ----PhysicalProject                                                            |
+    | ------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()   |
+    | --------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
+    | ----------PhysicalOlapScan[t1]                                                 |
+    | ----------PhysicalDistribute[DistributionSpecHash]                             |
+    | ------------PhysicalOlapScan[t2]                                               |
+    | --------PhysicalDistribute[DistributionSpecHash]                               |
+    | ----------PhysicalOlapScan[t3]                                                 |
+    |                                                                                |
+    | Hint log:                                                                      |
+    | Used:                                                                          |
+    | UnUsed: leading(t1 { t2 t3 })                                                  |
+    | SyntaxError:                                                                   |
+    +--------------------------------------------------------------------------------+
+    ```
 
-下面是一些可以交换的例子和不能交换的例子，读者可自行验证。
+   下面是一些可以交换的例子和不能交换的例子，读者可自行验证。
 
-```sql
--------- test outer join which can swap
--- (t1 leftjoin t2  on (P12)) innerjoin t3 on (P13) = (t1 innerjoin t3 on (P13)) leftjoin t2  on (P12)
-explain shape plan select * from t1 left join t2 on c1 = c2 join t3 on c1 = c3;
-explain shape plan select /*+ leading(t1 t3 t2) */ * from t1 left join t2 on c1 = c2 join t3 on c1 = c3;
+    ```sql
+    -------- test outer join which can swap
+    -- (t1 leftjoin t2  on (P12)) innerjoin t3 on (P13) = (t1 innerjoin t3 on (P13)) leftjoin t2  on (P12)
+    explain shape plan select * from t1 left join t2 on c1 = c2 join t3 on c1 = c3;
+    explain shape plan select /*+ leading(t1 t3 t2) */ * from t1 left join t2 on c1 = c2 join t3 on c1 = c3;
 
--- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P13) = (t1 leftjoin t3 on (P13)) leftjoin t2  on (P12)
-explain shape plan select * from t1 left join t2 on c1 = c2 left join t3 on c1 = c3;
-explain shape plan select /*+ leading(t1 t3 t2) */ * from t1 left join t2 on c1 = c2 left join t3 on c1 = c3;
+    -- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P13) = (t1 leftjoin t3 on (P13)) leftjoin t2  on (P12)
+    explain shape plan select * from t1 left join t2 on c1 = c2 left join t3 on c1 = c3;
+    explain shape plan select /*+ leading(t1 t3 t2) */ * from t1 left join t2 on c1 = c2 left join t3 on c1 = c3;
 
--- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P23) = t1 leftjoin (t2  leftjoin t3 on (P23)) on (P12)
-select /*+ leading(t2 t3 t1) SWAP_INPUT(t1) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+    -- (t1 leftjoin t2  on (P12)) leftjoin t3 on (P23) = t1 leftjoin (t2  leftjoin t3 on (P23)) on (P12)
+    select /*+ leading(t2 t3 t1) SWAP_INPUT(t1) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
+    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 left join t3 on c2 = c3;
 
--------- test outer join which can not swap
---  t1 leftjoin (t2  join t3 on (P23)) on (P12) != (t1 leftjoin t2  on (P12)) join t3 on (P23)
--- eliminated to inner join
-explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
-explain graph select /*+ leading(t1 t2 t3) */ * from t1 left join (select * from t2 join t3 on c2 = c3) on c1 = c2;
+    -------- test outer join which can not swap
+    --  t1 leftjoin (t2  join t3 on (P23)) on (P12) != (t1 leftjoin t2  on (P12)) join t3 on (P23)
+    -- eliminated to inner join
+    explain shape plan select /*+ leading(t1 {t2 t3}) */ * from t1 left join t2 on c1 = c2 join t3 on c2 = c3;
+    explain graph select /*+ leading(t1 t2 t3) */ * from t1 left join (select * from t2 join t3 on c2 = c3) on c1 = c2;
 
--- test semi join
-explain shape plan select * from t1 where c1 in (select c2 from t2);
-explain shape plan select /*+ leading(t2 t1) */ * from t1 where c1 in (select c2 from t2);
+    -- test semi join
+    explain shape plan select * from t1 where c1 in (select c2 from t2);
+    explain shape plan select /*+ leading(t2 t1) */ * from t1 where c1 in (select c2 from t2);
 
--- test anti join
-explain shape plan select * from t1 where exists (select c2 from t2);
-```
+    -- test anti join
+    explain shape plan select * from t1 where exists (select c2 from t2);
+    ```
 
 6. View
 
-在涉及别名（Alias）的情况下，可以将别名作为一个完整独立的子树进行指定，并在这些子树内部根据文本序生成 Join 顺序
+   在涉及别名（Alias）的情况下，可以将别名作为一个完整独立的子树进行指定，并在这些子树内部根据文本序生成 Join 顺序
 
-```sql
-mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
-+--------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                      |
-+--------------------------------------------------------------------------------------+
-| PhysicalResultSink                                                                   |
-| --hashAgg[GLOBAL]                                                                    |
-| ----PhysicalDistribute[DistributionSpecGather]                                       |
-| ------hashAgg[LOCAL]                                                                 |
-| --------PhysicalProject                                                              |
-| ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
-| ------------PhysicalProject                                                          |
-| --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-| ----------------PhysicalProject                                                      |
-| ------------------PhysicalOlapScan[t2]                                               |
-| ----------------PhysicalDistribute[DistributionSpecHash]                             |
-| ------------------PhysicalProject                                                    |
-| --------------------PhysicalOlapScan[t3]                                             |
-| ------------PhysicalDistribute[DistributionSpecHash]                                 |
-| --------------PhysicalProject                                                        |
-| ----------------PhysicalOlapScan[t1]                                                 |
-|                                                                                      |
-| Hint log:                                                                            |
-| Used: leading(alias t1)                                                              |
-| UnUsed:                                                                              |
-| SyntaxError:                                                                         |
-+--------------------------------------------------------------------------------------+
-```
+    ```sql
+    mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
+    +--------------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                      |
+    +--------------------------------------------------------------------------------------+
+    | PhysicalResultSink                                                                   |
+    | --hashAgg[GLOBAL]                                                                    |
+    | ----PhysicalDistribute[DistributionSpecGather]                                       |
+    | ------hashAgg[LOCAL]                                                                 |
+    | --------PhysicalProject                                                              |
+    | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()  |
+    | ------------PhysicalProject                                                          |
+    | --------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+    | ----------------PhysicalProject                                                      |
+    | ------------------PhysicalOlapScan[t2]                                               |
+    | ----------------PhysicalDistribute[DistributionSpecHash]                             |
+    | ------------------PhysicalProject                                                    |
+    | --------------------PhysicalOlapScan[t3]                                             |
+    | ------------PhysicalDistribute[DistributionSpecHash]                                 |
+    | --------------PhysicalProject                                                        |
+    | ----------------PhysicalOlapScan[t1]                                                 |
+    |                                                                                      |
+    | Hint log:                                                                            |
+    | Used: leading(alias t1)                                                              |
+    | UnUsed:                                                                              |
+    | SyntaxError:                                                                         |
+    +--------------------------------------------------------------------------------------+
+    ```
 
 ## Ordered Hint
 

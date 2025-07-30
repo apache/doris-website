@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Users can modify the schema of Doris tables through the [Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) operation. Schema changes mainly involve column modifications and index changes. This article mainly introduces column-related schema changes; for index-related changes, please refer to [Table Index](./index/index-overview.md) to understand the different methods of changing indexes.
 
 ## Principles Introduction
@@ -94,7 +75,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 ```sql
 ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 ```
-For specific syntax, refer to [ALTER TABLE RENAME](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME.md).
+For specific syntax, refer to [ALTER TABLE RENAME](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME).
 
 ### Add a Column
 

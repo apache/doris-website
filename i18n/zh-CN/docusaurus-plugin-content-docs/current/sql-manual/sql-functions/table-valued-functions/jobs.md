@@ -5,28 +5,9 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-表函数，生成任务临时表，可以查看某个任务类型中的job信息。
+表函数，生成任务临时表，可以查看某个任务类型中的 job 信息。
 
 ## 语法
 
@@ -49,12 +30,12 @@ JOBS(
     | 字段名             | 描述                           |
     |--------------------|--------------------------------|
     | Id                 | job id                        |
-    | Name               | job名称                       |
-    | Definer            | job定义者                     |
+    | Name               | job 名称                       |
+    | Definer            | job 定义者                     |
     | ExecuteType        | 执行类型                       |
     | RecurringStrategy  | 循环策略                       |
-    | Status             | job状态                       |
-    | ExecuteSql         | 执行SQL                       |
+    | Status             | job 状态                       |
+    | ExecuteSql         | 执行 SQL                       |
     | CreateTime         | job 创建时间                   |
     | SucceedTaskCount   | 成功任务数量                   |
     | FailedTaskCount    | 失败任务数量                   |
@@ -67,20 +48,20 @@ JOBS(
     | 字段名              | 描述                                 |
     |---------------------|--------------------------------------|
     | Id                  | job id                               |
-    | Name                | job名称                              |
-    | MvId                | 物化视图id                           |
+    | Name                | job 名称                              |
+    | MvId                | 物化视图 id                           |
     | MvName              | 物化视图名称                         |
-    | MvDatabaseId        | 物化视图所属db id                    |
-    | MvDatabaseName      | 物化视图所属db名称                   |
+    | MvDatabaseId        | 物化视图所属 db id                    |
+    | MvDatabaseName      | 物化视图所属 db 名称                   |
     | ExecuteType         | 执行类型                             |
     | RecurringStrategy   | 循环策略                             |
-    | Status              | job状态                              |
-    | CreateTime          | task创建时间                         |
+    | Status              | job 状态                              |
+    | CreateTime          | task 创建时间                         |
 
 
 ## 示例
 
-查看所有物化视图的job
+查看所有物化视图的 job
 
 ```sql
 select * from jobs("type"="mv");

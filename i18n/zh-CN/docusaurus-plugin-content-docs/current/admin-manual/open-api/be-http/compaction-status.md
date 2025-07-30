@@ -5,47 +5,26 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-## Request
+## 请求路径
 
 `GET /api/compaction/run_status`
 `GET /api/compaction/show?tablet_id={int}`
 
-## Description
+## 描述
 
 用于查看某个 BE 节点总体的 compaction 状态，或者指定 tablet 的 compaction 状态。
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
 
     - tablet 的 id
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
 ### 整体 Compaction 状态
 
@@ -112,7 +91,7 @@ under the License.
 
 * stale version path：该 table 当前被合并 rowset 集合的合并版本路径，该结构是一个数组结构，每个元素表示一个合并路径。每个元素中包含了三个属性：path id 表示版本路径 id，last create time 表示当前路径上最近的 rowset 创建时间，默认在这个时间半个小时之后这条路径上的所有 rowset 会被过期删除。
 
-## Examples
+## 示例
 
 ```shell
 curl http://192.168.10.24:8040/api/compaction/show?tablet_id=10015

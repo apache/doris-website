@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL, as outlined below.
 
 ## Data Types
@@ -36,8 +17,8 @@ Doris is highly compatible with MySQL syntax and supports standard SQL. However,
 | Bit          | <p>- Supported</p>  <p>- Range: 1 to 64</p>                                | Not supported                                                |
 | Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -128 to 127, unsigned range from 0 to 255 </p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
 | Smallint     | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p> - Range: signed range from -2^15 to 2^15-1, unsigned range from 0 to 2^16-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -32768 to 32767</p> |
-| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to -2^24-1</p> | - Not supported                                              |
-| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to -2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
+| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to 2^24-1</p> | - Not supported                                              |
+| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to 2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
 | Bigint       | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p>- Range: signed range from -2^63 to 2^63-1, unsigned range from 0 to 2^64-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^63 to 2^63-1</p> |
 | Largeint     | - Not supported                                              | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^127 to 2^127-1</p> |
 | Decimal      | <p>- Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p>  <p>- Default: Decimal(10, 0)</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Default: Decimal(9, 0)</p> |
@@ -116,7 +97,7 @@ Doris has several unique data types. Here are the details:
 
   The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
-  AGG_STATE can only be used in combination with [STATE](../../sql-manual/sql-functions/combinators/state) / [MERGE](../../sql-manual/sql-functions/combinators/merge)/ [UNION](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
+  AGG_STATE can only be used in combination with [STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge)/ [UNION](../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
 
 ## Syntax
 
@@ -252,7 +233,7 @@ This syntax can only be used on the UNIQUE KEY model table.
 
 The DELETE syntax in Doris is basically the same as in MySQL. However, since Doris is an analytical database, deletions cannot be too frequent.
 
-#### Select
+#### SELECT
 
 ```sql
 SELECT

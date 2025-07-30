@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 异步物化视图使用原则
 - **时效性考虑：** 异步物化视图通常用于对数据时效性要求不高的场景，一般是 T+1 的数据。如果时效性要求高，应考虑使用同步物化视图。
 
@@ -36,7 +17,7 @@ under the License.
     - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
 
 :::caution 注意
-- **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写， CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
+- **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写，CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
 
 - **定期检查物化视图使用状态：** 如果未使用，应及时删除。
 
@@ -52,7 +33,7 @@ under the License.
 
 - 物化视图使用的表除了分区表外，其他表不经常变化。
 
-- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)
+- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
 
 - 物化视图分区数不多，分区过多会导致分区多物化视图构建时间会过长。
 
@@ -62,7 +43,7 @@ under the License.
 
 ## 分区物化视图常见使用方式
 
-当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
+当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
 
 物化视图的分区是跟随基表的分区映射创建的，一般和基表的分区是 1:1 或者 1:n 的关系。
 
@@ -194,106 +175,106 @@ GROUP BY
 
 接下来，将详细说明如何针对上述四种操作构建物化视图：
 
-**1. 对于 Join**
+1. **对于 Join**
 
-可以提取查询中使用的公共的表连接模式来构建物化视图。透明改写如果使用了此物化视图，可以节省 Join 连接的计算。将查询中的 Filters 去除，这样就是一个比较通用的 Join 物化视图。
+   可以提取查询中使用的公共的表连接模式来构建物化视图。透明改写如果使用了此物化视图，可以节省 Join 连接的计算。将查询中的 Filters 去除，这样就是一个比较通用的 Join 物化视图。
 
-**2. 对于 Aggregate**
+2. **对于 Aggregate**
 
-建议尽量使用低基数的字段作为维度来构建物化视图。如果维度相关，那么聚合后的数量可以尽量减少。
+   建议尽量使用低基数的字段作为维度来构建物化视图。如果维度相关，那么聚合后的数量可以尽量减少。
 
-比如表 t1，原表的数据量是 1000000，查询语句 SQL 中有 `group by a, b, c`。如果 a，b，c 的基数分别是 100，50，15，那么聚合后的数据大概在 75000 左右，说明此物化视图是有效的。如果 a，b，c 具有相关性，那么聚合后的数据量会进一步减少。
+   比如表 t1，原表的数据量是 1000000，查询语句 SQL 中有 `group by a, b, c`。如果 a，b，c 的基数分别是 100，50，15，那么聚合后的数据大概在 75000 左右，说明此物化视图是有效的。如果 a，b，c 具有相关性，那么聚合后的数据量会进一步减少。
 
-如果 a, b, c 的基数很高，会导致聚合后的数据急速膨胀。如果聚合后的数据比原表的数据还多，可能这样的场景不太适合构建物化视图。比如 c 的基数是 3500，那么聚合后的数据量在 17000000 左右，比原表数据量大的多，构建这样的物化视图性能加速收益低。
+   如果 a, b, c 的基数很高，会导致聚合后的数据急速膨胀。如果聚合后的数据比原表的数据还多，可能这样的场景不太适合构建物化视图。比如 c 的基数是 3500，那么聚合后的数据量在 17000000 左右，比原表数据量大的多，构建这样的物化视图性能加速收益低。
 
-物化视图的聚合粒度要比查询细，即物化视图的聚合维度包含查询的聚合维度，这样才能提供查询所需的数据。查询可以不写 Group By，同理，物化视图的聚合函数应该包含查询的聚合函数。
+   物化视图的聚合粒度要比查询细，即物化视图的聚合维度包含查询的聚合维度，这样才能提供查询所需的数据。查询可以不写 Group By，同理，物化视图的聚合函数应该包含查询的聚合函数。
 
-**3. 对于 Filter**
+3. **对于 Filter**
 
-如果查询中经常出现对相同字段的过滤，那么通过在物化视图中添加相应的 Filter，可以减少物化视图中的数据量，从而提高查询时命中物化视图的性能。
+   如果查询中经常出现对相同字段的过滤，那么通过在物化视图中添加相应的 Filter，可以减少物化视图中的数据量，从而提高查询时命中物化视图的性能。
 
-要注意的是，物化视图应该比查询中出现的 Filter 少，查询的 Filter 要包含物化的 Filter。比如查询是 `a > 10 and b > 5`，物化视图可以没有 Filter，如果有 Filter 的话应对 a 和 b 过滤，并且数据范围要求比查询大，例如物化视图可以是 `a > 5 and b > 5，b > 0`，也可以是 a > 5 等。
+   要注意的是，物化视图应该比查询中出现的 Filter 少，查询的 Filter 要包含物化的 Filter。比如查询是 `a > 10 and b > 5`，物化视图可以没有 Filter，如果有 Filter 的话应对 a 和 b 过滤，并且数据范围要求比查询大，例如物化视图可以是 `a > 5 and b > 5`，也可以是 `a > 5` 等。
 
-**4. 对于 Calculated Expressions**
+4. **对于 Calculated Expressions**
 
-以 case when、处理字符串等函数为例，这部分表达式计算非常消耗性能，如果在物化视图中能够提前计算好，透明改写使用计算好的物化视图则可以提高查询的性能。
+   以 case when、处理字符串等函数为例，这部分表达式计算非常消耗性能，如果在物化视图中能够提前计算好，透明改写使用计算好的物化视图则可以提高查询的性能。
 
-建议物化视图的列数量尽量不要过多。如果查询使用了多个字段，应该根据最开始的查询 SQL 模式分组，分别构建对应列的物化视图，避免单个物化视图的列过多。
+   建议物化视图的列数量尽量不要过多。如果查询使用了多个字段，应该根据最开始的查询 SQL 模式分组，分别构建对应列的物化视图，避免单个物化视图的列过多。
 
-以聚合查询加速为例：
+   以聚合查询加速为例：
 
-查询 1：
+   查询 1：
 
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_partkey;
-```
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_partkey;
+    ```
 
-查询 2：
+   查询 2：
 
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey;
-```
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey;
+    ```
 
-根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by
-维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，
-同时也需要被包含在物化视图的聚合 group by 维度中。
+   根据以上两个 SQL 查询，我们可以构建一个更为通用的包含 Aggregate 的物化视图。在这个物化视图中，我们将 l_partkey 和 l_suppkey 都作为聚合的 group by
+   维度，并将 o_orderdate 作为过滤条件。值得注意的是，o_orderdate 不仅在物化视图的条件补偿中使用，
+   同时也需要被包含在物化视图的聚合 group by 维度中。
 
-通过这种方式构建的物化视图后，查询 1 和查询 2 都可以命中该物化视图，物化视图定义如下：
+   通过这种方式构建的物化视图后，查询 1 和查询 2 都可以命中该物化视图，物化视图定义如下：
 
-```sql
-CREATE MATERIALIZED VIEW common_agg_mv
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL
-DISTRIBUTED BY RANDOM BUCKETS 2
-AS 
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate;
-```
+    ```sql
+    CREATE MATERIALIZED VIEW common_agg_mv
+    BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    AS 
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate;
+    ```
 
 ## 使用场景
 
@@ -303,7 +284,7 @@ GROUP BY
 该过程会消耗大量计算资源，并且有时难以保证时效性。对此，异步物化视图能够很好应对，它不仅支持直接查询，也支持透明改写，
 优化器会依据改写算法和代价模型，自动选择最优的物化视图来响应请求。
 
-#### 用例1 多表连接聚合查询加速
+#### 用例 1 多表连接聚合查询加速
 通过构建更通用的物化视图能够加速多表连接聚合查询。
 
 以下面三个查询 SQL 为例：
@@ -400,11 +381,11 @@ GROUP BY
   o_shippriority;
 ```
 
-#### 用例2 日志查询加速
+#### 用例 2 日志查询加速
 
 在日志查询加速场景中，建议不局限于单独使用异步物化视图，可以结合同步物化视图。
 
-一般基表是分区表，按照小时分区居多，单表聚合查询，一般过滤条件是按照时间，还有一些标识位。有时查询的响应速度无法达到要求，一般可以构建同步物化视图进行加速。
+一般基表是分区表，按照小时分区居多，单表聚合查询，一般过滤条件是按照时间，还有一些标识位。有时查询的响应速度无法达到要求，一般可以构建异步物化视图进行加速。
 
 例如，基表的定义可能如下：
 
@@ -585,7 +566,7 @@ GROUP BY nation_name, month;
 
 在现代化的数据架构中，企业通常会采用湖仓一体设计，以平衡数据的存储成本与查询性能。在这种架构下，经常会遇到两个关键挑战：
 - 查询性能受限：频繁查询数据湖中的数据时，可能会受到网络延迟和第三方服务的影响，从而导致查询延迟，进而影响用户体验。
-- 数据分层建模的复杂性：在数据湖到实时数仓的数据流转和转换过程中，通常需要复杂的 ETL 流程，这增加了维护成本和开发难度
+- 数据分层建模的复杂性：在数据湖到实时数仓的数据流转和转换过程中，通常需要复杂的 ETL 流程，这增加了维护成本和开发难度。
 
 使用 Doris 异步物化视图，可以很好的应对上述挑战：
 - 透明改写加速查询：将常用的数据湖查询结果物化到 Doris 内部存储，采用透明改写可有效提升查询性能。
@@ -603,7 +584,7 @@ CREATE CATALOG hive_catalog PROPERTIES (
 
 基于 Hive Catalog 创建物化视图
 ```sql
--- 物化视图只能在 internal 的 catalog 上创建, 切换到内部 catalog
+-- 物化视图只能在 internal 的 catalog 上创建，切换到内部 catalog
 switch internal;
 create database hive_mv_db;
 use hive_mv_db;
@@ -665,8 +646,8 @@ revenue DESC;
 ```
 
 :::tip 提示
-Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据不一致时，使用物化视图可能出现数据不一致的情况。以下开关表示：参与透明改写的物化视图是否允许包含外表，默认false。如接受数据不一致或者通过定时刷新来保证外表数据一致性，可以将此开关设置成true。
-设置包含外表的物化视图是否可用于透明改写，默认不允许，如果可以接受数据不一致或者可以自行保证数据一致， 可以开启
+Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据不一致时，使用物化视图可能出现数据不一致的情况。以下开关表示：参与透明改写的物化视图是否允许包含外表，默认 false。如接受数据不一致或者通过定时刷新来保证外表数据一致性，可以将此开关设置成 true。
+设置包含外表的物化视图是否可用于透明改写，默认不允许，如果可以接受数据不一致或者可以自行保证数据一致，可以开启
 
 `SET materialized_view_rewrite_enable_contain_external_table = true;`
 
@@ -679,17 +660,15 @@ Doris 暂无法感知除 Hive 外的其他外表数据变更。当外表数据�
 
 ``SHOW TABLE STATS external_table_name;``
 
-自 2.1.3 版本支持创建物化视图的定义 SQL 使用物化视图，即嵌套物化视图。
 :::
 
 
 ### 场景四：提升写入效率，减少资源竞争
-在高吞吐的数据写入的场景中，系统性能的稳定性与数据处理的高效性同样重要。通过异步物化视图灵活的刷新策略，用户可以根据具体场景选择合适的刷新方式，
-从而降低写入压力，避免资源争抢。
+在高吞吐的数据写入的场景中，系统性能的稳定性与数据处理的高效性同样重要。通过异步物化视图灵活的刷新策略，用户可以根据具体场景选择合适的刷新方式，从而降低写入压力，避免资源争抢。
 
 相比之下，异步物化视图提供了手动触发、触发式、周期性触发三种灵活的刷新策略。用户可以根据场景需求差异，选择合适的刷新策略。当基表数据变更时，不会立即触发物化视图刷新，延迟刷新有利于降低资源压力，有效避免写入资源争抢。
 
-如下所示，选择的刷新方式为定时刷新，每 2 小时刷新一次。当orders 和 lineitem 导入数据时，不会立即触发物化视图刷新。
+如下所示，选择的刷新方式为定时刷新，每 2 小时刷新一次。当 orders 和 lineitem 导入数据时，不会立即触发物化视图刷新。
 
 ```sql
 CREATE MATERIALIZED VIEW common_schedule_join_mv

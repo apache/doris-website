@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Certificate Issues
 
 1. When querying, an error `curl 77: Problem with the SSL CA cert.` occurs. This indicates that the current system certificate is too old and needs to be updated locally.
@@ -126,17 +107,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 ## Hive Catalog
 
-1. Error accessing Iceberg table via Hive Metastore: `failed to get schema` or `Storage schema reading not supported`
+1. Accessing Iceberg or Hive table through Hive Catalog reports an error: `failed to get schema` or `Storage schema reading not supported`
 
-   Place the relevant `iceberg` runtime jar files in Hive's lib/ directory.
-
-   Configure in `hive-site.xml`:
-
-   ```
-   metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
-   ```
-
-   After configuration, restart the Hive Metastore.
+    You can try the following methods:
+    
+    * Put the `iceberg` runtime-related jar package in the lib/ directory of Hive.
+    
+    * Configure in `hive-site.xml`:
+    
+        ```
+        metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
+        ```
+        
+        After the configuration is completed, you need to restart the Hive Metastore.
+    
+    * Add `"get_schema_from_table" = "true"` in the Catalog properties
+    
+        This parameter is supported since versions 2.1.10 and 3.0.6.
 
 2. Error connecting to Hive Catalog: `Caused by: java.lang.NullPointerException`
 
@@ -244,6 +231,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     It is because the Doris built-in `libz.a` conflicts with the system environment's `libz.so`. To resolve this issue, first execute `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH`, and then restart the BE process.
 
+12. When inserting data into Hive, an error occurred as `HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`.
+
+    Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
@@ -252,30 +243,28 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Note: This feature may increase the load on the HDFS cluster, so use it judiciously.
 
-    You can enable this feature in two ways:
+    You can enable this feature by:
 
-    - Specify it in the parameters when creating the Catalog:
+    ```
+    create catalog regression properties (
+        'type'='hms',
+        'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
+        'dfs.client.hedged.read.threadpool.size' = '128',
+        'dfs.client.hedged.read.threshold.millis' = "500"
+    );
+    ```
 
-        ```
-        create catalog regression properties (
-            'type'='hms',
-            'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
-            'dfs.client.hedged.read.threadpool.size' = '128',
-            'dfs.client.hedged.read.threshold.millis' = "500"
-        );
-        ```
-
-`dfs.client.hedged.read.threadpool.size` represents the number of threads used for Hedged Read, which are shared by an HDFS Client. Typically, for an HDFS cluster, BE nodes will share an HDFS Client.
-
-`dfs.client.hedged.read.threshold.millis` is the read threshold in milliseconds. When a read request exceeds this threshold without returning, a Hedged Read is triggered.
-
-When enabled, you can see the related parameters in the Query Profile:
-
-`TotalHedgedRead`: Number of times Hedged Read was initiated.
-
-`HedgedReadWins`: Number of successful Hedged Reads (times when the request was initiated and returned faster than the original request)
-
-Note that these values are cumulative for a single HDFS Client, not for a single query. The same HDFS Client can be reused by multiple queries.
+    `dfs.client.hedged.read.threadpool.size` represents the number of threads used for Hedged Read, which are shared by an HDFS Client. Typically, for an HDFS cluster, BE nodes will share an HDFS Client.
+    
+    `dfs.client.hedged.read.threshold.millis` is the read threshold in milliseconds. When a read request exceeds this threshold without returning, a Hedged Read is triggered.
+    
+    When enabled, you can see the related parameters in the Query Profile:
+    
+    `TotalHedgedRead`: Number of times Hedged Read was initiated.
+    
+    `HedgedReadWins`: Number of successful Hedged Reads (times when the request was initiated and returned faster than the original request)
+    
+    Note that these values are cumulative for a single HDFS Client, not for a single query. The same HDFS Client can be reused by multiple queries.
 
 3. `Couldn't create proxy provider class org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider`
 

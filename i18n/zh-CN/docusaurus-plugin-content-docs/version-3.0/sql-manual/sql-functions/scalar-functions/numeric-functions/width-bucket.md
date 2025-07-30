@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 构造等宽直方图，其中直方图范围被划分为相同大小的区间，并在计算后返回表达式的值所在的桶号。特殊情况：
@@ -40,7 +21,7 @@ WIDTH_BUCKET(<expr>, <min_value>, <max_value>, <num_buckets>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 创建直方图的表达式。此表达式必须计算为数值或可隐式转换为数值的值,此值的范围必须为 `-(2^53 - 1)` 到 `2^53 - 1` (含) |
+| `<expr>` | 创建直方图的表达式。此表达式必须计算为数值或可隐式转换为数值的值，此值的范围必须为 `-(2^53 - 1)` 到 `2^53 - 1` (含) |
 | `<min_value>` | 表达式可接受范围的最低值点。参数必须为数值且不等于`<max_value>`，范围必须为 `-(2^53 - 1)` to `2^53 - 1` (含)). 此外，最高值点与最低值点的差必须小于 `2^53` (例如： `abs(max_value - min_value) < 2^53)` |
 | `<max_value>` | 表达式可接受范围的最高值点。参数必须为数值且不等于`<min_value>`，范围必须为 `-(2^53 - 1)` to `2^53 - 1` (含)). 此外，最高值点与最低值点的差必须小于 `2^53` (例如： `abs(max_value - min_value) < 2^53)` |
 | `<num_buckets>` | 分桶的数量，必须是正整数值。将表达式中的一个值分配给每个存储桶，然后该函数返回相应的存储桶编号 |

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
 By default, it supports up to 1048576 bytes (1MB), and can be increased up to 2147483643 bytes (2GB). This can be adjusted via the string_type_length_soft_limit_bytes configuration.
@@ -44,7 +25,7 @@ The separator is `|` instead of comma to distinguish it from the comma in json.
 ```
 1|{"name": "tom", "age": 35}
 2|{"name": null, "age": 28}
-3|{"name": "micheal", "age": null}
+3|{"name": "michael", "age": null}
 4|{"name": null, "age": null}
 5|null
 ```
@@ -83,7 +64,7 @@ SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | null                          |
 +------+-------------------------------+
@@ -100,7 +81,7 @@ Create the following JSON file, `test_json.json`
 [
     {"id": 1, "c_json": {"name": "tom", "age": 35}},
     {"id": 2, "c_json": {"name": null, "age": 28}},
-    {"id": 3, "c_json": {"name": "micheal", "age": null}},
+    {"id": 3, "c_json": {"name": "michael", "age": null}},
     {"id": 4, "c_json": {"name": null, "age": null}},
     {"id": 5, "c_json": null}
 ]
@@ -141,7 +122,7 @@ mysql> SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | NULL                          |
 +------+-------------------------------+

@@ -5,32 +5,11 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## 描述
 
 Proc 系统是 Doris 的一个比较有特色的功能。使用过 Linux 的同学可能比较了解这个概念。在 Linux 系统中，proc 是一个虚拟的文件系统，通常挂载在 /proc 目录下。用户可以通过这个文件系统来查看系统内部的数据结构。比如可以通过 /proc/pid 查看指定 pid 进程的详细情况。
 
-和 Linux 中的 proc 系统类似，Doris 中的 proc 系统也被组织成一个类似目录的结构，根据用户指定的“目录路径（proc 路径）”，来查看不同的系统信息。
+和 Linux 中的 proc 系统类似，Doris 中的 proc 系统也被组织成一个类似目录的结构，根据用户指定的"目录路径（proc 路径）"，来查看不同的系统信息。
 
 proc 系统被设计为主要面向系统管理人员，方便其查看系统内部的一些运行状态。如表的 tablet 状态、集群均衡状态、各种作业的状态等等。是一个非常实用的功能
 
@@ -81,29 +60,55 @@ mysql> show proc "/";
 说明：
 
 1. auth：用户名称及对应的权限信息
-2. backends：显示集群中 BE 的节点列表，等同于 [SHOW BACKENDS](./SHOW-BACKENDS.md)        
+2. backends：显示集群中 BE 的节点列表，等同于 [SHOW BACKENDS](../cluster-management/instance-management/SHOW-BACKENDS)        
 3. bdbje：查看 bdbje 数据库列表，需要修改 `fe.conf` 文件增加 `enable_bdbje_debug_mode=true` , 然后通过 `sh start_fe.sh --daemon` 启动 `FE` 即可进入 `debug` 模式。进入 `debug` 模式之后，仅会启动 `http server` 和  `MySQLServer` 并打开 `BDBJE` 实例，但不会进入任何元数据的加载及后续其他启动流程，
-4. brokers : 查看集群 Broker 节点信息，等同于 [SHOW BROKER](./SHOW-BROKER.md)
-5. catalogs : 查看当前已创建的数据目录，等同于 [SHOW CATALOGS](./SHOW-CATALOGS.md)
-6. cluster_balance：查看集群均衡情况，具体参照 [数据副本管理](../../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
-7. cluster_health : 通过 <code>SHOW PROC '/cluster_health/tablet_health'</code>; 命令可以查看整个集群的副本状态。
-8. colocation_group :   该命令可以查看集群内已存在的 Group 信息，具体可以查看 [Colocation Join](../../../query-acceleration/join-optimization/colocation-join.md) 章节
-9. current_backend_instances：显示当前正在执行作业的 be 节点列表
-10. current_queries  : 查看正在执行的查询列表，当前正在运行的 SQL 语句。                          
-11. current_query_stmts : 返回当前正在执行的 query。
-12. dbs：主要用于查看 Doris 集群中各个数据库以及其中的表的元数据信息。这些信息包括表结构、分区、物化视图、数据分片和副本等等。通过这个目录和其子目录，可以清楚的展示集群中的表元数据情况，以及定位一些如数据倾斜、副本故障等问题
-13. diagnose : 报告和诊断集群中的常见管控问题，主要包括副本均衡和迁移、事务异常等
-14. frontends：显示集群中所有的 FE 节点信息，包括 IP 地址、角色、状态、是否是 master 等，等同于 [SHOW FRONTENDS](./SHOW-FRONTENDS.md)
-15. jobs：各类任务的统计信息，可查看指定数据库的 Job 的统计信息，如果 `dbId` = -1, 则返回所有库的汇总信息
-16. load_error_hub：Doris 支持将 load 作业产生的错误信息集中存储到一个 error hub 中。然后直接通过 <code>SHOW LOAD WARNINGS;</code> 语句查看错误信息。这里展示的就是 error hub 的配置信息。
-17. monitor : 显示的是 FE JVM 的资源使用情况
-18. resources : 查看系统资源，普通账户只能看到自己有 USAGE_PRIV 使用权限的资源。只有 root 和 admin 账户可以看到所有的资源。等同于 [SHOW RESOURCES](./SHOW-RESOURCES.md)
-19. routine_loads：显示所有的 routine load 作业信息，包括作业名称、状态等
-20. statistics：主要用于汇总查看 Doris 集群中数据库、表、分区、分片、副本的数量。以及不健康副本的数量。这个信息有助于我们总体把控集群元信息的规模。帮助我们从整体视角查看集群分片情况，能够快速查看集群分片的健康情况。从而进一步定位有问题的数据分片。
-21. stream_loads : 返回当前正在执行的 stream load 任务。
-22. tasks :  显示现在各种作业的任务总量，及失败的数量。
-23. transactions：用于查看指定 transaction id 的事务详情，等同于 [SHOW TRANSACTION](./SHOW-TRANSACTION.md)
-24. trash：该语句用于查看 backend 内的垃圾数据占用空间。等同于 [SHOW TRASH](./SHOW-TRASH.md)
+4. binlog: 查看binlog 相关信息， 包括 binlog记录数、字节数、时间范围等信息。
+5. brokers : 查看集群 Broker 节点信息，等同于 [SHOW BROKER](../cluster-management/instance-management/SHOW-BROKER)
+6. catalogs : 查看当前已创建的数据目录，等同于 [SHOW CATALOGS](../catalog/SHOW-CATALOG.md)
+7. cluster_balance：查看集群均衡情况，具体参照 [数据副本管理](../../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
+8. cluster_health : 通过 <code>SHOW PROC '/cluster_health/tablet_health'</code>; 命令可以查看整个集群的副本状态。
+9. colocation_group :   该命令可以查看集群内已存在的 Group 信息，具体可以查看 [Colocation Join](../../../query-acceleration/colocation-join) 章节
+10. current_backend_instances：显示当前正在执行作业的 be 节点列表
+11. current_queries  : 查看正在执行的查询列表，当前正在运行的 SQL 语句。                          
+12. current_query_stmts : 返回当前正在执行的 query。
+13. dbs：主要用于查看 Doris 集群中各个数据库以及其中的表的元数据信息。这些信息包括表结构、分区、物化视图、数据分片和副本等等。通过这个目录和其子目录，可以清楚的展示集群中的表元数据情况，以及定位一些如数据倾斜、副本故障等问题
+14. diagnose : 报告和诊断集群中的常见管控问题，主要包括副本均衡和迁移、事务异常等
+15. frontends：显示集群中所有的 FE 节点信息，包括 IP 地址、角色、状态、是否是 master 等，等同于 [SHOW FRONTENDS](../cluster-management/instance-management/SHOW-FRONTENDS)
+16. jobs：各类任务的统计信息，可查看指定数据库的 Job 的统计信息，如果 `dbId` = -1, 则返回所有库的汇总信息
+17. load_error_hub：Doris 支持将 load 作业产生的错误信息集中存储到一个 error hub 中。然后直接通过 <code>SHOW LOAD WARNINGS;</code> 语句查看错误信息。这里展示的就是 error hub 的配置信息。
+18. monitor : 显示的是 FE JVM 的资源使用情况
+19. resources : 查看系统资源，普通账户只能看到自己有 USAGE_PRIV 使用权限的资源。只有 root 和 admin 账户可以看到所有的资源。等同于 [SHOW RESOURCES](../cluster-management/compute-management/SHOW-RESOURCES)
+20. routine_loads：显示所有的 routine load 作业信息，包括作业名称、状态等
+21. statistics：主要用于汇总查看 Doris 集群中数据库、表、分区、分片、副本的数量。以及不健康副本的数量。这个信息有助于我们总体把控集群元信息的规模。帮助我们从整体视角查看集群分片情况，能够快速查看集群分片的健康情况。从而进一步定位有问题的数据分片。
+22. stream_loads : 返回当前正在执行的 stream load 任务。
+23. tasks :  显示现在各种作业的任务总量，及失败的数量。
+24. transactions：用于查看指定 transaction id 的事务详情，等同于 [SHOW TRANSACTION](../transaction/SHOW-TRANSACTION)
+25. trash：该语句用于查看 backend 内的垃圾数据占用空间。等同于 [SHOW TRASH](../table-and-view/data-and-status-management/SHOW-TRASH)
+
+##  详细说明
+1. /binlog
+
+Binlog 是 Doris 中的一项重要功能，用于记录数据变更，可用于跨集群数据同步（CCR）等场景。通过此命令，管理员可以监控 Binlog 的状态，确保其正常运行并合理规划存储空间。
+
+| 字段名 | 数据类型 | 描述 |
+|--------|----------|------|
+| Name | 字符串 | 数据库或表的名称。|
+| Type | 字符串 | 数据对象的类型， 取值 "db"（数据库）或 "table"（表） |
+| Id | 数字 | 数据库ID或表ID |
+| Dropped | 布尔值 | 该数据库或表是否已被删除。值为 "true" 表示该对象已从 Doris 中删除，但其 Binlog 记录仍然保留；值为 "false" 表示该对象仍然存在于系统中。即使数据库或表被删除，系统仍然会保留一段时间的 Binlog 记录，直到 TTL 到期或被手动清理 |
+| BinlogLength | 数字 | 该数据库或表的二进制日志条目总数 |
+| BinlogSize | 数字 | 二进制日志的总大小（字节） |
+| FirstBinlogCommittedTime | 数字 | 第一条二进制日志的提交时间戳（Unix时间戳，毫秒） |
+| ReadableFirstBinlogCommittedTime | 字符串 | 第一条二进制日志的提交时间（可读格式） |
+| LastBinlogCommittedTime | 数字 | 最后一条二进制日志的提交时间戳（Unix时间戳，毫秒） |
+| ReadableLastBinlogCommittedTime | 字符串 | 最后一条二进制日志的提交时间（可读格式） |
+| BinlogTtlSeconds | 数字 | 二进制日志的生存时间（秒），超过此时间的日志可能会被清理 |
+| BinlogMaxBytes | 数字 | 二进制日志的最大大小（字节），超过此大小可能会触发清理 |
+| BinlogMaxHistoryNums | 数字 | 保留的二进制日志最大历史记录数，超过此数量可能会触发清理 |
+
+注意事项：
+- 只有启用了二进制日志功能的数据库和表才会在此命令的输出中显示
+- 对于数据库级别，如果启用了数据库级的二进制日志，则显示数据库的二进制日志信息；否则，显示该数据库下启用了二进制日志的各个表的信息
 
 ## 示例
 

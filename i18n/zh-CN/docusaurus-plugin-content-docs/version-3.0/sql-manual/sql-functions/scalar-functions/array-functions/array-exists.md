@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 使用一个可选 lambda 表达式作为输入参数，对其他的输入 ARRAY 参数的内部数据做对应表达式计算。当计算返回非 0 时，返回 1；否则返回 0。
 在 lambda 表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
@@ -39,12 +20,12 @@ ARRAY_EXISTS([ <lambda>, ] <arr1> [, <arr2> , ...] )
 | Parameter | Description |
 |---|---|
 | `<lambda>` | lambda 表达式，可以执行合法的标量函数，不支持聚合函数等 |
-| `<arr1>` | 需要计算的数组arr1  |
-| `<arr2>` | 需要计算的数组arr2  |
+| `<arr1>` | 需要计算的数组 arr1  |
+| `<arr2>` | 需要计算的数组 arr2  |
 
 ## 返回值
 返回使用表达式计算后的数组，特殊情况：
-- 如果数组里面包含NULL或者本身为NULL，则返回NULL
+- 如果数组里面包含 NULL 或者本身为 NULL，则返回 NULL
 
 
 ## 举例

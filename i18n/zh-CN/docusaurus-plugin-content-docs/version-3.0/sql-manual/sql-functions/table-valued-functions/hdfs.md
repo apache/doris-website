@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
@@ -66,16 +47,16 @@ HDFS(
 | `column_separator`            | 列分割符，默认为 `\t`                                                                                                                                                                 |                                                                             |
 | `line_delimiter`              | 行分割符，默认为 `\n`                                                                                                                                                                 |                                                                             |
 | `compress_type`               | 目前支持 UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK。默认值为 UNKNOWN, 将会根据 uri 的后缀自动推断类型                                                                          |                                                                             |
-| `read_json_by_line`           | 对 JSON 格式导入，默认为 `true`                                                                                                                                                        | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `strip_outer_array`           | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_root`                   | 对 JSON 格式导入，默认为空                                                                                                                                                              | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md)                                                                          |
-| `json_paths`                  | 对 JSON 格式导入，默认为空                                                                                                                                                              | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md)                                                                          |
-| `num_as_string`               | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md)                                                                          |
-| `fuzzy_parse`                 | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/import-way/load-json-format.md)                                                                          |
+| `read_json_by_line`           | 对 JSON 格式导入，默认为 `true`                                                                                                                                                        | 参考：[JSON Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array`           | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/file-format/json) |
+| `json_root`                   | 对 JSON 格式导入，默认为空                                                                                                                                                              | 参考：[JSON Load](../../../data-operate/import/file-format/json)                                                                          |
+| `json_paths`                  | 对 JSON 格式导入，默认为空                                                                                                                                                              | 参考：[JSON Load](../../../data-operate/import/file-format/json)                                                                          |
+| `num_as_string`               | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/file-format/json)                                                                          |
+| `fuzzy_parse`                 | 对 JSON 格式导入，默认为 `false`                                                                                                                                                       | 参考：[JSON Load](../../../data-operate/import/file-format/json)                                                                          |
 | `trim_double_quotes`          | 对 CSV 格式导入，布尔类型，默认为 `false`，为 `true` 时裁剪每个字段的外层双引号                                                                                                                            |                                                                             |
 | `skip_lines`                  | 对 CSV 格式导入，整数类型，默认为 0，跳过 CSV 文件前几行，`csv_with_names` 或 `csv_with_names_and_types` 时失效                                                                                          |                                                                             |
-| `path_partition_keys`         | 指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写path_partition_keys="city,date"，将会自动从路径中读取相应列名和列值进行导入                                                            |                                                                             |
-| `resource`                    | 指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) | 仅支持 2.1.4 及以上版本                                                                            |
+| `path_partition_keys`         | 指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写 path_partition_keys="city,date"，将会自动从路径中读取相应列名和列值进行导入                                                            |                                                                             |
+| `resource`                    | 指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) | 仅支持 2.1.4 及以上版本                                                                            |
 
 
 ## 权限控制

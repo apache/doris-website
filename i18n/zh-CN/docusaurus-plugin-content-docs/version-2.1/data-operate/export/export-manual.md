@@ -5,32 +5,13 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文档将介绍如何使用`EXPORT`命令导出 Doris 中存储的数据。
 
 `Export` 是 Doris 提供的一种将数据异步导出的功能。该功能可以将用户指定的表或分区的数据，以指定的文件格式，导出到目标存储系统中，包括对象存储、HDFS 或本地文件系统。
 
 `Export` 是一个异步执行的命令，命令执行成功后，立即返回结果，用户可以通过`Show Export` 命令查看该 Export 任务的详细信息。
 
-有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](../../data-operate/export/export-overview.md)。
 
@@ -103,7 +84,7 @@ PROPERTIES (
 ```
 
 ### 查看导出作业
-提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
+提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) 命令查询导出作业状态，结果举例如下：
 
 ```sql
 mysql> show export\G
@@ -132,11 +113,11 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md)：
+有关 `show export` 命令的详细用法及其返回结果的各个列的含义可以参看 [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT)：
 
 ### 取消导出作业
 
-提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
+提交 Export 作业后，在 Export 任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) 命令取消导出作业。取消命令举例如下：
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
@@ -318,6 +299,10 @@ PROPERTIES (
 ```
 
 通过设置 `"max_file_size" = "512MB"`，则单个导出文件的最大大小为 512MB。
+
+`max_file_size` 不能小于 5MB 且不能大于 2GB。
+
+在 2.1.11 和 3.0.7 版本中，取消了 2GB 的最大限制，仅保留最小 5MB 的限制。
 
 ## 注意事项
 

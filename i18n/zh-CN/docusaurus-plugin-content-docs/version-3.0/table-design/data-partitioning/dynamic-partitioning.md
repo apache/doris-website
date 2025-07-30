@@ -5,24 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 动态分区会按照设定的规则，滚动添加、删除分区，从而实现对表分区的生命周期管理（TTL），减少数据存储压力。在日志管理，时序数据管理等场景，通常可以使用动态分区能力滚动删除过期的数据。
 
 下图中展示了使用动态分区进行生命周期管理，其中指定了以下规则：
@@ -108,7 +90,7 @@ ALTER TABLE test_partition SET (
 
 ### 查看动态分区调度情况
 
-通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
+通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES) 可以查看当前数据库下，所有动态分区表的调度情况：
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES;
@@ -127,7 +109,7 @@ SHOW DYNAMIC PARTITION TABLES;
 
 ### 历史分区管理
 
-在使用 start 与 end 属性指定动态分区数量时，为了避免一次性创建所有的分区造成等待时间过长，不会创建历史分区，只会创建当前时间以后得分区。如果需要一次性创建所有分区，需要开启 `create_history_partition` 参数。
+在使用 `start` 与 `end` 属性指定动态分区数量时，为了避免一次性创建所有的分区造成等待时间过长，不会创建历史分区，只会创建当前时间以后得分区。如果需要一次性创建所有分区，需要开启 `create_history_partition` 参数。
 
 例如当前日期为 2024-10-11，指定 start = -2，end = 2：
 
@@ -148,7 +130,7 @@ SHOW DYNAMIC PARTITION TABLES;
 | `dynamic_partition.start`                      | 否  | 动态分区的起始偏移，为负数。默认值为 -2147483648，即不删除历史分区。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。                                                                                      |
 | `dynamic_partition.end`                        | 是  | 动态分区的结束偏移，为正数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，提前创建对应范围的分区。                                                                                                                                                                                                |
 | `dynamic_partition.prefix`                     | 是  | 动态创建的分区名前缀。                                                                                                                                                                                                                                                 |
-| `dynamic_partition.buckets`                    | 否  | 动态创建的分区所对应的分桶数，设置该参数后会覆盖 DISTRIBUTED 中指定的分桶数量。                                                                                                                                                                                                                                            |
+| `dynamic_partition.buckets`                    | 否  | 动态创建的分区所对应的分桶数。设置该参数后会覆盖 `DISTRIBUTED` 中指定的分桶数。量。                                                                                                                                                                                                                                            |
 | `dynamic_partition.replication_num`           | 否  | 动态创建的分区所对应的副本数量，如果不填写，则默认为该表创建时指定的副本数量。                                                                                                                                                                                                                     |
 | `dynamic_partition.create_history_partition` | 否  | 默认为 false。当置为 true 时，Doris 会自动创建所有分区，具体创建规则见下文。同时，FE 的参数 `max_dynamic_partition_num` 会限制总分区数量，以避免一次性创建过多分区。当期望创建的分区个数大于 `max_dynamic_partition_num` 值时，操作将被禁止。当不指定 `start` 属性时，该参数不生效。                                                                      |
 | `dynamic_partition.history_partition_num`    | 否  | 当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。该变量与 `dynamic_partition.start` 作用相同，建议同时只设置一个。                                                                                                                                          |
@@ -159,7 +141,7 @@ SHOW DYNAMIC PARTITION TABLES;
 
 ### FE 配置参数
 
-可以在 FE 配置文件或通过 ADMIN SET FRONTEND CONFIG 命令修改 FE 中的动态分区参数配置：
+可以在 FE 配置文件或通过 `ADMIN SET FRONTEND CONFIG` 命令修改 FE 中的动态分区参数配置：
 
 | 参数                                           | 默认值   | 说明                                          |
 | -------------------------------------------- | ----- | ------------------------------------------- |

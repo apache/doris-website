@@ -5,39 +5,18 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-## Request
+## 请求路径
 
 `POST /api/compaction/run?tablet_id={int}&compact_type={enum}`
 `POST /api/compaction/run?table_id={int}&compact_type=full` 注意，table_id=xxx 只有在 compact_type=full 时指定才会生效。
 `GET /api/compaction/run_status?tablet_id={int}`
 
 
-## Description
+## 描述
 
 用于手动触发 Compaction 以及状态查询。
 
-## Query parameters
+## 请求参数
 
 * `tablet_id`
     
@@ -51,11 +30,11 @@ under the License.
   
     - 取值为`base`或`cumulative`或`full`。full_compaction 的使用场景请参考[数据恢复](../../trouble-shooting/repairing-data)。
 
-## Request body
+## 请求体
 
 无
 
-## Response
+## 响应
 
 ### 触发 Compaction
 
@@ -133,7 +112,7 @@ under the License.
 
 * run_status：获取当前手动 compaction 任务执行状态
 
-### Examples
+### 示例
 
 ```shell
 curl -X POST "http://127.0.0.1:8040/api/compaction/run?tablet_id=10015&compact_type=cumulative"

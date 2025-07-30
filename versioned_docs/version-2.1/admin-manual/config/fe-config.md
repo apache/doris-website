@@ -7,25 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 <!-- Please sort the configuration alphabetically -->
 
 # FE Configuration
@@ -48,7 +29,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md):
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
 
     `SHOW FRONTEND CONFIG;`
 
@@ -85,7 +66,7 @@ There are two ways to configure FE configuration items:
 
 3. Dynamic configuration via HTTP protocol
 
-    For details, please refer to [Set Config Action](../fe/set-config-action)
+    For details, please refer to [Set Config Action](../open-api/fe-http/set-config-action)
 
     This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
 
@@ -1512,7 +1493,7 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 
 #### `label_clean_interval_second`
 
-Default：1 * 3600  (1 hour)
+Default: 1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
 
@@ -1768,7 +1749,7 @@ Used to set maximal number of replication per tablet.
 
 #### `default_db_data_quota_bytes`
 
-Default：1PB
+Default：8192PB
 
 IsMutable：true
 

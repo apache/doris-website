@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 This document mainly introduces Doris's monitoring items and how to collect and display them. And how to configure alarm (TODO)
 
 Dashboard template click download
@@ -42,7 +21,7 @@ Welcome to provide better dashboard.
 
 Doris uses [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) to collect and display input monitoring items.
 
-![Components](/images/dashboard_overview.png)
+![Doris monitor dashboard overview](/images/dashboard_overview.png)
 
 1. Prometheus
 
@@ -263,7 +242,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 1. Top Bar
 
-	![Top Bar](/images/dashboard_navibar.png)
+	![Doris Dashboard-Top Bar](/images/dashboard_navibar.png)
 
 	* The upper left corner is the name of Dashboard.
 	* The upper right corner shows the current monitoring time range. You can choose different time ranges by dropping down. You can also specify a regular refresh page interval.
@@ -275,7 +254,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 2. Row.
 
-	![Row](/images/dashboard_row.png)
+	![Doris Dashboard-Row](/images/dashboard_row.png)
 
 	In Grafana, the concept of Row is a set of graphs. As shown in the figure above, Overview and Cluster Overview are two different Rows. Row can be folded by clicking Row. Currently Dashboard has the following Rows (in continuous updates):
 
@@ -288,7 +267,7 @@ Here we briefly introduce Doris Dashboard. The content of Dashboard may change w
 
 3. Charts
 
-	![Charts](/images/dashboard_panel.png)
+	![Doris Dashboard-Charts](/images/dashboard_panel.png)
 
 	A typical icon is divided into the following parts:
 

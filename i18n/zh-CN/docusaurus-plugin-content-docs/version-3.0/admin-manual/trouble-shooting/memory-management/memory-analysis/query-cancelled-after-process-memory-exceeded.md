@@ -5,28 +5,9 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 当 Query 的报错信息中出现 `MEM_LIMIT_EXCEEDED` 且包含 `Process memory not enough` 时，说明因为进程可用内存不足被 Cancel。
 
-首先解析错误信息，确认 Cancel 的原因、Cancel 时 Query 自身使用的内存大小、以及进程的内存状态。 Query 被 Cancel 的原因通常有如下三种：
+首先解析错误信息，确认 Cancel 的原因、Cancel 时 Query 自身使用的内存大小、以及进程的内存状态。Query 被 Cancel 的原因通常有如下三种：
 
 1. 被 Cancel 的 Query 自身内存过大。
 
@@ -83,7 +64,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 ### 3 从 Allocator 申请内存失败
 
-Doris BE 的大内存申请都会通过 `Doris Allocator` 分配，并在分配时检查内存大小，如果进程可用内存不足则会抛出异常和尝试 Cancel 当前 Query 。
+Doris BE 的大内存申请都会通过 `Doris Allocator` 分配，并在分配时检查内存大小，如果进程可用内存不足则会抛出异常和尝试 Cancel 当前 Query。
 
 ```sql
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator sys memory check failed: Cannot alloc:4294967296, consuming tracker:<Query#Id=457efb1fdae74d3b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:<>, process memory used 2.23 GB exceed limit 3.01 GB or sys available memory 181.67 GB less than low water mark 3.20 GB.
@@ -105,7 +86,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 通常是因为内存更大的 Query 在 Cancel 阶段卡住，无法及时释放内存。Full GC 会先按照内存从大到小的顺序 Cancel Query，再按照内存从大到小的顺序 Cancel Load。若 Query 在内存 Full GC 中被 Cancel，但此时 BE 进程中存在其他 Query 的内存大于当前被 Cancel 的 Query，需要关注这些更大内存的 Query 是否在 Cancel 过程中卡住。
 
-首先执行 `grep {queryID} be/log/be.INFO` 找到 Query 被 Cancel 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存更大的 Query 存在。执行 `grep {更大内存的queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 同样被 Cancel，且这个更大内存的 Query 被 Cancel 的时间点和当前 Query 被 Cancel 的时间点不同，参考 [内存问题 FAQ](./memory-issue-faq.md) 中 [Query Cancel 过程中卡住] 分析这个更大内存的 Query 是否在 Cacnel 过程中卡住。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
+首先执行 `grep {queryID} be/log/be.INFO` 找到 Query 被 Cancel 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存更大的 Query 存在。执行 `grep {更大内存的queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 同样被 Cancel，且这个更大内存的 Query 被 Cancel 的时间点和当前 Query 被 Cancel 的时间点不同，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中 [Query Cancel 过程中卡住] 分析这个更大内存的 Query 是否在 Cacnel 过程中卡住。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ## 查询和导入任务之外的进程内存过大
 

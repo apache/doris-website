@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-# Integration with Apache Ranger
-
 Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform.
 
 In version 2.1.0, Doris supports unified permission management by integrating Apache Ranger.
@@ -54,7 +33,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 	
 3. Restart the Ranger service.
 
-4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-3.0/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. Execute the following command to upload the definition file to the Ranger service:
 
@@ -246,7 +225,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 #### Global Priv
 Equivalent to Doris' internal authorization statement `grant select_priv on *.*.* to user1`;
 - The global option can be found in the dropdown menu of the same level in the catalog
-- Only `*` can be entered in the input box
+- Only `*` can be entered in the input box 
 
   ![global](/images/ranger/global.png)
 

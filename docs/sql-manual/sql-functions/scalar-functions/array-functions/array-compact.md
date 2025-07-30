@@ -12,11 +12,11 @@
 
 </version>
 
-### Description
+## Description
 
 Removes consecutive duplicate elements from an array, keeping only the first occurrence of each different value. The function traverses the array from left to right, skipping elements that are the same as the previous element, and only retains the first occurrence of each value.
 
-### Syntax
+## Syntax
 
 ```sql
 array_compact(ARRAY<T> arr)

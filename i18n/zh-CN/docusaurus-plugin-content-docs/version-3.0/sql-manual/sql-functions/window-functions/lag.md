@@ -5,12 +5,6 @@
 }
 ---
 
-<!--  Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License. -->
-
 ## 描述
 
 LAG() 是一个窗口函数，用于访问当前行之前的行数据，而无需进行自连接。它可以获取分区内当前行之前第 N 行的值。
@@ -18,15 +12,15 @@ LAG() 是一个窗口函数，用于访问当前行之前的行数据，而无�
 ## 语法
 
 ```sql
-LAG ( <expr> [, <offset> [, <default> ] ] )
+LAG ( <expr>, <offset>, <default> )
 ```
 
 ## 参数
-| 参数                | 说明                                                                   |
-| ------------------- | ---------------------------------------------------------------------- |
-| expr                | 需要获取值的表达式                                                     |
-| offset              | 可选。向前偏移的行数。默认值为 1。设置为负数时效果等同于使用 LEAD 函数 |
-| default             | 可选。当偏移超出窗口范围时返回的默认值。默认为 NULL                    |
+| 参数                | 说明                                                              |
+| ------------------- | ----------------------------------------------------------------- |
+| expr                | 需要获取值的表达式                                                |
+| offset              | 向前偏移的行数。|
+| default             | 当偏移超出窗口范围时返回的默认值                   |
 
 ## 返回值
 

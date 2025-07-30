@@ -5,37 +5,18 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文介绍如何在 Doris 中导入 CSV 格式的数据文件。Doris 支持灵活的 CSV 格式配置，包括自定义分隔符、字段包围符等，并提供多种导入方式以满足不同场景的数据导入需求。
 
 ## 导入方式
 
 Doris 支持以下方式导入 CSV 格式数据：
 
-- [Stream Load](../import-way/stream-load-manual.md)
-- [Broker Load](../import-way/broker-load-manual.md)
-- [Routine Load](../import-way/routine-load-manual.md)
-- [MySQL Load](../import-way/mysql-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [Stream Load](../import-way/stream-load-manual)
+- [Broker Load](../import-way/broker-load-manual)
+- [Routine Load](../import-way/routine-load-manual)
+- [MySQL Load](../import-way/mysql-load-manual)
+- [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## 参数配置
 
@@ -76,8 +57,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - Linux/Unix 系统文件：
     ```
     数据文件：
-    张三,25\n
-    李四,30\n
+    张三，25\n
+    李四，30\n
     
     参数设置：
     line_delimiter：\n (默认值，可不设置)
@@ -85,8 +66,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - Windows 系统文件：
     ```
     数据文件：
-    张三,25\r\n
-    李四,30\r\n
+    张三，25\r\n
+    李四，30\r\n
     
     参数设置：
     line_delimiter：\r\n
@@ -94,8 +75,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - 特殊程序生成文件：
     ```
     数据文件：
-    张三,25\r
-    李四,30\r
+    张三，25\r
+    李四，30\r
     
     参数设置：
     line_delimiter：\r
@@ -103,8 +84,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - 自定义多字符分隔符：
     ```
     数据文件：
-    张三,25||
-    李四,30||
+    张三，25||
+    李四，30||
     
     参数设置：
     line_delimiter：||
@@ -124,8 +105,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - 常见可见字符：
     ```
     数据文件：
-    张三,25,北京
-    李四,30,上海
+    张三，25，北京
+    李四，30，上海
     
     参数设置：
     column_separator：,
@@ -142,8 +123,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - Hive 文件（Stream Load）：
     ```
     数据文件：
-    张三\x0125\x01北京
-    李四\x0130\x01上海
+    张三\x0125\x01 北京
+    李四\x0130\x01 上海
     
     参数设置：
     column_separator：\x01
@@ -151,8 +132,8 @@ Doris 支持以下方式导入 CSV 格式数据：
   - Hive 文件（Broker Load）：
     ```
     数据文件：
-    张三\x0125\x01北京
-    李四\x0130\x01上海
+    张三\x0125\x01 北京
+    李四\x0130\x01 上海
     
     参数设置：
     PROPERTIES("column_separator"="\\x01")
@@ -179,21 +160,21 @@ Doris 支持以下方式导入 CSV 格式数据：
     数据：a,'b,c',d
     列分隔符：,
     包围符：'
-    解析结果：3个字段 [a] [b,c] [d]
+    解析结果：3 个字段 [a] [b,c] [d]
     ```
   - 字段包含行分隔符：
     ```
     数据：a,'b\nc',d
     列分隔符：,
     包围符：'
-    解析结果：3个字段 [a] [b\nc] [d]
+    解析结果：3 个字段 [a] [b\nc] [d]
     ```
   - 字段既包含列分隔符又包含行分隔符：
     ```
     数据：a,'b,c\nd,e',f
     列分隔符：,
     包围符：'
-    解析结果：3个字段 [a] [b,c\nd,e] [f]
+    解析结果：3 个字段 [a] [b,c\nd,e] [f]
     ```
 
 #### 转义符
@@ -206,7 +187,7 @@ Doris 支持以下方式导入 CSV 格式数据：
     列分隔符：,
     包围符：'
     转义符：\
-    解析结果：3个字段 [a] [b,'c] [d]
+    解析结果：3 个字段 [a] [b,'c] [d]
     ```
   - 字段包含多个包围符：
     ```
@@ -214,7 +195,7 @@ Doris 支持以下方式导入 CSV 格式数据：
     列分隔符：,
     包围符："
     转义符：\
-    解析结果：3个字段 [a] [b,"c"d] [e]
+    解析结果：3 个字段 [a] [b,"c"d] [e]
     ```
   - 字段包含转义符本身：
     ```
@@ -222,7 +203,7 @@ Doris 支持以下方式导入 CSV 格式数据：
     列分隔符：,
     包围符：'
     转义符：\
-    解析结果：3个字段 [a] [b\c] [d]
+    解析结果：3 个字段 [a] [b\c] [d]
     ```
 
 #### 跳过行数
@@ -237,9 +218,9 @@ Doris 支持以下方式导入 CSV 格式数据：
   - 跳过标题行：
     ```
     数据文件：
-    姓名,年龄,城市
-    张三,25,北京
-    李四,30,上海
+    姓名，年龄，城市
+    张三，25，北京
+    李四，30，上海
     
     参数设置：
     skip_lines：1
@@ -249,9 +230,9 @@ Doris 支持以下方式导入 CSV 格式数据：
     ```
     数据文件：
     # 用户信息表
-    # 创建时间: 2024-01-01
-    张三,25,北京
-    李四,30,上海
+    # 创建时间：2024-01-01
+    张三，25，北京
+    李四，30，上海
     
     参数设置：
     skip_lines：2
@@ -261,8 +242,8 @@ Doris 支持以下方式导入 CSV 格式数据：
     ```
     数据文件：
     name,age,city
-    张三,25,北京
-    李四,30,上海
+    张三，25，北京
+    李四，30，上海
     
     参数设置：
     format：csv_with_names
@@ -273,8 +254,8 @@ Doris 支持以下方式导入 CSV 格式数据：
     数据文件：
     name,age,city
     string,int,string
-    张三,25,北京
-    李四,30,上海
+    张三，25，北京
+    李四，30，上海
     
     参数设置：
     format：csv_with_names_and_types
@@ -295,12 +276,12 @@ Doris 支持以下方式导入 CSV 格式数据：
     参数设置：
     trim_double_quotes：true
     结果：
-    张三,25,北京
-    李四,30,上海
+    张三，25，北京
+    李四，30，上海
     ```
 #### 压缩格式
 - 作用：指定导入文件的压缩格式
-- 类型：字符串， 忽略大小写
+- 类型：字符串，忽略大小写
 - 默认值：plain
 - 支持的压缩格式：
   - plain：不压缩（默认）

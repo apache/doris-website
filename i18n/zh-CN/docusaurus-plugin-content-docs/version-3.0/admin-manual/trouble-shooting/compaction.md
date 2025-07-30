@@ -5,27 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Doris 通过类似 LSM-Tree 的结构写入数据，在后台通过 Compaction 机制不断将小文件合并成有序的大文件，同时也会处理数据的删除、更新等操作。适当的调整 Compaction 的策略，可以极大地提升导入效率和查询效率。
 Doris 提供如下几种 compaction 方式进行调优：
 
@@ -88,7 +67,7 @@ Segment compaction 有以下特点：
 
 ## 单副本 compaction
 
-默认情况下，多个副本的 compaction 是独立进行的，每个副本在都需要消耗 CPU 和 IO 资源。开启单副本 compaction 后，在一个副本进行 compaction 后，其他几个副本拉取 compaction 后的文件，因此 CPU 资源只需要消耗 1次，节省了 N - 1 倍 CPU 消耗（ N 是副本数）。
+默认情况下，多个副本的 compaction 是独立进行的，每个副本在都需要消耗 CPU 和 IO 资源。开启单副本 compaction 后，在一个副本进行 compaction 后，其他几个副本拉取 compaction 后的文件，因此 CPU 资源只需要消耗 1 次，节省了 N - 1 倍 CPU 消耗（N 是副本数）。
 
 单副本 compaction 在表的 PROPERTIES 中通过参数 `enable_single_replica_compaction` 指定，默认为 false 不开启，设置为 true 开启。
 
@@ -96,7 +75,7 @@ Segment compaction 有以下特点：
 
 ## Compaction 策略
 
-Compaction 策略决定什么时候将哪些小文件合并成大文件。Doris 当前提供了 2种 compaction 策略，通过表属性的 `compaction_policy` 参数指定。
+Compaction 策略决定什么时候将哪些小文件合并成大文件。Doris 当前提供了 2 种 compaction 策略，通过表属性的 `compaction_policy` 参数指定。
 
 ### size_based compaction 策略
 
@@ -117,7 +96,7 @@ time_series compaction 策略是为日志、时序等场景优化的策略。它
 time_series compaction 策略在下面 3 个条件任意一个满足的时候触发小文件合并：
 - 未合并的文件大小超过 `time_series_compaction_goal_size_mbytes` (默认 1GB)
 - 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 2000)
-- 距离上次合并的时间超过 `time_series_compaction_time_threshold_seconds` (默认 1小时)
+- 距离上次合并的时间超过 `time_series_compaction_time_threshold_seconds` (默认 1 小时)
 
 上述参数在表的 PROPERTIES 中设置，可以在建表时指定，或者通过 `ALTER TABLE table_name SET("name" = "value")` 修改。
 

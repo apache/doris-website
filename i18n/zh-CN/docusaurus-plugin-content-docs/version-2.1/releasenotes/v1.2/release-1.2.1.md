@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在 1.2.1 版本中，Doris 团队已经修复了自 1.2.0 版本发布以来约 200 个问题或性能改进项。同时，1.2.1 版本也作为 1.2 的第一个迭代版本，具备更高的稳定性，建议所有用户升级到这个版本。
 
 
@@ -43,7 +24,7 @@ under the License.
 
 ### 支持 Iceberg V2
 
-支持 Iceberg V2 (仅支持 Position Delete， Equality Delete 会在后续版本支持)，可以通过 Multi-Catalog 功能访问 Iceberg V2 格式的表。
+支持 Iceberg V2 (仅支持 Position Delete，Equality Delete 会在后续版本支持)，可以通过 Multi-Catalog 功能访问 Iceberg V2 格式的表。
 
 
 ### 支持 OR 条件转 IN 
@@ -59,7 +40,7 @@ under the License.
 
 通过导入任务参数 `trim_double_quotes` 来控制，默认值为 false，为 true 时表示裁剪掉 CSV 文件每个字段最外层的双引号。  [#15241](https://github.com/apache/doris/pull/15241)
 
-### Broker 支持腾讯云 CHDFS 和 百度云 BOS 、AFS 
+### Broker 支持腾讯云 CHDFS 和 百度云 BOS、AFS 
 
 可以通过 Broker 访问存储在腾讯云 CHDFS 和 百度智能云 BOS、AFS 上的数据。 [#15297](https://github.com/apache/doris/pull/15297) [#15448](https://github.com/apache/doris/pull/15448)
 
@@ -84,13 +65,13 @@ under the License.
 
 - 请勿使用 JDK11 作为 BE 的运行时 JDK，会导致 BE Crash。
 
-- 该版本对csv格式的读取性能有下降，会影响csv格式的导入和读取效率，我们会在下一个三位版本尽快修复
+- 该版本对 csv 格式的读取性能有下降，会影响 csv 格式的导入和读取效率，我们会在下一个三位版本尽快修复
 
 ### 行为改变
 
-- BE 配置项 `high_priority_flush_thread_num_per_store` 默认值由 1 改成 6 ，以提升 Routine Load 的写入效率。[#14775](https://github.com/apache/doris/pull/14775)
+- BE 配置项 `high_priority_flush_thread_num_per_store` 默认值由 1 改成 6，以提升 Routine Load 的写入效率。[#14775](https://github.com/apache/doris/pull/14775)
 
-- FE 配置项 `enable_new_load_scan_node` 默认值改为 true ，将使用新的 File Scan Node 执行导入任务，对用户无影响。 [#14808](https://github.com/apache/doris/pull/14808)
+- FE 配置项 `enable_new_load_scan_node` 默认值改为 true，将使用新的 File Scan Node 执行导入任务，对用户无影响。 [#14808](https://github.com/apache/doris/pull/14808)
 
 - 删除 FE 配置项 `enable_multi_catalog`，默认开启 Multi-Catalog 功能。
 

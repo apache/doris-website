@@ -5,41 +5,22 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-This document introduces how to update data in the Doris primary key model using various load methods.
+This document introduces how to update data in the Doris unique key model using various load methods.
 
 ## Whole Row Update
 
-When loading data into the primary key model (Unique model) using Doris-supported methods like Stream Load, Broker Load, Routine Load, Insert Into, etc., new data is inserted if there is no existing primary key data row. If there is an existing primary key data row, it is updated. This means the load operation in the Doris primary key model works in an "upsert" mode. The process of updating existing records is the same as loading new records by default, so you can refer to the data load documentation for more details.
+When loading data into the unique key model using Doris-supported methods like Stream Load, Broker Load, Routine Load, Insert Into, etc., new data is inserted if there is no existing primary key data row. If there is an existing primary key data row, it is updated. This means the load operation in the Doris unique key model works in an "upsert" mode. The process of updating existing records is the same as loading new records by default, so you can refer to the data load documentation for more details.
 
 ## Partial Column Update
 
-Partial column update allows you to update specific fields in a table without modifying all fields. You can use the Update statement to perform this operation, which typically involves reading the entire row, updating the desired fields, and writing it back. This read-write transaction is time-consuming and not suitable for large-scale data writing. Doris provides a feature to directly insert or update partial column data in the primary key model load update, bypassing the need to read the entire row first, thus significantly improving update efficiency.
+Partial column update allows you to update specific fields in a table without modifying all fields. You can use the Update statement to perform this operation, which typically involves reading the entire row, updating the desired fields, and writing it back. This read-write transaction is time-consuming and not suitable for large-scale data writing. Doris provides a feature to directly insert or update partial column data in the unique key model load update, bypassing the need to read the entire row first, thus significantly improving update efficiency.
 
 :::caution Note
 
 1. Version 2.0 only supports partial column updates in the Merge-on-Write implementation of the Unique Key.
 2. Starting from version 2.0.2, partial column updates are supported using INSERT INTO.
 3. Partial column updates are not supported on tables with synchronized materialized views.
-
+4. Partial column updates are not allowed on tables doing schema change.
 :::
 
 ### Applicable Scenarios
@@ -138,13 +119,13 @@ Performance optimization suggestions:
 
 Currently, all rows in the same batch data writing task (whether a load task or `INSERT INTO`) can only update the same columns. To update data with different columns, write in different batches.
 
-## Flexible Partial Column Updates
+## Flexible Partial Column Updates (Experimental Feature)
 
-Before version x.x.x, Doris's partial update feature required that every row in an import update the same columns. Starting from version x.x.x, Doris supports a more flexible partial update method that allows each row in a single import to update different columns.
+Previously, Doris's partial update feature required that every row in an import update the same columns. Now, Doris supports a more flexible partial update method that allows each row in a single import to update different columns(only supported on the master branch).
 
 :::caution Note:
 
-1. The flexible partial update feature is supported since version x.x.x.
+1. The flexible partial update feature is still in the internal testing.
 2. Currently, only the Stream Load import method and tools using Stream Load (e.g. Doris-Flink-Connector) support this feature.
 3. The import file must be in JSON format when using flexible column updates.
 :::

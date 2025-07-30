@@ -6,24 +6,6 @@
 
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 The `DELETE` statement removes data from a specified table or partition based on conditions through the MySQL protocol. It supports specifying the data to be deleted using simple predicate combinations and also supports using the `USING` clause to join multiple tables for deletion on primary key tables.
 
 ## Delete by Specifying Filter Predicates
@@ -60,7 +42,7 @@ DELETE FROM table_name [table_alias]
     1. The conditions do not include partition columns.
     2. The `op` of the partition column is `not in`.
 
-  - When the partitioned table does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
+  - When the partitioned table is not a Unique table, and it does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
 
 ### Examples
 
@@ -208,4 +190,4 @@ mysql> show delete from test_db;
 
 ## Syntax
 
-For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) syntax manual.
+For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) syntax manual.

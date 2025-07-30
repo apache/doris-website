@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，包括查询、导入、Compaction、Schema Change 等任务生命周期中使用的内存，以及各项缓存。支持 Web 页面实时查看，并在内存相关报错时打印到 BE 日志中，用于内存分析和排查内存问题。
 
 有关 Memory Tracker 的查看方法，以及不同 Memory Tracker 所代表内存占用过大的原因以及减少其内存使用的分析方法在 [Overview](./../overview.md) 中已结合 Doris BE 内存结构一起介绍。本文只介绍 Memory Tracker 原理、结构，以及一些常见问题。
@@ -32,13 +13,13 @@ Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，包
 
 Memory Tracker 依赖 Doris Allocator 跟踪内存的每次申请和释放，有关 Doris Allocator 的介绍参考 [内存控制策略](./memory-control-strategy.md)。
 
-进程内存: Doris BE 会定时从系统获取 Doris BE 进程内存，兼容Cgroup。
+进程内存：Doris BE 会定时从系统获取 Doris BE 进程内存，兼容 Cgroup。
 
-任务内存: 每个查询、导入、Compaction等任务初始化时都会创建自己唯一的 Memory Tracker，在执行过程中将 Memory Tracker 放入 TLS（Thread Local Storage）中，Doris 主要的内存数据结构都继承自 Allocator，Allocator 每次申请和释放内存都会记录到 TLS 的 Memory Tracker 中。
+任务内存：每个查询、导入、Compaction 等任务初始化时都会创建自己唯一的 Memory Tracker，在执行过程中将 Memory Tracker 放入 TLS（Thread Local Storage）中，Doris 主要的内存数据结构都继承自 Allocator，Allocator 每次申请和释放内存都会记录到 TLS 的 Memory Tracker 中。
 
 算子内存：任务的不同执行算子也会创建自己的 Memory Trakcer，比如 Join/Agg/Sink 等，支持手动跟踪内存或放入 TLS 中由 `Doris Allocator` 记录，用于执行逻辑控制，以及 Query Profile 中分析不同算子的内存使用情况。
 
-全局内存: 全局内存主要包括 Cache 和元数据等在不同任务间共享的内存。每个 Cache 有自己唯一的 Memory Tracker，由 `Doris Allocator` 或 手动跟踪；元数据内存目前没有统计完全，更多要依赖 Metrics 和 Bvar 统计的各种元数据 Counter 进行分析。
+全局内存：全局内存主要包括 Cache 和元数据等在不同任务间共享的内存。每个 Cache 有自己唯一的 Memory Tracker，由 `Doris Allocator` 或 手动跟踪；元数据内存目前没有统计完全，更多要依赖 Metrics 和 Bvar 统计的各种元数据 Counter 进行分析。
 
 其中 Doris BE 进程内存因为取自操作系统，可以认为是完全准确的，其他 Memory Tracker 因为实现上的局限性，跟踪的内存通常只是真实内存的一个子集，导致大多数情况下所有 Memory Tracker 之和要小于 Doris BE 进程物理内存，存在一定的缺失，不过 Memory Tracker 记录到的内存在大多数情况下可信度较高，可以放心的用于内存分析。此外 Memory Tracker 实际跟踪的是虚拟内存，而不是通常更关注的物理内存，它们之间也存在一定的误差。
 
@@ -46,7 +27,7 @@ Memory Tracker 依赖 Doris Allocator 跟踪内存的每次申请和释放，有
 
 根据使用方式 Memory Tracker 分为两类，第一类 Memory Tracker Limiter，在每个查询、导入、Compaction 等任务和全局 Cache、TabletMeta 唯一，用于观测和控制内存使用；第二类 Memory Tracker，主要用于跟踪查询执行过程中的内存热点，如 Join/Aggregation/Sort/窗口函数中的 HashTable、序列化的中间数据等，来分析查询中不同算子的内存使用情况，以及用于导入数据下刷的内存控制。
 
-二者之间的父子关系只用于快照的打印，使用Lable名称关联，相当于一层软链接，不依赖父子关系同时消费，生命周期互不影响，减少理解和使用的成本。所有 Memory Tracker 存放在一组 Map 中，并提供打印所有 Memory Tracker Type 的快照、打印 Query/Load/Compaction  等 Task 的快照、获取当前使用内存最多的一组 Query/Load、获取当前过量使用内存最多的一组 Query/Load 等方法。
+二者之间的父子关系只用于快照的打印，使用 Lable 名称关联，相当于一层软链接，不依赖父子关系同时消费，生命周期互不影响，减少理解和使用的成本。所有 Memory Tracker 存放在一组 Map 中，并提供打印所有 Memory Tracker Type 的快照、打印 Query/Load/Compaction  等 Task 的快照、获取当前使用内存最多的一组 Query/Load、获取当前过量使用内存最多的一组 Query/Load 等方法。
 
 ![Memory Tracker Implement](/images/memory-tracker-implement.png)
 
@@ -100,9 +81,9 @@ Orphan Memory Tracker 是默认 Memory Tracker，值为正数或负数都意味�
 
 - Query 或 Load 等任务 Memory Tracker 析构时如果值不等于 0，，通常意味着这部分内存没有释放，将把这部分剩余的内存记录到 Orphan Memory Tracker 中，相当于将剩余内存交由 Orphan Memory Tracker 继续跟踪。从而保证 Orphan Memory Tracker 和其他 Memory Tracker 之和等于 Doris Allocator 分配出去的所有内存。
 
-理想情况下，期望 Orphan Memory Tracker 的值接近0。所以我们希望所有线程开始时都 Attach 一个 Orphan 之外的 Memory Tracker，比如 Query 或 Load Memory Tracker。并且所有 Query 或 Load Memory Tracker 析构时都等于0，这意味着 Query 或 Load 执行过程中使用的内存在析构时都已经被释放。
+理想情况下，期望 Orphan Memory Tracker 的值接近 0。所以我们希望所有线程开始时都 Attach 一个 Orphan 之外的 Memory Tracker，比如 Query 或 Load Memory Tracker。并且所有 Query 或 Load Memory Tracker 析构时都等于 0，这意味着 Query 或 Load 执行过程中使用的内存在析构时都已经被释放。
 
-如果 Orphan Memory Tracker 不等于0且值较大，这意味着有大量不知所属的内存没有被释放，或者 Query 和 Load 执行结束后有大量的内存没有被释放，
+如果 Orphan Memory Tracker 不等于 0 且值较大，这意味着有大量不知所属的内存没有被释放，或者 Query 和 Load 执行结束后有大量的内存没有被释放，
 
 #### Doris 2.1 之前
 

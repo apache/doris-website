@@ -5,25 +5,13 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## 架构规划
 
-  http://www.apache.org/licenses/LICENSE-2.0
+在部署 Doris 时，可以根据业务选择存算一体或存算分离架构：
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+- [存算一体](../../gettingStarted/what-is-apache-doris.md#存算一体)：存算一体架构部署简单，性能优异，不依赖与外部的共享存储设备，适合不需要极致弹性扩缩容的业务场景；
 
+- [存算分离](../../gettingStarted/what-is-apache-doris.md#存算分离)：存算分离架构依赖于共享存储，实现了计算资源的弹性伸缩，适合需要动态调整计算资源的业务场景。
 
 ## 端口规划
 
@@ -48,9 +36,9 @@ FE 节点主要负责用户请求的接入、查询解析规划、元数据管�
 
 对于生产集群，一般建议部署至少 3 个节点的 FE 以实现高可用环境。FE 节点分为以下两种角色：
 
-- Follower 节点：参与选举操作，当 Master 节点宕机时，会选择一个可用的 Follower 节点成为新的 Master。
+- **Follower 节点**：参与选举操作，当 Master 节点宕机时，会选择一个可用的 Follower 节点成为新的 Master。
   
-- Observer 节点：仅从 Leader 节点同步元数据，不参与选举，可用于横向扩展以提升元数据的读服务能力。
+- **Observer 节点**：仅从 Leader 节点同步元数据，不参与选举，可用于横向扩展以提升元数据的读服务能力。
 
 通常情况下，建议部署至少 3 个 Follower 节点。在高并发的场景中，可以通过增加 Observer 节点的数量来提高集群的连接数。
 

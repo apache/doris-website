@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在 Apache Doris 中，删除操作（Delete）是一项关键功能，用于管理和清理数据，以满足用户在大规模数据分析场景中的灵活性需求。
 
 Doris 提供了丰富多样的删除功能支持，包括：DELETE 语句、删除标记（delete sign）、分区删除、全表删除以及使用临时分区实现原子覆盖写等功能。下面将详细介绍每一项功能：
@@ -70,7 +51,7 @@ TRUNCATE TABLE table_name;
 
 这种方式相对于 DELETE 语句来说，可以批量进行大量主键的删除操作，效率较高。
 
-删除标记属于高级功能，使用起来相比前几种要更复杂一些，详细的用法请参考文档[批量删除](./delete-overview.md)。
+删除标记属于高级功能，使用起来相比前几种要更复杂一些，详细的用法请参考文档[批量删除](./batch-delete-manual.md)。
 
 ### 使用临时分区实现原子覆盖写
 

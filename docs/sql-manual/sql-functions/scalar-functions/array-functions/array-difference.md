@@ -9,14 +9,13 @@
 
 <version since="2.0.0">
 
-
 </version>
 
-### Description
+## Description
 
 Calculates the difference between adjacent elements in an array. The function traverses the array from left to right, calculating the difference between each element and its previous element, and returns a new array with the same length as the original array. The difference of the first element is always 0.
 
-### Syntax
+## Syntax
 
 ```sql
 array_difference(ARRAY<T> arr)

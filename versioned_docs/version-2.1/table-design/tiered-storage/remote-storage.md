@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Overview
 
 Remote storage supports placing cold data in external storage (such as object storage, HDFS).
@@ -102,6 +83,7 @@ CREATE RESOURCE "remote_hdfs" PROPERTIES (
         "fs.defaultFS"="fs_host:default_fs_port",
         "hadoop.username"="hive",
         "hadoop.password"="hive",
+        "root_path"="/my/root/path",
         "dfs.nameservices" = "my_ha",
         "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
         "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
@@ -158,7 +140,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 Note that if the user specifies different Storage Policies for the entire Table and some Partitions when creating the table, the Storage Policy set for the Partition will be ignored, and all Partitions of the table will use the table's Policy. If you need a Partition's Policy to differ from others, you can modify it using the method described above for associating a Storage Policy with an existing Partition.
 
-For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
+For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
 :::
 
 ### Configuring Compaction
@@ -203,7 +185,7 @@ To optimize query performance and save object storage resources, local Cache has
 
 -   The Cache is managed through LRU and does not support TTL.
 
-For specific configurations, please refer to (../../lakehouse/filecache).
+For specific configurations, please refer to (../../lakehouse/data-cache).
 
 ## FAQ
 

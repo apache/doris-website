@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 When `MEM_LIMIT_EXCEEDED` appears in the query or load error message and contains `memory tracker limit exceeded`, it means that the task exceeds the single execution memory limit.
 
 ## Error message analysis 
@@ -42,7 +23,7 @@ The error message is divided into two parts:
 
 `show variables;` You can view Doris Session Veriable, where `exec_mem_limit` is the execution memory limit for a single query and load, but since Doris 1.2, query memory over-issuance (overcommit) is supported, aiming to allow queries to set more flexible memory limits. When there is sufficient memory, even if the query memory exceeds the upper limit, it will not be Cancel, so users usually do not need to pay attention to query memory usage. Until the memory is insufficient, the query will wait for a while while trying to allocate new memory. At this time, based on certain rules, the query with a larger ratio of `mem_used` to `exec_mem_limit` will be canceled first. If the amount of memory released during the waiting process meets the requirements, the query will continue to execute, otherwise an exception will be thrown and the query will be terminated.
 
-If you want to turn off query memory over-issuance, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md) and add `enable_query_memory_overcommit=false` in `conf/be.conf`. At this time, a single query and load memory exceeding `exec_mem_limit` will be canceled. If you want to avoid the negative impact of large queries on cluster stability, or want to accurately control the execution of tasks on the cluster to ensure sufficient stability, then you can consider turning off query memory over-issuance.
+If you want to turn off query memory over-issuance, refer to [BE Configuration Items](../../../config/be-config) and add `enable_query_memory_overcommit=false` in `conf/be.conf`. At this time, a single query and load memory exceeding `exec_mem_limit` will be canceled. If you want to avoid the negative impact of large queries on cluster stability, or want to accurately control the execution of tasks on the cluster to ensure sufficient stability, then you can consider turning off query memory over-issuance.
 
 ## Query Memory Analysis
 

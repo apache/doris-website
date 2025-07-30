@@ -1,28 +1,10 @@
 ---
 {
    "title": "Overview",
-   "language": "en-US"
+    "language": "en"
 }
+  
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## Overview
 
@@ -42,12 +24,12 @@ CCR is suitable for the following common scenarios:
 
 - **Cluster Migration**: When relocating a Doris cluster or replacing equipment, using CCR can synchronize data from the old cluster to the new cluster, ensuring data consistency during the migration process.
 
-### Task Categories
+### Job Categories
 
-CCR supports two types of tasks:
+CCR supports two types of jobs:
 
-- **Database-Level Tasks**: Synchronize data for the entire database.
-- **Table-Level Tasks**: Only synchronize data for specified tables. Note that table-level synchronization does not support renaming or replacing tables. Each database in Doris can only run one snapshot task at a time, so full synchronization tasks for table-level synchronization need to be queued.
+- **Database-Level jobs**: Synchronize data for the entire database.
+- **Table-Level jobs**: Only synchronize data for specified tables. Note that table-level synchronization does not support renaming or replacing tables. Each database in Doris can only run one snapshot job at a time, so full synchronization jobs for table-level synchronization need to be queued.
 
 ## Principles and Architecture
 
@@ -57,8 +39,8 @@ CCR supports two types of tasks:
 - **Target Cluster**: The target cluster for cross-cluster synchronization.
 - **binlog**: The change log of the source cluster, which includes schema and data changes.
 - **Syncer**: A lightweight process responsible for synchronizing data.
-- **Upstream**: Refers to the upstream database in database-level tasks and the upstream table in table-level tasks.
-- **Downstream**: Refers to the downstream database in database-level tasks and the downstream table in table-level tasks.
+- **Upstream**: Refers to the upstream database in database-level jobs and the upstream table in table-level jobs.
+- **Downstream**: Refers to the downstream database in database-level jobs and the downstream table in table-level jobs.
 
 ### Architecture Description
 
@@ -69,13 +51,13 @@ CCR mainly relies on a lightweight process: `Syncer`. The `Syncer` is responsibl
 ### Principles
 
 1. **Full Synchronization**:
-   - CCR tasks will first perform full synchronization, copying the upstream data completely to the downstream.
+   - CCR jobs will first perform full synchronization, copying the upstream data completely to the downstream.
 
 2. **Incremental Synchronization**:
-   - After full synchronization is complete, CCR tasks will continue with incremental synchronization to maintain data consistency between upstream and downstream.
+   - After full synchronization is complete, CCR jobs will continue with incremental synchronization to maintain data consistency between upstream and downstream.
 
 3. **Restarting Full Synchronization**:
-   - When encountering DDL operations that do not support incremental synchronization, CCR tasks will restart full synchronization. For specific DDL operations that do not support incremental synchronization, please refer to [Feature Details](./feature.md).
+   - When encountering DDL operations that do not support incremental synchronization, CCR jobs will restart full synchronization. For specific DDL operations that do not support incremental synchronization, please refer to [Feature Details](./feature.md).
    - If the upstream binlog is interrupted due to expiration or other reasons, incremental synchronization will stop and restart full synchronization.
 
 4. **Restarting Full Synchronization**:
@@ -89,7 +71,20 @@ CCR supports four synchronization methods:
 
 | Synchronization Method | Principle                                               | Trigger Timing                                           |
 |------------------------|--------------------------------------------------------|---------------------------------------------------------|
-| **Full Sync**          | The upstream performs a full backup, and the downstream performs a restore. DB-level tasks trigger DB backups, and table-level tasks trigger table backups. | First synchronization or triggered by specific operations. For trigger conditions, please refer to [Feature Details](./feature.md). |
+| **Full Sync**          | The upstream performs a full backup, and the downstream performs a restore. DB-level jobs trigger DB backups, and table-level jobs trigger table backups. | First synchronization or triggered by specific operations. For trigger conditions, please refer to [Feature Details](./feature.md). |
 | **Partial Sync**       | The upstream performs table or partition-level backups, and the downstream performs table or partition-level restores. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **TXN**                | Incremental data synchronization, starting synchronization after the upstream commits. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **SQL**                | Replaying upstream SQL operations on the downstream.   | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
+
+## Download
+
+requirement: glibc >= 2.28
+
+| Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
+|---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-arm64.tar.xz) | 8ee7bd72baae87f2f226a5effbe4b10a8fac4b1fa25c9cc027e183e5f4c04bcc |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-x64.tar.xz)     | 3c36dd4a807931b00b191c3d9f3541f2e5732acb6d1d9fc83b8cb3fb334046a2 |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-arm64.tar.xz) | 7225cf8bc2acc37c09712a3655b0ff1939d574f42ed7bba29344a50742d7dcff |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-x64.tar.xz)   | 9fdafb90fdb337e3842dc690be40c77d64c1c1ea3b7b688b74bb9aeaf955681c |
+
+

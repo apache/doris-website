@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Storage Vault 是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个 Storage Vault，可将不同表存储在不同 Storage Vault 上。
 
 ## 创建 Storage Vault
@@ -74,6 +55,9 @@ PROPERTIES (
 
 更多参数说明及示例可见 [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md)。
 
+**注意**
+提供的对象存储路径必须具有head/get/list/put/multipartUpload/delete访问权限。
+
 ## 查看 Storage Vault 
 
 **语法**
@@ -82,7 +66,7 @@ PROPERTIES (
 SHOW STORAGE VAULTS
 ```
 
-返回结果包含 4 列，分别为 Storage Vault 名称、 Storage Vault  ID、属性以及是否为默认 Storage Vault 。
+返回结果包含 4 列，分别为 Storage Vault 名称、Storage Vault  ID、属性以及是否为默认 Storage Vault。
 
 ### 设置默认 Storage Vault 
 
@@ -94,7 +78,7 @@ SET <vault_name> AS DEFAULT STORAGE VAULT
 
 ## 建表时指定 Storage Vault 
 
-建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault 。
+建表时在 `PROPERTIES` 中指定 `storage_vault_name`，则数据会存储在指定 `vault name` 所对应的 Storage Vault 上。建表成功后，该表不允许再修改 `storage_vault`，即不支持更换 Storage Vault。
 
 **示例**
 
@@ -116,17 +100,40 @@ PROPERTIES (
 );
 ```
 
+## 创建数据库时指定 Storage Vault 
+
+创建数据库时在 `PROPERTIES` 中指定 `storage_vault_name`。如果在数据库下建表时没有指定 `storage_vault_name`，则表会使用数据库的 `vault name` 对应的 Storage Vault 进行数据的存储。用户可以通过 [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md) 更改数据库的 `storage_vault_name`，该行为不会改变数据库下已经创建表的`storage_vault`，只有新创建的表会使用更改后的`storage_vault`。
+
+**示例**
+
+```sql
+CREATE DATABASE IF NOT EXIST `db_test`
+PROPERTIES (
+    "storage_vault_name" = "hdfs_demo_vault"
+);
+```
+
+:::info 备注
+
+从 3.0.5 版本支持创建库时指定 Storage Vault。
+
+创建表时使用 Storage Vault 的优先顺序为 表 -> 数据库 -> 默认 Storage Vault。即如果表的 PROPERTY 中没有指定 Storage Vault，则会搜索数据库是否指定了 Storage Vault；如果数据库也没有指定，则会继续搜索是否有默认 Storage Vault。
+
+如果 Storage Vault 的 `VAULT_NAME` 属性被修改，可能会导致数据库下设置的 Storage Vault 失效而报错，用户需要根据实际情况为数据库再配置一个可用的 `storage_vault_name`。
+
+:::
+
 ## 更改 Storage Vault 
 
 用于更新 Storage Vault 配置的可修改属性。
 
-S3 Storage Vault 允许修改的属性:
+S3 Storage Vault 允许修改的属性：
 - `VAULT_NAME`
 - `s3.access_key`
 - `s3.secret_key`
 - `use_path_style`
 
-HDFS Storage Vault 禁止修改的属性:
+HDFS Storage Vault 禁止修改的属性：
 - `path_prefix`
 - `fs.defaultFS`
 
@@ -173,7 +180,7 @@ GRANT
 仅 Admin 用户有权限执行 `GRANT` 语句，该语句用于向 User / Role 授予指定 Storage Vault 的权限。拥有某个 Storage Vault 的 `USAGE_PRIV` 权限的 User / Role 可进行以下操作：
 
 - 通过 `SHOW STORAGE VAULTS` 查看该 Storage Vault 的信息；
-- 建表时在 `PROPERTIES` 中指定使用该 Storage Vault 。
+- 建表时在 `PROPERTIES` 中指定使用该 Storage Vault。
 
 ### 撤销
 
@@ -199,3 +206,23 @@ REVOKE
 ```sql
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
+
+## FAQ
+
+#### Q1. 如何查询特定storage vault被那些表引用？
+
+1. 通过`show storage vault`查看storage vault name对应的storage vault id
+
+2. 执行如下sql语句:
+
+```sql
+mysql> select * from information_schema.table_properties where PROPERTY_NAME = "storage_vault_id" and PROPERTY_VALUE=3;
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| TABLE_CATALOG | TABLE_SCHEMA                    | TABLE_NAME                          | PROPERTY_NAME    | PROPERTY_VALUE |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+| internal      | regression_test_vault_p0_create | s3_92ba28c209154d968e680e58dd54d0cc | storage_vault_id | 3              |
++---------------+---------------------------------+-------------------------------------+------------------+----------------+
+1 row in set (0.04 sec)
+```
+
+其中`PROPERTY_VALUE=3`替换为对应`storage vault id`的数值

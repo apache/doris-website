@@ -5,24 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ### Description
 
 AES encryption function. This function behaves like the `AES_ENCRYPT` function in MySQL. By default, it uses the `AES_128_ECB` algorithm with `PKCS7` padding mode.
@@ -40,6 +22,10 @@ VARCHAR AES_ENCRYPT(VARCHAR str, VARCHAR key_str [, VARCHAR init_vector [, VARCH
 - `init_vector` is the initial vector to be used in the algorithm, this is only valid for some algorithms, if not specified then Doris will use the built-in value;
 - `encryption_mode` is the encryption algorithm, optionally available in variable.
 
+:::warning
+Function with two arguments will ignore session variable `block_encryption_mode` and always use `AES_128_ECB` to do encryption. So it's not recommended to use it.
+:::
+
 ### Notice
 
 For the incoming key, the AES_ENCRYPT function not directly uses, but will further process it. The specific steps are as follows:
@@ -55,7 +41,7 @@ set block_encryption_mode='';
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
-```
+```text
 +----------------------------------------------------------+
 | to_base64(aes_encrypt('text', '***', '', 'AES_128_ECB')) |
 +----------------------------------------------------------+
@@ -68,7 +54,7 @@ set block_encryption_mode="AES_256_CBC";
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
-```
+```text
 +----------------------------------------------------------+
 | to_base64(aes_encrypt('text', '***', '', 'AES_256_CBC')) |
 +----------------------------------------------------------+
@@ -80,7 +66,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```
 
-```
+```text
 +--------------------------------------------------------------------+
 | to_base64(aes_encrypt('text', '***', '0123456789', 'AES_256_CBC')) |
 +--------------------------------------------------------------------+

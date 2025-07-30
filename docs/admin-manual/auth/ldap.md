@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # LDAP
 
 Access to third-party LDAP services to provide authentication login and group authorization services for Doris.
@@ -34,7 +15,7 @@ LDAP group authorization, is to map the group in LDAP to the Role in Doris, if t
 
 ## Noun Interpretation
 
-* LDAP: Lightweight directory access protocol that enables centralized management of account passwords.
+* LDAP: Lightweight Directory Access Protocol that enables centralized management of account passwords.
 * Privilege: Permissions act on nodes, databases or tables. Different permissions represent different permission to operate.
 * Role: Doris can create custom named roles. A role can be thought of as a collection of permissions.
 
@@ -60,7 +41,7 @@ In LDAP, data is organized in a tree structure.
 - cn(common name):name
 - group: Group, which can be understood as the role of Doris
 - user: User, equivalent to Doris' user
-- objectClass：It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
+- objectClass: It can be understood as the type of data in each row, such as how to distinguish whether group1 is a group or a user. Each type of data requires different attributes below, such as CN and member (user list) for group, CN, password, uid, etc. for user
 
 ## Enable LDAP Authentication
 ### Server-side Configuration
@@ -70,7 +51,7 @@ You need to configure the LDAP basic information in the fe/conf/ldap.conf file,
 
 and the LDAP administrator password needs to be set using sql statements.
 
-#### Configure the fe/conf/ldap.conf file：
+#### Configure the fe/conf/ldap.conf file:
 * ldap_host = 127.0.0.1  
   LDAP service ip.
   
@@ -81,7 +62,7 @@ and the LDAP administrator password needs to be set using sql statements.
   LDAP administrator account "Distinguished Name". When a user logs into Doris using LDAP authentication, Doris will bind the administrator account to search for user information in LDAP.
   
 * ldap_user_basedn = ou=people,dc=domain,dc=com
-  Doris base dn when searching for user information in LDAP,For example, only user2 in the above example is allowed to log in to Doris, which is configured as ou=ou2, dc=example, dc=com. If user1, user2, and user3 in the above example are allowed to log in to Doris, which is configured as dc=example, dc=com
+  Doris base DN(Distinguished Name) when searching for user information in LDAP,For example, only user2 in the above example is allowed to log in to Doris, which is configured as ou=ou2, dc=example, dc=com. If user1, user2, and user3 in the above example are allowed to log in to Doris, which is configured as dc=example, dc=com
   
 * ldap_user_filter = (&(uid={login}))
 
@@ -106,7 +87,7 @@ set ldap_admin_password = password('ldap_admin_password');
 #### MySQL Client
 Client-side LDAP authentication requires the mysql client-side explicit authentication plugin to be enabled. Logging into Doris using the command line enables the mysql explicit authentication plugin in one of two ways.
 
-* Set the environment variable LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN to value 1.
+* Set the environment variable `LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN` to value 1.
   For example, in a linux or max environment you can use the command:
   ```shell
   echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ～/.bash_profile && source ～/.bash_profile
@@ -224,7 +205,7 @@ If jack also belongs to the LDAP groups doris_qa, doris_pm; Doris exists roles: 
 > If you want user2 to belong to group2, you need to add user2 to the member attribute of group2
 
 ### LDAP information cache
-To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](... /... /sql-manual/sql-reference/Utility-Statements/REFRESH-LDAP.md).
+To avoid frequent access to LDAP service, Doris will cache LDAP information into memory, you can specify the cache time for LDAP users through the `ldap_user_cache_timeout_s` configuration item in ldap.conf, the default is 12 hours; after modifying the information in LDAP service or modifying the After modifying the information in the LDAP service or modifying the Role permissions of the LDAP user group, the cache may not take effect in time because of the cache, so you can refresh the cache with the refresh ldap statement, see [REFRESH-LDAP](../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ## Limitations of LDAP authentication
 

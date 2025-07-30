@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 Table function, generating temporary tables for asynchronous materialized views, which can view information about asynchronous materialized views created in a certain database.
@@ -53,7 +34,7 @@ MV_INFOS("database"="<database>")
 | EnvInfo                | TEXT    | Environment information when the materialized view was created       |
 | MvProperties           | TEXT    | Materialized view properties                                         |
 | MvPartitionInfo        | TEXT    | Partition information of the materialized view                       |
-| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../sql-reference/Show-Statements/SHOW-PARTITIONS.md) |
+| SyncWithBaseTables     | BOOLEAN | Whether the data is synchronized with the base table. To check which partition is not synchronized, use [SHOW PARTITIONS](../../sql-statements/table-and-view/table/SHOW-PARTITIONS) |
 
 ## Examples
 

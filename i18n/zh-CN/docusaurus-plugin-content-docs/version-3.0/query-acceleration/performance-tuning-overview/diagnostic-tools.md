@@ -5,40 +5,21 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 
-高效好用的性能诊断工具对于数据库系统的调优至关重要，因为这关系到是否能快速定位到存在性能问题的业务 SQL，继而快速定位和解决性能瓶颈，保证数据库系统服务的 SLA。
+高效好用的性能诊断工具对于数据库系统的调优至关重要，因为这取决于是否能快速定位到存在性能问题的业务 SQL，继而快速定位和解决性能瓶颈，保证数据库系统服务的 SLA。
 
 当前，Doris 系统默认将执行时间超过 5 秒的 SQL 认定为慢 SQL，此阈值可通过 `config.qe_slow_log_ms` 进行配置。目前 Doris 提供了以下三种诊断渠道，能够帮助快速定位存在性能问题的慢 SQL，分别如下：
 
 ## Doris Manager 日志
 
-Doris Manager 的日志模块提供了慢 SQL 筛选功能。用户可以通过选择特定 FE 节点上的 `fe.audit.log` 来查看慢 SQL。只需在搜索框中输入“slow_query”，即可在页面上展示出当前系统的历史慢 SQL 信息，如下图所示：
+Doris Manager 的日志模块提供了慢 SQL 筛选功能。用户可以通过选择特定 FE 节点上的 `fe.audit.log` 来查看慢 SQL。只需在搜索框中输入“slow_query”，即可在页面上展示当前系统的历史慢 SQL 信息，如下图所示：
 
 ![Doris Manager 监控与日志](/images/doris-manage-trace-log-2.png)
 
 ## Audit Log
 
-当前 Doris FE 提供了四种类型的 Audit Log，包括 `slow_query`、`query`、`load` 和 `stream_load`。Audit Log  除了在安装部署 Manager 服务的集群上通过日志页面访问获取之外，也可以直接访问 FE 所在节点的 `fe/log/fe.audit.log` 文件获取信息。
+当前 Doris FE 提供了四种类型的 Audit Log，包括 `slow_query`、`query`、`load` 和 `stream_load`。Audit Log 除了在安装部署 Manager 服务的集群上通过日志页面访问获取之外，也可以直接访问 FE 所在节点的 `fe/log/fe.audit.log` 文件获取信息。
 
 通过直查 `fe.audit.log` 中的 `slow_query` 标签，可以快速筛选出执行缓慢的查询 SQL，如下所示：
 

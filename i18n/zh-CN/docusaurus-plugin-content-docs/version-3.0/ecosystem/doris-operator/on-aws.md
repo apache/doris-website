@@ -5,32 +5,12 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## AWS 容器服务 EKS
 
 ### 新建集群
-EKS 集群中运行的容器是托管在 EC2 实例上的, 需要根据 Doris 的要求对 EC2 实例进行系统级配置。在集群创建时，需要用户确认 EKS 模式，自治模式或普通模式。
+EKS 集群中运行的容器是托管在 EC2 实例上的，需要根据 Doris 的要求对 EC2 实例进行系统级配置。在集群创建时，需要用户确认 EKS 模式，自治模式或普通模式。
 这里推荐不使用自治模式，因为自治模式的计算资源是通过内置节点池来分配和回收资源，在每一次的资源申请或则释放，都会进行现有资源的重新整合，对于 statefulset 这类有状态服务尤其是启动耗时长和 Doris 这种有严格的分布式协同要求的服务，会造成共享节点池的所有服务动荡，直接现象就是，有可能引起整个 Doris 集群的全部节点漂移（这比重启更恐怖，这个过程不会滚动重启，而是之前稳定运行的服务在节点上时，该节点被强制释放，K8s 调度这些 pod 去新的节点）对生产环境有很大的安全隐患。  
-- 如上内容，自治模式适用于无状态的服务运维部署，安装Doris集群 推荐非自治模式
+- 如上内容，自治模式适用于无状态的服务运维部署，安装 Doris 集群 推荐非自治模式
 - 推荐使用操作系统镜像：Amazon Linux 2
 
 ### 已有集群
@@ -46,12 +26,12 @@ EKS 集群中运行的容器是托管在 EC2 实例上的, 需要根据 Doris �
 
 EKS 下，EC2 实例是完全属于当前 EKS 用户的，不存在不同用户集群在资源池中相互影响而禁掉 K8s 特权模式的情况。  
 
-- 若您的 EKS 允许特权模式（默认允许），则无需关心系统参数， Doris Operator 默认会为 Doris 运行调整系统参数。
+- 若您的 EKS 允许特权模式（默认允许），则无需关心系统参数，Doris Operator 默认会为 Doris 运行调整系统参数。
 - 若不允许特权模式，则需要在宿主机上进行如下系统参数调整：  
   - 修改虚拟内存区域数量：`sysctl -w vm.max_map_count=2000000` 调整虚拟内存的最大映射数量。通过 `sysctl vm.max_map_count` 查看。
   - 关闭透明大页：透明大页对性能可能有不利影响，因此需要关闭它。通过 cat /sys/kernel/mm/transparent_hugepage/enabled  是否包含 never 来判断。
   - 设置最大打开文件句柄数：通过修改 `/etc/security/limits.conf` 来调整最大文件句柄数。通过 `ulimit -n` 来查看。
-  - 禁用 swap：`swapoff -a` 用于禁用所有 swap 分区和文件。通过 `swapon --show` 验证， 未开启则无输出。
+  - 禁用 swap：`swapoff -a` 用于禁用所有 swap 分区和文件。通过 `swapon --show` 验证，未开启则无输出。
 
 ### 存储配置  
 

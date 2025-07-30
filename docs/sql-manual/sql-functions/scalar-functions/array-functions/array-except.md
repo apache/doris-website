@@ -11,11 +11,11 @@
 
 </version>
 
-### Description
+## Description
 
 Returns elements that exist in the first array but not in the second array, forming a new array after deduplication while maintaining the original order.
 
-### Syntax
+## Syntax
 
 ```sql
 array_except(ARRAY<T> arr1, ARRAY<T> arr2)

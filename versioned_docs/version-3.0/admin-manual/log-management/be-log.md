@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 This document mainly introduces the log management of the Backend (BE) process.
 
 This document is applicable to Doris versions 2.1.4 and later.
@@ -105,6 +86,11 @@ sys_log_verbose_modules=*
 will turn on all BE verbose log.
 
 `sys_log_verbose_level` Indicates the level of DEBUG. The higher the number, the more detailed the DEBUG log. The value ranges from 1 to 10.
+
+In most situations, setting `sys_log_verbose_modules` and `sys_log_verbose_level` in `be.conf` is sufficient.
+Only in rare cases such as when debug logs do not appear as expected, you may also need to configure `sys_log_verbose_flags_v`, which is not limited by the module scope.
+
+`sys_log_verbose_flags_v` is the `FLAGS_v` in glog, which controls the global verbosity level for `VLOG(n)` logging, where messages with `n <= FLAGS_v` will be printed, allowing fine-grained control over log output detail.
 
 ### Dynamic Modification
 

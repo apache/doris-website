@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Memory management is one of the most important components of Doris. During the operation of Doris, both load and query rely on a large number of memory operations. The quality of memory management directly affects the stability and performance of Doris.
 
 As an OLAP database based on the MPP architecture, Apache Doris will stream and calculate between operators after loading data from disk to memory, and store the intermediate results of calculation in memory. This method reduces frequent disk I/O operations and makes full use of the parallel computing capabilities of multiple machines and multiple cores, which can show huge advantages in performance.
@@ -80,7 +61,7 @@ Real-time memory statistics can be viewed through Doris BE's Web page `http://{b
 
 ![image](https://github.com/apache/doris/assets/13197424/f989f4d2-4cc5-4a8e-880e-93ae6073d17d)
 
-Memory Tracker is divided into different types. Among the Memory Tracker of type=overview, except for `process resident memory`, `process virtual memory`, and `sum of all trackers`, the details of other Memory Trackers of type=overview can be viewed through `http://{be_host}:{be_web_server_port}/mem_tracker?type=Lable`.
+Memory Tracker is divided into different types. Among the Memory Tracker of type=overview, except for `process resident memory`, `process virtual memory`, and `sum of all trackers`, the details of other Memory Trackers of type=overview can be viewed through `http://{be_host}:{be_web_server_port}/mem_tracker?type=Label`.
 
 Memory Tracker has the following properties:
 

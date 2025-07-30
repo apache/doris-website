@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Doris adopts the MySQL network connection protocol. It is compatible with command-line tools, JDBC/ODBC drivers, and various visualization tools within the MySQL ecosystem. Additionally, Apache Doris comes with a built-in, easy-to-use Web UI. This guide is about how to connect to Doris using MySQL Client, MySQL JDBC Connector, DBeaver, and the built-in Doris Web UI.
 
 ## MySQL Client
@@ -56,7 +37,7 @@ Example of connection code:
 ```Java
 String user = "user_name";
 String password = "user_password";
-String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo？useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
+String newUrl = "jdbc:mysql://FE_IP:FE_PORT/demo?useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true";
 try {
     Connection myCon = DriverManager.getConnection(newUrl, user, password);
     Statement stmt = myCon.createStatement();
@@ -73,15 +54,21 @@ try {
 }
 ```
 
+If you need to initially change session variables when connecting, you can use the following format:
+
+```
+jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
+```
+
 ## DBeaver
 
 Create a MySQL connection to Apache Doris:
 
-![database-connect-dbeaver](/images/database-connect-dbeaver.png)
+![database connect via dbeaver](/images/database-connect-dbeaver.png)
 
 Query in DBeaver:
 
-![query-in-dbeaver](/images/query-in-dbeaver.png)
+![query in dbeaver](/images/query-in-dbeaver.png)
 
 ## Built-in Web UI of Doris
 
@@ -91,7 +78,7 @@ To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_por
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
-![web-login-username-password](/images/web-login-username-password.png)
+![Built in WebUI of Doris](/images/web-login-username-password.png)
 
 For example, you can execute the following command in the Playground to add a BE node.
 
@@ -99,7 +86,7 @@ For example, you can execute the following command in the Playground to add a BE
 ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-![Doris-Web-UI-Playground-en](/images/Doris-Web-UI-Playground-en.png)
+![Doris WebUI Playground](/images/Doris-Web-UI-Playground-en.png)
 
 :::tip 
 For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later.

@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-内存管理是Doris中最重要的组成部分之一，在Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到Doris的稳定性和性能。
+内存管理是 Doris 中最重要的组成部分之一，在 Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到 Doris 的稳定性和性能。
 
 Apache Doris 作为基于 MPP 架构的 OLAP 数据库，数据从磁盘加载到内存后，会在算子间流式传递并计算，在内存中存储计算的中间结果，这种方式减少了频繁的磁盘 I/O 操作，充分利用多机多核的并行计算能力，可在性能上呈现巨大优势。
 
@@ -80,7 +61,7 @@ Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，支
 
 ![image](https://github.com/apache/doris/assets/13197424/f989f4d2-4cc5-4a8e-880e-93ae6073d17d)
 
-Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker 中除 `process resident memory`、`process virtual memory`、`sum of all trackers` 外，其他 `type=overview` 的 Memory Tracker 都可以通过 `http://{be_host}:{be_web_server_port}/mem_tracker?type=Lable` 查看详情。
+Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker 中除 `process resident memory`、`process virtual memory`、`sum of all trackers` 外，其他 `type=overview` 的 Memory Tracker 都可以通过 `http://{be_host}:{be_web_server_port}/mem_tracker?type=Label` 查看详情。
 
 Memory Tracker 拥有如下的属性：
 
@@ -140,7 +121,7 @@ Doris BE Process Memory
     |---> Doris BE 进程虚拟内存，对应 `MemTrackerLimiter Label=process virtual memory, Type=overview`，Current Consumption 取自 VmSize in `/proc/self/status`，Peak Consumption 取自 VmPeak in `/proc/self/status`。
 ```
 
-上述内存结构中每一部分内存的分析方法:
+上述内存结构中每一部分内存的分析方法：
 
 1. [Jemalloc 内存分析](./memory-analysis/jemalloc-memory-analysis.md)
 

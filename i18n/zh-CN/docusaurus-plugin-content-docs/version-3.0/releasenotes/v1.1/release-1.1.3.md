@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 作为 1.1.2 LTS（Long-term Support，长周期支持）版本基础之上的 Bugfix 版本，在 Apache Doris 1.1.3 版本中，有超过 80 个 Issue 或性能优化项被合入，优化了在导入或查询过程中的内存控制，修复了许多导致 BE Core 以及产生错误查询结果的问题，系统稳定性和性能得以进一步加强，推荐所有用户下载和使用。
 
 # 新增功能
@@ -56,7 +35,7 @@ under the License.
 
 - 修复了 TBrokerOpenReaderResponse 过大时导致堆栈缓冲区溢出而导致的 BE Core 问题。 [#12658](https://github.com/apache/doris/pull/12658)
 
-- 修复了出现 -238错误时 BE 节点可能 OOM 的问题。 [#12666](https://github.com/apache/doris/pull/12666)
+- 修复了出现 -238 错误时 BE 节点可能 OOM 的问题。 [#12666](https://github.com/apache/doris/pull/12666)
 
 - 修复了 LEAD() 函数错误子表达式的问题。 [#12587](https://github.com/apache/doris/pull/12587)
 
@@ -78,7 +57,7 @@ under the License.
 
 Storage Page Cache 和 Chunk Allocator 分别缓存用户数据块和内存预分配。
 
-这两个功能会占用一定比例的内存，并且不会释放。 这部分内存占用无法灵活调配，导致在某些场景下，因这部分内存占用而导致其他任务内存不足，影响系统稳定性和可用性。因此我们在 1.1.3 版本中默认关闭了这两个功能。
+这两个功能会占用一定比例的内存，并且不会释放。这部分内存占用无法灵活调配，导致在某些场景下，因这部分内存占用而导致其他任务内存不足，影响系统稳定性和可用性。因此我们在 1.1.3 版本中默认关闭了这两个功能。
 
 但在某些延迟敏感的报表场景下，关闭该功能可能会导致查询延迟增加。如用户担心升级后该功能对业务造成影响，可以通过在 be.conf 中增加以下参数以保持和之前版本行为一致。
 
@@ -87,5 +66,5 @@ disable_storage_page_cache=false
 chunk_reserved_bytes_limit=10%
 ```
 
-* `disable_storage_page_cache`：是否关闭 Storage Page Cache。 1.1.2（含）之前的版本，默认是false，即打开。1.1.3 版本默认为 true，即关闭。
+* `disable_storage_page_cache`：是否关闭 Storage Page Cache。1.1.2（含）之前的版本，默认是 false，即打开。1.1.3 版本默认为 true，即关闭。
 * `chunk_reserved_bytes_limit`：Chunk allocator 预留内存大小。1.1.2（含）之前的版本，默认是整体内存的 10%。1.1.3 版本默认为 209715200（200MB）。

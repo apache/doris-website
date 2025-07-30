@@ -9,14 +9,13 @@
 
 <version since="2.0.0">
 
-
 </version>
 
-### 描述
+## 描述
 
 对数组中的元素应用 lambda 表达式，统计返回值不为 0 的元素个数。
 
-### 语法
+## 语法
 
 ```sql
 array_count(lambda, array1, ...)

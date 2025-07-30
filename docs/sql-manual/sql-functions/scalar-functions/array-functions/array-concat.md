@@ -12,11 +12,11 @@
 
 </version>
 
-### Description
+## Description
 
 Concatenates all input arrays into a single array. The function accepts one or more arrays as parameters and connects them into a new array in the order of the parameters.
 
-### Syntax
+## Syntax
 
 ```sql
 array_concat(ARRAY<T> arr1, [ARRAY<T> arr2, ...])

@@ -8,25 +8,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Doris FE 配置参数
 
 该文档主要介绍 FE 的相关配置项。
@@ -47,7 +28,7 @@ FE 的配置项有两种方式进行查看：
 
 2. 通过命令查看
 
-   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md)：
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG)：
 
    `SHOW FRONTEND CONFIG;`
 
@@ -84,7 +65,7 @@ FE 的配置项有两种方式进行配置：
 
 3. 通过 HTTP 协议动态配置
 
-   具体请参阅 [Set Config Action](../../admin-manual/fe/set-config-action.md)
+   具体请参阅 [Set Config Action](../../admin-manual/open-api/fe-http/set-config-action)
 
    该方式也可以持久化修改后的配置项。配置项将持久化在 `fe_custom.conf` 文件中，在 FE 重启后仍会生效。
 
@@ -371,7 +352,7 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 #### `enable_cooldown_replica_affinity`
 
-用户可以选择是否首先使用冷却副本进行扫描,默认为true
+用户可以选择是否首先使用冷却副本进行扫描，默认为 true
 
 默认值：true
 
@@ -425,7 +406,7 @@ FE https 端口，当前所有 FE https 端口都必须相同
 
 默认值：false
 
-FE https 使能标志位，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
+是否开启 FE https 的支持，false 表示支持 http，true 表示同时支持 http 与 https，并且会自动将 http 请求重定向到 https
 如果 enable_https 为 true，需要在 fe.conf 中配置 ssl 证书信息
 
 #### `enable_ssl`
@@ -1754,7 +1735,7 @@ HOUR: log 前缀是：yyyyMMddHH
 
 #### `default_db_data_quota_bytes`
 
-默认值：1PB
+默认值：8192PB
 
 是否可以动态配置：true
 
@@ -2556,7 +2537,7 @@ SmallFileMgr 中存储的最大文件数
 
 是否为 Master FE 节点独有的配置项：true
 
-备份过程中，一个 upload 任务上传的快照数量上限，默认值为10个。
+备份过程中，一个 upload 任务上传的快照数量上限，默认值为 10 个。
 
 #### `restore_download_snapshot_batch_size`
 
@@ -2566,7 +2547,7 @@ SmallFileMgr 中存储的最大文件数
 
 是否为 Master FE 节点独有的配置项：true
 
-恢复过程中，一个 download 任务下载的快照数量上限，默认值为10个。
+恢复过程中，一个 download 任务下载的快照数量上限，默认值为 10 个。
 
 #### `max_backup_restore_job_num_per_db`
 
@@ -2758,7 +2739,7 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 
 默认值： ""
 
-描述：FE 运行的模式。`cloud` 表示解耦的存储-计算模式。
+描述：FE 运行的模式。`cloud` 表示解耦的存储 - 计算模式。
 
 #### `meta_service_endpoint`
 

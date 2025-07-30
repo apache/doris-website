@@ -5,28 +5,9 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Compute Group is a mechanism for physical isolation between different workloads in a storage-compute separation architecture. The basic principle of Compute Group is illustrated in the diagram below:
 
-![compute_group](/images/compute_group_workload_management.png)
+![Compute Group workloads management in a storage-compute separation architecture](/images/compute_group_workload_management.png)
 
 - One or more BE nodes can form a Compute Group.
 
@@ -62,8 +43,8 @@ SHOW COMPUTE GROUPS;
 
 ## Adding Compute Groups
 
-Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
-To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) command. For example:
+Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../../sql-manual/sql-statements/account-management/GRANT-TO). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
+To add a BE and assign it to a compute group, use the [Add BE](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) command. For example:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");

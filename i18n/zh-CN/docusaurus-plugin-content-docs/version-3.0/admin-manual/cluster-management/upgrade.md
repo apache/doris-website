@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 Doris 提供了滚动升级的能力，在升级过程中逐步对 FE 与 BE 节点进行升级，减少停机时间，确保在升级过程中系统能够保持正常运行。
 
 ## 版本兼容性说明
@@ -33,12 +13,11 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
 
 在版本升级时，遵循以下规则：
 
-* 三位版本：相同的二位版本可以跨三位版本升级，如 2.1.3 版本可以直接升级到 2.1.7 版本；
+* 三位版本：二位版本相同时，可以跨三位版本升级，如 2.1.3 版本可以直接升级到 2.1.7 版本；
 
 * 二位版本及一位版本：不建议跨二位版本升级，考虑到兼容性问题，建议按照二位版本号依次升级，如 3.0 版本升级到 3.3 版本，需要按照 3.0 -> 3.1 -> 3.2 -> 3.3 的执行路径升级。
 
-详细版本说明可以参考[版本规则](../../../../docusaurus-plugin-content-docs-community/current/release-versioning)。
-
+详细版本说明可以参考[版本规则](https://doris.apache.org/zh-CN/community/release-versioning)。
 
 ## 升级注意事项
 
@@ -87,7 +66,7 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
    edit_log_port = 19010
 
    ## modify clusterIP
-   clusterId=<a_new_clusterIP, such as 123456>
+   clusterId=<a_new_clusterID, such as 123456>
    ...
    ```
 
@@ -97,7 +76,7 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
    cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
    ```
 
-4. 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster IP，如在上例中修改为 123456：
+4. 将拷贝的元数据目文件中的 VERSION 文件中的 cluster\_id 修改为新的 cluster ID，如在上例中修改为 123456：
 
    ```bash
    vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
@@ -138,7 +117,7 @@ Doris 版本号由三维组成，第一位表示重大里程碑版本，第二�
 
 :::caution 注意
 
-一般而言，Doris 只需要升级 FE 目录下的 `/bin` 和 `/lib` 以及 BE 目录下的 `/bin` 和 `/lib`
+Doris 只需要升级 FE 目录下的 `/bin` 和 `/lib` 以及 BE 目录下的 `/bin` 和 `/lib`
 
 在 2.0.2 及之后的版本，FE 和 BE 部署路径下新增了 `custom_lib/` 目录（如没有可以手动创建）。`custom_lib/` 目录用于存放一些用户自定义的第三方 jar 包，如 `hadoop-lzo-*.jar`，`orai18n.jar` 等。这个目录在升级时不需要替换。
 

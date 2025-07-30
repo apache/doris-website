@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 作为 1.1 LTS（Long-term Support，长周期支持）版本基础之上的 Bugfix 版本，在 Apache Doris 1.1.4 版本中，Doris 团队修复了自 1.1.3 版本以来的约 60 个 Issue 或性能优化项。改进了 Spark Load 的使用体验，优化了诸多内存以及 BE 异常宕机的问题，系统稳定性和性能得以进一步加强，推荐所有用户下载和使用。
 
 # 新增功能
@@ -48,7 +27,7 @@ under the License.
 
 - 修复了在使用 Anti Join 和其他 Join 谓词时产生错误结果的问题。 [#13743](https://github.com/apache/doris/pull/13743)
 
-- 修复了当调用函数 concat(ifnull)时 BE 宕机的问题。 [#13693](https://github.com/apache/doris/pull/13693)
+- 修复了当调用函数 concat(ifnull) 时 BE 宕机的问题。 [#13693](https://github.com/apache/doris/pull/13693)
 
 - 修复了 group by 语句中存在函数时 planner 错误的问题。 [#13613](https://github.com/apache/doris/pull/13613)
 

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 子查询（Subquery）是嵌套在另一个查询（通常是 SELECT 语句）中的 SQL 查询。它可以用在 SELECT、FROM、WHERE 或 HAVING 子句中，为外部查询提供数据或条件。子查询的使用使得 SQL 查询变得更加灵活和强大，因为它们允许我们在单个查询中解决更复杂的问题。  
   
 子查询的一些重要特征如下：  
@@ -311,7 +292,7 @@ where
 请参考以下 SQL 示例：
 
 ```sql
--- 关联的标量子查询，如果t2表中满足t1.c2 = t2.c2的数据多于 1 条，则会报运行时错误
+-- 关联的标量子查询，如果 t2 表中满足 t1.c2 = t2.c2 的数据多于 1 条，则会报运行时错误
 select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;
 
 -- 报错信息样例如下 

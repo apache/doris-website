@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 函数用于从 JSON 文档中提取一个字段的值并将其转换为 `DOUBLE` 类型。该函数会返回指定路径上的字段值，如果该值无法转换为 `DOUBLE` 类型，或者路径指向的字段不存在，则返回 `NULL`。
@@ -54,11 +35,11 @@ under the License.
 path 的内容不能包含 ", [ 和 ]。
 如果 `<json_str>` 格式不对，或 json_path 格式不对，或无法找到匹配项，则返回 NULL。
 
-另外，推荐使用jsonb类型和jsonb_extract_XXX函数实现同样的功能。
+另外，推荐使用 jsonb 类型和 jsonb_extract_XXX 函数实现同样的功能。
 
 特殊情况处理如下：
-- 如果 json_path 指定的字段在JSON中不存在，返回NULL
-- 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
+- 如果 json_path 指定的字段在 JSON 中不存在，返回 NULL
+- 如果 json_path 指定的字段在 JSON 中的实际类型和 json_extract_t 指定的类型不一致，如果能无损转换成指定类型返回指定类型 t，如果不能则返回 NULL
 
 ## 示例
 

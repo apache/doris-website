@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Usage Requirements
 
 ### Network Requirements
@@ -55,7 +36,7 @@ When Syncer synchronizes, the user needs to provide accounts for both upstream a
 
 **Configuration Requirements**
 - `restore_reset_index_id`: If the table to be synchronized has an inverted index, it must be configured as `false` on the target cluster.
-- `ignore_backup_tmp_partitions`: If the upstream creates tmp partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
+- `ignore_backup_tmp_partitions`: If the upstream creates temporary partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
 
 ## Enable binlog for all tables in the database
 

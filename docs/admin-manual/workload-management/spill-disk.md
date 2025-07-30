@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 Doris's computing layer adopts an MPP (Massively Parallel Processing) architecture, where all computing tasks are completed in the memory of BEs (Backends), and data exchange between BEs is also conducted through memory. Therefore, memory management plays a crucial role in ensuring the stability of queries. According to online query statistics, a significant portion of query errors are related to memory issues. As more and more users migrate tasks such as ETL data processing, multi-table materialized view processing, and complex AdHoc queries to Doris, it is necessary to offload intermediate operation results to disk to enable the execution of queries that require more memory than each query or each node can handle. Specifically, when processing large datasets or executing complex queries, memory consumption can increase rapidly, exceeding the memory limits of a single node or the entire query processing process. Doris alleviates memory pressure by writing intermediate results (such as intermediate states of aggregation, temporary data for sorting, etc.) to disk rather than relying solely on memory to store these data. This approach offers several benefits:
 - Scalability: Allows Doris to handle datasets much larger than the memory limit of a single node.
@@ -43,9 +24,10 @@ Currently, the operators that support spilling include:
 
 When a query triggers spilling, additional disk read/write operations may significantly increase query time. It is recommended to increase the FE Session variable query_timeout. Additionally, spilling can generate significant disk I/O, so it is advisable to configure a separate disk directory or use SSD disks to reduce the impact of query spilling on normal data ingestion or queries. The query spilling feature is currently disabled by default.
 
-##Memory Management Mechanism
-Doris's memory management is divided into three levels: process level, WorkloadGroup level, and Query level.
-![spill_disk_memory](/images/workload-management/spill_disk_memory.png)
+## Memory Management Mechanism
+Doris's memory management is divided into three levels: process level, Workload Group level, and Query level.
+
+![Memory Management Mechanism Spill Disk Memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE Process Memory Configuration
 The memory of the entire BE process is controlled by the mem_limit parameter in be.conf. Once Doris's memory usage exceeds this threshold, Doris cancels the current query that is requesting memory. Additionally, a background task asynchronously kills some queries to release memory or cache. Therefore, Doris's internal management operations (such as spilling to disk, flushing memtable, etc.) need to run when approaching this threshold to avoid reaching it. Once the threshold is reached, to prevent the entire process from experiencing OOM, Doris takes some drastic self-protection measures.
@@ -53,9 +35,9 @@ When Doris's BE is collocated with other processes (such as Doris FE, Kafka, HDF
 When the Doris process is deployed in K8S or managed by Cgroup, Doris automatically senses the memory configuration of the container.
 
 ### Workload Group Memory Configuration
-- memory_limit，default is 30%. Represents the percentage of memory allocated to the current workload group as a fraction of the entire process memory.
+- memory_limit, default is 30%. Represents the percentage of memory allocated to the current workload group as a fraction of the entire process memory.
 - enable_memory_overcommit, default is true. Indicates whether the memory limit for the current workload group is a hard or soft limit. When this value is true, it means that the memory usage of all tasks within this workload group can exceed the memory_limit. However, when the memory of the entire process is insufficient, to ensure rapid memory reclamation, BE will prioritize canceling queries from workload groups that exceed their limits without waiting for spilling to disk. This is a user-friendly configuration strategy when users are unsure how much memory to allocate to multiple workload groups.
-- write_buffer_ratio，default is 20%. Represents the size of the write buffer within the current workload group. To speed up data ingestion, Doris first accumulates data in memory (i.e., constructs a Memtable), sorts it in its entirety when it reaches a certain size, and then writes it to disk. However, accumulating too many Memtables in memory can affect the memory available for normal queries, leading to query cancellation. Therefore, Doris allocates a separate write buffer for each workload group. For workload groups with heavy write operations, a larger write buffer can effectively improve ingestion throughput; for workload groups with more query operations, this value can be reduced.
+- write_buffer_ratio, default is 20%. Represents the size of the write buffer within the current workload group. To speed up data ingestion, Doris first accumulates data in memory (i.e., constructs a Memtable), sorts it in its entirety when it reaches a certain size, and then writes it to disk. However, accumulating too many Memtables in memory can affect the memory available for normal queries, leading to query cancellation. Therefore, Doris allocates a separate write buffer for each workload group. For workload groups with heavy write operations, a larger write buffer can effectively improve ingestion throughput; for workload groups with more query operations, this value can be reduced.
 - low watermark: Default is 75%.
 - high watermark: Default is 90%.
 
@@ -111,7 +93,7 @@ SpillWriteBytesToLocalStorage=503412182|SpillReadBytesFromLocalStorage=503412182
 ```
 
 #### Profile
-If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build HashTable as an example, you can see the following counters:
+If spilling is triggered during a query, some Spill-prefixed counters are added to the Query Profile to mark and count spilling-related activities. Taking HashJoin's Build Hash Table as an example, you can see the following counters:
 
 ```
 PARTITIONED_HASH_JOIN_SINK_OPERATOR  (id=4  ,  nereids_id=179):(ExecTime:  6sec351ms)

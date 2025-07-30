@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Overview
 
 Doris employs Multi-Version Concurrency Control (MVCC) to handle concurrent updates. Each data write operation is assigned a write transaction, ensuring atomicity (i.e., the write operation either fully succeeds or fully fails). Upon committing the write transaction, the system assigns it a version number. In the Unique Key model, when loading data multiple times, if there are duplicate primary keys, Doris determines the overwrite order based on the version number: data with a higher version number will overwrite data with a lower version number.
@@ -189,7 +170,7 @@ The mapping method is the same as above. Example:
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
     [WITH MERGE|APPEND|DELETE]
     COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1  100 and k2 like "%doris%"
+    WHERE k1 > 100 and k2 like "%doris%"
     [ORDER BY source_sequence]
     PROPERTIES
     (
@@ -252,12 +233,18 @@ This time, the data in the table is replaced. In summary, during the load proces
 
 ### Note
 
-1. To prevent misuse, in StreamLoad/BrokerLoad load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
+1. To prevent misuse, in Stream Load/Broker Load load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
 
 ```Plain
 Table test_tbl has sequence column, need to specify the sequence column
 ```
 
-2. Since version 2.0, Doris supports partial column update capability for Unique Key tables with Merge-on-Write implementation. In partial column update loads, users can update only a portion of the columns each time, so it is not necessary to include the sequence column. If the load task submitted by the user includes the sequence column, the behavior is unaffected; if the load task does not include the sequence column, Doris will use the sequence column from the matching historical data as the value of the sequence column for the updated row. If there is no matching key column in the historical data, null or the default value will be used.
+2. When you use the Insert statement to insert data, you must display the specified sequence column; otherwise, the preceding exception is reported. In order to facilitate the use of Doris in some scenarios (table replication, internal data migration, etc.), Doris can be controlled by the session parameter to close the check constraint on the sequence column:
 
-3. During concurrent loads, Doris uses the MVCC mechanism to ensure data correctness. If two batches of data loads update different columns of the same key, the load task with the higher system version will use the data row written by the lower version load task to fill in the same key after the lower version load task succeeds.
+```sql
+set require_sequence_in_insert = false;
+```
+
+3. Since version 2.0, Doris supports partial column update capability for Unique Key tables with Merge-on-Write implementation. In partial column update loads, users can update only a portion of the columns each time, so it is not necessary to include the sequence column. If the load task submitted by the user includes the sequence column, the behavior is unaffected; if the load task does not include the sequence column, Doris will use the sequence column from the matching historical data as the value of the sequence column for the updated row. If there is no matching key column in the historical data, null or the default value will be used.
+
+4. During concurrent loads, Doris uses the MVCC mechanism to ensure data correctness. If two batches of data loads update different columns of the same key, the load task with the higher system version will use the data row written by the lower version load task to fill in the same key after the lower version load task succeeds.

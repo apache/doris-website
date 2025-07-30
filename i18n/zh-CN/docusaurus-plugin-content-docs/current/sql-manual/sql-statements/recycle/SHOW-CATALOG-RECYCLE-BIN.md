@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 该语句用于展示回收站中可回收的库、表或分区元数据信息。
@@ -50,14 +31,14 @@ SHOW CATALOG RECYCLE BIN [ WHERE NAME [ = "<name>" | LIKE "<name_matcher>"] ]
 
 | 列名 | 类型       | 说明                                                                                                      |
 |----|----------|---------------------------------------------------------------------------------------------------------|
-| Type   | String   | 元数据类型: Database、Table、Partition                                                                         |
+| Type   | String   | 元数据类型：Database、Table、Partition                                                                         |
 | Name   | String   | 元数据名称                                                                                                   |
-| DbId   | Bigint   | database对应的id                                                                                           |
-| TableId   | Bigint   | table对应的id                                                                                              |
-| PartitionId   | Bigint   | table对应的id                                                                                              |
+| DbId   | Bigint   | database 对应的 id                                                                                           |
+| TableId   | Bigint   | table 对应的 id                                                                                              |
+| PartitionId   | Bigint   | table 对应的 id                                                                                              |
 | DropTime   | DateTime | 元数据放入回收站的时间                                                                                             |
-| DataSize   | Bigint   | 数据量。如果元数据类型是database, 该值包含了database下在回收站中的所有table和partition的数据量                                         |
-| RemoteDataSize   | Decimal  | 远端存储 (hdfs或对象存储) 的数据量。如果元数据类型是database, 该值包含了 database 下在回收站中的所有 table 和 partition 的 remote storage 数据量 |
+| DataSize   | Bigint   | 数据量。如果元数据类型是 database, 该值包含了 database 下在回收站中的所有 table 和 partition 的数据量                                         |
+| RemoteDataSize   | Decimal  | 远端存储 (hdfs 或对象存储) 的数据量。如果元数据类型是 database, 该值包含了 database 下在回收站中的所有 table 和 partition 的 remote storage 数据量 |
 
 ## 权限控制
 

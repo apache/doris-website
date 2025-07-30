@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules, thereby managing the lifecycle of table partitions (TTL) and reducing data storage pressure. In scenarios such as log management and time-series data management, dynamic partitioning can typically be used to roll-delete expired data.
 
 The diagram below illustrates lifecycle management using dynamic partitioning, with the following rules specified:
@@ -107,7 +88,7 @@ ALTER TABLE test_partition SET (
 
 ### 查看动态分区调度情况
 
-通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
+通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md) 可以查看当前数据库下，所有动态分区表的调度情况：
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES;

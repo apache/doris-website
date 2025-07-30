@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The INSERT INTO statement supports importing the results of a Doris query into another table. INSERT INTO is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
 
 ## Applicable scenarios
@@ -100,9 +81,9 @@ MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
 3 rows in set (0.02 sec)
 ```
 
-6. You can use [JOB](../../scheduler/job-scheduler.md) make the INSERT operation execute asynchronously.
+6. You can use [JOB](../../../admin-manual/workload-management/job-scheduler) make the INSERT operation execute asynchronously.
 
-7. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database).
+7. Sources can be [tvf](../../../lakehouse/file-analysis) or tables in a [catalog](../../../lakehouse/catalog-overview).
 
 ### View INSERT INTO jobs
 
@@ -276,7 +257,7 @@ Doris supports the creation of external tables. Once created, data from external
 
 With its Multi-Catalog feature, Doris supports connections to various mainstream data lakes and databases including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (Incubating), Elasticsearch, MySQL, Oracle, and SQL Server.
 
-For more information on Multi-Catalog, please refer to [Lakehouse overview](../../../lakehouse/lakehouse-overview/#multi-catalog).
+For more information on Multi-Catalog, please refer to [Lakehouse overview](../../../lakehouse/lakehouse-overview).
 
 The followings illustrate importing data from a Hive external table into a Doris internal table.
 
@@ -314,7 +295,7 @@ PROPERTIES (
 );
 ```
 
-2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE/).
+2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE).
 
 3. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
 

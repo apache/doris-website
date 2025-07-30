@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The Doris permission management system is modeled after the MySQL permission management mechanism. It supports fine-grained permission control at the row and column level, role-based access control, and also supports a whitelist mechanism.
 
 ## Glossary
@@ -73,7 +54,7 @@ Doris supports the following password policies to assist users in better passwor
 
 1. `PASSWORD_HISTORY`
 
-    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `password_history`. A setting of 0 disables this feature. The default is 0.
+    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `PASSWORD_HISTORY`. A setting of 0 disables this feature. The default is 0.
 
     Examples:
 
@@ -115,7 +96,7 @@ Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 
 ### Permission Operations
 
-- Create user: [CREATE USER](../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md)
+- Create user: [CREATE USER](../../sql-manual/sql-statements/account-management/CREATE-USER)
 - Modify user: [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)
 - Delete user: [DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER.md)
 - Grant/Assign role: [GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)
@@ -308,7 +289,7 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
 
 3. SET PASSWORD
 
-    - Users with ADMIN privileges or GLOBAL level GRANT privileges can set passwords for non-ROOT users.
+    - Users with ADMIN privileges or GLOBAL level GRANT privileges can set passwords for non-root users.
     - Ordinary users can set the password for their corresponding User Identity. Their corresponding User Identity can be viewed with the `SELECT CURRENT_USER()` command.
     - ROOT users can change their own password.
 
@@ -321,7 +302,11 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
     - root@'%': root user, allowed to log in from any node, with the operator role.
     - admin@'%': admin user, allowed to log in from any node, with the admin role.
 
-2. It is not supported to delete or change the permissions of roles or users created by default.
+2. Deleting or altering the permissions of default created users, roles, or users is not supported.
+    - Deleting the users root@'%' and admin@'%' is not supported, but creating and deleting root@'xxx' and admin@'xxx' users (where xxx refers to any host except %) is allowed (Doris treats these users as regular users).
+    - Revoking the default roles of root@'%' and admin@'%' is not supported.
+    - Deleting the roles operator and admin is not supported.
+    - Modifying the permissions of the roles operator and admin is not supported.
 
 3. There is only one user with the operator role, which is Root. There can be multiple users with the admin role.
 

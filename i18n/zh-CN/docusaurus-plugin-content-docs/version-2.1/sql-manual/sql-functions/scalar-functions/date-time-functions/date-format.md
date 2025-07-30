@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 将日期类型按照 format 的类型转化为字符串。
@@ -41,18 +22,17 @@ DATE_FORMAT(<date>, <format>)
 | `<date>` | 合法的日期值 |
 | `<format>` | 规定日期/时间的输出格式 |
 
-
 支持的 format 格式：
 
 | 格式符 | 描述                                |
 |--------|-------------------------------------|
-| %a     | 缩写星期名                          |
-| %b     | 缩写月名                            |
-| %c     | 月，数值                            |
-| %D     | 带有英文前缀的月中的天              |
+| %a     | 三字母缩写星期名                          |
+| %b     | 三字母缩写月名                            |
+| %c     | 月，数值 (0-12)                            |
+| %D     | 带有英文后缀的月中的天 (0th, 1st, 2nd, 3rd, …) |
 | %d     | 月的天，数值 (00-31)                |
 | %e     | 月的天，数值 (0-31)                 |
-| %f     | 微秒                                |
+| %f     | 微秒 (000000-999999)               |
 | %H     | 小时 (00-23)                        |
 | %h     | 小时 (01-12)                        |
 | %I     | 小时 (01-12)                        |
@@ -63,7 +43,7 @@ DATE_FORMAT(<date>, <format>)
 | %M     | 月名                                |
 | %m     | 月，数值 (00-12)                    |
 | %p     | AM 或 PM                            |
-| %r     | 时间，12-小时（hh:mm:ss AM 或 PM） |
+| %r     | 时间，12-小时（hh:mm:ss, 后跟 AM 或 PM） |
 | %S     | 秒 (00-59)                          |
 | %s     | 秒 (00-59)                          |
 | %T     | 时间，24-小时 (hh:mm:ss)            |
@@ -71,15 +51,17 @@ DATE_FORMAT(<date>, <format>)
 | %u     | 周 (00-53) 星期一是一周的第一天    |
 | %V     | 周 (01-53) 星期日是一周的第一天，与 %X 使用 |
 | %v     | 周 (01-53) 星期一是一周的第一天，与 %x 使用 |
-| %W     | 星期名                              |
+| %W     | 周中日的名称 (Sunday-Saturday)    |
 | %w     | 周的天（0=星期日，6=星期六）        |
 | %X     | 年，其中的星期日是周的第一天，4 位，与 %V 使用 |
 | %x     | 年，其中的星期一是周的第一天，4 位，与 %v 使用 |
 | %Y     | 年，4 位                            |
 | %y     | 年，2 位                            |
 | %%     | 用于表示 %                          |
+| %**x** | 对于任何未出现在上列的 **x**，表示 **x** 本身 |
 
 还可以使用三种特殊格式：
+
 ```text
 yyyyMMdd
 yyyy-MM-dd
@@ -89,6 +71,7 @@ yyyy-MM-dd HH:mm:ss
 ## 返回值
 
 格式化后的日期字符串，特殊情况：
+
 - 当前支持最大 128 字节的字符串，如果返回值长度超过 128，则返回 NULL。
 
 ## 举例

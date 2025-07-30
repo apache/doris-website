@@ -5,31 +5,21 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 AES encryption function. This function behaves the same as the `AES_ENCRYPT` function in MySQL. The default algorithm is `AES_128_ECB`, and the padding mode is `PKCS7`.
 
 The AES_ENCRYPT function does not use the passed key directly, but further processes it. The specific steps are as follows:
+
 1. Determine the number of bytes of the key according to the encryption algorithm used. For example, if the AES_128_ECB algorithm is used, the number of bytes of the key is `128 / 8 = 16` (if the AES_256_ECB algorithm is used, the number of bytes of the key is `128 / 8 = 32`);
 2. Then, for the key input by the user, the `i`th bit and the `16*k+i`th bit are XORed. If the key input by the user is less than 16 bits, 0 is added at the end.
 3. Finally, use the newly generated key to encrypt;
+
+:::warning
+Until 2.1.6, function with two arguments will ignore session variable `block_encryption_mode` and always use `AES_128_ECB` to do encryption. So it's not recommended to use it.
+
+Since 2.1.7, it works as expected.
+:::
 
 ## Syntax
 
@@ -46,7 +36,6 @@ AES_ENCRYPT( <str>, <key_str>[, <init_vector>][, <encryption_mode>])
 | `<init_vector>`     | It is the initial vector used in the algorithm. It is only effective under specific algorithms. If not specified, Doris uses the built-in vector                                                                                                                                                          |
 | `<encryption_mode>` | For encryption algorithms, optional values ​​are given in variables                                                                                                                                                                                       |
 
-
 ## Return Value
 
 Returns the encrypted binary data
@@ -54,6 +43,7 @@ Returns the encrypted binary data
 ## Examples
 
 Using AES_128_ECB algorithm
+
 ```sql
 set block_encryption_mode='';
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -68,6 +58,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 Use AES_256_CBC algorithm
+
 ```sql
 set block_encryption_mode="AES_256_CBC";
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -82,6 +73,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 ```
 
 Use AES_256_CBC algorithm and set initial vector
+
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3', '0123456789'));
 ```

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 函数将输入的日期时间字符串根据指定的格式转换为 `DATETIME` 类型的值。
@@ -39,7 +20,15 @@ STR_TO_DATE(<datetime_str>, <format>)
 | 参数               | 说明                                                           |
 |------------------|--------------------------------------------------------------|
 | `<datetime_str>` | 必填，输入的日期时间字符串，表示要转换的日期或时间。                                   |
-| `<format>`       | 必填，指定的日期时间格式字符串，如 `%Y-%m-%d %H:%i:%s` 或 `yyy-MM-dd HH:mm:ss` |
+| `<format>`       | 必填，指定的日期时间格式字符串，如 `%Y-%m-%d %H:%i:%s` 等，具体格式参数详见[DATE_FORMAT](./date-format#参数)文档 |
+
+除此之外，`<format>` 额外支持以下若干代用格式，并按照正规 format 格式解读：
+
+|代用输入|解读为|
+|-|-|
+|`yyyyMMdd`|`%Y%m%d`|
+|`yyyy-MM-dd`|`%Y-%m-%d`|
+|`yyyy-MM-dd HH:mm:ss`|`%Y-%m-%d %H:%i:%s`|
 
 ## 返回值
 - 返回一个 DATETIME 类型值，表示转换后的日期时间。

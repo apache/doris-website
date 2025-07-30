@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 We are more than excited to announce that, after six months of coding, testing, and fine-tuning, Apache Doris 2.0.0 is now production-ready. Special thanks to the 275 committers who altogether contributed over 4100 optimizations and fixes to the project. 
 
 This new version highlights:
@@ -226,7 +206,7 @@ This feature allows for higher availability of data, read/write workload separat
 - A limit has been imposed on the depth of the expression tree. The default value is 200;
 - The single quote in the return value of array string has been changed to double quote;
 - The Doris processes are renamed to DorisFE and DorisBE.
-- The functions AES and SM4 with two arguments' behaviour changed. See more informations in [relative function docs](../../sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
+- The functions AES and SM4 with two arguments' behaviour changed. See more informations in [relative function docs](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 ## Embarking on the 2.0.0 Journey
 

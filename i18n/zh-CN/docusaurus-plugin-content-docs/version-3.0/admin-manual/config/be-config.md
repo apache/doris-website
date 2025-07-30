@@ -7,25 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 <!-- Please sort the configuration alphabetically -->
 
 
@@ -42,7 +23,7 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 1. 通过 BE 前端页面查看
 
-    在浏览器中打开 BE 前端页面: `http://be_host:be_webserver_port/varz`
+    在浏览器中打开 BE 前端页面：`http://be_host:be_webserver_port/varz`
 
 2. 通过命令行查看
 
@@ -404,7 +385,7 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
-* 默认值：48
+* 默认值：取决于 CPU 核心数量。等于 `max(48, num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -625,7 +606,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * 类型：int32
-* 描述：当 segment 数量超过此阈值时触发 segment compaction
+* 描述：当 segment 数量超过此阈值时触发 segment compaction，该配置也限制了单个 segment compaction 任务中的最大原始 segment 数量。
 * 默认值：10
 
 #### `segcompaction_candidate_max_rows`
@@ -633,12 +614,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过
 * 默认值：1048576
-
-#### `segcompaction_batch_size`
-
-* 类型：int32
-* 描述：单个 segment compaction 任务中的最大原始 segment 数量。
-* 默认值：10
 
 #### `segcompaction_candidate_max_rows`
 
@@ -1491,11 +1466,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
-* 默认值：10000
-
 #### `default_tzfiles_path`
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
@@ -1506,15 +1476,15 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `deploy_mode`
 
-* 默认值: ""
+* 默认值：""
 
-* 描述: BE 运行的模式。`cloud` 表示算分离模式。
+* 描述：BE 运行的模式。`cloud` 表示算分离模式。
 
 #### `meta_service_endpoint`
 
-* 默认值: ""
+* 默认值：""
 
-* 描述: Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
+* 描述：Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。该值通常由 FE 通过心跳传递给 BE，无需配置。
 
 #### `enable_file_cache`
 

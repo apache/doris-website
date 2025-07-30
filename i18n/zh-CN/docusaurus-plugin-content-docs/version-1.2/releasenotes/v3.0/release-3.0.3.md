@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，**Apache Doris 3.0.3 版本已于 2024 年 12 月 02 日正式发布。** 该版本进一步提升了系统的性能及稳定性，欢迎大家下载体验。
 
 - GitHub 下载：https://github.com/apache/doris/releases
@@ -100,7 +81,7 @@ under the License.
 
 - 支持读取 OpenCSV 格式的 Hive 表。[#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
 - 优化了访问 External Catalog 中 `information_schema.columns` 表的性能。[#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)
-- 使用新的 Max Compute 开放存储 API 访问 Max Compute 数据源。[#41614](https://github.com/apache/doris/pull/41614)
+- 使用新的 MaxCompute 开放存储 API 访问 MaxCompute 数据源。[#41614](https://github.com/apache/doris/pull/41614)
 - 优化了 Paimon 表 JNI 部分的调度策略，使得扫描任务更加均衡。[#43310](https://github.com/apache/doris/pull/43310)
 - 优化了 ORC 小文件的读取性能。[#42004](https://github.com/apache/doris/pull/42004) [#43467](https://github.com/apache/doris/pull/43467)
 - 支持读取 brotli 压缩格式的 parquet 文件。[#42177](https://github.com/apache/doris/pull/42177)

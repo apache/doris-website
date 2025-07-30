@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Workload Group 是一种进程内实现的对负载进行逻辑隔离的机制，它通过对 BE 进程内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的，它的原理如下图所示：
 
 ![workload_group](/images/workload_group_arch.png)
@@ -34,6 +15,14 @@ Workload Group 是一种进程内实现的对负载进行逻辑隔离的机制�
 * 管理内存资源，支持内存硬限和内存软限;
 * 管理 IO 资源，包括读本地文件和远程文件产生的 IO。
 
+:::tip
+Workload Group 提供进程内的资源隔离能力，与进程间的资源隔离方式（ Resource Group, Compute Group ）存在以下区别：
+
+1. 进程内的资源隔离无法做到彻底的隔离性，比如高负载查询和低负载查询在同一个进程内运行，即使通过 Workload Group 对高负载分组的 CPU 使用进行限制使得整体的 CPU 使用在合理范围内，
+   那么低负载分组的延迟也难免会受到影响，但相比于不做 CPU 管控的情况会有更好的表现。这是由于进程内部难免存在一些无法隔离的公共组件，比如公共的缓存和公共的 RPC 线程池。
+2. 在做资源隔离方案的选择时，具体使用 Workload Group 还是基于进程的资源隔离方案（也就是把需要隔离的负载放到不同的进程），主要取决于隔离性和成本的权衡，可以容忍一定的延迟但是偏好低成本的场景，可以选择 Workload Group 的隔离方案；
+   期望完全的隔离性同时可以接受更高的成本，那么可以选择基于进程的资源隔离方案，例如 Resource Group 或者 Compute Group，把高优负载划分到独立的 BE 节点上就可以做到比较彻底的隔离。
+   :::
 
 ## 版本说明
 
@@ -50,7 +39,7 @@ Workload Group 支持对于 CPU，内存，IO 资源的管理，其中对于 CPU
 
 以下为 CGroup 环境配置流程：
 
-1. 首先确认 BE 所在节点是否已经安装好 GGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
+1. 首先确认 BE 所在节点是否已经安装好 CGroup，输出结果中```cgroup``` 代表目前的环境已经安装 CGroup V1，```cgroup2``` 代表目前的环境已安装 CGroup V2，至于具体是哪个版本生效，可以通过下一步确认。
 ```shell
 cat /proc/filesystems | grep cgroup
 nodev	cgroup
@@ -95,14 +84,14 @@ chmod 770 /sys/fs/cgroup/doris
 chown -R doris:doris /sys/fs/cgroup/doris
 ```
 
-5. 如果目前环境里生效的是 CGroup v2 版本，那么还需要进行以下两步操作。 如果是 CGroup v1 那么可以跳过当前步骤。
+5. 如果目前环境里生效的是 CGroup v2 版本，那么还需要进行以下两步操作。如果是 CGroup v1 那么可以跳过当前步骤。
 * 修改根目录下的 cgroup.procs 文件权限，这是因为 CGroup v2 对于权限管控比较严格，需要具备根目录的 cgroup.procs 文件的写权限才能实现进程在 CGroup 目录之间的移动。
 ```shell
 chmod a+w /sys/fs/cgroup/cgroup.procs
 ```
 * 在 CGroup V2 中，cgroup.controllers 保存了当前目录可用的控制器，cgroup.subtree_control 保存了当前目录的子目录的可用控制器。
-  因此需要确认 doris 目录是否已经启用 cpu 控制器，如果 doris 目录下的 cgroup.controllers 中不包含 cpu ，那么说明 cpu 控制器未启用，可以在 doris 目录中执行以下命令，
-  这个命令是通过修改父级目录的 cgroup.subtree_control 文件使得 doris 目录可以使用 cpu 控制器。
+因此需要确认 doris 目录是否已经启用 cpu 控制器，如果 doris 目录下的 cgroup.controllers 中不包含 cpu，那么说明 cpu 控制器未启用，可以在 doris 目录中执行以下命令，
+这个命令是通过修改父级目录的 cgroup.subtree_control 文件使得 doris 目录可以使用 cpu 控制器。
 ```
 // 预期该命令执行完成之后，可以在 doris 目录下看到 cpu.max 文件，且 cgroup.controllers 的输出包含 cpu。
 // 如果该命令执行失败，则说明 doris 目录的父级目录也未启用 cpu 控制器，需要为父级目录启用 cpu 控制器。
@@ -124,7 +113,7 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/doris
 1. 建议单台机器上只部署一个 BE 实例，目前的 Workload Group 功能不支持一个机器上部署多个 BE；
 2. 当机器重启之后，CGroup 路径下的所有配置就会清空。如果期望 CGroup 配置持久化，可以使用 systemd 把操作设置成系统的自定义服务，这样在每次机器重启的时可以自动完成创建和授权操作
 3. 如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
-   :::
+:::
 
 #### 在容器中使用 Workload Group 的注意事项
 Workload 的 CPU 管理是基于 CGroup 实现的，如果期望在容器中使用 Workload Group，那么需要以特权模式启动容器，容器内的 Doris 进程才能具备读写宿主机 CGroup 文件的权限。
@@ -144,28 +133,28 @@ mysql [information_schema]>create workload group if not exists g1
 Query OK, 0 rows affected (0.03 sec)
 
 ```
-可以参考 [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)。
+可以参考 [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)。
 
 此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
 
 ### Workload Group 属性
 
 
-| 属性名称                       | 数据类型  | 默认值 |  取值范围   | 说明                                                                                                                                                                                                                                                                                                                                                                       |
-|------------------------------|---------|-----|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cpu_share                    | 整型      | -1  |  [1, 10000]   | 可选，CPU 软限模式下生效，取值范围和使用的 CGroup 版本有关，下文有详细描述。cpu_share 代表了 Workload Group 可获得 CPU 时间的权重，值越大，可获得的 CPU 时间越多。例如，用户创建了 3 个 Workload Group g-a、g-b 和 g-c，cpu_share 分别为 10、30、40，某一时刻 g-a 和 g-b 正在跑任务，而 g-c 没有任务，此时 g-a 可获得 25% (10 / (10 + 30)) 的 CPU 资源，而 g-b 可获得 75% 的 CPU 资源。如果系统只有一个 Workload Group 正在运行，则不管其 cpu_share 的值为多少，它都可获取全部的 CPU 资源。                                   |
-| memory_limit                 | 浮点      | -1         | (0%, 100%]      | 可选，开启内存硬限时代表当前 Workload Group 最大可用内存百分比，默认值代表不限制内存。所有 Workload Group 的 memory_limit 累加值不可以超过 100%，通常与 enable_memory_overcommit 属性配合使用。如果一个机器的内存为 64G，Workload Group 的 memory_limit 配置为 50%，那么该 group 的实际物理内存=64G * 90% * 50%= 28.8G，这里的 90% 是 BE 进程可用内存配置的默认值。                                                                                                               |
+| 属性名称                       | 数据类型  | 默认值 |  取值范围   | 说明                                                                                                                                                                                                                                                                                                                                                                         |
+|------------------------------|---------|-----|-----|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| cpu_share                    | 整型      | -1  |  [1, 10000]   | 可选，CPU 软限模式下生效，取值范围和使用的 CGroup 版本有关，下文有详细描述。cpu_share 代表了 Workload Group 可获得 CPU 时间的权重，值越大，可获得的 CPU 时间越多。例如，用户创建了 3 个 Workload Group g-a、g-b 和 g-c，cpu_share 分别为 10、30、40，某一时刻 g-a 和 g-b 正在跑任务，而 g-c 没有任务，此时 g-a 可获得 25% (10 / (10 + 30)) 的 CPU 资源，而 g-b 可获得 75% 的 CPU 资源。如果系统只有一个 Workload Group 正在运行，则不管其 cpu_share 的值为多少，它都可获取全部的 CPU 资源。                               |
+| memory_limit                 | 浮点      | -1         | (0%, 100%]      | 可选，开启内存硬限时代表当前 Workload Group 最大可用内存百分比，默认值代表不限制内存。所有 Workload Group 的 memory_limit 累加值不可以超过 100%，通常与 enable_memory_overcommit 属性配合使用。如果一个机器的内存为 64G，Workload Group 的 memory_limit 配置为 50%，那么该 group 的实际物理内存=64G * 90% * 50%= 28.8G，这里的 90% 是 BE 进程可用内存配置的默认值。                                                                                                             |
 | enable_memory_overcommit     | 布尔      | true       | true, false      | 可选，用于控制当前 Workload Group 的内存限制是硬限还是软限，默认为 true。如果设置为 false，则该 workload group 为内存硬隔离，系统检测到 workload group 内存使用超出限制后将立即 cancel 组内内存占用最大的若干个任务，以释放超出的内存；如果设置为 true，则该 Workload Group 为内存软隔离，如果系统有空闲内存资源则该 Workload Group 在超出 memory_limit 的限制后可继续使用系统内存，在系统总内存紧张时会 cancel 组内内存占用最大的若干个任务，释放部分超出的内存以缓解系统内存压力。建议所有 workload group 的 memory_limit 总和低于 100%，为 BE 进程中的其他组件保留一些内存。 |
-| cpu_hard_limit               | 整型      | -1         | [1%, 100%]      | 可选，CPU 硬限制模式下生效，Workload Group 最大可用 CPU 百分比，不管当前机器的 CPU 资源是否被用满，Workload Group 的最大 CPU 用量都不能超过 cpu_hard_limit，所有 Workload Group 的 cpu_hard_limit 累加值不能超过 100%。2.1 版本新增属性，2.0 版本不支持该功能。                                                                                                                                                                                    |
-| max_concurrency              | 整型      | 2147483647 | [0, 2147483647] | 可选，最大查询并发数，默认值为整型最大值，也就是不做并发的限制。运行中的查询数量达到最大并发时，新来的查询会进入排队的逻辑。                                                                                                                                                                                                                                                                                                           |
-| max_queue_size               | 整型      | 0          | [0, 2147483647] | 可选，查询排队队列的长度，当排队队列已满时，新来的查询会被拒绝。默认值为 0，含义是不排队。当排队队列已满时，新来的查询会直接失败。                                                                                                                                                                                                                                                                                                       |
-| queue_timeout                | 整型      | 0          | [0, 2147483647] | 可选，查询在排队队列中的最大等待时间，单位为毫秒。如果查询在队列中的排队时间超过这个值，那么就会直接抛出异常给客户端。默认值为 0，含义是不排队，查询进入队列后立即返回失败。                                                                                                                                                                                                                                                                                  |
+| cpu_hard_limit               | 整型      | -1         | [1%, 100%]      | 可选，CPU 硬限制模式下生效，Workload Group 最大可用 CPU 百分比，不管当前机器的 CPU 资源是否被用满，Workload Group 的最大 CPU 用量都不能超过 cpu_hard_limit，所有 Workload Group 的 cpu_hard_limit 累加值不能超过 100%。2.1 版本新增属性，2.0 版本不支持该功能。                                                                                                                                                                                     |
+| max_concurrency              | 整型      | 2147483647 | [0, 2147483647] | 可选，最大查询并发数，默认值为整型最大值，也就是不做并发的限制。运行中的查询数量达到最大并发时，新来的查询会进入排队的逻辑。                                                                                                                                                                                                                                                                                                             |
+| max_queue_size               | 整型      | 0          | [0, 2147483647] | 可选，查询排队队列的长度，当排队队列已满时，新来的查询会被拒绝。默认值为 0，含义是不排队。当排队队列已满时，新来的查询会直接失败。                                                                                                                                                                                                                                                                                                         |
+| queue_timeout                | 整型      | 0          | [0, 2147483647] | 可选，查询在排队队列中的最大等待时间，单位为毫秒。如果查询在队列中的排队时间超过这个值，那么就会直接抛出异常给客户端。默认值为 0，含义是不排队，查询进入队列后立即返回失败。                                                                                                                                                                                                                                                                                    |
 | scan_thread_num              | 整型      | -1         | [1, 2147483647] | 可选，当前 workload group 用于 scan 的线程个数。当该属性为 -1，含义是不生效，此时在 BE 上的实际取值为 BE 配置中的```doris_scanner_thread_pool_thread_num```。                                                                                                                                                                                                                                                       |
-| max_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最大线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                                  |
-| min_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最小线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                                  |
-| tag                          | 字符串     | 空          |   -   | 为 Workload Group 指定分组标签，相同标签的 Workload Group 资源累加值不能超过 100%；如果期望指定多个值，可以使用英文逗号分隔。                                                                                                                                                                                                                                                                                             |
-| read_bytes_per_second        | 整型      | -1         | [1, 9223372036854775807] | 可选，含义为读 Doris 内表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。需要注意的是这个值并不绑定磁盘，而是绑定文件夹。比如为 Doris 配置了 2 个文件夹用于存放内表数据，那么每个文件夹的最大读 IO 不会超过该值，如果这 2 个文件夹都配置到同一块盘上，最大吞吐控制就会变成 2 倍的 read_bytes_per_second。落盘的文件目录也受该值的约束。                                                                                                                                                                                       |
-| remote_read_bytes_per_second | 整型      | -1    | [1, 9223372036854775807] | 可选，含义为读 Doris 外表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。                                                                                                                                                                                                                                                                                                                                |
+| max_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最大线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                              |
+| min_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最小线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                              |
+| tag                          | 字符串     | 空          |   -   | 该功能已废弃，不推荐生产环境使用; 为 Workload Group 指定分组标签，相同标签的 Workload Group 资源累加值不能超过 100%；如果期望指定多个值，可以使用英文逗号分隔。                                                                                                                                                                                                                                                                        |
+| read_bytes_per_second        | 整型      | -1         | [1, 9223372036854775807] | 可选，含义为读 Doris 内表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。需要注意的是这个值并不绑定磁盘，而是绑定文件夹。比如为 Doris 配置了 2 个文件夹用于存放内表数据，那么每个文件夹的最大读 IO 不会超过该值，如果这 2 个文件夹都配置到同一块盘上，最大吞吐控制就会变成 2 倍的 read_bytes_per_second。落盘的文件目录也受该值的约束。                                                                                                                                                                       |
+| remote_read_bytes_per_second | 整型      | -1    | [1, 9223372036854775807] | 可选，含义为读 Doris 外表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。                                                                                                                                                                                                                                                                                                                           |
 
 :::tip
 
@@ -197,7 +186,7 @@ SELECT name FROM information_schema.workload_groups;
 GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'user_1'@'%';
 ```
 这个语句的含义是把名为 g1 的 Workload Group 的使用权限授予给名为 user_1 的账户。
-更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+更多授权操作可以参考[grant 语句](../../sql-manual/sql-statements/account-management/GRANT-TO)。
 
 **两种绑定方式**
 1. 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`，需要注意的这里的 value 不能填空，否则语句会执行失败。
@@ -218,7 +207,7 @@ set workload_group = 'g1';
 ```
 show workload groups;
 ```
-可以参考[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+可以参考[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS)。
 
 2. 通过系统表查看
 ```
@@ -246,7 +235,7 @@ mysql [information_schema]>select cpu_share from information_schema.workload_gro
 
 ```
 
-可以参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)。
+可以参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)。
 
 ## 删除 Workload Group
 ```
@@ -254,7 +243,7 @@ mysql [information_schema]>drop workload group g1;
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-可以参考：[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)。
+可以参考：[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)。
 
 ## CPU 软硬限模式切换的说明
 目前 Doris 暂不支持同时运行 CPU 的软限和硬限，一个 Doris 集群在任意时刻只能是 CPU 软限或者 CPU 硬限。
@@ -702,20 +691,22 @@ BrokerLoad 和 S3Load 是常用的大批量数据导入方式，用户可以把�
 1. 为什么配置了 CPU 的硬限但是没有生效？
 
 * 通常有以下几种原因：
-   * 环境初始化失败，需要检查 Doris CGroup 路径下的两个配置文件，这里以 CGroup V1 版本为例，如果用户指定的 Doris 的 CGroup 路径为```/sys/fs/cgroup/cpu/doris/```，
-     那么首先需要去查看```/sys/fs/cgroup/cpu/doris/query/1/tasks```文件的内容是否包含对应 Workload Group 的线程号，路径中的1代表的是 Workload Group 的 id，可以通过```top -H -b -n 1 -p pid```的命令获得该
-     Workload Group 的线程号，通过对比确认该 Workload Group 的线程号都写入到 tasks 文件中；然后是看下```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us```文件的值是否为-1，如果为-1就说明 CPU 硬限的配置没有生效。
-   * Doris BE进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU ，
-     比如 Compaction ，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
-     CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从2.1.6版本开始支持。
-   * 有用户配置了属性```cpu_resource_limit```，配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
-     可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
-     迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为-1，
-     观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
+    * 环境初始化失败，需要检查 Doris CGroup 路径下的两个配置文件，这里以 CGroup V1 版本为例，如果用户指定的 Doris 的 CGroup 路径为```/sys/fs/cgroup/cpu/doris/```，
+      那么首先需要去查看```/sys/fs/cgroup/cpu/doris/query/1/tasks```文件的内容是否包含对应 Workload Group 的线程号，路径中的 1 代表的是 Workload Group 的 id，可以通过```top -H -b -n 1 -p pid```的命令获得该
+      Workload Group 的线程号，通过对比确认该 Workload Group 的线程号都写入到 tasks 文件中；然后是看下```/sys/fs/cgroup/cpu/doris/query/1/cpu.cfs_quota_us```文件的值是否为 -1，如果为 -1 就说明 CPU 硬限的配置没有生效。
+    * Doris BE 进程的 CPU 使用率高于 Workload Group 配置的 CPU 硬限，这种情况是符合预期的，因为 Workload Group 可以管理的 CPU 主要是查询线程和导入的 memtable 下刷线程，但是 BE 进程内通常还会有其他组件也会消耗 CPU，
+      比如 Compaction，因此进程的 CPU 使用通常要高于 Workload Group 的配置。可以创建一个测试的 Workload Group，只压测查询负载，然后通过系统表```information_schema.workload_group_resource_usage```查看 Workload Group 的
+      CPU 使用，这个表只记录了 Workload Group 的 CPU 使用率，从 2.1.6 版本开始支持。
+    * 有用户配置了参数```cpu_resource_limit```，首先通过执行```show property for jack like 'cpu_resource_limit';```确认用户 jack 属性中是否设置了该参数；
+      然后通过执行```show variables like 'cpu_resource_limit'``` 确认session变量中是否设置了该参数；该参数默认值为-1，代表未设置。
+      配置了这个参数之后，查询走的是独立的线程池，该线程池不受 Workload Group 的管理。直接修改这个参数可能会影响生产环境的稳定性，
+      可以考虑逐步的把配置了该参数的查询负载迁移到 Workload Group 中管理，这个参数目前的平替是 session 变量 ```num_scanner_threads``` 。主要流程是，先把配置了 ```cpu_resource_limit``` 的用户分成若干批次，
+      迁移第一批用户的时候，首先修改这部分用户的 session 变量 ```num_scanner_threads``` 为 1，然后为这些用户指定 Workload Group，接着把 ```cpu_resource_limit``` 修改为 -1，
+      观察一段时间集群是否稳定，如果稳定就继续迁移下一批用户。
 
-2. 为什么默认的 Workload Group 的个数被限制为15个？
+2. 为什么默认的 Workload Group 的个数被限制为 15 个？
 * Workload Group 主要是对单机资源的划分，一个机器上如果划分了过多的 Workload Group，那么每个 Workload Group 都只能分到很少的资源。
-  如果业务确实需要建这么多的 Workload Group，那么可以考虑把一个集群划分为多组不同的 BE ，然后为每组 BE 创建不同的 Workload Group。
+  如果业务确实需要建这么多的 Workload Group，那么可以考虑把一个集群划分为多组不同的 BE，然后为每组 BE 创建不同的 Workload Group。
   也可以通过修改 FE 的配置 ```workload_group_max_num``` 来临时绕开这个限制。
 
 3. 为什么配置了较多 Workload Group 之后会报错"Resource temporarily unavailable"？

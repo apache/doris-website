@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 Used to determine the type of the field specified by `json_path` in the JSONB data. If the field does not exist, it returns NULL. If the field exists, it returns one of the following types:
@@ -41,69 +22,87 @@ Used to determine the type of the field specified by `json_path` in the JSONB da
 ## Syntax
 
 ```sql
-STRING JSON_TYPE( <JSON j> )
+JSON_TYPE( <json>, <json_path> )
 ```
 
 ## Alias
+- `JSONB_TYPE`
 
-- JSONB_TYPE
+## Parameters
 
-## Required Parameters
-
-
-| Parameter | Description |
-|------|------|
-| `<JSON j>` | The JSON string to check the type of. |
-
+- `<json>` The JSON string to check the type of.
+- `<json_path>` String type, which specifies the location of the field in JSON. The path is usually given in $. At the beginning, use. to represent the hierarchical structure.
 
 ## Return Value
-Returns the type of the JSON string. Possible values include:
-- "NULL": Indicates that the value in the JSON document is null.
-- "BOOLEAN": Indicates that the value in the JSON document is of boolean type (true or false).
-- "NUMBER": Indicates that the value in the JSON document is a number.
-- "STRING": Indicates that the value in the JSON document is a string.
-- "OBJECT": Indicates that the value in the JSON document is a JSON object.
-- "ARRAY": Indicates that the value in the JSON document is a JSON array.
+
+`Nullable<String>`: Returns the type of the corresponding field.
 
 ## Usage Notes
-
-JSON_TYPE returns the type of the outermost value in the JSON document. If the JSON document contains multiple different types of values, it will return the type of the outermost value. For invalid JSON strings, JSON_TYPE returns NULL. Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+- If `<json_object>` or `<json_path>` is NULL, returns NULL.
+- If `<json_path>` is not a valid path, the function reports an error.
+- If the field specified by `<json_path>` does not exist, returns NULL.
 
 ## Examples
 1. JSON is of string type:
-
-```sql
-SELECT JSON_TYPE('"Hello, World!"');
-```
-
-```sql
-+------------------------------------------+
-| JSON_TYPE('"Hello, World!"')            |
-+------------------------------------------+
-| STRING                                   |
-+------------------------------------------+
-```
+    ```sql
+    SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
+    ```
+    ```text
+    +-------------------------------------------------------------------+
+    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
+    +-------------------------------------------------------------------+
+    | string                                                            |
+    +-------------------------------------------------------------------+
+    ```
 
 2. JSON is of number type:
-
-```sql
-SELECT JSON_TYPE('123');
-```
-```sql
-+------------------------------------------+
-| JSON_TYPE('123')                        |
-+------------------------------------------+
-| NUMBER                                   |
-+------------------------------------------+
-```
-3. JSON is of null type:
-```sql
-SELECT JSON_TYPE('null');
-```
-```sql
-+------------------------------------------+
-| JSON_TYPE('null')                        |
-+------------------------------------------+
-| NULL                                     |
-+------------------------------------------+
-```
+    ```sql
+    SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
+    ```
+    ```text
+    +------------------------------------------------------------------+
+    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
+    +------------------------------------------------------------------+
+    | int                                                              |
+    +------------------------------------------------------------------+
+    ```
+3. NULL parameters
+    ```sql
+    select json_type(NULL, '$.key1');
+    ```
+    ```text
+    +---------------------------+
+    | json_type(NULL, '$.key1') |
+    +---------------------------+
+    | NULL                      |
+    +---------------------------+
+    ```
+4. NULL parameters 2
+    ```sql
+    select json_type('{"key1": true}', NULL);
+    ```
+    ```text
+    +-----------------------------------+
+    | json_type('{"key1": true}', NULL) |
+    +-----------------------------------+
+    | NULL                              |
+    +-----------------------------------+
+    ```
+5. Field specified by `json_path` parameter does not exist
+    ```sql
+    select json_type('{"key1": true}', '$.key2');
+    ```
+    ```text
+    +---------------------------------------+
+    | json_type('{"key1": true}', '$.key2') |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```
+6. Invalid `json_path` parameter
+    ```sql
+    select json_type('{"key1": true}', '$.');
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Json path error: Invalid Json Path for value: $.
+    ```

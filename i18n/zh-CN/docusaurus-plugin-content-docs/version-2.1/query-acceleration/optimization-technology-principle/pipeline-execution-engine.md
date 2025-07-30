@@ -7,28 +7,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-Doris 的并行执行模型是一种 Pipeline 执行模型，主要参考了[Hyper](https://db.in.tum.de/~leis/papers/morsels.pdf)论文中 Pipeline 的实现方式，Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，解决 Doris 的执行线程膨胀的问题。它的具体设计、实现和效果可以参阅 [DSIP-027](DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation) 以及 [DSIP-035](DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation)。
+Doris 的并行执行模型是一种 Pipeline 执行模型，主要参考了[Hyper](https://db.in.tum.de/~leis/papers/morsels.pdf)论文中 Pipeline 的实现方式，Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，从而解决 Doris 的执行线程膨胀的问题。它的具体设计、实现和效果可以参阅 [DSIP-027](DSIP-027: Support Pipeline Exec Engine - DORIS - Apache Software Foundation) 以及 [DSIP-035](DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation)。
 Doris 3.0 之后，Pipeline 执行模型彻底替换了原有的火山模型，基于 Pipeline 执行模型，Doris 实现了 Query、DDL、DML 语句的并行处理。
 
 ## 物理计划
@@ -48,7 +27,7 @@ FE 首先会把它翻译成下面这种逻辑计划，计划中每个节点就�
 所以 Doris 的规划分为 3 层：
 PLAN：执行计划，一个 SQL 会被执行规划器翻译成一个执行计划，之后执行计划会提供给执行引擎执行。
 
-FRAGMENT：由于 DORIS 是一个分布式执行引擎。一个完整的执行计划会被切分为多个单机的执行片段。一个 FRAGMENT 表是一个完整的单机执行片段。多个 FRAGMENT 组合在一起，构成一个完整的 PLAN。
+FRAGMENT：由于 DORIS 是一个分布式执行引擎。一个完整的执行计划会被切分为多个单机的执行片段。一个 FRAGMENT 代表一个完整的单机执行片段。多个 FRAGMENT 组合在一起，构成一个完整的 PLAN。
 
 PLAN NODE：算子，是执行计划的最小单位。一个 FRAGMENT 由多个算子构成。每一个算子负责一个实际的执行逻辑，比如聚合，连接等
 
@@ -63,7 +42,7 @@ PlanFragment 是 FE 发往 BE 执行任务的最小单位。BE 可能会收到�
 
 ![pip_exec_4](/images/pip_exec_4.png)
 
-多个 Pipeline 之间实际是有依赖关系的，以 JoinNode 为例，他实际被拆分到了 2 个 Pipeline 里。其中 Pipeline-0 是读取 Exchange 的数据，来构建 HashTable；Pipeline-1 是从表里读取数据，来进行 Probe。这 2 个 Pipeline 之间是有关联关系的，只有 Pipeline-0 运行完毕之后才能执行 Pipeline-1。这两者之间的依赖关系，称为 Dependency。当 Pipeline-0 运行完毕后，会调用 Dependency 的 set_ready 方法通知 Pipeline-1 可执行。
+多个 Pipeline 之间实际是有依赖关系的，以 JoinNode 为例，实际被拆分到了 2 个 Pipeline 里。其中 Pipeline-0 是读取 Exchange 的数据，来构建 HashTable；Pipeline-1 是从表里读取数据，来进行 Probe。这 2 个 Pipeline 之间是有关联关系的，只有 Pipeline-0 运行完毕之后才能执行 Pipeline-1。这两者之间的依赖关系，称为 Dependency。当 Pipeline-0 运行完毕后，会调用 Dependency 的 set_ready 方法通知 Pipeline-1 可执行。
 
 ### PipelineTask
 Pipeline 实际还是一个逻辑概念，他并不是一个可执行的实体。在有了 Pipeline 之后，需要进一步的把 Pipeline 实例化为多个 PipelineTask。将需要读取的数据分配给不同的 PipelineTask 最终实现并行处理。同一个 Pipeline 的多个 PipelineTask 之间的 Operator 完全相同，他们的区别在于 Operator 的状态不一样，比如读取的数据不一样，构建出的 HashTable 不一样，这些不一样的状态，我们称之为 LocalState。
@@ -74,10 +53,10 @@ Pipeline 实际还是一个逻辑概念，他并不是一个可执行的实体�
 - JoinNode，被拆分为 JoinBuildOperator 和 JoinProbeOperator
 - AggNode 被拆分为 AggSinkOperator 和 AggSourceOperator
 - SortNode 被拆分为 SortSinkOperator 和 SortSourceOperator
-基本原理是，对于一些 breaking 算子（需要把所有的数据都收集齐之后才能运算的算子），把灌入数据的部分拆分为 Sink，然后把从这个算子里获取数据的部分称为 Source。
+基本原理是，对于一些 breaking 算子（指需要把所有的数据都收集齐之后才能运算的算子），把灌入数据的部分拆分为 Sink，然后把从这个算子里获取数据的部分称为 Source。
 
 ## Scan 并行化 
-扫描数据是一个非常重的 IO 操作，它需要从本地磁盘读取大量的数据（如果是数据湖的场景，就需要从 HDFS 或者 S3 中读取，延时更长），需要比较多的时间。所以我们在 ScanOperator 中引入了并行扫描的技术，ScanOperator 会动态的生成多个 Scanner，每个 Scanner 扫描 100w-200w 行左右的数据，每个 Scanner 在做数据扫描时，完成相应的数据解压、过滤等计算任务，然后把数据发送给一个 DataQueue，供 ScanOperator 读取。
+扫描数据是一个非常重的 IO 操作，它需要从本地磁盘读取大量的数据（如果是数据湖的场景，就需要从 HDFS 或者 S3 中读取，延时更长），需要比较多的时间。所以我们在 ScanOperator 中引入了并行扫描的技术，ScanOperator 会动态的生成多个 Scanner，每个 Scanner 扫描 100 万 -200 万 行左右的数据，每个 Scanner 在做数据扫描时，完成相应的数据解压、过滤等计算任务，然后把数据发送给一个 DataQueue，供 ScanOperator 读取。
 
 ![pip_exec_5](/images/pip_exec_5.png)
 
@@ -94,5 +73,5 @@ Pipeline 实际还是一个逻辑概念，他并不是一个可执行的实体�
 
 ![pip_exec_7](/images/pip_exec_7.png)
 
-从图右可以看出，HashJoin 和 Agg 算子需要处理的数据量从 (1,1,7) 变成了 (3,3,3) 从而避免了数据倾斜。
+从图右可以看出，HashJoin 和 Agg 算子需要处理的数据量从 (1, 1, 7) 变成了 (3, 3, 3)，从而避免了数据倾斜。
 在 Doris 中，Local Exchange 根据一系列规则来决定是否被规划，例如当查询耗时比较大的 Join、聚合、窗口函数等算子需要被执行时，我们就需要使用 Local Exchange 来尽可能避免数据倾斜。

@@ -5,29 +5,10 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。
 
 Broker Load 适合源数据存储在远程存储系统，比如对象存储或 HDFS，且数据量比较大的场景。 
-从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF](../../../lakehouse/file-analysis) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
 在 Doris 早期版本中，S3 Load 和 HDFS Load 都是通过 `WITH BROKER` 连接到具体的 Broker 进程实现的。
 随着版本的更新，S3 Load 和 HDFS Load 作为最常用的导入方式得到了优化，现在它们不再依赖额外的 Broker 进程，但仍然使用与 Broker Load 类似的语法。
@@ -66,7 +47,7 @@ Broker Load 适合源数据存储在远程存储系统，比如对象存储或 H
 
 用户在提交导入任务后，FE 会生成对应的 Plan 并根据目前 BE 的个数和文件的大小，将 Plan 分给 多个 BE 执行，每个 BE 执行一部分导入数据。
 
-BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之后将数据导入系统。所有 BE 均完成导入，由 FE 最终决定导入是否成功。
+BE 在执行的过程中会从 Broker 拉取数据，在对数据转换之后将数据导入系统。所有 BE 均完成导入，由 FE 最终决定导入是否成功。
 
 ![Broker Load 基本原理](/images/broker-load.png)
 
@@ -76,13 +57,13 @@ BE 在执行的过程中会从 Broker 拉取数据，在对数据 transform 之�
 
 ## 快速上手
 
-本节演示了一个 S3 Load 的例子。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
+本节演示了一个 S3 Load 示例。具体的使用语法，请参考 SQL 手册中的 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD)。
 
 ### 前置检查
 
 1. Doris 表权限
 
-Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO.md) 命令给用户授权。
+Broker Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 2. S3 认证和连接信息
 
@@ -164,7 +145,7 @@ Doris 支持的 provider 列表：
 
 ### 查看导入作业
 
-Broker load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
+Broker Load 是一个异步的导入方式，具体导入结果可以通过 [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) 命令查看
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -189,13 +170,21 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ### 取消导入作业
 
-当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可执行 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD.md) 查看。
+当 Broker load 作业状态不为 CANCELLED 或 FINISHED 时，可以被用户手动取消。取消时需要指定待取消导入任务的 Label。取消导入命令语法可参考 [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD) 查看。
 
 例如：取消数据库 demo 上，label 为 broker_load_2022_04_01 的导入作业
 
 ```SQL
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
+
+### 绑定 Compute Group
+在存算分离模式下，Broker Load 的 Compute Group 选择逻辑按优先级如下：
+1. 选择 ```use db@cluster ``` 语句指定的Compute Group；
+2. 选择用户属性 ```default_compute_group``` 指定的 Compute Group；
+3. 从当前用户有权限的 Compute Group 中选择一个；
+
+在存算一体模式下，选择用户属性 ```resource_tags.location``` 中指定的 Compute Group；如果用户属性中未指定，那么就使用名为 default 的 Compute Group；
 
 ## 参考手册
 
@@ -205,6 +194,7 @@ CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 LOAD LABEL load_label
 (
 data_desc1[, data_desc2, ...]
+[format_properties]
 )
 WITH [S3|HDFS|BROKER broker_name] 
 [broker_properties]
@@ -212,7 +202,7 @@ WITH [S3|HDFS|BROKER broker_name]
 [COMMENT "comments"];
 ```
 
-其中 WITH 子句指定了如何访问存储系统，`broker_properties` 则是该访问方式的配置参数
+其中 WITH 子句指定了如何访问存储系统，`broker_properties` 是该访问方式的配置参数：
 
 - `S3`: 使用 S3 协议的存储系统
 - `HDFS`: 使用 HDFS 协议的存储系统
@@ -220,7 +210,7 @@ WITH [S3|HDFS|BROKER broker_name]
 
 ### 导入配置参数
 
-**load properties**
+**导入参数（Load Properties）**
 
 | Property 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -232,9 +222,37 @@ WITH [S3|HDFS|BROKER broker_name]
 | "load_parallelism" | Integer | 8 | 每个 BE 上并发 instance 数量的上限。 |
 | "send_batch_parallelism" | Integer | 1 | sink 节点发送数据的并发度，仅在关闭 memtable 前移时生效。 |
 | "load_to_single_tablet" | Boolean | "false" | 是否每个分区只导入一个 tablet，默认值为 false。该参数只允许在对带有 random 分桶的 OLAP 表导数的时候设置。 |
-| "skip_lines" | Integer | "0" | 跳过 CSV 文件的前几行。当设置 format 设置为 csv_with_names或csv_with_names_and_types时，该参数会失效。 |
-| "trim_double_quotes" | Boolean | "false" | 是否裁剪掉导入文件每个字段最外层的双引号。 |
 | "priority" | "HIGH" 或 "NORMAL" 或 "LOW" | "NORMAL" | 导入任务的优先级。 |
+
+**格式参数（Format Properties）**
+
+| 参数名 | 类型 | 默认值 | 描述 |
+|---------------------|----------|----------------|-------------|
+| `skip_lines` | Integer | `0` | 跳过 CSV 文件开头的若干行。当格式为 `csv_with_names` 或 `csv_with_names_and_types` 时，此参数无效。 |
+| `trim_double_quotes` | Boolean | `false` | 是否去除字段外层的双引号。 |
+| `enclose` | String | `""` | 字段包含换行符或分隔符时的包裹字符。例如，分隔符为 `,`，包裹字符为 `'` 时，`'b,c'` 会被解析为一个字段。 |
+| `escape` | String | `""` | 用于转义包裹字符的转义字符。例如转义字符为 `\`，包裹字符为 `'`，字段 `'b,\'c'` 会被正确解析为 `'b,'c'`。 |
+
+**注意：**格式参数用于定义如何解析源文件（如分隔符、引号处理），应在 `LOAD` 语句内部的 `PROPERTIES` 中设置。导入参数用于控制导入行为（如超时、重试），应在 `LOAD` 语句外部的最外层 `PROPERTIES` 块中设置。
+
+```sql
+LOAD LABEL s3_load_example (
+    DATA INFILE("s3://bucket/path/file.csv")
+    INTO TABLE users
+    COLUMNS TERMINATED BY ","
+    FORMAT AS "CSV"
+    (user_id, name, age)
+    PROPERTIES (
+        "trim_double_quotes" = "true"  -- 格式参数
+    )
+)
+WITH S3 (
+    ...
+)
+PROPERTIES (
+    "timeout" = "3600"  -- 导入参数
+);
+```
 
 **fe.conf**
 
@@ -248,7 +266,7 @@ WITH [S3|HDFS|BROKER broker_name]
 | default_load_parallelism | Integer | 8 | 每个 BE 节点最大并发 instance 数 |
 | broker_load_default_timeout_second | 14400 | Broker Load 导入的默认超时时间，单位：秒。 |
 
-注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的个数共同决定了本次导入的并发数。
+注：最小处理的数据量，最大并发数，源文件的大小和当前集群 BE 的数量共同决定了本次导入的并发数。
 
 ```Plain
 本次导入并发数 = Math.min(源文件大小/min_bytes_per_broker_scanner，max_broker_concurrency，当前BE节点个数 * load_parallelism)
@@ -269,7 +287,7 @@ WITH [S3|HDFS|BROKER broker_name]
 
 **1. 导入报错：`Scan bytes per broker scanner exceed limit:xxx`**
 
-请参照文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
+请参考文档中最佳实践部分，修改 FE 配置项 `max_bytes_per_broker_scanner` 和 `max_broker_concurrency`
 
 **2. 导入报错：`failed to send batch` 或 `TabletWriter add batch with unknown id`**
 
@@ -277,7 +295,7 @@ WITH [S3|HDFS|BROKER broker_name]
 
 **3. 导入报错：`LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
 
-如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 doris 表中的列名保持一致，如：
+如果是 PARQUET 或者 ORC 格式的数据，则文件头的列名需要与 Doris 表中的列名保持一致，如：
 
 ```sql
 (tmp_c1,tmp_c2)
@@ -294,7 +312,7 @@ SET
 
 **4. 导入报错：`Failed to get S3 FileSystem for bucket is null/empty`**
 
-bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
+Bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支持。使用 GCS 创建带`_`的桶名时，比如：`s3://gs_bucket/load_tbl`，S3 Client 访问 GCS 会报错，建议创建 bucket 路径时不使用`_`。
 
 **5. 导入超时**
 
@@ -327,7 +345,7 @@ bucket 信息填写不正确或者不存在。或者 bucket 的格式不受支�
 
 ### S3 Load 临时密钥
 
-- 支持使用临时秘钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
+- 支持使用临时密钥 (TOKEN) 访问所有支持 S3 协议的对象存储，用法如下：
 
   ```sql
     WITH S3
@@ -738,7 +756,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
   `my_table` 必须是 Unique Key 模型表，并且指定了 Sequence 列。数据会按照源数据中 `source_sequence` 列的值来保证顺序性。
 
-- 导入指定文件格式为 `json`，并指定 `json_root`、`jsonpaths`
+- 导入指定文件格式为 `json`，并指定 `json_root`、`jsonpaths` 属性：
 
   ```sql
   LOAD LABEL example_db.label10
@@ -779,6 +797,9 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
     "hadoop.username"="user"
   );
   ```
+:::info 备注
+如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+:::
 
 ### 从其他 Broker 导入
 
@@ -828,7 +849,7 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 - GCS
 
-在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
+在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION)
 
 ```sql
 (
@@ -840,4 +861,4 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
 
 ## 更多帮助
 
-关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP BROKER LOAD` 获取更多帮助信息。
+关于 Broker Load 使用的更多详细语法及最佳实践，请参阅 [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) 命令手册，你也可以在 MySQL 客户端命令行中输入 `HELP BROKER LOAD` 获取更多帮助信息。

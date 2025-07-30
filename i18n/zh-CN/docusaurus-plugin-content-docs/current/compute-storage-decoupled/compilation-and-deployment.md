@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 1. 概述
 
 本文档详细介绍了 Doris 存算分离模式下的编译和部署流程，重点说明了与存算一体模式的区别，特别是新增 Meta Service (MS) 模块的编译、配置和管理。
@@ -72,7 +53,7 @@ fdb_cluster = xxx:yyy@127.0.0.1:4500
 
 注意：`fdb_cluster` 的值应与 FoundationDB 部署机器上的 `/etc/foundationdb/fdb.cluster` 文件内容一致 (如果使用 Doris 提供的 fdb_ctl.sh 部署的话，可在 `$FDB_HOME/conf/fdb.cluster` 文件里获取该值)。
 
-**示例, 文件的最后一行就是要填到doris_cloud.conf 里 fdb_cluster 字段的值**
+**示例，文件的最后一行就是要填到 doris_cloud.conf 里 fdb_cluster 字段的值**
 
 ```shell
 cat /etc/foundationdb/fdb.cluster
@@ -95,9 +76,29 @@ export JAVA_HOME=${path_to_jdk_17}
 bin/start.sh --daemon
 ```
 
-启动脚本返回值为0表示启动成功, 否则启动失败.
-启动成功同时标准输出的最后一行文本信息为"doris_cloud start successfully".
+```text
+LIBHDFS3_CONF=
+starts doris_cloud with args: --meta-service
+wait and check doris_cloud start successfully
+successfully started brpc listening on port=5000 time_elapsed_ms=11
+doris_cloud start successfully
+```
 
+启动脚本返回值为 0 表示启动成功，否则启动失败。
+
+:::info
+在 3.0.4 中，启动脚本会输出更多信息：
+```text
+2024-12-26 15:31:53 start with args: --meta-service
+wait and check MetaService and Recycler start successfully
+process working directory: "/mnt/disk1/doris/ms"
+pid=1666015 written to file=./bin/doris_cloud.pid
+version:{doris-3.0.4-release} code_version:{commit=fd44740fadabebfedb5da201d7ce427a5dd47c44 time=2025-01-16 18:53:00 +0800} build_info: ...
+
+MetaService has been started successfully
+successfully started service listening on port=5000 time_elapsed_ms=19
+```
+:::
 
 *停止命令*
 
@@ -175,7 +176,7 @@ bin/start.sh --meta-service --daemon
 3. `meta_service_endpoint`
    - 描述：Meta Service 的地址和端口
    - 格式：`IP地址:端口号`
-   - 示例：`127.0.0.1:5000`, 可以用逗号分割配置多个meta service。
+   - 示例：`127.0.0.1:5000`, 可以用逗号分割配置多个 meta service。
 
 #### 5.2.2 启动 FE
 
@@ -213,10 +214,10 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    - 示例：`cloud`
 
 2. `file_cache_path`
-   - 描述: 用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
-   - 格式: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
-   - 示例: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
-   - 默认: [{"path":"${DORIS_HOME}/file_cache"}]
+   - 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一项。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
+   - 格式：[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 示例：[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+   - 默认：[{"path":"${DORIS_HOME}/file_cache"}]
 
 #### 5.4.1 启动和添加 BE
 
@@ -256,11 +257,11 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
 ## 6. 创建 Storage Vault
 
- Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault 。可以将 Storage Vault 设置成为默认 Storage Vault ，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
+ Storage Vault 是 Doris 存算分离架构中的重要组件。它们代表了存储数据的共享存储层。您可以使用 HDFS 或兼容 S3 的对象存储创建一个或多个 Storage Vault。可以将 Storage Vault 设置成为默认 Storage Vault，系统表和未指定 Storage Vault 的表都将存储在这个默认 Storage Vault 中。默认 Storage Vault 不能被删除。以下是为您的 Doris 集群创建 Storage Vault 的方法：
 
 ### 6.1 创建 HDFS  Storage Vault 
 
-要使用 SQL 创建 Storage Vault ，请使用 MySQL 客户端连接到您的 Doris 集群
+要使用 SQL 创建 Storage Vault，请使用 MySQL 客户端连接到您的 Doris 集群
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
@@ -272,11 +273,11 @@ CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
 
 ### 6.2 创建 S3  Storage Vault 
 
-要使用兼容 S3 的对象存储创建 Storage Vault ，请按照以下步骤操作：
+要使用兼容 S3 的对象存储创建 Storage Vault，请按照以下步骤操作：
 
 1. 使用 MySQL 客户端连接到您的 Doris 集群。
 
-2. 执行以下 SQL 命令来创建 S3  Storage Vault ：
+2. 执行以下 SQL 命令来创建 S3  Storage Vault：
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
@@ -292,11 +293,11 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-要在其他对象存储上创建 Storage Vault ，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
+要在其他对象存储上创建 Storage Vault，请参考 [创建 Storage Vault ](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT)。
 
 ### 6.3 设置默认 Storage Vault 
 
-使用如下 SQL 语句设置一个默认 Storage Vault 。
+使用如下 SQL 语句设置一个默认 Storage Vault。
 
 ```sql
 SET <storage_vault_name> AS DEFAULT STORAGE VAULT

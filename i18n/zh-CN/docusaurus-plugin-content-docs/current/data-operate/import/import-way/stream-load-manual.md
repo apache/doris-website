@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。一般来说，可以使用 Stream Load 导入 10GB 以下的文件，如果文件过大，建议将文件进行切分后使用 Stream Load 进行导入。Stream Load 可以保证一批导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
 :::tip
@@ -63,7 +44,6 @@ Stream Load 支持从本地或远程通过 HTTP 的方式导入 CSV、JSON、Par
 
 Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，演示通过 Stream Load 提交导入作业。
 
-详细语法可以参见 [STREAM LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
 ### 前置检查
 
@@ -203,6 +183,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
     ```
     :::info 备注
     若 JSON 文件内容不是 JSON Array，而是每行一个 JSON 对象，添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
+    如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`-H "jsonpaths:[\"$.\"]"`
     :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
@@ -248,6 +229,28 @@ mysql> show stream load from testdb;
 ### 取消导入作业
 
 用户无法手动取消 Stream Load，Stream Load 在超时或者导入错误后会被系统自动取消。
+
+### 绑定 Compute Group
+用户可以指定 Stream Load 在具体的某个 Compute Group上运行；
+
+存算分离模式下指定 Compute Group的方式如下：
+1. 通过 HTTP Header 参数指定。
+```
+-H "cloud_cluster:cluster1"
+```
+
+2. 在 Stream Load 绑定的 user 属性中指定 Compute Group。如果 user 属性和 HTTP header 同时指定了 Compute Group，那么以 Header 中指定的 Compute Group 为准。
+```
+set property for user1 'default_compute_group'='cluster1';
+```
+
+3. 如果 user 属性中和 HTTP Header 中均未指定 Compute Group，那么会从 Stream Load 绑定的 user 有权限访问的 Compute Group 中选择一个。
+如果 user 没有任何有权限访问的 Compute Group，那么导入就会失败。
+
+存算一体模式下，只支持通过 Stream Load 绑定的 user 属性指定 Compute Group，如果 user 属性中未指定，那么就会选择名为 ```default``` 的 Compute Group。
+```
+set property for user1 'resource_tags.location'='group_1';
+```
 
 ## 参考手册
 
@@ -582,7 +585,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 指定导入需要 Merge 的 Sequence 列
 
-当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通过制定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
+当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于 `DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通指定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -715,9 +718,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 表结构：
 
 ```sql
-`id` bigint(30) NOT NULL,
-`order_code` varchar(30) DEFAULT NULL COMMENT '',
-`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testDb.testTbl (
+    `id` BIGINT(30) NOT NULL,
+    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
+    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
 JSON 数据格式：
@@ -1010,12 +1017,9 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../../data-operate/import/load-strict-mode) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../handling-messy-data#严格模式) 文档。
 
 ### 导入时进行部分列更新/灵活部分列更新
 
 关于导入时，如何表达部分列更新，可以参考 [数据更新/主键模型的导入更新](../../../data-operate/update/update-of-unique-model) 文档
 
-## 更多帮助
-
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。

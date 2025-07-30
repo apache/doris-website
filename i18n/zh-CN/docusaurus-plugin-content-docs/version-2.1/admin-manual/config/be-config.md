@@ -7,25 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 <!-- Please sort the configuration alphabetically -->
 
 
@@ -166,7 +147,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
   **说明**
 
-    - /home/disk1/doris,medium:hdd，表示存储介质是HHD;
+    - /home/disk1/doris,medium:hdd，表示存储介质是HDD;
     - /home/disk2/doris,medium:ssd，表示存储介质是SSD;
 
 
@@ -399,7 +380,7 @@ thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
-* 默认值：48
+* 默认值：取决于 CPU 核心数量。等于 `max(48, num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -638,7 +619,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * 类型：int32
-* 描述：当 segment 数量超过此阈值时触发 segment compaction
+* 描述：当 segment 数量超过此阈值时触发 segment compaction，该配置也限制了单个 segment compaction 任务中的最大原始 segment 数量。
 * 默认值：10
 
 #### `segcompaction_candidate_max_rows`
@@ -646,12 +627,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过
 * 默认值：1048576
-
-#### `segcompaction_batch_size`
-
-* 类型：int32
-* 描述：单个 segment compaction 任务中的最大原始 segment 数量。
-* 默认值：10
 
 #### `segcompaction_candidate_max_rows`
 
@@ -1503,11 +1478,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
-
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
-* 默认值：10000
 
 #### `default_tzfiles_path`
 

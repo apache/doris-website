@@ -5,36 +5,17 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文介绍如何在 Doris 中导入 JSON 格式的数据文件。Doris 支持导入标准 JSON 格式数据，通过配置相关参数，可以灵活地处理不同的 JSON 数据结构，并支持从 JSON 数据中抽取字段、处理嵌套结构等场景。
 
 ## 导入方式
 
 以下导入方式支持 JSON 格式的数据导入：
 
-- [Stream Load](../import-way/stream-load-manual.md)
-- [Broker Load](../import-way/broker-load-manual.md)
-- [Routine Load](../import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
+- [Stream Load](../import-way/stream-load-manual)
+- [Broker Load](../import-way/broker-load-manual)
+- [Routine Load](../import-way/routine-load-manual)
+- [INSERT INTO FROM S3 TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## 支持的 JSON 格式
 
@@ -103,15 +84,17 @@ Doris 支持以下三种 JSON 格式：
 | json paths | 无 | jsonpaths | properties.jsonpaths | properties.jsonpaths | jsonpaths |
 | json root | 无 | json_root | properties.json_root | properties.json_root | json_root |
 | strip outer array | false | strip_outer_array | properties.strip_outer_array | properties.strip_outer_array | strip_outer_array |
-| read json by line | false | read_json_by_line | 不支持配置，都为true | 不支持 | read_json_by_line, 默认为true |
+| read json by line | false | read_json_by_line | 不支持配置，都为 true | 不支持 | read_json_by_line, 默认为 true |
 | fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | 不支持 | fuzzy_parse |
 | num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
+| 压缩格式 | plain | compress_type(从3.0.5版本开始支持) | PROPERTIES.compress_type | 不支持 | compress_type |
 
 :::tip 注意
 1. Stream Load：参数直接通过 HTTP Header 指定，如：`-H "jsonpaths: $.data"`
 2. Broker Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
+5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
 :::
 
 ### 参数说明
@@ -198,7 +181,7 @@ Doris 支持以下三种 JSON 格式：
     "id": "12345678901234567890",
     "price": "99999999.999999"
   }
-  -- 设置 num_as_string=true， price 字段将以字符串形式解析
+  -- 设置 num_as_string=true，price 字段将以字符串形式解析
   
   ```
 

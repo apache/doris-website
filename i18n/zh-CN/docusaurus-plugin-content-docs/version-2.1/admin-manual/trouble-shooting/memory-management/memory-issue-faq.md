@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris BE 进程内存分析主要使用 `be/log/be.INFO` 日志、BE 进程内存监控(Metrics)、Doris Bvar 统计，如果触发了 OOM Killer 需要收集 `dmesg -T` 执行结果，如果分析查询或导入任务的内存需要收集 Query Profile，依据这些信息分析常见的内存问题。如果你自行分析无法解决问题，需要向 Doris 开发者们求助，无论使用何种途径（Github 提交 issue，Doris 论坛创建问题，邮件或 WeChat），都请将上述信息添加到你的问题描述中。
+Doris BE 进程内存分析主要使用 `be/log/be.INFO` 日志、BE 进程内存监控 (Metrics)、Doris Bvar 统计，如果触发了 OOM Killer 需要收集 `dmesg -T` 执行结果，如果分析查询或导入任务的内存需要收集 Query Profile，依据这些信息分析常见的内存问题。如果你自行分析无法解决问题，需要向 Doris 开发者们求助，无论使用何种途径（Github 提交 issue，Doris 论坛创建问题，邮件或 WeChat），都请将上述信息添加到你的问题描述中。
 
 首先定位当前观察到的现象属于哪种内存问题，并进一步排查，通常需要先分析进程内存日志，参考 [内存日志分析](./memory-analysis/memory-log-analysis.md)，下面列举常见的内存问题。
 
@@ -86,7 +67,7 @@ Doris 目前仍存在 Doris BE 进程虚拟内存过大的问题，通常是因�
 
 ## 7 Query 没有复杂算子只是简单的 Scan 数据，却要使用很大的内存
 
-可能是读取 Segment 时打开的 Column Reader、Index Read 占用的内存，参考 [Metadata 内存分析](./memory-analysis/metadata-memory-analysis.md) 查看 Doris BE Bvar 中的 `doris_total_segment_num`、`doris_column_reader_num`、`doris_ordinal_index_memory_bytes`、`doris_zone_map_memory_bytes`、`doris_short_key_index_memory_bytes`的变化，这个现象同样常见于读取大宽表，当打开几十万个 Column Reader 时，内存可能会占用几十GB。
+可能是读取 Segment 时打开的 Column Reader、Index Read 占用的内存，参考 [Metadata 内存分析](./memory-analysis/metadata-memory-analysis.md) 查看 Doris BE Bvar 中的 `doris_total_segment_num`、`doris_column_reader_num`、`doris_ordinal_index_memory_bytes`、`doris_zone_map_memory_bytes`、`doris_short_key_index_memory_bytes`的变化，这个现象同样常见于读取大宽表，当打开几十万个 Column Reader 时，内存可能会占用几十 GB。
 
 如果你在 Heap Profile 内存占比大的调用栈中看到 `Segment`，`ColumnReader` 字段，则基本可以确认是读取 Segment 时占用了大量内存。
 

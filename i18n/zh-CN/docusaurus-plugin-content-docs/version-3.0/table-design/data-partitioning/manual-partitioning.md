@@ -5,30 +5,9 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 分区列
 
 -   分区列可以指定一列或多列，分区列必须为 KEY 列。
--   PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。
 -   不论分区列是什么类型，在写分区值时，都需要加双引号。
 -   分区数量理论上没有上限。但默认限制每张表 4096 个分区，如果想突破这个限制，可以修改 FE 配置`max_multi_partition_num`和`max_dynamic_partition_num `。
 -   当不使用分区建表时，系统会自动生成一个和表名同名的，全值范围的分区。该分区对用户不可见，并且不可删改。
@@ -52,7 +31,7 @@ PARTITION BY RANGE(col1[, col2, ...])
 
 示例如下：
 
-```shell
+```sql
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),

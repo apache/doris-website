@@ -12,11 +12,11 @@
 
 </version>
 
-### Description
+## Description
 
 Filters array elements using a specified binary operator and returns a new array containing elements that satisfy the condition. This is a simplified array filtering function that uses predefined operators instead of lambda expressions.
 
-### Syntax
+## Syntax
 
 ```sql
 array_apply(arr, op, val)

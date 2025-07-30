@@ -5,28 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
 ## 描述
 
 该语句是完成数据插入操作。
@@ -212,11 +190,12 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 2. 超时时间
 
-   INSERT 操作的超时时间由 [会话变量](../../../../advanced/variables.md) `insert_timeout` 控制。默认为 4 小时。超时则作业会被取消。
+   INSERT 操作的超时时间由`max(insert_timeout, query_timeout)` 控制。二者均为环境变量，insert_timeout 默认为 4 小时，query_timeout 默认为 5 分钟。超时则作业会被取消。引入`insert_timeout`的原因是让 insert 语句默认拥有较长的超时时间，
+   使导入任务不受普通查询默认较短的超时时间的影响。
 
 3. Label 和原子性
 
-   INSERT 操作同样能够保证导入的原子性，可以参阅 [导入事务和原子性](../../../../data-operate/import/import-scenes/load-atomicity.md) 文档。
+   INSERT 操作同样能够保证导入的原子性，可以参阅 [导入事务和原子性](../../../../data-operate/transaction.md) 文档。
 
    当需要使用 `CTE(Common Table Expressions)` 作为 insert 操作中的查询部分时，必须指定 `WITH LABEL` 和 `column` 部分。
 
@@ -224,7 +203,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
    与其他导入方式不同，INSERT 操作不能指定过滤阈值（`max_filter_ratio`）。默认的过滤阈值为 1，即素有错误行都可以被忽略。
 
-   对于有要求数据不能够被过滤的业务场景，可以通过设置 [会话变量](../../../../advanced/variables.md) `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
+   对于有要求数据不能够被过滤的业务场景，可以通过设置 [会话变量](../../session/variable/SET-VARIABLE) `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
 
 5. 性能问题
 

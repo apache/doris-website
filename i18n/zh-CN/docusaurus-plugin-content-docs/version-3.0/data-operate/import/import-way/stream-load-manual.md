@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。一般来说，可以使用 Stream Load 导入 10GB 以下的文件，如果文件过大，建议将文件进行切分后使用 Stream Load 进行导入。Stream Load 可以保证一批导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
 :::tip
@@ -63,7 +44,6 @@ Stream Load 支持从本地或远程通过 HTTP 的方式导入 CSV、JSON、Par
 
 Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，演示通过 Stream Load 提交导入作业。
 
-详细语法可以参见 [STREAM LOAD](../../../data-operate/import/import-way/stream-load-manual)
 
 ### 前置检查
 
@@ -203,6 +183,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
     ```
     :::info 备注
     若 JSON 文件内容不是 JSON Array，而是每行一个 JSON 对象，添加 Header `-H "strip_outer_array:false"` `-H "read_json_by_line:true"`。
+    如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`-H "jsonpaths:[\"$.\"]"`
     :::
 
     Stream Load 是一种同步导入方式，导入结果会直接返回给用户。
@@ -325,6 +306,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 | memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
+| unique_key_update_mode       | Unique 表上的更新模式，目前仅对 Merge-On-Write Unique 表有效，一共支持三种类型 `UPSERT`, `UPDATE_FIXED_COLUMNS`, `UPDATE_FLEXIBLE_COLUMNS`。 `UPSERT`: 表示以 upsert 语义导入数据; `UPDATE_FIXED_COLUMNS`: 表示以[部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据; `UPDATE_FLEXIBLE_COLUMNS`: 表示以[灵活部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据|
 
 ### 导入返回值
 
@@ -397,7 +379,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 ```Shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
-    -H "timeout:3000"
+    -H "timeout:3000" \
     -H "column_separator:," \
     -H "columns:user_id,name,age" \
     -T streamload_example.csv \
@@ -581,7 +563,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 指定导入需要 Merge 的 Sequence 列
 
-当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于`DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通过制定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
+当 Unique Key 表设置了 Sequence 列时，在相同 Key 列下，Sequence 列的值会作为 REPLACE 聚合函数替换顺序的依据，较大值可以替换较小值。当对这种表基于 `DORIS_DELETE_SIGN` 进行删除标记时，需要保证 Key 相同和 Sequence 列值要大于等于当前值。通指定 function_column.sequence_col 参数可以结合 merge_type: DELETE 进行删除操作：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -726,7 +708,7 @@ DISTRIBUTED BY HASH(id) BUCKETS 10;
 JSON 数据格式：
 
 ```Plain
-{"id":1,"order_code":"avc"}
+{"id":1,"order_Code":"avc"}
 ```
 
 导入命令：
@@ -1013,12 +995,9 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [错误数据处理](../../../data-operate/import/handling-messy-data) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../handling-messy-data#严格模式) 文档。
 
-### 导入时进行部分列更新
+### 导入时进行部分列更新/灵活部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../../../data-operate/update/unique-update) 文档
+关于导入时，如何表达部分列更新，可以参考 [数据更新/主键模型的导入更新](../../../data-operate/update/update-of-unique-model) 文档
 
-## 更多帮助
-
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../../data-operate/import/import-way/stream-load-manual) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。

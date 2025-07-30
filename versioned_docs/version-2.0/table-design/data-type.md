@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Apache Doris support standard SQL syntax, using MySQL Network Connection Protocol, highly compatible with MySQL syntax protocol. Therefore, in terms of data type support, Apache Doris aligns as closely as possible with MySQL-related data types
 
 The list of data types supported by Doris is as follows:
@@ -75,11 +56,5 @@ The list of data types supported by Doris is as follows:
 | [QUANTILE_STATE](../sql-manual/sql-data-types/aggregate/QUANTILE_STATE) | Variable Length | A type used to calculate approximate quantile values.  When loading, it performs pre-aggregation for the same keys with different values. When the number of values does not exceed 2048, it records all data in detail. When the number of values is greater than 2048, it employs the TDigest algorithm to aggregate (cluster) the data and store the centroid points after clustering.   QUANTILE_STATE cannot be used as a key column and should be paired with the aggregation type QUANTILE_UNION when creating a table. Users do not need to specify the length or default value as it is internally controlled based on the aggregation level of the data.   QUANTILE_STATE columns can only be queried or used through the companion functions such as QUANTILE_PERCENT, QUANTILE_UNION, and TO_QUANTILE_STATE. |
 | [AGG_STATE](../sql-manual/sql-data-types/aggregate/AGG_STATE)       | Variable Length | Aggregate function can only be used with state/merge/union function combiners.   AGG_STATE cannot be used as a key column. When creating a table, the signature of the aggregate function needs to be declared alongside.   Users do not need to specify the length or default value. The actual data storage size depends on the function's implementation. |
 
-## [IP types](../sql-manual/sql-data-types/data-type-overview#ip-types)
-
-| Type Name                                                    | Storage (bytes) | Description                                                  |  
-| ---------------------------------------------------------- | --------------- | ------------------------------------------------------------ |  
-| [IPv4](../sql-manual/sql-data-types/ip/IPV4)                 | 4               | It is used in conjunction with the `ipv4_*` family of functions. |  
-| [IPv6](../sql-manual/sql-data-types/ip/IPV6)                 | 16              | It is used in conjunction with the `ipv6_*` family of functions. |
 
 You can also view all the data types supported by Doris with the `SHOW DATA TYPES; `statement.

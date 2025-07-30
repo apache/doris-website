@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 新增功能
 
 ### 向量化执行引擎支持 ODBC Sink。
@@ -57,7 +38,7 @@ MemTracker 是一个用于分析内存使用情况的统计工具，在 1.1.0 �
 
 ### 修复 Compaction 不能正常工作导致的 -235 错误。
 
-在 Unique Key 模型中，当一个 Rowset 有多个 Segment 时，在做 Compaction 过程中由于没有正确的统计行数，会导致Compaction 失败并且产生 Tablet 版本过多而导致的 -235 错误。
+在 Unique Key 模型中，当一个 Rowset 有多个 Segment 时，在做 Compaction 过程中由于没有正确的统计行数，会导致 Compaction 失败并且产生 Tablet 版本过多而导致的 -235 错误。
 
 ### 修复查询过程中出现的部分 Segment fault。
 
@@ -67,7 +48,7 @@ MemTracker 是一个用于分析内存使用情况的统计工具，在 1.1.0 �
 
 # 致谢
 
-感谢所有参与贡献 1.1.1 版本的开发者:
+感谢所有参与贡献 1.1.1 版本的开发者：
 
 ```
 @jacktengg

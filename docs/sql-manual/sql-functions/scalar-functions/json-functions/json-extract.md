@@ -5,184 +5,169 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
-JSON_EXTRACT is a series of functions that extract the field specified by json_path from JSON data and provide different series of functions according to the type of the field to be extracted.
-
-* JSON_EXTRACT returns the VARCHAR type for a json string of the VARCHAR type.
-* JSON_EXTRACT_ISNULL returns the BOOLEAN type indicating whether it is a json null.
-* JSON_EXTRACT_BOOL returns the BOOLEAN type.
-* JSON_EXTRACT_INT returns the INT type.
-* JSON_EXTRACT_BIGINT returns the BIGINT type.
-* JSON_EXTRACT_LARGEINT returns the LARGEINT type.
-* JSON_EXTRACT_DOUBLE returns the DOUBLE type.
-* JSON_EXTRACT_STRING returns the STRING type.
-
-## Alias
-* JSONB_EXTRACT is the same as JSON_EXTRACT.
-* JSONB_EXTRACT_ISNULL is the same as JSON_EXTRACT_ISNULL.
-* JSONB_EXTRACT_BOOL is the same as JSON_EXTRACT_BOOL.
-* JSONB_EXTRACT_INT is the same as JSON_EXTRACT_INT.
-* JSONB_EXTRACT_BIGINT is the same as JSON_EXTRACT_BIGINT.
-* JSONB_EXTRACT_LARGEINT is the same as JSON_EXTRACT_LARGEINT.
-* JSONB_EXTRACT_DOUBLE is the same as JSON_EXTRACT_DOUBLE.
-* JSONB_EXTRACT_STRING is the same as JSON_EXTRACT_STRING.
+Extract the field specified by json_path from JSON type data.
 
 ## Syntax
 ```sql
-JSON_EXTRACT (<json_str>, <path>[, path] ...)
+JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
 ```
-```sql
-JSON_EXTRACT_ISNULL (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_BOOL (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_INT (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_BIGINT (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_LARGEINT (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_DOUBLE (<json_str>, <path>)
-```
-```sql
-JSON_EXTRACT_STRING (<json_str>, <path>)
-```
-Alias functions have the same syntax and usage as the above functions, except for the function names.
-
 ## Parameters
-| Parameter           | Description                          |
-|--------------|-----------------------------|
-| `<json_str>` | The JSON-type parameter or field to be extracted.         |
-| `<path>`     | The JSON path to extract the target element from the target JSON. |
-json path syntax:
-- '$' for json document root
-- '.k1' for element of json object with key 'k1'
-  - If the key column value contains ".", double quotes are required in json_path, For example: SELECT json_extract('{"k1.a":"abc","k2":300}', '$."k1.a"');
-- '[i]' for element of json array at index i
-  - Use '$[last]' to get the last element of json_array, and '$[last-1]' to get the penultimate element, and so on.
+### Required Parameters:
+- `<json_object>`: The JSON type expression to extract from.
+- `<path>`: The JSON path to extract the target element from the target JSON.
+### Optional/Variable Parameters
+- `<path2>` Multiple path values can be extracted from the JSON object.
 
-## Return Values
-According to the type of the field to be extracted, return the data type of the specified JSON_PATH in the target JSON. Special case handling is as follows:
-* If the field specified by json_path does not exist in the JSON, return NULL.
-* If the actual type of the field specified by json_path in the JSON is inconsistent with the type specified by json_extract_t.
-* if it can be losslessly converted to the specified type, return the specified type t; if not, return NULL.
+## Return Value
+- `Nullable(JSON)`: Returns the JSON element pointed to by `<path>`. If multiple results are matched, they will be returned as a JSON array.
 
-
+## Usage Notes
+- If `<json_object>` is NULL, or `<path>` is NULL, returns NULL.
+- For single `<path>` parameter cases, if the `<path>` does not exist, returns NULL.
+- For multiple `<path>` parameter cases, non-existent paths are ignored, and matched elements are returned as a JSON array. If no matches are found, returns NULL.
+- If `<path>` is not a valid path, an error is reported.
+- If the value corresponding to `<path>` is a string, the returned string will be surrounded by double quotes (`"`). To get results without double quotes, please use the function [`JSON_UNQUOTE`](./json-unquote.md).
+- The syntax of `<path>` is as follows:
+    * `$` represents the json root
+    * `.k1` represents the element with key `k1` in the json object
+        * If the key value contains ".", `<path>` needs to use double quotes, for example `SELECT json_extract('{"k1.a":"abc","k2":300}', '$."k1.a"')`;
+    * `[i]` represents the element at index i in the json array
+        * To get the last element of json_array, you can use `$[last]`, the second to last element can use `$[last-1]`, and so on.
+    * `*` represents a wildcard, where `$.*` represents all members of the root object, and `$[*]` represents all elements of the array.
+- If `<path>` contains wildcards (`*`), the matching results will be returned in array form.
 
 ## Examples
-```sql
-SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');
-```
+1. General parameters
+  ```sql
+  SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k1');
+  ```
+  ```
+  +-----------------------------------------------+
+  | JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k1') |
+  +-----------------------------------------------+
+  | "v31"                                         |
+  +-----------------------------------------------+
+  ```
+> Note: The returned result is `"v31"` not `v31`.
+2. NULL parameters
+    ```sql
+    select JSON_EXTRACT(null, '$.k1');
+    ```
+    ```
+    +----------------------------+
+    | JSON_EXTRACT(null, '$.k1') |
+    +----------------------------+
+    | NULL                       |
+    +----------------------------+
+    ```
+3. `<path>` is NULL
+    ```sql
+    SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', NULL);
+    ```
+    ```
+    +---------------------------------------------+
+    | JSON_EXTRACT('{"k1":"v31","k2":300}', NULL) |
+    +---------------------------------------------+
+    | NULL                                        |
+    +---------------------------------------------+
+    ```
+4. Multi-level path
+    ```sql
+    SELECT JSON_EXTRACT('{"k1":"v31","k2":{"sub_key": 1234.56}}', '$.k2.sub_key');
+    ```
+    ```
+    +------------------------------------------------------------------------+
+    | JSON_EXTRACT('{"k1":"v31","k2":{"sub_key": 1234.56}}', '$.k2.sub_key') |
+    +------------------------------------------------------------------------+
+    | 1234.56                                                                |
+    +------------------------------------------------------------------------+
+    ```
+5. Array path
+    ```sql
+    SELECT JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$[2]');
+    ```
+    ```
+    +----------------------------------------------------------------------+
+    | JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$.[2]') |
+    +----------------------------------------------------------------------+
+    | "2025-07-16 18:35:25"                                                |
+    +----------------------------------------------------------------------+
+    ```
+6. Non-existent path
+    ```sql
+    SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k3');
+    ```
+    ```
+    +-----------------------------------------------+
+    | JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k3') |
+    +-----------------------------------------------+
+    | NULL                                          |
+    +-----------------------------------------------+
+    ```
+7. Multiple path parameters
+    ```sql
+    select JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id', '$.not_exists');
+    ```
+    ```
+    +--------------------------------------------------------------------------------+
+    | JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id', '$.not_exists') |
+    +--------------------------------------------------------------------------------+
+    | ["doris",123]                                                                  |
+    +--------------------------------------------------------------------------------+
+    ```
+    > Even if there is only one match, it will be returned in array form
+    ```sql
+    select JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id2', '$.not_exists');
+    ```
+    ```
+    +---------------------------------------------------------------------------------+
+    | JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id2', '$.not_exists') |
+    +---------------------------------------------------------------------------------+
+    | ["doris"]                                                                       |
+    +---------------------------------------------------------------------------------+
+    ```
+    > If all paths have no matches, return NULL
+    ```sql
+    select JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.k1', '$.k2', '$.not_exists');
+    ```
+    ```
+    +------------------------------------------------------------------------------+
+    | JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.k1', '$.k2', '$.not_exists') |
+    +------------------------------------------------------------------------------+
+    | NULL                                                                         |
+    +------------------------------------------------------------------------------+
+    ```
 
-```text
-+------------------------------------------------------+
-| json_extract('{"id": 123, "name": "doris"}', '$.id') |
-+------------------------------------------------------+
-| 123                                                  |
-+------------------------------------------------------+
-```
-```sql
-SELECT json_extract('[1, 2, 3]', '$.[1]');
-```
-```text
-+------------------------------------+
-| json_extract('[1, 2, 3]', '$.[1]') |
-+------------------------------------+
-| 2                                  |
-+------------------------------------+
-```
-```sql
-SELECT json_extract('{"k1": "v1", "k2": { "k21": 6.6, "k22": [1, 2] } }', '$.k1', '$.k2.k21', '$.k2.k22', '$.k2.k22[1]');
-```
-```text
-+-------------------------------------------------------------------------------------------------------------------+
-| json_extract('{"k1": "v1", "k2": { "k21": 6.6, "k22": [1, 2] } }', '$.k1', '$.k2.k21', '$.k2.k22', '$.k2.k22[1]') |
-+-------------------------------------------------------------------------------------------------------------------+
-| ["v1",6.6,[1,2],2]                                                                                                |
-+-------------------------------------------------------------------------------------------------------------------+
-```
-```sql
-SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
-```
-```text
-+-----------------------------------------------------------------+
-| json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name') |
-+-----------------------------------------------------------------+
-| [null,"doris"]                                                  |
-+-----------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXTRACT_ISNULL('{"id": 123, "name": "doris"}', '$.id');
-```
-```text
-+----------------------------------------------------------------------------+
-| jsonb_extract_isnull(cast('{"id": 123, "name": "doris"}' as JSON), '$.id') |
-+----------------------------------------------------------------------------+
-|                                                                          0 |
-+----------------------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXTRACT_BOOL('{"id": 123, "name": "NULL"}', '$.id');
-```
-```text
-+-------------------------------------------------------------------------+
-| jsonb_extract_bool(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
-+-------------------------------------------------------------------------+
-|                                                                    NULL |
-+-------------------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXTRACT_INT('{"id": 123, "name": "NULL"}', '$.id');
-```
-```text
-+------------------------------------------------------------------------+
-| jsonb_extract_int(cast('{"id": 123, "name": "NULL"}' as JSON), '$.id') |
-+------------------------------------------------------------------------+
-|                                                                    123 |
-+------------------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXTRACT_INT('{"id": 123, "name": "doris"}', '$.name');
-```
-```text
-+---------------------------------------------------------------------------+
-| jsonb_extract_int(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
-+---------------------------------------------------------------------------+
-|                                                                      NULL |
-+---------------------------------------------------------------------------+
-```
-```sql
-SELECT JSON_EXTRACT_STRING('{"id": 123, "name": "doris"}', '$.name');
-```
-```text
-+------------------------------------------------------------------------------+
-| jsonb_extract_string(cast('{"id": 123, "name": "doris"}' as JSON), '$.name') |
-+------------------------------------------------------------------------------+
-| doris                                                                        |
-+------------------------------------------------------------------------------+
-```
+8. Wildcard path
+    ```sql
+    select json_extract('{"k": [1,2,3,4,5]}', '$.k[*]');
+    ```
+    ```
+    +----------------------------------------------+
+    | json_extract('{"k": [1,2,3,4,5]}', '$.k[*]') |
+    +----------------------------------------------+
+    | [1,2,3,4,5]                                  |
+    +----------------------------------------------+
+    ```
+    ```sql
+    select json_extract('{"k": [1,2,3,4,5], "k2": "abc", "k3": {"k4": "v4"}}', '$.*', '$.k3.k4');
+    ```
+    ```
+    +---------------------------------------------------------------------------------------+
+    | json_extract('{"k": [1,2,3,4,5], "k2": "abc", "k3": {"k4": "v4"}}', '$.*', '$.k3.k4') |
+    +---------------------------------------------------------------------------------------+
+    | [[1,2,3,4,5],"abc",{"k4":"v4"},"v4"]                                                  |
+    +---------------------------------------------------------------------------------------+
+    ```
+9. Value is NULL case
+    ```sql
+    select JSON_EXTRACT('{"id": 123, "name": null}', '$.name') v, JSON_EXTRACT('{"id": 123, "name": null}', '$.name') is null v2;
+    ```
+    ```
+    +------+------+
+    | v    | v2   |
+    +------+------+
+    | null |    0 |
+    +------+------+
+    ```

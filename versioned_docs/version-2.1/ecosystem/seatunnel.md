@@ -7,25 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## About SeaTunnel
 
 SeaTunnel is a very easy-to-use ultra-high-performance distributed data integration platform that supports real-time synchronization of massive data. It can synchronize tens of billions of data stably and efficiently every day.
@@ -73,7 +54,7 @@ The label prefix used by stream load imports. In the 2pc scenario, global unique
 
 `sink.enable-2pc [bool]`
 
-Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/stream-load-manual.md).
+Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/import-way/stream-load-manual).
 
 `sink.enable-delete [bool]`
 
@@ -85,7 +66,7 @@ Whether to enable deletion. This option requires Doris table to enable batch del
 
 The parameter of the stream load `data_desc`, you can get more detail at this link:
 
-[More Stream Load parameters](../data-operate/import/stream-load-manual.md)
+[More Stream Load parameters](../data-operate/import/import-way/stream-load-manual)
 
 ### Example
 
@@ -186,7 +167,7 @@ Number of retries after writing to Doris fails
 
 Import parameters for Stream load. For example: 'doris.column_separator' = ', ' etc.
 
-[More Stream Load parameter configuration](../data-operate/import/stream-load-manual.md)
+[More Stream Load parameter configuration](../data-operate/import/import-way/stream-load-manual)
 
 #### Examples
 
@@ -271,7 +252,7 @@ Doris number of submissions per batch
 `doris. [string]`
 Doris stream_load properties,you can use 'doris.' prefix + stream_load properties
 
-[More Doris stream_load Configurations](../data-operate/import/stream-load-manual.md)
+[More Doris stream_load Configurations](../data-operate/import/import-way/stream-load-manual)
 
 #### Examples
 

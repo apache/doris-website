@@ -1,28 +1,9 @@
 ---
 {
-  "title": "Best Practices",
-  "language": "en"
+    "title": "Best Practices",
+    "language": "en"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## Principles for Using Asynchronous Materialized Views
 - **Timeliness Consideration:** Asynchronous materialized views are typically used in scenarios where data timeliness is not critical, usually T+1 data. If high timeliness is required, consider using synchronous materialized views.
@@ -52,7 +33,7 @@ When the following conditions are met, it is recommended to create partitioned m
 
 - The tables used by the materialized view, except for the partitioned table, do not change frequently.
 
-- The definition SQL of the materialized view and the partition field meet the requirements of partition derivation, that is, meet the requirements of partition incremental update. Detailed requirements can be found in [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod)
+- The definition SQL of the materialized view and the partition field meet the requirements of partition derivation, that is, meet the requirements of partition incremental update. Detailed requirements can be found in [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)
 
 - The number of partitions in the materialized view is not large, as too many partitions will lead to excessively long partition materialized view construction time.
 
@@ -62,7 +43,7 @@ If partitioned materialized views cannot be constructed, you can consider choosi
 
 ## Common Usage of Partitioned Materialized Views
 
-When the materialized view's base table data volume is large and the base table is a partitioned table, if the materialized view's definition SQL and partition fields meet the requirements of partition derivation, this scenario is suitable for building partitioned materialized views. For detailed requirements of partition derivation, refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW/#refreshmethod) and [Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-partitioned-materialized-view).
+When the materialized view's base table data volume is large and the base table is a partitioned table, if the materialized view's definition SQL and partition fields meet the requirements of partition derivation, this scenario is suitable for building partitioned materialized views. For detailed requirements of partition derivation, refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters) and [Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-partitioned-materialized-view).
 
 The materialized view's partitions are created following the base table's partition mapping, generally having a 1:1 or 1:n relationship with the base table's partitions.
 
@@ -191,104 +172,104 @@ For Join, Aggregate, Filters, and Calculated Expressions, building materialized 
 
 Next, we'll explain in detail how to build materialized views for these four operations:
 
-**1. For Join**
+1. **For Join**
 
-You can extract common table join patterns used in queries to build materialized views. If transparent rewriting uses this materialized view, it can save Join computation. Remove the Filters from the query to create a more general Join materialized view.
+   You can extract common table join patterns used in queries to build materialized views. If transparent rewriting uses this materialized view, it can save Join computation. Remove the Filters from the query to create a more general Join materialized view.
 
-**2. For Aggregate**
+2. **For Aggregate**
 
-It is recommended to use low-cardinality fields as dimensions when building materialized views. If the dimensions are related, the number after aggregation can be reduced as much as possible.
+   It is recommended to use low-cardinality fields as dimensions when building materialized views. If the dimensions are related, the number after aggregation can be reduced as much as possible.
 
-For example, with table t1, if the original table has 1,000,000 records, and the SQL query has `group by a, b, c`. If the cardinality of a, b, c is 100, 50, and 15 respectively, then the aggregated data would be around 75,000, indicating that this materialized view is effective. If a, b, c are correlated, the amount of aggregated data will be further reduced.
+   For example, with table t1, if the original table has 1,000,000 records, and the SQL query has `group by a, b, c`. If the cardinality of a, b, c is 100, 50, and 15 respectively, then the aggregated data would be around 75,000, indicating that this materialized view is effective. If a, b, c are correlated, the amount of aggregated data will be further reduced.
 
-If a, b, c have high cardinality, it will cause the aggregated data to expand rapidly. If the aggregated data is more than the original table data, this scenario might not be suitable for building materialized views. For example, if c's cardinality is 3,500, then the aggregated data would be around 17,000,000, much larger than the original table data, making the performance acceleration benefit of building such a materialized view low.
+   If a, b, c have high cardinality, it will cause the aggregated data to expand rapidly. If the aggregated data is more than the original table data, this scenario might not be suitable for building materialized views. For example, if c's cardinality is 3,500, then the aggregated data would be around 17,000,000, much larger than the original table data, making the performance acceleration benefit of building such a materialized view low.
 
-The aggregation granularity of the materialized view should be finer than the query, meaning the aggregation dimensions of the materialized view should include the query's aggregation dimensions to provide the data needed by the query. The query may not write Group By, and similarly, the aggregation functions of the materialized view should include the query's aggregation functions.
+   The aggregation granularity of the materialized view should be finer than the query, meaning the aggregation dimensions of the materialized view should include the query's aggregation dimensions to provide the data needed by the query. The query may not write Group By, and similarly, the aggregation functions of the materialized view should include the query's aggregation functions.
 
-Taking aggregate query acceleration as an example:
+   Taking aggregate query acceleration as an example:
 
-Query 1:
+   Query 1:
 
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_partkey;
-```
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_partkey;
+    ```
 
-Query 2:
+   Query 2:
 
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority 
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-WHERE 
-  o_orderdate <= DATE '2024-06-30' 
-  AND o_orderdate >= DATE '2024-05-01' 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey;
-```
+    ```sql
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority 
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    WHERE 
+      o_orderdate <= DATE '2024-06-30' 
+      AND o_orderdate >= DATE '2024-05-01' 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey;
+    ```
 
-Based on the above two SQL queries, we can build a more general materialized view that includes Aggregate. In this materialized view, we include both l_partkey and l_suppkey as group by dimensions for aggregation, and use o_orderdate as a filter condition. Note that o_orderdate is not only used in the materialized view's condition compensation but also needs to be included in the materialized view's aggregation group by dimensions.
+   Based on the above two SQL queries, we can build a more general materialized view that includes Aggregate. In this materialized view, we include both l_partkey and l_suppkey as group by dimensions for aggregation, and use o_orderdate as a filter condition. Note that o_orderdate is not only used in the materialized view's condition compensation but also needs to be included in the materialized view's aggregation group by dimensions.
 
-After building the materialized view this way, both Query 1 and Query 2 can hit this materialized view. The materialized view definition is as follows:
+   After building the materialized view this way, both Query 1 and Query 2 can hit this materialized view. The materialized view definition is as follows:
 
-```sql
-CREATE MATERIALIZED VIEW common_agg_mv
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL
-DISTRIBUTED BY RANDOM BUCKETS 2
-AS 
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate
-FROM 
-  orders 
-  LEFT JOIN lineitem ON l_orderkey = o_orderkey 
-GROUP BY 
-  l_linestatus, 
-  o_shippriority,
-  l_suppkey,
-  l_partkey,
-  o_orderdate;
-```
+    ```sql
+    CREATE MATERIALIZED VIEW common_agg_mv
+    BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    AS 
+    SELECT 
+      l_linestatus, 
+      sum(
+        l_extendedprice * (1 - l_discount)
+      ) AS revenue, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate
+    FROM 
+      orders 
+      LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    GROUP BY 
+      l_linestatus, 
+      o_shippriority,
+      l_suppkey,
+      l_partkey,
+      o_orderdate;
+    ```
 
-**3. For Filter**
+3. **For Filter**
 
-If filters on the same fields frequently appear in queries, adding corresponding Filters in the materialized view can reduce the amount of data in the materialized view, thereby improving the performance when queries hit the materialized view.
+   If filters on the same fields frequently appear in queries, adding corresponding Filters in the materialized view can reduce the amount of data in the materialized view, thereby improving the performance when queries hit the materialized view.
 
-Note that the materialized view should have fewer Filters than those appearing in queries, and the query's Filters should include the materialized view's Filters. For example, if the query is `a > 10 and b > 5`, the materialized view can have no Filter, or if it has Filters, it should filter on a and b with a larger data range than the query, such as `a > 5 and b > 5`, `b > 0`, or just `a > 5`.
+   Note that the materialized view should have fewer Filters than those appearing in queries, and the query's Filters should include the materialized view's Filters. For example, if the query is `a > 10 and b > 5`, the materialized view can have no Filter, or if it has Filters, it should filter on a and b with a larger data range than the query, such as `a > 5 and b > 5`, `b > 0`, or just `a > 5`.
 
-**4. For Calculated Expressions**
+   **4. For Calculated Expressions**
 
-Taking examples like case when and string processing functions, these expression calculations are very performance-intensive. If these can be pre-calculated in the materialized view, using the pre-calculated materialized view through transparent rewriting can improve query performance.
+   Taking examples like case when and string processing functions, these expression calculations are very performance-intensive. If these can be pre-calculated in the materialized view, using the pre-calculated materialized view through transparent rewriting can improve query performance.
 
-It is recommended that the number of columns in the materialized view should not be too many. If a query uses multiple fields, you should build corresponding materialized views for different columns based on the initial SQL pattern grouping, avoiding too many columns in a single materialized view.
+   It is recommended that the number of columns in the materialized view should not be too many. If a query uses multiple fields, you should build corresponding materialized views for different columns based on the initial SQL pattern grouping, avoiding too many columns in a single materialized view.
 
 ## Usage Scenarios
 
@@ -669,8 +650,6 @@ Enable getting row count from file list for statistics
 View external table statistics to confirm if they are complete
 
 ``SHOW TABLE STATS external_table_name;``
-
-Starting from version 2.1.3, it is supported to use materialized views in the SQL definition for creating materialized views, i.e., nested materialized views.
 :::
 
 ### Scenario Four: Improving Write Efficiency, Reducing Resource Contention

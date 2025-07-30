@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 该语句用于备份指定数据库下的数据。该命令为异步操作，提交成功后，需通过 [SHOW BACKUP](./SHOW-BACKUP.md) 命令查看进度。
@@ -76,7 +57,7 @@ TO `<repository_name>`
 
 ## 权限控制
 
-执行此SQL命令的用户必须至少具有以下权限：
+执行此 SQL 命令的用户必须至少具有以下权限：
 | 权限         | 对象         | 说明          |
 |:------------|:------------|:--------------|
 | LOAD_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 LOAD_PRIV 权限才能进行此操作 |
@@ -85,7 +66,7 @@ TO `<repository_name>`
 
 - 仅支持备份 OLAP 类型的表。
 - 同一数据库下只能有一个正在执行的 BACKUP 或 RESTORE 任务。
-- 备份操作会备份指定表或分区的基础表及 [物化视图](../../../../query-acceleration/materialized-view/sync-materialized-view.md)，并且仅备份一副本。
+- 备份操作会备份指定表或分区的基础表及 [物化视图](../../../../query-acceleration/materialized-view/sync-materialized-view.md)，并且仅备份一副本。[异步物化视图](../../../../query-acceleration/materialized-view/async-materialized-view/overview.md)还不支持。
 - 备份操作的效率取决于数据量、Compute Node 节点数量以及文件数量。备份数据分片所在的每个 Compute Node 都会参与备份操作的上传阶段。节点数量越多，上传的效率越高，文件数据量只涉及到的分片数，以及每个分片中文件的数量。如果分片非常多，或者分片内的小文件较多，都可能增加备份操作的时间。
 
 ## 示例

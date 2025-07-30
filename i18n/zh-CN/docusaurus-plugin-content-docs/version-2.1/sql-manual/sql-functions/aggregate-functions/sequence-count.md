@@ -5,28 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 计算与模式匹配的事件链的数量。该函数搜索不重叠的事件链。当前链匹配后，它开始搜索下一个链。
 
-**警告!** 
+**警告！** 
 
 在同一秒钟发生的事件可能以未定义的顺序排列在序列中，会影响最终结果。
 
@@ -42,17 +25,17 @@ SEQUENCE_COUNT(<pattern>, <timestamp>, <cond_1> [, <cond_2>, ..., <cond_n>]);
 | -- | -- |
 | `<pattern>` | 模式字符串，可参考下面的**模式语法** |
 | `<timestamp>` | 包含时间的列。典型的时间类型是： `Date` 和 `DateTime`。也可以使用任何支持的 `UInt` 数据类型。 |
-| `<cond_n>` | 事件链的约束条件。 数据类型是： `UInt8`。 最多可以传递32个条件参数。 该函数只考虑这些条件中描述的事件。 如果序列包含未在条件中描述的数据，则函数将跳过这些数据 |
+| `<cond_n>` | 事件链的约束条件。数据类型是： `UInt8`。最多可以传递 32 个条件参数。该函数只考虑这些条件中描述的事件。如果序列包含未在条件中描述的数据，则函数将跳过这些数据 |
 
 **模式语法**
 
-- `(?N)` — 在位置N匹配条件参数。 条件在编号 `[1, 32]` 范围。 例如, `(?1)` 匹配传递给 `cond_1` 参数。
+- `(?N)` — 在位置 N 匹配条件参数。条件在编号 `[1, 32]` 范围。例如，`(?1)` 匹配传递给 `cond_1` 参数。
 
-- `.*` — 匹配任何事件的数字。 不需要条件参数来匹配这个模式。
+- `.*` — 匹配任何事件的数字。不需要条件参数来匹配这个模式。
 
-- `(?t operator value)` — 分开两个事件的时间。 单位为秒。
+- `(?t operator value)` — 分开两个事件的时间。单位为秒。
 
-- `t`表示为两个时间的差值，单位为秒。 例如： `(?1)(?t>1800)(?2)` 匹配彼此发生超过1800秒的事件， `(?1)(?t>10000)(?2)`匹配彼此发生超过10000秒的事件。 这些事件之间可以存在任意数量的任何事件。 您可以使用 `>=`, `>`, `<`, `<=`, `==` 运算符。
+- `t`表示为两个时间的差值，单位为秒。例如： `(?1)(?t>1800)(?2)` 匹配彼此发生超过 1800 秒的事件， `(?1)(?t>10000)(?2)`匹配彼此发生超过 10000 秒的事件。这些事件之间可以存在任意数量的任何事件。您可以使用 `>=`, `>`, `<`, `<=`, `==` 运算符。
 
 ## 返回值
 
@@ -170,7 +153,7 @@ SELECT SEQUENCE_COUNT('(?1)(?2)', date, number = 1, number = 5) FROM sequence_co
 +----------------------------------------------------------------+
 ```
 
-上面为一个非常简单的匹配例子， 该函数找到了数字5跟随数字1的事件链。 它跳过了它们之间的数字7，3，4，因为该数字没有被描述为事件。 如果我们想在搜索示例中给出的事件链时考虑这个数字，我们应该为它创建一个条件。
+上面为一个非常简单的匹配例子，该函数找到了数字 5 跟随数字 1 的事件链。它跳过了它们之间的数字 7，3，4，因为该数字没有被描述为事件。如果我们想在搜索示例中给出的事件链时考虑这个数字，我们应该为它创建一个条件。
 
 现在，考虑如下执行语句：
 
@@ -186,7 +169,7 @@ SELECT SEQUENCE_COUNT('(?1)(?2)', date, number = 1, number = 5, number = 4) FROM
 +------------------------------------------------------------------------------+
 ```
 
-您可能对这个结果有些许疑惑，在这种情况下，函数找不到与模式匹配的事件链，因为数字4的事件发生在1和5之间。 如果在相同的情况下，我们检查了数字6的条件，则序列将与模式匹配。
+您可能对这个结果有些许疑惑，在这种情况下，函数找不到与模式匹配的事件链，因为数字 4 的事件发生在 1 和 5 之间。如果在相同的情况下，我们检查了数字 6 的条件，则序列将与模式匹配。
 
 ```sql
 SELECT SEQUENCE_COUNT('(?1)(?2)', date, number = 1, number = 5, number = 6) FROM sequence_count_test3;

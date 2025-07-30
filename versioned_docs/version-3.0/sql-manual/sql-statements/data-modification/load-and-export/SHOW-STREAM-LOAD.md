@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
 
 This statement is used to display the execution of the specified Stream Load task
@@ -45,7 +25,7 @@ SHOW STREAM LOAD
 
 illustrate:
 
-1. By default, BE does not record Stream Load records. If you want to view records that need to be enabled on BE, the configuration parameter is: `enable_stream_load_record=true`. For details, please refer to [BE Configuration Items](../../../admin-manual/config/be-config.md)
+1. By default, BE does not record Stream Load records. If you want to view records that need to be enabled on BE, the configuration parameter is: `enable_stream_load_record=true`. For details, please refer to [BE Configuration Items](../../../../admin-manual/config/be-config)
 2. If db_name is not specified, the current default db is used
 3. If LABEL LIKE is used, it will match the tasks whose label of the Stream Load task contains label_matcher
 4. If LABEL = is used, it will match the specified label exactly

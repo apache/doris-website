@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 [DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件
 `dbt-doris` adapter 是基于`dbt-core` 1.5.0 开发，依赖于`mysql-connector-python`驱动对 doris 进行数据转换。
 
@@ -311,7 +291,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 增量模型样例参考(duplicate 模式)
+### 增量模型样例参考 (duplicate 模式)
 
 建表为 duplicate 模式，无数据聚合，不需要指定 unique_key
 
@@ -330,7 +310,7 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型样例参考(unique 模式)
+### 增量模型样例参考 (unique 模式)
 
 建表为 unique 模式，数据聚合，必须指定 unique_key
 
@@ -466,7 +446,7 @@ select
 
 {% if is_incremental() %}
     where    
-    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}
@@ -494,7 +474,7 @@ select
 
 {% if is_incremental() %}
     where    
-    -- 如果提供了my_date变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令） 如果没有提供 my_date 变量(直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数,这个通路也是生产环境经常走的。 
+    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}

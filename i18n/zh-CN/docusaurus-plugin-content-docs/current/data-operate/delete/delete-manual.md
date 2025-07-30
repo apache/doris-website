@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 删除操作语句通过 MySQL 协议，按条件删除指定表或分区中的数据。支持通过简单的谓词组合条件来指定要删除的数据，也支持在主键表上使用 `USING` 子句关联多表进行删除。
 
 ## 通过指定过滤谓词删除
@@ -61,7 +41,7 @@ DELETE FROM table_name [table_alias]
     1. 条件中不包含分区列
     2. 分区列的 `op` 为 `not in`
 
-  - 当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
+  - 如果分区表不是 Unique 表，当分区表未指定分区，或无法从条件中推断分区时，需要设置会话变量 `delete_without_partition` 为 `true`，此时删除操作会应用到所有分区。
 
 ### 示例
 
@@ -209,4 +189,4 @@ mysql> show delete from test_db;
 
 ## 语法
 
-删除语法详见 [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) 语法手册。
+删除语法详见 [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) 语法手册。

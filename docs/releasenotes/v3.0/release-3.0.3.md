@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 Dear community members, the Apache Doris 3.0.3 version was officially released on December 02, 2024, this version further enhances the performance and stability of the system.
 
 **Quick Download:** https://doris.apache.org/download/
@@ -99,7 +79,7 @@ Dear community members, the Apache Doris 3.0.3 version was officially released o
 
 - Supported reading of Hive tables in OpenCSV format. [#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
 - Optimized the performance of accessing the `information_schema.columns` table in External Catalog. [#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)
-- Used the new Max Compute open storage API to access Max Compute data sources. [#41614](https://github.com/apache/doris/pull/41614)
+- Used the new MaxCompute open storage API to access MaxCompute data sources. [#41614](https://github.com/apache/doris/pull/41614)
 - Optimized the scheduling policy of the JNI part of Paimon tables, making scan tasks more balanced. [#43310](https://github.com/apache/doris/pull/43310)
 - Optimized the read performance of small ORC files. [#42004](https://github.com/apache/doris/pull/42004) [#43467](https://github.com/apache/doris/pull/43467)
 - Supported reading of parquet files in brotli compressed format. [#42177](https://github.com/apache/doris/pull/42177)

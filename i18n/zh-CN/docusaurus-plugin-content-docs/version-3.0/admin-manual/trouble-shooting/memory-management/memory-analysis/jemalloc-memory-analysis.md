@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris 默认使用 Jemalloc 作为通用内存分配器，Jemalloc 自身占用的内存包括 Cache 和 Metadata 两部分，其中 Cache 包括 Thread Cache 和 Dirty Page 两部分，在 http://{be_host}:{be_web_server_port}/memz 可以实时查看到内存分配器原始的profile。
+Doris 默认使用 Jemalloc 作为通用内存分配器，Jemalloc 自身占用的内存包括 Cache 和 Metadata 两部分，其中 Cache 包括 Thread Cache 和 Dirty Page 两部分，在 http://{be_host}:{be_web_server_port}/memz 可以实时查看到内存分配器原始的 profile。
 
 ## Jemalloc Cache 内存分析
 
@@ -44,7 +25,7 @@ BE 进程运行过程中，Jemalloc Cache 包括两部分。
 
 ### Jemalloc Cache 查看方法
 
-查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port默认8040）可以获得 Jemalloc Profile，根据几组关键信息解读 Jemalloc Cache 的使用。
+查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port 默认 8040）可以获得 Jemalloc Profile，根据几组关键信息解读 Jemalloc Cache 的使用。
 
 - Jemalloc Profile 中的 `tcache_bytes`是 Jemalloc Thread Cache 的总字节数。如果 `tcache_bytes` 值较大，说明 Jemalloc Thread Cache 使用的内存过大。
 
@@ -101,7 +82,7 @@ MemTrackerLimiter Label=tc/jemalloc_metadata, Type=overview, Limit=-1.00 B(-1 B)
 
 ### Jemalloc Metadata 查看方法
 
-查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port默认8040）可以获得 Jemalloc Profile，查找 Jemalloc Profile 中关于 Jemalloc 整体的内存统计如下，其中 `metadata` 就是 Jemalloc Metadata 的内存大小。
+查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port 默认 8040）可以获得 Jemalloc Profile，查找 Jemalloc Profile 中关于 Jemalloc 整体的内存统计如下，其中 `metadata` 就是 Jemalloc Metadata 的内存大小。
 
 `Allocated: 2401232080, active: 2526302208, metadata: 535979296 (n_thp 221), resident: 2995621888, mapped: 3221979136, retained: 131542581248`
 
@@ -111,7 +92,7 @@ MemTrackerLimiter Label=tc/jemalloc_metadata, Type=overview, Limit=-1.00 B(-1 B)
 
 - `metadata` Jemalloc 的元数据总字节数，和分配和缓存的 Page 个数、内存碎片 等因素都有关，参考文档 [Jemalloc stats.metadata](https://jemalloc.net/jemalloc.3.html#stats.metadata)
 
-- `retained` Jemalloc 保留的虚拟内存映射大小，也没有通过munmap或类似方法返回给操作系统，也没有强关联物理内存。参考文档 [Jemalloc stats.retained](https://jemalloc.net/jemalloc.3.html#stats.retained)
+- `retained` Jemalloc 保留的虚拟内存映射大小，也没有通过 munmap 或类似方法返回给操作系统，也没有强关联物理内存。参考文档 [Jemalloc stats.retained](https://jemalloc.net/jemalloc.3.html#stats.retained)
 
 ### Jemalloc Metadata 内存过大
 

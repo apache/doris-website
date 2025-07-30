@@ -9,14 +9,13 @@
 
 <version since="2.0.0">
 
-
 </version>
 
-### Description
+## Description
 
 Filters array elements based on conditions and returns a new array composed of elements that satisfy the conditions. The function supports two calling methods: a higher-order function form using lambda expressions, and a filtering form directly using boolean arrays.
 
-### Syntax
+## Syntax
 
 ```sql
 array_filter(lambda, array1, ...)

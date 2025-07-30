@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # TPC-DS Benchmark
 
 TPC-DS（Transaction Processing Performance Council Decision Support Benchmark）是一个以决策支持为重点的基准测试，旨在评估数据仓库和分析系统的性能。它是由 TPC（Transaction Processing Performance Council）组织开发的，用于比较不同系统在处理复杂查询和大规模数据分析方面的能力。
@@ -41,7 +22,7 @@ TPC-DS 的设计目标是模拟现实世界中的复杂决策支持工作负载�
 | 硬件   | 配置说明                                     |
 |------|------------------------------------------|
 | 机器数量 | 4 台阿里云主机（1 个 FE，3 个 BE）                  |
-| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32核 |
+| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32 核 |
 | 内存   | 128G                                     |
 | 磁盘   | 阿里云 ESSD (PL0)                           |
 
@@ -91,7 +72,7 @@ TPC-DS 99 个测试查询语句： [TPC-DS-Query-SQL](https://github.com/apache/
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行对比测试，测试结果如下：(由于缺少最新的内存优化，Apache Doris 2.0.15.1 q78 q79无法执行，在计算总和时被删除)
+这里我们使用 Apache Doris 2.1.7-rc03 和 Apache Doris 2.0.15.1 版本进行对比测试，测试结果如下：(由于缺少最新的内存优化，Apache Doris 2.0.15.1 q78 q79 无法执行，在计算总和时被删除)
 
 | Query     | Apache Doris 2.1.7-rc03  (ms) | Apache Doris 2.0.15.1-rc01  (ms) |
 |-----------|-------------------------------|----------------------------------|
@@ -198,7 +179,7 @@ TPC-DS 99 个测试查询语句： [TPC-DS-Query-SQL](https://github.com/apache/
 
 ## 6. 环境准备
 
-请先参照 [官方文档](../install/cluster-deployment/standard-deployment) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+请先参照 [官方文档](../../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
 ## 7. 数据准备
 

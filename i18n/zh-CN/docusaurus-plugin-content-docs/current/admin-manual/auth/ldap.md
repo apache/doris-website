@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # LDAP
 
 接入第三方 LDAP 服务为 Doris 提供验证登录和组授权服务。
@@ -70,7 +51,7 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 
 ### server 端配置
 
-在 `fe/conf/fe.conf` 文件中配置认证方式为ldap `authentication_type=ldap`。
+在 `fe/conf/fe.conf` 文件中配置认证方式为 ldap `authentication_type=ldap`。
 
 在 `fe/conf/ldap.conf` 文件中配置 LDAP 基本信息，
 
@@ -88,11 +69,11 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 
 - `ldap_admin_name = cn=admin,dc=domain,dc=com`
 
-  LDAP 管理员账户“Distinguished Name”。当用户使用 LDAP 验证登录 Doris 时，Doris 会绑定该管理员账户在 LDAP 中搜索用户信息。
+  LDAP 管理员账户“Distinguished Name”。当用户使用 LDAP 身份验证 Doris 时，Doris 会绑定该管理员账户在 LDAP 中搜索用户信息。
 
 - `ldap_user_basedn = ou=people,dc=domain,dc=com`
 
-  Doris 在 LDAP 中搜索用户信息时的 base dn，例如只允许上例中的 user2 登陆 doris，此处配置为 ou=ou2,dc=example,dc=com 如果允许上例中的 user1,user2,user3 都能登陆 doris，此处配置为 dc=example,dc=com
+  Doris 在 LDAP 中搜索用户信息时的 base dn，例如只允许上例中的 user2 登陆 Doris，此处配置为 ou=ou2,dc=example,dc=com 如果允许上例中的 user1,user2,user3 都能登陆 Doris，此处配置为 dc=example,dc=com
 
 - `ldap_user_filter = (&(uid={login}))`
 
@@ -181,7 +162,7 @@ LDAP 密码验证和组授权是 Doris 密码验证和授权的补充，开启 L
 | 不存在   | 存在      | Doris 密码 | 登录成功 | Doris 用户       |
 | 存在     | 不存在    | LDAP 密码  | 登录成功 | Ldap 临时用户    |
 
-开启 LDAP 后，用户使用 mysql client 登录时，Doris 会先通过 LDAP 服务验证用户密码，如果 LDAP 存在用户且密码正确，Doris 则使用该用户登录；此时 Doris 若存在对应账户则直接登录该账户，如果不存在对应账户则为用户创建临时账户并登录该账户。临时账户具有具有相应对权限（参见 LDAP 组授权），仅对当前连接有效，doris 不会创建该用户，也不会产生创建用户对元数据。
+开启 LDAP 后，用户使用 mysql client 登录时，Doris 会先通过 LDAP 服务验证用户密码，如果 LDAP 存在用户且密码正确，Doris 则使用该用户登录；此时 Doris 若存在对应账户则直接登录该账户，如果不存在对应账户则为用户创建临时账户并登录该账户。临时账户具有具有相应对权限（参见 LDAP 组授权），仅对当前连接有效，Doris 不会创建该用户，也不会产生创建用户对元数据。
 如果 LDAP 服务中不存在登录用户，则使用 Doris 进行密码认证。
 
 以下假设已开启 LDAP 认证，配置 ldap_user_filter = (&(uid={login}))，且其他配置项都正确，客户端设置环境变量 LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1
@@ -228,7 +209,7 @@ LDAP 密码验证和组授权是 Doris 密码验证和授权的补充，开启 L
 
 ### LDAP 组授权详解
 
-DLAP 用户 dn 是 LDAP 组节点的“member”属性则 Doris 认为用户属于该组。LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 role，并将所有对应的 role 权限授予登录用户，用户退出登录后 Doris 会撤销对应的 role 权限。在使用 LDAP 组授权前应该在 Doris 中创建相应对 role，并为 role 授权。
+LDAP 用户 dn 是 LDAP 组节点的“member”属性则 Doris 认为用户属于该组。LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 role，并将所有对应的 role 权限授予登录用户，用户退出登录后 Doris 会撤销对应的 role 权限。在使用 LDAP 组授权前应该在 Doris 中创建相应的 role，并为 role 授权。
 
 登录用户权限跟 Doris 用户和组权限有关，见下表：
 
@@ -271,13 +252,13 @@ member: uid=jack,ou=aidp,dc=domain,dc=com
 
 ## 常见问题
 
-- 怎么判断 LDAP 用户在 doris 中有哪些角色？
+- 怎么判断 LDAP 用户在 Doris 中有哪些角色？
   
-  使用 LDAP 用户在 doris 中登陆，`show grants;`能查看当前用户有哪些角色。其中 ldapDefaultRole 是每个 ldap 用户在 doris 中都有的默认角色。
+  使用 LDAP 用户在 doris 中登录，`show grants;`能查看当前用户有哪些角色。其中 ldapDefaultRole 是每个 ldap 用户在 doris 中都有的默认角色。
 
-- LDAP 用户在 doris 中的角色比预期少怎么排查？
+- LDAP 用户在 Doris 中的角色比预期少怎么排查？
 
-  1. 通过`show roles;`查看预期的角色在 doris 中是否存在，如果不存在，需要通过` CREATE ROLE rol_name;`创建角色。
+  1. 通过`show roles;`查看预期的角色在 doris 中是否存在，如果不存在，需要通过` CREATE ROLE role_name;`创建角色。
   2. 检查预期的 group 是否在`ldap_group_basedn`对应的组织结构下。
   3. 检查预期 group 是否包含 member 属性。
   4. 检查预期 group 的 member 属性是否包含当前用户。

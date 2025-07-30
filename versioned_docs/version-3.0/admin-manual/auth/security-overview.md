@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 Doris provides the following mechanisms to manage data security:
 
 **Authentication:** Doris supports both username/password and LDAP authentication methods.
@@ -47,4 +26,8 @@ Doris provides the following mechanisms to manage data security:
 **Data Transmission Encryption:** Doris supports SSL encryption protocols to ensure secure data transmission between clients and Doris servers, preventing data from being intercepted or tampered with during transfer.
 
 **Fine-Grained Access Control:** Doris allows configuring data row and column access permissions based on rules to control user access at a granular level.
+
+**JAVA-UDF Security:** Doris supports user-defined function functionality, so root administrators need to review the implementation of user UDFs to ensure the operations in the logic are safe and prevent high-risk actions in UDFs, such as data deletion and system disruption.
+
+**Third-Party Packages:** When using Doris features like JDBC Catalog or UDFs, administrators must ensure that any third-party packages are from trusted and secure sources. To reduce security risks, it is recommended to use dependencies only from official or reputable community sources.
 

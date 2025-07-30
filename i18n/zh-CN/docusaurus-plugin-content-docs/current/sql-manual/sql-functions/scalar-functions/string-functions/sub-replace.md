@@ -5,27 +5,9 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
 
-`sub_replace` 函数用于替换字符串中的子字符串。可以指定要替换的子字符串和替换的目标字符串，返回用`new_str` 字符串替换 `str` 中从 `start` 开始长度为len的新字符串。其中 `start`, `len` 为负整数，返回 NULL, 且 `len` 的默认值为 `new_str` 的长度。
+`sub_replace` 函数用于替换字符串中的子字符串。可以指定要替换的子字符串和替换的目标字符串，返回用`new_str` 字符串替换 `str` 中从 `start` 开始长度为 len 的新字符串。其中 `start`, `len` 为负整数，返回 NULL, 且 `len` 的默认值为 `new_str` 的长度。
 
 ## 语法
 

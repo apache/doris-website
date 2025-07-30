@@ -5,24 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 ## 描述
 
 ALTER USER 语句用于修改一个用户的账户属性，包括密码、和密码策略等
@@ -99,7 +81,7 @@ password_policy:
 
 ## 注意事项
 
-1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT.md)和[REVOKE](./REVOKE.md)。
+1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT-TO.md)和[REVOKE](./REVOKE-FROM.md)。
 
 2. 在一个 ALTER USER 命令中，只能同时对以下账户属性中的一项进行修改：
 - 修改密码

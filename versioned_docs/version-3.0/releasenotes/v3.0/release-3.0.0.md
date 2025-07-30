@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 We are excited to announce the release of Apache Doris 3.0! 
 
 **Starting from version 3.0, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. Additionally, users can take advantage of low-cost shared storage systems such as object storage or HDFS to significantly reduce storage costs.**
@@ -215,15 +195,15 @@ See doc:
 
 - Trino Connector: https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/
 
-- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpch/
+- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpch/
 
-- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpcds/
+- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpcds/
 
-- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/deltalake/
+- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/catalogs/delta-lake-catalog/
 
-- Kudu: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/kudu/
+- Kudu: https://doris.apache.org/docs/3.0/lakehouse/catalogs/kudu-catalog/
 
-- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/bigquery/
+- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/catalogs/bigquery-catalog/
 :::
 
 
@@ -234,7 +214,7 @@ In V3.0, we have introduced data writeback functionality for Hive and Iceberg. T
 In future iterations, Apache Doris will further enhance support for data lake table formats and improve the openness of storage APIs.
 
 :::info Note
-See doc: https://doris.apache.org/docs/3.0/lakehouse/datalake-building/hive-build/
+See doc: https://doris.apache.org/docs/3.0/lakehouse/catalogs/hive-catalog/
 :::
 
 ## 3. Upgraded semi-structured data analysis capabilities
@@ -282,7 +262,7 @@ Data processing in data warehouses often involves multiple data changes that nee
   
   ```Java
   BEGIN WITH LABEL label_etl_1;
-  INTO table1 SELECT * FROM stage_table1;
+  INSERT INTO table1 SELECT * FROM stage_table1;
   INSERT INTO table SELECT * FROM stage_table;
   COMMIT;
   ```

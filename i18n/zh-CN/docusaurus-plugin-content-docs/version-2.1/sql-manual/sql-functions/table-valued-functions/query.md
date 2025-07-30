@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
 
 query 表函数（table-valued-function,tvf），可用于将查询语句直接透传到某个 catalog 进行数据查询
@@ -42,11 +22,11 @@ QUERY(
 ```
 
 ## 必填参数
-query表函数 tvf中的每一个参数都是一个 `"key"="value"` 对
+query 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
 
 | 字段           | 描述                         |
 |--------------|----------------------------|
-| `catalog`    | catalog名称，需要按照catalog的名称填写 |
+| `catalog`    | catalog 名称，需要按照 catalog 的名称填写 |
 | `query`      | 需要执行的查询语句                  |
 
 

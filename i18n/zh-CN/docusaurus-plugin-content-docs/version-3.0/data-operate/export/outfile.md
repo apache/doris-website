@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 本文档将介绍如何使用 `SELECT INTO OUTFILE` 命令进行查询结果的导出操作。
 
 `SELECT INTO OUTFILE` 命令将 `SELECT` 部分的结果数据，以指定的文件格式导出到目标存储系统中，包括对象存储或 HDFS。
@@ -115,6 +96,16 @@ PROPERTIES(
 * csv
 * csv\_with\_names
 * csv\_with\_names\_and\_types
+
+### 导出并发度
+
+可以通过会话参数 `enable_parallel_outfile` 开启并发导出。
+
+`SET enable_parallel_outfile=true;`
+
+并发导出会利用多节点、多线程导出结果数据，以提升整体的导出效率。但并发导出可能会产生更多的文件。
+
+注意，某些查询即使打开此参数，也无法执行并发导出，如包含全局排序的查询。如果导出命令返回的行数大于 1 行，则表示开启了并发导出。
 
 ## 导出示例
 

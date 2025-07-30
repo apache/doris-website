@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 当 point 是一个合法的 POINT 类型时，返回对应的 X 坐标值
@@ -33,17 +14,24 @@ under the License.
 ```sql
 ST_X( <point>)
 ```
+
 ## 参数
 
-| 参数        | 说明       |
-|-----------|----------|
-| `<point>` | 二维点的几何坐标 |
+| 参数   | 说明       |
+|------|----------|
+| `<point>` | 待提取 X 坐标的几何对象，必须是有效的 POINT 类型（二维点），x纬度范围为[-180,180],y纬度范围为[-90,90] |
 
 ## 返回值
 
-几何坐标中的 X 值
+几何坐标中的 X 值,类型为双浮点精度小数Double
+
+- 若输入为有效的 POINT 对象，返回该点的 X 坐标（双精度浮点数 Double）。
+- 若输入为 NULL、非 POINT 类型对象、空点（POINT EMPTY）或无效点（如三维点），返回 NULL。
 
 ## 举例
+
+
+提取有效点的 X 坐标
 
 ```sql
 SELECT ST_X(ST_Point(24.7, 56.7));
@@ -56,3 +44,60 @@ SELECT ST_X(ST_Point(24.7, 56.7));
 |                       24.7 |
 +----------------------------+
 ```
+
+输入为空点（POINT EMPTY）
+
+```sql
+mysql> SELECT ST_X(ST_GeometryFromText("POINT EMPTY"));
++------------------------------------------+
+| ST_X(ST_GeometryFromText("POINT EMPTY")) |
++------------------------------------------+
+|                                     NULL |
++------------------------------------------+
+```
+
+输入为三维点（不支持）
+
+```sql
+
+mysql> SELECT ST_X(ST_GeometryFromText("POINT (10 20 30)"));
++-----------------------------------------------+
+| ST_X(ST_GeometryFromText("POINT (10 20 30)")) |
++-----------------------------------------------+
+|                                          NULL |
++-----------------------------------------------+
+```
+
+输入为 NULL
+
+```sql
+mysql> SELECT ST_X(NULL);
++------------+
+| ST_X(NULL) |
++------------+
+|       NULL |
++------------+
+```
+
+纬度超出范围
+
+```sql
+mysql> SELECT ST_X(ST_Point(244.7, 56.7));
++-----------------------------+
+| ST_X(ST_Point(244.7, 56.7)) |
++-----------------------------+
+|                        NULL |
++-----------------------------+
+```
+
+经度超出范围
+
+```sql
+mysql> SELECT ST_X(ST_Point(44.7, 156.7));
++-----------------------------+
+| ST_X(ST_Point(44.7, 156.7)) |
++-----------------------------+
+|                        NULL |
++-----------------------------+
+```
+

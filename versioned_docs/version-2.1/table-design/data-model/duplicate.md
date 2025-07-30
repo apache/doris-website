@@ -1,40 +1,21 @@
 ---
 {
-    "title": "Detail Model",
-    "language": "zh-CN"
+    "title": "Duplicate Key Model",
+    "language": "en"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+The **Duplicate Key Model** in Doris is the default table model, designed to store individual raw data records. The `Duplicate Key` specified during table creation determines the columns for sorting and storage, optimizing common queries. It is recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Duplicate Key Model has the following characteristics:
 
-  http://www.apache.org/licenses/LICENSE-2.0
+* **Preserving Raw Data**: The Duplicate Key Model retains all original data, making it ideal for storing and querying raw data. It is recommended for use cases requiring detailed data analysis to avoid data loss.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key models, the Duplicate Key Model does not perform deduplication or aggregation, fully retaining identical records.
 
-In Doris, the **Detail Model** is the default table model, and it can be used to store every individual raw data record. The `Duplicate Key` specified during table creation determines the columns by which the data is sorted and stored, which can be used to optimize common queries. It is generally recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Detail Model has the following characteristics:
-
-* **Preserving Raw Data**: The Detail Model retains all original data, making it suitable for storing and querying raw data. For use cases that require detailed data analysis later on, it is recommended to use the Detail Model to avoid the risk of data loss.
-
-* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key models, the Detail Model does not perform deduplication or aggregation. Every data insertion, even if two records are identical, will be fully retained.
-
-* **Flexible Data Querying**: The Detail Model retains the complete original data, which allows detailed extraction from the full data set. This enables aggregation operations across any dimension on the full dataset, allowing for metadata auditing and fine-grained analysis.
+* **Flexible Data Querying**: The Duplicate Key Model retains all original data, enabling detailed extraction and aggregation across any dimension for metadata auditing and fine-grained analysis.
 
 ## Use Cases
 
-In the Detail Model, data is generally only appended, and old data is not updated. The Detail Model is typically used in scenarios where full raw data is required:
+In the Duplicate Key Model, data is generally only appended, and old data is not updated. The Duplicate Key Model is ideal for scenarios that require full raw data:
 
 * **Log Storage**: Used for storing various types of application logs, such as access logs, error logs, etc. Each piece of data needs to be detailed for future auditing and analysis.
 
@@ -45,10 +26,7 @@ In the Detail Model, data is generally only appended, and old data is not update
 
 ## Table Creation Instructions
 
-When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Detail Model. The Detail table must specify the Key columns, which are used to sort the data during storage. In the following example, the Detail table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
-
-
-![columnar_storage](/images/table-desigin/columnar-storage.png)
+When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Duplicate Key Model. The Duplicate Key table must specify the Key columns, which are used to sort the data during storage. In the following example, the Duplicate Key table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
@@ -66,11 +44,11 @@ DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 
 ## Data Insertion and Storage
 
-In a Detail table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Detail Model are used for sorting.
+In a Duplicate Key table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Duplicate Key Model are used for sorting.
 
 ![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
 
-In the example above, there are initially 4 rows of data in the table. After inserting 2 rows, the data is appended (APPEND) to the table, resulting in a total of 6 rows stored in the Detail table.
+In the example above, after inserting 2 rows into the initial 4 rows, the data is appended, resulting in a total of 6 rows.
 
 ```sql
 -- 4 rows raw data

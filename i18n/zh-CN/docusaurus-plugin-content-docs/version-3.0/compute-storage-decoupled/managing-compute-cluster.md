@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括：
 
 - 查看所有计算组
@@ -74,8 +54,8 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
-要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) 命令。例如：
+操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/account-management/GRANT-TO)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
+要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 命令。例如：
 
 
 ```sql
@@ -90,7 +70,7 @@ ALTER SYSTEM ADD BACKEND 'host:9050';
 
 ## 授予计算组访问权限
 
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 
 ```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
@@ -98,7 +78,7 @@ GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
 
 ## 撤销计算组访问权限
 
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 ```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user};
 ```
@@ -123,7 +103,7 @@ SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 SHOW PROPERTY;
 ```
 
-查看其他用户默认计算组，此操作需要当前用户具备admin权限，返回结果中`default_compute_group` 的值即为默认计算组：
+查看其他用户默认计算组，此操作需要当前用户具备 admin 权限，返回结果中`default_compute_group` 的值即为默认计算组：
 
 ```sql
 SHOW PROPERTY FOR {user};
@@ -174,4 +154,4 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。
 
 
-详细操作参考[存算分离相关操作](../../compute-storage-decoupled/overview.md)
+详细操作参考[存算分离相关操作](../compute-storage-decoupled/overview)

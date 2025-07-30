@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 HDFS table-valued-function(tvf), allows users to read and access file contents on S3-compatible object storage, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
@@ -67,16 +48,16 @@ HDFS(
 | `column_separator`                          | Column separator, default is `\t`                                                                                                            |                                                                                     |
 | `line_delimiter`                            | Line separator, default is `\n`                                                                                                              |                                                                                     |
 | `compress_type`                             | Supported types: `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default is `UNKNOWN`, and the type will be automatically inferred based on the URI suffix. |                                                                                     |
-| `read_json_by_line`                         | For JSON format imports, default is `true`                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `strip_outer_array`                         | For JSON format imports, default is `false`                                                                                                  | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_root`                                 | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_paths`                                | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `num_as_string`                             | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `fuzzy_parse`                               | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `read_json_by_line`                         | For JSON format imports, default is `true`                                                                                                   | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array`                         | For JSON format imports, default is `false`                                                                                                  | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
+| `json_root`                                 | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
+| `json_paths`                                | For JSON format imports, default is empty                                                                                                   | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
+| `num_as_string`                             | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse`                               | For JSON format imports, default is `false`                                                                                                 | Reference: [JSON Load](../../../data-operate/import/file-format/json) |
 | `trim_double_quotes`                        | For CSV format imports, boolean type. Default is `false`. If `true`, removes the outermost double quotes from each field.                  |                                                                                     |
 | `skip_lines`                                | For CSV format imports, integer type. Default is 0. Skips the first few lines of the CSV file. This parameter is ignored if `csv_with_names` or `csv_with_names_and_types` is set. |                                                                                     |
 | `path_partition_keys`                       | Specify the partition column names carried in the file path, for example `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`, which will automatically read the corresponding column names and values from the path for import. |                                                                                     |
-| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
+| `resource`                                  | Specify the resource name. HDFS TVF can directly access HDFS using an existing HDFS resource. Refer to [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) for creating HDFS resources. | Supported from version 2.1.4 and above.                                            |
 
 ## Access Control Requirements
 

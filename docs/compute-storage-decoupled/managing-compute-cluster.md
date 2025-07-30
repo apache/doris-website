@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a Compute Group. This document describes how to use compute groups, including operations such as:
 
 - Viewing all compute groups
@@ -161,3 +142,10 @@ If the database or compute group name contains reserved keywords, the correspond
 ## Scaling Compute Groups
 
 You can scale compute groups by adding or removing BE using `ALTER SYSTEM ADD BACKEND` and `ALTER SYSTEM DECOMMISION BACKEND`.
+
+## Renaming Compute Group
+
+You can use the `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` command to rename an existing compute group. Please refer to the SQL Manual on [Renaming Compute Groups](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP).
+
+Note
+After renaming a compute group, users who had permissions for the old name (old_name) or had set the old name as the default compute group (default_compute_group) will not have their permissions automatically updated to the new name (new_name). Permissions need to be reset by an account with administrative privileges. This is consistent with the permission system of MySQL databases.

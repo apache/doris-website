@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 介绍
 
 Doris 提供了备份和恢复操作支持。这些功能使用户能够将数据从库、表或者分区备份到远程存储系统，并在需要时进行恢复。
@@ -72,10 +53,10 @@ Doris 提供了备份和恢复操作支持。这些功能使用户能够将数�
    不支持备份或恢复 **异步物化视图 (MTMV)**。在备份和恢复操作中，这些视图不被考虑。
 
 3. **不支持具有存储策略的表**：
-   使用了 [**存储策略**](../../../table-desgin/tiered-storage/remote-storage.md) 的表 **不支持** 备份和恢复操作。
+   使用了 [**存储策略**](../../../table-design/tiered-storage/remote-storage) 的表 **不支持** 备份和恢复操作。
 
 4. **增量备份**：
-   目前，Doris 仅支持全量备份。增量备份（仅存储自上次备份以来更改的数据）尚不支持，您可以可以备份特定分区来实现增量备份。
+   目前，Doris 仅支持全量备份。增量备份（仅存储自上次备份以来更改的数据）尚不支持，您可以备份特定分区来实现增量备份。
 
 5. **colocate_with 属性**：
    在备份或恢复操作期间，Doris 不会保留表的 `colocate_with` 属性。这可能需要在恢复后重新配置共置表。

@@ -6,25 +6,6 @@
   
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Overview
 
 CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the target cluster at the database or table level. It is mainly used to enhance the data availability of online services, isolate read and write loads, and build a dual-site, three-center architecture. CCR currently does not support the separation of computing and storage modes.
@@ -94,3 +75,16 @@ CCR supports four synchronization methods:
 | **Partial Sync**       | The upstream performs table or partition-level backups, and the downstream performs table or partition-level restores. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **TXN**                | Incremental data synchronization, starting synchronization after the upstream commits. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **SQL**                | Replaying upstream SQL operations on the downstream.   | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
+
+## Download
+
+requirement: glibc >= 2.28
+
+| Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
+|---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-arm64.tar.xz) | 8ee7bd72baae87f2f226a5effbe4b10a8fac4b1fa25c9cc027e183e5f4c04bcc |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-x64.tar.xz)     | 3c36dd4a807931b00b191c3d9f3541f2e5732acb6d1d9fc83b8cb3fb334046a2 |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-arm64.tar.xz) | 7225cf8bc2acc37c09712a3655b0ff1939d574f42ed7bba29344a50742d7dcff |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-x64.tar.xz)   | 9fdafb90fdb337e3842dc690be40c77d64c1c1ea3b7b688b74bb9aeaf955681c |
+
+

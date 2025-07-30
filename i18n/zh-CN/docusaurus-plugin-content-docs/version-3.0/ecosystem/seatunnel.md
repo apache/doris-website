@@ -7,27 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 SeaTunnel 是一个非常简单易用的超高性能分布式数据集成平台，支持海量数据的实时同步。每天稳定高效地同步数百亿数据
 
 ## Connector-V2
@@ -73,7 +52,7 @@ Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一
 
 `sink.enable-2pc [bool]`
 
-是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../data-operate/import/stream-load-manual.md)
+是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../data-operate/import/import-way/stream-load-manual)
 
 `sink.enable-delete [bool]`
 
@@ -85,7 +64,7 @@ Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一
 
 Stream Load `data_desc` 的参数，你可以在这个链接获得更多细节：
 
-[更多 Stream Load 参数](../data-operate/import/stream-load-manual.md)
+[更多 Stream Load 参数](../data-operate/import/import-way/stream-load-manual)
 
 ### 使用示例
 
@@ -189,7 +168,7 @@ flush 间隔时间 (毫秒)，超过该时间后异步线程将 缓存中数据�
 
 Stream load 的导入参数。例如:'doris.column_separator' = ', '等
 
-[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual.md)
+[更多 Stream Load 参数配置](../data-operate/import/import-way/stream-load-manual)
 
 **Examples**
 
@@ -274,7 +253,7 @@ Spark 通过 Stream Load 方式写入，每个批次提交条数
 
 Stream Load 方式写入的 Http 参数优化，在官网参数前加上'Doris.'前缀
 
-[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual.md)
+[更多 Stream Load 参数配置](../data-operate/import/import-way/stream-load-manual)
 
 **Examples**
 

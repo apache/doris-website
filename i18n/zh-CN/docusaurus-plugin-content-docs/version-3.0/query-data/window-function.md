@@ -1,28 +1,9 @@
 ---
 {
-    "title": "分析函数 (窗口函数）",
+    "title": "分析函数（窗口函数）",
     "language": "zh-CN"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
 
@@ -378,7 +359,7 @@ GROUP BY
 
 ## 报告函数
 
-报告函数是指每一行的窗口范围都是整个 Partition。报告函数的主要优点是能够在单个查询块中多次传递数据，从而提高查询性能。例如，“对于每一年，找出其销售额最高的商品类别”之类的查询，使用报告函数则不需要进行 JOIN 操作。示例如下：
+报告函数是指每一行的窗口范围都是整个 partition。报告函数的主要优点是能够在单个查询块中多次传递数据，从而提高查询性能。例如，“对于每一年，找出其销售额最高的商品类别”之类的查询，使用报告函数则不需要进行 JOIN 操作。示例如下：
 
 ```sql
 select year,category,total_sum from (
@@ -427,7 +408,7 @@ where total_sum=max_sales;
 2 rows in set (0.12 sec)
 ```
 
-你可以将报告聚合与嵌套查询结合使用，以解决一些复杂的问题，比如查找重要商品子类别中销量最好的产品。以“查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出其中销量最高的五种商品。为例，查询语句如下：
+你可以将报告聚合与嵌套查询结合使用，以解决一些复杂的问题，比如查找重要商品子类别中销量最好的产品。以“查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出其中销量最高的五种商品”为例，查询语句如下：
 
 ```sql
 select i_category as categ, i_class as sub_categ, i_item_id 
@@ -449,7 +430,7 @@ where sub_cat_sales>0.2*cat_sales and rank_in_line<=5;
 
 ## LAG / LEAD 函数
 
-LAG 和 LEAD 函数适用于值之间的比较。两个函数无需进行自连接，皆可以同时访问表中的多个行，从而可以提高查询处理的速度。具体来说，LAG 函数能够提供对当**前行之前**给定偏移处的行的访问，而 LEAD 函数则提供对当**前行之后**给定偏移处的行的访问。
+LAG 和 LEAD 函数适用于值之间的比较。两个函数无需进行自连接，均可以同时访问表中的多个行，从而可以提高查询处理的速度。具体来说，LAG 函数能够提供对当**前行之前**给定偏移处的行的访问，而 LEAD 函数则提供对当**前行之后**给定偏移处的行的访问。
 
 以下是一个使用 LAG 函数的 SQL 查询示例，该查询希望选取特定年份（1999, 2000, 2001, 2002）中，每个商品类别的总销售额、前一年的总销售额以及两者之间的差异：
 
@@ -700,7 +681,7 @@ PROPERTIES (
 );
 ```
 
-在终端执行如下命令，下载数据到本地，并使用Stream Load的方式加载数据：
+在终端执行如下命令，下载数据到本地，并使用 Stream Load 的方式加载数据：
 
 ```shell
 curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -

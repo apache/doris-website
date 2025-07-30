@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Hive HLL UDF
 
  The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.:[Approximate Deduplication Using HLL](https://doris.apache.org/docs/query-acceleration/distinct-counts/using-hll/)
@@ -181,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- then reuse the previous steps to insert data from a normal table into it using the to_hll function
 ```
 
-2. [Create a Doris catalog](../lakehouse/datalake-analytics/hive.md)
+2. [Create a Doris catalog](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (

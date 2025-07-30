@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 **Apache Doris version 2.1.4 was officially released on June 26, 2024.** In this update, we have optimized various functional experiences for data lakehouse scenarios, with a focus on resolving the abnormal memory usage issue in the previous version. Additionally, we have implemented several improvemnents and bug fixes to enhance the stability.  Welcome to download and use it.
 
 
@@ -48,9 +29,9 @@ under the License.
 
 	For more infomation, please see the documentations:
 	
-	- [Log Management - FE Log](../admin-manual/log-management/fe-log.md)
+	- [Log Management - FE Log](../../admin-manual/log-management/fe-log)
 
-	- [Log Management - BE Log](../admin-manual/log-management/be-log.md)
+	- [Log Management - BE Log](../../admin-manual/log-management/be-log)
 
 - If no table comment is provided when creating a table, the default comment will be empty instead of using the table type as the default comment. [#36025](https://github.com/apache/doris/pull/36025)
 
@@ -94,7 +75,7 @@ under the License.
 
 - Support `show storage policy using` statement.
 
-	For more information, see [documentation](../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md).
+	For more information, see [documentation](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING).
 
 - Support JVM metrics on the BE side.
 

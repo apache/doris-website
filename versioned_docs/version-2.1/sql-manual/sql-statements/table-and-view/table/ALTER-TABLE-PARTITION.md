@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
 
 This statement is used to modify a table with a partition.
@@ -57,7 +37,7 @@ Notice:
 - The partition is left closed and right open. If the user only specifies the right boundary, the system will automatically determine the left boundary
 - If the bucketing method is not specified, the bucketing method and bucket number used for creating the table would be automatically used
 - If the bucketing method is specified, only the number of buckets can be modified, not the bucketing method or the bucketing column. If the bucketing method is specified but the number of buckets not be specified, the default value `10` will be used for bucket number instead of the number specified when the table is created. If the number of buckets modified, the bucketing method needs to be specified simultaneously.
-- The ["key"="value"] section can set some attributes of the partition, see [CREATE TABLE](../Create/CREATE-TABLE.md)
+- The ["key"="value"] section can set some attributes of the partition, see [CREATE TABLE](./CREATE-TABLE)
 - If the user does not explicitly create a partition when creating a table, adding a partition by ALTER is not supported
 - If the user uses list partition then they can add default partition to the table. The default partition will store all data not satisfying prior partition key's constraints.
   -  ALTER TABLE table_name ADD PARTITION partition_name

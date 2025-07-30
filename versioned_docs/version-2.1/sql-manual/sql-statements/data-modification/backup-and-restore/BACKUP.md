@@ -6,26 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Description
 
 This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the [SHOW BACKUP](./SHOW-BACKUP.md) command.
@@ -87,7 +67,7 @@ The user executing this SQL command must have at least the following privileges:
 
 - Only backing up tables of type OLAP is supported.
 - Only one backup operation can be performed under the same database.
-- The backup operation will back up the underlying table and [Synchronous materialized view](../../../../query/view-materialized-view/materialized-view.md) of the specified table or partition, and only one replica will be backed up. [Asynchronous materialized view](../../../../query/view-materialized-view/async-materialized-view.md) is not supported.
+- The backup operation will back up the underlying table and [Synchronous materialized view](../../../../query-acceleration/materialized-view/sync-materialized-view.md) of the specified table or partition, and only one replica will be backed up. [Asynchronous materialized view](../../../../query-acceleration/materialized-view/async-materialized-view/overview.md) is not supported.
 - Efficiency of backup operations:The efficiency of backup operations depends on the amount of data, the number of Compute Nodes, and the number of files. Each Compute Node where the backup data shard is located will participate in the upload phase of the backup operation. The greater the number of nodes, the higher the upload efficiency. The amount of file data refers only to the number of shards, and the number of files in each shard. If there are many shards, or there are many small files in the shards, the backup operation time may be increased.
 
 ## Example

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Resource Group 是存算一体架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示：
 
 ![Resource Group](/images/resource_group.png)
@@ -33,14 +14,14 @@ Resource Group 是存算一体架构下，实现不同的负载之间物理隔�
 - 在查询时，根据不同的用户，使用不同的 Resource Group，比如 online 用户，只能访问 host1,host2,host3 上的数据，所以他可以访问 table1 和 table2；但是 offline 用户只能访问 host4，host5，所以只能访问 table2 的数据，由于 table1 在 group b 上没有对应的副本，所以访问会出错。
 
 Resource Group 本质上是一种 Table 副本的放置策略，所以它有以下优势和限制：
-- 不同的 Resource Group 使用的是不同的 BE，所以它们之间完全无干扰，即使一个 group 内的某个 BE 宕机了，也不会影响其他 Group 的查询；由于导入需要多副本成功，所以如果剩下的副本数量不满足 Quoram，那么导入还是会失败；
+- 不同的 Resource Group 使用的是不同的 BE，所以它们之间完全无干扰，即使一个 group 内的某个 BE 宕机了，也不会影响其他 Group 的查询；由于导入需要多副本成功，所以如果剩下的副本数量不满足 Quorum，那么导入还是会失败；
 - 每个 Resource Group 至少要有一个 Table 的一个副本，比如如果要建立 5 个 Resource Group，并且每个 Resource Group 都可能访问所有的 Table，那么就需要 Table 有 5 个副本，会带来比较大的存储开销。
 
 ## 典型使用场景
 
 - 读写隔离，可以将一个集群划分为两个 Resource Group，Offline Resource Group 用来执行 ETL 作业，Online Resource Group 负责在线查询；数据以 3 副本的方式存储，其中 2 个副本存放在 Online 资源组，1 个副本存放在 Offline 资源组。Online 资源组主要用于高并发低延迟的在线数据服务，而一些大查询或离线 ETL 操作，则可以使用 Offline 资源组中的节点执行。从而实现在统一集群内同时提供在线和离线服务的能力。
 - 不同业务之间隔离，此时多个业务之间数据没有共享，可以为每个业务划分一个 Resource Group，多个业务之间没有任何干扰，这实际上是把多个物理集群合并到统一的一个大集群管理；
-- 不同用户之间隔离，比如集群内有一张业务表需要共享给所有 3 个用户使用，但是希望能够尽量避免不同用户之间的资源抢占。则我们可以为这张表创建 3 个副本，分别存储在 3 个资源组中，为个用户绑定一个资源组。
+- 不同用户之间隔离，比如集群内有一张业务表需要共享给所有 3 个用户使用，但是希望能够尽量避免不同用户之间的资源抢占。则我们可以为这张表创建 3 个副本，分别存储在 3 个资源组中，为每个用户绑定一个资源组。
 
 ## 配置 Resource Group
 

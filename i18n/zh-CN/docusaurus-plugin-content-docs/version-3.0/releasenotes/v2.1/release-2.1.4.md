@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 **Apache Doris 2.1.4 版本已于 2024 年 6 月 26 日正式发布。** 在 2.1.4 版本中，我们对数据湖分析场景进行了多项功能体验优化，重点修复了旧版本中异常内存占用的问题，同时提交了若干改进项以及问题修复，进一步提升了系统的性能、稳定性及易用性，欢迎大家下载使用。
 
 **官网下载：** https://doris.apache.org/download/
@@ -66,11 +47,11 @@ under the License.
 
 - **支持 Paimon 的原生读取器来处理 Deletion Vector：** Deletion Vector 主要用于标记或追踪哪些数据已被删除或标记为删除，通常应用在需要保留历史数据的场景，基于本优化可以提升大量数据更新或删除时的处理效率。 [#35241](https://github.com/apache/doris/pull/35241)
   
-  关于更多信息，请参考文档：[数据湖分析 - Paimon](../../lakehouse/datalake-analytics/paimon.md)
+  关于更多信息，请参考文档：[数据湖分析 - Paimon](../../lakehouse/catalogs/paimon-catalog.md)
   
 -  **支持在表值函数（TVF）中使用 Resource**：TVF 功能为 Apache Doris 提供了直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析的能力。通过在 TVF 中引用 Resource，可以避免重复填写连接信息，提升使用体验。  [#35139](https://github.com/apache/doris/pull/35139)
 
-	关于更多信息，请参考文档：[表函数 - HDFS](../../sql-manual/sql-functions/table-functions/hdfs.md)
+	关于更多信息，请参考文档：[表函数 - HDFS](../../lakehouse/file-analysis.md)
 
 - **支持通过 Ranger 插件实现数据脱敏**：开启 Ranger 鉴权功能后，支持使用 Ranger 中的 Data Mask 功能进行数据脱敏。
 
@@ -86,7 +67,7 @@ under the License.
 
 - 透明改写支持 agg_state, agg_union 类型的聚合上卷，物化视图可以定义为 agg_state 或者 agg_union，查询使用具体的聚合函数，或者使用 agg_merge
 
-  关于更多信息，请参考文档：[AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG-STATE.md)
+  关于更多信息，请参考文档：[AGG_STATE](../../sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE)
 
 ### 其他
 
@@ -96,7 +77,7 @@ under the License.
 
 - 支持 `show storage policy using` 语句：支持查看所有或指定存储策略关联的表和分区。
 
-	关于更多信息，请参考文档：[SQL 语句 - SHOW](../../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md)
+	关于更多信息，请参考文档：[SQL 语句 - SHOW](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING)
 
 - **支持 BE 侧的 JVM 指标：** 通过在 `be.conf` 配置文件中设置`enable_jvm_monitor=true`，可以启用对 BE 节点 JVM 的监控和指标收集，有助于了解 BE JVM 的资源使用情况，以便进行故障排除和性能优化。
 

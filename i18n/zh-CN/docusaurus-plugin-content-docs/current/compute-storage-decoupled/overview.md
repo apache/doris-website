@@ -5,26 +5,7 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-本文介绍存算分离与存算一体两种架构的区别、优势和适用场景，为用户的选择与使用提供参考。后文将详细说明如何部署并使用 Apache Doris 存算分离模式。如需部署存算一体模式，请参考[集群部署](../install/cluster-deployment/standard-deployment.md)。
+本文介绍存算分离与存算一体两种架构的区别、优势和适用场景，为用户的选择与使用提供参考。后文将详细说明如何部署并使用 Apache Doris 存算分离模式。如需部署存算一体模式，请参考[集群部署](../../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ## 存算一体 VS 存算分离
 
@@ -52,12 +33,15 @@ Meta Service 是 Doris 存算分离元数据服务，主要负责处理导入事
 
 存算分离模式下的 BE 是无状态的 Doris BE 节点，BE 上会缓存一部分 Tablet 元数据和数据以提高查询性能。
 
-计算组（Compute Group） 是由 BE 节点组成的计算资源集合，多个计算组共享一份数据，计算组可以随时弹性加减节点。
+计算组（Compute Group）是由 BE 节点组成的计算资源集合，多个计算组共享一份数据，计算组可以随时弹性加减节点。
 
 **共享存储层：**
 
 您可以基于 HDFS 和对象存储创建存储库（Storage Vault），建表时可以选择表的存储库。
 
+### 存算分离的限制
+
+当前版本Doris存算分离模式还不支持CCR，备份恢复功能，这些功能在持续迭代中，后续版本会陆续支持。
 
 ## 如何选择
 
@@ -81,9 +65,10 @@ Meta Service 是 Doris 存算分离元数据服务，主要负责处理导入事
 
 ### 存算分离的适用场景
 
-- 已使用公有云服务
-- 具备可靠的共享存储系统，比如 HDFS、Ceph、对象存储等
-- 高吞吐的共享存储能力，多计算组共享一份数据
+- 已在使用公有云服务
+- 具备可靠的高性能共享存储系统[1]，比如 HDFS、Ceph、对象存储等
+- 多个业务使用共享同一份数据, 并且有隔离计算的需求
 - 需要极致的弹性扩缩容，需要 K8S 容器化，需要运行在私有云上
 - 有专职团队维护整个公司的数据仓库平台
 
+[1] 如果共享存储的吞吐或者延迟等性能比较差，对于存算分离架构Doris有比较大的性能影响。

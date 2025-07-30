@@ -5,39 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 将原始 JSON 字符串解析成 JSON 二进制格式。为了满足不同的异常数据处理需求，提供不同的 JSON_PARSE 系列函数，具体如下：
-* JSON_PARSE  解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，报错。
-* JSON_PARSE_ERROR_TO_INVALID 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
-* JSON_PARSE_ERROR_TO_NULL 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
-* JSON_PARSE_ERROR_TO_VALUE 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回参数 default_json_str 指定的默认值。
-* JSON_PARSE_NOTNULL 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
-
-## 别名
-* JSONB_PARSE 同 `JSON_PARSE`
-* JSONB_PARSE_ERROR_TO_INVALID 同 `JSON_PARSE_ERROR_TO_INVALID`
-* JSONB_PARSE_ERROR_TO_NULL 同 `JSON_PARSE_ERROR_TO_NULL`
-* JSONB_PARSE_ERROR_TO_VALUE 同 `JSON_PARSE_ERROR_TO_VALUE`
-* JSONB_PARSE_NOTNULL 同 `JSON_PARSE_NOTNULL`
+* `JSON_PARSE`  解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，报错。
+* `JSON_PARSE_ERROR_TO_NULL` 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回 NULL。
+* `JSON_PARSE_ERROR_TO_VALUE` 解析 JSON 字符串，当输入的字符串不是合法的 JSON 字符串时，返回参数 default_json_value 指定的默认值。
 
 ## 语法
 
@@ -45,113 +17,143 @@ under the License.
 JSON_PARSE (<json_str>)
 ```
 ```sql
-JSON_PARSE_ERROR_TO_INVALID (<json_str>)
-```
-```sql
 JSON_PARSE_ERROR_TO_NULL (<json_str>)
 ```
 
 ```sql
-JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_str>)
-```
-```sql
-JSONB_PARSE_NOTNULL (<json_str>)
+JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_value>)
 ```
 
 ## 参数
-| 参数           | 描述                          |
-|--------------|-----------------------------|
-| `<json_str>` | 要提取的 JSON 类型的参数或者字段         |
-| `<default_json_str>`     | 当输入的字符串不是合法的 JSON 字符串时，返回参数 default_json_str 指定的默认值。 |
+### 必须参数
+- `<json_str>` String 类型，其内容应是合法的 JSON 字符串。
+### 可选参数
+- `<default_json_value>` JSON 类型，可以是 NULL，当 `<json_str>` 解析失败时，`<default_json_value>` 作为默认值返回。
 
 ## 返回值
-* json_str 为 NULL 时，都返回 NULL
-* json_str 为非法 JSON 字符串时
-  - JSON_PARSE 报错
-  - JSON_PARSE_ERROR_TO_INVALID 返回 NULL
-  - JSON_PARSE_ERROR_TO_NULL 返回 NULL
-  - JSON_PARSE_ERROR_TO_VALUE 返回参数 default_json_str 指定的默认值
-  - JSON_PARSE_NOTNULL 返回 NULL
+`Nullable<JSON>` 返回解析后得到的 JSON 对象
 
-
+## 使用说明
+1. 如果 `<json_str>` 是 NULL，得到的结果也是 NULL。
+2. `JSONB_PARSE`/`JSONB_PARSE_ERROR_TO_NULL`/`JSONB_PARSE_ERROR_TO_VALUE` 行为基本一致，只是在解析失败时得到的结果不同。
 
 ## 示例
-
 1. 正常 JSON 字符串解析
-```sql
-SELECT json_parse('{"k1":"v31","k2":300}');
-```
-```text
-+--------------------------------------+
-| json_parse('{"k1":"v31","k2":300}') |
-+--------------------------------------+
-| {"k1":"v31","k2":300}                |
-+--------------------------------------+
-```
-```sql
-SELECT json_parse_error_to_invalid('{"k1":"v31","k2":300}');
-```
-```text
-+-------------------------------------------------------+
-| jsonb_parse_error_to_invalid('{"k1":"v31","k2":300}') |
-+-------------------------------------------------------+
-| {"k1":"v31","k2":300}                                 |
-+-------------------------------------------------------+
-```
-```sql
-SELECT json_parse_notnull('{"a":"b"}');
-```
-```text
-+----------------------------------+
-| jsonb_parse_notnull('{"a":"b"}') |
-+----------------------------------+
-| {"a":"b"}                        |
-+----------------------------------+
-```
-```sql
-SELECT json_parse_error_to_value('{"k1":"v31","k2":300}','{}');
-```
-```text
-+-----------------------------------------------------------+
-| jsonb_parse_error_to_value('{"k1":"v31","k2":300}', '{}') |
-+-----------------------------------------------------------+
-| {"k1":"v31","k2":300}                                     |
-+-----------------------------------------------------------+
-```
+    ```sql
+    SELECT json_parse('{"k1":"v31","k2":300}');
+    ```
+    ```text
+    +-------------------------------------+
+    | json_parse('{"k1":"v31","k2":300}') |
+    +-------------------------------------+
+    | {"k1":"v31","k2":300}               |
+    +-------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_null('{"k1":"v31","k2":300}','{}');
+    ```
+    ```text
+    +---------------------------------------------------+
+    | json_parse_error_to_null('{"k1":"v31","k2":300}') |
+    +---------------------------------------------------+
+    | {"k1":"v31","k2":300}                             |
+    +---------------------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value('{"k1":"v31","k2":300}','{}');
+    ```
+    ```text
+    +---------------------------------------------------------+
+    | json_parse_error_to_value('{"k1":"v31","k2":300}','{}') |
+    +---------------------------------------------------------+
+    | {"k1":"v31","k2":300}                                   |
+    +---------------------------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value('{"k1":"v31","k2":300}', NULL);
+    ```
+    ```text
+    +----------------------------------------------------------+
+    | json_parse_error_to_value('{"k1":"v31","k2":300}', NULL) |
+    +----------------------------------------------------------+
+    | {"k1":"v31","k2":300}                                    |
+    +----------------------------------------------------------+
+    ```
 2. 非法 JSON 字符串解析
-```sql
-SELECT json_parse('invalid json');
-```
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = json parse error: Invalid document: document must be an object or an array for value: invalid json
-```
-```sql
-SELECT json_parse_error_to_invalid('invalid json');
-```
-```text
-+----------------------------------------------+
-| jsonb_parse_error_to_invalid('invalid json') |
-+----------------------------------------------+
-| NULL                                         |
-+----------------------------------------------+
-```
-```sql
-SELECT json_parse_notnull('invalid json');
-```
-```text
-+-------------------------------------------+
-| jsonb_parse_error_to_null('invalid json') |
-+-------------------------------------------+
-| NULL                                      |
-+-------------------------------------------+
-```
-```sql
-SELECT json_parse_error_to_value('invalid json', '{}');
-```
-```text
-+--------------------------------------------------+
-| json_parse_error_to_value('invalid json', '{}') |
-+--------------------------------------------------+
-| {}                                               |
-+--------------------------------------------------+
-```
+    ```sql
+    SELECT json_parse('invalid json');
+    ```
+    ```text
+    ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Parse json document failed at row 0, error: [INTERNAL_ERROR]simdjson parse exception:
+    ```
+    ```sql
+    SELECT json_parse_error_to_null('invalid json');
+    ```
+    ```text
+    +------------------------------------------+
+    | json_parse_error_to_null('invalid json') |
+    +------------------------------------------+
+    | NULL                                     |
+    +------------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value('invalid json');
+    ```
+    ```text
+    +-------------------------------------------+
+    | json_parse_error_to_value('invalid json') |
+    +-------------------------------------------+
+    | {}                                        |
+    +-------------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value('invalid json', '{"key": "default value"}');
+    ```
+    ```text
+    +-----------------------------------------------------------------------+
+    | json_parse_error_to_value('invalid json', '{"key": "default value"}') |
+    +-----------------------------------------------------------------------+
+    | {"key":"default value"}                                               |
+    +-----------------------------------------------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value('invalid json', NULL);
+    ```
+    ```text
+    +-------------------------------------------------+
+    | json_parse_error_to_value('invalid json', NULL) |
+    +-------------------------------------------------+
+    | NULL                                            |
+    +-------------------------------------------------+
+    ```
+3. NULL 参数
+    ```sql
+    SELECT json_parse(NULL);
+    ```
+    ```text
+    +------------------+
+    | json_parse(NULL) |
+    +------------------+
+    | NULL             |
+    +------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_null(NULL);
+    ```
+    ```text
+    +--------------------------------+
+    | json_parse_error_to_null(NULL) |
+    +--------------------------------+
+    | NULL                           |
+    +--------------------------------+
+    ```
+    ```sql
+    SELECT json_parse_error_to_value(NULL, '{}');
+    ```
+    ```text
+    +---------------------------------------+
+    | json_parse_error_to_value(NULL, '{}') |
+    +---------------------------------------+
+    | NULL                                  |
+    +---------------------------------------+
+    ```

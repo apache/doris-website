@@ -6,25 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 This statement is used to restore the data backed up by the BACKUP command to the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the [SHOW RESTORE](./SHOW-RESTORE.md) command.
@@ -66,10 +47,12 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
 - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
 - "meta_version" = 40: Use the specified meta_version to read the previously backed up metadata. Note that this parameter is used as a temporary solution and is only used to restore the data backed up by the old version of Doris. The latest version of the backup data already contains the meta version, no need to specify it.
 - "clean_tables" : Indicates whether to clean up tables that do not belong to the restore target. For example, if the target db before the restore has tables that are not present in the snapshot, specifying `clean_tables` can drop these extra tables and move them into the recycle bin during the restore.
-  - This feature is supported since the Apache Doris 1.2.6  version
-- "clean_partitions": Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
-  - This feature is supported since the Apache Doris 1.2.6  version
-
+  - This feature is supported since the Apache Doris 2.1.6  version
+- "clean_partitions"：Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
+  - This feature is supported since the Apache Doris 2.1.6  version
+- "atomic_restore"：The data will be loaded into a temporary table first, and then the original table will be replaced atomically to ensure that the read and write of the target table are not affected during the recovery process.
+- "force_replace"：Force replace when the table exists and the schema is different with the backup table. 
+  - Note that to enable "force_replace", you must enable "atomic_restore"
 ## Optional Parameters
 
 **1.`<table_name>`**

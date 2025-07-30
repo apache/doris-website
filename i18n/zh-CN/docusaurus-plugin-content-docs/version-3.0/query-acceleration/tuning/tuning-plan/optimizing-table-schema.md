@@ -5,28 +5,9 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 
-Schema 设计和调优中，表的 Schema 设计是其中重要的一部分，包括表引擎选择、分区分桶列选择、分区分桶大小设置、key 列和字段类型优化等。缺乏 Schema 设计的系统，有可能会导致数据倾斜等问题，不能充分利用系统并行和排序特性，从而影响 Doris 在业务系统中发挥真实的性能优势。
+Schema 设计和调优中，表设计是其中重要的一部分，包括表引擎选择、分区分桶列选择、分区分桶大小设置、key 列和字段类型优化等。缺乏 Schema 设计的系统，有可能会导致数据倾斜等问题，不能充分利用系统并行和排序特性，从而影响 Doris 在业务系统中发挥真实的性能优势。
 
 详细的设计原则可以参考[数据表设计](../../../table-design/overview.md)章节了解详细信息。本章将从实际案例的角度，展示几种典型场景下因 Schema 设计问题导致的性能瓶颈，并给出优化建议，供业务调优参考。
 

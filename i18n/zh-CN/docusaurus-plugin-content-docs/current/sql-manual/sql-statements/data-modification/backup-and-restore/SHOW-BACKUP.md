@@ -5,28 +5,9 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
-该语句用于查看BACKUP任务
+该语句用于查看 BACKUP 任务
 
 ## 语法
 
@@ -49,7 +30,7 @@ under the License.
 
 | 列名 | 说明 |
 | -- | -- |
-| JobId | 唯一作业id |
+| JobId | 唯一作业 id |
 | SnapshotName | 备份的名称 |
 | DbName | 所属数据库 |
 | State | 当前阶段：<ul><li>PENDING：提交作业后的初始状态。</li><li>SNAPSHOTING：执行快照中。</li><li>UPLOAD_SNAPSHOT：快照结束，准备上传。</li><li>UPLOADING：正在上传快照。</li><li>SAVE_META：将作业元信息保存为本地文件。</li><li>UPLOAD_INFO：上传作业元信息。</li><li>FINISHED：作业成功。</li><li>CANCELLED：作业失败。</li></ul> |
@@ -72,7 +53,7 @@ under the License.
 SHOW BACKUP FROM example_db;
 ```
 
-2. 查看备份名称为snapshot_label的BACKUP任务。
+2. 查看备份名称为 snapshot_label 的 BACKUP 任务。
 
 ```sql
 show backup from example_db where SnapshotName = 'snapshot_label';

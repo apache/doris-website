@@ -5,42 +5,24 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
-
 ## Description
 
 This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items).
 
-The configurable items can be viewed using the `SHOW FRONTEND CONFIG;` command.
-
-Syntax:
+## Syntax:
 
 ```sql
-ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
--- or
-ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
+ADMIN SET {ALL FRONTENDS | FRONTEND} CONFIG ("<fe_config_key>" = "<fe_config_value>")
 ```
+
+## Required Parameters
+**`{ALL FRONTENDS | FRONTEND}`**
+> **`ALL FRONTENDS`**: Represents all FE nodes in the Doris cluster
+>
+> **`FRONTEND`**: Represents the currently connected FE node, i.e., the FE node the user is interacting with
+
+## Optional Parameters
+The `<fe_config_key>` and `<fe_config_value>` that need to be modified can be viewed through the [SHOW FRONTEND CONFIG](./SHOW-FRONTEND-CONFIG) command
 
 :::tip Explanation
 
@@ -50,13 +32,13 @@ ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 
 ## Example
 
-1. Set `disable_balance` to true
+1. Set `disable_balance` to `true`
 
-    `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
+    ```sql
+    ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+    ```
 
-## Keywords
-
-ADMIN, SET, CONFIG
-
-## Best Practice
-
+2. Set `disable_balance` of all FE nodes to `true`
+   ```sql
+   ADMIN SET ALL FRONTENDS CONFIG ("disable_balance" = "true");
+   ```

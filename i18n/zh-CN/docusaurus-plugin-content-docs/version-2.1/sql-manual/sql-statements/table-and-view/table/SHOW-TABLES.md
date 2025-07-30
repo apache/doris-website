@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 该语句用于展示当前 db 下所有的 table 以及 view。
@@ -37,7 +18,7 @@ SHOW [ FULL ] TABLES [ FROM [ <catalog_name>.]<db_name> ][ LIKE <like_condition>
 ## 可选参数
 
 **1. `FULL`**
-> 语句中加了此参数，返回结果会多三列值，分别为Table_type（表类型）、Storage_format（存储格式）、Inverted_index_storage_format（倒排索引存储格式）。
+> 语句中加了此参数，返回结果会多三列值，分别为 Table_type（表类型）、Storage_format（存储格式）、Inverted_index_storage_format（倒排索引存储格式）。
 
 **2. `FROM [ <catalog_name>.]<db_name>`**
 > FROM 子句中可以指定查询的 catalog 名称以及 database 的名称。

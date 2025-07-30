@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Build and Refresh
 
 ### Q1: How does Doris determine which partitions need to be refreshed for a materialized view?
@@ -38,7 +19,7 @@ Alternatively, if changes to t2 can be accepted without triggering a refresh of 
 
 ### Q2: What can be done if a materialized view consumes too many resources, impacting other business operations?
 
-You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](docs/admin-manual/workload-management/workload-group) through the materialized view's properties.
+You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](../../../admin-manual/workload-management/workload-group) through the materialized view's properties.
 
 It's important to note that if the memory allocation is too small and the refresh of a single partition requires more memory, the task may fail. This trade-off should be carefully considered based on business requirements.
 
@@ -88,7 +69,7 @@ Unable to find a suitable base table for partitioning
 
 This error typically indicates that the SQL definition of the materialized view and the choice of partitioning fields do not allow incremental partition updates, resulting in an error during the creation of the partitioned materialized view.
 
-- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW#refreshmethod) for details.
+- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters) for details.
 
 - The latest code can indicate the reason for partition build failure, with error summaries and descriptions provided in Appendix 2.
 
@@ -181,6 +162,14 @@ Reasons may be:
     ```
 
 2. There may be a typographical error in the refresh keywords or a syntax error in the SQL definition of the materialized view. Check the SQL definition and creation statement for the materialized view for correctness.
+
+### Q14: After the materialized view is refreshed successfully, there is still no data
+
+The materialized view determines whether the data needs to be updated based on its ability to retrieve version information from the base table or base table partitions.
+
+When encountering data lakes that currently do not support retrieving version information, such as JDBC Catalog, the refresh process will assume that the materialized view does not need to be updated. Therefore, when creating or refreshing a materialized view, you should specify complete instead of auto.
+
+For the progress of materialized view support for data lakes, please refer to[Data Lake Support Status.](./overview.md)
 
 ## Queries and Transparent Rewriting
 
