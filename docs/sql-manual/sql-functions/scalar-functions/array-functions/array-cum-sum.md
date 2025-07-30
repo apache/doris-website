@@ -52,7 +52,6 @@ Usage notes:
 - The cumulative sum calculation order is from left to right, where each position contains the sum of all non-null elements before it.
 - Empty array returns empty array, NULL array returns NULL, array with only one element returns the original array.
 - Nested arrays, MAP, STRUCT and other complex types do not support cumulative sum, calling will result in an error.
-- The function is nullsafe
 - For null values in array elements: null elements do not participate in cumulative sum calculation, and the result at the corresponding position is null
 
 ### Examples
@@ -120,7 +119,7 @@ SELECT array_cum_sum(int_array) FROM array_cum_sum_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL array returns NULL: the function is nullsafe, returning NULL when the input array is NULL without throwing an error.
+NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
 SELECT array_cum_sum(int_array) FROM array_cum_sum_test WHERE id = 4;
 +-----------------------------+

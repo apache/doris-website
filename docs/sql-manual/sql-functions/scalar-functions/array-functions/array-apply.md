@@ -29,8 +29,7 @@ array_apply(arr, op, val)
 - `val`：T type, the filtering condition value, must be a constant value
 
 **T supported types:**
-- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE
-- Decimal types: DECIMALV2, DECIMALV3 (including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMALV2, DECIMALV3 (including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
 - Boolean type: BOOLEAN
 
@@ -47,7 +46,6 @@ Usage notes:
 - The operator and condition value must be constants, not column names or expressions
 - Limited supported types, mainly numeric, date, and boolean types
 - Empty array returns empty array, NULL array returns NULL
-- The function is nullsafe
 - For null values in array elements: null elements will be filtered out and not participate in comparison operations
 
 ### Examples
@@ -114,7 +112,7 @@ SELECT array_apply(int_array, ">", 0) FROM array_apply_test WHERE id = 3;
 +------------------------------------------+
 ```
 
-NULL array returns NULL: The function is nullsafe, returning NULL when the input array is NULL without throwing an error.
+NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
 SELECT array_apply(int_array, ">", 0) FROM array_apply_test WHERE id = 4;
 +------------------------------------------+

@@ -45,7 +45,6 @@ array_except(ARRAY<T> arr1, ARRAY<T> arr2)
 - 仅支持基础类型数组，不支持复杂类型（ARRAY、MAP、STRUCT）。
 - 空数组与任意数组做 except，结果为空数组。
 - 元素比较遵循类型兼容性规则，类型不兼容时会尝试转换，失败则为 null。
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会被视为普通元素参与运算，null 与 null 被认为是相同的
 
 ### 示例
@@ -109,7 +108,7 @@ SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL 数组：函数是 nullsafe 的，当任何一个输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组：当任何一个输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 4;
 +-----------------------------+
@@ -129,7 +128,7 @@ SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 5;
 +-----------------------------+
 ```
 
-第二个数组为 NULL：函数是 nullsafe 的，当任何一个输入数组为 NULL 时返回 NULL，不会抛出错误。
+第二个数组为 NULL：当任何一个输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 6;
 +-----------------------------+

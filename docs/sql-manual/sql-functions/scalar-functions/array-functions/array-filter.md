@@ -52,7 +52,6 @@ Usage notes:
 - Empty array returns empty array, NULL array returns NULL
 - Lambda can use any scalar expression, cannot use aggregate functions
 - Lambda expressions can call other higher-order functions, but need to return compatible types
-- The function is nullsafe
 - For null values in array elements: null elements will be passed to the lambda expression for processing, lambda can evaluate null values
 
 ### Examples
@@ -150,7 +149,7 @@ SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 3;
 +-------------------------------------+
 ```
 
-NULL array returns NULL: the function is nullsafe, returning NULL when the input array is NULL without throwing an error.
+NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
 SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 4;
 +-------------------------------------+

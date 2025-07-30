@@ -52,7 +52,6 @@ array_filter(array1, array<boolean> filter_array)
 - 空数组返回空数组，NULL 数组返回 NULL
 - lambda 可以用任意标量表达式，不能用聚合函数
 - lambda 表达式可以调用其他高阶函数，但需要返回类型兼容
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会传递给 lambda 表达式处理，lambda 可以判断 null 值
 
 ### 示例
@@ -150,7 +149,7 @@ SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 3;
 +-------------------------------------+
 ```
 
-NULL 数组返回 NULL：函数是 nullsafe 的，当输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组返回 NULL：当输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 4;
 +-------------------------------------+

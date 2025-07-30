@@ -39,7 +39,7 @@ array_count(lambda, array1, ...)
 Return type: BIGINT
 
 Return value meaning:
-- Returns the number of elements whose lambda expression result is not 0
+- Returns the number of elements whose lambda expression result is true
 - 0: if no elements satisfy the condition, or the input array is NULL
 
 Usage notes:
@@ -48,7 +48,6 @@ Usage notes:
 - Supports counting on multiple arrays and complex type arrays
 - Empty array returns 0, NULL array returns 0
 - Lambda expressions can call other higher-order functions, but the return types must be compatible
-- The function is nullsafe
 - For null values in array elements: null elements will be passed to the lambda expression for processing, and the lambda can evaluate null values
 
 ### Examples

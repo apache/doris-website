@@ -49,7 +49,6 @@ array_contains(ARRAY<T> arr, T value)
    - 当输入数组为空时，返回 false
    - 当输入数组为 NULL 时，返回 NULL
    - 当数组元素类型与查找值类型不匹配时，返回 false
-   - 函数是 nullsafe 的
    - 对数组元素中的 null 值：null 元素会被正常处理，可以查找数组中的 null 元素
 
 2. 异常值行为：

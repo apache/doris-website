@@ -27,9 +27,7 @@ array_cum_sum(ARRAY<T> arr)
 - `arr`：ARRAY\<T> 类型，要计算累积和的数组。支持列名或常量值。
 
 **T 支持的类型：**
-  - 整数类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
-  - 浮点数类型：FLOAT、DOUBLE
-  - 十进制类型：DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
+  - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
 
 ### 返回值
 
@@ -53,7 +51,6 @@ array_cum_sum(ARRAY<T> arr)
 - 累积和的计算顺序为从左到右，每个位置的值为前面所有非 null 元素的和。
 - 空数组返回空数组，NULL 数组返回 NULL，只有一个元素的数组返回原数组。
 - 嵌套数组、MAP、STRUCT 等复杂类型不支持累积和，调用会报错。
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素不参与累积和计算，结果对应位置为 null
 
 
@@ -122,7 +119,7 @@ SELECT array_cum_sum(int_array) FROM array_cum_sum_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL 数组返回 NULL：函数是 nullsafe 的，当输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组返回 NULL：当输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_cum_sum(int_array) FROM array_cum_sum_test WHERE id = 4;
 +-----------------------------+

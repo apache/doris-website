@@ -49,7 +49,6 @@ Return value behavior description:
    - When the input array is empty, returns false
    - When the input array is NULL, returns NULL
    - When the array element type does not match the search value type, returns false
-   - The function is nullsafe
    - For null values in array elements: null elements will be processed normally, and null elements in the array can be searched for
 
 2. Exception value behavior:

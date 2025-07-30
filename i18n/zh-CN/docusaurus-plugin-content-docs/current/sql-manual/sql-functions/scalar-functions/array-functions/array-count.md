@@ -40,7 +40,7 @@ array_count(lambda, array1, ...)
 返回类型：BIGINT
 
 返回值含义：
-- 返回 lambda 表达式结果不为 0 的元素个数
+- 返回 lambda 表达式结果是 True 的元素个数
 - 0：如果没有元素满足条件，或输入数组为 NULL
 
 使用说明：
@@ -49,7 +49,6 @@ array_count(lambda, array1, ...)
 - 支持对多数组、复杂类型数组进行统计
 - 空数组返回 0，NULL 数组返回 0
 - lambda 表达式可以调用其他高阶函数，但需要返回类型兼容
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会传递给 lambda 表达式处理，lambda 可以判断 null 值
 
 
@@ -117,7 +116,7 @@ SELECT array_count(x -> x > 0, int_array) FROM array_count_test WHERE id = 3;
 +-------------------------------------+
 ```
 
-对 NULL 数组进行计算：函数是 nullsafe 的，当输入数组为 NULL 时返回 0，不会抛出错误。
+对 NULL 数组进行计算：当输入数组为 NULL 时返回 0，不会抛出错误。
 ```sql
 SELECT array_count(x -> x > 0, int_array) FROM array_count_test WHERE id = 4;
 +-------------------------------------+

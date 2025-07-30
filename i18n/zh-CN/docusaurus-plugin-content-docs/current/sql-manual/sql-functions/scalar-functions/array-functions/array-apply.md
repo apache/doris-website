@@ -28,8 +28,7 @@ array_apply(arr, op, val)
 - `val`：T 类型，过滤的条件值，必须是常量值
 
 **T 支持的类型：**
-- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE
-- 十进制类型：DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
+- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
 - 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2
 - 布尔类型：BOOLEAN
 
@@ -46,7 +45,6 @@ array_apply(arr, op, val)
 - 操作符和条件值必须是常量，不能是列名或表达式
 - 支持的类型有限，主要是数值、日期和布尔类型
 - 空数组返回空数组，NULL 数组返回 NULL
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会被过滤掉，不参与比较操作
 
 ### 示例
@@ -113,7 +111,7 @@ SELECT array_apply(int_array, ">", 0) FROM array_apply_test WHERE id = 3;
 +------------------------------------------+
 ```
 
-NULL 数组返回 NULL：函数是 nullsafe 的，当输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组返回 NULL：当输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_apply(int_array, ">", 0) FROM array_apply_test WHERE id = 4;
 +------------------------------------------+

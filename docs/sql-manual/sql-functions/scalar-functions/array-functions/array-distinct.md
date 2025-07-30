@@ -45,7 +45,6 @@ Usage notes:
 - The function traverses the array from left to right, keeping the first occurrence of each element and removing subsequent duplicate elements
 - Empty array returns empty array, NULL array returns NULL
 - Deduplication maintains the relative order of elements in the original array, does not reorder
-- The function is nullsafe
 - For null values in array elements: null elements will be deduplicated, multiple nulls only keep one
 
 ### Examples
@@ -111,7 +110,7 @@ Empty array returns empty array: empty array has no elements to deduplicate, dir
 +--------------------+
 ```
 
-NULL array returns NULL: the function is nullsafe, returning NULL when the input array is NULL without throwing an error.
+NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
 +----------------------+
 | array_distinct(NULL) |

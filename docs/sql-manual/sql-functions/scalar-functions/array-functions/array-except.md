@@ -45,7 +45,6 @@ Usage notes:
 - Only supports basic type arrays, does not support complex types (ARRAY, MAP, STRUCT).
 - Empty array with any array results in an empty array.
 - Element comparison follows type compatibility rules, attempts conversion when types are incompatible, fails to null.
-- The function is nullsafe
 - For null values in array elements: null elements are treated as regular elements in operations, null and null are considered the same
 
 ### Examples
@@ -109,7 +108,7 @@ SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL array: the function is nullsafe, returning NULL when either input array is NULL without throwing an error.
+NULL array: returning NULL when either input array is NULL without throwing an error.
 ```sql
 SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 4;
 +-----------------------------+
@@ -129,7 +128,7 @@ SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 5;
 +-----------------------------+
 ```
 
-Second array is NULL: the function is nullsafe, returning NULL when either input array is NULL without throwing an error.
+Second array is NULL: returning NULL when either input array is NULL without throwing an error.
 ```sql
 SELECT array_except(arr1, arr2) FROM array_except_test WHERE id = 6;
 +-----------------------------+

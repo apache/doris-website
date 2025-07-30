@@ -26,9 +26,7 @@ array_difference(ARRAY<T> arr)
 - `arr`：ARRAY\<T> 类型，要计算差值的数组。支持列名或常量值。
 
 **T 支持的类型：**
-- 整数类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT
-- 浮点数类型：FLOAT、DOUBLE
-- 十进制类型：DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
+- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
 
 
 ### 返回值
@@ -52,7 +50,6 @@ array_difference(ARRAY<T> arr)
 - 差值的计算顺序为从左到右，每个位置的值为当前元素与前一个元素的差值，第一个元素为 0。
 - 空数组返回空数组，NULL 数组返回 NULL，只有一个元素的数组返回 [0]。
 - 复杂类型（嵌套数组、MAP、STRUCT）不支持差值计算，调用会报错。
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会影响后续差值计算，前一个元素为 null 时，当前差值为 null
 
 ### 示例
@@ -110,7 +107,7 @@ SELECT array_difference(int_array) FROM array_difference_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL 数组返回 NULL：函数是 nullsafe 的，当输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组返回 NULL：当输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 SELECT array_difference(int_array) FROM array_difference_test WHERE id = 4;
 +-----------------------------+

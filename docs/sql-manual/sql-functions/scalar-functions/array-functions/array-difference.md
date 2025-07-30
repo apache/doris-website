@@ -51,7 +51,6 @@ Usage notes:
 - The difference calculation order is from left to right, where each position contains the difference between the current element and the previous element, with the first element being 0.
 - Empty array returns empty array, NULL array returns NULL, array with only one element returns [0].
 - Complex types (nested arrays, MAP, STRUCT) do not support difference calculation, calling will result in an error.
-- The function is nullsafe
 - For null values in array elements: null elements will affect subsequent difference calculations, when the previous element is null, the current difference will be null
 
 ### Examples
@@ -109,7 +108,7 @@ SELECT array_difference(int_array) FROM array_difference_test WHERE id = 3;
 +-----------------------------+
 ```
 
-NULL array returns NULL: the function is nullsafe, returning NULL when the input array is NULL without throwing an error.
+NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
 SELECT array_difference(int_array) FROM array_difference_test WHERE id = 4;
 +-----------------------------+

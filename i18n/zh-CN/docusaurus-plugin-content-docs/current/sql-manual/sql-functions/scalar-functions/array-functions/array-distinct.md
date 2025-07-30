@@ -46,7 +46,6 @@ array_distinct(ARRAY<T> arr)
 - 函数从左到右遍历数组，保留每个元素的第一次出现，移除后续的重复元素
 - 空数组返回空数组，NULL 数组返回 NULL
 - 去重操作保持原始数组中元素的相对顺序，不重新排序
-- 函数是 nullsafe 的
 - 对数组元素中的 null 值：null 元素会被去重，多个 null 只保留一个
 
 ### 示例
@@ -112,7 +111,7 @@ SELECT array_distinct(CAST(['2001:db8::1', '2001:db8::2', '2001:db8::1'] AS ARRA
 +--------------------+
 ```
 
-NULL 数组返回 NULL：函数是 nullsafe 的，当输入数组为 NULL 时返回 NULL，不会抛出错误。
+NULL 数组返回 NULL：当输入数组为 NULL 时返回 NULL，不会抛出错误。
 ```sql
 +----------------------+
 | array_distinct(NULL) |

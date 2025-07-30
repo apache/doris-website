@@ -58,7 +58,6 @@ Usage notes:
 
 - The function maintains the original order of array elements
 - Only removes consecutive duplicate elements, does not perform global deduplication
-- The function is nullsafe
 - For null values in array elements: null elements will be processed normally, multiple consecutive null elements will be merged into one
 
 ### Examples

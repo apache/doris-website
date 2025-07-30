@@ -46,7 +46,6 @@ Usage notes:
 - Empty arrays will be ignored and will not add any elements
 - When there is only one array and it is empty, returns an empty array; when there is only one array and it is NULL, returns NULL
 - Complex types (nested arrays, MAP, STRUCT) require completely consistent structure when concatenating, otherwise an error will be thrown
-- The function is nullsafe
 - For null values in array elements: null elements will be normally retained in the concatenation result
 
 ### Examples
