@@ -11,6 +11,8 @@
 
 `INT UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])`
 
+`DECIMAL UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])`
+
 Converting a Date or Datetime type to a UNIX timestamp.
 
 If there are no parameters, the current time is converted into a timestamp.
@@ -23,6 +25,14 @@ See `date_format` function to get Format explanation.
 
 This function is affected by time zone.
 
+
+## Return Value
+Returns two types based on the input:
+
+If the input `datetime` contains `decimal` places
+Returns a timestamp of type Decimal, with a precision of only six decimal places.
+If the input `datetime` does not contain decimal places
+Returns a timestamp of type `INT`.
 ### example
 
 ```
@@ -61,6 +71,15 @@ mysql> select unix_timestamp('1969-01-01 00:00:00');
 |                                     0 |
 +---------------------------------------+
 ```
+
+Input with float point
+
+mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.0122222');
++-----------------------------------------------+
+| UNIX_TIMESTAMP('2015-11-13 10:20:19.0122222') |
++-----------------------------------------------+
+|                             1447381219.122220 |
++-----------------------------------------------+
 
 ### keywords
 
