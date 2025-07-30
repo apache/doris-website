@@ -17,7 +17,7 @@
 
 | 参数 | 说明 |
 | -- | -- |
-| `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month, day, hour, minute, second 或者 microsecond |
+| `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month, day, hour, minute, second, microsecond, dayofyear(doy), dayofweek(dow) |
 | `datetime` | 参数是合法的日期表达式 |
 
 ## 返回值
@@ -33,13 +33,17 @@ extract(day from '2022-09-22 17:01:30') as day,
 extract(hour from '2022-09-22 17:01:30') as hour,
 extract(minute from '2022-09-22 17:01:30') as minute,
 extract(second from '2022-09-22 17:01:30') as second,
-extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond;
+extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetimev2(6))) as microsecond,
+extract(dayofyear FROM '2022-09-22 17:01:30') as dayofyear,
+extract(doy FROM '2022-09-22 17:01:30') as dayofyear_alias,
+extract(dayofweek FROM '2022-09-22 17:01:30') as dayofweek,
+extract(dow FROM '2022-09-22 17:01:30') as dayofweek_alias;
 ```
 
 ```text
-+------+-------+------+------+--------+--------+-------------+
-| year | month | day  | hour | minute | second | microsecond |
-+------+-------+------+------+--------+--------+-------------+
-| 2022 |     9 |   22 |   17 |      1 |     30 |         123 |
-+------+-------+------+------+--------+--------+-------------+
++------+-------+------+------+--------+--------+-------------+-----------+-----------------+-----------+-----------------+
+| year | month | day  | hour | minute | second | microsecond | dayofyear | dayofyear_alias | dayofweek | dayofweek_alias |
++------+-------+------+------+--------+--------+-------------+-----------+-----------------+-----------+-----------------+
+| 2022 |     9 |   22 |   17 |      1 |     30 |         123 |       265 |             265 |         5 |               5 |
++------+-------+------+------+--------+--------+-------------+-----------+-----------------+-----------+-----------------+
 ```
