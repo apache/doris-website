@@ -21,6 +21,21 @@ spec:
 ```
 Update the above configuration in the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#step-3-deploy-the-compute-storage-decoupled-cluster) that you intend to deploy.
 
+## Configuring the Number of Follower Nodes
+In a Doris Frontend (FE) service, there are two types of roles: Follower and Observer. Follower nodes are responsible for SQL parsing, metadata management, and storage. Observer nodes primarily handle SQL parsing to offload query and write traffic from Followers. Doris uses the bdbje storage system for metadata management, which implements an algorithm similar to the Paxos protocol.
+
+In a distributed deployment, multiple Follower nodes must be configured to participate in metadata management within the distributed environment.
+
+When deploying a compute-storage disaggregated Doris cluster using the `DorisDisaggregatedCluster` resource, the default number of Follower nodes is set to 1. You can configure the number of Followers using the following setting. The example below configures three Follower nodes:
+```yaml
+spec:
+  feSpec:
+    electionNumber: 3
+```
+:::tip Note
+Once the disaggregated cluster is deployed, the `electionNumber` setting cannot be modified.
+:::
+
 ## Custom Startup Configuration
 The Doris Operator mounts the FE startup configuration using a Kubernetes ConfigMap. Follow these steps to configure it:
 

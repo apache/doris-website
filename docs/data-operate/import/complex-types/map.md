@@ -5,14 +5,7 @@
 }
 ---
 
-`MAP<K, V>` A Map of K, V items, it cannot be used as a key column. Now MAP can only be used in Duplicate and Unique Model Tables.
-
-K,V could be any of:
-
-```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
+`MAP<K, V>` A Map of K, V items。 Click [MAP](../../../sql-manual/basic-element/sql-data-types/semi-structured/MAP.md) to learn more.
 
 ## CSV format import
 
