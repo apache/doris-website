@@ -4,87 +4,154 @@
   "language": "zh-CN"
 }
 ---
+# 使用 `CREATE CATALOG` 连接外部元数据服务的参数说明
 
-本文档用于介绍通过 `CREATE CATALOG` 语句连接并访问 Hive Metastore 时所支持的参数。
-## 参数总览
-| 属性名称                                 | 曾用名 | 描述                                                                                                                                                                                                                                        | 默认值    | 是否必须 |
-|--------------------------------------|---|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|------|
-| `hive.metastore.uris`                | | Hive Metastore 的 URI 地址。支持指定多个 URI，使用逗号分隔。默认使用第一个 URI，当第一个 URI 不可用时，会尝试使用其他的。如：`thrift://172.0.0.1:9083` 或 `thrift://172.0.0.1:9083,thrift://172.0.0.2:9083`                                                                              | 无      | 是    |
-| `hive.conf.resources`                | | hive-site.xml 文件位置，用于从 hive-site.xml 文件中加载连接 HMS 所需参数，若 hive-site.xml 文件包含完整的链接参数信息，则可仅填写此参数。配置文件必须放在 FE 部署目录，默认目录为部署目录下的 `/plugins/hadoop_conf/`（可修改 fe.conf 中的 `hadoop_config_dir` 来更改默认路径），文件位置需要为相对路径，如 hms-1/hive-site.xml。且所有 FE 节点都必须含有此文件。 | 空      | 否    |
-| `hive.metastore.authentication.type` | | Hive Metastore 的认证方式。支持 `simple` 和 `kerberos` 两种。在 2.1 及之前版本中，认证方式由`hadoop.security.authentication`属性决定。3.0 版本开始，可以单独指定 Hive Metastore 的认证方式。                                                                                             | simple | 否    |
-| `hive.metastore.service.principal`   | | 当认证方式为 kerberos 时，用于指定 Hive Metastore 服务端的 principal。                                                                                                                                                                                     | 空      | 否    |
-| `hive.metastore.client.principal`    | | 当认证方式为 kerberos 时，用于指定 Hive Metastore 客户端的 principal。在 2.1 及之前版本中，该参数由`hadoop.kerberos.principal`属性决定。                                                                                                                                    | 空      | 否    |
-| `hive.metastore.client.keytab`       | | 当认证方式为 kerberos 时，用于指定 Hive Metastore 客户端的 keytab。keytab 文件必须要放置到所有 FE 节点的相同目录下。                                                                                                                                                          | 空      | 否    |
+本文档用于介绍通过 `CREATE CATALOG` 语句连接并访问外部元数据服务时支持的所有参数，当前支持 Hive、Iceberg 和 Paimon 三种 Catalog 类型。
 
-## 认证参数
-在 Hive Metastore 中，有两种认证方式：simple 和 kerberos。
+## ✅ 当前支持的 Catalog 类型
+
+| Catalog 类型 | 类型标识 (`type`)   | 描述                                |
+|--------------|---------------------|-------------------------------------|
+| Hive         | `hms`               | 对接 Hive Metastore 的 Catalog      |
+| Iceberg      | `iceberg_hms` / `iceberg_rest` | 对接 Iceberg 表格式                |
+| Paimon       | `paimon`            | 对接 Apache Paimon 表格式           |
+
+---
+
+# 一、Hive Catalog
+
+Hive Catalog 用于连接 Hive Metastore，并读取 Hive 表信息。支持 Kerberos 认证。
+
+## 📋 参数总揽
+
+| 参数名称                             | 是否必须 | 默认值   | 简要描述                                                     |
+|--------------------------------------|----------|----------|--------------------------------------------------------------|
+| `type`                               | ✅ 是    | 无       | Catalog 类型，Hive 固定为 `hms`                              |
+| `hive.metastore.uris`                | ✅ 是    | 无       | Hive Metastore 的 URI 地址                                   |
+| `hive.conf.resources`                | 否       | 空       | hive-site.xml 配置文件相对路径                               |
+| `hive.metastore.authentication.type` | 否       | simple   | Metastore 认证方式，支持 `simple` 或 `kerberos`              |
+| `hive.metastore.service.principal`   | 否       | 空       | Kerberos 服务端 principal                                     |
+| `hive.metastore.client.principal`    | 否       | 空       | Kerberos 客户端 principal                                     |
+| `hive.metastore.client.keytab`       | 否       | 空       | Kerberos 客户端 keytab 文件路径                              |
+
+## 📖 参数详细说明
+
+### `type`
+Catalog 类型，Hive 固定为 `hms`  
+示例：`"type" = "hms"`
+
+### `hive.metastore.uris`
+Hive Metastore 的 URI 地址，支持多个逗号分隔  
+示例：`"hive.metastore.uris" = "thrift://127.0.0.1:9083"`
+
+### `hive.conf.resources`
+hive-site.xml 配置文件路径，默认目录为 `/plugins/hadoop_conf/`  
+示例：`"hive.conf.resources" = "hms-1/hive-site.xml"`
 
 ### `hive.metastore.authentication.type`
+认证方式：`simple`（默认）或 `kerberos`  
+示例：`"hive.metastore.authentication.type" = "kerberos"`
 
-- 描述  
-    指定 Hive Metastore 的认证方式。
+### `hive.metastore.service.principal`
+Hive 服务端 principal，支持 `_HOST` 占位符  
+示例：`"hive.metastore.service.principal" = "hive/_HOST@EXAMPLE.COM"`
 
-- 可选值
-    - `simple`（默认）: 即不使用任何认证。
-    - `kerberos`: 启用 Kerberos 认证
+### `hive.metastore.client.principal`
+客户端 principal（Kerberos 模式）  
+示例：`"hive.metastore.client.principal" = "doris/_HOST@EXAMPLE.COM"`
 
-- 版本差异
-    - 2.1 及之前版本：依赖全局参数 `hadoop.security.authentication`
-    - 3.1+ 版本：可独立配置
+### `hive.metastore.client.keytab`
+keytab 文件路径，所有 FE 节点均需存在  
+示例：`"hive.metastore.client.keytab" = "conf/doris.keytab"`
 
-### 启用 Simple 认证相关参数
-直接指定 `hive.metastore.authentication.type = simple` 即可。**生产环境不建议使用此方式**
+## ✅ 示例：Hive Catalog（Kerberos）
 
-#### 完整示例
-```plaintext
-"hive.metastore.authentication.type" = "simple"
+```
+CREATE CATALOG hive_catalog WITH (
+  "type" = "hms",
+  "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+  "hive.metastore.authentication.type" = "kerberos",
+  "hive.metastore.service.principal" = "hive/_HOST@EXAMPLE.COM",
+  "hive.metastore.client.principal" = "doris/_HOST@EXAMPLE.COM",
+  "hive.metastore.client.keytab" = "conf/doris.keytab"
+);
 ```
 
-### 启用 Kerberos 认证相关参数
+---
 
-#### `hive.metastore.service.principal`
-- 描述  
-    Hive Metastore 服务的 Kerberos 主体，用于 Doris 验证 Metastore 身份。
+# 二、Iceberg Catalog
 
-- 占位符支持  
-    `_HOST` 会自动替换为实际连接的 Metastore 主机名（适用于多节点 Metastore 集群）。
+支持使用 Hive Metastore。
 
-- 示例
-    ```plaintext
-    hive/hive-metastore01.example.com@EXAMPLE.COM
-    hive/_HOST@EXAMPLE.COM  # 动态解析实际主机名
-    ```
+## 📋 参数总揽
 
-#### `hive.metastore.client.principal`
-- 描述
-    连接到 Hive MeteStore 服务时使用的 Kerberos 主体。例如：`doris/fe@EXAMPLE.COM` 或 `doris/_HOST@EXAMPLE.COM`。
+| 参数名称                                 | 是否必须 | 默认值         | 简要描述                                    |
+|--------------------------------------|----------|----------------|-----------------------------------------|
+| `type`                               | ✅ 是    | 无             | Catalog 类型：固定为 `iceberg`                |
+| `iceberg.catalog.type`               | ✅ 是    | 无             | Mestadata Catalog 类型，固定为 `hms`          |
+| `warehouse`                          | ✅ 是    | 无             | Iceberg 仓库路径                            |
+| `hive.metastore.uris`                | ✅ 是    | 无       | Hive Metastore 的 URI 地址                 |
+| `hive.conf.resources`                | 否       | 空       | hive-site.xml 配置文件相对路径                  |
+| `hive.metastore.authentication.type` | 否       | simple   | Metastore 认证方式，支持 `simple` 或 `kerberos` |
+| `hive.metastore.service.principal`   | 否       | 空       | Kerberos 服务端 principal                  |
+| `hive.metastore.client.principal`    | 否       | 空       | Kerberos 客户端 principal                  |
+| `hive.metastore.client.keytab`       | 否       | 空       | Kerberos 客户端 keytab 文件路径                |
 
-- 占位符支持  
-    `_HOST` 会自动替换为实际连接的 Metastore 主机名（适用于多节点 Metastore 集群）。
 
-- 示例
-    ```plaintext
-    doris/fe@EXAMPLE.COM
-    doris/_HOST@EXAMPLE.COM  # 动态解析实际主机名
-    ```
+### `type`
+Catalog 类型，Hive 固定为 `hms`  
+示例：`"type" = "hms"`
 
-#### `hive.metastore.client.keytab`
-- 描述
-    包含指定的 principal 的密钥的密钥表文件的路径。运行所有 FE 的操作系统用户必须有权限读取此文件。
+### `hive.metastore.uris`
+Hive Metastore 的 URI 地址，支持多个逗号分隔  
+示例：`"hive.metastore.uris" = "thrift://127.0.0.1:9083"`
 
-- 示例
-    ```plaintext
-    "hive.metastore.client.keytab" = "conf/doris.keytab"
-    ```
+### `hive.conf.resources`
+hive-site.xml 配置文件路径，默认目录为 `/plugins/hadoop_conf/`  
+示例：`"hive.conf.resources" = "hms-1/hive-site.xml"`
 
-#### 完整示例  
+### `hive.metastore.authentication.type`
+认证方式：`simple`（默认）或 `kerberos`  
+示例：`"hive.metastore.authentication.type" = "kerberos"`
 
-启用 Kerberos 认证
+### `hive.metastore.service.principal`
+Hive 服务端 principal，支持 `_HOST` 占位符  
+示例：`"hive.metastore.service.principal" = "hive/_HOST@EXAMPLE.COM"`
 
-```plaintext
-"hive.metastore.authentication.type" = "kerberos",
-"hive.metastore.service.principal" = "hive/_HOST@EXAMPLE.COM",
-"hive.metastore.client.principal" = "doris/_HOST@EXAMPLE.COM",
-"hive.metastore.client.keytab" = "etc/doris/conf/doris.keytab"
+### `hive.metastore.client.principal`
+客户端 principal（Kerberos 模式）  
+示例：`"hive.metastore.client.principal" = "doris/_HOST@EXAMPLE.COM"`
+
+### `hive.metastore.client.keytab`
+keytab 文件路径，所有 FE 节点均需存在  
+示例：`"hive.metastore.client.keytab" = "conf/doris.keytab"`
+
+## ✅ 示例
+
+```
+CREATE CATALOG iceberg_catalog WITH (
+  "type" = "iceberg_hms",
+  "iceberg.hive.metastore.uris" = "thrift://127.0.0.1:9083",
+  "warehouse" = "hdfs:///user/hive/warehouse"
+  ----
+  Standard Hive Metastore parameters
+);
 ```
 
+
+---
+
+# 三、Paimon Catalog
+
+补充中
+
+
+---
+
+# 四、常见问题 FAQ
+
+**Q1:** hive-site.xml 是必须的吗？  
+不是，仅当需要从中读取链接配置时使用。
+
+**Q2:** keytab 文件是否必须每个节点都存在？  
+是的，所有 FE 节点必须可访问指定路径。
