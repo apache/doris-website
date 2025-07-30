@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON_TYPE",
+    "title": "GEO",
     "language": "zh-CN"
 }
 ---

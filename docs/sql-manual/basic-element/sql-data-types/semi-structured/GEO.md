@@ -1,6 +1,6 @@
 ---
 {
-    "title": "GEO_TYPE",
+    "title": "GEO",
     "language": "en"
 }
 ---
