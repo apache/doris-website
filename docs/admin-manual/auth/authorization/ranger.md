@@ -167,7 +167,9 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on st
 
    As shown in the image, when creating the service, add the configuration `default.policy.users`. If you need to configure multiple users with full permissions, separate them with `,`.
    ![default policy](/images/ranger/default-policy.png)
+4. After using Ranger for authentication, is internal authorization still effective?
 
+   No, it cannot be used, and roles cannot be created/deleted.
 
 ## Install and Configure Doris Ranger Plugin
 
