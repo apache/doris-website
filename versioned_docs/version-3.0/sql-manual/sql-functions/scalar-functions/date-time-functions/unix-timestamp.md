@@ -29,9 +29,9 @@ This function is affected by time zone.
 ## Return Value
 Returns two types based on the input:
 
-If the input `datetime` contains `decimal` places
-Returns a timestamp of type Decimal, with a precision of only six decimal places.
-If the input `datetime` does not contain decimal places
+If the input `datetime` and non-zero scale
+Returns a timestamp of type Decimal, maximum six decimal places of precision
+If the input `datetime` and zeo scale
 Returns a timestamp of type `INT`.
 ### example
 
@@ -72,7 +72,7 @@ mysql> select unix_timestamp('1969-01-01 00:00:00');
 +---------------------------------------+
 ```
 
-Input with float point
+Input with non-zero scale
 
 mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.0122222');
 +-----------------------------------------------+
