@@ -369,7 +369,7 @@ Explain 显示的信息如下：
 explain
 SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
 FROM lineitem
-        LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 ```
 
