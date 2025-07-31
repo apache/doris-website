@@ -12,9 +12,9 @@
 
 -  **物化视图定义与构建成本考虑：**
 
-   - 物化视图定义和原查询越接近，查询加速效果越好，但物化的通用性和复用性越差，意味着构建成本越高。
+    - 物化视图定义和原查询越接近，查询加速效果越好，但物化的通用性和复用性越差，意味着构建成本越高。
 
-   - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
+    - 物化视图定义越通用（例如没有 WHERE 条件和更多聚合维度），查询加速效果较低，但物化的通用性和复用性越好，意味着构建成本越低。
 
 :::caution 注意
 - **物化视图数量控制：** 物化视图并非越多越好。物化视图构建和刷新需要资源。物化视图参与透明改写，CBO 代价模型选择最优物化视图需要时间。理论上，物化视图越多，透明改写的时间越长。
@@ -817,13 +817,13 @@ BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
 AS
 SELECT
-   l_linestatus,
-   l_extendedprice * (1 - l_discount),
-   o_orderdate,
-   o_shippriority
+l_linestatus,
+l_extendedprice * (1 - l_discount),
+o_orderdate,
+o_shippriority
 FROM
-   orders
-      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 透明改写能够对查询 SQL 的改写，实现了查询加速，同时也能对导入 SQL 进行改写，从而提升导入效率。
@@ -832,13 +832,13 @@ FROM
 1. 创建 Insert Into 数据的目标表
 ```sql
 CREATE TABLE IF NOT EXISTS target_table  (
-                                            orderdate      DATE NOT NULL,
-                                            shippriority   INTEGER NOT NULL,
-                                            linestatus     CHAR(1) NOT NULL,
-   sale           DECIMALV3(15,2) NOT NULL
-   )
-   DUPLICATE KEY(orderdate, shippriority)
-   DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
+orderdate      DATE NOT NULL,
+shippriority   INTEGER NOT NULL,
+linestatus     CHAR(1) NOT NULL,
+sale           DECIMALV3(15,2) NOT NULL
+)
+DUPLICATE KEY(orderdate, shippriority)
+DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
 ```
 
 2. common_schedule_join_mv
@@ -848,26 +848,26 @@ BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 2 HOUR
 DISTRIBUTED BY RANDOM BUCKETS 16
 AS
 SELECT
-   l_linestatus,
-   l_extendedprice * (1 - l_discount),
-   o_orderdate,
-   o_shippriority
+l_linestatus,
+l_extendedprice * (1 - l_discount),
+o_orderdate,
+o_shippriority
 FROM
-   orders
-      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 未经改写的导入语句如下：
 ```sql
 INSERT INTO target_table
 SELECT
-   o_orderdate,
-   o_shippriority,
-   l_linestatus,
-   l_extendedprice * (1 - l_discount)
+o_orderdate,
+o_shippriority,
+l_linestatus,
+l_extendedprice * (1 - l_discount)
 FROM
-   orders
-      LEFT JOIN lineitem ON l_orderkey = o_orderkey;
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
 经过透明改写后，语句如下：
