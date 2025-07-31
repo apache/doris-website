@@ -26,7 +26,7 @@ array_difference(ARRAY<T> arr)
 - `arr`：ARRAY\<T> 类型，要计算差值的数组。支持列名或常量值。
 
 **T 支持的类型：**
-- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMALV2、DECIMALV3（包括DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
+- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
 
 
 ### 返回值
@@ -38,12 +38,8 @@ array_difference(ARRAY<T> arr)
 - NULL：如果输入数组为 NULL
 
 使用说明：
-- 函数会尝试将所有元素转换为兼容的数值类型进行差值计算。仅支持以下类型的直接计算：
-  - 整数类型（TINYINT、SMALLINT、INT、BIGINT、LARGEINT）
-  - 浮点类型（FLOAT、DOUBLE）
-  - 十进制类型（DECIMALV2、DECIMALV3，包括 DECIMAL32、DECIMAL64、DECIMAL128I、DECIMAL256）
 - 如果数组包含其他类型（如字符串、日期等），会尝试将元素转换为 DOUBLE 类型。转换失败的元素结果为 null，不参与差值计算。
-- 差值的返回类型根据输入类型自动选择：
+- 函数会尝试将所有元素转换为兼容的数值类型进行差值计算, 差值的返回类型根据输入类型自动选择：
   - 输入为 DOUBLE 或 FLOAT 时，返回 ARRAY\<DOUBLE>
   - 输入为整数类型时，返回 ARRAY\<BIGINT> 或 ARRAY\<LARGEINT>
   - 输入为 DECIMAL 时，返回 ARRAY\<DECIMAL>，保持原精度和标度

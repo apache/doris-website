@@ -185,6 +185,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[RUNTIME_ERROR]exec
 1. 建立array 倒排索引的属性只能是不分词索引
 2. array的元素类型 T 必须是满足能建立倒排索引的数据类型基础上才能对array 建立索引
 3. 查询条件参数 T 如果是 NULL 则无法利用索引进行加速
+4. 函数作为谓词过滤条件时才会进行索引加速
 
 ```sql
 -- 建表示例

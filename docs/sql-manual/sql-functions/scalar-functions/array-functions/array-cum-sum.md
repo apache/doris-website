@@ -26,9 +26,7 @@ array_cum_sum(ARRAY<T> arr)
 - `arr`：ARRAY\<T> type, the array to calculate cumulative sum for. Supports column names or constant values.
 
 **T supported types:**
-  - Integer types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
-  - Floating-point types: FLOAT, DOUBLE
-  - Decimal types: DECIMALV2, DECIMALV3 (including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
+  - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT，FLOAT, DOUBLE，DECIMAL
 
 ### Return Value
 
@@ -52,7 +50,7 @@ Usage notes:
 - The cumulative sum calculation order is from left to right, where each position contains the sum of all non-null elements before it.
 - Empty array returns empty array, NULL array returns NULL, array with only one element returns the original array.
 - Nested arrays, MAP, STRUCT and other complex types do not support cumulative sum, calling will result in an error.
-- For null values in array elements: null elements do not participate in cumulative sum calculation, and the result at the corresponding position is null
+- For null values in array elements: null value be treated as 0 in the cumulative sum calculation.
 
 ### Examples
 
@@ -99,14 +97,14 @@ SELECT array_cum_sum(double_array) FROM array_cum_sum_test WHERE id = 1;
 +------------------------------------------+
 ```
 
-When mixing strings and numbers, elements that can be converted to numbers will participate in the cumulative sum, those that cannot be converted will be null, and the result at the corresponding position will be null.
+When mixing strings and numbers, elements that can be converted to numbers will participate in the cumulative sum, those that cannot be converted will be null, and the null value be treated as 0 in the cumulative sum calculation.
 ```sql
 SELECT array_cum_sum(['a', 1, 'b', 2, 'c', 3]);
-+------------------------------------------+
++-----------------------------------------+
 | array_cum_sum(['a', 1, 'b', 2, 'c', 3]) |
-+------------------------------------------+
-| [null, 1, null, 3, null, 6]             |
-+------------------------------------------+
++-----------------------------------------+
+| [0, 1, 1, 3, 3, 6]                      |
++-----------------------------------------+
 ```
 
 Empty array returns empty array:
@@ -139,14 +137,14 @@ SELECT array_cum_sum([42]);
 +----------------------+
 ```
 
-Array containing null values, null elements do not participate in cumulative sum, result at corresponding position is null.
+Array containing null values, null value be treated as 0 in the cumulative sum calculation.
 ```sql
 SELECT array_cum_sum([1, null, 3, null, 5]);
-+-----------------------------+
++--------------------------------------+
 | array_cum_sum([1, null, 3, null, 5]) |
-+-----------------------------+
-| [1, null, 4, null, 9]                |
-+-----------------------------+
++--------------------------------------+
+| [1, 1, 4, 4, 9]                      |
++--------------------------------------+
 ```
 
 Complex type examples:

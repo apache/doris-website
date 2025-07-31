@@ -29,7 +29,7 @@ array_apply(arr, op, val)
 - `val`：T type, the filtering condition value, must be a constant value
 
 **T supported types:**
-- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMALV2, DECIMALV3 (including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
 - Boolean type: BOOLEAN
 

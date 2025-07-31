@@ -12,11 +12,11 @@
 
 </version>
 
-### Description
+## Description
 
 Checks whether an array contains a specified value. Returns true if found, false otherwise. If the array is NULL, returns NULL.
 
-### Syntax
+## Syntax
 
 ```sql
 array_contains(ARRAY<T> arr, T value)
@@ -24,8 +24,8 @@ array_contains(ARRAY<T> arr, T value)
 
 ### Parameters
 
-- `arr`：ARRAY\<T> type, the array to check. Supports column names or constant values.
-- `value`：T type, the value to search for. The type must be compatible with the array element type.
+- `arr`：ARRAY<T> type, the array to check. Supports column names or constant values.
+- `value`：T type, the value to search for. Type must be compatible with array element type.
 
 **T supported types:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
@@ -46,13 +46,13 @@ Return value meaning:
 Return value behavior description:
 
 1. Boundary condition behavior:
-   - When the input array is empty, returns false
-   - When the input array is NULL, returns NULL
-   - When the array element type does not match the search value type, returns false
-   - For null values in array elements: null elements will be processed normally, and null elements in the array can be searched for
+   - Returns false when the input array is empty
+   - Returns NULL when the input array is NULL
+   - Returns false when array element type does not match the search value type
+   - For null values in array elements: null elements are processed normally, can search for null elements in arrays
 
 2. Exception value behavior:
-   - When array elements are of unsupported types, returns unsupported error
+   - Returns unsupported error when array elements are of unsupported types
 
 3. Cases that return NULL:
    - When the input array is NULL
@@ -134,46 +134,81 @@ SELECT array_contains(int_array, 1000) FROM array_contains_test WHERE id = 3;
 +----------------------------------+
 ```
 
-Check for null values in an array containing null elements: This example returns true because the array contains null values.
+Check if an array contains null
+In this example, the value_expr parameter is null, and there are no null elements in the array, so it returns false.
 ```sql
-SELECT array_contains(int_array, null) FROM array_contains_test WHERE id = 4;
-+----------------------------------+
-| array_contains(int_array, null)  |
-+----------------------------------+
-| 1                                |
-+----------------------------------+
+SELECT array_contains([1, 2, 3], null);
++---------------------------------+
+| array_contains([1, 2, 3], null) |
++---------------------------------+
+|                               0 |
++---------------------------------+
 ```
 
-Type compatibility example: searching for a string in an integer array returns false.
+Check if an array contains null
+In this example, the value_expr parameter is null, and the array contains SQL null values, so it returns true.
 ```sql
-SELECT array_contains(int_array, '1000') FROM array_contains_test WHERE id = 1;
-+----------------------------------+
-| array_contains(int_array, '1000') |
-+----------------------------------+
-| 0                                |
-+----------------------------------+
+SELECT array_contains([null, 1, 2], null);
++------------------------------------+
+| array_contains([null, 1, 2], null) |
++------------------------------------+
+|                                  1 |
++------------------------------------+
 ```
 
-Literal array example: check if a literal array contains a specific value.
+When the search value type is incompatible with array element type, returns false.
 ```sql
-SELECT array_contains([1, 2, 3, 4, 5], 3);
-+----------------------------------+
-| array_contains([1, 2, 3, 4, 5], 3) |
-+----------------------------------+
-| 1                                |
-+----------------------------------+
+SELECT array_contains([1, 2, 3], 'string');
++-------------------------------------+
+| array_contains([1, 2, 3], 'string') |
++-------------------------------------+
+| 0                                   |
++-------------------------------------+
 ```
 
-Check if a literal array contains null values.
+When the search value type cannot be type-converted with array elements, an error is returned
 ```sql
-SELECT array_contains([1, null, 3], null);
-+----------------------------------+
-| array_contains([1, null, 3], null) |
-+----------------------------------+
-| 1                                |
-+----------------------------------+
+SELECT array_contains([1, 2, 3], [4, 5, 6]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type ARRAY<TINYINT> to target type=TINYINT
+```
+
+Unsupported complex types will throw an error. In this example, the array is a nested array type, returning an unsupported error.
+```sql
+SELECT array_contains([[1,2],[2,3]], [1,2]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[RUNTIME_ERROR]execute failed or unsupported types for function array_contains(Array(Nullable(Array(Nullable(TINYINT)))), Array(Nullable(TINYINT)))
+```
+
+### Notes
+
+Performance considerations: When dealing with large arrays, if performance is a major concern, you can use inverted indexes for accelerated queries, but there are some usage restrictions to note:
+
+1. The property for creating an array inverted index can only be a non-tokenized index
+2. The element type T of the array must be a data type that supports creating inverted indexes
+3. If the query condition parameter T is NULL, the index cannot be used for acceleration
+4. Index acceleration only occurs when the function is used as a predicate filter condition
+
+```sql
+-- Table creation example
+CREATE TABLE `test_array_index` (
+    `apply_date` date NULL COMMENT '',
+    `id` varchar(60) NOT NULL COMMENT '',
+    `inventors` array<text> NULL COMMENT '' -- Add non-tokenized inverted index to array column when creating table
+  ) ENGINE=OLAP
+  DUPLICATE KEY(`apply_date`, `id`)
+  COMMENT 'OLAP'
+  DISTRIBUTED BY HASH(`id`) BUCKETS 1
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 1",
+  "is_being_synced" = "false",
+  "storage_format" = "V2",
+  "light_schema_change" = "true",
+  "disable_auto_compaction" = "false",
+  "enable_single_replica_compaction" = "false"
+  );
+-- Query example
+SELECT id, inventors FROM test_array_index WHERE array_contains(inventors, 'x') ORDER BY id;
 ```
 
 ### Keywords
 
-ARRAY, CONTAINS, ARRAY_CONTAINS 
+ARRAY, CONTAIN, CONTAINS, ARRAY_CONTAINS 

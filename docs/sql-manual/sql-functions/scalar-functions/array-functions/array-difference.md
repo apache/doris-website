@@ -26,9 +26,7 @@ array_difference(ARRAY<T> arr)
 - `arr`：ARRAY\<T> type, the array to calculate differences for. Supports column names or constant values.
 
 **T supported types:**
-- Integer types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
-- Floating-point types: FLOAT, DOUBLE
-- Decimal types: DECIMALV2, DECIMALV3 (including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 
 ### Return Value
 
@@ -39,12 +37,8 @@ Return value meaning:
 - NULL: if the input array is NULL
 
 Usage notes:
-- The function will attempt to convert all elements to compatible numeric types for difference calculation. Only the following types support direct calculation:
-  - Integer types (TINYINT, SMALLINT, INT, BIGINT, LARGEINT)
-  - Floating-point types (FLOAT, DOUBLE)
-  - Decimal types (DECIMALV2, DECIMALV3, including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
 - If the array contains other types (such as strings, dates, etc.), it will attempt to convert elements to DOUBLE type. Elements that fail conversion will result in null and will not participate in the difference calculation.
-- The return type of the difference is automatically selected based on the input type:
+- The function will attempt to convert all elements to compatible numeric types for difference calculation,and the return type of the difference is automatically selected based on the input type:
   - When input is DOUBLE or FLOAT, returns ARRAY\<DOUBLE>
   - When input is integer type, returns ARRAY\<BIGINT> or ARRAY\<LARGEINT>
   - When input is DECIMAL, returns ARRAY\<DECIMAL>, maintaining original precision and scale
