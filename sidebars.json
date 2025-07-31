@@ -1027,6 +1027,7 @@
                                     "type": "category",
                                     "label": "Conversion",
                                     "items": [
+                                        "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
@@ -1035,6 +1036,8 @@
                                         "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/json-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/map-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/struct-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
                                     ]
                                 }
