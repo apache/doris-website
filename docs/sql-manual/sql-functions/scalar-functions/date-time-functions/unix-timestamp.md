@@ -28,13 +28,13 @@ UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
 
 | Paramters | Description |
 | -- | -- | 
-| `<date>` | The datetime value to be converted is of type `datetime`, with a convertible range from '1970-01-01 00:00:01.000000 UTC' to '3001-01-19 03:14:07.999999 UTC'.|
+| `<date>` | The datetime value to be converted is of type `datetime` or `date` type, with a convertible range from '1970-01-01 00:00:01.000000 UTC' to '3001-01-19 03:14:07.999999 UTC'.|
 | `<fmt>` | The 'date' parameter refers to the specific part that needs to be converted into a timestamp, and it is a parameter of type string. If this parameter is provided, only the part matching the format will be converted into a timestamp. |
 
 ## Return value
 Returns two types based on the input:
 
-- If the input datetime scale is not 0 or a format parameter is provided,
+- If the input `date`(only `datetime` type have the scale not zero) scale is not 0 or a format parameter is provided,
 returns a timestamp of type Decimal with a maximum precision of six decimal places.
 - If the input datetime scale is 0 and no format parameter is provided,
 returns a timestamp of type INT.
