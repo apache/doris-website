@@ -27,12 +27,12 @@ UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
 ## Return value
 Returns two types based on the input:
 
-1. If the input datetime scale is not 0 or a format parameter is provided,
-2. returns a timestamp of type Decimal with a maximum precision of six decimal places.
-If the input datetime scale is 0 and no format parameter is provided,
+- If the input datetime scale is not 0 or a format parameter is provided,
+returns a timestamp of type Decimal with a maximum precision of six decimal places.
+- If the input datetime scale is 0 and no format parameter is provided,
 returns a timestamp of type INT.
 
-For times before '1970-01-01 00:00:01.000000 UTC' or after '3001-01-19 03:14:07.999999 UTC', the function returns 0.
+- For times before '1970-01-01 00:00:01.000000 UTC' or after '3001-01-19 03:14:07.999999 UTC', the function returns 0.
 
 Returns NULL if any argument is NULL.
 
