@@ -48,8 +48,7 @@ PROPERTIES (
     'llm.temperature' = '0.7',
     'llm.max_token' = '1024',
     'llm.max_retries' = '3',
-    'llm.retry_delay_ms' = '1000',
-    'llm.timeout_ms' = '30000',
+    'llm.retry_delay_second' = '1'
 );
  ```
 
@@ -65,15 +64,13 @@ PROPERTIES (
 
 `llm_api_key`: 除`llm.provider_type = local`的情况外必填，API 密钥。
 
-`llm.temperature`: 非必填，采样温度，控制输出随机性，为 0 到 1 之间的浮点数
+`llm.temperature`: 可选，控制生成内容的随机性，取值范围为 0 到 1 的浮点数。默认值为 -1，表示不设置该参数。
 
-`llm.max_tokends`: 非必填，最大生成 token 数。
+`llm.max_tokens`: 可选，限制生成内容的最大 token 数。默认值为 -1，表示不设置该参数。Anthropic 默认值为 2048。
 
-`llm.max_retries`: 非必填，单次请求最大重试数。
+`llm.max_retries`: 可选，单次请求的最大重试次数。默认值为 3。
 
-`llm.retry_delay_ms`: 非必填，重试延迟时间。
-
-`llm.timeout_ms`: 非必填，单次请求超时时间。
+`llm.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
 
 ---
 

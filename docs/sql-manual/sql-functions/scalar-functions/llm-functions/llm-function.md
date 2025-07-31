@@ -49,8 +49,7 @@ PROPERTIES (
     'llm.temperature' = '0.7',
     'llm.max_token' = '1024',
     'llm.max_retries' = '3',
-    'llm.retry_delay_ms' = '1000',
-    'llm.timeout_ms' = '30000',
+    'llm.retry_delay_second' = '1'
 );
  ```
 
@@ -66,15 +65,15 @@ PROPERTIES (
 
 `llm_api_key`: Required except when `llm.provider_type = local`, API key.
 
-`llm.temperature`: Optional, sampling temperature, controls output randomness, a float between 0 and 1.
+`llm.temperature`: Optional. Controls the randomness of generated content. Accepts a float value between 0 and 1. 
+The default value is -1, which means this parameter is not set.
 
-`llm.max_tokends`: Optional, maximum number of generated tokens.
+`llm.max_tokens`: Optional. Limits the maximum number of tokens for generated content. 
+The default value is -1, which means this parameter is not set. The default value for Anthropic is 2048.
 
-`llm.max_retries`: Optional, maximum number of retries for a single request.
+`llm.max_retries`: Optional. The maximum number of retries for a single request. The default value is 3.
 
-`llm.retry_delay_ms`: Optional, retry delay time.
-
-`llm.timeout_ms`: Optional, timeout for a single request.
+`llm.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
 
 ---
 
