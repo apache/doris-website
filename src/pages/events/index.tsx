@@ -42,6 +42,50 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
+            detailTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
+            tag: 'Apache Doris Meetup',
+            date: 'August 22, 2025 1:30-5:00 PM (GMT+8)',
+            cardDate: 'August 22, 2025',
+            address: 'Room 4&5 14/F Fairmont House, 8 Cotton Tree Drive, Central, Hong Kong',
+            description: 'This joint event, co-hosted by NebulaGraph and Apache Doris, brings together industry leaders and technical experts to explore how modern graph and analytics technologies are reshaping financial risk control, observability, and compliance.',
+            start_date: '2025-08-22T13:30:00.000Z',
+            end_date: '2025-08-22T17:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/250822-doris-mettup-banner.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-meetup-20250822',
+        },
+        {
+            cardTitle: 'Real-Time IoT Analytics with Apache Doris',
+            detailTitle: 'Real-Time IoT Analytics with Apache Doris',
+            tag: 'Apache Doris Meetup',
+            date: 'August 20, 2025 5:00-7:00 PM PDT',
+            cardDate: 'August 20, 2025',
+            address: 'Plug and Play Tech Center 440 N Wolfe Rd, Sunnyvale, CA 94085',
+            description: 'Join EMQ and VeloDB for a developer-focused meetup exploring how to build scalable, real-time data pipelines using MQTT and Apache Doris.',
+            start_date: '2025-08-20T17:00:00.000Z',
+            end_date: '2025-08-20T19:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/emqx-velodb-meetup-banner.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/doris-meetup-250820',
+        },
+        {
             cardTitle: 'Migrating from Snowflake to Apache Doris',
             detailTitle: 'Migrating from Snowflake to Apache Doris',
             tag: 'Apache Doris Webinar',
@@ -133,29 +177,6 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
-            detailTitle: 'CommunityOverCode Asia 2025',
-            date: '2025 年 07 月 25 日 - 27 日',
-            address: '北京市海淀区中关村国家自主创新示范区会议中心',
-            description:
-                '飞轮科技作为本届峰会的开源市集赞助商，携手菜鸟、中国电信翼支付、小米、中国联通等多位资深技术专家，于 AI、OLAP & Data Analysis、Cloud Native 等多个论坛为大家分享基于 Apache Doris 的最新研究成果、实践经验和技术发展，欢迎报名并前往 Apache Doris x SelectDB 展区参与互动！',
-            start_date: '2025-07-25T00:00:00.000Z',
-            end_date: '2025-07-27T20:30:00.000Z',
-            img: (
-                <img
-                    alt="CommunityOverCode Asia 2025"
-                    width={384}
-                    height={164}
-                    className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/community-over-code-asia2025.jpeg').default}`}
-                />
-            ),
-            isCover: true,
-            link: 'https://mp.weixin.qq.com/s/v3TTeNRf-QONXQXQsZ4kJA',
-        },
-        {
-            cardTitle: '',
-            cardDate: '',
-            tag: '',
             detailTitle: '走进小米@武汉',
             date: '2025 年 08 月 02 日',
             address: '武汉市洪山区 · 小米武汉总部大楼 1 楼展厅',
@@ -174,6 +195,52 @@ const EVENTS_PAGE_DATA = {
             ),
             isCover: true,
             link: 'https://www.selectdb.com/resources/events/apache-doris-meetup-20250802',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '实时分析系列直播（第二期）：数据更新',
+            date: '2025 年 07 月 31 日',
+            address: '线上直播',
+            description:
+                'Apache Doris 作为一款高性能的实时分析引擎，凭其强大的实时更新能力，支持多种数据源的快速接入与处理，使企业能够即时获取最新信息，从而做出更快速、更准确的决策。',
+            start_date: '2025-07-31T19:30:00.000Z',
+            end_date: '2025-07-31T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250717"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-webinar-0731.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250731',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'CommunityOverCode Asia 2025',
+            date: '2025 年 07 月 25 日 - 27 日',
+            address: '北京市海淀区中关村国家自主创新示范区会议中心',
+            description:
+                '飞轮科技作为本届峰会的开源市集赞助商，携手菜鸟、中国电信翼支付、小米、中国联通等多位资深技术专家，于 AI、OLAP & Data Analysis、Cloud Native 等多个论坛为大家分享基于 Apache Doris 的最新研究成果、实践经验和技术发展，欢迎报名并前往 Apache Doris x SelectDB 展区参与互动！',
+            start_date: '2025-07-25T00:00:00.000Z',
+            end_date: '2025-07-27T20:30:00.000Z',
+            img: (
+                <img
+                    alt="CommunityOverCode Asia 2025"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/community-over-code-asia2025.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://mp.weixin.qq.com/s/v3TTeNRf-QONXQXQsZ4kJA',
         },
         {
             cardTitle: '',
