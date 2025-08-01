@@ -26,16 +26,66 @@ APPROX_COUNT_DISTINCT(<expr>)
 
 Returns a value of type BIGINT.
 
-### Example
+## Example
 
 ```sql
-select approx_count_distinct(query_id) from log_statis group by datetime;
+-- setup
+create table t1(
+        k1 int,
+        k2 varchar(100)
+) distributed by hash (k1) buckets 1
+properties ("replication_num"="1");
+insert into t1 values 
+    (1, 'apple'),
+    (1, 'banana'),
+    (1, 'apple'),
+    (2, 'orange'),
+    (2, 'orange'),
+    (2, 'grape'),
+    (3, 'cherry'),
+    (3, null);
 ```
 
+```sql
+select approx_count_distinct(k2) from t1;
+```
+
+Calculate the approximate distinct count of all k2 values, NULL values are not included in the calculation.
+
 ```text
-+-----------------+
-| approx_count_distinct(`query_id`) |
-+-----------------+
-| 17721           |
-+-----------------+
++---------------------------+
+| approx_count_distinct(k2) |
++---------------------------+
+|                         5 |
++---------------------------+
+```
+
+```sql
+select k1, approx_count_distinct(k2) from t1 group by k1;
+```
+
+Group by k1 and calculate the approximate distinct count of k2 in each group.
+
+```text
++------+---------------------------+
+| k1   | approx_count_distinct(k2) |
++------+---------------------------+
+|    1 |                         2 |
+|    2 |                         2 |
+|    3 |                         1 |
++------+---------------------------+
+```
+
+```sql
+select approx_count_distinct(k2) from t1 where k1 = 999;
+```
+
+When the query result is empty, returns 0.
+
+```text
++---------------------------+
+| approx_count_distinct(k2) |
++---------------------------+
+|                         0 |
++---------------------------+
 ```

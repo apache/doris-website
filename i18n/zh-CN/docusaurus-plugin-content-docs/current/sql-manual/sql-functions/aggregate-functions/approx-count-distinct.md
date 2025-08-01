@@ -30,13 +30,63 @@ APPROX_COUNT_DISTINCT(<expr>)
 ## 举例
 
 ```sql
-select approx_count_distinct(query_id) from log_statis group by datetime;
+-- setup
+create table t1(
+        k1 int,
+        k2 varchar(100)
+) distributed by hash (k1) buckets 1
+properties ("replication_num"="1");
+insert into t1 values 
+    (1, 'apple'),
+    (1, 'banana'),
+    (1, 'apple'),
+    (2, 'orange'),
+    (2, 'orange'),
+    (2, 'grape'),
+    (3, 'cherry'),
+    (3, null);
 ```
 
+```sql
+select approx_count_distinct(k2) from t1;
+```
+
+计算所有 k2 值的近似去重数量，NULL 值不参与计算。
+
 ```text
-+-----------------+
-| approx_count_distinct(`query_id`) |
-+-----------------+
-| 17721           |
-+-----------------+
++---------------------------+
+| approx_count_distinct(k2) |
++---------------------------+
+|                         5 |
++---------------------------+
+```
+
+```sql
+select k1, approx_count_distinct(k2) from t1 group by k1;
+```
+
+按 k1 分组，计算每组中 k2 的近似去重数量。
+
+```text
++------+---------------------------+
+| k1   | approx_count_distinct(k2) |
++------+---------------------------+
+|    1 |                         2 |
+|    2 |                         2 |
+|    3 |                         1 |
++------+---------------------------+
+```
+
+```sql
+select approx_count_distinct(k2) from t1 where k1 = 999;
+```
+
+当查询结果为空时，返回 0。
+
+```text
++---------------------------+
+| approx_count_distinct(k2) |
++---------------------------+
+|                         0 |
++---------------------------+
 ```
