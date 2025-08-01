@@ -7,7 +7,8 @@
 
 ## 描述
 
-APPROX_COUNT_DISTINCT 函数基于 HyperLogLog 算法实现，使用固定大小的内存估算列基数。
+返回非 NULL 的不同元素数量。
+基于 HyperLogLog 算法实现，使用固定大小的内存估算列基数。
 该算法基于尾部零分布假设进行计算，具体精确程度取决于数据分布。基于 Doris 使用的固定桶大小，该算法相对标准误差为 0.8125%
 更详细具体的分析，详见[相关论文](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
 
@@ -43,7 +44,6 @@ insert into t1 values
     (2, 'orange'),
     (2, 'orange'),
     (2, 'grape'),
-    (3, 'cherry'),
     (3, null);
 ```
 
@@ -57,7 +57,7 @@ select approx_count_distinct(k2) from t1;
 +---------------------------+
 | approx_count_distinct(k2) |
 +---------------------------+
-|                         5 |
+|                         4 |
 +---------------------------+
 ```
 
@@ -65,7 +65,7 @@ select approx_count_distinct(k2) from t1;
 select k1, approx_count_distinct(k2) from t1 group by k1;
 ```
 
-按 k1 分组，计算每组中 k2 的近似去重数量。
+按 k1 分组，计算每组中 k2 的近似去重数量。 组内记录都为 NULL 时，返回 0 。
 
 ```text
 +------+---------------------------+
@@ -73,7 +73,7 @@ select k1, approx_count_distinct(k2) from t1 group by k1;
 +------+---------------------------+
 |    1 |                         2 |
 |    2 |                         2 |
-|    3 |                         1 |
+|    3 |                         0 |
 +------+---------------------------+
 ```
 

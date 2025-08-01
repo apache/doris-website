@@ -7,7 +7,8 @@
 
 ## Description
 
-The APPROX_COUNT_DISTINCT function is implemented based on the HyperLogLog algorithm, which uses a fixed size of memory to estimate the column base. The algorithm is based on the assumption of a null distribution in the tails, and the accuracy depends on the data distribution. Based on the fixed bucket size used by Doris, the relative standard error of the algorithm is 0.8125%.
+Returns the number of distinct non-NULL elements.
+This function is implemented based on the HyperLogLog algorithm, which uses a fixed size of memory to estimate the column base. The algorithm is based on the assumption of a null distribution in the tails, and the accuracy depends on the data distribution. Based on the fixed bucket size used by Doris, the relative standard error of the algorithm is 0.8125%.
 For a more detailed and specific analysis, see [related paper](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)
 
 ## Syntax
@@ -42,7 +43,6 @@ insert into t1 values
     (2, 'orange'),
     (2, 'orange'),
     (2, 'grape'),
-    (3, 'cherry'),
     (3, null);
 ```
 
@@ -56,7 +56,7 @@ Calculate the approximate distinct count of all k2 values, NULL values are not i
 +---------------------------+
 | approx_count_distinct(k2) |
 +---------------------------+
-|                         5 |
+|                         4 |
 +---------------------------+
 ```
 
@@ -64,7 +64,7 @@ Calculate the approximate distinct count of all k2 values, NULL values are not i
 select k1, approx_count_distinct(k2) from t1 group by k1;
 ```
 
-Group by k1 and calculate the approximate distinct count of k2 in each group.
+Group by k1 and calculate the approximate distinct count of k2 in each group. When all records in the group are NULL, returns 0.
 
 ```text
 +------+---------------------------+
@@ -72,7 +72,7 @@ Group by k1 and calculate the approximate distinct count of k2 in each group.
 +------+---------------------------+
 |    1 |                         2 |
 |    2 |                         2 |
-|    3 |                         1 |
+|    3 |                         0 |
 +------+---------------------------+
 ```
 
