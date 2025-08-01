@@ -5,36 +5,79 @@
 }
 ---
 
-## Description
+## Function
 
-Merge multiple arrays without duplicate elements to generate a new array
+`ARRAY_UNION` is used to return the union of multiple arrays, that is, to merge all elements that appear in the arrays and form a new array after deduplication.
 
 ## Syntax
 
-```sql
-ARRAY_UNION(<array>, <array> [, ... ])
+```SQL
+ARRAY_UNION(arr1, arr2, ..., arrN)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<array>` | The array to be merged |
+- `arr1, arr2, ..., arrN`: Any number of array inputs, all of type `ARRAY<T>`.
+    - The element types `T` of all arrays must be the same, or can be implicitly converted to a unified type.
+    - The type `T` does not support semi-structured types.
+    - Parameters can be constants or variables.
 
 ## Return Value
 
-Returns an array containing all elements in the union of all arrays, excluding duplicates. If the input parameter is NULL, it returns NULL.
+- Returns a new array of type `ARRAY<T>`, containing all unique elements from the input arrays, i.e., the deduplicated union.
+    - If any parameter is `NULL`, returns `NULL` (see examples).
 
-## Example
+## Usage Notes
 
-```sql
-SELECT ARRAY_UNION([1, 2, 3, 6],[1, 2, 5]),ARRAY_UNION([1, 4, 3, 5, NULL],[1,6,10]);
-```
+1. Deduplication of elements relies on equality comparison (using the = operator).
+2. Only one `NULL` is retained in the array result (see examples).
+3. The order of the array result is indeterminate.
 
-```text
-+--------------------------------------+---------------------------------------------+
-| array_union([1, 2, 3, 6], [1, 2, 5]) | array_union([1, 4, 3, 5, NULL], [1, 6, 10]) |
-+--------------------------------------+---------------------------------------------+
-| [3, 2, 1, 6, 5]                      | [null, 10, 3, 1, 6, 4, 5]                   |
-+--------------------------------------+---------------------------------------------+
-```
+## Examples
+
+1. Simple examples
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world')); 
+    +---------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world')) |
+    +---------------------------------------------------------------+
+    | ["world", "hello"]                                            |
+    +---------------------------------------------------------------+
+
+    SELECT ARRAY_UNION(ARRAY(1, 2, 3), ARRAY(3, 5, 6));
+    +---------------------------------------------+
+    | ARRAY_UNION(ARRAY(1, 2, 3), ARRAY(3, 5, 6)) |
+    +---------------------------------------------+
+    | [1, 5, 2, 6, 3]                             |
+    +---------------------------------------------+
+    ```
+
+2. When the input array is `NULL`
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world'), NULL); 
+    +---------------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world'), NULL) |
+    +---------------------------------------------------------------------+
+    | NULL                                                                |
+    +---------------------------------------------------------------------+
+    ```
+
+3. When the input array contains `NULL`
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)); 
+    +------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)) |
+    +------------------------------------------------------------+
+    | [null, "world", "hello"]                                   |
+    +------------------------------------------------------------+
+
+    SELECT ARRAY_UNION(ARRAY(NULL, 'world'), ARRAY('hello', NULL)); 
+    +---------------------------------------------------------+
+    | ARRAY_UNION(ARRAY(NULL, 'world'), ARRAY('hello', NULL)) |
+    +---------------------------------------------------------+
+    | [null, "world", "hello"]                                |
+    +---------------------------------------------------------+
+    ```

@@ -5,37 +5,81 @@
 }
 ---
 
-## 描述
+## 功能
 
-生成一个包含 n 个重复元素 element 的数组
+`ARRAY_WITH_CONSTANT` 用于生成一个指定长度的数组，其中所有元素都为给定的值。
 
 ## 语法
 
-```sql
-ARRAY_WITH_CONSTANT(<n>, <element>)
+```SQL
+ARRAY_WITH_CONSTANT(count, element)
 ```
 
 ## 参数
 
-| 参数 | 说明   |
-|--|------|
-| `<n>` | 元数个数 |
-| `<element>` | 指定元素 |
+- `count`：整数类型，指定返回数组的长度。
+    - `count` 的范围是 `[0, 1000000]`，否则会返回错误 `INVALID_ARGUMENT`。
+    - 可以是构造的常量，或者变量。
+
+- `element`：任意类型的值，用于填充数组。
+    - 可以是构造的常量，或者变量。
 
 ## 返回值
 
-返回一个数组，包含 n 个重复的 element 元素。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
+- 返回一个 `ARRAY<T>` 类型的数组，其中 `T` 是 `element` 的类型。
+    - 数组中包含 `count` 个相同的 `element`。
 
-## 举例
+## 使用说明
 
-```sql
-SELECT ARRAY_WITH_CONSTANT(2, "hello"),ARRAY_WITH_CONSTANT(3, 12345);
-```
+- 如果 `count = 0` 或者 `NULL`，返回空数组。
+- 如果 element 为 NULL，数组中所有元素均为 NULL。
+- 函数功能和 `ARRAY_REPEAT` 函数相同，参数位置相反。
+- 可以与其他数组函数组合使用，实现更复杂的数据构造逻辑。
 
-```text
-+---------------------------------+-------------------------------+
-| array_with_constant(2, 'hello') | array_with_constant(3, 12345) |
-+---------------------------------+-------------------------------+
-| ["hello", "hello"]              | [12345, 12345, 12345]         |
-+---------------------------------+-------------------------------+
-```
+## 示例
+
+1. 简单实例
+
+    ```SQL
+    SELECT ARRAY_WITH_CONSTANT(3, 'hello');
+    +---------------------------------+
+    | ARRAY_WITH_CONSTANT(3, 'hello') |
+    +---------------------------------+
+    | ["hello", "hello", "hello"]     |
+    +---------------------------------+
+    ```
+
+2. 异常参数
+   
+    ```SQL
+    SELECT ARRAY_WITH_CONSTANT(0, 'hello');
+    +---------------------------------+
+    | ARRAY_WITH_CONSTANT(0, 'hello') |
+    +---------------------------------+
+    | []                              |
+    +---------------------------------+
+
+    SELECT ARRAY_WITH_CONSTANT(NULL, 'hello');
+    +------------------------------------+
+    | ARRAY_WITH_CONSTANT(NULL, 'hello') |
+    +------------------------------------+
+    | []                                 |
+    +------------------------------------+
+
+    SELECT ARRAY_WITH_CONSTANT(2, NULL);
+    +------------------------------+
+    | ARRAY_WITH_CONSTANT(2, NULL) |
+    +------------------------------+
+    | [null, null]                 |
+    +------------------------------+
+
+    SELECT ARRAY_WITH_CONSTANT(NULL, NULL);
+    +---------------------------------+
+    | ARRAY_WITH_CONSTANT(NULL, NULL) |
+    +---------------------------------+
+    | []                              |
+    +---------------------------------+
+
+    -- 返回错误：INVALID_ARGUMENT
+    SELECT ARRAY_WITH_CONSTANT(-1, 'hello');
+    ```
