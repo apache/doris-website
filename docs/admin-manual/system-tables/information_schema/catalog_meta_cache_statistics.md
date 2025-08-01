@@ -52,11 +52,11 @@ View the metadata cache information of the External Catalog in the currently con
 ```
 
 The METRIC_NAME column contains the following Caffeine cache performance metrics:
-> - eviction_count: The number of entries that have been evicted from the cache
-> - hit_ratio: The ratio of cache requests which were hits (ranges from 0.0 to 1.0)
-> - average_load_penalty: The average time spent loading new values (in nanoseconds)
-> - estimated_size: The approximate number of entries in the cache
-> - hit_count: The number of times cache lookup methods have returned a cached value
-> - read_count: The total number of times cache lookup methods have been called
+- eviction_count: The number of entries that have been evicted from the cache
+- hit_ratio: The ratio of cache requests which were hits (ranges from 0.0 to 1.0)
+- average_load_penalty: The average time spent loading new values (in nanoseconds)
+- estimated_size: The approximate number of entries in the cache
+- hit_count: The number of times cache lookup methods have returned a cached value
+- read_count: The total number of times cache lookup methods have been called
 
 

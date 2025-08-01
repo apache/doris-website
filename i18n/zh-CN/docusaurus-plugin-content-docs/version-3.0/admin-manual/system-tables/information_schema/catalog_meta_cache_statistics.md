@@ -49,9 +49,9 @@ mysql> select * from catalog_meta_cache_statistics;
 
 METRIC_NAME 列包含以下 Caffeine 缓存性能指标：
 
-> - eviction_count：从缓存中驱逐的条目数量
-> - hit_ratio：缓存命中率，范围从 0.0 到 1.0
-> - average_load_penalty：加载新值的平均耗时（纳秒）
-> - estimated_size：缓存中条目的估计数量
-> - hit_count：缓存查找方法返回缓存值的次数
-> - read_count：缓存查找方法被调用的总次数
+- eviction_count：从缓存中驱逐的条目数量
+- hit_ratio：缓存命中率，范围从 0.0 到 1.0
+- average_load_penalty：加载新值的平均耗时（纳秒）
+- estimated_size：缓存中条目的估计数量
+- hit_count：缓存查找方法返回缓存值的次数
+- read_count：缓存查找方法被调用的总次数
