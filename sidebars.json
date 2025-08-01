@@ -1034,6 +1034,7 @@
                                         "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/json-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
                                     ]
                                 }
