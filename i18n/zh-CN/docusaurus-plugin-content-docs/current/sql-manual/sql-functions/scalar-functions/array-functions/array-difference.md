@@ -38,7 +38,7 @@ array_difference(ARRAY<T> arr)
 - NULL：如果输入数组为 NULL
 
 使用说明：
-- 如果数组包含其他类型（如字符串、日期等），会尝试将元素转换为 DOUBLE 类型。转换失败的元素结果为 null，不参与差值计算。
+- 如果数组包含其他类型（如字符串等），会尝试将元素转换为 DOUBLE 类型。转换失败的元素结果为 null，不参与差值计算。
 - 函数会尝试将所有元素转换为兼容的数值类型进行差值计算, 差值的返回类型根据输入类型自动选择：
   - 输入为 DOUBLE 或 FLOAT 时，返回 ARRAY\<DOUBLE>
   - 输入为整数类型时，返回 ARRAY\<BIGINT> 或 ARRAY\<LARGEINT>

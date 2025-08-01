@@ -32,7 +32,7 @@ array_compact(ARRAY<T> arr)
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
-- Complex data types: ARRAY, MAP, STRUCT
+- Complex data types: ARRAY
 
 ### Return Value
 
@@ -58,6 +58,7 @@ Usage notes:
 
 - The function maintains the original order of array elements
 - Only removes consecutive duplicate elements, does not perform global deduplication
+- map, struct do not support deduplication logic
 - For null values in array elements: null elements will be processed normally, multiple consecutive null elements will be merged into one
 
 ### Examples
@@ -124,26 +125,6 @@ SELECT array_compact([[1,2],[1,2],[3,4],[3,4]]);
 +------------------------------------------+
 | [[1,2],[3,4]]                            |
 +------------------------------------------+
-```
-
-Consecutive deduplication for map types. Only adjacent completely identical maps will be removed, non-consecutive ones will not.
-```sql
-SELECT array_compact([{'k':1},{'k':1},{'k':2}]);
-+------------------------------------------+
-| array_compact([{'k':1},{'k':1},{'k':2}]) |
-+------------------------------------------+
-| [{"k":1},{"k":2}]                      |
-+------------------------------------------+
-```
-
-Consecutive deduplication for struct types. Only adjacent completely identical structs will be removed, non-consecutive ones will not.
-```sql
-SELECT array_compact(array(named_struct('name','Alice','age',20),named_struct('name','Alice','age',20),named_struct('name','Bob','age',30)));
-+-------------------------------------------------------------+
-| array_compact(array(named_struct('name','Alice','age',20),named_struct('name','Alice','age',20),named_struct('name','Bob','age',30))) |
-+-------------------------------------------------------------+
-| [{"name":"Alice","age":20},{"name":"Bob","age":30}]         |
-+-------------------------------------------------------------+
 ```
 
 Empty array returns empty array:

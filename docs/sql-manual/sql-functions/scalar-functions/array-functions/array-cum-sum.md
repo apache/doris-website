@@ -38,12 +38,8 @@ Return value meaning:
 - NULL: if the input array is NULL
 
 Usage notes:
-- The function will attempt to convert all elements to compatible numeric types for cumulative sum calculation. Only the following types support direct accumulation:
-  - Integer types (TINYINT, SMALLINT, INT, BIGINT, LARGEINT)
-  - Floating-point types (FLOAT, DOUBLE)
-  - Decimal types (DECIMALV2, DECIMALV3, including DECIMAL32, DECIMAL64, DECIMAL128I, DECIMAL256)
-- If the array contains other types (such as strings, dates, etc.), it will attempt to convert elements to DOUBLE type. Elements that fail conversion will result in null and will not participate in the cumulative sum.
-- The return type of the cumulative sum is automatically selected based on the input type:
+- If the array contains other types (such as strings etc.), it will attempt to convert elements to DOUBLE type. Elements that fail conversion will result in null and null value be treated as 0 in the cumulative sum calculation.
+- The function will attempt to convert all elements to compatible numeric types for cumulative sum calculation，The return type of the cumulative sum is automatically selected based on the input type:
   - When input is DOUBLE or FLOAT, returns ARRAY\<DOUBLE>
   - When input is integer type, returns ARRAY\<BIGINT> or ARRAY\<LARGEINT>
   - When input is DECIMAL, returns ARRAY\<DECIMAL>, maintaining original precision and scale
