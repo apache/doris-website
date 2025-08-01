@@ -13,7 +13,11 @@
 
   支持读取 `org.apache.hadoop.mapred.TextInputFormat` 格式的 Hive 表。
 
-  支持读取 `org.apache.hadoop.hive.serde2.OpenCSVSerde` 格式的 Hive 表。（2.1.7 版本支持）
+  支持以下 Serde：
+
+  - `org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe`
+  - `org.apache.hadoop.hive.serde2.OpenCSVSerde` (2.1.7 版本支持)
+  - `org.apache.hadoop.hive.serde2.MultiDelimitSerDe` (3.1.0 版本支持)
 
 * Table Valued Function
 
@@ -47,12 +51,14 @@
 
 ### Catalog
 
-- `org.apache.hive.hcatalog.data.JsonSerDe` 格式的 Hive 表（自 3.0.4 版本支持）
+- `org.apache.hadoop.hive.serde2.JsonSerDe`（3.0.4 版本支持）
+
+- `org.apache.hive.hcatalog.data.JsonSerDe`（3.0.4 版本支持）
 
   1. 支持普通类型和复杂类型。
   2. 不支持 `timestamp.formats` SERDEPROPERTIES
 
-- [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde) 格式的 Hive 表（自 3.0.6 版本支持）
+- [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde)（3.0.6 版本支持）
   
   1. 支持普通类型和复杂类型。
   2. SERDEPROPERTIES: 只支持 [`ignore.malformed.json`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#importing-malformed-data) 且行为与该 JsonSerDe 一致，其他 SERDEPROPERTIES 不生效。 
