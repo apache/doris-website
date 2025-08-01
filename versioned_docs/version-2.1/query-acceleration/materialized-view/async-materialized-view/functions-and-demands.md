@@ -93,24 +93,26 @@ Determines whether to refresh immediately after materialized view creation.
 
   Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_6
-  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-  AS
-  SELECT FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_6
+REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
 
   Example of incremental refresh (`REFRESH AUTO`) every 10 hours,
   only refreshing changed partitions or falling back to full refresh if needed
   (automatic Hive partition calculation supported from version 2.1.3):
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_7
-  REFRESH AUTO ON SCHEDULE EVERY 10 hour
-  PARTITION by(l_shipdate)
-  AS
-  SELECT FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_7
+REFRESH AUTO ON SCHEDULE EVERY 10 hour
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
 
 
 - **`ON COMMIT` Automatic Trigger**
@@ -123,17 +125,19 @@ Determines whether to refresh immediately after materialized view creation.
     
     Example: When partition `t1` data changes in base table `lineitem`, it automatically triggers corresponding materialized view partition refresh:
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_8
-    REFRESH AUTO ON COMMIT
-    PARTITION by(l_shipdate)
-    AS
-    SELECT FROM lineitem;
-    ```
-    
-    :::caution
-    Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
-    :::
+```sql
+CREATE MATERIALIZED VIEW mv_8
+REFRESH AUTO ON COMMIT
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
+
+
+:::caution
+Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
+:::
 
     For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
@@ -240,7 +244,8 @@ The time specified in STARTS must be later than the current time.
 CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
-ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   
@@ -260,6 +265,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   

@@ -90,22 +90,25 @@ CREATE MATERIALIZED VIEW
 
   如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_6
-  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-  AS
-  SELECT * FROM lineitem;
-  ```
+
+```sql
+CREATE MATERIALIZED VIEW mv_6
+REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT * FROM lineitem;
+```
 
   如下，尽量增量刷新 (`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_7
-    REFRESH AUTO ON SCHEDULE EVERY 10 hour
-    PARTITION by(l_shipdate)
-    AS
-  SELECT * FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_7
+REFRESH AUTO ON SCHEDULE EVERY 10 hour
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2    
+AS
+SELECT * FROM lineitem;
+```
 
 - **`ON COMMIT` 自动触发**
 
@@ -117,13 +120,14 @@ CREATE MATERIALIZED VIEW
 
   如果物化视图的创建语句如下，那么当 基表 `lineitem` 的 `t1` 分区数据发生变化时，会自动触发物化视图的对应分区刷新。
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_8
-  REFRESH AUTO ON COMMIT
-  PARTITION by(l_shipdate)
-  AS
-  SELECT * FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_8
+REFRESH AUTO ON COMMIT
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT * FROM lineitem;
+```
 
   :::caution 注意
   如果基表的数据频繁变更，不太适合使用此种触发方式，因为会频繁构建物化刷新任务，消耗过多资源。
@@ -237,6 +241,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+DISTRIBUTED BY RANDOM BUCKETS 2          
 PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
@@ -258,6 +263,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
+DISTRIBUTED BY RANDOM BUCKETS 2          
 PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
