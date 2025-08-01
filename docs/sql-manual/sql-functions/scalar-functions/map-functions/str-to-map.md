@@ -20,12 +20,9 @@ STR_TO_MAP(<str> [, <pair_delimiter> [, <key_value_delimiter>]])
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<str>` | The string to be converted to a map |
-| `<pair_delimiter>` | The delimiter for the pairs in the string, default is `,` |
-| `<key_value_delimiter>` | The delimiter for the keys and values in the string, default is `:` |
+- `<str>` The string to be converted to a map.
+- `<pair_delimiter>` The delimiter for the pairs in the string, default is `,`.
+- `<key_value_delimiter>` The delimiter for the keys and values in the string, default is `:`.
 
 ## Return Value
 

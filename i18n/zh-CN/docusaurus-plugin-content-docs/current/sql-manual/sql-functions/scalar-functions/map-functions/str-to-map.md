@@ -21,11 +21,9 @@ STR_TO_MAP(<str> [, <pair_delimiter> [, <key_value_delimiter>]])
 
 ## 参数
 
-| 参数 | 说明 |
-| -- | -- |
-| `<str>` | 要转换为 map 的字符串 |
-| `<pair_delimiter>` | 字符串中键值对的分割符，默认为 `,` |
-| `<key_value_delimiter>` | 字符串中键和值的分割符，默认为 `:` |
+- `<str>` 要转换为 map 的字符串。
+- `<pair_delimiter>` 字符串中键值对的分割符，默认为 `,`。
+- `<key_value_delimiter>` 字符串中键和值的分割符，默认为 `:`。
 
 ## 返回值
 
