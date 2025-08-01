@@ -141,7 +141,7 @@ Distributed replica management improvements include skipping partition deletion,
   - https://github.com/apache/doris/pull/27276
 - Fix missing and leak problem of hardlink for inverted index file.
   - https://github.com/apache/doris/pull/26903
-- Fix index file corrupt when disk is full temporarilly
+- Fix index file corrupt when disk is full temporarily
   - https://github.com/apache/doris/pull/28191
 - Fix incorrect result due to optimization for skip reading index column
   - https://github.com/apache/doris/pull/28104
@@ -176,7 +176,7 @@ Distributed replica management improvements include skipping partition deletion,
 
 
 ### Load and compaction
-- Fix unkown slot descriptor error in routineload for running multiple tables 
+- Fix unknown slot descriptor error in routineload for running multiple tables 
   - https://github.com/apache/doris/pull/25762
 - Fix be crash due to concurrent memory access when caculating memory 
   - https://github.com/apache/doris/pull/27101 

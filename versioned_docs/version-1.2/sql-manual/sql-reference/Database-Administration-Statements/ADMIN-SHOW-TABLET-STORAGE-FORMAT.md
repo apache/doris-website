@@ -7,7 +7,7 @@
 
 ## ADMIN SHOW TABLET STORAGE FORMAT
 ### description
-    This statement is used to display tablet storage foramt information (for administrators only)
+    This statement is used to display tablet storage format information (for administrators only)
     Grammar:
         ADMIN SHOW TABLET STORAGE FORMAT [VERBOSE]
 

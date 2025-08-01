@@ -158,7 +158,7 @@ For **workload management**, we will enable higher flexibility. Users will be ab
 
 ### Cloud-nativeness and storage-compute separation
 
-When Apache Doris 2.0 was released, we previewed the merging of the SelectDB Cloud storage-compute separation solution into the Apache Doris project. After some intense code refactoring and compatibility building, this functionallity will be good and ready in Apache Doris 2.2, and users will be able to experience the elastic computation capability. 
+When Apache Doris 2.0 was released, we previewed the merging of the SelectDB Cloud storage-compute separation solution into the Apache Doris project. After some intense code refactoring and compatibility building, this functionality will be good and ready in Apache Doris 2.2, and users will be able to experience the elastic computation capability. 
 
 ![storage-compute-separation](/images/summit2023/storage-compute-separation.png)
 

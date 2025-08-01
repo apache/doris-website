@@ -413,7 +413,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "File Foramt",
+                            "label": "File Format",
                             "items": [
                                 "lakehouse/file-formats/parquet",
                                 "lakehouse/file-formats/orc",
