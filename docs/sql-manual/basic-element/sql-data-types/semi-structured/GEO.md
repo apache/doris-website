@@ -4,7 +4,7 @@
     "language": "en"
 }
 ---
-# GEO Type Documentation
+## GEO Type Documentation
 
 Geospatial types are special data types in databases used to store and manipulate geospatial data, which can represent geometric objects such as points, lines, and polygons.
 - Core purposes:
@@ -14,31 +14,31 @@ Geospatial types are special data types in databases used to store and manipulat
 Geographic Information Systems are widely used in map services, logistics scheduling, location-based social networking, meteorological monitoring, etc. The core requirement is to efficiently store massive spatial data and support low-latency spatial computing.
 
 
-# Core Encoding Technologies
-## S2 Geometry Library
+## Core Encoding Technologies
+### S2 Geometry Library
 S2 Geometry is a spherical geometry encoding system developed by Google. Its core idea is to achieve efficient indexing of global geospatial data through projection from a sphere to a plane.
 
-### Core Principles
+#### Core Principles
 - Spherical projection: Project the Earth's sphere onto the 6 faces of a regular hexahedron, converting 3D spherical data into 2D planar data.
 - Hierarchical grid division: Each face is recursively divided into quadrilateral grids (cells), and each cell can be further subdivided into 4 smaller sub-cells, forming a hierarchical structure with 30 levels of precision (the higher the level, the smaller the cell area and the higher the precision).
 - 64-bit encoding: Each cell is assigned a unique 64-bit ID, through which spatial positions can be quickly located and spatial relationships can be judged.
 - Hilbert curve ordering: Hilbert space-filling curves are used to encode cells, making spatially adjacent cells have continuous IDs and optimizing range query performance.
 
-### Advantages
+#### Advantages
 - High precision and smooth transition: 30 levels of hierarchy, with precision ranging from global (level 0) to centimeter-level (level 30), ensuring smooth transition to meet the needs of different scenarios.
 - Efficiency in global range queries: Suitable for large-scale spatial queries (e.g., cross-continental, cross-country regional analysis) with no significant performance degradation.
 - Efficient spatial relationship calculation: Inclusion, intersection, and other relationships can be quickly judged through cell IDs, avoiding complex geometric operations.
 
 
-## GeoHash Encoding
+### GeoHash Encoding
 GeoHash is a geocoding method based on equirectangular projection, which realizes spatial indexing by converting longitude and latitude into strings.
 
-### Core Principles
+#### Core Principles
 - Planar projection: Approximate the Earth's sphere as a plane, and recursively divide the area through binary division of longitude and latitude.
 - Rectangular grid division: Divide the Earth's surface into rectangular cells with different precisions. The length of the string determines the precision (up to 12 characters), and each additional character increases the precision by approximately 10 times.
 - Z-order curve encoding: Form a Z-order curve by alternately truncating the binary bits of longitude and latitude, converting 2D coordinates into 1D strings.
 
-### Features
+#### Features
 - Indexing convenience: Adjacent areas can be quickly queried through string prefix matching (e.g., GeoHash codes with the same prefix correspond to spatially adjacent areas).
 - Limitations:
   - Limited precision levels: Up to 12 levels, with steep transitions between levels, making it difficult to meet the needs of high-precision smooth division.
@@ -53,14 +53,14 @@ Comprehensively comparing the characteristics of S2 Geometry Library and GeoHash
 - Spatial continuity: Hilbert curves have better spatial continuity than Z-order curves, which can reduce redundant calculations in range queries.
 
 
-# Introduction to WKT
+## Introduction to WKT
 WKT (Well-Known Text) is a standard text format for representing geospatial data.
 
-## Definition
+### Definition
 - Text format: Describe the structure and coordinates of geometric objects with text strings.
 - Features: Human-readable, easy to edit, suitable for manual input or simple data exchange.
 
-## Syntax Structure
+### Syntax Structure
 - Basic format: GeometryType(CoordinateValues)
 - Common geometric types:
   - Point: POINT(longitude, latitude)  
@@ -70,14 +70,14 @@ WKT (Well-Known Text) is a standard text format for representing geospatial data
   - Polygon: POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))
 
 
-# Introduction to WKB
+## Introduction to WKB
 WKB (Well-Known Binary) is a standard binary data format for representing geospatial data.
 
-## Definition
+### Definition
 - Binary format: Represent geometric objects with binary encoding, which is more compact and efficient than WKT.
 - Features: Optimized for internal storage and transmission by computers, saving space and enabling fast parsing.
 
-## Encoding Structure
+### Encoding Structure
 WKB consists of the following parts:
 - Byte order (1 byte):
   - 0x00: Big Endian (network byte order)
@@ -92,7 +92,7 @@ WKB consists of the following parts:
   - LineString: coordinates of point1, coordinates of point2
   - Polygon: coordinates of point1, coordinates of point2...
 
-### Example
+#### Example
 ```sql
     01 01 00 00 00 00 00 00 00 00 F0 3F 00 00 00 00 00 00 00 40
     └─┘ └─┘ └───────────────┘ └───────────────┘
@@ -100,7 +100,7 @@ WKB consists of the following parts:
     Little Endian Point type     x=1.0           y=2.0
 ```
 
-# GeoPoint Type
+## GeoPoint Type
 1. Storing WKT Format Using String or Varchar
 
 ```sql
@@ -165,7 +165,7 @@ select st_astext(st_point(x,y)) from simple_point_double;
 ```
 
 
-# GeoLine type
+## GeoLine type
 
 1. Storing WKT Format Using String or Varchar
 
@@ -210,7 +210,7 @@ select st_astext(st_geometryfromwkb(wkb)) from simple_line;
 +-------------------------------------------------+
 ```
 
-# GeoPolygon type
+## GeoPolygon type
 
 1. Storing WKT Format Using String or Varchar
 
@@ -253,7 +253,7 @@ select st_astext(st_geometryfromwkb(wkb)) from simple_polygon_wkb;
 +------------------------------------------+
 ```
 
-# GeoMultiPolygon type
+## GeoMultiPolygon type
 
 
 1. Storing WKT Format Using String or Varchar
@@ -280,7 +280,7 @@ select st_astext(st_geometryfromtext(wkt)) from simple_multipolygon;
 ```
 Note: WKB format conversion for GeoMultiPolygon is not yet supported
 
-# GeoCircle type
+## GeoCircle type
 
 Storage Method (Storing Center Coordinates and Radius Using Floating-Point Numbers)
 Since circles do not conform to WKB and WKT formats, three floating-point numbers are needed to store the center coordinates (x, y) and radius (R) respectively:
@@ -300,8 +300,8 @@ select st_astext(st_circle(X,Y,R)) from simple_circle;
 +-----------------------------+
 ```
 
-# Constraints
-## Index
+## Constraints
+### Index
 Since Doris does not directly implement the Geo type but stores and converts it using WKT and WKB, query acceleration for GEO type queries through indexing technology is not possible.
 
 Only 13-digit precision can be guaranteed when converting WKT to GEO output:
@@ -329,8 +329,8 @@ mysql> select ST_AsText(ST_GeomFromWKB(ST_AsBinary(ST_Point(24.7,3.1415926535897
 
 
 
-# Common Uses and Methods of Geo Types in Doris
-## Calculating Distance Between Two Points on Earth
+## Common Uses and Methods of Geo Types in Doris
+### Calculating Distance Between Two Points on Earth
 
 The distance of  Beijing to Shanghai
 Coordinates of Beijing (116.4074, 39.9042) and Shanghai (121.4737, 31.2304):
@@ -363,7 +363,7 @@ select ST_DISTANCE_SPHERE(116.4074, 39.9042, -74.0060, 40.7128);
 ![alt text](/images/BeijingToNewyork.png)
 
 
-## Calculating Area of a Region on the Earth's Sphere
+### Calculating Area of a Region on the Earth's Sphere
 
 Estimating New York's Area
 Outline the New York area roughly with a polygon and calculate the area:
