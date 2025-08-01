@@ -19,8 +19,8 @@ AVG_WEIGHTED(<x>, <weight>)
 
 | Parameter | Description |
 | -- | -- |
-| `<x>` | It is the numeric expression for which the average needs to be calculated, and can be a column name, constant, or a complex numeric expression. |
-| `<weight>` | It is a numeric expression, typically a column name, constant, or the result of another numeric calculation. |
+| `<x>` | It is the numeric expression for which the average needs to be calculated, and can be a column name, constant, or a complex numeric expression. Supported type is Double. |
+| `<weight>` | It is a numeric expression, typically a column name, constant, or the result of another numeric calculation. Supported type is Double. |
 
 ## Return Value
 
