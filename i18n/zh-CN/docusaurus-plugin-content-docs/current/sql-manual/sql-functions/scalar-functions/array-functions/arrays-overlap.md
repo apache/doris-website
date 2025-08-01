@@ -5,52 +5,152 @@
 }
 ---
 
-## 描述
+## 功能
 
-判断 left 和 right 数组中是否包含公共元素
+`ARRAYS_OVERLAP` 用于判断两个数组是否存在至少一个**相同的非空元素**，如果存在返回 `true`，否则返回 `false`。
 
 ## 语法
 
-```sql
-ARRAYS_OVERLAP(<left>, <right>)
+```SQL
+ARRAYS_OVERLAP(arr1, arr2)
 ```
 
 ## 参数
 
-| 参数 | 说明 |
-|--|--|
-| `<left>` | 待判断的数组 |
-| `<right>` | 待判断的数组 |
+- `arr1`：第一个数组，类型为 `ARRAY<T>`。
+
+- `arr2`：第二个数组，类型为 `ARRAY<T>`。
+
+    - 两个数组的元素类型 `T` 必须一致或可以相互隐式转换。
+    - 两个数组的元素类型 `T` 不能是半结构化类型。
+    - 参数可以是构造的常量，也可以是变量。
 
 ## 返回值
 
-如果 left 和 right 具有任何非 null 的共同元素，则返回 true。
-如果没有非 null 的共同元素且任一数组包含 null，则返回 null。
-如果没有非 null 的共同元素，且 left 和 right 都不包含 null，则返回 false。
+- 返回 `BOOLEAN` 类型：
 
-## 举例
+    - 如果两个数组有交集，返回 `true`；
 
-```
-select arrays_overlap([1, 2, 3], [1, null]);
-+--------------------------------------+
-| arrays_overlap([1, 2, 3], [1, null]) |
-+--------------------------------------+
-|                                    1 |
-+--------------------------------------+
+    - 如果没有交集，返回 `false`；
 
+    - 如果任一参数为 `NULL`，则返回 `NULL` (见示例)。
 
-select arrays_overlap([2, 3], [1, null]);
-+-----------------------------------+
-| arrays_overlap([2, 3], [1, null]) |
-+-----------------------------------+
-|                              NULL |
-+-----------------------------------+
+## 使用说明
 
-select arrays_overlap([2, 3], [1]);
-+-----------------------------+
-+-----------------------------+
-| arrays_overlap([2, 3], [1]) |
-+-----------------------------+
-|                           0 |
-+-----------------------------+
-```
+1. **比较方式使用元素的等值判断（= 运算符）**。
+2. **如果没有相同的非空元素，当数组的元素中包含 `NULL` 时，返回值是 `NULL`**（具体见示例）。
+3. 可以在建表语句中指定**倒排索引来加速函数的执行**（具体见示例）。
+   - 函数作谓词判断条件使用时，倒排索引会加速函数的执行。
+   - 当函数作查询结果使用时，倒排索引不会加速函数的执行。
+4. 常用于数据清洗、标签匹配、用户行为交集判断等场景。
+
+## 示例
+
+1. 简单示例：
+
+    ```SQL
+    SELECT ARRAYS_OVERLAP(ARRAY('hello', 'aloha'), ARRAY('hello', 'hi', 'hey'));
+    +----------------------------------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY('hello', 'aloha'), ARRAY('hello', 'hi', 'hey')) |
+    +----------------------------------------------------------------------+
+    |                                                                    1 |
+    +----------------------------------------------------------------------+
+
+    SELECT ARRAYS_OVERLAP(ARRAY('Pinnacle', 'aloha'), ARRAY('hi', 'hey'));
+    +----------------------------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY('Pinnacle', 'aloha'), ARRAY('hi', 'hey')) |
+    +----------------------------------------------------------------+
+    |                                                              0 |
+    +----------------------------------------------------------------+
+    ```
+
+2. 错误参数，当输入的参数是不支持的类型时，返回 `INVALID_ARGUMENT`。
+
+    ```SQL
+    -- [INVALID_ARGUMENT]execute failed, unsupported types for function arrays_overlap
+    SELECT ARRAYS_OVERLAP(ARRAY(ARRAY('hello', 'aloha'), ARRAY('hi', 'hey')), ARRAY(ARRAY('hello', 'hi', 'hey'), ARRAY('aloha', 'hi')));
+    ```
+
+3. 输入的`ARRAY` 是 `NULL`，返回值是 `NULL`。
+
+    ```SQL
+    SELECT ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), NULL);
+    +-----------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), NULL) |
+    +-----------------------------------------------+
+    |                                          NULL |
+    +-----------------------------------------------+
+
+    SELECT ARRAYS_OVERLAP(NULL, NULL);
+    +----------------------------+
+    | ARRAYS_OVERLAP(NULL, NULL) |
+    +----------------------------+
+    |                       NULL |
+    +----------------------------+
+    ```'
+
+4. 输入的`ARRAY` 包含 `NULL` 时，如果存在相同非空元素时，返回值是 `True`，不存在则返回 `NULL`。
+   
+   ```SQL
+    SELECT ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), ARRAY('HELLO', NULL));
+    +---------------------------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), ARRAY('HELLO', NULL)) |
+    +---------------------------------------------------------------+
+    |                                                             1 |
+    +---------------------------------------------------------------+
+
+    SELECT ARRAYS_OVERLAP(ARRAY('PICKLE', 'ALOHA'), ARRAY('HELLO', NULL));
+    +----------------------------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY('PICKLE', 'ALOHA'), ARRAY('HELLO', NULL)) |
+    +----------------------------------------------------------------+
+    |                                                           NULL |
+    +----------------------------------------------------------------+
+
+    SELECT ARRAYS_OVERLAP(ARRAY(NULL), ARRAY('HELLO', NULL));
+    +---------------------------------------------------+
+    | ARRAYS_OVERLAP(ARRAY(NULL), ARRAY('HELLO', NULL)) |
+    +---------------------------------------------------+
+    |                                              NULL |
+    +---------------------------------------------------+
+    ```'
+
+5. 使用倒排索引加速查询
+   
+    ```SQL
+    -- 建表包含倒排索引
+    CREATE TABLE IF NOT EXISTS arrays_overlap_table (
+        id INT,
+        array_column ARRAY<STRING>,
+        INDEX idx_array_column (array_column) USING INVERTED --只允许不分词倒排索引
+    ) ENGINE=OLAP
+    DUPLICATE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1
+    PROPERTIES (
+    "replication_num" = "1"
+    );
+
+    -- 插入两行
+    INSERT INTO arrays_overlap_table (id, array_column) VALUES (1, ARRAY('HELLO', 'ALOHA')), (2, ARRAY('NO', 'WORLD'));
+    ```
+
+ - 当函数作谓词判断条件使用时，倒排索引会加速函数的执行
+  
+    ```SQL
+    SELECT * from arrays_overlap_table WHERE ARRAYS_OVERLAP(array_column, ARRAY('HELLO', 'PICKLE')); 
+    +------+--------------------+
+    | id   | array_column       |
+    +------+--------------------+
+    |    1 | ["HELLO", "ALOHA"] |
+    +------+--------------------+
+
+- 当函数作查询结果使用时，倒排索引不会加速函数的执行
+  
+    ```SQL
+    SELECT ARRAYS_OVERLAP(array_column, ARRAY('HELLO', 'PICKLE')) FROM arrays_overlap_table;
+    +--------------------------------------------------------+
+    | ARRAYS_OVERLAP(array_column, ARRAY('HELLO', 'PICKLE')) |
+    +--------------------------------------------------------+
+    |                                                      1 |
+    |                                                      0 |
+    +--------------------------------------------------------+
+    ```
