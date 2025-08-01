@@ -250,6 +250,10 @@ properties(
 
 这样我们同时具有了 Auto Partition 的灵活性，且分区名上保持了一致性。
 
+:::note
+在 2.1.7 之前的一些早期版本（2.1.2 ~ 2.1.6）中，Auto Partition 和 Dynamic Partition 无法对一张表同时使用。
+:::
+
 ## 分区管理
 
 当启用自动分区后，分区名可以通过 `auto_partition_name` 函数映射到分区。`partitions` 表函数可以通过分区名产生详细的分区信息。仍然以 `DAILY_TRADE_VALUE` 表为例，在我们插入数据后，查看其当前分区：
