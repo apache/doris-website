@@ -7,9 +7,9 @@
 
 ## Description
 
-The DATE_FORMAT function is used to convert a date or time value into a string according to a specified format string (<format>). It supports formatting DATE (date only) and DATETIME (date and time) types, and the output result is a string that conforms to the specified format.
+The DATE_FORMAT function is used to convert a date or time value into a string according to a specified format string (`format`). It supports formatting DATE (date only) and DATETIME (date and time) types, and the output result is a string that conforms to the specified format.
 
-## Sytax
+## Syntax
 
 ```sql
 DATE_FORMAT(<date>, <format>)
@@ -19,7 +19,7 @@ DATE_FORMAT(<date>, <format>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date>` | A valid date value, supporting date and datetime types|
+| `<date>` | A valid date value, support `datetime` or `date` type and `string` types that conform to the format,for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
 | `<format>` | Specifies the output format of the date/time, of type varchar |
 
 Supported Format Specifiers
@@ -47,10 +47,10 @@ Supported Format Specifiers
 | %S     | Seconds (00-59)                          |
 | %s     | Seconds (00-59)                          |
 | %T     | Time in 24-hour format (hh:mm:ss)           |
-| %U     | Week (00-53), where Sunday is the first day of the week    |
-| %u     | Week (00-53), where Monday is the first day of the week    |
-| %V     | Week (01-53), where Sunday is the first day of the week; used with %X |
-| %v     | Week (01-53), where Monday is the first day of the week; used with %x |
+| %U     | Week (00-53), where Sunday is the first day of the week ,[week](./week) mode 0   |
+| %u     | Week (00-53), where Monday is the first day of the week ,[week](./week)) mode 1   |
+| %V     | Week (01-53), where Sunday is the first day of the week; [week](./week) mode 2,used with %X |
+| %v     | Week (01-53), where Monday is the first day of the week; [week](./week)) mode 3,used with %x |
 | %W     | Full weekday name (Sunday-Saturday)    |
 | %w     | Day of the week (0 = Sunday, 6 = Saturday)        |
 | %X     | Year, where Sunday is the first day of the week (4 digits); used with %V |
@@ -74,21 +74,21 @@ A formatted date string.
 
 Special cases:
 
-- Returns NULL if the input date is invalid (e.g., '2023-13-01').
-- Returns NULL if <format> is NULL or an empty string.
+- Returns NULL if `format` is NULL or an empty string.
 - Returns NULL if any parameter is NULL.
+- Returns NULL if return value length larger than 128 charactors and fold constant close.
 
 ## Example
 
 ```sql
 -- Output weekday name, month name, and 4-digit year
-select date_format('2009-10-04 22:23:00', '%W %M %Y');
+select date_format(cast('2009-10-04 22:23:00' as datetime), '%W %M %Y');
 
-+------------------------------------------------+
-| date_format('2009-10-04 22:23:00', '%W %M %Y') |
-+------------------------------------------------+
-| Sunday October 2009                            |
-+------------------------------------------------+
++------------------------------------------------------------------+
+| date_format(cast('2009-10-04 22:23:00' as datetime), '%W %M %Y') |
++------------------------------------------------------------------+
+| Sunday October 2009                                              |
++------------------------------------------------------------------+
 
 -- Output time in 24-hour format (hour:minute:second)
 select date_format('2007-10-04 22:23:00', '%H:%i:%s');
@@ -118,13 +118,13 @@ select date_format('1999-01-01 00:00:00', '%X-%V');
 +---------------------------------------------+
 
 -- Output the % character (escaped with %%)
-select date_format('2006-06-01', '%%%d/%m');
+select date_format(cast('2006-06-01' as date), '%%%d/%m');
 
-+--------------------------------------+
-| date_format('2006-06-01', '%%%d/%m') |
-+--------------------------------------+
-| %01/06                               |
-+--------------------------------------+
++----------------------------------------------------+
+| date_format(cast('2006-06-01' as date), '%%%d/%m') |
++----------------------------------------------------+
+| %01/06                                             |
++----------------------------------------------------+
 
 --- Special format yyyy-MM-dd HH:mm:ss
 select date_format('2023-12-31 23:59:59', 'yyyy-MM-dd HH:mm:ss');
@@ -158,12 +158,12 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
---- Invalid datetime
 
-mysql> select date_format('2023-12-32 23:59:59', 'yyyy-MM-dd');
-+--------------------------------------------------+
-| date_format('2023-12-32 23:59:59', 'yyyy-MM-dd') |
-+--------------------------------------------------+
-| NULL                                             |
-+--------------------------------------------------+
+---Return NULL if the length of string over 128
+mysql> select date_format('2022-01-12',repeat('a',129));
++-------------------------------------------+
+| date_format('2022-01-12',repeat('a',129)) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
 ```
