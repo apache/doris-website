@@ -9,7 +9,7 @@
 
 The DATE_TRUNC function is used to truncate a date or time value (<datetime>) to a specified time unit (<time_unit>). This means retaining the time information at the specified unit and higher levels, while resetting the time information at lower levels to zero. For example, when truncating to the "hour" unit, the year, month, day, and hour are retained, and minutes, seconds, etc., are reset to zero.
 
-## Sytax
+## Syntax
 
 ```sql
 DATE_TRUNC(<datetime>, <time_unit>)

@@ -9,7 +9,7 @@
 
 The DATE_FLOOR function is used to floor a specified date or time value down to the nearest start of a specified time interval period. That is, it returns the largest periodic moment that is not greater than the input date and time. The period rules are jointly defined by <period> (number of periods) and <type> (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
-## Sytax
+## Syntax
 
 `DATE_FLOOR(<datetime>, INTERVAL <period> <type>)`
 

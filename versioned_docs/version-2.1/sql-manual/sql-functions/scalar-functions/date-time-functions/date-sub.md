@@ -15,7 +15,7 @@ The DATE_SUB function is used to subtract a specified time interval from a given
 - date_sub
 - subdate
 
-## Sytax
+## Syntax
 
 ```sql
 DATE_ADD(<date>, <expr> <time_unit>)

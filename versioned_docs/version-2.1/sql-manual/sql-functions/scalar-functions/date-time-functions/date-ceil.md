@@ -9,7 +9,7 @@
 
 The DATE_CEIL function is used to round up (ceil) a specified date or time value to the nearest start of a specified time interval period. That is, it returns the smallest periodic moment that is not less than the input date and time. The period rules are jointly defined by <period> (number of periods) and <type> (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
-## Sytax
+## Syntax
 
 `DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
 

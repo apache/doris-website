@@ -19,7 +19,7 @@ The DATE_ADD function is used to add a specified time interval to a given date o
 - days_add
 - adddate
 
-## Sytax
+## Syntax
 
 ```sql
 DATE_ADD(<date>, <expr> <time_unit>)

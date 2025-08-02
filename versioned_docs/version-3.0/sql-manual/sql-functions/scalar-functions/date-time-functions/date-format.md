@@ -9,7 +9,7 @@
 
 The DATE_FORMAT function is used to convert a date or time value into a string according to a specified format string (<format>). It supports formatting DATE (date only) and DATETIME (date and time) types, and the output result is a string that conforms to the specified format.
 
-## Sytax
+## Syntax
 
 ```sql
 DATE_FORMAT(<date>, <format>)

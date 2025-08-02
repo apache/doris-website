@@ -9,7 +9,7 @@
 
 The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting <expr2> from <expr1>. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
 
-## Sytax
+## Syntax
 
 ```sql
 DATEDIFF(<expr1>, <expr2>)

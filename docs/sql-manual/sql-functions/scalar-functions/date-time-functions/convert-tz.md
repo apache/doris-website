@@ -9,7 +9,7 @@
 
 Converts a datetime value from the time zone specified by from_tz to the time zone specified by to_tz and returns the resulting value. For time zone settings, refer to the time-zone documentation.
 
-## Sytax
+## Syntax
 
 ```sql
 CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
