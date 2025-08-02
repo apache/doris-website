@@ -1,48 +1,119 @@
 ---
 {
-    "title": "DAYS_ADD",
+    "title": "DATE_ADD",
     "language": "en"
 }
 ---
 
 ## Description
 
-Add a specified time interval to the date.
+The DATE_ADD function is used to add a specified time interval to a given date or time value and return the calculated result.
 
-## Alias
+- Supported input date types include DATE, DATETIME, TIMESTAMP, or formatted strings (such as '2023-12-31', '2023-12-31 23:59:59').
+- The time interval is specified by a numerical value (<expr>) and a unit (<time_unit>). When <expr> is a positive number, it means "adding"; when it is a negative number, it is equivalent to "subtracting" the corresponding interval.
+- If the input parameters are invalid (such as an incorrectly formatted date, an illegal time unit, etc.), the function returns NULL.
+
+## Aliases
 
 - date_add
 - days_add
 - adddate
 
-## Syntax
+## Sytax
 
 ```sql
 DATE_ADD(<date>, <expr> <time_unit>)
 ```
 
-## Parameters
+## Parameter
 
-| Parameter | Description |
+| parameter | description |
 | -- | -- |
-| `<date>` | A valid date value |
-| `<expr>` | The time interval you want to add |
-| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | The date/time value to be processed. Supported types: DATE, DATETIME|
+| `<expr>` | 	The time interval to be added, of type INT|
+| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK |
 
-## Return Value
+## Return value
 
-Returns the calculated date.
+If the input is valid, the returned result is of the same type as <date>:
+
+- When input is DATE, returns DATE (date part only);
+- When input is DATETIME/TIMESTAMP or a string with time, returns DATETIME (including date and time);
+- Inputs with fractional seconds (such as '2024-01-01 12:00:00.123') retain the fractional precision.
+
+Special cases:
+
+- Returns NULL if any parameter is NULL;
+- Returns NULL for invalid dates, illegal units, or non-numerical <expr>;
+- Returns NULL if the calculated result is outside the range of the date type (e.g., before '0000-00-00').
 
 ## Examples
 
 ```sql
+---Add days
 select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
-```
 
-```text
 +-------------------------------------------------+
 | date_add('2010-11-30 23:59:59', INTERVAL 2 DAY) |
 +-------------------------------------------------+
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
+
+---Add quarters
+mysql> select DATE_ADD('2023-01-01', INTERVAL 1 QUARTER);
++--------------------------------------------+
+| DATE_ADD('2023-01-01', INTERVAL 1 QUARTER) |
++--------------------------------------------+
+| 2023-04-01                                 |
++--------------------------------------------+
+
+---Add weeks
+mysql> select DATE_ADD('2023-01-01', INTERVAL 1 WEEK);
++-----------------------------------------+
+| DATE_ADD('2023-01-01', INTERVAL 1 WEEK) |
++-----------------------------------------+
+| 2023-01-08                              |
++-----------------------------------------+
+
+---Add months. Since February 2023 has only 28 days, adding one month to January 31 returns February 28
+mysql> select DATE_ADD('2023-01-31', INTERVAL 1 MONTH);
++------------------------------------------+
+| DATE_ADD('2023-01-31', INTERVAL 1 MONTH) |
++------------------------------------------+
+| 2023-02-28                               |
++------------------------------------------+
+
+---Negative number test
+mysql> select DATE_ADD('2019-01-01', INTERVAL -3 DAY);
++-----------------------------------------+
+| DATE_ADD('2019-01-01', INTERVAL -3 DAY) |
++-----------------------------------------+
+| 2018-12-29                              |
++-----------------------------------------+
+
+---Add hours across years
+mysql> select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR);
++--------------------------------------------------+
+| DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR) |
++--------------------------------------------------+
+| 2024-01-01 01:00:00                              |
++--------------------------------------------------+
+
+-- February 30 is an invalid date (February has a maximum of 28 days in a common year)
+mysql> select DATE_ADD('2023-02-30', INTERVAL 1 DAY);
++----------------------------------------+
+| DATE_ADD('2023-02-30', INTERVAL 1 DAY) |
++----------------------------------------+
+| NULL                                   |
++----------------------------------------+
+
+---Parameter is NULL, returns NULL
+mysql> select DATE_ADD(NULL, INTERVAL 1 MONTH);
++----------------------------------+
+| DATE_ADD(NULL, INTERVAL 1 MONTH) |
++----------------------------------+
+| NULL                             |
++----------------------------------+
+
+
 ```

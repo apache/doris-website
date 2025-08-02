@@ -7,91 +7,136 @@
 
 ## Description
 
-`date_ceil` rounds a given date to the next upper boundary of the specified time interval.
+The DATE_CEIL function is used to round up (ceil) a specified date or time value to the nearest start of a specified time interval period. That is, it returns the smallest periodic moment that is not less than the input date and time. The period rules are jointly defined by <period> (number of periods) and <type> (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
-## Syntax
+## Sytax
 
 `DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
 
-## Parameters
+## Parameter
 
-| Parameter | Description |
+| parameter | description |
 | -- | -- |
-| `datetime` | The argument is a valid date expression |
-| `period` | The argument specifies how many units make up each period, with the start time being 0001-01-01T00:00:00 |
-| `type` | The argument can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND|
+| `datetime` | A valid date expression, supporting input of date/datetime types|
+| `period` | 	Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
+| `type` | Can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK |
 
-## Return Value
+## Raturn value
 
-The return value is a date or time, representing the result of rounding the input value up to the specified unit.
+Returns a date or time value representing the result of rounding up the input value to the specified unit.
 
+If the input is valid, the rounded result is of the same type as <datetime>:
+
+- When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
+- When input is DATETIME, returns DATETIME (including date and time).
+
+Special cases:
+
+- Returns NULL if any parameter is NULL;
+- Returns NULL if the rounded result exceeds the range supported by the date type (e.g., after '9999-12-31');
+- Returns NULL if the <period> parameter is negative;
+- Returns NULL if the <datetime> format is invalid.
 ## Examples
 
 ```sql
-select date_ceil("2023-07-13 22:28:18",interval 5 second);
-```
 
-```text
+---Round up seconds to the nearest 5-second interval
+select date_ceil("2023-07-13 22:28:18",interval 5 second);
+
 +--------------------------------------------------------------+
 | second_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +--------------------------------------------------------------+
 | 2023-07-13 22:28:20                                          |
 +--------------------------------------------------------------+
-```
 
-```sql
+---Round up to the nearest 5-minute interval
 select date_ceil("2023-07-13 22:28:18",interval 5 minute);
 +--------------------------------------------------------------+
 | minute_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +--------------------------------------------------------------+
 | 2023-07-13 22:30:00                                          |
 +--------------------------------------------------------------+
-```
 
-```sql
+---Round up to the nearest 5-hour interval
 select date_ceil("2023-07-13 22:28:18",interval 5 hour);
-```
 
-```text
 +------------------------------------------------------------+
 | hour_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +------------------------------------------------------------+
 | 2023-07-13 23:00:00                                        |
 +------------------------------------------------------------+
-```
 
-```sql
+---Round up to the nearest 5-day interval
 select date_ceil("2023-07-13 22:28:18",interval 5 day);
-```
 
-```text
 +-----------------------------------------------------------+
 | day_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-----------------------------------------------------------+
 | 2023-07-15 00:00:00                                       |
 +-----------------------------------------------------------+
-```
 
-```sql
+---Round up to the nearest 5-month interval
 select date_ceil("2023-07-13 22:28:18",interval 5 month);
-```
 
-```text
 +-------------------------------------------------------------+
 | month_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +-------------------------------------------------------------+
 | 2023-12-01 00:00:00                                         |
 +-------------------------------------------------------------+
-```
 
-```sql
+---Round up to the nearest 5-year interval
 select date_ceil("2023-07-13 22:28:18",interval 5 year);
-```
 
-```text
 +------------------------------------------------------------+
 | year_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
 +------------------------------------------------------------+
 | 2026-01-01 00:00:00                                        |
 +------------------------------------------------------------+
+
+---Input is of date type
+mysql> select date_ceil("2023-07-13",interval 5 year);
++-----------------------------------------+
+| date_ceil("2023-07-13",interval 5 year) |
++-----------------------------------------+
+| 2026-01-01 00:00:00                     |
++-----------------------------------------+
+
+---Exceeds the maximum year
+mysql> select date_ceil("9999-07-13",interval 5 year);
++-----------------------------------------+
+| date_ceil("9999-07-13",interval 5 year) |
++-----------------------------------------+
+| NULL                                    |
++-----------------------------------------+
+
+--Any parameter is NULL
+mysql> select date_ceil("9900-07-13",interval NULL year);
++--------------------------------------------+
+| date_ceil("9900-07-13",interval NULL year) |
++--------------------------------------------+
+| NULL                                       |
++--------------------------------------------+
+
+mysql> select date_ceil(NULL,interval 5 year);
++---------------------------------+
+| date_ceil(NULL,interval 5 year) |
++---------------------------------+
+| NULL                            |
++---------------------------------+
+
+---Invalid parameter, period is negative
+mysql> select date_ceil("2023-01-13 22:28:18",interval -5 month);
++----------------------------------------------------+
+| date_ceil("2023-01-13 22:28:18",interval -5 month) |
++----------------------------------------------------+
+| NULL                                               |
++----------------------------------------------------+
+
+--Invalid datetime, returns NULL
+mysql> select date_ceil("2023-01- 22:28:18",interval -5 month);
++--------------------------------------------------+
+| date_ceil("2023-01- 22:28:18",interval -5 month) |
++--------------------------------------------------+
+| NULL                                             |
++--------------------------------------------------+
 ```

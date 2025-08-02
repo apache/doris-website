@@ -22,11 +22,12 @@ CURDATE()
 
 ## 返回值
 
-当前的日期。
+当前的日期,返回值为 date 类型。
 
 ## 示例 
 
 ```sql
+---获取当前的日期
 SELECT CURDATE();
 ```
 
@@ -39,6 +40,7 @@ SELECT CURDATE();
 ```
 
 ```sql
+---获取当前的日期以数字表示
 SELECT CURDATE() + 0;
 ```
 
