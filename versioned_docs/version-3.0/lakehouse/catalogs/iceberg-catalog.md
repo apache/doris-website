@@ -310,7 +310,7 @@ SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 
 ### Branch and Tag
 
-> This feature is supported since version 3.1.0
+> Since 3.1.0
 >
 > For creating, dropping and managing branch and tag, please refer to [Managing Branch & Tag]
 
@@ -334,7 +334,7 @@ For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether t
 
 ## System Tables
 
-> This feature is supported since version 3.1.0
+> Since 3.1.0
 
 Doris supports querying Iceberg system tables to retrieve metadata information about tables. You can use system tables to view snapshot history, manifest files, data files, partitions, and other metadata.
 
@@ -837,7 +837,7 @@ ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 
 ### Managing Branch & Tag
 
-> This feature is supported since version 3.1.0
+> Since 3.1.0
 
 * **Create Branch**
 
