@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Use arthas to profile fe",
+    "title": "Using Arthas to Profiling FE",
     "language": "en"
 }
 ---
@@ -24,16 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Introduce
-Starting from Doris version 3.1.0, the Arthas tool (version 4.0.5) is included in the FE deployment directory `${DORIS_FE_HOME}/arthas`. Arthas can be used to generate flame graphs, trace method call paths, output method execution times, observe method parameters and return values, and more. This makes it easier to diagnose various runtime issues in the FE process.
-For detailed usage instructions, please refer to the [official Arthas documentation](https://arthas.aliyun.com/en/doc/)
+## Introduction
+
+In Doris 3.1.0 and later versions, the Arthas tool (version 4.0.5) is included in the FE deployment directory `${DORIS_FE_HOME}/arthas`. You can use Arthas to print flame graphs, trace function call paths, output function execution times, observe function parameters and return values, and more, making it convenient to locate various runtime issues in FE.
+
+For specific Arthas usage methods, please refer to: [Arthas Official Documentation](https://arthas.aliyun.com/en/doc/).
+
+For versions prior to 3.1, you need to manually download Arthas:
+
+```shell
+wget https://github.com/alibaba/arthas/releases/download/arthas-all-4.0.5/arthas-bin.zip
+unzip arthas-bin.zip -o ${DORIS_FE_HOME}/arthas
+```
 
 :::note
-Note: Currently, only Linux and macOS are supported. Windows is not supported yet.
+Note: Currently only Linux and MacOS systems are supported, Windows system is not yet supported
 :::
 
-Example: Generating a Flame Graph
-1. Run the `${DORIS_FE_HOME}/arthas/as.sh` script and select the DorisFE process:
+## Generating FlameGraph
+
+1. Run the `${DORIS_FE_HOME}/arthas/as.sh` script and select the `DorisFE` process
+
     ```shell
     bash ./as.sh
     Arthas script version: 4.0.5
@@ -47,22 +58,17 @@ Example: Generating a Flame Graph
     2
     ```
 
-2. Start profiling:
+2. Start Profiling
+
     ```shell
     [arthas@77285]$ profiler start
     Profiling started
     ```
 
-3. Stop profiling and generate a flame graph file named 20250627-115104.html:
+3. Stop Profiling and generate flame graph file as `20250627-115104.html`
+
     ```shell
     [arthas@77285]$ profiler stop --format html
     OK
     profiler output file: <DORIS_FE_HOME>/arthas-output/20250627-115104.html
     ```
-
-## Using Arthas in Older FE Versions
-For versions prior to 3.1, you need to manually download Arthas:
-```shell
-wget https://github.com/alibaba/arthas/releases/download/arthas-all-4.0.5/arthas-bin.zip
-unzip arthas-bin.zip -o ${DORIS_FE_HOME}/arthas
-```
