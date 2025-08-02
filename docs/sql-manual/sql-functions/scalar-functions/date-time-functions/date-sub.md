@@ -1,50 +1,112 @@
 ---
 {
-    "title": "DAYS_SUB",
+    "title": "DATE_SUB",
     "language": "en"
 }
 ---
 
-## Description
+## Descirption
 
-Subtracts a specified time interval to the date.
+The DATE_SUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result. It supports operations on DATE (date only) and DATETIME (date and time) types, where the time interval is defined by both a numerical value and a unit.
 
-## Alias
-
-## 别名
+## Aliases
 
 - days_sub
 - date_sub
 - subdate
 
-## Syntax
+## Sytax
 
 ```sql
-DATE_SUB(<date>, <expr> <time_unit>)
+DATE_ADD(<date>, <expr> <time_unit>)
 ```
 
-## Parameters
+## Parameter
 
-| Parameter | Description |
+| Parameter | Descirption |
 | -- | -- |
-| `<date>` | A valid date value |
-| `<expr>`| The time interval you want to subtract |
-| `<type>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | A valid date value, supporting both date and datetime types|
+| `<expr>` | The time interval to be subtracted, of type INT |
+| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK|
 
-## Return Value
+## Return value
 
-Returns the calculated date.
+If the input is valid, returns a calculated result with the same type as <date>:
 
-## Examples
+- When input is DATE, returns DATE (date part only);
+- When input is DATETIME, returns DATETIME (including date and time).
+
+Special cases:
+
+- Returns NULL if any parameter is NULL;
+- Returns NULL for invalid dates, illegal <expr> (negative values) or <time_unit>;
+Returns NULL if the calculated result is earlier than the minimum value supported by the date type (e.g., before '0000-01-01').
+
+## Example
 
 ```sql
-select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
-```
 
-```text
+--- Subtract two days
+mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
+
 +-------------------------------------------------+
 | date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY) |
 +-------------------------------------------------+
 | 2010-11-28 23:59:59                             |
 +-------------------------------------------------+
+
+--- Subtract two months across years
+mysql> select date_sub('2023-01-15', INTERVAL 2 MONTH);
++------------------------------------------+
+| date_sub('2023-01-15', INTERVAL 2 MONTH) |
++------------------------------------------+
+| 2022-11-15                               |
++------------------------------------------+
+
+--- February 2023 has only 28 days, so subtracting one month from 2023-03-31 results in 2023-02-28
+mysql> select date_sub('2023-03-31', INTERVAL 1 MONTH);
++------------------------------------------+
+| date_sub('2023-03-31', INTERVAL 1 MONTH) |
++------------------------------------------+
+| 2023-02-28                               |
++------------------------------------------+
+
+--- Subtract 61 seconds
+mysql> select date_sub('2023-12-31 23:59:59', INTERVAL 61 SECOND);
++-----------------------------------------------------+
+| date_sub('2023-12-31 23:59:59', INTERVAL 61 SECOND) |
++-----------------------------------------------------+
+| 2023-12-31 23:58:58                                 |
++-----------------------------------------------------+
+
+--- Subtract quarters
+
+mysql> select date_sub('2023-12-31 23:59:59', INTERVAL 61 QUARTER);
++------------------------------------------------------+
+| date_sub('2023-12-31 23:59:59', INTERVAL 61 QUARTER) |
++------------------------------------------------------+
+| 2008-09-30 23:59:59                                  |
++------------------------------------------------------+
+
+--- Any parameter is NULL
+mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
++-------------------------------------------+
+| date_sub('2023-01-01', INTERVAL NULL DAY) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
+
+--- Invalid date, returns NULL
+mysql> select date_sub('2023-02-30', INTERVAL 1 DAY); 
++----------------------------------------+
+| date_sub('2023-02-30', INTERVAL 1 DAY) |
++----------------------------------------+
+| NULL                                   |
++----------------------------------------+
+
+--- Exceeds minimum date
+mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
+
+
 ```
