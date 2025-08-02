@@ -321,6 +321,8 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 ### Branch 和 Tag
 
 > 该功能自 3.1.0 版本支持
+>
+> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】
 
 支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
 
@@ -595,6 +597,15 @@ PROPERTIES (
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
+### 写入数据到 Branch
+
+> 该功能自 3.1.0 版本支持
+
+```sql
+INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
+INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
+```
+
 ### 相关参数
 
 * BE
@@ -831,6 +842,103 @@ ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'Th
 ```sql
 ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 ```
+
+### 管理 Branch & Tag
+
+> 该功能自 3.1.0 版本支持
+
+* **创建 Branch**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] BRANCH [IF NOT EXISTS] <branch_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  [WITH SNAPSHOT RETENTION { snapshotKeep | timeKeep }]
+
+  snapshotKeep:
+    <num> SNAPSHOTS [<num> { DAYS | HOURS | MINUTES }]
+
+  timeKeep:
+    <num> { DAYS | HOURS | MINUTES }
+  ```
+
+  示例：
+
+  ```sql
+  -- 创建分支 "b1"。
+  ALTER TABLE tbl CREATE BRANCH b1;
+  ALTER TABLE tb1 CREATE BRANCH IF NOT EXISTS b1;
+  -- 创建或替换分支 "b1"。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1;
+  -- 基于快照 "123456" 创建或替换分支 "b1"。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456;
+  -- 基于快照 "123456" 创建或替换分支 "b1"，分支保留 1 天。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的保留最近的 3 个快照。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的快照最多保留 2 天。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 2 DAYS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的保留最近的 3 个快照，分支中的快照最多保留 2 天。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
+  ```
+
+* **删除 Branch**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP BRANCH [IF EXISTS] <branch_name>;
+  ```
+
+  示例：
+
+  ```sql
+  ALTER TABLE tbl DROP BRANCH b1;
+  ```
+
+* **创建 Tag**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] TAG [IF NOT EXISTS] <tag_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  ```
+
+  示例：
+
+  ```sql
+  -- 创建标记 "t1"。
+  ALTER TABLE tbl CREATE TAG t1;
+  ALTER TABLE tb1 CREATE TAG IF NOT EXISTS t1;
+  -- 创建或替换标记 "t1"。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG t1;
+  -- 基于快照 "123456" 创建或替换标记 "t1"。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456;
+  -- 基于快照 "123456" 创建或替换标记 "b1"，标记保留 1 天。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  ```
+
+* **删除 Tag**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP TAG [IF EXISTS] <tag_name>;
+  ```
+
+  示例：
+
+  ```sql
+  ALTER TABLE tbl DROP TAG t1;
+  ```
 
 ## Iceberg 表优化
 

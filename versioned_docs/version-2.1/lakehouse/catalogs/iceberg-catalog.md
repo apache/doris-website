@@ -311,6 +311,8 @@ SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 ### Branch and Tag
 
 > This feature is supported since version 3.1.0
+>
+> For creating, dropping and managing branch and tag, please refer to [Managing Branch & Tag]
 
 Reading specific branches and tags of Iceberg tables is supported.
 
@@ -586,6 +588,15 @@ PROPERTIES (
 AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;
 ```
 
+### INSERT INTO BRANCH
+
+> Since 3.1.0
+
+```sql
+INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
+INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
+```
+
 ### Related Parameters
 
 * BE (Backend)
@@ -823,6 +834,103 @@ Use `ORDER BY` to reorder columns by specifying the new column order.
 ```sql
 ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
 ```
+
+### Managing Branch & Tag
+
+> This feature is supported since version 3.1.0
+
+* **Create Branch**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] BRANCH [IF NOT EXISTS] <branch_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  [WITH SNAPSHOT RETENTION { snapshotKeep | timeKeep }]
+
+  snapshotKeep:
+    <num> SNAPSHOTS [<num> { DAYS | HOURS | MINUTES }]
+
+  timeKeep:
+    <num> { DAYS | HOURS | MINUTES }
+  ```
+
+  Examples:
+
+  ```sql
+  -- Create branch "b1".
+  ALTER TABLE tbl CREATE BRANCH b1;
+  ALTER TABLE tb1 CREATE BRANCH IF NOT EXISTS b1;
+  -- Create or replace branch "b1".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1;
+  -- Create or replace branch "b1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456;
+  -- Create or replace branch "b1" based on snapshot "123456", branch retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 2 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch, and snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
+  ```
+
+* **Drop Branch**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP BRANCH [IF EXISTS] <branch_name>;
+  ```
+
+  Example:
+
+  ```sql
+  ALTER TABLE tbl DROP BRANCH b1;
+  ```
+
+* **Create Tag**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] TAG [IF NOT EXISTS] <tag_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  ```
+
+  Examples:
+
+  ```sql
+  -- Create tag "t1".
+  ALTER TABLE tbl CREATE TAG t1;
+  ALTER TABLE tb1 CREATE TAG IF NOT EXISTS t1;
+  -- Create or replace tag "t1".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG t1;
+  -- Create or replace tag "t1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456;
+  -- Create or replace tag "b1" based on snapshot "123456", tag retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  ```
+
+* **Drop Tag**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP TAG [IF EXISTS] <tag_name>;
+  ```
+
+  Example:
+
+  ```sql
+  ALTER TABLE tbl DROP TAG t1;
+  ```
 
 ## Iceberg Table Optimization
 
