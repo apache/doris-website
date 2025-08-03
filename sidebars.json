@@ -2015,6 +2015,7 @@
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]
                         },
