@@ -480,6 +480,26 @@
                 },
                 {
                     "type": "category",
+                    "label": "AI",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "AI Search",
+                            "items": [
+                                "ai/ai-search"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "LLM Functions",
+                            "items": [
+                                "ai/llm-functions"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Observability",
                     "items": [
                         "observability/overview",
