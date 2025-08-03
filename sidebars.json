@@ -1853,15 +1853,15 @@
                             "type": "category",
                             "label": "LLM Functions",
                             "items": [
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-classify.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-extract.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-fixgrammar.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-function.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-generate.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-mask.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-sentiment.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-summarize.md",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-translate.md"
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-classify",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-extract",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-fixgrammar",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-function",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-generate",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-mask",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-sentiment",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-summarize",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-translate"
                             ]
                         }
                     ]
