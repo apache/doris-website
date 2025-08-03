@@ -1848,6 +1848,21 @@
                                 "sql-manual/sql-functions/table-valued-functions/s3",
                                 "sql-manual/sql-functions/table-valued-functions/tasks"
                             ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "LLM Functions",
+                            "items": [
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-classify",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-extract",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-fixgrammar",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-function",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-generate",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-mask",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-sentiment",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-summarize",
+                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-translate"
+                            ]
                         }
                     ]
                 },
