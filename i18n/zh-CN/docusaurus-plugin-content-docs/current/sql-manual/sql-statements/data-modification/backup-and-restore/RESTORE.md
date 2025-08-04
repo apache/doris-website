@@ -50,6 +50,13 @@ FROM `<repository_name>`
 - "atomic_restore"：先将数据加载到临时表中，再以原子方式替换原表，确保恢复过程中不影响目标表的读写。
 - "force_replace"：当表存在且架构与备份表不同时，强制替换。
   - 注意，要启用 "force_replace"，必须启用 "atomic_restore"
+- "storage_medium"：控制恢复表的存储介质。默认为 "same_with_upstream"，保留源表的存储介质设置。
+  - "same_with_upstream"：使用与备份源表相同的存储介质（默认）
+  - "hdd"：强制使用 HDD 存储
+  - "ssd"：强制使用 SSD 存储
+- "medium_allocation_mode"：指定在存储介质不可用时的处理方式。默认为 "strict"。
+  - "strict"：严格使用指定的存储介质。如果介质不可用则恢复失败（单介质环境除外）
+  - "adaptive"：优先使用指定介质，但如果不可用则自动切换到可用介质
 
 ## 可选参数
 
@@ -124,6 +131,34 @@ EXCLUDE ( `backup_tbl` )
 PROPERTIES
 (
     "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+4. 从 snapshot_4 中恢复表 backup_tbl，使用 SSD 存储且严格模式（如果 SSD 不可用则恢复失败）：
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_4`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-19-20-30",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+5. 从 snapshot_5 中恢复表 backup_tbl，保留原始存储介质且使用自适应模式（如果原始介质不可用则自动切换到可用介质）：
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_5`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-20-30-40",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
 );
 ```
 

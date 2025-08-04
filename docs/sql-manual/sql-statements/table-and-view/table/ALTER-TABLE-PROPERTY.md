@@ -7,7 +7,7 @@
 
 :::caution
 Differences between Partition Attributes and Table Attributes
-- Partition attributes generally focus on the number of buckets (buckets), storage medium (storage_medium), replication num (replication_num), and hot/cold data separation policies (storage_policy).
+- Partition attributes generally focus on the number of buckets (buckets), storage medium (storage_medium), medium allocation mode (medium_allocation_mode), replication num (replication_num), and hot/cold data separation policies (storage_policy).
   - For existing partitions, you can use ALTER TABLE {tableName} MODIFY PARTITION ({partitionName}) SET ({key}={value}) to modify them, but the number of buckets (buckets) cannot be changed.
   - For not-created dynamic partitions, you can use ALTER TABLE {tableName} SET (dynamic_partition.{key} = {value}) to modify their attributes.
   - For not-created auto partitions, you can use ALTER TABLE {tableName} SET ({key} = {value}) to modify their attributes.
@@ -258,6 +258,14 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="cr
 ```
 NOTE: The table's partition can be successfully added only if it hasn't been associated with a storage policy. A table just can have one storage policy.
 
+14. Modify the medium allocation mode
+```sql
+-- Change to strict mode: requires exact medium match
+ALTER TABLE example_db.my_table SET ("medium_allocation_mode" = "strict");
+
+-- Change to adaptive mode: automatically switches to available media when needed
+ALTER TABLE example_db.my_table SET ("medium_allocation_mode" = "adaptive");
+```
 
 ## Keywords
 

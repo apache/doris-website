@@ -7,7 +7,7 @@
 
 :::caution
 分区属性与表属性的一些区别
-- 分区属性一般主要关注分桶数 (buckets)、存储介质 (storage_medium)、副本数 (replication)、冷热分离存储策略 (storage_policy)；
+- 分区属性一般主要关注分桶数 (buckets)、存储介质 (storage_medium)、介质分配模式 (medium_allocation_mode)、副本数 (replication)、冷热分离存储策略 (storage_policy)；
   - 对于已经创建的分区，可以使用 alter table {tableName} modify partition({partitionName}) set ({key}={value}) 来修改，但是分桶数 (buckets) 不能修改；
   - 对于未创建的动态分区 (dynamic partition)，可以使用 alter table {tableName} set (dynamic_partition.{key} = {value}) 来修改其属性；
   - 对于未创建的自动分区 (auto partition)，可以使用 alter table {tableName} set ({key} = {value}) 来修改其属性；
@@ -266,6 +266,15 @@ ALTER TABLE example_db.mysql_table MODIFY ENGINE TO odbc PROPERTIES("driver" = "
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="created_create_table_partition_alter_policy");
 ```
 注：表的 partition 没有关联过 storage policy，才能被添加成功，一个表只能添加一个 storage policy
+
+14. 修改介质分配模式
+```sql
+-- 修改为严格模式：严格遵循指定介质
+ALTER TABLE example_db.my_table SET ("medium_allocation_mode" = "strict");
+
+-- 修改为自适应模式：需要时自动切换到可用介质
+ALTER TABLE example_db.my_table SET ("medium_allocation_mode" = "adaptive");
+```
 
 ## 关键词
 

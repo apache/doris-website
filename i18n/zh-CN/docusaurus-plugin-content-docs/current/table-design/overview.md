@@ -21,6 +21,8 @@ Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/
 
 - 存储介质 (storage_medium)：控制数据的存储方式，如使用 HDD、SSD 或远程共享存储；
 
+- 介质分配模式 (medium_allocation_mode)：指定当存储介质不可用时的处理模式；
+
 - 副本数 (replication_num)：控制数据副本的数量，以保证数据的冗余和可靠性；
 
 - 冷热分离存储策略 (storage_policy) ：控制数据的冷热分离存储的迁移策略；
