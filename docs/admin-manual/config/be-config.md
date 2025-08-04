@@ -339,7 +339,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 #### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Description: Number of threads to execute asynic work. By default, the minimum number of threads is 16.
 * Default value: 16
 
 #### `fragment_mgr_asynic_work_pool_thread_num_max`

@@ -159,9 +159,9 @@
     "message": "存储服务",
     "description": "The label for category Storages in sidebar docs"
   },
-  "sidebar.docs.category.File Foramt": {
+  "sidebar.docs.category.File Format": {
     "message": "开放文件格式",
-    "description": "The label for category File Foramt in sidebar docs"
+    "description": "The label for category File Format in sidebar docs"
   },
   "sidebar.docs.category.SQL Dialect Convertor": {
     "message": "SQL 方言转换",
