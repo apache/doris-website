@@ -49,7 +49,7 @@ hive-site.xml 配置文件路径，默认目录为 `/plugins/hadoop_conf/`
 示例：`"hive.conf.resources" = "hms-1/hive-site.xml"`
 
 ### `hive.metastore.authentication.type`
-认证方式：`simple`（默认）或 `kerberos`，在 2.1 及之前版本中，认证方式由`hadoop.security.authentication`属性决定。3.0 版本开始，可以单独指定 Hive Metastore 的认证方式。
+认证方式：`simple`（默认）或 `kerberos`，在 3.0 及之前版本中，认证方式由`hadoop.security.authentication`属性决定。3.1 版本开始，可以单独指定 Hive Metastore 的认证方式。
 示例：`"hive.metastore.authentication.type" = "kerberos"`
 
 ### `hive.metastore.service.principal`
@@ -111,7 +111,7 @@ hive-site.xml 配置文件路径，默认目录为 `/plugins/hadoop_conf/`
 示例：`"hive.conf.resources" = "hms-1/hive-site.xml"`
 
 ### `hive.metastore.authentication.type`
-认证方式：`simple`（默认）或 `kerberos`，在 2.1 及之前版本中，认证方式由`hadoop.security.authentication`属性决定。3.0 版本开始，可以单独指定 Hive Metastore 的认证方式。
+认证方式：`simple`（默认）或 `kerberos`，在 3.0 及之前版本中，认证方式由`hadoop.security.authentication`属性决定。3.1 版本开始，可以单独指定 Hive Metastore 的认证方式。
 示例：`"hive.metastore.authentication.type" = "kerberos"`
 
 ### `hive.metastore.service.principal`
