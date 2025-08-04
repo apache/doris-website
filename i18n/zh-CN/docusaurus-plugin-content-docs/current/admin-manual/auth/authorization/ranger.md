@@ -166,6 +166,10 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
    如图所示，创建服务的时候，添加配置 `default.policy.users` ，如需配置多个用户拥有全部权限，用 `,` 分隔
    ![default policy](/images/ranger/default-policy.png)
 
+4. 使用 ranger 鉴权后，内部授权还有用么？
+
+   不能用，也不能创建/删除角色
+
 ## 安装和配置 Doris Ranger 插件
 ### 安装插件
 

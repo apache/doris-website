@@ -1,6 +1,6 @@
 ---
 {
-    "title": "使用 arthas 对 fe 进行 profile",
+    "title": "使用 Arthas 分析 FE 性能",
     "language": "zh-CN"
 }
 ---
@@ -25,16 +25,26 @@ under the License.
 -->
 
 ## 介绍
-在 doris 3.1.0及以上版本中，在fe部署目录`${DORIS_FE_HOME}/arthas`中存放了 Arthas 工具（4.0.5版本），可以使用 Arthas 来打印火焰图、跟踪函数调用路径、输出函数调用时间、观察函数的入参和返回值等等，方便我们定位 fe 的各种运行时问题。
-具体 Arthas 的使用方法可以参考：[Arthas官方文档](https://arthas.aliyun.com/en/doc/)
 
+在 Doris 3.1.0 及以上版本中，在 FE 部署目录 `${DORIS_FE_HOME}/arthas` 中存放了 Arthas 工具（4.0.5 版本），可以使用 Arthas 来打印火焰图、跟踪函数调用路径、输出函数调用时间、观察函数的入参和返回值等等，方便我们定位 fe 的各种运行时问题。
+
+具体 Arthas 的使用方法可以参考：[Arthas 官方文档](https://arthas.aliyun.com/en/doc/)。
+
+对于 3.1 之前的版本，需要手动下载 Arthas：
+
+```shell
+wget https://github.com/alibaba/arthas/releases/download/arthas-all-4.0.5/arthas-bin.zip
+unzip arthas-bin.zip -o ${DORIS_FE_HOME}/arthas
+```
 
 :::note
 注：目前仅支持 Linux 和 MacOS 系统，暂未支持 Windows 系统
 :::
 
-打印火焰图的案例如下：
-1. 运行`${DORIS_FE_HOME}/arthas/as.sh`脚本，选择`DorisFE`进程
+## 生成火焰图
+
+1. 运行 `${DORIS_FE_HOME}/arthas/as.sh` 脚本，选择 `DorisFE` 进程
+
     ```shell
     bash ./as.sh
     Arthas script version: 4.0.5
@@ -48,22 +58,17 @@ under the License.
     2
     ```
 
-2. 开始 profile
+2. 开始 Profiling
+
     ```shell
     [arthas@77285]$ profiler start
     Profiling started
     ```
 
-3. 结束 profile，生成火焰图文件为 20250627-115104.html
+3. 结束 Profiling，生成火焰图文件为 `20250627-115104.html`
+
     ```shell
     [arthas@77285]$ profiler stop --format html
     OK
     profiler output file: <DORIS_FE_HOME>/arthas-output/20250627-115104.html
     ```
-
-## 在低版本 fe 中使用Arthas
-对于3.1之前的版本，需要手动下载 Arthas：
-```shell
-wget https://github.com/alibaba/arthas/releases/download/arthas-all-4.0.5/arthas-bin.zip
-unzip arthas-bin.zip -o ${DORIS_FE_HOME}/arthas
-```
