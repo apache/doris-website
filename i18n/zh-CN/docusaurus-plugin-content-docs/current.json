@@ -507,6 +507,10 @@
     "message": "SQL 类型",
     "description": "The label for category SQL Data Types in sidebar docs"
   },
+  "sidebar.docs.category.AI Functions": {
+    "message": "AI 函数",
+    "description": "The label for category AI functions in sidebar docs"
+  },
   "sidebar.docs.category.Scalar Functions": {
     "message": "标量函数",
     "description": "The label for category Scalar Functions in sidebar docs"
@@ -533,7 +537,11 @@
   },
   "sidebar.docs.category.Vector Distance Functions": {
     "message": "向量函数",
-    "description": "The label for category Encryption Functions in sidebar docs"
+    "description": "The label for category vector distance functions in sidebar docs"
+  },
+  "sidebar.docs.category.LLM Functions": {
+    "message": "LLM 函数",
+    "description": "The label for category llm functions in sidebar docs"
   },
   "sidebar.docs.category.Bitwise Functions": {
     "message": "位处理函数",
