@@ -26,6 +26,56 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
+    spellcheck: # run the action
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+              submodules: recursive
+        - uses: ./.github/actions/cspell-action
+          with:
+              # Define glob patterns to filter the files to be checked. Use a new line between patterns to define multiple patterns.
+              # The default is to check ALL files that were changed in in the pull_request or push.
+              # Note: `ignorePaths` defined in cspell.json still apply.
+              # Example:
+              # files: |
+              #   **/*.{ts,js}
+              #   !dist/**/*.{ts,js}
+              #
+              # Default: ALL files
+              files: |
+                  blog/**/*.{md,json}
+                  docs/**/*.{md,json}
+                  i18n/zh-CN/**/*.{md,json}
+                  community/**/*.{md,json}
+          
+              # Check files and directories starting with `.`.
+              # - "true" - glob searches will match against `.dot` files.
+              # - "false" - `.dot` files will NOT be checked.
+              # - "explicit" - glob patterns can match explicit `.dot` patterns.
+              check_dot_files: false
+          
+              # The point in the directory tree to start spell checking.
+              # Default: .
+              root: '.'
+          
+              # Notification level to use with inline reporting of spelling errors.
+              # Allowed values are: warning, error, none
+              # Default: warning
+              inline: warning
+          
+              # Reports flagged / forbidden words as errors.
+              # If true, errors will still be reported even if `inline` is "none"
+              treat_flagged_words_as_errors: false
+          
+              # Generate Spelling suggestions.
+              suggestions: false
+          
+              # Determines if the action should be failed if any spelling issues are found.
+              # Allowed values are: true, false
+              # Default: true
+              strict: true
+        
     build-and-deploy:
         name: Build Check
         runs-on: ubuntu-latest
