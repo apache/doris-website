@@ -19,7 +19,7 @@ MIN(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 需要获取值的表达式  |
+| `<expr>` | 需要获取值的表达式，支持类型为 String，Time，Date，DateTime，IPv4，IPv6，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal。 |
 
 ## 返回值
 
@@ -28,13 +28,77 @@ MIN(<expr>)
 ## 举例
 
 ```sql
-select MIN(scan_rows) from log_statis group by datetime;
+-- setup
+create table t1(
+        k1 int,
+        k_string varchar(100),
+        k_decimal decimal(10, 2)
+) distributed by hash (k1) buckets 1
+properties ("replication_num"="1");
+insert into t1 values 
+    (1, 'apple', 10.01),
+    (1, 'banana', 20.02),
+    (2, 'orange', 30.03),
+    (2, null, null),
+    (3, null, null);
 ```
 
+```sql
+select k1, min(k_string) from t1 group by k1;
+```
+
+String 类型：对于每个分组，返回最小的字符串值。
+
 ```text
-+------------------+
-| MIN(`scan_rows`) |
-+------------------+
-|                0 |
-+------------------+
++------+---------------+
+| k1   | min(k_string) |
++------+---------------+
+|    1 | apple         |
+|    2 | orange        |
+|    3 | NULL          |
++------+---------------+
+```
+
+```sql
+select k1, min(k_decimal) from t1 group by k1;
+```
+
+Decimal 类型：返回最小的高精度小数值。
+
+```text
++------+----------------+
+| k1   | min(k_decimal) |
++------+----------------+
+|    1 |          10.01 |
+|    2 |          30.03 |
+|    3 |           NULL |
++------+----------------+
+```
+
+```sql
+select min(k_string) from t1 where k1 = 3;
+```
+
+当组内所有值都为 NULL 时，返回 NULL。
+
+```text
++---------------+
+| min(k_string) |
++---------------+
+| NULL          |
++---------------+
+```
+
+```sql
+select min(k_string) from t1;
+```
+
+所有数据的最小值。
+
+```text
++---------------+
+| min(k_string) |
++---------------+
+| apple         |
++---------------+
 ```
