@@ -1389,16 +1389,6 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Vector Distance Functions",
-                                    "items": [
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/cosine-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/inner-product",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l1-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l2-distance"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
@@ -1851,17 +1841,33 @@
                         },
                         {
                             "type": "category",
-                            "label": "LLM Functions",
+                            "label": "AI Functions",
                             "items": [
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-classify",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-extract",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-fixgrammar",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-function",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-generate",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-mask",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-sentiment",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-summarize",
-                                "sql-manual/sql-functions/scalar-functions/llm-functions/llm-translate"
+                                {
+                                    "type": "category",
+                                    "label": "Vector Distance Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/distance-functions/cosine-distance",
+                                        "sql-manual/sql-functions/scalar-functions/distance-functions/inner-product",
+                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l1-distance",
+                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l2-distance"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "LLM Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-classify",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-extract",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-fixgrammar",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-function",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-generate",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-mask",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-sentiment",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-summarize",
+                                        "sql-manual/sql-functions/scalar-functions/llm-functions/llm-translate"
+                                    ]
+                                }
                             ]
                         }
                     ]
