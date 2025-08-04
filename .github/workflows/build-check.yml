@@ -49,12 +49,11 @@ jobs:
                   #   !dist/**/*.{ts,js}
                   #
                   # Default: ALL files
-                  #files: ''
-                      #blog/**/*
-                      #docs/**/*
-                      #i18n/zh-CN/**/*
-                      #community/**/*
-                      #.gitmodules/**/*
+                  files: ''
+                      blog/**/*
+                      docs/**/*
+                      i18n/zh-CN/**/*
+                      community/**/*
               
                   # Check files and directories starting with `.`.
                   # - "true" - glob searches will match against `.dot` files.
