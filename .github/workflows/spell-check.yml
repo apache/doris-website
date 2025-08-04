@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: recursive
       - uses: ./.github/actions/cspell-action
         with:
             # Define glob patterns to filter the files to be checked. Use a new line between patterns to define multiple patterns.
