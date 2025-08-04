@@ -49,7 +49,7 @@ jobs:
                   #   !dist/**/*.{ts,js}
                   #
                   # Default: ALL files
-                  files: ''
+                  files: |
                       blog/**/*
                       docs/**/*
                       i18n/zh-CN/**/*
