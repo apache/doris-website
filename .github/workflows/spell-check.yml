@@ -71,7 +71,7 @@ jobs:
             incremental_files_only: true
         
             # Path to `cspell.json`
-            config: '.'
+            config: '.config/'
         
             # Log progress and other information during the action execution.
             # Default: false
