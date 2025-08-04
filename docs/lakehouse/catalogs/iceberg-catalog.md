@@ -555,6 +555,13 @@ INSERT INTO iceberg_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, 'beijing', '2023-12-12');
 ```
 
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+
 ### INSERT OVERWRITE
 
 The INSERT OVERWRITE operation completely replaces the existing data in the table with new data.
@@ -562,6 +569,13 @@ The INSERT OVERWRITE operation completely replaces the existing data in the tabl
 ```sql
 INSERT OVERWRITE TABLE iceberg_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
 ### CTAS
@@ -766,74 +780,74 @@ Supported schema change operations include:
 
 * **Rename Column**
 
-Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
+  Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
 
-```sql
-ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+  ```
 
 * **Add a Column**
 
-Use `ADD COLUMN` to add a new column. The new column will be added to the end of the table. Adding new columns to nested types is not supported.
+  Use `ADD COLUMN` to add a new column. Adding new columns to nested types is not supported.
 
-When adding a new column, you can specify nullable attributes, default values, and comments.
+  When adding a new column, you can specify nullable attributes, default values, comments, and column position.
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-Example:
+  Example:
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+  ```
 
 * **Add Columns**
 
-You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Adding new columns to nested types is not supported.
+  You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Column positioning is not supported for multiple columns. Adding new columns to nested types is not supported.
 
-The syntax for each column is the same as adding a single column.
+  The syntax for each column is the same as adding a single column.
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+  ```
 
 * **Drop Column**
 
-Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+  Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
 
-```sql
-ALTER TABLE iceberg_table DROP COLUMN col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table DROP COLUMN col_name;
+  ```
 
 * **Modify Column**
 
-Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, and comment.
+  Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
 
-Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
+  Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
 
-```sql
-ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-Example:
+  Example:
 
-```sql
-CREATE TABLE iceberg_table (
-    id INT,
-    name STRING
-);
--- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
-ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
-```
+  ```sql
+  CREATE TABLE iceberg_table (
+      id INT,
+      name STRING
+  );
+  -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
+  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+  ```
 
 * **Reorder Columns**
 
-Use `ORDER BY` to reorder columns by specifying the new column order.
+  Use `ORDER BY` to reorder columns by specifying the new column order.
 
-```sql
-ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+  ```
 
 ### Managing Branch & Tag
 
