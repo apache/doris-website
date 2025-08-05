@@ -505,7 +505,8 @@
                     "label": "SQL Clients",
                     "items": [
                         "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip"
+                        "ecosystem/bi/datagrip",
+                        "ecosystem/bi/clouddm"
                     ]
                 },
                 {
