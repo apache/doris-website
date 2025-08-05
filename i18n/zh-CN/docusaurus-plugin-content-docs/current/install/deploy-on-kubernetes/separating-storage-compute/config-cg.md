@@ -187,6 +187,15 @@ spec:
             resources:
               requests:
                 storage: 300Gi
+        - mountPaths:
+             - /opt/apache-doris/be/storage
+          persistentVolumeClaimSpec:
+             # storageClassName: ${storageclass_name}
+             accessModes:
+                - ReadWriteOnce
+             resources:
+                requests:
+                   storage: 300Gi
         - persistentVolumeClaimSpec:
             # storageClassName: ${storageclass_name}
             accessModes:
@@ -195,7 +204,7 @@ spec:
               requests:
                 storage: 500Gi
 ```
-上述配置中，日志目录使用自定义的存储配置挂载 300Gi 的存储磁盘，而缓存目录则使用存储模板挂载 500Gi 的存储磁盘。
+上述配置中，日志目录使用自定义的存储配置挂载 300Gi 的存储磁盘，WAL 以及 StreamLoad 导入时使用的目录配置挂载 300Gi 的存储磁盘，而缓存目录则使用存储模板挂载 500Gi 的存储磁盘。
 
 :::tip 提示
 若 `mountPaths` 数组为空，则表示当前存储配置为模板配置。
