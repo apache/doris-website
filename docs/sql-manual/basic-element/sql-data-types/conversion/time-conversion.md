@@ -89,12 +89,12 @@ Two formats are supported: `<colon-format>` and `<numeric-format>`.
 Starting from 4.0, DECIMAL type is converted according to its literal value representation. Supports parsing `<microsecond>` field to microseconds. Any format exceeding the boundary is considered an error and handled accordingly.
 :::
 
-Except for error handling, non-strict mode behavior is identical to strict mode.
+Non-strict mode supports leading and trailing spaces, and error handling is different from strict mode.
 
 #### BNF Definition
 
 ```xml
-<time> ::= ("+" | "-")? (<colon-format> | <numeric-format>)
+<time> ::= <whitespace>* ("+" | "-")? (<colon-format> | <numeric-format>) <whitespace>*
 
 <colon-format> ::= <hour> ":" <minute> (":" <second> (<microsecond>)?)?
 <hour> ::= <digit>+
@@ -106,6 +106,7 @@ Except for error handling, non-strict mode behavior is identical to strict mode.
 <microsecond> ::= "." <digit>*
 
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<whitespace> ::= " " | "\t" | "\n" | "\r" | "\v" | "\f"
 ```
 
 #### Rule Description

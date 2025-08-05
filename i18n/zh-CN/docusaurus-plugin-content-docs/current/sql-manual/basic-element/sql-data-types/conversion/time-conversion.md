@@ -94,15 +94,15 @@ TIME 类型包含类型参数 `p`，即小数位数。完整表示为 `TIME(p)` 
 ### 非严格模式
 
 :::caution 行为变更
-自 4.0 开始，DECIMAL 类型按照其字面数值表示进行转换。支持解析 \<microsecond> 域到微秒。任意格式越界以后均认为是错误，执行错误处理。
+自 4.0 开始，支持解析 \<microsecond> 域到微秒。任意格式越界以后均认为是错误，执行错误处理。
 :::
 
-除错误处理外，非严格模式的行为同严格模式完全一致。
+非严格模式支持前后空格，且错误处理与严格模式不同。
 
 #### BNF 定义
 
 ```xml
-<time> ::= ("+" | "-")? (<colon-format> | <numeric-format>)
+<time> ::= <whitespace>* ("+" | "-")? (<colon-format> | <numeric-format>) <whitespace>*
 
 <colon-format> ::= <hour> ":" <minute> (":" <second> (<microsecond>)?)?
 <hour> ::= <digit>+
@@ -114,6 +114,7 @@ TIME 类型包含类型参数 `p`，即小数位数。完整表示为 `TIME(p)` 
 <microsecond> ::= "." <digit>*
 
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<whitespace> ::= " " | "\t" | "\n" | "\r" | "\v" | "\f"
 ```
 
 #### 规则描述
@@ -178,7 +179,7 @@ TIME 类型包含类型参数 `p`，即小数位数。完整表示为 `TIME(p)` 
 支持所有数字类型转换为 TIME 类型。
 
 :::caution 行为变更
-自 4.0 开始，Doris 支持解析小数部分，且支持任意数字类型转换到 Time 类型。
+自 4.0 开始，Doris 支持解析小数部分，且支持任意数字类型转换到 Time 类型。DECIMAL 类型按照其字面数值表示进行转换。
 :::
 
 ### 严格模式
