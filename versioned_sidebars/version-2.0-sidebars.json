@@ -908,6 +908,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-or",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
+                                "sql-manual/sql-functions/aggregate-functions/geomean",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/stddev",
                                 "sql-manual/sql-functions/aggregate-functions/group-concat",
