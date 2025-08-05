@@ -7,7 +7,7 @@
 
 ## 描述
 
-MAX 函数返回表达式的最大值。
+MAX 函数返回表达式的最大非 NULL 值。
 
 ## 语法
 
@@ -19,11 +19,12 @@ MAX(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 需要获取值的表达式，支持类型为 String，Time，Date，DateTime，IPv4，IPv6，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal。 |
+| `<expr>` | 用于获取值的表达式。支持的类型包括 String、Time、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。 |
 
 ## 返回值
 
 返回与输入表达式相同的数据类型。
+如果组内所有记录均为 NULL，则函数返回 NULL。
 
 ## 举例
 
@@ -93,7 +94,7 @@ select max(k_string) from t1 where k1 = 3;
 select max(k_string) from t1;
 ```
 
-所有数据的最大值。
+返回所有数据的最大值。
 
 ```text
 +---------------+

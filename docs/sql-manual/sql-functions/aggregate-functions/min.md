@@ -7,7 +7,7 @@
 
 ## Description
 
-The MIN function returns the minimum value of the expression.
+The MIN function returns the minimum non-NULL value of the expression.
 
 ## Syntax
 
@@ -24,6 +24,7 @@ MIN(<expr>)
 ## Return Value
 
 Returns the same data type as the input expression.
+If all records in the group are NULL, the function returns NULL.
 
 ## Example
 
