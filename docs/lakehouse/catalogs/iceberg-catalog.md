@@ -332,6 +332,15 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 
 For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether the parameter is a timestamp or a Branch/Tag name.
 
+### View
+
+> Since version 3.1.0
+
+Supports querying Iceberg views. View queries work the same way as regular table queries. Please note the following:
+
+- Only `hms` type Iceberg Catalog is supported.
+- The view definition SQL must be compatible with Doris SQL dialect, otherwise parsing errors will occur. (Dialect conversion functionality will be provided in future versions).
+
 ## System Tables
 
 > Since 3.1.0

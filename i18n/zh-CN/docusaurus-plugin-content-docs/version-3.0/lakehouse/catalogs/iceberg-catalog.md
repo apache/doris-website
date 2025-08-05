@@ -342,6 +342,15 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 
 对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Branch/Tag 名称。
 
+### 视图查询
+
+> 该功能自 3.1.0 版本支持
+
+支持查询 Iceberg 视图。视图查询方式和普通表方式一样。有以下几点注意事项：
+
+- 仅支持 `hms` 类型的 Iceberg Catalog。
+- 视图的定义 SQL 与需要与 Doris SQL 方言兼容，否则会出现解析错误。（后续版本会提供方言转换功能）。
+
 ## 系统表
 
 > 该功能自 3.1.0 版本支持
