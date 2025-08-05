@@ -926,3 +926,36 @@ spec:
 :::tip 提示
 `mountPath` 支持使用 `${DORIS_HOME}` 作为路径前缀。当 `mountPath` 使用 `${DORIS_HOME}` 作为前缀使用时，在 FE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/fe`; 在 BE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/be`。
 :::
+
+## 配置探测超时
+`DorisCluster` 为每种服务提供两种探测超时配置：启动探测超时配置，存活探测超时配置。当服务启动时间超过配置的启动探测超时时间时，则认定服务启动失败并重新启动服务。当服务超过存活探测时间没有响应时，Pod 会被自动重启。
+### 启动探测超时配置
+- FE 服务启动探测超时配置
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+    以上配置将 FE 的启动超时设置为 3600 秒。
+- BE 服务启动探测超时配置
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+    以上配置将 BE 的启动超时设置为 3600 秒。
+### 存活探测超时配置
+- FE 服务存活探测超时配置
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+    以上配置将 FE 的存活超时设置为 60 秒。
+- BE 服务存活探测超时配置
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+    以上配置将 BE 的存活超时设置为 60 秒。
