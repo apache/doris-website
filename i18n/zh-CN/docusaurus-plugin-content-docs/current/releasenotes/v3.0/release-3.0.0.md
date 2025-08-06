@@ -128,7 +128,7 @@
 
 - 存算一体模式的部署和升级可以正常按照官网文档进行，推荐采用 Doris Manager 进行快速部署和集群升级，存算分离模式暂不支持 Doris Manager 部署和升级，后续我们将会持续迭代以实现更好支持。
 
-- 暂不支持从 2.1 版本原地升级至 3.0 存算分离模式，需要在存算分离集群部署完成后通过诸如 x2Doris 等工具进行数据迁移，后续也会支持通过 CCR 能力实现不停服迁移。
+- 暂不支持从 2.1 版本原地升级至 3.0 存算分离模式，需要在存算分离集群部署完成后通过工具进行数据迁移，后续也会支持通过 CCR 能力实现不停服迁移。
 
 :::info 备注
 
@@ -181,15 +181,11 @@
 
 - [接入 Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide)
 
-- [TPC-H](../../lakehouse/datalake-analytics/tpch/)
-
-- [TPC-DS](../../lakehouse/datalake-analytics/tpcds/)
-
 - [Delta Lake](../../lakehouse/catalogs/delta-lake-catalog.md)
 
 - [Kudu](../../lakehouse/catalogs/kudu-catalog.md)
 
-- [BigQuery](../../data-operate/import/data-source/bigquery.md)
+- [BigQuery](../../lakehouse/catalogs/bigquery-catalog.md)
 :::
 
 ### 2-3 数据湖构建
@@ -200,7 +196,7 @@
 
 :::info 备注
 
-参考文档：[数据湖构建](../../lakehouse/datalake-building/hive-build/)
+参考文档：[数据湖构建](../../lakehouse/catalogs/hive-catalog.md)
 
 :::
 

@@ -31,7 +31,7 @@ under the License.
 -->
 
 
-Financial fraud prevention is a race against time. Implementation-wise, it relies heavily on the data processing power, especially under large datasets. Today I'm going to share with you the use case of a retail bank with over 650 million individual customers. They have compared analytics components including [Apache Doris](https://doris.apache.org), ClickHouse, Greenplum, Cassandra, and Kylin. After 5 rounds of deployment and comparsion based on 89 custom test cases, they settled on Apache Doris, because they witnessed a six-fold writing speed and faster multi-table joins in Apache Doris as compared to the mighty ClickHouse.
+Financial fraud prevention is a race against time. Implementation-wise, it relies heavily on the data processing power, especially under large datasets. Today I'm going to share with you the use case of a retail bank with over 650 million individual customers. They have compared analytics components including [Apache Doris](https://doris.apache.org), ClickHouse, Greenplum, Cassandra, and Kylin. After 5 rounds of deployment and comparison based on 89 custom test cases, they settled on Apache Doris, because they witnessed a six-fold writing speed and faster multi-table joins in Apache Doris as compared to the mighty ClickHouse.
 
 I will get into details about how the bank builds their fraud risk management platform based on Apache Doris and how it performs. 
 
