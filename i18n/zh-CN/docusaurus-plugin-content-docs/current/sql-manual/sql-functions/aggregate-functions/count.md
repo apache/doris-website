@@ -7,7 +7,7 @@
 
 ## 描述
 
-返回指定列的非 NULL 记录数，或者记录总数
+返回指定列的非 NULL 记录数，或者记录总数。
 
 ## 语法
 
@@ -21,29 +21,45 @@ COUNT(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 条件表达式（列名） |
+| `<expr>` | 如果填写表达式，则计算非 NULL 的记录数，否则计算总行数。 |
 
 ## 返回值
 
-返回值为数值类型。如果 expr 为 NULL，则不参数统计
+返回值的类型为 Bigint。如果 expr 为 NULL，则不参数统计。
 
 ## 举例
 
 ```sql
-select * from test_count;
-```
+-- setup
+create table test_count(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
 
-```text
-+------+------+------+
-| id   | name | sex  |
-+------+------+------+
-|    1 | 1    |    1 |
-|    2 | 2    |    1 |
-|    3 | 3    |    1 |
-|    4 | 0    |    1 |
-|    4 | 4    |    1 |
-|    5 | NULL |    1 |
-+------+------+------+
+insert into test_count values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
+
+create table test_insert(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into test_insert values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
 ```
 
 ```sql
