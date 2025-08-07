@@ -7,7 +7,7 @@
 
 ## Description
 
-Returns the number of non-NULL records in the specified column, or the total number of records.
+Returns the number of non-NULL records for the specified column, or the total number of records.
 
 ## Syntax
 
@@ -21,29 +21,45 @@ COUNT(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | Conditional expression (column name) |
+| `<expr>` | If an expression is specified, counts the number of non-NULL records; otherwise, counts the total number of rows. |
 
 ## Return Value
 
-The return value is of numeric type. If expr is NULL, there will be no parameter statistics.
+The return type is Bigint. If expr is NULL, it is not counted.
 
 ## Example
 
 ```sql
-select * from test_count;
-```
+-- setup
+create table test_count(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
 
-```text
-+------+------+------+
-| id   | name | sex  |
-+------+------+------+
-|    1 | 1    |    1 |
-|    2 | 2    |    1 |
-|    3 | 3    |    1 |
-|    4 | 0    |    1 |
-|    4 | 4    |    1 |
-|    5 | NULL |    1 |
-+------+------+------+
+insert into test_count values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
+
+create table test_insert(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into test_insert values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
 ```
 
 ```sql
