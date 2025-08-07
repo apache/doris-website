@@ -26,7 +26,7 @@ under the License.
 
 ## 描述
 
-LLM Function 是 Doris 提供的基于大语言模型能力的内置函数，用户可以在 SQL 查询中直接调用 LLM 执行多种文本只能任务。LLM Function 通过 Doris 的资源机制对接多个主流 LLM 厂商(如 OpenAI、Anthropic、DeepSeek、Gemini、Ollama MoonShot等)
+LLM Function 是 Doris 提供的基于大语言模型能力的内置函数，用户可以在 SQL 查询中直接调用 LLM 执行多种文本智能任务。LLM Function 通过 Doris 的资源机制对接多个主流 LLM 厂商(如 OpenAI、Anthropic、DeepSeek、Gemini、Ollama MoonShot等)
 
 所使用的 LLM 必须由 Doris 外部提供，且支持文本分析
 
