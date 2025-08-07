@@ -7,7 +7,7 @@
 
 ## 描述
 
-对单个整数列或表达式中的所有值执行按位 xor 运算
+对单个整数列或表达式中的所有值执行按位 xor 运算。
 
 ## 语法
 
@@ -19,38 +19,50 @@ GROUP_BIT_XOR(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 支持所有 INT 类型 |
+| `<expr>` | 支持类型为 TinyInt，SmallInt，Integer，BigInt，LargeInt。 |
 
 ## 返回值
 
-返回一个整数值
+返回一个整数值，类型与 <expr> 相同。如果所有值均为 NULL，则返回 NULL。NULL 值不参与按位运算。
 
 ## 举例
 
-```
-select * from group_bit;
+```sql
+-- setup
+create table group_bit(
+    value int
+) distributed by hash(value) buckets 1
+properties ("replication_num"="1");
+
+insert into group_bit values
+    (3),
+    (1),
+    (2),
+    (4),
+    (NULL);
 ```
 
-```text
-+-------+
-| value |
-+-------+
-|     3 |
-|     1 |
-|     2 |
-|     4 |
-+-------+
-```
-
-```text
+```sql
 select group_bit_xor(value) from group_bit;
 ```
 
 ```text
-+------------------------+
-| group_bit_xor(`value`) |
-+------------------------+
-|                      4 |
-+------------------------+
++----------------------+
+| group_bit_xor(value) |
++----------------------+
+|                    4 |
++----------------------+
+```
+
+```sql
+select group_bit_xor(value) from group_bit where value is null;
+```
+
+```text
++----------------------+
+| group_bit_xor(value) |
++----------------------+
+|                 NULL |
++----------------------+
 ```
 

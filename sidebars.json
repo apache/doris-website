@@ -1645,7 +1645,9 @@
                                         "sql-manual/sql-functions/scalar-functions/other-functions/convert-to",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/esquery",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/field",
-                                        "sql-manual/sql-functions/scalar-functions/other-functions/g"
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/g",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping-id"
                                     ]
                                 },
                                 {
@@ -1703,8 +1705,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-concat",
-                                "sql-manual/sql-functions/aggregate-functions/grouping",
-                                "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
@@ -1793,8 +1793,6 @@
                                 "sql-manual/sql-functions/window-functions/group-bit-xor",
                                 "sql-manual/sql-functions/window-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/window-functions/group-concat",
-                                "sql-manual/sql-functions/window-functions/grouping",
-                                "sql-manual/sql-functions/window-functions/grouping-id",
                                 "sql-manual/sql-functions/window-functions/histogram",
                                 "sql-manual/sql-functions/window-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/window-functions/hll-union-agg",
