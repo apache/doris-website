@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。Doris 目前推荐的 LDB Toolchain 版本为 Robin(0.19), 其中含有 clang-17 和 gcc-13。
+本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。对于 Doris 3.1以及之前的版本 目前推荐的 LDB Toolchain 版本为 0.19, 其中含有 clang-17 和 gcc-13。对于Doris 3.1之后的版本 目前推荐的 LDB Toolchain 版本为 0.25, 其中含有 clang-20 和 gcc-15。
 
 :::tip
 LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于在几乎所有 Linux 发行版上编译现代 C++ 项目。
@@ -38,7 +38,7 @@ LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于
 
 **1. 下载`ldb_toolchain_gen.sh`**
 
-可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载最新的 `ldb_toolchain_gen.sh`，对于ARM架构，需要下载最新的`ldb_toolchain_gen.aarch64.sh`。该脚本用于生成 LDB Toolchain
+可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载对应版本的 `ldb_toolchain_gen.sh`，对于ARM架构，需要下载对应版本的`ldb_toolchain_gen.aarch64.sh`。该脚本用于生成 LDB Toolchain
 
 :::tip
 更多信息，可访问 <https://github.com/amosbird/ldb_toolchain_gen>
