@@ -24,7 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help developers and users without a Docker environment. For Doris 3.1 and earlier versions, the recommended LDB Toolchain version is Robin(0.19), which includes clang-17 and gcc-13. For Doris versions after 3.1, the recommended LDB Toolchain version is 0.25, which includes clang-20 and gcc-15.
+This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help developers and users without a Docker environment.
+
+| Doris Version | Recommended LDB Toolchain Version | Included Compiler Version |
+| -- | -- | -- |
+| master | 0.25 | clang-20, gcc-15 |
+| 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
 :::tip
 LDB Toolchain stands for Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.

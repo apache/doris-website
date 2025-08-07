@@ -24,7 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。对于 Doris 3.1以及之前的版本 目前推荐的 LDB Toolchain 版本为 0.19, 其中含有 clang-17 和 gcc-13。对于Doris 3.1之后的版本 目前推荐的 LDB Toolchain 版本为 0.25, 其中含有 clang-20 和 gcc-15。
+本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。
+
+| Doris 版本 | 推荐 LDB Toolchain 版本 | 包含编译器版本 |
+| -- | -- | -- |
+| master | 0.25 | clang-20, gcc-15 |
+| 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
 :::tip
 LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于在几乎所有 Linux 发行版上编译现代 C++ 项目。
