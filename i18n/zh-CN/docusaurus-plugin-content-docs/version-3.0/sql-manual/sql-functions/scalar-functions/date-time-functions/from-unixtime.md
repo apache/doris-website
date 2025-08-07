@@ -7,8 +7,7 @@
 
 ## 描述
 
-将 unix 时间戳转化为对应的 time 格式。特殊情况：
-- 目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`，超出范围的 `unix_timestamp` 将会得到 NULL
+FROM_UNIXTIME 函数用于将 Unix 时间戳（以秒为单位） 转换为指定格式的日期时间字符串或 `VARCHAR` 类型值。Unix 时间戳的基准时间为 1970-01-01 00:00:00 UTC，函数会根据输入的时间戳和格式字符串，生成对应的日期时间表示。
 
 ## 语法
 
@@ -20,16 +19,21 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 
 | 参数 | 说明 |
 | -- | -- |
-| `<unix_timestamp>` | unix 时间戳 |
-| `<string_format>` | format 格式，默认为 %Y-%m-%d %H:%i:%s|
+| `<unix_timestamp>` | 输入的 Unix 时间戳，类型为整数 `BIGINT`，表示从 1970-01-01 00:00:00 UTC 开始的秒数 |
+| `<string_format>` | format 格式，默认为 %Y-%m-%d %H:%i:%s, 具体格式请查看 [date-format](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/scalar-functions/date-time-functions/date-format/)|
 
 ## 返回值
 
-返回指定格式的日期。
+返回指定格式的日期,类型为字符串。
+- 目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`( 对应日期为 1970-01-01 00:00:00 至 3000-12-31 23:59:59)，超出范围的 `unix_timestamp` 将会得到 NULL.
+- 若 `string_format` 格式无效，返回不符合预期的字符串。
+- 若任意参数为 NULL ,则返回 NULL
 
 ## 举例
 
-```
+```sql
+
+---默认格式 %Y-%m-%d %H:%i:%s 返回
 mysql> select from_unixtime(1196440219);
 +---------------------------+
 | from_unixtime(1196440219) |
@@ -37,6 +41,7 @@ mysql> select from_unixtime(1196440219);
 | 2007-12-01 00:30:19       |
 +---------------------------+
 
+---指定 yyyy-MM-dd HH:mm:ss 格式返回
 mysql> select from_unixtime(1196440219, 'yyyy-MM-dd HH:mm:ss');
 +--------------------------------------------------+
 | from_unixtime(1196440219, 'yyyy-MM-dd HH:mm:ss') |
@@ -44,6 +49,7 @@ mysql> select from_unixtime(1196440219, 'yyyy-MM-dd HH:mm:ss');
 | 2007-12-01 00:30:19                              |
 +--------------------------------------------------+
 
+---指定 %Y-%m-%d 只有日期格式返回
 mysql> select from_unixtime(1196440219, '%Y-%m-%d');
 +-----------------------------------------+
 | from_unixtime(1196440219, '%Y-%m-%d') |
@@ -51,10 +57,43 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d');
 | 2007-12-01                              |
 +-----------------------------------------+
 
+---指定 %Y-%m-%d %H:%i:%s 格式返回
 mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 +--------------------------------------------------+
 | from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s') |
 +--------------------------------------------------+
 | 2007-12-01 00:30:19                              |
 +--------------------------------------------------+
+
+---超出最大范围， 返回 NULL
+mysql> select from_unixtime(32536771299);
++----------------------------+
+| from_unixtime(32536771299) |
++----------------------------+
+| NULL                       |
++----------------------------+
+
+---超出最小范围，返回 NULL
+mysql> select from_unixtime(-1);
++-------------------+
+| from_unixtime(-1) |
++-------------------+
+| NULL              |
++-------------------+
+
+---string-format 格式错误，返回不符合预期的字符串
+mysql> select from_unixtime(32536799,"gdaskpdp");
++------------------------------------+
+| from_unixtime(32536799,"gdaskpdp") |
++------------------------------------+
+| gdaskpdp                           |
++------------------------------------+
+
+---输入为 NULL，返回 NULL
+mysql> select from_unixtime(NULL);
++---------------------+
+| from_unixtime(NULL) |
++---------------------+
+| NULL                |
++---------------------+
 ```
