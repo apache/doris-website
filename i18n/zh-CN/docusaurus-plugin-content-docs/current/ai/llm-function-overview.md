@@ -44,6 +44,9 @@ under the License.
 - [LLM_EXTRACT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-extract)：
 根据文本内容，为每个给定标签提取相关信息。
 
+- [LLM_FILTER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-filter):
+判断文本内容是否正确，返回值为bool类型。
+
 - [LLM_FIXGRAMMAR](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar)：
 修复文本中的语法、拼写错误。
 
@@ -55,6 +58,9 @@ under the License.
 
 - [LLM_SENTIMENT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment)：
 分析文本情感倾向，返回值为`positive`、`negative`、`neutral`、`mixed`其中之一。
+
+- [LLM_SIMILARITY](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity)：
+判断两文本的语义相似度，返回值为 0 - 10 之间的浮点数，值越大代表语义越相似。
 
 - [LLM_SUMMARIZE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize)：
 对文本进行高度总结概括。
