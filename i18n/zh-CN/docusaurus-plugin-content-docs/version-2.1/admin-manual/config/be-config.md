@@ -1487,5 +1487,5 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 #### `time_series_max_tablet_version_num`
 
 * 类型：int
-* 描述：限制time series compaction 策略的 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。
+* 描述：限制time series compaction 策略的 tablet 最大 version 的数量。用于防止导入过于频繁，或 compaction 不及时导致的大量 version 堆积问题。当超过限制后，导入任务将被拒绝。从2.1.11版本开始支持这个参数
 * 默认值：20000
