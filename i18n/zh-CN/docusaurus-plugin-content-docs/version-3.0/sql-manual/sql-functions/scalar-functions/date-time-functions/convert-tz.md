@@ -26,7 +26,7 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 ## 返回值
 
 转换后的 timestamp 值
-对于不带有 scale 的 datetime 输入, 返回结果也不带有 scale, 带有 scale 的输入，返回带有 scale
+对于不带有 scale 的 datetime 输入, 返回结果也不带有 scale, 带有 scale 的输入，返回带有 scale。
 
 特殊情况:
 - 如果参数无效（如无效的 datetime 和 date 格式( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)) 、不存在的时区标识等），该函数返回 NULL。​
