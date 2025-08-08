@@ -382,6 +382,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "AI & LLM",
+                    "items": [
+                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
@@ -552,13 +559,6 @@
                                 "admin-manual/auth/integrations/aws-authentication-and-authorization"
                             ]
                         }
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "AI",
-                    "items": [
-                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function-overview"
                     ]
                 }
             ]
