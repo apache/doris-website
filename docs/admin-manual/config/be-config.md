@@ -1363,5 +1363,5 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 #### `time_series_max_tablet_version_num`
 
 * Type: int
-* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent import or untimely compaction. When the limit is exceeded, the import task will be rejected.
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or untimely compaction. When the limit is exceeded, the load task will be rejected.
 * Default value: 20000
