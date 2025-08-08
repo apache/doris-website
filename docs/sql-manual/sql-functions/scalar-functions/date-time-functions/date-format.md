@@ -47,10 +47,10 @@ Supported Format Specifiers
 | %S     | Seconds (00-59)                          |
 | %s     | Seconds (00-59)                          |
 | %T     | Time in 24-hour format (hh:mm:ss)           |
-| %U     | Week (00-53), where Sunday is the first day of the week ,[week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 0   |
-| %u     | Week (00-53), where Monday is the first day of the week ,[week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 1   |
-| %V     | Week (01-53), where Sunday is the first day of the week; [week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 2,used with %X |
-| %v     | Week (01-53), where Monday is the first day of the week; [week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 3,used with %x |
+| %U     | Week (00-53), where Sunday is the first day of the week ,[week](./week) mode 0   |
+| %u     | Week (00-53), where Monday is the first day of the week ,[week](./week)) mode 1   |
+| %V     | Week (01-53), where Sunday is the first day of the week; [week](./week) mode 2,used with %X |
+| %v     | Week (01-53), where Monday is the first day of the week; [week](./week)) mode 3,used with %x |
 | %W     | Full weekday name (Sunday-Saturday)    |
 | %w     | Day of the week (0 = Sunday, 6 = Saturday)        |
 | %X     | Year, where Sunday is the first day of the week (4 digits); used with %V |
