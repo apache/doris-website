@@ -5,134 +5,142 @@
 }
 ---
 
-## 描述
-返回一个数组，包含 array1 和 array2 的交集中的所有元素，不包含重复项，如果输入参数为 NULL，则返回 NULL
+## array_intersect
 
-## 语法
-```sql
-ARRAY_INTERSECT(<arr1> , <arr2> )
-```
+<version since="2.0.0">
 
-## 参数
-| Parameter | Description |
-|---|---|
-| `<arr1>` | 源数组 |
-| `<arr2>` | 与 arr1 求交集的数组 |
+</version>
 
-## 返回值
-返回包含 array1 和 array2 的交集中的所有元素的数组，特殊情况：
-- 如果输入参数为 NULL，则返回 NULL
+### 描述
 
-## 注意事项
+返回多个数组的交集，即所有数组中共同存在的元素。函数会找出所有输入数组中共同存在的元素，去重后组成新数组。
 
-`仅支持向量化引擎中使用`
-
-## 举例
+### 语法
 
 ```sql
-CREATE TABLE array_type_table (
-    k1 INT,
-    k2 ARRAY<INT>,
-    k3 ARRAY<INT>
-)
-duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table VALUES 
-(1, [1, 2, 3], [2, 4, 5]),
-(2, [2, 3], [1, 5]),
-(3, [1, 1, 1], [2, 2, 2]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table;
-```
-```text
-+------+-----------------+--------------+-----------------------------+
-| k1   | k2              | k3           | array_intersect(`k2`, `k3`) |
-+------+-----------------+--------------+-----------------------------+
-|    1 | [1, 2, 3]       | [2, 4, 5]    | [2]                         |
-|    2 | [2, 3]          | [1, 5]       | []                          |
-|    3 | [1, 1, 1]       | [2, 2, 2]    | []                          |
-+------+-----------------+--------------+-----------------------------+
-```
-```sql
-CREATE TABLE array_type_table_nullable (
-    k1 INT,
-    k2 ARRAY<INT>,
-    k3 ARRAY<INT>
-)
-duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_nullable VALUES
-(1, [1, NULL, 3], [1, 3, 5]),
-(2, [NULL, NULL, 2], [2, NULL, 4]),
-(3, NULL, [1, 2, 3]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_nullable;
+array_intersect(ARRAY<T> arr1, ARRAY<T> arr2, [ARRAY<T> arr3, ...])
 ```
 
-```text
-+------+-----------------+--------------+-----------------------------+
-| k1   | k2              | k3           | array_intersect(`k2`, `k3`) |
-+------+-----------------+--------------+-----------------------------+
-|    1 | [1, NULL, 3]    | [1, 3, 5]    | [1, 3]                      |
-|    2 | [NULL, NULL, 2] | [2, NULL, 4] | [NULL, 2]                   |
-|    3 | NULL            | [1, 2, 3]    | NULL                        |
-+------+-----------------+--------------+-----------------------------+
-```
+### 参数
+
+- `arr1, arr2, arr3, ...`：ARRAY<T> 类型，要计算交集的数组。支持两个或更多数组参数。
+
+**T 支持的类型：**
+- 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
+- 字符串类型：CHAR、VARCHAR、STRING
+- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2
+- 布尔类型：BOOLEAN
+- IP 类型：IPV4、IPV6
+
+### 返回值
+
+返回类型：ARRAY<T>
+
+返回值含义：
+- 返回一个新数组，包含所有输入数组中共同存在的唯一元素
+- 空数组，输入的所有参数数组没有共同存在的元素
+
+使用说明：
+- 函数会找出所有输入数组中共同存在的元素, 结果数组中的元素会被去重
+- 空数组和任何非NULL数组结果都是空数组，如果没有元素重叠，该函数将返回一个空数组。
+- 函数不支持数组为 NULL
+- 元素比较遵循类型兼容性规则，类型不兼容时会尝试转换，失败则为 null
+- 对数组元素中的 null 值：null 元素会被视为普通元素参与运算，null 与 null 被认为是相同的
+
+**查询示例：**
+
+两个数组的交集：
 ```sql
-CREATE TABLE array_type_table_varchar (
-    k1 INT,
-    k2 ARRAY<VARCHAR>,
-    k3 ARRAY<VARCHAR>
-)
-    duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_varchar VALUES
-(1, ['hello', 'world', 'c++'], ['I', 'am', 'c++']),
-(2, ['a1', 'equals', 'b1'], ['a2', 'equals', 'b2']),
-(3, ['hasnull', NULL, 'value'], ['nohasnull', 'nonull', 'value']),
-(3, ['hasnull', NULL, 'value'], ['hasnull', NULL, 'value']);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_varchar;
+SELECT array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8]);
++------------------------------------------------+
+| array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8]) |
++------------------------------------------------+
+| [4, 2]                                         |
++------------------------------------------------+
 ```
-```text
-+------+----------------------------+----------------------------------+----------------------------+
-| k1   | k2                         | k3                               | array_intersect(k2, k3)    |
-+------+----------------------------+----------------------------------+----------------------------+
-|    1 | ["hello", "world", "c++"]  | ["I", "am", "c++"]               | ["c++"]                    |
-|    2 | ["a1", "equals", "b1"]     | ["a2", "equals", "b2"]           | ["equals"]                 |
-|    3 | ["hasnull", null, "value"] | ["hasnull", null, "value"]       | [null, "value", "hasnull"] |
-|    3 | ["hasnull", null, "value"] | ["nohasnull", "nonull", "value"] | ["value"]                  |
-+------+----------------------------+----------------------------------+----------------------------+```
-```
+
+多个数组的交集：
 ```sql
-CREATE TABLE array_type_table_decimal (
-    k1 INT,
-    k2 ARRAY<DECIMAL(10, 2)>,
-    k3 ARRAY<DECIMAL(10, 2)>
-)
-    duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_decimal VALUES
-(1, [1.1, 2.1, 3.44], [2.1, 3.4, 5.4]),
-(2, [NULL, 2, 5], [NULL, NULL, 5.4]),
-(3, [1, NULL, 2, 5], [1, 3.1, 5.4]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_decimal;
+SELECT array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8], [2, 4, 10, 12]);
++----------------------------------------------------------------+
+| array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8], [2, 4, 10, 12]) |
++----------------------------------------------------------------+
+| [2, 4]                                                         |
++----------------------------------------------------------------+
 ```
-```text
-+------+--------------------------+--------------------+-------------------------+
-| k1   | k2                       | k3                 | array_intersect(k2, k3) |
-+------+--------------------------+--------------------+-------------------------+
-|    1 | [1.10, 2.10, 3.44]       | [2.10, 3.40, 5.40] | [2.10]                  |
-|    2 | [null, 2.00, 5.00]       | [null, null, 5.40] | [null]                  |
-|    3 | [1.00, null, 2.00, 5.00] | [1.00, 3.10, 5.40] | [1.00]                  |
-+------+--------------------------+--------------------+-------------------------+
+
+字符串数组的交集：
+```sql
+SELECT array_intersect(['a', 'b', 'c'], ['b', 'c', 'd']);
++--------------------------------------------+
+| array_intersect(['a','b','c'], ['b','c','d']) |
++--------------------------------------------+
+| ["b", "c"]                                 |
++--------------------------------------------+
 ```
+
+包含 null 的数组， null 被视为可以比较相等性的值。
+```sql
+SELECT array_intersect([1, null, 2, null, 3], [null, 2, 3, 4]);
++---------------------------------------------------------+
+| array_intersect([1, null, 2, null, 3], [null, 2, 3, 4]) |
++---------------------------------------------------------+
+| [null, 2, 3]                                            |
++---------------------------------------------------------+
+```
+
+字符串数组和整数数组的交集：
+字符串'2' 可以被转换成整数2, 'b' 转换失败变成 null 
+```
+SELECT array_intersect([1, 2, null, 3], ['2', 'b']);
++----------------------------------------------+
+| array_intersect([1, 2, null, 3], ['2', 'b']) |
++----------------------------------------------+
+| [null, 2]                                    |
++----------------------------------------------+
+```
+
+空数组与任意数组：
+```sql
+SELECT array_intersect([], [1, 2, 3]);
++-----------------------------+
+| array_intersect([], [1,2,3]) |
++-----------------------------+
+| []                          |
++-----------------------------+
+```
+
+输入数组是NULL 会报错：
+```
+SELECT array_intersect(NULL, NULL);
+ERROR 1105 (HY000): errCode = 2, detailMessage = class org.apache.doris.nereids.types.NullType cannot be cast to class org.apache.doris.nereids.types.ArrayType (org.apache.doris.nereids.types.NullType and org.apache.doris.nereids.types.ArrayType are in unnamed module of loader 'app')
+```
+
+复杂类型不支持会报错：
+嵌套数组类型不支持，报错：
+```
+SELECT array_intersect([[1,2],[3,4],[5,6]]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = array_intersect does not support type ARRAY<ARRAY<TINYINT>>, expression is array_intersect([[1, 2], [3, 4], [5, 6]])
+```
+
+map 类型不支持，报错：
+```
+SELECT array_intersect([{'k':1},{'k':2},{'k':3}]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = array_intersect does not support type ARRAY<MAP<VARCHAR(1),TINYINT>>, expression is array_intersect([map('k', 1), map('k', 2), map('k', 3)])
+```
+
+参数数量错误会报错：
+```sql
+SELECT array_intersect([1, 2, 3]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'array_intersect' which has 1 arity. Candidate functions are: [array_intersect(Expression, Expression, ...)]
+```
+
+传入非数组类型会报错：
+```sql
+SELECT array_intersect('not_an_array', [1, 2, 3]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_intersect(VARCHAR(12), ARRAY<INT>)
+```
+
+### Keywords
+
+ARRAY, INTERSECT, ARRAY_INTERSECT 
