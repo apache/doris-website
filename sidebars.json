@@ -384,7 +384,7 @@
                     "type": "category",
                     "label": "AI & LLM",
                     "items": [
-                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function"
+                        "ai/llm-function-overview"
                     ]
                 },
                 {
