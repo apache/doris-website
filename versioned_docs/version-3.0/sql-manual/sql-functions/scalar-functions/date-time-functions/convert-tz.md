@@ -7,7 +7,7 @@
 
 ## Description
 
-Converts a datetime value from the time zone specified by from_tz to the time zone specified by to_tz and returns the resulting value. For time zone settings, refer to the time-zone documentation.
+Convert a datetime value from the given time zone from_tz to the given time zone to_tz and return the result. For time zone settings, please refer to the document at [time-zone](https://doris.apache.org/docs/dev/admin-manual/cluster-management/time-zone/)
 
 ## Syntax
 
@@ -19,16 +19,16 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 | Parameter | Description |
 | -- | -- | 
-| `<dt>` | The value to be converted, which is of `datetime` or date type, with a maximum precision of six decimal places for seconds (e.g., 23:59:59.999999) |
+| `<dt>` | The value to be converted, which is of `datetime` or `date` type and `string` types that conform to the format, with a maximum precision of six decimal places for seconds (e.g.,2022-12-28 23:59:59.999999) |
 | `<from_tz>` | The original time zone of dt, it is `string` type |
 | `<to_tz>` | The original time zone of dt,it is `string` type |
 
 ## Return value
 
 The converted timestamp value.​
-For datetime inputs without scale, the returned result also has no scale; for inputs with scale, the return also has no scale.​
+For datetime inputs without scale, the returned result also has no scale; for inputs with scale, the return also has scale.​
 Special cases:​
-- If any parameter is invalid (e.g., invalid datetime format, non-existent time zone identifier, etc.), the function returns NULL.​
+- If the parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), a non-existent time zone identifier, etc.), this function returns NULL.
 - If any parameter is NULL, returns NULL.
 ## Example
 
@@ -37,7 +37,7 @@ Special cases:​
 
 
 ---Convert time from Shanghai, China to Los Angeles, USA
-mysql> select CONVERT_TZ('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles');
+mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), 'Asia/Shanghai', 'America/Los_Angeles');
 +---------------------------------------------------------------------------+
 | CONVERT_TZ('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles') |
 +---------------------------------------------------------------------------+
@@ -52,6 +52,14 @@ select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', 'America/Los_Angeles');
 +--------------------------------------------------------------------+
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
+
+---input date type，time part will convert to 00:00:00
+mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', 'America/Los_Angeles');
++-------------------------------------------------------------------------------------------+
+| CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATEV2), 'Asia/Shanghai', 'America/Los_Angeles') |
++-------------------------------------------------------------------------------------------+
+| 2019-07-31 09:00:00                                                                       |
++-------------------------------------------------------------------------------------------+
 
 ---Convert time is NULL, output NULL
 
@@ -100,6 +108,15 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 +------------------------------------------------------------------------+
 | 2019-07-31 22:21:03.636                                                |
 +------------------------------------------------------------------------+
+
+
+---Larer than 9999 year,return NULL
+mysql> select CONVERT_TZ('12019-08-01 13:21:03.636', '+08:00', 'America/Los_Angeles');
++-------------------------------------------------------------------------+
+| CONVERT_TZ('12019-08-01 13:21:03.636', '+08:00', 'America/Los_Angeles') |
++-------------------------------------------------------------------------+
+| NULL                                                                    |
++-------------------------------------------------------------------------+
 
 ```
 

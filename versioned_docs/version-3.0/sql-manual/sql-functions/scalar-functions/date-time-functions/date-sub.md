@@ -25,43 +25,63 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | Parameter | Descirption |
 | -- | -- |
-| `<date>` | A valid date value, supporting both date and datetime types|
+| `<date>` | A valid date value, support `datetime` or `date` type and `string` types that conform to the format|
 | `<expr>` | The time interval to be subtracted, of type INT |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK|
 
 ## Return value
 
-If the input is valid, returns a calculated result with the same type as <date>:
+If the input is valid, returns a calculated result with the same type as `date`:
 
 - When input is DATE, returns DATE (date part only);
 - When input is DATETIME, returns DATETIME (including date and time).
+- For datetime types with scale, they will be rounded to seconds; for string types with scale, they will be returned with the scale retained.
 
 Special cases:
 
 - Returns NULL if any parameter is NULL;
-- Returns NULL for invalid dates, illegal <expr> (negative values) or <time_unit>;
-Returns NULL if the calculated result is earlier than the minimum value supported by the date type (e.g., before '0000-01-01').
+- Returns NULL for illegal `expr` (negative values) or `time_unit`;
+- Returns NULL if the calculated result is earlier than the minimum value supported by the date type (e.g., before '0000-01-01').
+- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
 
 ## Example
 
 ```sql
 
---- Subtract two days
-mysql> select date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY);
 
-+-------------------------------------------------+
-| date_sub('2010-11-30 23:59:59', INTERVAL 2 DAY) |
-+-------------------------------------------------+
-| 2010-11-28 23:59:59                             |
-+-------------------------------------------------+
+--- Subtract two days
+mysql> select date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
+
++-------------------------------------------------------------------+
+| date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY) |
++-------------------------------------------------------------------+
+| 2010-11-28 23:59:59                                               |
++-------------------------------------------------------------------+
+
+
+---For datetime type parameters with scale, round to seconds
+mysql> select date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND);
++------------------------------------------------------------------------+
+| date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND) |
++------------------------------------------------------------------------+
+| 2010-11-30 23:59:56                                                    |
++------------------------------------------------------------------------+
+
+---For string type parameters with scale, return with scale retained
+mysql> select date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND);
++------------------------------------------------------+
+| date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND) |
++------------------------------------------------------+
+| 2010-11-30 23:59:55.6                                |
++------------------------------------------------------+
 
 --- Subtract two months across years
-mysql> select date_sub('2023-01-15', INTERVAL 2 MONTH);
-+------------------------------------------+
-| date_sub('2023-01-15', INTERVAL 2 MONTH) |
-+------------------------------------------+
-| 2022-11-15                               |
-+------------------------------------------+
+mysql> select date_sub(cast('2023-01-15' as date), INTERVAL 2 MONTH);
++--------------------------------------------------------+
+| date_sub(cast('2023-01-15' as date), INTERVAL 2 MONTH) |
++--------------------------------------------------------+
+| 2022-11-15                                             |
++--------------------------------------------------------+
 
 --- February 2023 has only 28 days, so subtracting one month from 2023-03-31 results in 2023-02-28
 mysql> select date_sub('2023-03-31', INTERVAL 1 MONTH);
@@ -109,4 +129,11 @@ mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
 
 
+---date is not in the range of[0000,9999],return null
+mysql> select date_sub('10000-01-01', INTERVAL 1 YEAR);
++------------------------------------------+
+| date_sub('10000-01-01', INTERVAL 1 YEAR) |
++------------------------------------------+
+| NULL                                     |
++------------------------------------------+
 ```

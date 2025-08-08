@@ -7,7 +7,7 @@
 
 ## Description
 
-The DATE_FLOOR function is used to floor a specified date or time value down to the nearest start of a specified time interval period. That is, it returns the largest periodic moment that is not greater than the input date and time. The period rules are jointly defined by <period> (number of periods) and <type> (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
+The DATE_FLOOR function is used to floor a specified date or time value down to the nearest start of a specified time interval period. That is, it returns the largest periodic moment that is not greater than the input date and time. The period rules are jointly defined by `period` (number of periods) and `type` (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
 ## Syntax
 
@@ -17,15 +17,15 @@ The DATE_FLOOR function is used to floor a specified date or time value down to 
 
 | parameter | description |
 | -- | -- |
-| `datetime` | A valid date expression, of type DATE or DATETIME |
+| `datetime` | A valid date expression, support `datetime` or `date` type and `string` types that conform to the format |
 | `period` | Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
 | `type` | Can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK |
 
 ## Return value
 
-Returns the result of flooring the date down according to the period, with the same type as <datetime>.
+Returns the result of flooring the date down according to the period, with the same type as `datetime`.
 
-If the input is valid, the floored result is of the same type as <datetime>:
+If the input is valid, the floored result is of the same type as `datetime`:
 
 - When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
 - When input is DATETIME or a string with time, returns DATETIME (including date and time).
@@ -33,8 +33,9 @@ If the input is valid, the floored result is of the same type as <datetime>:
 Special cases:
 
 - Returns NULL if any parameter is NULL;
-- Returns NULL for invalid dates, illegal <period> (non-positive integers) or <type>;
+- Returns NULL for illegal `period` (non-positive integers) or `type`;
 - Returns NULL if the floored result is earlier than the minimum value supported by the date type (e.g., before '0001-01-01').
+- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
 
 ## Example
 
@@ -107,4 +108,12 @@ mysql> select date_floor("0000-01-01", INTERVAL 5 WEEK);
 +-------------------------------------------+
 | NULL                                      |
 +-------------------------------------------+
+
+---date is not in the range of[0000,9999],return null
+mysql> select date_format('20223-12-18 23:59:59', 'yyyy-MM-dd');
++---------------------------------------------------+
+| date_format('20223-12-18 23:59:59', 'yyyy-MM-dd') |
++---------------------------------------------------+
+| NULL                                              |
++---------------------------------------------------+
 ```

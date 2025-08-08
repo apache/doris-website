@@ -7,7 +7,7 @@
 
 ## 描述
 
-DATEDIFF 函数用于计算两个日期或日期时间值之间的差值，结果精确到天，即返回 <expr1> 减去 <expr2> 所得到的天数差。该函数仅关注日期部分，忽略时间部分的具体小时、分钟、秒。
+DATEDIFF 函数用于计算两个日期或日期时间值之间的差值，结果精确到天，即返回 `expr1` 减去 `expr2` 所得到的天数差。该函数仅关注日期部分，忽略时间部分的具体小时、分钟、秒。
 
 ## 语法
 
@@ -19,12 +19,16 @@ DATEDIFF(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 日期被减数，支持的类型为 `date` 和 `datetime` |
+| `<expr1>` | 日期被减数，支持的类型为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
 | `<expr2>` | 日期减数,支持的类型为 `date` 和 `datetime` |
 
 ## 返回值
 
 返回 expr1 - expr2 的值，结果精确到天。
+
+特殊情况:
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), 返回 NULL。
+- 若输入任一参数为 NULL, 返回 NULL.
 
 ## 举例
 
@@ -65,11 +69,19 @@ mysql> select datediff('2023-02-30', '2023-01-01');
 +--------------------------------------+
 
 ---跨年度的计算
-mysql> select datediff('2024-03-01', '2023-12-31');
+mysql> select datediff(cast('2024-03-01' as date), '2023-12-31');
 +--------------------------------------+
 | datediff('2024-03-01', '2023-12-31') |
 +--------------------------------------+
 |                                   61 |
 +--------------------------------------+
 
+
+---日期不在范围[0000,9999]之内，返回 NULL
+mysql> select datediff(cast('20241-03-01' as date), '2023-12-31');
++-----------------------------------------------------+
+| datediff(cast('20241-03-01' as date), '2023-12-31') |
++-----------------------------------------------------+
+|                                                NULL |
++-----------------------------------------------------+
 ```

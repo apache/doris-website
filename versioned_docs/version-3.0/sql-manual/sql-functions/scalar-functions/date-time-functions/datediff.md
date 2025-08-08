@@ -7,7 +7,7 @@
 
 ## Description
 
-The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting <expr2> from <expr1>. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
+The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting `expr2` from `expr1`. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
 
 ## Syntax
 
@@ -19,12 +19,17 @@ DATEDIFF(<expr1>, <expr2>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | The minuend date, supporting date and datetime types |
+| `<expr1>` | The minuend date, support `datetime` or `date` type and `string` types that conform to the format |
 | `<expr2>` | The subtrahend date, supporting date and datetime types |
 
 ## Return value
 
 Returns the value of expr1 - expr2, with the result precise to the day.
+
+Special cases:
+
+- If any parameter is NULL, return NULL.
+- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), the function returns NULL.
 
 ## Example
 
@@ -65,11 +70,18 @@ mysql> select datediff('2023-02-30', '2023-01-01');
 +--------------------------------------+
 
 -- Calculation across years
-mysql> select datediff('2024-03-01', '2023-12-31');
+mysql> select datediff(cast('2024-03-01' as date), '2023-12-31');
 +--------------------------------------+
 | datediff('2024-03-01', '2023-12-31') |
 +--------------------------------------+
 |                                   61 |
 +--------------------------------------+
 
+---日期不在范围[0000,9999]之内，返回null
+mysql> select datediff(cast('20241-03-01' as date), '2023-12-31');
++-----------------------------------------------------+
+| datediff(cast('20241-03-01' as date), '2023-12-31') |
++-----------------------------------------------------+
+|                                                NULL |
++-----------------------------------------------------+
 ```
