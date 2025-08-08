@@ -7,62 +7,89 @@
 
 ## Description
 
-This function is used to check whether a JSON document contains a specified JSON element. If the specified element exists in the JSON document, it returns 1; otherwise, it returns 0. If the JSON document or the queried element is invalid, it returns `NULL`.
+Used to determine whether a JSON document contains a specified JSON element. If the specified element exists in the JSON document, it returns 1, otherwise it returns 0. If the JSON document or the queried element is invalid, it returns `NULL`.
 
 ## Syntax
 
-`JSON_CONTAINS(<json_str>,  <candidate> [,  <json_path>])`
+```sql
+JSON_CONTAINS(<json_object>, <candidate>[, <json_path>])
+```
 
-## Required Parameters
-
-| Parameter   | Description                                         |
-|-------------|-----------------------------------------------------|
-| `<json_str>` | The JSON string to be checked.                      |
-| `<candidate>` | The JSON element to check for inclusion.            |
-
-## Optional Parameters
-
-| Parameter   | Description                                         |
-|-------------|-----------------------------------------------------|
-| `<json_path>` | An optional JSON path to specify the subdocument to check. If not provided, the root document is used by default. |
+## Parameters
+### Required Parameters
+- `<json_object>` JSON type, check whether `<candidate>` exists in it.
+- `<candidate>` JSON type, the candidate value to be determined.
+### Optional Parameters
+- `<json_path>` String type, the search starting path. If not provided, it starts from root by default.
 
 ## Return Value
-- If `<json_path>` exists in `json_doc`, it returns 1.
-- If `<json_path>` does not exist in `json_doc`, it returns 0.
-- If any parameter is invalid or the JSON document format is incorrect, it returns `NULL`.
+- Null: If any of the three parameters is NULL, returns NULL
+- True: If `<json_object>` contains `<candidate>`, returns True.
+- False: If `<json_object>` does not contain `<candidate>`, returns False.
+- If `<json_object>` or `<candidate>` is not a JSON type, an error is reported.
 
-## Examples
-
-```sql
-
-SELECT JSON_CONTAINS('{"a": 1, "b": 2, "c": {"d": 4}}', '1', '$.a');
-
-```
-
-```sql
-+------------------------------------------------------------------------------------------+
-| json_contains(cast('{"a": 1, "b": 2, "c": {"d": 4}}' as JSON), cast('1' as JSON), '$.a') |
-+------------------------------------------------------------------------------------------+
-|                                                                                        1 |
-+------------------------------------------------------------------------------------------+
-
-```
-
-
-```sql
-
-SELECT json_contains('[1, 2, {"x": 3}]', '1');
-
-```
-
-```sql
-+-------------------------------------------------------------------------+
-| json_contains(cast('[1, 2, {"x": 3}]' as JSON), cast('1' as JSON), '$') |
-+-------------------------------------------------------------------------+
-|                                                                       1 |
-+-------------------------------------------------------------------------+
-
-```
-
-
-
+## Examples 
+1. Example 1
+    ```sql
+    SET @j = '{"a": 1, "b": 2, "c": {"d": 4}}';
+    SET @j2 = '1';
+    SELECT JSON_CONTAINS(@j, @j2, '$.a');
+    ```
+    ```text
+    +-------------------------------+
+    | JSON_CONTAINS(@j, @j2, '$.a') |
+    +-------------------------------+
+    |                             1 |
+    +-------------------------------+
+    ```
+    ```sql
+    SELECT JSON_CONTAINS(@j, @j2, '$.b');
+    ```
+    ```text
+    +-------------------------------+
+    | JSON_CONTAINS(@j, @j2, '$.b') |
+    +-------------------------------+
+    |                             0 |
+    +-------------------------------+
+    ```
+    ```sql
+    SELECT JSON_CONTAINS(@j, '{"a": 1}');
+    ```
+    ```text
+    +-------------------------------+
+    | JSON_CONTAINS(@j, '{"a": 1}') |
+    +-------------------------------+
+    |                             1 |
+    +-------------------------------+
+    ```
+2. NULL parameters
+    ```sql
+    SELECT JSON_CONTAINS(NULL, '{"a": 1}');
+    ```
+    ```text
+    +---------------------------------+
+    | JSON_CONTAINS(NULL, '{"a": 1}') |
+    +---------------------------------+
+    |                            NULL |
+    +---------------------------------+
+    ```
+    ```sql
+    SELECT JSON_CONTAINS('{"a": 1}', NULL);
+    ```
+    ```text
+    +---------------------------------+
+    | JSON_CONTAINS('{"a": 1}', NULL) |
+    +---------------------------------+
+    |                            NULL |
+    +---------------------------------+
+    ```
+    ```sql
+    SELECT JSON_CONTAINS('{"a": 1}', '{"a": 1}', NULL);
+    ```
+    ```text
+    +---------------------------------------------+
+    | JSON_CONTAINS('{"a": 1}', '{"a": 1}', NULL) |
+    +---------------------------------------------+
+    |                                        NULL |
+    +---------------------------------------------+
+    ```

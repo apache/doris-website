@@ -281,6 +281,7 @@
                                         "query-acceleration/materialized-view/async-materialized-view/overview",
                                         "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
                                         "query-acceleration/materialized-view/async-materialized-view/use-guide",
+                                        "query-acceleration/materialized-view/async-materialized-view/use-advice",
                                         "query-acceleration/materialized-view/async-materialized-view/faq"
                                     ]
                                 }
@@ -357,57 +358,95 @@
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
+                        "lakehouse/catalog-overview",
                         {
                             "type": "category",
-                            "label": "Querying Data Lakes",
+                            "label": "Data Catalogs",
                             "items": [
-                                "lakehouse/datalake-analytics/hive",
-                                "lakehouse/datalake-analytics/hudi",
-                                "lakehouse/datalake-analytics/iceberg",
-                                "lakehouse/datalake-analytics/paimon",
-                                "lakehouse/datalake-analytics/dlf"
+                                "lakehouse/catalogs/hive-catalog",
+                                "lakehouse/catalogs/iceberg-catalog",
+                                "lakehouse/catalogs/hudi-catalog",
+                                "lakehouse/catalogs/paimon-catalog",
+                                "lakehouse/catalogs/maxcompute-catalog",
+                                "lakehouse/catalogs/delta-lake-catalog",
+                                "lakehouse/catalogs/bigquery-catalog",
+                                "lakehouse/catalogs/kudu-catalog",
+                                "lakehouse/catalogs/lakesoul-catalog",
+                                "lakehouse/catalogs/jdbc-catalog-overview",
+                                "lakehouse/catalogs/jdbc-mysql-catalog",
+                                "lakehouse/catalogs/jdbc-pg-catalog",
+                                "lakehouse/catalogs/jdbc-oracle-catalog",
+                                "lakehouse/catalogs/jdbc-sqlserver-catalog",
+                                "lakehouse/catalogs/jdbc-ibmdb2-catalog",
+                                "lakehouse/catalogs/jdbc-clickhouse-catalog",
+                                "lakehouse/catalogs/jdbc-saphana-catalog",
+                                "lakehouse/catalogs/jdbc-oceanbase-catalog"
+                            ]
+                        },
+                        "lakehouse/file-analysis",
+                        {
+                            "type": "category",
+                            "label": "Metastores",
+                            "items": [
+                                "lakehouse/metastores/hive-metastore",
+                                "lakehouse/metastores/aws-glue",
+                                "lakehouse/metastores/google-dataproc-metastore",
+                                "lakehouse/metastores/aliyun-dlf",
+                                "lakehouse/metastores/iceberg-rest",
+                                "lakehouse/metastores/filesystem"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Building Data Lakes",
+                            "label": "Storages",
                             "items": [
-                                "lakehouse/datalake-building/hive-build",
-                                "lakehouse/datalake-building/iceberg-build"
+                                "lakehouse/storages/hdfs",
+                                "lakehouse/storages/s3",
+                                "lakehouse/storages/azure-blob",
+                                "lakehouse/storages/gcs",
+                                "lakehouse/storages/aliyun-oss",
+                                "lakehouse/storages/tencent-cos",
+                                "lakehouse/storages/huawei-obs",
+                                "lakehouse/storages/baidu-bos",
+                                "lakehouse/storages/minio"
                             ]
                         },
                         {
                             "type": "category",
-                            "label": "Querying Databases",
+                            "label": "File Format",
                             "items": [
-                                "lakehouse/database/jdbc",
-                                "lakehouse/database/mysql",
-                                "lakehouse/database/postgresql",
-                                "lakehouse/database/oracle",
-                                "lakehouse/database/sqlserver",
-                                "lakehouse/database/ibm-db2",
-                                "lakehouse/database/clickhouse",
-                                "lakehouse/database/sap-hana",
-                                "lakehouse/database/oceanbase",
-                                "lakehouse/database/es",
-                                "lakehouse/database/max-compute"
+                                "lakehouse/file-formats/parquet",
+                                "lakehouse/file-formats/orc",
+                                "lakehouse/file-formats/text"
                             ]
                         },
-                        "lakehouse/file",
                         "lakehouse/data-cache",
                         "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/external-statistics",
-                        "lakehouse/cloud-auth",
-                        "lakehouse/sql-dialect",
+                        "lakehouse/statistics",
+                        {
+                            "type": "category",
+                            "label": "SQL Dialect Convertor",
+                            "items": [
+                                "lakehouse/sql-convertor/sql-convertor-overview",
+                                "lakehouse/sql-convertor/presto-trino-guide",
+                                "lakehouse/sql-convertor/clickhouse-guide",
+                                "lakehouse/sql-convertor/hive-guide",
+                                "lakehouse/sql-convertor/pg-guide"
+                            ]
+                        },
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
-                                "lakehouse/lakehouse-best-practices/doris-hudi",
-                                "lakehouse/lakehouse-best-practices/doris-paimon",
-                                "lakehouse/lakehouse-best-practices/doris-iceberg",
-                                "lakehouse/lakehouse-best-practices/doris-lakesoul"
+                                "lakehouse/best-practices/doris-hudi",
+                                "lakehouse/best-practices/doris-paimon",
+                                "lakehouse/best-practices/doris-iceberg",
+                                "lakehouse/best-practices/doris-lakesoul",
+                                "lakehouse/best-practices/doris-aws-s3tables",
+                                "lakehouse/best-practices/tpch",
+                                "lakehouse/best-practices/tpcds",
+                                "lakehouse/best-practices/doris-maxcompute"
                             ]
                         }
                     ]
@@ -1789,6 +1828,7 @@
                                 "sql-manual/sql-statements/catalog/ALTER-CATALOG",
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]

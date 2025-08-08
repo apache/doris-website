@@ -5,22 +5,7 @@
 }
 ---
 
-`STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.
-
-- It cannot be used as a Key column. Now STRUCT can only be used in Duplicate Model Tables.
-
-- The names and number of Fields in a Struct are fixed and always Nullable, and a Field typically consists of the following parts.
-
-  - field_name: Identifier naming the field, non repeatable.
-  - field_type: A data type.
-  - COMMENT: An optional string describing the field. (currently not supported)
-
-The currently supported types are:
-
-```sql
-BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
-DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
-```
+`STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.Click [STRUCT](../../../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) to learn more.
 
 ## CSV format import
 

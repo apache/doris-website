@@ -359,11 +359,31 @@ CREATE TABLE example_table (
 SELECT * FROM example_table WHERE data_string LIKE '%doris%'
 ```
 
+**Tuning Techniques for Column-Count Limits:**
+
+Note: If the number of sub-columns exceeds 5,000, higher requirements for memory and configuration apply. On a single machine, aim for at least 128 GB of RAM and 32 CPU cores.
+
+1. In BE configuration, adjust `variant_max_merged_tablet_schema_size=n`, where n should be greater than the actual number of columns (not recommended to exceed 10,000).
+
+2. Be aware that extracting too many columns will put heavy pressure on compaction (import throughput must be throttled accordingly). Increasing the client-side import `batch_size`—based on memory usage—can reduce write amplification during compaction. Alternatively, enable `group_commit` (a table property) and appropriately increase `group_commit_interval_ms` and `group_commit_data_bytes`.
+
+3. If your queries do not require bucket pruning, use random bucketing and enable the [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) import setting (an import configuration) to reduce compaction write amplification.
+
+4. In BE configuration, adjust `max_cumu_compaction_threads` according to import pressure; ensure at least 8 threads.
+
+5. In BE configuration, set `vertical_compaction_num_columns_per_group=500` to improve grouped-compaction efficiency, although this increases memory overhead.
+
+6. In BE configuration, set `segment_cache_memory_percentage=20` to increase segment cache capacity and improve metadata caching efficiency.
+
+7. Monitor the Compaction Score closely. A continuously rising score indicates that compaction cannot keep up (import pressure should be reduced accordingly).
+
+8. Using `SELECT *` or `SELECT variant` can significantly increase cluster-wide pressure, potentially causing timeouts or out-of-memory errors. It is recommended to include path information in queries—for example, `SELECT variant['path_1']`.
+
 ### FAQ
 
 1. Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
 
-Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
+Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns(Requires higher-spec hardware).
 
 2. Is there a difference between null in the VARIANT type (e.g., `{"key": null}`) and SQL NULL (i.e., IS NULL)?
 

@@ -147,7 +147,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
   **说明**
 
-    - /home/disk1/doris,medium:hdd，表示存储介质是HHD;
+    - /home/disk1/doris,medium:hdd，表示存储介质是HDD;
     - /home/disk2/doris,medium:ssd，表示存储介质是SSD;
 
 

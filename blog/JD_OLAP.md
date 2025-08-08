@@ -39,7 +39,7 @@ This article discusses the exploration and practice of the search engine team in
 JD.com (NASDAQ: JD), a leading e-commerce company in China, had a net income of RMB 951.6 billion in 2021. JD Group owns JD Retail, JD Global, JD Technology, JD Logistics, JD Cloud, etc. Jingdong Group was officially listed on the NASDAQ Stock Exchange in May 2014.
 
 ## JD Search Box's Requirement: Real-time Data Analysis
-JD search box, as the entrance of the e-commerce platform, provides a link betwee merchants and users. Users can express their needs through the search box. In order to better understand user intentions and quickly improve the conversion rate, multiple A/B tests are running online at the same time, which apply to multiple products. The category, organization, and brand all need to be monitored online for better conversion. At present, JD search box demands real-time data in application mainly includes three parts:
+JD search box, as the entrance of the e-commerce platform, provides a link between merchants and users. Users can express their needs through the search box. In order to better understand user intentions and quickly improve the conversion rate, multiple A/B tests are running online at the same time, which apply to multiple products. The category, organization, and brand all need to be monitored online for better conversion. At present, JD search box demands real-time data in application mainly includes three parts:
 
 1. The overall data of JD search box.
 2. Real-time monitoring of the A/B test.
@@ -49,7 +49,7 @@ The analysis mentioned above needs to refine the data to the SKU-level. At the s
 
 Although different business analysists care about different data granularity, time frequency, and dimensions, we are hoping to establish a unified real-time OLAP data warehouse and provide a set of safe, reliable and flexible real-time data services.
 
-At present, the newly generated exposure logs every day reach hundreds of millions. The logs willl increase by 10 times if they are stored as SKU. And they would grow to billions of records if based on A/B test. Aggregation queries cross multi-dimension require second-level response time. 
+At present, the newly generated exposure logs every day reach hundreds of millions. The logs will increase by 10 times if they are stored as SKU. And they would grow to billions of records if based on A/B test. Aggregation queries cross multi-dimension require second-level response time. 
 
 Such an amount of data also brings huge challenges to the team: 2 billion rows have been created daily; Up to 60 million rows need to be imported per minute; Data latency should be limited to 1 minute; MDX query needs to be executed within 3 seconds; QPS has reached above 20. Yet a new reliable OLAP database with high stability should be able to respond to priority 0 emergency.
 

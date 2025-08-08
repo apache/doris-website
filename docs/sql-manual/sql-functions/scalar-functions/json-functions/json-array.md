@@ -5,7 +5,6 @@
 }
 ---
 
-# JSON_ARRAY
 ## Description
 Generate a JSON array containing the specified elements. Returns an empty array when no parameters are passed.
 
@@ -13,6 +12,11 @@ Generate a JSON array containing the specified elements. Returns an empty array 
 ```sql
 JSON_ARRAY([<expression>, ...]) 
 ```
+## Arguments
+### Variable arguments: 
+- `<expression>`: Elements to be included in the JSON array can be of a single type or multiple types, including NULL.
+## Returns
+[`Nullable(JSON)`](../../../basic-element/sql-data-types/semi-structured/JSON.md): Returns a JSON array containing the specified values. If no values are specified, an empty JSON array is returned.
 
 ## Parameters
 ### Variable parameters:

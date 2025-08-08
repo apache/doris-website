@@ -142,7 +142,7 @@ In terms of write performance, we have simulated two test cases under the same c
 
 - If users need the compute-storage coupled mode, following the [documentation](https://doris.apache.org/docs/3.0/install/source-install/compilation-with-docker/) for its deployment and upgrade. We recommend using Doris Manager for quick deployment and cluster upgrades. However, the compute-storage decoupled mode does not yet support Doris Manager deployment and upgrade. We will continue iteration for better support in future versions.
 
-- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools like X2Doris after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
+- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
 
 :::info
 See doc:
@@ -195,15 +195,15 @@ See doc:
 
 - Trino Connector: https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/
 
-- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpch/
+- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpch/
 
-- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpcds/
+- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpcds/
 
-- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/deltalake/
+- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/catalogs/delta-lake-catalog/
 
-- Kudu: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/kudu/
+- Kudu: https://doris.apache.org/docs/3.0/lakehouse/catalogs/kudu-catalog/
 
-- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/bigquery/
+- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/catalogs/bigquery-catalog/
 :::
 
 
@@ -214,7 +214,7 @@ In V3.0, we have introduced data writeback functionality for Hive and Iceberg. T
 In future iterations, Apache Doris will further enhance support for data lake table formats and improve the openness of storage APIs.
 
 :::info Note
-See doc: https://doris.apache.org/docs/3.0/lakehouse/datalake-building/hive-build/
+See doc: https://doris.apache.org/docs/3.0/lakehouse/catalogs/hive-catalog/
 :::
 
 ## 3. Upgraded semi-structured data analysis capabilities

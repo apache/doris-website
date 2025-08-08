@@ -9,7 +9,7 @@ This document presents a summary of Apache Doris versions released within one ye
 
 :::tip Latest Release
 
-🎉 Version 3.0.5 released now. Check out the 🔗[Release Notes](../releasenotes/v3.0/release-3.0.5) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
+🎉 Version 3.0.6 released now. Check out the 🔗[Release Notes](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.6) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
 
 <br />
 
@@ -20,27 +20,29 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
+- [2025-06-16, Apache Doris 3.0.6 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.6)
+
 - [2025-05-17, Apache Doris 2.1.10 is released](../releasenotes/v2.1/release-2.1.10.md)
 
-- [2025-04-28, Apache Doris 3.0.5 is released](../releasenotes/v3.0/release-3.0.5.md)
+- [2025-04-28, Apache Doris 3.0.5 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.5)
 
 - [2025-04-02, Apache Doris 2.1.9 is released](../releasenotes/v2.1/release-2.1.9.md)
 
-- [2025-02-28, Apache Doris 3.0.4 is released](../releasenotes/v3.0/release-3.0.4.md)
+- [2025-02-28, Apache Doris 3.0.4 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.4)
 
 - [2025-01-24, Apache Doris 2.1.8 is released](../releasenotes/v2.1/release-2.1.8.md)
 
-- [2024-12-02, Apache Doris 3.0.3 is released](../releasenotes/v3.0/release-3.0.3.md)
+- [2024-12-02, Apache Doris 3.0.3 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.3)
 
 - [2024-11-10, Apache Doris 2.1.7 is released](../releasenotes/v2.1/release-2.1.7.md)
 
-- [2024-10-15, Apache Doris 3.0.2 is released](../releasenotes/v3.0/release-3.0.2.md)
+- [2024-10-15, Apache Doris 3.0.2 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.2)
 
 - [2024-09-30, Apache Doris 2.0.15 is released](../releasenotes/v2.0/release-2.0.15.md)
 
 - [2024-09-10, Apache Doris 2.1.6 is released](../releasenotes/v2.1/release-2.1.6.md)
 
-- [2024-08-23, Apache Doris 3.0.1 is released](../releasenotes/v3.0/release-3.0.1.md)
+- [2024-08-23, Apache Doris 3.0.1 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.1)
 
 - [2024-07-24, Apache Doris 2.1.5 is released](../releasenotes/v2.1/release-2.1.5.md)
 

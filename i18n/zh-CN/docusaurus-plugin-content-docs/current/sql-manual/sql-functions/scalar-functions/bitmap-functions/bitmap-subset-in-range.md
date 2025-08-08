@@ -26,6 +26,8 @@ bitmap_subset_in_range(<bitmap>, <range_start_include>, <range_end_exclude>)
 ## 返回值
 
 指定范围的子集 Bitmap。
+- 当参数存在NULL时或者指定范围为非法范围时，返回 NULL
+
 
 ## 示例
 
@@ -58,5 +60,35 @@ select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 
 | value |
 +-------+
 | 2     |
++-------+
+```
+
+
+```sql
+select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 2, NULL)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
++-------+
+```
+
+
+```sql
+select bitmap_to_string(bitmap_subset_in_range(bitmap_from_string('1,2,3,4,5'), 2, -10000)) value;
+```
+
+结果如下：
+
+```text
++-------+
+| value |
++-------+
+| NULL  |
 +-------+
 ```
