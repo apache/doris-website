@@ -388,3 +388,74 @@ PROPERTIES(
 6. 不支持在有 Variant 列的表上进行灵活列更新。
 
 7. 不支持在有同步物化视图的表上进行灵活列更新。
+
+
+## 部分列更新/灵活列更新中对新插入的行的处理
+
+session variable或导入属性`partial_update_new_key_behavior`用于控制部分列更新和灵活列更新中插入的新行的行为。
+
+当`partial_update_new_key_behavior=ERROR`时，插入的每一行数据必须满足该行数据的 Key 在表中已经存在。而当`partial_update_new_key_behavior=APPEND`时，进行部分列更新或灵活列更新时可以更新 Key 已经存在的行，也可以插入 Key 不存在的新行。
+
+例如有表结构如下：
+```sql
+CREATE TABLE user_profile
+(
+    id               INT,
+    name             VARCHAR(10),
+    age              INT,
+    city             VARCHAR(10),
+    balance          DECIMAL(9, 0),
+    last_access_time DATETIME
+) ENGINE=OLAP
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "enable_unique_key_merge_on_write" = "true"
+);
+```
+
+表中有一条数据如下：
+```sql
+mysql> select * from user_profile;
++------+-------+------+----------+---------+---------------------+
+| id   | name  | age  | city     | balance | last_access_time   |
++------+-------+------+----------+---------+---------------------+
+|    1 | kevin |   18 | shenzhen |     400 | 2023-07-01 12:00:00|
++------+-------+------+----------+---------+---------------------+
+```
+
+当用户在`partial_update_new_key_behavior=ERROR`的情况下使用 Insert Into 部分列更新向表中插入上述数据时，由于第二、三行的数据的 key(`(3)`, `(18)`) 不在原表中，所以本次插入会失败：
+```sql
+SET enable_unique_key_partial_update=true;
+SET partial_update_new_key_behavior=ERROR;
+INSERT INTO user_profile (id, balance, last_access_time) VALUES
+(1, 500, '2023-07-03 12:00:01'),
+(3, 23, '2023-07-03 12:00:02'),
+(18, 9999999, '2023-07-03 12:00:03');
+(1105, "errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]tablet error: [E-7003]Can't append new rows in partial update when partial_update_new_key_behavior is ERROR. Row with key=[3] is not in table., host: 127.0.0.1")
+```
+
+当用在`partial_update_new_key_behavior=APPEND`的情况下使用 Insert Into 部分列更新向表中插入如下数据时：
+```sql
+SET enable_unique_key_partial_update=true;
+SET partial_update_new_key_behavior=APPEND;
+INSERT INTO user_profile (id, balance, last_access_time) VALUES 
+(1, 500, '2023-07-03 12:00:01'),
+(3, 23, '2023-07-03 12:00:02'),
+(18, 9999999, '2023-07-03 12:00:03');
+```
+
+表中原有的一条数据将会被更新，此外还向表中插入了两条新数据。对于插入的数据中用户没有指定的列，如果该列有默认值，则会以默认值填充；否则，如果该列可以为 NULL，则将以 NULL 值填充；否则本次插入不成功。
+
+查询结果如下：
+```sql
+mysql> select * from user_profile;
++------+-------+------+----------+---------+---------------------+
+| id   | name  | age  | city     | balance | last_access_time    |
++------+-------+------+----------+---------+---------------------+
+|    1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
+|    3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
+|   18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
++------+-------+------+----------+---------+---------------------+
+```
+
