@@ -1,137 +1,146 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
-Returns an array of the elements in the intersection of array1 and array2, without duplicates. If the input parameter is null, null is returned.
+## array_intersect
 
-## Syntax
+<version since="2.0.0">
+
+</version>
+
+### Description
+
+Returns the intersection of multiple arrays, i.e., elements that exist in all arrays. The function finds elements that exist in all input arrays and forms a new array after deduplication.
+
+### Syntax
+
 ```sql
-ARRAY_INTERSECT(<arr1> , <arr2> )
+array_intersect(ARRAY<T> arr1, ARRAY<T> arr2, [ARRAY<T> arr3, ...])
 ```
 
-## Parameters
-| Parameter | Description |
-|---|---|
-| `<arr1>`  | The source array arr1 |
-| `<arr2>`  | Array of intersections with arr1 |
+### Parameters
 
-## Return Value
-Returns an array containing all elements of the intersection of arr1 and arr2. Special cases:
-- If the input parameter is NULL, the function returns NULL.
+- `arr1, arr2, arr3, ...`：ARRAY<T> type, arrays for which to calculate the intersection. Supports two or more array parameters.
 
-## Notes
+**Supported types for T:**
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
+- String types: CHAR, VARCHAR, STRING
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Boolean type: BOOLEAN
+- IP types: IPV4, IPV6
 
-This function is supported only in the vectorized engine.
+### Return Value
 
-## Example
+Return type: ARRAY<T>
+
+Return value meaning:
+- Returns a new array containing unique elements that exist in all input arrays
+- Empty array: when there are no common elements among all input parameter arrays
+
+Usage notes:
+- The function finds elements that exist in all input arrays, and elements in the result array will be deduplicated
+- Empty arrays and any non-NULL array result in empty arrays. If there are no overlapping elements, the function will return an empty array.
+- The function does not support NULL arrays
+- Element comparison follows type compatibility rules. When types are incompatible, conversion will be attempted, and failure results in null
+- For null values in array elements: null elements are treated as regular elements in operations, and null is considered the same as null
+
+**Query Examples:**
+
+Intersection of two arrays:
 ```sql
-CREATE TABLE array_type_table (
-    k1 INT,
-    k2 ARRAY<INT>,
-    k3 ARRAY<INT>
-)
-duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table VALUES 
-(1, [1, 2, 3], [2, 4, 5]),
-(2, [2, 3], [1, 5]),
-(3, [1, 1, 1], [2, 2, 2]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table;
-```
-```text
-+------+-----------------+--------------+-----------------------------+
-| k1   | k2              | k3           | array_intersect(`k2`, `k3`) |
-+------+-----------------+--------------+-----------------------------+
-|    1 | [1, 2, 3]       | [2, 4, 5]    | [2]                         |
-|    2 | [2, 3]          | [1, 5]       | []                          |
-|    3 | [1, 1, 1]       | [2, 2, 2]    | []                          |
-+------+-----------------+--------------+-----------------------------+
-```
-```sql
-CREATE TABLE array_type_table_nullable (
-    k1 INT,
-    k2 ARRAY<INT>,
-    k3 ARRAY<INT>
-)
-duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_nullable VALUES
-(1, [1, NULL, 3], [1, 3, 5]),
-(2, [NULL, NULL, 2], [2, NULL, 4]),
-(3, NULL, [1, 2, 3]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_nullable;
+SELECT array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8]);
++------------------------------------------------+
+| array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8]) |
++------------------------------------------------+
+| [4, 2]                                         |
++------------------------------------------------+
 ```
 
-```text
-+------+-----------------+--------------+-----------------------------+
-| k1   | k2              | k3           | array_intersect(`k2`, `k3`) |
-+------+-----------------+--------------+-----------------------------+
-|    1 | [1, NULL, 3]    | [1, 3, 5]    | [1, 3]                      |
-|    2 | [NULL, NULL, 2] | [2, NULL, 4] | [NULL, 2]                   |
-|    3 | NULL            | [1, 2, 3]    | NULL                        |
-+------+-----------------+--------------+-----------------------------+
-```
+Intersection of multiple arrays:
 ```sql
-CREATE TABLE array_type_table_varchar (
-    k1 INT,
-    k2 ARRAY<VARCHAR>,
-    k3 ARRAY<VARCHAR>
-)
-    duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_varchar VALUES
-(1, ['hello', 'world', 'c++'], ['I', 'am', 'c++']),
-(2, ['a1', 'equals', 'b1'], ['a2', 'equals', 'b2']),
-(3, ['hasnull', NULL, 'value'], ['nohasnull', 'nonull', 'value']),
-(3, ['hasnull', NULL, 'value'], ['hasnull', NULL, 'value']);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_varchar;
+SELECT array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8], [2, 4, 10, 12]);
++----------------------------------------------------------------+
+| array_intersect([1, 2, 3, 4, 5], [2, 4, 6, 8], [2, 4, 10, 12]) |
++----------------------------------------------------------------+
+| [2, 4]                                                         |
++----------------------------------------------------------------+
 ```
-```text
-+------+----------------------------+----------------------------------+----------------------------+
-| k1   | k2                         | k3                               | array_intersect(k2, k3)    |
-+------+----------------------------+----------------------------------+----------------------------+
-|    1 | ["hello", "world", "c++"]  | ["I", "am", "c++"]               | ["c++"]                    |
-|    2 | ["a1", "equals", "b1"]     | ["a2", "equals", "b2"]           | ["equals"]                 |
-|    3 | ["hasnull", null, "value"] | ["hasnull", null, "value"]       | [null, "value", "hasnull"] |
-|    3 | ["hasnull", null, "value"] | ["nohasnull", "nonull", "value"] | ["value"]                  |
-+------+----------------------------+----------------------------------+----------------------------+```
-```
+
+Intersection of string arrays:
 ```sql
-CREATE TABLE array_type_table_decimal (
-    k1 INT,
-    k2 ARRAY<DECIMAL(10, 2)>,
-    k3 ARRAY<DECIMAL(10, 2)>
-)
-    duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-INSERT INTO array_type_table_decimal VALUES
-(1, [1.1, 2.1, 3.44], [2.1, 3.4, 5.4]),
-(2, [NULL, 2, 5], [NULL, NULL, 5.4]),
-(3, [1, NULL, 2, 5], [1, 3.1, 5.4]);
-select k1,k2,k3,array_intersect(k2,k3) from array_type_table_decimal;
+SELECT array_intersect(['a', 'b', 'c'], ['b', 'c', 'd']);
++--------------------------------------------+
+| array_intersect(['a','b','c'], ['b','c','d']) |
++--------------------------------------------+
+| ["b", "c"]                                 |
++--------------------------------------------+
 ```
-```text
-+------+--------------------------+--------------------+-------------------------+
-| k1   | k2                       | k3                 | array_intersect(k2, k3) |
-+------+--------------------------+--------------------+-------------------------+
-|    1 | [1.10, 2.10, 3.44]       | [2.10, 3.40, 5.40] | [2.10]                  |
-|    2 | [null, 2.00, 5.00]       | [null, null, 5.40] | [null]                  |
-|    3 | [1.00, null, 2.00, 5.00] | [1.00, 3.10, 5.40] | [1.00]                  |
-+------+--------------------------+--------------------+-------------------------+
+
+Array containing null values, null is treated as a value that can be compared for equality:
+```sql
+SELECT array_intersect([1, null, 2, null, 3], [null, 2, 3, 4]);
++---------------------------------------------------------+
+| array_intersect([1, null, 2, null, 3], [null, 2, 3, 4]) |
++---------------------------------------------------------+
+| [null, 2, 3]                                            |
++---------------------------------------------------------+
 ```
+
+Intersection of string array and integer array:
+String '2' can be converted to integer 2, 'b' conversion fails and becomes null:
+```sql
+SELECT array_intersect([1, 2, null, 3], ['2', 'b']);
++----------------------------------------------+
+| array_intersect([1, 2, null, 3], ['2', 'b']) |
++----------------------------------------------+
+| [null, 2]                                    |
++----------------------------------------------+
+```
+
+Empty array with any array:
+```sql
+SELECT array_intersect([], [1, 2, 3]);
++-----------------------------+
+| array_intersect([], [1,2,3]) |
++-----------------------------+
+| []                          |
++-----------------------------+
+```
+
+NULL input arrays will error:
+```sql
+SELECT array_intersect(NULL, NULL);
+ERROR 1105 (HY000): errCode = 2, detailMessage = class org.apache.doris.nereids.types.NullType cannot be cast to class org.apache.doris.nereids.types.ArrayType (org.apache.doris.nereids.types.NullType and org.apache.doris.nereids.types.ArrayType are in unnamed module of loader 'app')
+```
+
+Complex types are not supported and will error:
+Nested array types are not supported, will error:
+```sql
+SELECT array_intersect([[1,2],[3,4],[5,6]]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = array_intersect does not support type ARRAY<ARRAY<TINYINT>>, expression is array_intersect([[1, 2], [3, 4], [5, 6]])
+```
+
+Map types are not supported, will error:
+```sql
+SELECT array_intersect([{'k':1},{'k':2},{'k':3}]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = array_intersect does not support type ARRAY<MAP<VARCHAR(1),TINYINT>>, expression is array_intersect([map('k', 1), map('k', 2), map('k', 3)])
+```
+
+Error when parameter count is wrong:
+```sql
+SELECT array_intersect([1, 2, 3]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'array_intersect' which has 1 arity. Candidate functions are: [array_intersect(Expression, Expression, ...)]
+```
+
+Error when passing non-array type:
+```sql
+SELECT array_intersect('not_an_array', [1, 2, 3]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_intersect(VARCHAR(12), ARRAY<INT>)
+```
+
+### Keywords
+
+ARRAY, INTERSECT, ARRAY_INTERSECT

@@ -1,183 +1,144 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## description
+## array_map
 
-Use a lambda expression as the input parameter to calculate the corresponding expression for the internal data of other input ARRAY parameters.
-The number of parameters entered the lambda expression is 1 or more, which must be consistent with the number of input array columns.
-The scalar functions can be executed in lambda, and aggregate functions are not supported.
+<version since="2.0.0">
+
+</version>
+
+## Description
+
+Applies a lambda expression to elements in an array and returns a new array. The function applies the lambda expression to each element in the array and returns the corresponding result.
 
 ## Syntax
-```sql
-ARRAY_MAP(lambda, <arr> [ , <arr> ... ] )
-```
-
-## Parameters
-
-| Parameter | Description |
-| --- |---|
-| `lambda` | A lambda expression with one or more input parameters, which must match the number of input arrays. The lambda can execute valid scalar functions but does not support aggregate functions. |
-| `<arr>` | ARRAY array |
-
-## Return Value
-
-An ARRAY processed through the lambda expression.
-
-## example
 
 ```sql
-CREATE TABLE array_test2 (
-    id INT,
-    c_array1 ARRAY<INT>,
-    c_array2 ARRAY<INT>
-    )
-duplicate key (id)
-distributed by hash(id) buckets 1
-properties(
-    'replication_num' = '1'
-    );
-INSERT INTO array_test2 (id, c_array1, c_array2) VALUES
-                                                     (1, [1, 2, 3, 4, 5], [10, 20, -40, 80, -100]),
-                                                     (2, [6, 7, 8], [10, 12, 13]),
-                                                     (3, [1], [-100]),
-                                                     (4, NULL, NULL);
-select *, array_map(x->x,[1,2,3]) from array_test2 order by id;
-```
-```text
-+------+-----------------+-------------------------+----------------------------------------+
-| id   | c_array1        | c_array2                | array_map([x] -> x(0), ARRAY(1, 2, 3)) |
-+------+-----------------+-------------------------+----------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [1, 2, 3]                              |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [1, 2, 3]                              |
-|    3 | [1]             | [-100]                  | [1, 2, 3]                              |
-|    4 | NULL            | NULL                    | [1, 2, 3]                              |
-+------+-----------------+-------------------------+----------------------------------------+
-```
-```sql
-select *, array_map(x->x+2,[1,2,3]) from array_test2 order by id;
-```
-```text
-+------+-----------------+-------------------------+--------------------------------------------+
-| id   | c_array1        | c_array2                | array_map([x] -> x(0) + 2, ARRAY(1, 2, 3)) |
-+------+-----------------+-------------------------+--------------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [3, 4, 5]                                  |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [3, 4, 5]                                  |
-|    3 | [1]             | [-100]                  | [3, 4, 5]                                  |
-|    4 | NULL            | NULL                    | [3, 4, 5]                                  |
-+------+-----------------+-------------------------+--------------------------------------------+
+array_map(lambda, ARRAY<T> arr1, [ARRAY<T> arr2, ...])
 ```
 
+### Parameters
+
+- `lambda`：lambda expression used to define transformation rules
+- `arr1, arr2, ...`：ARRAY<T> type, arrays to be transformed. Supports one or more array parameters.
+
+**Supported types for T:**
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
+- String types: CHAR, VARCHAR, STRING
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Boolean type: BOOLEAN
+- IP types: IPV4, IPV6
+- Complex types: ARRAY, MAP, STRUCT
+
+### Return Value
+
+Return type: ARRAY<R>
+
+Return value meaning:
+- Returns a new array with the same length as the input array, where each position contains the result of applying the lambda expression to the corresponding element
+- NULL: if the input array is NULL
+
+Usage notes:
+- The number of parameters in the lambda expression must match the number of array parameters
+- When there are multiple array parameters, all arrays must have the same length
+- Lambda can use any scalar expression, but cannot use aggregate functions
+- Lambda expressions can call other higher-order functions, but the return types must be compatible
+- For null values in array elements: null elements will be passed to the lambda expression for processing, and lambda can check for null values
+
+**Query Examples:**
+
+Square each element in the array:
 ```sql
-select c_array1, c_array2, array_map(x->x,[1,2,3]) from array_test2 order by id;
-```
-```text
-+-----------------+-------------------------+----------------------------------------+
-| c_array1        | c_array2                | array_map([x] -> x(0), ARRAY(1, 2, 3)) |
-+-----------------+-------------------------+----------------------------------------+
-| [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [1, 2, 3]                              |
-| [6, 7, 8]       | [10, 12, 13]            | [1, 2, 3]                              |
-| [1]             | [-100]                  | [1, 2, 3]                              |
-| NULL            | NULL                    | [1, 2, 3]                              |
-+-----------------+-------------------------+----------------------------------------+
-```
-```sql
-select c_array1, c_array2, array_map(x->power(x,2),[1,2,3]) from array_test2 order by id;
-```
-```text
-+-----------------+-------------------------+----------------------------------------------------+
-| c_array1        | c_array2                | array_map([x] -> power(x(0), 2.0), ARRAY(1, 2, 3)) |
-+-----------------+-------------------------+----------------------------------------------------+
-| [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [1, 4, 9]                                          |
-| [6, 7, 8]       | [10, 12, 13]            | [1, 4, 9]                                          |
-| [1]             | [-100]                  | [1, 4, 9]                                          |
-| NULL            | NULL                    | [1, 4, 9]                                          |
-+-----------------+-------------------------+----------------------------------------------------+
-```
-```sql
-select c_array1, c_array2, array_map((x,y)->x+y,c_array1,c_array2) from array_test2 order by id;
-```
-```text
-+-----------------+-------------------------+----------------------------------------------------------+
-| c_array1        | c_array2                | array_map([x, y] -> x(0) + y(1), `c_array1`, `c_array2`) |
-+-----------------+-------------------------+----------------------------------------------------------+
-| [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [11, 22, -37, 84, -95]                                   |
-| [6, 7, 8]       | [10, 12, 13]            | [16, 19, 21]                                             |
-| [1]             | [-100]                  | [-99]                                                    |
-| NULL            | NULL                    | NULL                                                     |
-+-----------------+-------------------------+----------------------------------------------------------+
+SELECT array_map(x -> x * x, [1, 2, 3, 4, 5]);
++------------------------------------------+
+| array_map(x -> x * x, [1, 2, 3, 4, 5]) |
++------------------------------------------+
+| [1, 4, 9, 16, 25]                       |
++------------------------------------------+
 ```
 
+Round each element in a floating-point array:
 ```sql
-select c_array1, c_array2, array_map((x,y)->power(x,2)+y,c_array1, c_array2) from array_test2 order by id;
-```
-```text
-+-----------------+-------------------------+----------------------------------------------------------------------+
-| c_array1        | c_array2                | array_map([x, y] -> power(x(0), 2.0) + y(1), `c_array1`, `c_array2`) |
-+-----------------+-------------------------+----------------------------------------------------------------------+
-| [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [11, 24, -31, 96, -75]                                               |
-| [6, 7, 8]       | [10, 12, 13]            | [46, 61, 77]                                                         |
-| [1]             | [-100]                  | [-99]                                                                |
-| NULL            | NULL                    | NULL                                                                 |
-+-----------------+-------------------------+----------------------------------------------------------------------+
+SELECT array_map(x -> round(x), [1.1, 2.7, 3.3, 4.9, 5.5]);
++--------------------------------------------------+
+| array_map(x -> round(x), [1.1, 2.7, 3.3, 4.9, 5.5]) |
++--------------------------------------------------+
+| [1, 3, 3, 5, 6]                                 |
++--------------------------------------------------+
 ```
 
+Calculate the length of each element in a string array:
 ```sql
-select *,array_map(x->x=3,c_array1) from array_test2 order by id;
-```
-```text
-+------+-----------------+-------------------------+----------------------------------------+
-| id   | c_array1        | c_array2                | array_map([x] -> x(0) = 3, `c_array1`) |
-+------+-----------------+-------------------------+----------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [0, 0, 1, 0, 0]                        |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [0, 0, 0]                              |
-|    3 | [1]             | [-100]                  | [0]                                    |
-|    4 | NULL            | NULL                    | NULL                                   |
-+------+-----------------+-------------------------+----------------------------------------+
+SELECT array_map(x -> length(x), ['a', 'bb', 'ccc', 'dddd', 'eeeee']);
++--------------------------------------------------+
+| array_map(x -> length(x), ['a', 'bb', 'ccc', 'dddd', 'eeeee']) |
++--------------------------------------------------+
+| [1, 2, 3, 4, 5]                                 |
++--------------------------------------------------+
 ```
 
+Process an array containing null values:
 ```sql
-select *,array_map(x->x>3,c_array1) from array_test2 order by id;
-```
-```text
-+------+-----------------+-------------------------+----------------------------------------+
-| id   | c_array1        | c_array2                | array_map([x] -> x(0) > 3, `c_array1`) |
-+------+-----------------+-------------------------+----------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [0, 0, 0, 1, 1]                        |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [1, 1, 1]                              |
-|    3 | [1]             | [-100]                  | [0]                                    |
-|    4 | NULL            | NULL                    | NULL                                   |
-+------+-----------------+-------------------------+----------------------------------------+
+SELECT array_map(x -> x is not null, [1, null, 3, null, 5]);
++--------------------------------------------------+
+| array_map(x -> x is not null, [1, null, 3, null, 5]) |
++--------------------------------------------------+
+| [1, 0, 1, 0, 1]                                 |
++--------------------------------------------------+
 ```
 
+Multiple array parameters example, adding corresponding elements from two arrays:
 ```sql
-select *,array_map((x,y)->x>y,c_array1,c_array2) from array_test2 order by id;
-```
-```text
-+------+-----------------+-------------------------+----------------------------------------------------------+
-| id   | c_array1        | c_array2                | array_map([x, y] -> x(0) > y(1), `c_array1`, `c_array2`) |
-+------+-----------------+-------------------------+----------------------------------------------------------+
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [0, 0, 1, 0, 1]                                          |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [0, 0, 0]                                                |
-|    3 | [1]             | [-100]                  | [1]                                                      |
-|    4 | NULL            | NULL                    | NULL                                                     |
-+------+-----------------+-------------------------+----------------------------------------------------------+
-```
-```sql
-select array_map(x->cast(x as string), c_array1) from test_array_map_function;
-```
-```text
-+-----------------+-------------------------------------------------------+
-| c_array1        | array_map([x] -> CAST(x(0) AS CHARACTER), `c_array1`) |
-+-----------------+-------------------------------------------------------+
-| [1, 2, 3, 4, 5] | ['1', '2', '3', '4', '5']                             |
-| [6, 7, 8]       | ['6', '7', '8']                                       |
-| []              | []                                                    |
-| NULL            | NULL                                                  |
-+-----------------+-------------------------------------------------------+
+SELECT array_map((x, y) -> x + y, [1, 2, 3, 4, 5], [10, 20, 30, 40, 50]);
++--------------------------------------------------+
+| array_map((x, y) -> x + y, [1, 2, 3, 4, 5], [10, 20, 30, 40, 50]) |
++--------------------------------------------------+
+| [11, 22, 33, 44, 55]                             |
++--------------------------------------------------+
 ```
 
+Nested array processing, calculating the length of each sub-array:
+```sql
+SELECT array_map(x -> size(x), [[1,2],[3,4,5],[6],[7,8,9,10]]);
++--------------------------------------------------+
+| array_map(x -> size(x), [[1,2],[3,4,5],[6],[7,8,9,10]]) |
++--------------------------------------------------+
+| [2, 3, 1, 4]                                     |
++--------------------------------------------------+
+```
 
+Map type processing, extracting the value with key 'a' from each map:
+```sql
+SELECT array_map(x -> x['a'], [{'a':1,'b':2}, {'a':3,'b':4}, {'a':5,'b':6}]);
++--------------------------------------------------+
+| array_map(x -> x['a'], [{'a':1,'b':2}, {'a':3,'b':4}, {'a':5,'b':6}]) |
++--------------------------------------------------+
+| [1, 3, 5]                                        |
++--------------------------------------------------+
+```
+
+Error when parameter count is wrong:
+```sql
+SELECT array_map();
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'array_map' which has 0 arity. Candidate functions are: [array_map(Expression, Expression...)]
+```
+
+Error when the number of parameters in lambda expression doesn't match the number of array parameters:
+```sql
+SELECT array_map(x -> x > 0, [1,2,3], [4,5,6], [7,8,9]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = lambda x -> (x > 0) arguments' size is not equal parameters' size
+```
+
+Error when passing non-array type:
+```sql
+SELECT array_map(x -> x * 2, 'not_an_array');
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_map(Expression, VARCHAR(12))
+```
+
+### Keywords
+
+ARRAY, MAP, ARRAY_MAP

@@ -1,52 +1,129 @@
 ---
 {
     "title": "ARRAY_ENUMERATE",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
+## array_enumerate
+
+<version since="2.0.0">
+
+</version>
+
 ## Description
-Returns array sub item indexes e.g. [1, 2, 3, …, length (arr) ]
+
+Returns the position index (starting from 1) for each element in the array. The function generates corresponding position numbers for each element in the array.
 
 ## Syntax
+
 ```sql
-ARRAY_ENUMERATE(<arr>)
+array_enumerate(ARRAY<T> arr)
 ```
 
-## Parameters
-| Parameter | Description |
-|---|---|
-| `<arr>` | The array that returns array sub item indexes |
+### Parameters
 
-## Return Value
-Returns an array containing the index of the array.
+- `arr`：ARRAY<T> type, the array for which to generate position indices. Supports column names or constant values.
 
-## Example
+**Supported types for T:**
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
+- String types: CHAR, VARCHAR, STRING
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Boolean type: BOOLEAN
+- IP types: IPV4, IPV6
+- Complex types: ARRAY, MAP, STRUCT
+
+### Return Value
+
+Return type: ARRAY<BIGINT>
+
+Return value meaning:
+- Returns a new array with the same length as the input array, where each position contains the position index (starting from 1) of the corresponding element in the array
+- NULL: if the input array is NULL
+
+Usage notes:
+- The function generates position indices for each element in the array, starting from 1 and incrementing
+- Empty arrays return empty arrays, NULL arrays return NULL
+- For null values in array elements: null elements also generate corresponding position indices
+
+### Examples
+
+**Query Examples:**
+
+Generate position indices for an array:
 ```sql
-create table array_type_table(
-    k1 INT, 
-    k2 Array<STRING>
-) 
-duplicate key (k1)
-distributed by hash(k1) buckets 1 
-properties(
-    'replication_num' = '1'
-);
-insert into array_type_table values (0, []), 
-("1", [NULL]), 
-("2", ["1", "2", "3"]), 
-("3", ["1", NULL, "3"]), 
-("4", NULL);
-select k2, array_enumerate(k2) from array_type_table;
+SELECT array_enumerate([1, 2, 1, 4, 5]);
++----------------------------------+
+| array_enumerate([1, 2, 1, 4, 5]) |
++----------------------------------+
+| [1, 2, 3, 4, 5]                  |
++----------------------------------+
 ```
-```text
-+------------------+-----------------------+
-| k2               | array_enumerate(`k2`) |
-+------------------+-----------------------+
-| []               | []                    |
-| [NULL]           | [1]                   |
-| ['1', '2', '3']  | [1, 2, 3]             |
-| ['1', NULL, '3'] | [1, 2, 3]             |
-| NULL             | NULL                  |
-+------------------+-----------------------+
+
+Empty array returns empty array:
+```sql
+SELECT array_enumerate([]);
++----------------------+
+| array_enumerate([])  |
++----------------------+
+| []                   |
++----------------------+
 ```
+
+Array containing null values, null elements also generate position indices:
+```sql
+SELECT array_enumerate([1, null, 3, null, 5]);
++--------------------------------------------+
+| array_enumerate([1, null, 3, null, 5])     |
++--------------------------------------------+
+| [1, 2, 3, 4, 5]                            |
++--------------------------------------------+
+```
+
+Complex type examples:
+
+Nested array types:
+```sql
+SELECT array_enumerate([[1,2],[3,4],[5,6]]);
++----------------------------------------+
+| array_enumerate([[1,2],[3,4],[5,6]])   |
++----------------------------------------+
+| [1, 2, 3]                              |
++----------------------------------------+
+```
+
+Map types:
+```sql
+SELECT array_enumerate([{'k':1},{'k':2},{'k':3}]);
++----------------------------------------------+
+| array_enumerate([{'k':1},{'k':2},{'k':3}])   |
++----------------------------------------------+
+| [1, 2, 3]                                    |
++----------------------------------------------+
+```
+
+Struct types:
+```sql
+SELECT array_enumerate(array(named_struct('name','Alice','age',20),named_struct('name','Bob','age',30)));
++----------------------------------------------------------------------------------------+
+| array_enumerate(array(named_struct('name','Alice','age',20),named_struct('name','Bob','age',30))) |
++----------------------------------------------------------------------------------------+
+| [1, 2]                                                                                  |
++----------------------------------------------------------------------------------------+
+```
+
+Error when parameter count is wrong:
+```sql
+SELECT array_enumerate([1,2,3], [4,5,6]);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'array_enumerate' which has 2 arity. Candidate functions are: [array_enumerate(Expression)]
+```
+
+Error when passing non-array type:
+```sql
+SELECT array_enumerate('not_an_array');
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_enumerate(VARCHAR(12))
+```
+
+### Keywords
+
+ARRAY, ENUMERATE, ARRAY_ENUMERATE
