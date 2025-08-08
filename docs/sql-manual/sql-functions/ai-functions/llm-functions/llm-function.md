@@ -119,6 +119,8 @@ Currently supported LLM Functions in Doris include:
 
 - `LLM_EXTRACT`: Information extraction
 
+- `LLM_FILTER`：Filter information
+
 - `LLM_FIXGRAMMAR`: Grammar correction
 
 - `LLM_GENERATE`: Text generation
@@ -126,6 +128,8 @@ Currently supported LLM Functions in Doris include:
 - `LLM_MASK`: Masking sensitive information
 
 - `LLM_SENTIMENT`: Sentiment analysis
+
+- `LLM_SIMILARITY`: Text semantic similarity comparison
 
 - `LLM_SUMMARIZE`: Text summarization
 
