@@ -553,6 +553,13 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "type": "category",
+                    "label": "AI",
+                    "items": [
+                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function-overview"
+                    ]
                 }
             ]
         },
