@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_Function Overview",
+    "title": "LLM Function",
     "language": "en"
 }
 ---

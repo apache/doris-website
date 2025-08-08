@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM函数概览",
+    "title": "LLM 函数",
     "language": "zh-CN"
 }
 ---
