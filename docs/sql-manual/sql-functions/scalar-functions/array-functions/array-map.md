@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
@@ -40,10 +40,10 @@ Return type: ARRAY<R>
 
 Return value meaning:
 - Returns a new array with the same length as the input array, where each position contains the result of applying the lambda expression to the corresponding element
-- NULL: if the input array is NULL
 
 Usage notes:
 - The number of parameters in the lambda expression must match the number of array parameters
+- Does not support NULL for input array parameters
 - When there are multiple array parameters, all arrays must have the same length
 - Lambda can use any scalar expression, but cannot use aggregate functions
 - Lambda expressions can call other higher-order functions, but the return types must be compatible
@@ -89,6 +89,12 @@ SELECT array_map(x -> x is not null, [1, null, 3, null, 5]);
 +--------------------------------------------------+
 | [1, 0, 1, 0, 1]                                 |
 +--------------------------------------------------+
+```
+
+NULL can not apply to array_map, will meet error:
+```
+mysql> SELECT array_map(x->x>2, NULL);
+ERROR 1105 (HY000): errCode = 2, detailMessage = lambda argument must be array but is NULL
 ```
 
 Multiple array parameters example, adding corresponding elements from two arrays:

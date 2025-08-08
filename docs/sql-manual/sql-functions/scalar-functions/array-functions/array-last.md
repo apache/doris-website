@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_LAST",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

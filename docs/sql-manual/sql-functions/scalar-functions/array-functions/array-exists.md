@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_EXISTS",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

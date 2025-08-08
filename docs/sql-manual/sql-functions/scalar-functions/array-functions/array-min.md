@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_MIN",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

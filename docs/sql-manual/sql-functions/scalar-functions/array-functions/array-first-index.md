@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_FIRST_INDEX",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_MAX",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

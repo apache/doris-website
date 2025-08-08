@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_POSITION",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

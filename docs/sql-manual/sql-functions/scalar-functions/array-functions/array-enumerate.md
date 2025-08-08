@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_ENUMERATE",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

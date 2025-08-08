@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

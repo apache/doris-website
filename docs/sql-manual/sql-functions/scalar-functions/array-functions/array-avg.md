@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_AVG",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
