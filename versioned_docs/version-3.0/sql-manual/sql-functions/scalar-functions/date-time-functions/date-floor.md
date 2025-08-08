@@ -117,7 +117,7 @@ mysql> select date_floor("0000-01-01", INTERVAL 5 WEEK);
 | NULL                                      |
 +-------------------------------------------+
 
----date is not in the range of[0000,9999],return null
+---date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select date_format('20223-12-18 23:59:59', 'yyyy-MM-dd');
 +---------------------------------------------------+
 | date_format('20223-12-18 23:59:59', 'yyyy-MM-dd') |

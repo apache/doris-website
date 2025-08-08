@@ -29,6 +29,7 @@ If the input is valid, the rounded result is of the same type as `datetime`:
 
 - When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
 - When input is DATETIME, returns DATETIME (including date and time).
+- Return value with scale if datetime has scale.
 
 Special cases:
 
@@ -49,6 +50,15 @@ mysql> select date_ceil(cast("2023-07-13 22:28:18" as datetime),interval 5 secon
 +----------------------------------------------------------------------+
 | 2023-07-13 22:28:20.000000                                           |
 +----------------------------------------------------------------------+
+
+---input datetime with scale
+
+mysql> select date_ceil(cast("2023-07-13 22:28:18.123" as datetime),interval 5 second);
++----------------------------------------------------------------------------+
+| date_ceil(cast("2023-07-13 22:28:18.123" as datetime),interval 5 second) |
++----------------------------------------------------------------------------+
+| 2023-07-13 22:28:20.000000                                                 |
++----------------------------------------------------------------------------+
 
 ---Round up to the nearest 5-minute interval
 select date_ceil("2023-07-13 22:28:18",interval 5 minute);
@@ -142,10 +152,10 @@ mysql> select date_ceil("2023-01- 22:28:18",interval -5 month);
 +--------------------------------------------------+
 
 
----date is not in the range of[0000,9999],return null
-mysql> select date_ceil("20123-01- 22:28:18",interval 5 month);
+---date is not in the range of[0000-01-01,9999-12-31],return null
+mysql> select date_ceil("20123-01-01 22:28:18",interval 5 month);
 +--------------------------------------------------+
-| date_ceil("20123-01- 22:28:18",interval 5 month) |
+| date_ceil("20123-01-01 22:28:18",interval 5 month) |
 +--------------------------------------------------+
 | NULL                                             |
 +--------------------------------------------------+

@@ -80,7 +80,7 @@ mysql> select date('0000-00-00 12:00:00');
 | NULL                        |
 +-----------------------------+
 
----date is not in the range of [0000-9999],return null
+---date is not in the range of [0000-01-01,9999-12-31],return null
 mysql> select date('20232-02-13 12:00:00');
 +------------------------------+
 | date('20232-02-13 12:00:00') |

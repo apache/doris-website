@@ -29,7 +29,7 @@ If the input is valid, the floored result is of the same type as `datetime`:
 
 - When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
 - When input is DATETIME or a string with time, returns DATETIME (including date and time).
-
+- Return value with scale if input datetime with scale.
 Special cases:
 
 - Returns NULL if any parameter is NULL;
@@ -47,6 +47,14 @@ mysql> select date_floor("0001-01-01 00:00:18", INTERVAL 5 SECOND);
 +------------------------------------------------------+
 | 0001-01-01 00:00:15                                  |
 +------------------------------------------------------+
+
+---input datetime with scale
+mysql> select date_floor(cast("0001-01-01 00:00:18.123" as datetime), INTERVAL 5 SECOND);
++----------------------------------------------------------------------------+
+| date_floor(cast("0001-01-01 00:00:18.123" as datetime), INTERVAL 5 SECOND) |
++----------------------------------------------------------------------------+
+| 0001-01-01 00:00:15.000000                                                 |
++----------------------------------------------------------------------------+
 
 -- The input time is exactly the start of a 5-day period
 mysql> select date_floor("2023-07-10 00:00:00", INTERVAL 5 DAY);
@@ -109,7 +117,7 @@ mysql> select date_floor("0000-01-01", INTERVAL 5 WEEK);
 | NULL                                      |
 +-------------------------------------------+
 
----date is not in the range of[0000,9999],return null
+---date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select date_format('20223-12-18 23:59:59', 'yyyy-MM-dd');
 +---------------------------------------------------+
 | date_format('20223-12-18 23:59:59', 'yyyy-MM-dd') |

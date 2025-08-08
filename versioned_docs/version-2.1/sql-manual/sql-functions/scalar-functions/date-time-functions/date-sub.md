@@ -35,6 +35,7 @@ If the input is valid, returns a calculated result with the same type as `date`:
 
 - When input is DATE, returns DATE (date part only);
 - When input is DATETIME, returns DATETIME (including date and time).
+- For datetime types with scale, they will be rounded to seconds; for string types with scale, they will be returned with the scale retained.
 
 Special cases:
 
@@ -56,6 +57,23 @@ mysql> select date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
 +-------------------------------------------------------------------+
 | 2010-11-28 23:59:59                                               |
 +-------------------------------------------------------------------+
+
+
+---For datetime type parameters with scale, round to seconds
+mysql> select date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND);
++------------------------------------------------------------------------+
+| date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND) |
++------------------------------------------------------------------------+
+| 2010-11-30 23:59:56                                                    |
++------------------------------------------------------------------------+
+
+---For string type parameters with scale, return with scale retained
+mysql> select date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND);
++------------------------------------------------------+
+| date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND) |
++------------------------------------------------------+
+| 2010-11-30 23:59:55.6                                |
++------------------------------------------------------+
 
 --- Subtract two months across years
 mysql> select date_sub(cast('2023-01-15' as date), INTERVAL 2 MONTH);
@@ -111,7 +129,7 @@ mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
 
 
----date is not in the range of[0000,9999],return null
+---date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select date_sub('10000-01-01', INTERVAL 1 YEAR);
 +------------------------------------------+
 | date_sub('10000-01-01', INTERVAL 1 YEAR) |

@@ -123,7 +123,7 @@ mysql> select date_sub('2023-02-30', INTERVAL 1 DAY);
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
 
----输入日期不在日期范围[0000,9999]，返回 null
+---输入日期不在日期范围[0000-01-01,9999-12-31]，返回 null
 mysql> select date_sub('10000-01-01', INTERVAL 1 YEAR);
 +------------------------------------------+
 | date_sub('10000-01-01', INTERVAL 1 YEAR) |

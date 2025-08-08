@@ -130,7 +130,7 @@ mysql> select date_trunc('2023-02-28', 'microsecond');
 ERROR 1105 (HY000): errCode = 2, detailMessage = date_trunc function time unit param only support argument is year|quarter|month|week|day|hour|minute|second
 
 
----date is not in the range of[0000,9999],return null
+---date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select date_trunc('20234-02-30', 'day');
 +----------------------------------+
 | date_trunc('20234-02-30', 'day') |

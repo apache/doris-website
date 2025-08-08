@@ -129,7 +129,7 @@ mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
 
 
----date is not in the range of[0000,9999],return null
+---date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select date_sub('10000-01-01', INTERVAL 1 YEAR);
 +------------------------------------------+
 | date_sub('10000-01-01', INTERVAL 1 YEAR) |

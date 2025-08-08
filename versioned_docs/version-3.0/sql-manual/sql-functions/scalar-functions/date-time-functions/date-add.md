@@ -115,7 +115,7 @@ mysql> select DATE_ADD(NULL, INTERVAL 1 MONTH);
 | NULL                             |
 +----------------------------------+
 
-------date is not in the range of[0000,9999],return null
+------date is not in the range of[0000-01-01,9999-12-31],return null
 mysql> select DATE_ADD('0001-01-28', INTERVAL -2 YEAR);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation years_add of 0001-01-28, -2 out of range
 

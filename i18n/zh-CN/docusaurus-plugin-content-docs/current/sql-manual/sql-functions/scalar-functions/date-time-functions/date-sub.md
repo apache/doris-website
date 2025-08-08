@@ -25,7 +25,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 合法的日期值,支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<date>` | 合法的日期值,支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型, 最高有六位秒数的精度(如 2022-12-28 23:59:59.999999) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT` |
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND,WEEK |
 
@@ -34,6 +34,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 若输入有效，返回与 `date` 类型一致的计算结果：
 - 输入 DATE 时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 时，返回 DATETIME（包含日期和时间）。
+- 对于带有 scale 的 datetime 类型，会四舍五入为秒数，对于带有 scale 的 字符串类型，会保留 scale 返回.
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法 `expr`（负数）或 `time_unit` 时，返回 NULL；
@@ -52,6 +53,22 @@ mysql> select date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
 +-------------------------------------------------------------------+
 | 2010-11-28 23:59:59                                               |
 +-------------------------------------------------------------------+
+
+---带有 scale 的 datetime 类型参数，四舍五入为秒数
+mysql> select date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND);
++------------------------------------------------------------------------+
+| date_sub(cast('2010-11-30 23:59:59.6' as datetime), INTERVAL 4 SECOND) |
++------------------------------------------------------------------------+
+| 2010-11-30 23:59:56                                                    |
++------------------------------------------------------------------------+
+
+---带有 scale 的 字符串类型参数，返回保留 scale
+mysql> select date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND);
++------------------------------------------------------+
+| date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND) |
++------------------------------------------------------+
+| 2010-11-30 23:59:55.6                                |
++------------------------------------------------------+
 
 ---跨年减去两个月
 mysql> select date_sub(cast('2023-01-15' as date), INTERVAL 2 MONTH);
@@ -106,7 +123,7 @@ mysql> select date_sub('2023-02-30', INTERVAL 1 DAY);
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
 
----输入日期不在日期范围[0000,9999]，返回 null
+---输入日期不在日期范围[0000-01-01,9999-12-31]，返回 null
 mysql> select date_sub('10000-01-01', INTERVAL 1 YEAR);
 +------------------------------------------+
 | date_sub('10000-01-01', INTERVAL 1 YEAR) |

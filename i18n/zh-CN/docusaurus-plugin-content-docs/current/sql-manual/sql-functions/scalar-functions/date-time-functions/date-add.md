@@ -29,7 +29,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 待处理的日期 / 时间值。支持类型：为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<date>` | 待处理的日期 / 时间值。支持类型：为 `datetime` 或者 `date` 类型和符合格式的字符串类型 ,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999)|
 | `<expr>` | 希望添加的时间间隔, 为 `INT` 类型|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND，WEEK |
 
@@ -38,7 +38,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 若输入有效，返回与 `date` 类型一致的结果：
 - 输入 DATE 时，返回 DATE（仅日期部分）；
 - 输入 DATETIME/TIMESTAMP 或带时间的字符串时，返回 DATETIME（包含日期和时间）；
-- 带小数秒的输入（如 '2024-01-01 12:00:00.123'）会保留小数精度。
+- 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
