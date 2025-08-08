@@ -20,7 +20,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 合法的日期表达式,类型为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<datetime>` | 合法的日期表达式,类型为 `datetime` 或者 `date` 类型和符合格式的字符串类型,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999) |
 | `<time_unit>` | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## 返回值

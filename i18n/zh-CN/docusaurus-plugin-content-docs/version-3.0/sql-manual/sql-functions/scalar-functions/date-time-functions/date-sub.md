@@ -25,7 +25,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 合法的日期值,支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<date>` | 合法的日期值,支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型, 最高有六位秒数的精度(如 2022-12-28 23:59:59.999999) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT` |
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND,WEEK |
 

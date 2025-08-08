@@ -19,7 +19,7 @@ DATE_FORMAT(<date>, <format>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 合法的日期值，支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<date>` | 合法的日期值，支持 为 `datetime` 或者 `date` 类型和符合格式的字符串类型,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999) |
 | `<format>` | 规定日期/时间的输出格式, 为 `varchar` 类型 |
 
 支持的 format 格式：
@@ -73,7 +73,7 @@ yyyy-MM-dd HH:mm:ss
 格式化后的日期字符串。
 特殊情况：
 - 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), 返回 NULL。
-- <format> 为 NULL 或空字符串 返回 NULL。
+- `format` 为 NULL 或空字符串 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
 - 如果返回值超过 128 字符长度，返回 NULL. 
 

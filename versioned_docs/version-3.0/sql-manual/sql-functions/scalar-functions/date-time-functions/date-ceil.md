@@ -153,9 +153,9 @@ mysql> select date_ceil("2023-01- 22:28:18",interval -5 month);
 
 
 ---date is not in the range of[0000,9999],return null
-mysql> select date_ceil("20123-01- 22:28:18",interval 5 month);
+mysql> select date_ceil("20123-01-01 22:28:18",interval 5 month);
 +--------------------------------------------------+
-| date_ceil("20123-01- 22:28:18",interval 5 month) |
+| date_ceil("20123-01-01 22:28:18",interval 5 month) |
 +--------------------------------------------------+
 | NULL                                             |
 +--------------------------------------------------+

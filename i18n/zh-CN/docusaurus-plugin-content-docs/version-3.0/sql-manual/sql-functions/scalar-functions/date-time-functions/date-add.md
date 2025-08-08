@@ -29,7 +29,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 待处理的日期 / 时间值。支持类型：为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
+| `<date>` | 待处理的日期 / 时间值。支持类型：为 `datetime` 或者 `date` 类型和符合格式的字符串类型 ,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999)|
 | `<expr>` | 希望添加的时间间隔, 为 `INT` 类型|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND，WEEK |
 
