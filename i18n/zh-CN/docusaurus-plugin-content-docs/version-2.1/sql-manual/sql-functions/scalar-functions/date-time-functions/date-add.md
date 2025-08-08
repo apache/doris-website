@@ -7,7 +7,11 @@
 
 ## 描述
 
-向日期添加指定的时间间隔。
+DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
+
+- 支持的输入日期类型包括 DATE、DATETIME，或符合格式的字符串（如 '2023-12-31'、'2023-12-31 23:59:59'）。
+- 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示 “添加”，为负数时等效于 “减去” 对应间隔。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-2-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))、非法的时间单位等），函数返回 NULL。
 
 ## 别名
 
@@ -25,24 +29,89 @@ DATE_ADD(<date>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | 合法的日期值 |
-| `<expr>` | 希望添加的时间间隔 |
-| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<date>` | 待处理的日期 / 时间值。支持类型：为 `datetime` 或者 `date` 类型和符合格式的字符串类型 ,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999)|
+| `<expr>` | 希望添加的时间间隔, 为 `INT` 类型|
+| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND，WEEK |
 
 ## 返回值
 
-返回计算后的日期。
+若输入有效，返回与 `date` 类型一致的结果：
+- 输入 DATE 时，返回 DATE（仅日期部分）；
+- 输入 DATETIME/TIMESTAMP 或带时间的字符串时，返回 DATETIME（包含日期和时间）；
+- 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。
+
+特殊情况：
+- 任何参数为 NULL 时，返回 NULL；
+- 无效日期、非法单位或非数值 `expr` 时，返回 NULL；
+- 计算后超出日期类型范围（如 '0000-00-00' 之前）时，返回 错误。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))、非法的时间单位等），函数返回 NULL。
 
 ## 举例
 
 ```sql
-select date_add('2010-11-30 23:59:59', INTERVAL 2 DAY);
-```
+---添加天数
+select date_add(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
 
-```text
 +-------------------------------------------------+
 | date_add('2010-11-30 23:59:59', INTERVAL 2 DAY) |
 +-------------------------------------------------+
 | 2010-12-02 23:59:59                             |
 +-------------------------------------------------+
+
+---添加季度
+mysql> select DATE_ADD(cast('2023-01-01' as date), INTERVAL 1 QUARTER);
++--------------------------------------------+
+| DATE_ADD('2023-01-01', INTERVAL 1 QUARTER) |
++--------------------------------------------+
+| 2023-04-01                                 |
++--------------------------------------------+
+
+---添加周数
+mysql> select DATE_ADD('2023-01-01', INTERVAL 1 WEEK);
++-----------------------------------------+
+| DATE_ADD('2023-01-01', INTERVAL 1 WEEK) |
++-----------------------------------------+
+| 2023-01-08                              |
++-----------------------------------------+
+
+---添加月数,因为2023年2月只有28天，所以1月31加一个月返回2月28
+mysql> select DATE_ADD('2023-01-31', INTERVAL 1 MONTH);
++------------------------------------------+
+| DATE_ADD('2023-01-31', INTERVAL 1 MONTH) |
++------------------------------------------+
+| 2023-02-28                               |
++------------------------------------------+
+
+---负数测试
+mysql> select DATE_ADD('2019-01-01', INTERVAL -3 DAY);
++-----------------------------------------+
+| DATE_ADD('2019-01-01', INTERVAL -3 DAY) |
++-----------------------------------------+
+| 2018-12-29                              |
++-----------------------------------------+
+
+---跨年的小时增加
+mysql> select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR);
++--------------------------------------------------+
+| DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR) |
++--------------------------------------------------+
+| 2024-01-01 01:00:00                              |
++--------------------------------------------------+
+
+
+---参数为NULL,返回NULL
+mysql> select DATE_ADD(NULL, INTERVAL 1 MONTH);
++----------------------------------+
+| DATE_ADD(NULL, INTERVAL 1 MONTH) |
++----------------------------------+
+| NULL                             |
++----------------------------------+
+
+---计算出的结果不在日期范围[0000,9999]，返回错误
+mysql> select DATE_ADD('0001-01-28', INTERVAL -2 YEAR);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation years_add of 0001-01-28, -2 out of range
+
+mysql> select DATE_ADD('9999-01-28', INTERVAL 2 YEAR);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation years_add of 9999-01-28, 2 out of range
+
 ```
