@@ -44,6 +44,9 @@ All large language models must be provided externally to Doris and support text 
 - [LLM_EXTRACT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-extract):  
   Extracts relevant information for each given label based on the text content.
 
+- [LLM_FILTER](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-filter):
+  Check if the text content is correct and return a boolean value.
+
 - [LLM_FIXGRAMMAR](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar):  
   Fixes grammar and spelling errors in the text.
 
@@ -55,6 +58,10 @@ All large language models must be provided externally to Doris and support text 
 
 - [LLM_SENTIMENT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment):  
   Analyzes the sentiment of the text, returning one of `positive`, `negative`, `neutral`, or `mixed`.
+
+- [LLM_SIMILARITY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity):  
+  Determine the similarity of the meaning between two texts, return a floating-point number between 0 and 10, 
+  the larger the value, the more similar the meaning.
 
 - [LLM_SUMMARIZE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize):  
   Provides a highly condensed summary of the text.
