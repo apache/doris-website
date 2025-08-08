@@ -774,3 +774,36 @@ spec:
 The `mountPath` parameter can use `${DORIS_HOME}` as a prefix. When `${DORIS_HOME}` is used, it resolves to `/opt/apache-doris/fe` within FE containers and `/opt/apache-doris/be` within BE containers.
 :::
 
+## Configuring Probe Timeouts
+DorisCluster provides two types of probe timeout configurations for each service: `startup probe timeout` and `liveness probe timeout`. If a service fails to start within the specified startup timeout period, it is considered to have failed and will be restarted.
+If a service becomes unresponsive for longer than the specified liveness timeout, the corresponding Pod will be automatically restarted.
+
+### Startup Probe Timeout
+- FE Service Startup Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+    The above configuration sets the FE service startup timeout to 3600 seconds.  
+- BE Service Startup Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+### Liveness Probe Timeout
+- FE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the FE service liveness timeout to 60 seconds.
+- BE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the BE service liveness timeout to 60 seconds.
