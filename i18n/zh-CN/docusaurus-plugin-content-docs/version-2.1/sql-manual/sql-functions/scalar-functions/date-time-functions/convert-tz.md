@@ -7,7 +7,7 @@
 
 ## 描述
 
-转换 datetime 值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值,时区设置请查看 [时区管理](https://doris.apache.org/zh-CN/docs/3.0/admin-manual/cluster-management/time-zone) 文档。
+转换 datetime 值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值,时区设置请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone.md) 文档。
 
 ## 语法
 
@@ -29,8 +29,9 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 对于不带有 scale 的 datetime 输入, 返回结果也不带有 scale, 带有 scale 的输入，返回带有 scale。
 
 特殊情况:
-- 如果参数无效（如无效的 datetime 和 date 格式( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)) 、不存在的时区标识等），该函数返回 NULL。​
+- 如果参数无效（如无效的 datetime 和 date 格式( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) 、不存在的时区标识等），该函数返回 NULL。​
 - 如果任何参数为 NULL，返回 NULL。
+- 时区范围为 [-12:00,14:00],超出此范围返回 NULL
 
 ## 示例
 
@@ -87,14 +88,6 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', NULL);
 | NULL                                              |
 +---------------------------------------------------+
 
----时间格式无效，返回NULL
-mysql> select CONVERT_TZ('2019-08|*aa01 1', '+08:00', 'America/Los_Angeles');
-+----------------------------------------------------------------+
-| CONVERT_TZ('2019-08|*aa01 1', '+08:00', 'America/Los_Angeles') |
-+----------------------------------------------------------------+
-| NULL                                                           |
-+----------------------------------------------------------------+
-
 ---任一时区无效，返回NULL
 mysql> SELECT CONVERT_TZ('2038-01-19 03:14:07','GMTaa','MET');
 +-------------------------------------------------+
@@ -120,7 +113,13 @@ mysql> select CONVERT_TZ('12019-08-01 13:21:03.636', '+08:00', 'America/Los_Ange
 | NULL                                                                    |
 +-------------------------------------------------------------------------+
 
-
+---时区范围为 [-12:00,14:00],超出此范围返回 NULL
+mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00');
++-------------------------------------------------------+
+| CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00') |
++-------------------------------------------------------+
+| NULL                                                  |
++-------------------------------------------------------+
 ```
 
 

@@ -47,10 +47,10 @@ Supported Format Specifiers
 | %S     | Seconds (00-59)                          |
 | %s     | Seconds (00-59)                          |
 | %T     | Time in 24-hour format (hh:mm:ss)           |
-| %U     | Week (00-53), where Sunday is the first day of the week    |
-| %u     | Week (00-53), where Monday is the first day of the week    |
-| %V     | Week (01-53), where Sunday is the first day of the week; used with %X |
-| %v     | Week (01-53), where Monday is the first day of the week; used with %x |
+| %U     | Week (00-53), where Sunday is the first day of the week ,[week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 0   |
+| %u     | Week (00-53), where Monday is the first day of the week ,[week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 1   |
+| %V     | Week (01-53), where Sunday is the first day of the week; [week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 2,used with %X |
+| %v     | Week (01-53), where Monday is the first day of the week; [week](../../../sql-functions/scalar-functions/date-time-functions/week.md) mode 3,used with %x |
 | %W     | Full weekday name (Sunday-Saturday)    |
 | %w     | Day of the week (0 = Sunday, 6 = Saturday)        |
 | %X     | Year, where Sunday is the first day of the week (4 digits); used with %V |
@@ -74,10 +74,10 @@ A formatted date string.
 
 Special cases:
 
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion))), the function returns NULL.
 - Returns NULL if `format` is NULL or an empty string.
 - Returns NULL if any parameter is NULL.
-- Returns NULL if return value length larger than 128 charactors.
+- Returns NULL if return value length larger than 128 charactors and fold constant close.
 
 ## Example
 
@@ -159,12 +159,12 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
---- Invalid datetime
 
-mysql> select date_format('2023-12-32 23:59:59', 'yyyy-MM-dd');
-+--------------------------------------------------+
-| date_format('2023-12-32 23:59:59', 'yyyy-MM-dd') |
-+--------------------------------------------------+
-| NULL                                             |
-+--------------------------------------------------+
+---Return NULL if the length of string over 128
+mysql> select date_format('2022-01-12',repeat('a',129));
++-------------------------------------------+
+| date_format('2022-01-12',repeat('a',129)) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
 ```

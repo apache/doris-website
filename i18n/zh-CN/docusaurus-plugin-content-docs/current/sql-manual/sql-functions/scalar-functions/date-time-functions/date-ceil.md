@@ -19,7 +19,7 @@ DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最
 | -- | -- |
 | `datetime` | 参数是合法的日期表达式，支持输入 为 `datetime` 或者 `date` 类型和符合格式的字符串类型 |
 | `period` | 参数是指定每个周期有多少个单位组成，类型为 INT ，开始的时间起点为 0001-01-01T00:00:00 |
-| `type` | 参数可以是：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND,WEEK |
+| `type` | 参数可以是：YEAR, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|
 
 ## 返回值
 
@@ -33,7 +33,7 @@ DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最
 - 任何参数为 NULL 时，返回 NULL；
 - 若取整结果超出日期类型支持的范围（如 '9999-12-31' 之后），返回 NULL。
 - 若 `period` 参数为负数，返回NULL
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))、非法的时间单位等），函数返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))、非法的时间单位等），函数返回 NULL。
 ## 举例
 
 ```sql
@@ -63,6 +63,14 @@ select date_ceil("2023-07-13 22:28:18",interval 5 minute);
 +--------------------------------------------------------------+
 | 2023-07-13 22:30:00                                          |
 +--------------------------------------------------------------+
+
+---按五周向上取整
+select date_ceil("2023-07-13 22:28:18",interval 5 WEEK);
++--------------------------------------------------+
+| date_ceil("2023-07-13 22:28:18",interval 5 WEEK) |
++--------------------------------------------------+
+| 2023-08-14 00:00:00                              |
++--------------------------------------------------+
 
 ---按五小时向上取整
 select date_ceil("2023-07-13 22:28:18",interval 5 hour);
@@ -132,13 +140,6 @@ mysql> select date_ceil("2023-01-13 22:28:18",interval -5 month);
 | NULL                                               |
 +----------------------------------------------------+
 
---无效的 datetime ,返回 NULL
-mysql> select date_ceil("2023-01- 22:28:18",interval -5 month);
-+--------------------------------------------------+
-| date_ceil("2023-01- 22:28:18",interval -5 month) |
-+--------------------------------------------------+
-| NULL                                             |
-+--------------------------------------------------+
 
 ---日期不在范围[0000-01-01,9999-12-31]，返回 NULL 
 mysql> select date_ceil("20123-01-02 22:28:18",interval 5 month);

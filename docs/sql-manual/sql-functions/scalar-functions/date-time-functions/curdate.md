@@ -38,16 +38,3 @@ SELECT CURDATE();
 | 2019-12-20 |
 +------------+
 ```
-
-```sql
-------Get the current date expressed as a number
-SELECT CURDATE() + 0;
-```
-
-```text
-+---------------+
-| CURDATE() + 0 |
-+---------------+
-|      20191220 |
-+---------------+
-```

@@ -33,7 +33,7 @@ If the input is valid, the truncated result has the same type as `datetime`:
 Special cases:
 
 - Returns NULL if any parameter is NULL;
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), an illegal time unit, etc.), the function returns NULL.
 
 ## Examples
 

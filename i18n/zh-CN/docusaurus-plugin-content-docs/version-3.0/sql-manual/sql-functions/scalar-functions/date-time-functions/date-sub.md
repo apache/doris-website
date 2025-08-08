@@ -39,7 +39,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 - 任何参数为 NULL 时，返回 NULL；
 - 非法 `expr`（负数）或 `time_unit` 时，返回 NULL；
 - 计算结果早于日期类型支持的最小值（如 '0000-01-01' 之前），返回 NULL。
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))),返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))),返回 NULL。
 
 ## 举例
 
@@ -111,13 +111,6 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 | NULL                                      |
 +-------------------------------------------+
 
----无效日期，返回 NULL
-mysql> select date_sub('2023-02-30', INTERVAL 1 DAY); 
-+----------------------------------------+
-| date_sub('2023-02-30', INTERVAL 1 DAY) |
-+----------------------------------------+
-| NULL                                   |
-+----------------------------------------+
 
 ---超出最小日期
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);

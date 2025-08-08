@@ -19,7 +19,7 @@ The DATE_CEIL function is used to round up (ceil) a specified date or time value
 | -- | -- |
 | `datetime` | A valid date expression, supporting input of `datetime` or `date` type and `string` types that conform to the format|
 | `period` | 	Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
-| `type` | Can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, WEEK |
+| `type` | Can be: YEAR, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|
 
 ## Raturn value
 
@@ -36,7 +36,7 @@ Special cases:
 - Returns NULL if any parameter is NULL;
 - Returns NULL if the rounded result exceeds the range supported by the date type (e.g., after '9999-12-31');
 - Returns NULL if the `period` parameter is negative;
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), an illegal time unit, etc.), the function returns NULL.
 
 ## Examples
 
@@ -50,6 +50,14 @@ mysql> select date_ceil(cast("2023-07-13 22:28:18" as datetime),interval 5 secon
 +----------------------------------------------------------------------+
 | 2023-07-13 22:28:20.000000                                           |
 +----------------------------------------------------------------------+
+
+---date ceil by five weeks
+select date_ceil("2023-07-13 22:28:18",interval 5 WEEK);
++--------------------------------------------------+
+| date_ceil("2023-07-13 22:28:18",interval 5 WEEK) |
++--------------------------------------------------+
+| 2023-08-14 00:00:00                              |
++--------------------------------------------------+
 
 ---input datetime with scale
 
@@ -142,14 +150,6 @@ mysql> select date_ceil("2023-01-13 22:28:18",interval -5 month);
 +----------------------------------------------------+
 | NULL                                               |
 +----------------------------------------------------+
-
---Invalid datetime, returns NULL
-mysql> select date_ceil("2023-01- 22:28:18",interval -5 month);
-+--------------------------------------------------+
-| date_ceil("2023-01- 22:28:18",interval -5 month) |
-+--------------------------------------------------+
-| NULL                                             |
-+--------------------------------------------------+
 
 
 ---date is not in the range of[0000-01-01,9999-12-31],return null

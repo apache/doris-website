@@ -9,9 +9,9 @@
 
 The DATE_ADD function is used to add a specified time interval to a given date or time value and return the calculated result.
 
-- Supported input date types include DATE, DATETIME, TIMESTAMP, or formatted strings (such as '2023-12-31', '2023-12-31 23:59:59').
+- Supported input date types include DATE, DATETIME, or formatted strings (such as '2023-12-31', '2023-12-31 23:59:59').
 - The time interval is specified by a numerical value (`expr`) and a unit (`time_unit`). When `expr` is a positive number, it means "adding"; when it is a negative number, it is equivalent to "subtracting" the corresponding interval.
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), an illegal time unit, etc.), the function returns NULL.
 
 ## Aliases
 
@@ -98,14 +98,6 @@ mysql> select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR);
 +--------------------------------------------------+
 | 2024-01-01 01:00:00                              |
 +--------------------------------------------------+
-
--- February 30 is an invalid date (February has a maximum of 28 days in a common year)
-mysql> select DATE_ADD('2023-02-30', INTERVAL 1 DAY);
-+----------------------------------------+
-| DATE_ADD('2023-02-30', INTERVAL 1 DAY) |
-+----------------------------------------+
-| NULL                                   |
-+----------------------------------------+
 
 ---Parameter is NULL, returns NULL
 mysql> select DATE_ADD(NULL, INTERVAL 1 MONTH);

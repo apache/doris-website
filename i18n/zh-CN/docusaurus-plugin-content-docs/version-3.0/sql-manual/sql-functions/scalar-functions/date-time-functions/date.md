@@ -25,7 +25,7 @@ DATE(<datetime>)
 若输入有效，返回 DATE 类型的纯日期值（格式为 YYYY-MM-DD），不含时间部分。
 特殊情况：
 - 输入为 NULL 时，返回 NULL；
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), 返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))), 返回 NULL。
 
 ## 举例
 
@@ -63,13 +63,6 @@ mysql> select date(NULL);
 | NULL       |
 +------------+
 
----无效日期
-mysql> select date('2023-02-30 12:00:00');
-+-----------------------------+
-| date('2023-02-30 12:00:00') |
-+-----------------------------+
-| NULL                        |
-+-----------------------------+
 
 mysql> select date('0000-00-00 12:00:00');
 +-----------------------------+

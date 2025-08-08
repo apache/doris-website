@@ -9,7 +9,7 @@
 
 DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
 
-- 支持的输入日期类型包括 DATE、DATETIME、TIMESTAMP，或符合格式的字符串（如 '2023-12-31'、'2023-12-31 23:59:59'）。
+- 支持的输入日期类型包括 DATE、DATETIME，或符合格式的字符串（如 '2023-12-31'、'2023-12-31 23:59:59'）。
 - 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示 “添加”，为负数时等效于 “减去” 对应间隔。
 - 若输入参数无效（如格式错误的日期 ( 例如 2022-2-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))、非法的时间单位等），函数返回 NULL。
 
@@ -44,7 +44,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 - 任何参数为 NULL 时，返回 NULL；
 - 无效日期、非法单位或非数值 `expr` 时，返回 NULL；
 - 计算后超出日期类型范围（如 '0000-00-00' 之前）时，返回 错误。
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))、非法的时间单位等），函数返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))、非法的时间单位等），函数返回 NULL。
 
 ## 举例
 
@@ -98,13 +98,6 @@ mysql> select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR);
 | 2024-01-01 01:00:00                              |
 +--------------------------------------------------+
 
--- 2月30日为无效日期格式（平年2月最多28天）
-mysql> select DATE_ADD('2023-02-30', INTERVAL 1 DAY);
-+----------------------------------------+
-| DATE_ADD('2023-02-30', INTERVAL 1 DAY) |
-+----------------------------------------+
-| NULL                                   |
-+----------------------------------------+
 
 ---参数为NULL,返回NULL
 mysql> select DATE_ADD(NULL, INTERVAL 1 MONTH);

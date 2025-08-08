@@ -47,10 +47,10 @@ DATE_FORMAT(<date>, <format>)
 | %S     | 秒 (00-59)                          |
 | %s     | 秒 (00-59)                          |
 | %T     | 时间，24-小时 (hh:mm:ss)            |
-| %U     | 周 (00-53) 星期日是一周的第一天    |
-| %u     | 周 (00-53) 星期一是一周的第一天    |
-| %V     | 周 (01-53) 星期日是一周的第一天，与 %X 使用 |
-| %v     | 周 (01-53) 星期一是一周的第一天，与 %x 使用 |
+| %U     | 周 (00-53) 星期日是一周的第一天, [week](../../../sql-functions/scalar-functions/date-time-functions/week.md)模式 0  |
+| %u     | 周 (00-53) 星期一是一周的第一天  [week](../../../sql-functions/scalar-functions/date-time-functions/week.md)模式 1  |
+| %V     | 周 (01-53) 星期日是一周的第一天，[week](../../../sql-functions/scalar-functions/date-time-functions/week.md)模式 2,与 %X 使用 |
+| %v     | 周 (01-53) 星期一是一周的第一天，[week](../../../sql-functions/scalar-functions/date-time-functions/week.md)模式 3,与 %x 使用 |
 | %W     | 周中日的名称 (Sunday-Saturday)    |
 | %w     | 周的天（0=星期日，6=星期六）        |
 | %X     | 年，其中的星期日是周的第一天，4 位，与 %V 使用 |
@@ -72,10 +72,10 @@ yyyy-MM-dd HH:mm:ss
 
 格式化后的日期字符串。
 特殊情况：
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), 返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))), 返回 NULL。
 - `format` 为 NULL 或空字符串 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
-- 如果返回值超过 128 字符长度，返回 NULL. 
+- 如果返回值超过 128 字符长度 并且常量折叠关闭的情况下，返回 NULL. 
 
 ## 举例
 
@@ -157,14 +157,6 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
----datetime 无效
-
-mysql> select date_format('2023-12-32 23:59:59', 'yyyy-MM-dd');
-+--------------------------------------------------+
-| date_format('2023-12-32 23:59:59', 'yyyy-MM-dd') |
-+--------------------------------------------------+
-| NULL                                             |
-+--------------------------------------------------+
 
 ---日期不在范围[0000-01-01,9999-12-31]，返回NULL
 mysql> select date_format('20223-12-18 23:59:59', 'yyyy-MM-dd');
@@ -173,4 +165,12 @@ mysql> select date_format('20223-12-18 23:59:59', 'yyyy-MM-dd');
 +---------------------------------------------------+
 | NULL                                              |
 +---------------------------------------------------+
+
+---超出函数返回字符串长度范围，返回 NULL
+mysql> select date_format('2022-01-12',repeat('a',129));
++-------------------------------------------+
+| date_format('2022-01-12',repeat('a',129)) |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
 ```

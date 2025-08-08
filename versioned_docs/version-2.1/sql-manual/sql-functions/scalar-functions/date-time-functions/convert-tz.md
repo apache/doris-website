@@ -7,7 +7,7 @@
 
 ## Description
 
-Convert a datetime value from the given time zone from_tz to the given time zone to_tz and return the result. For time zone settings, please refer to the document at [time-zone](https://doris.apache.org/docs/dev/admin-manual/cluster-management/time-zone/)
+Convert a datetime value from the given time zone from_tz to the given time zone to_tz and return the result. For time zone settings, please refer to the document at [time-zone](../../../../admin-manual/cluster-management/time-zone/)
 
 ## Syntax
 
@@ -28,8 +28,9 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 The converted timestamp value.​
 For datetime inputs without scale, the returned result also has no scale; for inputs with scale, the return also has scale.​
 Special cases:​
-- If the parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), a non-existent time zone identifier, etc.), this function returns NULL.
+- If the parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), a non-existent time zone identifier, etc.), this function returns NULL.
 - If any parameter is NULL, returns NULL.
+- The time zone range is [-12:00, 14:00]. Returns NULL if outside this range.
 ## Example
 
 
@@ -85,13 +86,6 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', NULL);
 | NULL                                              |
 +---------------------------------------------------+
 
----Invalid time format, return NULL
-mysql> select CONVERT_TZ('2019-08|*aa01 1', '+08:00', 'America/Los_Angeles');
-+----------------------------------------------------------------+
-| CONVERT_TZ('2019-08|*aa01 1', '+08:00', 'America/Los_Angeles') |
-+----------------------------------------------------------------+
-| NULL                                                           |
-+----------------------------------------------------------------+
 
 ---If any time zone is invalid, return NULL
 mysql> SELECT CONVERT_TZ('2038-01-19 03:14:07','GMTaa','MET');
@@ -117,6 +111,14 @@ mysql> select CONVERT_TZ('12019-08-01 13:21:03.636', '+08:00', 'America/Los_Ange
 +-------------------------------------------------------------------------+
 | NULL                                                                    |
 +-------------------------------------------------------------------------+
+
+---The time zone range is [-12:00, 14:00]. Returns NULL if outside this range.
+mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00');
++-------------------------------------------------------+
+| CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00') |
++-------------------------------------------------------+
+| NULL                                                  |
++-------------------------------------------------------+
 
 ```
 

@@ -7,7 +7,7 @@
 
 ## 描述
 
-DATE_TRUNC 函数用于将日期或时间值（`datetime`）按照指定的时间单位（`time_unit`）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清零。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零。
+DATE_TRUNC 函数用于将日期或时间值（`datetime`）按照指定的时间单位（`time_unit`）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，月截断为 xxxx-01-01。
 
 ## 语法
 
@@ -32,7 +32,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 不支持的 `time_unit` 时，返回错误。
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)))，返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)))，返回 NULL。
 
 ## 举例
 
@@ -124,17 +124,6 @@ mysql> select date_trunc('2010-12-02 19:28:30.523', 'second');
 
 特殊情况
 ```sql
-
-
-
----日期无效，返回 NULL
-
-mysql> select date_trunc('2023-02-30', 'day');
-+---------------------------------+
-| date_trunc('2023-02-30', 'day') |
-+---------------------------------+
-| NULL                            |
-+---------------------------------+
 
 ---任意参数为 NULL ,返回 NULL
 

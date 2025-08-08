@@ -27,7 +27,7 @@ DATEDIFF(<expr1>, <expr2>)
 返回 expr1 - expr2 的值，结果精确到天。
 
 特殊情况:
-- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) 和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), 返回 NULL。
+- 若输入参数无效（如格式错误的日期 ( 例如 2022-02-32 13:21:03, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))), 返回 NULL。
 - 若输入任一参数为 NULL, 返回 NULL.
 
 ## 举例
@@ -60,13 +60,6 @@ mysql> select datediff('2023-01-01', NULL);
 |                         NULL |
 +------------------------------+
 
----含有无效日期，返回 NULL
-mysql> select datediff('2023-02-30', '2023-01-01');
-+--------------------------------------+
-| datediff('2023-02-30', '2023-01-01') |
-+--------------------------------------+
-|                                 NULL |
-+--------------------------------------+
 
 ---跨年度的计算
 mysql> mysql -uroot -P9031 -h127.0.0.1
@@ -92,4 +85,12 @@ select datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00');
 +--------------------------------------------------------+
 |                                                      1 |
 +--------------------------------------------------------+
+
+select datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00');
++--------------------------------------------------------+
+| datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00') |
++--------------------------------------------------------+
+|                                                      1 |
++--------------------------------------------------------+
+1 row in set (0.01 sec)
 ```

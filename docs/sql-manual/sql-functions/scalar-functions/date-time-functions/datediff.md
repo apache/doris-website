@@ -29,7 +29,7 @@ Returns the value of expr1 - expr2, with the result precise to the day.
 Special cases:
 
 - If any parameter is NULL, return NULL.
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion))), the function returns NULL.
 
 ## Example
 
@@ -61,14 +61,6 @@ mysql> select datediff('2023-01-01', NULL);
 |                         NULL |
 +------------------------------+
 
---- Contains an invalid date, returns NULL
-mysql> select datediff('2023-02-30', '2023-01-01');
-+--------------------------------------+
-| datediff('2023-02-30', '2023-01-01') |
-+--------------------------------------+
-|                                 NULL |
-+--------------------------------------+
-
 -- Calculation across years
 mysql> select datediff(cast('2024-03-01' as date), '2023-12-31');
 +--------------------------------------+
@@ -89,6 +81,13 @@ mysql> select datediff(cast('20241-03-01' as date), '2023-12-31');
 select datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00');
 +--------------------------------------------------------+
 | datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00') |
++--------------------------------------------------------+
+|                                                      1 |
++--------------------------------------------------------+
+
+select datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00');
++--------------------------------------------------------+
+| datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00') |
 +--------------------------------------------------------+
 |                                                      1 |
 +--------------------------------------------------------+

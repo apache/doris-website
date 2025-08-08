@@ -27,7 +27,7 @@ If the input is valid, it returns a pure date value of DATE type (in the format 
 Special cases:
 
 - Returns NULL when the input is NULL;
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/))), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion))), the function returns NULL.
 
 ## Example
 
@@ -65,20 +65,6 @@ mysql> select date(NULL);
 | NULL       |
 +------------+
 
---- Invalid date
-mysql> select date('2023-02-30 12:00:00');
-+-----------------------------+
-| date('2023-02-30 12:00:00') |
-+-----------------------------+
-| NULL                        |
-+-----------------------------+
-
-mysql> select date('0000-00-00 12:00:00');
-+-----------------------------+
-| date('0000-00-00 12:00:00') |
-+-----------------------------+
-| NULL                        |
-+-----------------------------+
 
 ---date is not in the range of [0000-01-01,9999-12-31],return null
 mysql> select date('20232-02-13 12:00:00');

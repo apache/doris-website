@@ -35,7 +35,7 @@ Special cases:
 - Returns NULL if any parameter is NULL;
 - Returns NULL for illegal `period` (non-positive integers) or `type`;
 - Returns NULL if the floored result is earlier than the minimum value supported by the date type (e.g., before '0001-01-01').
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), an illegal time unit, etc.), the function returns NULL.
 
 ## Example
 
@@ -79,14 +79,6 @@ mysql> select date_floor("2023-07-13 22:28:18", INTERVAL -5 MINUTE);
 +-------------------------------------------------------+
 | NULL                                                  |
 +-------------------------------------------------------+
-
---- datetime is invalid, returns NULL
-mysql> select date_floor("2023-02-30 22:28:18", INTERVAL 5 DAY); 
-+---------------------------------------------------+
-| date_floor("2023-02-30 22:28:18", INTERVAL 5 DAY) |
-+---------------------------------------------------+
-| NULL                                              |
-+---------------------------------------------------+
 
 --- Unsupported type
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL 5 MILLISECOND);

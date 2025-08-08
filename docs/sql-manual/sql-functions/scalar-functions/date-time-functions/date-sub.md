@@ -42,7 +42,7 @@ Special cases:
 - Returns NULL if any parameter is NULL;
 - Returns NULL for illegal `expr` (negative values) or `time_unit`;
 - Returns NULL if the calculated result is earlier than the minimum value supported by the date type (e.g., before '0000-01-01').
-- If the input parameters are invalid (such as an incorrectly formatted date(e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/) and [cast to date](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion/)), an illegal time unit, etc.), the function returns NULL.
+- If the input parameters are invalid (such as an invalid datetime format (e.g., 2022-2-32 13:21:03; for specific datetime formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)), an illegal time unit, etc.), the function returns NULL.
 
 ## Example
 
@@ -116,13 +116,6 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 | NULL                                      |
 +-------------------------------------------+
 
---- Invalid date, returns NULL
-mysql> select date_sub('2023-02-30', INTERVAL 1 DAY); 
-+----------------------------------------+
-| date_sub('2023-02-30', INTERVAL 1 DAY) |
-+----------------------------------------+
-| NULL                                   |
-+----------------------------------------+
 
 --- Exceeds minimum date
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
