@@ -1,18 +1,18 @@
 ---
 {
-"title": "CORR",
+"title": "CORR_WELFORD",
 "language": "zh-CN"
 }
 ---
 
 ## 描述
 
-计算两个随机变量的皮尔逊系数。
+采用 [Welford](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) 算法计算两个随机变量的皮尔逊系数，能够有效降低计算误差。
 
 ## 语法
 
 ```sql
-CORR(<expr1>, <expr2>)
+CORR_WELFORD(<expr1>, <expr2>)
 ```
 
 ## 参数
@@ -21,7 +21,6 @@ CORR(<expr1>, <expr2>)
 | -- | -- |
 | `<expr1>` | 用于计算的表达式之一，支持类型为 Double 。 |
 | `<expr2>` | 用于计算的表达式之一，支持类型为 Double 。 |
-
 
 ## 返回值
 
@@ -55,18 +54,18 @@ insert into test_corr values
 ```
 
 ```sql
-select id,corr(k1,k2) from test_corr group by id;
+select id,corr_welford(k1,k2) from test_corr group by id;
 ```
 
 ```text
-+------+--------------------+
-| id   | corr(k1, k2)       |
-+------+--------------------+
-|    4 |                  0 |
-|    1 |                  1 |
-|    3 |               NULL |
-|    2 | 0.4539206495016019 |
-+------+--------------------+
++------+---------------------+
+| id   | corr_welford(k1,k2) |
++------+---------------------+
+|    1 |                   1 |
+|    2 |  0.4539206495016017 |
+|    3 |                NULL |
+|    4 |                   0 |
++------+---------------------+
 ```
 
 ```sql
@@ -76,9 +75,9 @@ select corr_welford(k1,k2) from test_corr where id=999;
 组内没有有效数据。
 
 ```text
-+-------------+
-| corr(k1,k2) |
-+-------------+
-|        NULL |
-+-------------+
++---------------------+
+| corr_welford(k1,k2) |
++---------------------+
+|                NULL |
++---------------------+
 ```

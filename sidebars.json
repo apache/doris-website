@@ -382,6 +382,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "AI & LLM",
+                    "items": [
+                        "ai/llm-function-overview"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
@@ -1691,6 +1698,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
+                                "sql-manual/sql-functions/aggregate-functions/corr-welford",
                                 "sql-manual/sql-functions/aggregate-functions/corr",
                                 "sql-manual/sql-functions/aggregate-functions/count",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
@@ -1780,6 +1788,7 @@
                                 "sql-manual/sql-functions/window-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/window-functions/collect-list",
                                 "sql-manual/sql-functions/window-functions/collect-set",
+                                "sql-manual/sql-functions/window-functions/corr-welford",
                                 "sql-manual/sql-functions/window-functions/corr",
                                 "sql-manual/sql-functions/window-functions/count",
                                 "sql-manual/sql-functions/window-functions/count-by-enum",
