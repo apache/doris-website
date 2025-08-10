@@ -158,7 +158,7 @@ CREATE CATALOG paimon_hms PROPERTIES (
 );
 ```
 
-### Paimon on DLF
+### Paimon on DLF 1.0
 
 ```sql
 CREATE CATALOG paimon_dlf PROPERTIES (
@@ -170,6 +170,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
     'dlf.region' = 'cn-beijing',
     'dlf.access_key' = 'ak',
     'dlf.secret_key' = 'sk'
+);
+```
+
+### Paimon on DLF Rest Catalog
+
+> Since 3.1.0
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
 );
 ```
 
