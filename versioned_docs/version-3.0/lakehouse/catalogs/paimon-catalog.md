@@ -173,6 +173,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
 );
 ```
 
+### Paimon on DLF Rest Catalog
+
+> Since 3.1.0
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
+);
+```
+
 ### Paimon on Google Dataproc Metastore
 
 ```sql
@@ -278,7 +294,6 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 ```sql
 SELECT * FROM my_table$system_table_name;
 ```
-
 
 > Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.
 

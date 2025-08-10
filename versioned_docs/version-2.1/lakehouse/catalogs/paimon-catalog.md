@@ -173,6 +173,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
 );
 ```
 
+### Paimon on DLF Rest Catalog
+
+> Since 3.1.0
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
+);
+```
+
 ### Paimon on Google Dataproc Metastore
 
 ```sql
