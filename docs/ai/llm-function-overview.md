@@ -137,6 +137,8 @@ SET default_llm_resource='llm_resource_name';
 
 3. Execute SQL Query
 
+case 1:
+
 Suppose there is a data table storing document content related to databases:
 
 ```sql
@@ -178,11 +180,68 @@ This query uses the LLM to generate a relevance score for each document's conten
 +---------------------------------------------------------------------------------------------------------------+-------+
 ```
 
+case2:
+
+The following table simulates candidate resumes and job requirements during recruitment.
+```sql
+CREATE TABLE candidate_profiles (
+    candidate_id INT,
+    name         VARCHAR(50),
+    self_intro   VARCHAR(500)
+)
+DUPLICATE KEY(candidate_id)
+DISTRIBUTED BY HASH(candidate_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+CREATE TABLE job_requirements (
+    job_id   INT,
+    title    VARCHAR(100),
+    jd_text  VARCHAR(500)
+)
+DUPLICATE KEY(job_id)
+DISTRIBUTED BY HASH(job_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO candidate_profiles VALUES
+(1, 'Alice', 'I am a senior backend engineer with 7 years of experience in Java, Spring Cloud and high-concurrency systems.'),
+(2, 'Bob',   'Frontend developer focusing on React, TypeScript and performance optimization for e-commerce sites.'),
+(3, 'Cathy', 'Data scientist specializing in NLP, large language models and recommendation systems.');
+
+INSERT INTO job_requirements VALUES
+(101, 'Backend Engineer', 'Looking for a senior backend engineer with deep Java expertise and experience designing distributed systems.'),
+(102, 'ML Engineer',      'Seeking a data scientist or ML engineer familiar with NLP and large language models.');
+```
+
+We can perform semantic matching between job requirements and candidate profiles through `LLM_FILTER`
+to screen out suitable candidates.
+```sql
+SELECT
+    c.candidate_id, c.name,
+    j.job_id, j.title
+FROM candidate_profiles AS c
+JOIN job_requirements AS j
+WHERE LLM_FILTER(CONCAT('Does the following candidate self-introduction match the job description?', 
+                'Job: ', j.jd_text, ' Candidate: ', c.self_intro));
+```
+
+```text
++--------------+-------+--------+------------------+
+| candidate_id | name  | job_id | title            |
++--------------+-------+--------+------------------+
+|            3 | Cathy |    102 | ML Engineer      |
+|            1 | Alice |    101 | Backend Engineer |
++--------------+-------+--------+------------------+
+```
+
 ## Design Principles
 
 ### Function Execution Flow
 
-![LLM Function Execution Flow](https://i.ibb.co/mrXND0Kj/2025-08-06-14-12-18.png)
+![LLM Function Execution Flow](/images/LLM-function-flowchart.png)
 
 Notes:
 
