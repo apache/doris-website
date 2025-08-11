@@ -158,7 +158,7 @@ CREATE CATALOG paimon_hms PROPERTIES (
 );
 ```
 
-### Paimon on DLF
+### Paimon on DLF 1.0
 
 ```sql
 CREATE CATALOG paimon_dlf PROPERTIES (
@@ -170,6 +170,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
     'dlf.region' = 'cn-beijing',
     'dlf.access_key' = 'ak',
     'dlf.secret_key' = 'sk'
+);
+```
+
+### Paimon on DLF Rest Catalog
+
+> Since 3.1.0
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
 );
 ```
 
@@ -277,12 +293,6 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 
 ```sql
 SELECT * FROM my_table$system_table_name;
-```
-
-For example, to view the audit log of a table, execute:
-
-```sql
-SELECT * FROM my_table$audit_log;
 ```
 
 > Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.

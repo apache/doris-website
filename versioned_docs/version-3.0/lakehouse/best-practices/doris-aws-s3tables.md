@@ -33,19 +33,35 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
 
 ### 02 Create Iceberg Catalog
 
-Create an Iceberg Catalog of type `s3tables`
+- Create an Iceberg Catalog of type `s3tables`
 
-```sql
-CREATE CATALOG iceberg_s3 PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 's3tables',
-    'warehouse' = 'arn:aws:s3tables:us-east-1:169698000000:bucket/doris-s3-table-bucket',
-    's3.region' = 'us-east-1',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
-    's3.access_key' = 'AKIASPAWQE3ITEXAMPLE',
-    's3.secret_key' = 'l4rVnn3hCmwEXAMPLE/lht4rMIfbhVfEXAMPLE'
-);
-```
+    ```sql
+    CREATE CATALOG iceberg_s3 PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 's3tables',
+        'warehouse' = 'arn:aws:s3tables:<region>:<acount_id>:bucket/<s3_table_bucket_name>',
+        's3.region' = '<region>',
+        's3.endpoint' = 's3.<region>.amazonaws.com',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>'
+    );
+    ```
+
+- Connecting to `s3 tables` using Glue Rest Catalog 
+
+    ```sql
+    CREATE CATALOG glue_s3 PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 'rest',
+        'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
+        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'iceberg.rest.sigv4-enabled' = 'true',
+        'iceberg.rest.signing-name' = 'glue',
+        'iceberg.rest.access-key-id' = '<ak>',
+        'iceberg.rest.secret-access-key' = '<sk>',
+        'iceberg.rest.signing-region' = '<region>'
+    );
+    ```
 
 ### 03 Access S3Tables
 
@@ -107,7 +123,7 @@ Doris > SELECT * FROM partition_table;
 
 ### 05 Time Travel
 
-We can insert another batch of data, then use the `iceberg_meta()` function to view Iceberg Snapshots:
+We can insert another batch of data, then use the `$snapshots` system table to view Iceberg Snapshots:
 
 ```sql
 Doris > INSERT INTO partition_table VALUES
@@ -118,10 +134,7 @@ Query OK, 2 rows affected (9.76 sec)
 ```
 
 ```
-Doris > SELECT * FROM iceberg_meta(
-    ->     'table' = 'iceberg_s3.my_namespace.partition_table',
-    ->     'query_type' = 'snapshots'
-    -> )\G
+Doris > SELECT * FROM partition_table$snapshots\G
 *************************** 1. row ***************************
  committed_at: 2025-01-15 23:27:01
   snapshot_id: 6834769222601914216

@@ -753,7 +753,7 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-    ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../lakehouse/datalake-analytics/hive.md#catalog-configuration) documentation.
+    ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../lakehouse/catalogs/hive-catalog.md#configuring-catalog) documentation.
 
 ## Configure Shared Storage
 As of version 25.4.0, the Doris Operator supports mounting shared storage with the ReadWriteMany access mode to all pods across multiple components. Before using this feature, ensure that the shared storage PersistentVolume and PersistentVolumeClaim resources have been created. Configure the DorisCluster resource as shown below before deploying the Doris cluster:
@@ -774,3 +774,36 @@ spec:
 The `mountPath` parameter can use `${DORIS_HOME}` as a prefix. When `${DORIS_HOME}` is used, it resolves to `/opt/apache-doris/fe` within FE containers and `/opt/apache-doris/be` within BE containers.
 :::
 
+## Configuring Probe Timeouts
+DorisCluster provides two types of probe timeout configurations for each service: `startup probe timeout` and `liveness probe timeout`. If a service fails to start within the specified startup timeout period, it is considered to have failed and will be restarted.
+If a service becomes unresponsive for longer than the specified liveness timeout, the corresponding Pod will be automatically restarted.
+
+### Startup Probe Timeout
+- FE Service Startup Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+    The above configuration sets the FE service startup timeout to 3600 seconds.  
+- BE Service Startup Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+### Liveness Probe Timeout
+- FE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the FE service liveness timeout to 60 seconds.
+- BE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the BE service liveness timeout to 60 seconds.

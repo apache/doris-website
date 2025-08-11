@@ -77,6 +77,15 @@ SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
 
+### Nullable Attribute
+
+Doris currently has special restrictions on the Nullable attribute support for external table columns, with specific behaviors as follows:
+
+| Source Type | Doris Read Behavior | Doris Write Behavior |
+| ---   | ------------  | ------------ |
+| Nullable | Nullable  | Allow writing Null values |
+| Not Null | Nullable, i.e., still treated as columns that allow NULL during reading | Allow writing Null values, i.e., no strict checking for Null values. Users need to ensure data integrity and consistency themselves.|
+
 ## Using Catalog
 
 ### Viewing Catalog

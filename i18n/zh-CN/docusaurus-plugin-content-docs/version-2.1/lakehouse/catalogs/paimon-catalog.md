@@ -158,7 +158,7 @@ CREATE CATALOG paimon_hms PROPERTIES (
 );
 ```
 
-### Paimon on DLF
+### Paimon on DLF 1.0
 
 ```sql
 CREATE CATALOG paimon_dlf PROPERTIES (
@@ -170,6 +170,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
     'dlf.region' = 'cn-beijing',
     'dlf.access_key' = 'ak',
     'dlf.secret_key' = 'sk'
+);
+```
+
+### Paimon on DLF Rest Catalog
+
+> 该功能自 3.1.0 版本支持
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
 );
 ```
 
@@ -277,12 +293,6 @@ Doris 支持查询 Paimon 系统表，用来查询表的相关元信息。支持
 
 ```sql
 SELECT * FROM my_table$system_table_name;
-```
-
-例如，要查看表的审计记录，可以执行：
-
-```sql
-SELECT * FROM my_table$audit_log;
 ```
 
 > 注意点：Doris 不支持读取 Paimon 全局系统表，其只在 Flink 中支持。

@@ -13,7 +13,11 @@ This document introduces the support for reading and writing text file formats i
 
   Supports reading Hive tables in the `org.apache.hadoop.mapred.TextInputFormat` format.
 
-  Supports reading Hive tables in the `org.apache.hadoop.hive.serde2.OpenCSVSerde` format. (Supported from version 2.1.7)
+  Support following SerDes:
+
+  - `org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe`
+  - `org.apache.hadoop.hive.serde2.OpenCSVSerde` (Since 2.1.7)
+  - `org.apache.hadoop.hive.serde2.MultiDelimitSerDe` (Since 3.1.0)  
 
 * Table Valued Function
 
@@ -40,12 +44,14 @@ This document introduces the support for reading and writing text file formats i
 
 ### Catalog
 
-- Hive table in `org.apache.hive.hcatalog.data.JsonSerDe` format (supported since version 3.0.4)
+- `org.apache.hadoop.hive.serde2.JsonSerDe` (Since 3.0.4)
+
+- `org.apache.hive.hcatalog.data.JsonSerDe` (Since 3.0.4)
 
   1. Supports both primitive and complex types.
   2. Does not support the `timestamp.formats` SERDEPROPERTIES.
 
-- Hive table in [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde) format (supported since version 3.0.6)
+- Hive table in [`org.openx.data.jsonserde.JsonSerDe`](https://github.com/rcongiu/Hive-JSON-Serde) (Since 3.0.6)
 
   1. Supports both primitive and complex types.
   2. SERDEPROPERTIES: Only [`ignore.malformed.json`](https://github.com/rcongiu/Hive-JSON-Serde?tab=readme-ov-file#importing-malformed-data) is supported and behaves the same as in this JsonSerDe. Other SERDEPROPERTIES are not effective.

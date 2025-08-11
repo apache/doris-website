@@ -151,7 +151,7 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 * For empty result query, there will be an empty file.
 
-* File spliting will ensure that a row of data is stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
+* File splitting will ensure that a row of data is stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
 
 * For functions whose output is invisible characters, such as BITMAP and HLL types, the output is `\N`, which is NULL.
 

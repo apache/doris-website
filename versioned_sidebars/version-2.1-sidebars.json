@@ -413,7 +413,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "File Foramt",
+                            "label": "File Format",
                             "items": [
                                 "lakehouse/file-formats/parquet",
                                 "lakehouse/file-formats/orc",
@@ -1828,6 +1828,7 @@
                                 "sql-manual/sql-statements/catalog/ALTER-CATALOG",
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]

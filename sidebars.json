@@ -382,6 +382,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "AI & LLM",
+                    "items": [
+                        "ai/llm-function-overview"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
@@ -440,7 +447,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "File Foramt",
+                            "label": "File Format",
                             "items": [
                                 "lakehouse/file-formats/parquet",
                                 "lakehouse/file-formats/orc",
@@ -1027,6 +1034,7 @@
                                     "type": "category",
                                     "label": "Conversion",
                                     "items": [
+                                        "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
@@ -1034,6 +1042,9 @@
                                         "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/json-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/map-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/struct-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
                                     ]
                                 }
@@ -1084,6 +1095,37 @@
                     "items": [
                         {
                             "type": "category",
+                            "label": "AI Functions",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Vector Distance Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "LLM Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-classify",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-extract",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-generate",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-mask",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize",
+                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-translate"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "category",
                             "label": "Scalar Functions",
                             "items": [
                                 {
@@ -1104,6 +1146,8 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cos",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/cot",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/csc",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/e",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",
@@ -1126,6 +1170,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/random",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/round",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/sec",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/sign",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/sin",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/sinh",
@@ -1135,6 +1180,10 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/even",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/signbit",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/gcd",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/lcm",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/xor"
                                     ]
                                 },
@@ -1321,6 +1370,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/year-of-week",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
@@ -1373,16 +1423,6 @@
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/xxhash-32",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/xxhash-64"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
-                                    "label": "Vector Distance Functions",
-                                    "items": [
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/cosine-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/inner-product",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l1-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l2-distance"
                                     ]
                                 },
                                 {
@@ -1612,7 +1652,9 @@
                                         "sql-manual/sql-functions/scalar-functions/other-functions/convert-to",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/esquery",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/field",
-                                        "sql-manual/sql-functions/scalar-functions/other-functions/g"
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/g",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping-id"
                                     ]
                                 },
                                 {
@@ -1658,6 +1700,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
+                                "sql-manual/sql-functions/aggregate-functions/corr-welford",
                                 "sql-manual/sql-functions/aggregate-functions/corr",
                                 "sql-manual/sql-functions/aggregate-functions/count",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
@@ -1669,8 +1712,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-concat",
-                                "sql-manual/sql-functions/aggregate-functions/grouping",
-                                "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
@@ -1747,6 +1788,7 @@
                                 "sql-manual/sql-functions/window-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/window-functions/collect-list",
                                 "sql-manual/sql-functions/window-functions/collect-set",
+                                "sql-manual/sql-functions/window-functions/corr-welford",
                                 "sql-manual/sql-functions/window-functions/corr",
                                 "sql-manual/sql-functions/window-functions/count",
                                 "sql-manual/sql-functions/window-functions/count-by-enum",
@@ -1758,8 +1800,6 @@
                                 "sql-manual/sql-functions/window-functions/group-bit-xor",
                                 "sql-manual/sql-functions/window-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/window-functions/group-concat",
-                                "sql-manual/sql-functions/window-functions/grouping",
-                                "sql-manual/sql-functions/window-functions/grouping-id",
                                 "sql-manual/sql-functions/window-functions/histogram",
                                 "sql-manual/sql-functions/window-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/window-functions/hll-union-agg",
@@ -1931,6 +1971,7 @@
                                 "sql-manual/sql-statements/account-management/SHOW-ROLES",
                                 "sql-manual/sql-statements/account-management/GRANT-TO",
                                 "sql-manual/sql-statements/account-management/REVOKE-FROM",
+                                "sql-manual/sql-statements/account-management/SHOW-CREATE-USER",
                                 "sql-manual/sql-statements/account-management/SHOW-PRIVILEGES",
                                 "sql-manual/sql-statements/account-management/SHOW-GRANTS",
                                 "sql-manual/sql-statements/account-management/REFRESH-LDAP",
@@ -2002,6 +2043,7 @@
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]
                         },
