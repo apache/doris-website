@@ -72,12 +72,12 @@ SELECT cast('nan' as double),isnan(cast('nan' as double));
 ```
 
 ```sql
-SELECT isinf(NULL)
+SELECT isnan(NULL)
 ```
 
 ```text
 +-------------+
-| isinf(NULL) |
+| isnan(NULL) |
 +-------------+
 |        NULL |
 +-------------+
