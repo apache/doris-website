@@ -192,6 +192,15 @@ spec:
             resources:
               requests:
                 storage: 300Gi
+        - mountPaths:
+            - /opt/apache-doris/be/storage
+          persistentVolumeClaimSpec:
+            # storageClassName: ${storageclass_name}
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 300Gi
         - persistentVolumeClaimSpec:
             # storageClassName: ${storageclass_name}
             accessModes:
@@ -200,7 +209,7 @@ spec:
               requests:
                 storage: 500Gi
 ```
-In the above configuration, the log directory is mounted using a custom storage configuration with 300Gi, while the cache directory is mounted using the storage template with 500Gi.
+In the above configuration, the log directory is mounted using a custom storage configuration with 300Gi, A 300Gi storage disk is mounted to the directory `/opt/apache-doris/be/storage` used for WAL and StreamLoad imports, etc. while the cache directory is mounted using the storage template with 500Gi.
 
 :::tip Note
 If the `mountPaths` array is empty, it indicates that the current storage configuration is using the template configuration.
