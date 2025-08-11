@@ -22,7 +22,7 @@ DAY_CEIL(<datetime>, <period>, <origin>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/)  和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型和符合格式的字符串 |
 
@@ -39,7 +39,6 @@ DAY_CEIL(<datetime>, <period>, <origin>)
 
 - 任何参数为 NULL 时，返回 NULL；
 - 若 period 为负数或 0，返回 NULL；
-- 若 datetime 或 origin 格式无效，返回 NULL；
 - 若取整结果超出日期类型支持的范围（如 '9999-12-31' 之后），返回 NULL。
 - 带有 scale 的输入的datetime，输出会截断所有 scale 为0 ，返回值带有 scale
 
@@ -124,11 +123,4 @@ select day_ceil(NULL, 5, "2023-01-01");
 | NULL                            |
 +---------------------------------+
 
----输入时间日期格式无效，返回 NULL
-select day_ceil("2023-07- 13 22:28:18", 5);
-+-------------------------------------+
-| day_ceil("2023-07- 13 22:28:18", 5) |
-+-------------------------------------+
-| NULL                                |
-+-------------------------------------+
 ```

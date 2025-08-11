@@ -19,7 +19,7 @@
 | 参数 | 说明 |
 | -- | -- |
 | `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month,week, day, hour, minute, second 或者 microsecond |
-| `datetime` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/)  和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `datetime` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 
 ## 返回值
 
@@ -38,7 +38,6 @@ week 单位的取值范围为 0-53，计算规则如下：
 特殊情况：
 
 若 <datetime> 为 NULL，返回 NULL。
-若 <datetime> 格式无效（如 '2023-02-30'），返回 NULL。
 若 <unit> 为不支持单位，报错
 
 ## 举例
@@ -94,24 +93,8 @@ select extract(week from '2024-12-31') as week;
 |   52 |
 +------+
 
----输入日期为 NULL ，返回 NULL
-select extract(year from NULL);
-+-------------------------+
-| extract(year from NULL) |
-+-------------------------+
-|                    NULL |
-+-------------------------+
-
 ---输入单位不存在，报错
 select extract(uint from '2024-01-07') as week;
 
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'uint'
-
----输入无效日期，返回 NULL
-select extract(week from '2024-13-07') as week;
-+------+
-| week |
-+------+
-| NULL |
-+------+
 ```

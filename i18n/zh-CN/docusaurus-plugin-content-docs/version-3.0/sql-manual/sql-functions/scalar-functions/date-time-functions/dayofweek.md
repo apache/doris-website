@@ -19,7 +19,7 @@ DAYOFWEEK(<dt>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<dt>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/)  和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `<dt>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 
@@ -28,8 +28,6 @@ DAYOFWEEK(<dt>)
 特殊情况：
 
 若 <dt> 为 NULL，返回 NULL；
-若 <dt> 格式无效（如非日期时间字符串、不存在的日期），返回 NULL；
-
 ## 举例
 
 ```sql
@@ -65,22 +63,4 @@ select dayofweek(NULL);
 +-----------------+
 |            NULL |
 +-----------------+
-
----输入无效日期
-
-select dayofweek('2023-13-01');
-+-------------------------+
-| dayofweek('2023-13-01') |
-+-------------------------+
-|                    NULL |
-+-------------------------+
-
----输入无效日期格式
-
-mysql> select dayofweek('2023-/13-01');
-+--------------------------+
-| dayofweek('2023-/13-01') |
-+--------------------------+
-|                     NULL |
-+--------------------------+
 ```

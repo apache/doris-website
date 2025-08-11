@@ -22,7 +22,7 @@ DAY_FLOOR(<datetime>, <period>, <origin>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/)  和 [date 的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 NULL；若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型和符合日期时间格式的字符串。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
 
@@ -40,7 +40,6 @@ DAY_FLOOR(<datetime>, <period>, <origin>)
 
 - 任何参数为 NULL 时，返回 NULL；
 - 若 period 为负数或 0，返回 NULL；
-- 若 datetime 或 origin 格式无效，返回 NULL；
 - 带有 scale 输入的符合日期时间，返回值带有 scale 且全部小数为 0
 
 ## 举例
@@ -112,12 +111,4 @@ select day_floor(NULL, 5, "2023-01-01");
 +----------------------------------+
 | NULL                             |
 +----------------------------------+
-
----输入无效的 datetime 格式（返回 NULL）
-select day_floor("2023-07- 13 22:28:18", 5);
-+--------------------------------------+
-| day_floor("2023-07- 13 22:28:18", 5) |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
 ```
