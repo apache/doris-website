@@ -43,7 +43,7 @@ ISNAN(<value>)
 ## Return Value
 
 如果值是 NaN，则返回 1，否则返回 0。
-如果值为NULL，则返回NULL。
+如果值为 NULL，则返回 NULL。
 
 ## Examples
 

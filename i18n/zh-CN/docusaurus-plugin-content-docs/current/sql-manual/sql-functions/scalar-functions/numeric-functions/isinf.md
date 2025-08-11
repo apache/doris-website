@@ -43,7 +43,7 @@ ISINF(<value>)
 ## Return Value
 
 如果值是无穷大（正无穷或负无穷），则返回 1，否则返回 0。
-如果值为NULL，则返回NULL。
+如果值为 NULL，则返回 NULL。
 
 ## Examples
 
