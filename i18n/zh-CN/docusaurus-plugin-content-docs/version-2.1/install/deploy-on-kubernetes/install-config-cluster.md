@@ -906,7 +906,7 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabPath: ${keytabPath}
     ```
     ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
-      catalog 请参考配置 [Hive Catalog](../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
+      catalog 请参考配置 [Hive Catalog](../../lakehouse/catalogs/hive-catalog.md#配置-catalog) 文档。
 
 ## 配置共享存储
 Doris Operator 从 25.4.0 版本开始支持为多个组件的所有 Pod 挂载一个 `ReadWriteMany` 的共享存储。使用前请提前创建好共享存储 `PersistentVolume` 和 `PersistentVolumeClaim` 资源，在部署 Doris 集群之前按照如下配置 `DorisCluster` 资源：
