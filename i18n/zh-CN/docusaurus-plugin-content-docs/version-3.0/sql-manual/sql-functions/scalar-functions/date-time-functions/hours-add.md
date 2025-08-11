@@ -19,14 +19,13 @@ HOURS_ADD(<date>, <hours>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/),[date的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<hours>` | 	要增加的小时数，类型为整数（INT），可正可负：正数：增加指定小时，负数：减少指定小时（等效于减去小时）。 |
 
 ## 返回值
 
 返回类型为 DATETIME，返回以输入日期时间为基准，增加或减小指定小时数后的时间值。
 
-- 若输入的 `<date>` 为无效日期（如 '2023-02-30'），返回 NULL。
 - 若计算结果超出 DATETIME 类型的有效范围 [0000-01-01 00:00:01,9999-12-31 23:59:59]，返回 NULL。
 
 ## 举例
@@ -72,15 +71,6 @@ select hours_add('2023-10-01 10:00:00',NULL) ;
 +---------------------------------------+
 | NULL                                  |
 +---------------------------------------+
-
----无效日期时间，返回 NULL
-select hours_add('2023-02-30 12:00:00', 1);
-
-+-------------------------------------+
-| hours_add('2023-02-30 12:00:00', 1) |
-+-------------------------------------+
-| NULL                                |
-+-------------------------------------+
 
 ---超出日期时间范围
 select hours_add('9999-12-31 23:59:59', 2);

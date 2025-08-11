@@ -28,13 +28,27 @@ LOCALTIMESTAMP([<precision>]))
 ## 举例
 
 ```sql
-select LOCALTIME(),LOCALTIME(3),LOCALTIME(6);
-```
 
-```text
+--jdk 17 版本，可以支持六位精度
+mysql> select LOCALTIME(),LOCALTIME(3),LOCALTIME(6);
+
 +---------------------+-------------------------+----------------------------+
-| now()               | now(3)                  | now(6)                     |
+| LOCALTIME()         | LOCALTIME(3)            | LOCALTIME(6)               |
 +---------------------+-------------------------+----------------------------+
-| 2025-01-23 11:50:18 | 2025-01-23 11:50:18.883 | 2025-01-23 11:50:18.883000 |
+| 2025-08-11 11:04:49 | 2025-08-11 11:04:49.535 | 2025-08-11 11:04:49.535992 |
 +---------------------+-------------------------+----------------------------+
+
+---输入参数为 NULL，返回 NULL
+mysql> select LOCALTIME(NULL);
++-----------------+
+| LOCALTIME(NULL) |
++-----------------+
+| NULL            |
++-----------------+
+
+---不在精度范围内，报错
+mysql> select LOCALTIME(-1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: -1
+mysql> select LOCALTIME(7);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: 7
 ```

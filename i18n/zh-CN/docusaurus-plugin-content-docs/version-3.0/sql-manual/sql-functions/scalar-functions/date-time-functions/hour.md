@@ -22,7 +22,7 @@ HOUR(<dt>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<dt>` | 参数是合法的日期表达式，支持输入 date/datetime/time 类型和符合日期时间格式的字符串,具体 datetime,date,time 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/),[date的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion) [time的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<dt>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型和符合日期时间格式的字符串,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date/time 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 
@@ -30,7 +30,6 @@ HOUR(<dt>)
 - 对于 DATETIME 或日期时间字符串，返回 0-23 的整数。
 - 对于 DATE类型 或日期字符串，返回 0.
 - 对于 TIME 类型或时间字符串，返回 0 至 838 的整数（与 TIME 类型的范围一致）。
-- 若输入为无效的日期时间或时间格式（如 '2023-02-30 14:30:00'、'839:00:00'），返回 NULL。
 - 输入参数为 NULL，返回 NULL
 
 ## 举例
@@ -73,29 +72,6 @@ select hour("2022-12-12");
 |                  0 |
 +--------------------+
 
----无效时间格式，返回 NULL
-select hour('839:00:00') as invalid_time;  
-+--------------+
-| invalid_time |
-+--------------+
-|         NULL |
-+--------------+
-
----无效日期格式，返回 NULL
-mysql> select hour("2022-12-33");
-+--------------------+
-| hour("2022-12-33") |
-+--------------------+
-|               NULL |
-+--------------------+
-
----无效日期时间格式，返回 NULL
-mysql> select hour("2022-12-33 12:12:12");
-+-----------------------------+
-| hour("2022-12-33 12:12:12") |
-+-----------------------------+
-|                        NULL |
-+-----------------------------+
 
 ---输入参数为 NULL ，返回 NULL
 mysql> select hour(NULL);

@@ -19,14 +19,13 @@ HOURS_SUB(<date>, <hours>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/),[date的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<hours>` | 要减去的小时数，类型为 INT |
 
 ## 返回值
 
 返回 DATETIME 类型的值，表示加上或减去指定小时后的日期时间（格式为 YYYY-MM-DD HH:MM:SS）
 
-- 若输入的 <date> 为无效日期（如 '2023-02-30'），返回 NULL。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59），返回 NULL。
 - 输入任一参数为 NULL，返回 NULL
 - 输入 `hours` 为负数，返回日期时间加上对应小时数
@@ -67,15 +66,6 @@ select hours_sub('2023-10-01 10:00:00', NULL);
 +----------------------------------------+
 | NULL                                   |
 +----------------------------------------+
-
----输入日期时间无效，返回 NULL
-select hours_sub('2023-02-30 12:00:00', 1);
-
-+-------------------------------------+
-| hours_sub('2023-02-30 12:00:00', 1) |
-+-------------------------------------+
-| NULL                                |
-+-------------------------------------+
 
 ---超出日期时间范围，返回 NULL
 mysql> select hours_sub('9999-12-31 12:00:00', -20);

@@ -19,15 +19,14 @@ HOURS_DIFF(<end_date>, <start_date>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<end_date>` | 结束时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/),[date的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `<start_date>` | 开始时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date 格式请查看 [datetime的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion/),[date的转换](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<end_date>` | 结束时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<start_date>` | 开始时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
 
 ## 返回值
 
 返回整数类型，表示 `<end_date>` 与 `<start_date>` 之间的小时差值
 
 - 若 `<end_date>` 晚于 `<start_date>`，返回正数；若早于，则返回负数。
-- 若输入的日期时间无效（如 '2023-02-30'），返回 NULL。
 - 若输入参数为 NULL，返回 NULL。
 
 ## 举例
@@ -74,14 +73,6 @@ select hours_diff('2023-12-31', NULL);
 +--------------------------------+
 |                           NULL |
 +--------------------------------+
-
----无效日期 2023-2-30，返回 NULL
-select hours_diff('2023-02-30', '2023-01-01');
-+----------------------------------------+
-| hours_diff('2023-02-30', '2023-01-01') |
-+----------------------------------------+
-|                                   NULL |
-+----------------------------------------+
 
 
 ```
