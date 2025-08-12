@@ -504,6 +504,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/read-write-splitting",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
