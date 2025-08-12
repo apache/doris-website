@@ -2730,6 +2730,22 @@ Default value: 1
 
 Used to control the interval at which ProfileManager performs profile garbage collection. During garbage collection, ProfileManager purges excess and expired profiles from memory and disk to save memory.
 
+#### `force_skip_journal_ids`
+
+Default value: {}
+
+When FE restarts, if the replay process encounters corrupted journal entries during metadata image replay that cause the replay thread to crash, preventing FE from starting normally, you can configure the problematic journal IDs to temporarily skip these corrupted entries, allowing FE to start successfully. Default value is an empty set {}.
+
+**Note:** This configuration is intended for emergency recovery scenarios only. Skipping corrupted journal entries may lead to metadata inconsistency. It is recommended to clear this configuration after the underlying issue is resolved.
+
+#### `skip_operation_types_on_replay_exception`
+
+Default value: {-1, -1}
+
+When FE replays edit logs (editlog), if specific operation types encounter exceptions that prevent FE from starting, you can configure the edit log operation type enumeration values to be ignored, allowing the replay thread to skip these problematic operations and continue processing other log entries. Default value is {-1, -1}.
+
+**Note:** This configuration is also intended for emergency recovery scenarios only. Skipping specific operation types may affect metadata integrity. It is recommended to clear this configuration after the underlying issue is resolved.
+
 ### Compute and Storage Disaggregated Mode
 
 #### `cluster_id`
