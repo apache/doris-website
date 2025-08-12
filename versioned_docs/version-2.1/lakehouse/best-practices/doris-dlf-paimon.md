@@ -1,12 +1,12 @@
 ---
 {
-    "title": "Integration with Alibaba DLF",
+    "title": "Integration with Aliyun DLF",
     "language": "en"
 }
 
 ---
 
-Alibaba Cloud [Data Lake Formation (DLF)](https://www.alibabacloud.com/en/product/datalake-formation) serves as a core component of cloud-native data lake architecture, helping users quickly build cloud-native data lake architectures. Data Lake Formation provides unified metadata management on the lake, enterprise-level permission control, and seamlessly integrates with multiple computing engines to break data silos and uncover business value.
+Aliyun [Data Lake Formation (DLF)](https://www.alibabacloud.com/en/product/datalake-formation) serves as a core component of cloud-native data lake architecture, helping users quickly build cloud-native data lake architectures. Data Lake Formation provides unified metadata management on the lake, enterprise-level permission control, and seamlessly integrates with multiple computing engines to break data silos and uncover business value.
 
 - Unified Metadata and Storage
 
