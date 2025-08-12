@@ -63,7 +63,7 @@ mysql> show proc "/";
 2. backends：显示集群中 BE 的节点列表，等同于 [SHOW BACKENDS](../cluster-management/instance-management/SHOW-BACKENDS)        
 3. bdbje：查看 bdbje 数据库列表，需要修改 `fe.conf` 文件增加 `enable_bdbje_debug_mode=true` , 然后通过 `sh start_fe.sh --daemon` 启动 `FE` 即可进入 `debug` 模式。进入 `debug` 模式之后，仅会启动 `http server` 和  `MySQLServer` 并打开 `BDBJE` 实例，但不会进入任何元数据的加载及后续其他启动流程，
 4. brokers : 查看集群 Broker 节点信息，等同于 [SHOW BROKER](../cluster-management/instance-management/SHOW-BROKER)
-5. catalogs : 查看当前已创建的数据目录，等同于 [SHOW CATALOGS](../catalog/SHOW-CATALOGS)
+5. catalogs : 查看当前已创建的数据目录，等同于 [SHOW CATALOGS](../catalog/SHOW-CATALOG.md)
 6. cluster_balance：查看集群均衡情况，具体参照 [数据副本管理](../../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
 7. cluster_health : 通过 <code>SHOW PROC '/cluster_health/tablet_health'</code>; 命令可以查看整个集群的副本状态。
 8. colocation_group :   该命令可以查看集群内已存在的 Group 信息，具体可以查看 [Colocation Join](../../../query-acceleration/colocation-join) 章节
