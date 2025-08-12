@@ -246,9 +246,6 @@ Supports [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-que
 Supports querying incremental data within specified snapshot or timestamp intervals. The interval is left-closed and right-open.
 
 ```sql
--- read from snapshot 2
-SELECT * FROM paimon_table@incr('startSnapshotId'='2');
-
 -- between snapshots [0, 5)
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 
@@ -256,29 +253,29 @@ SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
 
 -- read from start timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
 
 -- read between timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
 ```
 
 Parameter:
 
 | Parameter | Description | Example |
 | --- | --- | -- |
-| `startSnapshotId` | Starting snapshot ID, must be greater than 0 | `'startSnapshotId'='3'` |
-| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Optional, if not specified, reads from `startSnapshotId` to the latest snapshot | `'endSnapshotId'='10'` |
+| `startSnapshotId` | Starting snapshot ID, must be greater than 0. Must be specified with `endSnapshotId` together. | `'startSnapshotId'='3'` |
+| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Must be specified with `startSnapshotId` together. | `'endSnapshotId'='10'` |
 | `incrementalBetweenScanMode` | Specifies the incremental read mode, default is `auto`, supports `delta`, `changelog` and `diff` |  `'incrementalBetweenScanMode'='delta'` |
-| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0 | `'startTimestamp'='1750844949'` |
-| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot | `'endTimestamp'='1750944949'` |
+| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0. Unit is millisecond. | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot. Unit is millisecond. | `'endTimestamp'='1750944949000'` |
 
 > Notice:
-
-> - `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
-
-> - `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
-
-> - `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+>
+> `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+>
+> `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949000,1750944949000'`
+>
+> `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
 
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 

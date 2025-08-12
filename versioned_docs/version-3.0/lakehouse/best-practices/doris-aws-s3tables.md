@@ -16,7 +16,7 @@ The release of S3 Tables further simplifies Lakehouse architecture and brings mo
 Thanks to Amazon S3 Tables' high compatibility with the Iceberg API, Apache Doris can quickly integrate with S3 Tables. This article will demonstrate how to connect Apache Doris with S3 Tables and perform data analysis and processing.
 
 :::tip
-This feature is supported from Doris 3.1 onwards
+This feature is supported since Doris 3.1
 :::
 
 ## Usage Guide
