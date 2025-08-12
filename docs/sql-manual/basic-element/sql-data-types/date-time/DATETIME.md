@@ -5,51 +5,56 @@
 }
 ---
 
-## DATETIME
+## Description
 
-DATETIME
+The DATETIME(p) type stores date and time, where p is the precision, with the range of values for p being `[0, 6]`, and the default value is 0. That is, DATETIME is equivalent to DATETIME(0).
 
-### Description
+The range is `[0000-01-01 00:00:00.000..., 9999-12-31 23:59:59.999...]`, and the default output format is 'yyyy-MM-dd HH:mm:ss.SSS...'. There are a total of p digits after the decimal point. For example, the range of DATETIME(6) is `[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]`.
 
-DATETIME([P])
-Date and time type.
-The optional parameter P indicates the time precision and the value range is [0, 6], that is, it supports up to 6 decimal places (microseconds). 0 when not set.
-Value range is ['0000-01-01 00:00:00[.000000]','9999-12-31 23:59:59[.999999]'].
-The form of printing is 'yyyy-MM-dd HH:mm:ss.SSSSSS'
+Doris uses the Gregorian calendar date format, and the dates existing in the Gregorian calendar correspond one by one to the dates existing in Doris, where `0000` represents 1 BC (BCE 1). No matter which day the date is on, the time range is always `['00:00:00.000...', '23:59:59.999...']`, and there are no duplicate times, i.e., no leap seconds.
 
-### note
+DATETIME type can be used as a primary key, partition column or bucket column. A DATETIME type field actually occupies 8 bytes in Doris. DATETIME is stored separately by year, month, day, hour, minute, second and microsecond in runtime, so executing `months_add` operation on DATETIME column is more efficient than `unix_timestamp`.
 
-DATETIME supports temporal precision up to microseconds. When parsing imported DATETIME type data using the BE side (e.g. using Stream load, Spark load, etc.), or using the FE side with the [Nereids](/docs/query/nereids/nereids-new) on, decimals exceeding the current precision will be **rounded**.
-Inserting a DATETIME value with a fractional seconds part into a column of the same type but having fewer fractional digits results in **rounded**.
-DATETIME reads support resolving the time zone in the format of the original DATETIME literal followed by the time zone:
+How to convert other types to DATETIME, and the input accepted during conversion, see [Cast to DATETIME](../conversion/datetime-conversion.md).
+
+Date and time types do not support direct use of mathematical operators for arithmetic operations. The essence of performing mathematical operations is to first implicitly convert the date and time types to numeric types, and then perform the operation. If you need to perform addition, subtraction, or rounding on time types, consider using functions like [DATE_ADD](../../../sql-functions/scalar-functions/date-time-functions/date-add.md), [DATE_SUB](../../../sql-functions/scalar-functions/date-time-functions/date-sub.md), [TIMESTAMPDIFF](../../../sql-functions/scalar-functions/date-time-functions/timestampdiff.md), [DATE_TRUNC](../../../sql-functions/scalar-functions/date-time-functions/date-trunc.md).
+
+DATETIME type does not store time zone, that is, changes in the session variable `time_zone` do not affect the stored values of DATETIME type.
+
+## Examples
+
 ```sql
-<date> <time>[<timezone>]
+select cast('2020-01-02' as datetime);
 ```
 
-For the specific supported formats for `<timezone>`, see [timezone](../../../../admin-manual/cluster-management/time-zone). Note that the `DATE`, `DATEV2`, `DATETIME`, and `DATETIMEV2` types **don't** contain time zone information. For example, if an input time string "2012-12-12 08:00:00+08:00" is parsed and converted to the current time zone "+02:00", and the actual value "2012-12-12 02:00:00" is stored in the DATETIME column, the value itself will not change, no matter how much the cluster environment variables are changed.
-
-### example
+```text
++--------------------------------+
+| cast('2020-01-02' as datetime) |
++--------------------------------+
+| 2020-01-02 00:00:00            |
++--------------------------------+
+```
 
 ```sql
-mysql> select @@time_zone;
-+----------------+
-| @@time_zone    |
-+----------------+
-| Asia/Hong_Kong |
-+----------------+
-1 row in set (0.11 sec)
+select cast('2020-01-02' as datetime(6));
+```
 
-mysql> insert into dtv23 values ("2020-12-12 12:12:12Z"), ("2020-12-12 12:12:12GMT"), ("2020-12-12 12:12:12+02:00"), ("2020-12-12 12:12:12America/Los_Angeles");
-Query OK, 4 rows affected (0.17 sec)
+```text
++-----------------------------------+
+| cast('2020-01-02' as datetime(6)) |
++-----------------------------------+
+| 2020-01-02 00:00:00.000000        |
++-----------------------------------+
+```
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 20:12:12.000 |
-| 2020-12-12 20:12:12.000 |
-| 2020-12-13 04:12:12.000 |
-| 2020-12-12 18:12:12.000 |
-+-------------------------+
-4 rows in set (0.15 sec)
+```sql
+select cast('0000-12-31 22:21:20.123456' as datetime(4));
+```
+
+```text
++---------------------------------------------------+
+| cast('0000-12-31 22:21:20.123456' as datetime(4)) |
++---------------------------------------------------+
+| 0000-12-31 22:21:20.1235                          |
++---------------------------------------------------+
 ```
