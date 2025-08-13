@@ -531,6 +531,7 @@
                             ]
                         },
                         "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
