@@ -30,7 +30,7 @@ This is a more intelligent and automated mechanism. It establishes a warm-up rel
 - The core solution for read-write splitting architectures, systematically solving cache issues caused by Compaction and data ingestion.
 - Scenarios with high requirements for data consistency and query performance stability.
 
-> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up](https://www.google.com/search?q=)**.
+> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up]()**.
 
 ### 2. Read-Only Compute Group Automatic Warm-up
 
