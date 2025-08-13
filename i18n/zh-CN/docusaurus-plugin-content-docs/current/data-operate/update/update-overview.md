@@ -235,7 +235,7 @@ Doris 强大的数据更新能力使其能够胜任多种要求严苛的实时�
 
 Doris 3.0 引入了先进的存算分离架构，带来了极致的弹性和更低的成本。在该架构下，由于BE无状态，因此在Merge-on-Write过程中，需要通过MetaService来维护一个全局状态以解决导入/compaction/schema change之间的写写冲突。主键模型的 MoW 实现依赖于一个基于 Meta Service 的分布式表锁来保证写操作的一致性，如下图所示：
 
-![img](https://selectdb.feishu.cn/space/api/box/stream/download/asynccode/?code=Nzc1ZWQ3MWE4MTg4ZDQ3ZDI3ZmJkMjYzNmQ2M2IwZTdfQTBYekpIZXpKYXRqd1FFYWU5SkNiSERKOU4xZ25McERfVG9rZW46S2hxWGIwWnY2b3NMdWd4OTRmMWN0ZlN4bmJnXzE3NTUwMTQyODQ6MTc1NTAxNzg4NF9WNA)
+![img](/images/update-overview/cloud-mow.png)
 
 高频的导入和 Compaction 会导致对表锁的频繁竞争，因此需要特别注意以下几点：
 
@@ -250,4 +250,4 @@ Doris 3.0 引入了先进的存算分离架构，带来了极致的弹性和更�
 
 Apache Doris 凭借其以主键模型为核心的强大、灵活且高效的数据更新能力，真正打破了传统 OLAP 系统在数据新鲜度上的瓶颈。无论是通过高性能的导入实现 `UPSERT` 和部分列更新，还是利用 Sequence 列保证乱序数据的一致性，Doris 都为构建端到端的实时分析应用提供了完整的解决方案。
 
-通过深入理解其核心原理，掌握不同更新方式的适用场景，并遵循本文档提供的最佳实践，您将能够充分释放 Doris 的潜力，让实时数据真正成为驱动业务增长的强大引擎g'g
+通过深入理解其核心原理，掌握不同更新方式的适用场景，并遵循本文档提供的最佳实践，您将能够充分释放 Doris 的潜力，让实时数据真正成为驱动业务增长的强大引擎
