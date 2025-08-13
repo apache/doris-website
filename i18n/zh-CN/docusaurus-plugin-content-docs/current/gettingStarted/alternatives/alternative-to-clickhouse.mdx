@@ -126,8 +126,14 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
     </tr>
     <tr>
         <td><strong>实时更新</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>具有强一致性主键存储模型，支持同步数据更新与删除</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>仅支持异步更新，更新后可读取到旧值</li></ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>具备强一致性的主键存储模型，支持同步数据更新与删除</li>
+            <li style={{fontSize:'14px'}}>对唯一键实现了写时合并（Merge-On-Write）和删除位图，确保查询性能不受影响</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>仅支持异步更新，更新后仍可能读取到旧值</li>
+            <li style={{fontSize:'14px'}}>可通过 <code>FINAL</code> 关键字实现同步更新，但会显著降低查询性能</li>
+        </ul></td>
     </tr>
     <tr>
         <td><strong>数据 API</strong></td>
@@ -157,6 +163,32 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
             <li style={{fontSize:'14px'}}>在 ClickBench 测试中，ClickHouse 与 Doris 轮流领先</li>
             <li style={{fontSize:'14px'}}>在 TPC-H 和 TPC-DS 测试中，ClickHouse 出现查询内存溢出（OOM）的问题</li>
         </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>存算分离</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>自 3.0 版本起，开源版本已支持存储与计算分离</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>开源版本不支持存储与计算分离</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>开源协议</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>完全由 Apache 软件基金会托管的开源项目，许可证和治理均由社区共同维护，任何单一实体无法更改</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>虽为开源，但由商业公司控制</li>
+            </ul>
         </td>
     </tr>
     </tbody>
