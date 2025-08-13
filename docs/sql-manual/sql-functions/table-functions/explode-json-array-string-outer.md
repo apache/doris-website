@@ -1,17 +1,17 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_STRING",
+"title": "EXPLODE_JSON_ARRAY_STRING_OUTER",
 "language": "en"
 }
 ---
 
 ## Description
-The `explode_json_array_string` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode` function for processing. The behavior is equivalent to: `explode(cast(<json_array> as Array<STRING>))`.
+The `explode_json_array_string_outer` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode_outer` function for processing. The behavior is equivalent to: `explode_outer(cast(<json_array> as Array<STRING>))`.
 It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 ## Syntax
 ```sql
-EXPLODE_JSON_ARRAY_STRING(<json>)
+EXPLODE_JSON_ARRAY_STRING_OUTER(<json>)
 ```
 
 ## Parameters
@@ -19,7 +19,7 @@ EXPLODE_JSON_ARRAY_STRING(<json>)
 
 ## Return Value
 - Returns a single-column, multi-row result composed of all elements in `<json>`. The column type is `Nullable<STRING>`.
-- If `<json>` is NULL or an empty array (number of elements is 0), 0 rows are returned.
+- If `<json>` is NULL or an empty array (number of elements is 0), 1 row with NULL is returned.
 - If the elements in the JSON array are not of STRING type, the function will try to convert them to STRING. If conversion to STRING fails, the element will be converted to NULL. For type conversion rules, please refer to [JSON Type Conversion](../../basic-element/sql-data-types/conversion/json-conversion.md).
 
 ## Examples
@@ -35,7 +35,7 @@ EXPLODE_JSON_ARRAY_STRING(<json>)
     ```
 1. Regular parameters
     ```sql
-    select * from example lateral view explode_json_array_string('[4, "5", "abc", 5.23, null]') t2 as c;
+    select * from example lateral view explode_json_array_string_outer('[4, "5", "abc", 5.23, null]') t2 as c;
     ```
     ```text
     +------+------+
@@ -50,22 +50,34 @@ EXPLODE_JSON_ARRAY_STRING(<json>)
     ```
 2. Empty array
     ```sql
-    select * from example lateral view explode_json_array_string('[]') t2 as c;
+    select * from example lateral view explode_json_array_string_outer('[]') t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 3. NULL parameter
     ```sql
-    select * from example lateral view explode_json_array_string(NULL) t2 as c;
+    select * from example lateral view explode_json_array_string_outer(NULL) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 4. Non-array parameter
     ```sql
-    select * from example lateral view explode_json_array_string('{}') t2 as c;
+    select * from example lateral view explode_json_array_string_outer('{}') t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
