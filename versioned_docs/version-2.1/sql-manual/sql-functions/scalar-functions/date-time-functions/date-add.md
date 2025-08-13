@@ -45,6 +45,7 @@ Special cases:
 - Returns NULL if any parameter is NULL;
 - Returns NULL illegal units, or non-numerical `expr`;
 - Returns NULL if the calculated result is outside the range of the date type (e.g., before '0000-00-00').
+- If the next month has fewer days than the input date, it will be automatically set to the last day of the next month.
 
 ## Examples
 

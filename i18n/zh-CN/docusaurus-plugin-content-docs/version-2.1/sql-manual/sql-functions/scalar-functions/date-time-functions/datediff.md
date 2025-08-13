@@ -29,6 +29,7 @@ DATEDIFF(<expr1>, <expr2>)
 特殊情况:
 - expr1 大于 expr2 ,返回正数，反之返回负数
 - 若输入任一参数为 NULL, 返回 NULL.
+- 忽略时间部分
 
 ## 举例
 

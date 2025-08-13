@@ -29,6 +29,7 @@ Returns the value of expr1 - expr2, with the result precise to the day.
 Special cases:
 
 - If any parameter is NULL, return NULL.
+- ignore time part
 
 ## Example
 
