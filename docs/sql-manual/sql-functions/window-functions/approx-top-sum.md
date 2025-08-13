@@ -1,1 +1,0 @@
-../aggregate-functions/approx-top-sum.md

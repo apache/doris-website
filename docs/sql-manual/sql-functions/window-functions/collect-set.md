@@ -1,1 +1,0 @@
-../aggregate-functions/collect-set.md
