@@ -1565,6 +1565,14 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Variant Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+                                        "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "IP Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
