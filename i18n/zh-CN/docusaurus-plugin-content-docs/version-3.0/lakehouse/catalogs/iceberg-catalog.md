@@ -772,7 +772,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
     注意，由 Doris 创建的 Iceberg 表，Datetime 对应的是 `timestamp_ntz` 类型。
 
-    2.1.11 和 3.0.7 之后的版本中，Datetime 类型写入到 Parquet 文件时，物理类型使用的是 INT64 而非 INT96。
+    3.1.0 之后的版本中，Datetime 类型写入到 Parquet 文件时，物理类型使用的是 INT64 而非 INT96。
 
     此外，如果是其他系统创建的 Iceberg 表，虽然 `timestamp` 和 `timestamp_ntz` 类型都映射为 Doris 的 Datetime 类型。但在写入时，会根据实际类型判断是否需要处理时区。
 

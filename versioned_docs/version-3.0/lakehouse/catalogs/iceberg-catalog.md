@@ -763,7 +763,7 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
     Note that for the Iceberg table created by Doris, the Datetime corresponds to the `timestamp_ntz` type.
 
-    In versions after 2.1.11 and 3.0.7, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
+    In versions after 3.1.0, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
     
     And if the Iceberg table is created by other systems, although the `timestamp` and `timestamp_ntz` types are both mapped to the Doris Datetime type. However, when writing, it will determine whether the time zone needs to be processed based on the actual type.
 
