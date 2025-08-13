@@ -1,7 +1,7 @@
 ---
 {
     "title": "Data Update Overview",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
