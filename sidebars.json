@@ -989,7 +989,8 @@
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/date-time/DATE",
                                         "sql-manual/basic-element/sql-data-types/date-time/TIME",
-                                        "sql-manual/basic-element/sql-data-types/date-time/DATETIME"
+                                        "sql-manual/basic-element/sql-data-types/date-time/DATETIME",
+                                        "admin-manual/cluster-management/time-zone"
                                     ]
                                 },
                                 {
