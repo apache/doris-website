@@ -27,10 +27,10 @@ This is a more intelligent and automated mechanism. It establishes a warm-up rel
 
 **Applicable Scenarios:**
 
-- The core solution for read-write splitting architectures, systematically solving cache issues caused by Compaction and data ingestion.
-- Scenarios with high requirements for data consistency and query performance stability.
+- Most scenarios.
+- Requires user permission to configure warm-up relationships.
 
-> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up]()**.
+> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up]**.
 
 ### 2. Read-Only Compute Group Automatic Warm-up
 
@@ -38,30 +38,13 @@ This is a lightweight, automatic warm-up strategy. By enabling a configuration o
 
 **Applicable Scenarios:**
 
-- Simple to configure, serving as an alternative or supplement to proactive incremental warm-up.
-- Scenarios with low requirements for system configuration complexity.
+- Most scenarios.
+- Requires user permission to configure warm-up relationships.
 
 **Core Configuration:** In the `be.conf` of the read-only compute group, set:
 
 ```
 enable_warmup_immediately_on_new_rowset = true
-```
-
-### 3. Manual Warm-up
-
-Users can explicitly trigger a cache warm-up for a specified table or partition using the `WARM UP` command. This method is highly flexible and suitable for temporary, one-time warm-up needs.
-
-**Applicable Scenarios:**
-
-- Cold starts, for manually loading core hot data.
-- Temporary query acceleration for specific cold data partitions.
-
-**Example Usage:**
-
-```sql
--- Warm up the 'p20230101' partition of the 'example_table' table
-WARM UP COMPUTE GROUP destination_group WITH 
-        TABLE example_table PARTITION p20230101;
 ```
 
 ## II. Optimizing the Impact of Compaction / Schema Change on Query Performance
