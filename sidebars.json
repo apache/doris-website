@@ -505,6 +505,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
