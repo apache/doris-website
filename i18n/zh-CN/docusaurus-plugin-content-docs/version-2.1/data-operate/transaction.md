@@ -51,7 +51,7 @@ Label 通常被设置为 `业务逻辑+时间` 的格式。如 `my_business1_202
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load)，主要用于支持 Flink 写入 Doris 时的 EOS 语义。
+[StreamLoad 2PC](./transaction.md#stream-load-2pc)，主要用于支持 Flink 写入 Doris 时的 EOS 语义。
 
 ## 显式事务操作
 

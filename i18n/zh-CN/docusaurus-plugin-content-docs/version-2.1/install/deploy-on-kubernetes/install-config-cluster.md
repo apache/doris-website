@@ -23,7 +23,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu) 可供使用。
 
 **BE Image 设置**  
 
@@ -35,7 +35,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu) 可供使用。
 
 ### 副本数设定
 
@@ -49,7 +49,7 @@ spec:
     replicas: 5
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。
 
 **BE 副本数修改**
 
@@ -61,7 +61,7 @@ spec:
     replicas: 5
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。
 
 ### 计算资源设定
 
@@ -80,7 +80,7 @@ spec:
       memory: 16Gi
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。
 
 **BE 计算资源设定**
 
@@ -97,7 +97,7 @@ spec:
       memory: 32Gi
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中。
 
 :::tip 提示  
 FE 和 BE 所需要的最小启动资源为 4c 8Gi，如果需要进行正常能力测试，建议配置为 8c 8Gi。  
@@ -105,7 +105,7 @@ FE 和 BE 所需要的最小启动资源为 4c 8Gi，如果需要进行正常能
 
 ## 定制化启动配置
 
-在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../admin-manual/config/fe-config)和 [BE 配置文档](../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
+在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../admin-manual/config/fe-config)和 [BE 配置文档](../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
 
 ### FE 定制化启动配置
 
@@ -158,7 +158,7 @@ kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
 
 #### 第 2 步：配置 DorisCluster 资源
 
-以 fe-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
+以 fe-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
 
 ```yaml
 spec:
@@ -224,7 +224,7 @@ kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
 
 #### 第 2 步：配置 DorisCluster 资源
 
-以 be-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
+以 be-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
 
 ```yaml
 spec:
@@ -284,7 +284,7 @@ spec:
 
 #### FE 元数据持久化
 
-使用默认配置文件时，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
+使用默认配置文件时，需要在[部署的 DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
 
 ```yaml
 spec:
@@ -307,7 +307,7 @@ spec:
 
 #### FE 日志持久化
 
-使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中：
+使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中：
 
 ```yaml
 spec:
@@ -329,7 +329,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](./install-config-cluster.md./install-config-cluster.md#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置
@@ -340,7 +340,7 @@ spec:
 
 - 默认持久化存储路径  
 
-  如果 BE 使用默认配置，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
+  如果 BE 使用默认配置，需要在[部署的 DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
   ```yaml
   beSpec:
     persistentVolumes:
@@ -359,7 +359,7 @@ spec:
 
 - 多存储路径持久化
 
-  如果自定义配置中通过 `storage_root_path` 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下配置：
+  如果自定义配置中通过 `storage_root_path` 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下配置：
 
   ```yaml
   beSpec:
@@ -386,7 +386,7 @@ spec:
   
 #### BE 日志持久化
 
-使用默认配置文件时，在需要[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中，添加以下内容：
+使用默认配置文件时，在需要[部署的 DorisCluster 资源](./install-doris-cluster.md#第-2-步安装自定义部署模板)中，添加以下内容：
 
 ```yaml
 beSpec:
@@ -677,7 +677,7 @@ func main() {
 }
 ```
 
-将加密后的密码按照配置文件要求配置到 `fe.conf` 中，根据[集群参数配置章节](#fe-定制化启动配置)章节的说明，将配置文件以 `ConfigMap` 的形式下发到 Kubernetes 集群。
+将加密后的密码按照配置文件要求配置到 `fe.conf` 中，根据[集群参数配置章节](./install-config-cluster.md#fe-定制化启动配置)章节的说明，将配置文件以 `ConfigMap` 的形式下发到 Kubernetes 集群。
 
 #### 第 2 步：构建 DorisCluster 资源
 
@@ -866,7 +866,7 @@ spec:
   enableRestartWhenConfigChange: true
 ```
 如果 DorisCluster 资源含有上述配置，Doris Operator 将会进行如下处理：
-1. 监测 `DorisCluster` 资源部署的集群依赖的启动配置(通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](#定制化启动配置))是否发生变化。
+1. 监测 `DorisCluster` 资源部署的集群依赖的启动配置 (通过 ConfigMap 挂载，详情请查看[定制化启动配置章节](./install-config-cluster.md#定制化启动配置)) 是否发生变化。
 2. 启动配置变化后，自动重启相应服务来使配置生效。
 
 ### 使用范例
@@ -882,10 +882,10 @@ spec:
           configMapName: fe-configmap
     ```
 2. 更新 `fe-configmap` 里面指定的 FE 服务启动配置。  
-  当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值( FE 服务的启动配置)后，Doris Operator 自动滚动重启 FE 服务使配置生效。
+  当更新 `fe-configmap` 中 key 为 `fe.conf` 对应的值 ( FE 服务的启动配置) 后，Doris Operator 自动滚动重启 FE 服务使配置生效。
 
 ## 使用 Kerberos 认证
-Doris Operator 从 25.2.0 版本开始支持 Doris (2.1.9 和 3.0.4 及以后版本) 在 Kubernetes 使用 Kerberos 认证。 Doris 使用 Kerberos 认证需要使用 [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 和 [keytab 文件](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) 。
+Doris Operator 从 25.2.0 版本开始支持 Doris (2.1.9 和 3.0.4 及以后版本) 在 Kubernetes 使用 Kerberos 认证。Doris 使用 Kerberos 认证需要使用 [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) 和 [keytab 文件](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) 。
 Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret` 资源挂载 keytab 文件。使用 Kerberos 认证流程如下：
 1. 构建包含 krb5.conf 文件的 ConfigMap：
     ```shell
