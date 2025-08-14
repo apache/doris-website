@@ -124,6 +124,12 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | list                                   | array                |                                         |
 | other                                  | UNSUPPORTED          |                                         |
 
+> Note:
+>
+> Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
+>
+> You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is
+
 ## Examples
 
 ### Iceberg on Hive Metastore
@@ -763,7 +769,7 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
     Note that for the Iceberg table created by Doris, the Datetime corresponds to the `timestamp_ntz` type.
 
-    In versions after 2.1.11 and 3.0.7, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
+    In versions after 3.1.0, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
     
     And if the Iceberg table is created by other systems, although the `timestamp` and `timestamp_ntz` types are both mapped to the Doris Datetime type. However, when writing, it will determine whether the time zone needs to be processed based on the actual type.
 

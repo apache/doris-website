@@ -115,6 +115,8 @@ Doris当前支持的 LLM Function包括:
 
 - `LLM_EXTRACT`: 提取信息
 
+- `LLM_FILTER`：筛选信息
+
 - `LLM_FIXGRAMMAR`： 修改病句
 
 - `LLM_GENERATE`： 生成信息
@@ -122,6 +124,8 @@ Doris当前支持的 LLM Function包括:
 - `LLM_MASK`： 掩盖敏感信息
 
 - `LLM_SENTIMENT`： 情感分析
+
+- `LLM_SIMILARITY`： 文本语义相似性比较
 
 - `LLM_SUMMARIZE`： 文本摘要
 

@@ -60,17 +60,19 @@ name=test-doris-sink
 connector.class=org.apache.doris.kafka.connector.DorisSinkConnector
 topics=topic_test
 doris.topic2table.map=topic_test:test_kafka_tbl
-buffer.count.records=10000
-buffer.flush.time=120
-buffer.size.bytes=5000000
 doris.urls=10.10.10.1
 doris.http.port=8030
 doris.query.port=9030
 doris.user=root
 doris.password=
 doris.database=test_db
+buffer.count.records=10000
+buffer.flush.time=120
+buffer.size.bytes=5000000
+enable.combine.flush=true
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
+value.converter.schemas.enable=false
 ```
 
 启动 Standalone
@@ -89,7 +91,7 @@ $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standal
 配置 config/connect-distributed.properties
 
 ```properties
-# 修改 kafka server 地址
+# 修改 broker 地址
 bootstrap.servers=127.0.0.1:9092
 
 # 修改 group.id，同一集群的需要一致
@@ -123,17 +125,19 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector",
     "topics":"topic_test",
     "doris.topic2table.map": "topic_test:test_kafka_tbl",
-    "buffer.count.records":"10000",
-    "buffer.flush.time":"120",
-    "buffer.size.bytes":"5000000",
     "doris.urls":"10.10.10.1",
     "doris.user":"root",
     "doris.password":"",
     "doris.http.port":"8030",
     "doris.query.port":"9030",
     "doris.database":"test_db",
+    "enable.combine.flush": "true",
+    "buffer.count.records":"10000",
+    "buffer.flush.time":"120",
+    "buffer.size.bytes":"5000000",
     "key.converter":"org.apache.kafka.connect.storage.StringConverter",
-    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
   }
 }'
 ```
@@ -198,25 +202,24 @@ errors.deadletterqueue.topic.replication.factor=1
 | doris.password              | -                                    | -                                                                                    | Y            | Doris 密码                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | doris.database              | -                                    | -                                                                                    | Y            | 要写入的数据库。多个库时可以为空，同时在 topic2table.map 需要配置具体的库名称                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | doris.topic2table.map       | -                                    | -                                                                                    | N            | topic 和 table 表的对应关系，例：topic1:tb1,topic2:tb2<br />默认为空，表示 topic 和 table 名称一一对应。 <br />  多个库的格式为 topic1:db1.tbl1,topic2:db2.tbl2                                                                                                                                                                                                                                                                                                                                                                                                                |
-| buffer.count.records        | -                                    | 50000                                                                                | N            | 在 flush 到 doris 之前，每个 Kafka 分区在内存中缓冲的记录数。默认 50000 条记录                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| buffer.count.records        | -                                    | 50000                                                                                | N            | 单次 Stream Load 写入的条数。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | buffer.flush.time           | -                                    | 120                                                                                  | N            | buffer 刷新间隔，单位秒，默认 120 秒                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| buffer.size.bytes           | -                                    | 10485760(100MB)                                                                      | N            | 每个 Kafka 分区在内存中缓冲的记录的累积大小，单位字节，默认 100MB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| buffer.size.bytes           | -                                    | 104857600(100MB)                                                                      | N            | 单次 Stream Load 写入的数据大小。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| enable.combine.flush | `true`,<br/> `false`| false | N | 是否将所有分区的数据合并在一起写入。默认值为 false。开启后只能保证 at_least_once 语义。|
 | jmx                         | -                                    | true                                                                                 | N            | 通过 JMX 获取 Connector 内部监控指标，请参考：[Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/zh-CN/Doris-Connector-JMX.md)                                                                                                                                                                                                                                                                                                                                                                                            |
-| enable.2pc                  | -                                    | true                                                                                 | N            | 是否开启 Stream Load 的两阶段提交 (TwoPhaseCommit)，默认为 true。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| enable.delete               | -                                    | false                                                                                | N            | 是否同步删除记录，默认 false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | label.prefix                | -                                    | ${name}                                                                              | N            | Stream load 导入数据时的 label 前缀。默认为 Connector 应用名称。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | auto.redirect               | -                                    | true                                                                                 | N            | 是否重定向 StreamLoad 请求。开启后 StreamLoad 将通过 FE 重定向到需要写入数据的 BE，并且不再显示获取 BE 信息                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | sink.properties.*           | -                                    | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Stream Load 的导入参数。<br />例如：定义列分隔符`'sink.properties.column_separator':','`  <br />详细参数参考[这里](../data-operate/import/import-way/stream-load-manual.md)。  <br/><br/> **开启 Group Commit**，例如开启 sync_mode 模式的 group commit：`"sink.properties.group_commit":"sync_mode"`。Group Commit 可以配置 `off_mode`、`sync_mode`、`async_mode` 三种模式，具体使用参考：[Group-Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/) <br/><br/>  **开启部分列更新**，例如开启更新指定 col2 的部分列：`"sink.properties.partial_columns":"true"`, `"sink.properties.columns": "col2",` |
 | delivery.guarantee          | `at_least_once`,<br/> `exactly_once` | at_least_once                                                                        | N            | 消费 Kafka 数据导入至 doris 时，数据一致性的保障方式。支持 `at_least_once` `exactly_once`，默认为 `at_least_once` 。Doris 需要升级至 2.1.0 以上，才能保障数据的 `exactly_once`                                                                                                                                                                                                                                                                                                                                                                                                           |
 | converter.mode              | `normal`,<br/> `debezium_ingestion`  | normal                                                                               | N            | 使用 Connector 消费 Kafka 数据时，上游数据的类型转换模式。 <br/> ```normal```表示正常消费 Kafka 中的数据，不经过任何类型转换。 <br/> ```debezium_ingestion```表示当 Kafka 上游的数据通过 Debezium 等 CDC（Changelog Data Capture，变更数据捕获）工具采集时，上游数据需要经过特殊的类型转换才能支持。                                                                                                                                                                                                                                                                                                                                 |
 | debezium.schema.evolution   | `none`,<br/> `basic`                 | none                                                                                 | N            | 通过 Debezium 采集上游数据库系统（如 MySQL），发生结构变更时，可以将增加的字段同步到 Doris 中。<br/>`none`表示上游数据库系统发生结构变更时，不同步变更后的结构到 Doris 中。 <br/>  `basic`表示同步上游数据库的数据变更操作。由于列结构变更是一个危险操作（可能会导致误删 Doris 表结构的列），目前仅支持同步上游增加列的操作。当列被重命名后，则旧列保持原样，Connector 会在目标表中新增一列，将重命名后的新增数据 Sink 到新列中。                                                                                                                                                                                                                                                                                       |
+| enable.delete               | -                                    | false                                                                                | N            | Debezium 同步下，是否同步删除记录，默认 false，非 Debezium 同步下，需要在消息中拼接删除标记                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | database.time_zone          | -                                    | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | avro.topic2schema.filepath  | -                                    | -                                                                                    | N            | 通过读取本地提供的 Avro Schema 文件，来解析 Topic 中的 Avro 文件内容，实现与 Confluent 提供 Schema 注册中心解耦。<br/> 此配置需要与 `key.converter` 或 `value.converter` 前缀一起使用，例如配置 avro-user、avro-product Topic 的本地 Avro Schema 文件如下： `"value.converter.avro.topic2schema.filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` <br/> 具体使用可以参考：[#32](https://github.com/apache/doris-kafka-connector/pull/32)                                                                                                                                 |
-| record.tablename.field      | -                                    | -                                                                                    | N            | 开启该参数后，可实现一个 Topic 的数据流向多个 Doris 表。配置详情参考：[#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| enable.combine.flush | `true`,<br/> `false` | false | N | 是否将所有分区的数据合并在一起写入。默认值为 false。开启后只能保证 at_least_once 语义。|
-| max.retries                 | -                                    | 10                                                                                   | N            | 任务失败前重试错误的最大次数。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| retry.interval.ms           | -                                    | 6000                                                                                 | N            | 发生错误后，尝试重试之前的等待时间，单位为毫秒，默认6000毫秒。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| behavior.on.null.values     | `ignore`,<br/> `fail`                | ignore                                                                               | N            | 如何处理null值的记录，默认跳过不处理。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| record.tablename.field      | -                                    | -                                                                                    | N            | 开启该参数后，可实现一个 Topic 的数据流向多个 Doris 表。配置详情参考：[#58](https://github.com/apache/doris-kafka-connector/pull/58)                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| max.retries                 | -                                    | 10                                                                                   | N            | 任务失败前重试错误的最大次数。                                                                                                                                                                                                                                                                                       |
+| retry.interval.ms           | -                                    | 6000                                                                                 | N            | 发生错误后，尝试重试之前的等待时间，单位为毫秒，默认 6000 毫秒。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| behavior.on.null.values     | `ignore`,<br/> `fail`                | ignore                                                                               | N            | 如何处理 null 值的记录，默认跳过不处理。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 其他 Kafka Connect Sink 通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
@@ -298,17 +301,19 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
    "tasks.max":"10",
    "topics":"test-data-topic",
    "doris.topic2table.map": "test-data-topic:test_kafka_connector_tbl",
-   "buffer.count.records":"10000",
-   "buffer.flush.time":"120",
-   "buffer.size.bytes":"5000000",
    "doris.urls":"10.10.10.1",
    "doris.user":"root",
    "doris.password":"",
    "doris.http.port":"8030",
    "doris.query.port":"9030",
    "doris.database":"test_db",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"120",
+   "buffer.size.bytes":"5000000",
+   "enable.combine.flush": "true",
    "key.converter":"org.apache.kafka.connect.storage.StringConverter",
-   "value.converter":"org.apache.kafka.connect.storage.StringConverter"
+   "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+   "value.converter.schemas.enable": "false"
    }
    }'
    ```
@@ -349,15 +354,16 @@ insert into test.test_user values(3,'wangwu',22);
    "tasks.max":"10",
    "topics":"mysql_debezium.test.test_user",
    "doris.topic2table.map": "mysql_debezium.test.test_user:test_user",
-   "buffer.count.records":"10000",
-   "buffer.flush.time":"120",
-   "buffer.size.bytes":"5000000",
    "doris.urls":"10.10.10.1",
    "doris.user":"root",
    "doris.password":"",
    "doris.http.port":"8030",
    "doris.query.port":"9030",
    "doris.database":"test_db",
+   "buffer.count.records":"10000",
+   "buffer.flush.time":"30",
+   "buffer.size.bytes":"5000000",
+   "enable.combine.flush": "true",
    "converter.mode":"debezium_ingestion",
    "enable.delete":"true",
    "key.converter":"org.apache.kafka.connect.json.JsonConverter",
@@ -375,16 +381,16 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "topics":"avro_topic", 
     "tasks.max":"10",
     "doris.topic2table.map": "avro_topic:avro_tab", 
-    "buffer.count.records":"100000", 
-    "buffer.flush.time":"120", 
-    "buffer.size.bytes":"10000000", 
     "doris.urls":"127.0.0.1", 
     "doris.user":"root", 
     "doris.password":"", 
     "doris.http.port":"8030", 
     "doris.query.port":"9030", 
     "doris.database":"test", 
-    "load.model":"stream_load",
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "enable.combine.flush": "true",
     "key.converter":"io.confluent.connect.avro.AvroConverter",
     "key.converter.schema.registry.url":"http://127.0.0.1:8081",
     "value.converter":"io.confluent.connect.avro.AvroConverter",
@@ -402,16 +408,16 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "topics":"proto_topic", 
     "tasks.max":"10",
     "doris.topic2table.map": "proto_topic:proto_tab", 
-    "buffer.count.records":"100000", 
-    "buffer.flush.time":"120", 
-    "buffer.size.bytes":"10000000", 
     "doris.urls":"127.0.0.1", 
     "doris.user":"root", 
     "doris.password":"", 
     "doris.http.port":"8030", 
     "doris.query.port":"9030", 
     "doris.database":"test", 
-    "load.model":"stream_load",
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000",
+    "enable.combine.flush": "true", 
     "key.converter":"io.confluent.connect.protobuf.ProtobufConverter",
     "key.converter.schema.registry.url":"http://127.0.0.1:8081",
     "value.converter":"io.confluent.connect.protobuf.ProtobufConverter",
@@ -442,8 +448,8 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "tasks.max": "1",  
     "topics": "users",  
     "doris.topic2table.map": "users:kf_users",  
-    "buffer.count.records": "10",    
-    "buffer.flush.time": "11",       
+    "buffer.count.records": "10000",    
+    "buffer.flush.time": "10",       
     "buffer.size.bytes": "5000000",  
     "doris.urls": "127.0.0.1:8030", 
     "doris.user": "root",                

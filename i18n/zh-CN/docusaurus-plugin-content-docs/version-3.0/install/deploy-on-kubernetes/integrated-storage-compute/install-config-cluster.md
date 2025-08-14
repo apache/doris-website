@@ -997,7 +997,7 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabPath: ${keytabPath}
     ```
    ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
-   catalog 请参考配置 [Hive Catalog](../../../lakehouse/datalake-analytics/hive.md#catalog-配置) 文档。
+   catalog 请参考配置 [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.md#配置-catalog) 文档。
 
 ## 配置共享存储
 Doris Operator 从 25.4.0 版本开始支持为多个组件的所有 Pod 挂载一个 `ReadWriteMany` 的共享存储。使用前请提前创建好共享存储 `PersistentVolume` 和 `PersistentVolumeClaim` 资源，在部署 Doris 集群之前按照如下配置 `DorisCluster` 资源：
@@ -1017,3 +1017,36 @@ spec:
 :::tip 提示
 `mountPath` 支持使用 `${DORIS_HOME}` 作为路径前缀。当 `mountPath` 使用 `${DORIS_HOME}` 作为前缀使用时，在 FE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/fe`; 在 BE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/be`。
 :::
+
+## 配置探测超时
+`DorisCluster` 为每种服务提供两种探测超时配置：启动探测超时配置，存活探测超时配置。当服务启动时间超过配置的启动探测超时时间时，则认定服务启动失败并重新启动服务。当服务超过存活探测时间没有响应时，Pod 会被自动重启。
+### 启动探测超时配置
+- FE 服务启动探测超时配置
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+  以上配置将 FE 的启动超时设置为 3600 秒。
+- BE 服务启动探测超时配置
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+  以上配置将 BE 的启动超时设置为 3600 秒。
+### 存活探测超时配置
+- FE 服务存活探测超时配置
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+  以上配置将 FE 的存活超时设置为 60 秒。
+- BE 服务存活探测超时配置
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+  以上配置将 BE 的存活超时设置为 60 秒。

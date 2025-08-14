@@ -563,6 +563,10 @@
     "message": "JSON 函数",
     "description": "The label for category JSON Functions in sidebar docs"
   },
+  "sidebar.docs.category.VARIANT Functions": {
+    "message": "VARIANT 函数",
+    "description": "The label for category VARIANT Functions in sidebar docs"
+  },
   "sidebar.docs.category.IP Functions": {
     "message": "IP 函数",
     "description": "The label for category IP Functions in sidebar docs"
