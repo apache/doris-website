@@ -17,10 +17,10 @@ MAP( <key1> , <value1> [, <key2>,<value2> ... ])
 
 ## Parameters
 
-| Parameter | Description |
-| -- | -- |
-| `<key>` | Constructing the key of the map |
-| `<value>` | Constructing the value of the map |
+| Parameter | Description                                     |
+| -- |-------------------------------------------------|
+| `<key>` | Constructing the key of the map, case sensitive |
+| `<value>` | Constructing the value of the map               |
 
 ## Return Value
 

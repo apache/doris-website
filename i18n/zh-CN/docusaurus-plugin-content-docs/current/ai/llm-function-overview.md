@@ -44,6 +44,9 @@ under the License.
 - [LLM_EXTRACT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-extract)：
 根据文本内容，为每个给定标签提取相关信息。
 
+- [LLM_FILTER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-filter):
+判断文本内容是否正确，返回值为bool类型。
+
 - [LLM_FIXGRAMMAR](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar)：
 修复文本中的语法、拼写错误。
 
@@ -55,6 +58,9 @@ under the License.
 
 - [LLM_SENTIMENT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment)：
 分析文本情感倾向，返回值为`positive`、`negative`、`neutral`、`mixed`其中之一。
+
+- [LLM_SIMILARITY](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity)：
+判断两文本的语义相似度，返回值为 0 - 10 之间的浮点数，值越大代表语义越相似。
 
 - [LLM_SUMMARIZE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize)：
 对文本进行高度总结概括。
@@ -132,6 +138,8 @@ SET default_llm_resource='llm_resource_name';
 
 3. 执行 SQL 查询
 
+case1:
+
 假设存在如下数据表，表中存储了与数据库相关的文档内容：
 
 ```sql
@@ -173,11 +181,67 @@ FROM doc_pool ORDER BY score DESC LIMIT 10;
 +---------------------------------------------------------------------------------------------------------------+-------+
 ```
 
+case2:
+
+以下表模拟在招聘时的候选人简历和职业要求
+```sql
+CREATE TABLE candidate_profiles (
+    candidate_id INT,
+    name         VARCHAR(50),
+    self_intro   VARCHAR(500)
+)
+DUPLICATE KEY(candidate_id)
+DISTRIBUTED BY HASH(candidate_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+CREATE TABLE job_requirements (
+    job_id   INT,
+    title    VARCHAR(100),
+    jd_text  VARCHAR(500)
+)
+DUPLICATE KEY(job_id)
+DISTRIBUTED BY HASH(job_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO candidate_profiles VALUES
+(1, 'Alice', 'I am a senior backend engineer with 7 years of experience in Java, Spring Cloud and high-concurrency systems.'),
+(2, 'Bob',   'Frontend developer focusing on React, TypeScript and performance optimization for e-commerce sites.'),
+(3, 'Cathy', 'Data scientist specializing in NLP, large language models and recommendation systems.');
+
+INSERT INTO job_requirements VALUES
+(101, 'Backend Engineer', 'Looking for a senior backend engineer with deep Java expertise and experience designing distributed systems.'),
+(102, 'ML Engineer',      'Seeking a data scientist or ML engineer familiar with NLP and large language models.');
+```
+
+可以通过LLM_FILTER把职业要求和候选人简介做语义匹配，筛选出合适的候选人
+```sql
+SELECT
+    c.candidate_id, c.name,
+    j.job_id, j.title
+FROM candidate_profiles AS c
+JOIN job_requirements AS j
+WHERE LLM_FILTER(CONCAT('Does the following candidate self-introduction match the job description?', 
+                'Job: ', j.jd_text, ' Candidate: ', c.self_intro));
+```
+
+```text
++--------------+-------+--------+------------------+
+| candidate_id | name  | job_id | title            |
++--------------+-------+--------+------------------+
+|            3 | Cathy |    102 | ML Engineer      |
+|            1 | Alice |    101 | Backend Engineer |
++--------------+-------+--------+------------------+
+```
+
 ## 设计原理
 
 ### 函数执行流程
 
-![LLM函数执行流程图](https://i.ibb.co/mrXND0Kj/2025-08-06-14-12-18.png)
+![LLM函数执行流程图](/images/LLM-function-flowchart.png)
 
 说明：
 

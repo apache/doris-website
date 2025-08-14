@@ -1,1 +1,0 @@
-../aggregate-functions/linear-histogram.md
