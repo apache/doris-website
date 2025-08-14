@@ -126,8 +126,14 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
     </tr>
     <tr>
         <td><strong>Real-time Updates</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>Features a strongly consistent primary key storage model, supporting synchronous data updates and deletions</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>Only supports asynchronous updates, allowing old values to be read after an update.</li></ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>Features a strongly consistent primary key storage model, supporting synchronous data updates and deletions</li>
+            <li style={{fontSize:'14px'}}>Implements Merge-On-Write for unique keys with a delete bitmap, ensuring query performance remains unaffected.</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>Only supports asynchronous updates, allowing old values to be read after an update.</li>
+            <li style={{fontSize:'14px'}}>Synchronous updates are possible using the <code>FINAL</code> keyword, but this significantly degrades query performance.</li>
+        </ul></td>
     </tr>
     <tr>
         <td><strong>Data API</strong></td>
@@ -144,7 +150,7 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
         <td><ul><li style={{fontSize:'14px'}}>Supports automatic scaling in, scaling out, and replica balancing</li></ul></td>
         <td><ul><li style={{fontSize:'14px'}}>Requires manual rebalancing during scaling operations</li></ul></td>
     </tr>
-       <tr>
+    <tr>
         <td><strong>Performance</strong></td>
         <td>
         <ul>
@@ -157,6 +163,32 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
             <li style={{fontSize:'14px'}}>In terms of ClickBench performance, ClickHouse and Doris have been taking turns leading</li>
             <li style={{fontSize:'14px'}}>Experiences many OOM (Out of Memory) queries in large TPC-H and TPC-DS tests</li>
         </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Storage-Compute Separation</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Available as an open-source feature since version 3.0</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Not supported in the open-source version</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Open Source</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Fully open source under the Apache Software Foundation; license and governance are community-driven and cannot be changed by any single entity.</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Open source, but controlled by a commercial company.</li>
+            </ul>
         </td>
     </tr>
     </tbody>
