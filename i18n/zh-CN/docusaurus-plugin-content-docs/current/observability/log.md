@@ -54,7 +54,7 @@ under the License.
 - BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 680 GB SSD 盘
 - S3 对象存储空间：即为预估冷数据存储空间，600 TB
 
-使用存算分离模式，写入和热数据存储只需要 1副本，能够显著降低成本。
+使用存算分离模式，写入和热数据存储只需要 1 副本，能够显著降低成本。
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
@@ -136,7 +136,7 @@ under the License.
 **配置分区分桶参数**
 
 分区按照以下说明配置：
-- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为排序 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶按照以下说明配置：

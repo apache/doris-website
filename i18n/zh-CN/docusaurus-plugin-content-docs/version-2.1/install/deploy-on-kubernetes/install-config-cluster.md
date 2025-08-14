@@ -329,7 +329,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](./install-config-cluster.md./install-config-cluster.md#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](./install-config-cluster.md#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置
