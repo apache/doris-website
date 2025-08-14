@@ -45,7 +45,7 @@ The user who executes this SQL must have at least the following permissions:
 
 | Privilege  | Object | Notes |
 |------------|----|----|
-| ADMIN_PRIV |    |    |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Usage Notes
 
