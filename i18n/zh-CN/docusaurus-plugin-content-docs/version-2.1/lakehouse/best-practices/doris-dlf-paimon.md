@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 集成阿里云 DLF",
+    "title": "Doris 集成阿里云 DLF Rest Catalog",
     "language": "zh-CN"
 }
 
