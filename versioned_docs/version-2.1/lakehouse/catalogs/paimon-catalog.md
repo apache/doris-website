@@ -124,6 +124,12 @@ The currently dependent Paimon version is 1.0.0.
 | row                                | struct        |                                                                         |
 | other                              | UNSUPPORTED   |                                                                         |
 
+> Note:
+>
+> Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
+>
+> You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
+
 ## Examples
 
 ### Paimon on HDFS

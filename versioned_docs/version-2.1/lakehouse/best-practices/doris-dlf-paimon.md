@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Integration with Aliyun DLF",
+    "title": "Integration with Aliyun DLF Rest Catalog",
     "language": "en"
 }
 
