@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_WITH_CONSTANT",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

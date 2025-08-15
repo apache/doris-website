@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_SUM",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
