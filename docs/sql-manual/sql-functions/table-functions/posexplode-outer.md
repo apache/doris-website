@@ -1,18 +1,18 @@
 ---
 {
-"title": "POSEXPLODE",
+"title": "POSEXPLODE_OUTER",
 "language": "en"
 }
 ---
 
 ## Description
-The `posexplode` table function expands the `<array>` column into multiple rows and adds a column indicating the position, returning a [`STRUCT`](../../basic-element/sql-data-types/semi-structured/STRUCT.md) type.
+The `posexplode_outer` table function expands the `<array>` column into multiple rows and adds a column indicating the position, returning a [`STRUCT`](../../basic-element/sql-data-types/semi-structured/STRUCT.md) type.
 It should be used together with Lateral View and supports multiple Lateral Views.
-The main difference between `posexplode` and [`posexplode_outer`](./posexplode-outer.md) is how they handle null values.
+The main difference between `posexplode_outer` and [`posexplode`](./posexplode.md) is how they handle null values.
 
 ## Syntax
 ```sql
-POSEXPLODE(<array>)
+POSEXPLODE_OUTER(<array>)
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ POSEXPLODE(<array>)
     ```
 1. Regular parameters
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([1, 2, null, 4, 5]) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([1, 2, null, 4, 5]) t2 as c;
     ```
     ```text
     +------+-----------------------+
@@ -52,7 +52,7 @@ POSEXPLODE(<array>)
     +------+-----------------------+
     ```
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([1, 2, null, 4, 5]) t2 as pos, value;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([1, 2, null, 4, 5]) t2 as pos, value;
     ```
     ```text
     +------+------+-------+
@@ -67,22 +67,26 @@ POSEXPLODE(<array>)
     ```
 2. Empty array
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([]) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([]) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 3. NULL parameter
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode(NULL) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer(NULL) t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode function but got NULL
+    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode_outer function but got NULL
     ```
 4. Non-array parameter
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode('abc') t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer('abc') t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode function but got VARCHAR(3)
+    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode_outer function but got VARCHAR(3)
     ```

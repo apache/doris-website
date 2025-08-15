@@ -1868,6 +1868,7 @@
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
                                 "sql-manual/sql-functions/table-functions/explode-split",
+                                "sql-manual/sql-functions/table-functions/explode-split-outer",
                                 "sql-manual/sql-functions/table-functions/posexplode"
                             ]
                         },
