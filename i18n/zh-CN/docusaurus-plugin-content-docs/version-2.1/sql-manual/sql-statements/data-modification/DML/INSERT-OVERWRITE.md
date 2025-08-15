@@ -26,7 +26,7 @@ INSERT OVERWRITE table table_name
 > partitions: 需要重写的目标分区，支持两种形式：
 >
 >> 1. 分区名。必须是 `table_name` 中存在的分区，多个分区名称用逗号分隔。
->> 2. 星号 (*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。该功能自 Apache Doris 2.1.3 版本开始支持。
+>> 2. 星号 (*)。开启[自动检测分区](./INSERT-OVERWRITE.md#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。该功能自 Apache Doris 2.1.3 版本开始支持。
 >
 > label: 为 Insert 任务指定一个 label
 >
@@ -286,7 +286,7 @@ mysql> select * from test order by k0;
 3 rows in set (0.20 sec)
 ```
 
-可以看到，数据 3、1234 所在的分区 `p10` 和 `pMAX` 中的全部数据均被覆写，而 `p100` 分区未发生变化。该操作可以理解为 INSERT OVERWRITE 操作时通过 PARTITION 子句指定覆写特定分区的语法糖，它的实现原理与[指定重写特定分区](#overwrite-table-partition)相同。通过 `PARTITION(*)` 的语法，在覆写大量分区数据时我们可以免于手动填写全部分区名的繁琐。
+可以看到，数据 3、1234 所在的分区 `p10` 和 `pMAX` 中的全部数据均被覆写，而 `p100` 分区未发生变化。该操作可以理解为 INSERT OVERWRITE 操作时通过 PARTITION 子句指定覆写特定分区的语法糖，它的实现原理与[指定重写特定分区](./INSERT-OVERWRITE.md#overwrite-table-partition)相同。通过 `PARTITION(*)` 的语法，在覆写大量分区数据时我们可以免于手动填写全部分区名的繁琐。
 
 ## 关键词
 
