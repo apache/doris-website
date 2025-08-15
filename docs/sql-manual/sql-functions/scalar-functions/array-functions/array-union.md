@@ -7,7 +7,7 @@
 
 ## Function
 
-`ARRAY_UNION` is used to return the union of multiple arrays, that is, to merge all elements that appear in the arrays and form a new array after deduplication.
+`ARRAY_UNION` returns the union of multiple arrays, i.e., merges all elements from the arrays, removes duplicates, and returns a new array.
 
 ## Syntax
 
@@ -18,24 +18,24 @@ ARRAY_UNION(arr1, arr2, ..., arrN)
 ## Parameters
 
 - `arr1, arr2, ..., arrN`: Any number of array inputs, all of type `ARRAY<T>`.
-    - The element types `T` of all arrays must be the same, or can be implicitly converted to a unified type.
-    - The type `T` does not support semi-structured types.
-    - Parameters can be constants or variables.
-
+    - The element type `T` of all arrays must be the same, or implicitly convertible to a unified type.
+    - The element type `T` can be numeric, string, date/time, or IP type.
+  
 ## Return Value
 
-- Returns a new array of type `ARRAY<T>`, containing all unique elements from the input arrays, i.e., the deduplicated union.
-    - If any parameter is `NULL`, returns `NULL` (see examples).
+- Returns a new array of type `ARRAY<T>` containing all unique elements from the input arrays (duplicates removed).
+    - If any input parameter is `NULL`, returns `NULL` (see example).
 
 ## Usage Notes
 
-1. Deduplication of elements relies on equality comparison (using the = operator).
-2. Only one `NULL` is retained in the array result (see examples).
-3. The order of the array result is indeterminate.
+1. Duplicate removal is based on equality comparison (`=` operator).
+2. Only one `NULL` will be kept in the result array (see example).
+3. If the input array itself contains multiple identical elements, only one will be kept (see example).
+4. The order of elements in the result array is not guaranteed.
 
 ## Examples
 
-1. Simple examples
+1. Simple example
 
     ```SQL
     SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world')); 
@@ -53,8 +53,8 @@ ARRAY_UNION(arr1, arr2, ..., arrN)
     +---------------------------------------------+
     ```
 
-2. When the input array is `NULL`
-
+2. If any input array is `NULL`, returns `NULL`
+   
     ```SQL
     SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world'), NULL); 
     +---------------------------------------------------------------------+
@@ -64,7 +64,7 @@ ARRAY_UNION(arr1, arr2, ..., arrN)
     +---------------------------------------------------------------------+
     ```
 
-3. When the input array contains `NULL`
+3. If input arrays contain `NULL`, the output array will contain only one `NULL`
 
     ```SQL
     SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)); 
@@ -80,4 +80,15 @@ ARRAY_UNION(arr1, arr2, ..., arrN)
     +---------------------------------------------------------+
     | [null, "world", "hello"]                                |
     +---------------------------------------------------------+
+    ```
+
+4. If an array contains duplicate elements, only one will be returned
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world', 'hello'), ARRAY('hello', NULL)); 
+    +------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)) |
+    +------------------------------------------------------------+
+    | [null, "world", "hello"]                                   |
+    +------------------------------------------------------------+
     ```

@@ -7,7 +7,7 @@
 
 ## 功能
 
-`ARRAYS_OVERLAP` 用于判断两个数组是否存在至少一个**相同的非空元素**，如果存在返回 `true`，否则返回 `false`。
+`ARRAYS_OVERLAP` 用于判断两个数组是否存在至少一个相同的元素，如果存在返回 `true`，否则返回 `false`。
 
 ## 语法
 
@@ -22,8 +22,7 @@ ARRAYS_OVERLAP(arr1, arr2)
 - `arr2`：第二个数组，类型为 `ARRAY<T>`。
 
     - 两个数组的元素类型 `T` 必须一致或可以相互隐式转换。
-    - 两个数组的元素类型 `T` 不能是半结构化类型。
-    - 参数可以是构造的常量，也可以是变量。
+    - 两个数组的元素类型 `T` 可以是数值类型、字符串类型、时间类型、IP类型。
 
 ## 返回值
 
@@ -31,14 +30,12 @@ ARRAYS_OVERLAP(arr1, arr2)
 
     - 如果两个数组有交集，返回 `true`；
 
-    - 如果没有交集，返回 `false`；
-
-    - 如果任一参数为 `NULL`，则返回 `NULL` (见示例)。
+    - 如果没有交集，返回 `false`。
 
 ## 使用说明
 
 1. **比较方式使用元素的等值判断（= 运算符）**。
-2. **如果没有相同的非空元素，当数组的元素中包含 `NULL` 时，返回值是 `NULL`**（具体见示例）。
+2. **`NULL`和`NULL`在这个函数中被认为是相等的**（具体见示例）。
 3. 可以在建表语句中指定**倒排索引来加速函数的执行**（具体见示例）。
    - 函数作谓词判断条件使用时，倒排索引会加速函数的执行。
    - 当函数作查询结果使用时，倒排索引不会加速函数的执行。
@@ -46,7 +43,7 @@ ARRAYS_OVERLAP(arr1, arr2)
 
 ## 示例
 
-1. 简单示例：
+1. 简单示例
 
     ```SQL
     SELECT ARRAYS_OVERLAP(ARRAY('hello', 'aloha'), ARRAY('hello', 'hi', 'hey'));
@@ -64,14 +61,14 @@ ARRAYS_OVERLAP(arr1, arr2)
     +----------------------------------------------------------------+
     ```
 
-2. 错误参数，当输入的参数是不支持的类型时，返回 `INVALID_ARGUMENT`。
+2. 错误参数，当输入的参数是不支持的类型时，返回 `INVALID_ARGUMENT`
 
     ```SQL
     -- [INVALID_ARGUMENT]execute failed, unsupported types for function arrays_overlap
     SELECT ARRAYS_OVERLAP(ARRAY(ARRAY('hello', 'aloha'), ARRAY('hi', 'hey')), ARRAY(ARRAY('hello', 'hi', 'hey'), ARRAY('aloha', 'hi')));
     ```
 
-3. 输入的`ARRAY` 是 `NULL`，返回值是 `NULL`。
+3. 输入的`ARRAY` 是 `NULL`，返回值是 `NULL`
 
     ```SQL
     SELECT ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), NULL);
@@ -89,7 +86,7 @@ ARRAYS_OVERLAP(arr1, arr2)
     +----------------------------+
     ```'
 
-4. 输入的`ARRAY` 包含 `NULL` 时，如果存在相同非空元素时，返回值是 `True`，不存在则返回 `NULL`。
+4. 输入的`ARRAY` 包含 `NULL` 时，`NULL` 和 `NULL`被视作相等
    
    ```SQL
     SELECT ARRAYS_OVERLAP(ARRAY('HELLO', 'ALOHA'), ARRAY('HELLO', NULL));
@@ -103,14 +100,14 @@ ARRAYS_OVERLAP(arr1, arr2)
     +----------------------------------------------------------------+
     | ARRAYS_OVERLAP(ARRAY('PICKLE', 'ALOHA'), ARRAY('HELLO', NULL)) |
     +----------------------------------------------------------------+
-    |                                                           NULL |
+    |                                                             0  |
     +----------------------------------------------------------------+
 
     SELECT ARRAYS_OVERLAP(ARRAY(NULL), ARRAY('HELLO', NULL));
     +---------------------------------------------------+
     | ARRAYS_OVERLAP(ARRAY(NULL), ARRAY('HELLO', NULL)) |
     +---------------------------------------------------+
-    |                                              NULL |
+    |                                                 1 |
     +---------------------------------------------------+
     ```'
 

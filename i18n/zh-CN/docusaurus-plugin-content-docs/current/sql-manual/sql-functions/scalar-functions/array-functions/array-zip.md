@@ -18,8 +18,6 @@ ARRAY_ZIP(arr1, arr2, ... , arrN)
 ## 参数
 
 - `arr1, arr2, ..., arrN`：输入的 N 个数组，类型为 `ARRAY<T1>, ARRAY<T2>, ..., ARRAY<Tn>`。
-    - 输入的参数可以是构造的常量，也可以是变量。
-    - 某一个数组为 NULL 时，函数结果为 NULL（见示例）。
 
 ## 返回值
 
@@ -60,7 +58,7 @@ ARRAY_ZIP(arr1, arr2, ... , arrN)
     +---------------------------------------------------------------+
     ```
 
-3. 某一个数组为NULL
+3. 某一个数组为`NULL`，返回 `NULL`
 
     ```SQL
     SELECT ARRAY_ZIP(ARRAY(23, 24, 25), ARRAY("John", "Jane", "Jim"), NULL) ;
@@ -71,7 +69,7 @@ ARRAY_ZIP(arr1, arr2, ... , arrN)
     +------------------------------------------------------------------+
     ```
 
-4. ARRAY 中的元素含有 NULL
+4. `ARRAY` 中的元素含有 `NULL`, 对应的 `STRUCT` 的那一列是 `NULL`
    
     ```SQL
      SELECT ARRAY_ZIP(ARRAY(23, NULL, 25), ARRAY("John", "Jane", NULL), ARRAY(NULL, false, true));

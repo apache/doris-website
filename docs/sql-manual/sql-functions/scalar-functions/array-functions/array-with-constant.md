@@ -1,13 +1,13 @@
 ---
 {
     "title": "ARRAY_WITH_CONSTANT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
 ## Function
 
-`ARRAY_WITH_CONSTANT` is used to generate an array of a specified length where all elements are the given value.
+`ARRAY_WITH_CONSTANT` is used to generate an array of a specified length, where all elements have the given value.
 
 ## Syntax
 
@@ -17,24 +17,21 @@ ARRAY_WITH_CONSTANT(count, element)
 
 ## Parameters
 
-- `count`: An integer type that specifies the length of the returned array.
-    - The range of `count` is `[0, 1000000]`; otherwise, it will return an error `INVALID_ARGUMENT`.
-    - It can be a constructed constant or a variable.
+- `count`: Integer type, specifies the length of the returned array.
 
-- `element`: A value of any type used to fill the array.
-    - It can be a constructed constant or a variable.
+- `element`: Any storage type supported in an `ARRAY`.
 
 ## Return Value
 
 - Returns an array of type `ARRAY<T>`, where `T` is the type of `element`.
-    - The array contains `count` elements, all equal to `element`.
+    - The array contains `count` copies of the same `element`.
 
 ## Usage Notes
 
 - If `count = 0` or `NULL`, returns an empty array.
-- If `element` is NULL, all elements in the array are NULL.
-- The function has the same functionality as `ARRAY_REPEAT`, but with parameters in reverse order.
-- It can be used in combination with other array functions to achieve more complex data construction logic.
+- If `element` is `NULL`, all elements in the array are `NULL`.
+- This function has the same functionality as `ARRAY_REPEAT`, but the parameter order is reversed.
+- Can be combined with other array functions to construct more complex data.
 
 ## Examples
 
@@ -49,8 +46,8 @@ ARRAY_WITH_CONSTANT(count, element)
     +---------------------------------+
     ```
 
-2. Exceptional parameters
-
+2. Special cases
+   
     ```SQL
     SELECT ARRAY_WITH_CONSTANT(0, 'hello');
     +---------------------------------+

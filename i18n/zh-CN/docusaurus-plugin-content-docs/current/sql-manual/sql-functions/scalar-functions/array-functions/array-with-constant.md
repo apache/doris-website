@@ -18,11 +18,8 @@ ARRAY_WITH_CONSTANT(count, element)
 ## 参数
 
 - `count`：整数类型，指定返回数组的长度。
-    - `count` 的范围是 `[0, 1000000]`，否则会返回错误 `INVALID_ARGUMENT`。
-    - 可以是构造的常量，或者变量。
 
-- `element`：任意类型的值，用于填充数组。
-    - 可以是构造的常量，或者变量。
+- `element`： `ARRAY` 类型中支持的所有存储类型。
 
 ## 返回值
 
