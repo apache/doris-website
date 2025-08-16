@@ -285,6 +285,82 @@ SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'
 
 可参阅 [Paimon 文档](https://paimon.apache.org/docs/master/maintenance/configurations/) 进一步了解这些参数。
 
+### 时间旅行
+
+> 该功能自 3.1.0 版本支持
+
+支持读取 Paimon 表指定的 Snapshot。
+
+默认情况下，读取请求只会读取最新版本的快照。
+
+可以通过 `$snapshots` 表函数查询查询指定 Paimon 表的 Snapshot：
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+可以使用 `FOR TIME AS OF` 和 `FOR VERSION AS OF` 语句，根据快照 ID 或者快照产生的时间读取历史版本的数据。示例如下：
+
+```sql
+-- Notice: The time must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+### Branch 和 Tag
+
+> 该功能自 3.1.0 版本支持
+
+支持读取指定 Paimon 表的分支（Branch）和标签（Tag）。
+
+可以使用 `$branches` 和 `$tags` 系统表查看 Paimon 表的 Branch 和 Tag：
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+支持多种不同的语法形式，以兼容 Spark/Trino 等系统的语法。
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@brand(branch1);
+SELECT * FROM paimon_tbl@brand("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Tag 名称。
+
 ## 系统表
 
 > 该功能自 3.1.0 版本支持
