@@ -1746,8 +1746,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
-                                "sql-manual/sql-functions/aggregate-functions/regr_intercept",
-                                "sql-manual/sql-functions/aggregate-functions/regr_slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
