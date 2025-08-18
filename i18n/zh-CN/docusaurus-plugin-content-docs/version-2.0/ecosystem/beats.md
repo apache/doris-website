@@ -1,6 +1,6 @@
 ---
 {
-"title": "Beats Doris Output Plugin",
+"title": "Filebeat",
 "language": "zh-CN"
 }
 ---

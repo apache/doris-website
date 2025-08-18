@@ -276,7 +276,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/observability/logstash)。
 
 **对接 Filebeat**
 
@@ -352,7 +352,7 @@ chmod +x filebeat-doris-7.17.5.4
 ./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/observability/beats)。
 
 **对接 Kafka**
 
