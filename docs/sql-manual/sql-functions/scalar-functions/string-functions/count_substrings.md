@@ -12,14 +12,15 @@ The COUNT_SUBSTRINGS function counts the number of occurrences of a specified su
 ## Syntax
 
 ```sql
-COUNT_SUBSTRINGS(<str>, <pattern>)
+COUNT_SUBSTRINGS(<str>, <pattern>[, <start_pos>])
 ```
 
 ## Parameters
-| Parameter | Description                             |
-| --------- | --------------------------------------- |
-| `<str>` | The string to be searched. Type: STRING |
-| `<pattern>` | The substring to match. Type: STRING    |
+| Parameter     | Description                                                        |
+| ------------- | ------------------------------------------------------------------ |
+| `<str>`       | The string to be searched. Type: STRING                            |
+| `<pattern>`   | The substring to match. Type: STRING                               |
+| `<start_pos>` | Position (1-based) at which the search starts. Type: INT. Optional |
 
 ## Return Value
 
@@ -29,6 +30,7 @@ Special cases:
 - If str is NULL, returns NULL
 - If pattern is an empty string, returns 0
 - If str is an empty string, returns 0
+- If start_pos is less than or equal to 0 or exceeds the string length, returns 0
 
 ## Examples
 
@@ -90,4 +92,30 @@ SELECT count_substrings('a,b,c,abcde', '');
 +-------------------------------------+
 |                                   0 |
 +-------------------------------------+
+```
+
+6. Using the start position parameter
+```sql
+SELECT count_substrings('你好，世界！你好，世界！', '世界', 1), 
+       count_substrings('你好，世界！你好，世界！', '世界', 6);
+```
+```text
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+| count_substrings('你好，世界！你好，世界！', '世界', 1)               | count_substrings('你好，世界！你好，世界！', '世界', 6)               |
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+|                                                                     2 |                                                                     1 |
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+```
+
+7. Start position out of range
+```sql
+SELECT count_substrings('你好，世界！你好，世界！', '世界', 0), 
+       count_substrings('你好，世界！你好，世界！', '世界', 30);
+```
+```text
++-----------------------------------------------------------------------+------------------------------------------------------------------------+
+| count_substrings('你好，世界！你好，世界！', '世界', 0)               | count_substrings('你好，世界！你好，世界！', '世界', 30)               |
++-----------------------------------------------------------------------+------------------------------------------------------------------------+
+|                                                                     0 |                                                                      0 |
++-----------------------------------------------------------------------+------------------------------------------------------------------------+
 ```
