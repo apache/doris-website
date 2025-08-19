@@ -9,8 +9,7 @@
 
 This function applies [reservoir sampling](https://en.wikipedia.org/wiki/Reservoir_sampling) with a reservoir size up to 8192 and a random number generator for sampling. This used to calculate approximate percentiles at position `p`.
 The value of `p` is between `0` and `1`.
- Note that this is not the average of the two numbers. Special cases:
-- Returns `NULL` when the input column is `NULL`
+Note that this is not the average of the two numbers.
 
 ## Syntax
 
@@ -22,12 +21,13 @@ PERCENTILE_RESERVOIR(<col>, <p>)
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | The column to be calculated as the approximate percentile, which must be an double column. |
-| `<p>` | The approximate percentile to be calculated, a constant value, with a value range of `[0.0, 1.0]`. |
+| `<col>` | The column to be calculated as the approximate percentile, Supported types: Double |
+| `<p>` | The approximate percentile to be calculated, a constant value, Supported types: Double with a value range of `[0.0, 1.0]`. |
 
 ## Return Value
 
 Return the approximate percentile of the specified column, with a return type of `DOUBLE`.
+- Returns `NULL` when the input column is `NULL`
 
 ## Examples
 
@@ -72,4 +72,18 @@ FROM sales_data;
 +--------------+-----------+-------------------+-------------------+----------+
 |         32.5 |     43.75 | 54.99999999999998 | 77.49999999999994 |     NULL |
 +--------------+-----------+-------------------+-------------------+----------+
+```
+
+```sql
+select percentile(sale_price, NULL) from sales_data;
+```
+
+If all input values are NULL, returns NULL.
+
+```text
++------------------------------+
+| percentile(sale_price, NULL) |
++------------------------------+
+|                         NULL |
++------------------------------+
 ```
