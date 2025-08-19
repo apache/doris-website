@@ -1,4 +1,3 @@
-
 ---
 {
 "title": "EXPLODE_JSON_ARRAY_DOUBLE_OUTER",
