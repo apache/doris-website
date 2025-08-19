@@ -22,11 +22,12 @@ CURDATE()
 
 ## Return Value
 
-The current date.
+The current date,it is `date` type.
 
 ## Examples 
 
 ```sql
+------Get the current date
 SELECT CURDATE();
 ```
 
@@ -36,16 +37,4 @@ SELECT CURDATE();
 +------------+
 | 2019-12-20 |
 +------------+
-```
-
-```sql
-SELECT CURDATE() + 0;
-```
-
-```text
-+---------------+
-| CURDATE() + 0 |
-+---------------+
-|      20191220 |
-+---------------+
 ```
