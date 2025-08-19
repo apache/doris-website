@@ -1,12 +1,12 @@
 ---
 {
-    "title": "EXPLODE",
+    "title": "EXPLODE-OUTER",
     "language": "en"
 }
 ---
 
 ## Description
-The `explode` function accepts one or more arrays and maps each element of the arrays to a separate row. It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md) to flatten nested data structures into a standard flat table format. The main difference between `explode` and [`explode_outer`](./explode-outer.md) is how they handle null values.
+The `explode` function accepts an array and maps each element of the array to a separate row. It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md) to flatten nested data structures into a standard flat table format. The main difference between `explode_outer` and [`explode`](./explode.md) is how they handle null values.
 
 ## Syntax
 ```sql
@@ -18,7 +18,7 @@ EXPLODE(<array>[, ...])
 
 ## Return Value
 - Returns a single-column, multi-row result composed of all elements in `<array>`.
-- If `<array>` is NULL or an empty array (number of elements is 0), 0 rows are returned.
+- If `<array>` is NULL or an empty array (number of elements is 0), 1 row with NULL is returned.
 
 ## Usage Notes
 1. If the `<array>` parameter is not of type [`Array`](../../basic-element/sql-data-types/semi-structured/ARRAY.md), an error will be reported.
@@ -70,22 +70,30 @@ EXPLODE(<array>[, ...])
     > The array with the most rows after expansion is `[null, null, 1, 2, 3, 4, 5]` (c3), which has 7 rows. Therefore, the final result has 7 rows, and the other three arrays (c0, c1, c2) are padded with NULLs for missing rows.
 3. Empty array
     ```sql
-    select  * from example lateral view explode([]) t2 as c;
+    select  * from example lateral view explode_outer([]) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 4. NULL parameter
     ```sql
-    select  * from example lateral view explode(NULL) t2 as c;
+    select  * from example lateral view explode_outer(NULL) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 5. Non-array parameter
     ```sql
-    select  * from example lateral view explode('abc') t2 as c;
+    select  * from example lateral view explode_outer('abc') t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode(VARCHAR(3))
+    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode_outer(VARCHAR(3))
     ```

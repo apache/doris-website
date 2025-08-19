@@ -1,12 +1,12 @@
 ---
 {
-    "title": "EXPLODE",
+    "title": "EXPLODE-OUTER",
     "language": "zh-CN"
 }
 ---
 
 ## 描述
-`explode` 函数接受一个或者多个数组，会将每个数组中的每个元素映射为单独的行。需要与 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 配合使用，以将嵌套数据结构展开为标准的平面表格式。 `explode` 和 [`explode_outer`](./explode-outer.md) 区别主要在于空值处理。
+`explode` 函数接受一个数组，会将数组的每个元素映射为单独的行。需要与 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 配合使用，以将嵌套数据结构展开为标准的平面表格式。 `explode_outer` 和 [`explode`](./explode.md) 区别主要在于空值处理。
 
 ## 语法
 ```sql
@@ -18,7 +18,7 @@ EXPLODE(<array>[, ...])
 
 ## 返回值
 - 返回由 `<array>` 所有元素组成的单列多行数据。
-- 如果 `<array>` 为 NULL 或者为空数组（元素个数为 0），返回 0 行数据。
+- 如果 `<array>` 为 NULL 或者为空数组（元素个数为 0），返回 1 行 NULL 数据。
 
 ## 使用说明
 1. 如果 `<array>` 参数的类型不是 [`Array`](../../basic-element/sql-data-types/semi-structured/ARRAY.md) 会报错。
@@ -70,22 +70,30 @@ EXPLODE(<array>[, ...])
     > 展开后行数最多的数组是 `[null, null, 1, 2, 3, 4, 5]`（c3）, 一共有 7 行数据，所以最终展开得到 7 行，其余三个数组（c0、c1、c2）不足的行用 NULL 补齐。
 3. 空数组
     ```sql
-    select  * from example lateral view explode([]) t2 as c;
+    select  * from example lateral view explode_outer([]) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 4. NULL 参数
     ```sql
-    select  * from example lateral view explode(NULL) t2 as c;
+    select  * from example lateral view explode_outer(NULL) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 5. 非数组参数
     ```sql
-    select  * from example lateral view explode('abc') t2 as c;
+    select  * from example lateral view explode_outer('abc') t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode(VARCHAR(3))
+    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode_outer(VARCHAR(3))
     ```

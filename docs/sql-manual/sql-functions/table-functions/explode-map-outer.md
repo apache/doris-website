@@ -1,17 +1,17 @@
 ---
 {
-"title": "EXPLODE_MAP",
+"title": "EXPLODE_MAP_OUTER",
 "language": "en"
 }
 ---
 
 ## Description
-The `explode_map` table function accepts a map type and expands the map into multiple rows, each containing a key-value pair.
+The `explode_map_outer` table function accepts a map type and expands the map into multiple rows, each containing a key-value pair.
 It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 ## Syntax
 ```sql
-EXPLODE_MAP(<map>)
+EXPLODE_MAP_OUTER(<map>)
 ```
 
 ## Parameters
@@ -19,7 +19,7 @@ EXPLODE_MAP(<map>)
 
 ## Return Value
 - Returns a single-column, multi-row result composed of all elements in `<map>`. The column type is `Nullable<Struct<K, V>>`.
-- If `<map>` is NULL or empty, 0 rows are returned.
+- If `<map>` is NULL or empty, 1 row with NULL is returned.
 
 ## Examples
 0. Prepare data
@@ -60,15 +60,23 @@ EXPLODE_MAP(<map>)
     ```
 3. Empty object
     ```sql
-    select  * from example lateral view explode_map(map()) t2 as c;
+    select  * from example lateral view explode_map_outer(map()) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 4. NULL parameter
     ```sql
-    select  * from example lateral view explode_map(NULL) t2 as c;
+    select  * from example lateral view explode_map_outer(cast('ab' as map<string,string>)) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```

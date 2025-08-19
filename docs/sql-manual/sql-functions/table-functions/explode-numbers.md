@@ -6,61 +6,70 @@
 ---
 
 ## Description
-
-The `explode_numbers` table function takes an integer n and expands all numbers within the range into multiple rows, each containing a single number. It is commonly used to generate a sequence of consecutive numbers and is often paired with LATERAL VIEW.
-
-`explode_numbers_outer`, unlike `explode_numbers`, adds a NULL row when the table function generates zero rows.
+The `explode_numbers` function accepts an integer and maps each number in the range to a separate row. It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md) to flatten nested data structures into a standard flat table format. The main difference between `explode_numbers` and [`explode_numbers_outer`](./explode-numbers-outer.md) is how they handle null values.
 
 ## Syntax
-
 ```sql
-EXPLODE_NUMBERS(<n>)
-EXPLODE_NUMBERS_OUTER(<n>)
+EXPLODE_NUMBERS(<int>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<n>` | Integer type input |
+- `<int>` Integer type
 
 ## Return Value
+- Returns an integer column `[0, n)`, with column type `INT`.
+- If `<int>` is NULL or 0 or negative, 0 rows are returned.
 
-Returns a sequence of [0, n).
-
-- Does not return any rows when n is 0 or NULL.
 
 ## Examples
+0. Prepare data
+    ```sql
+    create table example(
+        k1 int
+    ) properties(
+        "replication_num" = "1"
+    );
 
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
-```
-
-```text
-+------+
-| e1   |
-+------+
-|    0 |
-|    1 |
-|    2 |
-|    3 |
-|    4 |
-+------+
-```
-
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
-Empty set
-```
-
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) tmp1 as e1;
-```
-
-```text
-+------+
-| e1   |
-+------+
-| NULL |
-+------+
-```
+    insert into example values(1);
+    ```
+1. Regular parameters
+    ```sql
+    select  * from example lateral view explode_numbers(10) t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 |    0 |
+    |    1 |    1 |
+    |    1 |    2 |
+    |    1 |    3 |
+    |    1 |    4 |
+    |    1 |    5 |
+    |    1 |    6 |
+    |    1 |    7 |
+    |    1 |    8 |
+    |    1 |    9 |
+    +------+------+
+    ```
+2. Parameter 0
+    ```sql
+    select  * from example lateral view explode_numbers(0) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+3. NULL parameter
+    ```sql
+    select  * from example lateral view explode_numbers(NULL) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+4. Negative parameter
+    ```sql
+    select  * from example lateral view explode_numbers(-1) t2 as c;
+    ```
+    ```text
+    Empty set (0.04 sec)
+    ```

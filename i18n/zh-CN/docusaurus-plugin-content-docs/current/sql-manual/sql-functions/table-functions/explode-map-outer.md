@@ -1,28 +1,28 @@
 ---
 {
-"title": "EXPLODE_MAP",
-"language": "en"
+"title": "EXPLODE_MAP_OUTER",
+"language": "zh-CN"
 }
 ---
 
-## Description
-The `explode_map` table function accepts a map type and expands the map into multiple rows, each containing a key-value pair.
-It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
+## 描述
+`explode_map_outer` 表函数，接受一个 map (映射类型)，将 map（映射类型）展开成多个行，每行包含一个键值对。
+需配合 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 使用。
 
-## Syntax
+## 语法
 ```sql
-EXPLODE_MAP(<map>)
+EXPLODE_MAP_OUTER(<map>)
 ```
 
-## Parameters
-- `<map>` MAP type.
+## 参数
+- `<map>` MAP 类型。
 
-## Return Value
-- Returns a single-column, multi-row result composed of all elements in `<map>`. The column type is `Nullable<Struct<K, V>>`.
-- If `<map>` is NULL or empty, 0 rows are returned.
+## 返回值
+- 返回由 `<map>` 所有元素组成的单列多行数据，列类型为 `Nullable<Struct<K, V>>`。
+- 如果 `<map>` 为 NULL 或者 `<map>` 为空，返回 1 行 NULL 数据。
 
-## Examples
-0. Prepare data
+## 示例
+0. 准备数据
     ```sql
     create table example(
         k1 int
@@ -32,7 +32,7 @@ EXPLODE_MAP(<map>)
 
     insert into example values(1);
     ```
-1. Regular parameters
+1. 常规参数
     ```sql
     select  * from example lateral view explode_map_outer(map("k", "v", "k2", 123, null, null)) t2 as c;
     ```
@@ -45,7 +45,7 @@ EXPLODE_MAP(<map>)
     |    1 | {"col1":null, "col2":null}  |
     +------+-----------------------------+
     ```
-2. Expand key-value pairs into separate columns
+2. 将键值对展开为独立的列
     ```sql
     select  * from example lateral view explode_map_outer(map("k", "v", "k2", 123, null, null)) t2 as k, v;
     ```
@@ -58,17 +58,25 @@ EXPLODE_MAP(<map>)
     |    1 | NULL | NULL |
     +------+------+------+
     ```
-3. Empty object
+3. 空对象
     ```sql
-    select  * from example lateral view explode_map(map()) t2 as c;
+    select  * from example lateral view explode_map_outer(map()) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
-4. NULL parameter
+4. NULL 参数
     ```sql
-    select  * from example lateral view explode_map(NULL) t2 as c;
+    select  * from example lateral view explode_map_outer(cast('ab' as map<string,string>)) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
