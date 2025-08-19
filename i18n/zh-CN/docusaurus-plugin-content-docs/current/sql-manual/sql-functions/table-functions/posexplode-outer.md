@@ -1,18 +1,18 @@
 ---
 {
-"title": "POSEXPLODE",
+"title": "POSEXPLODE_OUTER",
 "language": "zh-CN"
 }
 ---
 
 ## 描述
-`posexplode` 表函数，将 `<array>` 列展开成多行, 并且增加一列标明位置的列，组成 [`STRUCT`](../../basic-element/sql-data-types/semi-structured/STRUCT.md) 类型返回。
+`posexplode_outer` 表函数，将 `<array>` 列展开成多行, 并且增加一列标明位置的列，组成 [`STRUCT`](../../basic-element/sql-data-types/semi-structured/STRUCT.md) 类型返回。
 需配合 Lateral View 使用, 可以支持多个 Lateral view。
-`posexplode` 和 [`posexplode_outer`](./posexplode-outer.md) 区别主要在于空值处理。
+`posexplode_outer` 和 [`posexplode`](./posexplode.md) 区别主要在于空值处理。
 
 ## 语法
 ```sql
-POSEXPLODE(<array>)
+POSEXPLODE_OUTER(<array>)
 ```
 
 ## 参数
@@ -22,8 +22,7 @@ POSEXPLODE(<array>)
 - 返回一列多行的 STRUCT 数据，STRUCT 由 2 列组成：
     1. 从 0 开始递增的整数列，步长为 1，直到 n – 1，其中 n 表示结果的行数。
     2. 由 `<array>` 所有元素组成的列。
-
-- 如果 `<array>` 为 NULL 或者为空数组（元素个数为 0），返回 0 行数据。
+- 如果 `<array>` 为 NULL 或者为空数组（元素个数为 0），返回 1 行 NULL 数据。
 
 ## 使用说明
 1. `<array>` 不能为 NULL 或者其他类型，否则报错。
@@ -41,7 +40,7 @@ POSEXPLODE(<array>)
     ```
 1. 常规参数
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([1, 2, null, 4, 5]) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([1, 2, null, 4, 5]) t2 as c;
     ```
     ```text
     +------+-----------------------+
@@ -55,7 +54,7 @@ POSEXPLODE(<array>)
     +------+-----------------------+
     ```
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([1, 2, null, 4, 5]) t2 as pos, value;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([1, 2, null, 4, 5]) t2 as pos, value;
     ```
     ```text
     +------+------+-------+
@@ -70,22 +69,26 @@ POSEXPLODE(<array>)
     ```
 2. 空数组
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode([]) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer([]) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 3. NULL 参数
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode(NULL) t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer(NULL) t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode function but got NULL
+    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode_outer function but got NULL
     ```
 4. 非数组参数
     ```sql
-    select  * from (select 1 as k1) t1 lateral view posexplode('abc') t2 as c;
+    select  * from (select 1 as k1) t1 lateral view posexplode_outer('abc') t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode function but got VARCHAR(3)
+    ERROR 1105 (HY000): errCode = 2, detailMessage = only support array type for posexplode_outer function but got VARCHAR(3)
     ```
