@@ -48,7 +48,8 @@ PROPERTIES (
     'llm.temperature' = '0.7',
     'llm.max_token' = '1024',
     'llm.max_retries' = '3',
-    'llm.retry_delay_second' = '1'
+    'llm.retry_delay_second' = '1',
+    'llm.dimensions' = '1024';
 );
  ```
 
@@ -56,7 +57,7 @@ PROPERTIES (
 
 `type`: 必填，且必须为 `llm`，作为 llm 的类型标识。
 
-`llm.provider_type`: 必填，外部LLM厂商类型。目前支持的厂商有：OpenAI、Anthropic、Gemini、DeepSeek、Local、MoonShot、MiniMax、Zhipu、QWen、Baichuan。若有不在上列的厂商，但其 API 格式与 [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1) 相同的，可直接填入三者中格式相同的厂商。
+`llm.provider_type`: 必填，外部LLM厂商类型。目前支持的厂商有：OpenAI、Anthropic、Gemini、DeepSeek、Local、MoonShot、MiniMax、Zhipu、QWen、Baichuan、VoyageAI(仅用于 EMBED 功能)。若有不在上列的厂商，但其 API 格式与 [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1) 相同的，可直接填入三者中格式相同的厂商。
 
 `llm.endpoint`: 必填，LLM API 接口地址。
 
@@ -71,6 +72,8 @@ PROPERTIES (
 `llm.max_retries`: 可选，单次请求的最大重试次数。默认值为 3。
 
 `llm.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
+
+`llm.dimensions`: 可选，控制[EMBED](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/distance-functions/embed)输出的向量维度。**设置前务必确认`llm.model_name`所填模型支持自定义向量维度**，否则可能会导致模型调用失败。
 
 ---
 

@@ -49,7 +49,8 @@ PROPERTIES (
     'llm.temperature' = '0.7',
     'llm.max_token' = '1024',
     'llm.max_retries' = '3',
-    'llm.retry_delay_second' = '1'
+    'llm.retry_delay_second' = '1',
+    'llm.dimensions' = '1024';
 );
  ```
 
@@ -57,7 +58,7 @@ PROPERTIES (
 
 `type`: Required, must be `llm`, used as the type identifier for llm.
 
-`llm.provider_type`: Required, external LLM provider type. Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan. If there are providers not listed above but their API format is the same as [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), you can directly fill in the corresponding provider.
+`llm.provider_type`: Required, external LLM provider type. Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan, VoyageAI(only for EMBED feature). If there are providers not listed above but their API format is the same as [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), you can directly fill in the corresponding provider.
 
 `llm.endpoint`: Required, LLM API endpoint.
 
@@ -74,6 +75,10 @@ The default value is -1, which means this parameter is not set. The default valu
 `llm.max_retries`: Optional. The maximum number of retries for a single request. The default value is 3.
 
 `llm.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
+
+`llm.dimensions`: Optional, control the vector dimension of [EMBED](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/distance-functions/embed) output. 
+**Make sure to confirm that the model filled in llm.model_name supports custom vector dimension before setting**, 
+otherwise it may cause model call failure.
 
 ---
 
