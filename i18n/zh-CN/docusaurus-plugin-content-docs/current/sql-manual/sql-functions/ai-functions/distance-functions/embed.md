@@ -59,7 +59,7 @@ CREATE TABLE knowledge_base (
     id BIGINT,
     title STRING,
     content STRING,
-    embedding ARRAY<FLOAT>
+    embedding ARRAY<FLOAT> COMMENT '由 EMBED 函数生成的嵌入向量'
 )
 DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 4
@@ -67,12 +67,23 @@ PROPERTIES (
     "replication_num" = "1"
 );
 
+-- `embedding` 是函数 EMBED 根据 content 对应的标签所生成的嵌入向量
 INSERT INTO knowledge_base (id, title, content, embedding) VALUES
-(1, "Travel Reimbursement Policy", "Employees must submit a reimbursement request within 7 days after the business trip, with invoices and travel approval attached.", embed("travel reimbursement policy")),
-(2, "Leave Policy", "Employees must apply for leave in the system in advance. If the leave is longer than three days, approval from the direct manager is required.", embed("leave request policy")),
-(3, "VPN User Guide", "To access the internal network, employees must use VPN. For the first login, download and install the client and configure the certificate.", embed("VPN guide intranet access")),
-(4, "Meeting Room Reservation", "Meeting rooms can be reserved in advance through the OA system, with time and number of participants specified.", embed("meeting room booking reservation")),
-(5, "Procurement Request Process", "Departments must fill out a procurement request form for purchasing items. If the amount exceeds $5000, financial approval is required.", embed("procurement request process finance"));
+(1, "Travel Reimbursement Policy",
+    "Employees must submit a reimbursement request within 7 days after the business trip, with invoices and travel approval attached.",
+    EMBED("travel reimbursement policy")),
+(2, "Leave Policy",
+    "Employees must apply for leave in the system in advance. If the leave is longer than three days, approval from the direct manager is required.",
+    EMBED("leave request policy")),
+(3, "VPN User Guide",
+    "To access the internal network, employees must use VPN. For the first login, download and install the client and configure the certificate.",
+    EMBED("VPN guide intranet access")),
+(4, "Meeting Room Reservation",
+    "Meeting rooms can be reserved in advance through the OA system, with time and number of participants specified.",
+    EMBED("meeting room booking reservation")),
+(5, "Procurement Request Process",
+    "Departments must fill out a procurement request form for purchasing items. If the amount exceeds $5000, financial approval is required.",
+    EMBED("procurement request process finance"));
 ```
 
 通过对文本的向量化处理，可以进行类似下列操作：
@@ -81,7 +92,7 @@ INSERT INTO knowledge_base (id, title, content, embedding) VALUES
 ```sql
 SELECT 
     id, title, content,
-    COSINE_DISTANCE(embedding, embed("How to apply for travel reimbursement?")) AS score
+    COSINE_DISTANCE(embedding, EMBED("How to apply for travel reimbursement?")) AS score
 FROM knowledge_base
 ORDER BY score ASC
 LIMIT 2;
@@ -101,7 +112,7 @@ LIMIT 2;
 ```sql
 SELECT 
     id, title, content,
-    L2_DISTANCE(embedding, embed("How to access the company intranet")) AS distance
+    L2_DISTANCE(embedding, EMBED("How to access the company intranet")) AS distance
 FROM knowledge_base
 ORDER BY distance ASC
 LIMIT 2;
@@ -120,7 +131,7 @@ LIMIT 2;
 ```sql
 SELECT 
     id, title, content,
-    INNER_PRODUCT(embedding, embed("Leave system request leader approval")) AS score
+    INNER_PRODUCT(embedding, EMBED("Leave system request leader approval")) AS score
 FROM knowledge_base
 WHERE id != 2
 ORDER BY score DESC
@@ -136,11 +147,11 @@ LIMIT 2;
 +------+-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+---------------------+
 ```
 
-4. 寻找差异较小的内容
+4. 寻找差异较小的内容(结合`L1_DISTANCE`)
 ```sql
 SELECT 
     id, title, content,
-    L1_DISTANCE(embedding, embed("Procurement application process")) AS distance
+    L1_DISTANCE(embedding, EMBED("Procurement application process")) AS distance
 FROM knowledge_base
 ORDER BY distance ASC
 LIMIT 3;
