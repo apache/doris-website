@@ -157,62 +157,49 @@ The startup configuration must be mounted at the `/etc/doris` directory.
 :::
 
 ## Persistent Storage Configuration
-In the default deployment, the BE service uses Kubernetes [`EmptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as its cache. The EmptyDir mode is non-persistent; thus, cache data is lost upon service restart, potentially reducing query performance. To ensure that cached data is preserved after a restart and to maintain query performance, persistent storage must be configured. The BE service logs are both output to the standard output and written to the directory specified by `LOG_DIR` in the startup configuration. When using a storage template, persistent storage is also applied to the logs.
+In the default deployment, the BE service uses Kubernetes [`EmptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as its cache. EmptyDir is a non-persistent storage mode, meaning that cached data is lost after the service restarts, which can reduce query performance.
 
-### Automatically Generating Persistent Storage with a Storage Template
-For compute group `cg1`, persistent storage for logs and cache data can be configured using a storage template, as shown below:
+To ensure that cached data is retained after service restarts and query efficiency is not degraded, persistent storage should be configured for the cache. The BE service logs are output both to standard output and to the directory specified by the `LOG_DIR` parameter in the startup configuration. In addition, the StreamLoad import process uses `/opt/apache-doris/be/storage` as a temporary storage location. To prevent data loss caused by unexpected service restarts, persistent storage should be mounted for this directory as well.
+
+### Persistent Storage Example
+The following is an example configuration for mounting persistent storage to the required data directories:
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      persistentVolumes:
-        - persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Gi
+  - uniqueId: cg1
+    persistentVolumes:
+    - mountPaths:
+      - /opt/apache-doris/be/log
+      persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Gi
+    - mountPaths:
+      - /opt/apache-doris/be/storage
+      persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Gi
+    - persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Gi
 ```
-After deploying the cluster with this configuration, the Doris Operator automatically mounts persistent storage for the log directory (default `/opt/apache-doris/be/log`) and the cache directory (default `/opt/apache-doris/be/file_cache`). If the log or cache directory is explicitly specified in the [custom startup configuration](#custom-startup-configuration), the Doris Operator will automatically parse and mount the persistent storage accordingly. Persistent storage is implemented using the [StorageClass mechanism](https://kubernetes.io/docs/concepts/storage/storage-classes/), which allows specifying the required StorageClass using the `storageClassName` field.
-
-### Custom Mount Point Configuration
-The Doris Operator supports customized storage configurations for mount points. The following example demonstrates a custom configuration for the log directory:
-```yaml
-spec:
-  computeGroups:
-    - uniqueId: cg1
-      persistentVolumes:
-        - mountPaths:
-            - /opt/apache-doris/be/log
-          persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 300Gi
-        - mountPaths:
-            - /opt/apache-doris/be/storage
-          persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 300Gi
-        - persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Gi
-```
-In the above configuration, the log directory is mounted using a custom storage configuration with 300Gi, A 300Gi storage disk is mounted to the directory `/opt/apache-doris/be/storage` used for WAL and StreamLoad imports, etc. while the cache directory is mounted using the storage template with 500Gi.
+In this configuration, a 300Gi persistent volume is mounted to the log directory using a custom storage configuration. Another 300Gi persistent volume is mounted to the directory used for WAL and StreamLoad imports. The cache directory is mounted with a 500Gi persistent volume created from a storage template.
 
 :::tip Note
-If the `mountPaths` array is empty, it indicates that the current storage configuration is using the template configuration.
+- If the mountPaths array is left empty, the current storage configuration is treated as a template. When users specify file_cache_path in the [startup configuration](#custom-startup-configuration), the operator automatically parses the directory path and mounts it.
+
+- It is recommended to configure four directories and mount four persistent volumes to maximize cloud disk performance.
 :::
 
 ### Disable Log Persistence
@@ -220,6 +207,6 @@ If log persistence is not required and logs should only be output to the standar
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      logNotStore: true
+  - uniqueId: cg1
+    logNotStore: true
 ```
