@@ -505,6 +505,7 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/read-write-splitting",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
@@ -1857,14 +1858,20 @@
                                 "sql-manual/sql-functions/table-functions/explode",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-double-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-int",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-int-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-json-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-string-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/posexplode"
+                                "sql-manual/sql-functions/table-functions/explode-split-outer",
+                                "sql-manual/sql-functions/table-functions/posexplode",
+                                "sql-manual/sql-functions/table-functions/posexplode-outer"
                             ]
                         },
                         {
@@ -2368,6 +2375,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
@@ -2381,6 +2389,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

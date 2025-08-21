@@ -572,7 +572,7 @@
     "description": "The label for category IP Functions in sidebar docs"
   },
   "sidebar.docs.category.Bitmap Functions": {
-    "message": "BITMAPs 函数",
+    "message": "BITMAP 函数",
     "description": "The label for category Bitmap Functions in sidebar docs"
   },
   "sidebar.docs.category.HLL Functions": {

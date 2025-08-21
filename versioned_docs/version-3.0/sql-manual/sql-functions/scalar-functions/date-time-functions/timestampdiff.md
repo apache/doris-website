@@ -17,7 +17,11 @@ The `timestampdiff` function is used to calculate the difference between two  da
 
 | Parameter | Description                                                                                                                  |
 | -- |------------------------------------------------------------------------------------------------------------------------------|
-| `unit` | Time unit, specifies the unit in which to return the difference, common values include SECOND, MINUTE, HOUR, DAY, MONTH, YEAR |
+| `unit` | Time unit, specifies the unit to return the difference in, supports SECOND, MINUTE, HOUR, DAY, MONTH, QUARTER, YEAR |
+
+:::tip 
+QUARTER is supported since version 3.0.8 and 3.1.0.
+:::
 | `datetime_expr1` | The first datetime, a valid target  date                                                                                     |
 | `datetime_expr2` | The second datetime, a valid target  date                                                                        |
 
@@ -39,6 +43,18 @@ SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
 +--------------------------------------------------------------------+
 |                                                                  3 |
 +--------------------------------------------------------------------+
+```
+
+```sql
+SELECT TIMESTAMPDIFF(QUARTER,'2002-05-01','2001-01-01');
+```
+
+```text
++--------------------------------------------------+
+| TIMESTAMPDIFF(QUARTER,'2002-05-01','2001-01-01') |
++--------------------------------------------------+
+|                                               -5 |
++--------------------------------------------------+
 ```
 
 ```sql

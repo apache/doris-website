@@ -245,7 +245,7 @@ SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 
 ### Batch Incremental Query
 
-> This feature is supported since version 3.1.0
+> Since version 3.1.0
 
 Supports [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) queries for Paimon, similar to Flink.
 
@@ -285,10 +285,85 @@ Parameter:
 
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
+### Time Travel
+
+> Since version 3.1.0
+
+Supports reading specified snapshots of Paimon tables.
+
+By default, read requests only read the latest version of snapshots.
+
+You can query snapshots of a specified Paimon table through the `$snapshots` table function:
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+You can use `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read historical version data based on snapshot ID or the time when the snapshot was created. Examples:
+
+```sql
+-- Notice: The time must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+### Branch and Tag
+
+> Since version 3.1.0
+
+Supports reading branches and tags of specified Paimon tables.
+
+You can use the `$branches` and `$tags` system tables to view branches and tags of Paimon tables:
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+Supports various syntax forms to be compatible with systems like Spark/Trino:
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@brand(branch1);
+SELECT * FROM paimon_tbl@brand("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether the parameter is a timestamp
 
 ## System Tables
 
-> This feature is supported since version 3.1.0
+> Since version 3.1.0
 
 Doris supports querying Paimon system tables to retrieve table-related metadata. System tables can be used to view snapshot history, manifest files, data files, partitions, and other information.
 
