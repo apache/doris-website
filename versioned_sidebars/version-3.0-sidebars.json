@@ -874,9 +874,30 @@
             "label": "Ecosystem",
             "collapsed": false,
             "items": [
-                "ecosystem/spark-doris-connector",
-                "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
+                {
+                    "type": "category",
+                    "label": "Spark Doris Connector",
+                    "items": [
+                        "ecosystem/spark-doris-connector/spark-doris-connector",
+                        "ecosystem/spark-doris-connector/release-note"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Flink Doris Connector",
+                    "items": [
+                        "ecosystem/flink-doris-connector/flink-doris-connector",
+                        "ecosystem/flink-doris-connector/release-note"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Doris Kafka Connector",
+                    "items": [
+                        "ecosystem/doris-kafka-connector/doris-kafka-connector",
+                        "ecosystem/doris-kafka-connector/release-note"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Doris Operator",
