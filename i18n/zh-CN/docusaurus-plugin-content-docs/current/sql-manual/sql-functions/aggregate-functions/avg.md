@@ -19,8 +19,8 @@ AVG([DISTINCT] <expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 是一个表达式或列，通常是一个数值列或者能够转换为数值的表达式 |
-| `[DISTINCT]` | 是一个可选的关键字，表示对 expr 中的重复值进行去重后再计算平均值 |
+| `<expr>` | 是一个表达式或列，通常是一个数值列或者能够转换为数值的表达式，支持类型为 TinyInt，SmallInt，Integer，BigInt，LargeInt，Double，Decimal 。|
+| `[DISTINCT]` | 是一个可选的关键字，表示对 expr 中的重复值进行去重后再计算平均值。 |
 
 ## 返回值
 
@@ -32,105 +32,143 @@ AVG([DISTINCT] <expr>)
 ```sql
 -- setup
 create table t1(
-        k1 int,
-        kd decimalv3(10, 5),
-        kstr varchar(100),
-        kstr_invalid varchar(100),
-        knull int,
-        kbigint bigint
-) distributed by hash (k1) buckets 1
+        k_tinyint tinyint,
+        k_smallint smallint,
+        k_int int,
+        k_bigint bigint,
+        k_largeint largeint,
+        k_double double,
+        k_decimal decimalv3(10, 5),
+        k_null_int int
+) distributed by hash (k_int) buckets 1
 properties ("replication_num"="1");
 insert into t1 values 
-    (1, 222.222, '1.5', 'test', null, 100),
-    (2, 444.444, '2.5', '1', null, 100),
-    (3, null, '3.5', '2', null, 1);
+    (1, 10, 100, 1000, 10000, 1.1, 222.222, null),
+    (2, 20, 200, 2000, 20000, 2.2, 444.444, null),
+    (3, 30, 300, 3000, 30000, 3.3, null, null);
 ```
-
 
 ```sql
-select avg(k1) from t1;
+select avg(k_tinyint) from t1;
 ```
 
-[1,2,3]的平均值为2。
+TinyInt 类型的平均值计算，[1,2,3]的平均值为2。
 
 ```text
-+---------+
-| avg(k1) |
-+---------+
-|       2 |
-+---------+
++----------------+
+| avg(k_tinyint) |
++----------------+
+|              2 |
++----------------+
 ```
-
 
 ```sql
-select avg(kd) from t1;
+select avg(k_smallint) from t1;
 ```
 
-[222.222,444.444,null]的平均值为333.333。
+SmallInt 类型的平均值计算，[10,20,30]的平均值为20。
 
 ```text
-+-----------+
-| avg(kd)   |
-+-----------+
-| 333.33300 |
-+-----------+
++-----------------+
+| avg(k_smallint) |
++-----------------+
+|              20 |
++-----------------+
 ```
 
 ```sql
-select avg(kstr) from t1;
+select avg(k_int) from t1;
 ```
 
-输入的 Varchar 类型会被隐式转换为 Double。
-[1.5,2.5,3.5]的平均值为2.5。
+Integer 类型的平均值计算，[100,200,300]的平均值为200。
 
 ```text
-+-----------+
-| avg(kstr) |
-+-----------+
-|       2.5 |
-+-----------+
++------------+
+| avg(k_int) |
++------------+
+|        200 |
++------------+
 ```
 
 ```sql
-select avg(kstr_invalid) from t1;
+select avg(k_bigint) from t1;
 ```
 
-非法的字符串会在隐式转换中变成 NULL 值。
-[null,1,2]的平均值为1.5。
+BigInt 类型的平均值计算，[1000,2000,3000]的平均值为2000。
 
 ```text
-+-------------------+
-| avg(kstr_invalid) |
-+-------------------+
-|               1.5 |
-+-------------------+
++---------------+
+| avg(k_bigint) |
++---------------+
+|          2000 |
++---------------+
 ```
 
 ```sql
-select avg(knull) from t1;
+select avg(k_largeint) from t1;
+```
+
+LargeInt 类型的平均值计算，[10000,20000,30000]的平均值为20000。
+
+```text
++-----------------+
+| avg(k_largeint) |
++-----------------+
+|           20000 |
++-----------------+
+```
+
+```sql
+select avg(k_double) from t1;
+```
+
+Double 类型的平均值计算，[1.1,2.2,3.3]的平均值为2.2。
+
+```text
+| avg(k_double)      |
++--------------------+
+| 2.1999999999999997 |
+```
+
+```sql
+select avg(k_decimal) from t1;
+```
+
+Decimal 类型的平均值计算，[222.222,444.444,null]的平均值为333.333。
+
+```text
++----------------+
+| avg(k_decimal) |
++----------------+
+|      333.33300 |
++----------------+
+```
+
+```sql
+select avg(k_null_int) from t1;
 ```
 
 对于输入数据均为 NULL 值的情况，返回 NULL 值。
 
 ```text
-+------------+
-| avg(knull) |
-+------------+
-|       NULL |
-+------------+
++-----------------+
+| avg(k_null_int) |
++-----------------+
+|            NULL |
++-----------------+
 ```
 
 ```sql
-select avg(distinct kbigint) from t1;
+select avg(distinct k_bigint) from t1;
 ```
 
-[100,100,1]去重之后为[100,1]，平均值为50.5。
+使用 DISTINCT 关键字进行去重计算，[1000,2000,3000]去重后平均值为2000。
 
 ```text
 +-----------------------+
-| avg(distinct kbigint) |
+| avg(distinct k_bigint) |
 +-----------------------+
-|                  50.5 |
+|                  2000 |
 +-----------------------+
 ```
 

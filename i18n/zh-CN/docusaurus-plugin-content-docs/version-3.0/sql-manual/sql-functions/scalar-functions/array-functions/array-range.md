@@ -34,7 +34,11 @@ ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 | `<start_datetime>` | 起始日期，为 datetimev2 类型 |
 | `<end_datetime>` | 结束日期，为 datetimev2 类型 |
 | `<interval_step>` | 间隔值，默认为 1 |
-| `<unit>` | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
+| `<unit>` | 间隔单位，支持年(year)/季度(quarter)/月(month)/周(week)/日(day)/小时(hour)/分钟(minute)/秒(second)，默认为日(day) |
+
+:::tip 
+quarter 支持从 3.0.8 和 3.1.0 版本开始。
+:::
 
 ## 返回值
 

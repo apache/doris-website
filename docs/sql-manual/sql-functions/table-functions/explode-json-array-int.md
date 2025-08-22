@@ -6,91 +6,84 @@
 ---
 
 ## Description
-
-The `explode_json_array_int` table function accepts a JSON array, where each element is of integer type, and expands each integer in the array into multiple rows, with each row containing one integer. It is used in conjunction with LATERAL VIEW.
-
-`explode_json_array_int_outer` is similar to `explode_json_array_int`, but the handling of NULL values is different.
-
-If the JSON string itself is NULL, the `OUTER` version will return one row, with the value as NULL. The normal version will completely ignore such records.
-
-If the JSON array is empty, the `OUTER` version will return one row, with the value as NULL. The normal version will return no results.
+The `explode_json_array_int` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode` function for processing. The behavior is equivalent to: `explode(cast(<json_array> as Array<BIGINT>))`.
+It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 ## Syntax
 ```sql
 EXPLODE_JSON_ARRAY_INT(<json>)
-EXPLODE_JSON_ARRAY_INT_OUTER(<json>)
 ```
-
-## Return Value
-
-| Parameter | Description |
-| -- | -- |
-| `<json>` | json type |
 
 ## Parameters
+- `<json>` JSON type, the content should be an array.
 
-Expands the JSON array, creating a row for each element, returning an integer column.
+## Return Value
+- Returns a single-column, multi-row result composed of all elements in `<json>`. The column type is `Nullable<BIGINT>`.
+- If `<json>` is NULL or an empty array (number of elements is 0), 0 rows are returned.
+- If the elements in the JSON array are not of INT type, the function will try to convert them to INT. Elements that cannot be converted to INT will be converted to NULL. For type conversion rules, please refer to [JSON Type Conversion](../../basic-element/sql-data-types/conversion/json-conversion.md).
 
 ## Examples
+0. Prepare data
+    ```sql
+    create table example(
+        k1 int
+    ) properties(
+        "replication_num" = "1"
+    );
 
-```sql
-CREATE TABLE json_array_example (
-    id INT,
-    json_array STRING
-)DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS AUTO
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1");
-```
-
-```sql
-INSERT INTO json_array_example (id, json_array) VALUES
-(1, '[1, 2, 3, 4, 5]'),
-(2, '[1.1, 2.2, 3.3, 4.4]'),
-(3, '["apple", "banana", "cherry"]'),
-(4, '[{"a": 1}, {"b": 2}, {"c": 3}]'),
-(5, '[]'),
-(6, 'NULL');
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_INT(json_array) tmp1 AS e1
-WHERE id = 1;
-```
-
-```text
-+------+------+
-| id   | e1   |
-+------+------+
-|    1 |    1 |
-|    1 |    2 |
-|    1 |    3 |
-|    1 |    4 |
-|    1 |    5 |
-+------+------+
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_INT(json_array) tmp1 AS e1
-WHERE id = 5;
-Empty set (0.01 sec)
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_INT_OUTER(json_array) tmp1 AS e1
-WHERE id = 5;
-```
-
-```text
-+------+------+
-| id   | e1   |
-+------+------+
-|    5 | NULL |
-+------+------+
-```
+    insert into example values(1);
+    ```
+1. Regular parameters
+    ```sql
+    select * from example lateral view explode_json_array_int('[4, 5, 5.23, null]') t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 |    4 |
+    |    1 |    5 |
+    |    1 |    5 |
+    |    1 | NULL |
+    +------+------+
+    ```
+2. Non-INT type
+    ```sql
+    select * from example 
+        lateral view 
+        explode_json_array_int('["abc", "123.4", 9223372036854775808.0, 9223372036854775295.999999]') t2 as c;
+    ```
+    ```text
+    +------+---------------------+
+    | k1   | c                   |
+    +------+---------------------+
+    |    1 |                NULL |
+    |    1 |                 123 |
+    |    1 |                NULL |
+    |    1 | 9223372036854774784 |
+    +------+---------------------+
+    ```
+    > `9223372036854775808.0` exceeds the valid range of `BIGINT`, so it will be converted to NULL.
+    > The string "123.4" is converted to 123.
+    > The string "abc" cannot be converted to INT, so the result is NULL.
+3. Empty array
+    ```sql
+    select * from example lateral view explode_json_array_int('[]') t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+4. NULL parameter
+    ```sql
+    select * from example lateral view explode_json_array_int(NULL) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+5. Non-array parameter
+    ```sql
+    select * from example lateral view explode_json_array_int('{}') t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```

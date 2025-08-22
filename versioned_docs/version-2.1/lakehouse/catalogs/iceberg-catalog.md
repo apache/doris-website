@@ -124,6 +124,12 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | list                                   | array                |                                         |
 | other                                  | UNSUPPORTED          |                                         |
 
+> Note:
+>
+> Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
+>
+> You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is
+
 ## Examples
 
 ### Iceberg on Hive Metastore
@@ -310,7 +316,9 @@ SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 
 ### Branch and Tag
 
-> This feature is supported since version 3.1.0
+> Since 3.1.0
+>
+> For creating, dropping and managing branch and tag, please refer to [Managing Branch & Tag]
 
 Reading specific branches and tags of Iceberg tables is supported.
 
@@ -330,9 +338,18 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 
 For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether the parameter is a timestamp or a Branch/Tag name.
 
+### View
+
+> Since version 3.1.0
+
+Supports querying Iceberg views. View queries work the same way as regular table queries. Please note the following:
+
+- Only `hms` type Iceberg Catalog is supported.
+- The view definition SQL must be compatible with Doris SQL dialect, otherwise parsing errors will occur. (Dialect conversion functionality will be provided in future versions).
+
 ## System Tables
 
-> This feature is supported since version 3.1.0
+> Since 3.1.0
 
 Doris supports querying Iceberg system tables to retrieve metadata information about tables. You can use system tables to view snapshot history, manifest files, data files, partitions, and other metadata.
 
@@ -553,6 +570,13 @@ INSERT INTO iceberg_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, 'beijing', '2023-12-12');
 ```
 
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+
 ### INSERT OVERWRITE
 
 The INSERT OVERWRITE operation completely replaces the existing data in the table with new data.
@@ -560,6 +584,13 @@ The INSERT OVERWRITE operation completely replaces the existing data in the tabl
 ```sql
 INSERT OVERWRITE TABLE iceberg_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+Since version 3.1.0, support for writing data to specified branches:
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
 ### CTAS
@@ -584,6 +615,15 @@ PROPERTIES (
     'compression-codec'='zstd'
 )
 AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;
+```
+
+### INSERT INTO BRANCH
+
+> Since 3.1.0
+
+```sql
+INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
+INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
 
 ### Related Parameters
@@ -729,7 +769,7 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
     Note that for the Iceberg table created by Doris, the Datetime corresponds to the `timestamp_ntz` type.
 
-    In versions after 2.1.11 and 3.0.7, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
+    In versions after 3.1.0, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
     
     And if the Iceberg table is created by other systems, although the `timestamp` and `timestamp_ntz` types are both mapped to the Doris Datetime type. However, when writing, it will determine whether the time zone needs to be processed based on the actual type.
 
@@ -755,74 +795,171 @@ Supported schema change operations include:
 
 * **Rename Column**
 
-Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
+  Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
 
-```sql
-ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+  ```
 
 * **Add a Column**
 
-Use `ADD COLUMN` to add a new column. The new column will be added to the end of the table. Adding new columns to nested types is not supported.
+  Use `ADD COLUMN` to add a new column. Adding new columns to nested types is not supported.
 
-When adding a new column, you can specify nullable attributes, default values, and comments.
+  When adding a new column, you can specify nullable attributes, default values, comments, and column position.
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-Example:
+  Example:
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+  ```
 
 * **Add Columns**
 
-You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Adding new columns to nested types is not supported.
+  You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Column positioning is not supported for multiple columns. Adding new columns to nested types is not supported.
 
-The syntax for each column is the same as adding a single column.
+  The syntax for each column is the same as adding a single column.
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+  ```
 
 * **Drop Column**
 
-Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+  Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
 
-```sql
-ALTER TABLE iceberg_table DROP COLUMN col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table DROP COLUMN col_name;
+  ```
 
 * **Modify Column**
 
-Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, and comment.
+  Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
 
-Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
+  Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
 
-```sql
-ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-Example:
+  Example:
 
-```sql
-CREATE TABLE iceberg_table (
-    id INT,
-    name STRING
-);
--- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
-ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
-```
+  ```sql
+  CREATE TABLE iceberg_table (
+      id INT,
+      name STRING
+  );
+  -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
+  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+  ```
 
 * **Reorder Columns**
 
-Use `ORDER BY` to reorder columns by specifying the new column order.
+  Use `ORDER BY` to reorder columns by specifying the new column order.
 
-```sql
-ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+  ```
+
+### Managing Branch & Tag
+
+> Since 3.1.0
+
+* **Create Branch**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] BRANCH [IF NOT EXISTS] <branch_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  [WITH SNAPSHOT RETENTION { snapshotKeep | timeKeep }]
+
+  snapshotKeep:
+    <num> SNAPSHOTS [<num> { DAYS | HOURS | MINUTES }]
+
+  timeKeep:
+    <num> { DAYS | HOURS | MINUTES }
+  ```
+
+  Examples:
+
+  ```sql
+  -- Create branch "b1".
+  ALTER TABLE tbl CREATE BRANCH b1;
+  ALTER TABLE tb1 CREATE BRANCH IF NOT EXISTS b1;
+  -- Create or replace branch "b1".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1;
+  -- Create or replace branch "b1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456;
+  -- Create or replace branch "b1" based on snapshot "123456", branch retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 2 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch, and snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
+  ```
+
+* **Drop Branch**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP BRANCH [IF EXISTS] <branch_name>;
+  ```
+
+  Example:
+
+  ```sql
+  ALTER TABLE tbl DROP BRANCH b1;
+  ```
+
+* **Create Tag**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] TAG [IF NOT EXISTS] <tag_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  ```
+
+  Examples:
+
+  ```sql
+  -- Create tag "t1".
+  ALTER TABLE tbl CREATE TAG t1;
+  ALTER TABLE tb1 CREATE TAG IF NOT EXISTS t1;
+  -- Create or replace tag "t1".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG t1;
+  -- Create or replace tag "t1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456;
+  -- Create or replace tag "b1" based on snapshot "123456", tag retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  ```
+
+* **Drop Tag**
+
+  Syntax:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP TAG [IF EXISTS] <tag_name>;
+  ```
+
+  Example:
+
+  ```sql
+  ALTER TABLE tbl DROP TAG t1;
+  ```
 
 ## Iceberg Table Optimization
 

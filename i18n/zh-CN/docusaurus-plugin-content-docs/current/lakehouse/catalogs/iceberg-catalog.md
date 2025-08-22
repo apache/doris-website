@@ -136,6 +136,12 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | list                                   | array                |                       |
 | other                                  | UNSUPPORTED          |                       |
 
+> 注：
+>
+> Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp` 和 `timestamptz` 会统一映射到 `datetime(N)` 类型上。但在读取和写入时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamptz` 列的读取和写入结果。
+>
+> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.0.8 版本支持)。
+
 ## 基础示例
 
 ### Iceberg on Hive Metastore
@@ -321,6 +327,8 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 ### Branch 和 Tag
 
 > 该功能自 3.1.0 版本支持
+>
+> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】
 
 支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
 
@@ -339,6 +347,15 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 ```
 
 对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Branch/Tag 名称。
+
+### 视图查询
+
+> 该功能自 3.1.0 版本支持
+
+支持查询 Iceberg 视图。视图查询方式和普通表方式一样。有以下几点注意事项：
+
+- 仅支持 `hms` 类型的 Iceberg Catalog。
+- 视图的定义 SQL 与需要与 Doris SQL 方言兼容，否则会出现解析错误。（后续版本会提供方言转换功能）。
 
 ## 系统表
 
@@ -562,13 +579,27 @@ INSERT INTO iceberg_tbl(col1, col2) values (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "beijing", "2023-12-12");
 ```
 
+自 3.1.0 版本，支持写入数据到指定分支：
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+
 ### INSERT OVERWRITE
 
 INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
 
 ```sql
-INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
+INSERT OVERWRITE TABLE iceberg_tbl VALUES(val1, val2, val3, val4)
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+自 3.1.0 版本，支持写入数据到指定分支：
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
 ### CTAS
@@ -593,6 +624,15 @@ PROPERTIES (
     'compression-codec'='zstd'
 )
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
+```
+
+### 写入数据到 Branch
+
+> 该功能自 3.1.0 版本支持
+
+```sql
+INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
+INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
 
 ### 相关参数
@@ -738,7 +778,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
     注意，由 Doris 创建的 Iceberg 表，Datetime 对应的是 `timestamp_ntz` 类型。
 
-    2.1.11 和 3.0.7 之后的版本中，Datetime 类型写入到 Parquet 文件时，物理类型使用的是 INT64 而非 INT96。
+    3.1.0 之后的版本中，Datetime 类型写入到 Parquet 文件时，物理类型使用的是 INT64 而非 INT96。
 
     此外，如果是其他系统创建的 Iceberg 表，虽然 `timestamp` 和 `timestamp_ntz` 类型都映射为 Doris 的 Datetime 类型。但在写入时，会根据实际类型判断是否需要处理时区。
 
@@ -764,73 +804,171 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **修改列名称**
 
-通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+  通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
 
-```sql
-ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+  ```
 
 * **添加一列**
 
-通过 `ADD COLUMN` 添加新列，新列会被添加到表的末尾，不支持为嵌套类型添加新列。
+  通过 `ADD COLUMN` 添加新列，不支持为嵌套类型添加新列。
 
-在添加新列时，可以指定 nullable 属性、默认值和注释。
+  在添加新列时，可以指定 nullable 属性、默认值、注释和列位置。
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-示例：
+  示例：
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col';
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+  ```
 
 * **添加多列**
 
-可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾，不支持为嵌套类型添加新列。
+  可以通过 `ADD COLUMN` 添加多列，新列会被添加到表的末尾，不支持指定列位置，不支持为嵌套类型添加新列。
 
-每一列的语法和添加单列时一样。
+  每一列的语法和添加单列时一样。
 
-```sql
-ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [nullable, [default default_value, [comment 'comment']]], col_name2 col_type2 [nullable, [default default_value, [comment 'comment']]] ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+  ```
+
 * **删除列**
 
-通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+  通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
 
-```sql
-ALTER TABLE iceberg_table DROP COLUMN col_name;
-```
+  ```sql
+  ALTER TABLE iceberg_table DROP COLUMN col_name;
+  ```
 
 * **修改列**
 
-通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值和注释。
+  通过 `MODIFY COLUMN` 语句修改列的属性，包括类型，nullable，默认值、注释和列位置。
 
-注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
+  注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
 
-```sql
-ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [nullable, [default default_value, [comment 'comment']]];
-```
+  ```sql
+  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
 
-示例：
+  示例：
 
-```sql
-CREATE TABLE iceberg_table (
-    id INT,
-    name STRING
-);
--- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
-ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
-```
+  ```sql
+  CREATE TABLE iceberg_table (
+      id INT,
+      name STRING
+  );
+  -- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
+  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column' FIRST;
+  ```
 
 * **重新排序**
 
-通过 `ORDER BY` 重新排序列，指定新的列顺序。
+  通过 `ORDER BY` 重新排序列，指定新的列顺序。
 
-```sql
-ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-```
+  ```sql
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+  ```
+
+### 管理 Branch & Tag
+
+> 该功能自 3.1.0 版本支持
+
+* **创建 Branch**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] BRANCH [IF NOT EXISTS] <branch_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  [WITH SNAPSHOT RETENTION { snapshotKeep | timeKeep }]
+
+  snapshotKeep:
+    <num> SNAPSHOTS [<num> { DAYS | HOURS | MINUTES }]
+
+  timeKeep:
+    <num> { DAYS | HOURS | MINUTES }
+  ```
+
+  示例：
+
+  ```sql
+  -- 创建分支 "b1"。
+  ALTER TABLE tbl CREATE BRANCH b1;
+  ALTER TABLE tb1 CREATE BRANCH IF NOT EXISTS b1;
+  -- 创建或替换分支 "b1"。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1;
+  -- 基于快照 "123456" 创建或替换分支 "b1"。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456;
+  -- 基于快照 "123456" 创建或替换分支 "b1"，分支保留 1 天。
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的保留最近的 3 个快照。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的快照最多保留 2 天。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 2 DAYS;
+  -- 基于快照 "123456" 创建分支 "b1"，分支保留 30 天。分支中的保留最近的 3 个快照，分支中的快照最多保留 2 天。
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
+  ```
+
+* **删除 Branch**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP BRANCH [IF EXISTS] <branch_name>;
+  ```
+
+  示例：
+
+  ```sql
+  ALTER TABLE tbl DROP BRANCH b1;
+  ```
+
+* **创建 Tag**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] TAG [IF NOT EXISTS] <tag_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  ```
+
+  示例：
+
+  ```sql
+  -- 创建标记 "t1"。
+  ALTER TABLE tbl CREATE TAG t1;
+  ALTER TABLE tb1 CREATE TAG IF NOT EXISTS t1;
+  -- 创建或替换标记 "t1"。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG t1;
+  -- 基于快照 "123456" 创建或替换标记 "t1"。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456;
+  -- 基于快照 "123456" 创建或替换标记 "b1"，标记保留 1 天。
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  ```
+
+* **删除 Tag**
+
+  语法：
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP TAG [IF EXISTS] <tag_name>;
+  ```
+
+  示例：
+
+  ```sql
+  ALTER TABLE tbl DROP TAG t1;
+  ```
 
 ## Iceberg 表优化
 

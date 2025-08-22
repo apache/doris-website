@@ -4,13 +4,12 @@
     "language": "en"
 }
 ---
-## GEO Type Documentation
 
-Geospatial types are special data types in databases used to store and manipulate geospatial data, which can represent geometric objects such as points, lines, and polygons.
-- Core purposes:
-  - Store geographic location information (e.g., longitude and latitude).
-  - Support spatial queries (e.g., distance calculation, area inclusion, intersection judgment).
-  - Process geospatial analysis (e.g., buffer analysis, path planning).
+
+Geospatial types are special data types in databases used to store and manipulate geospatial data, which can represent geometric objects such as points, lines, and polygons,Core purposes are as follows:.
+- Store geographic location information (e.g., longitude and latitude).
+- Support spatial queries (e.g., distance calculation, area inclusion, intersection judgment).
+- Process geospatial analysis (e.g., buffer analysis, path planning).
 Geographic Information Systems are widely used in map services, logistics scheduling, location-based social networking, meteorological monitoring, etc. The core requirement is to efficiently store massive spatial data and support low-latency spatial computing.
 
 

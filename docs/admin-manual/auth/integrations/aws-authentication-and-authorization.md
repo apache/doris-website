@@ -379,7 +379,7 @@ Use these parameters in doris SQL statements as shown below:
 
 Common important key parameters:​​
 ```sql
-"s3.role_arn" = "<your-target-role-arn>",
+"s3.role_arn" = "<your-bucket-role-arn>",
 "s3.external_id" = "<your-external-id>"      -- option parameter
 ```
 
@@ -398,7 +398,7 @@ Common important key parameters:​​
       "provider" = "S3",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
   )
   PROPERTIES
@@ -414,7 +414,7 @@ Common important key parameters:​​
       "format" = "parquet",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
   )
 ```
@@ -427,7 +427,7 @@ Common important key parameters:​​
       "warehouse" = "s3://your_bucket/dir/key",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
   );
 ```
@@ -440,7 +440,7 @@ PROPERTIES (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>",            -- option parameter
     "s3.root.path" = "s3_demo_vault_prefix",
     "provider" = "S3",
@@ -457,7 +457,7 @@ PROPERTIES (
 ) WITH S3 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 )
 ```
@@ -471,7 +471,7 @@ PROPERTIES
 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 );
 ```
@@ -484,7 +484,7 @@ PROPERTIES
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 );
 ```

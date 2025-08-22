@@ -6,90 +6,82 @@
 ---
 
 ## Description
-
-The `explode_json_array_double` table function accepts a JSON array, where each element is of double-precision floating-point type, and expands each floating-point number in the array into multiple rows, with each row containing one floating-point number. It is used in conjunction with LATERAL VIEW.
-
-`explode_json_array_double_outer` is similar to `explode_json_array_double`, but the handling of NULL values is different.
-
-If the JSON string itself is NULL, the `OUTER` version will return one row, with the value as NULL. The normal version will completely ignore such records.
-
-If the JSON array is empty, the `OUTER` version will return one row, with the value as NULL. The normal version will return no results.
+The `explode_json_array_double` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode` function for processing. The behavior is equivalent to: `explode(cast(<json_array> as Array<DOUBLE>))`.
+It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 ## Syntax
 ```sql
 EXPLODE_JSON_ARRAY_DOUBLE(<json>)
-EXPLODE_JSON_ARRAY_DOUBLE_OUTER(<json>)
 ```
-
-## Return Value
-
-| Parameter | Description |
-| -- | -- |
-| `<json>` | json type |
 
 ## Parameters
+- `<json>` JSON type, the content should be an array.
 
-Expands the JSON array, creating a row for each element, returning a double-precision floating-point column.
+## Return Value
+- Returns a single-column, multi-row result composed of all elements in `<json>`. The column type is `Nullable<DOUBLE>`.
+- If `<json>` is NULL or an empty array (number of elements is 0), 0 rows are returned.
+- If the elements in the JSON array are not of DOUBLE type, the function will try to convert them to DOUBLE. Elements that cannot be converted to DOUBLE will be converted to NULL. For type conversion rules, please refer to [JSON Type Conversion](../../basic-element/sql-data-types/conversion/json-conversion.md).
 
 ## Examples
+0. Prepare data
+    ```sql
+    create table example(
+        id int
+    ) properties(
+        "replication_num" = "1"
+    );
 
-```sql
-CREATE TABLE json_array_example (
-    id INT,
-    json_array STRING
-)DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS AUTO
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1");
-```
-
-```sql
-INSERT INTO json_array_example (id, json_array) VALUES
-(1, '[1, 2, 3, 4, 5]'),
-(2, '[1.1, 2.2, 3.3, 4.4]'),
-(3, '["apple", "banana", "cherry"]'),
-(4, '[{"a": 1}, {"b": 2}, {"c": 3}]'),
-(5, '[]'),
-(6, 'NULL');
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
-WHERE id = 2;
-```
-
-```text
-+------+------+
-| id   | e1   |
-+------+------+
-|    2 |  1.1 |
-|    2 |  2.2 |
-|    2 |  3.3 |
-|    2 |  4.4 |
-+------+------+
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
-WHERE id = 6;
-Empty set (0.01 sec)
-```
-
-```sql
-SELECT id, e1
-FROM json_array_example
-LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE_OUTER(json_array) tmp1 AS e1
-WHERE id = 6;
-```
-
-```text
-+------+------+
-| id   | e1   |
-+------+------+
-|    6 | NULL |
-+------+------+
-```
+    insert into example values(1);
+    ```
+1. Regular parameters
+    ```sql
+    select * from example lateral view explode_json_array_double('[4, 5, 5.23, null]') t2 as c;
+    ```
+    ```text
+    +------+------+
+    | id   | c    |
+    +------+------+
+    |    1 |    4 |
+    |    1 |    5 |
+    |    1 | 5.23 |
+    |    1 | NULL |
+    +------+------+
+    ```
+2. DOUBLE type
+    ```sql
+    select * from example
+        lateral view 
+        explode_json_array_double('[123.445, 9223372036854775807.0, 9223372036854775808.0, -9223372036854775808.0, -9223372036854775809.0]') t2 as c;
+    ```
+    ```text
+    +------+------------------------+
+    | id   | c                      |
+    +------+------------------------+
+    |    1 |                123.445 |
+    |    1 |  9.223372036854776e+18 |
+    |    1 |  9.223372036854776e+18 |
+    |    1 | -9.223372036854776e+18 |
+    |    1 | -9.223372036854776e+18 |
+    +------+------------------------+
+    ```
+3. Empty array
+    ```sql
+    select * from example lateral view explode_json_array_double('[]') t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+4. NULL parameter
+    ```sql
+    select * from example lateral view explode_json_array_double(NULL) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+5. Non-array parameter
+    ```sql
+    select * from example lateral view explode_json_array_double('{}') t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
