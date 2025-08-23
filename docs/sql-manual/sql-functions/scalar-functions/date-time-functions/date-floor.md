@@ -19,7 +19,7 @@
 | -- | -- |
 | `datetime` | The argument is a valid date expression |
 | `period` | The argument specifies how many units make up each period, with the start time being 0001-01-01T00:00:00 |
-| `type` | The argument can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND|
+| `type` | The argument can be: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND|
 
 ## Return Value
 
@@ -97,6 +97,18 @@ select date_floor("2023-07-13 22:28:18",interval 5 month);
 +--------------------------------------------------------------+
 | 2023-07-01 00:00:00                                          |
 +--------------------------------------------------------------+
+```
+
+```sql
+select date_floor("2023-07-13 22:28:18",interval 5 quarter);
+```
+
+```text
++------------------------------------------------------+
+| date_floor("2023-07-13 22:28:18",interval 5 quarter) |
++------------------------------------------------------+
+| 2023-07-01 00:00:00                                  |
++------------------------------------------------------+
 ```
 
 ```sql

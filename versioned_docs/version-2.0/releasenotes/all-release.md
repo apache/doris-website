@@ -9,16 +9,20 @@ This document presents a summary of Apache Doris versions released within one ye
 
 :::tip Latest Release
 
-🎉 Version 3.0.6 released now. Check out the 🔗[Release Notes](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.6) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
+🎉 Version 3.0.7 released now. Check out the 🔗[Release Notes](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.7) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
 
 <br />
 
-🎉 Version 2.1.10 released now. Check out the 🔗[Release Notes](../releasenotes/v2.1/release-2.1.10) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
+🎉 Version 2.1.11 released now. Check out the 🔗[Release Notes](../releasenotes/v2.1/release-2.1.11) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
 
 :::
 
 
 <br />
+
+- [2025-08-25, Apache Doris 3.0.7 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.7)
+
+- [2025-08-15, Apache Doris 2.1.11 is released](../releasenotes/v2.1/release-2.1.11.md)
 
 - [2025-06-16, Apache Doris 3.0.6 is released](https://doris.apache.org/docs/3.0/releasenotes/v3.0/release-3.0.6)
 
