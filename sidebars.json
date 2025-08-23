@@ -1509,8 +1509,10 @@
                                     "label": "MAP Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-entry",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-entries",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-keys",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-values",
