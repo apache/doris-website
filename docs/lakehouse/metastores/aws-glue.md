@@ -9,7 +9,7 @@ This document describes the parameter configuration when using **AWS Glue Catalo
 
 ## Supported Glue Catalog Types
 
-AWS Glue Catalog currently supports two types of Catalogs:
+AWS Glue Catalog currently supports three types of Catalogs:
 
 | Catalog Type | Type Identifier (`type`) | Description                                        |
 |--------------|-------------------------|----------------------------------------------------|
