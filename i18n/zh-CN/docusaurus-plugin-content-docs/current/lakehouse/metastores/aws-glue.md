@@ -9,7 +9,7 @@
 
 ## Glue Catalog 支持的类型
 
-AWS Glue Catalog 当前支持两种类型的 Catalog：
+AWS Glue Catalog 当前支持三种类型的 Catalog：
 
 | Catalog 类型 | 类型标识 (`type`) | 描述                                        |
 |-------------|------------------|---------------------------------------------|

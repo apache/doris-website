@@ -5,5 +5,5 @@
 }
 ---
 
-TODO
+Baidu Cloud BOS will be supported later.
 
