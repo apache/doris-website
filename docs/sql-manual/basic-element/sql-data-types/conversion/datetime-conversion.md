@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to DATETIME",
+    "title": "Cast to DATETIME Type",
     "language": "en"
 }
 ---

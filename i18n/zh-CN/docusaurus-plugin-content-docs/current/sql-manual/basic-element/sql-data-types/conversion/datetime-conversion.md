@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 DATETIME",
+    "title": "转换为 DATETIME 类型",
     "language": "zh-CN"
 }
 ---

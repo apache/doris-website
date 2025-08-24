@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 DATE",
+    "title": "转换为 DATE 类型",
     "language": "zh-CN"
 }
 ---
