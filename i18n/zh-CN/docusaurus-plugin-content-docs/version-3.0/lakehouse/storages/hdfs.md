@@ -41,7 +41,7 @@ Simple 认证适用于未开启 Kerberos 的 HDFS 集群。
 
 使用 Simple 认证方式，可以设置以下参数，或直接使用默认值：
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple"
 ```
 
@@ -51,14 +51,14 @@ Simple 认证模式下，可以使用 `hadoop.username` 参数来指定用户名
 
 使用 `lakers` 用户名访问 HDFS
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple",
 "hadoop.username" = "lakers"
 ```
 
 使用默认系统用户访问 HDFS
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple"
 ```
 
@@ -68,7 +68,7 @@ Kerberos 认证适用于已开启 Kerberos 的 HDFS 集群。
 
 使用 Kerberos 认证方式，需要设置以下参数：
 
-```plain
+```sql
 "hdfs.authentication.type" = "kerberos",
 "hdfs.authentication.kerberos.principal" = "<your_principal>",
 "hdfs.authentication.kerberos.keytab" = "<your_keytab>"
@@ -84,10 +84,32 @@ Doris 将以该 `hdfs.authentication.kerberos.principal` 属性指定的主体�
 
 示例：
 
-```plain
+```sql
 "hdfs.authentication.type" = "kerberos",
 "hdfs.authentication.kerberos.principal" = "hdfs/hadoop@HADOOP.COM",
 "hdfs.authentication.kerberos.keytab" = "/etc/security/keytabs/hdfs.keytab",
+```
+
+## 高可用配置（HDFS HA）
+
+如 HDFS 开启了 HA 模式，需要配置 `dfs.nameservices` 相关参数：
+
+```sql
+'dfs.nameservices' = '<your-nameservice>',
+'dfs.ha.namenodes.<your-nameservice>' = '<nn1>,<nn2>',
+'dfs.namenode.rpc-address.<your-nameservice>.<nn1>' = '<nn1_host:port>',
+'dfs.namenode.rpc-address.<your-nameservice>.<nn2>' = '<nn2_host:port>',
+'dfs.client.failover.proxy.provider.<your-nameservice>' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
+```
+
+示例：
+
+```sql
+'dfs.nameservices' = 'nameservice1',
+'dfs.ha.namenodes.nameservice1' = 'nn1,nn2',
+'dfs.namenode.rpc-address.nameservice1.nn1' = '172.21.0.2:8088',
+'dfs.namenode.rpc-address.nameservice1.nn2' = '172.21.0.3:8088',
+'dfs.client.failover.proxy.provider.nameservice1' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
 ```
 
 ## 配置文件
@@ -103,9 +125,9 @@ Doris 支持通过 `hadoop.config.resources` 参数来指定 HDFS 相关配置�
 **示例：**
 
 ```sql
-多个配置文件
+-- 多个配置文件
 'hadoop.config.resources'='hdfs-cluster-1/core-site.xml,hdfs-cluster-1/hdfs-site.xml'
-单个配置文件
+-- 单个配置文件
 'hadoop.config.resources'='hdfs-cluster-2/hdfs-site.xml'
 ```
 
@@ -121,7 +143,7 @@ HDFS Client 提供了 Hedged Read 功能。该功能可以在一个读请求超�
 
 可以通过以下方式开启这个功能：
 
-```plain
+```sql
 "dfs.client.hedged.read.threadpool.size" = "128",
 "dfs.client.hedged.read.threshold.millis" = "500"
 ```

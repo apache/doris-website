@@ -41,7 +41,7 @@ Simple authentication is suitable for HDFS clusters that have not enabled Kerber
 
 Using Simple authentication, you can set the following parameters or use the default values directly:
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple"
 ```
 
@@ -51,14 +51,14 @@ Examples:
 
 Using `lakers` username to access HDFS
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple",
 "hadoop.username" = "lakers"
 ```
 
 Using default system user to access HDFS
 
-```plain
+```sql
 "hdfs.authentication.type" = "simple"
 ```
 
@@ -68,7 +68,7 @@ Kerberos authentication is suitable for HDFS clusters with Kerberos enabled.
 
 Using Kerberos authentication, you need to set the following parameters:
 
-```plain
+```sql
 "hdfs.authentication.type" = "kerberos",
 "hdfs.authentication.kerberos.principal" = "<your_principal>",
 "hdfs.authentication.kerberos.keytab" = "<your_keytab>"
@@ -84,10 +84,32 @@ Doris will access HDFS with the identity specified by the `hdfs.authentication.k
 
 Example:
 
-```plain
+```sql
 "hdfs.authentication.type" = "kerberos",
 "hdfs.authentication.kerberos.principal" = "hdfs/hadoop@HADOOP.COM",
 "hdfs.authentication.kerberos.keytab" = "/etc/security/keytabs/hdfs.keytab",
+```
+
+## HDFS HA Configuration
+
+If HDFS HA mode is enabled, need to configure `dfs.nameservices` related parameters:
+
+```sql
+'dfs.nameservices' = '<your-nameservice>',
+'dfs.ha.namenodes.<your-nameservice>' = '<nn1>,<nn2>',
+'dfs.namenode.rpc-address.<your-nameservice>.<nn1>' = '<nn1_host:port>',
+'dfs.namenode.rpc-address.<your-nameservice>.<nn2>' = '<nn2_host:port>',
+'dfs.client.failover.proxy.provider.<your-nameservice>' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
+```
+
+Example:
+
+```sql
+'dfs.nameservices' = 'nameservice1',
+'dfs.ha.namenodes.nameservice1' = 'nn1,nn2',
+'dfs.namenode.rpc-address.nameservice1.nn1' = '172.21.0.2:8088',
+'dfs.namenode.rpc-address.nameservice1.nn2' = '172.21.0.3:8088',
+'dfs.client.failover.proxy.provider.nameservice1' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
 ```
 
 ## Configuration Files
@@ -103,9 +125,9 @@ If the configuration files contain the above parameters mentioned in this docume
 **Examples:**
 
 ```sql
-Multiple configuration files
+-- Multiple configuration files
 'hadoop.config.resources'='hdfs-cluster-1/core-site.xml,hdfs-cluster-1/hdfs-site.xml'
-Single configuration file
+-- Single configuration file
 'hadoop.config.resources'='hdfs-cluster-2/hdfs-site.xml'
 ```
 
@@ -121,7 +143,7 @@ Note: This feature may increase the load on the HDFS cluster, please use it judi
 
 You can enable this feature in the following way:
 
-```plain
+```sql
 "dfs.client.hedged.read.threadpool.size" = "128",
 "dfs.client.hedged.read.threshold.millis" = "500"
 ```

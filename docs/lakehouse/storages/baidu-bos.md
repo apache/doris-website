@@ -5,5 +5,5 @@
 }
 ---
 
-Baidu Cloud BOS will be supported later.
+Document is under development.
 
