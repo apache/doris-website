@@ -39,11 +39,6 @@ array_cum_sum(ARRAY<T> arr)
 - NULL：如果输入数组为 NULL
 
 使用说明：
-- 如果数组包含其他类型（如字符串等），会尝试将元素转换为 DOUBLE 类型。转换失败的元素结果为 null。
-- 函数会尝试将所有元素转换为兼容的数值类型进行累积和计算，累积和的返回类型根据输入类型自动选择：
-  - 输入为 DOUBLE 或 FLOAT 时，返回 ARRAY\<DOUBLE>
-  - 输入为整数类型时，返回 ARRAY\<BIGINT> 或 ARRAY\<LARGEINT>
-  - 输入为 DECIMAL 时，返回 ARRAY\<DECIMAL>，保持原精度和标度
 - 累积和的计算顺序为从左到右，每个位置的值为前面所有非 null 元素的和。
 - 空数组返回空数组，NULL 数组返回 NULL，只有一个元素的数组返回原数组。
 - 嵌套数组、MAP、STRUCT 等复杂类型不支持累积和，调用会报错。

@@ -31,7 +31,7 @@ array_product(ARRAY<T> arr)
 
 ### 返回值
 
-返回类型：DOUBLE 或 DECIMAL
+返回类型：T
 
 返回值含义：
 - 返回数组中所有元素的乘积
