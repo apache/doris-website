@@ -5,35 +5,73 @@
 }
 ---
 
+## ipv4_cidr_to_range
+
 ## Description
-Receive an IPv4 and an Int16 value containing CIDR. Returns a struct that contains two IPv4 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
+Calculates the minimum and maximum IPv4 addresses for a network segment based on an IPv4 address and CIDR prefix length, returning a struct containing two IPv4 addresses.
 
 ## Syntax
 ```sql
-IPV4_CIDR_TO_RANGE(<ip_v4>, <cidr>)
+IPV4_CIDR_TO_RANGE(<ipv4_address>, <cidr_prefix>)
 ```
 
-## Parameters
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<ip_v4>`      | An IPv4 address of type String |
-| `<cidr>`      | The cidr value |
+### Parameters
+- `<ipv4_address>`: IPv4 type address
+- `<cidr_prefix>`: CIDR prefix length (SMALLINT type, range 0-32)
 
+### Return Value
+Return Type: STRUCT<min: IPv4, max: IPv4>
 
-## Return Value
-Returns a struct that contains two IPv4 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
-- If input is NULL, the function returns NULL.
+Return Value Meaning:
+- Returns a struct containing two fields:
+  - `min`: Minimum IPv4 address of the network segment
+  - `max`: Maximum IPv4 address of the network segment
 
+### Usage Notes
+- CIDR prefix length must be within the range 0-32
+- Calculation is based on network mask, setting all host bits to zero for minimum address and all host bits to one for maximum address
+- Supports various combinations of constant parameters and column parameters
 
-## Example
+## Examples
+
+Calculate address range for /24 network segment.
 ```sql
-SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16) as re1, ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16) as re2, ipv4_cidr_to_range(NULL, NULL) as re3;
-```
-```text
-+------------------------------------------------+------------------------------------------------+------+
-| re1                                            | re2                                            | re3  |
-+------------------------------------------------+------------------------------------------------+------+
-| {"min":"192.168.0.0", "max":"192.168.255.255"} | {"min":"192.168.0.0", "max":"192.168.255.255"} | NULL |
-+------------------------------------------------+------------------------------------------------+------+
+SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
++----------------------------------------+
+| range                                  |
++----------------------------------------+
+| {"min": "192.168.1.0", "max": "192.168.1.255"} |
++----------------------------------------+
 ```
 
+Calculate address range for /16 network segment.
+```sql
+SELECT ipv4_cidr_to_range(INET_ATON('10.0.0.1'), 16) as range;
++----------------------------------------+
+| range                                  |
++----------------------------------------+
+| {"min": "10.0.0.0", "max": "10.255.255.255"} |
++----------------------------------------+
+```
+
+Access specific fields in the struct.
+```sql
+SELECT 
+  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).min as min_ip,
+  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).max as max_ip;
++-------------+-------------+
+| min_ip      | max_ip      |
++-------------+-------------+
+| 172.16.1.0  | 172.16.1.255 |
++-------------+-------------+
+```
+
+CIDR prefix out of range throws an exception.
+```sql
+SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 33);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal cidr value '33'
+```
+
+### Keywords
+
+IPV4_CIDR_TO_RANGE

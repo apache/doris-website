@@ -5,48 +5,81 @@
 }
 ---
 
+## is_ipv6_string
+
 ## Description
-Determine whether an IPv6-type address is a valid IPv6 address.
+Checks if the input string is a valid IPv6 address format. Returns 1 if it is a valid IPv6 address, returns 0 if it is not.
 
 ## Syntax
 ```sql
 IS_IPV6_STRING(<ipv6_str>)
 ```
 
-## Parameters
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<ipv6_str>`      | An IPv6 address of type String |
+### Parameters
+- `<ipv6_str>`: String to check
 
+### Return Value
+Return Type: TINYINT
 
-## Return Value
-If it is a correctly formatted and valid IPv6 address, return true; On the contrary, return false.
-- If input is NULL, the function returns NULL.
+Return Value Meaning:
+- Returns 1: indicates the input is a valid IPv6 address format
+- Returns 0: indicates the input is not a valid IPv6 address format
+- Returns NULL when input is NULL
 
+### Usage Notes
+- Only checks if the string format conforms to IPv6 address specification
+- Does not perform actual IP address conversion, only format validation
+- Supports NULL input, returns NULL
 
-## Example
+## Examples
+
+Check valid IPv6 address format.
 ```sql
-CREATE TABLE `test_is_ipv6_string` (
-      `id` int,
-      `ip_v6` string
-    ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(`id`) BUCKETS 4
-    PROPERTIES (
-    "replication_allocation" = "tag.location.default: 1"
-    );
-    
-insert into test_is_ipv6_string values(0, NULL), (1, '::'), (2, ''), (3, '2001:1b70:a1:610::b102:2'), (4, 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg');
+SELECT is_ipv6_string('2001:db8::1') as is_valid;
++----------+
+| is_valid |
++----------+
+| 1        |
++----------+
+```
 
-select id, ip_v6, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
+Check various IPv6 address formats.
+```sql
+SELECT 
+  is_ipv6_string('::1') as localhost,
+  is_ipv6_string('2001:db8::1') as standard,
+  is_ipv6_string('2001:db8:0:0:0:0:0:1') as expanded;
++-----------+----------+----------+
+| localhost | standard | expanded |
++-----------+----------+----------+
+| 1         | 1        | 1        |
++-----------+----------+----------+
 ```
-```text
-+------+------------------------------------------+-----------------------+
-| id   | ip_v6                                    | is_ipv6_string(ip_v6) |
-+------+------------------------------------------+-----------------------+
-|    0 | NULL                                     |                  NULL |
-|    1 | ::                                       |                     1 |
-|    2 |                                          |                     0 |
-|    3 | 2001:1b70:a1:610::b102:2                 |                     1 |
-|    4 | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffffg |                     0 |
-+------+------------------------------------------+-----------------------+
+
+Check invalid IPv6 address formats.
+```sql
+SELECT 
+  is_ipv6_string('2001:db8::1::2') as double_colon,
+  is_ipv6_string('2001:db8:1') as too_short,
+  is_ipv6_string('2001:db8:1:2:3:4:5:6:7') as too_long,
+  is_ipv6_string('not-an-ipv6') as not_ipv6;
++--------------+-----------+----------+----------+
+| double_colon | too_short | too_long | not_ipv6 |
++--------------+-----------+----------+----------+
+| 0            | 0         | 0        | 0        |
++--------------+-----------+----------+----------+
 ```
+
+Check NULL input.
+```sql
+SELECT is_ipv6_string(NULL) as null_check;
++------------+
+| null_check |
++------------+
+| NULL       |
++------------+
+```
+
+### Keywords
+
+IS_IPV6_STRING

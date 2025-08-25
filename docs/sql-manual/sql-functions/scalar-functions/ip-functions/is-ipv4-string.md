@@ -5,48 +5,81 @@
 }
 ---
 
+## is_ipv4_string
+
 ## Description
-Determine whether an IPv4-type address is a valid IPv4 address.
+Checks if the input string is a valid IPv4 address format. Returns 1 if it is a valid IPv4 address, returns 0 if it is not.
 
 ## Syntax
 ```sql
 IS_IPV4_STRING(<ipv4_str>)
 ```
 
-## Parameters
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<ipv4_str>`      | An IPv4 address of type String |
+### Parameters
+- `<ipv4_str>`: String to check
 
+### Return Value
+Return Type: TINYINT
 
-## Return Value
-If it is a correctly formatted and valid IPv4 address, return true; On the contrary, return false.
-- If input is NULL, the function returns NULL.
+Return Value Meaning:
+- Returns 1: indicates the input is a valid IPv4 address format
+- Returns 0: indicates the input is not a valid IPv4 address format
+- Returns NULL when input is NULL
 
+### Usage Notes
+- Only checks if the string format conforms to IPv4 address specification (A.B.C.D format)
+- Does not perform actual IP address conversion, only format validation
+- Supports NULL input, returns NULL
 
-## Example
+## Examples
+
+Check valid IPv4 address format.
 ```sql
-CREATE TABLE `test_is_ipv4_string` (
-      `id` int,
-      `ip_v4` string
-    ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(`id`) BUCKETS 4
-    PROPERTIES (
-    "replication_allocation" = "tag.location.default: 1"
-    );
-    
-insert into test_is_ipv4_string values(0, NULL), (1, '0.0.0.'), (2, ''), (3, '.'), (4, '255.255.255.255');
+SELECT is_ipv4_string('192.168.1.1') as is_valid;
++----------+
+| is_valid |
++----------+
+| 1        |
++----------+
+```
 
-select id, ip_v4, is_ipv4_string(ip_v4) from test_is_ipv4_string order by id;
+Check boundary value IPv4 addresses.
+```sql
+SELECT 
+  is_ipv4_string('0.0.0.0') as min_ip,
+  is_ipv4_string('255.255.255.255') as max_ip;
++--------+--------+
+| min_ip | max_ip |
++--------+--------+
+| 1      | 1      |
++--------+--------+
 ```
-```text
-+------+-----------------+-----------------------+
-| id   | ip_v4           | is_ipv4_string(ip_v4) |
-+------+-----------------+-----------------------+
-|    0 | NULL            |                  NULL |
-|    1 | 0.0.0.          |                     0 |
-|    2 |                 |                     0 |
-|    3 | .               |                     0 |
-|    4 | 255.255.255.255 |                     1 |
-+------+-----------------+-----------------------+
+
+Check invalid IPv4 address formats.
+```sql
+SELECT 
+  is_ipv4_string('256.1.1.1') as invalid_range,
+  is_ipv4_string('192.168.1') as missing_octet,
+  is_ipv4_string('192.168.1.1.1') as extra_octet,
+  is_ipv4_string('not-an-ip') as not_ip;
++---------------+----------------+--------------+--------+
+| invalid_range | missing_octet | extra_octet | not_ip |
++---------------+----------------+--------------+--------+
+| 0             | 0              | 0            | 0      |
++---------------+----------------+--------------+--------+
 ```
+
+Check NULL input.
+```sql
+SELECT is_ipv4_string(NULL) as null_check;
++------------+
+| null_check |
++------------+
+| NULL       |
++------------+
+```
+
+### Keywords
+
+IS_IPV4_STRING
+
