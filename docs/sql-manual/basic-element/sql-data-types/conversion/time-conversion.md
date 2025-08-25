@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to TIME",
+    "title": "Cast to TIME Type",
     "language": "en"
 }
 ---

@@ -24,19 +24,20 @@ PERCENTILE_APPROX_WEIGHTED(<col>, <weight>, <p> [, <compression>])
 
 | 参数 | 说明 |
 | -- | -- |
-| `<col>` | 需要计算百分位数的列 |
-| `<weight>` | 权重列，必须是正数 |
-| `<p>` | 百分位数值，取值范围 `[0.0, 1.0]`，例如 `0.99` 表示 `99` 分位数 |
-| `<compression>` | 可选参数，压缩度，取值范围 `[2048, 10000]`。值越大，精度越高，但内存消耗也越大。如果不指定或超出范围，则使用 `10000`。 |
+| `<col>` | 需要计算百分位数的列，支持类型为 Double 。 |
+| `<weight>` | 权重列，必须是正数，支持类型为 Double 。 |
+| `<p>` | 百分位数值，支持类型为 Double 。取值范围 `[0.0, 1.0]`，例如 `0.99` 表示 `99` 分位数 |
+| `<compression>` | 可选参数，支持类型为 Double 。表示压缩度，取值范围 `[2048, 10000]`。值越大，精度越高，但内存消耗也越大。如果不指定或超出范围，则使用 `10000`。 |
 
 ## 返回值
 
-返回一个 `DOUBLE` 类型的值，表示计算得到的加权近似百分位数。
+返回一个 Double 类型的值，表示计算得到的加权近似百分位数。
+如果组内没有合法数据，则返回 NULL 。
 
 ## 举例
 
 ```sql
--- 创建示例表
+-- setup
 CREATE TABLE weighted_scores (
     student_id INT,
     score DECIMAL(10, 2),
@@ -46,8 +47,6 @@ DISTRIBUTED BY HASH(student_id) BUCKETS AUTO
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
-
--- 插入示例数据
 INSERT INTO weighted_scores VALUES
 (1, 85.5, 1),   -- 普通作业分数，权重 1
 (2, 90.0, 2),   -- 重要作业分数，权重 2
@@ -59,8 +58,9 @@ INSERT INTO weighted_scores VALUES
 (8, 89.5, 2),
 (9, 94.0, 3),
 (10, 83.5, 1);
+```
 
--- 计算带权重的分数分布
+```sql
 SELECT 
     -- 计算不同压缩度下的 90 分位数
     percentile_approx_weighted(score, weight, 0.9) as p90_default,          -- 默认压缩度
@@ -68,6 +68,8 @@ SELECT
     percentile_approx_weighted(score, weight, 0.9, 10000) as p90_accurate   -- 高压缩度，更精确
 FROM weighted_scores;
 ```
+
+计算带权重的分数分布。
 
 ```text
 +------------------+------------------+------------------+
@@ -77,4 +79,30 @@ FROM weighted_scores;
 +------------------+------------------+------------------+
 ```
 
+```sql
+select percentile_approx_weighted(if(score>95,score,null), weight, 0.9) from weighted_scores;
+```
 
+只会计算输入的非 NULL 的数据。
+
+```text
++------------------------------------------------------------------+
+| percentile_approx_weighted(if(score>95,score,null), weight, 0.9) |
++------------------------------------------------------------------+
+|                                                             95.5 |
++------------------------------------------------------------------+
+```
+
+```sql
+select percentile_approx_weighted(score, weight, 0.9, null) from weighted_scores;
+```
+
+如果输入数据均为 NULL，则返回NULL。
+
+```text
++------------------------------------------------------+
+| percentile_approx_weighted(score, weight, 0.9, null) |
++------------------------------------------------------+
+|                                                 NULL |
++------------------------------------------------------+
+```
