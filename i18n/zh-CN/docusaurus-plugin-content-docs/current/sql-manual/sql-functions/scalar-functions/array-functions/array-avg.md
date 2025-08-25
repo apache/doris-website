@@ -27,8 +27,6 @@ array_avg(ARRAY<T> arr)
 
 **T 支持的类型：**
 - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
-- 字符串类型：CHAR、VARCHAR、STRING
-- 布尔类型：BOOLEAN
 
 ### 返回值
 

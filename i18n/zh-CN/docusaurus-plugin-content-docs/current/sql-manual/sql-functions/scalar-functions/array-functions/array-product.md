@@ -27,7 +27,6 @@ array_product(ARRAY<T> arr)
 
 **T 支持的类型：**
 - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
-- 布尔类型：BOOLEAN（true 转换为 1，false 转换为 0）
 
 ### 返回值
 
