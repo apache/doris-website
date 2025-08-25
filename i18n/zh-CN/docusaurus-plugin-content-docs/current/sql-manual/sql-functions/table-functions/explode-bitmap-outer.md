@@ -1,6 +1,6 @@
 ---
 {
-"title": "EXPLODE_BITMAP",
+"title": "EXPLODE_BITMAP_OUTER",
 "language": "zh-CN"
 }
 ---
@@ -12,7 +12,7 @@ explode_bitmap_outer 与 explode_bitmap 类似，但在处理空值或 NULL 时�
 
 ## 语法
 ```sql
-EXPLODE_BITMAP(<bitmap>)
+EXPLODE_BITMAP_OUTER(<bitmap>)
 ```
 
 ## 参数
@@ -20,6 +20,9 @@ EXPLODE_BITMAP(<bitmap>)
 
 ## 返回值
 - 返回 `<bitmap>` 中每一位对应的行，其中每一行包含一个位值。
+- 如果 `<bitmap>` 为 NULL 返回 1 行 NULL 数据。
+- 如果 `<bitmap>` 为空，返回 1 行 NULL 数据。
+
 
 ## 使用说明
 1. 如果 `<bitmap>` 参数的类型不是 [`BITMAP`](../../basic-element/sql-data-types/aggregate/BITMAP.md) 会报错。
@@ -37,7 +40,7 @@ EXPLODE_BITMAP(<bitmap>)
     ```
 1. 常规参数
     ```sql
-    select k1, e1 from example lateral view explode_bitmap(bitmap_from_string("1,3,4,5,6,10")) t2 as e1 order by k1, e1;
+    select k1, e1 from example lateral view explode_bitmap_outer(bitmap_from_string("1,3,4,5,6,10")) t2 as e1 order by k1, e1;
     ```
     ```text
     +------+------+
@@ -53,22 +56,30 @@ EXPLODE_BITMAP(<bitmap>)
     ```
 2. 空 BITMAP
     ```sql
-    select k1, e1 from example lateral view explode_bitmap(bitmap_from_string("")) t2 as e1 order by k1, e1;
+    select k1, e1 from example lateral view explode_bitmap_outer(bitmap_from_string("")) t2 as e1 order by k1, e1;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | e1   |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 3. NULL 参数
     ```sql
-    select  * from example lateral view explode_bitmap(NULL) t2 as c;
+    select  * from example lateral view explode_bitmap_outer(NULL) t2 as c;
     ```
     ```text
-    Empty set (0.03 sec)
+    +------+------+
+    | k1   | e1   |
+    +------+------+
+    |    1 | NULL |
+    +------+------+
     ```
 4. 非数组参数
     ```sql
-    select  * from example lateral view explode_bitmap('abc') t2 as c;
+    select  * from example lateral view explode_bitmap_outer('abc') t2 as c;
     ```
     ```text
-    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode_bitmap(VARCHAR(3))
+    ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: explode_bitmap_outer(VARCHAR(3))
     ```

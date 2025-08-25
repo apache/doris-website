@@ -24,14 +24,15 @@ PERCENTILE_APPROX_WEIGHTED(<col>, <weight>, <p> [, <compression>])
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | The column to calculate the percentile for |
-| `<weight>` | Weight column, must be positive numbers |
+| `<col>` | The column to calculate the percentile for. Supported type: Double |
+| `<weight>` | Weight column, must be positive numbers. Supported type: Double |
 | `<p>` | Percentile value, range `[0.0, 1.0]`, e.g., `0.99` represents the `99`th percentile |
-| `<compression>` | Optional parameter, compression ratio, range `[2048, 10000]`. The higher the value, the higher the precision, but the greater the memory consumption. If not specified or outside the range, use `10000`. |
+| `<compression>` | Optional parameter, supported type: Double. Compression ratio, range `[2048, 10000]`. The higher the value, the higher the precision, but the greater the memory consumption. If not specified or outside the range, `10000` is used. |
 
 ## Return Value
 
 Return a `DOUBLE` type value, representing the calculated weighted approximate percentile.
+If there is no valid data in the group, returns `NULL`.
 
 ## Examples
 
@@ -75,6 +76,35 @@ FROM weighted_scores;
 +------------------+------------------+------------------+
 | 95.3499984741211 | 95.3499984741211 | 95.3499984741211 |
 +------------------+------------------+------------------+
+```
+
+
+```sql
+select percentile_approx_weighted(if(score>95,score,null), weight, 0.9) from weighted_scores;
+```
+
+This will only consider non-NULL inputs.
+
+```text
++------------------------------------------------------------------+
+| percentile_approx_weighted(if(score>95,score,null), weight, 0.9) |
++------------------------------------------------------------------+
+|                                                             95.5 |
++------------------------------------------------------------------+
+```
+
+```sql
+select percentile_approx_weighted(score, weight, 0.9, null) from weighted_scores;
+```
+
+If all input values are NULL, the function returns NULL.
+
+```text
++------------------------------------------------------+
+| percentile_approx_weighted(score, weight, 0.9, null) |
++------------------------------------------------------+
+|                                                 NULL |
++------------------------------------------------------+
 ```
 
 

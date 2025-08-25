@@ -41,7 +41,7 @@ EXPLODE_SPLIT(<str>, <delimiter>)
     ```
 1. Regular parameters
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split("ab,cd,ef", ",") t2 as c;
+    select  * from example lateral view explode_split("ab,cd,ef", ",") t2 as c;
     ```
     ```text
     +------+------+
@@ -54,7 +54,7 @@ EXPLODE_SPLIT(<str>, <delimiter>)
     ```
 2. Empty string and unsplittable cases
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split("", ",") t2 as c;
+    select  * from example lateral view explode_split("", ",") t2 as c;
     ```
     ```text
     +------+------+
@@ -64,7 +64,7 @@ EXPLODE_SPLIT(<str>, <delimiter>)
     +------+------+
     ```
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split("abc", ",") t2 as c;
+    select  * from example lateral view explode_split("abc", ",") t2 as c;
     ```
     ```text
     +------+------+
@@ -75,14 +75,14 @@ EXPLODE_SPLIT(<str>, <delimiter>)
     ```
 3. NULL parameter
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split(NULL, ',') t2 as c;
+    select  * from example lateral view explode_split(NULL, ',') t2 as c;
     ```
     ```text
     Empty set (0.03 sec)
     ```
 4. Empty delimiter
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split('abc', '') t2 as c;
+    select  * from example lateral view explode_split('abc', '') t2 as c;
     ```
     ```text
     +------+------+
@@ -95,7 +95,7 @@ EXPLODE_SPLIT(<str>, <delimiter>)
     ```
 5. Delimiter is NULL
     ```sql
-    select  * from (select 1 as k1) t1 lateral view explode_split('abc', null) t2 as c;
+    select  * from example lateral view explode_split('abc', null) t2 as c;
     ```
     ```text
     Empty set (0.03 sec)
