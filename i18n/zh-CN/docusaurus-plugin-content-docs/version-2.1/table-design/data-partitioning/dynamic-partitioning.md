@@ -54,7 +54,7 @@ PROPERTIES(
 
 上例中创建了动态分区表，指定以下
 
-详细 `dynamic_partition` 参数可以参考[动态分区参数说明](#动态分区属性参数)。
+详细 `dynamic_partition` 参数可以参考[动态分区参数说明](./dynamic-partitioning.md#动态分区属性参数)。
 
 ## 管理动态分区
 

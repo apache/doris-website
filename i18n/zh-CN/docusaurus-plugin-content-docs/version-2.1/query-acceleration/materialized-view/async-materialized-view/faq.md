@@ -172,7 +172,7 @@ BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 
 物化视图判断数据是否需要更新依赖于能够获取到基表或基表分区的版本信息。
 
-遇到目前不支持获取版本信息的数据湖， 例如jdbc catalog， 那么刷新的时候会认为物化视图是不需要更新的，因此创建或者刷新物化视图的时候应该指定 complete 而不是 auto
+遇到目前不支持获取版本信息的数据湖，例如 jdbc catalog，那么刷新的时候会认为物化视图是不需要更新的，因此创建或者刷新物化视图的时候应该指定 complete 而不是 auto
 
 物化视图支持数据湖的进度参考[数据湖支持情况](./overview.md)
 
@@ -297,7 +297,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 ### Q2：物化视图没有命中的原因是什么？
 
-首先，需要确认物化视图是否命中，需要执行如下 SQL，详细见[查询和透明改写 - 问题 1](#q1如何确认是否命中如果不命中如何查看原因)
+首先，需要确认物化视图是否命中，需要执行如下 SQL，详细见[查询和透明改写 - 问题 1](#q1物化视图是如何判断需要刷新哪些分区的)
 
 ```Plain
 explain
@@ -310,9 +310,9 @@ your_query_sql;
 
 - 物化视图可能处于不可用状态，从而导致透明改写无法命中。要查看物化视图的构建状态，请参见查看物化视图状态。
 
-- 若经过前两步的检查后，物化视图仍然无法命中，那么可能是物化视图的定义 SQL 和查询 SQL 不在当前物化视图改写能力的范围内。详情请参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#透明改写能力)。
+- 若经过前两步的检查后，物化视图仍然无法命中，那么可能是物化视图的定义 SQL 和查询 SQL 不在当前物化视图改写能力的范围内。详情请参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#查询透明改写)。
 
-- 对于失败命中的详细信息和说明，请查阅[附录 1](#附录)。
+- 对于失败命中的详细信息和说明，请查阅[附录 1](./faq.md#附录)。
 
 以下是物化视图透明改写失败的示例：
 
