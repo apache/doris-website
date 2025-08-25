@@ -5,9 +5,10 @@
 }
 ---
 
+
 ## Description
 
-The HLL_UNION_AGG function is an aggregate function, which is mainly used to merge multiple HyperLogLog data structures and estimate the approximate value of the combined cardinality.
+The HLL_UNION_AGG function is an aggregate function mainly used to merge multiple HyperLogLog data structures and estimate the approximate cardinality after merging.
 
 ## Syntax
 
@@ -17,24 +18,52 @@ hll_union_agg(<hll>)
 
 ## Parameters
 
-| Parameters | Description |
+| Parameter | Description |
 | -- | -- |
-| `<hll>` | The HyperLogLog type expression to be calculated |
+| `<hll>` | The expression to be calculated, type HLL supported. |
 
 ## Return Value
 
-Returns the cardinality value of type BIGINT.
+Returns a BIGINT cardinality value.
+If there is no valid data in the group, returns 0.
 
 ## Example
 
 ```sql
-select HLL_UNION_AGG(uv_set) from test_uv;
+-- setup
+create table test_uv(
+    id int,
+    uv_set string
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+insert into test_uv values
+    (1, ('a')),
+    (1, ('b')),
+    (2, ('c')),
+    (2, ('d')),
+    (3, null);
+```
+
+```sql
+select HLL_UNION_AGG(HLL_HASH(uv_set)) from test_uv;
 ```
 
 ```text
-+-------------------------+
-| HLL_UNION_AGG(`uv_set`) |
-+-------------------------+
-| 17721                   |
-+-------------------------+
++---------------------------------+
+| HLL_UNION_AGG(HLL_HASH(uv_set)) |
++---------------------------------+
+|                               4 |
++---------------------------------+
+```
+
+```sql
+select HLL_UNION_AGG(HLL_HASH(uv_set)) from test_uv where uv_set is null;
+```
+
+```text
++---------------------------------+
+| HLL_UNION_AGG(HLL_HASH(uv_set)) |
++---------------------------------+
+|                               0 |
++---------------------------------+
 ```
