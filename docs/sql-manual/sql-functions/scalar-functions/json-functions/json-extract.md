@@ -35,6 +35,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     * `[i]` represents the element at index i in the json array
         * To get the last element of json_array, you can use `$[last]`, the second to last element can use `$[last-1]`, and so on.
     * `*` represents a wildcard, where `$.*` represents all members of the root object, and `$[*]` represents all elements of the array.
+    * `**` is used in combination with '$', '$**' represents all paths (including multi-level subpaths).
 - If `<path>` contains wildcards (`*`), the matching results will be returned in array form.
 
 ## Examples
@@ -160,7 +161,19 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     | [[1,2,3,4,5],"abc",{"k4":"v4"},"v4"]                                                  |
     +---------------------------------------------------------------------------------------+
     ```
-9. Value is NULL case
+9. '**' in path
+    ```sql
+    select json_extract('{"k": 123, "b": {"k": ["ab", "cd"]}}', '$**.k');
+    ```
+    ```text
+    +---------------------------------------------------------------+
+    | json_extract('{"k": 123, "b": {"k": ["ab", "cd"]}}', '$**.k') |
+    +---------------------------------------------------------------+
+    | [123,["ab","cd"]]                                             |
+    +---------------------------------------------------------------+
+    ```
+
+10. Value is NULL case
     ```sql
     select JSON_EXTRACT('{"id": 123, "name": null}', '$.name') v, JSON_EXTRACT('{"id": 123, "name": null}', '$.name') is null v2;
     ```
