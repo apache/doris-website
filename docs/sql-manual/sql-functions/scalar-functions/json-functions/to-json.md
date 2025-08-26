@@ -39,7 +39,7 @@ TO_JSON(value)
 **value** - The value to be converted to JSONB type. The following Doris data types are supported:
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - Boolean type: BOOLEAN
-- String type: STRING, VARCHAR
+- String type: STRING, VARCHAR, CHAR
 - Complex types: ARRAY, STRUCT
 
 Types not listed above (like DATE, DATETIME, etc.) are not supported directly and must be first converted to supported types (typically STRING).
