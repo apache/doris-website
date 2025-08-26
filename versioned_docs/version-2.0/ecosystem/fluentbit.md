@@ -1,6 +1,6 @@
 ---
 {
-"title": "Fluent Bit Doris Output Plugin",
+"title": "FluentBit",
 "language": "en"
 }
 ---
