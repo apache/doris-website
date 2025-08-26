@@ -13,13 +13,14 @@ import SearchIcon from '@site/static/images/search-icon.svg';
 import CloseIcon from '@site/static/images/icon/close.svg';
 import { DataContext } from '../../../Layout';
 import { ARCHIVE_PATH } from '../../../../constant/common' ;
+import { DEFAULT_VERSION } from '../../../../constant/version' ;
 
 interface NavbarDocsProps {
     isEN: boolean;
 }
 
 export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
-    const [currentVersion, setCurrentVersion] = useState('');
+    const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
     const history = useHistory();
     const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
@@ -34,7 +35,7 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
         if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
             setCurrentVersion(secPath);
         } else {
-            setCurrentVersion('');
+            setCurrentVersion(DEFAULT_VERSION);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (
