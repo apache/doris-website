@@ -122,13 +122,6 @@ function Footer(): JSX.Element | null {
                                 >
                                     <MediumIcon />
                                 </a>
-                                <a className="item wechat">
-                                    <WechatIcon />
-                                    <div className="wechat-dropdown">
-                                        <p className="text-[#4c576c] text-xs">Connect on WeChat</p>
-                                        <img src={require('@site/static/images/doris-wechat.png').default} alt="" />
-                                    </div>
-                                </a>
                             </div>
                         </div>
                     </div>
