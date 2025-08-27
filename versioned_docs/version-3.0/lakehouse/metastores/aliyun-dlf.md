@@ -24,7 +24,7 @@ This document describes how to use the `CREATE CATALOG` statement to connect and
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID. Used to specify metadata catalog. If not set, the default catalog is used. | None | No |
 | `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog | None | No |
 
-### DLF Rest Catalog
+### DLF 2.5+ (Rest Catalog)
 
 > Supported since version 3.1.0
 
@@ -72,7 +72,7 @@ CREATE CATALOG paimon_dlf PROPERTIES (
 );
 ```
 
-### DLF Rest Catalog
+### DLF 2.5+ (Rest Catalog)
 
 ```sql
 CREATE CATALOG paimon_dlf_test PROPERTIES (
