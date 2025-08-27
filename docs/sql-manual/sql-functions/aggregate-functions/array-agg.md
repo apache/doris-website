@@ -19,7 +19,7 @@ ARRAY_AGG(<col>)
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | An expression that determines the values to be placed into the array (usually column names). |
+| `<col>` | An expression that determines the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String, Array, Map, Struct. |
 
 ## Return Value
 
@@ -32,27 +32,13 @@ Returns a value of ARRAY type.Special cases:
 ## Example
 
 ```sql
-select * from test_doris_array_agg;
-```
-
-```text
-+------+------+
-
-| c1   | c2   |
-
-+------+------+
-
-|    1 | a    |
-
-|    1 | b    |
-
-|    2 | c    |
-
-|    2 | NULL |
-
-|    3 | NULL |
-
-+------+------+
+-- setup
+CREATE TABLE test_doris_array_agg (
+	c1 INT,
+	c2 INT
+) DISTRIBUTED BY HASH(c1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO test_doris_array_agg VALUES (1, 10), (1, 20), (1, 30), (2, 100), (2, 200), (3, NULL);
 ```
 
 ```sql
@@ -60,18 +46,26 @@ select c1, array_agg(c2) from test_doris_array_agg group by c1;
 ```
 
 ```text
-+------+-----------------+
++------+---------------+
+| c1   | array_agg(c2) |
++------+---------------+
+|    1 | [10, 20, 30]  |
+|    2 | [100, 200]    |
+|    3 | [null]        |
++------+---------------+
+```
 
-| c1   | array_agg(`c2`) |
+```sql
+select array_agg(c2) from test_doris_array_agg where c1 is null;
+```
 
-+------+-----------------+
-
+```text
++---------------+
+| array_agg(c2) |
++---------------+
+| []            |
++---------------+
+```
 |    1 | ["a","b"]       |
 
-|    2 | [NULL,"c"]      |
-
-|    3 | [NULL]          |
-
-+------+-----------------+
-```
 
