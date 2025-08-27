@@ -9,17 +9,19 @@
 
 DAYOFWEEK 函数用于返回日期或时间表达式对应的星期索引值，遵循星期日为 1，星期一为 2，……，星期六为 7 的规则。
 
+该函数与 mysql 中的 [dayofweek 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayofweek) 行为一致
+
 ## 语法
 
 ```sql
-DAYOFWEEK(<dt>)
+DAYOFWEEK(<date_or_time_expr>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<dt>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 
@@ -27,7 +29,8 @@ DAYOFWEEK(<dt>)
 
 特殊情况：
 
-若 <dt> 为 NULL，返回 NULL；
+若 `<date_or_time_expr>` 为 NULL，返回 NULL；
+
 ## 举例
 
 ```sql

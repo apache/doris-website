@@ -9,20 +9,24 @@
 
 DAY_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最近的指定天数周期的起点。即返回不小于输入日期时间的最小周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。
 
+日期计算公式
+DAY_CEIL(<date_or_time_expr>,   <period>, <origin>) = min{<origin> + k × <period> × day | k ∈ ℤ ∧ <origin> + k × <period> × day ≥ <date_or_time_expr>}
+K 代表基准时间到达目标时间所需的周期数
+
 ## 语法
 
 ```sql
-DAY_CEIL(<datetime>)
-DAY_CEIL(<datetime>, <origin>)
-DAY_CEIL(<datetime>, <period>)
-DAY_CEIL(<datetime>, <period>, <origin>)
+DAY_CEIL(<date_or_time_expr>)
+DAY_CEIL(<date_or_time_expr>, <origin>)
+DAY_CEIL(<date_or_time_expr>, <period>)
+DAY_CEIL(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型和符合格式的字符串 |
 
@@ -32,19 +36,20 @@ DAY_CEIL(<datetime>, <period>, <origin>)
 
 若输入有效，返回与 datetime 类型一致的取整结果：
 
-输入 DATE 时，返回 DATE（仅日期部分，时间默认为 00:00:00）；
+输入 DATE 时，返回 DATE；
 输入 DATETIME，返回 DATETIME（包含日期和时间，时间部分为 00:00:00，因周期基于天数）。
 
 特殊情况：
 
 - 任何参数为 NULL 时，返回 NULL；
-- 若 period 为负数或 0，返回 NULL；
-- 若取整结果超出日期类型支持的范围（如 '9999-12-31' 之后），返回 NULL。
+- 若 period 为负数或 0，返回错误；
+- 若取整结果超出日期类型支持的范围（如 '9999-12-31' 之后），报错。
 - 带有 scale 的输入的datetime，输出会截断所有 scale 为0 ，返回值带有 scale
 
 ## 举例
 
 ```sql
+
 
 ---以五天为一周期向上取整
 select day_ceil( cast("2023-07-13 22:28:18" as datetime), 5);
@@ -81,6 +86,14 @@ select day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00");
 | 2023-07-16 00:00:00                                       |
 +-----------------------------------------------------------+
 
+---日期时间刚好是周期的起点
+select day_ceil("2023-07-16 00:00:00", 7, "2023-01-01 00:00:00");
++-----------------------------------------------------------+
+| day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00") |
++-----------------------------------------------------------+
+| 2023-07-16 00:00:00                                       |
++-----------------------------------------------------------+
+
 ---输入为 DATE 类型，周期为 3 天
 select day_ceil(cast("2023-07-13" as date), 3);
 
@@ -98,21 +111,13 @@ select day_ceil(cast("2023-07-13" as date), 0);
 | NULL                                    |
 +-----------------------------------------+
 
----周期为负数（返回 NULL）
+---周期为负数
 mysql> select day_ceil("2023-07-13 22:28:18", -2);
-+-------------------------------------+
-| day_ceil("2023-07-13 22:28:18", -2) |
-+-------------------------------------+
-| NULL                                |
-+-------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation day_ceil of 2023-07-13 22:28:18, -2 input wrong parameters, period can not be negative or zero
 
----返回日期超过最大范围，返回 NULL
+---返回日期超过最大范围，返回错误
 select day_ceil("9999-12-31", 5);
-+---------------------------+
-| day_ceil("9999-12-31", 5) |
-+---------------------------+
-| NULL                      |
-+---------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_ceil of 9999-12-31 00:00:00, 5 out of range
 
 ---任意参数为 NULL，返回 NULL
 select day_ceil(NULL, 5, "2023-01-01");
@@ -122,5 +127,4 @@ select day_ceil(NULL, 5, "2023-01-01");
 +---------------------------------+
 | NULL                            |
 +---------------------------------+
-
 ```

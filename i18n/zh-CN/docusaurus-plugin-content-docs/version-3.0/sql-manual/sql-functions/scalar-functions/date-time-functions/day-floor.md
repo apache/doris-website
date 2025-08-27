@@ -9,20 +9,24 @@
 
 DAY_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定天数周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。
 
+日期时间的计算公式
+DAY_FLOOR(<date_or_time_expr>, <period>, <origin>) = max{<origin> + k × <period> × day | k ∈ ℤ ∧ <origin> + k × <period> × day ≤ <date_or_time_expr>}
+K 代表的是基准时间到目标时间的周期数
+
 ## 语法
 
 ```sql
-DAY_FLOOR(<datetime>)
-DAY_FLOOR(<datetime>, <origin>)
-DAY_FLOOR(<datetime>, <period>)
-DAY_FLOOR(<datetime>, <period>, <origin>)
+DAY_FLOOR(<date_or_time_expr>)
+DAY_FLOOR(<date_or_time_expr>, <origin>)
+DAY_FLOOR(<date_or_time_expr>, <period>)
+DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 NULL；若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型和符合日期时间格式的字符串。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
 
@@ -32,7 +36,7 @@ DAY_FLOOR(<datetime>, <period>, <origin>)
 
 若输入有效，返回与 datetime 类型一致的取整结果：
 
-输入 DATE 时，返回 DATE（仅日期部分，时间默认为 00:00:00）；
+输入 DATE 时，返回 DATE
 输入 DATETIME，返回 DATETIME（包含日期和时间，时间部分为 00:00:00，因周期基于天数）。
 
 
@@ -76,6 +80,14 @@ select day_floor("2023-07-13 22:28:18");
 select day_floor("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00");
 +------------------------------------------------------------+
 | day_floor("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00") |
++------------------------------------------------------------+
+| 2023-07-09 00:00:00                                        |
++------------------------------------------------------------+
+
+---开始时间恰好在一个周期开始，则返回输入日期时间
+select day_floor("2023-07-09 00:00:00", 7, "2023-01-01 00:00:00");
++------------------------------------------------------------+
+| day_floor("2023-07-09 00:00:00", 7, "2023-01-01 00:00:00") |
 +------------------------------------------------------------+
 | 2023-07-09 00:00:00                                        |
 +------------------------------------------------------------+

@@ -22,16 +22,24 @@ FROM_MILLISECOND(<millisecond>)
 
 ## 返回值
 
-- 返回一个 DATETIME 类型的值，表示输入的 Unix 时间戳对应的日期时间。
-- 如果 `millisecond` 为 NULL，函数返回 NULL。
-- 如果 `millisecond` 超出有效范围 ( 结果日期时间超过了 9999-12-31 23:59:59 ) ，函数返回NULL。
-- 若输入 `millisecond` 能转换为整数秒，那么结果返回日期时间不带有 scale，如果不能，则结果返回带有 scale
-- 输入为负数，结果返回 NULL
+返回一个 DATETIME 类型的值，表示输入的 UTC时区下的unix时间戳，转换为当前时区的时间的结果
+- 如果 millisecond 为 NULL，函数返回 NULL。
+- 如果 millisecond 超出有效范围 ( 结果日期时间超过了 9999-12-31 23:59:59 ) ，函数返回错误。
+- 若输入 millisecond 能转换为整数秒，那么结果返回日期时间不带有 scale，如果不能，则结果返回带有 scale
+- 输入为负数，结果返回错误
 
 ## 举例
 
 
 ```sql
+
+----因为当前机器所在时区为东八区，所以返回的时间相较于 UTC 会加八个小时
+SELECT FROM_MILLISECOND(0);
++-------------------------+
+| FROM_MILLISECOND(0)     |
++-------------------------+
+| 1970-01-01 08:00:00.000 |
++-------------------------+
 
 -- 将 1700000000000 毫秒转换为日期时间
 SELECT FROM_MILLISECOND(1700000000000);
@@ -59,19 +67,11 @@ select from_millisecond(NULL);
 | NULL                   |
 +------------------------+
 
----输入为负数，结果返回 NULL
-select from_millisecond(-1);
-+----------------------+
-| from_millisecond(-1) |
-+----------------------+
-| NULL                 |
-+----------------------+
+---输入为负数，结果返回错误
+ select from_millisecond(-1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INTERNAL_ERROR]The function from_millisecond Argument value must be non-negative
 
---结果超过最大日期，返回 NULL
+--结果超过最大日期，返回错误
 select from_millisecond(999999999999999999);
-+--------------------------------------+
-| from_millisecond(999999999999999999) |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INTERNAL_ERROR]The function from_millisecond Argument value is out of DateTime range
 ```
