@@ -1,67 +1,133 @@
 ---
 {
-    "title": "数据缓存",
+    "title": "文件缓存功能介绍",
     "language": "zh-CN"
 }
+
 ---
 
 在存算分离的架构中，数据被存储在远程存储。Doris 数据库通过利用本地硬盘上的缓存来加速数据访问，并采用了一种先进的多队列 LRU（Least Recently Used）策略来高效管理缓存空间。这种策略特别优化了索引和元数据的访问路径，旨在最大化地缓存用户频繁访问的数据。针对多计算组（Compute Group）的应用场景，Doris 还提供了缓存预热功能，以便在新计算组建立时，能够迅速加载特定数据（如表或分区）到缓存中，从而提升查询性能。
 
-## 多队列 LRU
+## 缓存的作用
 
-### LRU
+在存算分离架构中，数据通常存储在远程存储系统中，如对象存储 S3、HDFS 等。在这种场景下，Doris 数据库可以利用本地磁盘空间作为缓存，将部分数据缓存到本地，从而减少对远程存储的频繁访问，提升数据访问效率，降低运行成本。
 
- * LRU 通过维护一个数据访问队列来管理缓存。当数据被访问时，该数据会被移动到队列的前端。新加入缓存的数据同样会被置于队列前端，以防止其过早被淘汰。当缓存空间达到上限时，队列尾部的数据将优先被移除。
+远程存储（如对象存储）的访问延迟通常较高，且可能受到 QPS（每秒查询率）和带宽限制的约束。例如，对象存储的 QPS 限制可能导致在高并发查询时出现瓶颈，而网络带宽的限制则会影响数据传输速度。通过使用本地文件缓存，Doris 可以将热点数据存储在本地磁盘上，从而显著降低查询延迟，提升查询性能。
 
-### TTL (Time-To-Live)
+另一方面，对象存储服务通常会根据请求次数和数据传输量收费。频繁的访问和大量的数据下载会增加查询经济成本。通过缓存机制，可以减少对对象存储的访问次数和数据传输量，从而降低费用。
 
-  * TTL 策略确保新导入的数据在缓存中保留一段时间不被淘汰。在这段时间内，数据具有最高优先级，且所有 TTL 数据之间地位平等。当缓存空间不足时，系统会优先淘汰其它队列中的数据，以确保 TTL 数据能够被写入缓存。
+Doris 的文件缓存在存算分离架构中通常缓存以下两种文件
 
-  * 应用场景：TTL 策略特别适用于希望在本地持久化的小规模数据表。对于常驻表，可以设置较长的 TTL 值来保护其数据；对于动态分区的数据表，可以根据 Hot Partition 的活跃时间设定相应的 TTL 值。
+- segment 数据文件：Doris 中内表存储数据的基本单元。缓存这些文件可以加速对数据的读取操作，提升查询性能。
+- inverted index 反向索引文件：用于加速查询中的过滤操作。通过缓存这些文件，可以更快地定位到满足查询条件的数据，进一步提升查询效率，并支持复杂的查询场景。
 
-  * 注意事项：目前系统不支持直接查看 TTL 数据在缓存中的占比。
+## 缓存的配置
 
-### 多队列
-
- * Doris 采用基于 LRU 的多队列策略，根据 TTL 属性和数据属性将数据分为四类，并分别置于 TTL 队列、Index 队列、NormalData 队列和 Disposable 队列中。设置了 TTL 属性的数据被放置到 TTL 队列，没有设置 TTL 属性的索引数据被放置到 Index 队列，没有设置 TTL 属性的索引数据被放置到 NormalData 队列，临时使用的数据被放置到 Disposable 队列中。
-
-* 在数据读取和写入过程中，Doris 会地选择填充和读取的队列，以最大化缓存利用率。具体机制如下：
-
-| 操作          | 未命中时填充的队列 | 写入数据时填充的队列    |
-| ------------- | ----------------------| ---------- |
-| 导入          | TTL / Index / NormalData  | TTL / Index / NormalData    |
-| 查询          | TTL / Index / NormalData              | N/A        |
-| schema change | Disposable            | TTL / Index / NormalData     |
-| compaction    | Disposable            | TTL / Index / NormalData    |
-| 预热          | N/A                    | TTL / Index / NormalData     |
+Doris 提供了一系列的配置项来帮助用户灵活地管理文件缓存。这些配置项包括缓存的启用、缓存路径和大小的设置、缓存块的大小、自动清理的开关以及预先淘汰机制等。以下是详细的配置说明：
 
 
-### 淘汰
+1.启用文件缓存
+
+```plaintext
+enable_file_cache 默认 "false"
+```
+
+参数说明：此配置项用于控制是否启用文件缓存功能。如果设置为`true`，则启用文件缓存；如果设置为`false`，则禁用文件缓存。
+
+2.配置文件缓存路径和大小
+
+```plaintext
+file_cache_path 默认 be 部署路径下的 storage 目录
+```
 
 
-上述各类型缓存共同使用总缓存空间。根据重要程度的不同我们可以为它们划分比例。比例可以在 be 配置文件中通过 `file_cache_path` 设置，默认为：TTL : Normal : Index : Disposable = 50% :  30% : 10% : 10%。
+参数说明：此配置项用于指定文件缓存的路径和大小。格式为 JSON 数组，每个元素是一个 JSON 对象，包含以下字段：
 
-这些比例不是硬性限制，Doris 会根据需要动态调整以充分利用空间来加速访问。例如用户如果不使用 TTL 类型的缓存，那么其它类型可以超过预设比例使用原本为 TTL 分配的空间。
+- `path`：缓存文件存储的路径。
 
-缓存的淘汰有两种触发时机：垃圾清理或者缓存空间不足。当用户删除数据时，或是导入 compaction 任务结束时，会异步地对过期的缓存数据进行淘汰。写入缓存空间不足时，会按照 Disposable、Normal Data、Index、TTL 的顺序淘汰。例如：如果写入 Normal Data 时空间不足，那么 Doris 会依次淘汰 Disposable、Index、TTL 的部分数据（按照 LRU 的顺序）。注意我们不会将淘汰目标类型的数据全部淘汰再淘汰顺序中的下一个类型，而是至少会保留上述比例的空间以让其它类型也能正常工作。如果这个过程不能成功淘汰出足够的空间，那么将会触发自身类型的 LRU 淘汰。接着上面写 Normal Data 时空间不足例子，如果不能从其它类型中淘汰出足够的空间，此时 Normal Data 将从自身按照 LRU 顺序淘汰出数据。
+- `total_size`：该路径下缓存的总大小（单位：字节）。
 
-需要特别注意的是，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
+- `ttl_percent`：TTL 队列占用的比例（百分比）。
 
-特别的，对于带有过期时间的 TTL 队列，其数据过期时会被移动到 Normal Data 队列，作为 Normal Data 参与淘汰。
+- `normal_percent`：Normal 队列占用的比例（百分比）。
 
-## 缓存预热
+- `disposable_percent`：Disposable 队列占用的比例（百分比）。
 
-在存算分离模式下，Doris 支持多计算组部署，各计算组间共享数据但不共享缓存。新计算组创建时，其缓存为空，可能影响查询性能。为此，Doris 提供缓存预热功能，允许用户从远端存储主动拉取数据至本地缓存。该功能支持以下三种模式：
+- `index_percent`：Index 队列占用的比例（百分比）。
 
-- **计算组间预热**：将计算组 A 的缓存数据预热至计算组 B。Doris 定期收集各计算组在一段时间内被访问的表/分区的热点信息，并根据这些信息选择性地预热某些表/分区。
-- **表数据预热**：指定将表 A 的数据预热至新计算组。
-- **分区数据预热**：指定将表 A 的分区 `p1` 的数据预热至新计算组。
+- `storage`：缓存存储类型，可以是`disk`或`memory`。默认值为`disk`。
 
-## Compute Group 扩缩容
+示例：
 
-Compute Group 扩缩容时，为了避免 Cache 波动，Doris 会首先对受影响的 Tablet 重新映射并预热数据。
+- 单路径配置：
 
-## 缓存观测
+```json
+[{"path":"/path/to/file_cache","total_size":21474836480}]
+```
+
+- 多路径配置：
+
+```json
+[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+```
+
+- 内存存储配置：
+
+```json
+[{"path": "xxx", "total_size":53687091200, "storage": "memory"}]
+```
+
+3.自动清理缓存
+
+```plaintext
+clear_file_cache 默认 "false"
+```
+
+
+参数说明：此配置项用于控制是否在 BE 重启时自动清理已经缓存的数据。如果设置为`true`，则每次 BE 重启时会自动清理缓存；如果设置为`false`，则不会自动清理缓存。
+
+4.预先淘汰机制
+
+```plaintext
+enable_evict_file_cache_in_advance 默认 "true"
+```
+
+- 参数说明：此配置项用于控制是否启用预先淘汰机制。如果设置为`true`，则当缓存使用空间达到一定阈值后，系统会主动进行预先淘汰，留出空间为未来的查询使用；如果设置为`false`，则不会进行预先淘汰。
+
+
+```plaintext
+file_cache_enter_need_evict_cache_in_advance_percent 默认 "88"
+```
+
+- 参数说明：此配置项用于设置触发预先淘汰的阈值百分比。当缓存使用空间/inode数量达到此百分比时，系统开始进行预先淘汰。
+
+
+```plaintext
+file_cache_exit_need_evict_cache_in_advance_percent 默认 "85"
+```
+
+- 参数说明：此配置项用于设置停止预先淘汰的阈值百分比。当缓存使用空间降至此百分比时，系统停止进行预先淘汰。
+
+## 缓存的预热
+
+Doris 提供了缓存预热功能，允许用户从远端存储主动拉取数据至本地缓存。该功能支持以下三种模式：
+
+- 计算组间预热：将计算组 A 的缓存数据预热至计算组 B。Doris 定期收集各计算组在一段时间内被访问的表/分区的热点信息，并根据这些信息选择性地预热某些表/分区。
+
+- 表数据预热：指定将表 A 的数据预热至新计算组。
+
+- 分区数据预热：指定将表 A 的分区`p1`的数据预热至新计算组。
+  具体用法详见[WARM-UP SQL文档](#)。
+
+## 缓存的清理
+
+Doris 提供了同步清理和异步清理两种方式：
+
+- 同步清理：命令为`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=true'`，命令返回则代表清理完成。当需要立即清理缓存时，Doris 会同步删除本地文件系统目录中的缓存文件，并清理内存中的管理元数据。这种方式可以快速释放空间，但可能会对正在执行的查询效率乃至系统稳定性造成一定影响，通常用于快速测试。
+
+- 异步清理：命令为`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=false'`，命令直接返回，清理步骤异步执行，可以观察到缓存空间逐步减小。在异步清理过程中，Doris 会遍历内存中的管理元数据，逐一删除对应的缓存文件。如果发现某些缓存文件正在被查询使用中，Doris 会延迟删除这些文件，直到它们不再被使用。这种方式可以减少对正在执行查询的影响，但完全清理干净缓存通常需要相对同步清理更长的时间。
+
+## 缓存的观测
 
 ### 热点信息
 
@@ -149,57 +215,54 @@ WHERE dr2 = 1;
 
 Doris BE 节点通过 `curl {be_ip}:{brpc_port}/vars` ( brpc_port 默认为 8060 ) 获取 cache 统计信息，指标项的名称开始为磁盘路径。
 
-上述例子中指标前缀为 File Cache 的路径，例如前缀 "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
+上述例子中指标前缀为 File Cache 的路径，例如前缀"_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" 表示 "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
 去掉前缀的部分为统计指标，比如 "file_cache_cache_size" 表示当前 路径的 File Cache 大小为 26111 字节
 
 
 下表为全部的指标意义 (以下表示 size 大小单位均为字节)
 
-指标名称 (不包含路径前缀) | 语义
------|------
-file_cache_cache_size | 当前 File Cache 的总大小
-file_cache_disposable_queue_cache_size | 当前 disposable 队列的大小
-file_cache_disposable_queue_element_count | 当前 disposable 队列里的元素个数
-file_cache_disposable_queue_evict_size | 从启动到当前 disposable 队列总共淘汰的数据量大小
-file_cache_index_queue_cache_size | 当前 index 队列的大小
-file_cache_index_queue_element_count | 当前 index 队列里的元素个数
-file_cache_index_queue_evict_size | 从启动到当前 index 队列总共淘汰的数据量大小
-file_cache_normal_queue_cache_size | 当前 normal 队列的大小
-file_cache_normal_queue_element_count | 当前 normal 队列里的元素个数
-file_cache_normal_queue_evict_size | 从启动到当前 normal 队列总共淘汰的数据量大小
-file_cache_total_evict_size | 从启动到当前，整个 File Cache 总共淘汰的数据量大小
-file_cache_ttl_cache_evict_size | 从启动到当前 TTL 队列总共淘汰的数据量大小
-file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数
-file_cache_ttl_cache_size | 当前 TTL 队列的大小
-file_cache_evict_by_heat\_[A]\_to\_[B] | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于过期时间的淘汰方式） 
-file_cache_evict_by_size\_[A]\_to\_[B] | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于空间的淘汰方式） 
-file_cache_evict_by_self_lru\_[A] | A 缓存类型的数据为了写入新数据而淘汰自身的数据量（基于 LRU 的淘汰方式） 
+| 指标名称(不包含路径前缀)                     | 语义                                                         |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| file_cache_cache_size                        | 当前 File Cache 的总大小                                     |
+| file_cache_disposable_queue_cache_size       | 当前 disposable 队列的大小                                   |
+| file_cache_disposable_queue_element_count    | 当前 disposable 队列里的元素个数                             |
+| file_cache_disposable_queue_evict_size       | 从启动到当前 disposable 队列总共淘汰的数据量大小             |
+| file_cache_index_queue_cache_size            | 当前 index 队列的大小                                        |
+| file_cache_index_queue_element_count         | 当前 index 队列里的元素个数                                  |
+| file_cache_index_queue_evict_size            | 从启动到当前 index 队列总共淘汰的数据量大小                  |
+| file_cache_normal_queue_cache_size           | 当前 normal 队列的大小                                       |
+| file_cache_normal_queue_element_count        | 当前 normal 队列里的元素个数                                 |
+| file_cache_normal_queue_evict_size           | 从启动到当前 normal 队列总共淘汰的数据量大小                 |
+| file_cache_total_evict_size                  | 从启动到当前，整个 File Cache 总共淘汰的数据量大小           |
+| file_cache_ttl_cache_evict_size              | 从启动到当前 TTL 队列总共淘汰的数据量大小                    |
+| file_cache_ttl_cache_lru_queue_element_count | 当前 TTL 队列里的元素个数                                    |
+| file_cache_ttl_cache_size                    | 当前 TTL 队列的大小                                          |
+| file_cache_evict_by_heat\_[A]\_to\_[B]       | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于过期时间的淘汰方式） |
+| file_cache_evict_by_size\_[A]\_to\_[B]       | 为了写入 B 缓存类型的数据而淘汰的 A 缓存类型的数据量（基于空间的淘汰方式） |
+| file_cache_evict_by_self_lru\_[A]            | A 缓存类型的数据为了写入新数据而淘汰自身的数据量（基于 LRU 的淘汰方式） |
 
-### SQL profile
-
+SQL profile
 SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
 
-| 指标名称                     | 语义      |
-|------------------------------|---------|
-| BytesScannedFromCache        | 从 File Cache 读取的数据量    |
-| BytesScannedFromRemote       | 从远程存储读取的数据量    |
-| BytesWriteIntoCache          | 写入 File Cache 的数据量    |
-| LocalIOUseTimer              | 读取 File Cache 的耗时     |
-| NumLocalIOTotal              | 读取 File Cache 的次数       |
-| NumRemoteIOTotal             | 读取远程存储的次数       |
-| NumSkipCacheIOTotal          | 从远程存储读取并没有进入 File Cache 的次数       |
-| RemoteIOUseTimer             | 读取远程存储的耗时     |
-| WriteCacheIOUseTimer         | 写 File Cache 的耗时     |
+| 指标名称               | 语义                                       |
+| ---------------------- | ------------------------------------------ |
+| BytesScannedFromCache  | 从 File Cache 读取的数据量                 |
+| BytesScannedFromRemote | 从远程存储读取的数据量                     |
+| BytesWriteIntoCache    | 写入 File Cache 的数据量                   |
+| LocalIOUseTimer        | 读取 File Cache 的耗时                     |
+| NumLocalIOTotal        | 读取 File Cache 的次数                     |
+| NumRemoteIOTotal       | 读取远程存储的次数                         |
+| NumSkipCacheIOTotal    | 从远程存储读取并没有进入 File Cache 的次数 |
+| RemoteIOUseTimer       | 读取远程存储的耗时                         |
+| WriteCacheIOUseTimer   | 写 File Cache 的耗时                       |
 
 您可以通过 [查询性能分析](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile) 查看查询性能分析。
 
-## 使用方法
-
-### 设置 TTL 策略
+## TTL 用法
 
 在建表时，设置相应的 PROPERTY，即可将该表的数据使用 TTL 策略进行缓存。
 
-- `file_cache_ttl_seconds` : 新导入的数据期望在缓存中保留的时间，单位为秒。
+- `file_cache_ttl_seconds`:新导入的数据期望在缓存中保留的时间，单位为秒。
 
 ```shell
 CREATE TABLE IF NOT EXISTS customer (
@@ -231,46 +294,6 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 
 如果在建表时没有设置 TTL，用户同样可以通过执行 ALTER 语句来修改表的 TTL 属性。
 :::
-
-### 缓存预热
-
-- 计算组间预热，将 `compute_group_name0` 的缓存数据预热到 `compute_group_name1` 。
-
-当执行以下 SQL 时，`compute_group_name1` 计算组会获取 `compute_group_name0` 计算组的访问信息，来尽可能还原出与 `compute_group_name0` 计算组一致的缓存。
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
-```
-
-- 表数据预热，将表 `customer` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该表在远端存储上的数据全部拉取到本地。
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
-```
-
-- 分区数据预热，将表 `customer` 的分区 `p1` 的数据预热到 `compute_group_name1`。执行以下 SQL，可以将该分区在远端存储上的数据全部拉取到本地。
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
-```
-
-上述三条缓存预热 SQL 均会返回一个 JobID 结果。例如：
-
-```sql
-WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
-```
-
-然后可以通过以下 SQL 查看缓存预热进度。
-
-```sql
-SHOW WARM UP JOB WHERE ID = 13418; 
-```
-
-可根据 `FinishBatch` 和 `AllBatch` 判断当前任务进度，每个 Batch 的数据大小约为 10GB。目前，一个计算组中，同一时间内只支持执行一个预热 Job。用户可以停止正在进行的预热 Job。
-
-```sql
-CANCEL WARM UP JOB WHERE id = 13418;
-```
 
 ## 实践案例
 
