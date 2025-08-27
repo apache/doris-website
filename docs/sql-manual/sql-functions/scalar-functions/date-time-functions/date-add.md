@@ -29,14 +29,14 @@ Doris does not support this type of input.
 ## Syntax
 
 ```sql
-DATE_ADD(<date>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific datetime and date formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
 | `<expr>` | The time interval to be added, of `INT` type |
 | `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 

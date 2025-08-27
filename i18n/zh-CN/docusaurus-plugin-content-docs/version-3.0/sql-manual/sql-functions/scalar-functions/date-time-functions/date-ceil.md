@@ -12,7 +12,7 @@ DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最
 
 ## 语法
 
-`DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
+`DATE_CEIL(<date_or_time_expr>, INTERVAL <period> <type>)`
 
 ## 参数
 

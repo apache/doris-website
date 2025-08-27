@@ -11,13 +11,13 @@ The DATE_FLOOR function is used to floor a specified date or time value down to 
 
 ## Syntax
 
-`DATE_FLOOR(<datetime>, INTERVAL <period> <type>)`
+`DATE_FLOOR(<date_or_time_expr>, INTERVAL <period> <type>)`
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `date_or_time_expr` | A valid date expression, support datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `date_or_time_expr` | A valid date expression, support datetime or date type. For specific datetime and date formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
 | `period` | Specifies the number of units each period consists of, of `INT` type. The starting time point is 0001-01-01T00:00:00 |
 | `type` | Can be: YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 

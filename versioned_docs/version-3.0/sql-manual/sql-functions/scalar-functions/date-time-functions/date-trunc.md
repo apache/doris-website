@@ -12,8 +12,8 @@ The DATE_TRUNC function is used to truncate a date or time value (`datetime`) to
 ## Syntax
 
 ```sql
-DATE_TRUNC(<datetime>, <time_unit>)
-DATE_TRUNC(<time_unit>, <datetime>)
+DATE_TRUNC(<date_or_time_expr>, <time_unit>)
+DATE_TRUNC(<time_unit>, <date_or_time_expr>)
 ```
 
 ## Parameters

@@ -26,7 +26,7 @@ doris 不支持这种输入。
 ## 语法
 
 ```sql
-DATE_ADD(<date>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 ```
 
 ## 参数

@@ -14,14 +14,14 @@ This function is consistent with the [date_format function](https://dev.mysql.co
 ## Syntax
 
 ```sql
-DATE_FORMAT(<date>, <format>)
+DATE_FORMAT(<date_or_time_expr>, <format>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date value, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date value, supporting datetime or date type. For specific datetime and date formats, please refer to [cast to datetime](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [cast to date](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
 | `<format>` | Specifies the output format of the date/time, of `varchar` type |
 
 Supported format specifiers:

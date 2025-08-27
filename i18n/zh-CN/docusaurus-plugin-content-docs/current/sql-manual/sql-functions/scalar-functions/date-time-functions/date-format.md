@@ -14,7 +14,7 @@ DATE_FORMAT 函数用于将日期或时间值按照指定的格式字符串（fo
 ## 语法
 
 ```sql
-DATE_FORMAT(<date>, <format>)
+DATE_FORMAT(<date_or_time_expr>, <format>)
 ```
 
 ## 参数
