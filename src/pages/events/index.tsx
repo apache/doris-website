@@ -258,7 +258,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/doris-webinar-20250814.jpeg').default}`}
+                    src={`${require('@site/static/images/events/doris-webinar-20250814.JPEG').default}`}
                 />
             ),
             isCover: true,
