@@ -1,36 +1,45 @@
 ---
 {
-"title": "XOR",
-"language": "en"
+    "title": "XOR",
+    "language": "zh-CN"
 }
 ---
 
 ## Description
-Performs a bitwise exclusive OR operation on two BOOLEAN values.
+Performs a bitwise XOR operation on two BOOLEAN values.
 
 ## Syntax
 ```sql
- <lhs> XOR <rhs>
+<lhs> XOR <rhs>
 ```
 
 ## Parameters
-| parameter | description                                                             |
-|-----------|-------------------------------------------------------------------------|
-| `<lhs>`   | The first BOOLEAN value to be evaluated                                 |
-| `<rhs>`   | The second BOOLEAN value to be evaluated |
+- `<lhs>`: The first BOOLEAN value for the bitwise XOR operation.
+- `<rhs>`: The second BOOLEAN value for the bitwise XOR operation.
 
 ## Return Value
-Returns the exclusive OR of two BOOLEAN values.
+Returns the XOR value of the two BOOLEAN values.
 
 ## Examples
-```sql
-select true XOR false,true XOR true;
-```
-
-```text
-+------------------+-----------------+
-| xor(TRUE, FALSE) | xor(TRUE, TRUE) |
-+------------------+-----------------+
-|                1 |               0 |
-+------------------+-----------------+
-```
+1. Example 1
+    ```sql
+    select true XOR false, true XOR true;
+    ```
+    ```text
+    +----------------+---------------+
+    | true XOR false | true XOR true |
+    +----------------+---------------+
+    |              1 |             0 |
+    +----------------+---------------+
+    ```
+2. NULL argument
+    ```sql
+    select true XOR NULL, NULL XOR true, false XOR NULL, NULL XOR false, NULL XOR NULL;
+    ```
+    ```text
+    +---------------+---------------+----------------+----------------+---------------+
+    | true XOR NULL | NULL XOR true | false XOR NULL | NULL XOR false | NULL XOR NULL |
+    +---------------+---------------+----------------+----------------+---------------+
+    |          NULL |          NULL |           NULL |           NULL |          NULL |
+    +---------------+---------------+----------------+----------------+---------------+
+    ```
