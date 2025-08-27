@@ -2,6 +2,8 @@ const themes = require('prism-react-renderer').themes;
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
+const { DEFAULT_VERSION } = require('./src/constant/version');
+
 const lightCodeTheme = themes.dracula;
 
 const logoImg = '/images/logo.svg';
@@ -21,13 +23,17 @@ function getDocsVersions() {
                 banner: 'none',
                 badge: false,
             };
+            if (version === DEFAULT_VERSION) {
+                result[version].label = DEFAULT_VERSION;
+                result[version].path = DEFAULT_VERSION;
+            }
         }
     });
     return result;
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
+    return VERSIONS.includes(DEFAULT_VERSION) ? DEFAULT_VERSION : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -107,18 +113,26 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
                     {
                         from: '/docs/dev/get-starting/',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
                 ],
                 createRedirects(existingPath) {
+                    if (existingPath.startsWith('/docs/3.0/')) {
+                        const withoutVersion = existingPath.replace('/docs/3.0/', '/docs/');
+                        return [withoutVersion];
+                    }
+                    // return [];
                     if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
                         return [
-                            existingPath.replace('/gettingStarted/what-is-apache-doris', '/gettingStarted/what-is-new'),
+                            existingPath.replace(
+                                '/gettingStarted/what-is-apache-doris',
+                                '/gettingStarted/what-is-new',
+                            ),
                         ];
                     }
                     return undefined; // Return a falsy value: no redirect created
@@ -189,7 +203,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                // docsRouteBasePath: '/docs',
+                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.0', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -237,7 +251,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -360,7 +374,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },

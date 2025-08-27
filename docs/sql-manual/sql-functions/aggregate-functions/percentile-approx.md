@@ -24,18 +24,19 @@ PERCENTILE_APPROX(<col>, <p> [, <compression>])
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | The column to calculate percentiles for |
-| `<p>` | Percentile value, range `[0.0, 1.0]`, e.g., `0.99` represents the `99th` percentile |
-| `<compression>` | Optional parameter, compression level, range `[2048, 10000]`, higher values increase precision but consume more memory. If not specified or out of range, uses `10000` |
+| `<col>` | The column to calculate percentiles for, supported type: Double. |
+| `<p>` | Percentile value, constant, type Double, range `[0.0, 1.0]`, e.g., `0.99` means 99th percentile. Must be a constant. |
+| `<compression>` | Optional, compression level, type Double, range `[2048, 10000]`. Higher values increase precision but consume more memory. If not specified or out of range, defaults to `10000`. |
 
 ## Return Value
 
-Returns a `DOUBLE` value representing the calculated approximate percentile.
+Returns the approximate percentile of the specified column, type Double.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 
 ```sql
--- Create sample table
+-- setup
 CREATE TABLE response_times (
     request_id INT,
     response_time DECIMAL(10, 2)
@@ -44,8 +45,6 @@ DISTRIBUTED BY HASH(`request_id`) BUCKETS AUTO
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
-
--- Insert sample data
 INSERT INTO response_times VALUES
 (1, 10.5),
 (2, 15.2),
@@ -57,7 +56,9 @@ INSERT INTO response_times VALUES
 (8, 45.9),
 (9, 50.4),
 (10, 100.6);
+```
 
+```sql
 -- Calculate 99th percentile using different compression levels
 SELECT 
     percentile_approx(response_time, 0.99) as p99_default,          -- Default compression
@@ -72,6 +73,34 @@ FROM response_times;
 +-------------------+-------------------+-------------------+
 | 100.5999984741211 | 100.5999984741211 | 100.5999984741211 |
 +-------------------+-------------------+-------------------+
+```
+
+```sql
+SELECT percentile_approx(if(response_time>90,response_time,NULL), 0.5) FROM response_times;
+```
+
+Only non-NULL data is calculated.
+
+```text
++-----------------------------------------------------------------+
+| percentile_approx(if(response_time>90,response_time,NULL), 0.5) |
++-----------------------------------------------------------------+
+|                                               100.5999984741211 |
++-----------------------------------------------------------------+
+```
+
+```sql
+SELECT percentile_approx(NULL, 0.99) FROM response_times;
+```
+
+Returns NULL when all input data is NULL.
+
+```text
++-------------------------------+
+| percentile_approx(NULL, 0.99)  |
++-------------------------------+
+|                          NULL  |
++-------------------------------+
 ```
 
 

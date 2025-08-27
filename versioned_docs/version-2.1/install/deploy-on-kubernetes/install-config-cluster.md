@@ -267,7 +267,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
 :::tip Tip  
-If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
+If you have reconfigured meta_dir or `LOG_DIR` in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
 ### Persistent storage for BE

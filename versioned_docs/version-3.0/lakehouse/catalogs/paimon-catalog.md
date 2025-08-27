@@ -350,8 +350,8 @@ Supports various syntax forms to be compatible with systems like Spark/Trino:
 
 ```sql
 -- BRANCH
-SELECT * FROM paimon_tbl@brand(branch1);
-SELECT * FROM paimon_tbl@brand("name" = "branch1");
+SELECT * FROM paimon_tbl@branch(branch1);
+SELECT * FROM paimon_tbl@branch("name" = "branch1");
 
 -- TAG
 SELECT * FROM paimon_tbl@tag(tag1);

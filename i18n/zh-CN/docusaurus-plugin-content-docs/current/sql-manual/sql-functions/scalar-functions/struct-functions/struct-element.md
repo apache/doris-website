@@ -12,7 +12,7 @@
 ## 语法
 
 ```sql
-STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
+STRUCT_ELEMENT( <struct>, '<filed_location>/<filed_name>')
 ```
 
 ## 参数

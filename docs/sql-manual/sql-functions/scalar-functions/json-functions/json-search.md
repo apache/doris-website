@@ -18,6 +18,7 @@ JSON_SEARCH( <json_object>, <one_or_all>, <search_value> )
 - `<json_object>`: JSON type, the JSON document to be searched.
 - `<one_or_all>`: String type, specifies whether to find all matching values. Can be 'one' or 'all'.
 - `<search_value>`: String type, the value to search for, the search target.
+    Supports '%' (matches any number of any characters) and '_' (matches any single character) as wildcards.
 
 ## Return Value
 Nullable(JSON): Depending on the `<one_or_all>` parameter, there are two cases:
@@ -66,7 +67,41 @@ Nullable(JSON): Depending on the `<one_or_all>` parameter, there are two cases:
     | ["$.alias","$.name"]                                                       |
     +----------------------------------------------------------------------------+
     ```
-4. No matching value found
+4. '%' as a wildcard
+    ```sql
+    SELECT JSON_SEARCH('{"name": "John", "age": 30, "alias": "John"}', 'all', '%');
+    ```
+    ```text
+    +-------------------------------------------------------------------------+
+    | JSON_SEARCH('{"name": "John", "age": 30, "alias": "John"}', 'all', '%') |
+    +-------------------------------------------------------------------------+
+    | ["$.alias","$.name"]                                                    |
+    +-------------------------------------------------------------------------+
+    ```
+5. '_' as a wildcard
+    ```sql
+    SELECT JSON_SEARCH('{"name": "John", "age": 30, "alias": "Jihn"}', 'all', 'J_hn');
+    ```
+    ```text
+    +----------------------------------------------------------------------------+
+    | JSON_SEARCH('{"name": "John", "age": 30, "alias": "Jihn"}', 'all', 'J_hn') |
+    +----------------------------------------------------------------------------+
+    | ["$.alias","$.name"]                                                       |
+    +----------------------------------------------------------------------------+
+    ```
+6. Wildcard escape
+    ```sql
+    SELECT JSON_SEARCH('{"name": "John", "age": 30, "alias": "J_hn"}', 'all', 'J\_hn');
+    ```
+    ```text
+    +-----------------------------------------------------------------------------+
+    | JSON_SEARCH('{"name": "John", "age": 30, "alias": "J_hn"}', 'all', 'J\_hn') |
+    +-----------------------------------------------------------------------------+
+    | "$.alias"                                                                   |
+    +-----------------------------------------------------------------------------+
+    ```
+    > 'J\_hn' only matches "J_hn" and does not match "John".
+7. No matching value found
 
     ```sql
     SELECT JSON_SEARCH('{"name": "John", "age": 30}', 'one', 'Alice');
@@ -78,8 +113,7 @@ Nullable(JSON): Depending on the `<one_or_all>` parameter, there are two cases:
     | NULL                                                       |
     +------------------------------------------------------------+
     ```
-
-5. NULL parameters
+8. NULL parameters
     ```sql
     SELECT JSON_SEARCH('{"name": "John", "age": 30}', NULL, 'Alice');
     ```
@@ -110,7 +144,7 @@ Nullable(JSON): Depending on the `<one_or_all>` parameter, there are two cases:
     | NULL                              |
     +-----------------------------------+
     ```
-6. Invalid `<one_or_all>` parameter
+9. Invalid `<one_or_all>` parameter
     ```sql
     SELECT JSON_SEARCH('{"name": "John", "age": 30}', 'three', 'Alice');
     ```

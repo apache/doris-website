@@ -23,18 +23,19 @@ PERCENTILE_APPROX(<col>, <p> [, <compression>])
 
 | 参数 | 说明 |
 | -- | -- |
-| `<col>` | 需要计算百分位数的列 |
-| `<p>` | 百分位数值，取值范围 `[0.0, 1.0]`，例如 `0.99` 表示 `99` 分位数 |
-| `<compression>` | 可选参数，压缩度，取值范围 `[2048, 10000]`。值越大，精度越高，但内存消耗也越大。如果不指定或超出范围，则使用 `10000`。 |
+| `<col>` | 需要计算百分位数的列，支持类型：Double。 |
+| `<p>` | 百分位数，常量，支持类型为 Double，取值范围 `[0.0, 1.0]`，如 `0.99` 表示 99 分位。必须为常量。 |
+| `<compression>` | 可选，压缩度，支持类型为 Double，取值范围 `[2048, 10000]`。值越大精度越高但内存消耗也越大。未指定或超出范围时默认 `10000`。 |
 
 ## 返回值
 
-返回一个 `DOUBLE` 类型的值，表示计算得到的近似百分位数。
+返回指定列的近似百分位数，类型为 Double。
+如果组内没有合法数据，则返回 NULL。
 
 ## 举例
 
 ```sql
--- 创建示例表
+-- setup
 CREATE TABLE response_times (
     request_id INT,
     response_time DECIMAL(10, 2)
@@ -43,8 +44,6 @@ DISTRIBUTED BY HASH(`request_id`) BUCKETS AUTO
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
-
--- 插入示例数据
 INSERT INTO response_times VALUES
 (1, 10.5),
 (2, 15.2),
@@ -56,7 +55,9 @@ INSERT INTO response_times VALUES
 (8, 45.9),
 (9, 50.4),
 (10, 100.6);
+```
 
+```sql
 -- 使用不同压缩度计算 99 分位数
 SELECT 
     percentile_approx(response_time, 0.99) as p99_default,          -- 默认压缩度
@@ -71,6 +72,34 @@ FROM response_times;
 +-------------------+-------------------+-------------------+
 | 100.5999984741211 | 100.5999984741211 | 100.5999984741211 |
 +-------------------+-------------------+-------------------+
+```
+
+```sql
+SELECT percentile_approx(if(response_time>90,response_time,NULL), 0.5) FROM response_times;
+```
+
+只计算非 NULL 数据。
+
+```text
++-----------------------------------------------------------------+
+| percentile_approx(if(response_time>90,response_time,NULL), 0.5) |
++-----------------------------------------------------------------+
+|                                               100.5999984741211 |
++-----------------------------------------------------------------+
+```
+
+```sql
+SELECT percentile_approx(NULL, 0.99) FROM response_times;
+```
+
+输入数据均为 NULL 时返回 NULL。
+
+```text
++-------------------------------+
+| percentile_approx(NULL, 0.99)  |
++-------------------------------+
+|                          NULL  |
++-------------------------------+
 ```
 
 

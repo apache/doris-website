@@ -21,7 +21,7 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
-import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
@@ -49,7 +49,7 @@ function getVersionUrl(baseUrl, pathname) {
     }
     if (pathname?.startsWith('/docs') || pathname?.startsWith('/zh-CN/docs')) {
         let version = pathname?.startsWith('/docs') ? pathname.split('/')[2] : pathname.split('/')[3];
-        if (VERSIONS.includes(version)) {
+        if (VERSIONS.includes(version) && version !== DEFAULT_VERSION) {
             versionUrl += `docs/${version}/`;
         }
     }

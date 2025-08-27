@@ -23,12 +23,12 @@ REGR_INTERCEPT(<y>, <x>)
 
 | Parameter | Description |
 | -- | -- |
-| `<y>` | The dependent variable. This must be an expression that can be evaluated to a numeric type. |
-| `<x>` | The independent variable. This must be an expression that can be evaluated to a numeric type. |
+| `<y>` | The dependent variable. Supported type: Double. |
+| `<x>` | The independent variable. Supported type: Double. |
 
 ## Return Value
 
-Return a `DOUBLE` value, representing the intercept of the univariate linear regression line for non-null pairs in a group.
+Returns a Double value representing the intercept of the univariate linear regression line for non-null pairs in a group. If there are no rows, or only rows that contain nulls, the function returns NULL.
 
 ## Examples
 
@@ -57,9 +57,23 @@ SELECT REGR_INTERCEPT(y, x) FROM test_regr_intercept;
 ```
 
 ```text
-+-------------------------+
-| regr_intercept(y, x)    |
-+-------------------------+
-|      5.512931034482759  | 
-+-------------------------+
++----------------------+
+| REGR_INTERCEPT(y, x) |
++----------------------+
+|    5.512931034482759 |
++----------------------+
+```
+
+```sql
+SELECT REGR_INTERCEPT(y, x) FROM test_regr_intercept where x>100;
+```
+
+When there are no rows in the group, the function returns `NULL`.
+
+```text
++----------------------+
+| REGR_INTERCEPT(y, x) |
++----------------------+
+|                 NULL |
++----------------------+
 ```

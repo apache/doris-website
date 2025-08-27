@@ -20,17 +20,18 @@ REGR_SLOPE(<y>, <x>)
 
 | Parameter | Description |
 | -- | -- |
-| `<y>` | The dependent variable. This must be an expression that can be evaluated to a numeric type. |
-| `<x>` | The independent variable. This must be an expression that can be evaluated to a numeric type. |
+| `<y>` | The dependent variable. Supported type: Double. |
+| `<x>` | The independent variable. Supported type: Double. |
 
 ## Return Value
 
-Returns a `DOUBLE` value representing the slope of the linear regression line.
+Returns a Double value representing the slope of the linear regression line.
+If there are no rows in the group, or all rows contain NULLs for the expressions, the function returns `NULL`.
 
 ## Examples
 
 ```sql
--- Create example table
+-- setup
 CREATE TABLE test_regr_slope (
   `id` int,
   `x` int,
@@ -48,15 +49,33 @@ INSERT INTO test_regr_slope VALUES
 (3, 12, 2),
 (4, 5, 6),
 (5, 10, 20);
+```
 
--- Calculate the linear regression slope of x and y
+```sql
 SELECT REGR_SLOPE(y, x) FROM test_regr_slope;
 ```
 
+Calculate the linear regression slope of x and y.
+
+
 ```text
-+----------------------+
-| regr_slope(y, x)     |
-+----------------------+
-| 0.6853448275862069   |
-+----------------------+
++--------------------+
+| REGR_SLOPE(y, x)   |
++--------------------+
+| 0.6853448275862069 |
++--------------------+
+```
+
+```sql
+SELECT REGR_SLOPE(y, x) FROM test_regr_slope where x>100;
+```
+
+When there are no rows in the group, the function returns `NULL`.
+
+```text
++------------------+
+| REGR_SLOPE(y, x) |
++------------------+
+|             NULL |
++------------------+
 ```

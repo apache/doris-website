@@ -24,11 +24,12 @@ STDDEV(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The value to be calculated standard deviation, support all numeric type |
+| `<expr>` | The value to be calculated standard deviation, supports type Double. |
 
 ## Return Value
 
-Return the standard deviation of the expr expression
+Return the sample standard deviation of the expr expression as Double type.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 ```sql

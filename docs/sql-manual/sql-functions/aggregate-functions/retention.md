@@ -7,11 +7,11 @@
 
 ## Description
 
-The `retention` function takes as arguments a set of conditions from 1 to 32 arguments of type `UInt8` that indicate whether a certain condition was met for the event. Any condition can be specified as an argument.
+The `retention` function takes as arguments a set of conditions from 1 to 32 arguments of type Bool that indicate whether a certain condition was met for the event. Any condition can be specified as an argument.
 
 The conditions, except the first, apply in pairs: the result of the second will be true if the first and second are true, of the third if the first and third are true, etc.
 
-To put it simply, the first digit of the return value array indicates whether `event_1` is true or false, the second digit represents the truth and falseness of `event_1` and `event_2`, and the third digit represents whether `event_1` is true or false and `event_3` is true False and, and so on. If `event_1` is false, return an array full of zeros.
+To put it simply, the first digit of the return value array indicates whether `event_1` is true or false, the second digit represents the truth and falseness of `event_1` and `event_2`, and the third digit represents whether `event_1` is true or false and `event_3` is true or false, and so on. If `event_1` is false, return an array full of false.
 
 ## Syntax
 
@@ -23,17 +23,14 @@ RETENTION(<event_1> [, <event_2>, ... , <event_n>]);
 
 | Parameter | Description |
 | -- | -- |
-| `<event_n>` | The `n`th event condition, of type `UInt8` and value 1 or 0. |
+| `<event_n>` | The `n`th event condition, type Bool. |
 
 ## Returned value
-- 1: Condition is met.
-- 0: Condition is not met.
-
-An array of 1 and 0 with a maximum length of 32, where the final output array length matches the input parameter length.
+- true: Condition is met.
+- false: Condition is not met.
+An array of Bool with a maximum length of 32, where the final output array length matches the input parameter length.
 If no data is involved in the aggregation, a NULL value will be returned.
-
 When multiple columns are involved in a calculation, if any column contains a NULL value, the current row with the NULL value will not participate in the aggregate calculation and will be directly discarded.
-
 You can use the IFNULL function on the calculation column to handle NULL values. For details, refer to the subsequent examples.
 
 ## Examples
