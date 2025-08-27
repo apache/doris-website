@@ -9,6 +9,8 @@
 
 获取当前的日期，以 DATE 类型返回。
 
+该函数与 mysql 中的 [curdate 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_adddate) 行为一致
+
 ## 别名
 
 - curdate
@@ -37,17 +39,4 @@ SELECT CURDATE();
 +------------+
 | 2019-12-20 |
 +------------+
-```
-
-```sql
----获取当前的日期以数字表示
-SELECT CURDATE() + 0;
-```
-
-```text
-+---------------+
-| CURDATE() + 0 |
-+---------------+
-|      20191220 |
-+---------------+
 ```

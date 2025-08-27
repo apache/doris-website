@@ -7,29 +7,35 @@
 
 ## Description
 
-The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting <expr2> from <expr1>. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
+The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting `expr2` from `expr1`. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
 
-## Sytax
+This function is consistent with the [datediff function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_datediff) in MySQL.
+
+## Syntax
 
 ```sql
 DATEDIFF(<expr1>, <expr2>)
 ```
 
-## Parameter
+## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | The minuend date, supporting date and datetime types |
+| `<expr1>` | The minuend date, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr2>` | The subtrahend date, supporting date and datetime types |
 
-## Return value
+## Return Value
 
-Returns the value of expr1 - expr2, with the result precise to the day.
+Returns the value of expr1 - expr2, with the result precise to the day, type is INT.
 
-## Example
+Special cases:
+- expr1 greater than expr2 returns positive number, otherwise returns negative number
+- If any parameter is NULL, return NULL.
+- Ignores time part
+
+## Examples
 
 ```sql
-
 -- The two dates differ by 1 day (ignoring the time part)
 select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
 
@@ -48,7 +54,7 @@ select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DA
 |                                                                               -31 |
 +-----------------------------------------------------------------------------------+
 
---- Any parameter is NULL
+-- Any parameter is NULL
 mysql> select datediff('2023-01-01', NULL);
 +------------------------------+
 | datediff('2023-01-01', NULL) |
@@ -56,20 +62,19 @@ mysql> select datediff('2023-01-01', NULL);
 |                         NULL |
 +------------------------------+
 
---- Contains an invalid date, returns NULL
-mysql> select datediff('2023-02-30', '2023-01-01');
-+--------------------------------------+
-| datediff('2023-02-30', '2023-01-01') |
-+--------------------------------------+
-|                                 NULL |
-+--------------------------------------+
+-- If input datetime type, will ignore time part
+select datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00');
++--------------------------------------------------------+
+| datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00') |
++--------------------------------------------------------+
+|                                                      1 |
++--------------------------------------------------------+
 
--- Calculation across years
-mysql> select datediff('2024-03-01', '2023-12-31');
-+--------------------------------------+
-| datediff('2024-03-01', '2023-12-31') |
-+--------------------------------------+
-|                                   61 |
-+--------------------------------------+
-
+select datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00');
++--------------------------------------------------------+
+| datediff('2023-01-02 12:00:00', '2023-01-01 13:00:00') |
++--------------------------------------------------------+
+|                                                      1 |
++--------------------------------------------------------+
+1 row in set (0.01 sec)
 ```

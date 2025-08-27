@@ -6,39 +6,46 @@
 ---
 ## Description
 
-The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information. This function can convert a DATETIME type or a time-containing string into a DATE type, retaining only the year, month, and day information.
+The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information. This function can convert a DATETIME type into a DATE type, retaining only the year, month, and day information.
 
-## Sytax
+This function is consistent with the [date function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date) in MySQL.
+
+## Syntax
 
 ```sql
-DATE(<datetime>)
+DATE(<date_or_time_part>)
 ```
 
-## Parameter
+## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<datetime>` | A valid date expression of type datetime |
+| `<date_or_time_part>` | A valid date expression of type datetime, supporting datetime. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
-## Return value
+## Return Value
 
 If the input is valid, it returns a pure date value of DATE type (in the format YYYY-MM-DD), without the time part.
-
 Special cases:
-
 - Returns NULL when the input is NULL;
-- Returns NULL when the input is an invalid datetime (such as incorrect format or out of range).
 
-## Example
+## Examples
 
 ```sql
---- Extract the date part from a datetime
-mysql> select date('2010-12-02 19:28:30');
-+-----------------------------+
-| date('2010-12-02 19:28:30') |
-+-----------------------------+
-| 2010-12-02                  |
-+-----------------------------+
+-- Extract the date part from a datetime
+mysql> select date(cast('2010-12-02 19:28:30' as datetime));
++-----------------------------------------------+
+| date(cast('2010-12-02 19:28:30' as datetime)) |
++-----------------------------------------------+
+| 2010-12-02                                    |
++-----------------------------------------------+
+
+-- Extract the date part from a date
+mysql> select date(cast('2015-11-02' as date));
++----------------------------------+
+| date(cast('2015-11-02' as date)) |
++----------------------------------+
+| 2015-11-02                       |
++----------------------------------+
 
 -- Supports datetime strings with different separators (for specific supported date formats, please refer to the date type documentation)
 mysql> select date('2023/04/01 08:30:00');
@@ -48,7 +55,7 @@ mysql> select date('2023/04/01 08:30:00');
 | 2023-04-01                  |
 +-----------------------------+
 
---- Input is NULL
+-- Input is NULL
 mysql> select date(NULL);
 +------------+
 | date(NULL) |
@@ -56,19 +63,10 @@ mysql> select date(NULL);
 | NULL       |
 +------------+
 
---- Invalid date
-mysql> select date('2023-02-30 12:00:00');
-+-----------------------------+
-| date('2023-02-30 12:00:00') |
-+-----------------------------+
-| NULL                        |
-+-----------------------------+
-
 mysql> select date('0000-00-00 12:00:00');
 +-----------------------------+
 | date('0000-00-00 12:00:00') |
 +-----------------------------+
 | NULL                        |
 +-----------------------------+
-
 ```
