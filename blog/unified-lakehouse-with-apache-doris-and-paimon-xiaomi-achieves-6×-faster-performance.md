@@ -9,6 +9,6 @@
     'order': "1",
     'externalLink': 'https://www.velodb.io/blog/1461',
     'tags': ['Tech Sharing'],
-    "image": '/images/blogs/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.png'
+    'image': '/images/blogs/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.png'
 }
 ---
