@@ -54,3 +54,62 @@ For versions before 3.1:
 * For versions before 3.1, please use the legacy name `s3.` as the prefix.
 * Configuring `oss.region` can improve access accuracy and performance, recommended to set.
 * Connection pool parameters can be adjusted according to concurrency requirements to avoid connection blocking.
+
+## OSS-HDFS
+
+OSS-HDFS service (JindoFS service) is an Alibaba Cloud native data lake storage functionality. Based on unified metadata management capabilities, it is compatible with HDFS file system interfaces and meets data lake computing scenarios in big data and AI fields.
+
+Accessing data stored on OSS-HDFS is slightly different from directly accessing OSS services. Please refer to this documentation for details.
+
+### Parameter Overview
+
+| Property Name                  | Legacy Name                  | Description                                                  | Default Value | Required |
+| ------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------------- | -------- |
+| oss.hdfs.endpoint              | s3.endpoint                  | Alibaba Cloud OSS-HDFS service endpoint, e.g., `cn-hangzhou.oss-dls.aliyuncs.com`. | None          | Yes      |
+| oss.hdfs.access_key            | s3.access_key                | OSS Access Key for authentication                            | None          | Yes      |
+| oss.hdfs.secret_key            | s3.secret_key                | OSS Secret Key, used together with Access Key               | None          | Yes      |
+| oss.hdfs.region                | s3.region                    | Region ID where the OSS bucket is located, e.g., `cn-beijing`. | None          | Yes      |
+| oss.hdfs.fs.defaultFS          |                              | Supported in version 3.1. Specifies the file system access path for OSS, e.g., `oss://my-bucket/`. | None          | No       |
+| oss.hdfs.hadoop.config.resources |                            | Supported in version 3.1. Specifies the path containing OSS file system configuration. Requires relative path. Default directory is `/plugins/hadoop_conf/` under the (FE/BE) deployment directory (can be changed by modifying hadoop_config_dir in fe.conf/be.conf). All FE and BE nodes need to configure the same relative path. Example: `hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml`. | None          | No       |
+
+> For versions before 3.1, please use legacy names.
+
+### Endpoint Configuration
+
+`oss.hdfs.endpoint`: Used to specify the OSS-HDFS service endpoint.
+
+Endpoint is the entry address for accessing Alibaba Cloud OSS, formatted as `<region>.oss-dls.aliyuncs.com`, e.g., `cn-hangzhou.oss-dls.aliyuncs.com`.
+
+We perform strict format validation to ensure the endpoint conforms to the Alibaba Cloud OSS endpoint format.
+
+For backward compatibility, the endpoint configuration allows the inclusion of https:// or http:// prefixes. The system will automatically parse and ignore the protocol part during format validation.
+
+When using legacy names, the system determines whether it's an OSS-HDFS service based on whether the `endpoint` contains `oss-dls`.
+
+### Configuration Files
+
+> Supported in version 3.1
+
+OSS-HDFS supports specifying HDFS-related configuration file directories through the `oss.hdfs.hadoop.config.resources` parameter.
+
+The configuration file directory must contain `hdfs-site.xml` and `core-site.xml` files. The default directory is `/plugins/hadoop_conf/` under the (FE/BE) deployment directory. All FE and BE nodes need to configure the same relative path.
+
+If the configuration files contain the parameters mentioned above in this document, the explicitly configured parameters by the user take precedence. Configuration files can specify multiple files, separated by commas, such as `hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml`.
+
+### Example Configuration
+
+```properties
+"oss.hdfs.access_key" = "your-access-key",
+"oss.hdfs.secret_key" = "your-secret-key",
+"oss.hdfs.endpoint" = "cn-hangzhou.oss-dls.aliyuncs.com",
+"oss.hdfs.region" = "cn-hangzhou"
+```
+
+For versions before 3.1:
+
+```
+"s3.access_key" = "your-access-key",
+"s3.secret_key" = "your-secret-key",
+"s3.endpoint" = "cn-hangzhou.oss-dls.aliyuncs.com",
+"s3.region" = "cn-hangzhou"
+```
