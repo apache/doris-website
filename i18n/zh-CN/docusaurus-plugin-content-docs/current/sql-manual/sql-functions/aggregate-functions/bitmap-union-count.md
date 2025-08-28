@@ -19,37 +19,53 @@ BITMAP_UNION_COUNT(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 支持 BITMAP 的数据类型 |
+| `<expr>` | 支持 Bitmap 的数据类型 |
 
 ## 返回值
 
-返回 Bitmap 并集的大小，即去重后的元素个数
+返回 Bitmap 并集的大小，即去重后的元素个数。
+组内没有合法数据时，返回 0 。
 
 ## 举例
 
 ```sql
-select dt,page,bitmap_to_string(user_id) from pv_bitmap;
+-- setup
+CREATE TABLE pv_bitmap (
+	dt INT,
+	page INT,
+	user_id BITMAP
+) DISTRIBUTED BY HASH(dt) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+	(1, 100, to_bitmap(100)),
+	(1, 100, to_bitmap(200)),
+	(1, 100, to_bitmap(300)),
+	(2, 200, to_bitmap(300));
 ```
 
-```text
-+------+------+---------------------------+
-| dt   | page | bitmap_to_string(user_id) |
-+------+------+---------------------------+
-|    1 | 100  | 100,200,300               |
-|    2 | 200  | 300                       |
-+------+------+---------------------------+
-```
-
-计算 user_id 的去重值：
-
-```
+```sql
 select bitmap_union_count(user_id) from pv_bitmap;
 ```
 
+计算 user_id 的去重值个数。
+
 ```text
-+-------------------------------------+
-| bitmap_count(bitmap_union(user_id)) |
-+-------------------------------------+
-|                                   3 |
-+-------------------------------------+
++-----------------------------+
+| bitmap_union_count(user_id) |
++-----------------------------+
+|                           3 |
++-----------------------------+
 ```
+
+```sql
+select bitmap_union_count(user_id) from pv_bitmap where user_id is null;
+```
+
+```text
++-----------------------------+
+| bitmap_union_count(user_id) |
++-----------------------------+
+|                           0 |
++-----------------------------+
+```
+
