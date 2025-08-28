@@ -329,6 +329,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 | memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
 | unique_key_update_mode       | Unique 表上的更新模式，目前仅对 Merge-On-Write Unique 表有效，一共支持三种类型 `UPSERT`, `UPDATE_FIXED_COLUMNS`, `UPDATE_FLEXIBLE_COLUMNS`。 `UPSERT`: 表示以 upsert 语义导入数据; `UPDATE_FIXED_COLUMNS`: 表示以[部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据; `UPDATE_FLEXIBLE_COLUMNS`: 表示以[灵活部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据|
+| partial_update_new_key_behavior | Unique 表上进行部分列更新或灵活列更新时，对新插入行的处理方式。有两种类型 `APPEND`, `ERROR`。<br/>-`APPEND`: 允许插入新行数据<br/>-`ERROR`: 插入新行时倒入失败并报错 |
 
 ### 导入返回值
 
@@ -1017,7 +1018,7 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../handling-messy-data#严格模式) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响。关于严格模式的具体说明，可参阅 [严格模式](../handling-messy-data#严格模式) 文档。
 
 ### 导入时进行部分列更新/灵活部分列更新
 

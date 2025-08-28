@@ -42,6 +42,72 @@ const EVENTS_PAGE_DATA = {
     },
     eventListEn: [
         {
+            cardTitle: 'Bridging Lake and Database: Real-time Queries on Iceberg',
+            detailTitle: 'Bridging Lake and Database: Real-time Queries on Iceberg',
+            tag: 'Apache Doris Webinar',
+            date: 'September 23, 2025 7PM EST',
+            cardDate: 'September 23, 2025',
+            address: 'Virtual',
+            description: 'In this talk, We will deep-dive into how Apache Doris supports real-time queries on Iceberg tables, achieving flexible yet high-performance real-time queries—a problem that is attracting growing industry attention.',
+            start_date: '2025-09-23T07:00:00.000Z',
+            end_date: '2025-09-23T24:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/250923-doris-webinar-banner.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/doris-webinar-20250923',
+        },
+        {
+            cardTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
+            detailTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
+            tag: 'Apache Doris Meetup',
+            date: 'August 22, 2025 1:30-5:00 PM (GMT+8)',
+            cardDate: 'August 22, 2025',
+            address: 'Room 4&5 14/F Fairmont House, 8 Cotton Tree Drive, Central, Hong Kong',
+            description: 'This joint event, co-hosted by NebulaGraph and Apache Doris, brings together industry leaders and technical experts to explore how modern graph and analytics technologies are reshaping financial risk control, observability, and compliance.',
+            start_date: '2025-08-22T13:30:00.000Z',
+            end_date: '2025-08-22T17:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/250822-doris-mettup-banner.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/apache-doris-meetup-20250822',
+        },
+        {
+            cardTitle: 'Real-Time IoT Analytics with Apache Doris',
+            detailTitle: 'Real-Time IoT Analytics with Apache Doris',
+            tag: 'Apache Doris Meetup',
+            date: 'August 20, 2025 5:00-7:00 PM PDT',
+            cardDate: 'August 20, 2025',
+            address: 'Plug and Play Tech Center 440 N Wolfe Rd, Sunnyvale, CA 94085',
+            description: 'Join EMQ and VeloDB for a developer-focused meetup exploring how to build scalable, real-time data pipelines using MQTT and Apache Doris.',
+            start_date: '2025-08-20T17:00:00.000Z',
+            end_date: '2025-08-20T19:00:00.000Z',
+            img: (
+                <img
+                    alt="cover img"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/emqx-velodb-meetup-banner.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.velodb.io/events/doris-meetup-250820',
+        },
+        {
             cardTitle: 'Migrating from Snowflake to Apache Doris',
             detailTitle: 'Migrating from Snowflake to Apache Doris',
             tag: 'Apache Doris Webinar',
@@ -133,24 +199,70 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
-            detailTitle: 'CommunityOverCode Asia 2025',
-            date: '2025 年 07 月 25 日 - 27 日',
-            address: '北京市海淀区中关村国家自主创新示范区会议中心',
+            detailTitle: 'Apache Doris x Milvus 解锁 DB for AI 的无限可能',
+            date: '2025 年 08 月 28 日',
+            address: '线上直播',
             description:
-                '飞轮科技作为本届峰会的开源市集赞助商，携手菜鸟、中国电信翼支付、小米、中国联通等多位资深技术专家，于 AI、OLAP & Data Analysis、Cloud Native 等多个论坛为大家分享基于 Apache Doris 的最新研究成果、实践经验和技术发展，欢迎报名并前往 Apache Doris x SelectDB 展区参与互动！',
-            start_date: '2025-07-25T00:00:00.000Z',
-            end_date: '2025-07-27T20:30:00.000Z',
+                '为了帮助用户更好地了解 DB for AI 的前沿技术和应用，我们精心筹备了这场干货满满的直播，分析型数据库如何给 AI 装上“实时数据引擎”？向量数据库又怎样让 AI 拥有“语义超能力”？来这儿，看两者与 AI 擦出的全新火花，解锁智能时代的技术密码。',
+            start_date: '2025-08-28T19:30:00.000Z',
+            end_date: '2025-08-28T21:00:00.000Z',
             img: (
                 <img
-                    alt="CommunityOverCode Asia 2025"
+                    alt="doris-meetup-20250717"
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/community-over-code-asia2025.jpeg').default}`}
+                    src={`${require('@site/static/images/events/doris-meetup-20250828.JPEG').default}`}
                 />
             ),
             isCover: true,
-            link: 'https://mp.weixin.qq.com/s/v3TTeNRf-QONXQXQsZ4kJA',
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250828',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '走进浪潮｜Apache Doris 企业行',
+            date: '2025 年 08 月 15 日',
+            address: '山东省济南市历下区浪潮科技园 S01 2101',
+            description:
+                '此次活动将首次解读面向 AI 的实时分析型数据库 —— Apache Doris 4.0 全新特性，聚焦其在 AI、湖仓一体、存算分离、可观测性、高并发点查等关键场景的技术实践。活动将深入探讨 Apache Doris 如何应对各类复杂业务需求，并邀请来自浪潮与中泰证券的技术专家分享实战经验，共同探索基于 Apache Doris 及其商业化产品 SelectDB 构建实时数据平台的最佳路径。',
+            start_date: '2025-08-15T13:00:00.000Z',
+            end_date: '2025-08-14T17:00:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250717"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-meetup-20250815.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/apache-doris-meetup-20250815',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'Apache Doris x Pulsar：实时分析与智能管控',
+            date: '2025 年 08 月 14 日',
+            address: '线上直播',
+            description:
+                '在数据驱动的时代，实时性已成为企业构建核心竞争力的关键。如何高效处理海量实时数据？如何轻松管理日益复杂的流数据集群？Apache Doris 与 Apache Pulsar 作为实时数据生态中的两大明星开源项目，正在携手为开发者和企业提供更强大、更智能的解决方案。',
+            start_date: '2025-08-14T19:30:00.000Z',
+            end_date: '2025-08-14T21:00:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250717"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-webinar-20250814.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250814',
         },
         {
             cardTitle: '',
@@ -174,6 +286,52 @@ const EVENTS_PAGE_DATA = {
             ),
             isCover: true,
             link: 'https://www.selectdb.com/resources/events/apache-doris-meetup-20250802',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: '实时分析系列直播（第二期）：数据更新',
+            date: '2025 年 07 月 31 日',
+            address: '线上直播',
+            description:
+                'Apache Doris 作为一款高性能的实时分析引擎，凭其强大的实时更新能力，支持多种数据源的快速接入与处理，使企业能够即时获取最新信息，从而做出更快速、更准确的决策。',
+            start_date: '2025-07-31T19:30:00.000Z',
+            end_date: '2025-07-31T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250717"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/doris-webinar-0731.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250731',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'CommunityOverCode Asia 2025',
+            date: '2025 年 07 月 25 日 - 27 日',
+            address: '北京市海淀区中关村国家自主创新示范区会议中心',
+            description:
+                '飞轮科技作为本届峰会的开源市集赞助商，携手菜鸟、中国电信翼支付、小米、中国联通等多位资深技术专家，于 AI、OLAP & Data Analysis、Cloud Native 等多个论坛为大家分享基于 Apache Doris 的最新研究成果、实践经验和技术发展，欢迎报名并前往 Apache Doris x SelectDB 展区参与互动！',
+            start_date: '2025-07-25T00:00:00.000Z',
+            end_date: '2025-07-27T20:30:00.000Z',
+            img: (
+                <img
+                    alt="CommunityOverCode Asia 2025"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/community-over-code-asia2025.jpeg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://mp.weixin.qq.com/s/v3TTeNRf-QONXQXQsZ4kJA',
         },
         {
             cardTitle: '',

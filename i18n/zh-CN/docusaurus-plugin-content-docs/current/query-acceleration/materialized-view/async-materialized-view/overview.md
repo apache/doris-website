@@ -113,6 +113,80 @@ Doris 异步物化视图采用了基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）�
     </tr>
 </table>
 
+## 透明改写数据湖支持情况
+
+目前，异步物化视图的透明改写功能支持以下类型的表和 Catalog。
+
+**实时感知基表数据**：指的是物化视图使用的表数据发生变化，物化视图能够实时感知到基表数据的变化，并在查询时使用最新的数据。
+
+
+<table>
+    <tr>
+        <th>表类型</th>
+        <th>Catalog 类型</th>
+        <th>透明改写支持</th>
+        <th>实时感知基表数据</th>
+    </tr>
+    <tr>
+        <td>内表</td>
+        <td>Internal</td>
+        <td>支持</td>
+        <td>支持</td>
+    </tr>
+    <tr>
+        <td>Hive</td>
+        <td>Hive</td>
+        <td>支持</td>
+        <td>3.1 支持</td>
+    </tr>
+    <tr>
+        <td>Iceberg</td>
+        <td>Iceberg</td>
+        <td>支持</td>
+        <td>3.1 支持</td>
+    </tr>
+    <tr>
+        <td>Paimon</td>
+        <td>Paimon</td>
+        <td>支持</td>
+        <td>3.1 支持</td>
+    </tr>
+    <tr>
+        <td>Hudi</td>
+        <td>Hudi</td>
+        <td>支持</td>
+        <td>3.1 支持</td>
+    </tr>
+    <tr>
+        <td>JDBC</td>
+        <td>JDBC</td>
+        <td>支持</td>
+        <td>不支持</td>
+    </tr>
+    <tr>
+        <td>ES</td>
+        <td>ES</td>
+        <td>支持</td>
+        <td>不支持</td>
+    </tr>
+</table>
+
+物化视图使用外表，此物化视图默认是不参与透明改写的，因为因为无法感知到外表数据的变化，无法保证物化视图中的数据是最新的。
+如果想要使用外表的物化视图参与透明改写，可以通过设置 `SET materialized_view_rewrite_enable_contain_external_table = true` 来开启。
+
+自 2.1.11 起，Doris 优化了外表的透明改写性能，主要优化了获取包含外表可用物化的性能。
+
+如果是包含外表的分区物化视图，透明改写很慢，需要在 fe.conf 中
+配置 `max_hive_partition_cache_num = 20000`，Hive Metastore 表级别分区缓存的最大数量，这个默认值是 10000，
+如果 hive 外表的分区很多，可以设置更大一些。
+
+`external_cache_expire_time_minutes_after_access`，缓存对象自最后一次访问后经过多长时间缓存失效。默认是 10 分钟，可以适当调长。
+（适用于外表 schema 缓存和 Hive 元数据缓存）
+
+`external_cache_refresh_time_minutes = 60`，外部表元数据缓存对象的自动刷新时间，默认 10 分钟，可以适当调长, 此配置 3.1 才开始支持。
+外表的元数据缓存配置详情请看 [元数据缓存](../../../lakehouse/meta-cache.md)。
+
+
 ## 物化视图和 OLAP 内表关系
 
 异步物化视图定义 SQL 使用基表的表模型没有限制，可以是明细模型，主键模型（merge-on-write 和 merge-on-read），聚合模型等。

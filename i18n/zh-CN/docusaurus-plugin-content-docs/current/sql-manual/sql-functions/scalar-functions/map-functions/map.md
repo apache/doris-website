@@ -19,7 +19,7 @@ MAP( <key1> , <value1> [, <key2>,<value2> ... ])
 
 | 参数 | 说明 |
 | -- | -- |
-| `<key>` | 构造 map 的 key |
+| `<key>` | 构造 map 的 key，大小写敏感 |
 | `<value>` | 构造 map 的 value |
 
 ## 返回值

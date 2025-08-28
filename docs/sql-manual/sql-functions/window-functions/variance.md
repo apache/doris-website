@@ -1,1 +1,0 @@
-../aggregate-functions/variance.md

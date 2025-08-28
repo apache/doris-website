@@ -8,7 +8,7 @@
 ## Description
 
 Returns the [skewness](https://en.wikipedia.org/wiki/Skewness) of the expr expression.
-The forumula used for this function is `3-th centrol moment / ((variance)^{1.5})`, when variance is zero, `SKEWNESS` will return `NULL`.
+The formula used for this function is `3rd central moment / ((variance)^{1.5})`.
 
 **Related Commands**
 
@@ -29,11 +29,13 @@ SKEWNESS(<col>)
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | The column to be calculated skewness |
+| `<col>` | The column to be calculated skewness, supports type Double. |
 
 ## Return Value
 
-Returns the skewness of the expr expression, which is a `Double` type.
+Returns the skewness of the expr expression, which is a Double type.
+If variance is zero, returns NULL.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 ```sql

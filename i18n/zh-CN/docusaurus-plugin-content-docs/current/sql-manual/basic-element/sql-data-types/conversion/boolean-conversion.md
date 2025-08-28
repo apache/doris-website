@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 BOOLEAN",
+    "title": "转换为 BOOLEAN 类型",
     "language": "zh-CN"
 }
 ---

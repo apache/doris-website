@@ -10,7 +10,7 @@ import { GithubIcon } from '../../components/Icons/github-icon';
 import { SlackIcon } from '../../components/Icons/slack-icon';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
-import { VERSIONS } from '@site/src/constant/common';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
 import Link from '@docusaurus/Link';
 
 import styles from './styles.module.css';
@@ -34,11 +34,10 @@ export function downloadFile(url: string, filename: string) {
     xml.send();
 }
 
-export default function TOC({ className, ...props }: Props): JSX.Element {
+export default function TOC({ className, ...props }: Props): React.ReactElement {
     const { siteConfig } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
-    const DEFAULT_VERSION = '2.1';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
 
     useEffect(() => {
@@ -61,9 +60,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>
             <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
                 <Link to={'/'}>
-                    <div
-                        className="toc-icon-content group"
-                    >
+                    <div className="toc-icon-content group">
                         <HomeIcon className="group-hover:text-[#444FD9]" />
                         <span className="group-hover:text-[#444FD9]">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
                     </div>

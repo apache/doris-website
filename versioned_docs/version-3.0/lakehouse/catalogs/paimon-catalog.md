@@ -124,6 +124,12 @@ The currently dependent Paimon version is 1.0.0.
 | row                                | struct        |                                                                         |
 | other                              | UNSUPPORTED   |                                                                         |
 
+> Note:
+>
+> Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
+>
+> You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
+
 ## Examples
 
 ### Paimon on HDFS
@@ -158,7 +164,7 @@ CREATE CATALOG paimon_hms PROPERTIES (
 );
 ```
 
-### Paimon on DLF
+### Paimon on DLF 1.0
 
 ```sql
 CREATE CATALOG paimon_dlf PROPERTIES (
@@ -170,6 +176,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
     'dlf.region' = 'cn-beijing',
     'dlf.access_key' = 'ak',
     'dlf.secret_key' = 'sk'
+);
+```
+
+### Paimon on DLF Rest Catalog
+
+> Since 3.1.0
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
 );
 ```
 
@@ -223,16 +245,13 @@ SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 
 ### Batch Incremental Query
 
-> This feature is supported since version 3.1.0
+> Since version 3.1.0
 
 Supports [Batch Incremental](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) queries for Paimon, similar to Flink.
 
 Supports querying incremental data within specified snapshot or timestamp intervals. The interval is left-closed and right-open.
 
 ```sql
--- read from snapshot 2
-SELECT * FROM paimon_table@incr('startSnapshotId'='2');
-
 -- between snapshots [0, 5)
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 
@@ -240,36 +259,111 @@ SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
 
 -- read from start timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
 
 -- read between timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
 ```
 
 Parameter:
 
 | Parameter | Description | Example |
 | --- | --- | -- |
-| `startSnapshotId` | Starting snapshot ID, must be greater than 0 | `'startSnapshotId'='3'` |
-| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Optional, if not specified, reads from `startSnapshotId` to the latest snapshot | `'endSnapshotId'='10'` |
+| `startSnapshotId` | Starting snapshot ID, must be greater than 0. Must be specified with `endSnapshotId` together. | `'startSnapshotId'='3'` |
+| `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Must be specified with `startSnapshotId` together. | `'endSnapshotId'='10'` |
 | `incrementalBetweenScanMode` | Specifies the incremental read mode, default is `auto`, supports `delta`, `changelog` and `diff` |  `'incrementalBetweenScanMode'='delta'` |
-| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0 | `'startTimestamp'='1750844949'` |
-| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot | `'endTimestamp'='1750944949'` |
+| `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0. Unit is millisecond. | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot. Unit is millisecond. | `'endTimestamp'='1750944949000'` |
 
 > Notice:
-
-> - `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
-
-> - `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949,1750944949'`
-
-> - `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+>
+> `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+>
+> `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949000,1750944949000'`
+>
+> `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
 
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
+### Time Travel
+
+> Since version 3.1.0
+
+Supports reading specified snapshots of Paimon tables.
+
+By default, read requests only read the latest version of snapshots.
+
+You can query snapshots of a specified Paimon table through the `$snapshots` table function:
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+You can use `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read historical version data based on snapshot ID or the time when the snapshot was created. Examples:
+
+```sql
+-- Notice: The time must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+### Branch and Tag
+
+> Since version 3.1.0
+
+Supports reading branches and tags of specified Paimon tables.
+
+You can use the `$branches` and `$tags` system tables to view branches and tags of Paimon tables:
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+Supports various syntax forms to be compatible with systems like Spark/Trino:
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@branch(branch1);
+SELECT * FROM paimon_tbl@branch("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether the parameter is a timestamp
 
 ## System Tables
 
-> This feature is supported since version 3.1.0
+> Since version 3.1.0
 
 Doris supports querying Paimon system tables to retrieve table-related metadata. System tables can be used to view snapshot history, manifest files, data files, partitions, and other information.
 
@@ -278,7 +372,6 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 ```sql
 SELECT * FROM my_table$system_table_name;
 ```
-
 
 > Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.
 

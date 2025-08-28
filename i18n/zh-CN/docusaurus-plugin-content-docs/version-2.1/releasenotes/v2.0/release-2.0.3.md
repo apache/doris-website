@@ -177,7 +177,7 @@
 
 ### 导入和 Compaction
 
-- 修复 routine load 一流多表时 unkown slot descriptor 错误
+- 修复 routine load 一流多表时 unknown slot descriptor 错误
   - https://github.com/apache/doris/pull/25762
 
 - 修复内存统计并发访问导致 BE crash 问题

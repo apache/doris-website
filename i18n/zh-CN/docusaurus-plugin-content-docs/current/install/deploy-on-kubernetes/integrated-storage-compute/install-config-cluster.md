@@ -123,21 +123,21 @@ metadata:
 data:
   fe.conf: |
     CUR_DATE=`date +%Y%m%d-%H%M%S`
-
-    # the output dir of stderr and stdout
+    # Log dir
     LOG_DIR = ${DORIS_HOME}/log
+    # For jdk 8
+    JAVA_OPTS="-Dfile.encoding=UTF-8 -Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintClassHistogramAfterFullGC -Xloggc:$LOG_DIR/log/fe.gc.log.$CUR_DATE -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=50M -Dlog4j2.formatMsgNoLookups=true"
 
-    JAVA_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$CUR_DATE"
-
-    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_9="-Djavax.security.auth.useSubjectCredsOnly=false -Xss4m -Xmx8192m -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xlog:gc*:$DORIS_HOME/log/fe.gc.log.$CUR_DATE:time"
-
-    # INFO, WARN, ERROR, FATAL
-    sys_log_level = INFO
-
-    # NORMAL, BRIEF, ASYNC
-    sys_log_mode = NORMAL
-
+    # For jdk 17, this JAVA_OPTS will be used as default JVM options
+    JAVA_OPTS_FOR_JDK_17="-Dfile.encoding=UTF-8 -Djavax.security.auth.useSubjectCredsOnly=false -Xmx8192m -Xms8192m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR -Xlog:gc*,classhisto*=trace:$LOG_DIR/fe.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+    # Set your own JAVA_HOME
+    # JAVA_HOME=/path/to/jdk/
+    ##
+    ## the lowercase properties are read by main program.
+    ##
+    # store metadata, must be created before start FE.
+    # Default value is ${DORIS_HOME}/doris-meta
+    # meta_dir = ${DORIS_HOME}/doris-meta
     # Default dirs to put jdbc drivers,default value is ${DORIS_HOME}/jdbc_drivers
     # jdbc_drivers_dir = ${DORIS_HOME}/jdbc_drivers
 
@@ -145,6 +145,28 @@ data:
     rpc_port = 9020
     query_port = 9030
     edit_log_port = 9010
+    arrow_flight_sql_port = -1
+
+    # Choose one if there are more than one ip except loopback address.
+    # Note that there should at most one ip match this list.
+    # If no ip match this rule, will choose one randomly.
+    # use CIDR format, e.g. 10.10.10.0/24 or IP format, e.g. 10.10.10.1
+    # Default value is empty.
+    # priority_networks = 10.10.10.0/24;192.168.0.0/16
+
+    # Advanced configurations
+    # log_roll_size_mb = 1024
+    # INFO, WARN, ERROR, FATAL
+    syg_level = INFO
+    # NORMAL, BRIEF, ASYNC
+    syg_mode = ASYNC
+    # audit_log_dir = $LOG_DIR
+    # audit_log_modules = slow_query, query
+    # audit_log_roll_num = 10
+    # meta_delay_toleration_second = 10
+    # qe_max_connection = 1024
+    # qe_query_timeout_second = 300
+    # qe_slow_log_ms = 5000
     enable_fqdn_mode = true
 ```
 
@@ -188,30 +210,74 @@ metadata:
 data:
   be.conf: |
     CUR_DATE=`date +%Y%m%d-%H%M%S`
-
-    PPROF_TMPDIR="$DORIS_HOME/log/"
-
-    JAVA_OPTS="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xloggc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
-
-    # For jdk 9+, this JAVA_OPTS will be used as default JVM options
-    JAVA_OPTS_FOR_JDK_9="-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Xlog:gc:$DORIS_HOME/log/be.gc.log.$CUR_DATE -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000 -DJDBC_MAX_WAIT_TIME=5000"
-
-    # since 1.2, the JAVA_HOME need to be set to run BE process.
+    # Log dir
+    LOG_DIR="${DORIS_HOME}/log/"
+    # For jdk 8
+    JAVA_OPTS="-Dfile.encoding=UTF-8 -Xmx2048m -DlogPath=$LOG_DIR/jni.log -Xloggc:$LOG_DIR/be.gc.log.$CUR_DATE -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives"
+    # For jdk 17, this JAVA_OPTS will be used as default JVM options
+    JAVA_OPTS_FOR_JDK_17="-Dfile.encoding=UTF-8 -Djol.skipHotspotSAAttach=true -Xmx2048m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED -Darrow.enable_null_check_for_get=false"
+    # Set your own JAVA_HOME
     # JAVA_HOME=/path/to/jdk/
-
     # https://github.com/apache/doris/blob/master/docs/zh-CN/community/developer-guide/debug-tool.md#jemalloc-heap-profile
     # https://jemalloc.net/jemalloc.3.html
-    JEMALLOC_CONF="percpu_arena:percpu,background_thread:true,metadata_thp:auto,muzzy_decay_ms:15000,dirty_decay_ms:15000,oversize_threshold:0,lg_tcache_max:20,prof:false,lg_prof_interval:32,lg_prof_sample:19,prof_gdump:false,prof_accum:false,prof_leak:false,prof_final:false"
-    JEMALLOC_PROF_PRFIX=""
-
-    # INFO, WARNING, ERROR, FATAL
-    sys_log_level = INFO
-
+    JEMALLOC_CONF="percpu_arena:percpu,background_thread:true,metadata_thp:auto,muzzy_decay_ms:5000,dirty_decay_ms:5000,oversize_threshold:0,prof:true,prof_active:false,lg_prof_interval:-1"
+    JEMALLOC_PROF_PRFIX="jemalloc_heap_profile_"
     # ports for admin, web, heartbeat service
     be_port = 9060
     webserver_port = 8040
     heartbeat_service_port = 9050
     brpc_port = 8060
+    arrow_flight_sql_port = -1
+    # HTTPS configures
+    enable_https = false
+    # path of certificate in PEM format.
+    ssl_certificate_path = "$DORIS_HOME/conf/cert.pem"
+    # path of private key in PEM format.
+    ssl_private_key_path = "$DORIS_HOME/conf/key.pem"
+
+    # Choose one if there are more than one ip except loopback address.
+    # Note that there should at most one ip match this list.
+    # If no ip match this rule, will choose one randomly.
+    # use CIDR format, e.g. 10.10.10.0/24 or IP format, e.g. 10.10.10.1
+    # Default value is empty.
+    # priority_networks = 10.10.10.0/24;192.168.0.0/16
+
+    # data root path, separate by ';'
+    # You can specify the storage type for each root path, HDD (cold data) or SSD (hot data)
+    # eg:
+    # storage_root_path = /home/disk1/doris;/home/disk2/doris;/home/disk2/doris
+    # storage_root_path = /home/disk1/doris,medium:SSD;/home/disk2/doris,medium:SSD;/home/disk2/doris,medium:HDD
+    # /home/disk2/doris,medium:HDD(default)
+    #
+    # you also can specify the properties by setting '<property>:<value>', separate by ','
+    # property 'medium' has a higher priority than the extension of path
+    #
+    # Default value is ${DORIS_HOME}/storage, you should create it by hand.
+    # storage_root_path = ${DORIS_HOME}/storage
+
+    # Default dirs to put jdbc drivers,default value is ${DORIS_HOME}/jdbc_drivers
+    # jdbc_drivers_dir = ${DORIS_HOME}/jdbc_drivers
+
+    # Advanced configurations
+    # INFO, WARNING, ERROR, FATAL
+    sys_log_level = INFO
+    # sys_log_roll_mode = SIZE-MB-1024
+    # sys_log_roll_num = 10
+    # sys_log_verbose_modules = *
+    # log_buffer_level = -1
+
+    # aws sdk log level
+    #    Off = 0,
+    #    Fatal = 1,
+    #    Error = 2,
+    #    Warn = 3,
+    #    Info = 4,
+    #    Debug = 5,
+    #    Trace = 6
+    # Default to turn off aws sdk log, because aws sdk errors that need to be cared will be output through Doris logs
+    aws_log_level=0
+    ## If you are not running in aws cloud, you can disable EC2 metadata
+    AWS_EC2_METADATA_DISABLED=true
 ```
 
 使用 ConfigMap 挂载 BE 启动配置信息时，配置信息对应的 key 必须为 `be.conf` 。完成配置文件后，将其部署到目标 `DorisCluster` 资源需要部署的命名空间。
@@ -329,7 +395,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `LOG_DIR` 请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置
@@ -926,3 +992,36 @@ spec:
 :::tip 提示
 `mountPath` 支持使用 `${DORIS_HOME}` 作为路径前缀。当 `mountPath` 使用 `${DORIS_HOME}` 作为前缀使用时，在 FE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/fe`; 在 BE 容器中 `${DORIS_HOME}` 指代 `/opt/apache-doris/be`。
 :::
+
+## 配置探测超时
+`DorisCluster` 为每种服务提供两种探测超时配置：启动探测超时配置，存活探测超时配置。当服务启动时间超过配置的启动探测超时时间时，则认定服务启动失败并重新启动服务。当服务超过存活探测时间没有响应时，Pod 会被自动重启。
+### 启动探测超时配置
+- FE 服务启动探测超时配置
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+  以上配置将 FE 的启动超时设置为 3600 秒。
+- BE 服务启动探测超时配置
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+  以上配置将 BE 的启动超时设置为 3600 秒。
+### 存活探测超时配置
+- FE 服务存活探测超时配置
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+  以上配置将 FE 的存活超时设置为 60 秒。
+- BE 服务存活探测超时配置
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+  以上配置将 BE 的存活超时设置为 60 秒。

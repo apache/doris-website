@@ -93,7 +93,7 @@ mysql> select * from test_table;
 
 ## Partial Column Update
 
-Besides row update, under many circumstances, data analysts require the convenience of partial column update. For example, in user portraits, they would like to update certain dimensions of their users in real time. Or, if they need to maintain a flat table that is made of data from various source tables, they will prefer partial columm update than complicated join operations as a way of data update. 
+Besides row update, under many circumstances, data analysts require the convenience of partial column update. For example, in user portraits, they would like to update certain dimensions of their users in real time. Or, if they need to maintain a flat table that is made of data from various source tables, they will prefer partial column update than complicated join operations as a way of data update. 
 
 Apache Doris supports partial column update with the UPDATE statement. It filters the rows that need to be modified, read them, changes a few values, and write the rows back to the table. 
 
@@ -157,7 +157,7 @@ In Apache Doris, each data ingestion task is a transaction. Each successfully in
 
 In real-time data analytics, data updates often happen in high concurrency. It is possible that there are multiple data ingestion tasks updating the same row, but these tasks are committed in unknown order, so the last saved update remains unknown, too.
 
-For example, these are two data updates, with "2023-04-30" and "2023-05-01" as the `modify_data`, respectively. If they are written into the system concurrently, but the "2023-05-01" one is successully committed first and the other later, then the "2023-04-30" record will be saved due to its higher data version number, but we know it is not the latest one.
+For example, these are two data updates, with "2023-04-30" and "2023-05-01" as the `modify_data`, respectively. If they are written into the system concurrently, but the "2023-05-01" one is successfully committed first and the other later, then the "2023-04-30" record will be saved due to its higher data version number, but we know it is not the latest one.
 
 ```Plain
 mysql> insert into test_table values (2, "2023-04-29", 2, "2023-05-01", "bbb");

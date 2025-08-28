@@ -22,40 +22,42 @@ INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values> [, ...])
 
 | Parameter         | Description                                      |
 |------------------|--------------------------------------------------|
-| `<bitmap_column>`  | The input bitmap parameter column               |
-| `<column_to_filter>` | The dimension column used for filtering       |
-| `<filter_values>`  | The different values used to filter the dimension column |
+| `<bitmap_column>`  | The input bitmap parameter column. Supported types: Bitmap. |
+| `<column_to_filter>` | The dimension column used for filtering. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt. |
+| `<filter_values>`  | The different values used to filter the dimension column. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt. |
 
 
 ## Return Value  
 
-Return the number of elements in the intersection of the given bitmaps.
+Returns the number of elements in the intersection of the given bitmaps.
 
 ## Example
 
 ```sql
-select dt,bitmap_to_string(user_id) from pv_bitmap;
-```
-
-```text
-+------+---------------------------+
-| dt   | bitmap_to_string(user_id) |
-+------+---------------------------+
-|    1 | 1,2                       |
-|    2 | 2,3                       |
-|    4 | 1,2,3,4,5                 |
-|    3 | 1,2,3                     |
-+------+---------------------------+
+-- setup
+CREATE TABLE pv_bitmap (
+	dt INT,
+	user_id BITMAP,
+	city STRING
+) DISTRIBUTED BY HASH(dt) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+	(20250801, to_bitmap(1), 'beijing'),
+	(20250801, to_bitmap(2), 'beijing'),
+	(20250801, to_bitmap(3), 'shanghai'),
+	(20250802, to_bitmap(3), 'beijing'),
+	(20250802, to_bitmap(4), 'shanghai'),
+	(20250802, to_bitmap(5), 'shenzhen');
 ```
 
 ```sql
-select intersect_count(user_id,dt,3,4) from pv_bitmap;
+select intersect_count(user_id,dt,20250801) from pv_bitmap;
 ```
 
 ```text
-+------------------------------------+
-| intersect_count(user_id, dt, 3, 4) |
-+------------------------------------+
-|                                  3 |
-+------------------------------------+
++--------------------------------------+
+| intersect_count(user_id,dt,20250801) |
++--------------------------------------+
+|                                    3 |
++--------------------------------------+
 ```

@@ -5,8 +5,6 @@
 }
 ---
 
-# Time Zone
-
 Doris supports custom time zone settings
 
 ## Basic concepts

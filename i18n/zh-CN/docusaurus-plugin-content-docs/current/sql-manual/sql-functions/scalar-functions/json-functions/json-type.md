@@ -22,9 +22,6 @@
 JSON_TYPE(<json_object>, <json_path>)
 ```
 
-## 别名
-- `JSONB_TYPE`
-
 ## 参数
 - `<json_object>`: [JSON 类型](../../../basic-element/sql-data-types/semi-structured/JSON.md) 的表达式。
 - `<json_path>`: String 类型，比如 `"$.key"`。
@@ -35,7 +32,7 @@ JSON_TYPE(<json_object>, <json_path>)
 ## 使用说明
 - 如果 `<json_object>` 或者 `<json_path>` 是 NULL，返回 NULL。
 - 如果 `<json_path>` 不是一个合法路径，函数报错。
-- 如果 `<json_path>` 指定的字段，返回 NULL。
+- 如果 `<json_path>` 指定的字段不存在，返回 NULL。
 
 ## 示例
 1. Double 类型

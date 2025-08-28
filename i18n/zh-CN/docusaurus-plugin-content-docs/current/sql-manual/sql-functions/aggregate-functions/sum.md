@@ -16,14 +16,14 @@ SUM(<expr>)
 ```
 
 ## 参数
-
 | 参数 | 说明 |
 | --- | --- |
-| `<expr>` | 要计算和的字段 |
+| `<expr>` | 要计算和的字段，支持类型为 Double，Float，Decimal，LargeInt，BigInt，Integer，SmallInt，TinyInt。 |
 
 ## 返回值
 
 返回选中字段所有值的和。
+当组内没有合法数据时，返回 NULL。
 
 ## 举例
 ```sql

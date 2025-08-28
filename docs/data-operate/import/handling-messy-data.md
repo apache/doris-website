@@ -16,9 +16,7 @@ This makes it easier to handle data loading problems and keeps data management s
 
 ## Strict Mode
 
-Strict mode serves two primary purposes:
-1. Filtering out data rows where column type conversion fails during load
-2. Restricting updates to existing columns only in partial column update scenarios
+The main function of strict mode is to filter out data rows where column type conversion fails during load.
 
 ### Filtering Strategy for Column Type Conversion Failures
 
@@ -61,73 +59,6 @@ The system employs different strategies based on the strict mode setting:
 
 3. Although `10` exceeds the range, since its type meets decimal requirements, strict mode does not affect it.
 :::
-
-### Restricting Partial Column Updates to Existing Columns Only
-
-In strict mode, each row in a partial column update must have its Key already exist in the table. In non-strict mode, partial column updates can both update existing rows (where Key exists) and insert new rows (where Key doesn't exist).
-
-For example, given a table structure as follows:
-```sql
-CREATE TABLE user_profile
-(
-    id               INT,
-    name             VARCHAR(10),
-    age              INT,
-    city             VARCHAR(10),
-    balance          DECIMAL(9, 0),
-    last_access_time DATETIME
-) ENGINE=OLAP
-UNIQUE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1
-PROPERTIES (
-    "enable_unique_key_merge_on_write" = "true"
-);
-```
-
-The table contains one record as follows:
-```sql
-mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time   |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     400 | 2023-07-01 12:00:00|
-+------+-------+------+----------+---------+---------------------+
-```
-
-When using Insert Into with strict mode to perform partial column updates, the insertion will fail because the second and third rows with keys `(3)` and `(18)` do not exist in the original table:
-```sql
-SET enable_unique_key_partial_update=true;
-SET enable_insert_strict = true;
-INSERT INTO user_profile (id, balance, last_access_time) VALUES
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
-ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has filtered data in strict mode
-```
-
-When using Insert Into with non-strict mode to perform partial column updates:
-```sql
-SET enable_unique_key_partial_update=true;
-SET enable_insert_strict = false;
-INSERT INTO user_profile (id, balance, last_access_time) VALUES 
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
-```
-
-The existing record will be updated, and two new records will be inserted. For columns not specified in the insert statement, if a default value is defined, it will be used; if the column allows NULL values, NULL will be used; otherwise, the insertion will fail.
-
-The query result is as follows:
-```sql
-mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time    |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
-|    3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
-|   18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
-+------+-------+------+----------+---------+---------------------+
-```
 
 ### Enable Strict Mode
 

@@ -238,7 +238,7 @@ export DB='tpcds'
 ```shell
 sh bin/create-tpcds-tables.sh -s 1000
 ```
-Or copy the table creation statement in [create-tpcds-tables](https://github.com/apache/doris/blob/master/tools/tpcds-tools/ddl/create-tpcds-tables-sf1000) and excute it in Doris.
+Or copy the table creation statement in [create-tpcds-tables](https://github.com/apache/doris/blob/master/tools/tpcds-tools/ddl/create-tpcds-tables-sf1000) and execute it in Doris.
 
 
 ### 7.4 Import Data

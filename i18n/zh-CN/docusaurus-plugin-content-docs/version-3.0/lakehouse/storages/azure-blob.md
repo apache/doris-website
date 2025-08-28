@@ -5,4 +5,4 @@
 }
 ---
 
-TODO
+Azure blob 将在后续版本支持。

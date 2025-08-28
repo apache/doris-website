@@ -24,12 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help the developers and users without a Docker environment. The recommended LDB Toolchain version is 0.19(Robin), which includes clang-16 and gcc-11.
+This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help developers and users without a Docker environment.
+
+| Doris Version | Recommended LDB Toolchain Version | Included Compiler Version |
+| -- | -- | -- |
+| master | 0.25 | clang-20, gcc-15 |
+| 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
 :::tip
-LDB Toolchain is fully known as Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.
-
-Special thanks to [Amos Bird](https://github.com/amosbird) for the contribution.
+LDB Toolchain stands for Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.
 :::
 
 ## Prepare the compilation environment
@@ -136,7 +139,7 @@ $ USE_AVX2=0 sh build.sh
 $ BUILD_TYPE=Debug sh build.sh
 ```
 
-This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../compute-storage-decoupled/compilation-and-deployment).
+This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../docs/compute-storage-decoupled/compilation-and-deployment.md).
 
 ## Pre-compile third-party libraries
 

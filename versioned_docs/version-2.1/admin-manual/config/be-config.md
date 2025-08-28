@@ -1498,3 +1498,9 @@ This configuration is supported since the Apache Doris 1.2 version
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
+
+#### `time_series_max_tablet_version_num`
+
+* Type: int
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or delayed compaction. When the limit is exceeded, the load task will be rejected. Supported since version 2.1.11
+* Default value: 20000

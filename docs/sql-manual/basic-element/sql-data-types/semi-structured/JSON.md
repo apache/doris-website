@@ -5,7 +5,15 @@
 }
 ---
 
-## JSON
+## JSON Introduction
+
+JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit data. According to the official specification [RFC7159](https://datatracker.ietf.org/doc/html/rfc7159), JSON supports the following basic types:
+- Bool
+- Null
+- Number
+- String
+- Array
+- Object
 
 The JSON data type stores [JSON](https://www.rfc-editor.org/rfc/rfc8785) data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
@@ -15,7 +23,70 @@ Compared to storing JSON strings in a regular STRING type, the JSON type has two
 1. JSON format validation during data insertion.
 2. More efficient binary storage format, enabling faster access to JSON internal fields using functions like `json_extract`, compared to `get_json_xx` functions.
 
-**Note**: In version 1.2.x, the JSON type was named JSONB. To maintain compatibility with MySQL, it was renamed to JSON starting from version 2.0.0. Older tables can still use the previous name.
+:::caution Note
+In version 1.2.x, the JSON type was named JSONB. To maintain compatibility with MySQL, it was renamed to JSON starting from version 2.0.0. Older tables can still use the previous name.
+:::
+
+## JSON Number Precision Issues
+
+When using JSON, special attention is needed regarding number precision:
+- In most systems, the Number type is implemented based on IEEE 754-2008 binary 64-bit (double-precision) floating-point numbers (e.g., double type in C++)
+- Since the JSON specification doesn't strictly define the underlying type for Number, and JSON data is exchanged between different systems as text, precision loss may occur
+
+For a JSON string like `{"abc": 18446744073709551616}`:
+
+```sql
+-- Conversion result in MySQL
+cast('{"abc": 18446744073709551616}' as json)
+-- Result: {"abc": 1.8446744073709552e19}
+```
+
+```javascript
+// Conversion result in JavaScript
+console.log(JSON.parse('{"abc": 18446744073709551616}'));
+// Result: {abc: 18446744073709552000}
+```
+
+To ensure numeric precision is preserved when exchanging data between systems, large numbers should be stored as strings, e.g., `{"abc": "18446744073709551616"}`.
+
+## JSON Type in Doris
+
+Doris supports data types that conform to the JSON standard specification and uses an efficient JSONB (JSON Binary) format for binary encoding storage.
+
+### Supported Types
+
+Doris JSONB supports all standard JSON types. The main difference is that Doris provides more fine-grained extensions for the Number type to more accurately map to Doris's internal types.
+
+| JSON Type | Subtype | Corresponding Doris Type |
+|----------|-------|-----------------|
+| Bool | - | BOOLEAN |
+| Null | - | (No direct equivalent, represents JSON null value) |
+| Number | Int8 | TINYINT |
+| | Int16 | SMALLINT |
+| | Int32 | INT |
+| | Int64 | BIGINT |
+| | Int128 | LARGEINT |
+| | Double | DOUBLE |
+| | Float | FLOAT |
+| | Decimal | DECIMAL |
+| String | - | STRING |
+| Array | - | ARRAY |
+| Object | - | STRUCT |
+
+### Important Notes:
+- Meaning of Null:
+  - Null in JSON is a valid value representing "empty value". This is different from SQL's NULL, which represents "unknown" or "missing".
+  - CAST('null' AS JSON) results in a JSONB column containing a JSON null value, which itself is not NULL at the SQL level.
+  - CAST('null' AS JSON) IS NULL returns false (0), because the column contains a known JSON null value, which is not a SQL NULL.
+
+## Operations and Limitations
+- Comparison and Arithmetic:
+  - JSONB columns cannot be directly compared with other data types (including other JSONB columns) or used in arithmetic operations.
+  - Solution: Use JSON_EXTRACT function to extract scalar values (like INT, DOUBLE, STRING, BOOLEAN) from JSONB, then convert them to the corresponding native Doris types for comparison or calculation.
+- Sorting and Grouping:
+  - JSONB columns do not support ORDER BY and GROUP BY operations.
+- Implicit Conversion:
+  - Input Only: When inputting data into a JSONB column, STRING type can be implicitly converted to JSONB (provided the string content is valid JSON text). Other Doris types cannot be implicitly converted to JSONB.
 
 ### Syntax
 
@@ -37,7 +108,7 @@ INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
 14	[123, 456]
 ```
 
-- When the  all special character with `'\'` such as `'\r'`, `'\t'` appears in JSON, you need to use the replace function to replace `"\"` with `"\\"`, for example, you need replace `"\n"` to `"\\n"` 
+- When the special character with `'\'` such as `'\r'`, `'\t'` appears in JSON, you need to use the replace function to replace `"\"` with `"\\"`, for example, you need replace `"\n"` to `"\\n"` 
 
 
 **Query:**
@@ -62,7 +133,173 @@ SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
 The JSON type currently cannot be used for `GROUP BY`, `ORDER BY`, or comparison operations.
 :::
 
-### example
+## JSON Input
+
+Convert a string that conforms to JSON syntax to JSONB using CAST.
+
+```sql
+-- Simple scalar/basic values (numeric types, bool, null, string)
+mysql> SELECT cast('5' as json);
++-------------------+
+| cast('5' as json) |
++-------------------+
+| 5                 |
++-------------------+
+
+-- Arrays with zero or more elements (elements don't need to be the same type)
+mysql> SELECT cast('[1, 2, "foo", null]' as json);
++-------------------------------------+
+| cast('[1, 2, "foo", null]' as json) |
++-------------------------------------+
+| [1,2,"foo",null]                    |
++-------------------------------------+
+
+-- Objects containing key-value pairs
+-- Note that object keys must always be quoted strings
+mysql> SELECT cast('{"bar": "baz", "balance": 7.77, "active": false}' as json);
++------------------------------------------------------------------+
+| cast('{"bar": "baz", "balance": 7.77, "active": false}' as json) |
++------------------------------------------------------------------+
+| {"bar":"baz","balance":7.77,"active":false}                      |
++------------------------------------------------------------------+
+
+-- Arrays and objects can be nested arbitrarily
+mysql> SELECT cast('{"foo": [true, "bar"], "tags": {"a": 1, "b": null}}' as json);
++---------------------------------------------------------------------+
+| cast('{"foo": [true, "bar"], "tags": {"a": 1, "b": null}}' as json) |
++---------------------------------------------------------------------+
+| {"foo":[true,"bar"],"tags":{"a":1,"b":null}}                        |
++---------------------------------------------------------------------+
+```
+
+Doris's JSONB doesn't preserve semantically irrelevant details like whitespace.
+
+```sql
+mysql> -- The input text and JSON output may not look the same
+mysql> SELECT cast('[1,                 2]' as json);
++----------------------------------------+
+| cast('[1,                 2]' as json) |
++----------------------------------------+
+| [1,2]                                  |
++----------------------------------------+
+```
+
+### Key Differences and Notes:
+- CAST(string AS JSON): Used to parse strings that conform to JSON syntax.
+- CAST(string AS JSON): For Number types, it will only parse Int8, Int16, Int32, Int64, Int128, and Double types, not Decimal type.
+- Unlike most other JSON implementations, Doris's JSONB type supports up to Int128 precision. Numbers exceeding Int128 precision may overflow.
+- If the input number string is 12.34, it will be parsed as a Double; if there's no decimal point, it will be parsed as an integer (if the size exceeds Int128 range, it will be converted to Double but with precision loss)
+
+## Using to_json to Convert Doris Internal Types to JSONB Type
+
+```sql
+mysql> SELECT to_json(1) , to_json(3.14) , to_json("12345");
++------------+---------------+------------------+
+| to_json(1) | to_json(3.14) | to_json("12345") |
++------------+---------------+------------------+
+| 1          | 3.14          | "12345"          |
++------------+---------------+------------------+
+
+mysql> SELECT to_json(array(array(1,2,3),array(4,5,6)));
++-------------------------------------------+
+| to_json(array(array(1,2,3),array(4,5,6))) |
++-------------------------------------------+
+| [[1,2,3],[4,5,6]]                         |
++-------------------------------------------+
+
+mysql> SELECT json_extract(to_json(array(array(1,2,3),array(4,5,6))), '$.[1].[2]');
++----------------------------------------------------------------------+
+| json_extract(to_json(array(array(1,2,3),array(4,5,6))), '$.[1].[2]') |
++----------------------------------------------------------------------+
+| 6                                                                    |
++----------------------------------------------------------------------+
+
+mysql> SELECT to_json(struct(123,array(4,5,6),"789"));
++------------------------------------------+
+| to_json(struct(123,array(4,5,6),"789"))  |
++------------------------------------------+
+| {"col1":123,"col2":[4,5,6],"col3":"789"} |
++------------------------------------------+
+
+mysql> SELECT json_extract(to_json(struct(123,array(4,5,6),"789")),"$.col2");
++----------------------------------------------------------------+
+| json_extract(to_json(struct(123,array(4,5,6),"789")),"$.col2") |
++----------------------------------------------------------------+
+| [4,5,6]                                                        |
++----------------------------------------------------------------+
+```
+
+to_json only supports converting Doris types that map to JSONB types.
+For example, DECIMAL can be used with to_json.
+However, DATE cannot; it needs to be converted to STRING first, then use to_json.
+
+## JSONB Output
+
+When converting to plain text for interaction with other systems, Doris's JSONB type ensures generation of valid JSON text:
+
+1. Null values:
+   - Output as null (without quotes)
+2. Boolean values:
+   - true → output true
+   - false → output false
+3. Numeric types:
+   - All numeric values output directly
+   - Example: 5 → output 5, 3.14 → output 3.14
+4. Strings:
+   - Output in double quotes: "<content>"
+   - Special characters are escaped:
+     - " → \"
+     - \ → \\
+     - / → \/
+     - Backspace → \b
+     - Form feed → \f
+     - Newline → \n
+     - Carriage return → \r
+     - Tab → \t
+   - Other control characters (ASCII < 32) convert to Unicode escape sequences: \uXXXX
+5. Objects:
+   - Format: {<key-value pairs list>}
+   - Key-value pair format: "<key>": <value>
+   - Multiple key-value pairs separated by commas
+6. Arrays:
+   - Format: [<element list>]
+   - Multiple elements separated by commas
+7. Nested structure handling:
+   - Objects and arrays support unlimited nesting levels
+   - Each nesting level processed recursively using the same rules
+
+## Number Precision Issues
+
+When converting Doris internal types to JSONB using to_json, no precision loss occurs.
+When using Doris internal JSON functions, if the return value is also a JSONB type, no precision loss occurs.
+However, converting Doris JSONB to plain text and then back to JSONB can cause precision loss.
+
+Example: Doris JSON type object
+```
+Object{
+    "a": (Decimal 18446744073709551616.123)
+}
+```
+
+Converted to plain text:
+```
+{"a": 18446744073709551616.123}
+```
+
+When plain text is converted back to Doris JSON type:
+```
+Object{
+    "a": (Double 18446744073709552000)  // precision loss
+}
+```
+
+## Configuration and Limitations
+- JSON supports 1,048,576 bytes (1 MB) by default
+- Size limit can be adjusted via the BE configuration parameter string_type_length_soft_limit_bytes
+- Maximum adjustment up to 2,147,483,643 bytes (approximately 2 GB)
+- In Doris JSON type Objects, key length cannot exceed 255 bytes
+
+## Usage Example
 A tutorial for JSON datatype including create table, load data and query.
 
 #### create database and table

@@ -1,1 +1,0 @@
-../aggregate-functions/bitmap-union-count.md

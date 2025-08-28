@@ -32,9 +32,6 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
-
-    - 可以使用 [X2Doris](data-source/migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
-
 Doris 的每个导入默认都是一个隐式事务，事务相关的更多信息请参考[事务](../transaction.md)。
 
 ## 导入方式快速浏览

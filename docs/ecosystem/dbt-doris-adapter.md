@@ -8,15 +8,16 @@
 # DBT Doris Adapter
 
 [DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) is a component that focuses on doing T (Transform) in ELT (extraction, loading, transformation) - the "transformation data" link
-The `dbt-doris` adapter is developed based on `dbt-core` 1.5.0 and relies on the `mysql-connector-python` driver to convert data to doris.
+The `dbt-doris` adapter is developed based on `dbt-core` and relies on the `mysql-connector-python` driver to convert data to doris.
 
 git: https://github.com/apache/doris/tree/master/extension/dbt-doris
 
 ## version
 
-| doris   | python       | dbt-core |
-|---------|--------------|----------|
-| >=1.2.5 | >=3.8,<=3.10 | >=1.5.0  |
+| doris   | python      | dbt-core | dbt-doris |
+|---------|-------------|----------|----------|
+| >=1.2.5 | >=3.8,<=3.10| >=1.5.0  | <=0.3    |
+| >=1.2.5 | >=3.9       | >=1.8.0  | >=0.4    |
 
 
 ## dbt-doris adapter Instructions
@@ -462,4 +463,42 @@ select
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}
+```
+
+### Customizing table data column types and precision sample reference
+
+The `schema.yaml` file configures `data_type` for `columns` in `models` as follows:
+
+```yaml
+models:
+  - name: sell_user
+    description: "A dbt model named sell_user"
+    columns:
+      - name: user_id
+        data_type: BIGINT
+      - name: account_id
+        data_type: VARCHAR(12)
+      - name: status
+      - name: cost_sum
+        data_type: DECIMAL(38,9)
+      - name: update_time
+        data_type: DATETIME
+      - name: create_time
+        data_type: DATETIME
+```
+
+### Access catalog sample reference
+
+The [Data Catalog](../lakehouse/catalog-overview.md) is a reference to different data sources within the Doris data lake functionality, layered above the Database.
+It is recommended to access it through the dbt-doris built-in Macros: `catalog_source`
+
+```sql
+{{ config(materialized='table', replication_num=1) }}
+
+select *
+--  use macros 'catalog_source' not macros 'source'
+--  catalog name is 'mysql_catalog'
+--  database name is 'dbt_source'
+--  table name is 'sell_user'
+from {{ catalog_source('mysql_catalog', 'dbt_source', 'sell_user') }}
 ```

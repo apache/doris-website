@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1428',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/blogs/building-real-time-lakehouse-with-apache-doris.jpg'
 }
 ---

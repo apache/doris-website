@@ -5,36 +5,68 @@
 }
 ---
 
-## Description
+### Function
 
-Calculates the sum of all elements in an array
+The `ARRAY_SUM` function calculates the sum of all numeric elements in an array.
 
 ## Syntax
 
-```sql
-ARRAY_SUM(<src>)
+```SQL
+ARRAY_SUM(ARRAY<T>)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<src>` | Corresponding array |
+`ARRAY<T>`: An array containing **numeric type** elements.
 
 ## Return Value
 
-Returns the sum of all elements in the array. NULL values in the array will be skipped. For an empty array or an array with all NULL values, the result returns a NULL value.
+- Returns the sum of all non-`NULL` elements in the array.
 
-## Example
+    - If all elements are `NULL`, returns `NULL`.
 
-```sql
-SELECT ARRAY_SUM([1, 2, 3, 6]),ARRAY_SUM([1, 4, 3, 5, NULL]),ARRAY_SUM([NULL]);
-```
+## Usage Notes
 
-```text
-+-------------------------+-------------------------------+-------------------------------------------+
-| array_sum([1, 2, 3, 6]) | array_sum([1, 4, 3, 5, NULL]) | array_sum(cast([NULL] as ARRAY<BOOLEAN>)) |
-+-------------------------+-------------------------------+-------------------------------------------+
-|                      12 |                            13 |                                      NULL |
-+-------------------------+-------------------------------+-------------------------------------------+
-```
+1. Summation of elements uses the `+` operator.
+
+2. Elements that are `NULL` are automatically ignored.
+
+3. If the array contains non-numeric type elements (such as strings), it will result in a runtime error.
+
+## Examples
+
+1. Simple example
+
+    ```SQL
+    SELECT ARRAY_SUM([1, 2, 3, 4]);
+    +-------------------------+
+    | ARRAY_SUM([1, 2, 3, 4]) |
+    +-------------------------+
+    |                      10 |
+    +-------------------------+
+    ```
+
+2. Handling `NULL` values in arrays
+
+    ```SQL
+    SELECT ARRAY_SUM([1, NULL, 3]); 
+    +-------------------------+
+    | ARRAY_SUM([1, NULL, 3]) |
+    +-------------------------+
+    |                       4 |
+    +-------------------------+
+
+    SELECT ARRAY_SUM(NULL);
+    +-----------------+
+    | ARRAY_SUM(NULL) |
+    +-----------------+
+    |            NULL |
+    +-----------------+
+
+    SELECT ARRAY_SUM([NULL, NULL]); 
+    +-------------------------+
+    | ARRAY_SUM([NULL, NULL]) |
+    +-------------------------+
+    |                    NULL |
+    +-------------------------+
+    ```

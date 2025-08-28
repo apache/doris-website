@@ -25,10 +25,10 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 
 | 参数 | 说明 |
 | -- | -- |
-| `<window>` | 滑动时间窗口大小，单位为秒 |
-| `<mode>` | 模式，共有四种模式，分别为`default`, `deduplication`, `fixed`, `increase`，详细请参见下面的**模式** |
-| `<timestamp>` | 指定时间列，类型为 DATETIME, 滑动窗口沿着此列工作 |
-| `<event_n>` | 表示事件的布尔表达式。 |
+| `<window>` | 滑动时间窗口大小，单位为秒，支持类型为Bigint。 |
+| `<mode>` | 模式，共有四种模式，分别为`default`, `deduplication`, `fixed`, `increase`，详细请参见下面的**模式**，支持类型为String。 |
+| `<timestamp>` | 指定时间列，支持类型为 DATETIME, 滑动窗口沿着此列工作。 |
+| `<event_n>` | 表示事件的布尔表达式，支持类型为 Bool。 |
 
 **模式**
 
@@ -42,7 +42,7 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 
 ## 返回值
 
-返回一个整数，表示在指定时间窗口内完成的最大连续步骤数。
+返回一个整数，表示在指定时间窗口内完成的最大连续步骤数，类型为Integer。
 
 ## 举例
 

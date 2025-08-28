@@ -9,6 +9,7 @@
 
 The FROM_UNIXTIME function is used to convert a Unix timestamp (in seconds) to a date-time string or VARCHAR type value in a specified format. The reference time for Unix timestamps is 1970-01-01 00:00:00 UTC, and the function generates the corresponding date-time representation based on the input timestamp and format string.
 
+
 This function behaves consistently with the [from_unixtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-unixtime) in MySQL
 
 ## Syntax
@@ -96,3 +97,18 @@ mysql> select from_unixtime(NULL);
 | NULL                |
 +---------------------+
 ```
+
+### New behavior examples (since 3.0.8/3.1.0)
+
+The following example shows the extended upper bound available in 3.0.8/3.1.0 and later. Prior to these versions, the same input would return NULL.
+
+```sql
+-- Maximum supported timestamp in 3.0.8/3.1.0+
+mysql> select from_unixtime(253402271999.999999);
++------------------------------------+
+| from_unixtime(253402271999.999999) |
++------------------------------------+
+| 9999-12-31 23:59:59.999999         |
++------------------------------------+
+```
+

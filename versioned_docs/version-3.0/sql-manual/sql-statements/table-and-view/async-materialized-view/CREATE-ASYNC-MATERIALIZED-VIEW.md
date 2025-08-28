@@ -88,6 +88,10 @@ refresh_trigger
 >
 > AUTO: Try to refresh incrementally, only refreshing partitions that have changed since the last materialized view refresh. If incremental refresh is not possible, all partitions will be refreshed.
 
+:::caution Note
+If a partitioned materialized view uses COMPLETE refresh mode, it will perform a full refresh of all partition data, effectively degenerating into a non-partitioned materialized view.
+:::
+
 **4. `<refresh_trigger>`**
 
 > Trigger method:
@@ -134,6 +138,16 @@ Properties used by internal tables, most of which can be used by materialized vi
 | enable_nondeterministic_function | Whether the materialized view definition SQL is allowed to contain nondeterministic functions, such as current_date(), now(), random(), etc. If set to true, it allows the inclusion; otherwise, it does not. The default is not to allow. |
 | use_for_rewrite                  | Indicates whether this materialized view participates in transparent rewriting. If set to false, it does not participate in transparent rewriting. The default is true. In data modeling scenarios, if the materialized view is only used for direct queries, this property can be set so that the materialized view does not participate in transparent rewriting, thereby improving query response speed. |
 
+:::caution Note
+The DISTRIBUTED BY clause is mandatory before Apache Doris 2.1.10 - omitting it will cause an error.
+Since Apache Doris 2.1.10, if not specified, the default distribution becomes RANDOM.
+:::
+
+:::caution Note
+Before Apache Doris 2.1.10/3.0.6, the excluded_trigger_tables property only supported specifying base table names.
+Since these versions, it now supports fully qualified table names including Catalog and Database (e.g., internal.db1.table1).
+:::
+
 ## Access Control Requirements
 
 The user executing this SQL command must have at least the following permissions:
@@ -163,3 +177,124 @@ The user executing this SQL command must have at least the following permissions
   > 6. If the materialized view definition SQL uses a Window function, the partition field must appear after the Partition By clause.
   > 7. Data changes should occur on the partitioned table; if they occur on a non-partitioned table, the materialized view requires a full build.
   > 8. If the materialized view uses a field from the NULL-generating side of a Join as a partition field, it cannot perform partitioned incremental updates. For example, for a LEFT OUTER JOIN, the partition field must be on the left side, not
+
+
+## Examples
+1. Non-Partitioned Materialized View
+
+```sql
+
+CREATE MATERIALIZED VIEW complete_mv (
+orderdate COMMENT 'Order date',
+orderkey COMMENT 'Order key',
+partkey COMMENT 'Part key'
+)
+BUILD IMMEDIATE
+REFRESH AUTO
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+DISTRIBUTED BY HASH (orderkey) BUCKETS 2
+PROPERTIES
+("replication_num" = "1")
+AS
+SELECT
+o_orderdate,
+l_orderkey,
+l_partkey
+FROM
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey
+LEFT JOIN partsupp ON ps_partkey = l_partkey
+and l_suppkey = ps_suppkey;
+```
+
+2. Partitioned Materialized View
+
+As shown below, if a partition column is specified, the system automatically identifies which base table the column comes from and synchronizes the base table partitions. The base table is partitioned by day (partition column: o_orderdate, partition type: RANGE). The materialized view is partitioned by month, using the DATE_TRUNC function to roll up the base table partitions by month.
+```sql
+CREATE TABLE IF NOT EXISTS orders  (
+o_orderkey       integer not null,
+o_custkey        integer not null,
+o_orderstatus    char(1) not null,
+o_totalprice     decimalv3(15,2) not null,
+o_orderdate      date not null,
+o_orderpriority  char(15) not null,  
+o_clerk          char(15) not null,
+o_shippriority   integer not null,
+o_comment        varchar(79) not null
+)
+DUPLICATE KEY(o_orderkey, o_custkey)
+PARTITION BY RANGE(o_orderdate)(
+FROM ('2023-10-16') TO ('2023-11-30') INTERVAL 1 DAY
+)
+DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
+PROPERTIES (
+"replication_num" = "3"
+);
+```
+
+```sql
+CREATE MATERIALIZED VIEW partition_mv
+BUILD IMMEDIATE
+REFRESH AUTO
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2
+PROPERTIES
+("replication_num" = "3")
+AS
+SELECT
+o_orderdate,
+l_orderkey,
+l_partkey
+FROM
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey
+LEFT JOIN partsupp ON ps_partkey = l_partkey
+and l_suppkey = ps_suppkey;
+```
+
+The following example cannot create a partitioned materialized view because the partition column uses a non-date_trunc function. The error message is: because column to check use invalid implicit expression, invalid expression is min(o_orderdate#4)
+
+```sql
+CREATE MATERIALIZED VIEW partition_mv_2
+BUILD IMMEDIATE
+REFRESH AUTO
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+PARTITION BY (DATE_TRUNC(min_orderdate, 'MONTH'))
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2
+PROPERTIES
+("replication_num" = "3")
+AS
+SELECT
+min(o_orderdate) AS min_orderdate,
+l_orderkey,
+l_partkey
+FROM
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey
+LEFT JOIN partsupp ON ps_partkey = l_partkey
+and l_suppkey = ps_suppkey
+GROUP BY
+o_orderdate,
+l_orderkey,
+l_partkey;
+```
+
+3. Modifying Materialized View Properties Use the ALTER MATERIALIZED VIEW statement.
+
+For example:
+```sql
+ALTER MATERIALIZED VIEW partition_mv
+SET (
+"grace_period" = "10",
+"excluded_trigger_tables" = "lineitem,partsupp"
+);
+```
+
+4. Changing Materialized View Refresh Mode Use the ALTER MATERIALIZED VIEW statement.
+   For example:
+
+```sql
+ALTER MATERIALIZED VIEW partition_mv REFRESH COMPLETE;
+After running SHOW CREATE MATERIALIZED VIEW partition_mv;, you can see that the refresh mode has been changed to COMPLETE.
+```

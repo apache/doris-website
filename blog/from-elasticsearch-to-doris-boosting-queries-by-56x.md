@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1427',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "3",
     "image": '/images/blogs/from-elasticsearch-to-doris-boosting-queries-by-56x.jpg'
 }
 ---
