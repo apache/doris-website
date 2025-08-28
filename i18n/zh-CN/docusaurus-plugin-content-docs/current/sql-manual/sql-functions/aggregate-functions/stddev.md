@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STDDEV,STDDEV_POP",
+    "title": "STD,STDDEV,STDDEV_POP",
     "language": "zh-CN"
 }
 ---
@@ -12,6 +12,7 @@
 ## 别名
 
 - STDDEV_POP
+- STD
 
 ## 语法
 
@@ -23,11 +24,12 @@ STDDEV(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 需要被计算标准差的值 |
+| `<expr>` | 需要被计算标准差的值，支持类型为 Double。 |
 
 ## 返回值
 
-返回参数 expr 的标准差
+返回 Double 类型的参数 expr 的样本标准差。
+当组内没有合法数据时，返回 NULL。
 
 ## 举例
 ```sql

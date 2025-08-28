@@ -9,6 +9,10 @@
 
 Obtains the corresponding day of the year for the given date.
 
+## Alias
+
+- DOY
+
 ## Syntax
 
 ```sql

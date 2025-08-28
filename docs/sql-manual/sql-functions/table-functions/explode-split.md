@@ -6,144 +6,97 @@
 ---
 
 ## Description
-
-The `explode_split` table function is used to split a string into multiple substrings based on a specified delimiter and expand each substring into a separate row. Each substring is returned as an individual row, and it is typically used with LATERAL VIEW to break down long strings into individual parts for more granular queries.
-
-`explode_split_outer` is similar to `explode_split`, but it differs in the way it handles empty or NULL strings.
+The `explode_split` table function is used to split a string into multiple substrings according to the specified delimiter, and expand each substring into a separate row.
+It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md) to flatten nested data structures into a standard flat table format.
+The main difference between `explode_split` and [`explode_split_outer`](./explode-split-outer.md) is how they handle null values.
 
 ## Syntax
-
 ```sql
 EXPLODE_SPLIT(<str>, <delimiter>)
-EXPLODE_SPLIT_OUTER(<str>, <delimiter>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<str>` | String type |
-| `<delimiter>` | Delimiter |
+- `<str>` String type, the string to be split.
+- `<delimiter>` String type, the delimiter.
 
 ## Return Value
+- Returns a column composed of the split substrings, with column type String.
 
-Returns a sequence of the split substrings. If the string is empty or NULL, no rows are returned.
+## Usage Notes
+1. If `<str>` is NULL, 0 rows are returned.
+2. If `<str>` is an empty string ("") or cannot be split, 1 row is returned.
+3. If `<delimiter>` is NULL, 0 rows are returned.
+4. If `<delimiter>` is an empty string (""), `<str>` will be split by bytes([`SPLIT_BY_STRING`](../scalar-functions/string-functions/split-by-string.md)).
 
 ## Examples
+0. Prepare data
+    ```sql
+    create table example(
+        k1 int
+    ) properties(
+        "replication_num" = "1"
+    );
 
-```sql
-select * from example1 order by k1;
-```
-
-```text
-+------+---------+
-| k1   | k2      |
-+------+---------+
-|    1 |         |
-|    2 | NULL    |
-|    3 | ,       |
-|    4 | 1       |
-|    5 | 1,2,3   |
-|    6 | a, b, c |
-+------+---------+
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 1 order by k1, e1;
-```
-
-```text
-+------+------+
-| k1   | e1   |
-+------+------+
-|    1 |      |
-+------+------+
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 2 order by k1, e1;
-Empty set
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 3 order by k1, e1;
-```
-
-```text
-+------+------+
-| k1   | e1   |
-+------+------+
-|    3 |      |
-+------+------+
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 4 order by k1, e1;
-```
-
-```text
-+------+------+
-| k1   | e1   |
-+------+------+
-|    4 | 1    |
-+------+------+
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 5 order by k1, e1;
-```
-
-```text
-+------+------+
-| k1   | e1   |
-+------+------+
-|    5 | 2    |
-|    5 | 3    |
-|    5 | 1    |
-+------+------+
-```
-
-```sql
-select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 6 order by k1, e1;
-```
-
-```text
-+------+------+
-| k1   | e1   |
-+------+------+
-|    6 |  b   |
-|    6 |  c   |
-|    6 | a    |
-+------+------+
-```
-
-```sql
-CREATE TABLE example2 (
-    id INT,
-    str string null
-)DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(`id`) BUCKETS AUTO
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1");
-```
-
-```sql
-insert into example2 values (1,''),(2,NUll),(3,"1"),(4,"1,2,3"),(5,"a,b,c");
-```
-
-```sql
-select id, e1 from example2 lateral view explode_split(str, ',') tmp1 as e1 where id = 2 order by id, e1;
-Empty set (0.02 sec)
-```
-
-```sql
-select id, e1 from example2 lateral view explode_split_outer(str, ',') tmp1 as e1 where id = 2 order by id, e1;
-```
-
-```text
-+------+------+
-| id   | e1   |
-+------+------+
-|    2 | NULL |
-+------+------+
-```
+    insert into example values(1);
+    ```
+1. Regular parameters
+    ```sql
+    select  * from example lateral view explode_split("ab,cd,ef", ",") t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | ab   |
+    |    1 | cd   |
+    |    1 | ef   |
+    +------+------+
+    ```
+2. Empty string and unsplittable cases
+    ```sql
+    select  * from example lateral view explode_split("", ",") t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 |      |
+    +------+------+
+    ```
+    ```sql
+    select  * from example lateral view explode_split("abc", ",") t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | abc  |
+    +------+------+
+    ```
+3. NULL parameter
+    ```sql
+    select  * from example lateral view explode_split(NULL, ',') t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+4. Empty delimiter
+    ```sql
+    select  * from example lateral view explode_split('abc', '') t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 | a    |
+    |    1 | b    |
+    |    1 | c    |
+    +------+------+
+    ```
+5. Delimiter is NULL
+    ```sql
+    select  * from example lateral view explode_split('abc', null) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```

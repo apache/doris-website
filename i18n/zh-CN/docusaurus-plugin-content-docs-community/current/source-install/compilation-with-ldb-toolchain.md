@@ -24,7 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。Doris 目前推荐的 LDB Toolchain 版本为 Robin(0.19), 其中含有 clang-17 和 gcc-13。
+本文档主要介绍如何使用 LDB Toolchain 编译 Doris。该方式目前作为 Docker 编译方式的补充，方便没有 Docker 环境的开发者和用户编译 Doris 源码。
+
+| Doris 版本 | 推荐 LDB Toolchain 版本 | 包含编译器版本 |
+| -- | -- | -- |
+| master | 0.25 | clang-20, gcc-15 |
+| 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
 :::tip
 LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于在几乎所有 Linux 发行版上编译现代 C++ 项目。
@@ -38,7 +43,7 @@ LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于
 
 **1. 下载`ldb_toolchain_gen.sh`**
 
-可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载最新的 `ldb_toolchain_gen.sh`，对于ARM架构，需要下载最新的`ldb_toolchain_gen.aarch64.sh`。该脚本用于生成 LDB Toolchain
+可以从[这里](https://github.com/amosbird/ldb_toolchain_gen/releases)下载对应版本的 `ldb_toolchain_gen.sh`，对于ARM架构，需要下载对应版本的`ldb_toolchain_gen.aarch64.sh`。该脚本用于生成 LDB Toolchain
 
 :::tip
 更多信息，可访问 <https://github.com/amosbird/ldb_toolchain_gen>
@@ -137,7 +142,7 @@ $ BUILD_TYPE=Debug sh build.sh
 ```
 
 该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE、MS）。编译产出在 `output/` 目录下。
-MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此连接](../../../docusaurus-plugin-content-docs/current/compute-storage-decoupled/compilation-and-deployment)
+MS 模块是 doris 存算分离模式依赖的模块，详细说明请参考[此连接](../../../docusaurus-plugin-content-docs/current/compute-storage-decoupled/compilation-and-deployment.md)
 
 ## 预编译三方库
 

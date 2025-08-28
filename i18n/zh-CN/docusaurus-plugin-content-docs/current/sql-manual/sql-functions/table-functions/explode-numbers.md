@@ -6,61 +6,70 @@
 ---
 
 ## 描述
-
- `explode_numbers` 表函数，接受一个整数 n，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。
- 
- `explode_numbers_outer` 与 `explode_numbers` 不同的是，会在表函数生成 0 行数据时添加一行`Null`数据。
+`explode_numbers` 函数接受一个数组，会将数组的每个元素映射为单独的行。需要与 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 配合使用，以将嵌套数据结构展开为标准的平面表格式。 `explode_numbers` 和 [`explode_numbers_outer`](./explode-numbers-outer.md) 区别主要在于空值处理。
 
 ## 语法
 ```sql
-EXPLODE_NUMBERS(<n>)
-EXPLODE_NUMBERS_OUTER(<n>)
+EXPLODE_NUMBERS(<int>)
 ```
-
 
 ## 参数
-
-| 参数 | 说明 |
-| -- | -- |
-| `<n>` | 整数类型 |
+- `<int>` 数组类型
 
 ## 返回值
+- 返回一个 `[0, n)` 整数列，列类型为 `INT`。
+- 如果 `<int>` 为 NULL 或者为空数组（元素个数为 0），返回 0 行数据。
 
-返回一个 [0,n) 的序列
 
-- 当为 0 或者 NULL 时不返回
+## 示例
+0. 准备数据
+    ```sql
+    create table example(
+        k1 int
+    ) properties(
+        "replication_num" = "1"
+    );
 
-## 举例
-
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
-```
-
-```text
-+------+
-| e1   |
-+------+
-|    0 |
-|    1 |
-|    2 |
-|    3 |
-|    4 |
-+------+
-```
-
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
-Empty set
-```
-
-```sql
-select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) tmp1 as e1;
-```
-
-```text
-+------+
-| e1   |
-+------+
-| NULL |
-+------+
-```
+    insert into example values(1);
+    ```
+1. 常规参数
+    ```sql
+    select  * from example lateral view explode_numbers(10) t2 as c;
+    ```
+    ```text
+    +------+------+
+    | k1   | c    |
+    +------+------+
+    |    1 |    0 |
+    |    1 |    1 |
+    |    1 |    2 |
+    |    1 |    3 |
+    |    1 |    4 |
+    |    1 |    5 |
+    |    1 |    6 |
+    |    1 |    7 |
+    |    1 |    8 |
+    |    1 |    9 |
+    +------+------+
+    ```
+2. 参数 0
+    ```sql
+    select  * from example lateral view explode_numbers(0) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+3. NULL 参数
+    ```sql
+    select  * from example lateral view explode_numbers(NULL) t2 as c;
+    ```
+    ```text
+    Empty set (0.03 sec)
+    ```
+4. 负数参数
+    ```sql
+    select  * from example lateral view explode_numbers(-1) t2 as c;
+    ```
+    ```text
+    Empty set (0.04 sec)
+    ```

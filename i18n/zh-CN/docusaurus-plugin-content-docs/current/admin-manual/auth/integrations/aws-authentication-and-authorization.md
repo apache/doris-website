@@ -392,7 +392,7 @@ S3 Bucket 写策略模板，适用于需要往 bucket 中读取和写入对象�
 接下来分别介绍如何通过`arn_role`和`external_id`字段使用 Doris 对应功能的 sql 语法，主要关注如下两个字段：
 
 ```sql
-"s3.role_arn" = "<your-target-role-arn>",
+"s3.role_arn" = "<your-bucket-role-arn>",
 "s3.external_id" = "<your-external-id>"      -- 可选参数
 ```
 
@@ -411,7 +411,7 @@ S3 Bucket 写策略模板，适用于需要往 bucket 中读取和写入对象�
       "provider" = "S3",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- 可选参数
   )
   PROPERTIES
@@ -428,7 +428,7 @@ S3 Bucket 写策略模板，适用于需要往 bucket 中读取和写入对象�
       "format" = "parquet",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- 可选参数
   )
 ```
@@ -442,7 +442,7 @@ S3 Bucket 写策略模板，适用于需要往 bucket 中读取和写入对象�
       "warehouse" = "s3://your_bucket/dir/key",
       "s3.endpoint" = "s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
-      "s3.role_arn" = "<your-target-role-arn>",
+      "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- 可选参数
   );
 ```
@@ -456,7 +456,7 @@ PROPERTIES (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>",            -- 可选参数
     "s3.root.path" = "s3_demo_vault_prefix",
     "provider" = "S3",
@@ -474,7 +474,7 @@ PROPERTIES (
 ) WITH S3 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 )
 ```
@@ -489,7 +489,7 @@ PROPERTIES
 (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 );
 ```
@@ -503,7 +503,7 @@ PROPERTIES
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
-    "s3.role_arn" = "<your-target-role-arn>",
+    "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
 );
 ```

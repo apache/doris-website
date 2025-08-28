@@ -19,11 +19,12 @@ SUM(<expr>)
 
 | Parameter | Description |
 | --- | --- |
-| `<expr>` | The field to calculate the sum of |
+| `<expr>` | The field to calculate the sum of, supports type Double, Float, Decimal, LargeInt, BigInt, Integer, SmallInt, TinyInt. |
 
 ## Return Value
 
 Return the sum of all values of the selected field.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 ```sql

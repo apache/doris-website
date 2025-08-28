@@ -22,13 +22,17 @@ ST_GEOMETRYFROMTEXT( <wkt>)
 
 | 参数 | 说明      |
 | -- |---------|
-| `<WKB>` | 图形的内存形式 |
+| `<wkt>` | 图形的内存形式 |
 
 支持的WKT格式:
 - `POINT` - 空间中的单个点
 - `LINESTRING` - 连接的线段序列
 - `POLYGON` - 由一个或多个环定义的封闭区域, 要求至少有三个不同的点且首尾闭合
 - `MULTIPOLYGON` - 多边形的集合, 要求多边形之间仅能存在有限个离散点的接触
+
+:::info 备注
+从 Apache Doris 3.0.6 开始支持 MULTIPOLYGON 格式解析
+:::
 
 ## 返回值
 

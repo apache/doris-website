@@ -23,33 +23,24 @@ COLLECT_LIST(<expr> [,<max_size>])
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | Column or expression to aggregate |
-| `<max_size>` | Optional parameter that can be set to limit the size of the resulting array to max_size elements |
+| `<expr>` | An expression to determine the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String, Array, Map, Struct. |
+| `<max_size>` | Optional parameter to limit the result array size to max_size elements. Supported type: Integer. |
 
 ## Return Value
 
-The return type is ARRAY, which contains all values. Special circumstances:
-
-- If the value is NULL, it will filter
+Returns ARRAY type, containing all non-NULL values. If there is no valid data in the group, returns an empty array.
 
 ## Example
 
 ```sql
-select k1,k2,k3 from collect_list_test order by k1;
-```
-
-```text
-+------+------------+-------+
-| k1   | k2         | k3    |
-+------+------------+-------+
-|    1 | 2023-01-01 | hello |
-|    2 | 2023-01-02 | NULL  |
-|    2 | 2023-01-02 | hello |
-|    3 | NULL       | world |
-|    3 | 2023-01-02 | hello |
-|    4 | 2023-01-02 | sql   |
-|    4 | 2023-01-03 | sql   |
-+------+------------+-------+
+-- setup
+CREATE TABLE collect_list_test (
+	k1 INT,
+	k2 INT,
+	k3 STRING
+) DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO collect_list_test VALUES (1, 10, 'a'), (1, 20, 'b'), (1, 30, 'c'), (2, 100, 'x'), (2, 200, 'y'), (3, NULL, NULL);
 ```
 
 ```sql
@@ -57,11 +48,11 @@ select collect_list(k1),collect_list(k1,3) from collect_list_test;
 ```
 
 ```text
-+-------------------------+--------------------------+
-| collect_list(`k1`)      | collect_list(`k1`,3)     |
-+-------------------------+--------------------------+
-| [1,2,2,3,3,4,4]         | [1,2,2]                  |
-+-------------------------+--------------------------+
++--------------------+--------------------+
+| collect_list(k1)   | collect_list(k1,3) |
++--------------------+--------------------+
+| [1, 1, 1, 2, 2, 3] | [1, 1, 1]          |
++--------------------+--------------------+
 ```
 
 ```sql
@@ -69,12 +60,11 @@ select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1
 ```
 
 ```text
-+------+-------------------------+--------------------------+
-| k1   | collect_list(`k2`)      | collect_list(`k3`,1)     |
-+------+-------------------------+--------------------------+
-|    1 | [2023-01-01]            | [hello]                  |
-|    2 | [2023-01-02,2023-01-02] | [hello]                  |
-|    3 | [2023-01-02]            | [world]                  |
-|    4 | [2023-01-02,2023-01-03] | [sql]                    |
-+------+-------------------------+--------------------------+
++------+------------------+--------------------+
+| k1   | collect_list(k2) | collect_list(k3,1) |
++------+------------------+--------------------+
+|    1 | [10, 20, 30]     | ["a"]              |
+|    2 | [100, 200]       | ["x"]              |
+|    3 | []               | []                 |
++------+------------------+--------------------+
 ```

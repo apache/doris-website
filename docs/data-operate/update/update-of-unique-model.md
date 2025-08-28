@@ -396,3 +396,73 @@ The final data in the table is as follows:
 6. Flexible partial updates are not supported on tables with Variant columns.
 
 7. Flexible partial updates are not supported on tables with synchronous materialized views.
+
+
+## Handling New Rows in Partial Column Updates
+
+The session variable or import property `partial_update_new_key_behavior` controls the behavior when inserting new rows during partial column updates.
+
+When `partial_update_new_key_behavior=ERROR`, each inserted row must have a key that already exists in the table. When `partial_update_new_key_behavior=APPEND`, partial column updates can update existing rows with matching keys or insert new rows with keys that do not exist in the table.
+
+For example, consider the following table structure:
+```sql
+CREATE TABLE user_profile
+(
+  id               INT,
+  name             VARCHAR(10),
+  age              INT,
+  city             VARCHAR(10),
+  balance          DECIMAL(9, 0),
+  last_access_time DATETIME
+) ENGINE=OLAP
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true"
+);
+```
+
+Suppose the table contains the following data:
+```sql
+mysql> select * from user_profile;
++------+-------+------+----------+---------+---------------------+
+| id   | name  | age  | city     | balance | last_access_time    |
++------+-------+------+----------+---------+---------------------+
+|    1 | kevin |   18 | shenzhen |     400 | 2023-07-01 12:00:00|
++------+-------+------+----------+---------+---------------------+
+```
+
+If you use `Insert Into` for partial column updates with `partial_update_new_key_behavior=ERROR`, and try to insert the following data, the operation will fail because the keys `(3)` and `(18)` do not exist in the original table:
+```sql
+SET enable_unique_key_partial_update=true;
+SET partial_update_new_key_behavior=ERROR;
+INSERT INTO user_profile (id, balance, last_access_time) VALUES
+(1, 500, '2023-07-03 12:00:01'),
+(3, 23, '2023-07-03 12:00:02'),
+(18, 9999999, '2023-07-03 12:00:03');
+(1105, "errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]tablet error: [E-7003]Can't append new rows in partial update when partial_update_new_key_behavior is ERROR. Row with key=[3] is not in table., host: 127.0.0.1")
+```
+
+If you use `partial_update_new_key_behavior=APPEND` and perform the same partial column update:
+```sql
+SET enable_unique_key_partial_update=true;
+SET partial_update_new_key_behavior=APPEND;
+INSERT INTO user_profile (id, balance, last_access_time) VALUES 
+(1, 500, '2023-07-03 12:00:01'),
+(3, 23, '2023-07-03 12:00:02'),
+(18, 9999999, '2023-07-03 12:00:03');
+```
+
+The existing row will be updated, and two new rows will be inserted. For columns not specified in the inserted data, if a default value is defined, the default will be used; if the column is nullable, NULL will be used; otherwise, the insert will fail.
+
+The query result will be:
+```sql
+mysql> select * from user_profile;
++------+-------+------+----------+---------+---------------------+
+| id   | name  | age  | city     | balance | last_access_time    |
++------+-------+------+----------+---------+---------------------+
+|    1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
+|    3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
+|   18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
++------+-------+------+----------+---------+---------------------+
+```

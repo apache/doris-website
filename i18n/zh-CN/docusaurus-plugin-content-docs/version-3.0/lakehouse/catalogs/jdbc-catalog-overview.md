@@ -32,6 +32,8 @@ Doris JDBC Catalog 支持连接以下数据库：
 | [ SAP HANA](./jdbc-saphana-catalog)         |
 | [ Oceanbase](./jdbc-oceanbase-catalog.md)   |
 
+可参考 [开发者手册](https://doris.apache.org/zh-CN/community/how-to-contribute/jdbc-catalog-developer-guide) 开发新的未支持的 JDBC 数据源。
+
 ## 配置 Catalog
 
 ### 语法

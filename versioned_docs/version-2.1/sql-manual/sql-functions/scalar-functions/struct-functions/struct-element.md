@@ -12,7 +12,7 @@ Return a specific field within a data column of a struct.
 ## Syntax
 
 ```sql
-STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
+STRUCT_ELEMENT( <struct>, '<filed_location>/<filed_name>')
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 | -- | -- |
 | `<struct>` | If the input struct column is null, return null |
 | `<filed_location>` | The position of the field starts from 1, and only constants are supported |
-| `<filed_name>` | The field name must be a constant |
+| `<filed_name>` | The field name must be a constant, case sensitive |
 
 ## Return Value
 

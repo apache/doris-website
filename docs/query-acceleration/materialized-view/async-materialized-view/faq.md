@@ -171,6 +171,75 @@ When encountering data lakes that currently do not support retrieving version in
 
 For the progress of materialized view support for data lakes, please refer to[Data Lake Support Status.](./overview.md)
 
+
+### Q15: Why is my partitioned materialized view always fully refreshed?
+The incremental refresh of a materialized view's partitions depends on version information from the base table partitions. If data in the base table partitions changes since the last refresh, the materialized view will refresh those corresponding partitions.
+If your partitioned materialized view is being fully refreshed, the possible reasons are:
+
+Changes occurred in non-partition-tracked tables referenced in the materialized view's definition SQL, making it impossible to determine which partitions need updating, thus forcing a full refresh.
+For example:
+This materialized view tracks the o_orderdate partition of the orders table, but if data in lineitem or partsupp changes, the system cannot determine which partitions need updating, resulting in a full refresh.
+
+```sql
+
+CREATE MATERIALIZED VIEW partition_mv
+BUILD IMMEDIATE
+REFRESH AUTO
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2
+PROPERTIES
+("replication_num" = "3")
+AS
+SELECT
+o_orderdate,
+l_orderkey,
+l_partkey
+FROM
+orders
+LEFT JOIN lineitem ON l_orderkey = o_orderkey
+LEFT JOIN partsupp ON ps_partkey = l_partkey
+and l_suppkey = ps_suppkey;
+```
+
+You can check which base tables the materialized view tracks by running
+
+```sql
+SELECT *
+FROM mv_infos('database'='db_name')
+WHERE Name = 'partition_mv' \G
+```
+The returned result shows partitionType=FOLLOW_BASE_TABLE in MvPartitionInfo, indicating the materialized view partitions follow the base table partitions.
+relatedCol shows o_orderdate, meaning the materialized view partitions are based on the o_orderdate column.
+
+```text
+Id: 1752809156450
+Name: partition_mv
+JobName: inner_mtmv_1752809156450
+State: NORMAL
+SchemaChangeDetail:
+RefreshState: SUCCESS
+RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+QuerySql: SELECT
+`internal`.`doc_db`.`orders`.`o_orderdate`,
+`internal`.`doc_db`.`lineitem`.`l_orderkey`,
+`internal`.`doc_db`.`lineitem`.`l_partkey`
+FROM
+`internal`.`doc_db`.`orders`
+LEFT JOIN `internal`.`doc_db`.`lineitem` ON `internal`.`doc_db`.`lineitem`.`l_orderkey` = `internal`.`doc_db`.`orders`.`o_orderkey`
+LEFT JOIN `internal`.`doc_db`.`partsupp` ON `internal`.`doc_db`.`partsupp`.`ps_partkey` = `internal`.`doc_db`.`lineitem`.`l_partkey`
+and `internal`.`doc_db`.`lineitem`.`l_suppkey` = `internal`.`doc_db`.`partsupp`.`ps_suppkey`
+MvPartitionInfo: MTMVPartitionInfo{partitionType=EXPR, relatedTable=orders, relatedCol='o_orderdate', partitionCol='o_orderdate'}
+SyncWithBaseTables: 1
+```
+
+Solution:
+
+If changes in lineitem or partsupp tables don't affect your materialized view,
+you can exclude these tables from triggering full refreshes by setting the `excluded_trigger_tables` property:
+`ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");`
+
+
 ## Queries and Transparent Rewriting
 
 ### Q1: How to confirm if a Materialized View hits, and how to find the reasons for Non-Hits?
@@ -367,8 +436,8 @@ There is a certain delay between the data in async-materialized views and the un
 
 ### 2 Summary and Description of Transparent Rewriting Failures
 
-| Summary                                                      | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Summary                                                      | Description                                                 |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
 | View struct info is invalid                                  | The structure information of the materialized view is invalid. Currently supported SQL patterns for rewriting include joins in both queries and materialized views, and aggregations in queries with or without joins in materialized views. This error is often displayed during transparent rewriting, as each rewriting rule is responsible for a specific SQL pattern. If a rule is hit that does not match the required pattern, this error will occur, but it is generally not the primary cause of rewriting failure. |
 | Materialized view rule exec fail                             | Typically indicates an exception during the execution of the transparent rewriting rule. To investigate, use EXPLAIN memo plan query_sql to view the specific exception stack. |
 | Match mode is invalid                                        | The number of tables in the query does not match the number of tables in the materialized view, and rewriting is not supported. |
@@ -379,7 +448,7 @@ There is a certain delay between the data in async-materialized views and the un
 | Predicate compensate fail                                    | Typically occurs when the query's condition range exceeds that of the materialized view, e.g., query is a > 10 but materialized view is a > 15. |
 | Rewrite compensate predicate by view fail                    | Predicate compensation failed, usually because the query has additional conditions that need compensation, but the columns used in those conditions do not appear in the SELECT clause of the materialized view. |
 | Calc invalid partitions fail                                 | For partitioned materialized views, attempts to calculate whether partitions used by the query are valid failed. |
-| mv can not offer any partition for query                     | All partitions used by the query are invalid in the materialized view, meaning the materialized view cannot provide valid data for the query. |
+| mv can not offer any partition for query                     | Query only uses invalid partitions of materialized view (data changed since last refresh). Check partition validity via show partitions from mv_name (SyncWithBaseTables=false indicates need for refresh). Set grace_period (in seconds) to allow data latency. |
 | Add filter to base table fail when union rewrite             | The query used invalid partitions of the materialized view, and attempting to union all the materialized view and base table failed. |
 | RewrittenPlan output logical properties is different with target group | After rewriting, the output logical properties of the materialized view do not match those of the original query. |
 | Rewrite expressions by view in join fail                     | In join rewriting, fields or expressions used in the query are not present in the materialized view. |

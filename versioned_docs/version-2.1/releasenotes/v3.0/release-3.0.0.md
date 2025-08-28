@@ -142,7 +142,7 @@ In terms of write performance, we have simulated two test cases under the same c
 
 - If users need the compute-storage coupled mode, following the [documentation](https://doris.apache.org/docs/3.0/install/source-install/compilation-with-docker/) for its deployment and upgrade. We recommend using Doris Manager for quick deployment and cluster upgrades. However, the compute-storage decoupled mode does not yet support Doris Manager deployment and upgrade. We will continue iteration for better support in future versions.
 
-- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools like X2Doris after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
+- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
 
 :::info
 See doc:

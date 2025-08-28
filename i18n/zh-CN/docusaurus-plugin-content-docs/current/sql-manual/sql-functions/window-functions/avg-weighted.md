@@ -1,1 +1,0 @@
-../aggregate-functions/avg-weighted.md

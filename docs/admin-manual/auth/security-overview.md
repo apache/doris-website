@@ -29,3 +29,4 @@ Doris provides the following mechanisms to manage data security:
 
 **JAVA-UDF Security:** Doris supports user-defined function functionality, so root administrators need to review the implementation of user UDFs to ensure the operations in the logic are safe and prevent high-risk actions in UDFs, such as data deletion and system disruption.
 
+**Third-Party Packages:** When using Doris features like JDBC Catalog or UDFs, administrators must ensure that any third-party packages are from trusted and secure sources. To reduce security risks, it is recommended to use dependencies only from official or reputable community sources.

@@ -9,6 +9,10 @@
 
 Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Saturday is 7.
 
+## Alias
+
+- DOW
+
 ## Syntax
 
 ```sql

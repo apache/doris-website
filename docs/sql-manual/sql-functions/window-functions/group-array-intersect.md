@@ -1,1 +1,0 @@
-../aggregate-functions/group-array-intersect.md

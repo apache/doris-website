@@ -7,8 +7,6 @@
     'author': 'velodb.io · Xiaolei, Apache Doris Committer',
     'externalLink': 'https://www.velodb.io/blog/1422',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "2",
     "image": '/images/blogs/1-billion-json-records-1-second-query-response.jpg'
 }
 ---

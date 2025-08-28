@@ -39,7 +39,7 @@ TO_JSON(value)
 **value** - 要转换为 JSONB 类型的值。支持以下 Doris 数据类型：
 - 数字类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
 - 布尔类型：BOOLEAN
-- 字符串类型：STRING、VARCHAR
+- 字符串类型：STRING、VARCHAR、CHAR
 - 复杂类型：ARRAY、STRUCT
 
 未列出的类型（如 DATE、DATETIME 等）不直接支持，必须先转换为支持的类型（通常是 STRING）。

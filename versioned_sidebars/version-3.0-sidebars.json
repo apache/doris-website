@@ -438,7 +438,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "File Foramt",
+                            "label": "File Format",
                             "items": [
                                 "lakehouse/file-formats/parquet",
                                 "lakehouse/file-formats/orc",
@@ -469,9 +469,10 @@
                                 "lakehouse/best-practices/doris-iceberg",
                                 "lakehouse/best-practices/doris-lakesoul",
                                 "lakehouse/best-practices/doris-aws-s3tables",
+                                "lakehouse/best-practices/doris-dlf-paimon",
+                                "lakehouse/best-practices/doris-maxcompute",
                                 "lakehouse/best-practices/tpch",
-                                "lakehouse/best-practices/tpcds",
-                                "lakehouse/best-practices/doris-maxcompute"
+                                "lakehouse/best-practices/tpcds"
                             ]
                         }
                     ]
@@ -1629,6 +1630,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
+                                "sql-manual/sql-functions/aggregate-functions/corr-welford",
                                 "sql-manual/sql-functions/aggregate-functions/corr",
                                 "sql-manual/sql-functions/aggregate-functions/count",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
@@ -1905,6 +1907,7 @@
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]
                         },
@@ -2216,6 +2219,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
@@ -2229,6 +2233,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

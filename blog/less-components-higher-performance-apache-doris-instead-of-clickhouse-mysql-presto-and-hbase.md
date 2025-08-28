@@ -38,7 +38,7 @@ This post is about building a unified OLAP platform. An insurance company tries 
 
 ## Component-Heavy Data Architecture
 
-The user started with Lambda architecture, spliting their data pipeline into a batch processing link and a stream processing link. For real-time data streaming, they apply Flink CDC; for batch import, they incorporate Sqoop, Python, and DataX to build their own data integration tool named Hisen.  
+The user started with Lambda architecture, splitting their data pipeline into a batch processing link and a stream processing link. For real-time data streaming, they apply Flink CDC; for batch import, they incorporate Sqoop, Python, and DataX to build their own data integration tool named Hisen.  
 
 ![multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto](/images/multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto.png)
 

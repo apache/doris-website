@@ -1,1 +1,0 @@
-../aggregate-functions/group-bit-xor.md

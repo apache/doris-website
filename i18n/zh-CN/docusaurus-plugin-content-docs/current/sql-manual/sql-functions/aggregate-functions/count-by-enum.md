@@ -7,7 +7,7 @@
 
 ## 描述
 
-将列中数据看作枚举值，统计每个枚举值的个数。返回各个列枚举值的个数，以及非 null 值的个数与 null 值的个数。
+将列中数据看作枚举值，统计每个枚举值的个数。返回各个列枚举值的个数，以及非 NULL 值的个数与 NULL 值的个数。
 
 ## 语法
 
@@ -19,11 +19,12 @@ COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 至少填写一个输入。值为字符串（STRING）类型的列 |
+| `<expr1>` | 至少填写一个输入，至多支持 1024 个输入，支持类型为 String。 |
 
 ## 返回值
 
-返回一个 JSONArray 字符串。
+返回 JSONArray 格式的结果。
+返回类型为 String。
 
 例如：
 ```json
@@ -57,10 +58,10 @@ COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 }]
 ```
 说明：返回值为一个 JSON array 字符串，内部对象的顺序是输入参数的顺序。
-* cbe：根据枚举值统计非 null 值的统计结果
-* notnull：非 null 的个数
-* null：null 值个数
-* all：总数，包括 null 值与非 null 值
+* cbe：根据枚举值统计非 NULL 值的统计结果
+* notnull：非 NULL 的个数
+* null：NULL 值个数
+* all：总数，包括 NULL 值与非 NULL 值
 
 ## 举例
 

@@ -97,6 +97,24 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 ![group1](/images/ranger/group1.png)
 
+#### Compute Group 权限
+
+> 3.0.6 版本支持
+
+相当于 Doris 内部授权语句的 `grant usage_priv on compute group 'group1' to user1`;
+- catalog 同级下拉框可以找到 compute group 选项
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault 权限
+
+> 3.0.6 版本支持
+
+相当于 Doris 内部授权语句的 `grant usage_priv on storage vault 'vault1' to user1`;
+- catalog 同级下拉框可以找到 storage vault 选项
+
+![storage vault](/images/ranger/storage-vault.png)
+
 ### 行权限示例
 
 > 2.1.3 版本支持
@@ -147,6 +165,10 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
    如图所示，创建服务的时候，添加配置 `default.policy.users` ，如需配置多个用户拥有全部权限，用 `,` 分隔
    ![default policy](/images/ranger/default-policy.png)
+
+4. 使用 ranger 鉴权后，内部授权还有用么？
+
+   不能用，也不能创建/删除角色
 
 ## 安装和配置 Doris Ranger 插件
 ### 安装插件

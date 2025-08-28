@@ -97,6 +97,7 @@ select date_ceil("2023-07-13 22:28:18",interval 5 month);
 | 2023-12-01 00:00:00                                         |
 +-------------------------------------------------------------+
 
+
 -- Round up to the nearest 5-year interval
 select date_ceil("2023-07-13 22:28:18",interval 5 year);
 

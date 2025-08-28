@@ -7,7 +7,7 @@
 
 ## Description
 
-Treat the data in the column as enumeration values and count the number of each enumeration value. Returns the number of enumeration values for each column, as well as the number of non-null values and the number of null values.
+Treat the data in the column as enumeration values and count the number of each enumeration value. Returns the number of enumeration values for each column, as well as the number of non-NULL values and the number of NULL values.
 
 ## Syntax
 
@@ -19,11 +19,12 @@ COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | Fill in at least one input. Column whose value is of type STRING |
+| `<expr1>` | At least one input is required, supports up to 1024 inputs. Supported type is String. |
 
-## Returned value
+## Return Value
 
-Returns a JSONArray string.
+Returns results in JSONArray format.
+Return type is String.
 
 For example:
 ```json
@@ -56,11 +57,11 @@ For example:
   "all": 200
 }]
 ```
-Description: The return value is a JSON array string and the order of the internal objects is the order of the input parameters.
-* cbe: count of non-null values based on enumeration values
-* notnull: number of non-null values.
-* null: number of null values
-* all: total number, including both null and non-null values.
+Description: The return value is a JSON array string, and the order of internal objects follows the order of input parameters.
+* cbe: Statistical results of non-NULL values based on enumeration values
+* notnull: Count of non-NULL values
+* null: Count of NULL values
+* all: Total count, including both NULL and non-NULL values.
 
 
 ## Example

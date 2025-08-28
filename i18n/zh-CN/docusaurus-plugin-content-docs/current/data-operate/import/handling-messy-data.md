@@ -14,9 +14,7 @@
 
 ## 严格模式 
 
-严格模式具有两个主要功能：
-1. 对导入过程中发生列类型转换失败的数据行进行过滤。
-2. 在部分列更新场景中，限制只能更新已存在的列。
+严格模式的主要功能是对导入过程中发生列类型转换失败的数据行进行过滤。
 
 ### 列类型转换失败的过滤策略
 
@@ -59,74 +57,6 @@
 
 3. `10` 虽然是一个超过范围的值，但是因为其类型符合 decimal 的要求，所以严格模式对其不产生影响。
 :::
-
-
-### 限定部分列更新只能更新已有的列
-
-在严格模式下，部分列更新插入的每一行数据必须满足该行数据的 Key 在表中已经存在。而在非严格模式下，进行部分列更新时可以更新 Key 已经存在的行，也可以插入 Key 不存在的新行。
-
-例如有表结构如下：
-```sql
-CREATE TABLE user_profile
-(
-    id               INT,
-    name             VARCHAR(10),
-    age              INT,
-    city             VARCHAR(10),
-    balance          DECIMAL(9, 0),
-    last_access_time DATETIME
-) ENGINE=OLAP
-UNIQUE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1
-PROPERTIES (
-    "enable_unique_key_merge_on_write" = "true"
-);
-```
-
-表中有一条数据如下：
-```sql
-mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time   |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     400 | 2023-07-01 12:00:00|
-+------+-------+------+----------+---------+---------------------+
-```
-
-当用户使用严格模式的 Insert Into 部分列更新向表中插入上述数据时，由于开启了严格模式且第二、三行的数据的 key(`(3)`, `(18)`) 不在原表中，所以本次插入会失败：
-```sql
-SET enable_unique_key_partial_update=true;
-SET enable_insert_strict = true;
-INSERT INTO user_profile (id, balance, last_access_time) VALUES
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
-ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has filtered data in strict mode
-```
-
-当用户使用非严格模式的 Insert Into 部分列更新向表中插入如下数据时：
-```sql
-SET enable_unique_key_partial_update=true;
-SET enable_insert_strict = false;
-INSERT INTO user_profile (id, balance, last_access_time) VALUES 
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
-```
-
-表中原有的一条数据将会被更新，此外还向表中插入了两条新数据。对于插入的数据中用户没有指定的列，如果该列有默认值，则会以默认值填充；否则，如果该列可以为 NULL，则将以 NULL 值填充；否则本次插入不成功。
-
-查询结果如下：
-```sql
-mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time    |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
-|    3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
-|   18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
-+------+-------+------+----------+---------+---------------------+
-```
 
 ### 开启严格模式
 严格模式（strict_mode）默认为 False，以下是各种导入方式的设置方法：

@@ -19,7 +19,7 @@ MAP( <key1> , <value1> [, <key2>,<value2> ... ])
 
 | Parameter | Description |
 | -- | -- |
-| `<key>` | Constructing the key of the map |
+| `<key>` | Constructing the key of the map, case sensitive |
 | `<value>` | Constructing the value of the map |
 
 ## Return Value

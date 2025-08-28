@@ -59,7 +59,7 @@ Doris 支持的所有外表都能用于创建物化视图，但是目前仅有 H
 
 不太适合。物化视图刷新的最小单位是分区，如果数据量较大会占用较多的资源，并且实时性不够。可以考虑使用同步物化视图或其他手段。
 
-### Q12：构建分区物化视图报错  
+### Q12：构建分区物化视图报错
 
 **报错信息如下：**
 
@@ -175,6 +175,75 @@ BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 遇到目前不支持获取版本信息的数据湖， 例如jdbc catalog， 那么刷新的时候会认为物化视图是不需要更新的，因此创建或者刷新物化视图的时候应该指定 complete 而不是 auto
 
 物化视图支持数据湖的进度参考[数据湖支持情况](./overview.md)
+
+### Q15：创建的是分区物化视图，为什么每次都是全量刷新？
+
+物化视图的分区增量刷新依赖于基表分区的版本信息。如果物化视图的分区自上次刷新后，基表分区的数据发生变化，那么物化视图就会刷新此分区。
+如果物化视图是分区物化视图，刷新的时候刷新了所有分区，那么可能是以下原因：
+- 物化视图定义 SQL 中非分区追踪表数据发生了变化，导致物化视图刷新时无法判断哪些分区需要更新，因此只能全量刷新。
+
+例如：
+此物化视图追踪 orders 表的 o_orderdate 分区，但是 lineitem 或者 partsupp 数据发生了变化，导致物化视图无法判断哪些分区需要更新，因此只能全量刷新。
+
+```sql
+    CREATE MATERIALIZED VIEW partition_mv
+    BUILD IMMEDIATE 
+    REFRESH AUTO 
+    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
+    DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
+    PROPERTIES 
+    ("replication_num" = "3") 
+    AS 
+    SELECT 
+    o_orderdate, 
+    l_orderkey, 
+    l_partkey 
+    FROM 
+    orders 
+    LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+    LEFT JOIN partsupp ON ps_partkey = l_partkey 
+    and l_suppkey = ps_suppkey;
+```
+
+可以运行如下查看物化视图追踪的基表
+
+```sql
+SELECT * 
+FROM mv_infos('database'='db_name')
+WHERE Name = 'partition_mv' \G 
+```
+
+返回结果如下，MvPartitionInfo 中的 partitionType 为 FOLLOW_BASE_TABLE，表示物化视图分区跟随基表分区。
+relatedCol 为 o_orderdate，表示物化视图分区是基于 o_orderdate 分区的。
+```sql
+                Id: 1752809156450
+              Name: partition_mv
+           JobName: inner_mtmv_1752809156450
+             State: NORMAL
+SchemaChangeDetail: 
+      RefreshState: SUCCESS
+       RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+          QuerySql: SELECT
+                    `internal`.`doc_db`.`orders`.`o_orderdate`,
+                    `internal`.`doc_db`.`lineitem`.`l_orderkey`,
+                    `internal`.`doc_db`.`lineitem`.`l_partkey`
+                    FROM
+                    `internal`.`doc_db`.`orders`
+                    LEFT JOIN `internal`.`doc_db`.`lineitem` ON `internal`.`doc_db`.`lineitem`.`l_orderkey` = `internal`.`doc_db`.`orders`.`o_orderkey`
+                    LEFT JOIN `internal`.`doc_db`.`partsupp` ON `internal`.`doc_db`.`partsupp`.`ps_partkey` = `internal`.`doc_db`.`lineitem`.`l_partkey`
+                    and `internal`.`doc_db`.`lineitem`.`l_suppkey` = `internal`.`doc_db`.`partsupp`.`ps_suppkey`
+   MvPartitionInfo: MTMVPartitionInfo{partitionType=EXPR, relatedTable=orders, relatedCol='o_orderdate', partitionCol='o_orderdate'}
+SyncWithBaseTables: 1
+```
+
+
+解决办法：
+- 如果物化视图中 lineitem 或者 partsupp 表数据变化，对物化视图没有影响，
+  可以通过设置物化视图的属性 `excluded_trigger_tables` 来排除 lineitem 或 partsupp 表的变化引起物化视图全量刷。命令为
+  `ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");`
+
+
 
 ## 查询和透明改写
 
@@ -357,34 +426,34 @@ Explain 显示的信息如下：
 
 ### 1 透明改写失败摘要信息和说明
 
-| 摘要信息                                                     | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| View struct info is invalid                                  | 物化视图的结构信息不合法，目前支持改写的 SQL pattern 如下查询是 join，物化也是 join，查询是 agg，物化可以没有 join 透明改写过程中，多数会显示这个问题，因为每个透明改写的规则负责一定 SQL pattern 的改写，如果命中了不符合要求规则，就会有这个错误，这个错误一般不是决定透明改写失败的主要原因。 |
-| Materialized view rule exec fail                             | 这个一般是透明改写规则执行抛异常，这种情况需要 Explain memo plan query_sql 看下具体异常栈 |
-| Match mode is invalid                                        | 查询和物化视图表的数量不一致，暂不支持改写                   |
-| Query to view table mapping is null                          | 查询和物化视图表映射生成失败                                 |
-| queryToViewTableMappings are over the limit and be intercepted | 查询自关联的表太多了，导致透明改写空间膨胀过大，停止透明改写 |
-| Query to view slot mapping is null                           | 查询和物化的表 slot 映射失败                                   |
-| The graph logic between query and view is not consistent     | 查询和物化的 Join 类型不同或者 Join 的表不同                  |
-| Predicate compensate fail                                    | 一般是查询的条件范围在物化的范围外，比如查询是 a > 10，但是物化是 a > 15 |
-| Rewrite compensate predicate by view fail                    | 条件补偿失败，通常是查询比物化多的条件要进行补偿，但是条件用的列没有出现在物化视图 select 后 |
-| Calc invalid partitions fail                                 | 如果是分区物化视图，会尝试计算查询使用的物化视图分区是否有效，计算查询可能用到的失效分区失败 |
-| mv can not offer any partition for query                     | 查询使用的都是物化视图的失效分区，也就是说物化视图不能为查询提供有效的数据 |
-| Add filter to base table fail when union rewrite             | 查询使用了物化视图失效的分区，尝试将物化视图和原表 union all 失败 |
-| RewrittenPlan output logical properties is different with target group | 改写完成，物化视图的 output 和原查询不一致                     |
-| Rewrite expressions by view in join fail                     | join 改写中，查询使用的字段或者表达式不在物化视图中           |
-| Rewrite expressions by view in scan fail                     | 单表改写中，查询使用的字段或者表达式不在物化视图中           |
-| Split view to top plan and agg fail, view doesn't not contain aggregate | 改写聚合时，物化视图中不含有聚合                             |
-| Split query to top plan and agg fail                         | 改写聚合时，查询中不含有聚合                                 |
-| rewritten expression contains aggregate functions when group equals aggregate rewrite | 在查询和物化 group by 相等的时候，改写后的表达式含有聚合函数 |
-| Can not rewrite expression when no roll up                   | 在查询和物化 group by 相等的时候，表达式改写失败             |
-| Query function roll up fail                                  | 聚合改写时，聚合函数上卷失败                                 |
-| View dimensions do not cover the query dimensions            | 查询中 group by 使用了一些维度，这些维度不在物化视图的 group by 后 |
-| View dimensions don't not cover the query dimensions in bottom agg | 查询中 group by 使用了一些维度，这些维度不在物化视图的 group by 后 |
-| View dimensions do not cover the query group set dimensions  | 查询中 group sets 使用了一些维度，这些维度不在物化视图的 group by 后 |
-| The only one of query or view is scalar aggregate and can not rewrite expression meanwhile | 查询中有 group by，但是物化视图中没有 group by                 |
-| Both query and view have group sets, or query doesn't have but view has, not supported | 查询和物化视图都有 group sets 查询没有 group sets，但是物化视图有，这种不支持透明改写 |
-|                                                              |                                                              |
+| 摘要信息                                                     | 说明                                                                                                                                                                                                                  |
+| ------------------------------------------------------------ |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| View struct info is invalid                                  | 物化视图的结构信息不合法，目前支持改写的 SQL pattern 如下查询是 join，物化也是 join，查询是 agg，物化可以没有 join 透明改写过程中，多数会显示这个问题，因为每个透明改写的规则负责一定 SQL pattern 的改写，如果命中了不符合要求规则，就会有这个错误，这个错误一般不是决定透明改写失败的主要原因。                                             |
+| Materialized view rule exec fail                             | 这个一般是透明改写规则执行抛异常，这种情况需要 Explain memo plan query_sql 看下具体异常栈                                                                                                                                                         |
+| Match mode is invalid                                        | 查询和物化视图表的数量不一致，暂不支持改写                                                                                                                                                                                               |
+| Query to view table mapping is null                          | 查询和物化视图表映射生成失败                                                                                                                                                                                                      |
+| queryToViewTableMappings are over the limit and be intercepted | 查询自关联的表太多了，导致透明改写空间膨胀过大，停止透明改写                                                                                                                                                                                      |
+| Query to view slot mapping is null                           | 查询和物化的表 slot 映射失败                                                                                                                                                                                                   |
+| The graph logic between query and view is not consistent     | 查询和物化的 Join 类型不同或者 Join 的表不同                                                                                                                                                                                        |
+| Predicate compensate fail                                    | 一般是查询的条件范围在物化的范围外，比如查询是 a > 10，但是物化是 a > 15                                                                                                                                                                         |
+| Rewrite compensate predicate by view fail                    | 条件补偿失败，通常是查询比物化多的条件要进行补偿，但是条件用的列没有出现在物化视图 select 后                                                                                                                                                                  |
+| Calc invalid partitions fail                                 | 如果是分区物化视图，会尝试计算查询使用的物化视图分区是否有效，计算查询可能用到的失效分区失败                                                                                                                                                                      |
+| mv can not offer any partition for query                     | 查询使用的都是物化视图的失效分区，也就是说物化视图不能为查询提供有效的数据，可能是物化视图对应分区自上次刷新后，基表对应分区数据发生变更，可以使用 `show partitions from mv_name` 查看分区的 `SyncWithBaseTables` 字段是否为 true。如果为 false, 可以手动刷新下对应分区，如果允许物化和查询的数据有一定延迟，可以设置物化视图的 `grace_peroid`属性，单位是秒 |
+| Add filter to base table fail when union rewrite             | 查询使用了物化视图失效的分区，尝试将物化视图和原表 union all 失败                                                                                                                                                                              |
+| RewrittenPlan output logical properties is different with target group | 改写完成，物化视图的 output 和原查询不一致                                                                                                                                                                                           |
+| Rewrite expressions by view in join fail                     | join 改写中，查询使用的字段或者表达式不在物化视图中                                                                                                                                                                                        |
+| Rewrite expressions by view in scan fail                     | 单表改写中，查询使用的字段或者表达式不在物化视图中                                                                                                                                                                                           |
+| Split view to top plan and agg fail, view doesn't not contain aggregate | 改写聚合时，物化视图中不含有聚合                                                                                                                                                                                                    |
+| Split query to top plan and agg fail                         | 改写聚合时，查询中不含有聚合                                                                                                                                                                                                      |
+| rewritten expression contains aggregate functions when group equals aggregate rewrite | 在查询和物化 group by 相等的时候，改写后的表达式含有聚合函数                                                                                                                                                                                 |
+| Can not rewrite expression when no roll up                   | 在查询和物化 group by 相等的时候，表达式改写失败                                                                                                                                                                                       |
+| Query function roll up fail                                  | 聚合改写时，聚合函数上卷失败                                                                                                                                                                                                      |
+| View dimensions do not cover the query dimensions            | 查询中 group by 使用了一些维度，这些维度不在物化视图的 group by 后                                                                                                                                                                         |
+| View dimensions don't not cover the query dimensions in bottom agg | 查询中 group by 使用了一些维度，这些维度不在物化视图的 group by 后                                                                                                                                                                         |
+| View dimensions do not cover the query group set dimensions  | 查询中 group sets 使用了一些维度，这些维度不在物化视图的 group by 后                                                                                                                                                                       |
+| The only one of query or view is scalar aggregate and can not rewrite expression meanwhile | 查询中有 group by，但是物化视图中没有 group by                                                                                                                                                                                    |
+| Both query and view have group sets, or query doesn't have but view has, not supported | 查询和物化视图都有 group sets 查询没有 group sets，但是物化视图有，这种不支持透明改写                                                                                                                                                              |
+|                                                              |                                                                                                                                                                                                                     |
 
 ### 2 异步物化视图分区构建物化视图失败原因和说明
 

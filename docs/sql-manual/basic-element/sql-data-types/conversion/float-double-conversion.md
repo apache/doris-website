@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Convert to float/double",
+    "title": "Convert to FLOAT/DOUBLE",
     "language": "en"
 }
 ---

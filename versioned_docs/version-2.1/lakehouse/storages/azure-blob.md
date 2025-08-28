@@ -5,4 +5,5 @@
 }
 ---
 
-TODO
+Azure Blob will be supported later.
+

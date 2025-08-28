@@ -18,6 +18,7 @@ DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最
 
 | 参数 | 说明 |
 | -- | -- |
+
 | `date_or_time_expr` | 参数是合法的日期表达式，支持输入 为 datetime 或者 date 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
 | `period` | 参数是指定每个周期有多少个单位组成，类型为 INT ，开始的时间起点为 0001-01-01T00:00:00 |
 | `type` | 参数可以是：YEAR, Quarter, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|

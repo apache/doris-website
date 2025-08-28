@@ -19,7 +19,7 @@ SUM0(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The field to calculate the sum of |
+| `<expr>` | The field to calculate the sum of, supports type Double, Float, Decimal, LargeInt, BigInt, Integer, SmallInt, TinyInt. |
 
 ## Return Value
 
