@@ -7,28 +7,26 @@
 
 ## 描述
 
-NEXT_DAY 函数用于返回指定日期之后第一个匹配目标星期几的日期。该函数支持处理 DATE、DATETIME 类型及符合格式的字符串，忽略输入中的时间部分（仅基于日期部分计算）。
+NEXT_DAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXT_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。
 
-:::tip
-该函数自 3.0.6 版本开始支持.
-:::
+该函数与 Orcle 的 [next_day 函数](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html) 行为一致
 
 ## 语法
 
 ```sql
-NEXT_DAY(<datetime/date>, <day_of_week>)
+NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 ```
 
 ## 参数
 
 | 参数              | 描述                                                         |
 |-------------------|--------------------------------------------------------------|
-| `<datetime/date>` | 支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
-| `<day_of_week>`   | 用于标识星期几的字符串表达式，为字符串类型。                               |
+| ``<date_or_time_expr>`` | 支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
+| ``<day_of_week>``   | 用于标识星期几的字符串表达式，为字符串类型。                               |
 
 
 
-`<day_of_week>` 必须是以下值之一（不区分大小写）：
+``<day_of_week>`` 必须是以下值之一（不区分大小写）：
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
 - 'TU', 'TUE', 'TUESDAY'
@@ -39,12 +37,12 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 
 ## 返回值
 
-返回类型为 DATE，表示基准日期之后第一个匹配 <day_of_week> 的日期。
+返回类型为 DATE，表示基准日期之后第一个匹配 `<day_of_week>` 的日期。
 
 特殊情况：
 - 若基准日期本身就是目标星期几，返回下一个目标星期几（而非当前日期）；
-- 若 <datetime/date> 为 NULL，返回 NULL；
-- 若 <day_of_week> 为无效值（如 'ABC'），抛出异常；
+- 若 `<date_or_time_expr>` 为 NULL，返回 NULL；
+- 若 `<day_of_week>` 为无效值（如 'ABC'），抛出异常；
 - 若输入为 9999-12-31（无论是否包含时间），返回自身（因该日期是最大有效日期，不存在后续日期）；
 
 ## 示例

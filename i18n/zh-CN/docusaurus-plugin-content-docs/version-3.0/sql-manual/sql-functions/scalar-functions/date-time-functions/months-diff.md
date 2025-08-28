@@ -6,30 +6,31 @@
 ---
 
 ## 描述
-MONTHS_DIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 `<enddate>` 减去 `<startdate>` 后的月份数。该函数支持处理 DATE、DATETIME 类型及符合格式的字符串，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。
+
+MONTHS_DIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 `<enddate>` 减去 `<startdate>` 后的月份数。该函数支持处理 DATE、DATETIME 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。
 
 ## 语法
 
 ```sql
-MONTHS_DIFF(<enddate>, <startdate>)
+MONTHS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ```
 
 ## 参数
 
 | 参数            | 说明                                                      |
 |---------------|---------------------------------------------------------|
-| `<enddate>`   | 结束日期，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
-| `<startdate>` | 开始日期，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
+| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
+| ``<date_or_time_expr2>`` | 开始日期，支持输入 date/datetime 类型 |
 
 ## 返回值
 
-返回 `<enddate>` 减去 `<startdate>` 所得月份数.
+返回 `<date_or_time_expr1>` 减去 `<date_or_time_expr2>` 所得月份数，类型为 BIGINT.
 
 基础差值 =（结束年份 - 开始年份）× 12 +（结束月份 - 开始月份）；
 若结束日期的「日部分」< 开始日期的「日部分」，则最终结果 = 基础差值 - 1；
 其他情况，最终结果 = 基础差值。
 
-- 若 `<enddate>` 早于 `<startdate>`，返回负值（计算逻辑同上，仅符号相反）；
+- 若 `<date_or_time_expr1>` 早于 `<date_or_time_expr2>`，返回负值（计算逻辑同上，仅符号相反）；
 - 若任一参数为 NULL，返回 NULL；
 
 

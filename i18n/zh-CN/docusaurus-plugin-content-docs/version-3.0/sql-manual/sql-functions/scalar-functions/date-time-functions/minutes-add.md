@@ -7,31 +7,32 @@
 
 ## 描述
 
-MINUTES_ADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME类型及符合格式的字符串。
+MINUTES_ADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME类型。
+
+该函数与 mysql 的 [date-add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 MINUTE 为单位的行为一致。
 
 ## 语法
 
 ```sql
-MINUTES_ADD(<date>, <minutes>)
+MINUTES_ADD(`<date_or_time_expr>`, `<minutes>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 输入的日期时间值，类型可以是 DATE、DATETIME 以及符合格式的字符串，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<minutes>` | 要添加的分钟数，类型为 INT，可以为正数或负数 |
+| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), |
 
 ## 返回值
 
 返回 DATETIME 类型的值，表示基准时间添加指定分钟后的结果。
 
-- 若 <minutes> 为负数，函数效果等同于从基准时间中减去对应分钟数（即 MINUTES_ADD(date, -n) 等价于 MINUTES_SUB(date, n)）。
+- 若 `<minutes>` 为负数，函数效果等同于从基准时间中减去对应分钟数（即 MINUTES_ADD(date, -n) 等价于 MINUTES_SUB(date, n)）。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00。
 - 若输入的日期时间包含微秒部分，添加分钟后会保留原微秒精度（如 '2023-01-01 00:00:00.123456' 添加 1 分钟后为 '2023-01-01 00:01:00.123456'）。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 <minutes> 超出 INT 类型范围（-2147483648 至 2147483647），返回 NULL。
+- 若 `<minutes>` 超出 INT 类型范围（-2147483648 至 2147483647），返回 错误。
 
 ## 举例
 

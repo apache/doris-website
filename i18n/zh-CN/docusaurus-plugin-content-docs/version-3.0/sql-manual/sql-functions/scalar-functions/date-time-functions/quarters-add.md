@@ -6,24 +6,24 @@
 ---
 
 ## 描述
-QUARTERS_ADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月），并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型及符合格式的字符串，若输入负数则等效于减去对应季度数。
+QUARTERS_ADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月），并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应季度数。
 
 ## 语法
 
 ```sql
-QUARTERS_ADD(<date/datetime>, <quarters>)
+QUARTERS_ADD(`<date_or_time_expr>`, `<quarters>`)
 ```
 
 ## 参数
 
 | 参数                | 说明                                 |
 |-------------------|------------------------------------|
-| `<date/datetime>` | 输入的日期或日期时间值，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
-| `<quarters>`      | 要增加或减少的季度数，正整数表示增加，负整数表示减少。        |
+| ``<date_or_time_expr>`` | 输入的日期或日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
+| ``<quarters>``      | 要增加或减少的季度数，正整数表示增加，负整数表示减少。        |
 
 ## 返回值
 返回一个日期值，与输入的日期类型一致。
-- 若 <quarters> 为负数，函数效果等同于从基准时间中减去对应季度数（即 QUARTERS_ADD(date, -n) 等价于 QUARTERS_SUB(date, n)）。
+- 若 `<quarters>` 为负数，函数效果等同于从基准时间中减去对应季度数（即 QUARTERS_ADD(date, -n) 等价于 QUARTERS_SUB(date, n)）。
 - 若输入为 DATE 类型（仅包含年月日），返回结果仍为 DATE 类型；若输入为 DATETIME 类型，返回结果保留原时间部分（如 '2023-01-01 12:34:56' 加 1 个季度后为 '2023-04-01 12:34:56'）。
 - 若输入日期为当月最后一天，且目标月份天数少于该日期，则自动调整为目标月份的最后一天（如 1 月 31 日加 1 个季度（3 个月）为 4 月 30 日）。
 - 若计算结果超出日期类型的有效范围（DATE 类型：0000-01-01 至 9999-12-31；DATETIME 类型：0000-01-01 00:00:00 至 9999-12-31 23:59:59），返回 NULL 或抛出异常。

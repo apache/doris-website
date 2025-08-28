@@ -7,33 +7,38 @@
 
 ## 描述
 
-MINUTE_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定分钟周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型及符合格式的字符串。
+MINUTE_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定分钟周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型。
+
+日期时间的计算公式
+MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × minute| k ∈ ℤ ∧ `<origin>` + k × `<period>` × minute ≤ `<date_or_time_expr>`}
+K 代表的是基准时间到目标时间的周期数
 
 ## 语法
 
 ```sql
-MINUTE_FLOOR(<datetime>)
-MINUTE_FLOOR(<datetime>, <origin>)
-MINUTE_FLOOR(<datetime>, <period>)
-MINUTE_FLOOR(<datetime>, <period>, <origin>)
+MINUTE_FLOOR(`<datetime>`)
+MINUTE_FLOOR(`<datetime>`, `<origin>`)
+MINUTE_FLOOR(`<datetime>`, `<period>`)
+MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 需要向下取整的日期时间值，类型为 DATETIME 或 符合格式的字符串，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<period>` | 分钟周期值，类型为 INT，表示每个周期包含的分钟数 |
-| `<origin>` | 周期的起始时间点，类型为 DATETIME 或 符合格式的字符串，默认值为 0001-01-01 00:00:00 |
+| ```<datetime>``` | 需要向下取整的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
+| ```<period>``` | 分钟周期值，类型为 INT，表示每个周期包含的分钟数 |
+| ```<origin>``` | 周期的起始时间点，类型为 DATETIME ，默认值为 0001-01-01 00:00:00 |
 
 ## 返回值
 
+
 返回类型为 DATETIME，返回以输入日期时间为基准，向下取整到最近的指定分钟周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
 
-- 若 <period> 为非正整数（≤0），返回 NULL。
+- 若 `<period>` 为非正整数（≤0），返回 NULL。
 - 若任一参数为 NULL，返回 NULL。
 - 不指定 period 时，默认以 1 分钟为周期。
-- <origin> 未指定，默认以 0001-01-01 00:00:00 为基准。
+- `<origin>` 未指定，默认以 0001-01-01 00:00:00 为基准。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00。
 
 ## 举例
@@ -53,6 +58,14 @@ SELECT MINUTE_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
 | result                     |
 +----------------------------+
 | 2023-07-13 22:25:00.000    |
++----------------------------+
+
+---输入日期时间恰好是周期起点，则返回输入日期时间
+SELECT MINUTE_FLOOR('2023-07-13 22:25:00', 5) AS result;
++----------------------------+
+| result                     |
++----------------------------+
+| 2023-07-13 22:25:00.000000 |
 +----------------------------+
 
 --- 指定起始时间（origin）
@@ -95,7 +108,3 @@ SELECT MINUTE_FLOOR(NULL, 5), MINUTE_FLOOR('2023-07-13 22:28:18', NULL) AS resul
 | NULL                   | NULL   |
 +------------------------+--------+
 ```
-
-## 最佳实践
-
-还可参阅 [date_floor](./date-floor)

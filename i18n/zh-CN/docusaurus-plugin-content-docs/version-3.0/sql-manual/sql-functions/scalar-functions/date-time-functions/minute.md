@@ -7,19 +7,21 @@
 
 ## 描述
 
-MINUTE 函数用于从输入的日期时间值中提取分钟部分的值，返回范围为 0 到 59 的整数。该函数支持处理 DATE、DATETIME、TIME 类型及符合格式的字符串。
+MINUTE 函数用于从输入的日期时间值中提取分钟部分的值，返回范围为 0 到 59 的整数。该函数支持处理 DATE、DATETIME、TIME 类型。
+
+该函数与 mysql 的 [minute 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_minute) 行为一致。
 
 ## 语法
 
 ```sql
-MINUTE(<date>)
+MINUTE(`<date_or_time_expr>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 输入的日期时间值，类型可以是 DATE、DATETIME、或 TIME 以及符合格式的字符串，具体 datetime/date/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME,TIME，具体 datetime/date/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 
@@ -47,7 +49,7 @@ SELECT MINUTE('2023-05-01 10:05:30.123456') AS result;
 |      5 |
 +--------+
 
---- 从 TIME 类型中提取分钟
+--- 不会主动将字符串转换为 time 类型，返回 NULL
 SELECT MINUTE('14:25:45') AS result;
 +--------+
 | result |

@@ -7,19 +7,21 @@
 
 ## 描述
 
-MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME 类型及符合格式的字符串，返回值为完整的英文月份名称（January 到 December）。
+MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME 类型，返回值为完整的英文月份名称（January 到 December）。
+
+该函数与 mysql 的 [monthname 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_monthname) 使用 MINUTE 为单位的行为一致。
 
 ## 语法
 
 ```sql
-MONTHNAME(<date>)
+MONTHNAME(`<date_or_time_expr>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 输入的日期时间值，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 
@@ -55,5 +57,4 @@ SELECT MONTHNAME(NULL) AS result;
 +--------+
 | NULL   |
 +--------+
-
 ```

@@ -12,21 +12,24 @@
 - 第 3 季度：7 月至 9 月
 - 第 4 季度：10 月至 12 月
 
+该函数与 mysql 的 [quarter 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_quarter) 行为一致。
+
 ## 语法
 
 ```sql
-QUARTER(<datetime>)
+QUARTER(`<date_or_time_expr>`)
 ```
 
 ## 参数
 
 | 参数           | 说明                                     |
 |--------------|----------------------------------------|
-| `<datetime>` | 输入的日期或日期时间值，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
+| ``<date_or_time_expr>`` | 输入的日期或日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 
 
 ## 返回值
-- 返回一个整数，表示输入日期所属的季度，范围为 1 到 4。
+
+- 返回一个 TINYINT，表示输入日期所属的季度，范围为 1 到 4。
 - 如果输入值为 NULL，函数返回 NULL。
 
 ## 举例
