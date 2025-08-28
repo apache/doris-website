@@ -7,55 +7,113 @@
 
 In a decoupled architecture, data is stored in remote storage. The Doris database accelerates data access by utilizing a cache on local disks and employs an advanced multi-queue LRU (Least Recently Used) strategy to efficiently manage cache space. This strategy particularly optimizes the access paths for indexes and metadata, aiming to maximize the caching of frequently accessed user data. For multi-compute group (Compute Group) scenarios, Doris also provides a cache warming feature to quickly load specific data (such as tables or partitions) into the cache when a new compute group is established, thereby enhancing query performance.
 
-## Multi-Queue LRU
+## Role of Cache
 
-### LRU
+In a decoupled architecture, data is typically stored in remote storage systems, such as object storage S3, HDFS, etc. In this scenario, the Doris database can leverage local disk space as a cache to store some data locally, thereby reducing the frequency of access to remote storage,improving data access efficiency, and lowering operating costs.
 
-* LRU manages the cache by maintaining a data access queue. When data is accessed, it is moved to the front of the queue. Newly added data to the cache is also placed at the front of the queue to prevent it from being evicted too early. When the cache space reaches its limit, data at the tail of the queue will be removed first.
+Remote storage (such as object storage) usually has higher access latency and may be subject to constraints of QPS (queries per second) and bandwidth limits. For example, QPS limits on object storage can cause bottlenecks during high-concurrency queries, while network bandwidth limits can affect data transfer speeds. By using local file caching, Doris can store hot data on local disks, thereby significantly reducing query latency and enhancing query performance.
 
-### TTL (Time-To-Live)
+On the other hand, object storage services typically charge based on the number of requests and the amount of data transferred. Frequent access and large volumes of data downloads can increase query costs. Through caching mechanisms, the number of accesses and the amount of data transferred to object storage can be reduced, thereby lowering costs.
 
-* The TTL strategy ensures that newly imported data remains in the cache for a certain period without being evicted. During this time, the data has the highest priority, and all TTL data are treated equally. When cache space is insufficient, the system will prioritize evicting data from other queues to ensure that TTL data can be written to the cache.
+Doris's file cache typically caches the following two types of files in a decoupled architecture:
 
-* Application scenarios: The TTL strategy is particularly suitable for small-scale data tables that require local persistence. For resident tables, a longer TTL value can be set to protect their data; for dynamically partitioned tables, the TTL value can be set according to the active time of Hot Partitions.
+- Segment data files: The basic unit of data storage in Doris's internal tables. Caching these files can accelerate data read operations and enhance query performance.
 
-* Note: Currently, the system does not support directly viewing the proportion of TTL data in the cache.
+- Inverted index files: Used to accelerate filtering operations in queries.By caching these files, data that meets query conditions can be located more quickly, further improving query efficiency and supporting complex query scenarios.
 
-### Multi-Queue
+## Cache Configuration
 
-* Doris adopts a multi-queue strategy based on LRU, categorizing data into four types based on TTL attributes and data properties, and placing them in TTL queues, Index queues, NormalData queues, and Disposable queues. Data with a TTL attribute is placed in the TTL queue, index data without a TTL attribute is placed in the Index queue, normal data without a TTL attribute is placed in the NormalData queue, and temporary data is placed in the Disposable queue.
+Doris provides a range of configuration options to help users manage file caching flexibly. These configuration options include enabling/disabling caching, setting cache paths and sizes, configuring cache block sizes,enabling/disabling automatic cleanup,and pre-eviction mechanisms, among others. The detailed configuration instructions are as follows:
 
-* During data read and write processes, Doris selects the queues to fill and read from to maximize cache utilization. The specific mechanism is as follows:
+1. Enabling File Cache
 
-| Operation      | Queue Filled on Miss | Queue Filled on Write    |
-| -------------- | --------------------- | ------------------------- |
-| Import         | TTL / Index / NormalData | TTL / Index / NormalData    |
-| Query          | TTL / Index / NormalData | N/A                       |
-| Schema Change   | Disposable            | TTL / Index / NormalData   |
-| Compaction     | Disposable            | TTL / Index / NormalData   |
-| Warm-up        | N/A                   | TTL / Index / NormalData   |
+```plaintext
+enable_file_cache Default: "false"
+```
 
-### Eviction
+Parameter Description: This configuration item controls whether the file cache function is enabled. If set to`true`, file caching is enabled; if set to`false`, file caching is disabled.
 
-All types of caches share the total cache space, and proportions can be allocated based on their importance. These proportions can be set in the `be` configuration file using `file_cache_path`, with the default being: TTL: Normal: Index: Disposable = 50%: 30%: 10%: 10%.
+2. Configuring File Cache Paths and Sizes
 
-These proportions are not rigid limits; Doris dynamically adjusts them to make full use of space. E.g., if users do not utilize TTL cache, other types can exceed the preset proportion and use the space originally allocated for TTL.
+```plaintext
+file_cache_path Default: storage directory under the BE deployment path
+```
 
-Cache eviction is triggered by two conditions: garbage collection or insufficient cache space. When users delete data or when compaction tasks end, expired cache data is asynchronously evicted. When there is not enough space to write to the cache, eviction follows the order of Disposable, Normal Data, Index, and TTL. For instance, if there is not enough space to write Normal Data, Doris will sequentially evict some Disposable, Index, and TTL data in LRU order. Note that we do not evict all data of the target type before moving on to the next type; instead, we retain at least the aforementioned proportions to ensure other types can function properly. If this process does not free up enough space, LRU eviction for the type itself will be triggered. E.g., if not enough space can be freed from other types when writing Normal Data, Normal Data will then evict its own data in LRU order.
+Parameter Description: This configuration item specifies the path and size of the file cache. The format is a JSON array, with each element being a JSON object containing the following fields:
 
-Specifically, for the TTL queue with expiration times, when data expires, it is moved to the Normal Data queue and participates in eviction as Normal Data.
+- `path`: The path where cache files are stored.
+- `total_size`: The total size of the cache under this path (in bytes).
+- `ttl_percent`: The proportion of the TTL queue(as a percentage).
+- `normal_percent`: The proportion of the Normal queue(as a percentage).
+- `disposable_percent`: The proportion of the Disposable queue (as a percentage).
+- `index_percent`: The proportion of the Index queue (as a percentage).
+- `storage`: The type of cache storage,which can be`disk`or`memory`. The default value is`disk`.
 
-## Cache Warming
+Example:
+- Single-path configuration:
 
-In a decoupled mode, Doris supports multi-compute group deployment, where compute groups share data but do not share cache. When a new compute group is created, its cache is empty, which may affect query performance. Therefore, Doris provides a cache warming feature that allows users to actively pull data from remote storage to local cache. This feature supports the following three modes:
+```json
+[{"path":"/path/to/file_cache","total_size":21474836480}]
+```
+
+- Multi-path configuration:
+
+```json
+[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+```
+
+- Memory storage configuration:
+
+```json
+[{"path": "xxx", "total_size":53687091200, "storage": "memory"}]
+```
+
+3. Automatic Cache Cleanup
+
+```plaintext
+clear_file_cache Default: "false"
+```
+
+Parameter Description: This configuration item controls whether to automatically clear cached data when BE restarts. If set to`true`, the cache will be automatically cleared each time BE restarts; if set to`false`, the cache will not be automatically cleared.
+
+4. Pre-eviction Mechanism
+
+```plaintext
+enable_evict_file_cache_in_advance Default: "true"
+```
+
+- Parameter Description: This configuration item controls whether the pre-eviction mechanism is enabled. If set to`true`, when the cache space reaches a certain threshold, the system will proactively perform pre-eviction to free up space for future queries; if set to`false`, pre-eviction will not be performed.
+
+```plaintext
+file_cache_enter_need_evict_cache_in_advance_percent Default: "88"
+```
+
+- Parameter Description: This configuration item sets the threshold percentage for triggering pre-eviction. When the cache space/inode count reaches this percentage, the system begins pre-eviction.
+
+```plaintext
+file_cache_exit_need_evict_cache_in_advance_percent Default: "85"
+```
+
+- Parameter Description: This configuration item sets the threshold percentage for stopping pre-eviction. When the cache space drops to this percentage,the system stops pre-eviction.
+
+## Cache Warm Up
+
+Doris provides a cache warming feature that allows users to actively pull data from remote storage into the local cache. This feature supports the following three modes:
+
 
 - **Inter-Compute Group Warming**: Warm the cache data of Compute Group A to Compute Group B. Doris periodically collects hotspot information of tables/partitions accessed in each compute group over a period and selectively warms certain tables/partitions based on this information.
 - **Table Data Warming**: Specify to warm the data of Table A to the new compute group.
 - **Partition Data Warming**: Specify to warm the data of partition `p1` of Table A to the new compute group.
 
-## Compute Group Scaling
+For specific usage, please refer to the[WARM-UP SQL documentation](#).
 
-When scaling Compute Groups, to avoid cache fluctuations, Doris will first remap the affected tablets and warm the data.
+
+## Cache Cleanup
+
+Doris provides both synchronous and asynchronous cleanup methods:
+
+- Synchronous Cleanup:The command is`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=true'`. When the command returns, it indicates that the cleanup is complete.When Doris needs to clear the cache immediately, it will synchronously delete the cache files in the local file system directory and clean up the management metadata in memory. This method can quickly free up space but may have a certain impact on the efficiency of ongoing queries and even system stability. It is usually used for quick testing.
+- Asynchronous Cleanup: The command is`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=false'`. The command returns immediately,and the cleanup steps are executed asynchronously. During asynchronous cleanup, Doris traverses the management metadata in memory and deletes the corresponding cache files one by one. If it finds that some cache files are being used by queries, Doris will delay the deletion of these files until they are no longer in use. This method can reduce the impact on ongoing queries but usually takes longer to completely clean up the cache compared to synchronous cleanup.
 
 ## Cache Observation
 
@@ -173,47 +231,47 @@ The part after the prefix is the statistical metric, for example, "file_cache_ca
 
 The following table lists the meanings of all metrics (all size units are in bytes):
 
-Metric Name (excluding path prefix) | Meaning
------|------
-file_cache_cache_size | Current total size of the File Cache
-file_cache_disposable_queue_cache_size | Current size of the disposable queue
-file_cache_disposable_queue_element_count | Current number of elements in the disposable queue
-file_cache_disposable_queue_evict_size | Total amount of data evicted from the disposable queue since startup
-file_cache_index_queue_cache_size | Current size of the index queue
-file_cache_index_queue_element_count | Current number of elements in the index queue
-file_cache_index_queue_evict_size | Total amount of data evicted from the index queue since startup
-file_cache_normal_queue_cache_size | Current size of the normal queue
-file_cache_normal_queue_element_count | Current number of elements in the normal queue
-file_cache_normal_queue_evict_size | Total amount of data evicted from the normal queue since startup
-file_cache_total_evict_size | Total amount of data evicted from the entire File Cache since startup
-file_cache_ttl_cache_evict_size | Total amount of data evicted from the TTL queue since startup
-file_cache_ttl_cache_lru_queue_element_count | Current number of elements in the TTL queue
-file_cache_ttl_cache_size | Current size of the TTL queue
-file_cache_evict_by_heat\_[A]\_to\_[B] | Data from cache type A evicted due to cache type B (time-based expiration) 
-file_cache_evict_by_size\_[A]\_to\_[B] | Data from cache type A evicted due to cache type B (space-based expiration) 
-file_cache_evict_by_self_lru\_[A] | Data from cache type A evicted by its own LRU policy for new data 
+| Metric Name (excluding path prefix)          | Meaning                                                      |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| file_cache_cache_size                        | Current total size of the File Cache                         |
+| file_cache_disposable_queue_cache_size       | Current size of the disposable queue                         |
+| file_cache_disposable_queue_element_count    | Current number of elements in the disposable queue           |
+| file_cache_disposable_queue_evict_size       | Total amount of data evicted from the disposable queue since startup |
+| file_cache_index_queue_cache_size            | Current size of the index queue                              |
+| file_cache_index_queue_element_count         | Current number of elements in the index queue                |
+| file_cache_index_queue_evict_size            | Total amount of data evicted from the index queue since startup |
+| file_cache_normal_queue_cache_size           | Current size of the normal queue                             |
+| file_cache_normal_queue_element_count        | Current number of elements in the normal queue               |
+| file_cache_normal_queue_evict_size           | Total amount of data evicted from the normal queue since startup |
+| file_cache_total_evict_size                  | Total amount of data evicted from the entire File Cache since startup |
+| file_cache_ttl_cache_evict_size              | Total amount of data evicted from the TTL queue since startup |
+| file_cache_ttl_cache_lru_queue_element_count | Current number of elements in the TTL queue                  |
+| file_cache_ttl_cache_size                    | Current size of the TTL queue                                |
+| file_cache_evict_by_heat\_[A]\_to\_[B]       | Data from cache type A evicted due to cache type B (time-based expiration) |
+| file_cache_evict_by_size\_[A]\_to\_[B]       | Data from cache type A evicted due to cache type B (space-based expiration) |
+| file_cache_evict_by_self_lru\_[A]            | Data from cache type A evicted by its own LRU policy for new data |
 
 ### SQL Profile
 
 Cache-related metrics in the SQL profile are found under SegmentIterator, including:
 
-| Metric Name                     | Meaning      |
-|----------------------------------|-------------|
-| BytesScannedFromCache            | Amount of data read from the File Cache    |
-| BytesScannedFromRemote           | Amount of data read from remote storage     |
-| BytesWriteIntoCache              | Amount of data written into the File Cache   |
-| LocalIOUseTimer                  | Time taken to read from the File Cache      |
-| NumLocalIOTotal                  | Number of times the File Cache was read     |
-| NumRemoteIOTotal                 | Number of times remote storage was read      |
-| NumSkipCacheIOTotal              | Number of times data read from remote storage did not enter the File Cache |
-| RemoteIOUseTimer                 | Time taken to read from remote storage       |
-| WriteCacheIOUseTimer             | Time taken to write to the File Cache        |
+| Metric Name            | Meaning                                                      |
+| ---------------------- | ------------------------------------------------------------ |
+| BytesScannedFromCache  | Amount of data read from the File Cache                      |
+| BytesScannedFromRemote | Amount of data read from remote storage                      |
+| BytesWriteIntoCache    | Amount of data written into the File Cache                   |
+| LocalIOUseTimer        | Time taken to read from the File Cache                       |
+| NumLocalIOTotal        | Number of times the File Cache was read                      |
+| NumRemoteIOTotal       | Number of times remote storage was read                      |
+| NumSkipCacheIOTotal    | Number of times data read from remote storage did not enter the File Cache |
+| RemoteIOUseTimer       | Time taken to read from remote storage                       |
+| WriteCacheIOUseTimer   | Time taken to write to the File Cache                        |
 
 You can view query performance analysis through [Query Performance Analysis](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
-## Usage
 
-### Setting TTL Strategy
+
+## TTL Usage
 
 When creating a table, set the corresponding PROPERTY to use the TTL strategy for caching that table's data.
 
@@ -250,45 +308,6 @@ The modified TTL value will not take effect immediately and will have a certain 
 If no TTL is set when creating the table, users can also modify the table's TTL attribute by executing the ALTER statement.
 :::
 
-### Cache Warming
-
-- Inter-Compute Group Warming. Warm the cache data of `compute_group_name0` to `compute_group_name1`.
-
-When executing the following SQL, the `compute_group_name1` compute group will obtain the access information of the `compute_group_name0` compute group to restore the cache as closely as possible to that of `compute_group_name0`.
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 WITH COMPUTE GROUP compute_group_name0
-```
-
-- Table Data Warming. Warm the data of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that table from remote storage to local.
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 WITH TABLE customer
-```
-
-- Partition Data Warming. Warm the data of partition `p1` of the table `customer` to `compute_group_name1`. Executing the following SQL will pull all data of that partition from remote storage to local.
-
-```sql
-WARM UP COMPUTE GROUP compute_group_name1 with TABLE customer PARTITION p1
-```
-
-The above three cache warming SQL statements will return a JobID result. For example:
-
-```sql
-WARM UP COMPUTE GROUP cloud_warm_up WITH TABLE test_warm_up;
-```
-
-You can then check the cache warming progress with the following SQL.
-
-```sql
-SHOW WARM UP JOB WHERE ID = 13418; 
-```
-
-You can determine the current task progress based on `FinishBatch` and `AllBatch`, with each Batch's data size being approximately 10GB. Currently, only one warming job is supported to run at a time within a compute group. Users can stop an ongoing warming job.
-
-```sql
-CANCEL WARM UP JOB WHERE id = 13418;
-```
 
 ## Practical Case
 
