@@ -14,7 +14,7 @@
 ## 语法
 
 ```sql
-CONVERT_TZ(<date_or_time_expr>, <from_tz>, <to_tz>)
+CONVERT_TZ(`<date_or_time_expr>`, `<from_tz>`, `<to_tz>`)
 ```
 
 ## 参数

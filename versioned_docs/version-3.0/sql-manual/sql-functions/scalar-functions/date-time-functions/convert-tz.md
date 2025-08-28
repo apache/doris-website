@@ -14,14 +14,14 @@ This function is consistent with the [convert_tz function](https://dev.mysql.com
 ## Syntax
 
 ```sql
-CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
+CONVERT_TZ(`<date_or_time_expr>`, `<from_tz>`, `<to_tz>`)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- | 
-| `<dt>` | The value to be converted, which is of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The value to be converted, which is of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<from_tz>` | The original time zone of dt, this parameter is of `varchar` type |
 | `<to_tz>` | The target time zone to convert to, this parameter is of `varchar` type |
 

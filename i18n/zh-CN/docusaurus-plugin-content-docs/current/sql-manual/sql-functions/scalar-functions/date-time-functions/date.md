@@ -13,7 +13,7 @@ DATE 函数用于从日期时间值（包含日期和时间）中提取出纯日
 ## 语法
 
 ```sql
-DATE(<date_or_time_part>)
+DATE(`<date_or_time_part>`)
 ```
 
 ## 参数

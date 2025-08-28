@@ -13,7 +13,7 @@ This function is consistent with the [date function](https://dev.mysql.com/doc/r
 ## Syntax
 
 ```sql
-DATE(<date_or_time_part>)
+DATE(`<date_or_time_part>`)
 ```
 
 ## Parameters

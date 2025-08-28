@@ -29,7 +29,7 @@ Doris does not support this type of input.
 ## Syntax
 
 ```sql
-DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
+DATE_ADD(`<date_or_time_expr>`, `<expr>` `<time_unit>`)
 ```
 
 ## Parameters
@@ -42,7 +42,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 ## Return Value
 
-Returns a result with the same type as <date_or_time_expr>:
+Returns a result with the same type as `<date_or_time_expr>`:
 - When DATE is input, returns DATE (date part only);
 - When DATETIME or string with time is input, returns DATETIME (including date and time);
 - Input with scale (such as '2024-01-01 12:00:00.123') will preserve the scale, with a maximum of six decimal places.

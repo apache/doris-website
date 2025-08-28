@@ -29,7 +29,7 @@ doris 不支持这种输入。
 ## 语法
 
 ```sql
-DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
+DATE_ADD(`<date_or_time_expr>`, `<expr>` `<time_unit>`)
 ```
 
 ## 参数
@@ -42,7 +42,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 ## 返回值
 
-返回与 <date_or_time_expr> 类型一致的结果：
+返回与 `<date_or_time_expr>` 类型一致的结果：
 - 输入 DATE 时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 或带时间的字符串时，返回 DATETIME（包含日期和时间）；
 - 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。

@@ -26,7 +26,7 @@ Doris does not support this type of input.
 ## Syntax
 
 ```sql
-DATE_SUB(<date_or_time_expr>, <expr> <time_unit>)
+DATE_SUB(`<date_or_time_expr>`, `<expr>` `<time_unit>`)
 ```
 
 ## Parameters
