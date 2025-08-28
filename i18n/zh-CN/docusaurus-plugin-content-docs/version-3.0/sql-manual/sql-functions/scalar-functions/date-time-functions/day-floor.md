@@ -10,7 +10,7 @@
 DAY_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定天数周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。
 
 日期时间的计算公式
-DAY_FLOOR(<date_or_time_expr>, <period>, <origin>) = max{<origin> + k × <period> × day | k ∈ ℤ ∧ <origin> + k × <period> × day ≤ <date_or_time_expr>}
+DAY_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≤ `<date_or_time_expr>`}
 K 代表的是基准时间到目标时间的周期数
 
 ## 语法

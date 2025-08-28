@@ -10,7 +10,7 @@
 The DAY_CEIL function is used to round up a specified date or time value to the start of the nearest specified day period. It returns the smallest period moment that is not less than the input date and time. The period rule is defined jointly by period (number of days in the period) and origin (starting reference time). If no starting reference time is specified, it defaults to 0001-01-01 00:00:00 as the calculation basis.
 
 Date calculation formula
-DAY_CEIL(<date_or_time_expr>,   <period>, <origin>) = min{<origin> + k × <period> × day | k ∈ ℤ ∧ <origin> + k × <period> × day ≥ <date_or_time_expr>}
+DAY_CEIL(`<date_or_time_expr>`,   `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≥ `<date_or_time_expr>`}
 K represents the number of periods required to reach the target time from the reference time
 
 ## Syntax
