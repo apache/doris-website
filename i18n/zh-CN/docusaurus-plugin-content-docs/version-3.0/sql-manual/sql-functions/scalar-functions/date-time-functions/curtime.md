@@ -5,26 +5,26 @@
 }
 ---
 
-## Description
+## 描述
 
-Retrieves the current time and returns it as a TIME type.
+获取当前时间并返回为 TIME 类型。
 
-## Alias
+## 别名
 
 - CURTIME
 - CURRENT_TIME
 
-## Syntax
+## 语法
 
 ```sql
 CURTIME()
 ```
 
-## Return Value
+## 返回值
 
-Returns the current time.
+返回当前时间。
 
-## Examples
+## 示例
 
 ```sql
 mysql> select current_time();
