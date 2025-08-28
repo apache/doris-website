@@ -7,26 +7,26 @@
 
 ## 描述
 
-MILLISECONDS_DIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持处理DATETIME 类型及符合格式的字符串。
+MILLISECONDS_DIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持处理DATETIME 类型。
 
 ## 语法
 
 ```sql
-MILLISECONDS_DIFF(<enddate>, <startdate>)
+MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<end_date>` | 结束时间，支持输入 datetime 类型和符合日期时间格式的字符串,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<start_date>` | 开始时间，支持输入 datetime 类型和符合日期时间格式的字符串,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
+| `<date_or_time_expr1>` | 结束时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<date_or_time_expr2>` | 结束时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
 
 ## 返回值
 
 返回类型为 INT，表示两个时间之间的毫秒差值。
-- 若 <end_date> 晚于 <start_date>，返回正数。
-- 若 <end_date> 早于 <start_date>，返回负数。
+- 若 `<date_or_time_expr1>` 晚于 `<date_or_time_expr2>`，返回正数。
+- 若 `<date_or_time_expr1>` 早于 `<date_or_time_expr2>`，返回负数。
 - 若两个时间完全相同（包括毫秒部分），返回 0。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00.000。
 - 若输入的时间包含微秒部分（如 '2023-01-01 00:00:00.123456'），会自动截断为毫秒精度后计算（即 123 毫秒）。
@@ -84,6 +84,4 @@ SELECT MILLISECONDS_DIFF('2025-08-11 15:30:00.123', '2025-08-11 15:30:00.123');
 +-------------------------------------------------------------------------+
 |                                                                       0 |
 +-------------------------------------------------------------------------+
-
-
 ```

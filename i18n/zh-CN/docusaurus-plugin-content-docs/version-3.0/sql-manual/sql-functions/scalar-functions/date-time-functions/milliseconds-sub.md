@@ -7,30 +7,30 @@
 
 ## 描述
 
-MILLISECONDS_SUB 函数用于从输入的日期时间值中减去指定的毫秒数，并返回计算后的新日期时间值。该函数支持处理 DATETIME 类型及符合格式的字符串。
+MILLISECONDS_SUB 函数用于从输入的日期时间值中减去指定的毫秒数，并返回计算后的新日期时间值。该函数支持处理 DATETIME 类型。
 
 ## 语法
 
 ```sql
-MILLISECONDS_SUB(<basetime>, <delta>)
+MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<basetime>` | 输入的日期时间值，类型为 DATETIME 或 符合格式的字符串，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)  |
+| `<datetime>` | 输入的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)  |
 | `<delta>` | 要减去的毫秒数，类型为 INT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
 
 ## 返回值
 
 返回 DATETIME 类型的值，表示基准时间减去指定毫秒后的结果.
 
-- 若 <delta> 为负数，函数效果等同于向基准时间中添加对应毫秒数
+- 若 `<delta>` 为负数，函数效果等同于向基准时间中添加对应毫秒数
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00.000。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 <delta> 超出 INT 类型范围（-2147483648 至 2147483647），返回 NULL。
+- 若 `<delta>` 超出 INT 类型范围（-2147483648 至 2147483647），返回 NULL。
 
 ## 举例
 
@@ -59,6 +59,9 @@ SELECT MILLISECONDS_SUB('2023-01-01', 1500);
 | 2022-12-31 23:59:58.500000           |
 +--------------------------------------+
 
+---计算结果超出范围
+SELECT MILLISECONDS_SUB('0000-01-01', 1500);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_sub of 0000-01-01 00:00:00, 1500 out of range
 
 --- 任一参数为 NULL，返回 NULL
 SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS after_sub;

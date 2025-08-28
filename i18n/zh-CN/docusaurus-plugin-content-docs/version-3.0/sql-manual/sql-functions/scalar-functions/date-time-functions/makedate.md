@@ -9,28 +9,28 @@
 
 MAKEDATE 函数用于根据指定的年份和一年中的天数（dayofyear）构建并返回对应的日期。该函数通过计算 “年份的第一天 + 天数偏移” 生成结果，支持对超出当年天数的输入进行自动顺延处理。
 
+该函数与 mysql 中的 [makedate 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_makedate) 行为一致。
 
 ## 语法
 
 ```sql
-MAKEDATE(<year>, <day_of_year>)
+MAKEDATE(`<year>`, `<day_of_year>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| year | 	指定的年份，类型为 INT，支持的有效范围为 0 至 9999 |
-| dayofyear | 一年中的第几天（1-366），类型为 INT |
+| `year` | 	指定的年份，类型为 INT，支持的有效范围为 0 至 9999 |
+| `dayofyear` | 一年中的第几天（1-366），类型为 INT |
 
 ## 返回值
 
 返回 DATE 类型的值，表示根据输入的年份和天数计算得到的日期（格式为 YYYY-MM-DD）。
 
-- 若 <day_of_year> 小于等于 0，返回 NULL。
-- 若 <day_of_year> 超过指定年份的总天数（平年 365 天，闰年 366 天），则自动顺延到下一年及以后的年份（例如：2021 年（平年）的第 366 天会顺延为 2022-01-01）。
-- 若 <year> 超出有效日期范围（0000-01-01 至 9999-12-31），返回 NULL 或抛出异常。
-- 计算结果超出有效日期范围（0000-01-01 至 9999-12-31），返回 NULL
+- 若 `<day_of_year>` 小于等于 0，返回错误。
+- 若 `<day_of_year>` 超过指定年份的总天数（平年 365 天，闰年 366 天），则自动顺延到下一年及以后的年份（例如：2021 年（平年）的第 366 天会顺延为 2022-01-01）。
+- 计算结果超出有效日期范围（0000-01-01 至 9999-12-31），返回错误
 - 若任一参数为 NULL，返回 NULL。
 
 ## 举例
@@ -60,13 +60,9 @@ SELECT MAKEDATE(2021, 366), MAKEDATE(2021, 400);
 | 2022-01-01           | 2022-02-04           |
 +----------------------+----------------------+
 
---- 天数为 0 或负数，返回 NULL
-SELECT MAKEDATE(2023, 0), MAKEDATE(2023, -5);
-+-------------------+--------------------+
-| makedate(2023, 0) | makedate(2023, -5) |
-+-------------------+--------------------+
-| NULL              | NULL               |
-+-------------------+--------------------+
+--- 天数为非正数，返回错误
+SELECT MAKEDATE(2020, 0);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]The function makedate Argument value 2020, 0 must larger than zero ,and year between 1 and 9999
 
 --- 参数为 NULL，返回 NULL
 SELECT MAKEDATE(NULL, 100), MAKEDATE(2023, NULL);

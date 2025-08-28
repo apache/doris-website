@@ -8,11 +8,13 @@
 ## 描述
 函数用于获取当前系统时间，返回值为日期时间类型（`DATETIME`）。可以选择性地指定精度以调整返回值的小数秒部分的位数。
 
+该函数与 mysql 中的 [localtime 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_localtime) 行为一致。
+
 ## 语法
 
 ```sql
-LOCALTIME([<precision>])
-LOCALTIMESTAMP([<precision>]))    
+LOCALTIME([`<precision>`])
+LOCALTIMESTAMP([`<precision>`]))    
 ```
 
 ## 参数

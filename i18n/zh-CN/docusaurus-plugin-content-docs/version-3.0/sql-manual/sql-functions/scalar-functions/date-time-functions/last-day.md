@@ -14,17 +14,19 @@
 - 30 日：四月、六月、九月、十一月
 - 31 日：一月、三月、五月、七月、八月、十月、十二月
 
+该函数与 mysql 中的 [last_day 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_last-day) 行为一致。
+
 ## 语法
 
 ```sql
-LAST_DAY(<date>)
+LAST_DAY(`<date_or_time_expr>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date>` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 

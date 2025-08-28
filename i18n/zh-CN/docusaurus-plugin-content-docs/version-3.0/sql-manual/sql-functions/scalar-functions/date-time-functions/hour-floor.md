@@ -9,28 +9,32 @@
 
 HOUR_FLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻.
 
+日期时间的计算公式
+HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × hour | k ∈ ℤ ∧ `<origin>` + k × `<period>` × hour ≤ `<date_or_time_expr>`}
+K 代表的是基准时间到目标时间的周期数
+
 ## 语法
 
 ```sql
-HOUR_FLOOR(<datetime>)
-HOUR_FLOOR(<datetime>, <origin>)
-HOUR_FLOOR(<datetime>, <period>)
-HOUR_FLOOR(<datetime>, <period>, <origin>)
+HOUR_FLOOR(`<date_or_time_expr>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<origin>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<period>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 参数是合法的日期表达式，支持输入 datetime/date 类型和符合日期时间格式的字符串,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 	可选参数，指定周期长度（单位：小时），为正整数（如 2、6、12）。默认值为 1，表示每 1 小时一个周期。|
-|` <origin>` | 开始的时间起点，如果不填，默认是 0001-01-01T00:00:00 |
+|` <origin>` | 开始的时间起点，支持输入 datetime/date 类型，如果不填，默认是 0001-01-01T00:00:00 |
 
 ## 返回值
 
 返回 DATETIME 类型的值，表示向下取整后的最近周期时刻。
 
-- 若输入的 `period` 为非正整数，返回 NULL。
+- 若输入的 period 为非正整数，返回 NULL。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale
 
@@ -56,6 +60,14 @@ mysql> select hour_floor('2023-07-13 19:30:00', 4, '2023-07-13 08:00:00') as cus
 +---------------------+
 | 2023-07-13 16:00:00 |
 +---------------------+
+
+---输入日期时间恰好为周期边缘，返回输入日期时间值
+ select hour_floor("2023-07-13 18:00:00", 5);
++--------------------------------------+
+| hour_floor("2023-07-13 18:00:00", 5) |
++--------------------------------------+
+| 2023-07-13 18:00:00                  |
++--------------------------------------+
 
 ---输入 date 类型，会转换为一天 起始时间 2023-07-13 00:00:00
 mysql>  select hour_floor('2023-07-13 20:30:00', 4, '2023-07-13');
@@ -95,7 +107,5 @@ mysql> select hour_floor('2023-12-31 23:59:59', -3);
 +---------------------------------------+
 | NULL                                  |
 +---------------------------------------+
-
-
 
 ```

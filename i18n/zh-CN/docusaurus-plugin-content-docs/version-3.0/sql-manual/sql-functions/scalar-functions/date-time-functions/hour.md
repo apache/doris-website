@@ -7,29 +7,31 @@
 
 ## 描述
 
-HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括  DATE/DATETIME、TIME 以及符合格式的字符串，返回对应小时数值。
+HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括  DATE/DATETIME、TIME ，返回对应小时数值。
 
-对于 DATETIME 或日期时间字符串（如 '2023-10-01 14:30:00'），返回值范围为 0-23（24 小时制）。
-对于 TIME 类型或时间字符串（如 '456:26:32'），返回值可超出 24，范围为 [0,838]。
+对于 DATETIME （如 '2023-10-01 14:30:00'），返回值范围为 0-23（24 小时制）。
+对于 TIME 类型（如 '456:26:32'），返回值可超出 24，范围为 [0,838]。
+
+该函数与 mysql 中的 [hour 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_hour) 行为一致。
 
 ## 语法
 
 ```sql
-HOUR(<dt>)
+HOUR(`<date_or_time_expr>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `<dt>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型和符合日期时间格式的字符串,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date/time 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date/time 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 
 返回整数类型（INT），表示输入表达式中的小时部分。
-- 对于 DATETIME 或日期时间字符串，返回 0-23 的整数。
-- 对于 DATE类型 或日期字符串，返回 0.
-- 对于 TIME 类型或时间字符串，返回 0 至 838 的整数（与 TIME 类型的范围一致）。
+- 对于 DATETIME ，返回 0-23 的整数。
+- 对于 DATE类型 ，返回 0.
+- 对于 TIME 类型，返回 0 至 838 的整数（与 TIME 类型的范围一致）。
 - 输入参数为 NULL，返回 NULL
 
 ## 举例
@@ -65,13 +67,19 @@ select
 
 --- 从 date 类型中提取小时，返回 0
 select hour("2022-12-12");
-
 +--------------------+
 | hour("2022-12-12") |
 +--------------------+
 |                  0 |
 +--------------------+
 
+---不会主动将输入时间字符串转换为 time ,返回 NULL
+select hour('14:30:00') as normal_hour;
++-------------+
+| normal_hour |
++-------------+
+|        NULL |
++-------------+
 
 ---输入参数为 NULL ，返回 NULL
 mysql> select hour(NULL);

@@ -7,29 +7,31 @@
 
 ## 描述
 
-MICROSECONDS_SUB 函数用于从输入的日期时间值中减去指定的微秒数，并返回计算后的新日期时间值。该函数支持处理含微秒精度的 DATETIME 类型及符合格式的字符串。
+MICROSECONDS_SUB 函数用于从输入的日期时间值中减去指定的微秒数，并返回计算后的新日期时间值。该函数支持处理含微秒精度的 DATETIME 类型。
+
+该函数与 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 MICROSECOND 为单位的行为一致。
 
 ## 语法
 
 ```sql
-MICROSECONDS_SUB(<basetime>, <delta>)
+MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<basetime>` | 输入的日期时间值，类型为 DATETIME 或 符合格式的字符串，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | 输入的日期时间值，类型为 DATETIME，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 | `<delta>` | 要减去的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
 
 ## 返回值
 
 返回 DATETIME 类型的值，表示基准时间减去指定微秒后的结果。
 
-- 若 <delta> 为负数，函数效果等同于向基准时间中添加对应微秒数（即 MICROSECONDS_SUB(basetime, -n) 等价于 MICROSECONDS_ADD(basetime, n)）。
+- 若 `<delta>` 为负数，函数效果等同于向基准时间中添加对应微秒数（即 MICROSECONDS_SUB(basetime, -n) 等价于 MICROSECONDS_ADD(basetime, n)）。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 <delta> 超出 INT 类型范围，返回 NULL。
+- 若 `<delta>` 超出 INT 类型范围，返回 NULL。
 
 ## 举例
 
@@ -76,13 +78,9 @@ out of range
 
 --- delta 参数超出 INT 范围，返回 NULL
 SELECT MICROSECONDS_SUB('2023-10-01 12:00:00.500000', 2147483648) AS after_sub;
- SELECT MICROSECONDS_SUB('2023-10-01 12:00:00.500000', 2147483648) AS after_sub;
 +-----------+
 | after_sub |
 +-----------+
 | NULL      |
 +-----------+
 ```
-
-注意：
-- `NOW(3)` 返回精度为 3 位小数的当前时间
