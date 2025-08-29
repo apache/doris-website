@@ -219,7 +219,8 @@
                             "type": "category",
                             "label": "Load Internals",
                             "items": [
-                                "data-operate/import/load-internals/load-internals"
+                                "data-operate/import/load-internals/load-internals",
+                                "data-operate/import/load-internals/routine-load-internals"
                             ]
                         }
                     ]
