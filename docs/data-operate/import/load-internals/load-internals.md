@@ -198,7 +198,7 @@ Impact of different bucket counts on load performance, test results:
 
 #### GroupCommit Testing
 
-For Group Commit performance test data, refer to [Group Commit Performance](../group-commit-manual.md#performance)
+For small-batch high-frequency loads, it is recommended to enable Group Commit, which can significantly improve load performance. For Group Commit performance test data, refer to [Group Commit Performance](../group-commit-manual.md#performance)
 
 ## Summary
 
