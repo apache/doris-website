@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 TIME",
+    "title": "转换为 TIME 类型",
     "language": "zh-CN"
 }
 ---

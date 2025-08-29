@@ -214,7 +214,14 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/load-internals"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -505,6 +512,8 @@
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
                         "compute-storage-decoupled/file-cache",
+                        "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
@@ -1437,7 +1446,7 @@
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
-                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit_test",
+                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-test",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",
@@ -1742,12 +1751,10 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
-                                "sql-manual/sql-functions/aggregate-functions/regr_intercept",
-                                "sql-manual/sql-functions/aggregate-functions/regr_slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
@@ -1830,7 +1837,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
@@ -1855,7 +1862,9 @@
                             "label": "Table Functions",
                             "items": [
                                 "sql-manual/sql-functions/table-functions/explode",
+                                "sql-manual/sql-functions/table-functions/explode-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
+                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-int",
@@ -1866,7 +1875,9 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
                                 "sql-manual/sql-functions/table-functions/explode-map",
+                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
                                 "sql-manual/sql-functions/table-functions/posexplode",
@@ -2374,6 +2385,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
@@ -2387,6 +2399,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

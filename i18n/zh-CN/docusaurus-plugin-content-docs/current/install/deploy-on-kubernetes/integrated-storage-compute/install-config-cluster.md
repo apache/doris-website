@@ -160,8 +160,6 @@ data:
     syg_level = INFO
     # NORMAL, BRIEF, ASYNC
     syg_mode = ASYNC
-    # sys_log_roll_num = 10
-    # sys_log_verbose_modules = org.apache.doris
     # audit_log_dir = $LOG_DIR
     # audit_log_modules = slow_query, query
     # audit_log_roll_num = 10
@@ -397,7 +395,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `LOG_DIR` 请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置

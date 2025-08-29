@@ -326,8 +326,8 @@ Multiple syntax forms are supported to be compatible with systems such as Spark/
 
 ```sql
 -- BRANCH
-SELECT * FROM iceberg_tbl@brand(branch1);
-SELECT * FROM iceberg_tbl@brand("name" = "branch1");
+SELECT * FROM iceberg_tbl@branch(branch1);
+SELECT * FROM iceberg_tbl@branch("name" = "branch1");
 SELECT * FROM iceberg_tbl FOR VERSION AS OF 'branch1';
 
 -- TAG

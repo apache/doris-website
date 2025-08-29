@@ -208,7 +208,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 ```text
 |   0:VHUDI_SCAN_NODE(113)                                                                                            |
 |      table: lineitem_mor                                                                                            |
-|      predicates: (_hoodie_commit_time[#0] >= '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
+|      predicates: (_hoodie_commit_time[#0] > '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 

@@ -6,34 +6,43 @@
 ---
 
 ## Description
-Used to perform a bitwise OR operation on two integers.
+Performs a bitwise OR operation on two integers.
 
-Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
+Supported integer types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
 
 ## Syntax
 ```sql
-BITOR( <lhs>, <rhs>)
+BITOR(<lhs>, <rhs>)
 ```
 
 ## Parameters
-| parameter | description                                                             |
-|-----------|-------------------------------------------------------------------------|
-| `<lhs>`   | The first BOOLEAN value to be evaluated                                 |
-| `<rhs>`   | The second BOOLEAN value to be evaluated |
+- `<lhs>`: The first integer for the operation.
+- `<rhs>`: The second integer for the operation.
 
 ## Return Value
 
-Returns the result of the OR operation on two integers.
+Returns the result of the bitwise OR operation between the two integers.
 
 ## Examples
-```sql
-select BITOR(3,5), BITOR(4,7);
-```
-
-```text
-+---------+---------+
-| (3 | 5) | (4 | 7) |
-+---------+---------+
-|       7 |       7 |
-+---------+---------+
-```
+1. Example 1
+    ```sql
+    select BITOR(3,5), BITOR(4,7);
+    ```
+    ```text
+    +------------+------------+
+    | BITOR(3,5) | BITOR(4,7) |
+    +------------+------------+
+    |          7 |          7 |
+    +------------+------------+
+    ```
+2. NULL argument
+    ```sql
+    select BITOR(3, NULL), BITOR(NULL, 5), BITOR(NULL, NULL);
+    ```
+    ```text
+    +----------------+----------------+-------------------+
+    | BITOR(3, NULL) | BITOR(NULL, 5) | BITOR(NULL, NULL) |
+    +----------------+----------------+-------------------+
+    |           NULL |           NULL |              NULL |
+    +----------------+----------------+-------------------+
+    ```

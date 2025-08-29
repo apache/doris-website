@@ -7,39 +7,65 @@
 
 ## Description
 
-Returns `valueTrue` when the condition is true, and returns `valueFalseOrNull` otherwise. The return type is determined by the result of the `valueTrue`/`valueFalseOrNull` expression.
+If the expression `<condition>` is true, returns `<value_true>`; otherwise, returns `<value_false_or_null>`.
+Return type: The result type of the `<value_true>` expression.
 
 ## Syntax
 
 ```sql
 IF(<condition>, <value_true>, <value_false_or_null>)
 ```
-
 ## Parameters
-
-| Parameter               | Description                                                  |
-|-------------------------|--------------------------------------------------------------|
-| `<condition>`           | The boolean condition to evaluate.                           |
-| `<value_true>`          | The value to return if `<condition>` evaluates to true.      |
-| `<value_false_or_null>` | The value to return if `<condition>` evaluates to false.     |
-
-## Return Value
-
-The result of the IF expression:
-- Returns `valueTrue` when the condition is true.
-- Returns `valueFalseOrNull` when the condition is false.
+- `<condition>`: Boolean type, the expression used to determine whether the condition is true.
+- `<value_true>`: The value returned when `<condition>` is true.
+- `<value_false_or_null>`: The value returned when `<condition>` is false or NULL.
 
 ## Examples
+0. Prepare data
+    ```sql
+    create table test_if(
+        user_id int
+    ) properties('replication_num' = '1');
+    insert into test_if values(1),(2),(null);
+    ```
+1. Example 1
+    ```sql
+    SELECT user_id, IF(user_id = 1, "true", "false") AS test_if FROM test_if;
+    ```
+    ```text
+    +---------+---------+
+    | user_id | test_if |
+    +---------+---------+
+    |    NULL | false   |
+    |       1 | true    |
+    |       2 | false   |
+    +---------+---------+
+    ```
+2. Type conversion
+    ```sql
+    SELECT user_id, IF(user_id = 1, 2, 3.14) AS test_if FROM test_if;
+    ```
+    ```text
+    +---------+---------+
+    | user_id | test_if |
+    +---------+---------+
+    |    NULL |    3.14 |
+    |       1 |    2.00 |
+    |       2 |    3.14 |
+    +---------+---------+
+    ```
+    > The second argument "2" is converted to the type of the third argument "3.14" (Decimal).
 
-```sql
-SELECT user_id, IF(user_id = 1, 'true', 'false') AS test_if FROM test;
-```
-
-```text
-+---------+---------+
-| user_id | test_if |
-+---------+---------+
-| 1       | true    |
-| 2       | false   |
-+---------+---------+
-```
+3. NULL argument
+    ```sql
+    SELECT user_id, IF(user_id = 1, 2, NULL) AS test_if FROM test_if;
+    ```
+    ```text
+    +---------+---------+
+    | user_id | test_if |
+    +---------+---------+
+    |    NULL |    NULL |
+    |       1 |       2 |
+    |       2 |    NULL |
+    +---------+---------+
+    ```

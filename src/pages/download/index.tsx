@@ -22,7 +22,7 @@ import * as semver from 'semver';
 import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Latest} ( Stable )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
     { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier }
 ];
