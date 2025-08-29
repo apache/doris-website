@@ -196,7 +196,7 @@ Doris 的分布式架构支持多 BE 并行写入，增加并发可提升吞吐�
 
 #### GroupCommit 测试
 
-Group Commit 性能测试数据参考 [Group Commit 性能](../group-commit-manual.md#性能)
+小批量高频导入建议开启group commit，可以大幅提升导入性能。Group Commit 性能测试数据参考 [Group Commit 性能](../group-commit-manual.md#性能)
 
 ## 总结
 
