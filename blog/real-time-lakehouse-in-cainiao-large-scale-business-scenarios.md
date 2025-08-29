@@ -8,7 +8,7 @@
     'picked': "true",
     'order': "2",
     'externalLink': 'https://www.velodb.io/blog/1454',
-    'tags': ['Tech Sharing'],
+    'tags': ['Best Practice'],
     "image": '/images/blogs/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.png'
 }
 ---

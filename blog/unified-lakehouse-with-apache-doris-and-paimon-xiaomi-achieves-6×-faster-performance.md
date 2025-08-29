@@ -8,7 +8,7 @@
     'picked': "true",
     'order': "1",
     'externalLink': 'https://www.velodb.io/blog/1461',
-    'tags': ['Tech Sharing'],
+    'tags': ['Best Practice'],
     'image': '/images/blogs/lakehouse-performance.png'
 }
 ---

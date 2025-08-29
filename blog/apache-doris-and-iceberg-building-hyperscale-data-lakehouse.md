@@ -8,7 +8,7 @@
     'date': '2025-08-14',
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1450',
-    'tags': ['Tech Sharing'],
+    'tags': ['Best Practice'],
     "image": '/images/blogs/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.png'
 }
 ---
