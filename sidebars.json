@@ -1446,7 +1446,7 @@
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
-                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit_test",
+                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-test",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",

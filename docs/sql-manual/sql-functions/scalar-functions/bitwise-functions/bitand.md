@@ -6,37 +6,43 @@
 ---
 
 ## Description
-Used to perform a bitwise AND operation. The bitwise AND operation compares each bit of two integers. The result is 1 only when both corresponding binary bits are 1, otherwise it is 0.
+Performs a bitwise AND operation. The bitwise AND operation compares each bit of two integers; the result is 1 only if both corresponding bits are 1, otherwise it is 0.
 
-Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
+Supported integer types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
 
 ## Syntax
 ```sql
-BITAND( <lhs>, <rhs>)
+BITAND(<lhs>, <rhs>)
 ```
 
 ## Parameters
-| parameter | description  |
-|-----------|--------------|
-| `<lhs>`   | The first number involved in the bitwise AND operation |
-| `<rhs>`   | The second number to be included in the bitwise AND operation |
+- `<lhs>`: The first integer for the bitwise AND operation.
+- `<rhs>`: The second integer for the bitwise AND operation.
 
 ## Return Value
-
-Returns the result of the AND operation on two integers.
+Returns the result of the bitwise AND operation between the two integers.
 
 
 ## Examples
-
-```sql
-select BITAND(3,5), BITAND(4,7);
-```
-
-```text
-+---------+---------+
-| (3 & 5) | (4 & 7) |
-+---------+---------+
-|       1 |       4 |
-+---------+---------+
-
-```
+1. Example 1
+    ```sql
+    select BITAND(3,5), BITAND(5, 10), BITAND(7, 10);
+    ```
+    ```text
+    +-------------+---------------+---------------+
+    | BITAND(3,5) | BITAND(5, 10) | BITAND(7, 10) |
+    +-------------+---------------+---------------+
+    |           1 |             0 |             2 |
+    +-------------+---------------+---------------+
+    ```
+2. NULL argument
+    ```sql
+    select BITAND(1, null), BITAND(null, 1), BITAND(null, null);
+    ```
+    ```text
+    +-----------------+-----------------+--------------------+
+    | BITAND(1, null) | BITAND(null, 1) | BITAND(null, null) |
+    +-----------------+-----------------+--------------------+
+    |            NULL |            NULL |               NULL |
+    +-----------------+-----------------+--------------------+
+    ```
