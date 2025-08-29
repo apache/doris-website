@@ -25,7 +25,7 @@ export const NEWSLETTER_DATA = [
         title: "Real-time Data Analytics at Scale: Integrating Apache Flink and Doris",
         content: `In this article, we'll discuss the main technical use cases of Flink Doris Connector and Flink CDC, showing a complete playbook to combine Flink's real-time processing with Doris's fast analytics.`,
         to: 'https://www.velodb.io/blog/1453',
-        image: 'blogs/blogs/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.JPEG',
+        image: 'blogs/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.JPEG',
     },
 
 
