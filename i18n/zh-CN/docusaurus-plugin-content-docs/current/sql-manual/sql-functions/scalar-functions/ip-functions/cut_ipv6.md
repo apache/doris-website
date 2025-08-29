@@ -1,43 +1,43 @@
 ---
 {
     "title": "CUT_IPV6",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
 ## cut_ipv6
 
-## Description
-Cuts a specified number of bytes from the end of an IPv6 address based on its type (IPv4-mapped or pure IPv6), and returns the truncated IPv6 address string.
+## 描述
+根据 IPv6 地址的类型（IPv4 映射或纯 IPv6），从 IPv6 地址的末尾截取指定数量的字节，并返回截取后的 IPv6 地址字符串。
 
-## Syntax
+## 语法
 ```sql
 CUT_IPV6(<ipv6_address>, <bytes_to_cut_for_ipv6>, <bytes_to_cut_for_ipv4>)
 ```
 
-### Parameters
-- `<ipv6_address>`: IPv6 type address
-- `<bytes_to_cut_for_ipv6>`: Number of bytes to cut for pure IPv6 addresses (TINYINT type)
-- `<bytes_to_cut_for_ipv4>`: Number of bytes to cut for IPv4-mapped addresses (TINYINT type)
+### 参数
+- `<ipv6_address>`：IPv6 类型的地址
+- `<bytes_to_cut_for_ipv6>`：纯 IPv6 地址要截取的字节数（TINYINT 类型）
+- `<bytes_to_cut_for_ipv4>`：IPv4 映射地址要截取的字节数（TINYINT 类型）
 
-### Return Value
-Return Type: VARCHAR
+### 返回值
+返回类型：VARCHAR
 
-Return Value Meaning:
-- Returns the truncated IPv6 address string
-- If input is an IPv4-mapped address, uses the `bytes_to_cut_for_ipv4` parameter
-- If input is a pure IPv6 address, uses the `bytes_to_cut_for_ipv6` parameter
-- Returns NULL if any of the three parameters `<ipv6_address>`, `<bytes_to_cut_for_ipv6>`, `<bytes_to_cut_for_ipv4>` is NULL
+返回值含义：
+- 返回截取后的 IPv6 地址字符串
+- 如果输入是 IPv4 映射地址，使用 `bytes_to_cut_for_ipv4` 参数
+- 如果输入是纯 IPv6 地址，使用 `bytes_to_cut_for_ipv6` 参数
+- `<ipv6_address>` `<bytes_to_cut_for_ipv6>` `<bytes_to_cut_for_ipv4>` 三个参数任意一个为NULL 返回 NULL
 
-### Usage Notes
-- Automatically detects whether the IPv6 address is an IPv4-mapped address (format `::ffff:IPv4`)
-- Selects the appropriate number of bytes to cut based on the address type
-- Cutting operation starts from the end of the address, setting the specified number of bytes to zero
-- Parameter values cannot exceed 16 (total bytes in an IPv6 address)
+### 使用说明
+- 自动检测 IPv6 地址是否为 IPv4 映射地址（格式为 `::ffff:IPv4`）
+- 根据地址类型选择相应的截取字节数
+- 截取操作从地址末尾开始，将指定数量的字节置零
+- 参数值不能超过 16（IPv6 地址的总字节数）
 
-## Examples
+## 举例
 
-Cut trailing bytes from a pure IPv6 address.
+截取纯 IPv6 地址的末尾字节。
 ```sql
 SELECT cut_ipv6(to_ipv6('2001:db8::1'), 4, 4) as cut_result;
 +------------------+
@@ -47,7 +47,7 @@ SELECT cut_ipv6(to_ipv6('2001:db8::1'), 4, 4) as cut_result;
 +------------------+
 ```
 
-Cut trailing bytes from an IPv4-mapped address.
+截取 IPv4 映射地址的末尾字节。
 ```sql
 SELECT cut_ipv6(to_ipv6('::ffff:192.168.1.1'), 4, 4) as cut_result;
 +----------------+
@@ -57,7 +57,7 @@ SELECT cut_ipv6(to_ipv6('::ffff:192.168.1.1'), 4, 4) as cut_result;
 +----------------+
 ```
 
-Use different cutting parameters.
+使用不同的截取参数。
 ```sql
 SELECT 
   cut_ipv6(to_ipv6('2001:db8::1'), 8, 4) as ipv6_cut_8,
@@ -69,9 +69,9 @@ SELECT
 +------------+------------+
 ```
 
-Parameters as NULL return NULL
+参数为 NULL 返回 NULL
 ```sql 
-select cut_ipv6(NULL, NULL, NULL);
+ select cut_ipv6(NULL, NULL, NULL);
 +----------------------------+
 | cut_ipv6(NULL, NULL, NULL) |
 +----------------------------+
@@ -93,7 +93,7 @@ select cut_ipv6(to_ipv6("::"), 4, NULL);
 +----------------------------------+
 ```
 
-Parameter values out of range will throw an exception.
+参数值超出范围会抛出异常。
 ```sql
 SELECT cut_ipv6(to_ipv6('2001:db8::1'), 17, 4);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal value for argument 2 TINYINT of function cut_ipv6
@@ -105,5 +105,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal 
 ### Keywords
 
 CUT_IPV6
-
 
