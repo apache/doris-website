@@ -135,6 +135,13 @@ If a value in the STRUCT does not meet the requirements of the corresponding typ
 
 ### FROM STRUCT\<Other Type\>
 
+When the source data is of STRUCT type and the target is also of STRUCT type, the following conditions must be met:
+
+1. The source STRUCT and target STRUCT must have the same number of elements (fields)
+2. Each element in the source STRUCT will be converted to the corresponding element type in the target STRUCT in sequence
+
+If the above conditions are not met, such as when the number of elements doesn't match, the conversion will not be possible.
+
 #### Strict Mode
 
 ##### Rule Description
@@ -143,12 +150,47 @@ For each element in the STRUCT, a Cast from Other Type To Type is performed. The
 
 ##### Examples
 
-| Input STRUCT | Conversion Result | Comment |
-| --- | --- | --- |
-| {"a":"123","b":"456"} | Cast to STRUCT\<a:int, b:int\>: {"a":123, "b":456} | "123" and "456" can be converted to Int |
-| {"a":"abc","b":"123"} | Error | "abc" cannot be converted to Int |
-| {"a":null,"b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | The Cast result of null is still null |
-| {"name":"Mike","scores":[90,85,92]} | Cast to STRUCT\<name:string, scores:array<int>\>: {"name":"Mike", "scores":[90,85,92]} | STRUCT with array conversion |
+```sql
+-- Create a simple STRUCT type variable
+mysql> SELECT named_struct('a', 123, 'b', 'abc') AS original_struct;
++----------------------+
+| original_struct      |
++----------------------+
+| {"a":123, "b":"abc"} |
++----------------------+
+-- Result: {"a":123,"b":"abc"} Type: struct<a:tinyint,b:varchar(3)>
+
+-- Normal CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string>) AS renamed_struct;
++----------------------+
+| renamed_struct       |
++----------------------+
+| {"c":123, "d":"abc"} |
++----------------------+
+
+-- Fields count doesn't match
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string,e:char>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- Element in STRUCT doesn't have a corresponding CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- CAST is based on the defined order, not field names
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++------------------------+
+| renamed_struct         |
++------------------------+
+| {"b":"123", "a":"abc"} |
++------------------------+
+
+-- Element CAST fails, the whole CAST reports an error
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]parse number fail, string: 'abc'
+```
 
 #### Non-Strict Mode
 
@@ -158,9 +200,48 @@ For each element in the STRUCT, a Cast from Other Type To Type is performed. The
 
 ##### Examples
 
-| Input STRUCT | Conversion Result | Comment |
-| --- | --- | --- |
-| {"a":"123","b":"456"} | Cast to STRUCT\<a:int, b:int\>: {"a":123, "b":456} | "123" and "456" can be converted to Int |
-| {"a":"abc","b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | "abc" cannot be converted to Int, converted to null |
-| {"a":null,"b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | The Cast result of null is still null |
-| {"name":"Mike","scores":["ninety",85,"ninety-two"]} | Cast to STRUCT\<name:string, scores:array<int>\>: {"name":"Mike", "scores":[null,85,null]} | Array elements that cannot be converted to int become null |
+```sql
+-- Create a simple STRUCT type variable
+mysql> SELECT named_struct('a', 123, 'b', 'abc') AS original_struct;
++----------------------+
+| original_struct      |
++----------------------+
+| {"a":123, "b":"abc"} |
++----------------------+
+-- Result: {"a":123,"b":"abc"} Type: struct<a:tinyint,b:varchar(3)>
+
+-- Normal CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string>) AS renamed_struct;
++----------------------+
+| renamed_struct       |
++----------------------+
+| {"c":123, "d":"abc"} |
++----------------------+
+
+-- Fields count doesn't match
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string,e:char>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- Element in STRUCT doesn't have a corresponding CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- CAST is based on the defined order, not field names
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++------------------------+
+| renamed_struct         |
++------------------------+
+| {"b":"123", "a":"abc"} |
++------------------------+
+
+-- Element CAST fails, the corresponding element is set to null
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++-----------------------+
+| renamed_struct        |
++-----------------------+
+| {"b":"123", "a":null} |
++-----------------------+
+```

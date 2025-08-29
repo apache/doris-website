@@ -135,32 +135,125 @@ STRUCT 类型用于存储和处理结构化数据，可以包含不同类型的�
 
 ### FROM STRUCT\<Other Type\>
 
+当源数据为 STRUCT 类型，目标也为 STRUCT 类型时，需要满足以下条件：
+
+1. 源 STRUCT 和目标 STRUCT 必须具有相同数量的元素（字段）
+2. 源 STRUCT 中的每个元素将按顺序转换为目标 STRUCT 对应位置的元素类型
+
+如果不满足上述条件，例如元素数量不匹配，将无法进行转换。
+
 #### 严格模式
 
 ##### 规则描述
 
-对于 STRUCT 中的每一个元素，执行一次 Cast from Other Type To Type。此时 Cast 也是严格模式的 Cast。
+STRUC 中的每一个元素都会执行对应的严格模式的 CAST
 
 ##### 例子
 
-| 输入 STRUCT | 转换结果 | 说明 |
-| --- | --- | --- |
-| {"a":"123","b":"456"} | Cast to STRUCT\<a:int, b:int\>: {"a":123, "b":456} | "123" 和 "456" 可以转换成 Int |
-| {"a":"abc","b":"123"} | 报错 | "abc" 不可以转换成 Int |
-| {"a":null,"b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | null 的 Cast 结果还是 null |
-| {"name":"李四","scores":[90,85,92]} | Cast to STRUCT\<name:string, scores:array<int>\>: {"name":"李四", "scores":[90,85,92]} | 包含数组的 STRUCT 转换 |
+```sql
+-- 创建一个简单的 STRUCT 类型变量
+mysql> SELECT named_struct('a', 123, 'b', 'abc') AS original_struct;
++----------------------+
+| original_struct      |
++----------------------+
+| {"a":123, "b":"abc"} |
++----------------------+
+-- 结果：{"a":123,"b":"abc"} 类型为：struct<a:tinyint,b:varchar(3)>
+
+-- 普通的 CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string>) AS renamed_struct;
++----------------------+
+| renamed_struct       |
++----------------------+
+| {"c":123, "d":"abc"} |
++----------------------+
+
+-- 字段个数没有匹配
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string,e:char>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- STRUCT 中的元素不存在对应的 CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+
+-- CAST 按照定义的顺序，而不是字段的名字
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++------------------------+
+| renamed_struct         |
++------------------------+
+| {"b":"123", "a":"abc"} |
++------------------------+
+
+-- STRUCT 中的元素 CAST 失败，整个 CAST 报错
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]parse number fail, string: 'abc'
+```
 
 #### 非严格模式
 
 ##### 规则描述
 
-对于 STRUCT 中的每一个元素，执行一次 Cast from Other Type To Type。此时 Cast 也是非严格模式的 Cast。
+STRUC 中的每一个元素都会执行对应的非严格模式的 CAST
 
 ##### 例子
 
-| 输入 STRUCT | 转换结果 | 说明 |
-| --- | --- | --- |
-| {"a":"123","b":"456"} | Cast to STRUCT\<a:int, b:int\>: {"a":123, "b":456} | "123" 和 "456" 可以转换成 Int |
-| {"a":"abc","b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | "abc" 不可以转换成 Int，转换为 null |
-| {"a":null,"b":"123"} | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":123} | null 的 Cast 结果还是 null |
-| {"name":"李四","scores":["九十",85,"九十二"]} | Cast to STRUCT\<name:string, scores:array<int>\>: {"name":"李四", "scores":[null,85,null]} | 数组中不能转换为 int 的元素变为 null |
+
+```sql
+-- 创建一个简单的 STRUCT 类型变量
+mysql> SELECT named_struct('a', 123, 'b', 'abc') AS original_struct;
++----------------------+
+| original_struct      |
++----------------------+
+| {"a":123, "b":"abc"} |
++----------------------+
+-- 结果：{"a":123,"b":"abc"} 类型为：struct<a:tinyint,b:varchar(3)>
+
+-- 普通的 CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string>) AS renamed_struct;
++----------------------+
+| renamed_struct       |
++----------------------+
+| {"c":123, "d":"abc"} |
++----------------------+
+
+
+-- 字段个数没有匹配
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint, d:string,e:char>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<c:bigint>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+-- STRUCT 中的元素不存在对应的 CAST
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:int>) AS renamed_struct;
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
+
+
+-- CAST 按照定义的顺序，而不是字段的名字
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++------------------------+
+| renamed_struct         |
++------------------------+
+| {"b":"123", "a":"abc"} |
++------------------------+
+
+-- CAST 按照定义的顺序，而不是字段的名字
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++------------------------+
+| renamed_struct         |
++------------------------+
+| {"b":"123", "a":"abc"} |
++------------------------+
+
+-- STRUCT 中的元素 CAST 失败，对应元素设置为 null
+mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
++-----------------------+
+| renamed_struct        |
++-----------------------+
+| {"b":"123", "a":null} |
++-----------------------+
+```
