@@ -71,7 +71,7 @@ export default function Home(): JSX.Element {
         ),
         event: (
             <Link
-                to={'https://www.velodb.io/events/doris-meetup-250820'}
+                to={'https://www.velodb.io/events/doris-webinar-20250923'}
                 style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
                 onMouseEnter={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
@@ -88,7 +88,7 @@ export default function Home(): JSX.Element {
                     </span>
                 </div>
                 <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    Real-Time IoT Analytics — Apache Doris × EMQ Meetup | Aug 20 · San Francisco
+                    Bridging Data Lake and Database — Apache Doris Webinar | September 23
                 </p>
             </Link>
         ),
