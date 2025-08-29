@@ -4,7 +4,7 @@ export const NEWSLETTER_DATA = [
         title: "Unified Lakehouse with Apache Doris and Paimon: Xiaomi Achieves 6× Faster Performance",
         content: `Xiaomi is a leading global player in consumer electronics. Best known for its smartphones and smart home devices, Xiaomi is among the top global three smartphone makers and continues to expand into new offerings like electric vehicles. With a global operation, Xiaomi requires an analytical data architecture that can support its growth and increasing demand. Their solution: Apache Doris and Apache Paimon.`,
         to: 'https://www.velodb.io/blog/1461',
-        image: 'blogs/blogs/lakehouse-performance.png',
+        image: 'blogs/lakehouse-performance.png',
     },
     {
         tags: ['Best Practice'],
