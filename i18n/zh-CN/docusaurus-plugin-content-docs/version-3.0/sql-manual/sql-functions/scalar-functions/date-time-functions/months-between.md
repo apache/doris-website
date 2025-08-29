@@ -7,53 +7,97 @@
 
 ## 描述
 
-`MONTHS_BETWEEN` 函数计算两个日期之间的月份数（浮点数）。它接收两个日期参数和一个可选的布尔参数。
+与 [month_diff 函数](./month-diff) 不同的是，month-between 函数不会忽略日单位，返回的是浮点数，代表真实差距多少个月，而不是日期上显示的月单位所差的月数
+MONTHS_BETWEEN 函数用于计算两个日期时间值之间的月份差值，返回结果为浮点数。该函数支持处理 DATE、DATETIME 类型，并可通过可选参数控制结果是否四舍五入。
 
-:::tip
-该函数自 3.0.6 版本开始支持.
-:::
-
-**注意：**
-当 `<enddate>` 和 `<startdate>` 都是各自月份的最后一天时，函数会进行特殊处理。它会返回完整的月份差值，而不考虑基于天数的分数部分。这确保了在比较一个月末与另一个月末时的一致性。
-
-例如：
-- `months_between('2024-01-31', '2024-02-29')` 将返回 `-1.0`，因为两个日期都是各自月份的最后一天（1月31日和2月29日），所以结果被视为完整的月份差值，不进行分数调整。
-- `months_between('2024-01-29', '2024-02-29')` 也将返回 `-1.0`，因为月份中的日期相同。
-- `months_between('2024-01-30', '2024-02-29')` 将返回 `-0.96774194`，因为月份中的日期不同且不是月末。 
+该函数与 orcle 的 [month-between 函数](https://docs.oracle.com/cd/E11882_01/olap.112/e23381/row_functions042.htm#OLAXS434) 行为一致
 
 ## 语法
 
 ```sql
-MONTHS_BETWEEN(<enddate>, <startdate> [, <round_type>])
+MONTHS_BETWEEN(`<date_or_time_expr1>`, `<date_or_time_expr2>` [, `<round_type>`])
 ```
 
 ## 参数
 
 | 参数         | 说明                                                |
 |-------------------|------------------------------------------------------------|
-| `<enddate>`   | 结束日期，表示差值计算中的较晚日期。支持 `DATE`（如 `YYYY-MM-DD`）或 `DATETIME`（如 `YYYY-MM-DD HH:MM:SS`）类型。     |
-| `<startdate>` | 开始日期，表示差值计算中的较早日期。支持 `DATE`（如 `YYYY-MM-DD`）或 `DATETIME`（如 `YYYY-MM-DD HH:MM:SS`）类型。 |
-| `<round_type>` | 是否将结果四舍五入到第八位小数。支持 `true` 或 `false`。默认为 `true`。 |
+| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。     |
+| ``<date_or_time_expr2>`` | 开始日期，支持输入 date/datetime 类型和符合日期时间格式的字符串. |
+| ``<round_type>`` | 是否将结果四舍五入到第八位小数。支持 `true` 或 `false`。默认为 `true`。 |
 
 ## 返回值
 
-返回 `<enddate>` 减去 `<startdate>` 得到的月份数（浮点数）
+返回 `<date_or_time_expr1>` 减去 `<date_or_time_expr2>` 得到的月份数，类型为 DOUBLE
 
-结果 = (`<enddate>.year` - `<startdate>.year`) * 12 + `<enddate>.month` - `<startdate>.month` + (`<enddate>.day` - `<startdate>.day`) / 31.0
+结果 = (`<date_or_time_expr1>`.year - `<date_or_time_expr2>`.year) * 12 + `<date_or_time_expr1>`.month - `<date_or_time_expr2>`.month + (`<date_or_time_expr1>`.day - `<date_or_time_expr2>`.day) / 31.0
 
-- 当 `<enddate>` 或 `<startdate>` 为 NULL，或两者都为 NULL 时，返回 NULL
-- 当 `<round_type>` 为 `true` 时，结果四舍五入到第八位小数。
+- 当 `<date_or_time_expr1>` 或 `<date_or_time_expr2>` 为 NULL，或两者都为 NULL 时，返回 NULL
+- 当 `<round_type>` 为 true 时，结果四舍五入到第八位小数,否则和 DOUBLE 精度一样，十五位小数。
+- 若 `<date_or_time_expr1>` 早于 `<date_or_time_expr2>`，返回负值；
+- 时间部分（时、分、秒）不影响计算，仅基于日期部分（年、月、日）计算差值。
+当 `<date_or_time_expr1>` 和 `<date_or_time_expr2>` 满足以下条件时，函数会返回整数月份差值（忽略天数带来的分数部分）：
+
+- 两个日期均为各自月份的最后一天（如 2024-01-31 与 2024-02-29）；
+- 两个日期的「日部分」相同（如 2024-01-15 与 2024-03-15）。
 
 ## 示例
 
 ```sql
-select months_between('2020-12-26','2020-10-25'),months_between('2020-10-25 10:00:00','2020-12-26 11:00:00',false);
-```
+--- 两个日期的月份差值
+SELECT MONTHS_BETWEEN('2020-12-26', '2020-10-25') AS result;
++------------+
+| result     |
++------------+
+| 2.03225806 |
++------------+
 
-```text
-+-------------------------------------------+-------------------------------------------------------------------+
-| months_between('2020-12-26','2020-10-25') | months_between('2020-10-25 10:00:00','2020-12-26 11:00:00',false) |
-+-------------------------------------------+-------------------------------------------------------------------+
-|                                2.03225806 |                                                -2.032258064516129 |
-+-------------------------------------------+-------------------------------------------------------------------+
+--- 包含时间部分（不影响结果）
+SELECT MONTHS_BETWEEN('2020-12-26 15:30:00', '2020-10-25 08:15:00') AS result;
++------------+
+| result     |
++------------+
+| 2.03225806 |
++------------+
+
+--- 关闭四舍五入（保留原始精度）
+SELECT MONTHS_BETWEEN('2020-10-25', '2020-12-26', false) AS result;
++---------------------+
+| result              |
++---------------------+
+| -2.032258064516129  |
++---------------------+
+
+--- 均为月末日期（触发特殊处理，返回整数）
+SELECT MONTHS_BETWEEN('2024-02-29', '2024-01-31') AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
+
+--- 日部分相同（触发特殊处理，返回整数）
+SELECT MONTHS_BETWEEN('2024-03-15', '2024-01-15') AS result;
++--------+
+| result |
++--------+
+|      2 |
++--------+
+
+--- 日部分不同且非月末
+SELECT MONTHS_BETWEEN('2024-02-29', '2024-01-30') AS result;
++------------+
+| result     |
++------------+
+| 0.96774194 |
++------------+
+
+--- 输入为 NULL（返回 NULL）
+SELECT MONTHS_BETWEEN(NULL, '2024-01-01') AS result;
++--------+
+| result |
++--------+
+| NULL   |
++--------+
+
 ```
