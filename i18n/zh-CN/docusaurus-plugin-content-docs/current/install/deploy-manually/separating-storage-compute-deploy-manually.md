@@ -29,6 +29,10 @@
 
 本节提供了脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。您可以下载 [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) 并从 `fdb` 目录获取 `fdb_vars.sh` 和 `fdb_ctl.sh`。
 
+:::tip
+Doris 默认依赖的 FDB 版本为 7.1.x 系列。若已提前安装 FDB，请确认其版本属于 7.1.x 系列，否则 Meta Service 将启动失败。
+:::
+
 1. 机器要求
 
    通常，至少需要三台配备 SSD 的机器来组成具有双副本、单机故障容忍的 FoundationDB 集群。如果是测试/开发环境，单台机器也能搭建 FoundationDB。
