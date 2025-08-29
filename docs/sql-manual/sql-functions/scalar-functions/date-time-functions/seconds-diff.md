@@ -7,37 +7,71 @@
 
 ## Description
 
-The function calculates the time difference between two datetime values and returns the difference in seconds.
+The SECONDS_DIFF function calculates the difference between two datetime values and returns the result in seconds. This function supports processing DATE and DATETIME types. If the input is DATE type, its time portion defaults to 00:00:00.
 
 ## Syntax
 
 ```sql
-SECONDS_DIFF(<end_datetime>, <start_datetime>)
+SECONDS_DIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 ```
 
 ## Parameters
 
-| Parameter          | Description                                                                 |
-|--------------------|-----------------------------------------------------------------------------|
-| `<end_datetime>`   | Required. The ending datetime value. Supports the DATETIME and DATE type.   |
-| `<start_datetime>` | Required. The starting datetime value. Supports the DATETIME and DATE type. |
+| Parameter | Description |
+| --------- | ----------- |
+| `<date_or_time_expr1>` | Required. The ending datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr2>` | Required. The starting datetime value. Can be of type DATE or DATETIME. |
 
 ## Return Value
-- Returns an integer representing the difference in seconds between two datetime values:
-  - If `<end_datetime>` is later than `<start_datetime>`, returns a positive value.
-  - If `<end_datetime>` is earlier than `<start_datetime>`, returns a negative value.
-  - If `<end_datetime>` and `<start_datetime>` are equal, returns 0.
-- If either parameter is NULL, the function returns NULL.
-- If the input datetime values are invalid (e.g., 0000-00-00T00:00:00), the function returns NULL.
 
-## Example
+Returns a value of type BIGINT, representing the difference in seconds between the two datetime values:
+
+- If `<date_or_time_expr1>` is later than `<date_or_time_expr2>`, returns a positive number;
+- If `<date_or_time_expr1>` is earlier than `<date_or_time_expr2>`, returns a negative number;
+- If the two times are equal, returns 0;
+- If any parameter is NULL, returns NULL;
+- For times with scale, the fractional part difference is included in the calculation.
+
+## Examples
+
 ```sql
-SELECT SECONDS_DIFF('2025-01-23 12:35:56', '2025-01-23 12:34:56');
-```
-```text
-+----------------------------------------------------------------------------------------------------------+
-| seconds_diff(cast('2025-01-23 12:35:56' as DATETIMEV2(0)), cast('2025-01-23 12:34:56' as DATETIMEV2(0))) |
-+----------------------------------------------------------------------------------------------------------+
-|                                                                                                       60 |
-+----------------------------------------------------------------------------------------------------------+
+--- Seconds difference within the same hour
+SELECT SECONDS_DIFF('2025-01-23 12:35:56', '2025-01-23 12:34:56') AS result;
++--------+
+| result |
++--------+
+|     60 |
++--------+
+
+--- End time is earlier than start time (returns negative number)
+SELECT SECONDS_DIFF('2023-01-01 00:00:00', '2023-01-01 00:01:00') AS result;
++--------+
+| result |
++--------+
+|    -60 |
++--------+
+
+--- Input is DATE type (default time 00:00:00)
+SELECT SECONDS_DIFF('2023-01-02', '2023-01-01') AS result;  -- 1 day difference (86400 seconds)
++--------+
+| result |
++--------+
+|  86400 |
++--------+
+
+--- Times with scale include fractional part difference in calculation
+SELECT SECONDS_DIFF('2023-07-13 12:00:00.123', '2023-07-13 11:59:59') AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
+
+--- Any parameter is NULL (returns NULL)
+SELECT SECONDS_DIFF(NULL, '2023-07-13 10:30:25'), SECONDS_DIFF('2023-07-13 10:30:25', NULL) AS result;
++-------------------------------------------+--------+
+| seconds_diff(NULL, '2023-07-13 10:30:25') | result |
++-------------------------------------------+--------+
+| NULL                                      | NULL   |
++-------------------------------------------+--------+
 ```
