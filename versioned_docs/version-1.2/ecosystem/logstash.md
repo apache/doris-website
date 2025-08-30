@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "en"
 }
 ---
