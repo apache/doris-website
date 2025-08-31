@@ -1,34 +1,35 @@
 ---
 {
-    "title": "TO_DAYS",
-    "language": "zh-CN"
+  "title": "TO_DAYS",
+  "language": "zh-CN"
 }
 ---
 
 ## 描述
 日期计算函数，它用于将日期转换为天数数值，即计算从公元 0 年 12 月 31 日（基准日期）到指定日期的总天数。
 
+该函数与 mysql 中的 [to_day 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) 行为一致。
+
 ## 语法
 
 ```sql
-TO_DAYS(<datetime_or_date_value>)
+TO_DAYS(`<datetime_or_date>`)
 ```
 
-## 必选参数
+## 参数
 | 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<datetime_or_date_value>` | `datetime` 或者 `date` 类型日期时间 |
+| `<datetime_or_date>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 
 ## 举例
 
-查询2007年10月7日距今有多少天
 ```sql
 select to_days('2007-10-07');
 ```
 ```text
 +---------------------------------------+
-| to_days(cast('2007-10-07' as DATEV2)) |
+| to_days('2007-10-07') |
 +---------------------------------------+
 |                                733321 |
 +---------------------------------------+
@@ -39,7 +40,7 @@ select to_days('2007-10-07 10:03:09');
 ```
 ```text
 +------------------------------------------------+
-| to_days(cast('2007-10-07 10:03:09' as DATEV2)) |
+| to_days(2007-10-07 10:03:09') |
 +------------------------------------------------+
 |                                         733321 |
 +------------------------------------------------+
