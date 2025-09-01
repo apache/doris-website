@@ -5,7 +5,7 @@
 }
 ---
 
-FoundationDB is a distributed database developed by Apple that provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended:
+FoundationDB is an open-source distributed database released under the Apache 2.0 license, it provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended:
 - Deploying FoundationDB directly on virtual machines (including physical machines).
 - Using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.
 

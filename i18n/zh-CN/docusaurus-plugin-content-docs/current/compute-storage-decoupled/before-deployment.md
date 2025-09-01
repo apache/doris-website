@@ -51,6 +51,10 @@ Doris 存算分离架构包含三个主要模块：
 
 本节提供了脚本 `fdb_vars.sh` 和 `fdb_ctl.sh` 配置、部署和启动 FDB（FoundationDB）服务的分步指南。您可以下载 [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) 并从 `fdb` 目录获取 `fdb_vars.sh` 和 `fdb_ctl.sh`。
 
+:::tip
+Doris 默认依赖的 FDB 版本为 7.1.x 系列。若已提前安装 FDB，请确认其版本属于 7.1.x 系列，否则 Meta Service 将启动失败。
+:::
+
 #### 5.1.1 机器要求
 
 通常，至少需要 3 台配备 SSD 的机器来形成具有双数据副本并允许单机故障的 FoundationDB 集群。
