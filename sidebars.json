@@ -219,7 +219,8 @@
                             "type": "category",
                             "label": "Load Internals",
                             "items": [
-                                "data-operate/import/load-internals/load-internals"
+                                "data-operate/import/load-internals/load-internals",
+                                "data-operate/import/load-internals/routine-load-internals"
                             ]
                         }
                     ]
@@ -987,9 +988,8 @@
                                         "sql-manual/basic-element/sql-data-types/numeric/INT",
                                         "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
                                         "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/FLOAT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DOUBLE",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL"
+                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+                                        "sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT"
                                     ]
                                 },
                                 {

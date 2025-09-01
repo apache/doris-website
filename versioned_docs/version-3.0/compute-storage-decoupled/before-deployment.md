@@ -49,6 +49,10 @@ When machine configurations are high, consider mixing FDB, FE, and Meta Service,
 
 This section provides a step-by-step guide to configure, deploy, and start the FoundationDB (FDB) service using the provided scripts `fdb_vars.sh` and `fdb_ctl.sh`. You can download [doris tools](http://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-3.0.2-tools.tar.gz) and get `fdb_vars.sh` and `fdb_ctl.sh` from `fdb` directory.
 
+:::tip
+Doris currently relies on FDB version 7.1.x by default. If you have already installed FDB separately, please ensure it is version 7.1.x; otherwise, the Meta Service will fail to start.
+:::
+
 #### 5.1.1 Machine Requirements
 
 Typically, at least 3 machines equipped with SSDs are required to form a FoundationDB cluster with dual data replicas and allow for single machine failures.
