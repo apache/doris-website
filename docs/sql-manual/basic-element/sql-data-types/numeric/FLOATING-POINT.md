@@ -98,7 +98,7 @@ Doris follows PostgreSQL's implementation in this regard, returning SQL NULL ins
 The IEEE standard defines floating-point comparisons that differ from typical integer comparisons in important ways. For example, negative zero and positive zero are considered equal, and any NaN value is not equal to any other value (including itself). All finite floating-point numbers are strictly less than +∞ and strictly greater than -∞.
 
 To ensure consistency and predictability of results, Doris handles NaN differently from the IEEE standard.
-In Doris, NaN is considered greater than all other values (including Infinity):
+In Doris, NaN is considered greater than all other values (including Infinity), and NaN equals NaN.
 
 ```sql
 mysql> select * from sort_float order by d;
