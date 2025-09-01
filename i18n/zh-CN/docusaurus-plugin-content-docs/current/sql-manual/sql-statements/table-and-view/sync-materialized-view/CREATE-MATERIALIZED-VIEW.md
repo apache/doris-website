@@ -63,6 +63,7 @@ query
 
 ## 注意事项
 
+- 同步物化视图select列表中的列名不能和基表中已有列相同，也不能和基表的所有其他同步物化视图中的列名重复，可以通过指定别名的方式(col as xxx)避免重名。
 - 同步物化视图只支持针对单个表的 SELECT 语句，支持 WHERE、GROUP BY、ORDER BY 等子句，但不支持 JOIN、HAVING、LIMIT 子句和 LATERAL VIEW。
 - SELECT 列表中，不能包含自增列，不能包含常量，不能有重复表达式，也不支持窗口函数。
 - 如果 SELECT 列表包含聚合函数，则聚合函数必须是根表达式（不支持 `sum(a) + 1`，支持 `sum(a + 1)`），且聚合函数之后不能有其他非聚合函数表达式（例如，`SELECT x, sum(a)` 可以，而 `SELECT sum(a)`, x 不行）。
@@ -102,8 +103,8 @@ desc lineitem;
 ```sql
 CREATE MATERIALIZED VIEW sync_agg_mv AS
 SELECT 
-  l_shipdate,
-  l_partkey,
+  l_shipdate as shipdate,
+  l_partkey as partkey,
   count(*),
   sum(l_discount)
 FROM
