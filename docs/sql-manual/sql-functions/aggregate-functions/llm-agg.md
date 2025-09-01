@@ -18,7 +18,7 @@ Aggregates a specific column using a large language model according to user-prov
 | Parameter         | Description                                             |
 | ----------------- | ------------------------------------------------------- |
 | `<resource_name>` | The specified resource name, optional.                  |
-| `<expr>`          | The text column to aggregate.                           |
+| `<expr>`          | The text column to aggregate. The number of characters in a single text must be less than 128K.|
 | `<instruction>`   | The instruction to execute, only accepts literals.      |
 
 ## Return Value
@@ -73,4 +73,55 @@ GROUP BY subject;
 | Login Failure    | User experiences login issues, including redirection post-2FA, inability to log in after password reset despite using different browsers and clearing cache, and encountering 502 errors on the SSO page. |
 | Payment Declined | The customer's credit card was charged twice, but the order status remains pending, indicating a potential issue with the transaction processing or system update.                                        |
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+case 2：
+
+The following table simulates the user review table of an e-commerce platform.
+```sql
+CREATE TABLE product_reviews (
+    review_id   BIGINT,
+    product_id  BIGINT,
+    rating      TINYINT,
+    comment     STRING
+)
+DUPLICATE KEY(review_id)
+DISTRIBUTED BY HASH(product_id) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO product_reviews VALUES
+(1, 1001, 5, '鞋子尺码刚好，穿着舒服，颜色也好看，物流很快！'),
+(2, 1001, 4, '质量不错，就是鞋底有点硬，需要磨合几天。'),
+(3, 1001, 3, '外观和图片一样，但收到时有轻微胶味。'),
+(4, 1002, 5, '杯子小巧，出汁快，清洗也方便，上班带着刚好。'),
+(5, 1002, 3, '声音有点大，不过能接受，充满电只能榨 5 杯。'),
+(6, 1002, 2, '用了两周就充不进电，售后换货流程太慢。'),
+(7, 1003, 5, '面料透气不闷热，袖口设计很贴心，UPF50+ 确实晒不黑。'),
+(8, 1003, 4, '颜色好看，但拉链有点卡顿，需要用力。'),
+(9, 1004, 5, '降噪给力，地铁里也能安静听歌，续航一周充一次。');
+```
+
+Using LLM_AGG to summarize and evaluate:
+```sql
+SELECT
+    product_id,
+    LLM_AGG(
+        comment,
+        '请把多条用户评价总结成一句话，突出买家最关心的优点和缺点，控制在50字以内。'
+    ) AS 评价摘要
+FROM product_reviews
+GROUP BY product_id;
+```
+
+```text
++------------+--------------------------------------------------------------------------------------------------------------+
+| product_id | 评价摘要                                                                                                     |
++------------+--------------------------------------------------------------------------------------------------------------+
+|       1003 | 该产品面料透气、防晒效果好且颜色美观，但拉链使用不顺畅。                                                     |
+|       1004 | 用户评价该产品降噪效果好，续航能力强，一周充一次电。                                                         |
+|       1001 | 买家普遍认为鞋子穿着舒适、外观好看且物流快，但鞋底偏硬且有轻微胶味。                                         |
+|       1002 | 买家认为该榨汁杯小巧便携、出汁快且易清洗，但电池续航短且售后换货流程慢。                                     |
++------------+--------------------------------------------------------------------------------------------------------------+
 ```
