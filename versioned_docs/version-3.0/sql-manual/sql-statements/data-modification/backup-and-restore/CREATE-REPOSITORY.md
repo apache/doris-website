@@ -34,7 +34,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 
 **<storage_property>** Optional parameters are as follows, and additional parameters can be added based on the actual environment.
 
-| 参数                      | 说明                                 |
+| Parameter               | Description                            |
 |-------------------------|------------------------------------|
 | **s3.endpoint**         | S3 service endpoint                    |
 | **s3.access_key**       | S3 access key                          |

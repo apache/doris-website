@@ -130,7 +130,7 @@ PROPERTIES
 ```sql
 CREATE REPOSITORY `hdfs_repo`
 WITH hdfs
-ON LOCATION "/prefix_path/hdfs_repo"
+ON LOCATION "hdfs://127.0.0.1:9000/prefix_path/hdfs_repo"
 PROPERTIES
 (
     "fs.defaultFS" = "hdfs://127.0.0.1:9000",
