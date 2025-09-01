@@ -1751,6 +1751,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/intersect-count",
                                 "sql-manual/sql-functions/aggregate-functions/kurt",
                                 "sql-manual/sql-functions/aggregate-functions/linear-histogram",
+                                "sql-manual/sql-functions/aggregate-functions/llm-agg",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
                                 "sql-manual/sql-functions/aggregate-functions/max",
                                 "sql-manual/sql-functions/aggregate-functions/max-by",
