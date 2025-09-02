@@ -388,7 +388,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](./table-design/data-partitioning/data-distribution)
+参考文档：[数据划分](../../table-design/data-partitioning/manual-partitioning.md)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%

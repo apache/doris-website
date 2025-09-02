@@ -413,7 +413,7 @@ Connect with me on [Linkedin](https://www.linkedin.com/in/kang-xiao-441740316/)
 
 Apache Doris on [GitHub](https://github.com/apache/doris)
 
-Apache Doris [Website]( https://doris.apache.org)
+Apache Doris [Website](https://doris.apache.org)
 
 
 

@@ -54,7 +54,7 @@ under the License.
 - BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 680 GB SSD 盘
 - S3 对象存储空间：即为预估冷数据存储空间，600 TB
 
-使用存算分离模式，写入和热数据存储只需要 1副本，能够显著降低成本。
+使用存算分离模式，写入和热数据存储只需要 1 副本，能够显著降低成本。
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
@@ -80,7 +80,7 @@ under the License.
 
 ## 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ## 第 3 步：优化 FE 和 BE 配置
 
@@ -127,7 +127,7 @@ under the License.
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
-更多关于 BE 配置项的信息，可参考 [BE 配置项](./admin-manual/config/be-config)。
+更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config)。
 
 ### 第 4 步：建表
 
