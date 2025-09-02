@@ -7,44 +7,80 @@
 
 ## Description
 
-Calculates the millisecond difference between two datetime values. The result is the number of milliseconds from `<start_date>` subtracted from `<end_date>`.
+The `MILLISECONDS_DIFF` function calculates the difference in milliseconds between two datetime values. The result is the number of milliseconds obtained by subtracting the start time from the end time. This function supports processing `DATETIME` types.
 
 ## Syntax
 
 ```sql
-MILLISECONDS_DIFF(<enddate>, <startdate>)
+MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ```
 
 ## Parameters
 
-| Parameter  | Description                                     |
-|------------|-------------------------------------------------|
-| `<end_date>`    | The end time, of type DATETIMEV2               |
-| `<start_date>`  | The start time, of type DATETIMEV2             |
+| Parameter | Description |
+| --------- | ----------- |
+| `<date_or_time_expr1>` | The end time, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<date_or_time_expr2>` | The start time, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 
 ## Return Value
 
-Returns an INT type representing the millisecond difference between the two times.
-- Returns a positive number if `<end_date>` is greater than `<start_date>`.
-- Returns a negative number if `<end_date>` is less than `<start_date>`.
-- 1 second = 1,000 milliseconds.
-- 1 millisecond = 1,000 microseconds.
+Returns an `INT` type value, representing the difference in milliseconds between the two times.
 
-## Example
+- If `<date_or_time_expr1>` is later than `<date_or_time_expr2>`, the result is positive.
+- If `<date_or_time_expr1>` is earlier than `<date_or_time_expr2>`, the result is negative.
+- If the two times are identical (including the millisecond part), the result is 0.
+- If the input is of `DATE` type (only includes year, month, and day), the default time part is set to `00:00:00.000`.
+- If the input time includes microseconds (e.g., `'2023-01-01 00:00:00.123456'`), it is automatically truncated to millisecond precision for calculation (e.g., `123 milliseconds`).
+- If any parameter is `NULL`, the function returns `NULL`.
+
+## Examples
 
 ```sql
+-- Calculate millisecond difference
 SELECT MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000');
-```
++-------------------------------------------------------------------------------+
+| MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000') |
++-------------------------------------------------------------------------------+
+|                                                                           500 |
++-------------------------------------------------------------------------------+
 
-```text
-+-----------------------------------------------------------------------------------------------------------------------------+
-| milliseconds_diff(cast('2020-12-25 21:00:00.623000' as DATETIMEV2(3)), cast('2020-12-25 21:00:00.123000' as DATETIMEV2(3))) |
-+-----------------------------------------------------------------------------------------------------------------------------+
-|                                                                                                                         500 |
-+-----------------------------------------------------------------------------------------------------------------------------+
-```
+-- End time is earlier than start time, returns negative value
+SELECT MILLISECONDS_DIFF('2023-10-01 12:00:00.500', '2023-10-01 12:00:00.800');
++-------------------------------------------------------------------------+
+| MILLISECONDS_DIFF('2023-10-01 12:00:00.500', '2023-10-01 12:00:00.800') |
++-------------------------------------------------------------------------+
+|                                                                    -300 |
++-------------------------------------------------------------------------+
 
-**Note:**
-- The time difference in the example is 0.5 seconds, which equals 500 milliseconds.
-- The function's result is dependent on the precision of the input time; the example uses a precision of 3 decimal places.
-- The result only returns the millisecond difference and does not include the microsecond part.
+-- Input includes microseconds (automatically truncated to milliseconds)
+SELECT MILLISECONDS_DIFF('2023-01-01 00:00:00.123456', '2023-01-01 00:00:00.000123');
++-------------------------------------------------------------------------------+
+| MILLISECONDS_DIFF('2023-01-01 00:00:00.123456', '2023-01-01 00:00:00.000123') |
++-------------------------------------------------------------------------------+
+|                                                                           123 |
++-------------------------------------------------------------------------------+
+
+-- Input is of DATE type (default time is 00:00:00.000)
+SELECT MILLISECONDS_DIFF('2023-10-02', '2023-10-01');
++-----------------------------------------------+
+| MILLISECONDS_DIFF('2023-10-02', '2023-10-01') |
++-----------------------------------------------+
+|                                      86400000 |
++-----------------------------------------------+
+
+-- Any parameter is NULL, returns NULL
+SELECT MILLISECONDS_DIFF('2023-01-01 00:00:00', NULL), MILLISECONDS_DIFF(NULL, '2023-01-01 00:00:00');
++------------------------------------------------+------------------------------------------------+
+| milliseconds_diff('2023-01-01 00:00:00', NULL) | milliseconds_diff(NULL, '2023-01-01 00:00:00') |
++------------------------------------------------+------------------------------------------------+
+| NULL                                           | NULL                                           |
++------------------------------------------------+------------------------------------------------+
+
+-- Times are identical, returns 0
+SELECT MILLISECONDS_DIFF('2025-08-11 15:30:00.123', '2025-08-11 15:30:00.123');
++-------------------------------------------------------------------------+
+| MILLISECONDS_DIFF('2025-08-11 15:30:00.123', '2025-08-11 15:30:00.123') |
++-------------------------------------------------------------------------+
+|                                                                       0 |
++-------------------------------------------------------------------------+
+```
