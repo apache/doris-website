@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_SENTIMENT",
+    "title": "AI_SENTIMENT",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ under the License.
 
 
 ```sql
-LLM_SENTIMENT([<resource_name>], <text>)
+AI_SENTIMENT([<resource_name>], <text>)
 ```
 
 ## 参数
@@ -57,8 +57,8 @@ LLM_SENTIMENT([<resource_name>], <text>)
 ## 示例
 
 ```sql
-SET default_llm_resource = 'resource_name';
-SELECT LLM_SENTIMENT('Apache Doirs is a great DB system.') AS Result;
+SET default_ai_resource = 'resource_name';
+SELECT AI_SENTIMENT('Apache Doirs is a great DB system.') AS Result;
 ```
 ```text
 +----------+
@@ -69,7 +69,7 @@ SELECT LLM_SENTIMENT('Apache Doirs is a great DB system.') AS Result;
 ```
 
 ```sql
-SELECT LLM_SENTIMENT('resrouce_name', 'I hate sunny days.') AS Result;
+SELECT AI_SENTIMENT('resrouce_name', 'I hate sunny days.') AS Result;
 ```
 ```text
 +----------+

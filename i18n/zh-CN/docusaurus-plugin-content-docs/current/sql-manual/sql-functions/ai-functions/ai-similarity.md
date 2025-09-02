@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_FILTER",
+    "title": "AI_SIMILARITY",
     "language": "zh-CN"
 }
 ---
@@ -26,24 +26,26 @@ under the License.
 
 ## 描述
 
-根据给定条件对文本进行过滤
+判断两个文本之间的语义相似性
 
 ## 语法
 
+
 ```sql
-LLM_FILTER([<resource_name>], <text>)
+AI_AI_SIMILARITY([<resource_name>], <text_1>, <text_2>)
 ```
 
 ## 参数
 
 |    参数    | 说明 |
 | ---------- | -------- |
-| `<resource_name>`| 指定的资源名称，可空|
-| `<text>`   | 判断的信息 |
+| `<resource_name>`| 指定的资源名称|
+| `<text_1>`   | 文本   |
+| `<text_2>`   | 文本 |
 
 ## 返回值
 
-返回一个布尔值
+返回一个 0 - 10 之间的浮点数。0 表示无相似性，10 表示强相似性。
 
 当输入有值为 NULL 时返回 NULL
 
@@ -63,18 +65,22 @@ PROPERTIES (
 );
 ```
 
-当我想查询其中的好评时可以
+当我想按顾客语气情绪对评论进行排行时可以：
 ```sql
-SELECT id, comment FROM user_comments
-WHERE  LLM_FILTER('resource_name', CONCAT('This is a positive comment: ', comment));
+SELECT comment,
+    AI_SIMILARITY('resource_name', 'I am extremely dissatisfied with their service.', comment) AS score
+FROM user_comments ORDER BY score DESC LIMIT 5;
 ```
 
-结果大致如下：
+查询结果大致如下：
 ```text
-+------+--------------------------------------------+
-| id   | comment                                    |
-+------+--------------------------------------------+
-|    1 | Absolutely fantastic, highly recommend it. |
-|    3 | This product is amazing and I love it.     |
-+------+--------------------------------------------+
++-------------------------------------------------+-------+
+| comment                                         | score |
++-------------------------------------------------+-------+
+| It arrived broken and I am really disappointed. |   7.5 |
+| Delivery was very slow and frustrating.         |   6.5 |
+| Not bad, but the packaging could be better.     |   3.5 |
+| It is fine, nothing special to mention.         |     3 |
+| Absolutely fantastic, highly recommend it.      |     1 |
++-------------------------------------------------+-------+
 ```

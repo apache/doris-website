@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM Function",
+    "title": "AI Function",
     "language": "en"
 }
 ---
@@ -24,100 +24,100 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In today's data-intensive world, we are always seeking more efficient and intelligent tools for data analysis. With the rise of Large Language Models (LLMs), integrating these cutting-edge AI capabilities into our daily data analysis workflows has become a direction worth exploring.
+In today's data-intensive world, we are always seeking more efficient and intelligent tools for data analysis. With the rise of Artificial Intelligence(AI), integrating these cutting-edge AI capabilities into our daily data analysis workflows has become a direction worth exploring.
 
-Therefore, we have implemented a series of LLM functions in Apache Doris, enabling data analysts to invoke large language models for text processing directly through simple SQL statements. Whether it's extracting key information, performing sentiment classification on reviews, or generating concise text summaries, all can now be seamlessly accomplished within the database.
+Therefore, we have implemented a series of AI functions in Apache Doris, enabling data analysts to invoke large language models for text processing directly through simple SQL statements. Whether it's extracting key information, performing sentiment classification on reviews, or generating concise text summaries, all can now be seamlessly accomplished within the database.
 
-Currently, LLM functions can be applied to scenarios including but not limited to:
+Currently, AI functions can be applied to scenarios including but not limited to:
 - Intelligent feedback: Automatically identify user intent and sentiment.
 - Content moderation: Batch detect and process sensitive information to ensure compliance.
 - User insights: Automatically categorize and summarize user feedback.
 - Data governance: Intelligent error correction and key information extraction to improve data quality.
 
-All large language models must be provided externally to Doris and support text analysis. The results and costs of all LLM function calls depend on the external LLM provider and the model used.
+All large language models must be provided externally to Doris and support text analysis. The results and costs of all AI function calls depend on the external AI provider and the model used.
 
 ## Supported Functions
 
-- [LLM_CLASSIFY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-classify):  
+- [AI_CLASSIFY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-classify):  
   Extracts the single label string that best matches the text content from the given labels.
 
-- [LLM_EXTRACT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-extract):  
+- [AI_EXTRACT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-extract):  
   Extracts relevant information for each given label based on the text content.
 
-- [LLM_FILTER](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-filter):
+- [AI_FILTER](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-filter):
   Check if the text content is correct and return a boolean value.
 
-- [LLM_FIXGRAMMAR](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar):  
+- [AI_FIXGRAMMAR](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-fixgrammar):  
   Fixes grammar and spelling errors in the text.
 
-- [LLM_GENERATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-generate):  
+- [AI_GENERATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-generate):  
   Generates content based on the input parameters.
 
-- [LLM_MASK](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-mask):  
+- [AI_MASK](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-mask):  
   Replaces sensitive information in the original text with `[MASKED]` according to the labels.
 
-- [LLM_SENTIMENT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment):  
+- [AI_SENTIMENT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-sentiment):  
   Analyzes the sentiment of the text, returning one of `positive`, `negative`, `neutral`, or `mixed`.
 
-- [LLM_SIMILARITY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity):  
+- [AI_SIMILARITY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-similarity):  
   Determine the similarity of the meaning between two texts, return a floating-point number between 0 and 10, 
   the larger the value, the more similar the meaning.
 
-- [LLM_SUMMARIZE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize):  
+- [AI_SUMMARIZE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-summarize):  
   Provides a highly condensed summary of the text.
 
-- [LLM_TRANSLATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-translate):  
+- [AI_TRANSLATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-translate):  
   Translates the text into the specified language.
 
-- [LLM_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/llm-agg):
+- [AI_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg):
 Perform cross-line aggregation analysis on multiple texts
 
-## LLM Configuration Parameters
+## AI Configuration Parameters
 
-Doris centrally manages LLM API access through the [resource mechanism](https://doris.apache.org/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), ensuring key security and permission control.  
+Doris centrally manages AI API access through the [resource mechanism](https://doris.apache.org/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), ensuring key security and permission control.  
 The currently available parameters are as follows:
 
-`type`: Required, must be `llm`, indicating the type as LLM.
+`type`: Required, must be `ai`, indicating the type as AI.
 
-`llm.provider_type`: Required, the type of external LLM provider.
+`ai.provider_type`: Required, the type of external AI provider.
 
-`llm.endpoint`: Required, the LLM API endpoint.
+`ai.endpoint`: Required, the AI API endpoint.
 
-`llm.model_name`: Required, the model name.
+`ai.model_name`: Required, the model name.
 
-`llm.api_key`: Required except when `llm.provider_type = local`, the API key.
+`ai.api_key`: Required except when `ai.provider_type = local`, the API key.
 
-`llm.temperature`: Optional, controls the randomness of generated content, value range is a float from 0 to 1. Default is -1, meaning the parameter is not set.
+`ai.temperature`: Optional, controls the randomness of generated content, value range is a float from 0 to 1. Default is -1, meaning the parameter is not set.
 
-`llm.max_tokens`: Optional, limits the maximum number of tokens for generated content. Default is -1, meaning the parameter is not set. The default for Anthropic is 2048.
+`ai.max_tokens`: Optional, limits the maximum number of tokens for generated content. Default is -1, meaning the parameter is not set. The default for Anthropic is 2048.
 
-`llm.max_retries`: Optional, maximum number of retries for a single request. Default is 3.
+`ai.max_retries`: Optional, maximum number of retries for a single request. Default is 3.
 
-`llm.retry_delay_second`: Optional, delay time (in seconds) between retries. Default is 0.
+`ai.retry_delay_second`: Optional, delay time (in seconds) between retries. Default is 0.
 
 ## Supported Providers
 
 Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, Qwen, Baichuan.
 
 If you use a provider not listed above, but its API format is the same as [OpenAI](https://platform.openai.com/docs/overview), [Anthropic](https://docs.anthropic.com/en/api/messages-examples), or [Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1),  
-you can directly select the provider with the same format for the `llm.provider_type` parameter.  
+you can directly select the provider with the same format for the `ai.provider_type` parameter.  
 The provider selection only affects the API format constructed internally by Doris.
 
 ## Quick Start
 
-> The following examples are minimal implementations. For detailed steps, refer to the documentation: https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-function
+> The following examples are minimal implementations. For detailed steps, refer to the documentation: https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-function
 
-1. Configure LLM Resource
+1. Configure AI Resource
 
 Example 1:
 ```sql
 CREATE RESOURCE 'openai_example'
 PROPERTIES (
-    'type' = 'llm',
-    'llm.provider_type' = 'openai',
-    'llm.endpoint' = 'https://api.openai.com/v1/responses',
-    'llm.model_name' = 'gpt-4.1',
-    'llm.api_key' = 'xxxxx'
+    'type' = 'ai',
+    'ai.provider_type' = 'openai',
+    'ai.endpoint' = 'https://api.openai.com/v1/responses',
+    'ai.model_name' = 'gpt-4.1',
+    'ai.api_key' = 'xxxxx'
 );
 ```
 
@@ -125,17 +125,17 @@ Example 2:
 ```sql
 CREATE RESOURCE 'deepseek_example'
 PROPERTIES (
-    'type'='llm',
-    'llm.provider_type'='deepseek',
-    'llm.endpoint'='https://api.deepseek.com/chat/completions',
-    'llm.model_name' = 'deepseek-chat',
-    'llm.api_key' = 'xxxxx'
+    'type'='ai',
+    'ai.provider_type'='deepseek',
+    'ai.endpoint'='https://api.deepseek.com/chat/completions',
+    'ai.model_name' = 'deepseek-chat',
+    'ai.api_key' = 'xxxxx'
 );
 ```
 
 2. Set Default Resource (Optional)
 ```sql
-SET default_llm_resource='llm_resource_name';
+SET default_ai_resource='ai_resource_name';
 ```
 
 3. Execute SQL Query
@@ -160,11 +160,11 @@ To select the top 10 records most relevant to Doris, you can use the following q
 ```sql
 SELECT
     c,
-    CAST(LLM_GENERATE(CONCAT('Please score the relevance of the following document content to Apache Doris, with a floating-point number from 0 to 10, output only the score. Document:', c)) AS DOUBLE) AS score
+    CAST(AI_GENERATE(CONCAT('Please score the relevance of the following document content to Apache Doris, with a floating-point number from 0 to 10, output only the score. Document:', c)) AS DOUBLE) AS score
 FROM doc_pool ORDER BY score DESC LIMIT 10;
 ```
 
-This query uses the LLM to generate a relevance score for each document's content to Apache Doris, and selects the top 10 results in descending order of score.
+This query uses the AI to generate a relevance score for each document's content to Apache Doris, and selects the top 10 results in descending order of score.
 
 ```text
 +---------------------------------------------------------------------------------------------------------------+-------+
@@ -219,7 +219,7 @@ INSERT INTO job_requirements VALUES
 (102, 'ML Engineer',      'Seeking a data scientist or ML engineer familiar with NLP and large language models.');
 ```
 
-We can perform semantic matching between job requirements and candidate profiles through `LLM_FILTER`
+We can perform semantic matching between job requirements and candidate profiles through `AI_FILTER`
 to screen out suitable candidates.
 ```sql
 SELECT
@@ -227,7 +227,7 @@ SELECT
     j.job_id, j.title
 FROM candidate_profiles AS c
 JOIN job_requirements AS j
-WHERE LLM_FILTER(CONCAT('Does the following candidate self-introduction match the job description?', 
+WHERE AI_FILTER(CONCAT('Does the following candidate self-introduction match the job description?', 
                 'Job: ', j.jd_text, ' Candidate: ', c.self_intro));
 ```
 
@@ -244,7 +244,7 @@ WHERE LLM_FILTER(CONCAT('Does the following candidate self-introduction match th
 
 ### Function Execution Flow
 
-![LLM Function Execution Flow](/images/LLM-function-flowchart.png)
+![AI Function Execution Flow](/images/LLM-function-flowchart.png)
 
 Notes:
 
@@ -260,7 +260,7 @@ output only the ...
 ```
 
 - user_prompt: Only input parameters, no extra description.
-- Request body: If the user does not set optional parameters (such as `llm.temperature` and `llm.max_tokens`),  
+- Request body: If the user does not set optional parameters (such as `ai.temperature` and `ai.max_tokens`),  
 these parameters will not be included in the request body (except for Anthropic, which must pass `max_tokens`; Doris uses a default of 2048 internally).  
 Therefore, the actual value of the parameter will be determined by the provider or the specific model's default settings.
 
@@ -270,10 +270,10 @@ If a timeout occurs, try increasing the value of `query_timeout`.
 
 ### Resource Management
 
-Doris abstracts LLM capabilities as resources, unifying the management of various large model services (such as OpenAI, DeepSeek, Moonshot, local models, etc.).  
+Doris abstracts AI capabilities as resources, unifying the management of various large model services (such as OpenAI, DeepSeek, Moonshot, local models, etc.).  
 Each resource contains key information such as provider, model type, API key, and endpoint, simplifying access and switching between multiple models and environments, while also ensuring key security and permission control.
 
-### Compatibility with Mainstream LLMs
+### Compatibility with Mainstream AIs
 
 Due to differences in API formats between providers, Doris implements core methods such as request construction, authentication, and response parsing for each service.  
 This allows Doris to dynamically select the appropriate implementation based on resource configuration, without worrying about underlying API differences.  

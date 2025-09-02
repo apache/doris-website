@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_TRANSLATE",
+    "title": "AI_FIXGRAMMAR",
     "language": "zh-CN"
 }
 ---
@@ -26,26 +26,25 @@ under the License.
 
 ## 描述
 
-用于将文本翻译为特定语言
+用于修复文本中的语法错误
 
 ## 语法
 
 
 ```sql
-LLM_TRANSLATE([<resource_name>], <text>, <target_language>)
+AI_FIXGRAMMAR([<resource_name>], <text>)
 ```
 
 ## 参数
 
 |    参数    | 说明 |
 | ---------- | -------- |
-| `<resource_name>`| 指定的资源名称|
-| `<text>`   | 文本   |
-| `<target_language>`   | 目标语言 |
+| `<resource_name>`| 指定的资源名称，可空|
+| `<text>`   | 需要修复语法的文本 |
 
 ## 返回值
 
-返回翻译后的文本字符串
+返回修复语法后的文本字符串
 
 当输入有值为 NULL 时返回 NULL
 
@@ -54,24 +53,24 @@ LLM_TRANSLATE([<resource_name>], <text>, <target_language>)
 ## 示例
 
 ```sql
-SET default_llm_resource = 'resourse_name';
-SELECT LLM_TRANSLATE('In my mind, doris is the best databases management system.', 'zh-CN') AS Result;
+SET default_ai_resource = 'resource_name';
+SELECT AI_FIXGRAMMAR('Apache Doris a great system DB') AS Result;
 ```
 ```text
-+-------------------------------------------------+
-| Result                                          |
-+-------------------------------------------------+
-| 在我心目中，Doris是最棒的数据库管理系统。       |
-+-------------------------------------------------+
++------------------------------------------+
+| Result                                   |
++------------------------------------------+
+| Apache Doris is a great database system. |
++------------------------------------------+
 ```
 
 ```sql
-SELECT LLM_Translate('resource_name', 'This is an example', 'Franch') AS Result;
+SELECT AI_FIXGRAMMAR('resource_name', 'I am like to using Doris') AS Result;
 ```
 ```text
-+------------------+
-| Result           |
-+------------------+
-| Voici un exemple |
-+------------------+
++--------------------+
+| Result             |
++--------------------+
+| I like using Doris |
++--------------------+
 ```

@@ -390,9 +390,9 @@
                 },
                 {
                     "type": "category",
-                    "label": "AI & LLM",
+                    "label": "AI",
                     "items": [
-                        "ai/llm-function-overview"
+                        "ai/ai-function-overview"
                     ]
                 },
                 {
@@ -1130,19 +1130,19 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "LLM Functions",
+                                    "label": "AI Functions",
                                     "items": [
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-classify",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-extract",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-filter",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-generate",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-mask",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-translate"
+                                        "sql-manual/sql-functions/ai-functions/ai-classify",
+                                        "sql-manual/sql-functions/ai-functions/ai-extract",
+                                        "sql-manual/sql-functions/ai-functions/ai-filter",
+                                        "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+                                        "sql-manual/sql-functions/ai-functions/ai-function",
+                                        "sql-manual/sql-functions/ai-functions/ai-generate",
+                                        "sql-manual/sql-functions/ai-functions/ai-mask",
+                                        "sql-manual/sql-functions/ai-functions/ai-sentiment",
+                                        "sql-manual/sql-functions/ai-functions/ai-similarity",
+                                        "sql-manual/sql-functions/ai-functions/ai-summarize",
+                                        "sql-manual/sql-functions/ai-functions/ai-translate"
                                     ]
                                 }
                             ]
@@ -1719,6 +1719,7 @@
                             "type": "category",
                             "label": "Aggregate Functions",
                             "items": [
+                                "sql-manual/sql-functions/aggregate-functions/ai-agg",
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
                                 "sql-manual/sql-functions/aggregate-functions/approx-top-k",
@@ -1751,7 +1752,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/intersect-count",
                                 "sql-manual/sql-functions/aggregate-functions/kurt",
                                 "sql-manual/sql-functions/aggregate-functions/linear-histogram",
-                                "sql-manual/sql-functions/aggregate-functions/llm-agg",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
                                 "sql-manual/sql-functions/aggregate-functions/max",
                                 "sql-manual/sql-functions/aggregate-functions/max-by",
