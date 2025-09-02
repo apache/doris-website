@@ -84,7 +84,7 @@
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
 :::note 备注
-参考文档：[Pipeline X 执行引擎](../../query-acceleration/optimization-technology-principle/pipeline-execution-engine)
+参考文档：[Pipeline X 执行引擎](../../query/pipeline-execution-engine.md)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 

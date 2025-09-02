@@ -99,7 +99,7 @@ under the License.
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](./admin-manual/config/fe-config)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](../admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
