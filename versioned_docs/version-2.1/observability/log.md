@@ -70,7 +70,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ## Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../install/deploy-manually/integrated-storage-compute-deploy-manually.md).
 
 
 ## Step 3: Optimize FE and BE configurations
@@ -90,7 +90,7 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | `autobucket_min_buckets = 10`                                | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
 
-For more information, refer to [FE Configuration](./admin-manual/config/fe-config.md).
+For more information, refer to [FE Configuration](../admin-manual/config/fe-config.md).
 
 **Optimize BE configurations**
 
@@ -119,7 +119,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | Accelerate the recycling of trash files.                     |
 
 
-For more information, refer to [BE Configuration](./admin-manual/config/be-config).
+For more information, refer to [BE Configuration](../admin-manual/config/be-config).
 
 ### Step 4: Create tables
 
@@ -129,7 +129,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](./table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](./table-design/data-partitioning/dynamic-partitioning.md) (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](../table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../table-design/data-partitioning/dynamic-partitioning.md) (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the sort key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 
@@ -139,7 +139,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
     - Use the Random strategy (`DISTRIBUTED BY RANDOM BUCKETS 60`) to optimize batch writing efficiency when paired with single tablet imports.
 
-For more information, refer to [Data Partitioning](./table-design/data-partitioning/auto-partitioning).
+For more information, refer to [Data Partitioning](../table-design/data-partitioning/auto-partitioning).
 
 **Configure compression parameters**
 
@@ -294,7 +294,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../../ecosystem/logstash.md).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../ecosystem/logstash.md).
 
 **Integrating Filebeat**
 
@@ -362,7 +362,7 @@ headers:
     ./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](../../ecosystem/beats.md).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](../ecosystem/beats.md).
 
 **Integrating Kafka**
 

@@ -156,7 +156,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](./install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 ### Step 3: Optimize FE and BE configurations
 
