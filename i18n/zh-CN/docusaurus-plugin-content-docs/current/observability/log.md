@@ -136,14 +136,14 @@ under the License.
 **配置分区分桶参数**
 
 分区按照以下说明配置：
-- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为排序 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [数据划分](./table-design/data-partitioning/data-distribution)。
+更多关于分区分桶的信息，可参考 [数据划分](../table-design/data-partitioning/data-distribution)。
 
 **配置压缩参数**
 - 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
@@ -295,7 +295,7 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/logstash)。
 
 **对接 Filebeat**
 
@@ -371,7 +371,7 @@ chmod +x filebeat-doris-7.17.5.4
 ./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/beats)。
 
 **对接 Kafka**
 
