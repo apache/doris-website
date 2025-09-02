@@ -13,7 +13,7 @@
 
 * [明细表](./duplicate)（Duplicate Key Table）：允许指定的 Key 列重复，Doirs 存储层保留所有写入的数据，适用于必须保留所有原始数据记录的情况；
 
-* [主键表](./unique)（Unique Key Model）：每一行的 Key 值唯一，可确保给定的 Key 列不会存在重复行，Doris 存储层对每个 key 只保留最新写入的数据，适用于数据更新的情况；
+* [主键表](./unique)（Unique Key Table）：每一行的 Key 值唯一，可确保给定的 Key 列不会存在重复行，Doris 存储层对每个 key 只保留最新写入的数据，适用于数据更新的情况；
 
 * [聚合表](./aggregate)（Aggregate Key Table）：可根据 Key 列聚合数据，Doris 存储层保留聚合后的数据，从而可以减少存储空间和提升查询性能；通常用于需要汇总或聚合信息（如总数或平均值）的情况。
 
