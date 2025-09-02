@@ -69,6 +69,9 @@ All large language models must be provided externally to Doris and support text 
 - [LLM_TRANSLATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-translate):  
   Translates the text into the specified language.
 
+- [AI_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg):
+Perform cross-line aggregation analysis on multiple texts
+
 ## LLM Configuration Parameters
 
 Doris centrally manages LLM API access through the [resource mechanism](https://doris.apache.org/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), ensuring key security and permission control.  

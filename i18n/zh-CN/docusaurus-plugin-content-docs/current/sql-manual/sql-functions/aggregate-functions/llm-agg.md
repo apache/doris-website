@@ -59,6 +59,7 @@ INSERT INTO support_tickets VALUES
 SELECT
     subject,
     LLM_AGG(
+        'llm_resource_name',
         details,
         'Summarize every ticket detail into one short paragraph of 40 words or less.'
     ) AS ai_summary
@@ -105,6 +106,7 @@ INSERT INTO product_reviews VALUES
 
 使用 LLM_AGG 总结聚合评价：
 ```sql
+SET default_llm_resource = 'llm_resource_name';
 SELECT
     product_id,
     LLM_AGG(

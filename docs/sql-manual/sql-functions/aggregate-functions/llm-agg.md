@@ -58,6 +58,7 @@ You can use `LLM_AGG` to summarize customer issues by problem subject:
 SELECT
     subject,
     LLM_AGG(
+        'llm_resource_name',
         details,
         'Summarize every ticket detail into one short paragraph of 40 words or less.'
     ) AS ai_summary
@@ -105,6 +106,7 @@ INSERT INTO product_reviews VALUES
 
 Using LLM_AGG to summarize and evaluate:
 ```sql
+SET default_llm_resoure = 'llm_resource_name';
 SELECT
     product_id,
     LLM_AGG(
