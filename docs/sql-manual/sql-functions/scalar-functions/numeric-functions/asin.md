@@ -7,7 +7,7 @@
 
 ## Description
 
-Returns the arc sine of `x`, or `nan` if `x` is not in the range `-1` to `1`.
+Returns the arc sine of `x`, or `NULL` if `x` is not in the range `-1` to `1`.
 
 ## Syntax
 
@@ -44,9 +44,9 @@ select asin(2);
 ```
 
 ```text
-+-----------+
-| asin(2.0) |
-+-----------+
-|       nan |
-+-----------+
++---------+
+| asin(2) |
++---------+
+|    NULL |
++---------+
 ```
