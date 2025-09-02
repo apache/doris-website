@@ -584,7 +584,8 @@
                             "type": "category",
                             "label": "Integrations",
                             "items": [
-                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization",
+                                "admin-manual/auth/integrations/aws-iam-role"
                             ]
                         }
                     ]
