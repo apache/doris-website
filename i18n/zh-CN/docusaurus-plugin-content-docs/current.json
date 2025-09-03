@@ -79,9 +79,9 @@
     "message": "数据表设计",
     "description": "The label for category Data Table Design in sidebar docs"
   },
-  "sidebar.docs.category.Data Models": {
-    "message": "数据模型",
-    "description": "The label for category Data Models in sidebar docs"
+  "sidebar.docs.category.Table Types": {
+    "message": "表类型",
+    "description": "The label for category Table Types in sidebar docs"
   },
   "sidebar.docs.category.Data Partitioning": {
     "message": "数据划分",

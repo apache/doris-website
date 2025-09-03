@@ -72,7 +72,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
