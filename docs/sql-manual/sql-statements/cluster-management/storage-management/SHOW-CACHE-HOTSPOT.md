@@ -12,7 +12,7 @@ This statement is used to display the hotspot information of the file cache.
 
 :::info Note
 
-Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query cache hotspot information statistics. Starting from version 3.0.4, the use of the `SHOW CACHE HOTSPOT` statement for cache hotspot information statistics is no longer supported. Please directly access the system table `__internal_schema.cloud_cache_hotspot` for queries. For detailed usage, refer to [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache). 
+Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query cache hotspot information statistics. Starting from version 3.0.4, the use of the `SHOW CACHE HOTSPOT` statement for cache hotspot information statistics is no longer supported. Please directly access the system table `__internal_schema.cloud_cache_hotspot` for queries. For detailed usage, refer to [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache/file-cache). 
 
 
 
@@ -47,5 +47,5 @@ SHOW CACHE HOTSPOT '/my_compute_group/';
 ## References
 
 - [WARMUP CACHE](../Database-Administration-Statements/WARM-UP-COMPUTE-GROUP.md)
-- [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache)
+- [MANAGING FILE CACHE](../../../../compute-storage-decoupled/file-cache/file-cache)
 
