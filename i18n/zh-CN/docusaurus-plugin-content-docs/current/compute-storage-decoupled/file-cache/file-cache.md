@@ -256,7 +256,7 @@ SQL profile 中 cache 相关的指标在 SegmentIterator 下，包括
 | RemoteIOUseTimer       | 读取远程存储的耗时                         |
 | WriteCacheIOUseTimer   | 写 File Cache 的耗时                       |
 
-您可以通过 [查询性能分析](../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile) 查看查询性能分析。
+您可以通过 [查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile) 查看查询性能分析。
 
 ## TTL 用法
 
