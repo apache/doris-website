@@ -747,6 +747,10 @@
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
   },
+  "sidebar.docs.category.File Cache": {
+    "message": "文件缓存",
+    "description": "File Cache"
+  },
   "sidebar.ecosystem.category.BI and Database IDE": {
     "message": "BI 与数据库 IDE",
     "description": "The label for category BI and Database IDE in sidebar docs"

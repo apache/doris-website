@@ -512,7 +512,14 @@
                         "compute-storage-decoupled/compilation-and-deployment",
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
-                        "compute-storage-decoupled/file-cache",
+                        {
+                            "type": "category",
+                            "label": "File Cache",
+                            "items": [
+                                "compute-storage-decoupled/file-cache/file-cache",
+                                "compute-storage-decoupled/file-cache/file-cache-internals"
+                            ]
+                        },
                         "compute-storage-decoupled/read-write-splitting",
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
