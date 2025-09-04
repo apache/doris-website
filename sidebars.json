@@ -624,6 +624,7 @@
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
                         "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/spill-disk",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
