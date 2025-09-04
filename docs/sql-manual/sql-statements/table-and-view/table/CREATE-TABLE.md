@@ -154,7 +154,7 @@ CREATE
           "<table_properties>"
           [ , ... ] 
     ) ]
-AS <query>;
+[ AS ] <query>;
 ```
 
 ### CREATE TABLE ... LIKE
