@@ -69,7 +69,7 @@ All large language models must be provided externally to Doris and support text 
 - [LLM_TRANSLATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-translate):  
   Translates the text into the specified language.
 
-- [AI_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg):
+- [LLM_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/llm-agg):
 Perform cross-line aggregation analysis on multiple texts
 
 ## LLM Configuration Parameters
