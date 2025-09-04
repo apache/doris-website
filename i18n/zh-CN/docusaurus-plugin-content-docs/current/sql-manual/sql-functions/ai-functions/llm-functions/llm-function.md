@@ -134,6 +134,8 @@ Doris当前支持的 LLM Function包括:
 
 - `LLM_TRANSLATE`： 翻译
 
+- `LLM_AGG`：对多条文本进行跨行聚合分析
+
 ### 示例
 
 1. `LLM_TRANSLATE`

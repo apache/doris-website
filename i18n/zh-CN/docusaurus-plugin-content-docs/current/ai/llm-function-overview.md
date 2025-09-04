@@ -68,6 +68,9 @@ under the License.
 - [LLM_TRANSLATE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/llm-functions/llm-translate)：
 将文本翻译为指定语言。
 
+- [LLM_AGG](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/aggregate-functions/llm-agg):
+对多条文本进行跨行聚合分析。
+
 ## LLM 配置相关参数
 
 Doris 通过[资源机制](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)

@@ -140,6 +140,8 @@ Currently supported LLM Functions in Doris include:
 
 - `LLM_TRANSLATE`: Translation
 
+- `LLM_AGG`: Perform cross-line aggregation analysis on multiple texts
+
 ### Examples
 
 1. `LLM_TRANSLATE`
