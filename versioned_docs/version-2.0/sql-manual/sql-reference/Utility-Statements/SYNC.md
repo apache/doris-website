@@ -23,6 +23,6 @@ Any user or role can perform this operation.
 
 Synchronize metadata:
 
-    ```sql
-    SYNC;
-    ```
+```sql
+SYNC;
+```
