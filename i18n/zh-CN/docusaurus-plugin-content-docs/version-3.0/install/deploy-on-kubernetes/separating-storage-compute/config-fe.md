@@ -63,6 +63,7 @@ Doris Operator 通过 Kubernetes 的 ConfigMap 挂载 FE 启动配置。配置�
         query_port = 9030
         edit_log_port = 9010
         enable_fqdn_mode=true
+        deploy_mode = true
     ```
 
 2. 通过如下命令部署 `ConfigMap` 到 `DorisDisaggregatedCluster` 所在的命名空间：
@@ -82,7 +83,7 @@ Doris Operator 通过 Kubernetes 的 ConfigMap 挂载 FE 启动配置。配置�
     ```
 
 :::tip 提示
-1. Kubernetes 部署中，启动配置中无需要添加 `meta_service_endpoint`、`deploy_mode` 以及 `cluster_id` 配置，Doris-Operator 会自动添加相关信息。  
+1. Kubernetes 部署中，启动配置中无需要添加 `meta_service_endpoint` 以及 `cluster_id` 配置，Doris-Operator 会自动添加相关信息。  
 2. Kubernetes 部署中，自定义启动配置时，必须设定 `enable_fqdn_mode=true`。
 :::
 
