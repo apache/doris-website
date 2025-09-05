@@ -43,8 +43,9 @@ The name of the database for which partition information needs to be viewed must
 Filter conditions, supporting filtering on columns such as PartitionId, PartitionName, State, Buckets, ReplicationNum, LastConsistencyCheckTime, etc.
 
 Please note that:
-1. Currently, the where clause only supports the = operator and does not support operators such as >, <, >=, <=, etc.
-2. When using the = operator in the where clause, the column name needs to be on the left side.
+1. Currently, the where clause only supports the `=`, `!=`, `like` operator for string type PartitionName, State. For the other columns only support operators such as `=`, `!=`, `>`, `<`, `>=`, `<=`.
+2. When using the above operators in the where clause, the column name needs to be on the left side.
+3. Where clause can contains `AND`.
 
 **4. `<order_by_key>`**
 
