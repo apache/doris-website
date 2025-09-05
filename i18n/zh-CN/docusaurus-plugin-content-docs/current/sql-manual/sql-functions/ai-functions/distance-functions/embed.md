@@ -67,7 +67,7 @@ PROPERTIES (
     "replication_num" = "1"
 );
 
-SET default_llm_resource = 'embed_resource_name';
+SET default_ai_resource = 'embed_resource_name';
 
 -- `embedding` 是函数 EMBED 根据 content 对应的标签所生成的嵌入向量
 INSERT INTO knowledge_base (id, title, content, embedding) VALUES

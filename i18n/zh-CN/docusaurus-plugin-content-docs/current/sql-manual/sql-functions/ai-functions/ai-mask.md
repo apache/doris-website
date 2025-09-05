@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_MASK",
+    "title": "AI_MASK",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ under the License.
 
 
 ```sql
-LLM_MASK([<resource_name>], <text>, <labels>)
+AI_MASK([<resource_name>], <text>, <labels>)
 ```
 
 ## 参数
@@ -54,8 +54,8 @@ LLM_MASK([<resource_name>], <text>, <labels>)
 ## 示例
 
 ```sql
-SET default_llm_resource = 'resource_name';
-SELECT LLM_MASK('Wccccat is a 20-year-old Doris community contributor.', ['name', 'age']) AS Result;
+SET default_ai_resource = 'resource_name';
+SELECT AI_MASK('Wccccat is a 20-year-old Doris community contributor.', ['name', 'age']) AS Result;
 ```
 ```text
 +-----------------------------------------------------+
@@ -66,7 +66,7 @@ SELECT LLM_MASK('Wccccat is a 20-year-old Doris community contributor.', ['name'
 ```
 
 ```sql
-SELECT LLM_MASK('resource_name', 'My email is rarity@example.com and my phone is 123-456-7890',
+SELECT AI_MASK('resource_name', 'My email is rarity@example.com and my phone is 123-456-7890',
                 ['email', 'phone_num']) AS RESULT
 ```
 

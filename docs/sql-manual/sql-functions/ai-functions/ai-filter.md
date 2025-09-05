@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_SIMILARITY",
+    "title": "AI_FILTER",
     "language": "en"
 }
 ---
@@ -26,25 +26,24 @@ under the License.
 
 ## Description
 
-Determines the semantic similarity between two texts.
+Filters text based on given conditions.
 
 ## Syntax
 
 ```sql
-LLM_SIMILARITY([<resource_name>], <text_1>, <text_2>)
+AI_FILTER([<resource_name>], <text>)
 ```
 
 ## Parameters
 
-| Parameter         | Description                |
-|-------------------|---------------------------|
-| `<resource_name>` | The specified resource name |
-| `<text_1>`        | Text                      |
-| `<text_2>`        | Text                      |
+| Parameter         | Description                       |
+|-------------------|-----------------------------------|
+| `<resource_name>` | The specified resource name, optional |
+| `<text>`          | The information to be evaluated   |
 
 ## Return Value
 
-Returns a floating-point number between 0 and 10. 0 means no similarity, 10 means strong similarity.
+Returns a boolean value.
 
 If any input is NULL, returns NULL.
 
@@ -64,22 +63,18 @@ PROPERTIES (
 );
 ```
 
-If you want to rank comments by customer sentiment, you can use:
+If you want to query the positive comments, you can use:
 ```sql
-SELECT comment,
-    LLM_SIMILARITY('resource_name', 'I am extremely dissatisfied with their service.', comment) AS score
-FROM user_comments ORDER BY score DESC LIMIT 5;
+SELECT id, comment FROM user_comments
+WHERE AI_FILTER('resource_name', CONCAT('This is a positive comment: ', comment));
 ```
 
-The query result may look like:
+The result may look like:
 ```text
-+-------------------------------------------------+-------+
-| comment                                         | score |
-+-------------------------------------------------+-------+
-| It arrived broken and I am really disappointed. |   7.5 |
-| Delivery was very slow and frustrating.         |   6.5 |
-| Not bad, but the packaging could be better.     |   3.5 |
-| It is fine, nothing special to mention.         |     3 |
-| Absolutely fantastic, highly recommend it.      |     1 |
-+-------------------------------------------------+-------+
++------+--------------------------------------------+
+| id   | comment                                    |
++------+--------------------------------------------+
+|    1 | Absolutely fantastic, highly recommend it. |
+|    3 | This product is amazing and I love it.     |
++------+--------------------------------------------+
 ```

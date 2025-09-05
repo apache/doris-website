@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_EXTRACT",
+    "title": "AI_EXTRACT",
     "language": "zh-CN"
 }
 ---
@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-LLM_EXTRACT([<resource_name>], <text>, <labels>)
+AI_EXTRACT([<resource_name>], <text>, <labels>)
 ```
 
 ## 参数
@@ -52,8 +52,8 @@ LLM_EXTRACT([<resource_name>], <text>, <labels>)
 
 ## 示例
 ```sql
-SET default_llm_resource = 'resource_name';
-SELECT LLM_EXTRACT('Apache Doris is an MPP-based real-time data warehouse known for its high query speed.', 
+SET default_ai_resource = 'resource_name';
+SELECT AI_EXTRACT('Apache Doris is an MPP-based real-time data warehouse known for its high query speed.', 
                   ['product_name', 'architecture', 'key_feature']) AS Result;
 ```
 ```text
@@ -65,7 +65,7 @@ SELECT LLM_EXTRACT('Apache Doris is an MPP-based real-time data warehouse known 
 ```
 
 ```sql
-SELECT LLM_EXTRACT('resource_name', 'Apache Doris began in 2008 as an internal project named Palo.',
+SELECT AI_EXTRACT('resource_name', 'Apache Doris began in 2008 as an internal project named Palo.',
                   ['original name', 'founding time']) AS Result;
 ```
 ```text

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_GENERATE",
+    "title": "AI_GENERATE",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ under the License.
 
 
 ```sql
-LLM_GENERATE([<resource_name>], <prompt>)
+AI_GENERATE([<resource_name>], <prompt>)
 ```
 
 ## 参数
@@ -53,8 +53,8 @@ LLM_GENERATE([<resource_name>], <prompt>)
 ## 示例
 
 ```sql
-SET default_llm_resource = 'resource_name';
-SELECT LLM_GENERATE('Describe Apache Doris in a few words') AS Result;
+SET default_ai_resource = 'resource_name';
+SELECT AI_GENERATE('Describe Apache Doris in a few words') AS Result;
 ```
 ```text
 +---------------------------------------------------------+
@@ -65,7 +65,7 @@ SELECT LLM_GENERATE('Describe Apache Doris in a few words') AS Result;
 ```
 
 ```sql
-SELECT LLM_GENERATE('resource_name', 'What is the fouding time of Apache Doris? Return only the date.') AS Result;
+SELECT AI_GENERATE('resource_name', 'What is the fouding time of Apache Doris? Return only the date.') AS Result;
 ```
 ```text
 +--------+

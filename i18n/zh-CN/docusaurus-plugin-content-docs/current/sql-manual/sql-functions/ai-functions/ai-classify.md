@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LLM_CLASSIFY",
+    "title": "AI_CLASSIFY",
     "language": "zh-CN"
 }
 ---
@@ -32,7 +32,7 @@ under the License.
 
 
 ```sql
-LLM_CLASSIFY([<resource_name>], <text>, <labels>)
+AI_CLASSIFY([<resource_name>], <text>, <labels>)
 ```
 
 ## 参数
@@ -54,8 +54,8 @@ LLM_CLASSIFY([<resource_name>], <text>, <labels>)
 ## 示例
 
 ```sql
-SET default_llm_resource = 'resource_name';
-SELECT LLM_CLASSIFY('Apache Doris is a databases system.', ['useage', 'introduce']) AS Result;
+SET default_ai_resource = 'resource_name';
+SELECT AI_CLASSIFY('Apache Doris is a databases system.', ['useage', 'introduce']) AS Result;
 ```
 ```text
 +-----------+
@@ -66,7 +66,7 @@ SELECT LLM_CLASSIFY('Apache Doris is a databases system.', ['useage', 'introduce
 ```
 
 ```sql
-SELECT LLM_CLASSIFY('resource_name', 'Apache Doris is developing rapidly.', ['science', 'sport']) AS Result;
+SELECT AI_CLASSIFY('resource_name', 'Apache Doris is developing rapidly.', ['science', 'sport']) AS Result;
 ```
 ```text
 +---------+
