@@ -5,37 +5,40 @@
 }
 ---
 
-## Description
+## Function
 
-Removes all specified elements from an array
+Remove all elements equal to the given value from an array while preserving the relative order of the remaining elements.
 
 ## Syntax
 
-```sql
-ARRAY_REMOVE(<arr>, <val>)
-```
+- `ARRAY_REMOVE(arr, target)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | Corresponding array |
-| `<val>` | Specifying Elements |
+- `arr`: `ARRAY<T>`, supports numbers, boolean, string, datetime, IP, etc.
+- `target`: a value of the same type as the array elements, used to match elements to remove.
 
-## Return Value
+## Return value
 
-Returns the array after removing all specified elements. If the input parameter is NULL, it returns NULL
+- Returns `ARRAY<T>` of the same type as the input.
+- If `arr` or `target` is `NULL`, returns `NULL`.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_REMOVE(['test', NULL, 'value'], 'value');
-```
+- Matching rule: only elements whose value equals `target` are removed. `NULL` elements are not equal to any non-`NULL` value, so they are not removed.
 
-```text
-+------------------------------------------------+
-| array_remove(['test', NULL, 'value'], 'value') |
-+------------------------------------------------+
-| ["test", null]                                 |
-+------------------------------------------------+
-```
+## Examples
+
+- Basic: After removal, the remaining elements keep their original relative order.
+  - `ARRAY_REMOVE([1,2,3], 1)` -> `[2,3]`
+  - `ARRAY_REMOVE([1,2,3,null], 1)` -> `[2,3,null]`
+
+- If either `arr` or `target` is `NULL`, returns `NULL`
+  - `ARRAY_REMOVE(['a','b','c',NULL], NULL)` -> `NULL`
+  - `ARRAY_REMOVE(NULL, 2)` -> `NULL`
+
+- No match
+  - `ARRAY_REMOVE([1,2,3], 258)` -> `[1,2,3]`
+
+
+
