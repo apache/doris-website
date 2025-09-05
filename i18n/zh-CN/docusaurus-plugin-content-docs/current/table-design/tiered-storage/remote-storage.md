@@ -138,7 +138,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 ```
 
 :::tip
-注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
+注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被忽略，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
 具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)等文档。
 :::
@@ -158,6 +158,9 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 -   Unique 模型表在开启 Merge-on-Write 特性时，不支持设置远程存储。
 
 -   Storage policy 支持创建、修改和删除，删除前需要先保证没有表引用此 Storage policy。
+
+-   一旦设置了 Storage policy 之后，不能取消设置。
+
 
 ## 冷数据空间
 
@@ -212,3 +215,7 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
+
+2. 修改冷却时间相关参数之后的行为表现是怎么样的？
+
+   冷却时间相关的参数修改之后只对还未冷却到远程存储的数据生效，对于已经冷却到远程存储的数据不生效。比如将 `cooldown_ttl` 从 21 天修改为 7天，已经在远程存储的数据不会回到本地；
