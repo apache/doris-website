@@ -21,13 +21,15 @@ SOUNDEX ( <expr> )
 
 | Argument | Description                |
 |----------|----------------------------|
-| `<expr>` | The string to compute for. |
+| `<expr>` | The string to compute for, only accept ASCII characters. |
 
 ## Return Value
 
 Returns a VARCHAR(4) string consisting of an uppercase letter followed by a three-digit numeric sound code representing English pronunciation.
 
 If the string is empty or contains no letter characters, an empty string is returned.
+
+If the string to be processed contains non-ASCII characters, the function will throw an exception during the calculation process.
 
 If the input is NULL, NULL is returned.
 
