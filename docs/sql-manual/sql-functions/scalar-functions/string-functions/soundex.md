@@ -72,3 +72,31 @@ SELECT name, soundex(name) AS IDX FROM soundex_test;
 | Smyth      | S530 |
 +------------+------+
 ```
+
+Behavior for non-ASCII characters:
+
+- When Doris processes the input string character by character, if it encounters a non-ASCII character before finishing the computation, it will throw an error. Example:
+
+```sql
+SELECT SOUNDEX('你好');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+```
+
+```sql
+-- After processing `Doris` it produces D62 (still missing one digit, not a complete 4-character code)
+-- When it reads the non-ASCII character `你`, the function errors
+SELECT SOUNDEX('Doris 你好');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+```
+
+```sql
+SELECT SOUNDEX('Apache Doris 你好');
+```
+
+```text
++--------------------------------+
+| SOUNDEX('Apache Doris 你好')   |
++--------------------------------+
+| A123                           |
++--------------------------------+
+```

@@ -73,3 +73,28 @@ SELECT name, soundex(name) AS IDX FROM soundex_test;
 | Smyth      | S530 |
 +------------+------+
 ```
+
+对非 ASCII 码的行为：
+
+- Doris 在逐字符处理输入字符串时，如果在完成计算之前遇到非 ASCII 字符，会立即抛出错误，示例如下：
+
+```sql
+SELECT SOUNDEX('你好');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+```
+```sql
+-- 在处理完 `Doris` 后得到 D62（还缺一位数字，未构成完整的 4 字符编码）
+-- 读到非 ASCII 字符 `你` 后，函数报错
+SELECT SOUNDEX('Doris 你好');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+```
+```sql
+SELECT SOUNDEX('Apache Doris 你好');
+```
+```text
++--------------------------------+
+| SOUNDEX('Apache Doris 你好')   |
++--------------------------------+
+| A123                           |
++--------------------------------+
+```
