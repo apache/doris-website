@@ -1,66 +1,67 @@
 ---
 {
-"title": "Fluent Bit Doris Output Plugin",
-"language": "en"
+"title": "FluentBit",
+"language": "zh-CN"
 }
 ---
 
-[Fluent Bit](https://fluentbit.io/) is a fast log processor and forwarder that supports custom output plugins to write data into storage systems, with the Fluent Bit Doris output plugin being the one for outputting to Doris.
+[Fluent Bit](https://fluentbit.io/) 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris Output Plugin 是输出到 Doris 的插件。
 
-By invoking the [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP interface, the Fluent Bit Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
+Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
-To use the Fluent Bit Doris output plugin, there are three main steps:
-1. Download or compile the Fluent Bit binary program that includes the Doris output plugin.
-2. Configure the Fluent Bit output address and other parameters.
-3. Start Fluent Bit to write data into Doris in real-time.
+使用 Fluent Bit Doris Output Plugin 主要有三个步骤：
+1. 下载或编译包含 Doris Output Plugin 的 Fluent Bit 二进制程序
+2. 配置 Fluent Bit 输出地址和其他参数
+3. 启动 Fluent Bit 将数据实时写入 Doris
 
-## Installation (alpha)
+## 安装（alpha 版本）
 
-### Download from the Official Website
+### 从官网下载
 
-https://github.com/joker-star-l/fluent-bit/releases/download/v3.1.9-alpha/fluent-bit
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9
 
-### Compile from Source Code
+### 从源码编译
 
-Clone the dev branch of https://github.com/joker-star-l/fluent-bit and run the following commands in the build/ directory
+克隆 https://github.com/joker-star-l/fluent-bit 的 dev 分支，在 build/ 目录下执行
+
 ```
 cmake -DFLB_RELEASE=ON ..
 make
 ```
 
-The build output is build/bin/fluent-bit.
+编译产物为 build/bin/fluent-bit。
 
-## Configuration
+## 参数配置
 
-The configuration for the Fluent Bit Doris output plugin is as follows:
+Fluent Bit Doris output plugin 的配置如下：
 
-Configuration | Description
+配置 | 说明
 --- | ---
 `host` | Stream Load HTTP host
 `port` | Stream Load HTTP port
-`user` | Doris username, this user needs to have import permissions for the corresponding Doris database and table
-`password` | Doris user's password
-`database` | The Doris database name to write into
-`table` | The Doris table name to write into
-`label_prefix` | Doris Stream Load Label prefix，the final generated Label is *{label_prefix}\_{timestamp}\_{uuid}* ，the default value is fluentbit. If set to false, no Label will be added
- `time_key` | The name of the timestamp column to add to the data. The default value is date. If set to false, the column will not be added
-`header` |  Doris Stream Load headers parameter, can be set more than one
-`log_request` | Whether to output Doris Stream Load request and response metadata in logs for troubleshooting, default is true
-`log_progress_interval` | Time interval for outputting speed in logs, unit is seconds, default is 10, setting to 0 can disable this type of logging
-`retry_limit` | Doris Stream Load request failure retry number, default value is 1, if set to false will not limit the number of retries
-`workers` | Number of workers to perform Doris Stream Load, default value is 2
+`user` | Doris 用户名，该用户需要有 doris 对应库表的导入权限
+`password` | Doris 用户的密码
+`database` | 要写入的 Doris 库名
+`table` | 要写入的 Doris 表名
+`label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}\_{timestamp}\_{uuid}* ，默认值是 fluentbit, 如果设置为 false 则不会添加 Label
+ `time_key` | 数据中要添加的时间戳列的名称，默认值是 date，如果设置为 false 则不会添加该列
+`header` | Doris Stream Load 的 header 参数，可以设置多个
+`log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 true
+`log_progress_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
+`retry_limit` | Doris Stream Load 请求失败重试次数，默认为 1, 如果设置为 false 则不限制重试次数
+`workers` | 执行 Doris Stream Load 的 worker 数量，默认为 2
 
-## Usage Example
+## 使用示例
 
-### TEXT Log Collection Example
+### TEXT 日志采集示例
 
-This example demonstrates TEXT log collection using Doris FE logs as an example.
+该示例以 Doris FE 的日志为例展示 TEXT 日志采集。
 
-**1. Data**
+**1. 数据**
 
-FE log files are typically located at the fe/log/fe.log file under the Doris installation directory. They are typical Java program logs, including fields such as timestamp, log level, thread name, code location, and log content. Not only do they contain normal logs, but also exception logs with stacktraces, which are multiline. Log collection and storage need to combine the main log and stacktrace into a single log entry.
+FE 日志文件一般位于 Doris 安装目录下的 `fe/log/fe.log` 文件，是典型的 Java 程序日志，包括时间戳，日志级别，线程名，代码位置，日志内容等字段。不仅有正常的日志，还有带 `stacktrace` 的异常日志，`stacktrace` 是跨行的，日志采集存储需要把主日志和 `stacktrace` 组合成一条日志。
 
-```
+```java
 2024-07-08 21:18:01,432 INFO (Statistics Job Appender|61) [StatisticsJobAppender.runAfterCatalogReady():70] Stats table not available, skip
 2024-07-08 21:18:53,710 WARN (STATS_FETCH-0|208) [StmtExecutor.executeInternalQuery():3332] Failed to run internal SQL: OriginStatement{originStmt='SELECT * FROM __internal_schema.column_statistics WHERE part_id is NULL  ORDER BY update_time DESC LIMIT 500000', idx=0}
 org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031 has no queryable replicas. err: replica 10032's backend 10008 does not exist or not alive
@@ -68,11 +69,11 @@ org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031
         at org.apache.doris.planner.OlapScanNode.computeTabletInfo(OlapScanNode.java:1197) ~[doris-fe.jar:1.2-SNAPSHOT]
 ```
 
-**2. Table Creation**
+**2. 建表**
 
-The table structure includes fields such as the log's creation time, collection time, hostname, log file path, log type, log level, thread name, code location, and log content.
+表结构包括日志的产生时间，采集时间，主机名，日志文件路径，日志类型，日志级别，线程名，代码位置，日志内容等字段。
 
-```
+```sql
 CREATE TABLE `doris_log` (
   `log_time` datetime NULL COMMENT 'log content time',
   `collect_time` datetime NULL COMMENT 'log agent collect time',
@@ -108,12 +109,13 @@ PROPERTIES (
 );
 ```
 
-**3. Configuration**
+**3. 配置**
 
-The configuration file of Fluent Bit log collection is as follows, doris_log.conf is used to define various parts of ETL components, and parsers.conf is used to define different log parsers.
+Fluent Bit 日志采集的配置文件如下，`doris_log.conf` 用于定义 ETL 的各个部分组件，`parsers.conf` 用于定义不同的日志解析器。
 
 doris_log.conf:
-```
+
+```java
 # config for Fluent Bit service
 [SERVICE]
     log_level info
@@ -163,7 +165,8 @@ doris_log.conf:
 ```
 
 parsers.conf:
-```
+
+```java
 [MULTILINE_PARSER]
     name          multiline_java
     type          regex
@@ -189,9 +192,9 @@ parsers.conf:
     regex       ^(?<log_time>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}) (?<level>[^ ]+) \((?<thread>[^\)]+)\) \[(?<position>[^\]]+)\] (?<message>(\n|.)*)\n$
 ```
 
-**4. Running Fluent Bit**
+**4. 运行 Fluent Bit**
 
-```
+```java
 fluent-bit -c doris_log.conf
 
 # log stream load response
@@ -222,21 +225,21 @@ fluent-bit -c doris_log.conf
 [2024/10/31 18:40:13] [ info] [output:doris:doris.1] total 0 MB 2 ROWS, total speed 0 MB/s 0 R/s, last 10 seconds speed 0 MB/s 0 R/s
 ```
 
-### JSON Log Collection Example
+### JSON 日志采集示例
 
-This example demonstrates JSON log collection using data from the GitHub events archive.
+该样例以 github events archive 的数据为例展示 JSON 日志采集。
 
-**1. Data**
+**1. 数据**
 
-The GitHub events archive contains archived data of GitHub user actions, formatted as JSON. It can be downloaded from [here](https://data.gharchive.org/), for example, the data for January 1, 2024, at 3 PM.
+github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
 
 ```shell
 wget https://data.gharchive.org/2024-01-01-15.json.gz
 ```
 
-Below is a sample of the data. Normally, each piece of data is on a single line, but for ease of display, it has been formatted here.
+下面是一条数据样例，实际一条数据一行，这里为了方便展示进行了格式化。
 
-```
+```jason
 {
   "id": "37066529221",
   "type": "PushEvent",
@@ -267,14 +270,9 @@ Below is a sample of the data. Normally, each piece of data is on a single line,
 }
 ```
 
+**2. 建表**
 
-**2. Table Creation**
-
-```
-CREATE DATABASE log_db;
-USE log_db;
-
-
+```sql
 CREATE TABLE github_events
 (
   `created_at` DATETIME,
@@ -309,11 +307,12 @@ PROPERTIES (
 );
 ```
 
-**3. Configuration**
+**3. 配置**
 
-In contrast to the previous TEXT log collection, this configuration does not use FILTER because no additional processing transformations are required.
+和之前 TEXT 日志采集相比，该配置文件没有使用 FILTER，因为不需要额外的处理转换。
 
 github_events.conf:
+
 ```
 [SERVICE]
     log_level info
@@ -345,7 +344,7 @@ github_parsers.conf:
     format json
 ```
 
-**4. Running Fluent Bit**
+**4. 运行 Fluent Bit**
 
 ```
 fluent-bit -c github_events.conf

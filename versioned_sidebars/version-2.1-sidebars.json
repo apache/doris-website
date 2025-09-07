@@ -458,7 +458,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -862,6 +872,16 @@
                 },
                 {
                     "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -870,8 +890,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]

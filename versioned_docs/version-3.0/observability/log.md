@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Log Storage and Analysis",
+    "title": "Log",
     "language": "en"
 }
 ---
@@ -294,13 +294,13 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../ecosystem/logstash.md).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](../ecosystem/observability/logstash.md).
 
 **Integrating Filebeat**
 
 Follow these steps:
 
-1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-7.17.5.4) or compile it from the Apache Doris source code.
+1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) or compile it from the Apache Doris source code.
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
@@ -358,11 +358,11 @@ headers:
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
 
     ```shell  
-    chmod +x filebeat-doris-7.17.5.4
-    ./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
+    chmod +x filebeat-doris-2.1.1
+    ./filebeat-doris-2.1.1 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](../ecosystem/beats.md).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](../ecosystem/observability/beats.md).
 
 **Integrating Kafka**
 
