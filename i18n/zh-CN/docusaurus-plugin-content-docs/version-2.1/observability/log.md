@@ -282,7 +282,7 @@ output {
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-7.17.5.4) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -348,8 +348,8 @@ output {
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
 ```shell  
-chmod +x filebeat-doris-7.17.5.4
-./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
+chmod +x filebeat-doris-2.1.1
+./filebeat-doris-2.1.1 -c filebeat_demo.yml
 ```
 
 更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/observability/beats)。
