@@ -383,7 +383,7 @@ For more information about the Logstash Doris Output plugin, see [Logstash Doris
 
 Follow these steps:
 
-1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) or compile it from the Apache Doris source code.
+1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-2.1.1) or compile it from the Apache Doris source code.
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
@@ -441,8 +441,8 @@ headers:
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
 
     ```shell  
-    chmod +x filebeat-doris-1.0.0  
-    ./filebeat-doris-1.0.0 -c filebeat_demo.yml
+    chmod +x filebeat-doris-2.1.1  
+    ./filebeat-doris-2.1.1 -c filebeat_demo.yml
     ```
 
 For more information about Filebeat, refer to [Beats Doris Output Plugin](../ecosystem/observability/beats).
