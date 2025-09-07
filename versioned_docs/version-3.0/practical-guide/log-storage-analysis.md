@@ -316,12 +316,12 @@ Follow these steps:
 
 1. Download and install the Logstash Doris Output plugin. You can choose one of the following two methods:
 
-   - [Click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem) and install.
+   - [Click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem) and install.
 
    - Compile from the source code and run the following command to install:
 
 ```markdown  
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. Configure Logstash. Specify the following fields:

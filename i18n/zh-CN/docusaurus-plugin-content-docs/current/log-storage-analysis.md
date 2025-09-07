@@ -284,12 +284,12 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 1. 下载并安装 Logstash Doris Output 插件。你可选择以下两种方式之一：
 
-- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)。
+- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)。
   
 - 从源码编译，并运行下方命令安装：
 
 ```sql
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. 配置 Logstash。需配置以下参数：
