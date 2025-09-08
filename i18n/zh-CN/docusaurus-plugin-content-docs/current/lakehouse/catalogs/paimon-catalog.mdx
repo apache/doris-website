@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Paimon 数据查询。
 
 目前只支持 Paimon 表的读操作，未来会支持的写入 Paimon 表。
@@ -28,9 +31,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'paimon',
     'paimon.catalog.type' = '<paimon_catalog_type>',
     'warehouse' = '<paimon_warehouse>'
-    {MetaStoreProperties},
-    {StorageProperties},
-    {CommonProperties}
+    [MetaStoreProperties],
+    [StorageProperties],
+    [CommonProperties]
 );
 ```
 
@@ -50,15 +53,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`。
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -132,96 +135,447 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 基础示例
 
-### Paimon on HDFS
+### Hive Metastore
+<details>
+    <summary>3.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hdfs_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'hdfs://127.0.0.1:8320/user/hive/warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
+            'hadoop.username' = 'doris'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_aws_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'warehouse' = 's3://bucket/paimon_warehouse',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+            's3.access_key' = 'ACCESS_KEY',
+            's3.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_ali_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+            'oss.region' = 'cn-beijing',
+            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+            'oss.access_key' = 'ACCESS_KEY',
+            'oss.secret_key' = 'SECRET_KEY'
+            );
+            ```
 
-```sql
-CREATE CATALOG paimon_hdfs PROPERTIES (
-    'type' = 'paimon',
-    'warehouse' = 'hdfs://HDFS8000871/user/paimon',
-    'dfs.nameservices' = 'HDFS8000871',
-    'dfs.ha.namenodes.HDFS8000871' = 'nn1,nn2',
-    'dfs.namenode.rpc-address.HDFS8000871.nn1' = '172.21.0.1:4007',
-    'dfs.namenode.rpc-address.HDFS8000871.nn2' = '172.21.0.2:4007',
-    'dfs.client.failover.proxy.provider.HDFS8000871' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
-    'hadoop.username' = 'hadoop'
-);
-```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_tx_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'cosn://bucket/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'cos.region' = 'ap-beijing',
+            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+            'cos.access_key' = 'ACCESS_KEY',
+            'cos.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hw_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'obs.region' = 'cn-north-4',
+            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+            'obs.access_key' = 'ACCESS_KEY',
+            'obs.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG `paimon_on_gcs` PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'gs://bucket/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'fs.gcs.support' = 'true',
+            'gs.secret_key' = 'SECRET_KEY',
+            'gs.access_key' = 'ACCESS_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_hms_on_minio_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 's3://test-bucket/paimon-warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'minio.endpoint' = 'http://127.0.0.1:19000',
+            'minio.access_key' = 'minioadmin',
+            'minio.secret_key' = 'minioadmin'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-### Paimon on HMS
+<details >
+    <summary>2.1 & 3.0 版本</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            访问未开启 Kerberos 认证的 HMS
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_hms_on_hdfs_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'warehouse' = 'hdfs://127.0.0.1:8320/user/paimon/warehouse/paimon-hms-hdfs-warehouse',
+            'hadoop.username' = 'doris',
+            'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+            访问开启 Kerberos 认证的 HMS
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+            'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+            'hive.metastore.sasl.enabled ' = 'true',
+            'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+            'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+             RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+             RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+             DEFAULT',
+            'hadoop.security.authentication' = 'kerberos',
+            'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+            'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_aws_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 's3://bucket-hk/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+            's3.access_key' = 'ACCESS_KEY',
+            's3.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_ali_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'oss.region' = 'cn-beijing',
+            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+            'oss.access_key' = 'ACCESS_KEY',
+            'oss.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+          //create db 失败，需确定是否是环境问题
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_tx_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'cosn://bucket/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'cos.region' = 'ap-beijing',
+            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+            'cos.access_key' = 'ACCESS_KEY',
+            'cos.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hw_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'obs.region' = 'cn-north-4',
+            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+            'obs.access_key' = 'ACCESS_KEY',
+            'obs.secret_key' = 'SECRET_KEY'
+            );
+            ```
 
-```sql
-CREATE CATALOG paimon_hms PROPERTIES (
-    'type' = 'paimon',
-    'paimon.catalog.type' = 'hms',
-    'warehouse' = 'hdfs://HDFS8000871/user/zhangdong/paimon2',
-    'hive.metastore.uris' = 'thrift://172.21.0.44:7004',
-    'dfs.nameservices' = 'HDFS8000871',
-    'dfs.ha.namenodes.HDFS8000871' = 'nn1,nn2',
-    'dfs.namenode.rpc-address.HDFS8000871.nn1' = '172.21.0.1:4007',
-    'dfs.namenode.rpc-address.HDFS8000871.nn2' = '172.21.0.2:4007',
-    'dfs.client.failover.proxy.provider.HDFS8000871' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
-    'hadoop.username' = 'hadoop'
-);
-```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_minio_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'hms',
+            'warehouse' = 's3://bucket/paimon-warehouse',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            'minio.endpoint' = 'http://127.0.0.1:19000',
+            'minio.access_key' = 'minioadmin',
+            'minio.secret_key' = 'minioadmin'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-### Paimon on DLF 1.0
+### Aliyun DLF Metastore
+<details>
+    <summary>3.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_dlf_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'dlf',
+            'warehouse' = 'oss://bucket/p2_regression_case',
+            'dlf.uid' = '203225413946383283',
+            'dlf.catalog.id' = 'p2_regression_case',
+            'dlf.region' = 'cn-beijing',
+            'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+            'dlf.access_key' = 'ACCESS_KEY',
+            'dlf.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='DLF(2.5+)' label='DLF(2.5+)'>
+            ``` sql
+            CREATE CATALOG paimon_dlf_test PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'rest',
+            'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+            'warehouse' = 'new_dfl_paimon_catalog',
+            'paimon.rest.token.provider' = 'dlf',
+            'paimon.rest.dlf.access-key-id' = 'ak',
+            'paimon.rest.dlf.access-key-secret' = 'sk'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 
-```sql
-CREATE CATALOG paimon_dlf PROPERTIES (
-    'type' = 'paimon',
-    'paimon.catalog.type' = 'dlf',
-    'warehouse' = 'oss://xx/yy/',
-    'dlf.proxy.mode' = 'DLF_ONLY',
-    'dlf.uid' = 'xxxxx',
-    'dlf.region' = 'cn-beijing',
-    'dlf.access_key' = 'ak',
-    'dlf.secret_key' = 'sk'
-);
-```
 
-### Paimon on DLF Rest Catalog
+</details>
 
-> 该功能自 3.1.0 版本支持
+<details >
+    <summary>2.1 & 3.0 版本</summary>
 
-```sql
-CREATE CATALOG paimon_dlf_test PROPERTIES (
-    'type' = 'paimon',
-    'paimon.catalog.type' = 'rest',
-    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
-    'warehouse' = 'new_dfl_paimon_catalog',
-    'paimon.rest.token.provider' = 'dlf',
-    'paimon.rest.dlf.access-key-id' = 'ak',
-    'paimon.rest.dlf.access-key-secret' = 'sk'
-);
-```
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_dlf_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'dlf',
+            'warehouse' = 'oss://bucket/paimon-dlf-oss-warehouse',
+            'dlf.uid' = '203225413946383283',
+            'dlf.catalog.id' = 'p2_regression_case',
+            'dlf.region' = 'cn-beijing',
+            'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+            'dlf.access_key' = 'ACCESS_KEY',
+            'dlf.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
 
-### Paimon on Google Dataproc Metastore
+    </Tabs>
+</details>
 
-```sql
-CREATE CATALOG `paimon_gms` PROPERTIES (
-    "type" = "paimon",
-    "paimon.catalog.type" = "hms",
-    "hive.metastore.uris" = "thrift://ip:port",
-    "warehouse" = "gs://bucket/warehouse",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "s3.region" = "region",
-    "s3.endpoint" = "storage.googleapis.com"
-);
-```
+### FileSystem Metastore
 
-### Paimon on Google Cloud Storage
+<details>
+    <summary>3.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
+            ```sql
+            CREATE CATALOG IF NOT EXISTS ctl_test_paimon_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+            'fs.default.fs' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_fs_aws_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 's3://bucket/paimon_warehouse',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+            's3.access_key' = 'ACCESS_KEY',
+            's3.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_oss PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'oss://bucket/regression/paimon1',
+            'oss.region'='cn-beijing',
+            'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+            'oss.access_key'='ACCESS_KEY',
+            'oss.secret_key'='SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_cosn PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'cosn://bucket/regression/paimon1',
+            'cos.region' = 'ap-beijing',
+            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+            'cos.access_key' = 'ACCESS_KEY',
+            'cos.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_obs PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'obs://bucket/regression/paimon1',
+            'obs.region' = 'cn-north-4',
+            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+            'obs.access_key' = 'ACCESS_KEY',
+            'obs.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_on_gcs_s3_fs PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 's3://bucket/paimon_warehouse',
+            'fs.gcs.support' = 'true',
+            'gs.secret_key' = 'SECRET_KEY',
+            'gs.access_key' = 'ACCESS_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_minio_minio PROPERTIES (
+            'type' = 'paimon',
+            'warehouse' = 's3://warehouse/wh',
+            'minio.endpoint' = 'http://127.0.0.1:19001',
+            'minio.access_key' = 'admin',
+            'minio.secret_key' = 'password',
+            'minio.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-```sql
-CREATE CATALOG `paimon_gcs` PROPERTIES (
-    "type" = "paimon",
-    "warehouse" = "gs://bucket/warehouse",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "s3.region" = "region",
-    "s3.endpoint" = "storage.googleapis.com"
-);
-```
+<details>
+    <summary>2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
+            ```sql
+            CREATE CATALOG IF NOT EXISTS ctl_test_paimon_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+            'fs.default.fs' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_paimon_on_fs_aws_catalog PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 's3://bucket/paimon_warehouse',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+            's3.access_key' = 'ACCESS_KEY',
+            's3.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_oss PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'oss://bucket/regression/paimon1',
+            'oss.region'='cn-beijing',
+            'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+            'oss.access_key'='ACCESS_KEY',
+            'oss.secret_key'='SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_cosn PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'cosn://bucket/regression/paimon1',
+            'cos.region' = 'ap-beijing',
+            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+            'cos.access_key' = 'ACCESS_KEY',
+            'cos.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_obs PROPERTIES (
+            'type' = 'paimon',
+            'paimon.catalog.type' = 'filesystem',
+            'warehouse' = 'obs://bucket/regression/paimon1',
+            'obs.region' = 'cn-north-4',
+            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+            'obs.access_key' = 'ACCESS_KEY',
+            'obs.secret_key' = 'SECRET_KEY'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            尚未支持
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+        </TabItem>
+    </Tabs>
+</details>
 
 ## 查询操作
 
