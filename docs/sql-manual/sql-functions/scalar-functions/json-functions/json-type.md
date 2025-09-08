@@ -25,9 +25,6 @@ Used to determine the type of the field specified by `json_path` in the JSONB da
 JSON_TYPE( <json>, <json_path> )
 ```
 
-## Alias
-- `JSONB_TYPE`
-
 ## Parameters
 
 - `<json>` The JSON string to check the type of.

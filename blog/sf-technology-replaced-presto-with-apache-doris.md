@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1433',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "3",
     "image": '/images/sf-technology.jpg'
 }
 ---

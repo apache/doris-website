@@ -57,7 +57,7 @@ export default function Download() {
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
     // const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
-    const [releaseNote, setReleaseNote] = useState('/docs/3.0/releasenotes/v3.0/release-3.0.5')
+    const [releaseNote, setReleaseNote] = useState('/docs/3.1/releasenotes/v3.1/release-3.1.0')
 
     const changeVersion = (val: string) => {
         setVersion(val);

@@ -27,7 +27,10 @@ When used in Internal catalog:
 1. Support the filtering of PartitionId, PartitionName, State, Buckets, ReplicationNum, LastConsistencyCheckTime and other columns
 2. TEMPORARY specifies to list temporary partitions
 
-
+Please note that:
+1. Currently, the where clause only supports the `=`, `!=`, `like` operator for string type PartitionName, State. For the other columns only support operators such as `=`, `!=`, `>`, `<`, `>=`, `<=`.
+2. When using the above operators in the where clause, the column name needs to be on the left side.
+3. Where clause can contains `AND`.
 
 when used in Hive Catalog:
 Will return all partitions' name. Support multilevel partition table

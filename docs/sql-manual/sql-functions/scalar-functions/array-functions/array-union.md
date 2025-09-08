@@ -5,36 +5,90 @@
 }
 ---
 
-## Description
+## Function
 
-Merge multiple arrays without duplicate elements to generate a new array
+`ARRAY_UNION` returns the union of multiple arrays, i.e., merges all elements from the arrays, removes duplicates, and returns a new array.
 
 ## Syntax
 
-```sql
-ARRAY_UNION(<array>, <array> [, ... ])
+```SQL
+ARRAY_UNION(arr1, arr2, ..., arrN)
 ```
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<array>` | The array to be merged |
-
+- `arr1, arr2, ..., arrN`: Any number of array inputs, all of type `ARRAY<T>`.
+    - The element type `T` of all arrays must be the same, or implicitly convertible to a unified type.
+    - The element type `T` can be numeric, string, date/time, or IP type.
+  
 ## Return Value
 
-Returns an array containing all elements in the union of all arrays, excluding duplicates. If the input parameter is NULL, it returns NULL.
+- Returns a new array of type `ARRAY<T>` containing all unique elements from the input arrays (duplicates removed).
+    - If any input parameter is `NULL`, returns `NULL` (see example).
 
-## Example
+## Usage Notes
 
-```sql
-SELECT ARRAY_UNION([1, 2, 3, 6],[1, 2, 5]),ARRAY_UNION([1, 4, 3, 5, NULL],[1,6,10]);
-```
+1. Duplicate removal is based on equality comparison (`=` operator).
+2. Only one `NULL` will be kept in the result array (see example).
+3. If the input array itself contains multiple identical elements, only one will be kept (see example).
+4. The order of elements in the result array is not guaranteed.
 
-```text
-+--------------------------------------+---------------------------------------------+
-| array_union([1, 2, 3, 6], [1, 2, 5]) | array_union([1, 4, 3, 5, NULL], [1, 6, 10]) |
-+--------------------------------------+---------------------------------------------+
-| [3, 2, 1, 6, 5]                      | [null, 10, 3, 1, 6, 4, 5]                   |
-+--------------------------------------+---------------------------------------------+
-```
+## Examples
+
+1. Simple example
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world')); 
+    +---------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world')) |
+    +---------------------------------------------------------------+
+    | ["world", "hello"]                                            |
+    +---------------------------------------------------------------+
+
+    SELECT ARRAY_UNION(ARRAY(1, 2, 3), ARRAY(3, 5, 6));
+    +---------------------------------------------+
+    | ARRAY_UNION(ARRAY(1, 2, 3), ARRAY(3, 5, 6)) |
+    +---------------------------------------------+
+    | [1, 5, 2, 6, 3]                             |
+    +---------------------------------------------+
+    ```
+
+2. If any input array is `NULL`, returns `NULL`
+   
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world'), NULL); 
+    +---------------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', 'world'), NULL) |
+    +---------------------------------------------------------------------+
+    | NULL                                                                |
+    +---------------------------------------------------------------------+
+    ```
+
+3. If input arrays contain `NULL`, the output array will contain only one `NULL`
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)); 
+    +------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)) |
+    +------------------------------------------------------------+
+    | [null, "world", "hello"]                                   |
+    +------------------------------------------------------------+
+
+    SELECT ARRAY_UNION(ARRAY(NULL, 'world'), ARRAY('hello', NULL)); 
+    +---------------------------------------------------------+
+    | ARRAY_UNION(ARRAY(NULL, 'world'), ARRAY('hello', NULL)) |
+    +---------------------------------------------------------+
+    | [null, "world", "hello"]                                |
+    +---------------------------------------------------------+
+    ```
+
+4. If an array contains duplicate elements, only one will be returned
+
+    ```SQL
+    SELECT ARRAY_UNION(ARRAY('hello', 'world', 'hello'), ARRAY('hello', NULL)); 
+    +------------------------------------------------------------+
+    | ARRAY_UNION(ARRAY('hello', 'world'), ARRAY('hello', NULL)) |
+    +------------------------------------------------------------+
+    | [null, "world", "hello"]                                   |
+    +------------------------------------------------------------+
+    ```

@@ -510,6 +510,15 @@
                 },
                 {
                     "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/logstash",
+                        "ecosystem/beats",
+                        "ecosystem/fluentbit"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -518,8 +527,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]
@@ -1477,6 +1484,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

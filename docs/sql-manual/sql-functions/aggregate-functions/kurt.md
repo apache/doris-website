@@ -5,48 +5,51 @@
 }
 ---
 
+
 ## Description
 
-The KURTOSIS function returns the [kurtosis](https://en.wikipedia.org/wiki/Kurtosis) of the expr expression.
-The forumula used for this function is `4-th centrol moment / ((variance)^2) - 3`.
+The KURTOSIS function calculates the [kurtosis](https://en.wikipedia.org/wiki/Kurtosis) of the data. The formula used is: fourth central moment / (variance squared) - 3.
 
 ## Alias
 
-KURT_POP,KURTOSIS
+KURT_POP, KURTOSIS
 
 ## Syntax
 
 ```sql
 KURTOSIS(<expr>)
+KURT_POP(<expr>)
+KURT(<expr>)
 ```
 
 ## Parameters
 
-| Parameters | Description |
+| Parameter | Description |
 | -- | -- |
-| `<expr>` | The expression needs to be obtained |
+| `<expr>` | The expression to calculate, type Double supported. |
 
 ## Return Value
 
-Returns a value of type DOUBLE. Special cases:
-- Returns NULL when the variance is zero.
+Returns a DOUBLE value.
+Returns NULL when variance is zero.
+Returns NULL when there is no valid data in the group.
 
 ## Example
 
 ```sql
-select * from statistic_test;
-```
-
-```text
-+-----+------+------+
-| tag | val1 | val2 |
-+-----+------+------+
-|   1 |  -10 |   -10|
-|   2 |  -20 |  NULL|
-|   3 |  100 |  NULL|
-|   4 |  100 |  NULL|
-|   5 | 1000 |  1000|
-+-----+------+------+
+-- setup
+create table statistic_test(
+    tag int,
+    val1 double,
+    val2 double
+) distributed by hash(tag) buckets 1
+properties ("replication_num"="1");
+insert into statistic_test values
+    (1, -10, -10),
+    (2, -20, null),
+    (3, 100, null),
+    (4, 100, null),
+    (5, 1000, 1000);
 ```
 
 ```sql
@@ -54,15 +57,14 @@ select kurt(val1), kurt(val2) from statistic_test;
 ```
 
 ```text
-+-------------------+--------------------+
-| kurt(val1)        | kurt(val2)         |
-+-------------------+--------------------+
-| 0.162124583734851 | -1.3330994719286338 |
-+-------------------+--------------------+
++---------------------+------------+
+| kurt(val1)          | kurt(val2) |
++---------------------+------------+
+| 0.16212458373485106 |         -2 |
++---------------------+------------+
 ```
 
 ```sql
-// Each group just has one row, result is NULL
 select kurt(val1), kurt(val2) from statistic_test group by tag;
 ```
 

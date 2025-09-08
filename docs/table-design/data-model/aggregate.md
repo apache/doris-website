@@ -1,21 +1,21 @@
 ---
 {
-    "title": "Aggregate Model",
+    "title": "Aggregate Key Table",
     "language": "en"
 }
 ---
 
-Doris's **Aggregate Key Model** is designed to efficiently handle aggregation operations in large-scale data queries. By performing pre-aggregation on the data, it reduces redundancy in computations and improves query performance. The model stores only aggregated data, omitting raw data, which saves storage space and enhances query performance.
+Doris's **Aggregate Key Table** is designed to efficiently handle aggregation operations in large-scale data queries. By performing pre-aggregation on the data, it reduces redundancy in computations and improves query performance. The table stores only aggregated data, omitting raw data, which saves storage space and enhances query performance.
 
 ## Use Cases
 
-* **Summarizing Detailed Data**: The Aggregate Key Model is used in scenarios like e-commerce platforms evaluating monthly sales, financial risk control calculating customer transaction totals, or advertising campaigns analyzing total ad clicks, for multidimensional summarization of detailed data.
+* **Summarizing Detailed Data**: The Aggregate Key Table is used in scenarios like e-commerce platforms evaluating monthly sales, financial risk control calculating customer transaction totals, or advertising campaigns analyzing total ad clicks, for multidimensional summarization of detailed data.
 
 * **No Need to Query Raw Detailed Data**: For use cases such as dashboard reports or user transaction behavior analysis, where the raw data is stored in a data lake and does not need to be retained in the database, only the aggregated data is stored.
 
 ## Principle
 
-Each data import creates a version in the Aggregate Key Model, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
+Each data import creates a version in the Aggregate Key Table, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
 
 * **Data Import Stage**
 
@@ -38,7 +38,7 @@ Each data import creates a version in the Aggregate Key Model, and during the **
 
 ## Table Creation Instructions
 
-When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Key Model. The Aggregate Key Model must specify Key columns, which are used to aggregate Value columns during storage. 
+When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Key Table. The Aggregate Key Table must specify Key columns, which are used to aggregate Value columns during storage.
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_agg
@@ -56,7 +56,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, `city`, and `age` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
 
-The following types of dimension aggregation are supported in the Aggregate Key Model:
+The following types of dimension aggregation are supported in the Aggregate Key Table:
 
 
 | Aggregation Method       | Description                                                         |
@@ -82,7 +82,7 @@ If the aggregation methods above do not meet your business requirements, conside
 
 In the Aggregate Key table, data is aggregated based on the primary key. After data insertion, aggregation operations are completed.
 
-![aggrate-key-model-insert](/images/table-desigin/aggrate-key-model-insert.png)
+![aggrate-key-table-insert](/images/table-desigin/aggrate-key-model-insert.png)
 
 In the example above, there were originally 4 rows of data in the table. After inserting 2 rows, aggregation operations on the dimension columns are performed based on the Key columns:
 
