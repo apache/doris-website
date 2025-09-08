@@ -11,7 +11,7 @@ This statement is used to delete a Table.
 ## Syntax
 
 ```sql
-DROP TABLE [IF EXISTS] [<db_name>.]<table_name> [FORCE];
+DROP [TEMPORARY] TABLE [IF EXISTS] [<db_name>.]<table_name> [FORCE];
 ```
 
 ## Required Parameters
@@ -26,7 +26,13 @@ DROP TABLE [IF EXISTS] [<db_name>.]<table_name> [FORCE];
 
 ## Optional Parameters
 
-**1.`<db_name>`**
+**1. `TEMPORARY` **
+> If specifies, the statement drops only TEMPORARY tables.
+
+**2. `IF EXISTS`**
+> IF specifies, no error occurs for nonexisting tables.
+
+**3.`<db_name>`**
 > Specifies the identifier (name) for the database.
 >
 > Identifiers must begin with an alphabetic character (or any character in a given language if unicode name support is enabled) and cannot contain spaces or special characters unless the entire identifier string is enclosed in backticks (e.g., `My Database`).
@@ -35,7 +41,7 @@ DROP TABLE [IF EXISTS] [<db_name>.]<table_name> [FORCE];
 >
 > See Identifier Requirements and Reserved Keywords for more details.
 
-**2.`FORCE`**
+**4.`FORCE`**
 > If specified, the system will not check whether there are any unfinished transactions in the table. The table will be deleted directly and cannot be recovered. This operation is generally not recommended.
 
 ## Access Control Requirements

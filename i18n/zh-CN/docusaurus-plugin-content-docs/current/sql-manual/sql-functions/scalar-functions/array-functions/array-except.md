@@ -44,7 +44,6 @@ array_except(ARRAY<T> arr1, ARRAY<T> arr2)
 使用说明：
 - 仅支持基础类型数组，不支持复杂类型（ARRAY、MAP、STRUCT）。
 - 空数组与任意数组做 except，结果为空数组。
-- 元素比较遵循类型兼容性规则，类型不兼容时会尝试转换，失败则为 null。
 - 对数组元素中的 null 值：null 元素会被视为普通元素参与运算，null 与 null 被认为是相同的
 
 ### 示例

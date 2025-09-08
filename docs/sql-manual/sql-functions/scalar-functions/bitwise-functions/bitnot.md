@@ -6,31 +6,41 @@
 ---
 
 ## Description
-Used to perform a bitwise inversion operation on an integer.
+Performs a bitwise NOT operation on an integer.
 
-Integer range: TINYINT, SMALLINT, INT, BIGINT, LARGEINT
+Supported integer types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT.
 
 ## Syntax
 ```sql
-BITNOT( <x>)
+BITNOT(<x>)
 ```
 
 ## Parameters
-| parameter | description |
-|-----------|-------------|
-| `<x>`     | Integer operations      |
+- `<x>`: The integer to perform the operation on.
 
 ## Return Value
-Returns the result of the NOT operation of one integer.
+Returns the result of the bitwise NOT operation on the integer.
 
 ## Examples
-```sql
-select BITNOT(7), BITNOT(-127);
-```
-```text
-+-------+----------+
-| (~ 7) | (~ -127) |
-+-------+----------+
-|    -8 |      126 |
-+-------+----------+
-```
+1. Example 1
+    ```sql
+    select BITNOT(7), BITNOT(-127);
+    ```
+    ```text
+    +-----------+--------------+
+    | BITNOT(7) | BITNOT(-127) |
+    +-----------+--------------+
+    |        -8 |          126 |
+    +-----------+--------------+
+    ```
+2. NULL argument
+    ```sql
+    select BITNOT(NULL);
+    ```
+    ```text
+    +--------------+
+    | BITNOT(NULL) |
+    +--------------+
+    |         NULL |
+    +--------------+
+    ```

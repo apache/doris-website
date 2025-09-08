@@ -1,40 +1,40 @@
 ---
 {
     "title": "ARRAY_REVERSE_SORT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-Sort the elements in an array in descending order
+Sort array elements in descending order.
 
 ## Syntax
 
-```sql
-ARRAY_REVERSE_SORT(<arr>)
-```
+- `ARRAY_REVERSE_SORT(arr)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | Corresponding array |
+- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc.
 
-## Return Value
+## Return value
 
-Returns an array sorted in descending order. If the input array is NULL, it returns NULL. If the array element contains NULL, the output sorted array will put NULL at the end.
+- Returns `ARRAY<T>` of the same type as the input.
+- `NULL` elements are placed at the end of the returned array.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_REVERSE_SORT([1, 2, 3, 6]),ARRAY_REVERSE_SORT([1, 4, 3, 5, NULL]),ARRAY_REVERSE_SORT([NULL]);
-```
+- If the input is `NULL`, returns `NULL`; if the input is an empty array `[]`, returns an empty array.
+- `ARRAY_REVERSE_SORT` sorts in descending order, while `ARRAY_SORT` sorts in ascending order.
 
-```text
-+----------------------------------+----------------------------------------+----------------------------+
-| array_reverse_sort([1, 2, 3, 6]) | array_reverse_sort([1, 4, 3, 5, NULL]) | array_reverse_sort([NULL]) |
-+----------------------------------+----------------------------------------+----------------------------+
-| [6, 3, 2, 1]                     | [5, 4, 3, 1, null]                     | [null]                     |
-+----------------------------------+----------------------------------------+----------------------------+
-```
+## Examples
+
+- Basic: `NULL` elements are placed at the end of the returned array
+  - `ARRAY_REVERSE_SORT([1,2,3,null])` -> `[3,2,1,null]`
+
+- If the input is `NULL`, returns `NULL`; if the input is an empty array `[]`, returns an empty array.
+  - `ARRAY_REVERSE_SORT(NULL)` -> `NULL`
+  - `ARRAY_REVERSE_SORT([])` -> `[]`
+
+
+

@@ -97,7 +97,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
@@ -214,7 +214,15 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/load-internals",
+                                "data-operate/import/load-internals/routine-load-internals"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -382,9 +390,9 @@
                 },
                 {
                     "type": "category",
-                    "label": "AI & LLM",
+                    "label": "AI",
                     "items": [
-                        "ai/llm-function-overview"
+                        "ai/ai-function-overview"
                     ]
                 },
                 {
@@ -492,7 +500,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -504,8 +522,16 @@
                         "compute-storage-decoupled/compilation-and-deployment",
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
-                        "compute-storage-decoupled/file-cache",
+                        {
+                            "type": "category",
+                            "label": "File Cache",
+                            "items": [
+                                "compute-storage-decoupled/file-cache/file-cache",
+                                "compute-storage-decoupled/file-cache/file-cache-internals"
+                            ]
+                        },
                         "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
@@ -608,6 +634,7 @@
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
                         "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/spill-disk",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
@@ -922,6 +949,16 @@
                 },
                 {
                     "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -930,9 +967,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
-                        "ecosystem/fluentbit",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
                         "ecosystem/hive-hll-udf",
@@ -979,9 +1013,8 @@
                                         "sql-manual/basic-element/sql-data-types/numeric/INT",
                                         "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
                                         "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/FLOAT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DOUBLE",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL"
+                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+                                        "sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT"
                                     ]
                                 },
                                 {
@@ -1108,24 +1141,25 @@
                                         "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
                                         "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
                                         "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
-                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance"
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/embed"
                                     ]
                                 },
                                 {
                                     "type": "category",
-                                    "label": "LLM Functions",
+                                    "label": "AI Functions",
                                     "items": [
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-classify",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-extract",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-filter",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-generate",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-mask",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-translate"
+                                        "sql-manual/sql-functions/ai-functions/ai-classify",
+                                        "sql-manual/sql-functions/ai-functions/ai-extract",
+                                        "sql-manual/sql-functions/ai-functions/ai-filter",
+                                        "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+                                        "sql-manual/sql-functions/ai-functions/ai-function",
+                                        "sql-manual/sql-functions/ai-functions/ai-generate",
+                                        "sql-manual/sql-functions/ai-functions/ai-mask",
+                                        "sql-manual/sql-functions/ai-functions/ai-sentiment",
+                                        "sql-manual/sql-functions/ai-functions/ai-similarity",
+                                        "sql-manual/sql-functions/ai-functions/ai-summarize",
+                                        "sql-manual/sql-functions/ai-functions/ai-translate"
                                     ]
                                 }
                             ]
@@ -1438,7 +1472,7 @@
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
-                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit_test",
+                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-test",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",
@@ -1702,6 +1736,7 @@
                             "type": "category",
                             "label": "Aggregate Functions",
                             "items": [
+                                "sql-manual/sql-functions/aggregate-functions/ai-agg",
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
                                 "sql-manual/sql-functions/aggregate-functions/approx-top-k",
@@ -1743,12 +1778,10 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
-                                "sql-manual/sql-functions/aggregate-functions/regr_intercept",
-                                "sql-manual/sql-functions/aggregate-functions/regr_slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
@@ -1831,7 +1864,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
@@ -1856,7 +1889,9 @@
                             "label": "Table Functions",
                             "items": [
                                 "sql-manual/sql-functions/table-functions/explode",
+                                "sql-manual/sql-functions/table-functions/explode-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
+                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-int",
@@ -1867,7 +1902,9 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
                                 "sql-manual/sql-functions/table-functions/explode-map",
+                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
                                 "sql-manual/sql-functions/table-functions/posexplode",

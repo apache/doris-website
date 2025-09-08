@@ -12,9 +12,9 @@
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: ${uniqueId}
-      image: ${beImage}
-      replicas: 1
+  - uniqueId: ${uniqueId}
+    image: ${beImage}
+    replicas: 1
 ```
 `${beImage}` 为部署 BE 服务的镜像地址，请使用 [apache doris 官方镜像仓库](https://hub.docker.com/r/apache/doris)提供的镜像。`${uniqueId}` 为计算组的唯一标识也是计算组的名称，匹配规则为`[a-zA-Z][0-9a-zA-Z_]+`。replicas 为计算组内 BE 服务节点的数量。
 
@@ -23,12 +23,12 @@ spec:
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      image: ${beImage}
-      replicas: 3
-    - uniqueId: cg2
-      image: ${beImage}
-      replicas: 2
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 3
+  - uniqueId: cg2
+    image: ${beImage}
+    replicas: 2
 ```
 其中，名称为 `cg1` 的计算组副本数为 3，名称为 `cg2` 的计算组副本数为 2。`${beImage}` 表示部署的 BE 服务镜像。尽管计算组之间相互独立，但建议同一存算分离集群中各计算组内 BE 服务所使用的镜像保持一致。
 
@@ -37,13 +37,13 @@ spec:
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      requests:
-        cpu: 8
-        memory: 8Gi
-      limits:
-        cpu: 8
-        memory: 8Gi
+  - uniqueId: cg1
+    requests:
+      cpu: 8
+      memory: 8Gi
+    limits:
+      cpu: 8
+      memory: 8Gi
 ```
 将上述配置更新到需要部署的[`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
 
@@ -81,12 +81,12 @@ test-disaggregated-cluster-cg1           ClusterIP   10.152.183.154   <none>    
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      service:
-        type: NodePort
-        portMaps:
-          - nodePort: 31012
-            targetPort: 8040
+  - uniqueId: cg1
+    service:
+      type: NodePort
+      portMaps:
+      - nodePort: 31012
+        targetPort: 8040
 ```
 上述配置中，将计算组名称为 cg1 的 BE 监听端口 8040 映射到宿主机的 31012 端口。
 #### 动态配置
@@ -94,9 +94,9 @@ spec:
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      service:
-        type: NodePort
+  - uniqueId: cg1
+    service:
+      type: NodePort
 ```
 
 ### LoadBalancer
@@ -126,7 +126,8 @@ spec:
       be.conf: |
         # For jdk 17, this JAVA_OPTS will be used as default JVM options
         JAVA_OPTS_FOR_JDK_17="-Xmx1024m -DlogPath=$LOG_DIR/jni.log -Xlog:gc*:$LOG_DIR/be.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M -Djavax.security.auth.useSubjectCredsOnly=false -Dsun.security.krb5.debug=true -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED"
-        file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]
+        file_cache_path = [{"path":"/mnt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]
+        deploy_mode = cloud
     ```
    存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。
 2. 部署 ConfigMap  
@@ -152,62 +153,46 @@ spec:
 
 ## 持久化存储配置
 默认部署中，BE 服务使用 Kubernetes 的 [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) 作为服务的缓存。`EmptyDir` 模式是非持久化存储模式，服务重启后缓存的数据会丢失相应查询效率会降低。
-为了保证 BE 服务在重启后缓存数据不丢失、查询效率不降低，需要对缓存数据进行持久化存储。BE 服务的日志既会输出到标准输出，也会写入启动配置中 `LOG_DIR` 指定的目录，使用配置模板自动生成持久化存储时也会对日志数据进行持久化存储。
-### 使用存储模板自动生成
-对名称为 `cg1` 的计算组，使用存储模板对日志和缓存数据进行持久化配置，示例如下：
-```yaml
-spec:
-  computeGroups:
-    - uniqueId: cg1
-      persistentVolumes:
-        - persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Gi
-```
-使用如上配置部署集群后，Doris Operator 会自动为日志目录(默认为 `/opt/apache-doris/be/log`)以及缓存数据目录（默认为 `/opt/apache-doris/be/file_cache`）挂载持久化存储。 如果在[自定义启动配置](#自定义启动配置)中显示指定了日志存储目录或缓存目录，Doris Operator 会自动解析并进行挂载。
-持久化存储采用 [StorageClass 模式](https://kubernetes.io/docs/concepts/storage/storage-classes/)，可以通过 `storageClassName` 指定所需的 StorageClass。
+为了保证 BE 服务在重启后缓存数据不丢失、查询效率不降低，需要对缓存数据进行持久化存储。BE 服务的日志既会输出到标准输出，也会写入启动配置中 `LOG_DIR` 指定的目录。StreamLoad 模式导入会使用 `/opt/apache-doris/be/storage` 作为数据的暂存位置，避免服务异常重启后暂存的数据丢失，需要对对应写入位置挂载持久化存储。
 
-### 自定义挂载点配置
-Doris Operator 支持对挂载目录进行个性化存储配置。如下示例为日志目录设置个性化配置：
+### 持久化存储样例
+以下为需要持久化数据挂载持久化存储的配置样例：
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      persistentVolumes:
-        - mountPaths:
-            - /opt/apache-doris/be/log
-          persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 300Gi
-        - mountPaths:
-             - /opt/apache-doris/be/storage
-          persistentVolumeClaimSpec:
-             # storageClassName: ${storageclass_name}
-             accessModes:
-                - ReadWriteOnce
-             resources:
-                requests:
-                   storage: 300Gi
-        - persistentVolumeClaimSpec:
-            # storageClassName: ${storageclass_name}
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Gi
+  - uniqueId: cg1
+    persistentVolumes:
+    - mountPaths:
+      - /opt/apache-doris/be/log
+      persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Gi
+    - mountPaths:
+      - /opt/apache-doris/be/storage
+      persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Gi
+    - persistentVolumeClaimSpec:
+        # storageClassName: ${storageclass_name}
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Gi
 ```
 上述配置中，日志目录使用自定义的存储配置挂载 300Gi 的存储磁盘，WAL 以及 StreamLoad 导入时使用的目录配置挂载 300Gi 的存储磁盘，而缓存目录则使用存储模板挂载 500Gi 的存储磁盘。
 
 :::tip 提示
-若 `mountPaths` 数组为空，则表示当前存储配置为模板配置。
+- 若 `mountPaths` 数组为空，则表示当前存储配置为模板配置。当用户在[启动配置](#自定义启动配置)中配置了 `file_cache_path`, operator 会自动解析出目录地址进行挂载。
+- 推荐配置 4 个目录，挂载 4 个持久化存储来发挥云盘的最大效应。
 :::
 
 ### 不持久化日志
@@ -215,6 +200,6 @@ spec:
 ```yaml
 spec:
   computeGroups:
-    - uniqueId: cg1
-      logNotStore: true
+  - uniqueId: cg1
+    logNotStore: true
 ```

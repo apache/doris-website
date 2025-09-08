@@ -152,9 +152,13 @@ For more details, please refer to the Docs directory under [RESOURCE](../../sql-
 
 -   Tables using remote storage do not support backup.
 
--   Modifying the location information of remote storage, such as endpoint, bucket, and path, is not supported.
+-   Modifying the location information of remote storage, such as endpoint, bucket, or path, is not supported.
 
--   Unique model tables do not support setting remote storage when the Merge-on-Write feature is enabled.
+-   Unique model tables with Merge-on-Write enabled do not support remote storage.
+
+-   Storage policies support creation, modification, and deletion. Before deleting a storage policy, ensure that no tables are referencing it.
+
+-   Once a storage policy is set, it cannot be unset.
 
 ## Cold Data Space
 
@@ -209,3 +213,7 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
+
+2. What happens after modifying parameters related to cooldown time?
+
+   Changes to cooldown-related parameters only take effect for data that has not yet been cooled to remote storage. For data that has already been cooled to remote storage, the changes do not apply. For example, if you change `cooldown_ttl` from 21 days to 7 days, data that is already in remote storage will not be moved back to local storage;

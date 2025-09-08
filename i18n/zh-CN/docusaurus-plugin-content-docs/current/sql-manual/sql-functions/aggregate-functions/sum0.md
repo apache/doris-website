@@ -19,7 +19,7 @@ SUM0(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 要计算和的字段 |
+| `<expr>` | 要计算和的字段，支持类型为 Double，Float，Decimal，LargeInt，BigInt，Integer，SmallInt，TinyInt。 |
 
 ## 返回值
 
