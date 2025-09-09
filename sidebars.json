@@ -1274,6 +1274,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/soundex",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strleft",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strright",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp",
