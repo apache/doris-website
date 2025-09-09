@@ -42,7 +42,7 @@ When input is DATETIME, returns DATETIME (including date and time, with the time
 Special cases:
 
 - When any parameter is NULL, returns NULL;
-- If period is negative or 0, returns NULL;
+- If period is negative or 0, returns error;
 - For datetime input with scale, the output will have scale with all decimals as 0
 
 ## Examples
@@ -99,21 +99,11 @@ select day_floor(cast("2023-07-13" as date), 3);
 | 2023-07-11                               |
 +------------------------------------------+
 
----Period is negative, returns NULL
+---Period is negative, returns error
 select day_floor("2023-07-13 22:28:18", -2);
-+--------------------------------------+
-| day_floor("2023-07-13 22:28:18", -2) |
-+--------------------------------------+
-| NULL                                 |
-+--------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation day_ceil of 2023-07-13 22:28:18, -2 input wrong parameters, period can not be negative or zero
 
----Period is 0, returns NULL
-select day_floor("2023-07-13 22:28:18", 0);
-+-------------------------------------+
-| day_floor("2023-07-13 22:28:18", 0) |
-+-------------------------------------+
-| NULL                                |
-+-------------------------------------+
+
 
 ---Any parameter is NULL, returns NULL
 select day_floor(NULL, 5, "2023-01-01");
@@ -122,43 +112,4 @@ select day_floor(NULL, 5, "2023-01-01");
 +----------------------------------+
 | NULL                             |
 +----------------------------------+
-```
-
-## Description
-
-Rounds the date down to the nearest timestamp of the specified time interval period.
-
-## Syntax
-
-```sql
-DAY_FLOOR(<datetime>)
-DAY_FLOOR(<datetime>, <origin>)
-DAY_FLOOR(<datetime>, <period>)
-DAY_FLOOR(<datetime>, <period>, <origin>)
-```
-
-## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<datetime>` | A valid date expression |
-| `<period>` | Specifies how many days make up each period |
-| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
-
-## Return Value
-
-Returns the date of the nearest rounded-up timestamp.
-
-## Examples
-
-```sql
-select day_floor("2023-07-13 22:28:18", 5);
-```
-
-```text
-+------------------------------------------------------------+
-| day_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
-+------------------------------------------------------------+
-| 2023-07-12 00:00:00                                        |
-+------------------------------------------------------------+
 ```
