@@ -9,7 +9,9 @@
 
 Retrieves the current time and returns it as a TIME type.
 
-## Alias
+This function is consistent with the [curtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_curtime) in MySQL.
+
+## Aliases
 
 - CURTIME
 - CURRENT_TIME
