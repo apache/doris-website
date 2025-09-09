@@ -28,7 +28,7 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 | -- | -- |
 | `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 NULL；若未指定，默认周期为 1 天。 |
-| `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型和符合日期时间格式的字符串。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
+| `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
 
 ## 返回值
 
