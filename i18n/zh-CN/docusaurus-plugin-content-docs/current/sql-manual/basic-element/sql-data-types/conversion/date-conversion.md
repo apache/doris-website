@@ -245,7 +245,7 @@ DATE 类型支持的合法时间上下界：`[0000-01-01, 9999-12-31]`
 <second> ::= <digit>{1,2}
 
 <separator> ::= ^(<digit> | <alpha>)
-<delimiter> ::= " " | "T"
+<delimiter> ::= " " | "T" | ":"
 
 <fraction> ::= "." <digit>*
 
