@@ -17,7 +17,7 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<weeks_value>` | INT type integer, representing the number of weeks to add or subtract (positive for addition, negative for subtraction) |
 
 This function behaves consistently with the [weeks_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) using WEEK as the unit in MySQL.

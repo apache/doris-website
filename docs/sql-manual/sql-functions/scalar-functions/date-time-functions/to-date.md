@@ -17,7 +17,7 @@ TO_DATE(`<datetime_value>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_value>` | DATETIME type datetime value, supports DATETIME format, for datetime format please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime_value>` | DATETIME type datetime value, supports DATETIME format, for datetime format please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 
 ## Return Value
 

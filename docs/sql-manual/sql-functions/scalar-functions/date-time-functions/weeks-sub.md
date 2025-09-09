@@ -18,7 +18,7 @@ WEEKS_SUB(`<date_or_time_expr>`, `<week_period>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `week_period` | INT type integer, representing the number of weeks to subtract (positive for subtraction, negative for addition). |
 
 ## Return Value

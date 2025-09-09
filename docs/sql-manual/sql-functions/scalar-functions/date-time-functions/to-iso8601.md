@@ -13,13 +13,13 @@ The returned ISO8601 formatted datetime is represented as YYYY-MM-DDTHH:MM:SS, w
 ## Syntax
 
 ```sql
-TO_ISO8601(`<datetime_or_date_value>`)
+TO_ISO8601(`<date_or_date_expr>`)
 ```
 
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date_value>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 

@@ -23,15 +23,15 @@ This function behaves consistently with the [unix_timestamp function](https://de
 
 ```sql
 UNIX_TIMESTAMP()
-UNIX_TIMESTAMP(`<datetime_or_date>`)
-UNIX_TIMESTAMP(`<datetime_or_date>`, `<fmt>`)
+UNIX_TIMESTAMP(`<date_or_date_expr>`)
+UNIX_TIMESTAMP(`<date_or_date_expr>`, `<fmt>`)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<fmt>` | The date parameter specifies the specific part to be converted to timestamp, type is string. If this parameter is provided, only the part matching the format will be converted to timestamp. |
 
 ## Return Value
