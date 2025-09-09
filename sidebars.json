@@ -1220,6 +1220,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/uniform",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/even",
