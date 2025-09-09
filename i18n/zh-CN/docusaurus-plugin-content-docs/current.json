@@ -79,9 +79,9 @@
     "message": "数据表设计",
     "description": "The label for category Data Table Design in sidebar docs"
   },
-  "sidebar.docs.category.Data Models": {
-    "message": "数据模型",
-    "description": "The label for category Data Models in sidebar docs"
+  "sidebar.docs.category.Table Types": {
+    "message": "表类型",
+    "description": "The label for category Table Types in sidebar docs"
   },
   "sidebar.docs.category.Data Partitioning": {
     "message": "数据划分",
@@ -747,6 +747,10 @@
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
   },
+  "sidebar.docs.category.File Cache": {
+    "message": "文件缓存",
+    "description": "File Cache"
+  },
   "sidebar.ecosystem.category.BI and Database IDE": {
     "message": "BI 与数据库 IDE",
     "description": "The label for category BI and Database IDE in sidebar docs"
@@ -776,7 +780,7 @@
     "description": "The label for category Backup & Restore in sidebar docs"
   },
   "sidebar.docs.category.Integrations": {
-    "message": "外部集成",
+    "message": "集成",
     "description": "The label for category Integrations in sidebar docs"
   }
 }

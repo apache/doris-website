@@ -1,79 +1,53 @@
 ---
 {
     "title": "ARRAY_REVERSE_SPLIT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the split point to the right of the position in the `cond` that is `true`.
-2. Higher-order functions, passed a lambda expression and at least one `ARRAY arg0`, split `arg0` by the right-hand side of the `true` position in the `cond` of the `Array<Boolean>` result of the operation on the lambda expression.
+Split the input array into multiple subarrays according to given boolean flags.
+
+- Splitting rule (left to right): for `arr=[a1,a2,...,an]` and `flags=[f1,f2,...,fn]`, at every position where `fi==true`, split between `ai` and `a(i+1)`.
+  - For example, with `arr=[3, 4, 5]` and `flags=[false, true, false]`, the second flag is true, so split between the second and third elements, resulting in two subarrays `[3, 4]` and `[5]`.
 
 ## Syntax
 
-```sql
-ARRAY_REVERSE_SPLIT(<arr>, <cond>)
-ARRAY_REVERSE_SPLIT(<lambda>, <arr> [, ...])
-```
+- `ARRAY_REVERSE_SPLIT(arr, flags)`
+- `ARRAY_REVERSE_SPLIT(lamda, arr0, ...)`
+- `ARRAY_REVERSE_SPLIT(lambda, arr0, ...)` is equivalent to `ARRAY_REVERSE_SPLIT(arr0, ARRAY_MAP(lambda, arr0, ...))`
 
 ## Parameters
 
-| Parameter | Description | 
-| --- | --- |
-| `<lambda>` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
-| `<arr>` | ARRAY array |
+- `arr`: `ARRAY<T>`.
+- `flags`: `ARRAY<BOOLEAN>`, whose length must match that of `arr` row by row. `true` means split between the current position and the next element.
+- `arr0, ...`: one or more `ARRAY<T>`.
+- `lambda`: a `lambda` expression applied to `arr0, ...` to produce `flags`, which are then used for splitting.
 
-## Return Value
+## Return value
 
-Returns an ARRAY type result, where the array is split according to the specified condition.
+- Returns `ARRAY<ARRAY<T>>`. Elements of inner arrays are the same as those of `arr`.
+- If the element counts of `arr` and `flags` do not match, an error is thrown.
 
-## Example
+## Usage notes
 
-```sql
-select array_reverse_split([1,2,3,4,5], [1,0,1,0,0]);
-```
+- If a position in `flags` is `NULL`, it is treated as no split (equivalent to `false`).
+- The splitting rule of `ARRAY_REVERSE_SPLIT` is: at each position where `fi==true`, split between `ai` and `a(i+1)`.
+- The splitting rule of `ARRAY_SPLIT` is: at each position where `fi==true`, split between `ai` and `a(i-1)`.
 
-```text
-+-------------------------------------------------------------------------------+
-| array_reverse_split([1, 2, 3, 4, 5], cast([1, 0, 1, 0, 0] as ARRAY<BOOLEAN>)) |
-+-------------------------------------------------------------------------------+
-| [[1], [2, 3], [4, 5]]                                                         |
-+-------------------------------------------------------------------------------+
-```
+## Examples
 
-```sql
-select array_reverse_split((x,y)->y, [1,2,3,4,5], [1,0,0,0,0]);
-```
+- Basic splitting: at each `true` position, split from the right side neighbor.
+  - `ARRAY_REVERSE_SPLIT([1,2,3,4,5], [false,true,false,true,false])` -> `[[1,2], [3,4], [5]]`
+  - `ARRAY_REVERSE_SPLIT(['a','b','c'], [false,false,false])` -> `[['a','b','c']]`
 
-```text
-+------------------------------------------------------------------------------------------------------------------------+
-| array_reverse_split([1, 2, 3, 4, 5], cast(array_map((x, y) -> y, [1, 2, 3, 4, 5], [1, 0, 0, 0, 0]) as ARRAY<BOOLEAN>)) |
-+------------------------------------------------------------------------------------------------------------------------+
-| [[1], [2, 3, 4, 5]]                                                                                                    |
-+------------------------------------------------------------------------------------------------------------------------+
-```
+- With `NULL` in `flags`: `NULL` is treated the same as `false` (no split).
+  - `ARRAY_REVERSE_SPLIT([1,NULL,3], [false,null,false])` -> `[[1,[NULL,3]]`
 
-```sql
-select array_reverse_split((x,y)->(y+1), ['a', 'b', 'c', 'd'], [-1, -1, 0, -1]);
-```
+- `lambda= x -> x-1` applied to `arr=[1, 2, 3]` produces `flags=[0,1,2]`, equivalent to `flags=[false,true,true]`
+  - `ARRAY_REVERSE_SPLIT(x->x-1, [1, 2, 3])` is equivalent to `ARRAY_REVERSE_SPLIT([1, 2, 3], [false,true,true])` -> `[[1, 2], [3]]`
 
-```text
-+----------------------------------------------------------------------------------------------------------------------------------------+
-| array_reverse_split(['a', 'b', 'c', 'd'], cast(array_map((x, y) -> (y + 1), ['a', 'b', 'c', 'd'], [-1, -1, 0, -1]) as ARRAY<BOOLEAN>)) |
-+----------------------------------------------------------------------------------------------------------------------------------------+
-| [["a", "b", "c"], ["d"]]                                                                                                               |
-+----------------------------------------------------------------------------------------------------------------------------------------+
-```
+- `lambda= (x,y) -> x-y` applied to `arr=[1, 2, 3]` and `arr1=[0,1,2]` produces `flags=[true,true,true]`
+  - `ARRAY_REVERSE_SPLIT((x,y) -> x-y, [1, 2, 3], [0, 1, 2])` is equivalent to `ARRAY_REVERSE_SPLIT([1, 2, 3], [true,true,true])` -> `[[1], [2], [3]]`
 
-```sql
-select array_reverse_split(x->(year(x)>2013),["2020-12-12", "2013-12-12", "2015-12-12", null]);
-```
-
-```text
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| array_reverse_split(['2020-12-12', '2013-12-12', '2015-12-12', NULL], array_map(x -> (year(cast(x as DATEV2)) > 2013), ['2020-12-12', '2013-12-12', '2015-12-12', NULL])) |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| [["2020-12-12"], ["2013-12-12", "2015-12-12"], [null]]                                                                                                                    |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-```

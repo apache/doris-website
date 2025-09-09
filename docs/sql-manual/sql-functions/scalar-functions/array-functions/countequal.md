@@ -5,37 +5,41 @@
 }
 ---
 
-## Description
+## Function
 
-Determine the number of value elements in the array
+Count the number of elements equal to a given target value within an array.
 
 ## Syntax
 
-```sql
-COUNTEQUAL(<arr>, <value>)
-```
+- `COUNTEQUAL(arr, target)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | Input arrayd |
-| `<value>` | Judging elements |
+- `arr`: `ARRAY<T>`, supported element types include numeric, boolean, string, datetime, and IP.
+- `target`: same type as elements of `arr`.
 
-## Return Value
+## Return value
 
-The returned judgment results are as follows: num: the number of value in array; 0: value does not exist in array arr; NULL: if the array is NULL.
+- Returns `BIGINT`, representing the count of equal elements.
 
-## Example
+## Usage notes
 
-```sql
-SELECT COUNTEQUAL(NULL,1),COUNTEQUAL([1, 2, 3, 'c'],2),COUNTEQUAL([],'b');
-```
+- `NULL` equals `NULL` for this function and will be counted.
 
-```text
-+---------------------+---------------------------------------------------+------------------------------------------+
-| countequal(NULL, 1) | countequal(['1', '2', '3', 'c'], cast(2 as TEXT)) | countequal(cast([] as ARRAY<TEXT>), 'b') |
-+---------------------+---------------------------------------------------+------------------------------------------+
-|                NULL |                                                 1 |                                        0 |
-+---------------------+---------------------------------------------------+------------------------------------------+
-```
+## Examples
+
+- Basic
+  - `COUNTEQUAL([1,2,3,2], 2)` -> `2`
+  - `COUNTEQUAL(['a','b','a'], 'a')` -> `2`
+  - `COUNTEQUAL([true,false,false], false)` -> `2`
+
+- `NULL` is considered equal and will be counted
+  - `COUNTEQUAL([1,NULL,2,NULL], NULL)` -> `2`
+  - `COUNTEQUAL([1,NULL,1], 1)` -> `2`
+  - `COUNTEQUAL([1, 2], NULL)` -> `0`
+
+- If the array is `NULL`, returns `NULL`
+  - `COUNTEQUAL(NULL, 1)` -> `NULL`
+
+
+

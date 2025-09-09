@@ -258,7 +258,7 @@ DATETIME 类型包含类型参数 `p`，即小数位数。完整表示为 `DATET
 <second> ::= <digit>{1,2}
 
 <separator> ::= ^(<digit> | <alpha>)
-<delimiter> ::= " " | "T"
+<delimiter> ::= " " | "T" | ":"
 
 <fraction> ::= "." <digit>*
 

@@ -156,7 +156,7 @@ CREATE
           -- 其他表属性
           [ , ... ]) 
     ]
-    AS <query>
+    [ AS ] <query>
 ```
 
 ### CREATE TABLE … LIKE
