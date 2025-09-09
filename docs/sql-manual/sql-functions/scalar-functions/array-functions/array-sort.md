@@ -1,40 +1,40 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-Sort the elements in an array in ascending order
+Sort array elements in ascending order.
 
 ## Syntax
 
-```sql
-ARRAY_SORT(<arr>)
-```
+- `ARRAY_SORT(arr)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | Corresponding array |
+- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc.
 
-## Return Value
+## Return value
 
-Returns an array sorted in ascending order. If the input array is NULL, it returns NULL. If the array elements contain NULL, the output sorted array will put NULL first.
+- Returns `ARRAY<T>` of the same type as the input.
+- `NULL` elements are placed at the beginning of the returned array.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_SORT([1, 2, 3, 6]),ARRAY_SORT([1, 4, 3, 5, NULL]),ARRAY_SORT([NULL]);
-```
+- If the input is `NULL`, returns `NULL`; if the input is an empty array `[]`, returns an empty array.
+- `ARRAY_SORT` sorts in ascending order, while `ARRAY_REVERSE_SORT` sorts in descending order.
 
-```text
-+--------------------------+--------------------------------+--------------------+
-| array_sort([1, 2, 3, 6]) | array_sort([1, 4, 3, 5, NULL]) | array_sort([NULL]) |
-+--------------------------+--------------------------------+--------------------+
-| [1, 2, 3, 6]             | [null, 1, 3, 4, 5]             | [null]             |
-+--------------------------+--------------------------------+--------------------+
-```
+## Examples
+
+- Basic: `NULL` elements are placed at the beginning of the returned array
+  - `ARRAY_SORT([2,1,3,null])` -> `[null, 1, 2, 3]`
+
+- If the input is `NULL`, returns `NULL`; if the input is an empty array `[]`, returns an empty array.
+  - `ARRAY_SORT(NULL)` -> `NULL`
+  - `ARRAY_SORT([])` -> `[]`
+
+
+

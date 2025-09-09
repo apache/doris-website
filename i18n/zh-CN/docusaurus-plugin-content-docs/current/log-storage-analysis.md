@@ -133,7 +133,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 ### 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](./install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ### 第 3 步：优化 FE 和 BE 配置
 
@@ -164,7 +164,6 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | -          | `enable_file_cache = true`                                   | 开启文件缓存。                                               |
 | -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br />`path`：缓存路径<br />`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br />`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
 | 写入       | `write_buffer_size = 1073741824`                             | 增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。 |
-| -          | `max_tablet_version_num = 20000`                             | 配合建表的 time_series compaction 策略，允许更多版本暂时未合并。 |
 | Compaction | `max_cumu_compaction_threads = 8`                            | 设置为 CPU 核数 / 4，意味着 CPU 资源的 1/4 用于写入，1/4 用于后台 Compaction，2/1 留给查询和其他操作。 |
 | -          | `inverted_index_compaction_enable = true`                    | 开启索引合并（index compaction），减少 Compaction 时的 CPU 消耗。 |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
@@ -285,12 +284,12 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 1. 下载并安装 Logstash Doris Output 插件。你可选择以下两种方式之一：
 
-- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)。
+- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)。
   
 - 从源码编译，并运行下方命令安装：
 
 ```sql
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. 配置 Logstash。需配置以下参数：
@@ -347,13 +346,13 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/observability/logstash)。
 
 **对接 Filebeat**
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -419,11 +418,11 @@ output {
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
 ```shell  
-chmod +x filebeat-doris-1.0.0  
-./filebeat-doris-1.0.0 -c filebeat_demo.yml
+chmod +x filebeat-doris-2.1.1  
+./filebeat-doris-2.1.1 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/observability/beats)。
 
 **对接 Kafka**
 

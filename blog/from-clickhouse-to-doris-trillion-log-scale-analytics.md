@@ -7,8 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1429',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/blogs/from-clickhouse-to-doris-trillion-log-scale-analytics.jpg'
 }
 ---

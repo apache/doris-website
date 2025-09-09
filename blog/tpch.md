@@ -186,7 +186,7 @@ export DB='tpch1'
 ```shell
 sh create-tpch-tables.sh
 ```
-Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/incubator-doris/blob/master/tools/tpch-tools/create-tpch-tables.sql) and excute it in Doris.
+Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/incubator-doris/blob/master/tools/tpch-tools/create-tpch-tables.sql) and execute it in Doris.
 
 
 ### 7.4 Import Data

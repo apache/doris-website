@@ -79,9 +79,9 @@
     "message": "数据表设计",
     "description": "The label for category Data Table Design in sidebar docs"
   },
-  "sidebar.docs.category.Data Models": {
-    "message": "数据模型",
-    "description": "The label for category Data Models in sidebar docs"
+  "sidebar.docs.category.Table Types": {
+    "message": "表类型",
+    "description": "The label for category Table Types in sidebar docs"
   },
   "sidebar.docs.category.Data Partitioning": {
     "message": "数据划分",
@@ -123,6 +123,10 @@
     "message": "复杂数据类型",
     "description": "The label for category Complex Data Types in sidebar docs"
   },
+  "sidebar.docs.category.Load Internals": {
+    "message": "导入原理",
+    "description": "The label for category Load Internals in sidebar docs"
+  },
   "sidebar.docs.category.Updating Data": {
     "message": "数据更新",
     "description": "The label for category Update in sidebar docs"
@@ -159,9 +163,9 @@
     "message": "存储服务",
     "description": "The label for category Storages in sidebar docs"
   },
-  "sidebar.docs.category.File Foramt": {
+  "sidebar.docs.category.File Format": {
     "message": "开放文件格式",
-    "description": "The label for category File Foramt in sidebar docs"
+    "description": "The label for category File Format in sidebar docs"
   },
   "sidebar.docs.category.SQL Dialect Convertor": {
     "message": "SQL 方言转换",
@@ -507,6 +511,10 @@
     "message": "SQL 类型",
     "description": "The label for category SQL Data Types in sidebar docs"
   },
+  "sidebar.docs.category.AI Functions": {
+    "message": "AI 函数",
+    "description": "The label for category AI functions in sidebar docs"
+  },
   "sidebar.docs.category.Scalar Functions": {
     "message": "标量函数",
     "description": "The label for category Scalar Functions in sidebar docs"
@@ -533,7 +541,11 @@
   },
   "sidebar.docs.category.Vector Distance Functions": {
     "message": "向量函数",
-    "description": "The label for category Encryption Functions in sidebar docs"
+    "description": "The label for category vector distance functions in sidebar docs"
+  },
+  "sidebar.docs.category.LLM Functions": {
+    "message": "LLM 函数",
+    "description": "The label for category llm functions in sidebar docs"
   },
   "sidebar.docs.category.Bitwise Functions": {
     "message": "位处理函数",
@@ -555,12 +567,16 @@
     "message": "JSON 函数",
     "description": "The label for category JSON Functions in sidebar docs"
   },
+  "sidebar.docs.category.VARIANT Functions": {
+    "message": "VARIANT 函数",
+    "description": "The label for category VARIANT Functions in sidebar docs"
+  },
   "sidebar.docs.category.IP Functions": {
     "message": "IP 函数",
     "description": "The label for category IP Functions in sidebar docs"
   },
   "sidebar.docs.category.Bitmap Functions": {
-    "message": "BITMAPs 函数",
+    "message": "BITMAP 函数",
     "description": "The label for category Bitmap Functions in sidebar docs"
   },
   "sidebar.docs.category.HLL Functions": {
@@ -731,6 +747,10 @@
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
   },
+  "sidebar.docs.category.File Cache": {
+    "message": "文件缓存",
+    "description": "File Cache"
+  },
   "sidebar.ecosystem.category.BI and Database IDE": {
     "message": "BI 与数据库 IDE",
     "description": "The label for category BI and Database IDE in sidebar docs"
@@ -760,7 +780,7 @@
     "description": "The label for category Backup & Restore in sidebar docs"
   },
   "sidebar.docs.category.Integrations": {
-    "message": "外部集成",
+    "message": "集成",
     "description": "The label for category Integrations in sidebar docs"
   }
 }

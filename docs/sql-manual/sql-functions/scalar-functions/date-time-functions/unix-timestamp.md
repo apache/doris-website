@@ -50,6 +50,7 @@ You can also control the machine's timezone through the `time_zone` variable.
 
 Returns null if any parameter is null.
 
+
 ## Examples
 
 ```sql

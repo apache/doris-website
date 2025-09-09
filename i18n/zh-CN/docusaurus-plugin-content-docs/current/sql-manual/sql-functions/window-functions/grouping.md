@@ -1,1 +1,0 @@
-../aggregate-functions/grouping.md

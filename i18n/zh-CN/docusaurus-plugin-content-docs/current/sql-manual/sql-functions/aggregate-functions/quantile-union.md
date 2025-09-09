@@ -19,16 +19,17 @@ QUANTILE_UNION(<query_state>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<query_state>` | 由 `TO_QUANTILE_STATE` 函数生成的中间状态 |
+| `<query_state>` | 需要聚合的数据，支持类型为 QuantileState。 |
 
 ## 返回值
 
-返回一个可以用于进一步分位数计算的聚合状态。此函数返回的结果仍是 `QUANTILE_STATE`。
+返回一个可以用于进一步分位数计算的聚合状态，类型为 QuantileState 。
+组内没有合法数据时返回 NULL。
 
 ## 举例
 
 ```sql
--- 创建示例表
+-- setup
 CREATE TABLE response_times (
     request_id INT,
     response_time DOUBLE,
@@ -38,8 +39,6 @@ DISTRIBUTED BY HASH(request_id) BUCKETS AUTO
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
-
--- 插入示例数据
 INSERT INTO response_times VALUES
 (1, 10.5, 'east'),
 (2, 15.2, 'east'),
@@ -51,8 +50,9 @@ INSERT INTO response_times VALUES
 (8, 45.9, 'east'),
 (9, 50.4, 'west'),
 (10, 100.6, 'east');
+```
 
--- 按区域计算响应时间的 50% 分位数
+```sql
 SELECT 
     region,
     QUANTILE_PERCENT(
@@ -63,8 +63,9 @@ SELECT
     ) AS median_response_time
 FROM response_times
 GROUP BY region;
-
 ```
+
+按区域计算响应时间的 50% 分位数。
 
 ```text
 +--------+----------------------+
@@ -73,4 +74,19 @@ GROUP BY region;
 | west   |                35.25 |
 | east   |                30.75 |
 +--------+----------------------+
+```
+
+```sql
+SELECT QUANTILE_UNION(TO_QUANTILE_STATE(response_time, 2048))
+FROM response_times where response_time is null;
+```
+
+组内没有合法数据时返回 NULL。
+
+```text
++--------------------------------------------------------+
+| QUANTILE_UNION(TO_QUANTILE_STATE(response_time, 2048)) |
++--------------------------------------------------------+
+| NULL                                                   |
++--------------------------------------------------------+
 ```

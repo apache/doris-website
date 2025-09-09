@@ -7,13 +7,11 @@
 
 ## 描述
 
-
 将 Date 或者 Datetime 类型转化为 unix 时间戳。
 
 如果没有参数，则是将当前的时间转化为时间戳。
 
 参数需要是 Date 或者 Datetime 类型。
-
 Format 的格式请参阅 date_format 函数的格式说明。
 
 该函数受时区影响，时区部分请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
@@ -37,6 +35,20 @@ UNIX_TIMESTAMP(DATETIME <date_or_time_expr>[, STRING fmt])
 |----------------------------|-----------------------------|
 | `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 string。若提供该参数，则仅将与格式匹配的部分转换为时间戳。|
+
+## 语法
+
+```sql
+UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
+
+```
+
+## 参数
+
+| 参数 | 描述 |
+| -- | -- | 
+| `<date>` | 待转换的日期时间值，类型为 `datetime` 或 `date` 类型，支持范围：'1970-01-01 00:00:00.000000 UTC' 至 '9999-12-31 23:59:59.999999 UTC'。|
+| `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 `string`。若提供该参数，则仅将与格式匹配的部分转换为时间戳。 |
 
 ## 返回值
 根据输入返回两种类型
@@ -89,11 +101,6 @@ mysql> select unix_timestamp('2007-11-30 10:30:19');
 +----------------------------------------------+
 |                            1196386219.000000 |
 +----------------------------------------------+
-
-postgres=# SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '2007-11-30 10:30:19+09:00');
-      extract      
--------------------
- 1196386219.000000
 
 ---匹配 format 显示给出的 datetime 对应时间戳
 mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
