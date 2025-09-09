@@ -21,7 +21,7 @@ SECONDS_SUB(<date_or_time_expr>, <seconds>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<seconds>` | Required. The number of seconds to subtract or add. Supports integer type (INT). Positive numbers indicate subtracting seconds, negative numbers indicate adding seconds. |
 
 ## Return Value

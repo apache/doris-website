@@ -21,7 +21,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 
 | Parameter             | Description                                                                                                                                                                                                                                                                                                                                                     |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<date_or_time_expr>` | Required. Supports TIME or DATETIME. If the input is DATETIME type, the function extracts the time portion for calculation. For specific datetime/time formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [time conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | Required. Supports TIME or DATETIME. If the input is DATETIME type, the function extracts the time portion for calculation. For specific datetime/time formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 
 ## Return Value
 

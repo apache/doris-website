@@ -19,7 +19,7 @@ SECONDS_DIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | Required. The ending datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr1>` | Required. The ending datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<date_or_time_expr2>` | Required. The starting datetime value. Can be of type DATE or DATETIME. |
 
 ## Return Value

@@ -23,7 +23,7 @@ SECOND_CEIL(<datetime>[, <period>][, <origin_datetime>])
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | Required. The input datetime value. Supports datetime type. For specific datetime formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | Required. The input datetime value. Supports datetime type. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 | `<period>` | Optional. Indicates how many seconds make up each period. Supports positive integer type (INT). Default is 1 second. |
 | `<origin_datetime>` | Optional. The alignment starting point. Supports datetime type and strings that conform to datetime formats. If not specified, defaults to 0001-01-01T00:00:00. |
 
