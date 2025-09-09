@@ -15,6 +15,7 @@ import SearchBar from '@theme/SearchBar';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
+import { SummitModal } from '@site/src/components/summit-modal/summit-modal';
 
 interface DataType {
     showSearchPageMobile: boolean;
@@ -81,6 +82,8 @@ export default function Layout(props: Props): JSX.Element {
                 <SkipToContent />
                 <AnnouncementBar />
                 <Navbar />
+                <SummitModal />
+
                 {showSearchPageMobile ? (
                     <div ref={searchPageDom}>
                         <NavbarSearch>
