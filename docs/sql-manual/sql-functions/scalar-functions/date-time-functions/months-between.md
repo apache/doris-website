@@ -23,7 +23,7 @@ MONTHS_BETWEEN(`<date_or_time_expr1>`, `<date_or_time_expr2>` [, `<round_type>`]
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | End date. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr1>` | End date. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<date_or_time_expr2>` | Start date. Supports date/datetime types and strings that conform to datetime formats. |
 | `<round_type>` | Whether to round the result to the 8th decimal place. Supports `true` or `false`. Default is `true`. |
 

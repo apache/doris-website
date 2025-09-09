@@ -21,7 +21,7 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<minutes>` | The number of minutes to subtract, of type INT. Can be positive or negative. |
 
 ## Return Value

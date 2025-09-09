@@ -16,19 +16,19 @@ K 代表的是基准时间到目标时间的周期数
 ## 语法
 
 ```sql
-MINUTE_FLOOR(`<datetime>`)
-MINUTE_FLOOR(`<datetime>`, `<origin>`)
-MINUTE_FLOOR(`<datetime>`, `<period>`)
-MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
+MINUTE_FLOOR(`<date_or_time_expr>`)
+MINUTE_FLOOR(`<date_or_time_expr>`, `<origin>`)
+MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`)
+MINUTE_FLOOR(`<date_or_time_expr>, `<period>`, `<origin>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<datetime>`` | 需要向下取整的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
+| ``<date_or_time_expr>`` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体 datetime/date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | ``<period>`` | 月份周期值，类型为 INT，表示每个周期包含的月数 |
-| ``<origin>`` | 周期的起始时间点，类型为 DATETIME ，默认值为 0001-01-01 00:00:00 |
+| ``<origin>`` | 周期的起始时间点，类型为 DATETIME/DATE ，默认值为 0001-01-01 00:00:00 |
 
 ## 返回值
 
