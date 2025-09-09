@@ -19,7 +19,7 @@ MILLISECOND_TIMESTAMP(`<datetime>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | Represents the datetime to be converted into a Unix timestamp. Supports the `DATETIME` type. For specific datetime formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | Represents the datetime to be converted into a Unix timestamp. Supports the `DATETIME` type. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 
 ## Return Value
 

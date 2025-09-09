@@ -19,7 +19,7 @@ MICROSECOND(`<datetime>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The input datetime value, of type DATETIME. For datetime formats, see [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). Precision must be greater than 0. |
+| `<datetime>` | The input datetime value, of type DATETIME. For datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) . Precision must be greater than 0. |
 
 This function behaves the same as MySQL’s [microsecond function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_microsecond).
 

@@ -24,7 +24,7 @@ HOUR(`<date_or_time_expr>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime/date/time types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific datetime/date/time formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), and [time conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports datetime/date/time types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific datetime/date/time formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion), and [time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion//time-conversion) |
 
 ## Return Value
 
