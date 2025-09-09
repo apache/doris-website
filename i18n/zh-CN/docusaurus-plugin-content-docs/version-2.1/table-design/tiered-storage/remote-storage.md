@@ -159,6 +159,8 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 -   Storage policy 支持创建、修改和删除，删除前需要先保证没有表引用此 Storage policy。
 
+-   一旦设置了 Storage policy 之后，不能取消设置。
+
 ## 冷数据空间
 
 ### 查看
@@ -212,3 +214,7 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
+
+2. 修改冷却时间相关参数之后的行为表现是怎么样的？
+
+冷却时间相关的参数修改之后只对还未冷却到远程存储的数据生效，对于已经冷却到远程存储的数据不生效。比如将 `cooldown_ttl` 从 21 天修改为 7天，已经在远程存储的数据不会回到本地；

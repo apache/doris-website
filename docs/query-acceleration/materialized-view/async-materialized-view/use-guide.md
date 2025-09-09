@@ -164,6 +164,148 @@ GROUP BY
   date_trunc(l_ordertime, 'day');
 ```
 
+## Creating Partitioned Materialized Views with UNION ALL
+Currently, Doris has a limitation where partitioned materialized view definitions cannot contain UNION ALL clauses.
+To create a materialized view that includes UNION ALL, you can use the following approach: For each input part of the UNION ALL,
+attempt to create a partitioned materialized view, and then create a regular view for the entire UNION ALL result set.
+
+For example:
+The materialized view definition below contains a UNION ALL clause, which cannot be directly used to create a partitioned materialized view.
+
+```sql
+
+SELECT
+l_linestatus,
+sum(
+l_extendedprice * (1 - l_discount)
+) AS revenue,
+ps_partkey,
+date_trunc(l_ordertime, 'day') as order_date
+FROM
+lineitem
+LEFT JOIN partsupp ON l_partkey = ps_partkey
+and l_suppkey = ps_suppkey
+GROUP BY
+l_linestatus,
+ps_partkey,
+date_trunc(l_ordertime, 'day')
+UNION ALL
+SELECT
+l_linestatus,
+l_extendedprice,
+ps_partkey,
+date_trunc(l_ordertime, 'day') as order_date
+FROM
+lineitem
+LEFT JOIN partsupp ON l_partkey = ps_partkey
+and l_suppkey = ps_suppkey;
+```
+
+You can split the above SQL statement into two parts and create two partitioned materialized views separately.
+
+```sql
+
+CREATE MATERIALIZED VIEW union_sub_mv1
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(order_date)
+DISTRIBUTED BY RANDOM BUCKETS 2
+AS
+SELECT
+l_linestatus,
+sum(
+l_extendedprice * (1 - l_discount)
+) AS revenue,
+ps_partkey,
+date_trunc(l_ordertime, 'day') as order_date
+FROM
+lineitem
+LEFT JOIN partsupp ON l_partkey = ps_partkey
+and l_suppkey = ps_suppkey
+GROUP BY
+l_linestatus,
+ps_partkey,
+date_trunc(l_ordertime, 'day');
+```
+
+```sql
+CREATE MATERIALIZED VIEW union_sub_mv2
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(order_date)
+DISTRIBUTED BY RANDOM BUCKETS 2
+AS
+SELECT
+l_linestatus,
+l_extendedprice,
+ps_partkey,
+date_trunc(l_ordertime, 'day') as order_date
+FROM
+lineitem
+LEFT JOIN partsupp ON l_partkey = ps_partkey
+and l_suppkey = ps_suppkey;
+```
+Then create a regular view that performs UNION ALL on the result sets of the two partitioned materialized views.
+This view (union_all_view) can be exposed externally.
+
+```sql
+CREATE VIEW union_all_view
+AS
+SELECT *
+FROM
+union_sub_mv1
+UNION ALL
+SELECT *
+FROM
+union_sub_mv2;
+```
+
+## Partitioned Materialized Views Retaining Only Recent Partition Data
+:::tip Note
+This feature has been supported since Apache Doris version 2.1.1.
+:::
+
+Materialized views can be configured to retain data only from the most recent partitions, automatically deleting expired partition data during each refresh.
+This can be achieved by setting the following properties for the materialized view:
+partition_sync_limit, partition_sync_time_unit, and partition_sync_date_format.
+
+`partition_sync_limit`: When the base table's partition field is time-based, this property configures the synchronization range for base table partitions, working in conjunction with partition_sync_time_unit. For example, setting it to 3 with partition_sync_time_unit as DAY means only partitions and data from the last 3 days of the base table will be synchronized.
+
+`partition_sync_time_unit`: The time unit for partition refresh, supporting DAY/MONTH/YEAR (default is DAY).
+
+`partition_date_format`: When the base table's partition field is a string type, this property sets the date format if you want to use the partition_sync_limit capability.
+
+Example:
+The materialized view defined below will only retain data from the last 3 days. If there's no data in the recent 3 days, querying this materialized view directly will return no results.
+
+
+```sql
+CREATE MATERIALIZED VIEW latest_partition_mv
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+PARTITION BY(order_date)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES (
+"partition_sync_limit" = "3",
+"partition_sync_time_unit" = "DAY",
+"partition_date_format" = "yyyy-MM-dd"
+)       
+AS
+SELECT
+l_linestatus,
+sum(
+l_extendedprice * (1 - l_discount)
+) AS revenue,
+ps_partkey,
+date_trunc(l_ordertime, 'day') as order_date
+FROM
+lineitem
+LEFT JOIN partsupp ON l_partkey = ps_partkey
+AND l_suppkey = ps_suppkey
+GROUP BY
+l_linestatus,
+ps_partkey,
+date_trunc(l_ordertime, 'day');
+```
+
+
 ## How to Use Materialized Views to Accelerate Queries
 
 To use materialized views for query acceleration, first check the profile file to find the operation that consumes the most time in a query, which usually appears in Join, Aggregate, Filter, or Calculated Expressions.

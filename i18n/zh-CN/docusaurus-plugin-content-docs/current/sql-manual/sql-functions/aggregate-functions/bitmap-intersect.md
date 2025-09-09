@@ -7,7 +7,7 @@
 
 ## 描述
 
-聚合函数，用于计算分组后的 bitmap 交集。常见使用场景如：计算用户留存率。
+用于计算分组后的 Bitmap 交集。常见使用场景如：计算用户留存率。
 
 ## 语法
 
@@ -19,31 +19,58 @@ BITMAP_INTERSECT(BITMAP <value>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<value>` | 支持 bitmap 的数据类型 |
+| `<value>` | 支持 Bitmap 的数据类型 |
 
 ## 返回值
 
-返回值的数据类型为 BITMAP。
+返回值的数据类型为 Bitmap。
+组内没有合法数据时，返回 NULL。
 
 ## 举例
 
-表结构
-
-```
-KeysType: AGG_KEY
-Columns: tag varchar, date datetime, user_id bitmap bitmap_union
-
-```
-
-```
-求今天和昨天不同 tag 下的用户留存
-select tag, bitmap_intersect(user_id) from (select tag, date, bitmap_union(user_id) user_id from table where date in ('2020-05-18', '2020-05-19') group by tag, date) a group by tag;
-```
-
-和 bitmap_to_string 函数组合使用可以获取交集的具体数据
-
-```
-求今天和昨天不同 tag 下留存的用户都是哪些
-select tag, bitmap_to_string(bitmap_intersect(user_id)) from (select tag, date, bitmap_union(user_id) user_id from table where date in ('2020-05-18', '2020-05-19') group by tag, date) a group by tag;
+```sql
+-- setup
+CREATE TABLE user_tags (
+	tag VARCHAR(20),
+	date DATETIME,
+	user_id BITMAP bitmap_union
+) AGGREGATE KEY(tag, date) DISTRIBUTED BY HASH(tag) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO user_tags VALUES
+	('A', '2020-05-18', to_bitmap(1)),
+	('A', '2020-05-18', to_bitmap(2)),
+	('A', '2020-05-19', to_bitmap(2)),
+	('A', '2020-05-19', to_bitmap(3)),
+	('B', '2020-05-18', to_bitmap(4)),
+	('B', '2020-05-19', to_bitmap(4)),
+	('B', '2020-05-19', to_bitmap(5));
 ```
 
+```sql
+select tag, bitmap_to_string(bitmap_intersect(user_id)) from (
+	select tag, date, bitmap_union(user_id) user_id from user_tags where date in ('2020-05-18', '2020-05-19') group by tag, date
+) a group by tag;
+```
+
+查询今天和昨天不同 tag 下的用户留存。
+
+```text
++------+---------------------------------------------+
+| tag  | bitmap_to_string(bitmap_intersect(user_id)) |
++------+---------------------------------------------+
+| A    | 2                                           |
+| B    | 4                                           |
++------+---------------------------------------------+
+```
+
+```sql
+select bitmap_to_string(bitmap_intersect(user_id)) from user_tags where tag is null;
+```
+
+```text
++---------------------------------------------+
+| bitmap_to_string(bitmap_intersect(user_id)) |
++---------------------------------------------+
+|                                             |
++---------------------------------------------+
+```

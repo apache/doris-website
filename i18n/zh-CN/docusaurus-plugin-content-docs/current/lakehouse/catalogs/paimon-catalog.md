@@ -124,6 +124,12 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | row                                | struct        |                                        |
 | other                              | UNSUPPORTED   |                                        |
 
+> 注：
+>
+> Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp_without_time_zone` 和 `timestamp_with_local_time_zone` 会统一映射到 `datetime(N)` 类型上。但在读取时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamp_with_local_time_zone` 列的返回结果。
+>
+> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.0.8 版本支持)。
+
 ## 基础示例
 
 ### Paimon on HDFS
@@ -158,7 +164,7 @@ CREATE CATALOG paimon_hms PROPERTIES (
 );
 ```
 
-### Paimon on DLF
+### Paimon on DLF 1.0
 
 ```sql
 CREATE CATALOG paimon_dlf PROPERTIES (
@@ -170,6 +176,22 @@ CREATE CATALOG paimon_dlf PROPERTIES (
     'dlf.region' = 'cn-beijing',
     'dlf.access_key' = 'ak',
     'dlf.secret_key' = 'sk'
+);
+```
+
+### Paimon on DLF Rest Catalog
+
+> 该功能自 3.1.0 版本支持
+
+```sql
+CREATE CATALOG paimon_dlf_test PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'rest',
+    'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+    'warehouse' = 'new_dfl_paimon_catalog',
+    'paimon.rest.token.provider' = 'dlf',
+    'paimon.rest.dlf.access-key-id' = 'ak',
+    'paimon.rest.dlf.access-key-secret' = 'sk'
 );
 ```
 
@@ -230,9 +252,6 @@ SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 支持查询指定的快照或时间戳区间内的增量数据。区间为左闭右开区间。
 
 ```sql
--- read from snapshot 2
-SELECT * FROM paimon_table@incr('startSnapshotId'='2');
-
 -- between snapshots [0, 5)
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 
@@ -240,32 +259,107 @@ SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
 SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
 
 -- read from start timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
 
 -- read between timestamp
-SELECT * FROM paimon_table@incr('startTimestamp'='1750844949', 'endTimestamp'='1750944949');
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
 ```
 
 参数说明：
 
 | 参数 | 说明 | 示例 |
 | --- | --- | -- |
-| `startSnapshotId` | 起始快照 ID，必须大于 0 | `'startSnapshotId'='3'` |
-| `endSnapshotId` | 结束快照 ID，必须大于 `startSnapshotId`。可选，如不指定，则表示从 `startSnapshotId` 开始读取到最新的快照 | `'endSnapshotId'='10'` |
+| `startSnapshotId` | 起始快照 ID，必须大于 0。必须和 `endSnapshotId` 配对使用。 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | 结束快照 ID，必须大于 `startSnapshotId`。必须和 `startSnapshotId` 配对使用。 | `'endSnapshotId'='10'` |
 | `incrementalBetweenScanMode` | 指定增量读取的模式，默认 `auto`，支持 `delta`， `changelog` 和 `diff` |  `'incrementalBetweenScanMode'='delta'` |
-| `startTimestamp` | 起始快照时间，必须大于等于 0 | `'startTimestamp'='1750844949'` |
-| `endTimestamp` | 结束快照时间，必须大于 `startTimestamp`。可选，如不指定，则表示从 `startTimestamp` 开始读取到最新的快照 | `'endTimestamp'='1750944949'` |
+| `startTimestamp` | 起始快照时间，必须大于等于 0。单位是毫秒。 | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | 结束快照时间，必须大于 `startTimestamp`。可选，如不指定，则表示从 `startTimestamp` 开始读取到最新的快照。单位是毫秒。 | `'endTimestamp'='1750944949000'` |
 
 > 注：
-
-> - `startSnapshotId` 和 `endSnapshotId` 会组成 Paimon 参数 `'incremental-between'='3,10'`
-
-> - `startTimestamp` 和 `endTimestamp` 会组成 Paimon 参数 `'incremental-between-timestamp'='1750844949,1750944949'`
-
-> - `incrementalBetweenScanMode` 对应 Paimon 参数 `incremental-between-scan-mode`。
+>
+> `startSnapshotId` 和 `endSnapshotId` 会组成 Paimon 参数 `'incremental-between'='3,10'`
+>
+> `startTimestamp` 和 `endTimestamp` 会组成 Paimon 参数 `'incremental-between-timestamp'='1750844949000,1750944949000'`
+>
+> `incrementalBetweenScanMode` 对应 Paimon 参数 `incremental-between-scan-mode`。
 
 可参阅 [Paimon 文档](https://paimon.apache.org/docs/master/maintenance/configurations/) 进一步了解这些参数。
 
+### 时间旅行
+
+> 该功能自 3.1.0 版本支持
+
+支持读取 Paimon 表指定的 Snapshot。
+
+默认情况下，读取请求只会读取最新版本的快照。
+
+可以通过 `$snapshots` 表函数查询查询指定 Paimon 表的 Snapshot：
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+可以使用 `FOR TIME AS OF` 和 `FOR VERSION AS OF` 语句，根据快照 ID 或者快照产生的时间读取历史版本的数据。示例如下：
+
+```sql
+-- Notice: The time must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+### Branch 和 Tag
+
+> 该功能自 3.1.0 版本支持
+
+支持读取指定 Paimon 表的分支（Branch）和标签（Tag）。
+
+可以使用 `$branches` 和 `$tags` 系统表查看 Paimon 表的 Branch 和 Tag：
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+支持多种不同的语法形式，以兼容 Spark/Trino 等系统的语法。
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@branch(branch1);
+SELECT * FROM paimon_tbl@branch("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+对于 `FOR VERSION AS OF` 语法，Doris 会根据后面的参数，自动判断是时间戳还是 Tag 名称。
 
 ## 系统表
 
@@ -277,12 +371,6 @@ Doris 支持查询 Paimon 系统表，用来查询表的相关元信息。支持
 
 ```sql
 SELECT * FROM my_table$system_table_name;
-```
-
-例如，要查看表的审计记录，可以执行：
-
-```sql
-SELECT * FROM my_table$audit_log;
 ```
 
 > 注意点：Doris 不支持读取 Paimon 全局系统表，其只在 Flink 中支持。

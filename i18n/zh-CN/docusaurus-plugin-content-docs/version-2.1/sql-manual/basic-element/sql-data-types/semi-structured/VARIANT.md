@@ -371,8 +371,8 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 3. 如果查询没有分桶裁剪的需求，可以使用 random 分桶，开启 [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) 导入（导入的配置），可以减少 compaction 写放大
 4. BE 配置 根据导入压力调整 `max_cumu_compaction_threads`，至少保证 8 个线程
 5. BE 配置`vertical_compaction_num_columns_per_group=500`提升分组 compaction 效率，但是会增加内存开销销
-6. BE 配置`segment_cache_memory_percentage=20`增加 segment 缓存的容量，提升元数据缓存效率率
-7. 注意关注 Compaction Score，如果 Score 持续增加会导致，Score 过高反应 Compaction 做不过来（需要适当降低导入压力）
+6. BE 配置`segment_cache_memory_percentage=20`增加 segment 缓存的容量，提升元数据缓存效率
+7. 注意关注 Compaction Score，Score 过高反应 Compaction 做不过来（需要适当降低导入压力）
 8. `SELECT *` 或者 `SELECT variant` 会导致集群整体压力明显上升，甚至出现超时或者内存超限。建议查询带上 Path 信息例如 `SELECT variant['path_1']`。
 
 

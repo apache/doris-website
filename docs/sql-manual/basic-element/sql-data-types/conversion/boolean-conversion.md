@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to BOOLEAN",
+    "title": "Cast to BOOLEAN Type",
     "language": "en"
 }
 ---

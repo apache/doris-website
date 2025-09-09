@@ -23,10 +23,11 @@ VAR_SAMP(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The column or expression to calculate sample variance for. Must be numeric type |
+| `<expr>` | The column or expression to calculate sample variance for, supports type Double. |
 
 ## Return Value
-Returns a DOUBLE value representing the calculated sample variance.
+Returns a Double value representing the calculated sample variance.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 ```sql

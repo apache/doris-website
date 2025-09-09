@@ -1,1 +1,0 @@
-../aggregate-functions/sum0.md

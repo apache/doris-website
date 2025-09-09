@@ -97,6 +97,24 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 ![group1](/images/ranger/group1.png)
 
+#### Compute Group Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on compute group 'group1' to user1`;
+- The compute group option can be found in the dropdown box at the same level as the catalog.
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on storage vault 'vault1' to user1`;
+- The storage vault option can be found in the dropdown box at the same level as the catalog.
+
+![storage vault](/images/ranger/storage-vault.png)
+
 ### Row-Level Permissions Example
 
 > Supported in version 2.1.3
@@ -148,6 +166,9 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
    As shown in the image, when creating the service, add the configuration `default.policy.users`. If you need to configure multiple users with full permissions, separate them with `,`.
    ![default policy](/images/ranger/default-policy.png)
+4. After using Ranger for authentication, is internal authorization still effective?
+
+   No, it cannot be used, and roles cannot be created/deleted.
 
 ## Install and Configure Doris Ranger Plugin
 

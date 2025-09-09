@@ -7,7 +7,7 @@
 
 ## Description
 
-Computes the sample covariance between two numeric variables.
+Calculates the sample covariance between two variables. If either input variable is NULL, that row is not included in the calculation.
 
 ## Syntax
 
@@ -19,25 +19,61 @@ COVAR_SAMP(<expr1>, <expr2>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | Numeric expression or column |
-| `<expr2>` | Numeric expression or column |
+| `<expr1>` | One of the expressions to calculate, supported type is Double. |
+| `<expr2>` | One of the expressions to calculate, supported type is Double. |
 
 ## Return Value
 
-Returns the sample covariance of expr1 and expr2, special case:
-
-- If a column of expr1 or expr2 is NULL, the row data will not be counted in the final result.
+Returns the sample covariance of expr1 and expr2, with return type Double.
+If there is no valid data in the group, returns NULL.
 
 ## Example
 
+```sql
+-- setup
+create table baseall(
+    id int,
+    x double,
+    y double
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into baseall values
+    (1, 1.0, 2.0),
+    (2, 2.0, 3.0),
+    (3, 3.0, 4.0),
+    (4, 4.0, NULL),
+    (5, NULL, 5.0);
 ```
+
+```sql
 select covar_samp(x,y) from baseall;
 ```
 
 ```text
-+---------------------+
-| covar_samp(x, y)    |
-+---------------------+
-| 0.89442719099991586 |
-+---------------------+
++-----------------+
+| covar_samp(x,y) |
++-----------------+
+|               1 |
++-----------------+
+```
+
+```sql
+select id, covar_samp(x, y) from baseall group by id;
+```
+
+```text
++------+------------------+
+| id   | covar_samp(x, y) |
++------+------------------+
+|    1 |                0 |
+|    2 |                0 |
+|    3 |                0 |
+|    4 |             NULL |
+|    5 |             NULL |
++------+------------------+
+```
+|    4 |             NULL |
+|    5 |             NULL |
++------+------------------+
 ```

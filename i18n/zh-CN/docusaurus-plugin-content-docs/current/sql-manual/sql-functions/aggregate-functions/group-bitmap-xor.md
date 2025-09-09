@@ -24,21 +24,27 @@ GROUP_BITMAP_XOR(<expr>)
 ## 返回值
 
 返回值的数据类型为 BITMAP。
+当组内没有合法数据时，返回 NULL 。
 
 ## 举例
 
 ```sql
- select page, bitmap_to_string(user_id) from pv_bitmap;
-```
-
-```text
-+------+-----------------------------+
-| page | bitmap_to_string(`user_id`) |
-+------+-----------------------------+
-| m    | 4,7,8                       |
-| m    | 1,3,6,15                    |
-| m    | 4,7                         |
-+------+-----------------------------+
+-- setup
+CREATE TABLE pv_bitmap (
+	page varchar(10),
+	user_id BITMAP
+) DISTRIBUTED BY HASH(page) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+	('m', to_bitmap(4)),
+	('m', to_bitmap(7)),
+	('m', to_bitmap(8)),
+	('m', to_bitmap(1)),
+	('m', to_bitmap(3)),
+	('m', to_bitmap(6)),
+	('m', to_bitmap(15)),
+	('m', to_bitmap(4)),
+	('m', to_bitmap(7));
 ```
 
 ```sql
@@ -46,9 +52,22 @@ select page, bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap group by
 ```
 
 ```text
-+------+-----------------------------------------------+
-| page | bitmap_to_string(group_bitmap_xor(`user_id`)) |
-+------+-----------------------------------------------+
-| m    | 1,3,6,8,15                                    |
-+------+-----------------------------------------------+
++------+---------------------------------------------+
+| page | bitmap_to_string(group_bitmap_xor(user_id)) |
++------+---------------------------------------------+
+| m    | 1,3,6,8,15                                  |
++------+---------------------------------------------+
+```
+
+
+```sql
+select bitmap_to_string(group_bitmap_xor(user_id)) from pv_bitmap where page is null;
+```
+
+```text
++---------------------------------------------+
+| bitmap_to_string(group_bitmap_xor(user_id)) |
++---------------------------------------------+
+| NULL                                        |
++---------------------------------------------+
 ```

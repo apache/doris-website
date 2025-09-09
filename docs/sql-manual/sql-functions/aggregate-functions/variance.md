@@ -23,10 +23,11 @@ VARIANCE(<expr>)
 ## Parameters
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The column or expression to calculate variance for. Must be numeric type |
+| `<expr>` | The column or expression to calculate variance for, supports type Double. |
 
 ## Return Value
-Returns a DOUBLE value representing the calculated variance.
+Returns a Double value representing the calculated variance.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 ```sql

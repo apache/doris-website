@@ -1196,8 +1196,6 @@
                 "ecosystem/seatunnel",
                 "ecosystem/kettle",
                 "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
                 "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",

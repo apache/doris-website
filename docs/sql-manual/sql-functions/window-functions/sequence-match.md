@@ -1,1 +1,0 @@
-../aggregate-functions/sequence-match.md

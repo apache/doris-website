@@ -65,7 +65,7 @@ columns_definition
     [ , <col_name> <col_type> [ ... ] ]
 ```
 
-```sql    
+```sql
 indexes_definition
   : -- 索引定义
     INDEX [ IF NOT EXISTS ]
@@ -84,22 +84,25 @@ indexes_definition
 
 ```sql
 partitions_definition
-  : AUTO PARTITION BY RANGE(
-      <auto_partition_function>(<auto_partition_arguments>))
-      ()
-  | PARTITION BY <partition_type>
-    (<partition_cols>)
-    (
+  : AUTO PARTITION BY RANGE(<auto_partition_function>(<auto_partition_arguments>))
+    <origin_partitions_definition>
+  | AUTO PARTITION BY LIST(<partition_cols>)
+    <origin_partitions_definition>
+  | PARTITION BY <partition_type> (<partition_cols>)
+    <origin_partitions_definition>
+```
+
+- 其中：
+
+    ```sql
+    <origin_partitions_definition>
+    : (
         -- 分区定义
         <one_partition_definition>
         -- 其他分区定义
         [ , ... ]
-    )
-```
+      )
 
-- 其中： <one_partition_definition>
-
-    ```sql
     <one_partition_definition>
     : PARTITION [ IF NOT EXISTS ] <partition_name>
         VALUES LESS THAN <partition_value_list>
@@ -114,7 +117,7 @@ partitions_definition
         }
     ```
 
-```sql      
+```sql
 roll_up_definition
   : ROLLUP (
         -- 聚合定义
@@ -153,7 +156,7 @@ CREATE
           -- 其他表属性
           [ , ... ]) 
     ]
-    AS <query>
+    [ AS ] <query>
 ```
 
 ### CREATE TABLE … LIKE
@@ -273,12 +276,6 @@ CREATE TABLE <table_name> LIKE <source_table>
 ### 自动分区相关参数
 
 有关分区的详细介绍，请参阅[自动分区](../../../../table-design/data-partitioning/auto-partitioning.md)章节。
-
-**<auto_partition_function>(<auto_partition_arguments>)**
-
-> 自动分区方式。<auto_partition_function> 目前只支持`date_trunc`。<auto_partition_arguments> 填写自动分区的列和 date_trunc 的单位。例如 `date_trunc(col_1, 'day')`。
->
-> 当使用自动分区时，分区列必须为 NOT NULL。
 
 ### 手动分区相关参数
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "en"
 }
 ---
@@ -11,7 +11,7 @@
 
 Logstash is a log ETL framework (collect, preprocess, send to storage systems) that supports custom output plugins to write data into storage systems. The Logstash Doris output plugin is a plugin for outputting data to Doris.
 
-The Logstash Doris output plugin calls the [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP interface to write data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
+The Logstash Doris output plugin calls the [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP interface to write data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
 
 Using the Logstash Doris output plugin mainly involves three steps:
 1. Install the plugin into Logstash
@@ -26,9 +26,9 @@ You can download the plugin from the official website or compile it from the sou
 
 - Download from the official website
    - Installation package without dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)
+   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)
    - Installation package with dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip)
+   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip)
 
 - Compile from source code
 
@@ -45,9 +45,9 @@ gem build logstash-output-doris.gemspec
 `${LOGSTASH_HOME}` is the installation directory of Logstash. Run the `bin/logstash-plugin` command under it to install the plugin.
 
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 
-Validating logstash-output-doris-1.0.0.gem
+Validating logstash-output-doris-1.2.0.gem
 Installing logstash-output-doris
 Installation successful
 ```
@@ -57,9 +57,9 @@ The standard installation mode will automatically install the ruby modules that 
 - Offline Installation
 
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.0.0.zip
+${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.2.0.zip
 
-Installing file: logstash-output-doris-1.0.0.zip
+Installing file: logstash-output-doris-1.2.0.zip
 Resolving dependencies.........................
 Install successful
 ```

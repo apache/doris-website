@@ -302,7 +302,11 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
     - root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
     - admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
 
-2. 不支持删除或更改默认创建的角色或用户的权限。
+2. 不支持删除或更改默认创建的用户，角色或用户的权限。
+    - 不支持删除 root@'%' 和 admin@'%' 用户，但是允许创建和删除 root@'xxx' 和 admin@'xxx' 用户（xxx 指的是除了 % 之外的 host）（Doris 会把这些用户视为普通用户）
+    - 不支持撤销 root@'%' 和 admin@'%' 的默认角色
+    - 不支持删除角色 operator 和 admin
+    - 不支持操作角色 operator 和 admin 的权限
 
 3. operator 角色的用户有且只有一个，即 Root。admin 角色的用户可以创建多个。
 
