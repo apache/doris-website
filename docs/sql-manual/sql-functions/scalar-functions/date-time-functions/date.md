@@ -20,7 +20,7 @@ DATE(<date_or_time_part>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date expression of type datetime, supporting datetime. For specific datetime and date formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date expression of type datetime, supporting datetime. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
