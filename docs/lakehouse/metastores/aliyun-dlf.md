@@ -24,6 +24,10 @@ This document describes how to use the `CREATE CATALOG` statement to connect and
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID. Used to specify metadata catalog. If not set, the default catalog is used. | None | No |
 | `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog | None | No |
 
+> Note:
+>
+> For versions before 3.1.0, please use the former names.
+
 ### DLF 2.5+ (Rest Catalog)
 
 > Supported since version 3.1.0

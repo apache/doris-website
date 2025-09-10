@@ -68,6 +68,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.recursive_directories`: Whether to recurse into subdirectories when listing partition directories. This parameter has been supported since version 3.0.2. Before version 4.0, this parameter defaulted to `false`; in later versions, it defaults to `true`. The partition paths of some Hive tables may not match the partition information in the table schema. Setting this parameter to true is necessary to retrieve data files in subdirectories.
 
+  * `hive.ignore_absent_partitions`: Whether to ignore non-existent partitions. Defaults to `true`. If set to `false`, the query will report an error when encountering non-existent partitions. This parameter has been supported since version 3.0.2.
+
 ### Supported Hive Versions
 
 Supports Hive 1.x, 2.x, 3.x, and 4.x.
