@@ -146,7 +146,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.0.8 版本支持)。
 
 ## 基础示例
-### Hive Catalog
+### Hive Metastore
 <details>
     <summary>3.1+ 版本</summary>
     <Tabs>
@@ -311,7 +311,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
-            CREATE CATALOG `iceberg_hms_on_gcs_kerberos_new_catalog` PROPERTIES (
+            CREATE CATALOG IF NOT EXISTS `iceberg_hms_on_gcs_kerberos_new_catalog` PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
@@ -323,11 +323,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
-
+            ```sql
+            CREATE CATALOG IF NOT EXISTS test_iceberg_on_hms_minio_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/wh',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.use_path_style' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = 'ACCESS_KEY',
+                'minio.secret_key' = 'SECRET_KEY'
+            );
+            ```
         </TabItem>
     </Tabs>
-
-
 </details>
 
 <details >
@@ -427,7 +437,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 </details>
 
 
-### Glue Metastore
+### AWS Glue
 <details>
     <summary>3.1+ 版本</summary>
     <Tabs>
@@ -484,7 +494,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     </Tabs>
 </details>
 
-### Aliyun DLF Metastore
+### Aliyun DLF
 <details>
     <summary>3.1+ 版本</summary>
     <Tabs>
@@ -495,7 +505,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'iceberg.catalog.type'='dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
-                'dlf.catalog.id' = 'p2_regression_case',
+                'dlf.catalog_id' = 'p2_regression_case',
                 'dlf.region' = 'cn-beijing',
                 'dlf.endpoint' = 'datalake.cn-beijing.aliyuncs.com',
                 'dlf.access_key' = 'ACCESS_KEY',
@@ -525,7 +535,219 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     </Tabs>
 </details>
 
-### Hadoop Metastore
+
+### Iceberg Rest Catalog
+<details>
+    <summary>3.1+ 版本  </summary>
+    <Tabs>
+        <TabItem value='no-auth' label='无认证' default>
+            <Tabs>
+                <TabItem value='static-storage' label='静态存储凭证' default>
+
+                    支持 S3、OSS、COS 等存储系统，基于 Iceberg 原生配置。
+
+                    <Tabs>
+                        <TabItem value='s3' label='S3' default>
+                            ```sql
+                            CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 's3://iceberg_rest_warehouse',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                            's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                            's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                            's3.region' = 'ap-east-1'
+                            );
+                            ```
+                        </TabItem>
+                        <TabItem value='oss' label='OSS'>
+                            ```sql
+                            CREATE CATALOG iceberg_static_oss PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 's3://iceberg_rest_warehouse',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                            'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                            'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                            'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                            'oss.region' = 'cn-beijing'
+                            );
+                            ```
+                        </TabItem>
+                        <TabItem value='cos' label='COS'>
+                            ```sql
+                            CREATE CATALOG iceberg_static_cos PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 's3://iceberg_rest_warehouse',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                            'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                            'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                            'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                            'cos.region' = 'ap-beijing'
+                            );
+                            ```
+                        </TabItem>
+                    </Tabs>
+                </TabItem>
+
+                <TabItem value='vended-credentials' label='Vended Credentials'>
+
+                    基于 Gravitino + S3 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
+
+                    ```sql
+                    CREATE CATALOG gravitino_vended_s3 PROPERTIES (
+                    'type' = 'iceberg',
+                    'warehouse' = 'warehouse',
+                    'iceberg.catalog.type' = 'rest',
+                    'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
+                    'iceberg.rest.vended-credentials-enabled' = 'true',
+                    's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                    's3.region' = 'us-west-2'
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='oauth2' label='OAuth2 认证'>
+            <Tabs>
+                <TabItem value='credential' label='Credential 认证' default>
+                    <Tabs>
+                        <TabItem value='credential-static' label='静态存储凭证' default>
+
+                            基于 MinIO/S3 + Polaris 测试。
+
+                            ```sql
+                            CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 'doris_test',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                            'iceberg.rest.security.type' = 'oauth2',
+                            'iceberg.rest.oauth2.credential' = 'root:secret123',
+                            'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                            'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                            'iceberg.rest.vended-credentials-enabled' = 'false',
+                            's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                            's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                            's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                            's3.region' = 'us-west-2'
+                            );
+                            ```
+                        </TabItem>
+
+                        <TabItem value='credential-vended' label='Vended Credentials'>
+
+                            基于 MinIO/S3 + Polaris 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
+
+                            ```sql
+                            CREATE CATALOG polaris_oauth2_credential_vended_s3 PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 'doris_test',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                            'iceberg.rest.security.type' = 'oauth2',
+                            'iceberg.rest.oauth2.credential' = 'root:secret123',
+                            'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                            'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                            'iceberg.rest.vended-credentials-enabled' = 'true'
+                            );
+                            ```
+                        </TabItem>
+                    </Tabs>
+                </TabItem>
+
+                <TabItem value='token' label='Token 认证'>
+                    <Tabs>
+                        <TabItem value='token-static' label='静态存储凭证' default>
+
+                            基于 MinIO/S3 + Polaris 测试。
+
+                            ```sql
+                            CREATE CATALOG polaris_oauth2_token_static_s3 PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 'doris_test',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                            'iceberg.rest.security.type' = 'oauth2',
+                            'iceberg.rest.oauth2.token' = 'xxx',
+                            's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                            's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                            's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                            's3.region' = 'us-west-2'
+                            );
+                            ```
+                        </TabItem>
+
+                        <TabItem value='token-vended' label='Vended Credentials'>
+
+                            基于 MinIO/S3 + Polaris 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
+
+                            ```sql
+                            CREATE CATALOG polaris_oauth2_token_vended_s3 PROPERTIES (
+                            'type' = 'iceberg',
+                            'warehouse' = 'doris_test',
+                            'iceberg.catalog.type' = 'rest',
+                            'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                            'iceberg.rest.security.type' = 'oauth2',
+                            'iceberg.rest.oauth2.token' = 'xxx',
+                            'iceberg.rest.vended-credentials-enabled' = 'true'
+                            );
+                            ```
+                        </TabItem>
+                    </Tabs>
+                </TabItem>
+            </Tabs>
+        </TabItem>
+    </Tabs>
+
+    #### 配置说明
+
+    **认证方式**
+    - **无认证**：直接访问 REST Catalog 服务
+    - **OAuth2**：由 REST 服务提供认证
+    - **Credential**：使用用户名密码认证（格式：`username:password`）
+    - **Token**：使用预获取的访问令牌认证
+
+    **存储凭证**
+    - **Vended Credentials**：由 REST 服务动态提供存储凭证，需设置 `'iceberg.rest.vended-credentials-enabled' = 'true'`
+    - **3.1.1 版本后**：使用 Vended Credentials 时 `s3.endpoint` 和 `s3.region` 可选配置
+
+</details>
+
+<details >
+    <summary>2.1 & 3.0  版本 </summary>
+
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+
+        </TabItem>
+
+    </Tabs>
+
+</details>
+
+### FileSystem
 <details>
     <summary>3.1+ 版本  </summary>
     <Tabs>
@@ -626,21 +848,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'iceberg.catalog.type'='hadoop',
                 'warehouse' = 's3://warehouse/wh',
                 'fs.minio.support'='true',
-                'minio.endpoint' = 'http://172.20.32.136:19001',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
                 'minio.access_key' = 'admin',
                 'minio.secret_key' = 'password',
-                'minio.path.style.access' = 'true'
+                'minio.use_path_style' = 'true'
             );
             ```
         </TabItem>
     </Tabs>
-
-
 </details>
-
 <details >
-    <summary>2.1 & 3.0  版本 </summary>
-
+    <summary>2.1 & 3.0 版本 </summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HDFS 服务
@@ -724,223 +942,10 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
         </TabItem>
     </Tabs>
-
-</details>
-
-### Rest Metastore
-<details>
-    <summary>3.1+ 版本  </summary>
-
-    <Tabs>
-        <TabItem value='no-auth' label='无认证' default>
-            <Tabs>
-                <TabItem value='static-storage' label='静态存储凭证' default>
-                    
-                    支持 S3、OSS、COS 等存储系统，基于 Iceberg 原生配置。
-
-                    <Tabs>
-                        <TabItem value='s3' label='S3' default>
-                            ```sql
-                            CREATE CATALOG iceberg_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'ap-east-1'
-                            );
-                            ```
-                        </TabItem>
-                        <TabItem value='oss' label='OSS'>
-                            ```sql
-                            CREATE CATALOG iceberg_static_oss PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                                'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                'oss.region' = 'cn-beijing'
-                            );
-                            ```
-                        </TabItem>
-                        <TabItem value='cos' label='COS'>
-                            ```sql
-                            CREATE CATALOG iceberg_static_cos PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                                'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                'cos.region' = 'ap-beijing'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
-                </TabItem>
-                
-                <TabItem value='vended-credentials' label='Vended Credentials'>
-                    
-                    基于 Gravitino + S3 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
-
-                    ```sql
-                    CREATE CATALOG gravitino_vended_s3 PROPERTIES (
-                        'type' = 'iceberg',
-                        'warehouse' = 'warehouse',
-                        'iceberg.catalog.type' = 'rest',
-                        'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
-                        'iceberg.rest.vended-credentials-enabled' = 'true',
-                        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                        's3.region' = 'us-west-2'
-                    );
-                    ```
-                </TabItem>
-            </Tabs>
-        </TabItem>
-
-        <TabItem value='oauth2' label='OAuth2 认证'>
-            <Tabs>
-                <TabItem value='credential' label='Credential 认证' default>
-                    <Tabs>
-                        <TabItem value='credential-static' label='静态存储凭证' default>
-                            
-                            基于 MinIO/S3 + Polaris 测试。
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.credential' = 'root:secret123',
-                                'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                                'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                                'iceberg.rest.vended-credentials-enabled' = 'false',
-                                's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'us-west-2'
-                            );
-                            ```
-                        </TabItem>
-                        
-                        <TabItem value='credential-vended' label='Vended Credentials'>
-                            
-                            基于 MinIO/S3 + Polaris 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_credential_vended_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.credential' = 'root:secret123',
-                                'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                                'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                                'iceberg.rest.vended-credentials-enabled' = 'true'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
-                </TabItem>
-
-                <TabItem value='token' label='Token 认证'>
-                    <Tabs>
-                        <TabItem value='token-static' label='静态存储凭证' default>
-                            
-                            基于 MinIO/S3 + Polaris 测试。
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_token_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.token' = 'xxx',
-                                's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'us-west-2'
-                            );
-                            ```
-                        </TabItem>
-                        
-                        <TabItem value='token-vended' label='Vended Credentials'>
-                            
-                            基于 MinIO/S3 + Polaris 测试，3.1.1 版本后 `s3.endpoint/s3.region` 可以不配置。
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_token_vended_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.token' = 'xxx',
-                                'iceberg.rest.vended-credentials-enabled' = 'true'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
-                </TabItem>
-            </Tabs>
-        </TabItem>
-    </Tabs>
-
-#### 配置说明
-
-**认证方式**
-- **无认证**：直接访问 REST Catalog 服务
-- **OAuth2**：由 REST 服务提供认证
-  - **Credential**：使用用户名密码认证（格式：`username:password`）
-  - **Token**：使用预获取的访问令牌认证
-
-**存储凭证**
-- **Vended Credentials**：由 REST 服务动态提供存储凭证，需设置 `'iceberg.rest.vended-credentials-enabled' = 'true'`
-- **3.1.1 版本后**：使用 Vended Credentials 时 `s3.endpoint` 和 `s3.region` 可选配置
-
-</details>
-
-<details >
-    <summary>2.1 & 3.0  版本 </summary>
-
-    <Tabs>
-        <TabItem value='HDFS' label='HDFS' default>
-
-        </TabItem>
-        <TabItem value='S3' label='S3'>
-
-        </TabItem>
-        <TabItem value='OSS' label='OSS'>
-
-        </TabItem>
-        <TabItem value='COS' label='COS'>
-
-        </TabItem>
-        <TabItem value='OBS' label='OBS'>
-
-        </TabItem>
-        <TabItem value='GCS' label='GCS'>
-
-        </TabItem>
-        <TabItem value='MinIO' label='MinIO'>
-
-        </TabItem>
-
-    </Tabs>
-
 </details>
 
 
-### S3Tables Metastore
+### S3Tables
 <details>
     <summary>3.1+ 版本  </summary>
     <Tabs>
