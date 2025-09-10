@@ -21,11 +21,11 @@ Remove all elements equal to the given value from an array while preserving the 
 ## Return value
 
 - Returns `ARRAY<T>` of the same type as the input.
-- If `arr` or `target` is `NULL`, returns `NULL`.
+- If `arr` is `NULL`, returns `NULL`.
 
 ## Usage notes
 
-- Matching rule: only elements whose value equals `target` are removed. `NULL` elements are not equal to any non-`NULL` value, so they are not removed.
+- Matching rule: only elements whose value equals `target` are removed. `NULL` is equal to `NULL`.
 
 ## Examples
 
@@ -33,8 +33,10 @@ Remove all elements equal to the given value from an array while preserving the 
   - `ARRAY_REMOVE([1,2,3], 1)` -> `[2,3]`
   - `ARRAY_REMOVE([1,2,3,null], 1)` -> `[2,3,null]`
 
-- If either `arr` or `target` is `NULL`, returns `NULL`
+- If `target` is `NULL`, remove `NULL` in `arr`.
   - `ARRAY_REMOVE(['a','b','c',NULL], NULL)` -> `NULL`
+
+- If `arr` is `NULL`, returns `NULL`
   - `ARRAY_REMOVE(NULL, 2)` -> `NULL`
 
 - No match

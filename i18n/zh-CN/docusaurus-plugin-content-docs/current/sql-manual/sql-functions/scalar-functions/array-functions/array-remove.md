@@ -21,11 +21,11 @@
 ## 返回值
 
 - 返回与输入同类型的 `ARRAY<T>`。
-- 若 `arr` 或 `target` 为 `NULL`，返回 `NULL`。
+- 如果 `arr` 输入 `NULL`, 返回 `NULL`.
 
 ## 使用说明
 
-- 匹配规则：仅移除与 `target` 值相等的元素；`NULL` 元素不会与任何非 `NULL` 值相等，因此不会被移除。
+- 匹配规则：移除与 `target` 值相等的元素；`NULL` 元素与 `NULL` 值相等。
 
 ## 示例
 
@@ -33,8 +33,10 @@
   - `ARRAY_REMOVE([1,2,3], 1)` -> `[2,3]`
   - `ARRAY_REMOVE([1,2,3,null], 1)` -> `[2,3,null]`
 
-- `arr` 或 `target` 为 `NULL`，返回 `NULL` 
-  - `ARRAY_REMOVE(['a','b','c',NULL], NULL)` -> `NULL`
+- `target` 为 `NULL`，移除 `arr` 中 `NULL` 
+  - `ARRAY_REMOVE(['a','b','c',NULL], NULL)` -> `['a', 'b', 'c']`
+
+- `arr` 为 `NULL`， 返回  `NULL`
   - `ARRAY_REMOVE(NULL, 2)` -> `NULL`
 
 - 无匹配情况
