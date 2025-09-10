@@ -131,7 +131,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 >
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
 >
-> You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is
+> You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
 
 ## Examples
 
