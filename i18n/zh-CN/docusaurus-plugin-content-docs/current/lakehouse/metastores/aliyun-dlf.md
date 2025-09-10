@@ -24,6 +24,10 @@
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID。用于指定元数据目录，如果不设置则使用默认目录。 | 无 | 否 |
 | `warehouse` | - | Warehouse 的存储路径，仅在 Paimon Catalog 中需要填写 | 无 | 否 |
 
+> 注：
+>
+> 3.1.0 版本之前，请使用曾用名。
+
 ### DLF 2.5+ (Rest Catalog)
 
 > 自 3.1.0 版本支持
