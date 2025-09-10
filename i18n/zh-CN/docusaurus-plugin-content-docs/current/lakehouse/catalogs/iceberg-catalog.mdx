@@ -924,7 +924,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
-            Create DB异常，需要排查
+           ```sql
+            CREATE CATALOG IF NOT EXISTS test_fs_on_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = 'ACCESS_KEY',
+                'obs.secret_key' = 'SECRET_KEY'
+            );
+            ```
         </TabItem>
         <TabItem value='GCS' label='GCS'>
           ```sql
@@ -964,8 +974,6 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
         </TabItem>
     </Tabs>
-
-
 </details>
 
 <details >
