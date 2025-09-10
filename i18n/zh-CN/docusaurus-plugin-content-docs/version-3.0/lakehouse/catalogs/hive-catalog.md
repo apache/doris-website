@@ -70,6 +70,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.recursive_directories`：在list 分区目录时，是否递归子目录。该参数自 3.0.2 版本支持。在 4.0 版本之前，该参数默认值为 `false`，之后的版本，该默认值为 `true`。某些 Hive 外表的分区路径可能和表结构中的分区信息不匹配，需要将这个参数设为 `true` 以便获取子目录下的数据文件。
 
+  * `hive.ignore_absent_partitions`：是否忽略不存在的分区。默认为 `true`。如果设为 `false`，当遇到不存在的分区时，查询会报错。该参数自 3.0.2 版本支持。
+
 ### 支持的 Hive 版本
 
 支持 Hive 1.x，2.x，3.x，4.x。
