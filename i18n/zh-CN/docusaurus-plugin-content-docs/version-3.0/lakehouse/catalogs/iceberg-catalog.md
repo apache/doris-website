@@ -140,7 +140,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 >
 > Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp` 和 `timestamptz` 会统一映射到 `datetime(N)` 类型上。但在读取和写入时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamptz` 列的读取和写入结果。
 >
-> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.0.8 版本支持)。
+> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.1.0 版本支持)。
 
 ## 基础示例
 
