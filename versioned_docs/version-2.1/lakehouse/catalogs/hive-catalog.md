@@ -64,7 +64,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   OtherProperties section is for entering properties related to Hive Catalog.
 
-  * `get_schema_from_table`：The default value is false. By default, Doris will obtain the table schema information from the Hive Metastore. However, in some cases, compatibility issues may occur, such as the error `Storage schema reading not supported`. In this case, you can set this parameter to true, and the table schema will be obtained directly from the Table object. But please note that this method will cause the default value information of the column to be ignored. This property is supported since version 2.1.10 and 3.0.6.
+  * `get_schema_from_table`: The default value is false. By default, Doris will obtain the table schema information from the Hive Metastore. However, in some cases, compatibility issues may occur, such as the error `Storage schema reading not supported`. In this case, you can set this parameter to true, and the table schema will be obtained directly from the Table object. But please note that this method will cause the default value information of the column to be ignored. This property is supported since version 2.1.10 and 3.0.6.
+
+  * `hive.recursive_directories`: Whether to recurse into subdirectories when listing partition directories. This parameter has been supported since version 3.0.2. Before version 4.0, this parameter defaulted to `false`; in later versions, it defaults to `true`. The partition paths of some Hive tables may not match the partition information in the table schema. Setting this parameter to true is necessary to retrieve data files in subdirectories.
+
+  * `hive.ignore_absent_partitions`: Whether to ignore non-existent partitions. Defaults to `true`. If set to `false`, the query will report an error when encountering non-existent partitions. This parameter has been supported since version 3.0.2.
 
 ### Supported Hive Versions
 
