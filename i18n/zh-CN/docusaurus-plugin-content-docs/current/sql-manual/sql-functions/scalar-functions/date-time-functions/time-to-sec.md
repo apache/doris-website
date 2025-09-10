@@ -25,6 +25,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 ## 返回值
 返回类型为 INT，表示输入时间值对应的总秒数，计算逻辑为：小时×3600 + 分钟×60 + 秒。
 
+- 输入 datetime 字符串时必须显示转换为 datetime 类型，不然会默认转换为 time 类型，返回 NULL.
 - 若输入为负数时间（如 -01:30:00），返回对应的负秒数（如 -5400）；
 - 若输入为 NULL，返回 NULL；
 - 忽略微秒部分（如 12:34:56.789 仅按 12:34:56 计算）
@@ -40,8 +41,16 @@ SELECT TIME_TO_SEC('16:32:18') AS result;
 |  59538 |
 +--------+
 
--- 处理 DATETIME 类型（提取时间部分）
+-- 处理 DATETIME 字符串，返回 NULL
 SELECT TIME_TO_SEC('2025-01-01 16:32:18') AS result;
++--------+
+| result |
++--------+
+|   NULL |
++--------+
+
+-- datetime 字符串需要显示转换为 datetime 类型
+SELECT TIME_TO_SEC(cast('2025-01-01 16:32:18' as datetime)) AS result;
 +--------+
 | result |
 +--------+

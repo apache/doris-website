@@ -27,6 +27,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 
 Returns an INT type representing the total seconds corresponding to the input time value, calculated as: hours×3600 + minutes×60 + seconds.
 
+- When entering a datetime string, you must explicitly convert it to a datetime type; otherwise, it will be converted to a time type by default, and NULL will be returned.
 - If the input is negative time (such as -01:30:00), returns the corresponding negative seconds (such as -5400)
 - If the input is NULL, returns NULL
 - Ignores the microsecond portion (e.g., 12:34:56.789 is calculated as 12:34:56 only)
@@ -42,8 +43,16 @@ SELECT TIME_TO_SEC('16:32:18') AS result;
 |  59538 |
 +--------+
 
--- Process DATETIME type (extract time portion)
+-- Process the DATETIME string and return NULL.
 SELECT TIME_TO_SEC('2025-01-01 16:32:18') AS result;
++--------+
+| result |
++--------+
+|   NULL |
++--------+
+
+-- A datetime string needs to be explicitly converted to a datetime type.
+SELECT TIME_TO_SEC(cast('2025-01-01 16:32:18' as datetime)) AS result;
 +--------+
 | result |
 +--------+
