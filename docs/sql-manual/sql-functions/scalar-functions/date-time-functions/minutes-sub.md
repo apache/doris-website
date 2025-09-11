@@ -22,7 +22,7 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 | Parameter | Description |
 | --------- | ----------- |
 | `<date_or_time_expr>` | The input datetime value, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
-| `<minutes>` | The number of minutes to subtract, of type INT. Can be positive or negative. |
+| `<minutes>` | The number of minutes to subtract, of type BIGINT. Can be positive or negative. |
 
 ## Return Value
 
@@ -33,7 +33,6 @@ Returns a value of type DATETIME, representing the datetime value after subtract
 - If the input datetime includes microseconds, the original microsecond precision is preserved after subtracting minutes (e.g., '2023-01-01 00:01:00.123456' becomes '2023-01-01 00:00:00.123456' after subtracting 1 minute).
 - If the calculation result exceeds the valid range of the DATETIME type (0000-01-01 00:00:00 to 9999-12-31 23:59:59.999999), an exception is thrown.
 - If any parameter is NULL, returns NULL.
-- If `<minutes>` exceeds the range of the INT type (-2147483648 to 2147483647), returns NULL.
 
 ## Examples
 
@@ -78,13 +77,6 @@ SELECT MINUTES_SUB(NULL, 10), MINUTES_SUB('2023-07-13 22:28:18', NULL) AS result
 | NULL                  | NULL   |
 +-----------------------+--------+
 
--- Minutes exceed INT range, returns NULL
-SELECT MINUTES_SUB('2023-07-13 22:28:18', 2147483648) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
 
 -- Calculation result exceeds datetime range, throws error
 SELECT MINUTES_SUB('0000-01-01 00:00:00', 1) AS result;

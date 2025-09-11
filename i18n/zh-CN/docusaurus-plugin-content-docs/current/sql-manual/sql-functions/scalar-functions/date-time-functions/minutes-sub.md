@@ -22,7 +22,7 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 | 参数 | 说明 |
 | ---- | ---- |
 | ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| ``<minutes>`` | 要减去的分钟数，类型为 INT，可以为正数或负数 |
+| ``<minutes>`` | 要减去的分钟数，类型为 BIGINT，可以为正数或负数 |
 
 ## 返回值
 
@@ -34,7 +34,6 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 - 若输入的日期时间包含微秒部分，减去分钟后会保留原微秒精度（如 '2023-01-01 00:01:00.123456' 减去 1 分钟后为 '2023-01-01 00:00:00.123456'）。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 `<minutes>` 超出 INT 类型范围（-2147483648 至 2147483647），返回 NULL。
 
 
 ## 举例
@@ -81,13 +80,6 @@ SELECT MINUTES_SUB(NULL, 10), MINUTES_SUB('2023-07-13 22:28:18', NULL) AS result
 | NULL                  | NULL   |
 +-----------------------+--------+
 
---- 分钟数超出 INT 范围，返回 NULL
-SELECT MINUTES_SUB('2023-07-13 22:28:18', 2147483648) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
 
 --- 计算结果超出日期时间范围，报错
 SELECT MINUTES_SUB('0000-01-01 00:00:00', 1) AS result;
