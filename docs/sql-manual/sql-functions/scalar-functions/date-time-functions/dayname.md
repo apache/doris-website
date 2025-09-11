@@ -7,34 +7,58 @@
 
 ## Description
 
-Calculates the name of the day corresponding to the given date expression.
+The DAYNAME function is used to calculate the name of the day (such as "Tuesday", etc.) corresponding to a date or time expression, returning a string type value.
+
+This function behaves consistently with the [dayname function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayname) in MySQL
 
 ## Syntax
 
 ```sql
-DAYNAME(<dt>)
+DAYNAME(<date_or_time_expr>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<dt>` | The date expression to be calculated |
+| `<date_or_time_expr>` | A valid date expression that supports date/datetime types and strings in date-time format. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
-Returns the name of the day corresponding to the given date expression.
+Returns the day name corresponding to the date (string type)
+
+Special cases:
+
+- If `date_or_time_expr` is NULL, returns NULL;
 
 ## Examples
 
 ```sql
-select dayname('2007-02-03 00:00:00');
-```
 
-```text
+---Calculate day name corresponding to DATETIME type
+select dayname('2007-02-03 00:00:00');
+
 +--------------------------------+
 | dayname('2007-02-03 00:00:00') |
 +--------------------------------+
 | Saturday                       |
 +--------------------------------+
+
+---Calculate day name corresponding to DATE type
+
+select dayname('2023-10-01');
++-----------------------+
+| dayname('2023-10-01') |
++-----------------------+
+| Sunday                |
++-----------------------+
+
+
+---Parameter is NULL, returns NULL
+select dayname(NULL);
++---------------+
+| dayname(NULL) |
++---------------+
+| NULL          |
++---------------+
 ```
