@@ -341,7 +341,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 #### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Description: Number of threads to execute asynic work. By default, the minimum number of threads is 16.
 * Default value: 16
 
 #### `fragment_mgr_asynic_work_pool_thread_num_max`
@@ -1365,3 +1365,9 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `time_series_max_tablet_version_num`
+
+* Type: int
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or untimely compaction. When the limit is exceeded, the load task will be rejected. Supported since version 3.0.7
+* Default value: 20000

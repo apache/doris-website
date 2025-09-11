@@ -1,15 +1,15 @@
 ---
 {
-    "title": "Table Model Overview",
+    "title": "Table Type Overview",
     "language": "en"
 }
 ---
 
-When creating a table in Doris, it is necessary to specify the table model to define how data is stored and managed. Doris provides three table models: the **Duplicate Key Model**, **Unique Key Model** and **Aggregate Key Model**, which cater to different application scenarios. Each model has corresponding mechanisms for data deduplication, aggregation, and updates. Choosing the appropriate table model helps achieve business objectives while ensuring flexibility and efficiency in data processing.
+When creating a table in Doris, you need to specify the table type, which determines how data is stored and managed. In Doris, the concept of "Key Model" is used to define the storage and management semantics of keys, and is closely related to the table type. Doris supports three key models (or table types): **Duplicate Key**, **Unique Key**, and **Aggregate Key**. Each key model provides different mechanisms for data deduplication, aggregation, and update handling, and is suitable for different business scenarios. Selecting the appropriate key model (table type) is essential for meeting business requirements while ensuring efficient and flexible data processing.
 
-## Table Model Classification
+## Table Type Classification
 
-Doris supports three types of table models:
+Doris supports three types of table types:
 
 * [Duplicate Key Model](./duplicate): Allows the specified Key columns to be duplicated, and Doris's storage layer retains all written data. This model is suitable for situations where all original data records must be preserved.
 
@@ -17,7 +17,7 @@ Doris supports three types of table models:
 
 * [Aggregate Key Model](./aggregate): Allows data to be aggregated based on the Key columns. The Doris storage layer retains aggregated data, reducing storage space and improving query performance. This model is typically used in situations where summary or aggregated information (such as totals or averages) is required.
 
-After creating the table, the properties of the table model are confirmed and cannot be modified. Choosing the right model for the business is crucial:
+After creating the table, the properties of the table type are confirmed and cannot be modified. Choosing the right model for the business is crucial:
 
 * **Duplicate Key Model** is suitable for ad-hoc queries with any dimensions. Although it cannot leverage the benefits of pre-aggregation, it is not constrained by aggregation models and can take advantage of the columnar storage model (only reading relevant columns without needing to read all key columns).
 
@@ -33,7 +33,7 @@ After creating the table, the properties of the table model are confirmed and ca
 
 In Doris, data is stored in a columnar format, and a table can be divided into Key columns and Value columns. The Key columns are used for grouping and sorting, while the Value columns are used for aggregation. Key columns can consist of one or more fields, and when creating a table, data is sorted and stored according to the columns of Aggregate Key, Unique Key, and Duplicate Key models.
 
-Different table models require the specification of Key columns during table creation, each with a different significance: for the Duplicate Key model, the Key columns represent sorting, without any uniqueness constraints. In the Aggregate Key and Unique Key models, aggregation is performed based on the Key columns, which not only have sorting capabilities but also enforce uniqueness constraints.
+Different table types require the specification of Key columns during table creation, each with a different significance: for the Duplicate Key model, the Key columns represent sorting, without any uniqueness constraints. In the Aggregate Key and Unique Key models, aggregation is performed based on the Key columns, which not only have sorting capabilities but also enforce uniqueness constraints.
 
 Proper use of the Sort Key can provide the following benefits:
 
@@ -53,7 +53,7 @@ When selecting a sort key, the following recommendations can be followed:
 
 * For the length of `VARCHAR` and `STRING` types, follow the principle of choosing enough...
 
-## Table Model Comparison
+## table type Comparison
 
 |           | Duplicate Key Model       | Unique Key Model | Aggregate Key Model |
 | --------- | ------------------ | ----------------- | --------------- |

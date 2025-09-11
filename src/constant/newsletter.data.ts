@@ -1,31 +1,31 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Best Practice'],
-        title: "From ClickHouse to Apache Doris: Powering Trillion-Log-Scale Analytics at a Leading Music Streaming Service",
-        content: `A major music streaming platform successfully migrated its massive 2PB log analytics from ClickHouse to Apache Doris, achieving up to 7x faster searches, 30% lower P99 query latency, 2.5x higher concurrency, and significant operational savings.`,
-        to: 'https://www.velodb.io/blog/1429',
-        image: 'blogs/from-clickhouse-to-doris-trillion-log-scale-analytics.jpg',
+        title: "Unified Lakehouse with Apache Doris and Paimon: Xiaomi Achieves 6× Faster Performance",
+        content: `Xiaomi is a leading global player in consumer electronics. Best known for its smartphones and smart home devices, Xiaomi is among the top global three smartphone makers and continues to expand into new offerings like electric vehicles. With a global operation, Xiaomi requires an analytical data architecture that can support its growth and increasing demand. Their solution: Apache Doris and Apache Paimon.`,
+        to: 'https://www.velodb.io/blog/1461',
+        image: 'blogs/lakehouse-performance.png',
+    },
+    {
+        tags: ['Best Practice'],
+        title: "Apache Doris Empowers Real-time Lakehouse in Large-Scale Business Scenarios of Cainiao",
+        content: `Cainiao, the world of e-commerce logistics giant, chose Apache Doris to upgrade its data platform. This step-by-step migration started in 2023, including validating Doris in a mission-critical scenario, expanding Doris's application scenarios, and executing full-scale deployment. the cost efficiency, stability, and operational efficiency of Doris have been powerfully proven. Currently, Doris powers over 25 clusters (10,000+ CPUs) across 3 regions without any failure.`,
+        to: 'https://www.velodb.io/blog/1454',
+        image: 'blogs/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.png',
+    },
+    {
+        tags: ['Best Practice'],
+        title: "Leading Cloud Computing Service Provider Chose Apache Doris + Iceberg for Hyperscale Data Lakehouse",
+        content: `The world's cloud computing service giant chose Apache Doris + Apache Iceberg to upgrade its data platform into a flexible, efficient data lakehouse with low costs. This solution handles reporting and BI, federated analysis, log storage and analysis, and high-concurrency analysis. With Apache Doris, this company has successfully launched 20+ projects with 50+ clusters, 3000+ nodes, and over 15 petabytes of data.`,
+        to: 'https://www.velodb.io/blog/1450',
+        image: 'blogs/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.png',
     },
     {
         tags: ['Tech Sharing'],
-        title: "From Elasticsearch to Apache Doris: How a Leading Payment Platform Upgraded its Financial Security Analytics, Boosting Queries by 56x",
-        content: `A leading payment platform, handling over 600 million daily security events, replaced its Elasticsearch and Hudi stack with Apache Doris. This move achieved up to 56x faster queries, 50% lower storage costs, and 58% higher write throughput, while simplifying architecture and boosting developer efficiency.`,
-        to: 'https://www.velodb.io/blog/1427',
-        image: 'blogs/from-elasticsearch-to-doris-boosting-queries-by-56x.jpg',
-    },
-    {
-        tags: ['Tech Sharing'],
-        title: "Building Real-Time Lakehouse with Apache Doris: A Practical Guide",
-        content: `The Lakehouse is a data management paradigm that combines the advantages of data lakes and data warehouses. Apache Doris advances this concept with its core philosophies of "Boundless Data, Seamless Lakehouse." This article takes a deeper dive into its typical application scenarios to help readers better understand and apply its capabilities.`,
-        to: 'https://www.velodb.io/blog/1428',
-        image: 'blogs/building-real-time-lakehouse-with-apache-doris.jpg',
-    },
-    {
-        tags: ['Tech Sharing'],
-        title: "EMQX now supports real-time data ingestion into Apache Doris for efficient IoT analytics",
-        content: `Apache Doris data integration is an out-of-the-box feature in EMQX, which enables complex business development through simple configuration. In a typical IoT application, EMQX, as the IoT platform, is responsible for device connection and transmitting messages. Apache Doris, as the data storage platform, is responsible for storing device status and metadata, as well as message data storage and data analysis. Using EMQX and Apache Doris, users can build high-performance, reliable, and scalable IoT applications that deliver an end-to-end solution from data acquisition through analytics to actionable intelligence.`,
-        to: 'https://www.velodb.io/blog/1412',
-        image: 'blogs/emqx-apache-doris-ecosystem-for-iot-analytics.png',
+        title: "Real-time Data Analytics at Scale: Integrating Apache Flink and Doris",
+        content: `In this article, we'll discuss the main technical use cases of Flink Doris Connector and Flink CDC, showing a complete playbook to combine Flink's real-time processing with Doris's fast analytics.`,
+        to: 'https://www.velodb.io/blog/1453',
+        image: 'blogs/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.JPEG',
     },
 
 

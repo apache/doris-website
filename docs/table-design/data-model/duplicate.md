@@ -1,21 +1,21 @@
 ---
 {
-    "title": "Duplicate Key Model",
+    "title": "Duplicate Key Table",
     "language": "en"
 }
 ---
 
-The **Duplicate Key Model** in Doris is the default table model, designed to store individual raw data records. The `Duplicate Key` specified during table creation determines the columns for sorting and storage, optimizing common queries. It is recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Duplicate Key Model has the following characteristics:
+The **Duplicate Key Table** in Doris is the default table type, designed to store individual raw data records. The `Duplicate Key` specified during table creation determines the columns for sorting and storage, optimizing common queries. It is recommended to choose no more than three columns as the sort key. For more specific selection guidelines, refer to [Sort Key](../index/prefix-index). The Duplicate Key Table has the following characteristics:
 
-* **Preserving Raw Data**: The Duplicate Key Model retains all original data, making it ideal for storing and querying raw data. It is recommended for use cases requiring detailed data analysis to avoid data loss.
+* **Preserving Raw Data**: The Duplicate Key Table retains all original data, making it ideal for storing and querying raw data. It is recommended for use cases requiring detailed data analysis to avoid data loss.
 
-* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key models, the Duplicate Key Model does not perform deduplication or aggregation, fully retaining identical records.
+* **No Deduplication or Aggregation**: Unlike the Aggregate and Primary Key tables, the Duplicate Key Table does not perform deduplication or aggregation, fully retaining identical records.
 
-* **Flexible Data Querying**: The Duplicate Key Model retains all original data, enabling detailed extraction and aggregation across any dimension for metadata auditing and fine-grained analysis.
+* **Flexible Data Querying**: The Duplicate Key Table retains all original data, enabling detailed extraction and aggregation across any dimension for metadata auditing and fine-grained analysis.
 
 ## Use Cases
 
-In the Duplicate Key Model, data is generally only appended, and old data is not updated. The Duplicate Key Model is ideal for scenarios that require full raw data:
+In the Duplicate Key Table, data is generally only appended, and old data is not updated. The Duplicate Key Table is ideal for scenarios that require full raw data:
 
 * **Log Storage**: Used for storing various types of application logs, such as access logs, error logs, etc. Each piece of data needs to be detailed for future auditing and analysis.
 
@@ -26,7 +26,7 @@ In the Duplicate Key Model, data is generally only appended, and old data is not
 
 ## Table Creation Instructions
 
-When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Duplicate Key Model. The Duplicate Key table must specify the Key columns, which are used to sort the data during storage. In the following example, the Duplicate Key table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
+When creating a table, the **DUPLICATE KEY** keyword can be used to specify the Duplicate Key Table. The Duplicate Key table must specify the Key columns, which are used to sort the data during storage. In the following example, the Duplicate Key table stores log information and sorts the data based on the `log_time`, `log_type`, and `error_code` columns:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_duplicate
@@ -44,7 +44,7 @@ DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 
 ## Data Insertion and Storage
 
-In a Duplicate Key table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Duplicate Key Model are used for sorting.
+In a Duplicate Key table, data is not deduplicated or aggregated; inserting data directly stores it. The Key columns in the Duplicate Key Table are used for sorting.
 
 ![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
 

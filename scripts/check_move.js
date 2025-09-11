@@ -22,6 +22,8 @@ let hasBrokenLinks = false;
 function getModifiedMarkdownFiles(commit) {
   const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
   const lines = output.split("\n");
+  console.log('lines',lines);
+  
   const files = [];
 
   for (const line of lines) {

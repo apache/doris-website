@@ -86,7 +86,7 @@ Here we use Apache Doris 2.1.7-rc03 and Apache Doris 2.0.15.1 for comparative te
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](../../versioned_docs/version-2.1/install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](../install/deploy-manually/integrated-storage-compute-deploy-manually.md) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 
@@ -144,7 +144,7 @@ export DB='tpch'
 ```shell
 sh bin/create-tpch-tables.sh -s 1000
 ```
-Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/doris/blob/master/tools/tpch-tools/ddl/create-tpch-tables-sf1000.sql) and excute it in Doris.
+Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/doris/blob/master/tools/tpch-tools/ddl/create-tpch-tables-sf1000.sql) and execute it in Doris.
 
 
 ### 7.4 Import Data

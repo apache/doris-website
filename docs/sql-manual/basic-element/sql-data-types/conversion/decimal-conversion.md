@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to DECIMAL",
+    "title": "Cast to DECIMAL Type",
     "language": "en"
 }
 ---

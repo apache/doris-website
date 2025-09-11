@@ -25,7 +25,7 @@ In Doris, the CREATE TABLE statement can specify [table properties](../sql-manua
 
 - **storage_policy**: Controls the migration strategy for cold and hot data separation storage.
 
-These properties apply to partitions, meaning that once a partition is created, it will have its own properties. Modifying table properties will only affect partitions created in the future and will not affect existing partitions. For more information about table properties, refer to [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY).
+These properties apply to partitions, meaning that after a partition is created, it will have its own properties. Modifying table properties will only affect partitions created in the future and will not affect existing partitions. For more information about table properties, refer to [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY). [Dynamic partitions](data-partitioning/dynamic-partitioning.md) can have these properties set individually.
 
 ## Notes
 

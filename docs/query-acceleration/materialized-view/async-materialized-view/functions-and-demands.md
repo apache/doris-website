@@ -89,7 +89,7 @@ Determines whether to refresh immediately after materialized view creation.
 
 - **`ON SCHEDULE` Scheduled Trigger**
 
-  Specify refresh intervals in the materialized view creation statement.
+  Specify refresh intervals in the materialized view creation statement. You can specify the data refresh interval in the materialized view creation statement using refreshUnit, where the refresh time interval unit can be minute, hour, day, week, etc.
 
   Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
 
@@ -1203,6 +1203,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - RefreshMode: COMPLETE means all partitions were refreshed, PARTIAL means some partitions were refreshed, NOT_REFRESH means no partitions needed refreshing.
 
 :::info Note
+
+- Currently, the default storage and display count for tasks is 100. This can be modified by configuring max_persistence_task_count in the fe.conf file. When exceeding this limit, older task records will be discarded. If the value is set to < 1, task persistence will be disabled. After modifying the configuration, a restart of the FE service is required for the changes to take effect.
+
 - If the `grace_period` property was set when creating the materialized view, it may still be available for transparent rewriting in some cases even if `SyncWithBaseTables` is false or 0.
 
 - `grace_period` is measured in seconds and specifies the allowed time for data inconsistency between the materialized view and base tables.

@@ -97,7 +97,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
@@ -214,7 +214,15 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/load-internals",
+                                "data-operate/import/load-internals/routine-load-internals"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -382,6 +390,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "AI",
+                    "items": [
+                        "ai/ai-function-overview"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Lakehouse",
                     "items": [
                         "lakehouse/lakehouse-overview",
@@ -440,7 +455,7 @@
                         },
                         {
                             "type": "category",
-                            "label": "File Foramt",
+                            "label": "File Format",
                             "items": [
                                 "lakehouse/file-formats/parquet",
                                 "lakehouse/file-formats/orc",
@@ -471,9 +486,10 @@
                                 "lakehouse/best-practices/doris-iceberg",
                                 "lakehouse/best-practices/doris-lakesoul",
                                 "lakehouse/best-practices/doris-aws-s3tables",
+                                "lakehouse/best-practices/doris-dlf-paimon",
+                                "lakehouse/best-practices/doris-maxcompute",
                                 "lakehouse/best-practices/tpch",
-                                "lakehouse/best-practices/tpcds",
-                                "lakehouse/best-practices/doris-maxcompute"
+                                "lakehouse/best-practices/tpcds"
                             ]
                         }
                     ]
@@ -484,7 +500,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -496,7 +522,16 @@
                         "compute-storage-decoupled/compilation-and-deployment",
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
-                        "compute-storage-decoupled/file-cache",
+                        {
+                            "type": "category",
+                            "label": "File Cache",
+                            "items": [
+                                "compute-storage-decoupled/file-cache/file-cache",
+                                "compute-storage-decoupled/file-cache/file-cache-internals"
+                            ]
+                        },
+                        "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
@@ -599,6 +634,7 @@
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
                         "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/spill-disk",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
@@ -913,6 +949,16 @@
                 },
                 {
                     "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -921,9 +967,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
-                        "ecosystem/fluentbit",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
                         "ecosystem/hive-hll-udf",
@@ -970,9 +1013,8 @@
                                         "sql-manual/basic-element/sql-data-types/numeric/INT",
                                         "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
                                         "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/FLOAT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DOUBLE",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL"
+                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+                                        "sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT"
                                     ]
                                 },
                                 {
@@ -981,7 +1023,8 @@
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/date-time/DATE",
                                         "sql-manual/basic-element/sql-data-types/date-time/TIME",
-                                        "sql-manual/basic-element/sql-data-types/date-time/DATETIME"
+                                        "sql-manual/basic-element/sql-data-types/date-time/DATETIME",
+                                        "admin-manual/cluster-management/time-zone"
                                     ]
                                 },
                                 {
@@ -1027,6 +1070,8 @@
                                     "type": "category",
                                     "label": "Conversion",
                                     "items": [
+                                        "sql-manual/basic-element/sql-data-types/conversion/overview",
+                                        "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
@@ -1034,6 +1079,9 @@
                                         "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/json-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/map-conversion",
+                                        "sql-manual/basic-element/sql-data-types/conversion/struct-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/time-conversion"
                                     ]
                                 }
@@ -1084,6 +1132,40 @@
                     "items": [
                         {
                             "type": "category",
+                            "label": "AI Functions",
+                            "items": [
+                                {
+                                    "type": "category",
+                                    "label": "Vector Distance Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/embed"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "AI Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/ai-functions/ai-classify",
+                                        "sql-manual/sql-functions/ai-functions/ai-extract",
+                                        "sql-manual/sql-functions/ai-functions/ai-filter",
+                                        "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+                                        "sql-manual/sql-functions/ai-functions/ai-function",
+                                        "sql-manual/sql-functions/ai-functions/ai-generate",
+                                        "sql-manual/sql-functions/ai-functions/ai-mask",
+                                        "sql-manual/sql-functions/ai-functions/ai-sentiment",
+                                        "sql-manual/sql-functions/ai-functions/ai-similarity",
+                                        "sql-manual/sql-functions/ai-functions/ai-summarize",
+                                        "sql-manual/sql-functions/ai-functions/ai-translate"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "category",
                             "label": "Scalar Functions",
                             "items": [
                                 {
@@ -1112,6 +1194,8 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/format-round",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/isinf",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/isnan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/ln",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/log",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/log10",
@@ -1136,6 +1220,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/uniform",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/even",
@@ -1207,6 +1292,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/soundex",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strleft",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strright",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp",
@@ -1385,20 +1471,10 @@
                                 },
                                 {
                                     "type": "category",
-                                    "label": "Vector Distance Functions",
-                                    "items": [
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/cosine-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/inner-product",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l1-distance",
-                                        "sql-manual/sql-functions/scalar-functions/distance-functions/l2-distance"
-                                    ]
-                                },
-                                {
-                                    "type": "category",
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
-                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit_test",
+                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-test",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",
@@ -1526,6 +1602,14 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Variant Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+                                        "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "IP Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
@@ -1620,7 +1704,9 @@
                                         "sql-manual/sql-functions/scalar-functions/other-functions/convert-to",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/esquery",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/field",
-                                        "sql-manual/sql-functions/scalar-functions/other-functions/g"
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/g",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/grouping-id"
                                     ]
                                 },
                                 {
@@ -1652,6 +1738,7 @@
                             "type": "category",
                             "label": "Aggregate Functions",
                             "items": [
+                                "sql-manual/sql-functions/aggregate-functions/ai-agg",
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
                                 "sql-manual/sql-functions/aggregate-functions/approx-top-k",
@@ -1666,6 +1753,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
+                                "sql-manual/sql-functions/aggregate-functions/corr-welford",
                                 "sql-manual/sql-functions/aggregate-functions/corr",
                                 "sql-manual/sql-functions/aggregate-functions/count",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
@@ -1677,8 +1765,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-concat",
-                                "sql-manual/sql-functions/aggregate-functions/grouping",
-                                "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
                                 "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
@@ -1694,12 +1780,10 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
-                                "sql-manual/sql-functions/aggregate-functions/regr_intercept",
-                                "sql-manual/sql-functions/aggregate-functions/regr_slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
@@ -1741,68 +1825,65 @@
                                 "sql-manual/sql-functions/window-functions/percent-rank",
                                 "sql-manual/sql-functions/window-functions/rank",
                                 "sql-manual/sql-functions/window-functions/row-number",
-                                "sql-manual/sql-functions/window-functions/any-value",
-                                "sql-manual/sql-functions/window-functions/approx-count-distinct",
-                                "sql-manual/sql-functions/window-functions/approx-top-k",
-                                "sql-manual/sql-functions/window-functions/approx-top-sum",
-                                "sql-manual/sql-functions/window-functions/array-agg",
-                                "sql-manual/sql-functions/window-functions/avg",
-                                "sql-manual/sql-functions/window-functions/avg-weighted",
-                                "sql-manual/sql-functions/window-functions/bitmap-agg",
-                                "sql-manual/sql-functions/window-functions/bitmap-intersect",
-                                "sql-manual/sql-functions/window-functions/bitmap-union",
-                                "sql-manual/sql-functions/window-functions/bitmap-union-count",
-                                "sql-manual/sql-functions/window-functions/bitmap-union-int",
-                                "sql-manual/sql-functions/window-functions/collect-list",
-                                "sql-manual/sql-functions/window-functions/collect-set",
-                                "sql-manual/sql-functions/window-functions/corr",
-                                "sql-manual/sql-functions/window-functions/count",
-                                "sql-manual/sql-functions/window-functions/count-by-enum",
-                                "sql-manual/sql-functions/window-functions/covar",
-                                "sql-manual/sql-functions/window-functions/covar-samp",
-                                "sql-manual/sql-functions/window-functions/group-array-intersect",
-                                "sql-manual/sql-functions/window-functions/group-bit-and",
-                                "sql-manual/sql-functions/window-functions/group-bit-or",
-                                "sql-manual/sql-functions/window-functions/group-bit-xor",
-                                "sql-manual/sql-functions/window-functions/group-bitmap-xor",
-                                "sql-manual/sql-functions/window-functions/group-concat",
-                                "sql-manual/sql-functions/window-functions/grouping",
-                                "sql-manual/sql-functions/window-functions/grouping-id",
-                                "sql-manual/sql-functions/window-functions/histogram",
-                                "sql-manual/sql-functions/window-functions/hll-raw-agg",
-                                "sql-manual/sql-functions/window-functions/hll-union-agg",
-                                "sql-manual/sql-functions/window-functions/intersect-count",
-                                "sql-manual/sql-functions/window-functions/kurt",
-                                "sql-manual/sql-functions/window-functions/linear-histogram",
-                                "sql-manual/sql-functions/window-functions/map-agg",
-                                "sql-manual/sql-functions/window-functions/max",
-                                "sql-manual/sql-functions/window-functions/max-by",
-                                "sql-manual/sql-functions/window-functions/median",
-                                "sql-manual/sql-functions/window-functions/min",
-                                "sql-manual/sql-functions/window-functions/min-by",
-                                "sql-manual/sql-functions/window-functions/percentile",
-                                "sql-manual/sql-functions/window-functions/percentile-approx",
-                                "sql-manual/sql-functions/window-functions/percentile-array",
-                                "sql-manual/sql-functions/window-functions/percentile_approx_weighted",
-                                "sql-manual/sql-functions/window-functions/quantile-union",
-                                "sql-manual/sql-functions/window-functions/regr-intercept",
-                                "sql-manual/sql-functions/window-functions/regr-slope",
-                                "sql-manual/sql-functions/window-functions/regr_intercept",
-                                "sql-manual/sql-functions/window-functions/regr_slope",
-                                "sql-manual/sql-functions/window-functions/retention",
-                                "sql-manual/sql-functions/window-functions/sequence-count",
-                                "sql-manual/sql-functions/window-functions/sequence-match",
-                                "sql-manual/sql-functions/window-functions/skew",
-                                "sql-manual/sql-functions/window-functions/stddev",
-                                "sql-manual/sql-functions/window-functions/stddev-samp",
-                                "sql-manual/sql-functions/window-functions/sum",
-                                "sql-manual/sql-functions/window-functions/sum0",
-                                "sql-manual/sql-functions/window-functions/topn",
-                                "sql-manual/sql-functions/window-functions/topn-array",
-                                "sql-manual/sql-functions/window-functions/topn-weighted",
-                                "sql-manual/sql-functions/window-functions/var-samp",
-                                "sql-manual/sql-functions/window-functions/variance",
-                                "sql-manual/sql-functions/window-functions/window-funnel"
+                                "sql-manual/sql-functions/aggregate-functions/any-value",
+                                "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
+                                "sql-manual/sql-functions/aggregate-functions/approx-top-k",
+                                "sql-manual/sql-functions/aggregate-functions/approx-top-sum",
+                                "sql-manual/sql-functions/aggregate-functions/array-agg",
+                                "sql-manual/sql-functions/aggregate-functions/avg",
+                                "sql-manual/sql-functions/aggregate-functions/avg-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-agg",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-intersect",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-union",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-union-count",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
+                                "sql-manual/sql-functions/aggregate-functions/collect-list",
+                                "sql-manual/sql-functions/aggregate-functions/collect-set",
+                                "sql-manual/sql-functions/aggregate-functions/corr-welford",
+                                "sql-manual/sql-functions/aggregate-functions/corr",
+                                "sql-manual/sql-functions/aggregate-functions/count",
+                                "sql-manual/sql-functions/aggregate-functions/count-by-enum",
+                                "sql-manual/sql-functions/aggregate-functions/covar",
+                                "sql-manual/sql-functions/aggregate-functions/covar-samp",
+                                "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+                                "sql-manual/sql-functions/aggregate-functions/group-bit-and",
+                                "sql-manual/sql-functions/aggregate-functions/group-bit-or",
+                                "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
+                                "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
+                                "sql-manual/sql-functions/aggregate-functions/group-concat",
+                                "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
+                                "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
+                                "sql-manual/sql-functions/aggregate-functions/intersect-count",
+                                "sql-manual/sql-functions/aggregate-functions/kurt",
+                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
+                                "sql-manual/sql-functions/aggregate-functions/map-agg",
+                                "sql-manual/sql-functions/aggregate-functions/max",
+                                "sql-manual/sql-functions/aggregate-functions/max-by",
+                                "sql-manual/sql-functions/aggregate-functions/median",
+                                "sql-manual/sql-functions/aggregate-functions/min",
+                                "sql-manual/sql-functions/aggregate-functions/min-by",
+                                "sql-manual/sql-functions/aggregate-functions/percentile",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-array",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/quantile-union",
+                                "sql-manual/sql-functions/aggregate-functions/regr-intercept",
+                                "sql-manual/sql-functions/aggregate-functions/regr-slope",
+                                "sql-manual/sql-functions/aggregate-functions/retention",
+                                "sql-manual/sql-functions/aggregate-functions/sequence-count",
+                                "sql-manual/sql-functions/aggregate-functions/sequence-match",
+                                "sql-manual/sql-functions/aggregate-functions/skew",
+                                "sql-manual/sql-functions/aggregate-functions/stddev",
+                                "sql-manual/sql-functions/aggregate-functions/stddev-samp",
+                                "sql-manual/sql-functions/aggregate-functions/sum",
+                                "sql-manual/sql-functions/aggregate-functions/sum0",
+                                "sql-manual/sql-functions/aggregate-functions/topn",
+                                "sql-manual/sql-functions/aggregate-functions/topn-array",
+                                "sql-manual/sql-functions/aggregate-functions/topn-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/var-samp",
+                                "sql-manual/sql-functions/aggregate-functions/variance",
+                                "sql-manual/sql-functions/aggregate-functions/window-funnel"
                             ]
                         },
                         {
@@ -1810,16 +1891,26 @@
                             "label": "Table Functions",
                             "items": [
                                 "sql-manual/sql-functions/table-functions/explode",
+                                "sql-manual/sql-functions/table-functions/explode-outer",
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
+                                "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-double",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-double-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-int",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-int-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-json",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-json-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-array-string",
+                                "sql-manual/sql-functions/table-functions/explode-json-array-string-outer",
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
                                 "sql-manual/sql-functions/table-functions/explode-map",
+                                "sql-manual/sql-functions/table-functions/explode-map-outer",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
                                 "sql-manual/sql-functions/table-functions/explode-split",
-                                "sql-manual/sql-functions/table-functions/posexplode"
+                                "sql-manual/sql-functions/table-functions/explode-split-outer",
+                                "sql-manual/sql-functions/table-functions/posexplode",
+                                "sql-manual/sql-functions/table-functions/posexplode-outer"
                             ]
                         },
                         {
@@ -2011,6 +2102,7 @@
                                 "sql-manual/sql-statements/catalog/DROP-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+                                "sql-manual/sql-statements/catalog/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/catalog/REFRESH"
                             ]
                         },
@@ -2322,6 +2414,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",
                         "releasenotes/v3.0/release-3.0.4",
@@ -2335,6 +2428,7 @@
                     "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

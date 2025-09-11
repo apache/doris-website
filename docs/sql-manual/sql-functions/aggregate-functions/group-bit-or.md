@@ -19,37 +19,49 @@ GROUP_BIT_OR(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | Supports all INT types |
+| `<expr>` | Supports types: TinyInt, SmallInt, Integer, BigInt, LargeInt. |
 
 ## Return Value
 
-Returns an integer value
+Returns an integer value of the same type as <expr>. If all values are NULL, returns NULL. NULL values are not involved in the bitwise operation.
 
 ## Example
 
 ```sql
-select * from group_bit;
-```
+-- setup
+create table group_bit(
+    value int
+) distributed by hash(value) buckets 1
+properties ("replication_num"="1");
 
-```text
-+-------+
-| value |
-+-------+
-|     3 |
-|     1 |
-|     2 |
-|     4 |
-+-------+
+insert into group_bit values
+    (3),
+    (1),
+    (2),
+    (4),
+    (NULL);
 ```
 
 ```sql
-mysql> select group_bit_or(value) from group_bit;
+select group_bit_or(value) from group_bit;
 ```
 
 ```text
-+-----------------------+
-| group_bit_or(`value`) |
-+-----------------------+
-|                     7 |
-+-----------------------+
++---------------------+
+| group_bit_or(value) |
++---------------------+
+|                   7 |
++---------------------+
+```
+
+```sql
+select group_bit_or(value) from group_bit where value is null;
+```
+
+```text
++---------------------+
+| group_bit_or(value) |
++---------------------+
+|                NULL |
++---------------------+
 ```

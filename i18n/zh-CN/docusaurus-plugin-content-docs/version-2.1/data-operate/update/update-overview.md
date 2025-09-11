@@ -5,108 +5,232 @@
 }
 ---
 
-数据更新是指对具有相同 key 的数据记录中的 value 列进行修改。对于不同的数据模型，数据更新的处理方式有所不同：
+在数据驱动决策的今天，数据的“新鲜度”已成为企业在激烈市场竞争中脱颖而出的核心竞争力。传统的T+1数据处理模式，由于其固有的延迟，已无法满足现代商业对实时性的苛刻要求。无论是为了实现毫秒级的业务库与数据仓库同步、动态调整运营策略，还是为了在秒级内修正错误数据以保障决策的准确性，强大的实时数据更新能力都显得至关重要。
 
-- **主键（Unique）模型**：主键模型是专门为数据更新设计的一种数据模型。Doris 支持两种存储方式：Merge-on-Read（MoR）和 Merge-on-Write（MoW）。MoR 优化了写入性能，而 MoW 则提供了更好的分析性能。从 Doris 2.1 版本开始，默认存储方式为 MoW。主键模型支持使用 `UPDATE` 语句进行少量数据更新，也支持通过导入方式进行批量更新。导入方式包括 Stream Load、Broker Load、Routine Load 和 Insert Into 等，所有导入操作都遵循“UPSERT”语义，即如果记录不存在则插入，存在则更新。更新操作支持整行更新和部分列更新，默认为整行更新。
+Apache Doris 作为一个现代化的实时分析型数据库，其设计的核心目标之一便是提供极致的数据新鲜度。它通过强大的数据模型和灵活的更新机制，将数据分析的延迟从天级、小时级成功压缩至秒级，为用户构建实时、敏捷的商业决策闭环提供了坚实的基础。
 
-- **聚合（Aggregate）模型**：在聚合模型中，数据更新是一种特殊用法。当聚合函数设置为 REPLACE 或 REPLACE_IF_NOT_NULL 时，可以实现数据更新。聚合模型仅支持基于导入方式的更新，不支持使用 `UPDATE` 语句。通过设置聚合函数为 REPLACE_IF_NOT_NULL，可以实现部分列更新的能力。
+本文档将作为一份官方指南，系统性地阐述 Apache Doris 的数据更新能力，内容涵盖其核心原理、多样的更新与删除方式、典型的应用场景，以及在不同部署模式下的性能最佳实践，旨在帮助您全面掌握并高效利用 Doris 的数据更新功能。
 
-通过对不同模型的数据更新方式的理解，可以更好地选择适合的更新策略，以满足具体的业务需求。
+## 1. 核心概念：表模型与更新机制
 
-## 不同模型/实现的更新能力对比
+在 Doris 中，数据表的**表模型（Data Model）**决定了其数据组织方式和更新行为。为了支持不同的业务场景，Doris 提供了三种表模型：主键模型（Unique Key）、聚合模型（Aggregate Key）和明细模型（Duplicate Key）。其中，**主键模型是实现复杂、高频数据更新的核心**。
 
-### 性能对比
-|                | Unique Key MoW                                                                                                                                                                   | Unique Key MoR                                                                                                                                                                   | Aggregate Key |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| 导入速度       | 导入过程中进行数据去重，小批量实时写入相比 MoR 约有 10%-20% 的性能损失，大批量导入（例如千万级/亿级数据）相比 MoR 约有 30%-50% 的性能损失                                                                                                      | 与 Duplicate Key 接近                                                                                                                                                                 | 与 Duplicate Key 接近  |
-| 查询速度       | 与 Duplicate Key 接近                                                                                                                                                                 | 需要在查询期间进行去重，查询耗时约为 MoW 的 3-10 倍                                                                                                                                                    | 如果聚合函数为 REPLACE/REPLACE_IF_NOT_NULL，查询速度与 MoR 接近 |
-| 谓词下推       | 支持                                                                                                                                                                               | 不支持                                                                                                                                                                              | 不支持        |
-| 资源消耗       | - **导入资源消耗**：相比 Duplicate Key/Unique Key MoR，约额外消耗 10%-30% 的 CPU。<br /><br /> - **查询资源消耗**：与 Duplicate Key 接近，无额外资源消耗。<br /><br /> - **Compaction 资源消耗**：相比 Duplicate Key，消耗更多内存和 CPU，具体取决于数据特征和数据量。 | - **导入资源消耗**：与 Duplicate Key 相近，无额外资源消耗。<br /><br /> - **查询资源消耗**：相比 Duplicate Key/Unique Key MoW，查询时额外消耗更多的 CPU 和内存。<br /><br /> - **Compaction 资源消耗**：相比 Duplicate Key，需更多内存和 CPU，具体数值取决于数据特征和数据量。 | 与 Unique Key MoR 相同 |
+### 1.1. 表模型概览
 
-### 功能支持对比
-|                | Unique Key MoW | Unique Key MoR | Aggregate Key  |
-|----------------|----------------|----------------|----------------|
-| UPDATE         | 支持           | 支持           | 不支持         |
-| DELETE         | 支持           | 支持           | 不支持         |
-| sequence 列    | 支持           | 支持           | 不支持         |
-| delete_sign    | 支持           | 支持           | 不支持         |
-| 部分列更新     | 支持           | 不支持         | 支持 (但无法更新 null 值) |
-| 倒排索引       | 支持           | 不支持         | 不支持         |
+| **表模型**                   | **主要特点**                                                 | **更新能力**                               | **适用场景**                                                 |
+| ---------------------------- | ------------------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------ |
+| **主键模型 (Unique Key)**    | 为实时更新而生。每个数据行由唯一的键（Primary Key）标识，支持行级别的UPSERT（Update/Insert）和部分列更新。 | 最强，支持所有更新和删除方式。             | 订单状态更新、用户标签实时计算、CDC数据同步等需要频繁、实时变更的场景。 |
+| **聚合模型 (Aggregate Key)** | 根据指定的 Key 列对数据进行预聚合。对于 Key 相同的行，其 Value 列会按照定义的聚合函数（如SUM, MAX, MIN, REPLACE）进行合并。 | 有限，支持基于Key列的REPLACE式更新和删除。 | 需要实时汇总统计的场景，如实时报表、广告点击量统计等。       |
+| **明细模型 (Duplicate Key)** | 数据仅支持追加写入（Append-only），不进行任何去重或聚合操作，即使数据行完全相同也会被保留。 | 有限，仅支持通过DELETE语句进行条件删除。   | 日志采集、用户行为埋点等只需追加、无需更新的场景。           |
 
-## 主键（Unique）模型的更新
+### 1.2. 数据更新方式
 
-Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
+Doris 提供了两大类数据更新方法：**通过数据导入进行更新**和**通过DML语句进行更新**。
 
-在 Doris 2.0，默认创建的 unique 模型依旧是 MoR 的，如果要创建 MoW 的，需要通过参数 "enable_unique_key_merge_on_write" = "true" 手动指定，如下示例：
+#### 1.2.1. 通过导入进行更新 (UPSERT)
+
+这是 Doris **推荐的高性能、高并发**的更新方式，主要针对**主键模型**。所有的导入方式（Stream Load, Broker Load, Routine Load, `INSERT INTO`）都天然支持 `UPSERT` 语义。当新数据导入时，如果其主键已存在，Doris 会用新行数据覆盖旧行数据；如果主键不存在，则插入新行。
+
+![img](/images/update-overview/update-by-loading.png)
+
+1.2.2. 通过 `UPDATE` DML语句更新
+
+Doris 支持标准的 SQL `UPDATE` 语句，允许用户根据 `WHERE` 子句指定的条件对数据进行更新。这种方式非常灵活，支持复杂的更新逻辑，例如跨表关联更新。
+
+![img](/images/update-overview/update-self.png)
 
 ```sql
-CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
-(
-  `user_id` LARGEINT NOT NULL,
-  `username` VARCHAR(50) NOT NULL,
-  `city` VARCHAR(20),
-  `age` SMALLINT,
-  `sex` TINYINT,
-  `phone` LARGEINT,
-  `address` VARCHAR(500),
-  `register_time` DATETIME
-)
-UNIQUE KEY(`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"enable_unique_key_merge_on_write" = "true"
-);
+-- 简单更新
+UPDATE user_profiles SET age = age + 1 WHERE user_id = 1;
+
+-- 跨表关联更新
+UPDATE sales_records t1
+SET t1.user_name = t2.name
+FROM user_profiles t2
+WHERE t1.user_id = t2.user_id;
 ```
 
-:::caution
-从 Doris 2.1 版本开始，MoW 是主键模型的默认方式。所以如果使用 Doris 2.1 及以上版本，务必要阅读相关建表文档。
-:::
+**注意**：`UPDATE` 语句的执行过程是先扫描满足条件的数据，然后将更新后的数据重新写回表中。它适合低频、批量的更新任务。**不建议对** **`UPDATE`** **语句进行高并发操作**，因为并发的 `UPDATE` 在涉及相同主键时，无法保证数据的隔离性。
 
-### 主键模型的两种更新方式
+#### 1.2.2. 通过 `INSERT INTO SELECT` DML语句更新
 
-#### 使用 `UPDATE` 语句更新
+由于Doris默认提供了UPSERT的语义，因此使用`INSERT INTO SELECT`也可以实现类似于`UPDATE`的更新效果。
 
-无论是 MoR 还是 MoW，语义都是完成对指定列的更新。单次 UPDATE 的耗时会随着被更新的数据量的增加而增长。
+### 1.3. 数据删除方式
 
-#### 基于导入的批量更新
+与更新类似，Doris 也支持通过导入和DML语句两种方式删除数据。
 
-Doris 支持多种数据导入方式，包括 Stream Load、Broker Load、Routine Load 以及 Insert Into 等。对于主键表，所有导入操作默认采用“UPSERT”语义：当相同主键的记录不存在时执行插入操作，若记录已存在则进行更新操作。更新方式包括整行更新和部分列更新：
+#### 1.3.1. 通过导入进行标记删除
 
-- **整行更新**：Unique Key 表的更新**默认为整行更新**。在导入数据时，用户可以选择提供所有字段，或仅提供部分字段。当用户只提供部分字段时，Doris 会用默认值填充缺失的字段，生成完整记录并进行更新。
+这是一种高效的批量删除方法，主要用于**主键模型**。用户可以在导入数据时，增加一个特殊的隐藏列 `DORIS_DELETE_SIGN`。当某行的该列值为 `1` 或 `true` 时，Doris 会将该主键对应的数据行标记为删除（关于delete sign的原理，后文会有详细的介绍）。
 
-- **部分列更新**：Unique Key MoW 支持部分列更新。用户可以通过设置会话变量 `enable_unique_key_partial_update = true` 或在 HTTP Header 中指定 `partial_columns:true` 来启用此功能。开启后，若导入数据的主键已存在，则仅更新指定的部分字段；若主键不存在，则使用默认值填充缺失字段。
+```Plain
+// Stream Load 导入数据，删除 user_id 为 2 的行
+// curl --location-trusted -u user:passwd -H "columns:user_id, __DORIS_DELETE_SIGN__" -T delete.json http://fe_host:8030/api/db_name/table_name/_stream_load
 
-我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/update-of-unique-model) 详细介绍两种更新方式。
+// delete.json 内容
+[
+    {"user_id": 2, "__DORIS_DELETE_SIGN__": "1"}
+]
+```
 
-### 主键模型的更新并发控制
+#### 1.3.2. 通过 `DELETE` DML语句删除
 
-#### 使用 `UPDATE` 语句更新数据
+Doris 支持标准的 SQL `DELETE` 语句，可以根据 `WHERE` 条件删除数据。
 
-默认情况下，Doris 不允许在同一时间对同一张表进行多个 `UPDATE` 操作。`UPDATE` 语句通过表级锁来确保隔离性。
+- **主键模型**：`DELETE` 语句会将满足条件的行的主键重新写入，并附带删除标记。因此，其性能与需要删除的数据量成正比。主键模型上的`DELETE`语句执行原理与`UPDATE`语句非常相似，先通过查询把要删除的数据读取出来，然后再附加删除标记进行一次写入。相比`UPDATE`语句，DELETE语句只需要写入Key列和删除标记列，相对轻量一些。
+- **明细/聚合模型**：`DELETE` 语句的实现方式是记录一个删除谓词（Delete Predicate）。在查询时，这个谓词会作为一个运行时过滤器（Runtime Filter）来过滤掉被删除的数据。因此，`DELETE` 操作本身非常快，几乎与删除的数据量无关。但需要注意，**在明细/聚合模型上进行高频的** **`DELETE`** **操作会累积大量的运行时过滤器，严重影响后续的查询性能**。
 
-用户可以通过修改 FE 配置 `enable_concurrent_update=true` 来调整并发限制。当放宽并发限制时，多个 `UPDATE` 语句如果更新同一行数据，结果将是未定义的。
+```sql
+DELETE FROM user_profiles WHERE last_login < '2022-01-01';
+```
 
-#### 基于导入的批量更新
+下表是对使用DML语句进行删除的一个简要总结
 
-Doris 对所有导入更新操作提供原子性保障，即每次导入数据要么全部成功应用，要么全部失败回滚。
+|          | **主键模型** | **聚合模型**            | **明细模型**     |
+| -------- | ------------ | ----------------------- | ---------------- |
+| 实现方式 | Delete Sign  | Delete Predicate        | Delete Predicate |
+| 限制     | 无           | 删除条件只能用于 Key 列 | 无               |
+| 删除性能 | 一般         | 快                      | 快               |
 
-对于并发导入更新，Doris 基于系统内部版本控制（按照导入完成提交的顺序进行分配），使用 MVCC 机制确定并发更新的顺序。
+## 2. 深入主键模型：原理与实现
 
-由于多个并发导入更新的提交顺序可能无法预期，若这些并发导入涉及相同主键的更新，则其生效顺序也无法预知，最终的可见结果会因此存在不确定性。为解决此问题，Doris 提供了 sequence 列机制，允许用户在并发导入更新时为每一行数据指定版本，以便明确控制并发更新的结果顺序，实现确定性。
+主键模型是 Doris 实现高性能实时更新的基石。理解其内部工作原理，对于充分发挥其性能至关重要。
 
-我们将在文档 [主键模型的更新并发控制](../update/unique-update-concurrent-control.md) 中对更新的并发控制机制进行详细介绍。
+### 2.1. Merge-on-Write (MoW) vs. Merge-on-Read (MoR)
 
-## 聚合（Aggregate）模型的更新
+主键模型有两种数据合并策略：写时合并（MoW）和读时合并（MoR）。**自 Doris 2.1 版本起，MoW 已成为默认且推荐的实现方式**。
 
-聚合模型的更新，主要是指用新的列值和旧的聚合值按照聚合函数的要求产出新的聚合值。
+| **特性**     | **Merge-on-Write (MoW)**                                     | **Merge-on-Read (MoR) - (旧版)**                             |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **核心思想** | 在数据写入时即完成数据去重和合并，保证存储中的每个主键只有一条最新记录。 | 数据写入时保留多个版本，在查询时进行实时合并，返回最新版本。 |
+| **查询性能** | 极高。查询时无需额外合并操作，性能接近无更新的明细表。       | 较差。查询时需要进行数据合并，耗时约为 MoW 的 3-10 倍，并消耗更多CPU和内存。 |
+| **写入性能** | 写入时有合并开销，相比 MoR 有一定的性能损失（小批量约10-20%，大批量约30-50%）。 | 写入速度快，接近明细表。                                     |
+| **资源消耗** | 写入和后台Compaction消耗更多CPU和内存。                      | 查询时消耗更多CPU和内存。                                    |
+| **适用场景** | 绝大多数实时更新场景。尤其适合读多写少的业务，能提供极致的查询分析性能。 | 适用于写多读少的场景，但已不作为主流推荐。                   |
 
-New Agg Value = Agg Func (Old Agg Value, New Column Value)
+MoW 机制通过在写入阶段付出少量代价，换取了查询性能的巨大提升，完美契合了OLAP系统“重读轻写”的特点。
 
-聚合模型只支持基于导入方式的更新，不支持使用 `UPDATE` 语句更新。在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NOT_NULL，也可以间接实现类似主键表的部分列更新能力。更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。
+### 2.2. 条件更新 (Sequence Column)
 
-## 主键模型和聚合模型的选择建议
-- 大部分有数据更新需求的场景，都建议**首选主键模型**。例如从 TP 数据库 CDC 同步到 Doris，用户画像，人群圈选等。
-- 下面两类场景，建议使用聚合模型：
-  - 部分字段需要做指标聚合，部分字段需要进行更新。
-  - 对部分列更新有需求，同时对写入性能非常敏感，对查询延迟要求不高的场景，建议使用聚合表 + REPLACE_IF_NOT_NULL 聚合函数。
+在分布式系统中，数据乱序到达是一个常见问题。例如，一个订单状态先后变更为“已支付”和“已发货”，但由于网络延迟，代表“已发货”的数据可能先于“已支付”的数据到达 Doris。
+
+为了解决这个问题，Doris 引入了**Sequence 列**机制。用户可以在建表时指定一个列（通常是时间戳或版本号）作为 Sequence 列。当处理具有相同主键的数据时，Doris 会比较它们的 Sequence 列的值，并**始终保留 Sequence 值最大的那一行数据**，从而保证了数据的最终一致性，即使数据乱序到达。
+
+```sql
+CREATE TABLE order_status (
+    order_id BIGINT,
+    status_name STRING,
+    update_time DATETIME
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id)
+PROPERTIES (
+    "function_column.sequence_col" = "update_time" -- 指定 update_time 为 Sequence 列
+);
+
+-- 1. 写入 "已发货" 记录 (update_time 较大)
+-- {"order_id": 1001, "status_name": "Shipped", "update_time": "2023-10-26 12:00:00"}
+
+-- 2. 写入 "已支付" 记录 (update_time 较小，后到达)
+-- {"order_id": 1001, "status_name": "Paid", "update_time": "2023-10-26 11:00:00"}
+
+-- 最终查询结果，保留了 update_time 最大的记录
+-- order_id: 1001, status_name: "Shipped", update_time: "2023-10-26 12:00:00"
+```
+
+### 2.3. 删除机制 (`DORIS_DELETE_SIGN`) 工作流程
+
+`DORIS_DELETE_SIGN` 的工作原理可以概括为“逻辑标记，后台清理”。
+
+1. **执行删除**：当用户通过导入或`DELETE`语句删除数据时，Doris 不会立即从物理文件中移除数据。相反，它会为要删除的主键写入一条新记录，该记录的 `DORIS_DELETE_SIGN` 列被标记为 `1`。
+2. **查询过滤**：当用户查询数据时，Doris 会在查询计划中自动添加一个过滤条件 `WHERE DORIS_DELETE_SIGN = 0`，从而在查询结果中隐藏所有被标记为删除的数据。
+3. **后台 Compaction**：Doris 的后台 Compaction 进程会定期扫描数据。当它发现一个主键同时存在正常记录和删除标记记录时，它会在合并过程中将这两条记录都物理地移除，最终释放存储空间。
+
+这种机制确保了删除操作的快速响应，同时通过后台任务异步完成物理清理，避免了对在线业务的性能冲击。
+
+下图展示了`DORIS_DELETE_SIGN` 的工作原理
+
+![img](/images/update-overview/delete_sign_en.png)
+
+### 2.4 部分列更新(**Partial Column Update)**
+
+从 2.0 版本开始，Doris 在主键模型（MoW）上支持了强大的部分列更新能力。用户在导入数据时，只需提供主键和待更新的列，未提供的列将保持其原值不变。这极大地简化了宽表拼接、实时标签更新等场景的ETL流程。
+
+要启用此功能，需在创建主键模型表时，开启 Merge-on-Write (MoW) 模式，并设置 `enable_unique_key_partial_update` 属性为 `true`。或者在数据导入时配置`"partial_columns"`参数
+
+```sql
+CREATE TABLE user_profiles (
+    user_id BIGINT,
+    name STRING,
+    age INT,
+    last_login DATETIME
+)
+UNIQUE KEY(user_id)
+DISTRIBUTED BY HASH(user_id)
+PROPERTIES (
+    "enable_unique_key_partial_update" = "true"
+);
+
+-- 初始数据
+-- user_id: 1, name: 'Alice', age: 30, last_login: '2023-10-01 10:00:00'
+
+-- 通过 Stream Load 导入部分更新数据，只更新 age 和 last_login
+-- {"user_id": 1, "age": 31, "last_login": "2023-10-26 18:00:00"}
+
+-- 更新后数据
+-- user_id: 1, name: 'Alice', age: 31, last_login: '2023-10-26 18:00:00'
+```
+
+**部分列更新原理概要**
+
+不同于传统的OLTP数据库，Doris的部分列更新并非是原地的数据更新，为了让Doris有更好的写入吞吐以及查询性能，主键模型的部分列更新采取了**“导入时将缺失字段补齐后再整行写入”**的实现方案。
+
+因此使用Doris的部分列更新存在**“读放大”**和**“写放大”**的影响。例如给一个100列的宽表更新10个字段，Doris在写入过程中需要补齐缺失的90个字段，假设每个字段的大小接近，则1MB的10字段更新，会在Doris系统中产生大约9MB的数据读取（补齐缺失的字段），以及10MB的数据写入（补齐整行后写入到新的文件），也就是有大约9倍的读放大和10倍的写放大。
+
+**部分列更新性能建议**
+
+由于部分列更新存在读放大和写放大，同时Doris还是列存系统，在数据读取的过程中可能会产生大量d随机IO，因此对硬盘的随机读IOPS有较高的要求。由于传统的机械磁盘在随机IO上存在显著瓶颈，因此如果要使用部分列更新功能进行高频的写入，**建议使用SSD硬盘，最好是nvme接口，**能够提供最好的随机IO支撑
+
+同时，**如果表很宽，也建议开启行存来减少随机IO**。开启行存后，Doris会在列存之外额外的存储一份行存数据，由于行存数据每一行都是连续存储的，因此可以一次IO就读取到整行数据（列存则需要N次IO才能读取到所有缺失的字段，例如前面的100列宽表更新10列的例子，每一行需要90次IO才能读取到所有的字段）
+
+## 3. 典型应用场景
+
+Doris 强大的数据更新能力使其能够胜任多种要求严苛的实时分析场景。
+
+### 3.1. CDC 数据实时同步
+
+通过 Flink CDC 等工具捕获上游业务数据库（如 MySQL, PostgreSQL, Oracle）的变更数据（Binlog），并实时写入 Doris 的主键模型表，是构建实时数仓最经典的场景。
+
+- **整库同步**：Flink Doris Connector 内部集成了 Flink CDC，可以实现从上游数据库到 Doris 的自动化、端到端的整库同步，无需手动建表和配置字段映射。
+- **保证一致性**：利用主键模型的 `UPSERT` 能力处理上游的 `INSERT` 和 `UPDATE` 操作，利用 `DORIS_DELETE_SIGN` 处理 `DELETE` 操作，并结合 Sequence 列（如 Binlog 中的时间戳）处理乱序数据，完美复刻上游数据库的状态，实现毫秒级延迟的数据同步。
+
+![img](/images/update-overview/flink.png)
+
+### 3.2. 实时宽表拼接
+
+在很多分析场景中，需要将来自不同业务系统的数据拼接成一张用户宽表或商品宽表。传统的方式是使用离线的 ETL 任务（如 Spark 或 Hive）定期（T+1）进行拼接，实时性差，且维护成本高。或者使用Flink进行实时的宽表join计算，将拼接后的数据写入数据库，这通常需要消耗大量的计算资源。
+
+利用 Doris 的**部分列更新**能力，可以极大地简化这一流程：
+
+1. 在 Doris 中创建一张主键模型的宽表。
+2. 将来自不同数据源（如用户基础信息、用户行为数据、交易数据等）的数据流通过 Stream Load 或 Routine Load 实时写入这张宽表。
+3. 每个数据流只负责更新自己相关的字段。例如，用户行为数据流只更新 `page_view_count`, `last_login_time`等字段；交易数据流只更新 `total_orders`, `total_amount` 等字段。
+
+这种方式不仅将宽表的构建从离线ETL转变为实时流式处理，大大提升了数据新鲜度，还因为只写入变化的列而减少了I/O开销，提升了写入性能。
+
+## 4. 最佳实践
+
+遵循以下最佳实践，可以帮助您更稳定、更高效地使用 Doris 的数据更新功能。
+
+1. **优先使用导入更新**：对于高频、大量的更新操作，应优先选择 Stream Load, Routine Load 等导入方式，而非 `UPDATE` DML 语句。
+2. **攒批写入**：避免使用 `INSERT INTO` 语句进行逐条的高频写入（如 > 100 TPS），因为每条 `INSERT` 都会产生一次事务开销。如果必须使用，应考虑开启 Group Commit 功能，将多个小批量提交合并成一个大事务。
+3. **谨慎使用高频** **`DELETE`**：在明细模型和聚合模型上，避免高频的 `DELETE` 操作，以防查询性能下降。
+4. **删除分区数据时使用****`TRUNCATE PARTITION`**：如果需要删除整个分区的数据，应使用 `TRUNCATE PARTITION`，其效率远高于 `DELETE`。
+5. **串行执行** **`UPDATE`**：避免并发执行可能作用于相同数据行的 `UPDATE` 任务。
+
+## 结论
+
+Apache Doris 凭借其以主键模型为核心的强大、灵活且高效的数据更新能力，真正打破了传统 OLAP 系统在数据新鲜度上的瓶颈。无论是通过高性能的导入实现 `UPSERT` 和部分列更新，还是利用 Sequence 列保证乱序数据的一致性，Doris 都为构建端到端的实时分析应用提供了完整的解决方案。
+
+通过深入理解其核心原理，掌握不同更新方式的适用场景，并遵循本文档提供的最佳实践，您将能够充分释放 Doris 的潜力，让实时数据真正成为驱动业务增长的强大引擎

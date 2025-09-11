@@ -5,7 +5,6 @@
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
 }
-
 ---
 
 ## Description
@@ -66,7 +65,7 @@ columns_definition
     [ , <col_name> <col_type> [ ... ] ]
 ```
 
-```sql    
+```sql
 indexes_definition
   : -- Index definition
     INDEX [ IF NOT EXISTS ]
@@ -85,22 +84,25 @@ indexes_definition
 
 ```sql
 partitions_definition
-  : AUTO PARTITION BY RANGE(
-      <auto_partition_function>(<auto_partition_arguments>))
-      ()
-  | PARTITION BY <partition_type>
-    (<partition_cols>)
-    (
+  : AUTO PARTITION BY RANGE(<auto_partition_function>(<auto_partition_arguments>))
+    <origin_partitions_definition>
+  | AUTO PARTITION BY LIST(<partition_cols>)
+    <origin_partitions_definition>
+  | PARTITION BY <partition_type> (<partition_cols>)
+    <origin_partitions_definition>
+```
+
+- 其中：
+
+    ```sql
+    <origin_partitions_definition>
+    : (
         -- Partition definition
         <one_partition_definition>
         -- Additional partition definition
         [ , ... ]
-    )
-```
+      )
 
-- Where <one_partition_definition>:
-
-    ```sql
     <one_partition_definition>
     : PARTITION [ IF NOT EXISTS ] <partition_name>
         VALUES LESS THAN <partition_value_list>
@@ -115,7 +117,7 @@ partitions_definition
         }
     ```
 
-```sql      
+```sql
 roll_up_definition
   : ROLLUP (
         -- Rollup definition
@@ -152,7 +154,7 @@ CREATE
           "<table_properties>"
           [ , ... ] 
     ) ]
-AS <query>;
+[ AS ] <query>;
 ```
 
 ### CREATE TABLE ... LIKE
@@ -269,15 +271,9 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 > The properties of the index. For detailed explanations, refer to the [Inverted Index](../../../../table-design/index/inverted-index.md) section.
 
-### Automatic Partitioning Related Parameters
+### Auto Partition Related Parameters
 
 For a detailed introduction to partitioning, see the [Automatic Partitioning](../../../../table-design/data-partitioning/auto-partitioning.md) section.
-
-**<auto_partition_function>(<auto_partition_arguments>)**
-
-> The method of automatic partitioning. `<auto_partition_function>` currently only supports `date_trunc`. `<auto_partition_arguments>` specifies the column for automatic partitioning and the unit of `date_trunc`. For example, `date_trunc(col_1, 'day')`.
->
-> When using automatic partitioning, the partition column must be NOT NULL.
 
 ### Manual Partitioning Related Parameters
 
