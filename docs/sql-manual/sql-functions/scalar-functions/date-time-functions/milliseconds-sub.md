@@ -20,7 +20,7 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
 | `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
-| `<delta>`    | The number of milliseconds to subtract, of type `INT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
+| `<delta>`    | The number of milliseconds to subtract, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value
 
@@ -30,7 +30,6 @@ Returns a value of type `DATETIME`, representing the result of subtracting the s
 - If the input is of `DATE` type (only includes year, month, and day), the default time part is set to `00:00:00.000`.
 - If the calculation result exceeds the valid range of the `DATETIME` type (`0000-01-01 00:00:00` to `9999-12-31 23:59:59.999999`), an exception is thrown.
 - If any parameter is `NULL`, the function returns `NULL`.
-- If `<delta>` exceeds the range of the `INT` type (`-2147483648` to `2147483647`), the function returns `NULL`.
 
 ## Examples
 
@@ -71,11 +70,4 @@ SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS afte
 | NULL                         | NULL                       |
 +------------------------------+----------------------------+
 
--- Delta exceeds INT range, returns NULL
-SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435', 2147483648) AS after_sub;
-+-----------+
-| after_sub |
-+-----------+
-| NULL      |
-+-----------+
 ```

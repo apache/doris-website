@@ -20,7 +20,7 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 | 参数 | 说明 |
 | ---- | ---- |
 | `<datetime>` | 输入的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)  |
-| `<delta>` | 要减去的毫秒数，类型为 INT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
+| `<delta>` | 要减去的毫秒数，类型为 BIGINT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
 
 ## 返回值
 
@@ -30,7 +30,6 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00.000。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 `<delta>` 超出 INT 类型范围（-2147483648 至 2147483647），返回 NULL。
 
 ## 举例
 
@@ -71,11 +70,4 @@ SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS afte
 | NULL                         | NULL                       |
 +------------------------------+----------------------------+
 
---- delta 超出 INT 范围，返回 NULL
-SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435', 2147483648) AS after_sub;
-+-----------+
-| after_sub |
-+-----------+
-| NULL      |
-+-----------+
 ```

@@ -22,7 +22,7 @@ MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 | 参数 | 说明 |
 | ---- | ---- |
 | `<datetime>` | 输入的日期时间值，类型为 DATETIME，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<delta>` | 要减去的微秒数，类型为 INT，1 秒 = 1,000,000 微秒 |
+| `<delta>` | 要减去的微秒数，类型为 BIGINT，1 秒 = 1,000,000 微秒 |
 
 ## 返回值
 
@@ -31,7 +31,6 @@ MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 - 若 `<delta>` 为负数，函数效果等同于向基准时间中添加对应微秒数（即 MICROSECONDS_SUB(basetime, -n) 等价于 MICROSECONDS_ADD(basetime, n)）。
 - 若计算结果超出 DATETIME 类型的有效范围（0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），抛出异常。
 - 若任一参数为 NULL，返回 NULL。
-- 若 `<delta>` 超出 INT 类型范围，返回 NULL。
 
 ## 举例
 
@@ -76,11 +75,5 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation mi
 out of range
 
 
---- delta 参数超出 INT 范围，返回 NULL
-SELECT MICROSECONDS_SUB('2023-10-01 12:00:00.500000', 2147483648) AS after_sub;
-+-----------+
-| after_sub |
-+-----------+
-| NULL      |
-+-----------+
+
 ```

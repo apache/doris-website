@@ -22,7 +22,7 @@ MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 | Parameter    | Description                                                                                     |
 |--------------|-------------------------------------------------------------------------------------------------|
 | `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
-| `<delta>`    | The number of microseconds to subtract, of type `INT`. 1 second = 1,000,000 microseconds.       |
+| `<delta>`    | The number of microseconds to subtract, of type `BIGINT`. 1 second = 1,000,000 microseconds.       |
 
 ## Return Value
 
@@ -31,7 +31,6 @@ Returns a value of type `DATETIME`, representing the result of subtracting the s
 - If `<delta>` is negative, the function behaves the same as adding the corresponding number of microseconds to the base time (i.e., `MICROSECONDS_SUB(basetime, -n)` is equivalent to `MICROSECONDS_ADD(basetime, n)`).
 - If the calculation result exceeds the valid range of the `DATETIME` type (`0000-01-01 00:00:00` to `9999-12-31 23:59:59.999999`), an exception is thrown.
 - If any parameter is `NULL`, the function returns `NULL`.
-- If `<delta>` exceeds the range of the `INT` type, the function returns `NULL`.
 
 ## Examples
 
@@ -74,11 +73,4 @@ mysql> SELECT MICROSECONDS_SUB('0000-01-01 00:00:00.000000', 1000000) AS after_s
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation microseconds_sub of 0000-01-01 00:00:00, 1000000 
 out of range
 
--- Delta parameter exceeds INT range, returns NULL
-SELECT MICROSECONDS_SUB('2023-10-01 12:00:00.500000', 2147483648) AS after_sub;
-+-----------+
-| after_sub |
-+-----------+
-| NULL      |
-+-----------+
 ```
