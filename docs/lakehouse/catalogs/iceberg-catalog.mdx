@@ -207,180 +207,128 @@ CREATE CATALOG iceberg_dlf PROPERTIES (
 ### Rest Metastore
 
     <Tabs>
-        <TabItem value='no-auth' label='No Authentication' default>
+        <TabItem value='s3' label='S3' default>
             <Tabs>
-                <TabItem value='static-storage' label='Static Storage Credential' default>
-                    
-                    Supports S3, OSS, COS and other storage systems based on Iceberg native configuration.
-
-                    <Tabs>
-                        <TabItem value='s3' label='S3' default>
-                            ```sql
-                            CREATE CATALOG iceberg_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'ap-east-1'
-                            );
-                            ```
-                        </TabItem>
-                        <TabItem value='oss' label='OSS'>
-                            ```sql
-                            CREATE CATALOG iceberg_static_oss PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                                'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                'oss.region' = 'cn-beijing'
-                            );
-                            ```
-                        </TabItem>
-                        <TabItem value='cos' label='COS'>
-                            ```sql
-                            CREATE CATALOG iceberg_static_cos PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 's3://iceberg_rest_warehouse',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                                'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                                'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                'cos.region' = 'ap-beijing'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
+                <TabItem value='s3-noauth' label='No Authentication' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                        's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        's3.region' = 'ap-east-1'
+                    );
+                    ```
                 </TabItem>
-                
-                <TabItem value='vended-credentials' label='Vended Credentials'>
-                    
-                    Tested with Gravitino + S3. Since 3.1.1, `s3.endpoint/s3.region` are optional.
-
+                <TabItem value='s3-oauth2' label='OAuth2 Authentication'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                        's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        's3.region' = 'us-west-2'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='s3-vended' label='Vended Credentials'>
                     ```sql
                     CREATE CATALOG gravitino_vended_s3 PROPERTIES (
                         'type' = 'iceberg',
                         'warehouse' = 'warehouse',
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
-                        'iceberg.rest.vended-credentials-enabled' = 'true',
-                        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                        's3.region' = 'us-west-2'
+                        'iceberg.rest.vended-credentials-enabled' = 'true'
                     );
                     ```
                 </TabItem>
             </Tabs>
         </TabItem>
-
-        <TabItem value='oauth2' label='OAuth2 Authentication'>
+        
+        <TabItem value='oss' label='OSS'>
             <Tabs>
-                <TabItem value='credential' label='Credential Authentication' default>
-                    <Tabs>
-                        <TabItem value='credential-static' label='Static Storage Credential' default>
-                            
-                            Tested with MinIO/S3 + Polaris.
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.credential' = 'root:secret123',
-                                'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                                'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                                'iceberg.rest.vended-credentials-enabled' = 'false',
-                                's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'us-west-2'
-                            );
-                            ```
-                        </TabItem>
-                        
-                        <TabItem value='credential-vended' label='Vended Credentials'>
-                            
-                            Tested with MinIO/S3 + Polaris. Since 3.1.1, `s3.endpoint/s3.region` are optional.
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_credential_vended_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.credential' = 'root:secret123',
-                                'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                                'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                                'iceberg.rest.vended-credentials-enabled' = 'true'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
+                <TabItem value='oss-noauth' label='No Authentication' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_oss PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'oss.region' = 'cn-beijing'
+                    );
+                    ```
                 </TabItem>
-
-                <TabItem value='token' label='Token Authentication'>
-                    <Tabs>
-                        <TabItem value='token-static' label='Static Storage Credential' default>
-                            
-                            Tested with MinIO/S3 + Polaris.
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_token_static_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.token' = 'xxx',
-                                's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                                's3.region' = 'us-west-2'
-                            );
-                            ```
-                        </TabItem>
-                        
-                        <TabItem value='token-vended' label='Vended Credentials'>
-                            
-                            Tested with MinIO/S3 + Polaris. Since 3.1.1, `s3.endpoint/s3.region` are optional.
-
-                            ```sql
-                            CREATE CATALOG polaris_oauth2_token_vended_s3 PROPERTIES (
-                                'type' = 'iceberg',
-                                'warehouse' = 'doris_test',
-                                'iceberg.catalog.type' = 'rest',
-                                'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                                'iceberg.rest.security.type' = 'oauth2',
-                                'iceberg.rest.oauth2.token' = 'xxx',
-                                'iceberg.rest.vended-credentials-enabled' = 'true'
-                            );
-                            ```
-                        </TabItem>
-                    </Tabs>
+                <TabItem value='oss-oauth2' label='OAuth2 Authentication'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_oss PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'oss.region' = 'cn-beijing'
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+        
+        <TabItem value='cos' label='COS'>
+            <Tabs>
+                <TabItem value='cos-noauth' label='No Authentication' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_cos PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'cos.region' = 'ap-beijing'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='cos-oauth2' label='OAuth2 Authentication'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_cos PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                        'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'cos.region' = 'ap-beijing'
+                    );
+                    ```
                 </TabItem>
             </Tabs>
         </TabItem>
     </Tabs>
-
-#### Configuration Notes
-
-**Authentication Methods**
-- **No Authentication**: Direct access to REST Catalog service
-- **OAuth2**: Authentication provided by REST service (e.g., Polaris built-in auth or Gravitino with Google OAuth)
-  - **Credential**: Username/password authentication (format: `username:password`)
-  - **Token**: Pre-obtained access token authentication
-
-**Storage Credentials**
-- **Vended Credentials**: Storage credentials dynamically provided by REST service, requires `'iceberg.rest.vended-credentials-enabled' = 'true'`
-- **Since 3.1.1**: `s3.endpoint` and `s3.region` are optional when using Vended Credentials
 
 ### Iceberg on Google Dataproc Metastore
 
