@@ -22,7 +22,7 @@ MICROSECONDS_ADD(`<datetime>`, `<delta>`)
 | Parameter | Description |
 | --------- | ----------- |
 | `<datetime>` | The input datetime value, of type DATETIME. For datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<delta>` | The number of microseconds to add, of type INT. 1 second = 1,000,000 microseconds. |
+| `<delta>` | The number of microseconds to add, of type BIGINT. 1 second = 1,000,000 microseconds. |
 
 ## Return Value
 
@@ -72,11 +72,4 @@ SELECT MICROSECONDS_ADD('2023-10-01 12:00:00.500000', NULL);
 | NULL                                                |
 +-----------------------------------------------------+
 
--- delta parameter type is INT, input parameter out of this range returns NULL
-SELECT MICROSECONDS_ADD('2023-10-01 12:00:00.500000',2147483648);
-+-----------------------------------------------------------+
-| MICROSECONDS_ADD('2023-10-01 12:00:00.500000',2147483648) |
-+-----------------------------------------------------------+
-| NULL                                                      |
-+-----------------------------------------------------------+
 ```
