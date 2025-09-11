@@ -1592,6 +1592,7 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-value",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-quote",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-replace",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-remove",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-search",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-set",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
