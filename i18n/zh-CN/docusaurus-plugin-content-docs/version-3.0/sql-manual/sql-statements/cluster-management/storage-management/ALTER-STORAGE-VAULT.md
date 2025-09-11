@@ -20,6 +20,9 @@ PROPERTIES (<storage_vault_property>)
 
 **<storage_vault_property>**
 
+> - type：可选值为 s3, hdfs. 这个字段从3.0.8之后是选填字段.
+> 
+>
 > 当 type 为 s3 时，允许出现的属性字段如下：
 >
 > - s3.access_key：s3 vault 的 ak
