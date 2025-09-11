@@ -9,7 +9,7 @@
 
 The TIMESTAMP function converts a datetime string to DATETIME type.
 
-For specific datetime formats, please refer to [datetime conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
+For specific datetime formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
 
 This function differs from the [timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestamp) in MySQL. Doris currently does not support a second time parameter for datetime addition/subtraction.
 

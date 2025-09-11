@@ -7,7 +7,7 @@
 
 ## 描述
 
-与 [date-diff 函数](./date-diff) 作用一致
+与 [date-diff 函数](./datediff) 作用一致
 TIMESTAMPDIFF 函数用于计算两个日期时间值之间的差值，并以指定的时间单位返回结果。该函数支持多种时间单位（如秒、分、时、日、周、月、年）
 
 该函数与 mysql 中的 [date_diff 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-diff) 行为一致
