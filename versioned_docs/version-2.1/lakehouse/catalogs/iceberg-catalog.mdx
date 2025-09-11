@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables.
 
 [Quick start with Apache Doris and Apache Iceberg](../best-practices/doris-iceberg.md).
@@ -58,15 +61,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   The `warehouse` path must point to the level above the `Database` path. For example, if your table path is `s3://bucket/path/to/db1/table1`, then the `warehouse` should be `s3://bucket/path/to/`.
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   The MetaStoreProperties section is for entering connection and authentication information for the Metastore metadata service. Refer to the section on [Supported Metadata Services].
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   The StorageProperties section is for entering connection and authentication information related to the storage system. Refer to the section on [Supported Storage Systems].
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is for entering general properties. See the [Catalog Overview](../catalog-overview.md) for details on common properties.
 
