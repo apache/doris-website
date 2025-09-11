@@ -49,6 +49,14 @@ jobs:
             
             - name: Refactor PR commits and check move
               run: |
+                git config --global user.email "gha@apache.org"
+                git config --global user.name "github-action-test"
+          
+                # Get the base commit of the PR
+                BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
+    
+                # Run the Python script with the base commit range
+                python scripts/check_move.py $BASE_COMMIT
                   
             
             - name: Run Node.js dead link checker
