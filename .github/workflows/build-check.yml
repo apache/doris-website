@@ -56,7 +56,7 @@ jobs:
                 BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
     
                 # Run the Python script with the base commit range
-                python scripts/check_move.py $BASE_COMMIT
+                python check_move.py $BASE_COMMIT
                   
             
             - name: Run Node.js dead link checker
