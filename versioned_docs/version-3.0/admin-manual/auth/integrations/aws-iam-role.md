@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Introduction to Apache Doris IAM Assume Role",
+    "title": "How Apache Doris IAM Assume Role work",
     "language": "en"
 }
 ---
 
-# A New Paradigm for Cloud Data Security: Apache Doris IAM Assume Role Unlocks Keyless Access to AWS S3 Data
+# How Apache Doris IAM Assume Role work
 
 ## 1. Issues with Traditional AK/SK Access to AWS Resources
 

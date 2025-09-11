@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Apache Doris IAM Assume Role简介",
+    "title": "Apache Doris IAM Assume Role工作原理",
     "language": "zh-CN"
 }
 ---
 
-# 云上数据安全新范式：Apache Doris IAM Assume Role解锁无密钥访问AWS S3数据
+# Apache Doris IAM Assume Role工作原理
 
 ## 一、传统AK/SK方式访问AWS资源存在的问题
 
