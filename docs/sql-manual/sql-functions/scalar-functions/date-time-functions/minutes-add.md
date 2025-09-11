@@ -22,7 +22,7 @@ MINUTES_ADD(`<date_or_time_expr>`, `<minutes>`)
 | Parameter | Description |
 | --------- | ----------- |
 | `<date_or_time_expr>` | The input datetime value, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<minutes>` | The number of minutes to add, of type INT. |
+| `<minutes>` | The number of minutes to add, of type BIGINT. |
 
 ## Return Value
 
@@ -33,7 +33,6 @@ Returns a value of type DATETIME, representing the result of adding the specifie
 - If the input datetime includes microseconds, the original microsecond precision is preserved after adding minutes (e.g., '2023-01-01 00:00:00.123456' becomes '2023-01-01 00:01:00.123456' after adding 1 minute).
 - If the calculation result exceeds the valid range of the DATETIME type (0000-01-01 00:00:00 to 9999-12-31 23:59:59.999999), an exception is thrown.
 - If any parameter is NULL, returns NULL.
-- If `<minutes>` exceeds the range of the INT type (-2147483648 to 2147483647), returns an error.
 
 ## Examples
 
@@ -78,13 +77,6 @@ SELECT MINUTES_ADD(NULL, 10), MINUTES_ADD('2023-07-13 22:28:18', NULL) AS result
 | NULL                    | NULL   |
 +-------------------------+--------+
 
--- Minutes exceed INT range, returns NULL
-SELECT MINUTES_ADD('2023-07-13 22:28:18', 2147483648) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
 
 -- Calculation result exceeds datetime range, throws error
 SELECT MINUTES_ADD('9999-12-31 23:59:59', 2) AS result;
