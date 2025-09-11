@@ -20,7 +20,7 @@ SECONDS_ADD(<date_or_time_expr>, <seconds>)
 | 参数           | 说明                                          |
 |--------------|---------------------------------------------|
 | `<date_or_time_expr>` | 必填，输入的日期时间值，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)           |
-| `<seconds>`  | 必填，要增加或减少的秒数，支持整数类型（INT）。正数表示增加秒数，负数表示减少秒数。 |
+| `<seconds>`  | 必填，要增加或减少的秒数，支持整数类型（BIGINT）。正数表示增加秒数，负数表示减少秒数。 |
 
 ## 返回值
 
