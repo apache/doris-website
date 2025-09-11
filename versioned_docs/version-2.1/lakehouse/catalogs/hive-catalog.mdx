@@ -5,6 +5,9 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 By connecting to Hive Metastore or metadata services compatible with Hive Metastore, Doris can automatically retrieve Hive database and table information for data querying.
 
 In addition to Hive, many other systems use Hive Metastore to store metadata. Therefore, through the Hive Catalog, we can access not only Hive tables but also other table formats that use Hive Metastore for metadata storage, such as Iceberg and Hudi.
@@ -27,10 +30,10 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
-    {MetaStoreProperties},
-    {StorageProperties},
-    {CommonProperties},
-    {OtherProperties}
+    [MetaStoreProperties],
+    [StorageProperties],
+    [CommonProperties],
+    [OtherProperties]
 );
 ```
 
@@ -48,19 +51,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   `'fs.defaultFS' = 'hdfs://namenode:port'`
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   The MetaStoreProperties section is for entering connection and authentication information for the Metastore metadata service. Refer to the "Supported Metadata Services" section for details.
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   The StorageProperties section is for entering connection and authentication information related to the storage system. Refer to the "Supported Storage Systems" section for details.
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is for entering common attributes. Please see the "Common Properties" section in the [Catalog Overview](../catalog-overview.md).
 
-* `{OtherProperties}`
+* `[OtherProperties]`
 
   OtherProperties section is for entering properties related to Hive Catalog.
 
