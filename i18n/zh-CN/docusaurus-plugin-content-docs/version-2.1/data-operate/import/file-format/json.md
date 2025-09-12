@@ -47,6 +47,7 @@ Doris 支持以下三种 JSON 格式：
 适用于单行数据导入，要求：
 - 根节点必须是对象
 - 整个对象表示一行数据
+- 文件中一行只有一个json记录
 
 示例数据：
 ```json
@@ -64,7 +65,7 @@ Doris 支持以下三种 JSON 格式：
 
 适用于批量导入多行数据，要求：
 - 每行是一个完整的 JSON 对象
-- 必须设置 `read_json_by_line=true`
+- 可以不设置`read_json_by_line=true`, 默认启用该配置
 - 可通过 `line_delimiter` 参数指定行分隔符，默认为 `\n`
 
 示例数据：
@@ -81,13 +82,13 @@ Doris 支持以下三种 JSON 格式：
 
 | 参数 | 默认值 | Stream Load | Broker Load | Routine Load | TVF |
 |------|---------|-------------|--------------|--------------|-----|
-| json paths | 无 | jsonpaths | properties.jsonpaths | properties.jsonpaths | jsonpaths |
-| json root | 无 | json_root | properties.json_root | properties.json_root | json_root |
-| strip outer array | false | strip_outer_array | properties.strip_outer_array | properties.strip_outer_array | strip_outer_array |
-| read json by line | false | read_json_by_line | 不支持配置，都为 true | 不支持 | read_json_by_line, 默认为 true |
-| fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | 不支持 | fuzzy_parse |
-| num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
-| 压缩格式 | plain | 不支持 | PROPERTIES.compress_type | 不支持 | compress_type |
+| json paths | 无 | 支持 | 支持 | 支持 | 支持 |
+| json root | 无 | 支持 | 支持 | 支持 | 支持 |
+| strip outer array | false | 支持 | 支持 | 支持 | 支持 |
+| read json by line | true | 支持 | 支持 | 支持 | 支持 |
+| fuzzy parse | false | 支持 | 支持 | 不支持 | 支持 |
+| num as string | false | 支持 | 支持 | 支持 | 支持 |
+| 压缩格式 | plain | 支持 | 支持 | 不支持 | 支持 |
 
 :::tip 注意
 1. Stream Load：参数直接通过 HTTP Header 指定，如：`-H "jsonpaths: $.data"`
