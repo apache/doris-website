@@ -548,7 +548,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                     ```sql
                     CREATE CATALOG iceberg_static_s3 PROPERTIES (
                         'type' = 'iceberg',
-                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'warehouse' = 's3://warehouse',
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:8181',
                         's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
@@ -596,7 +596,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                     ```sql
                     CREATE CATALOG iceberg_static_oss PROPERTIES (
                         'type' = 'iceberg',
-                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'warehouse' = 's3://warehouse',
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:8181',
                         'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
@@ -633,7 +633,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                     ```sql
                     CREATE CATALOG iceberg_static_cos PROPERTIES (
                         'type' = 'iceberg',
-                        'warehouse' = 's3://iceberg_rest_warehouse',
+                        'warehouse' = 's3://warehouse',
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:8181',
                         'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',

@@ -54,7 +54,7 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
         'iceberg.rest.sigv4-enabled' = 'true',
         'iceberg.rest.signing-name' = 'glue',
         'iceberg.rest.access-key-id' = '<ak>',
