@@ -140,7 +140,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hdfs_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_hdfs_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'hdfs://127.0.0.1:8320/user/hive/warehouse',
@@ -152,7 +152,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_aws_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
@@ -166,7 +166,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_ali_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
@@ -181,7 +181,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_tx_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'cosn://bucket/paimon_warehouse',
@@ -195,7 +195,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hw_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'obs://bucket/regression/paimon_warehouse',
@@ -222,7 +222,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_hms_on_minio_catalog PROPERTIES (
+            CREATE CATALOG paimon_hms_on_minio_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 's3://test-bucket/paimon-warehouse',
@@ -244,7 +244,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_hms_on_hdfs_catalog PROPERTIES (
+            CREATE CATALOG paimon_hms_on_hdfs_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
@@ -255,7 +255,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
             访问开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+            CREATE CATALOG paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
@@ -275,7 +275,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_aws_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 's3://bucket-hk/paimon_warehouse',
@@ -289,7 +289,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_ali_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'oss://bucket/regression/paimon_warehouse',
@@ -303,7 +303,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_tx_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'cosn://bucket/paimon_warehouse',
@@ -317,7 +317,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_hw_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 'obs://bucket/regression/paimon_warehouse',
@@ -334,7 +334,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_hms_minio_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_hms_minio_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'hms',
                 'warehouse' = 's3://bucket/paimon-warehouse',
@@ -355,7 +355,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_dlf_catalog PROPERTIES (
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/p2_regression_case',
@@ -392,7 +392,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_dlf_catalog PROPERTIES (
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/paimon-dlf-oss-warehouse',
@@ -417,7 +417,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS ctl_test_paimon_catalog PROPERTIES (
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
@@ -427,7 +427,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_fs_aws_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
@@ -440,7 +440,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_oss PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'oss://bucket/regression/paimon1',
@@ -453,7 +453,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_cosn PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'cosn://bucket/regression/paimon1',
@@ -466,7 +466,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_obs PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'obs://bucket/regression/paimon1',
@@ -479,7 +479,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_on_gcs_s3_fs PROPERTIES (
+            CREATE CATALOG paimon_on_gcs_s3_fs PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
@@ -491,7 +491,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_minio_minio PROPERTIES (
+            CREATE CATALOG test_paimon_minio_minio PROPERTIES (
                 'type' = 'paimon',
                 'warehouse' = 's3://warehouse/wh',
                 'fs.minio.support' = 'true',
@@ -511,7 +511,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS ctl_test_paimon_catalog PROPERTIES (
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
@@ -521,7 +521,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_paimon_on_fs_aws_catalog PROPERTIES (
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
@@ -534,7 +534,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_oss PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'oss://bucket/regression/paimon1',
@@ -547,7 +547,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_cosn PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'cosn://bucket/regression/paimon1',
@@ -560,7 +560,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS paimon_base_filesystem_paimon_obs PROPERTIES (
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'obs://bucket/regression/paimon1',
