@@ -81,13 +81,13 @@ The following table lists the JSON format parameters supported by various loadin
 
 | Parameter | Default Value | Stream Load | Broker Load | Routine Load | TVF |
 |-----------|--------------|-------------|--------------|--------------|-----|
-| json paths | None | jsonpaths | properties.jsonpaths | properties.jsonpaths | jsonpaths |
-| json root | None | json_root | properties.json_root | properties.json_root | json_root |
-| strip outer array | false | strip_outer_array | properties.strip_outer_array | properties.strip_outer_array | strip_outer_array |
-| read json by line | false | read_json_by_line | Always true | Not supported | read_json_by_line, default true |
-| fuzzy parse | false | fuzzy_parse | properties.fuzzy_parse | Not supported | fuzzy_parse |
-| num as string | false | num_as_string | properties.num_as_string | properties.num_as_string | num_as_string |
-| compression format | plain | compress_type | PROPERTIES.compress_type | Not supported |  compress_type |
+| json paths | None | supported | supported | supported | supported |
+| json root | None | supported | supported | supported | supported |
+| strip outer array | false | supported | supported | supported | supported |
+| read json by line | true | supported | supported | supported | supported |
+| fuzzy parse | false | supported | supported | not supported | supported |
+| num as string | false | supported | supported | supported | supported |
+| compression format | plain | supported | supported | not supported | supported |
 
 :::tip Note
 1. Stream Load: Parameters are specified directly through HTTP Headers, e.g., `-H "jsonpaths: $.data"`
