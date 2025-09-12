@@ -76,8 +76,19 @@
 
     通过调整 Export 命令属性中的 `parallelism` 参数，可以控制并发 Outfile 的个数，从而控制并发度。
 
+2. 影响并行度的参数
 
+    Export 作业的并行度取决于两个参数：
 
+    - `parallelism`
+
+        用于设置最多拆分成几个 Outfile 命令。
+
+    - `data_consistency`
+
+        是否在分区内部进行 Outfile 命令的拆分。该参数默认为 `partition`，即不对分区进一步拆分。即 Outfile 命令的数量，只会小于等于涉及到的分区数量。如果设置为 `none`，则会对一个分区进一步拆分，这样可以提高并发，但如果分区在写入数据，则可能会牺牲导出的一致性（即同一个分区的不同 Outfile 命令，可能导出的是这个分区的不同版本的数据）。
+
+        具体可参阅 [Export 命令手册](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
 
 
 
