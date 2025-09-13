@@ -25,7 +25,7 @@ SEC_TO_TIME(<seconds>)
 - Returns a value of `TIME` type.
 - If the input is an integer, the return format is `HH:MM:SS`, representing the time calculated from the start of the day (`00:00:00`).
 - If the input is a floating-point number, the return format is `HH:MM:SS`, representing the time calculated from the start of the day (`00:00:00`).
-- When the absolute value of the input exceeds `3020399.999999`, the return value is `838:59:59` or `838:59:59.999999`, depending on the input type.
+- When the absolute value of the input exceeds `3020399`, the return value is `838:59:59` or `838:59:59.000000`, depending on the input type.
 - If `<seconds>`  is NULL, the function returns NULL.
 
 ## Example
@@ -69,7 +69,7 @@ SELECT SEC_TO_TIME(789456123.0);
 +--------------------------+
 | SEC_TO_TIME(789456123.0) |
 +--------------------------+
-| 838:59:59.999999         |
+| 838:59:59.000000         |
 +--------------------------+
 ```
 
