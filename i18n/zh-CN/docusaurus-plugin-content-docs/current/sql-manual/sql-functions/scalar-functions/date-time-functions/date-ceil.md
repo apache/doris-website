@@ -10,7 +10,9 @@
 DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最近的指定时间间隔周期的起点。即返回不小于输入日期时间的最小周期时刻，周期规则由 period（周期数量）和 type（周期单位）共同定义，且所有周期均以固定起点 0001-01-01 00:00:00 为基准计算。
 
 日期计算公式
-DATE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≥ `<date_or_time_expr>`}
+$$
+\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表基准时间到达目标时间所需的周期数
 
 
