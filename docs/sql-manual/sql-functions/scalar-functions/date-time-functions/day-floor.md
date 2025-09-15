@@ -48,6 +48,7 @@ Special cases:
 - When any parameter is NULL, returns NULL;
 - If period is negative or 0, returns error;
 - For datetime input with scale, the output will have scale with all decimals as 0
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -107,7 +108,13 @@ select day_floor(cast("2023-07-13" as date), 3);
 select day_floor("2023-07-13 22:28:18", -2);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation day_ceil of 2023-07-13 22:28:18, -2 input wrong parameters, period can not be negative or zero
 
-
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+select day_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
++----------------------------------------------------------------+
+| day_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') |
++----------------------------------------------------------------+
+| 2023-07-13 08:00:00.000                                        |
++----------------------------------------------------------------+
 
 ---Any parameter is NULL, returns NULL
 select day_floor(NULL, 5, "2023-01-01");

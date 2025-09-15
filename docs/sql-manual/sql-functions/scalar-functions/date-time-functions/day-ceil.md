@@ -49,6 +49,7 @@ Special cases:
 - If period is negative or 0, returns an error;
 - If the rounding result exceeds the supported range of date types (such as after '9999-12-31'), an error is reported.
 - For datetime input with scale, the output will truncate all scale to 0, and the return value will have scale
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -105,6 +106,14 @@ select day_ceil(cast("2023-07-13" as date), 3);
 +-----------------------------------------+
 | 2023-07-14                              |
 +-----------------------------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+select day_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
++---------------------------------------------------------------+
+| day_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') |
++---------------------------------------------------------------+
+| 2023-07-17 08:00:00.000                                       |
++---------------------------------------------------------------+
 
 ---Period time is zero, returns NULL
 select day_ceil(cast("2023-07-13" as date), 0);
