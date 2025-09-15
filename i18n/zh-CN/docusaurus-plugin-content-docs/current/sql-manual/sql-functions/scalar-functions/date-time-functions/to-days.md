@@ -6,7 +6,7 @@
 ---
 
 ## 描述
-日期计算函数，它用于将日期转换为天数数值，即计算从公元 0 年 12 月 31 日（基准日期）到指定日期的总天数。
+日期计算函数，它用于将日期转换为天数数值，即计算从公元 1 年 12 月 31 日（基准日期）到指定日期的总天数。
 
 该函数与 mysql 中的 [to_day 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) 行为一致。
 

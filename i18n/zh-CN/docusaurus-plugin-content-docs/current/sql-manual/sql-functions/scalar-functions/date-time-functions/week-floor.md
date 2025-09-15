@@ -11,7 +11,10 @@
 WEEK_FLOOR 函数用于将输入的日期时间值向下舍入到最接近的指定周间隔的起始时间，间隔单位为 WEEK。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
 日期时间的计算公式
-WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × week| k ∈ ℤ ∧ `<origin>` + k × `<period>` × week ≤ `<date_or_time_expr>`}
+
+$$
+\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表的是基准时间到目标时间的周期数
 
 ## 语法
@@ -40,6 +43,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 - 若 `<datetime>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
 - 若输入为 date 类型，则返回 date 类型
 - 若输入为  datetime 类型，则返回 datetime 类型，返回值的时间部分与起始时间一样。
+- 对于 `<origin>` 日期时间超过 `<date_or_time_expr>`,也可以使用上述公式计算，不过 k 为负值。
 
 ## 举例
 

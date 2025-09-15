@@ -10,7 +10,9 @@
 The WEEK_CEIL function rounds up an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
 
 Date calculation formula:
-WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × week | k ∈ ℤ ∧ `<origin>` + k × `<period>` × week ≥ `<date_or_time_expr>`}
+$$
+\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 where K represents the number of periods needed to reach the target time from the reference time.
 
 ## Syntax
@@ -40,6 +42,7 @@ Returns DATETIME type, representing the rounded-up datetime value.
 - If input is date type, returns date type
 - If input is datetime type, returns datetime type with the same time portion as the origin time.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 

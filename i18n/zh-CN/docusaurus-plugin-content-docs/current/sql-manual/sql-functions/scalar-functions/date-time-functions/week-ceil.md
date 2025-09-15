@@ -10,7 +10,9 @@
 WEEK_CEIL 函数用于将输入的日期时间值向上舍入到最接近的指定周间隔的起始时间,间隔单位为 WEEK 。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
 日期计算公式
-WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × week | k ∈ ℤ ∧ `<origin>` + k × `<period>` × week ≥ `<date_or_time_expr>`}
+$$
+\text{WEEK\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表基准时间到达目标时间所需的周期数
 
 ## 语法
@@ -36,10 +38,11 @@ WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 - 若 `<period>` 为非正整数（≤0），函数返回错误；
 - 若任一参数为 NULL，返回 NULL；
-- 若 `<datetime>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
+- 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
 - 若输入为 date 类型，则返回 date 类型
 - 若输入为  datetime 类型，则返回 datetime 类型，时间部分和起始时间一样。
 - 计算结果超过最大日期时间 9999-12-31 23:59:59 ，则返回错误 。
+- 对于 `<origin>` 日期时间超过 `<date_or_time_expr>`,也可以使用上述公式计算，不过 k 为负值。
 
 ## 举例
 

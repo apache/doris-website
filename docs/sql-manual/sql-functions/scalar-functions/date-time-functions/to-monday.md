@@ -39,6 +39,14 @@ SELECT TO_MONDAY('2022-09-10') AS result;
 | 2022-09-05 |
 +------------+
 
+-- input value of datetime type
+SELECT TO_MONDAY('2022-09-10 12:22:15') AS result;
++------------+
+| result     |
++------------+
+| 2022-09-05 |
++------------+
+
 -- Returns the Monday of the week for dates before 1970
 SELECT TO_MONDAY('1022-09-10') AS result;
 +------------+

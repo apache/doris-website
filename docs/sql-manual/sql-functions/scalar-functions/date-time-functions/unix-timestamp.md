@@ -43,10 +43,7 @@ Returns two types based on input:
 2. If the input date has scale 0 and no format parameter:
    Returns a timestamp of type INT
 
-Converts input time to timestamp based on seconds from 1970-01-01 00:00:01.000000 UTC, converted to the timezone of the current machine.
-If input includes timezone, returns timestamp based on seconds from 1970-01-01 00:00:01.000000 UTC, converted to the corresponding timezone.
-For times before 1970-01-01 00:00:01.000000 UTC, this function returns 0.
-You can also control the machine's timezone through the `time_zone` variable.
+Converts the input time to the corresponding timestamp, with the epoch time being 1970-01-01 00:00:00.
 
 Returns null if any parameter is null.
 
@@ -54,7 +51,7 @@ Returns null if any parameter is null.
 ## Examples
 
 ```sql
--- Current machine timezone is UTC+8 (set time_zone = "+08:00")
+-- int put datetime is the begin datetime
 mysql> select unix_timestamp('1970-01-01 +08:00');
 +------------------------------+
 | unix_timestamp('1970-01-01') |
@@ -78,13 +75,6 @@ mysql> select unix_timestamp('2007-11-30 10:30:19');
 |                            1196389819 |
 +---------------------------------------+
 
--- Input with timezone
-select unix_timestamp('2007-11-30 10:30:19 +09:00');
-+----------------------------------------------+
-| unix_timestamp('2007-11-30 10:30:19 +09:00') |
-+----------------------------------------------+
-|                            1196386219.000000 |
-+----------------------------------------------+
 
 -- Match format to display timestamp for given datetime
 mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
