@@ -7,9 +7,9 @@
 
 ## Description
 
-The FROM_DAYS function is used to convert an integer number of days to the corresponding date (DATE type). This function uses "January 1st, year 0" as the reference point (i.e., day 0 corresponds to 0000-01-01), calculating the date after the specified number of days from the reference date.
+The FROM_DAYS function is used to convert an integer number of days to the corresponding date (DATE type). This function uses "January 1st, year 1" as the reference point (i.e., day 0 corresponds to 0000-01-01), calculating the date after the specified number of days from the reference date.
 
-Note: To maintain behavioral consistency with MySQL, the FROM_DAYS function does not support "February 29th, year 0" (0000-02-29), even though theoretically this year conforms to leap year rules, this date will be automatically skipped.
+Note: To maintain behavioral consistency with MySQL, the FROM_DAYS function does not support "February 29th, year 1" (0000-02-29), even though theoretically this year conforms to leap year rules, this date will be automatically skipped.
 Historical date limitation: This function calculates based on the extended Gregorian calendar, and is not suitable for dates before the Gregorian calendar was introduced in 1582 (when the Julian calendar was actually used), which may cause discrepancies between results and actual historical dates.
 
 This function behaves consistently with the [from_days function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-days) in MySQL

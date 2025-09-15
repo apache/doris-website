@@ -30,7 +30,6 @@ FROM_MILLISECOND(<millisecond>)
 
 ## 举例
 
-
 ```sql
 
 ----因为当前机器所在时区为东八区，所以返回的时间相较于 UTC 会加八个小时

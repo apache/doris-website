@@ -11,6 +11,10 @@ The DAYOFWEEK function is used to return the weekday index value corresponding t
 
 This function behaves consistently with the [dayofweek function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayofweek) in MySQL
 
+## Alias
+
+- DOW
+
 ## Syntax
 
 ```sql

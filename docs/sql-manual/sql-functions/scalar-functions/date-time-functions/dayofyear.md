@@ -11,6 +11,10 @@ The DAYOFYEAR function is used to calculate the number of days in the current ye
 
 This function behaves consistently with the [dayofyear function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayofyear) in MySQL
 
+## Alias
+
+- DOY
+
 ## Syntax
 
 ```sql

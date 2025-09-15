@@ -25,7 +25,7 @@ mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
 
 | 参数 | 说明 |
 | -- | -- |
-| `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month,week, day, hour, minute, second 或者 microsecond |
+| `unit` | 提取 DATETIME 某个指定单位的值。单位可以为 year, month, week, day, hour, minute, second 或者 microsecond |
 | `datetime_or_time_expr` | 参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 
 ## 返回值

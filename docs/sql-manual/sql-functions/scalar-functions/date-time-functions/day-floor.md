@@ -9,9 +9,13 @@
 
 The DAY_FLOOR function is used to round down a specified date or time value to the start of the nearest specified day period. It returns the largest period moment that is not greater than the input date and time. The period rule is defined jointly by period (number of days in the period) and origin (starting reference time). If no starting reference time is specified, it defaults to 0001-01-01 00:00:00 as the calculation basis.
 
-Date calculation formula
-DAY_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≤ `<date_or_time_expr>`}
-K represents the number of periods from the reference time to the target time
+Date calculation formula:
+
+$$
+\text{DAY\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
+
+where K represents the number of periods from the reference time to the target time.
 
 ## Syntax
 

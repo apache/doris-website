@@ -10,7 +10,9 @@
 DAY_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定天数周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。
 
 日期时间的计算公式
-DAY_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≤ `<date_or_time_expr>`}
+$
+\text{DAY\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$
 K 代表的是基准时间到目标时间的周期数
 
 ## 语法
@@ -36,8 +38,7 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 
 若输入有效，返回与 datetime 类型一致的取整结果：
 
-输入 DATE 时，返回 DATE
-输入 DATETIME，返回 DATETIME（包含日期和时间，时间部分为 00:00:00，因周期基于天数）。
+`<date_or_time_expr>` 与 `<origin>` 输入都 DATE 类型时，返回 DATE 类型, 否则返回 DATETIME 类型.
 
 
 特殊情况：

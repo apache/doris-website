@@ -40,7 +40,6 @@ DAY(<date_or_time_expr>)
 
 ```sql
 
-
 --从 DATE 类型中提取日
 select day('1987-01-31');
 

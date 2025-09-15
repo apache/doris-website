@@ -11,6 +11,10 @@ DAYOFWEEK 函数用于返回日期或时间表达式对应的星期索引值，�
 
 该函数与 mysql 中的 [dayofweek 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayofweek) 行为一致
 
+## 别名
+
+- DOW()
+
 ## 语法
 
 ```sql

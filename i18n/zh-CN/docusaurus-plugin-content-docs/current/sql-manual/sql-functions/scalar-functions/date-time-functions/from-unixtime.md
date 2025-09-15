@@ -28,7 +28,7 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 
 ## 返回值
 
-返回指定格式的日期,类型为 VARCHAR，返回的是UTC时区下当前时间的时间戳转换为当前时区的时间。
+返回指定格式的日期,类型为 VARCHAR，返回的是UTC时区下的时间戳的时间戳转换为当前时区的时间。
 - 目前支持的 unix_timestamp 范围为 [0,  253402271999]( 对应日期为 1970-01-01 00:00:00 至 9999-12-31 23:59:59)，超出范围的 unix_timestamp 将返回 错误
 - 若 string_format 格式无效，返回不符合预期的字符串。
 - 若任意参数为 NULL ,则返回 NULL
@@ -80,7 +80,6 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 ---超出最大范围， 返回错误
 select from_unixtime(253402281999);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Cannot convert timestamp 253402281999 to valid date
-
 
 ---string-format 格式未引用任何时间值
 mysql> select from_unixtime(32536799,"gdaskpdp");
