@@ -10,7 +10,10 @@
 The MONTH_FLOOR function rounds the input datetime value down to the nearest specified month interval. If an origin time is specified, it uses that time as the baseline for dividing intervals and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the baseline. This function supports processing DATETIME and DATE types.
 
 Date calculation formula:
-MONTH_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × month | k ∈ ℤ ∧ `<origin>` + k × `<period>` × month ≤ `<date_or_time_expr>`}
+
+$$
+\text{MONTH\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K represents the number of periods from the baseline time to the target time.
 
 ## Syntax
@@ -34,11 +37,12 @@ MONTH_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified month interval based on the input datetime. The time component of the result will be set to 00:00:00, and the day component will be truncated to 01.
 
-- If `<period>` is a non-positive integer (≤0), returns NULL.
+- If `<period>` is a non-positive number (≤0), returns NULL.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-month interval.
 - If `<origin>` is not specified, it defaults to 0001-01-01 00:00:00 as the baseline.
 - If the input is of DATE type (only includes year, month, and day), its time part defaults to 00:00:00.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -89,6 +93,14 @@ SELECT MONTH_FLOOR('2023-07-13', 3) AS result;
 | result              |
 +---------------------+
 | 2023-07-01 00:00:00 |
++---------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+SELECT MONTH_FLOOR('2022-09-13 22:28:18', 5, '2028-07-03 22:20:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2022-09-03 22:20:00 |
 +---------------------+
 
 -- Period is non-positive, returns NULL

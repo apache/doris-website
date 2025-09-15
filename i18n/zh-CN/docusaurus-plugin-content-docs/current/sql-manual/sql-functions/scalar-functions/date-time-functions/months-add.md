@@ -13,9 +13,9 @@ MONTHS_ADD 函数用于向输入的日期时间值中添加指定的月份数，
 
 ## 语法
 
-````sql
+```sql
 MONTHS_ADD(`<date_or_time_expr>`, `<nums>`)
-````
+```
 
 ## 参数
 

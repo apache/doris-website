@@ -10,7 +10,9 @@
 The MONTH_CEIL function rounds the input datetime value up to the nearest specified month interval. If an origin time is specified, it uses that time as the baseline for dividing intervals and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the baseline. This function supports processing DATETIME and DATE types.
 
 Date calculation formula:
-MONTH_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × month | k ∈ ℤ ∧ `<origin>` + k × `<period>` × month ≥ `<date_or_time_expr>`}
+$$
+\text{MONTH\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K represents the number of periods needed from the baseline time to reach the target time.
 
 ## Syntax
@@ -34,12 +36,13 @@ MONTH_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 Returns a value of type DATETIME, representing the time value after rounding up to the nearest specified month interval based on the input datetime. The time component of the result will be set to 00:00:00, and the day component will be truncated to 01.
 
-- If `<period>` is a non-positive integer (≤0), returns an error.
+- If `<period>` is a non-positive number (≤0), returns an error.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-month interval.
 - If `<origin>` is not specified, it defaults to 0001-01-01 00:00:00 as the baseline.
 - If the input is of DATE type (default time 00:00:00).
 - If the calculation result exceeds the maximum date range 9999-12-31 23:59:59, returns an error.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -74,6 +77,14 @@ SELECT MONTH_CEIL('2023-07-13 22:28:18', 5, '2023-01-01 00:00:00') AS result;
 | result              |
 +---------------------+
 | 2023-11-01 00:00:00 |
++---------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative
+SELECT MONTH_CEIL('2022-09-13 22:28:18', 5, '2028-07-03 22:20:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-02-03 22:20:00 |
 +---------------------+
 
 -- Datetime with scale, time component and decimal places are all truncated to 0
