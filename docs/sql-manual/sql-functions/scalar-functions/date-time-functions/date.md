@@ -47,14 +47,6 @@ mysql> select date(cast('2015-11-02' as date));
 | 2015-11-02                       |
 +----------------------------------+
 
--- Supports datetime strings with different separators (for specific supported date formats, please refer to the date type documentation)
-mysql> select date('2023/04/01 08:30:00');
-+-----------------------------+
-| date('2023/04/01 08:30:00') |
-+-----------------------------+
-| 2023-04-01                  |
-+-----------------------------+
-
 -- Input is NULL
 mysql> select date(NULL);
 +------------+
@@ -63,10 +55,4 @@ mysql> select date(NULL);
 | NULL       |
 +------------+
 
-mysql> select date('0000-00-00 12:00:00');
-+-----------------------------+
-| date('0000-00-00 12:00:00') |
-+-----------------------------+
-| NULL                        |
-+-----------------------------+
 ```

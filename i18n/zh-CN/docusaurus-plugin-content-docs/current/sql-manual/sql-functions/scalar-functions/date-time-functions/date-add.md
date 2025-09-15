@@ -9,7 +9,7 @@
 
 DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
 
-- 支持的输入日期类型包括 DATE、DATETIME，或符合格式的字符串（如 '2023-12-31'、'2023-12-31 23:59:59'）。
+- 支持的输入日期类型包括 DATE、DATETIME（如 '2023-12-31'、'2023-12-31 23:59:59'）。
 - 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示 “添加”，为负数时等效于 “减去” 对应间隔。
 
 该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 行为大致一致，但不同的是，mysql 支持联合单位的增减，如:
@@ -46,6 +46,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 - 输入 DATE 时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 或带时间的字符串时，返回 DATETIME（包含日期和时间）；
 - 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。
+
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法单位或非数值 expr 时，返回 NULL；

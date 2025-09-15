@@ -9,7 +9,7 @@
 
 The DATE_ADD function is used to add a specified time interval to a specified date or time value and return the calculated result.
 
-- Supported input date types include DATE, DATETIME, or strings that conform to the format (such as '2023-12-31', '2023-12-31 23:59:59').
+- Supported input date types include DATE, DATETIME (such as '2023-12-31', '2023-12-31 23:59:59').
 - The time interval is specified by both a numeric value (`expr`) and a unit (`time_unit`). When `expr` is positive, it means "add", and when it is negative, it is equivalent to "subtract" the corresponding interval.
 
 This function behaves generally consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL, but the difference is that MySQL supports compound unit additions and subtractions, such as:

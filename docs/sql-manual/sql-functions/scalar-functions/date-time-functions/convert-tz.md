@@ -27,10 +27,10 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 ## Return Value
 
-- The converted datetime value
+- The converted value type of datetime
 - The returned scale is the same as the input scale
   - For datetime input without scale, the returned result also has no scale
-  - For input with scale, the returned result has scale
+  - For input with scale, the returned result has the same scale
 
 Special cases:
 - If any parameter is NULL, returns NULL.
@@ -58,7 +58,7 @@ mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'Ame
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
 
--- For date type input, the time part is automatically converted to 00:00:00
+-- For date type input,return datetime type value, the time part is automatically converted to 00:00:00
 mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', 'America/Los_Angeles');
 +-------------------------------------------------------------------------------------------+
 | CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATEV2), 'Asia/Shanghai', 'America/Los_Angeles') |

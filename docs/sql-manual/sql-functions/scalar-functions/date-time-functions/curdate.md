@@ -31,9 +31,7 @@ The current date, return value is of date type.
 ```sql
 -- Get the current date
 SELECT CURDATE();
-```
 
-```text
 +------------+
 | CURDATE()  |
 +------------+

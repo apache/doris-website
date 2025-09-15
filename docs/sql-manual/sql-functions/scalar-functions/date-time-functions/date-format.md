@@ -65,14 +65,15 @@ Supported format specifiers:
 Three special formats are also available:
 
 ```text
-yyyyMMdd
-yyyy-MM-dd
-yyyy-MM-dd HH:mm:ss
+yyyyMMdd --corresponds to standard format specifier：%Y%m%d
+yyyy-MM-dd --corresponds to standard format specifier：%Y-%m-%d
+yyyy-MM-dd HH:mm:ss --corresponds to standard format specifier：%Y-%m-%d %H:%i:%s
 ```
 
 ## Return Value
 
 A formatted date string, type is Varchar.
+
 Special cases:
 - Returns NULL if format is NULL or empty string.
 - Returns NULL if any parameter is NULL.

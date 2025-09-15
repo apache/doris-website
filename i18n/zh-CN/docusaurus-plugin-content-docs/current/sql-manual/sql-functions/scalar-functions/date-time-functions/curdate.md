@@ -31,9 +31,7 @@ CURDATE()
 ```sql
 ---获取当前的日期
 SELECT CURDATE();
-```
 
-```text
 +------------+
 | CURDATE()  |
 +------------+

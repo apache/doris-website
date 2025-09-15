@@ -24,15 +24,13 @@ CURTIME()
 
 ## Return Value
 
-Returns the current time.
+Returns the current time type of TIME.
 
 ## Examples
 
 ```sql
 mysql> select current_time();
-```
 
-```text
 +----------------+
 | current_time() |
 +----------------+

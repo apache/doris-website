@@ -8,6 +8,8 @@
 ## 描述
 函数用于获取当前系统时间，返回值为日期时间类型（`DATETIME`）。可以选择性地指定精度以调整返回值的小数秒部分的位数。
 
+这个函数为 now() 的别名函数。
+
 ## 语法
 
 ```sql
@@ -18,7 +20,7 @@ CURRENT_TIMESTAMP([<precision>])
 
 | 参数            | 说明                                                                                                                                  |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `<precision>` | 可选参数，表示返回值的小数秒部分的精度，取值范围为 0 到 6。默认为 0，即不返回小数秒部分。 <br/>受限于 JDK 实现，如果用户使用 JDK8 构建 FE，则精度最多支持到毫秒（小数点后三位），更大的精度位将全部填充 0。如果用户有更高精度需求，请使用 JDK11。 |
+| `<precision>` | 可选参数，表示返回值的小数秒部分的精度，取值范围为 0 到 6。默认为 0，即不返回小数秒部分。 |
 
 ## 返回值
 
@@ -45,4 +47,11 @@ select CURRENT_TIMESTAMP(NULL);
 +-------------------------+
 | NULL                    |
 +-------------------------+
+
+--输入不在 精度范围内，抛出错误
+select CURRENT_TIMESTAMP(-1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: -1
+
+select CURRENT_TIMESTAMP(7);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: 7
 ```

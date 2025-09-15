@@ -10,6 +10,8 @@ This function is used to get the current system time and returns a datetime type
 
 This function is consistent with the [current_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_current-timestamp) in MySQL.
 
+This function is an alias for the now() function.
+
 ## Syntax
 
 ```sql
@@ -20,7 +22,7 @@ CURRENT_TIMESTAMP([<precision>])
 
 | Parameter     | Description                                                                                                                                  |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `<precision>` | Optional parameter indicating the precision of the fractional seconds part of the return value, ranging from 0 to 6. Default is 0, which means no fractional seconds part is returned. <br/>Limited by JDK implementation, if users build FE with JDK8, precision is supported up to milliseconds (3 digits after decimal point), and higher precision digits will be filled with 0. If users need higher precision, please use JDK11. |
+| `<precision>` | Optional parameter indicating the precision of the fractional seconds part of the return value, ranging from 0 to 6. Default is 0, which means no fractional seconds part is returned. |
 
 ## Return Value
 - Returns the current system time as `DATETIME` type
@@ -45,4 +47,11 @@ select CURRENT_TIMESTAMP(NULL);
 +-------------------------+
 | NULL                    |
 +-------------------------+
+
+--input out of precision range, return error
+select CURRENT_TIMESTAMP(-1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: -1
+
+select CURRENT_TIMESTAMP(7);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Scale of Datetime/Time must between 0 and 6. Scale was set to: 7
 ```

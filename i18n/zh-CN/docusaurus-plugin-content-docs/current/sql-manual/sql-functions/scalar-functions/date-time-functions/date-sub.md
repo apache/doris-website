@@ -43,6 +43,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 - 输入 DATE 时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 时，返回 DATETIME（包含日期和时间）。
 - 对于带有 scale 的 datetime 类型，会保留 scale 返回.
+
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法 expr（负数）或 time_unit 时，返回 NULL；
@@ -60,7 +61,6 @@ mysql> select date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
 +-------------------------------------------------------------------+
 | 2010-11-28 23:59:59                                               |
 +-------------------------------------------------------------------+
-
 
 ---带有 scale 的 参数，返回保留 scale
 mysql> select date_sub('2010-11-30 23:59:59.6', INTERVAL 4 SECOND);
@@ -110,7 +110,6 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 +-------------------------------------------+
 | NULL                                      |
 +-------------------------------------------+
-
 
 ---超出最小日期
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);

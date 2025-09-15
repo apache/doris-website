@@ -22,15 +22,13 @@ CURTIME()
 
 ## 返回值
 
-返回当前时间。
+返回当前时间，类型为 TIME。
 
 ## 示例
 
 ```sql
 mysql> select current_time();
-```
 
-```text
 +----------------+
 | current_time() |
 +----------------+

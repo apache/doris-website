@@ -26,7 +26,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 ## Return Value
 
 Returns a truncated result with the same type as datetime:
-- When input is DATE, returns DATE (date part only, time defaults to 00:00:00);
+- When input is DATE, returns DATE ;
 - When input is DATETIME or a time-containing string, returns DATETIME (including the date and the truncated time).
 - For datetime types with scale, the fractional part will be truncated to zero but the scale will be preserved in the return value.
 

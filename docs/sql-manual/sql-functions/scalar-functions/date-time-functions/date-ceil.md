@@ -9,6 +9,10 @@
 
 The DATE_CEIL function is used to round up (ceil) a specified date or time value to the nearest start of a specified time interval period. That is, it returns the smallest periodic moment that is not less than the input date and time. The period rules are jointly defined by `period` (number of periods) and `type` (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
+Date Calculation Formula
+DATE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≥ `<date_or_time_expr>`}
+K Represents the number of cycles required for the base time to reach the target time
+
 ## Syntax
 
 `DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
@@ -19,7 +23,7 @@ The DATE_CEIL function is used to round up (ceil) a specified date or time value
 | -- | -- |
 | `date_or_time_expr` | A valid date expression, supporting input of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `period` | Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
-| `type` | Can be: YEAR, Quarter, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
+| `type` | Can be: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 

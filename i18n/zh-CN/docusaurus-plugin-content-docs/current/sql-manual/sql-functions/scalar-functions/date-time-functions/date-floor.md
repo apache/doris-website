@@ -9,6 +9,10 @@
 
 DATE_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定时间间隔周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期数量）和 type（周期单位）共同定义，所有周期均以固定起点 0001-01-01 00:00:00 为基准计算。
 
+日期时间的计算公式
+DAY_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≤ `<date_or_time_expr>`}
+K 代表的是基准时间到目标时间的周期数
+
 ## 语法
 
 `DATE_FLOOR(<datetime>, INTERVAL <period> <type>)`
@@ -28,10 +32,10 @@ DATE_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到�
 - 输入 DATE 时，返回 DATE（仅日期部分，时间默认为 00:00:00）；
 - 输入 DATETIME 时，返回 DATETIME（包含日期和时间）。
 - 输入带有 scale 的日期时间，返回值也会带有 scale
+
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法 period（非正整数）或 type 时，返回错误；
-举例
 
 ## 举例
 

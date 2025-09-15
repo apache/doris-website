@@ -49,10 +49,10 @@ DATE_FORMAT(<date>, <format>)
 | %S     | 秒 (00-59)                          |
 | %s     | 秒 (00-59)                          |
 | %T     | 时间，24-小时 (hh:mm:ss)            |
-| %U     | 周 (00-53) 星期日是一周的第一天, [week](./week),模式 0  |
-| %u     | 周 (00-53) 星期一是一周的第一天  [week](./week),模式 1  |
-| %V     | 周 (01-53) 星期日是一周的第一天，[week](./week),模式 2,与 %X 使用 |
-| %v     | 周 (01-53) 星期一是一周的第一天，[week](./week) ,模式 3,与 %x 使用 |
+| %U     | 周 (00-53) 星期日是一周的第一天,[week](./week),模式 0  |
+| %u     | 周 (00-53) 星期一是一周的第一天,[week](./week),模式 1  |
+| %V     | 周 (01-53) 星期日是一周的第一天,[week](./week),模式 2,与 %X 使用 |
+| %v     | 周 (01-53) 星期一是一周的第一天,[week](./week),模式 3,与 %x 使用 |
 | %W     | 周中日的名称 (Sunday-Saturday)    |
 | %w     | 周的天（0=星期日，6=星期六）        |
 | %X     | 年，其中的星期日是周的第一天，4 位，与 %V 使用 |
@@ -65,14 +65,15 @@ DATE_FORMAT(<date>, <format>)
 还可以使用三种特殊格式：
 
 ```text
-yyyyMMdd
-yyyy-MM-dd
-yyyy-MM-dd HH:mm:ss
+yyyyMMdd --对应标准格式符：%Y%m%d
+yyyy-MM-dd --对应标准格式符：%Y-%m-%d
+yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 ```
 
 ## 返回值
 
 格式化后的日期字符串,类型为 Varchar。
+
 特殊情况：
 - format 为 NULL 或空字符串 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
@@ -165,7 +166,6 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 +-------------------------------+
 | NULL                          |
 +-------------------------------+
-
 
 ---超出函数返回字符串长度范围，返回 NULL
 mysql> select date_format('2022-01-12',repeat('a',129));
