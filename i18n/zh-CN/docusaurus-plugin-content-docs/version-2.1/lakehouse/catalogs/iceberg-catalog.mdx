@@ -564,10 +564,10 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                         'type' = 'iceberg',
                         'warehouse' = 'doris_test',
                         'iceberg.catalog.type' = 'rest',
-                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
                         'iceberg.rest.security.type' = 'oauth2',
                         'iceberg.rest.oauth2.credential' = 'root:secret123',
-                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
                         'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
                         's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
                         's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
@@ -600,8 +600,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:8181',
                         'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                        'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                        'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'oss.access_key' = 'YOUR_OSS_ACCESS_KEY_ID',
+                        'oss.secret_key' = 'YOUR_OSS_SECRET_ACCESS_KEY',
                         'oss.region' = 'cn-beijing'
                     );
                     ```
@@ -612,14 +612,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                         'type' = 'iceberg',
                         'warehouse' = 'doris_test',
                         'iceberg.catalog.type' = 'rest',
-                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
                         'iceberg.rest.security.type' = 'oauth2',
                         'iceberg.rest.oauth2.credential' = 'root:secret123',
-                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
                         'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
                         'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                        'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                        'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'oss.access_key' = 'YOUR_OSS_ACCESS_KEY_ID',
+                        'oss.secret_key' = 'YOUR_OSS_SECRET_ACCESS_KEY',
                         'oss.region' = 'cn-beijing'
                     );
                     ```
@@ -637,8 +637,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                         'iceberg.catalog.type' = 'rest',
                         'iceberg.rest.uri' = 'http://127.0.0.1:8181',
                         'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                        'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                        'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'cos.access_key' = 'YOUR_COS_ACCESS_KEY_ID',
+                        'cos.secret_key' = 'YOUR_COS_SECRET_ACCESS_KEY',
                         'cos.region' = 'ap-beijing'
                     );
                     ```
@@ -649,19 +649,104 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                         'type' = 'iceberg',
                         'warehouse' = 'doris_test',
                         'iceberg.catalog.type' = 'rest',
-                        'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
                         'iceberg.rest.security.type' = 'oauth2',
                         'iceberg.rest.oauth2.credential' = 'root:secret123',
-                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
                         'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
                         'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                        'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                        'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                        'cos.access_key' = 'YOUR_COS_ACCESS_KEY_ID',
+                        'cos.secret_key' = 'YOUR_COS_SECRET_ACCESS_KEY',
                         'cos.region' = 'ap-beijing'
                     );
                     ```
                 </TabItem>
             </Tabs>
+        </TabItem>
+
+        <TabItem value='obs' label='OBS'>
+            <Tabs>
+                <TabItem value='obs-noauth' label='无认证' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = 'YOUR_OBS_ACCESS_KEY_ID',
+                        'obs.secret_key' = 'YOUR_OBS_SECRET_ACCESS_KEY',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='obs-oauth2' label='OAuth2 认证'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = 'YOUR_OBS_ACCESS_KEY_ID',
+                        'obs.secret_key' = 'YOUR_OBS_SECRET_ACCESS_KEY',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='gcs' label='GCS'>
+            <Tabs>
+                <TabItem value='gcs-noauth' label='无认证' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'gs://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = 'YOUR_GCS_ACCESS_KEY_ID',
+                        'gs.secret_key' = 'YOUR_GCS_SECRET_ACCESS_KEY'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='gcs-oauth2' label='OAuth2 认证'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = 'YOUR_GCS_ACCESS_KEY_ID',
+                        'gs.secret_key' = 'YOUR_GCS_SECRET_ACCESS_KEY'
+                        
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='hdfs' label='HDFS'>
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
         </TabItem>
     </Tabs>
 
@@ -671,26 +756,72 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <summary>2.1 & 3.0  版本 </summary>
 
     <Tabs>
-        <TabItem value='HDFS' label='HDFS' default>
-
-        </TabItem>
-        <TabItem value='S3' label='S3'>
-
+        <TabItem value='S3' label='S3' default>
+            ```sql
+            CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
+                's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
+                's3.region' = 'ap-east-1'
+            );
+            ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_oss PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                's3.access_key' = 'YOUR_OSS_ACCESS_KEY_ID',
+                's3.secret_key' = 'YOUR_OSS_SECRET_ACCESS_KEY',
+                's3.region' = 'cn-beijing'
+            );
+            ```
         </TabItem>
         <TabItem value='COS' label='COS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_cos PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                's3.access_key' = 'YOUR_COS_ACCESS_KEY_ID',
+                's3.secret_key' = 'YOUR_COS_SECRET_ACCESS_KEY',
+                's3.region' = 'ap-beijing'
+            );
+            ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_obs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                's3.access_key' = 'YOUR_OBS_ACCESS_KEY_ID',
+                's3.secret_key' = 'YOUR_OBS_SECRET_ACCESS_KEY',
+                's3.region' = 'cn-north-4'
+            );
+            ```
         </TabItem>
-        <TabItem value='GCS' label='GCS'>
-
-        </TabItem>
-        <TabItem value='MinIO' label='MinIO'>
-
+        <TabItem value='HDFS' label='HDFS'>
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
         </TabItem>
 
     </Tabs>
