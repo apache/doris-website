@@ -9,8 +9,7 @@
 
 The YEARWEEK function is used to return the "year + week number" combination for a specified date (format YYYYWW, e.g., 202301 represents week 1 of 2023). This function flexibly defines the start day of the week and the criteria for determining the "first week" through the optional parameter mode, defaulting to mode=0.
 
-If the week containing the date belongs to the previous year, it returns the previous year's year and corresponding week number;
-If the week containing the date belongs to the next year, it returns the next year's year and week 1;
+Return the week of year
 Week numbers range from 1-53, depending on the mode configuration.
 
 The effect of parameter mode is shown in the table below:

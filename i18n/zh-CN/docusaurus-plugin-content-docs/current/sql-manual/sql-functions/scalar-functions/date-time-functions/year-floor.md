@@ -9,7 +9,9 @@
 YEAR_FLOOR 函数用于将输入的日期时间值向下舍入到最接近的指定年间隔的起始时间，间隔单位为年。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
 计算日期时间公式
-YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>) = max{<origin> + k × <period> × year| k ∈ ℤ ∧ <origin> + k × <period> × year ≤ <date_or_time_expr>}
+$$
+\text{YEAR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表的是基准时间到目标时间的周期数
 
 ## 语法
@@ -32,10 +34,11 @@ DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
 返回与输入类型一致的结果（DATETIME 或 DATE），表示向下舍入后的年间隔起始时间：
 
 - 若输入为 DATE 类型，返回 DATE 类型（仅包含日期部分）；若输入为 DATETIME 或符合格式的字符串，返回 DATETIME 类型（时间部分与 origin 一致，无 origin 时默认为 00:00:00）。
-- 若 <period> 为非正整数（≤0），函数返回错误。
+- 若 `<period>` 为非正整数（≤0），函数返回错误。
 - 若任一参数为 NULL，返回 NULL。
-- 若 <date_or_time_expr> 恰好是某间隔的起始点（基于 <period> 和 <origin>），则返回该起始点。
+- 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点。
 - 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误。
+- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
 
 ## 举例
 ```sql
@@ -73,6 +76,14 @@ SELECT YEAR_FLOOR('2023-07-13', 1, '2020-01-01') AS result;
 
 -- 指定origin包含时间部分，返回结果的时间部分与origin一致
 SELECT YEAR_FLOOR('2023-07-13', 1, '2020-01-01 08:30:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-01-01 08:30:00 |
++---------------------+
+
+--- 若 <origin> 日期时间在 <period> 之后，也会按照上述公式计算，不过周期 k 为负数。
+SELECT YEAR_FLOOR('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
 +---------------------+
 | result              |
 +---------------------+

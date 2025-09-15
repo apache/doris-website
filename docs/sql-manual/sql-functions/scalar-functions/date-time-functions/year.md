@@ -23,10 +23,9 @@ YEAR(`<date_or_time_expr>`)
 
 ## Return Value
 
-Returns the year part of the date type, INT type, range from 0-9999.
+Returns the year part of the date/datetime type, INT type, range from 0-9999.
 
 - If the input parameter is NULL, returns NULL
-- Invalid date returns NULL
 
 ## Examples
 
@@ -46,14 +45,6 @@ SELECT YEAR('2024-05-20 14:30:25') AS year_datetime;
 +---------------+
 |          2024 |
 +---------------+
-
--- Invalid date (returns NULL)
-SELECT YEAR('2023-02-30') AS invalid_date;
-+--------------+
-| invalid_date |
-+--------------+
-| NULL         |
-+--------------+
 
 -- Input is NULL (returns NULL)
 SELECT YEAR(NULL) AS null_input;

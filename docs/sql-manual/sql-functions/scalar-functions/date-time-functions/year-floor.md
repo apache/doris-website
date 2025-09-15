@@ -9,7 +9,9 @@
 The YEAR_FLOOR function rounds down an input datetime value to the nearest specified year interval start time, with the interval unit being year. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
 
 Date calculation formula:
-YEAR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × year | k ∈ ℤ ∧ `<origin>` + k × `<period>` × year ≤ `<date_or_time_expr>`}
+$$
+\text{YEAR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 where K represents the number of periods from the reference time to the target time.
 
 ## Syntax
@@ -35,6 +37,7 @@ Returns a result consistent with the input type (DATETIME or DATE), representing
 - If any parameter is NULL, returns NULL.
 - If `<date_or_time_expr>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 ```sql
@@ -100,6 +103,14 @@ SELECT YEAR_FLOOR('2025-07-13', 3, '2020-01-01') AS result;
 | result              |
 +---------------------+
 | 2023-01-01 00:00:00 |
++---------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+SELECT YEAR_FLOOR('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-01-01 08:30:00 |
 +---------------------+
 
 -- Input time part earlier than origin time part, rounds down within same year

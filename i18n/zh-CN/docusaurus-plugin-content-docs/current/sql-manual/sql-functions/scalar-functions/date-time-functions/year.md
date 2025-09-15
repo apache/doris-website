@@ -23,10 +23,9 @@ YEAR(<date_or_time_expr>)
 
 ## 返回值
 
-返回 date 类型的 year 部分，INT 类型，范围从 0-9999
+返回 date/datetime 类型的 year 部分，INT 类型，范围从 0-9999
 
 - 若输入的参数为 NULL，返回 NULL
-- 无效日期（返回 NULL）
 
 ## 举例
 
@@ -47,13 +46,6 @@ SELECT YEAR('2024-05-20 14:30:25') AS year_datetime;
 |          2024 |
 +---------------+
 
--- 无效日期（返回NULL）
-SELECT YEAR('2023-02-30') AS invalid_date;
-+--------------+
-| invalid_date |
-+--------------+
-| NULL         |
-+--------------+
 
 -- 输入为NULL（返回NULL）
 SELECT YEAR(NULL) AS null_input;

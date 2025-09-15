@@ -10,7 +10,9 @@
 YEAR_CEIL 函数用于将输入的日期时间值向上舍入到最接近的指定年间隔的起始时间，间隔单位为年。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
 日期计算公式
-YEAR_CEIL(<date_or_time_expr>, <period>, <origin>) = min{<origin> + k × <period> × year | k ∈ ℤ ∧ <origin> + k × <period> × year ≥ <date_or_time_expr>}
+$$
+\text{YEAR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表基准时间到达目标时间所需的周期数
 
 ## 语法
@@ -35,10 +37,11 @@ DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
 返回与输入类型一致的结果（DATETIME 或 DATE），表示向上舍入后的年间隔起始时间：
 
 - 若输入为 DATE 类型，返回 DATE 类型（仅包含日期部分）；若输入为 DATETIME 或符合格式的字符串，返回 DATETIME 类型（时间部分与 origin 一致，无 origin 时默认为 00:00:00）。
-- 若 <period> 为非正整数（≤0），函数返回错误。
+- 若 `<period>` 为非正整数（≤0），函数返回错误。
 - 若任一参数为 NULL，返回 NULL。
-- 若 <date_or_time_expr> 恰好是某间隔的起始点（基于 <period> 和 <origin>），则返回该起始点。
-- 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误。
+- 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点。
+- 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误
+- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。。
 举例
 ## 举例
 
@@ -89,6 +92,14 @@ SELECT YEAR_CEIL('2023-01-01', 1, '2023-01-01') AS result;
 | result              |
 +---------------------+
 | 2023-01-01 00:00:00 |
++---------------------+
+
+--- 若 <origin> 日期时间在 <period> 之后，也会按照上述公式计算，不过周期 k 为负数。
+SELECT YEAR_CEIL('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2024-01-01 08:30:00 |
 +---------------------+
 
 -- 无效period（非正整数）
