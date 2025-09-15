@@ -9,6 +9,8 @@
 
 MICROSECOND 函数用于从输入的日期时间值中提取微秒部分（即小数点后第六位及以内的数值），返回范围为 0 到 999999。该函数支持处理含微秒精度的 DATETIME 类型，对于精度不足的输入会自动补 0。
 
+该函数与 mysql 中的 [microsecond 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_microsecond) 行为一致。
+
 ## 语法
 
 ```sql
@@ -20,9 +22,6 @@ MICROSECOND(`<datetime>`)
 | 参数 | 说明 |
 | ---- | ---- |
 | `<datetime>` | 输入的日期时间值，类型为 DATETIME , datetime格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)，精度需要大于 0 |
-
-
-该函数与 mysql 中的 [microsecond 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_microsecond) 行为一致。
 
 ## 返回值
 

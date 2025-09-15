@@ -10,7 +10,9 @@
 HOUR_FLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻.
 
 日期时间的计算公式
-HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`) = max{`<origin>` + k × `<period>` × hour | k ∈ ℤ ∧ `<origin>` + k × `<period>` × hour ≤ `<date_or_time_expr>`}
+$$
+\text{HOUR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K 代表的是基准时间到目标时间的周期数
 
 ## 语法

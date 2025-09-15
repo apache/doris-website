@@ -28,7 +28,7 @@ Returns BIGINT type, representing the hour difference between `<date_or_time_exp
 
 - If `<date_or_time_expr1>` is later than `<date_or_time_expr2>`, returns a positive number; if earlier, returns a negative number.
 - If any input parameter is NULL, returns NULL.
-- When including minute time, if the actual difference is less than one hour, the calculation result is reduced by one.
+- Including minute and below unit, if the actual difference is less than one hour, the calculation result is reduced by one.
 
 ## Examples
 

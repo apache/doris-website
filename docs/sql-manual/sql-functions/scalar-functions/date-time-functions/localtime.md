@@ -10,6 +10,10 @@ The function is used to retrieve the current system time, and the return value i
 
 This function behaves the same as MySQL’s [localtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_localtime).
 
+## Alias
+
+- NOW()
+
 ## Syntax
 
 ```sql
@@ -21,7 +25,7 @@ LOCALTIMESTAMP([`<precision>`])
 
 | Parameter       | Description                                                                                                                        |
 |------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `<precision>`    | Optional parameter that specifies the precision of the fractional seconds part of the return value. The range is 0 to 6. The default is 0, meaning no fractional seconds are returned. <br/> Due to JDK implementation limitations, if the FE is built with JDK8, the precision is limited to milliseconds (3 decimal places), and higher precision values will be padded with zeros. For higher precision, use JDK11. |
+| `<precision>`    | Optional parameter that specifies the precision of the fractional seconds part of the return value. The range is 0 to 6. The default is 0, meaning no fractional seconds are returned. |
 
 ## Return Value
 - Returns the current system time, with the type `DATETIME`.

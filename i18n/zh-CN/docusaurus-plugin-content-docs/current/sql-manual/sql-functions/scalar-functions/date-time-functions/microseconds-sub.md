@@ -74,6 +74,4 @@ mysql> SELECT MICROSECONDS_SUB('0000-01-01 00:00:00.000000', 1000000) AS after_s
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation microseconds_sub of 0000-01-01 00:00:00, 1000000 
 out of range
 
-
-
 ```

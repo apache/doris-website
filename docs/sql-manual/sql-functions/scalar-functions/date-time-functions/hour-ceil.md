@@ -10,8 +10,9 @@
 The HOUR_CEIL function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is specified as 5 hours, the function will adjust the input time to the next hour mark within that period (if the input time is already at the period origin, it remains unchanged).
 
 Date calculation formula:
-HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × hour | k ∈ ℤ ∧ `<origin>` + k × `<period>` × hour ≥ `<date_or_time_expr>`}
-
+$$
+\text{HOUR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K represents the number of periods required from the baseline time to reach the target time.
 
 ## Syntax

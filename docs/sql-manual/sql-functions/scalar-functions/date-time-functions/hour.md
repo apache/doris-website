@@ -31,7 +31,7 @@ HOUR(`<date_or_time_expr>`)
 Returns an integer type (INT) representing the hour part of the input expression.
 - For DATETIME, returns an integer from 0-23.
 - For DATE type, returns 0.
-- For TIME type, returns an integer from 0 to 838 (consistent with the TIME type range).
+- For TIME type, returns an integer from 0 to 838 (consistent with the TIME type range), it return tht absolute value.
 - If the input parameter is NULL, returns NULL.
 
 ## Examples
