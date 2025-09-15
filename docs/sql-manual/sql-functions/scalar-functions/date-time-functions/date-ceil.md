@@ -10,7 +10,9 @@
 The DATE_CEIL function is used to round up (ceil) a specified date or time value to the nearest start of a specified time interval period. That is, it returns the smallest periodic moment that is not less than the input date and time. The period rules are jointly defined by `period` (number of periods) and `type` (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
 
 Date Calculation Formula
-DATE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`) = min{`<origin>` + k × `<period>` × day | k ∈ ℤ ∧ `<origin>` + k × `<period>` × day ≥ `<date_or_time_expr>`}
+$$
+\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K Represents the number of cycles required for the base time to reach the target time
 
 ## Syntax
