@@ -11,7 +11,7 @@ The HOUR_CEIL function rounds up the input datetime value to the nearest moment 
 
 Date calculation formula:
 $$
-\text{HOUR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\text{HOUR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \geq \langle\text{date\_or\_time\_expr}\rangle\}
 $$
 K represents the number of periods required from the baseline time to reach the target time.
 
@@ -40,6 +40,7 @@ Returns a DATETIME type value representing the nearest period moment after round
 - If any parameter is NULL, the result returns NULL.
 - If origin or datetime has scale, the returned result has scale.
 - If the calculation result exceeds the maximum datetime range 9999-12-31 23:59:59, returns an error.
+- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
 
 
 ## Examples
@@ -89,6 +90,14 @@ mysql> select hour_ceil('2023-07-13 19:30:00', 4, '2023-07-13 08:00:00.123') ;
 mysql> select hour_ceil('2023-07-13 19:30:00.123', 4, '2023-07-13 08:00:00') ;
 +----------------------------------------------------------------+
 | hour_ceil('2023-07-13 19:30:00.123', 4, '2023-07-13 08:00:00') |
++----------------------------------------------------------------+
+| 2023-07-13 20:00:00.000                                        |
++----------------------------------------------------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+select hour_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') ;
++----------------------------------------------------------------+
+| hour_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') |
 +----------------------------------------------------------------+
 | 2023-07-13 20:00:00.000                                        |
 +----------------------------------------------------------------+

@@ -12,7 +12,7 @@ The HOUR_FLOOR function rounds down the input datetime value to the nearest mome
 Datetime calculation formula:
 
 $$
-\text{HOUR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\text{HOUR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \leq \langle\text{date\_or\_time\_expr}\rangle\}
 $$
 
 K represents the number of periods from the baseline time to the target time.
@@ -41,6 +41,7 @@ Returns a DATETIME type value representing the nearest period moment after round
 - If the input period is a non-positive integer, returns NULL.
 - If any parameter is NULL, the result returns NULL.
 - If origin or datetime has scale, the returned result has scale.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -92,6 +93,14 @@ mysql> select hour_floor('2023-07-13 19:30:00', 4, '2023-07-03 08:00:00.123') as
 +-------------------------+
 | 2023-07-13 16:00:00.123 |
 +-------------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+select hour_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') ;
++-----------------------------------------------------------------+
+| hour_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') |
++-----------------------------------------------------------------+
+| 2023-07-13 16:00:00.000                                         |
++-----------------------------------------------------------------+
 
 -- Input any parameter as NULL (returns NULL)
 mysql> select hour_floor(null, 6) as null_input;
