@@ -10,7 +10,9 @@ This function is used to get the current system time and returns a datetime type
 
 This function is consistent with the [current_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_current-timestamp) in MySQL.
 
-This function is an alias for the now() function.
+## Alias
+
+- NOW()
 
 ## Syntax
 
