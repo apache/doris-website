@@ -11,9 +11,11 @@ The DATE_CEIL function is used to round up (ceil) a specified date or time value
 
 Date Calculation Formula
 $$
-\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \geq \langle\text{date\_or\_time\_expr}\rangle\}
 $$
-K Represents the number of cycles required for the base time to reach the target time
+K Represents the number of cycles required for the base time to reach the target time.
+
+type represent the unit of period
 
 ## Syntax
 

@@ -11,10 +11,11 @@ DATE_CEIL 函数用于将指定的日期或时间值向上取整（ceil）到最
 
 日期计算公式
 $$
-\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\text{DATE\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \geq \langle\text{date\_or\_time\_expr}\rangle\}
 $$
-K 代表基准时间到达目标时间所需的周期数
+K 代表基准时间到达目标时间所需的周期数.
 
+type 代表的是周期单位
 
 ## 语法
 
