@@ -507,3 +507,25 @@ PROPERTIES
     "s3.external_id" = "<your-external-id>"
 );
 ```
+
+### FAQ
+
+#### 1. 如何设置`BE`和`Recycler`的Aws Sdk DEBUG级别日志?
+be.conf和doris_cloud.conf配置aws_log_level=5,并重启进程生效
+* 类型：int32
+* 描述：AWS SDK 的日志级别
+  ```
+     Off = 0,
+     Fatal = 1,
+     Error = 2,
+     Warn = 3,
+     Info = 4,
+     Debug = 5,
+     Trace = 6
+  ```
+* 默认值：2
+
+#### 2.设置Aws Sdk DEBUG级别日志后，be.log/recycler.log报如下错误：
+`OpenSSL SSL_connect: Connection reset by peer in connection to sts.me-south-1.amazonaws.com:443 `
+
+请检查aws vpc网络配置或者防火墙端口配置是否存在问题，导致无法访问aws对应region的sts服务(可通过telnet host:port确认)
