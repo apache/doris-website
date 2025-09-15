@@ -944,6 +944,7 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
                     ]
