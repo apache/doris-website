@@ -31,9 +31,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'paimon',
     'paimon.catalog.type' = '<paimon_catalog_type>',
     'warehouse' = '<paimon_warehouse>'
-    [MetaStoreProperties],
-    [StorageProperties],
-    [CommonProperties]
+    {MetaStoreProperties},
+    {StorageProperties},
+    {CommonProperties}
 );
 ```
 
@@ -53,15 +53,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`。
 
-* `[MetaStoreProperties]`
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* `[StorageProperties]`
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `[CommonProperties]`
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -75,33 +75,33 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的元数据服务
 
-* [ Hive Metastore](../metastores/hive-metastore.md)
+* [Hive Metastore](../metastores/hive-metastore.md)
 
-* [ Aliyun DLF ](../metastores/aliyun-dlf.md)
+* [Aliyun DLF ](../metastores/aliyun-dlf.md)
 
-* [ FileSystem](../metastores/filesystem.md)
+* [FileSystem](../metastores/filesystem.md)
 
 ### 支持的存储系统
 
-* [ HDFS](../storages/hdfs.md)
+* [HDFS](../storages/hdfs.md)
 
-* [ AWS S3](../storages/s3.md)
+* [AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/gcs.md)
+* [Google Cloud Storage](../storages/gcs.md)
 
-* [ 阿里云 OSS](../storages/aliyun-oss.md)
+* [阿里云 OSS](../storages/aliyun-oss.md)
 
-* [ 腾讯云 COS](../storages/tencent-cos.md)
+* [腾讯云 COS](../storages/tencent-cos.md)
 
-* [ 华为云 OBS](../storages/huawei-obs.md)
+* [华为云 OBS](../storages/huawei-obs.md)
 
-* [ MINIO](../storages/minio.md)
+* [MINIO](../storages/minio.md)
 
 ### 支持的数据格式
 
-* [ Parquet](../file-formats/parquet.md)
+* [Parquet](../file-formats/parquet.md)
 
-* [ ORC](../file-formats/orc.md)
+* [ORC](../file-formats/orc.md)
 
 ## 列类型映射
 
@@ -159,8 +159,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
                 's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY'
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -173,8 +173,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'oss://bucket/regression/paimon_warehouse',
                 'oss.region' = 'cn-beijing',
                 'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-                'oss.access_key' = 'ACCESS_KEY',
-                'oss.secret_key' = 'SECRET_KEY'
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
 
@@ -188,8 +188,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'cos.region' = 'ap-beijing',
                 'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-                'cos.access_key' = 'ACCESS_KEY',
-                'cos.secret_key' = 'SECRET_KEY'
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -202,8 +202,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'obs.region' = 'cn-north-4',
                 'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-                'obs.access_key' = 'ACCESS_KEY',
-                'obs.secret_key' = 'SECRET_KEY'
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -215,8 +215,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'gs://bucket/paimon_warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'fs.gcs.support' = 'true',
-                'gs.secret_key' = 'SECRET_KEY',
-                'gs.access_key' = 'ACCESS_KEY'
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
             );
             ```
         </TabItem>
@@ -282,8 +282,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.region' = 'ap-east-1',
                 's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY'
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -296,8 +296,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'oss.region' = 'cn-beijing',
                 'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-                'oss.access_key' = 'ACCESS_KEY',
-                'oss.secret_key' = 'SECRET_KEY'
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -310,8 +310,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'cos.region' = 'ap-beijing',
                 'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-                'cos.access_key' = 'ACCESS_KEY',
-                'cos.secret_key' = 'SECRET_KEY'
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -324,8 +324,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'obs.region' = 'cn-north-4',
                 'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-                'obs.access_key' = 'ACCESS_KEY',
-                'obs.secret_key' = 'SECRET_KEY'
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -340,8 +340,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket/paimon-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.endpoint' = 'http://127.0.0.1:19000',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
                 's3.path.style.access' = 'true'
             );
             ```
@@ -363,8 +363,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'dlf.catalog_id' = 'p2_regression_case',
                 'dlf.region' = 'cn-beijing',
                 'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
-                'dlf.access_key' = 'ACCESS_KEY',
-                'dlf.secret_key' = 'SECRET_KEY'
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -376,8 +376,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
                 'warehouse' = 'new_dfl_paimon_catalog',
                 'paimon.rest.token.provider' = 'dlf',
-                'paimon.rest.dlf.access-key-id' = 'ACCESS_KEY',
-                'paimon.rest.dlf.access-key-secret' = 'SECRET_KEY'
+                'paimon.rest.dlf.access-key-id' = '<ak>',
+                'paimon.rest.dlf.access-key-secret' = '<sk>'
             );
             ```
         </TabItem>
@@ -400,8 +400,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'dlf.catalog.id' = 'p2_regression_case',
                 'dlf.region' = 'cn-beijing',
                 'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
-                'dlf.access_key' = 'ACCESS_KEY',
-                'dlf.secret_key' = 'SECRET_KEY'
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -433,8 +433,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
                 's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY'
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -446,8 +446,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'oss://bucket/regression/paimon1',
                 'oss.region'='cn-beijing',
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
-                'oss.access_key'='ACCESS_KEY',
-                'oss.secret_key'='SECRET_KEY'
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
             );
             ```
         </TabItem>
@@ -459,8 +459,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'cosn://bucket/regression/paimon1',
                 'cos.region' = 'ap-beijing',
                 'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-                'cos.access_key' = 'ACCESS_KEY',
-                'cos.secret_key' = 'SECRET_KEY'
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -472,8 +472,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'obs://bucket/regression/paimon1',
                 'obs.region' = 'cn-north-4',
                 'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-                'obs.access_key' = 'ACCESS_KEY',
-                'obs.secret_key' = 'SECRET_KEY'
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -484,8 +484,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 'fs.gcs.support' = 'true',
-                'gs.secret_key' = 'SECRET_KEY',
-                'gs.access_key' = 'ACCESS_KEY'
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
             );
             ```
         </TabItem>
@@ -527,8 +527,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
                 's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY'
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -540,8 +540,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'oss://bucket/regression/paimon1',
                 'oss.region'='cn-beijing',
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
-                'oss.access_key'='ACCESS_KEY',
-                'oss.secret_key'='SECRET_KEY'
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
             );
             ```
         </TabItem>
@@ -553,8 +553,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'cosn://bucket/regression/paimon1',
                 'cos.region' = 'ap-beijing',
                 'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-                'cos.access_key' = 'ACCESS_KEY',
-                'cos.secret_key' = 'SECRET_KEY'
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -566,8 +566,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 'obs://bucket/regression/paimon1',
                 'obs.region' = 'cn-north-4',
                 'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-                'obs.access_key' = 'ACCESS_KEY',
-                'obs.secret_key' = 'SECRET_KEY'
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -581,8 +581,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://warehouse/wh',
                 'paimon.catalog.type' = 'filesystem',
                 's3.endpoint' = 'http://127.0.0.1:19001',
-                's3.access_key' = 'ACCESS_KEY',
-                's3.secret_key' = 'SECRET_KEY',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
                 's3.path.style.access' = 'true'
             );
             ```
