@@ -12,7 +12,7 @@ Statement for creating a synchronized materialized view.
 ## Syntax
 
 ```sql
-CREATE MATERIALIZED VIEW <materialized_view_name> AS <query>            
+CREATE MATERIALIZED VIEW <materialized_view_name> [AS] <query>            
 ```
 
 Where

@@ -32,15 +32,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
@@ -208,7 +208,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 ```text
 |   0:VHUDI_SCAN_NODE(113)                                                                                            |
 |      table: lineitem_mor                                                                                            |
-|      predicates: (_hoodie_commit_time[#0] >= '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
+|      predicates: (_hoodie_commit_time[#0] > '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 

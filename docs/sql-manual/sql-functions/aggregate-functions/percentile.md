@@ -8,7 +8,6 @@
 ## Description
 
 Calculates the exact percentile, suitable for small datasets. First sorts the specified column in descending order, then takes the exact p-th percentile. The value of `p` is between `0` and `1`. If `p` does not point to an exact position, it returns the [linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) of the adjacent values at position `p`. Note that this is not the average of the two numbers. Special cases:
-- Returns `NULL` when the input column is `NULL`
 
 ## Syntax
 
@@ -20,17 +19,18 @@ PERCENTILE(<col>, <p>)
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | The column to be calculated as the exact percentile, which must be an integer column. |
-| `<p>` | The exact percentile to be calculated, a constant value, with a value range of `[0.0, 1.0]`. |
+| `<col>` | The column to calculate the exact percentile for. Supported types: Double, Float, LargeInt, BigInt, Int, SmallInt, TinyInt. |
+| `<p>` | The exact percentile to be calculated, a constant value. Supported type: Double. Range: `[0.0, 1.0]`. The second parameter must be a constant. |
 
 ## Return Value
 
-Return the exact percentile of the specified column, with a return type of `DOUBLE`.
+Return the exact percentile of the specified column, with a return type of Double.
+If there is no valid data in the group, returns NULL.
 
 ## Examples
 
 ```sql
--- Create sample table
+-- Setup
 CREATE TABLE sales_data
 (
     product_id INT,
@@ -40,8 +40,6 @@ DISTRIBUTED BY HASH(`product_id`) BUCKETS AUTO
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
-
--- Insert sample data
 INSERT INTO sales_data VALUES
 (1, 10.00),
 (1, 15.00),
@@ -53,8 +51,9 @@ INSERT INTO sales_data VALUES
 (1, 45.00),
 (1, 50.00),
 (1, 100.00);
+```
 
--- Calculate different percentiles of sales prices
+```sql
 SELECT 
     percentile(sale_price, 0.5)  as median_price,     -- Median
     percentile(sale_price, 0.75) as p75_price,        -- 75th percentile
@@ -64,10 +63,40 @@ SELECT
 FROM sales_data;
 ```
 
+Calculates sale prices at different percentiles.
+
 ```text
 +--------------+-----------+-------------------+-------------------+----------+
 | median_price | p75_price | p90_price         | p95_price         | p99_null |
 +--------------+-----------+-------------------+-------------------+----------+
 |         32.5 |     43.75 | 54.99999999999998 | 77.49999999999994 |     NULL |
 +--------------+-----------+-------------------+-------------------+----------+
+```
+
+```sql
+select percentile(if(sale_price>90,sale_price,NULL), 0.5) from sales_data;
+```
+
+Only non-NULL input values are considered in the calculation.
+
+```text
++----------------------------------------------------+
+| percentile(if(sale_price>90,sale_price,NULL), 0.5) |
++----------------------------------------------------+
+|                                                100 |
++----------------------------------------------------+
+```
+
+```sql
+select percentile(sale_price, NULL) from sales_data;
+```
+
+If all input values are NULL, returns NULL.
+
+```text
++------------------------------+
+| percentile(sale_price, NULL) |
++------------------------------+
+|                         NULL |
++------------------------------+
 ```

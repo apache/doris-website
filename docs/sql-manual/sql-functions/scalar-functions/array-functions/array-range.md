@@ -5,52 +5,68 @@
 }
 ---
 
-## Description
+## Function
 
-1. Generate int array
-2. Generate date and time array
-
-## Aliases
-
-- SEQUENCE
+Generate an arithmetic sequence array of numbers or datetimes.
+- For numeric types, the default step is 1
+- For datetime types, the default step is 1 day
 
 ## Syntax
 
-```sql
-ARRAY_RANGE(<end>)
-ARRAY_RANGE(<start>, <end>)
-ARRAY_RANGE(<start>, <end>, <step>)
-ARRAY_RANGE(<start_datetime>, <end_datetime>)
-ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
-```
+- `ARRAY_RANGE(end)`
+- `ARRAY_RANGE(start, end)`
+- `ARRAY_RANGE(start, end, step)`
+- `ARRAY_RANGE(start_dt, end_dt)`
+- `ARRAY_RANGE(start_dt, end_dt, interval step unit)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<start>` | The starting value is a positive integer, the default value is 0 |
-| `<end>` | End value, a positive integer |
-| `<step>` | Step size, a positive integer, default is 1 |
-| `<start_datetime>` | Start date, datetimev2 type |
-| `<end_datetime>` | End date, datetimev2 type |
-| `<interval_step>` | Interval value, default is 1 |
-| `<unit>` | Interval unit, supports year/quarter/month/week/day/hour/minute/second, default is day |
+- `start`, `end`: non-negative integers. `end` is the upper bound and is excluded from the result.
+- `step`: must be a positive integer; the step length; default is 1.
+- `start_dt`, `end_dt`: DATETIME. In the two-argument form, the default step is 1 DAY.
+- `interval step unit`: datetime step. `unit` can be `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`; `step` must be a positive integer.
 
-## Return Value
+## Return value
 
-1. Returns an array from start to end - 1, with a step length of step. If the third parameter step is negative or zero, the function result will be NULL
-2. Returns an array of datetimev2 between start_datetime and the closest end_datetime (calculated by Interval_step UNIT). If the third argument interval_step is negative or zero, the function result will be NULL
+- Returns `ARRAY<T>`; returns `NULL` for illegal arguments; returns an empty array `[]` for an empty range.
+- The element type `T` matches the input: integers produce `INT`, datetimes produce `DATETIME`.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_RANGE(0,20,2),ARRAY_RANGE(cast('2019-05-15 12:00:00' as datetimev2(0)), cast('2022-05-17 12:00:00' as datetimev2(0)), interval 2 year);
-```
+- Numeric sequence: start from `start`, increment by `step`, up to but excluding `end` (left-closed, right-open).
+- Datetime sequence: start from `start_dt`, increment by `step` in the given `unit`, up to but excluding `end_dt`; the two-argument form is equivalent to `interval 1 day`.
+- Illegal arguments return `NULL`:
+  - Numeric: `start < 0`, `end < 0`, `step <= 0`.
+  - Datetime: `start_dt` or `end_dt` invalid, or `step <= 0`.
+- `ARRAY_RANGE` and `SEQUENCE` are equivalent.
 
-```text
-+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-| array_range(0, 20, 2)               | array_range_year_unit(cast('2019-05-15 12:00:00' as DATETIMEV2(0)), cast('2022-05-17 12:00:00' as DATETIMEV2(0)), 2) |
-+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-| [0, 2, 4, 6, 8, 10, 12, 14, 16, 18] | ["2019-05-15 12:00:00", "2021-05-15 12:00:00"]                                                                       |
-+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-```
+## Examples
+
+- Numeric: `start` defaults to 0, `step` defaults to 1
+  - `ARRAY_RANGE(5)` -> `[0, 1, 2, 3, 4]`
+  - `ARRAY_RANGE(0, 5)` -> `[0, 1, 2, 3, 4]`
+
+- Numeric: `end` is the upper bound and is not included in the result.
+  - `ARRAY_RANGE(2, 6, 2)` -> `[2, 4]`
+  - `ARRAY_RANGE(3, 3)` -> `[]`
+
+- Numeric: `end` must be greater than or equal to `start`, otherwise returns `[]`
+   - `ARRAY_RANGE(3, 2)` -> `[]`
+
+- Numeric: `start`, `end` must be non-negative integers, and `step` must be greater than 0.
+  - `ARRAY_RANGE(-1, 3)` -> `NULL`
+  - `ARRAY_RANGE(1, 3, 0)` -> `NULL`
+
+- Datetime: `step` defaults to 1 day.
+  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00')` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
+  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
+
+- Datetime: `unit` can be `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2024-05-17 12:00:00', interval 1 year)` -> `["2022-05-15 12:00:00", "2023-05-15 12:00:00"]`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2023-05-17 12:00:00', interval 1 quarter);` -> `["2022-05-15 12:00:00", "2022-08-15 12:00:00", "2022-11-15 12:00:00", "2023-02-15 12:00:00"] `
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-07-17 12:00:00', interval 1 month);` -> `["2022-05-15 12:00:00", "2022-06-15 12:00:00"]`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 14:00:00', interval 1 hour)` -> `["2022-05-15 12:00:00", "2022-05-15 13:00:00"]`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:02:00', interval 1 minute)` -> `["2022-05-15 12:00:00", "2022-05-15 12:01:00"]`
+   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:00:02', interval 1 second)` -> `["2022-05-15 12:00:00", "2022-05-15 12:00:01"]`
+

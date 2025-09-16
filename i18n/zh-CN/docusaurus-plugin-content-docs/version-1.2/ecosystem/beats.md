@@ -1,6 +1,6 @@
 ---
 {
-"title": "Beats Doris Output Plugin",
+"title": "Filebeat",
 "language": "zh-CN"
 }
 ---
@@ -23,7 +23,7 @@ Beats Doris output plugin 调用 [Doris Stream Load](../data-operate/import/impo
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-2.0.0
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1
 
 
 ### 从源码编译

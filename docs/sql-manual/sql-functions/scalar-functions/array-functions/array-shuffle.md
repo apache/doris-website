@@ -1,45 +1,41 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-Randomly arrange the elements in an array
-
-## Aliases
-
-- SHUFFLE
+Randomly shuffle the order of elements in an array.
 
 ## Syntax
 
-```sql
-ARRAY_SHUFFLE(<array>, <seed>)
-```
+- `ARRAY_SHUFFLE(arr)`
+- `ARRAY_SHUFFLE(arr, seed)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<array>` | The array to be randomly permuted |
-| `<seed>` | An optional parameter that sets the initial value of the pseudo-random number generator used to generate pseudo-random numbers |
+- `arr`: `ARRAY<T>`.
+- `seed`: optional, random seed.
 
-## Return Value
+## Return value
 
-Randomize the elements in an array. The parameter array1 is the array to be randomly arranged, and the optional parameter seed is the initial value used by the pseudo-random number generator to generate pseudo-random numbers. shuffle has the same function as array_shuffle.
+- Returns an array of the same type as the input, with elements randomly reordered. Element count and types remain unchanged.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_SHUFFLE([1, 2, 3, 6]),ARRAY_SHUFFLE([1, 4, 3, 5, NULL],1);
-```
+- If the input `arr` is `NULL`, returns `NULL`.
+- Providing a `seed` yields reproducible results; omitting it may yield different results per execution.
+- `ARRAY_SHUFFLE` has an alias `SHUFFLE`; they are equivalent.
+- 
 
-```text
-+-----------------------------+--------------------------------------+
-| array_shuffle([1, 2, 3, 6]) | array_shuffle([1, 4, 3, 5, NULL], 1) |
-+-----------------------------+--------------------------------------+
-| [2, 6, 3, 1]                | [4, 1, 3, 5, null]                   |
-+-----------------------------+--------------------------------------+
-```
+## Examples
+
+- Basic usage:
+  - `ARRAY_SHUFFLE([1, 2, 3, 4])` -> e.g. `[3, 1, 4, 2]` (random order)
+  - `ARRAY_SHUFFLE(['a', null, 'b'])` -> e.g. `['b', 'a', null]`
+
+- With a fixed seed (reproducible results):
+  - `ARRAY_SHUFFLE([1, 2, 3, 4], 0)` -> same order each time (e.g. `[1, 3, 2, 4]`)
+

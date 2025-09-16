@@ -97,7 +97,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
@@ -483,7 +483,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -495,7 +505,14 @@
                         "compute-storage-decoupled/compilation-and-deployment",
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
-                        "compute-storage-decoupled/file-cache",
+                        {
+                            "type": "category",
+                            "label": "File Cache",
+                            "items": [
+                                "compute-storage-decoupled/file-cache/file-cache",
+                                "compute-storage-decoupled/file-cache/file-cache-internals"
+                            ]
+                        },
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
@@ -548,7 +565,8 @@
                             "type": "category",
                             "label": "Integrations",
                             "items": [
-                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization",
+                                "admin-manual/auth/integrations/aws-iam-role"
                             ]
                         }
                     ]
@@ -910,6 +928,16 @@
                 },
                 {
                     "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "More",
                     "items": [
                         "ecosystem/cloudcanal",
@@ -918,8 +946,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
                         "ecosystem/hive-hll-udf"
@@ -2215,6 +2241,13 @@
             "collapsed": false,
             "items": [
                 "releasenotes/all-release",
+                {
+                    "type": "category",
+                    "label": "v3.1",
+                    "items": [
+                        "releasenotes/v3.1/release-3.1.0"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "v3.0",

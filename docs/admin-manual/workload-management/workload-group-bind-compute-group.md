@@ -5,7 +5,7 @@
 }
 ---
 
-## 背景
+## Background
 Doris supports logical partitioning of BE (Backend) resources within a cluster through the Compute Group feature, forming independent sub-cluster units to achieve physical isolation of computing and storage resources for different business parties. Due to the significant differences in load characteristics among business parties, their configuration requirements for Workload Groups often exhibit obvious distinctions.
 
 In early versions, the Workload Groups configured by users would take effect globally across all Compute Groups, forcing different business parties to share the same set of Workload Group configurations. For example, Business A’s high-concurrency queries and Business B’s large-scale data analysis might require completely different resource quotas, but the old architecture could not meet such differentiated needs, limiting the flexibility of resource management.

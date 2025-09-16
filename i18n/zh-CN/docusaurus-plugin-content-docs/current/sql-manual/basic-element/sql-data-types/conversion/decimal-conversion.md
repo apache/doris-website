@@ -1,6 +1,6 @@
 ---
 {
-    "title": "转换为 DECIMAL",
+    "title": "转换为 DECIMAL 类型",
     "language": "zh-CN"
 }
 ---

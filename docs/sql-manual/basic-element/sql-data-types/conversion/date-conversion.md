@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to DATE",
+    "title": "Cast to DATE Type",
     "language": "en"
 }
 ---
@@ -245,7 +245,7 @@ Assume the current Doris time zone is UTC+8 (`+08:00`). For the effect of time z
 <second> ::= <digit>{1,2}
 
 <separator> ::= any symbol except digits or letters
-<delimiter> ::= " " | "T"
+<delimiter> ::= " " | "T" | ":"
 
 <fraction> ::= "." <digit>*
 

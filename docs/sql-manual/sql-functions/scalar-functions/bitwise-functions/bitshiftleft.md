@@ -6,34 +6,42 @@
 ---
 
 ## Description
-Functions for left shift operations are usually used to perform bit shift operations, which shift all bits of a binary number to the left by a specified number of bits. It is a form of bitwise operation that is often used to process binary data or perform efficient mathematical calculations.
+Performs a left shift operation, which moves all bits of a binary number to the left by a specified number of positions. This is a form of bitwise operation, commonly used for handling binary data or efficient mathematical calculations.
 
-For the maximum value of BIGINT type, 9223372036854775807, a one-bit left shift results in -2.
+For the maximum value of BIGINT type (9223372036854775807), shifting left by one position results in -2.
 ## Syntax
 ```sql
-BIT_SHIFT_LEFT( <x>, <bits>)
+BIT_SHIFT_LEFT(<x>, <bits>)
 ```
 
 ## Parameters
-| parameter | description                       |
-|-----------|-----------------------------------|
-| `<x>`     | The number to be shifted                         |
-| `<bits>`  |The number of bits to shift left. It is an integer that determines how many bits `<x>` will be shifted left |
+- `<x>`: The number to be shifted.
+- `<bits>`: The number of positions to shift left. It is an integer that determines how many positions `<x>` will be shifted.
 
 ## Return Value
-
-Returns an integer representing the result of a left shift operation.
+Returns an integer representing the result after the left shift operation.
 
 ## Examples
-```sql
-select BIT_SHIFT_LEFT(5, 2), BIT_SHIFT_LEFT(-5, 2), BIT_SHIFT_LEFT(9223372036854775807, 1);
-```
+1. Example 1
+    ```sql
+    select BIT_SHIFT_LEFT(5, 2), BIT_SHIFT_LEFT(-5, 2), BIT_SHIFT_LEFT(9223372036854775807, 1);
+    ```
 
-```text
-+----------------------+-----------------------+----------------------------------------+
-| bit_shift_left(5, 2) | bit_shift_left(-5, 2) | bit_shift_left(9223372036854775807, 1) |
-+----------------------+-----------------------+----------------------------------------+
-|                   20 |                   -20 |                                     -2 |
-+----------------------+-----------------------+----------------------------------------+
-```
-
+    ```text
+    +----------------------+-----------------------+----------------------------------------+
+    | BIT_SHIFT_LEFT(5, 2) | BIT_SHIFT_LEFT(-5, 2) | BIT_SHIFT_LEFT(9223372036854775807, 1) |
+    +----------------------+-----------------------+----------------------------------------+
+    |                   20 |                   -20 |                                     -2 |
+    +----------------------+-----------------------+----------------------------------------+
+    ```
+2. NULL argument
+    ```sql
+    select BIT_SHIFT_LEFT(5, NULL), BIT_SHIFT_LEFT(NULL, 2), BIT_SHIFT_LEFT(NULL, NULL);
+    ```
+    ```text
+    +-------------------------+-------------------------+----------------------------+
+    | BIT_SHIFT_LEFT(5, NULL) | BIT_SHIFT_LEFT(NULL, 2) | BIT_SHIFT_LEFT(NULL, NULL) |
+    +-------------------------+-------------------------+----------------------------+
+    |                    NULL |                    NULL |                       NULL |
+    +-------------------------+-------------------------+----------------------------+
+    ```

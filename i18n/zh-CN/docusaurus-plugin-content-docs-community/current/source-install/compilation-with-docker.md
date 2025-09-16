@@ -48,6 +48,12 @@ yum install docker
 | --------------------------------------------------- | ---------- |
 | apache/doris:build-env-for-2.0                      | 2.0.x      |
 | apache/doris:build-env-for-2.0-no-avx2              | 2.0.x      |
+| apache/doris:build-env-for-2.1                      | 2.1.x      |
+| apache/doris:build-env-for-2.1-no-avx2              | 2.1.x      |
+| apache/doris:build-env-for-3.0                      | 3.0.x      |
+| apache/doris:build-env-for-3.0-no-avx2              | 3.0.x      |
+| apache/doris:build-env-for-3.1                      | 3.1.x      |
+| apache/doris:build-env-for-3.1-no-avx2              | 3.1.x      |
 | apache/doris:build-env-ldb-toolchain-latest         | master     |
 | apache/doris:build-env-ldb-toolchain-no-avx2-latest | master     |
 

@@ -51,7 +51,7 @@
 
 ### 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ### 第 3 步：优化 FE 和 BE 配置
 
@@ -70,7 +70,7 @@
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](./admin-manual/config/fe-config)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](../admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
@@ -98,7 +98,7 @@
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
-更多关于 BE 配置项的信息，可参考 [BE 配置项](./admin-manual/config/be-config)。
+更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config)。
 
 ### 第 4 步：建表
 
@@ -107,14 +107,14 @@
 **配置分区分桶参数**
 
 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [数据划分](./table-design/data-partitioning/data-distribution)。
+更多关于分区分桶的信息，可参考 [数据划分](../table-design/data-partitioning/data-distribution)。
 
 **配置压缩参数**
 - 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
@@ -203,12 +203,12 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 1. 下载并安装 Logstash Doris Output 插件。你可选择以下两种方式之一：
 
-- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)。
+- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)。
   
 - 从源码编译，并运行下方命令安装：
 
 ```sql
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. 配置 Logstash。需配置以下参数：
@@ -265,13 +265,13 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/observability/logstash)。
 
 **对接 Filebeat**
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -337,11 +337,11 @@ output {
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
 ```shell  
-chmod +x filebeat-doris-1.0.0  
-./filebeat-doris-1.0.0 -c filebeat_demo.yml
+chmod +x filebeat-doris-2.1.1  
+./filebeat-doris-2.1.1 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/observability/beats)。
 
 **对接 Kafka**
 

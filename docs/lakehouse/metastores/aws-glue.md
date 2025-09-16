@@ -9,7 +9,7 @@ This document describes the parameter configuration when using **AWS Glue Catalo
 
 ## Supported Glue Catalog Types
 
-AWS Glue Catalog currently supports two types of Catalogs:
+AWS Glue Catalog currently supports three types of Catalogs:
 
 | Catalog Type | Type Identifier (`type`) | Description                                        |
 |--------------|-------------------------|----------------------------------------------------|
@@ -101,7 +101,7 @@ CREATE CATALOG glue_s3 PROPERTIES (
   'type' = 'iceberg',
   'iceberg.catalog.type' = 'rest',
   'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-  'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+  'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
   'iceberg.rest.sigv4-enabled' = 'true',
   'iceberg.rest.signing-name' = 'glue',
   'iceberg.rest.access-key-id' = '<ak>',

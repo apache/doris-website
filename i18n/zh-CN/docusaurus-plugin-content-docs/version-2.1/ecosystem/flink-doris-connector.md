@@ -831,9 +831,9 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。 |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。例如： 'sink.properties.column_separator' = ', ' 定义列分隔符， 'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，\x01 会被转换为二进制的 0x01。JSON 格式导入 'sink.properties.format' = 'json' , 'sink.properties.read_json_by_line' = 'true' 详细参数参考[这里](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/stream-load-manual.md)。Group Commit 模式 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。 |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。例如： 'sink.properties.column_separator' = ', ' 定义列分隔符， 'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，\x01 会被转换为二进制的 0x01。JSON 格式导入 'sink.properties.format' = 'json' , 'sink.properties.read_json_by_line' = 'true' 详细参数参考[这里](../data-operate/import/import-way/stream-load-manual.md#导入配置参数)。Group Commit 模式 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit，详细使用和限制参考 [group commit](../data-operate/import/group-commit-manual.md) 。 |
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。 |
-| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/stream-load-manual.md)。 |
+| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/transaction.md#streamload-2pc)。 |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可   |
 | sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可             |
 | sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                       |
@@ -894,7 +894,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
 | --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。 |
 | --db2-conf              | SQLServer CDCSource 配置，例如--db2-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/db2-cdc/)查看所有配置 DB2-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。｜ |
-| --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#通用配置项)查看完整的配置项。 |
+| --sink-conf             | Doris Sink 的所有配置，可以在[这里](./flink-doris-connector.md#sink-配置项)查看完整的配置项。 |
 | --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样 mongodb 数据为 Doris 建表的配置，默认为 0.2 |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 --table-conf replication_num=1，而 --table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |
 | --schema-change-mode    | 解析 schema change 的模式，支持 debezium_structure、sql_parser 两种解析模式，默认采用 debezium_structure 模式。debezium_structure 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。sql_parser 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。使用例子：--schema-change-mode debezium_structure。24.0.0 后支持 |
@@ -1106,7 +1106,7 @@ from KAFKA_SOURCE;
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-   这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/fe-config/#max_running_txn_num_per_db)。
+   这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](../admin-manual/config/fe-config#max_running_txn_num_per_db)。
    同时，一个任务频繁修改 label 重启，也可能会导致这个错误。2pc 场景下 (Duplicate/Aggregate 模型)，每个任务的 label 需要唯一，并且从 checkpoint 重启时，flink 任务才会主动 abort 掉之前已经 precommit 成功，没有 commit 的 txn，频繁修改 label 重启，会导致大量 precommit 成功的 txn 无法被 abort，占用事务。在 Unique 模型下也可关闭 2pc，可以实现幂等写入。
 
 4. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**

@@ -9,7 +9,7 @@
 
 ## Glue Catalog 支持的类型
 
-AWS Glue Catalog 当前支持两种类型的 Catalog：
+AWS Glue Catalog 当前支持三种类型的 Catalog：
 
 | Catalog 类型 | 类型标识 (`type`) | 描述                                        |
 |-------------|------------------|---------------------------------------------|
@@ -101,7 +101,7 @@ CREATE CATALOG glue_s3 PROPERTIES (
   'type' = 'iceberg',
   'iceberg.catalog.type' = 'rest',
   'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-  'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+  'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
   'iceberg.rest.sigv4-enabled' = 'true',
   'iceberg.rest.signing-name' = 'glue',
   'iceberg.rest.access-key-id' = '<ak>',

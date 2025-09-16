@@ -7,11 +7,11 @@
 
 ## Description
 
-`EXPORT` command is used to export the data of the specified table as a file to the specified location. Currently, it supports exporting to remote storage such as HDFS, S3, BOS, and COS (Tencent Cloud) through the Broker process, S3 protocol, or HDFS protocol.
+The `EXPORT` command is used to export data from a specified table to files at a specified location. Currently supports exporting to remote storage such as HDFS, S3, BOS, COS (Tencent Cloud) through Broker processes, S3 protocol, or HDFS protocol.
 
-`EXPORT` is an asynchronous operation. This command will submit an `EXPORT JOB` to Doris, and the task will be returned immediately after successful submission. After execution, you can use the [SHOW EXPORT](./SHOW-EXPORT) command to view the progress.
+`EXPORT` is an asynchronous operation. This command submits an `EXPORT JOB` to Doris and returns immediately upon successful submission. You can use the [SHOW EXPORT](./SHOW-EXPORT) command to check the progress after execution.
 
-## Syntax
+## Syntax:
 
   ```sql
   EXPORT TABLE <table_name>
@@ -23,198 +23,200 @@
   [ <broker_properties> ];
   ```
 
-## Required Parameters
+## Required Parameters  
 
 **1. `<table_name>`**
 
-  The name of the table to be exported. Supports export of Doris local table, view, and catalog external table data.
+  The name of the table to be exported. Supports exporting data from Doris local tables, views, and catalog external tables.
 
 **2. `<export_path>`**
 
-  The exported file path. It can be a directory or a file directory plus a file prefix, such as `hdfs://path/to/my_file_`
+  The export file path. Can be a directory or a file directory with file prefix, such as `hdfs://path/to/my_file_`
 
-## Optional Parameters
+## Optional Parameters  
+
 **1. `<where_clause>`**
 
-  Optional parameter to specify filter conditions for exporting data.
+  You can specify filter conditions for the exported data.
 
-**2. `<partition_name>`**
+**2. `<partation_name>`**
 
-  Optional parameter to export specific partitions of a table, applicable only to Doris local tables.
+  You can export only certain specified partitions of the specified table. Only valid for Doris local tables.
 
 **3. `<properties>`**
 
-  Used to specify additional export parameters.
+  Used to specify some export parameters.
 
   ```sql
   [ PROPERTIES ("<key>"="<value>" [, ... ]) ]
   ```
 
-  The following parameters can be specified:
+  The following parameters can be specified:  
+  - `label`: Optional parameter to specify the Label for this Export task. When not specified, the system will randomly generate a Label.
 
-  - `label`: This parameter is optional, specifies the label of the export task. If this parameter is not specified, the system randomly assigns a label to the export task.
+  - `column_separator`: Specifies the column separator for export, default is `\t`, supports multi-byte. This parameter is only used for CSV file format.
 
-  - `column_separator`: Specifies the exported column separator, default is `\t`, mulit-bytes is supported. This parameter is only used for `CSV` file format.
+  - `line_delimiter`: Specifies the line delimiter for export, default is `\n`, supports multi-byte. This parameter is only used for CSV file format.
 
-  - `line_delimiter`: Specifies the line delimiter for export, the default is `\n`, mulit-bytes is supported. This parameter is only used for `CSV` file format.
+  - `columns`: Specifies certain columns of the export table.
 
-  - `timeout`: The timeout period of the export job, the default is 2 hours, the unit is seconds.
+  - `format`: Specifies the file format for the export job, supports: parquet, orc, csv, csv_with_names, csv_with_names_and_types. Default is CSV format.
 
-  - `columns`: Specifies certain columns of the export job table
+  - `max_file_size`: Single file size limit for export job. If the result exceeds this value, it will be split into multiple files. `max_file_size` value range is [5MB, 2GB], default is 1GB. (When specifying export to orc file format, the actual split file size will be a multiple of 64MB, e.g.: specifying max_file_size = 5MB will actually split at 64MB; specifying max_file_size = 65MB will actually split at 128MB)
 
-  - `format`: Specifies the file format, support: parquet, orc, csv, csv_with_names, csv_with_names_and_types.The default is csv format.
+  - `parallelism`: Concurrency of the export job, default is `1`. The export job will start `parallelism` number of threads to execute `select into outfile` statements. (If the number of Parallelism is greater than the number of Tablets in the table, the system will automatically set Parallelism to the size of the number of Tablets, i.e., each `select into outfile` statement is responsible for one Tablet)
 
-  - `parallelism`: The concurrency degree of the `export` job, the default is `1`. The export job will be divided into `select..outfile..` statements of the number of `parallelism` to execute concurrently. (If the value of `parallelism` is greater than the number of tablets in the table, the system will automatically set `parallelism` to the number of tablets, that is, each `select..outfile..` statement is responsible for one tablet)
+  - `delete_existing_files`: Default is `false`. If specified as `true`, all files in the directory specified by `export_path` will be deleted first, then data will be exported to that directory. For example: "export_path" = "/user/tmp", will delete all files and directories under "/user/"; "file_path" = "/user/tmp/", will delete all files and directories under "/user/tmp/".
 
-  - `delete_existing_files`: default `false`. If it is specified as true, you will first delete all files specified in the directory specified by the file_path, and then export the data to the directory.For example: "file_path" = "/user/tmp", then delete all files and directory under "/user/"; "file_path" = "/user/tmp/", then delete all files and directory under "/user/tmp/"
+  - `with_bom`: Default is `false`. If specified as `true`, the exported file encoding will be UTF8 encoding with BOM (only effective for csv-related file formats).
 
-  - `max_file_size`: it is the limit for the size of a single file in the export job. If the result file exceeds this value, it will be split into multiple files. The valid range for `max_file_size` is [5MB, 2GB], with a default value of 1GB. (When exporting to the ORC file format, the actual size of the split files will be multiples of 64MB, for example, if max_file_size is specified as 5MB, the actual split size will be 64MB; if max_file_size is specified as 65MB, the actual split size will be 128MB.)
-  
-  - `with_bom`: The default is false. If it is set to true, the exported file is encoded in UTF8 with BOM (valid only for CSV-related file format).
+  - `data_consistency`: Can be set to `none` / `partition`, default is `partition`. Indicates at what granularity to split the export table, `none` represents Tablets level, `partition` represents Partition level.
 
-  - `timeout`: This is the timeout parameter of the export job, the default timeout is 2 hours, and the unit is seconds.
+  - `timeout`: Timeout for export job, default is 2 hours, unit is seconds.
 
-  - `compress_type`: (since 2.1.5) When specifying the export file format as Parquet or ORC, you can choose the compression method for the Parquet or ORC files. For Parquet file format, you can specify the compression method as SNAPPY, GZIP, BROTLI, ZSTD, LZ4, or PLAIN, with the default being SNAPPY. For ORC file format, you can specify the compression method as PLAIN, SNAPPY, ZLIB, or ZSTD, with the default being ZLIB. This parameter is supported starting from version 2.1.5. (PLAIN means no compression is used.)
+  - `compress_type`: (Supported since 2.1.5) When specifying the export file format as Parquet / ORC files, you can specify the compression method used by Parquet / ORC files. Parquet file format can specify compression methods as SNAPPY, GZIP, BROTLI, ZSTD, LZ4, and PLAIN, with default value SNAPPY. ORC file format can specify compression methods as PLAIN, SNAPPY, ZLIB, and ZSTD, with default value ZLIB. This parameter is supported starting from version 2.1.5. (PLAIN means no compression)
 
   :::caution Note  
-  Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment. 
-  :::
+  To use the delete_existing_files parameter, you also need to add the configuration `enable_delete_existing_files = true` in fe.conf and restart fe, then delete_existing_files will take effect. delete_existing_files = true is a dangerous operation, it's recommended to use only in test environments.  
+  :::  
 
+**4. `<target_storage>`**  
+    Storage medium, optional BROKER, S3, HDFS.  
 
-**4. `<target_storage>`**
-  Storage medium, optional BROKER, S3, HDFS.
+**5. `<broker_properties>`**  
+    Different properties need to be specified according to different storage media of `<target_storage>`.  
 
-**5. `<broker_properties>`**
-Depending on the storage medium of `<target_storage>`, different properties need to be specified.
-
-- **BROKER**
-
-  The export function needs to write data to the remote storage through the Broker process. Here you need to define the relevant connection information for the broker to use.
+- **BROKER**  
+  Data can be written to remote storage through Broker processes. Here you need to define relevant connection information for Broker to use.  
 
   ```sql
   WITH BROKER "broker_name"
   ("<key>"="<value>" [,...])
   ```  
 
-  **Broker properties:**  
-  - `username`: user name
-  - `password`: password
-  - `hadoop.security.authentication`: specify the authentication method as kerberos
-  - `kerberos_principal`: specifies the principal of kerberos
-  - `kerberos_keytab`: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
+  **Broker related properties:**  
+  - `username`: Username
+  - `password`: Password
+  - `hadoop.security.authentication`: Specify authentication method as kerberos
+  - `kerberos_principal`: Specify kerberos principal
+  - `kerberos_keytab`: Specify the path to kerberos keytab file. This file must be an absolute path to a file on the server where the Broker process is located and accessible by the Broker process  
 
-- **HDFS**
+- **HDFS**  
 
-  You can directly write data to the remote HDFS.
+  Data can be written directly to remote HDFS.
 
   ```sql
-  WITH HDFS ("key"="value" [,...])
+  WITH HDFS ("<key>"="<value>" [,...])
   ```  
 
-  **HDFS properties: **
+  **HDFS related properties:**  
   - `fs.defaultFS`: namenode address and port
-  - `hadoop.username`: hdfs username
-  - `dfs.nameservices`: if hadoop enable HA, please set fs nameservice. See hdfs-site.xml
-  - `dfs.ha.namenodes.[nameservice ID]`: unique identifiers for each NameNode in the nameservice. See hdfs-site.xml
-  - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: the fully-qualified RPC address for each NameNode to listen on. See hdfs-site.xml
+  - `hadoop.username`: HDFS username
+  - `dfs.nameservices`: name service name, consistent with hdfs-site.xml
+  - `dfs.ha.namenodes.[nameservice ID]`: list of namenode ids, consistent with hdfs-site.xml
+  - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: rpc address of Name node, same number as namenode count, consistent with hdfs-site.xml   
 
-  **For a kerberos-authentication enabled Hadoop cluster, additional properties need to be set:**
-  - `dfs.namenode.kerberos.principal`: HDFS namenode service principal
-  - `hadoop.security.authentication`: set the value as `kerberos`
-  - `hadoop.kerberos.principal`: the Kerberos pincipal that Doris will use when connectiong to HDFS.
-  - `hadoop.kerberos.keytab`: HDFS client keytab location.
+  **For Hadoop clusters with kerberos authentication enabled, the following additional PROPERTIES attributes need to be set:**
+  - `dfs.namenode.kerberos.principal`: Principal name of HDFS namenode service
+  - `hadoop.security.authentication`: Set authentication method to kerberos
+  - `hadoop.kerberos.principal`: Set the Kerberos principal used when Doris connects to HDFS
+  - `hadoop.kerberos.keytab`: Set the local file path of keytab  
 
-- **S3**
+- **S3**  
 
-  You can directly write data to a remote S3 object store
+  Data can be written directly to remote S3 object storage.
 
   ```sql
-  WITH S3 ("key"="value" [,...])
+  WITH S3 ("<key>"="<value>" [,...])
   ```  
 
-  **S3 properties:**
+  **S3 related properties:**
   - `s3.endpoint`
   - `s3.region`
   - `s3.secret_key`
   - `s3.access_key`
-  - `use_path_style`: (optional) default false . The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not be enabled or support virtual-hosted style access. At this time, we can add the use_path_style parameter to force the use of path style access method.
+  - `use_path_style`: (Optional) Default is `false`. S3 SDK uses Virtual-hosted Style by default. However, some object storage systems may not have enabled or support Virtual-hosted Style access. In this case, you can add the `use_path_style` parameter to force the use of Path Style access.
 
-## Return Value
+## Return Values
 
-| Column             | DataType       | Note                                                                         |
-|--------------------|----------------|------------------------------------------------------------------------------|
-| jobId              | long           | The unique identifier of the export job.                                     |
-| label              | string         | The label of the export job.                                                 |
-| dbId               | long           | The identifier of the database.                                              |
-| tableId            | long           | The identifier of the table.                                                 |
-| state              | ExportJobState | The current state of the export job.                                         |
-| path               | string         | The path of the export file.                                                 |
-| partitions         | string         | The list of partition names being exported, separated by commas.             |
-| progress           | int            | The current progress of the export job (in percentage).                      |
-| createTimeMs       | string         | The creation time of the job in milliseconds, formatted as a date/time.      |
-| exportStartTimeMs  | string         | The start time of the export job in milliseconds, formatted as a date/time.  |
-| exportFinishTimeMs | string         | The finish time of the export job in milliseconds, formatted as a date/time. |
-| failMsg            | ExportFailMsg  | The error message if the export job failed.                                  |
-
-## Access Control Requirements
-
-The user executing this SQL command must have at least the following privileges:
-
-| Privilege         | Object     | Notes                                           |
-|:------------------|:-----------|:------------------------------------------------|
-| SELECT_PRIV       | Database   | Requires read access to the database and table. |
+| Column Name         | Type   | Description                                                          |
+|---------------------|--------|----------------------------------------------------------------------|
+| jobId               | long   | Unique identifier of the export job.                                |
+| label               | string | Label of the export job.                                             |
+| dbId                | long   | Identifier of the database.                                          |
+| tableId             | long   | Identifier of the table.                                             |
+| state               | string | Current state of the job.                                            |
+| path                | string | Path of the export files.                                            |
+| partitions          | string | List of exported partition names, multiple partition names separated by commas. |
+| progress            | int    | Current progress of the export job (percentage).                     |
+| createTimeMs        | string | Millisecond value of job creation time, formatted as date time.      |
+| exportStartTimeMs   | string | Millisecond value of export job start time, formatted as date time.  |
+| exportFinishTimeMs  | string | Millisecond value of export job end time, formatted as date time.    |
+| failMsg             | string | Error message when export job fails.                                 |
 
 
-## Usage Notes
+## Access Control
 
-### Concurrent Export
+Users executing this SQL command must have at least the following permissions:
 
-An Export job can be configured with the `parallelism` parameter to concurrently export data. The `parallelism` parameter specifies the number of threads to execute the `EXPORT Job`. Each thread is responsible for exporting a subset of the total tablets.
+| Permission  | Object       | Description                           |
+|:------------|:-------------|:--------------------------------------|
+| SELECT_PRIV | Database     | Requires read permission on database and table. |
 
-The underlying execution logic of an `Export Job `is actually the `SELECT INTO OUTFILE` statement. Each thread specified by the `parallelism` parameter executes independent `SELECT INTO OUTFILE` statements.
 
-The specific logic for splitting an `Export Job` into multiple `SELECT INTO OUTFILE` is, to evenly distribute all the tablets of the table among all parallel threads. For example:
+## Notes
 
-- If num(tablets) = 40 and parallelism = 3, then the three threads will be responsible for 14, 13, and 13 tablets, respectively.
-- If num(tablets) = 2 and parallelism = 3, then Doris automatically sets the parallelism to 2, and each thread is responsible for one tablet.
+### Concurrent Execution
 
-When the number of tablets responsible for a thread exceeds the `maximum_tablets_of_outfile_in_export` value (default is 10, and can be modified by adding the `maximum_tablets_of_outfile_in_export` parameter in fe.conf), the thread will split the tablets which are responsibled for this thread into multiple `SELECT INTO OUTFILE` statements. For example:
+An Export job can set the `parallelism` parameter to export data concurrently. The `parallelism` parameter actually specifies the number of threads executing the EXPORT job. When `"data_consistency" = "none"` is set, each thread will be responsible for exporting part of the table's Tablets.
 
-- If a thread is responsible for 14 tablets and `maximum_tablets_of_outfile_in_export = 10`, then the thread will be responsible for two `SELECT INTO OUTFILE` statements. The first `SELECT INTO OUTFILE` statement exports 10 tablets, and the second `SELECT INTO OUTFILE` statement exports 4 tablets. The two `SELECT INTO OUTFILE` statements are executed serially by this thread.
+The underlying execution logic of an Export job is actually `SELECT INTO OUTFILE` statements. Each thread set by the `parallelism` parameter will execute independent `SELECT INTO OUTFILE` statements.
 
-### memory limit
+The specific logic for splitting Export jobs into multiple `SELECT INTO OUTFILE` is: evenly distribute all tablets of the table to all parallel threads, for example:
+- num(tablets) = 40, parallelism = 3, then these 3 threads are responsible for 14, 13, 13 tablets respectively.
+- num(tablets) = 2, parallelism = 3, then Doris will automatically set parallelism to 2, with each thread responsible for one tablet.
 
-The query plan for an `Export Job` typically involves only `scanning and exporting`, and does not involve compute logic that requires a lot of memory. Therefore, the default memory limit of 2GB is usually sufficient to meet the requirements.
+When the tablets a thread is responsible for exceeds the `maximum_tablets_of_outfile_in_export` value (default is 10, can be modified by adding `maximum_tablets_of_outfile_in_export` parameter in fe.conf), that thread will be split into multiple `SELECT INTO OUTFILE` statements, for example:
+- A thread is responsible for 14 tablets, `maximum_tablets_of_outfile_in_export = 10`, then this thread is responsible for two `SELECT INTO OUTFILE` statements. The first `SELECT INTO OUTFILE` statement exports 10 tablets, the second `SELECT INTO OUTFILE` statement exports 4 tablets. The two `SELECT INTO OUTFILE` statements are executed serially by this thread.
 
-However, in certain scenarios, such as a query plan that requires scanning too many tablets on the same BE, or when there are too many data versions of tablets, it may result in insufficient memory. In these cases, you can adjust the session variable `exec_mem_limit` to increase the memory usage limit.
+When the amount of data to be exported is very large, you can consider appropriately increasing the `parallelism` parameter to increase concurrent export. If machine cores are tight and cannot increase `parallelism` while the export table has many Tablets, you can consider increasing `maximum_tablets_of_outfile_in_export` to increase the number of tablets a `SELECT INTO OUTFILE` statement is responsible for, which can also speed up export.
 
-### Precautions
+If you want to export Table at Partition granularity, you can set Export property `"data_consistency" = "partition"`. In this case, concurrent threads of Export tasks will be divided into multiple Outfile statements at Partition granularity. Different Outfile statements export different Partitions, while data exported by the same Outfile statement must belong to the same Partition. For example: after setting `"data_consistency" = "partition"`
 
-- Exporting a large amount of data at one time is not recommended. The maximum recommended export data volume for an Export job is several tens of GB. An overly large export results in more junk files and higher retry costs. If the amount of table data is too large, it is recommended to export by partition.
+- num(partition) = 40, parallelism = 3, then these 3 threads are responsible for 14, 13, 13 Partitions respectively.
+- num(partition) = 2, parallelism = 3, then Doris will automatically set Parallelism to 2, with each thread responsible for one Partition.
 
-- If the Export job fails, the generated files will not be deleted, and the user needs to delete it manually.
 
-- The Export job only exports the data of the Base table / View / External table, not the data of the materialized view.
+### Memory Limits
 
-- The export job scans data and occupies IO resources, which may affect the query latency of the system.
+Usually an Export job's query plan only has `scan-export` two parts, not involving computation logic that requires too much memory. So usually the default memory limit of 2GB can meet the requirements.
 
-- Currently, The `Export Job` is simply check whether the `Tablets version` is the same, it is recommended not to import data during the execution of the `Export Job`.
+But in some scenarios, such as when a query plan needs to scan too many Tablets on the same BE, or when Tablet data versions are too many, it may cause insufficient memory. You can adjust the Session variable `exec_mem_limit` to increase the memory usage limit.
 
-- The maximum number of partitions that an `Export job` allows is 2000. You can add a parameter to the fe.conf `maximum_number_of_export_partitions` and restart FE to modify the setting.
+### Other Matters
+
+- It's not recommended to export large amounts of data at once. The recommended maximum export data volume for one Export job is tens of GB. Too large exports will cause more garbage files and higher retry costs. If table data volume is too large, it's recommended to export by partition.
+
+- If Export job fails, already generated files will not be deleted and need to be manually deleted by users.
+
+- Export jobs will scan data and occupy IO resources, which may affect system query latency.
+
+- Currently during Export, only simple checks are performed on whether Tablets versions are consistent. It's recommended not to perform data import operations on the table during Export execution.
+
+- An Export Job allows exporting a maximum of 2000 partitions. You can add parameter `maximum_number_of_export_partitions` in `fe.conf` and restart FE to modify this setting.
+
 
 ## Examples
 
-### Export to local
-> Export data to the local file system needs to add `enable_outfile_to_local = true` to the fe.conf and restart the Fe.
+### Export Data to Local
+> To export data to local file system, you need to add `enable_outfile_to_local=true` in `fe.conf` and restart FE.
 
-You can export the `test` table to a local store. Export csv format file by default.
-
+- Export all data in Test table to local storage, default export CSV format files
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/";
 ```
 
-- You can export the k1 and k2 columns in `test` table to a local store, and set export label. Export csv format file by default.
-
+- Export k1,k2 columns in Test table to local storage, default export CSV file format, and set Label
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -223,8 +225,7 @@ PROPERTIES (
 );
 ```
 
-- You can export the rows where `k1 < 50` in `test` table to a local store, and set column_separator to `,`. Export csv format file by default.
-
+- Export rows where `k1 < 50` in Test table to local storage, default export CSV format files, and use `,` as column separator
 ```sql
 EXPORT TABLE test WHERE k1 < 50 TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -233,15 +234,13 @@ PROPERTIES (
 );
 ```
 
-- Export partitions p1 and p2 from the test table to local storage, with the default exported file format being csv.
-
+- Export partitions p1,p2 in Test table to local storage, default export csv format files
 ```sql
 EXPORT TABLE test PARTITION (p1,p2) TO "file:///home/user/tmp/" 
 PROPERTIES ("columns" = "k1,k2");
 ```
 
-- Export all data in the test table to local storage with a non-default file format.
-
+- Export all data in Test table to local storage, export other format files
 ```sql
 -- parquet
 EXPORT TABLE test TO "file:///home/user/tmp/"
@@ -272,10 +271,11 @@ PROPERTIES (
 );
 ```
 
-- set `max_file_sizes`
-  When the exported file is larger than 5MB, the data will be split into multiple files, with each file having a maximum size of 5MB.
+- Set `max_file_sizes` property  
+   When exported file is larger than 5MB, data will be split into multiple files, each file maximum 5MB.
 
 ```sql
+-- When the exported file is larger than 5MB, the data will be split into multiple files, with each file having a maximum size of 5MB.
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "parquet",
@@ -283,7 +283,7 @@ PROPERTIES (
 );
 ```
 
-- set `parallelism`
+- Set `parallelism` property
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -293,8 +293,8 @@ PROPERTIES (
 );
 ```
 
-- set `delete_existing_files`     
-  Before exporting data, all files and directories in the `/home/user/` directory will be deleted, and then the data will be exported to that directory.
+- Set `delete_existing_files` property  
+    When Export exports data, it will first delete all files and directories under `/home/user/` directory, then export data to this directory.
 
 ```sql
 -- When exporting data, all files and directories under the `/home/user/` directory will be deleted first, and then the data will be exported to this directory.
@@ -306,10 +306,9 @@ PROPERTIES (
 );
 ```
 
-### Export with S3
+### Export to S3  
 
-
-- Export all data from the `testTbl` table to S3 using invisible character '\x07' as a delimiter for columns and rows.If you want to export data to minio, you also need to specify use_path_style=true.
+- Export all data in s3_test table to S3, using invisible character `\x07` as column or row separator. If you need to export data to minio, you also need to specify `use_path_style`=`true`.
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
@@ -324,9 +323,9 @@ PROPERTIES (
 )
 ```
 
-### export with HDFS
+### Export to HDFS
 
-- Export all data from the `test` table to HDFS in `Parquet` format, with a limit of 512MB for the size of a single file in the export job, and retain all files under the specified directory.
+- Export all data in Test table to HDFS, export file format is Parquet, export job single file size limit is 512MB, keep all files in the specified directory.
 
 ```sql
 EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c/" 
@@ -341,10 +340,9 @@ with HDFS (
 );
 ```
 
-### Export with Broker  
-You need to first start the broker process and add it to the FE before proceeding.
-- Export the `test` table to hdfs  
-
+### Export through Broker Node  
+Need to start Broker process first and add this Broker in FE.
+- Export all data in Test table to HDFS
 ```sql
 EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c" 
 WITH BROKER "broker_name" 
@@ -354,7 +352,7 @@ WITH BROKER "broker_name"
 );
 ```
 
-- Export partitions 'p1' and 'p2' from the 'testTbl' table to HDFS using ',' as the column delimiter and specifying a label.
+- Export partitions p1,p2 in testTbl table to HDFS, using "," as column separator, and specify Label
 
 ```sql
 EXPORT TABLE testTbl PARTITION (p1,p2) TO "hdfs://hdfs_host:port/a/b/c" 
@@ -369,7 +367,7 @@ WITH BROKER "broker_name"
 );
 ```
 
-- Export all data from the 'testTbl' table to HDFS using the non-visible character '\x07' as the column and row delimiter.
+- Export all data in testTbl table to HDFS, using invisible character `\x07` as column or row separator.
 
 ```sql
 EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
@@ -383,4 +381,3 @@ WITH BROKER "broker_name"
   "password"="yyy"
 )
 ```
-

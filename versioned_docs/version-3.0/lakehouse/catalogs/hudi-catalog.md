@@ -32,15 +32,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   The MetaStoreProperties section is used to fill in the connection and authentication information for the Metastore metadata service. See the section [Supported Metadata Services] for details.
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   The StorageProperties section is used to fill in the connection and authentication information related to the storage system. See the section [Supported Storage Systems] for details.
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is used to fill in common properties. Please refer to the [Data Catalog Overview](../catalog-overview.md) section on [Common Properties].
 
@@ -201,7 +201,7 @@ By using `desc` to view the execution plan, you can see that Doris converts `@in
 ```text
 |   0:VHUDI_SCAN_NODE(113)                                                                                            |
 |      table: lineitem_mor                                                                                            |
-|      predicates: (_hoodie_commit_time[#0] >= '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
+|      predicates: (_hoodie_commit_time[#0] > '20240311151019723'), (_hoodie_commit_time[#0] <= '20240311151606605') |
 |      inputSplitNum=1, totalFileSize=13099711, scanRanges=1              
 ```
 

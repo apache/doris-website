@@ -27,6 +27,10 @@ SHOW PARTITIONS
 1. 支持 PartitionId,PartitionName,State,Buckets,ReplicationNum,LastConsistencyCheckTime 等列的过滤
 2. TEMPORARY 指定列出临时分区
 
+需要注意的是：
+1. 目前 `where`子句等操作符。对字符型的 `PartitionName`, `State` 只支持`=`、`!=`、`like` 操作符。对其余的只支持 `=`、`!=`、`>`、`<`、`>=`、`<=` 操作符。
+2. `where`子句使用上面的操作符时，列名需要在左侧。
+3. `where`子句可以包含`AND`。
 
 
 对于 Hive Catalog：

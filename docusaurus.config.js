@@ -2,6 +2,8 @@ const themes = require('prism-react-renderer').themes;
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
+const { DEFAULT_VERSION } = require('./src/constant/version');
+
 const lightCodeTheme = themes.dracula;
 
 const logoImg = '/images/logo.svg';
@@ -21,13 +23,17 @@ function getDocsVersions() {
                 banner: 'none',
                 badge: false,
             };
+            if (version === DEFAULT_VERSION) {
+                result[version].label = DEFAULT_VERSION;
+                result[version].path = DEFAULT_VERSION;
+            }
         }
     });
     return result;
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
+    return VERSIONS.includes(DEFAULT_VERSION) ? DEFAULT_VERSION : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -107,18 +113,26 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
                     {
                         from: '/docs/dev/get-starting/',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
                 ],
                 createRedirects(existingPath) {
+                    if (existingPath.startsWith('/docs/3.0/')) {
+                        const withoutVersion = existingPath.replace('/docs/3.0/', '/docs/');
+                        return [withoutVersion];
+                    }
+                    // return [];
                     if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
                         return [
-                            existingPath.replace('/gettingStarted/what-is-apache-doris', '/gettingStarted/what-is-new'),
+                            existingPath.replace(
+                                '/gettingStarted/what-is-apache-doris',
+                                '/gettingStarted/what-is-new',
+                            ),
                         ];
                     }
                     return undefined; // Return a falsy value: no redirect created
@@ -189,7 +203,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                // docsRouteBasePath: '/docs',
+                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.0', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -209,21 +223,33 @@ const config = {
             },
             announcementBar: {
                 id: 'join_us',
+                //     content: JSON.stringify({
+                //         zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250828" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                //     <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                //     <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+                //    <span>Apache Doris x Milvus 联合 Webinar：解锁 DB for AI 的无限可能</span> 
+                //    <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
+                //        </a>`,
+                //         en: `<a href="https://www.velodb.io/events/doris-webinar-20250923" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                //         <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                //         <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
+                //        <span>Bridging Data Lake and Database — Apache Doris Webinar | September 23</span> 
+                //        <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                //            </a>`,
+                //     }),
                 content: JSON.stringify({
-                    zh: `<a href="https://www.selectdb.com/resources/events/apache-doris-meetup-20250802" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
-                <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-               <span>走进小米 —— Apache Doris 企业行@武汉 Meetup</span> 
-               <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
+                    zh: `<a href="https://doris-summit.org.cn" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+               <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Powering Real-Time Analytics & Search  in the AI Era | 2025 年 11 月 05 日-06 日 · 全网直播</span> 
+               <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">提交议程 -></p> 
                    </a>`,
-                    en: `<a href="https://www.velodb.io/events/doris-meetup-250820" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                    <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
-                    <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
-                   <span>Real-Time IoT Analytics — Apache Doris × EMQ Meetup | Aug 20 · San Francisco</span> 
-                   <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                    en: `<a href="https://apache-doris-summit.org" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+                   <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Powering Real-Time Analytics & Search  in the AI Era | November 05, 2025 ·  Virtual</span> 
+                   <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">Submit Your Talk -></p> 
                        </a>`,
                 }),
-                textColor: '#4C576C',
+                textColor: '#FFF',
                 isCloseable: false,
             },
             navbar: {
@@ -237,7 +263,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -360,7 +386,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
