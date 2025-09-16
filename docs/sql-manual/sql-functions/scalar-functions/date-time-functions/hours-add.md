@@ -9,7 +9,7 @@
 
 The HOURS_ADD function adds or subtracts a specified number of hours to/from an input date or datetime value and returns the calculated new datetime. This function supports both DATE and DATETIME input types. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00 before adding hours.
 
-This function behaves consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL when using the `HOUR` unit.
+This function behaves consistently with the [date_add function](./date-add) and [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL when using the `HOUR` unit.
 
 ## Syntax
 

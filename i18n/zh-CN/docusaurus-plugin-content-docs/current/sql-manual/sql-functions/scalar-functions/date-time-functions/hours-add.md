@@ -9,7 +9,7 @@
 
 HOURS_ADD 函数用于在输入的日期或日期时间值上增加或减少指定的小时数，并返回计算后的新日期时间。该函数支持 DATE 和 DATETIME 两种输入类型,若输入为 DATE 类型（仅包含年月日），会默认其时间部分为 00:00:00 转换为 DATETIME 类型，再进行小时累加。
 
-该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 使用 `HOUR` 单位的行为一致。
+该函数与 [date_add 函数](./date-add) 和 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 使用 `HOUR` 单位的行为一致。
 
 ## 语法
 
