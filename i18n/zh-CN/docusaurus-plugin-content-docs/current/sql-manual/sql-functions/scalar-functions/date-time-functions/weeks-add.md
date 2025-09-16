@@ -9,6 +9,8 @@
 
 WEEKS_ADD 函数用于在指定的日期或时间值上增加（或减少）指定数量的周数，等价于 在原有日期上 增加/减少 七天，返回调整后的日期或时间。
 
+该函数与 [weeks_add 函数](./weeks-sub) 和 mysql 中的 [weeks_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) 使用 WEEK 为单位的行为一致。
+
 ## 语法
 ```sql
 WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
@@ -20,7 +22,6 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 | `<datetime_or_date_expr>` | 日期时间的输入值,，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 | `<weeks_value>`            | INT 类型整数，表示要增加或减少的周数（正数表示增加，负数表示减少） |
 
-该函数与 mysql 中的 [weeks_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) 使用 WEEK 为单位的行为一致。
 
 ## 返回值
 

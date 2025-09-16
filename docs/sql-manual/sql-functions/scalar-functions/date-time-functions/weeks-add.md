@@ -9,6 +9,8 @@
 
 The WEEKS_ADD function is used to add (or subtract) a specified number of weeks to a given date or time value, equivalent to adding/subtracting seven days to the original date, returning the adjusted date or time.
 
+This function behaves consistently with the [weeks_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) using WEEK as the unit in MySQL.
+
 ## Syntax
 ```sql
 WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
@@ -19,8 +21,6 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 |-----------|-------------|
 | `<datetime_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<weeks_value>` | INT type integer, representing the number of weeks to add or subtract (positive for addition, negative for subtraction) |
-
-This function behaves consistently with the [weeks_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) using WEEK as the unit in MySQL.
 
 ## Return Value
 

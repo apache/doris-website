@@ -8,7 +8,7 @@
 ## 描述
 WEEKS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeks_value × 7 天）。支持处理 DATE、DATETIME 类型。
 
-该函数与 mysql 中的 [weeks_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) 使用 WEEK 为单位的行为一致。
+该函数与 [weeks_sub 函数](./weeks-sub) 和 mysql 中的 [weeks_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) 使用 WEEK 为单位的行为一致。
 
 ## 语法
 ```sql
