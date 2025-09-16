@@ -11,7 +11,7 @@
 
 ## 别名
 
-- CURRENT_TIME
+- CURTIME
 
 ## 语法
 
@@ -26,10 +26,10 @@ CURTIME()
 ## 示例
 
 ```sql
-mysql> select curtime();
+mysql> select current_time();
 
 +----------------+
-| curtime()      |
+| current_time() |
 +----------------+
 | 15:25:47       |
 +----------------+

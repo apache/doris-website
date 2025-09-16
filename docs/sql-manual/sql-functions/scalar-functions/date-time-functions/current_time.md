@@ -13,7 +13,7 @@ This function is consistent with the [curtime function](https://dev.mysql.com/do
 
 ## Aliases
 
-- CURRENT_TIME
+- CURTIME
 
 ## Syntax
 
@@ -28,10 +28,10 @@ Returns the current time type of TIME.
 ## Examples
 
 ```sql
-mysql> select curtime();
+mysql> select current_time();
 
 +----------------+
-| curtime()      |
+| current_time() |
 +----------------+
 | 15:25:47       |
 +----------------+
