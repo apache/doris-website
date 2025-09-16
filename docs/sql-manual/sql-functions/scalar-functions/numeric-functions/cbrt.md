@@ -25,6 +25,12 @@ CBRT(<a>)
 
 Cubic root of parameter `<a>`, a floating point number.
 
+## Special Cases
+- When `a` is NaN, returns NaN
+- When `a` is positive infinity, returns Infinity
+- When `a` is negative infinity, returns -Infinity
+- When `a` is NULL, returns NULL
+
 ## Examples
 
 ```sql
@@ -61,4 +67,40 @@ select cbrt(1234);
 +----------------------------+
 |         10.726014668827325 |
 +----------------------------+
+```
+
+```sql
+select cbrt(cast('nan' as double));
+```
+
+```text
++------------------------------+
+| cbrt(cast('nan' AS DOUBLE))  |
++------------------------------+
+| NaN                          |
++------------------------------+
+```
+
+```sql
+select cbrt(cast('inf' as double));
+```
+
+```text
++------------------------------+
+| cbrt(cast('inf' AS DOUBLE))  |
++------------------------------+
+| Infinity                     |
++------------------------------+
+```
+
+```sql
+select cbrt(cast('-inf' as double));
+```
+
+```text
++-------------------------------+
+| cbrt(cast('-inf' AS DOUBLE))  |
++-------------------------------+
+| -Infinity                     |
++-------------------------------+
 ```
