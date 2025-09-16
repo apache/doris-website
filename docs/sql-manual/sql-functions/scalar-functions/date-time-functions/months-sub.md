@@ -9,7 +9,7 @@
 
 The MONTHS_SUB function subtracts a specified number of months from the input datetime value and returns the resulting new datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to adding the corresponding number of months.
 
-This function behaves the same as MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_sub) when using MONTH as the unit.
+This function behaves the same as [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_sub) when using MONTH as the unit.
 
 ## Syntax
 

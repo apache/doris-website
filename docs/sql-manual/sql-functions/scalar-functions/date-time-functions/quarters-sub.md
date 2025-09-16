@@ -9,6 +9,8 @@
 
 The QUARTERS_SUB function is used to subtract or add a specified number of quarters (1 quarter = 3 months) to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to adding the corresponding number of quarters.
 
+This function behaves consistently with the [date_sub function](./date-sub) when using QUARTER as the unit.
+
 ## Syntax
 
 ```sql

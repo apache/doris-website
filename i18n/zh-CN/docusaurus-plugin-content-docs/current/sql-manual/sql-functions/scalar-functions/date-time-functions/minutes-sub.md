@@ -9,7 +9,7 @@
 
 MINUTES_SUB 函数用于从输入的日期时间值中减去指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME类型.
 
-该函数与 mysql 的 [date-add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 MINUTE 为单位的行为一致。
+该函数与 [date_sub 函数](./date-sub) 和 mysql 的 [date-add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 MINUTE 为单位的行为一致。
 
 ## 语法
 

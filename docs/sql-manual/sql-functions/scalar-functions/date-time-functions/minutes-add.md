@@ -9,7 +9,7 @@
 
 The MINUTES_ADD function adds a specified number of minutes to the input datetime value and returns the resulting new datetime value. This function supports processing DATE and DATETIME types.
 
-This function behaves the same as MySQL's [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) when using MINUTE as the unit.
+This function behaves the same as [date_add function](./date-add) and MySQL's [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) when using MINUTE as the unit.
 
 ## Syntax
 
