@@ -8,6 +8,9 @@
 ## 描述
 
 YEARS_ADD 函数用于在指定的日期或时间值上增加（或减少）指定数量的年数，返回调整后的日期或时间。支持处理 DATE、DATETIME 类型，年数可为正数（增加）或负数（减少）。
+
+该函数与 [date_add 函数](./date-add) 和 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 使用 YEAR 为单位的行为一致
+
 ## 语法
 
 ```sql
@@ -21,7 +24,6 @@ YEARS_ADD(<date_or_time_expr>, <years>)
 | `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<years>` | 要增加的年数，类型为 INT,负数表示减少，正数表示增加 |
 
-该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 使用 YEAR 为单位的行为一致
 
 ## 返回值
 

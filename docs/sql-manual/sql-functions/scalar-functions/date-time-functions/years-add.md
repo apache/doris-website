@@ -9,6 +9,8 @@
 
 The YEARS_ADD function is used to add (or subtract) a specified number of years to a given date or time value, returning the adjusted date or time. It supports processing DATE and DATETIME types, where the number of years can be positive (addition) or negative (subtraction).
 
+This function behaves consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) using YEAR as the unit in MySQL.
+
 ## Syntax
 
 ```sql
@@ -22,7 +24,6 @@ YEARS_ADD(`<date_or_time_expr>`, `<years>`)
 | `<date_or_time_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<years>` | Number of years to add, type INT, negative numbers indicate subtraction, positive numbers indicate addition |
 
-This function behaves consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) using YEAR as the unit in MySQL.
 
 ## Return Value
 

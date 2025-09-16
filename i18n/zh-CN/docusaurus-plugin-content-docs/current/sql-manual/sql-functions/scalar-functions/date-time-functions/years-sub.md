@@ -9,7 +9,7 @@
 
 YEARS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的年数，返回调整后的日期或时间（本质是减去 years_value × 1 年）。支持处理 DATE、DATETIME 类型，年数可为正数（减少）或负数（增加）。
 
-该函数与 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 YEAR 为单位的行为一致
+该函数与 [date_sub 函数](./date-sub) 和 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 YEAR 为单位的行为一致
 
 ## 语法
 
