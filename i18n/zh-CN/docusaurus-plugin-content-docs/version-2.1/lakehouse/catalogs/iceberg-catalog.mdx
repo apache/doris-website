@@ -433,6 +433,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type' = 'hms',
+            'warehouse' = 's3://warehouse/iceberg',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            's3.endpoint' = 'http://127.0.0.1:19001',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
+                );
+                ```
         </TabItem>
     </Tabs>
 </details>
