@@ -281,9 +281,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket-hk/paimon_warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.region' = 'ap-east-1',
+                'paimon.s3.region' = 'ap-east-1',
                 's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                'paimon.s3.endpoint' = 'ap-east-1',
                 's3.access_key' = '<ak>',
-                's3.secret_key' = '<sk>'
+                'paimon.s3.access-key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>'    
             );
             ```
         </TabItem>
@@ -340,8 +344,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'warehouse' = 's3://bucket/paimon-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.endpoint' = 'http://127.0.0.1:19000',
+                'paimon.s3.endpoint' = 'http://127.0.0.1:19000',
                 's3.access_key' = '<ak>',
+                'paimon.s3.access-key' = '<ak>',
                 's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>',    
                 's3.path.style.access' = 'true'
             );
             ```

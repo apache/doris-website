@@ -1007,7 +1007,17 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
-
+            ```sql
+            CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type'='hadoop',
+            'warehouse' = 's3://warehouse/wh',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 'http://minio:9000',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
+            );
+            ```
         </TabItem>
     </Tabs>
 </details>
