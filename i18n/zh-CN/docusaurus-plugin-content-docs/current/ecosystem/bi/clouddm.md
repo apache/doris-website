@@ -25,7 +25,7 @@ CloudDM 针对 Apache Doris 的一些特性提供专项适配，并为 Apache Do
 2. 在数据源管理页面左上角点击 **新增数据源**。
 3. 选择 Doris 数据源。
 
-   ![添加数据源](/images/clouddm1_cn.png)
+   ![添加数据源](/images/clouddm1-cn.png)
 
 4. 在添加数据源页面中，配置以下连接信息：
   - Client 地址：Doris 集群机器的 FE 查询端口，如 hostID:9030。
@@ -41,12 +41,12 @@ CloudDM 针对 Apache Doris 的一些特性提供专项适配，并为 Apache Do
 
 5. 在上方点击 **查询设置** > **查询配置**，为 Doris 实例启用数据管理，并测试连接。
 
-   ![启用数据源](/images/clouddm2_cn.png)
+   ![启用数据源](/images/clouddm2-cn.png)
 
 6. 访问数据   
    数据库连接建立以后，可以在左侧的数据库连接导航看到已连接的数据源，并且可以通过 CloudDM 连接并管理数据库。
 
-   ![建立连接](/images/clouddm3_cn.png)
+   ![建立连接](/images/clouddm3-cn.png)
 
 ## 功能支持
 
