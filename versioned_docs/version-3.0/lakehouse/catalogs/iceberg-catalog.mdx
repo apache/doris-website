@@ -90,6 +90,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 * [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
 * [FileSystem](../metastores/filesystem.md)
 
+> Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
+
 ### Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
@@ -99,6 +101,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 * [Tencent COS](../storages/tencent-cos.md)
 * [Huawei OBS](../storages/huawei-obs.md)
 * [MINIO](../storages/minio.md)
+
+> Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
 ### Supported Data Formats
 
@@ -430,8 +434,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
             's3.endpoint' = 'http://127.0.0.1:19001',
             's3.access_key' = '<ak>',
             's3.secret_key' = '<sk>'
-                ); 
-            ```
+                );
+                ```
         </TabItem>
     </Tabs>
 </details>
@@ -1002,9 +1006,6 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
             );
             ```
         </TabItem>
-        <TabItem value='OBS' label='OBS'>
-            Create DB exception, needs investigation
-        </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
             CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
@@ -1020,13 +1021,13 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
         <TabItem value='MinIO' label='MinIO'>
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type'='hadoop',
-            'warehouse' = 's3://warehouse/wh',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'http://minio:9000',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://warehouse/wh',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'http://minio:9000',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>

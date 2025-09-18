@@ -83,51 +83,55 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的元数据服务
 
-* [ Hive Metastore](../metastores/hive-metastore.md)
+* [Hive Metastore](../metastores/hive-metastore.md)
 
-* [ AWS Glue](../metastores/aws-glue.md)
+* [AWS Glue](../metastores/aws-glue.md)
 
-* [ Aliyun DLF ](../metastores/aliyun-dlf.md)
+* [Aliyun DLF ](../metastores/aliyun-dlf.md)
+
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
 ### 支持的存储系统
 
-* [ HDFS](../storages/hdfs.md)
+* [HDFS](../storages/hdfs.md)
 
-* [ AWS S3](../storages/s3.md)
+* [AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/gcs.md)
+* [Google Cloud Storage](../storages/gcs.md)
 
-* [ 阿里云 OSS](../storages/aliyun-oss.md)
+* [阿里云 OSS](../storages/aliyun-oss.md)
 
-* [ 腾讯云 COS](../storages/tencent-cos.md)
+* [腾讯云 COS](../storages/tencent-cos.md)
 
-* [ 华为云 OBS](../storages/huawei-obs.md)
+* [华为云 OBS](../storages/huawei-obs.md)
 
-* [ MINIO](../storages/minio.md)
+* [MINIO](../storages/minio.md)
 
 > 如果需要通过 Doris 创建 Hive 表并写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
+> 
+> 不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
 ### 支持的数据格式
 
 * Hive
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
-  * [ Text/CSV/JSON](../file-formats/text.md)
+  * [Text/CSV/JSON](../file-formats/text.md)
 
 * Hudi
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
 * Iceberg
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
 ## 列类型映射
 
