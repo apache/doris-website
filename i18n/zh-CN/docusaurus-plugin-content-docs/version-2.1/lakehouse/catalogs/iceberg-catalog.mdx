@@ -95,6 +95,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [FileSystem](../metastores/filesystem.md)
 
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+
 ### 支持的存储系统
 
 * [HDFS](../storages/hdfs.md)
@@ -110,6 +112,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * [华为云 OBS](../storages/huawei-obs.md)
 
 * [MINIO](../storages/minio.md)
+
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
 ### 支持的数据格式
 
@@ -435,15 +439,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='MinIO' label='MinIO'>
             ```sql
             CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 's3://warehouse/iceberg',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            's3.endpoint' = 'http://127.0.0.1:19001',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-                );
-                ```
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/iceberg',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19001',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
         </TabItem>
     </Tabs>
 </details>
@@ -1013,9 +1017,6 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'oss.secret_key' = '<sk>'
             );
             ```
-        </TabItem>
-        <TabItem value='OBS' label='OBS'>
-            Create DB 异常，需要排查
         </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
