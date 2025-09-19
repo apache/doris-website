@@ -10,6 +10,9 @@
 ## Description
 Checks if the input string is a valid IPv4 address format. Returns 1 if it is a valid IPv4 address, returns 0 if it is not.
 
+## Alias
+- IS_IPV4
+
 ## Syntax
 ```sql
 IS_IPV4_STRING(<ipv4_str>)
