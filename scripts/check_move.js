@@ -45,7 +45,8 @@ function isLocalLink(link) {
          !link.startsWith("https://") &&
          !link.startsWith("mailto:") &&
          !link.startsWith("#") &&
-         !path.isAbsolute(link);
+         !path.isAbsolute(link)&&
+         !/.*@.*\..*/.test(link);
 }
 
 function removeCodeBlocks(content) {

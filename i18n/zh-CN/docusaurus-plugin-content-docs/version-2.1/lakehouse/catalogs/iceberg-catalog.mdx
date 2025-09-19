@@ -203,6 +203,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             访问未开启 Kerberos 认证的 HMS
@@ -881,6 +892,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.region' = 'ap-east-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
+            );
+            ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            ```sql
+            CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
             );
             ```
         </TabItem>

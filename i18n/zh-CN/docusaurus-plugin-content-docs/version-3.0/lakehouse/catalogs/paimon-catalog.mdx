@@ -166,6 +166,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            ```sql
+            CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket/warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
@@ -429,7 +439,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
-                'fs.default.fs' = 'hdfs://127.0.0.1:8020'
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
             );
             ```
         </TabItem>
@@ -445,6 +455,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+) 
+            ```sql
+            CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```    
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
@@ -523,7 +543,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
-                'fs.default.fs' = 'hdfs://127.0.0.1:8020'
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
             );
             ```
         </TabItem>
@@ -1049,3 +1069,55 @@ SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as t
 
 ## 附录
 
+### FAQ
+
+1. `Could not find a file io implementation for scheme 's3a' in the classpath`
+
+    3.1 之前的版本，使用 HMS 作为元数据存储，存储端 使用 's3a' 或 's3' 协议的时候，出现如下报错：
+    
+    ```
+    java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
+    ```
+
+    3.1 之前的不支持 `s3a` 协议，如果必须使用，可以临时显示添加 `s3a` 协议相关参数临时解决。3.1 之后的版本无需此操作。
+    
+    如：
+
+    ```sql
+    CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
+        "type" = "paimon",
+        "paimon.catalog.type" = "hms",
+        "hive.metastore.uris" = "thrift://172.20.48.119:9383"
+        "warehouse" = "s3a://bucket/paimon_warehouse",
+        "s3.access_key" = "<ak>",
+        "s3.secret_key" = "<sk>",
+        "s3.region" = "ap-east-1",
+        "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
+        -- explicitly add s3a parameters
+        "fs.s3a.access.key"="<ak>",
+        "fs.s3a.secret.key"="<sk>",
+        "fs.s3a.endpoint.region"="ap-east-1",
+        "fs.s3a.endpoint"="s3.ap-east-1.amazonaws.com",
+        "fs.s3a.impl"= "org.apache.hadoop.fs.s3a.S3AFileSystem",
+    ); 
+    ``` 
+
+    使用 `s3` 协议的时候，需要显示添加 Paimon S3 相关参数，即添加 `paimon.` 前缀。如
+
+    ```sql
+    CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+        'type' = 'paimon',
+        'paimon.catalog.type' = 'hms',
+        'warehouse' = 's3://bucket-hk/paimon_warehouse',
+        'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+        's3.region' = 'ap-east-1',
+        's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>',
+        -- explicitly add s3 parameters
+        'paimon.s3.region' = 'ap-east-1',
+        'paimon.s3.endpoint' = 'ap-east-1',
+        'paimon.s3.access-key' = '<ak>',
+        'paimon.s3.secret-key' = '<sk>'
+    );
+    ```
