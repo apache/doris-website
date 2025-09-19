@@ -62,6 +62,8 @@ Doris supports both fixed-length and variable-length strings, including:
 
 - **[STRING](./string-type/STRING)**: A variable-length string with a default maximum length of 1,048,576 bytes (1 MB). This maximum length can be increased up to 2,147,483,643 bytes (2 GB) by configuring the `string_type_length_soft_limit_bytes`setting.
 
+- **[VARBINARY](./string-type/VARBINARY)**: A variable-length binary byte sequence, where M is the maximum length (in bytes). Similar to VARCHAR, but uses byte-wise storage and comparison with no character set or collation involved; suitable for storing arbitrary binary data (e.g., file fragments, encrypted data, compressed data). Supported since 4.0; currently not supported for table creation and storage in Doris, but you can use Catalogs to map BINARY columns from other databases into Doris for use.
+
 ## Semi-Structured Types
 
 
