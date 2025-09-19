@@ -121,7 +121,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 
 For more information, refer to [BE Configuration](../admin-manual/config/be-config).
 
-### Step 4: Create tables
+## Step 4: Create tables
 
 Due to the distinct characteristics of both writing and querying log data, it is recommended to configure tables with targeted settings to enhance performance.
 
@@ -221,7 +221,7 @@ PROPERTIES (
 );
 ```
 
-### Step 5: Collect logs
+## Step 5: Collect logs
 
 After completing table creation, you can proceed with log collection.
 
@@ -423,7 +423,7 @@ When using custom programs, pay attention to the following key points:
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
 
-### Step 6: Query and analyze logs
+## Step 6: Query and analyze logs
 
 **Query logs**
 
