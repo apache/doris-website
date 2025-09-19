@@ -28,7 +28,7 @@ under the License.
 
 ```shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@17 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@21 openjdk@17 npm
 ```
 
 *The version of jdk installed using brew is 17, because on macOS, the arm64 version of brew does not have version 8 of jdk by default*
@@ -83,9 +83,6 @@ reference link: `https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f39449
     ```shell
     export DORIS_HOME=~/DorisDev/doris
     export PATH=$DORIS_HOME/bin:$PATH
-
-    # Apple Clang does not support OpenMP, need to specify llvm install folder as clang home
-    export DORIS_CLANG_HOME="$(brew --prefix llvm@16)"
     ```
 
 ## Download Doris compilation dependencies
