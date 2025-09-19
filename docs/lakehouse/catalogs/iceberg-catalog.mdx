@@ -191,6 +191,17 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
                 's3.secret_key' = '<sk>'
             );
             ```
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             Access HMS without Kerberos authentication
@@ -869,6 +880,16 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
                 's3.region' = 'ap-east-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
+            );
+            ```
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            ```sql
+            CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
             );
             ```
         </TabItem>
