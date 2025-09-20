@@ -83,8 +83,8 @@ reference link: `https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f39449
     ```shell
     export DORIS_HOME=~/DorisDev/doris
     export PATH=$DORIS_HOME/bin:$PATH
-    export LDFLAGS="-L$(brew --prefix llvm@21)/lib":$LDFLAGS
-    export CPPFLAGS="-L$(brew --prefix llvm@21)/include":$CPPFLAG
+    export LDFLAGS="-L$(brew --prefix llvm)/lib${LDFLAGS:+ $LDFLAGS}"
+    export CPPFLAGS="-I$(brew --prefix llvm)/include${CPPFLAGS:+ $CPPFLAGS}"
     ```
 
 ## Download Doris compilation dependencies
