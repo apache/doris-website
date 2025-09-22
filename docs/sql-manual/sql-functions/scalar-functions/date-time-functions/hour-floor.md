@@ -38,7 +38,7 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 Returns a DATETIME type value representing the nearest period moment after rounding down.
 
-- If the input period is a non-positive integer, returns NULL.
+- If the input period is a non-positive integer, returns error.
 - If any parameter is NULL, the result returns NULL.
 - If origin or datetime has scale, the returned result has scale.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
@@ -110,12 +110,8 @@ mysql> select hour_floor(null, 6) as null_input;
 | NULL       |
 +------------+
 
--- Period is negative, returns NULL
+-- Period is negative, returns erro
 mysql> select hour_floor('2023-12-31 23:59:59', -3);
-+---------------------------------------+
-| hour_floor('2023-12-31 23:59:59', -3) |
-+---------------------------------------+
-| NULL                                  |
-+---------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_floor of 2023-12-31 23:59:59, -3 out of range
 
 ```

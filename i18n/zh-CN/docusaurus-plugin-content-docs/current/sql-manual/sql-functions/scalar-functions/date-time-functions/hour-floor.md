@@ -36,10 +36,10 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回 DATETIME 类型的值，表示向下取整后的最近周期时刻。
 
-- 若输入的 period 为非正整数，返回 NULL。
+- 若输入的 period 为非正整数，返回错误s。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale
-- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
+- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周s期 k 为负数。
 
 ## 举例
 
@@ -111,12 +111,8 @@ mysql> select hour_floor(null, 6) as null_input;
 | NULL       |
 +------------+
 
----period 为负数，返回 NULL
+---period 为负数，返回 错误
 mysql> select hour_floor('2023-12-31 23:59:59', -3);
-+---------------------------------------+
-| hour_floor('2023-12-31 23:59:59', -3) |
-+---------------------------------------+
-| NULL                                  |
-+---------------------------------------+
-
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_floor of 2023-12-31 23:59:59, -3 out of range
+s
 ```

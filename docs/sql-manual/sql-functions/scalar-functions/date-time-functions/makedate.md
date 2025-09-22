@@ -74,9 +74,5 @@ SELECT MAKEDATE(NULL, 100), MAKEDATE(2023, NULL);
 
 --- Year exceeds the valid range
 SELECT MAKEDATE(9999, 366);
-+---------------------+
-| MAKEDATE(9999, 366) |
-+---------------------+
-| NULL                |
-+---------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation makedate of 9999, 366 out of range
 ```
