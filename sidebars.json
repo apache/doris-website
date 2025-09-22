@@ -808,6 +808,7 @@
                             ]
                         },
                         "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/compaction-principles",
                         "admin-manual/trouble-shooting/metadata-operation",
                         "admin-manual/trouble-shooting/frontend-lock-manager",
                         "admin-manual/trouble-shooting/tablet-local-debug",
