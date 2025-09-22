@@ -29,7 +29,7 @@ FROM_DAYS(<days>)
 ## 返回值
 
 返回值为 DATE 类型，格式为 YYYY-MM-DD，表示从基准日期（0000-01-01）开始经过 days 天后的日期。
-若 days 为负数，返回 NULL。
+若 days 为负数，返回错误。
 若 days 超出有效日期范围（通常为 1 到 3652424，对应约公元 10000 年），返回错误
 
 ## 举例
@@ -45,14 +45,9 @@ select from_days(730669),from_days(5),from_days(59), from_days(60);
 | 2000-07-03        | 0000-01-05   | 0000-02-28    | 0000-03-01    |
 +-------------------+--------------+---------------+---------------+
 
----输入参数为负数，返回 NULL
+---输入参数为负数，返回错误
 select from_days(-60);
-
-+----------------+
-| from_days(-60) |
-+----------------+
-| NULL           |
-+----------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_days of -60 out of range
 
 ---输入 NULL ,返回 NULL
 select from_days(NULL);
@@ -61,4 +56,8 @@ select from_days(NULL);
 +-----------------+
 | NULL            |
 +-----------------+
+
+---若 days 超出有效日期范围（通常为 1 到 3652424，对应约公元 10000 年），返回错误
+select from_days(99999999);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_days of 99999999 out of range
 ```

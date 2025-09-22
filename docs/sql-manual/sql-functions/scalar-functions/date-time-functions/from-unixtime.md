@@ -31,6 +31,7 @@ Returns date in specified format, of type VARCHAR, returning the result of conve
 - Currently supported unix_timestamp range is [0, 253402271999] (corresponding to dates from 1970-01-01 00:00:00 to 9999-12-31 23:59:59), unix_timestamp outside this range will return an error
 - If string_format is invalid, returns a string that does not meet expectations.
 - If any parameter is NULL, returns NULL
+- If the format length over than 128,return error
 
 ## Examples
 
@@ -79,8 +80,7 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 
 ---Exceeds maximum range, returns error
 select from_unixtime(253402281999);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Cannot convert timestamp 253402281999 to valid date
-
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of 253402281999, yyyy-MM-dd HH:mm:ss is invalid
 
 ---string-format does not reference any time values
 mysql> select from_unixtime(32536799,"gdaskpdp");
@@ -97,4 +97,8 @@ mysql> select from_unixtime(NULL);
 +---------------------+
 | NULL                |
 +---------------------+
+
+- If the format length over than 128,return error
+mysql> select from_unixtime(1196440219, repeat('y',129));
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of invalid or oversized format is invalid
 ```

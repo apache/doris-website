@@ -87,31 +87,11 @@ select from_iso8601_date('0522-W01') as week_1;
 | 0521-12-29 |
 +------------+
 
----Input contains time or timezone information (e.g., 2023-10-01T12:34), returns NULL
+---invalid style, return error
 select from_iso8601_date('2023-10-01T12:34:10');
-+------------------------------------------+
-| from_iso8601_date('2023-10-01T12:34:10') |
-+------------------------------------------+
-| NULL                                     |
-+------------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_iso8601_date of 2023-10-01T12:34:10 is invalid
 
----Exceeds maximum week number, invalid format, returns NULL
-select from_iso8601_date('0522-W61') as week_61;
-+--------+
-| week_61 |
-+--------+
-| NULL   |
-+--------+
-
----Exceeds maximum days in a year, invalid format, returns NULL
-select from_iso8601_date('0522-661') as day_661;
-+--------+
-| day_661|
-+--------+
-| NULL   |
-+--------+
-
----Input NULL
+---input NULL
 select from_iso8601_date(NULL);
 +-------------------------+
 | from_iso8601_date(NULL) |

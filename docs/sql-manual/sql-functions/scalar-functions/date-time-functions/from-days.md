@@ -45,21 +45,19 @@ select from_days(730669),from_days(5),from_days(59), from_days(60);
 | 2000-07-03        | 0000-01-05   | 0000-02-28    | 0000-03-01    |
 +-------------------+--------------+---------------+---------------+
 
----Input parameter is negative, returns NULL
+---If the input parameter is negative, an error is returned
 select from_days(-60);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_days of -60 out of range
 
-+----------------+
-| from_days(-60) |
-+----------------+
-| NULL           |
-+----------------+
-
-
----Input NULL, returns NULL
+---If the input is NULL, returns NULL
 select from_days(NULL);
 +-----------------+
 | from_days(NULL) |
 +-----------------+
 | NULL            |
 +-----------------+
+
+---If days exceeds the valid date range (typically 1 to 3652424, corresponding to approximately year 10000), an error is returned
+select from_days(99999999);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_days of 99999999 out of range
 ```

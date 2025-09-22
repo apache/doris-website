@@ -32,6 +32,7 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 - 目前支持的 unix_timestamp 范围为 [0,  253402271999]( 对应日期为 1970-01-01 00:00:00 至 9999-12-31 23:59:59)，超出范围的 unix_timestamp 将返回 错误
 - 若 string_format 格式无效，返回不符合预期的字符串。
 - 若任意参数为 NULL ,则返回 NULL
+- 如果 string_format 超过 128 字符长度，返回错误
 
 ## 举例
 
@@ -79,7 +80,7 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 
 ---超出最大范围， 返回错误
 select from_unixtime(253402281999);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Cannot convert timestamp 253402281999 to valid date
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of 253402281999, yyyy-MM-dd HH:mm:ss is invalid
 
 ---string-format 格式未引用任何时间值
 mysql> select from_unixtime(32536799,"gdaskpdp");
@@ -96,4 +97,8 @@ mysql> select from_unixtime(NULL);
 +---------------------+
 | NULL                |
 +---------------------+
+
+---如果 string_format 超过 128 字符长度，返回错误
+mysql> select from_unixtime(1196440219, repeat('y',129));
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of invalid or oversized format is invalid
 ```
