@@ -5,11 +5,13 @@
 }
 ---
 CAST converts a value of one data type into another data type.
+TRY_CAST is a safe type conversion mechanism that returns a SQL NULL value instead of throwing an error when the conversion might fail.
 
 ## Syntax
 
 ```sql
 CAST( <source_expr> AS <target_data_type> )
+TRY_CAST( <source_expr> AS <target_data_type> )
 ```
 
 ## Arguments
@@ -21,6 +23,8 @@ CAST( <source_expr> AS <target_data_type> )
 
 ## Examples
 
+Normal CAST conversion:
+
 ```sql
 SELECT CAST('123' AS INT);
 ```
@@ -31,6 +35,30 @@ SELECT CAST('123' AS INT);
 +--------------------+
 |                123 |
 +--------------------+
+```
+
+In strict mode, some invalid CAST conversions may result in errors:
+
+```sql
+SELECT CAST('abc' AS INT);
+```
+
+```text
+[INVALID_ARGUMENT]parse number fail, string: 'abc'
+```
+
+In such cases, you can use TRY_CAST to avoid errors and convert failed conversions to NULL values:
+
+```sql
+SELECT TRY_CAST('abc' AS INT);
+```
+
+```text
++------------------------+
+| try_cast('abc' as int) |
++------------------------+
+|                   NULL |
++------------------------+
 ```
 
 ## Behavior
@@ -65,5 +93,5 @@ length(CAST(123 AS varchar(65533)))
 ...
 ```
 
-You can see that the execution plan contains a CAST.
+You can see from the execution plan above that the system automatically performs a CAST conversion, converting the integer 123 to a string type.
 
