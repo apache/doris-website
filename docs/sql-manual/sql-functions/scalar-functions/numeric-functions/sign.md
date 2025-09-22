@@ -33,6 +33,8 @@ Returns an integer:
 
 - If x is NULL, it returns NULL.
 
+Note that for floating-point positive and negative zeros, they all return 0 here. If you want to distinguish between positive and negative zeros of floating-point numbers, you can use the `<signbit>` function.
+
 ## Example
 
 ```sql
@@ -81,4 +83,16 @@ select sign(null);
 +------------+
 |       NULL |
 +------------+
+```
+
+```sql
+select sign(cast('+0.0' as double)) , sign(cast('-0.0' as double));
+```
+
+```text
++------------------------------+------------------------------+
+| sign(cast('+0.0' as double)) | sign(cast('-0.0' as double)) |
++------------------------------+------------------------------+
+|                            0 |                            0 |
++------------------------------+------------------------------+
 ```

@@ -34,6 +34,8 @@ For an entry `<a>` of type Decimal, assuming it is of type `Decimal(p, s)`, the 
 - `Decimal(p, <d>)`，if `0 < <d> <= s`
 - `Decimal(p, s)`，if `<d> > s`
 
+When any input parameter is NULL, returns NULL.
+
 ## Alias
 
 - DFLOOR
@@ -102,4 +104,16 @@ select floor(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers
 |      123.45 |
 |      123.45 |
 +-------------+
+```
+
+```sql
+select floor(NULL, 2);
+```
+
+```text
++----------------+
+| floor(NULL, 2) |
++----------------+
+|           NULL |
++----------------+
 ```

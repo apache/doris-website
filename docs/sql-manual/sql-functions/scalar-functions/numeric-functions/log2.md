@@ -23,9 +23,10 @@ LOG2(<x>)
 
 ## Return value
 
-Returns a floating-point number.
+Returns a floating-point number. Special cases:
 
-- If x IS NULL: return `NULL`
+- If x IS NULL, return `NULL`
+- If x IS NaN, return NaN
 
 ## Example
 
@@ -63,4 +64,28 @@ select log2(10);
 +--------------------------+
 |       3.3219280948873626 |
 +--------------------------+
+```
+
+```sql
+select log2(NULL);
+```
+
+```text
++------------+
+| log2(NULL) |
++------------+
+|       NULL |
++------------+
+```
+
+```sql
+select log2(cast('Nan' as double));
+```
+
+```text
++-----------------------------+
+| log2(cast('Nan' as double)) |
++-----------------------------+
+|                         NaN |
++-----------------------------+
 ```
