@@ -44,14 +44,6 @@ select to_date("2020-02-02");
 | 2020-02-02            |
 +-----------------------+
 
----无效日期时间，返回 NULL
-SELECT TO_DATE('2023-02-30 23:23:56') AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
-
 ---输入 NULL ,返回 NULL
 SELECT TO_DATE(NULL) AS result;
 +--------+

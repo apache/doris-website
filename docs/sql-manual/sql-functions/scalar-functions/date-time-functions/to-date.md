@@ -43,14 +43,6 @@ select to_date("2020-02-02");
 | 2020-02-02            |
 +-----------------------+
 
--- Invalid datetime, returns NULL
-SELECT TO_DATE('2023-02-30 23:23:56') AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
-
 -- Input NULL, returns NULL
 SELECT TO_DATE(NULL) AS result;
 +--------+

@@ -61,7 +61,8 @@ UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
 
 将输入时间转换为当前输入时间所对应的时间戳，其实时间为 1970-01-01 00:00:00.
 
-任意参数为 null 则返回 null
+- 任意参数为 null 则返回 null
+- 无效格式，返回错误
 
 ## 举例
 
@@ -150,5 +151,9 @@ mysql> select unix_timestamp('2038-01-19 11:14:08',null);
 +--------------------------------------------+
 |                                       NULL |
 +--------------------------------------------+
+
+--无效格式，返回错误
+mysql> select unix_timestamp('2007-11-30 10:30-19', 's');
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation unix_timestamp of 2007-11-30 10:30-19, s is invalid
 ```
 
