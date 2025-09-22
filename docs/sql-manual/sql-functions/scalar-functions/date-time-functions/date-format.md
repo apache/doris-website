@@ -75,9 +75,9 @@ yyyy-MM-dd HH:mm:ss --corresponds to standard format specifier：%Y-%m-%d %H:%i:
 A formatted date string, type is Varchar.
 
 Special cases:
-- Returns NULL if format is NULL or empty string.
+- Returns NULL if format is NULL.
 - Returns NULL if any parameter is NULL.
-- Returns NULL if return value exceeds 128 characters length and executed on BE.
+- Returns error if return value exceeds 128 characters length.
 
 ## Examples
 
@@ -167,11 +167,7 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
--- Return NULL if the length of string exceeds the function return string length range
+---Returns error if the result string exceeds the function's maximum length limit.
 mysql> select date_format('2022-01-12',repeat('a',129));
-+-------------------------------------------+
-| date_format('2022-01-12',repeat('a',129)) |
-+-------------------------------------------+
-| NULL                                      |
-+-------------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of invalid or oversized format is invalid
 ```

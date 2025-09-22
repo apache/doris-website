@@ -34,7 +34,7 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 特殊情况:
 - 如果任何参数为 NULL，返回 NULL。
-- 当输入的时区不合法的时候，返回NULL。 时区的设置参考 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
+- 当输入的时区不合法的时候，返回错误。 时区的设置参考 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
 - 输入为date类型，时间部分自动转换为 00:00:00
 
 ## 示例
@@ -107,11 +107,7 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 +------------------------------------------------------------------------+
 
 
----时区范围为 [-12:00,14:00],超出此范围返回 NULL
-mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00');
-+-------------------------------------------------------+
-| CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00') |
-+-------------------------------------------------------+
-| NULL                                                  |
-+-------------------------------------------------------+
+---当输入的时区不合法的时候，返回错误
+select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Anges');
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT][E33] Operation convert_tz invalid timezone: America/Los_Anges
 ```

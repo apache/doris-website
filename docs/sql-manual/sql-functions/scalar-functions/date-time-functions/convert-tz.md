@@ -34,7 +34,7 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 Special cases:
 - If any parameter is NULL, returns NULL.
-- When the input time zone is invalid, returns NULL. For time zone settings, refer to [Time Zone Management](../../../../admin-manual/cluster-management/time-zone).
+- When the input time zone is invalid, returns error. For time zone settings, refer to [Time Zone Management](../../../../admin-manual/cluster-management/time-zone).
 - For date type input, the time part is automatically converted to 00:00:00
 
 ## Examples
@@ -105,13 +105,9 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 | 2019-07-31 22:21:03.636                                                |
 +------------------------------------------------------------------------+
 
--- The time zone range is [-12:00, 14:00]. Returns NULL if outside this range
-mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00');
-+-------------------------------------------------------+
-| CONVERT_TZ('2019-08-01 13:21:03', '+08:00', '+15:00') |
-+-------------------------------------------------------+
-| NULL                                                  |
-+-------------------------------------------------------+
+---When the input time zone is invalid, an error is returned.
+select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Anges');
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT][E33] Operation convert_tz invalid timezone: America/Los_Anges
 ```
 
 

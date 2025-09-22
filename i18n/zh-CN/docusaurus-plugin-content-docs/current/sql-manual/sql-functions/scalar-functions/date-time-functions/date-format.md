@@ -75,9 +75,9 @@ yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 格式化后的日期字符串,类型为 Varchar。
 
 特殊情况：
-- format 为 NULL 或空字符串 返回 NULL。
+- format 为 NULL 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
-- 如果返回值超过 128 字符长度 并且在 BE 执行的情况下，返回 NULL. 
+- 如果返回值超过 128 字符长度 ,返回错误
 
 ## 举例
 
@@ -167,11 +167,7 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
----超出函数返回字符串长度范围，返回 NULL
+---超出函数返回字符串长度范围，返回错误
 mysql> select date_format('2022-01-12',repeat('a',129));
-+-------------------------------------------+
-| date_format('2022-01-12',repeat('a',129)) |
-+-------------------------------------------+
-| NULL                                      |
-+-------------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of invalid or oversized format is invalid
 ```
