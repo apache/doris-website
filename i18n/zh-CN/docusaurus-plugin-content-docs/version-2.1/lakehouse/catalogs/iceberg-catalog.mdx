@@ -203,7 +203,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
-            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
             ```sql
             CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'iceberg',
@@ -894,7 +894,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
-            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
             ```sql
             CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'iceberg',

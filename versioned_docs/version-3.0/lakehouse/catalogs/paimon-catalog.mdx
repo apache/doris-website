@@ -167,7 +167,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.secret_key' = '<sk>'
             );
             ```
-            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.221+)
             ```sql
             CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -456,7 +456,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.secret_key' = '<sk>'
             );
             ```
-            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.2+)
             ```sql
             CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -703,8 +703,13 @@ Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
 You can use `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read historical version data based on snapshot ID or the time when the snapshot was created. Examples:
 
 ```sql
--- Notice: The time must be precise down to the millisecond.
+-- Notice:
+-- Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
 SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17";
+
 -- Notice: The timestamp must be precise down to the millisecond.
 SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 -- Use snapshot id
