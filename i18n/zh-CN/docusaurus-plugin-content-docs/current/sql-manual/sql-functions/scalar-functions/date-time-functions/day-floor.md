@@ -112,8 +112,7 @@ select day_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
 
 ---周期为负数，返回错误
 select day_floor("2023-07-13 22:28:18", -2);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation day_ceil of 2023-07-13 22:28:18, -2 input wrong parameters, period can not be negative or zero
-
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_floor of 2023-07-13 22:28:18, -2 out of range
 
 ---任意参数为 NULL ，返回 NULL
 select day_floor(NULL, 5, "2023-01-01");

@@ -98,7 +98,4 @@ mysql> select from_unixtime(NULL);
 | NULL                |
 +---------------------+
 
----如果 string_format 超过 128 字符长度，返回错误
-mysql> select from_unixtime(1196440219, repeat('y',129));
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of invalid or oversized format is invalid
 ```

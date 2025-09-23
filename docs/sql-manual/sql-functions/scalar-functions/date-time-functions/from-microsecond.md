@@ -60,7 +60,8 @@ select from_microsecond(1700000000123456) as dt_with_micro;
 
 ---Input negative number, returns error
  select from_microsecond(-1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INTERNAL_ERROR]The function from_microsecond Argument value must be non-negative
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_microsecond of -1 out of range
+
 
 ---Input NULL, returns NULL
 select from_microsecond(NULL);
@@ -72,5 +73,5 @@ select from_microsecond(NULL);
 
 ---Exceeds maximum time range 9999-12-31 23:59:59, returns error
 select from_microsecond(999999999999999999);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INTERNAL_ERROR]The function from_microsecond Argument value is out of DateTime range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_microsecond of 999999999999999999 out of range
 ```

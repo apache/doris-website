@@ -62,5 +62,5 @@ select from_second(NULL);
 
 --输入参数为负数，结果返回错误
  select from_second(-1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INTERNAL_ERROR]The function from_second Argument value must be non-negative
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation from_second of -1 out of range
 ```

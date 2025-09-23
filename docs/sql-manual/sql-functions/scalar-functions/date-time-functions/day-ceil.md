@@ -125,7 +125,7 @@ select day_ceil(cast("2023-07-13" as date), 0);
 
 ---Period is negative
 mysql> select day_ceil("2023-07-13 22:28:18", -2);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation day_ceil of 2023-07-13 22:28:18, -2 input wrong parameters, period can not be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_ceil of 2023-07-13 22:28:18, -2 out of range
 
 ---Return date exceeds maximum range, returns error
 select day_ceil("9999-12-31", 5);
