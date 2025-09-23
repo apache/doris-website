@@ -166,7 +166,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
-            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
             ```sql
             CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -455,7 +455,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
-            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+) 
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+) 
             ```sql
             CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -702,8 +702,13 @@ Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
 可以使用 `FOR TIME AS OF` 和 `FOR VERSION AS OF` 语句，根据快照 ID 或者快照产生的时间读取历史版本的数据。示例如下：
 
 ```sql
--- Notice: The time must be precise down to the millisecond.
+-- Notice:
+-- Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
 SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17";
+
 -- Notice: The timestamp must be precise down to the millisecond.
 SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 -- Use snapshot id
