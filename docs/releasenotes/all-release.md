@@ -8,6 +8,9 @@
 This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
 
 :::tip Latest Release
+🎉 Version 3.1.0 is released. Check out the 🔗[Release Notes](../releasenotes/v3.1/release-3.1.0) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
+
+<br />
 
 🎉 Version 3.0.8 released now. Check out the 🔗[Release Notes](../releasenotes/v3.0/release-3.0.8) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
 
@@ -21,6 +24,8 @@ This document presents a summary of Apache Doris versions released within one ye
 <br />
 
 - [2025-09-19, Apache Doris 3.0.8 is released](../releasenotes/v3.0/release-3.0.8.md)
+
+- [2025-09-04, Apache Doris 3.1.0 is released](../releasenotes/v3.1/release-3.1.0.md)
 
 - [2025-08-25, Apache Doris 3.0.7 is released](../releasenotes/v3.0/release-3.0.7.md)
 
