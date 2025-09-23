@@ -81,7 +81,7 @@ SELECT WEEK_CEIL('2023-07-13', 1, '2023-07-03') AS result;
 
 -- Invalid period (non-positive integer)
 SELECT WEEK_CEIL('2023-07-13', 0) AS result;
--- ERROR: period cannot be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_ceil of 2023-07-13 00:00:00, 0 out of range
 
 -- Parameter is NULL
 SELECT WEEK_CEIL(NULL, 1) AS result;
