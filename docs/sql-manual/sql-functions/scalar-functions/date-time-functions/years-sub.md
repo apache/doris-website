@@ -80,9 +80,9 @@ SELECT YEARS_SUB(NULL, 5) AS null_input;
 
 -- Calculation result exceeds datetime range (upper limit)
 SELECT YEARS_SUB('9999-12-31', -1);
--- ERROR: Operation out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_add of 9999-12-31, 1 out of range
 
 -- Calculation result exceeds datetime range (lower limit)
 SELECT YEARS_SUB('0000-01-01', 1);
--- ERROR: Operation out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_add of 0000-01-01, -1 out of range
 ```

@@ -131,7 +131,7 @@ SELECT YEAR_FLOOR('2023-07-13 10:00:00', 1, '2020-01-01 08:30:00') AS result;
 
 -- Invalid period (non-positive integer)
 SELECT YEAR_FLOOR('2023-07-13', 0) AS result;
--- ERROR: period cannot be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_floor of 2023-07-13 00:00:00, 0 out of range
 
 -- Any parameter is NULL, returns NULL
 SELECT YEAR_FLOOR(NULL, 1) AS result;
