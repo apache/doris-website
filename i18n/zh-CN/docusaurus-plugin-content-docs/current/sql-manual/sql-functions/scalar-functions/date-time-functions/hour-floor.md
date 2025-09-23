@@ -114,5 +114,4 @@ mysql> select hour_floor(null, 6) as null_input;
 ---period 为负数，返回 错误
 mysql> select hour_floor('2023-12-31 23:59:59', -3);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_floor of 2023-12-31 23:59:59, -3 out of range
-s
 ```

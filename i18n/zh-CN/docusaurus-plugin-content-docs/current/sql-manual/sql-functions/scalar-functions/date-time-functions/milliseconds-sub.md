@@ -60,7 +60,7 @@ SELECT MILLISECONDS_SUB('2023-01-01', 1500);
 
 ---计算结果超出范围
 SELECT MILLISECONDS_SUB('0000-01-01', 1500);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_sub of 0000-01-01 00:00:00, 1500 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_add of 0000-01-01 00:00:00, -1500 out of range
 
 --- 任一参数为 NULL，返回 NULL
 SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS after_sub;

@@ -59,8 +59,8 @@ SELECT MILLISECONDS_SUB('2023-01-01', 1500);
 +--------------------------------------+
 
 -- Calculation result exceeds the datetime range, throws an exception
-SELECT MILLISECONDS_SUB('0000-01-01', 1500);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_sub of 0000-01-01 00:00:00, 1500 out of range
+SELECT MILLISECONDS_SUB('0000-01-01',-1500);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_add of 0000-01-01 00:00:00, -1500 out of range
 
 -- Any parameter is NULL, returns NULL
 SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS after_sub;

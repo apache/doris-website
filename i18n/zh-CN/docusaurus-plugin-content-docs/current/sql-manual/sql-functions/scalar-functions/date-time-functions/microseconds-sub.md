@@ -71,7 +71,7 @@ SELECT MICROSECONDS_SUB('2023-10-01', -300000);
 
 ---超出日期时间范围，抛出错误
 mysql> SELECT MICROSECONDS_SUB('0000-01-01 00:00:00.000000', 1000000) AS after_sub;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation microseconds_sub of 0000-01-01 00:00:00, 1000000 
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation microseconds_add of 0000-01-01 00:00:00, -1000000 
 out of range
 
 ```

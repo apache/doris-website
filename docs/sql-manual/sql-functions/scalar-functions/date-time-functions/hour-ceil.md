@@ -108,7 +108,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation ho
 
 -- If period is less than or equal to 0, return error
 mysql> select hour_ceil("2023-07-13 22:28:18", 0);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation hour_ceil of 2023-07-13 22:28:18, 0 input wrong parameters, period can not be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_ceil of 2023-07-13 22:28:18, 0 out of range
 
 -- If any input parameter is NULL, return NULL
 mysql> select hour_ceil(null, 3) as null_input;

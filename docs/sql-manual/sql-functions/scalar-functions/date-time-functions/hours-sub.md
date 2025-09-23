@@ -70,8 +70,8 @@ select hours_sub('2023-10-01 10:00:00', NULL);
 
 -- Exceeds datetime range, return NULL
 mysql> select hours_sub('9999-12-31 12:00:00', -20);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation hours_sub of 9999-12-31 12:00:00, -20 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation hours_add of 9999-12-31 12:00:00, 20 out of range
 
 mysql> select hours_sub('0000-01-01 12:00:00', 20);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation hours_sub of 0000-01-01 12:00:00, 20 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation hours_add of 0000-01-01 12:00:00, -20 out of range
 ```
