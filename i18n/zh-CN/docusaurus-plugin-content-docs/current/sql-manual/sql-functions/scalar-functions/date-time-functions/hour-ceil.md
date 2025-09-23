@@ -35,7 +35,7 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回 DATETIME 类型的值，表示向上取整后的最近周期时刻。
 
-- 若输入的 period 为非正整数，返回错误。
+- 若输入的 period 为非正数，返回错误。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale
 - 计算结果大于最大日期时间范围 9999-12-31 23:59:59,返回 错误

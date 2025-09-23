@@ -36,7 +36,7 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回 DATETIME 类型的值，表示向下取整后的最近周期时刻。
 
-- 若输入的 period 为非正整数，返回错误s。
+- 若输入的 period 为非正数，返回错误s。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周s期 k 为负数。
