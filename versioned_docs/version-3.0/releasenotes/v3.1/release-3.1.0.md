@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS tbl3 (
 ) DUPLICATE KEY(k);
 ```
 
-## 1. Inverted Index Storage Format V3
+## 2. Inverted Index Storage Format V3
 
 Compared to V2, Inverted Index V3 further optimizes storage:
 
@@ -524,7 +524,7 @@ Refer to [documentation](https://doris.apache.org/docs/lakehouse/storages/hdfs#k
 
 Refer to [documentation](https://doris.apache.org/docs/lakehouse/storages/hdfs#kerberos-authentication) 
 
-## 1. Storage Engine Improvements
+## 4. Storage Engine Improvements
 
 In Doris 3.1, we've continued to improve the storage layer, improving performance and stability.
 
@@ -561,7 +561,7 @@ In storage-compute separation scenarios, updating the Delete Bitmap in MOW table
 
 We have added several optimizations to make large-scale, concurrent data ingestion more stable and efficient. These include **reducing compaction lock times:** cutting p99 commit latency from 1.68 minutes to 49.4 seconds in high-concurrency multi-tablet import tests. We also **reduced long-tail import latency** by allowing transactions to force-lock after a wait threshold is exceeded. 
 
-## 2. Query Performance Boosts
+## 5. Query Performance Boosts
 
 ### Enhanced Partition Pruning Performance and Coverage
 
