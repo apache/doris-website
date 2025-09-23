@@ -37,7 +37,7 @@ MINUTE_FLOOR(`<date_or_time_expr>, `<period>`, `<origin>`)
 
 返回类型为 DATETIME，返回以输入日期时间为基准，向下取整到最近的指定分钟周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
 
-- 若 `<period>` 为非正数（≤0），返回 NULL。
+- 若 `<period>` 为非正数（≤0），返回错误。
 - 若任一参数为 NULL，返回 NULL。
 - 不指定 period 时，默认以 1 分钟为周期。
 - `<origin>` 未指定，默认以 0001-01-01 00:00:00 为基准。
@@ -103,13 +103,9 @@ SELECT MINUTE_FLOOR('2023-07-13', 30) AS result;
 | 2023-07-13 00:00:00 |
 +---------------------+
 
---- 周期为非正数，返回 NULL
+--- 周期为非正数，返回错误
 SELECT MINUTE_FLOOR('2023-07-13 22:28:18', -5) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+Operation month_floor of 2023-07-13 22:28:18, -5 input wrong parameters, period can not be negative or zero
 
 --- 任一参数为 NULL，返回 NULL
 SELECT MINUTE_FLOOR(NULL, 5), MINUTE_FLOOR('2023-07-13 22:28:18', NULL) AS result;

@@ -37,7 +37,7 @@ MONTH_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified month interval based on the input datetime. The time component of the result will be set to 00:00:00, and the day component will be truncated to 01.
 
-- If `<period>` is a non-positive number (≤0), returns NULL.
+- If `<period>` is a non-positive number (≤0), returns error.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-month interval.
 - If `<origin>` is not specified, it defaults to 0001-01-01 00:00:00 as the baseline.
@@ -103,13 +103,10 @@ SELECT MONTH_FLOOR('2022-09-13 22:28:18', 5, '2028-07-03 22:20:00') AS result;
 | 2022-09-03 22:20:00 |
 +---------------------+
 
--- Period is non-positive, returns NULL
-SELECT MONTH_FLOOR('2023-07-13 22:28:18', -5) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+-- Period is non-positive, returns error
+SELECT MINUTE_FLOOR('2023-07-13 22:28:18', -5) AS result;
+Operation month_floor of 2023-07-13 22:28:18, -5 input wrong parameters, period can not be negative or zero
+
 
 -- Any parameter is NULL, returns NULL
 SELECT MONTH_FLOOR(NULL, 5), MONTH_FLOOR('2023-07-13 22:28:18', NULL) AS result;
