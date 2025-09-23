@@ -34,7 +34,7 @@ DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
 返回与输入类型一致的结果（DATETIME 或 DATE），表示向下舍入后的年间隔起始时间：
 
 - 若输入为 DATE 类型，返回 DATE 类型（仅包含日期部分）；若输入为 DATETIME 或符合格式的字符串，返回 DATETIME 类型（时间部分与 origin 一致，无 origin 时默认为 00:00:00）。
-- 若 `<period>` 为非正整数（≤0），函数返回错误。
+- 若 `<period>` 为非正数（≤0），函数返回错误。
 - 若任一参数为 NULL，返回 NULL。
 - 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点。
 - 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误。
@@ -130,7 +130,7 @@ SELECT YEAR_FLOOR('2023-07-13 10:00:00', 1, '2020-01-01 08:30:00') AS result;
 | 2023-01-01 08:30:00 |
 +---------------------+
 
--- 无效period（非正整数）
+-- 无效period（非正数）
 SELECT YEAR_FLOOR('2023-07-13', 0) AS result;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation year_floor of 2023-07-13 00:00:00, 0 input wrong parameters, period can not be negative or zero
 
