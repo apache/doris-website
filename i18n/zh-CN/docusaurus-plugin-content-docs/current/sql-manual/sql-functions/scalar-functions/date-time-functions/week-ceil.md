@@ -36,7 +36,7 @@ WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回类型为 DATETIME，表示向上舍入后的日期时间值。
 
-- 若 `<period>` 为非正整数（≤0），函数返回错误；
+- 若 `<period>` 为非正数（≤0），函数返回错误；
 - 若任一参数为 NULL，返回 NULL；
 - 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
 - 若输入为 date 类型，则返回 date 类型

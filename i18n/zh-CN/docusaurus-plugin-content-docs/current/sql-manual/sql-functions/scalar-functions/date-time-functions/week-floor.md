@@ -38,7 +38,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回类型为 DATETIME，表示向下舍入后的日期时间值。结果的时间部分将被设置为 00:00:00。
 
-- 若 `<period>` 为非正整数（≤0），函数返回 NULL；
+- 若 `<period>` 为非正数（≤0），函数返回错误；
 - 若任一参数为 NULL，返回 NULL；
 - 若 `<datetime>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
 - 若输入为 date 类型，则返回 date 类型
@@ -104,13 +104,9 @@ SELECT WEEK_FLOOR('2023-07-10', 1, '2023-07-10 12:00:00') AS result;
 | 2023-07-03 12:00:00 |
 +---------------------+
 
--- 无效period（非正整数）
+-- 无效period，返回错误
 SELECT WEEK_FLOOR('2023-07-13', 0) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation week_floor of 2023-07-13 00:00:00, 0 input wrong parameters, period can not be negative or zero
 
 -- 参数为NULL
 SELECT WEEK_FLOOR(NULL, 1) AS result;

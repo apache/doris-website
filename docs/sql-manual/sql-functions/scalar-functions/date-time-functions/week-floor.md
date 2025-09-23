@@ -36,7 +36,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 Returns DATETIME type, representing the rounded-down datetime value. The time portion of the result will be set to 00:00:00.
 
-- If `<period>` is a non-positive integer (≤0), the function returns NULL;
+- If `<period>` is a non-positive (≤0), the function returns error;
 - If any parameter is NULL, returns NULL;
 - If `<datetime>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point;
 - If input is date type, returns date type
@@ -78,13 +78,10 @@ SELECT WEEK_FLOOR('2023-07-13', 1, '2023-07-03') AS result;
 | 2023-07-10 00:00:00 |
 +---------------------+
 
--- Invalid period (non-positive integer)
+-- Invalid period
+-- 无效period，返回错误
 SELECT WEEK_FLOOR('2023-07-13', 0) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation week_floor of 2023-07-13 00:00:00, 0 input wrong parameters, period can not be negative or zero
 
 -- Parameter is NULL
 SELECT WEEK_FLOOR(NULL, 1) AS result;
