@@ -87,8 +87,8 @@ SELECT MONTHS_SUB(NULL, 5), MONTHS_SUB('2023-07-13', NULL) AS result;
 
 --- Calculation result exceeds date range
 mysql> SELECT MONTHS_SUB('0000-01-01', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_sub of 0000-01-01, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_add of 0000-01-01, -1 out of range
 
 mysql> SELECT MONTHS_SUB('9999-12-31', -1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_sub of 9999-12-31, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_add of 9999-12-31, 1 out of range
 ```

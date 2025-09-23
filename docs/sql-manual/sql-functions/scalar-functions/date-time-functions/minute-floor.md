@@ -37,7 +37,7 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified minute interval based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
 
-- If `<period>` is a non-positive number (≤0), returns NULL.
+- If `<period>` is a non-positive number (≤0), returns error.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-minute interval.
 - If `<origin>` is not specified, it defaults to 0001-01-01 00:00:00 as the baseline.
@@ -103,13 +103,9 @@ SELECT MINUTE_floor('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;
 | 0001-01-01 12:30:00 |
 +---------------------+
 
--- Period is non-positive, returns NULL
+-- Period is non-positive, returns error
 SELECT MINUTE_FLOOR('2023-07-13 22:28:18', -5) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_floor of 2023-07-13 22:28:18, -5 out of range
 
 -- Any parameter is NULL, returns NULL
 SELECT MINUTE_FLOOR(NULL, 5), MINUTE_FLOOR('2023-07-13 22:28:18', NULL) AS result;

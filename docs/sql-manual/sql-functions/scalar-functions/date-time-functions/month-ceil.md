@@ -109,7 +109,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation mo
 
 -- Period is non-positive, returns error
 SELECT MONTH_CEIL('2023-07-13 22:28:18', -5) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation month_ceil of 2023-07-13 22:28:18, -5 input wrong parameters, period can not be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_ceil of 2023-07-13 22:28:18, -5 out of range
 
 -- Any parameter is NULL, returns NULL
 SELECT MONTH_CEIL(NULL, 5), MONTH_CEIL('2023-07-13 22:28:18', NULL) AS result;

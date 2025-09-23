@@ -83,5 +83,5 @@ SELECT MINUTES_SUB(NULL, 10), MINUTES_SUB('2023-07-13 22:28:18', NULL) AS result
 
 --- 计算结果超出日期时间范围，报错
 SELECT MINUTES_SUB('0000-01-01 00:00:00', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minutes_sub of 0000-01-01 00:00:00, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minutes_add of 0000-01-01 00:00:00, -1 out of range
 ```
