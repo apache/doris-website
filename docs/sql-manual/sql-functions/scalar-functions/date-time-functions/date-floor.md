@@ -79,7 +79,7 @@ mysql> select date_floor("2023-07-13", INTERVAL 5 YEAR);
 
 -- period is negative, invalid returns error
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL -5 MINUTE);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation minute_floor of 2023-07-13 22:28:18, -5 input wrong parameters, period can not be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_floor of 2023-07-13 22:28:18, -5, 0001-01-01 00:00:00 out of range
 
 -- Unsupported type
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL 5 MILLISECOND);

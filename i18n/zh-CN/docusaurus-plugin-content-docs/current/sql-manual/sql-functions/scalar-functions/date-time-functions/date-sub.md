@@ -113,9 +113,8 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 
 ---超出最小日期
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[E-218]Operation days_sub of 0000-01-01, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_add of 0000-01-01, -1 out of range
 
 select date_sub('9999-01-01', INTERVAL -1 YEAR);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation years_sub of 9999-01-01, -1 out of range
-
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_add of 9999-01-01, 1 out of range
 ```

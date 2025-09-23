@@ -136,5 +136,5 @@ mysql> select date_ceil(NULL,interval 5 year);
 
 -- Invalid parameter, period is negative
 mysql> select date_ceil("2023-01-13 22:28:18",interval -5 month);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation month_ceil of 2023-01-13 22:28:18, -5 input wrong parameters, period can`t be negative or zero
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation month_ceil of 2023-01-13 22:28:18, -5, 0001-01-01 00:00:00 out of range
 ```
