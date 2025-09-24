@@ -4,6 +4,9 @@
     "language": "en"
 }
 ---
+
+## Introduction
+
 CAST converts a value of one data type into another data type.
 TRY_CAST is a safe type conversion mechanism that returns a SQL NULL value instead of throwing an error when the conversion might fail.
 
@@ -21,9 +24,41 @@ TRY_CAST( <source_expr> AS <target_data_type> )
 - target_data_type  
   The target data type. If the type supports additional properties (for example, precision and scale for DECIMAL(p, s)), include them as needed.
 
+## Strict Mode
+
+Before Doris 4.0, Doris's CAST behavior followed database systems like MySQL, trying to avoid CAST operations from raising errors. For example, in MySQL executing the following SQL:
+
+```sql
+select cast('abc' as signed);
+```
+
+Would result in:
+```
+0
+```
+
+Starting from Doris 4.0, we've adopted a more rigorous approach, following PostgreSQL's practice: when encountering invalid conversions, Doris will directly report an error rather than generating potentially confusing results.
+
+Doris 4.0 introduced a new variable `enable_strict_cast`, which can be enabled with:
+
+```sql
+set enable_strict_cast = true;
+```
+
+In strict mode, illegal CAST operations will directly result in errors:
+
+```sql
+mysql> select cast('abc' as int);
+ERROR 1105 (HY000): errCode = 2, detailMessage = abc can't cast to INT in strict mode.
+```
+
+The advantages of strict mode are:
+1. It prevents users from getting unexpected values during CAST operations
+2. The system can assume that all data can be successfully type-converted (illegal data will directly cause errors), enabling better optimization during computation
+
 ## Examples
 
-Normal CAST conversion:
+### Normal CAST Conversion
 
 ```sql
 SELECT CAST('123' AS INT);
@@ -37,17 +72,9 @@ SELECT CAST('123' AS INT);
 +--------------------+
 ```
 
-In strict mode, some invalid CAST conversions may result in errors:
+### Using TRY_CAST to Handle Potentially Failed Conversions
 
-```sql
-SELECT CAST('abc' AS INT);
-```
-
-```text
-[INVALID_ARGUMENT]parse number fail, string: 'abc'
-```
-
-In such cases, you can use TRY_CAST to avoid errors and convert failed conversions to NULL values:
+When conversions might fail, using TRY_CAST can prevent query errors by returning NULL instead:
 
 ```sql
 SELECT TRY_CAST('abc' AS INT);
@@ -93,5 +120,5 @@ length(CAST(123 AS varchar(65533)))
 ...
 ```
 
-You can see from the execution plan above that the system automatically performs a CAST conversion, converting the integer 123 to a string type.
+You can see from the execution plan above that the system automatically performs a CAST conversion, converting the integer 123 to a string type. This is an example of implicit CAST.
 
