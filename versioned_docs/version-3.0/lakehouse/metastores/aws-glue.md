@@ -38,7 +38,7 @@ Hive Glue Catalog is used to access Hive tables through AWS Glue's Hive Metastor
 ### Example
 
 ```sql
-CREATE CATALOG hive_glue_catalog WITH (
+CREATE CATALOG hive_glue_catalog PROPERTIES (
   'type' = 'hms',
   'hive.metastore.type' = 'glue',
   'glue.region' = 'us-east-1',
@@ -68,7 +68,7 @@ Iceberg Glue Catalog accesses Glue through the Glue Client. Configuration parame
 ### Example
 
 ```sql
-CREATE CATALOG iceberg_glue_catalog WITH (
+CREATE CATALOG iceberg_glue_catalog PROPERTIES (
   'type' = 'iceberg',
   'iceberg.catalog.type' = 'glue',
   'glue.region' = 'us-east-1',
