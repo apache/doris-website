@@ -82,12 +82,12 @@ Doris 支持以下三种 JSON 格式：
 
 | 参数 | 默认值 | Stream Load | Broker Load | Routine Load | TVF |
 |------|---------|-------------|--------------|--------------|-----|
-| json paths | 无 | 支持 | 支持 | 支持 | 支持 |
-| json root | 无 | 支持 | 支持 | 支持 | 支持 |
-| strip outer array | false | 支持 | 支持 | 支持 | 支持 |
-| read json by line | true | 支持 | 支持 | 支持 | 支持 |
-| fuzzy parse | false | 支持 | 支持 | 不支持 | 支持 |
-| num as string | false | 支持 | 支持 | 支持 | 支持 |
+| json_paths | 无 | 支持 | 支持 | 支持 | 支持 |
+| json_root | 无 | 支持 | 支持 | 支持 | 支持 |
+|strip_outer_array| false | 支持 | 支持 | 支持 | 支持 |
+|read_json_by_line| true | 支持 | 不支持配置 | 不支持配置 | 支持 |
+| fuzzy_parse | false | 支持 | 支持 | 不支持 | 支持 |
+| num_as_string | false | 支持 | 支持 | 支持 | 支持 |
 | 压缩格式 | plain | 支持 | 支持 | 不支持 | 支持 |
 
 :::tip 注意
@@ -96,6 +96,7 @@ Doris 支持以下三种 JSON 格式：
 3. Routine Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
 5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+6. read_json_by_line默认为true指的是如果导入时不指定strip_outer_array和read_json_by_line任何一个, 那么read_json_by_line为true.
 :::
 
 ### 参数说明
