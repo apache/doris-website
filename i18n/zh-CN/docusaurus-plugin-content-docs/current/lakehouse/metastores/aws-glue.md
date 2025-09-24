@@ -26,14 +26,14 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
 | `glue.access_key`       | AWS Access Key ID                                           | 是       | 空         |
 | `glue.secret_key`       | AWS Secret Access Key                                       | 是       | 空         |
 | `glue.catalog_id`       | Glue Catalog ID（暂未支持）                                       | 否       | 空         |
-| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（自3.1.1+ 支持）                          | 否       | 空         |
-| `glue.external_id`      | IAM External ID，用于访问 Glue（自3.1.1+ 支持）                             | 否       | 空         |
+| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（自3.1.2+ 支持）                          | 否       | 空         |
+| `glue.external_id`      | IAM External ID，用于访问 Glue（自3.1.2+ 支持）                       | 否       | 空         |
 
 ### 认证参数
 访问 Glue 需要认证信息，支持以下两种方式：
 1. **Access Key 认证** 
    通过 `glue.access_key` 和 `glue.secret_key` 提供的 Access Key 认证访问 Glue。
-2. **IAM Role 认证（自3.1.1+ 起支持）**  
+2. **IAM Role 认证（自3.1.2+ 起支持）**  
    通过 `glue.role_arn` 提供的 IAM Role 认证访问 Glue。  
    该方式需要 Doris 部署在 AWS EC2 上，并且 EC2 实例需要绑定一个 IAM Role，且该 Role 需要有访问 Glue 的权限。
    如果需要通过 External ID 进行访问，需要同时配置 `glue.external_id`。
@@ -92,17 +92,17 @@ CREATE CATALOG hive_glue_catalog PROPERTIES (
 Iceberg Glue Catalog 通过 Glue Client 访问 Glue。配置如下：
 
 | 参数名称                 | 描述                                                         | 是否必须 | 默认值     |
-|-------------------------|--------------------------------------------------------------|----------|------------|
-| `type`                  | 固定为 `iceberg`                                             | 是       | 无         |
-| `iceberg.catalog.type`  | 固定为 `glue`                                               | 是       | 无         |
-| `warehouse`             | Iceberg 数据仓库路径，例如：`s3://my-bucket/iceberg-warehouse/` | 是       | s3://doris |
-| `glue.region`           | AWS Glue 所在区域，例如：`us-east-1`                        | 是       | 无         |
-| `glue.endpoint`         | AWS Glue endpoint，例如：`https://glue.us-east-1.amazonaws.com` | 是       | 无         |
-| `glue.access_key`       | AWS Access Key ID                                           | 是       | 空         |
-| `glue.secret_key`       | AWS Secret Access Key                                       | 是       | 空         |
-| `glue.catalog_id`       | Glue Catalog ID（暂未支持）                                  | 否       | 空         |
-| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（暂未支持）                      | 否       | 空         |
-| `glue.external_id`      | IAM External ID，用于访问 Glue（暂未支持）                   | 否       | 空         |
+|-------------------------|--------------------------------------------------------------|------|------------|
+| `type`                  | 固定为 `iceberg`                                             | 是    | 无         |
+| `iceberg.catalog.type`  | 固定为 `glue`                                               | 是    | 无         |
+| `warehouse`             | Iceberg 数据仓库路径，例如：`s3://my-bucket/iceberg-warehouse/` | 是    | s3://doris |
+| `glue.region`           | AWS Glue 所在区域，例如：`us-east-1`                        | 是    | 无         |
+| `glue.endpoint`         | AWS Glue endpoint，例如：`https://glue.us-east-1.amazonaws.com` | 是    | 无         |
+| `glue.access_key`       | AWS Access Key ID                                           | 否    | 空         |
+| `glue.secret_key`       | AWS Secret Access Key                                       | 否    | 空         |
+| `glue.catalog_id`       | Glue Catalog ID（暂未支持）                                  | 否    | 空         |
+| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（暂未支持）                      | 否    | 空         |
+| `glue.external_id`      | IAM External ID，用于访问 Glue（暂未支持）                   | 否    | 空         |
 
 #### 示例
 
