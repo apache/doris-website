@@ -17,6 +17,8 @@ SUBSTR
 
 ```sql
 SUBSTRING(<str>, <pos> [, <len>])
+
+SUBSTRING(<str> FROM <pos> [FOR <len>])
 ```
 
 ## Parameters
@@ -97,4 +99,28 @@ SELECT substring('abc1def', 2, 2);
 +-----------------------------+
 | bc                          |
 +-----------------------------+
+```
+
+6. Using from and for
+```sql
+SELECT substring('foobarbar' FROM 4 FOR 3);
+```
+```text
++-------------------------------------+
+| substring('foobarbar' FROM 4 FOR 3) |
++-------------------------------------+
+| bar                                 |
++-------------------------------------+
+```
+
+7. Using from
+```sql
+SELECT substring('foobarbar' FROM 4);
+```
+```text
++-------------------------------+
+| substring('foobarbar' FROM 4) |
++-------------------------------+
+| barbar                        |
++-------------------------------+
 ```
