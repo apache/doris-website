@@ -45,13 +45,13 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using S3 Load
 
 :::caution Caution
-If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+When using S3 Load to import MinIO data, the following issues should be noted:
 
-- `"s3.endpoint" = "http://localhost:9000"`
+- If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string,for example
+`"s3.endpoint" = "http://localhost:9000"`
 
-The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-
-- `"use_path_style" = "true"`
+- The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style,for example
+`"use_path_style" = "true"`
 :::
 
 ```sql
@@ -139,14 +139,14 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using TVF
 
 :::caution Caution
-If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+When using TVF to import MinIO data, the following issues should be noted:
 
-- `"s3.endpoint" = "http://localhost:9000"`
+- If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string,for example
+`"s3.endpoint" = "http://localhost:9000"`
 
 
-The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-
-- `"use_path_style" = "true"`
+- The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style,for example
+`"use_path_style" = "true"`
 :::
 
 ```sql
