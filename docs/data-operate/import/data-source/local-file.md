@@ -7,17 +7,11 @@
 
 Doris provides multiple ways to load data from local sources:
 
-### 1. Stream Load
+- **Stream Load**：Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSON, Parquet, and ORC formats. For more information, refer to the [Stream Load documentation](../import-way/stream-load-manual.md).
 
-Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSON, Parquet, and ORC formats. For more information, refer to the [Stream Load documentation](../import-way/stream-load-manual.md).
+- **streamloader**：The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
 
-### 2. Streamloader Tool
-
-The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
-
-### 3. MySQL Load
-
-Doris is compatible with MySQL protocol and supports using the standard [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) syntax to load local files, suitable for loading CSV files.
+- **MySQL Load**：Doris is compatible with MySQL protocol and supports using the standard [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) syntax to load local files, suitable for loading CSV files.
 
 ## Using Stream Load to Load Data
 
@@ -144,6 +138,21 @@ Create a file named `client_local.csv` with the following sample data:
 
 ```Shell
 mysql --local-infile -h <fe_ip> -P <fe_query_port> -u root -D testdb
+```
+
+Execute MySQL Load and use specified parameter options when connecting:
+
+- When linking MySQL clients, the '-- local inpile' option must be used, otherwise an error may occur.
+- To connect through JDBC, it is necessary to specify the configuration 'allowLoadLocalInfille=true' in the URL`
+
+Create the following table in Doris:
+
+```SQL
+CREATE TABLE testdb.t1 (
+    pk     INT, 
+    v1     INT SUM
+) AGGREGATE KEY (pk) 
+DISTRIBUTED BY hash (pk);
 ```
 
 ### Step 3: Load Data

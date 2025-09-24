@@ -52,9 +52,9 @@ The minimum write replica number allows users to specify the minimum number of r
 
 ### Configuration Methods
 
-#### 1. Single Table Configuration
+#### Single Table Configuration
 
-a. Set when creating a table:
+1. Set when creating a table:
 
 ```sql
 CREATE TABLE example_table
@@ -71,14 +71,14 @@ PROPERTIES
 );
 ```
 
-b. Modify an existing table:
+2. Modify an existing table:
 
 ```sql
 ALTER TABLE example_table
 SET ( 'min_load_replica_num' = '2' );
 ```
 
-#### 2. Global Configuration
+#### Global Configuration
 Set through the FE configuration item `min_load_replica_num`.
 
 - Valid values: greater than 0
@@ -88,6 +88,7 @@ Set through the FE configuration item `min_load_replica_num`.
 Priority: Table property > Global configuration > Default majority rule
 
 If the table property is not set or invalid, and the global configuration is valid, the minimum write replica number for the table is:
+
 `min(FE configured min_load_replica_num, table's replica number/2 + 1)`
 
 For viewing and modifying FE configuration items, please refer to the [FE Configuration Document](../../admin-manual/config/fe-config.md).
