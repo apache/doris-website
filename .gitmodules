@@ -4,3 +4,6 @@
 [submodule ".github/actions/aliyun-oss-website-action"]
 	path = .github/actions/aliyun-oss-website-action
 	url = https://github.com/jeffreys-cat/aliyun-oss-website-action.git
+[submodule ".github/actions/cspell-action"]
+	path = .github/actions/cspell-action
+	url = https://github.com/streetsidesoftware/cspell-action.git
