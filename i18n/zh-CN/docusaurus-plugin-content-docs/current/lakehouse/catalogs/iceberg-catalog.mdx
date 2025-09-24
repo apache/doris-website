@@ -497,6 +497,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+ 支持)
+            ```sql
+            CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/warehouse',
+                'glue.region' = 'us-east-1',                    
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'                
+            );
+            ```                        
         </TabItem>
     </Tabs>
 </details>
