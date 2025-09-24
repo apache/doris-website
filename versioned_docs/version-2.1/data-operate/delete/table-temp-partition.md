@@ -5,25 +5,25 @@
 }
 ---
 
-Doris supports adding temporary partitions to partitioned tables. Temporary partitions differ from regular partitions in that they are not retrieved by regular queries and can only be queried through special query statements.
+Apache Doris supports adding temporary partitions to partitioned tables. Temporary partitions differ from regular partitions in that they are not retrieved by standard queries and can only be accessed through specific query statements.
 
-- The partition columns of temporary partitions are the same as those of regular partitions and cannot be modified.
+- Temporary partition columns must match those of regular partitions and cannot be modified.
+- Temporary partition ranges cannot overlap with each other, but they can overlap with regular partition ranges.
+- Temporary partition names must be unique and cannot duplicate regular partition names or other temporary partition names.
 
-- The partition ranges of all temporary partitions cannot overlap, but the ranges of temporary partitions and regular partitions can overlap.
+## Use Cases
 
-- The names of temporary partitions cannot duplicate those of regular partitions or other temporary partitions.
+**Temporary partitions are primarily used for:**
 
-**Main application scenarios for temporary partitions:**
+- **Atomic overwrite operations**: You can rewrite partition data without losing data between deletion and import operations. Create a temporary partition, import new data into it, then atomically replace the original partition through a replace operation. For atomic overwrite operations on non-partitioned tables, see the [replace table documentation](../../data-operate/delete/atomicity-replace).
 
-- **Atomic overwrite operation**: Users can rewrite the data of a partition without data loss between deleting old data and importing new data. In this case, a temporary partition can be created, new data can be imported into the temporary partition, and then the original partition can be atomically replaced through a replace operation. For atomic overwrite operations on non-partitioned tables, refer to the [replace table documentation](../../data-operate/delete/atomicity-replace).
+- **Bucket count modification**: If an inappropriate bucket count was used when creating a partition, you can create a new temporary partition with the desired bucket count. Import the regular partition data into the temporary partition using the `INSERT INTO` command, then atomically replace the original partition through a replace operation.
 
-- **Modify the number of buckets**: If an inappropriate number of buckets was used when creating a partition, a new temporary partition can be created with the specified new number of buckets. Then, the data of the regular partition can be imported into the temporary partition using the `INSERT INTO` command, and the original partition can be atomically replaced through a replace operation.
+- **Partition merging or splitting**: You can modify partition ranges, such as merging two partitions or splitting a large partition into multiple smaller ones. Create a new temporary partition, import the regular partition data using the `INSERT INTO` command, then atomically replace the original partition through a replace operation.
 
-- **Merge or split partitions**: Users can modify the partition range, such as merging two partitions or splitting a large partition into multiple smaller partitions. A new temporary partition can be created, the data of the regular partition can be imported into the temporary partition using the `INSERT INTO` command, and the original partition can be atomically replaced through a replace operation.
+## Adding Temporary Partitions
 
-## Add Temporary Partition
-
-Use the `ALTER TABLE ADD TEMPORARY PARTITION` statement to add a temporary partition:
+Use the `ALTER TABLE ADD TEMPORARY PARTITION` statement to add temporary partitions:
 
 ```sql
 ALTER TABLE tbl1 ADD TEMPORARY PARTITION tp1 VALUES LESS THAN("2020-02-01");
@@ -43,17 +43,17 @@ ALTER TABLE tbl3 ADD TEMPORARY PARTITION tp1 VALUES IN ("Beijing", "Shanghai")
 DISTRIBUTED BY HASH(k1) BUCKETS 5;
 ```
 
-## Drop Temporary Partition
+## Dropping Temporary Partitions
 
-Use the `ALTER TABLE DROP TEMPORARY PARTITION` statement to drop a temporary partition:
+Use the `ALTER TABLE DROP TEMPORARY PARTITION` statement to drop temporary partitions:
 
 ```sql
 ALTER TABLE tbl1 DROP TEMPORARY PARTITION tp1;
 ```
 
-## Replace Regular Partition
+## Replacing Regular Partitions
 
-Use the `ALTER TABLE REPLACE PARTITION` statement to replace a regular partition with a temporary partition:
+Use the `ALTER TABLE REPLACE PARTITION` statement to replace regular partitions with temporary partitions:
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
@@ -67,17 +67,17 @@ PROPERTIES (
 );
 ```
 
-There are two special optional parameters for the replace operation:
+The replace operation supports two optional parameters:
 
-**1. `strict_range`**
+### 1. `strict_range`
 
-Default is true.
+**Default value**: `true`
 
-For Range partitions, when this parameter is true, the union of the ranges of all replaced regular partitions must be exactly the same as the union of the ranges of the replacing temporary partitions. When set to false, it only needs to ensure that the ranges of the new regular partitions do not overlap after replacement.
+**For Range partitions**: When `true`, the union of all replaced regular partition ranges must exactly match the union of the replacing temporary partition ranges. When `false`, only ensure that the new regular partition ranges don't overlap after replacement.
 
-For List partitions, this parameter is always true. The enumeration values of all replaced regular partitions must be exactly the same as the enumeration values of the replacing temporary partitions.
+**For List partitions**: This parameter is always `true`. The enumeration values of all replaced regular partitions must exactly match the enumeration values of the replacing temporary partitions.
 
-**Example 1**
+**Example 1: Range partitions with matching unions**
 
 ```sql
 -- The range of partitions p1, p2, p3 to be replaced (=> union):
@@ -86,10 +86,10 @@ For List partitions, this parameter is always true. The enumeration values of al
 -- The range of replacing partitions tp1, tp2 (=> union):
 [10, 30), [40, 45), [45, 50) => [10, 30), [40, 50)
 
--- The union of ranges is the same, so tp1 and tp2 can replace p1, p2, p3.
+-- Range unions match, so tp1 and tp2 can replace p1, p2, p3.
 ```
 
-**Example 2**
+**Example 2: Range partitions with non-matching unions**
 
 ```sql
 -- The range of partition p1 to be replaced (=> union):
@@ -101,7 +101,7 @@ For List partitions, this parameter is always true. The enumeration values of al
 -- The union of ranges is not the same. If strict_range is true, tp1 and tp2 cannot replace p1. If it is false, and the ranges of the two partitions after replacement [10, 30), [40, 50) do not overlap with other regular partitions, they can replace p1.
 ```
 
-**Example 3**
+**Example 3: List partitions with matching unions**
 
 ```sql
 -- The enumeration values of partitions p1, p2 to be replaced (=> union):
@@ -110,10 +110,10 @@ For List partitions, this parameter is always true. The enumeration values of al
 -- The enumeration values of replacing partitions tp1, tp2, tp3 (=> union):
 (1, 2, 3), (4), (5, 6) => (1, 2, 3, 4, 5, 6)
 
--- The union of enumeration values is the same, so tp1, tp2, tp3 can replace p1, p2.
+-- Enumeration unions match, so tp1, tp2, tp3 can replace p1, p2.
 ```
 
-**Example 4**
+**Example 4: Multi-column list partitions with matching unions**
 
 ```sql
 -- The enumeration values of partitions p1, p2, p3 to be replaced (=> union):
@@ -122,47 +122,47 @@ For List partitions, this parameter is always true. The enumeration values of al
 -- The enumeration values of replacing partitions tp1, tp2 (=> union):
 (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
 
--- The union of enumeration values is the same, so tp1, tp2 can replace p1, p2, p3.
+-- Enumeration unions match, so tp1, tp2 can replace p1, p2, p3.
 ```
 
-**2. `use_temp_partition_name`**
+### 2. `use_temp_partition_name`
 
-Default is false.
+**Default value**: `false`
 
-When this parameter is false, and the number of partitions to be replaced is the same as the number of replacing partitions, the names of the partitions remain unchanged after replacement.
+When `false` and the number of partitions to replace equals the number of replacing partitions, partition names remain unchanged after replacement.
 
-If it is true, the names of the partitions after replacement will be the names of the replacing partitions. Examples are as follows:
+When `true`, partition names after replacement become the names of the replacing partitions.
 
-**Example 1**
+**Example 1: Same partition count**
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1) WITH TEMPORARY PARTITION (tp1);
 ```
 
-- `use_temp_partition_name` defaults to false, so after replacement, the partition name remains p1, but the data and properties are replaced with those of tp1.
-- If `use_temp_partition_name` is true, after replacement, the partition name is tp1, and p1 no longer exists.
+- With `use_temp_partition_name` defaulting to `false`, the partition name remains `p1` after replacement, but data and properties are replaced with those of `tp1`.
+- With `use_temp_partition_name` set to `true`, the partition name becomes `tp1` after replacement, and `p1` no longer exists.
 
-**Example 2**
+**Example 2: Different partition counts**
 
 ```sql
 ALTER TABLE tbl1 REPLACE PARTITION (p1, p2) WITH TEMPORARY PARTITION (tp1);
 ```
 
-- `use_temp_partition_name` defaults to false, but since the number of partitions to be replaced is different from the number of replacing partitions, this parameter is invalid. After replacement, the partition name is tp1, and p1 and p2 no longer exist.
+- With `use_temp_partition_name` defaulting to `false`, but since partition counts differ, this parameter is ignored. After replacement, the partition name becomes `tp1`, and `p1` and `p2` no longer exist.
 
-:::tip
-**Explanation of the replace operation:**
-
-After the partition replacement is successful, the replaced partitions will be deleted and cannot be recovered.
+:::warning
+**Important**: After successful partition replacement, the replaced partitions are permanently deleted and cannot be recovered.
 :::
 
-## Import Temporary Partition
+## Importing Data into Temporary Partitions
 
-The syntax for specifying the import of temporary partitions varies slightly depending on the import method. Examples are as follows:
+The syntax for importing data into temporary partitions varies slightly depending on the import method:
 
 ```sql
 INSERT INTO tbl TEMPORARY PARTITION(tp1, tp2, ...) SELECT ....
+
 curl --location-trusted -u root: -H "label:123" -H "temporary_partitions: tp1, tp2, ..." -T testData http://host:port/api/testDb/testTbl/_stream_load    
+
 LOAD LABEL example_db.label1
 (
 DATA INFILE("hdfs://hdfs_host:hdfs_port/user/palo/data/input/file")
@@ -171,6 +171,7 @@ TEMPORARY PARTITION (tp1, tp2, ...)
 ...
 )
 WITH BROKER hdfs ("username"="hdfs_user", "password"="hdfs_password");
+
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
 TEMPORARY PARTITIONS(tp1, tp2, ...),
@@ -181,7 +182,7 @@ FROM KAFKA
 (...);
 ```
 
-## Query Temporary Partition
+## Querying Temporary Partitions
 
 ```sql
 SELECT ... FROM
@@ -192,27 +193,21 @@ ON ...
 WHERE ...;
 ```
 
-## Relationship with Other Operations
+## Interaction with Other Operations
 
-**DROP**
+### DROP Operations
 
-- After using the Drop operation to directly delete a database or table, the database or table can be recovered using the Recover command (within a limited time), but temporary partitions will not be recovered.
+- **Database/Table DROP**: After dropping a database or table, you can recover it using the Recover command (within time limits), but temporary partitions are not recovered.
+- **Regular Partition DROP**: After dropping a regular partition, you can recover it using the Recover command (within time limits). This operation doesn't affect temporary partitions.
+- **Temporary Partition DROP**: After dropping a temporary partition, it cannot be recovered using the Recover command.
 
-- After using the Alter command to delete a regular partition, the partition can be recovered using the Recover command (within a limited time). This operation is unrelated to temporary partitions.
+### TRUNCATE Operations
 
-- After using the Alter command to delete a temporary partition, the temporary partition cannot be recovered using the Recover command.
+- **Table TRUNCATE**: Truncating a table removes all temporary partitions, and they cannot be recovered.
+- **Regular Partition TRUNCATE**: Truncating a regular partition doesn't affect temporary partitions.
+- **Temporary Partition TRUNCATE**: The TRUNCATE command cannot be used on temporary partitions.
 
-**TRUNCATE**
+### ALTER Operations
 
-- Using the Truncate command to empty a table will delete the table's temporary partitions, and they cannot be recovered.
-
-- Using the Truncate command to empty a regular partition does not affect temporary partitions.
-
-- The Truncate command cannot be used to empty temporary partitions.
-
-**ALTER**
-
-- When a table has temporary partitions, the Alter command cannot be used to perform Schema Change, Rollup, or other change operations on the table.
-
-- When a table is undergoing change operations, temporary partitions cannot be added to the table.
-```
+- **Schema Changes**: When a table has temporary partitions, you cannot perform Schema Change, Rollup, or other modification operations.
+- **Adding Temporary Partitions**: You cannot add temporary partitions to a table that is undergoing modification operations.
