@@ -45,6 +45,11 @@ BE 启动后，可以通过以下命令动态设置配置项。
   curl -X POST http://{be_ip}:{be_http_port}/api/update_config?{key}={value}\&persist=true
   ```
 
+**注意：**
+
+在`be.conf`中配置项的值，支持使用`$`符号，动态从系统环境变量中获取。如`storage_root_path`可以设置为`${DORIS_HOME}/storage`或者`$DORIS_HOME/storage`。注意，系统变量的命名规范为：大小写字母`[a-zA-Z]`、下划线`_`和数字`[0-9]`，首字母无特殊要求。同时，支持`$`符号转义，使用两个`$$`符号即可完成转义。
+
+
 ## 应用举例
 
 1. 静态方式修改 `max_base_compaction_threads`
