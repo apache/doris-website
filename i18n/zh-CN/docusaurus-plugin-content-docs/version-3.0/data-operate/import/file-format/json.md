@@ -97,6 +97,7 @@ Doris 支持以下三种 JSON 格式：
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
 5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
 6. read_json_by_line默认为true指的是如果导入时不指定strip_outer_array和read_json_by_line任何一个, 那么read_json_by_line为true.
+7. read_json_by_line不支持配置指强制设置为true, 开启流式读取降低BE内存压力
 :::
 
 ### 参数说明

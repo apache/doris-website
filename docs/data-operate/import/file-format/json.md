@@ -84,7 +84,7 @@ The following table lists the JSON format parameters supported by various loadin
 | json paths | None | supported | supported | supported | supported |
 | json root | None | supported | supported | supported | supported |
 | strip outer array | false | supported | supported | supported | supported |
-| read json by line | true | supported | supported | supported | supported |
+| read json by line | true | supported | not supported | not supported | supported |
 | fuzzy parse | false | supported | supported | not supported | supported |
 | num as string | false | supported | supported | supported | supported |
 | compression format | plain | supported | supported | not supported | supported |
@@ -95,6 +95,8 @@ The following table lists the JSON format parameters supported by various loadin
 3. Routine Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 4. TVF: Parameters are specified in TVF statements, e.g., `S3("jsonpaths"="$.data")`
 5. If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`
+6. The default value of read_json_by_line is true, which means if neither strip_outer_array nor read_json_by_line is specified during import, read_json_by_line will be set to true.
+7. "read_json_by_line not configurable" means it is forcibly set to true to enable streaming reading and reduce BE memory usage.
 :::
 
 ### Parameter Description
