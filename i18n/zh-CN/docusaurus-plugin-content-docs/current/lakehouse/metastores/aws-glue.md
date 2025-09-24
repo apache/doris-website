@@ -32,7 +32,9 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
 ### 认证参数
 访问 Glue 需要认证信息，支持以下两种方式：
 1. **Access Key 认证** 
+
    通过 `glue.access_key` 和 `glue.secret_key` 提供的 Access Key 认证访问 Glue。
+
 2. **IAM Role 认证（自3.1.2+ 起支持）**  
    通过 `glue.role_arn` 提供的 IAM Role 认证访问 Glue。  
    该方式需要 Doris 部署在 AWS EC2 上，并且 EC2 实例需要绑定一个 IAM Role，且该 Role 需要有访问 Glue 的权限。
