@@ -1268,6 +1268,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/make-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n",
