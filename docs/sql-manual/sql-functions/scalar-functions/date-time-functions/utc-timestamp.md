@@ -5,28 +5,28 @@
 }
 ---
 
-## utc_timestamp
-### Description
-#### Syntax
+## Description
+The UTC_TIMESTAMP function returns the current date and time in UTC timezone. This function is not affected by local timezone and always returns the current time based on UTC timezone, ensuring time consistency across different timezone scenarios.
 
-`DATETIME UTC_TIMESTAMP()`
+This function behaves consistently with the [utc_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_utc-timestamp) in MySQL.
 
+## Syntax
 
-Returns the current UTC date and time in "YYYY-MM-DD HH: MM: SS" or
-
-A Value of "YYYYMMDDHMMSS" Format
-
-Depending on whether the function is used in a string or numeric context
-
-### example
-
+```sql
+UTC_TIMESTAMP()
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+
+## Return Value
+Returns the current UTC date and time, type DATETIME.
+
+## Examples
+
+```sql
+-- Current local time is UTC+8 2025-08-14 11:45:42
+SELECT UTC_TIMESTAMP() AS utc_str;
++---------------------+
+| utc_str             |
++---------------------+
+| 2025-08-14 03:45:42 |
++---------------------+
 ```
-### keywords
-    UTC_TIMESTAMP,UTC,TIMESTAMP

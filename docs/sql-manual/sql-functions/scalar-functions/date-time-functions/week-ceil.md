@@ -7,45 +7,96 @@
 
 ## Description
 
-Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided, it uses that time as the reference for calculating the interval.
+The WEEK_CEIL function rounds up an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
+
+Date calculation formula:
+$$
+\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
+where K represents the number of periods needed to reach the target time from the reference time.
 
 ## Syntax
 
 ```sql
-WEEK_CEIL(<datetime>)
-WEEK_CEIL(<datetime>, <origin>)
-WEEK_CEIL(<datetime>, <period>)
-WEEK_CEIL(<datetime>, <period>, <origin>)
+WEEK_CEIL(`<date_or_time_expr>`)
+WEEK_CEIL(`<date_or_time_expr>`, `<origin>`)
+WEEK_CEIL(`<date_or_time_expr>`, `<period>`)
+WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<datetime>`  | The datetime value to round up, of type DATETIME or DATETIMEV2 |
-| `<period>`    | The week interval value, of type INT, representing the number of weeks in each interval |
-| `<origin>`    | The starting point for the interval, of type DATETIME or DATETIMEV2; defaults to 0001-01-01 00:00:00 |
+| Parameter | Description |
+|-----------|-------------|
+| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<period>` | Week interval value, type INT, representing the number of weeks in each interval |
+| `<origin>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00 |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the rounded-up datetime value. The time portion of the result will be set to 00:00:00.
+Returns DATETIME type, representing the rounded-up datetime value.
 
-**Note:**
-- If no period is specified, it defaults to a 1-week interval.
-- The period must be a positive integer.
-- The result is always rounded up to a future time.
-- The time portion of the returned value is always set to 00:00:00.
+- If `<period>` is a non-positive integer (≤0), the function returns an error;
+- If any parameter is NULL, returns NULL;
+- If `<datetime>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point;
+- If input is date type, returns date type
+- If input is datetime type, returns datetime type with the same time portion as the origin time.
+- If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
 
-## Example
+## Examples
 
 ```sql
-SELECT WEEK_CEIL('2023-07-13 22:28:18', 2);
-```
+-- 2023-07-13 is Thursday, rounds up to next interval start (1-week interval starts on Monday, so rounds to 2023-07-17 (Monday))
+SELECT WEEK_CEIL(cast('2023-07-13 22:28:18' as datetime)) AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-07-17 00:00:00 |
++---------------------+
 
-```text
-+-----------------------------------------------------------+
-| week_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 2) |
-+-----------------------------------------------------------+
-| 2023-07-17 00:00:00                                       |
-+-----------------------------------------------------------+
+-- Specify 2-week interval
+SELECT WEEK_CEIL('2023-07-13 22:28:18', 2) AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-07-24 00:00:00 |
++---------------------+
+
+-- Input date type returns date type, date string returns datetime
+SELECT WEEK_CEIL(cast('2023-07-13' as date));
++---------------------------------------+
+| WEEK_CEIL(cast('2023-07-13' as date)) |
++---------------------------------------+
+| 2023-07-17                            |
++---------------------------------------+
+
+--input with decimal part 
+mysql> SELECT WEEK_CEIL('2023-07-13 22:28:18.123', 2) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2023-07-24 00:00:00.000 |
++-------------------------+
+
+-- Specify origin date
+SELECT WEEK_CEIL('2023-07-13', 1, '2023-07-03') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-07-17 00:00:00 |
++---------------------+
+
+-- Invalid period (non-positive integer)
+SELECT WEEK_CEIL('2023-07-13', 0) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_ceil of 2023-07-13 00:00:00, 0 out of range
+
+-- Parameter is NULL
+SELECT WEEK_CEIL(NULL, 1) AS result;
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 ```
