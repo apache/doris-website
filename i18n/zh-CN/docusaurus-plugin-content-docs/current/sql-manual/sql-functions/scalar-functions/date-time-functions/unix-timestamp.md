@@ -25,7 +25,7 @@ Format 的格式请参阅 date_format 函数的格式说明。
 
 UNIX_TIMESTAMP()
 UNIX_TIMESTAMP(<date_or_time_expr>)
-UNIX_TIMESTAMP(<date_or_time_expr>[, STRING fmt])
+UNIX_TIMESTAMP(<date_or_time_expr>[, fmt])
 
 ```
 
@@ -39,7 +39,7 @@ UNIX_TIMESTAMP(<date_or_time_expr>[, STRING fmt])
 ## 语法
 
 ```sql
-UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
+UNIX_TIMESTAMP([DATETIME date[, fmt]])
 
 ```
 
@@ -59,7 +59,7 @@ UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
 2.若是输入的 date_or_time_expr 或 scale 为 0 并且不带有 format 参数
 返回一个时间戳，类型为 INT
 
-将输入时间转换为当前输入时间所对应的时间戳，其实时间为 1970-01-01 00:00:00.
+将输入时间转换为当前输入时间所对应的时间戳，起始时间为 1970-01-01 00:00:00.
 
 - 任意参数为 null 则返回 null
 - 无效格式，返回错误
