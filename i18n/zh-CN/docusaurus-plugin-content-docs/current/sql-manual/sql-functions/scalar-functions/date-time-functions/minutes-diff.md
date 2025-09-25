@@ -30,7 +30,7 @@ MINUTES_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 - 若 `<date_or_time_expr1>` 早于 `<date_or_time_expr2>`，返回负数。
 - 计算时会计算真实差距，不会忽略秒，微秒。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00。
-- 若输入的日期时间包含 scale ,秒或秒部分不为零，计算时不会忽略。
+- 若输入的日期时间包含 scale ,秒或毫秒部分不为零，计算时不会忽略。
 - 若任一参数为 NULL，返回 NULL。
 
 ## 举例

@@ -32,6 +32,7 @@ Otherwise, final result = base difference.
 
 - If `<date_or_time_expr1>` is earlier than `<date_or_time_expr2>`, returns a negative value (calculation logic is the same, only the sign is opposite);
 - If any parameter is NULL, returns NULL;
+- Takes into account whether there is an actual full month difference (including days, hours, etc.)
 
 ## Examples
 
@@ -77,6 +78,21 @@ SELECT MONTHS_DIFF('2020-02-29', '2020-03-29') AS result;
 
 --- Same month (result is 0)
 SELECT MONTHS_DIFF('2023-07-15', '2023-07-30') AS result;
++--------+
+| result |
++--------+
+|      0 |
++--------+
+
+--Takes into account whether there is an actual full month difference (including days, hours, etc.)
+mysql> SELECT MONTHS_DIFF('2020-03-28', '2020-01-29') AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
+
+mysql> SELECT MONTHS_DIFF('2020-03-28 22:22:22', '2020-02-29 23:12:12') AS result;
 +--------+
 | result |
 +--------+

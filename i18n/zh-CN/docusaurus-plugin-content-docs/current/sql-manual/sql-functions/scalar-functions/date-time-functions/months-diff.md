@@ -32,6 +32,7 @@ MONTHS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 - 若 `<date_or_time_expr1>` 早于 `<date_or_time_expr2>`，返回负值（计算逻辑同上，仅符号相反）；
 - 若任一参数为 NULL，返回 NULL；
+- 会考虑实际是否相差 一个月(包括天，时 等部分)
 
 
 ## 举例
@@ -78,6 +79,21 @@ SELECT MONTHS_DIFF('2020-02-29', '2020-03-29') AS result;
 
 --- 同一月份（结果为0）
 SELECT MONTHS_DIFF('2023-07-15', '2023-07-30') AS result;
++--------+
+| result |
++--------+
+|      0 |
++--------+
+
+--会考虑月以下的单位
+mysql> SELECT MONTHS_DIFF('2020-03-28', '2020-01-29') AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
+
+mysql> SELECT MONTHS_DIFF('2020-03-28 22:22:22', '2020-02-29 23:12:12') AS result;
 +--------+
 | result |
 +--------+
