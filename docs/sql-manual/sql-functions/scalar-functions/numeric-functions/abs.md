@@ -24,6 +24,7 @@ ABS(<x>)
 ## Return Value  
 
 The absolute value of parameter `x`. 
+When `x` is NULL, returns NULL.
 
 ## Example
 
@@ -61,4 +62,16 @@ select abs(-3254654236547654354654767);
 +---------------------------------+
 | 3254654236547654354654767       |
 +---------------------------------+
+```
+
+```sql
+select abs(NULL);
+```
+
+```text
++-----------+
+| abs(NULL) |
++-----------+
+|      NULL |
++-----------+
 ```

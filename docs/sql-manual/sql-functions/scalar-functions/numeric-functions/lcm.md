@@ -26,7 +26,7 @@ under the License.
 
 ## Description
 
-Calculates the least common multiple (LCM) of two integers.Note that the result may overflow.
+Calculates the least common multiple (LCM) of two integers. Note that the result may overflow.
 
 ## Syntax
 
@@ -45,6 +45,7 @@ LCM(<a>, <b>)
 ## Return Value
 
 Returns the least common multiple of `<a>` and `<b>`.
+If any input is NULL, returns NULL.
 
 ## Examples
 
@@ -90,4 +91,16 @@ select lcm(-170141183460469231731687303715884105728, 3);
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not convert to legacy literal: 510423550381407695195061911147652317184
+```
+
+```sql
+select lcm(-4, NULL);
+```
+
+```text
++---------------+
+| lcm(-4, NULL) |
++---------------+
+|          NULL |
++---------------+
 ```
