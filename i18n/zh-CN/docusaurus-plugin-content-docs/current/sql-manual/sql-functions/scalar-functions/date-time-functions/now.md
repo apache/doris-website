@@ -10,6 +10,10 @@
 
 该函数与 mysql 的 [now 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_now) 行为一致。
 
+# 别名
+
+- current_timestamp()
+
 ## 语法
 
 ```sql

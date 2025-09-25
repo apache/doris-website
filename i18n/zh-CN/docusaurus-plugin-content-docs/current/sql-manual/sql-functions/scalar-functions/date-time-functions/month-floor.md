@@ -43,6 +43,7 @@ MINUTE_FLOOR(`<date_or_time_expr>, `<period>`, `<origin>`)
 - `<origin>` 未指定，默认以 0001-01-01 00:00:00 为基准。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00。
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
+- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零.
 
 ## 举例
 

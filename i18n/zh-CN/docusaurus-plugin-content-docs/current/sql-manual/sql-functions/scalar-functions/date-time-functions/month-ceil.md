@@ -43,6 +43,7 @@ MONTH_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 - 输入为 DATE 类型（默认时间设置为 00:00:00）。
 - 计算结果超过日期最大范围 9999-12-31 23:59:59，结果返回错误
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
+- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零.
 
 ## 举例
 

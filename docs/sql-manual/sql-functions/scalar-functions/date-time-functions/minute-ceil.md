@@ -43,6 +43,7 @@ Returns a value of type DATETIME, representing the time value after rounding up 
 - If the input is of DATE type (only includes year, month, and day), its time part defaults to 00:00:00.
 - If the calculation result exceeds the maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If `date_or_time_expr` has a scale, the returned result will also have a scale with the fractional part being zero.
 
 ## Examples
 
