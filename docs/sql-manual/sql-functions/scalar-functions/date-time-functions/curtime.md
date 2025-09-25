@@ -9,9 +9,10 @@
 
 Retrieves the current time and returns it as a TIME type.
 
-## Alias
+This function is consistent with the [curtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_curtime) in MySQL.
 
-- CURTIME
+## Aliases
+
 - CURRENT_TIME
 
 ## Syntax
@@ -22,17 +23,15 @@ CURTIME()
 
 ## Return Value
 
-Returns the current time.
+Returns the current time type of TIME.
 
 ## Examples
 
 ```sql
-mysql> select current_time();
-```
+mysql> select curtime();
 
-```text
 +----------------+
-| current_time() |
+| curtime()      |
 +----------------+
 | 15:25:47       |
 +----------------+

@@ -7,11 +7,10 @@
 
 ## 描述
 
-获得当前的时间，以 TIME 类型返回
+获取当前时间并返回为 TIME 类型。
 
 ## 别名
 
-- CURTIME
 - CURRENT_TIME
 
 ## 语法
@@ -22,17 +21,15 @@ CURTIME()
 
 ## 返回值
 
-返回当前的时间
+返回当前时间，类型为 TIME。
 
-## 举例
+## 示例
 
 ```sql
-mysql> select current_time();
-```
+mysql> select curtime();
 
-```text
 +----------------+
-| current_time() |
+| curtime()      |
 +----------------+
 | 15:25:47       |
 +----------------+
