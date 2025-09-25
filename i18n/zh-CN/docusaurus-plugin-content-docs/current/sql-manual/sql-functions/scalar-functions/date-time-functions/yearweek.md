@@ -9,7 +9,6 @@
 
 YEARWEEK 函数用于返回指定日期对应的 “年份 + 周数” 组合（格式为 YYYYWW，如 202301 表示 2023 年第 1 周）。该函数通过可选参数 mode 灵活定义一周的起始日和 “第一周” 的判断标准，默认使用 mode=0。
 
-返回所在年的周数
 周数范围为 1-53，具体取决于 mode 的配置。
 
 参数 mode 的作用参见下面的表格：
@@ -30,7 +29,7 @@ YEARWEEK 函数用于返回指定日期对应的 “年份 + 周数” 组合（
 ## 语法
 
 ```sql
-YEARWEEK(DATE <date_or_time_expr>[, INT mode])
+YEARWEEK(<date_or_time_expr>[, mode])
 ```
 
 ## 返回值

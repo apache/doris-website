@@ -16,10 +16,10 @@ K 代表的是基准时间到目标时间的周期数
 
 ## 语法
 ```sql
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, DATETIME origin)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
+YEAR_FLOOR(<date_or_time_expr>)
+YEAR_FLOOR(<date_or_time_expr>, origin)
+YEAR_FLOOR(<date_or_time_expr>, <period>)
+YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## 参数
@@ -39,6 +39,7 @@ DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
 - 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点。
 - 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误。
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
+- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零
 
 ## 举例
 ```sql
@@ -57,6 +58,14 @@ SELECT YEAR_FLOOR('2023-07-13 22:28:18', 5) AS result;
 +---------------------+
 | 2020-01-01 00:00:00 |  
 +---------------------+
+
+--带有 scale 的情况
+mysql> SELECT YEAR_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2021-01-01 00:00:00.000 |
++-------------------------+
 
 -- 输入为DATE类型，返回DATE类型的间隔起点
 SELECT YEAR_FLOOR(cast('2023-07-13' as date)) AS result;

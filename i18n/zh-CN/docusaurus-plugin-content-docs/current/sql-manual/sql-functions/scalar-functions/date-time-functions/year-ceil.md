@@ -17,10 +17,10 @@ K 代表基准时间到达目标时间所需的周期数
 
 ## 语法
 ```sql
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, DATETIME origin)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period)
-DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
+YEAR_CEIL(<date_or_time_expr>)
+YEAR_CEIL(<date_or_time_expr>, origin)
+YEAR_CEIL(<date_or_time_expr>, <period>)
+YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## 参数
@@ -43,6 +43,8 @@ DATETIME YEAR_CEIL(DATETIME <date_or_time_expr>, INT period, DATETIME origin)
 - 若计算结果超过最大日期时间 9999-12-31 23:59:59，返回错误
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。。
 举例
+- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零
+
 ## 举例
 
 ```sql
@@ -61,6 +63,14 @@ SELECT YEAR_CEIL('2023-07-13 22:28:18', 5) AS result;
 +---------------------+
 | 2025-01-01 00:00:00 |  
 +---------------------+
+
+---带有 scale 的部分 
+mysql> SELECT YEAR_CEIL('2023-07-13 22:28:18.123', 5) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2026-01-01 00:00:00.000 |
++-------------------------+
 
 -- 输入为DATE类型，返回DATE类型的间隔起点
 SELECT YEAR_CEIL(cast('2023-07-13' as date)) AS result;

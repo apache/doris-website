@@ -16,10 +16,10 @@ where K represents the number of periods from the reference time to the target t
 
 ## Syntax
 ```sql
-DATETIME YEAR_FLOOR(DATETIME `<date_or_time_expr>`)
-DATETIME YEAR_FLOOR(DATETIME `<date_or_time_expr>`, DATETIME origin)
-DATETIME YEAR_FLOOR(DATETIME `<date_or_time_expr>`, INT period)
-DATETIME YEAR_FLOOR(DATETIME `<date_or_time_expr>`, INT period, DATETIME origin)
+YEAR_FLOOR(<date_or_time_expr>)
+YEAR_FLOOR(<date_or_time_expr>, origin)
+YEAR_FLOOR(<date_or_time_expr>, <period>)
+YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -38,6 +38,7 @@ Returns a result consistent with the input type (DATETIME or DATE), representing
 - If `<date_or_time_expr>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
 
 ## Examples
 ```sql
@@ -56,6 +57,14 @@ SELECT YEAR_FLOOR('2023-07-13 22:28:18', 5) AS result;
 +---------------------+
 | 2020-01-01 00:00:00 |  
 +---------------------+
+
+---input with scale
+mysql> SELECT YEAR_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2021-01-01 00:00:00.000 |
++-------------------------+
 
 -- Input is DATE type, returns DATE type interval start
 SELECT YEAR_FLOOR(cast('2023-07-13' as date)) AS result;

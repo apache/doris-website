@@ -17,12 +17,11 @@ where K represents the number of periods needed to reach the target time from th
 
 ## Syntax
 ```sql
-DATETIME YEAR_CEIL(DATETIME `<date_or_time_expr>`)
-DATETIME YEAR_CEIL(DATETIME `<date_or_time_expr>`, DATETIME origin)
-DATETIME YEAR_CEIL(DATETIME `<date_or_time_expr>`, INT period)
-DATETIME YEAR_CEIL(DATETIME `<date_or_time_expr>`, INT period, DATETIME origin)
+YEAR_CEIL(<date_or_time_expr>)
+YEAR_CEIL(<date_or_time_expr>, origin)
+YEAR_CEIL(<date_or_time_expr>, <period>)
+YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
 ```
-
 ## Parameters
 
 | Parameter | Description |
@@ -41,6 +40,7 @@ Returns a result consistent with the input type (DATETIME or DATE), representing
 - If `<date_or_time_expr>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
 
 ## Examples
 
@@ -76,6 +76,14 @@ SELECT YEAR_CEIL('2023-07-13', 1, '2020-01-01') AS result;
 +---------------------+
 | 2024-01-01 00:00:00 |
 +---------------------+
+
+---input with scale
+mysql> SELECT YEAR_CEIL('2023-07-13 22:28:18.123', 5) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2026-01-01 00:00:00.000 |
++-------------------------+
 
 -- Specify origin with time part, returned result's time part matches origin
 SELECT YEAR_CEIL('2023-07-13', 1, '2020-01-01 08:30:00') AS result;

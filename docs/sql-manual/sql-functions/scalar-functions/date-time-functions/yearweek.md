@@ -9,7 +9,6 @@
 
 The YEARWEEK function is used to return the "year + week number" combination for a specified date (format YYYYWW, e.g., 202301 represents week 1 of 2023). This function flexibly defines the start day of the week and the criteria for determining the "first week" through the optional parameter mode, defaulting to mode=0.
 
-Return the week of year
 Week numbers range from 1-53, depending on the mode configuration.
 
 The effect of parameter mode is shown in the table below:
@@ -30,7 +29,7 @@ This function behaves consistently with the [yearweek function](https://dev.mysq
 ## Syntax
 
 ```sql
-YEARWEEK(DATE `<date_or_time_expr>`[, INT mode])
+YEARWEEK(`<date_or_time_expr>`[, mode])
 ```
 
 ## Return Value
