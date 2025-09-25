@@ -43,6 +43,7 @@ Returns DATETIME type, representing the rounded-up datetime value.
 - If input is datetime type, returns datetime type with the same time portion as the origin time.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
 
 ## Examples
 
@@ -70,6 +71,14 @@ SELECT WEEK_CEIL(cast('2023-07-13' as date));
 +---------------------------------------+
 | 2023-07-17                            |
 +---------------------------------------+
+
+--input with decimal part 
+mysql> SELECT WEEK_CEIL('2023-07-13 22:28:18.123', 2) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2023-07-24 00:00:00.000 |
++-------------------------+
 
 -- Specify origin date
 SELECT WEEK_CEIL('2023-07-13', 1, '2023-07-03') AS result;

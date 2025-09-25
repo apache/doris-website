@@ -56,16 +56,6 @@ SELECT TO_ISO8601(CAST('2020-01-01 12:30:45.956' AS DATETIME)) AS datetime_resul
 | 2020-01-01T12:30:46.000000 |
 +----------------------------+
 
-
---. 无效日期（返回 NULL）
-SELECT TO_ISO8601('2023-02-30') AS invalid_date;
-+--------------+
-| invalid_date |
-+--------------+
-| NULL         |
-+--------------+
-
-
 -- 输入为 NULL（返回 NULL）
 SELECT TO_ISO8601(NULL) AS null_input;
 +------------+

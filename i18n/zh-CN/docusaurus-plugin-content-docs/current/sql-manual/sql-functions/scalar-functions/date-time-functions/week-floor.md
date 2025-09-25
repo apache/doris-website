@@ -44,6 +44,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 - 若输入为 date 类型，则返回 date 类型
 - 若输入为  datetime 类型，则返回 datetime 类型，返回值的时间部分与起始时间一样。
 - 对于 `<origin>` 日期时间超过 `<date_or_time_expr>`,也可以使用上述公式计算，不过 k 为负值。
+- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零
 
 ## 举例
 
@@ -71,6 +72,14 @@ SELECT WEEK_FLOOR('2023-07-10 22:28:18', 2) AS result;
 +---------------------+
 | 2023-07-10 00:00:00 |
 +---------------------+
+
+--带有小数部分
+mysql> SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2023-07-10 00:00:00.000 |
++-------------------------+
 
 -- 输入date类型，返回date类型
 SELECT WEEK_FLOOR(cast('2023-07-13' as date)) AS result;

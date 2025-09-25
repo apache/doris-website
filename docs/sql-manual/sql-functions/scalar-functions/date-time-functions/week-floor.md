@@ -42,6 +42,7 @@ Returns DATETIME type, representing the rounded-down datetime value. The time po
 - If input is date type, returns date type
 - If input is datetime type, returns datetime type with the same time portion as the origin time.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
 
 ## Examples
 
@@ -61,6 +62,14 @@ SELECT WEEK_FLOOR('2023-07-13 22:28:18', 2) AS result;
 +---------------------+
 | 2023-07-10 00:00:00 |
 +---------------------+
+
+--inpput with decimal part
+mysql> SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2023-07-10 00:00:00.000 |
++-------------------------+
 
 -- Input date type, returns date type
 SELECT WEEK_FLOOR(cast('2023-07-13' as date)) AS result;

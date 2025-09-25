@@ -37,10 +37,10 @@ UNIX_TIMESTAMP(`<date_or_date_expr>`, `<fmt>`)
 ## Return Value
 Returns two types based on input:
 
-1. If the input date is datetime type with non-zero scale or has format parameter:
+1. If the input date_or_date_expr is datetime type with non-zero scale or has format parameter:
    Returns a timestamp of type Decimal, with up to six decimal places precision
 
-2. If the input date has scale 0 and no format parameter:
+2. If the input date_or_date_expr has scale 0 and no format parameter:
    Returns a timestamp of type INT
 
 Converts the input time to the corresponding timestamp, with the epoch time being 1970-01-01 00:00:00.
