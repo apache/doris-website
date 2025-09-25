@@ -583,6 +583,10 @@
     "message": "HLL 函数",
     "description": "The label for category HLL Functions in sidebar docs"
   },
+  "sidebar.docs.category.Binary Functions": {
+    "message": "Binary 函数",
+    "description": "The label for category Binary Functions in sidebar docs"
+  },
   "sidebar.docs.category.System Functions": {
     "message": "系统函数",
     "description": "The label for category System Functions in sidebar docs"
