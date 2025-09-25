@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在生成式 AI 的应用中，单纯依赖大模型自身的参数记忆往往存在局限：一方面，模型的知识存在时效性，无法覆盖所有最新的信息；另一方面，直接依赖模型“生成”容易导致幻觉。因此，RAG（检索增强生层）应运而生。RAG 的关键任务，并不是让模型凭空生成答案，而是要从外部知识库中检索出与用户查询最相关的 Top-K 个信息片段，作为模型生成的依据。为了实现这一点，需要一种机制来衡量“用户查询”与“知识库文档”之间的语义相关性。向量表示正是常用的工具：通过将查询和文档统一编码为语义向量，就可以利用向量相似度来衡量两者的相关程度。随着预训练语言模型的发展，生成高质量的语义向量已成为主流做法。这样，RAG 的检索部分就转化为一个典型的向量相似度搜索问题，即从大规模向量集合中找出与查询最相似的 K 个向量（也就是候选知识片段）。值得注意的是，RAG 的向量检索不仅应用于文本，还可以扩展到多模态生成场景。例如，在多模态 RAG 系统中，图片、语音、视频等数据也可以被编码成向量，以便检索并提供给生成模型作为上下文。比如用户上传一张图片，系统可以先检索出相关描述或知识片段，再结合生成模型生成解释性内容或答案；在医学问答中，RAG 则可以通过检索病例资料和医学文献，辅助生成更准确的诊断建议。
+在生成式 AI 的应用中，单纯依赖大模型自身的参数“记忆”存在明显局限：一方面，模型知识具有时效性，无法覆盖最新信息；另一方面，完全依赖模型直接“生成”容易产生幻觉（Hallucination）。因此，RAG（检索增强生成）应运而生。其核心目标不是让模型凭空构造答案，而是从外部知识库中检索出与用户查询最相关的 Top-K 信息片段，作为生成依据。为实现这一点，需要一种机制衡量“用户查询”与“知识库文档”之间的语义相关性。向量表示正是常用手段：将查询与文档统一编码为语义向量后，可通过向量相似度衡量相关程度。随着预训练模型的发展，生成高质量语义向量已成主流，RAG 的检索阶段也演化为一个标准的向量相似度搜索问题——从大规模向量集合中找出与查询最相似的 K 个向量（候选知识片段）。需要注意，RAG 的向量检索不限于文本，也可扩展到多模态：图片、语音、视频等数据同样可以编码为向量供生成模型使用。例如，用户上传图片后，系统先检索相关描述或知识片段，再辅助生成解释性内容；在医学问答中，可检索病例资料与医学文献，生成更准确的诊断建议。
 ## 暴力搜索
-Apache Doris 从最早 2.0 版本开始支持基于向量距离的最近邻搜索，通过 SQL 实现向量搜索是一个非常自然且简单的过程。
+Apache Doris 自 2.0 版本起支持基于向量距离的最近邻搜索，通过 SQL 实现向量搜索是一个自然且简单的过程。
 ```
 SELECT id,
        l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
@@ -35,12 +35,12 @@ ORDER  BY distance
 LIMIT  10; 
 ```
 
-当数据量不大（小于1百万行）时，Apache Doris 的向量精确近邻搜索性能完全可以满足要求，并且可以返回召回率100%准确率100%的严格最近邻（K-Nearest Neighbor）。不过当数据量进一步增加后，大多数用户开始希望通过损失一部分召回率和精度的代价，实现查询性能的大幅度提高，此时这个问题就变成了向量近似最近邻搜索（Approximate Nearest Neighbor）。
+当数据量不大（小于 100 万行）时，Apache Doris 的精确最近邻（K-Nearest Neighbor）搜索性能足以满足需求，可获得 100% 召回与 100% 精确。但随着数据进一步增长，用户通常愿意牺牲少量召回与精度以换取显著的查询加速，此时问题就转化为向量近似最近邻搜索（Approximate Nearest Neighbor，ANN）。
 
 ## 近似最近邻搜索
 
-Apache Doris 从 4.0 版本开始正式支持 ANN search。没有引入额外的数据类型，向量在 Doris 中可以被存储为定长的数组类型，而对于基于向量距离的索引，我们基于 faiss 实现了新的索引类型：ANN。
-以常见的 [sift](http://corpus-texmex.irisa.fr/) 数据集为例，可以建表如下
+Apache Doris 自 4.0 版本开始正式支持 ANN 搜索。系统未引入额外数据类型，向量仍以定长数组存储；针对向量距离检索，我们基于 Faiss 实现了新的 ANN 索引类型。
+以下以常见的 [SIFT](http://corpus-texmex.irisa.fr/) 数据集为例，建表示例如下：
 ```
 CREATE TABLE sift_1M (
   id int NOT NULL,
@@ -58,10 +58,10 @@ PROPERTIES (
   "replication_num" = "1"
 );
 ```
-- index_type: hnsw 表示使用基于 [hierarchical navigable small world 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)的索引
-- metric: l2_distance 表示使用 l2_distance 作为距离函数
-- dim: 128 表示向量的维度为 128 
-- quantizer: flat 表示向量的每个维度使用原始的 float32 存储
+- index_type: hnsw 表示使用 [Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
+- metric: l2_distance 表示使用 L2 距离作为距离函数
+- dim: 128 表示向量维度为 128 
+- quantizer: flat 表示按原始 float32 存储各维度
 
 
 | 参数 | 是否必填 | 支持/可选值 | 默认值 | 说明 |
@@ -73,7 +73,7 @@ PROPERTIES (
 | `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好但构建更慢。 |
 | `quantizer` | 否 | `flat`，`sq8`，`sq4` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为对称量化（8/4 bit）以降低内存占用。 |
 
-通过 S3 TVF 导入数据
+通过 S3 TVF 导入数据：
 ```sql
 INSERT INTO sift_1M
 SELECT *
@@ -89,7 +89,7 @@ select count(*) from sift_1M
 |  1000000 |
 +----------+
 ```
-sift 数据集一起发布了一组 groud truth，用于进行结果的验证，选取其中的一组数据，先用精准距离函数进行 topN 的召回：
+SIFT 数据集同时发布了一组 ground truth，用于校验结果。下面选取一组向量，先使用精确距离函数进行 TopN 召回：
 ```
 SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
 --------------
@@ -110,7 +110,7 @@ SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44
 +--------+----------+
 10 rows in set (0.29 sec)
 ```
-当使用 l2_distance 或者 inner_product 时，doris 需要计算查询向量与 1000000 个待查询向量之间的 l2 distance，然后通过 TopN 算子得到全局的 TopN。使用 l2_distance_approximate/inner_product_approximate 可以触发查询向量索引的执行路径：
+当使用 `l2_distance` 或 `inner_product` 时，Doris 需要计算查询向量与 1,000,000 个候选向量之间的距离，再通过 TopN 算子得到全局结果。使用 `l2_distance_approximate` / `inner_product_approximate` 可触发索引执行路径：
 ```
 SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
 --------------
@@ -131,14 +131,14 @@ SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,
 +--------+----------+
 10 rows in set (0.02 sec)
 ```
-可以看到使用 ANN 索引后，查询耗时从290ms减少到了20ms。
-Doris 中，ann 索引是建立在 segment 粒度上的，同时 doris 的表天然的也是分布式表，所以在每个 segment 返回各自的 topn 之后，TopN 算子会把多个 tablet 的 segment 返回的数据 merge 到一起，最终得到一个全局的 topN。
+可以看到使用 ANN 索引后，查询耗时从约 290 ms 降至约 20 ms。
+Doris 中，ANN 索引建立在 segment 粒度；由于表是分布式的，各 segment 返回局部 TopN 后，TopN 算子会将多个 tablet 的结果归并生成全局 TopN。
 
-需要注意的是，当 l2_distance 作为索引的 metric 时，distance 越小，表示距离越近，而 inner_product 则正好相反，inner_product 越大，则表示两个向量更加接近。因此，如果使用 inner_product 作为 metric，那么需要使用 ORDER BY dist DESC 才能通过索引获得 topn。
+需要注意：当 `l2_distance` 作为索引 metric 时，distance 越小表示越接近；`inner_product` 则相反，值越大越接近。因此若使用 `inner_product`，必须 `ORDER BY dist DESC` 才能通过索引获得 TopN。
 ## 近似范围搜索
 
 除了常见的 TopN 最近邻搜索（即返回与目标向量最近的前 N 条记录）之外，向量检索中还有一类常见的查询方式是 基于距离阈值的范围搜索。
- 这种查询方式并不是要求返回固定数量的结果，而是希望找出所有与目标向量之间的距离 满足某种条件 的数据点。例如，用户可能想要找到所有距离大于某个阈值的向量，或者所有距离小于某个阈值的向量。这种范围搜索在实际应用中非常有用，特别是在需要获取与查询向量 “足够相似”或“足够不相似” 的候选集合时。例如，推荐系统中可能希望获取一批“接近但不完全相同”的商品或内容，以增加多样性；异常检测中可能会希望找出那些与正常模式距离较远的数据点。
+这类查询不返回固定数量，而是找出所有与目标向量距离满足条件的数据点。例如：查找距离大于或小于某阈值的向量。范围搜索在需要“足够相似”或“足够不相似”候选集的场景中很有用：推荐系统中可获取“接近但不完全相同”内容以增加多样性；异常检测中可定位远离正常模式的数据点。
 一个典型的 SQL 为：
 ```
 SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300
@@ -153,7 +153,7 @@ SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77
 ```
 在 Doris 中，这类基于范围的向量搜索同样通过 ANN 索引 来加速执行。通过 ANN 索引，系统能够快速筛选出候选向量集合，然后再计算精确的近似距离，从而显著降低计算开销、提升查询效率。目前支持的范围查询条件包括 `>, >=, <, <=`。
 ## 组合搜索
-Compound Search 是指将 AnnSearch 与 RangeSearch 写在同一个 SQL 中，意在返回满足某个范围要求的 topN。
+Compound Search 指在同一条 SQL 中同时进行 ANN TopN 与 Range 条件过滤，返回满足范围约束的 TopN。
 ```
 SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300 ORDER BY dist limit 10
 --------------
@@ -174,11 +174,11 @@ SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,
 +--------+----------+
 10 rows in set (0.12 sec)
 ```
-对于 Compound Search，一个关键点是谓词的过滤与 TopN 的过滤谁的执行步骤在前谁在后。如果谓词先过滤，然后在剩余的结果中再进行TopN 的过滤，这种模式被称为前过滤，反之则称之为后过滤。通常来说，后过滤的执行速度是要远比前过滤更快的，然而后过滤的问题是结果的召回率会很低，因此 doris 选择实现前过滤。
-在 Doris 中，Compound Search 的两个阶段均可通过索引进行加速，不过在某些场景下（比如第一阶段的 Range Search 过滤率很高的时候），两阶段均走索引可能会导致召回率出现大幅下降的情况，因此 Doris 会自适应判断是否需要走索引来完成两阶段的计算，自适应算法会考虑谓词的过滤率与索引类型综合做出决定。
+对于 Compound Search，一个关键点是谓词过滤与 TopN 的执行顺序：若先做谓词过滤再在剩余集合上取 TopN，称为“前过滤”；反之为“后过滤”。后过滤通常更快，但可能显著降低召回，因此 Doris 采用前过滤策略。
+在 Doris 中，Compound Search 的两个阶段均可通过索引加速。但在某些场景（如第一阶段 Range 过滤率极高）双阶段同时使用索引可能导致召回下降。Doris 会自适应判断是否对两阶段均使用索引，依据谓词过滤率与索引类型综合决策。
 ## 带过滤条件的 ANN 搜索
-带过滤条件的 ANN 搜索是指在 ANN TopN Search 之前执行一些其他的谓词过滤，返回满足用户要求的条件下的 topn。
-用一个 8 维的小向量来说明如何进行混合搜索。
+带过滤条件的 ANN 搜索是指在执行 ANN TopN 之前先应用其他谓词过滤，返回满足条件的 TopN。
+下面用一个 8 维示例说明混合搜索流程。
 ```
 create table ann_with_fulltext (
             id int not null,
@@ -197,7 +197,7 @@ INSERT INTO ann_with_fulltext VALUES
 (3, [0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2], 'latest music trend',  30),
 (4, [0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3], 'politics update',40)
 ```
-用户输入一个 query embedding `[0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]`，只想在 comment 包含 “music” 的文档中，找出与 query 最相似的前 2 条。
+假设用户输入查询向量 `[0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]`，只在 comment 含 “music” 的文档中检索最相似的前 2 条：
 ```
 SELECT id, comment,
        l2_distance_approximate(embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) AS dist
@@ -214,10 +214,10 @@ LIMIT 2;
 +------+---------------------+----------+
 2 rows in set (0.04 sec)
 ```
-带过滤条件的 ANN 搜索中为了能够让 topn 通过向量索引进行加速，需要确保谓词列都有倒排索引。
+带过滤条件的 ANN 搜索要想利用向量索引加速 TopN，需要确保涉及的过滤列具备倒排等二级索引。
 ## 查询参数
 
-除了在构建 hnsw 索引时可以指定参数外，在查询 hnsw 索引时也可以通过 session variables 指定参数。
+除了在构建 HNSW 索引时可指定参数外，查询阶段也可通过会话变量调节行为。
 
 - hnsw_ef_search：HNSW索引的EF搜索参数。ef_search 用来控制搜索阶段时 candidates 队列的最大长度，ef_search 越大则搜索的精度越高，代价是搜索的耗时越高。默认值为 32。
 
@@ -225,8 +225,8 @@ LIMIT 2;
 
 - hnsw_bounded_queue： 是否使用有界优先队列来优化HNSW的搜索性能。默认为 true。
 ## 向量量化
-在采用 FLAT 编码时，HNSW 索引本身（包含原始向量和图索引结构）可能会占据大量内存。HNSW 索引需要全量加载到内存后才能工作，因此HNSW索引对于内存的使用量在超大规模数据集时可能会是瓶颈。
-向量量化技术就是通过对 FLOAT32 进行压缩编码减少内存的开销，Doris 目前支持两种类型的 Scalar Quantization（标量量化）：INT8 和 INT4，对应索引定义里的 SQ8 和 SQ4。以 SQ8 为例子，建表如下
+采用 FLAT 编码时，HNSW 索引（原始向量 + 图结构）可能占用大量内存。HNSW 必须全量驻留内存才能工作，因此在超大规模数据集上易成瓶颈。
+向量量化通过压缩 FLOAT32 减少内存开销。Doris 当前支持两种标量量化：INT8 与 INT4（SQ8 / SQ4）。以 SQ8 为例：
 
 ```
 CREATE TABLE sift_1M (
@@ -245,7 +245,7 @@ PROPERTIES (
   "replication_num" = "1"
 );
 ```
-在 768 维的 Cohere-MEDIUM-1M 与 Cohere-LARGE-10M（768D）上进行测试，可以看到相比 FLAT 编码，SQ8 可以将索引大小减少到原来的 1/3。
+在 768 维的 Cohere-MEDIUM-1M 与 Cohere-LARGE-10M 数据集测试中，SQ8 可将索引大小压缩至 FLAT 的约 1/3。
 数据集
 
 | 数据集 | 向量维度 | 存储/索引方案 | 总磁盘占用 | 数据部分 | 索引部分 | 备注 |
@@ -255,13 +255,13 @@ PROPERTIES (
 | Cohere-LARGE-10M | 768D | Doris (FLAT)    | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M 向量 |
 | Cohere-LARGE-10M | 768D | Doris SQ INT8   | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 量化，索引显著减小 |
 
-量化会对索引构建产生额外的开销，主要原因是索引构建过程中需要大量的距离函数的计算，INT8 量化后每次距离计算都需要引入额外的解码开销。以 128 维的向量为例子，索引的构建时间会随着行数的增加而增加，而SQ相比FLAT会引入大约10倍的索引构建开销。
+量化会带来额外构建开销，原因是构建阶段需要大量距离计算，且每次计算需对量化值解码。以 128 维向量为例，随行数增长构建时间上升，SQ 相比 FLAT 可能引入约 10 倍构建成本。
 
 ![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
 
 
 ## 性能调优
-向量搜索是一个典型的基于二级索引的点查场景，当用户对QPS以及平均延迟要求较高时，我们有如下的使用建议，通过调优，在 FE 32C 64GB + BE 32C 64GB 的机器上，doris 可以达到 3000+ 的 QPS。测试数据集为 Cohere-MEDIUM-1M。
+向量搜索是典型的二级索引点查场景。若对 QPS 与延迟要求较高，可参考以下建议。经调优，在 FE 32C 64GB + BE 32C 64GB 机器上，Doris 可达到 3000+ QPS（数据集：Cohere-MEDIUM-1M）。
 ### 查询性能
 | 并发 | 方案 | QPS | 平均延迟 (s) | P99 延迟 (s) | CPU 使用率 | 召回率 |
 |------|------|------|---------------|--------------|------------|--------|
@@ -275,7 +275,7 @@ PROPERTIES (
 | 480 | Doris 暴力计算 | 3.6787 | 25.554878826 | 29.363227973 | 100% | 100.00% |
 
 ### 使用 prepared statement
-现在常用的 embedding 模型输出的向量通常具有 768 或更高的维度，如果这 768 维度的向量作为字面量通过 SQL 直接传给 doris 的 parser，那么可能会出现 parse sql 的时间大于查询真正的执行时间的情况。因此建议使用 prepared statement 执行查询。目前 doris 不支持通过 mysql client 直接执行 prepare stmt 相关的命令，需要通过 jdbc 来访问
+常见 embedding 模型输出通常为 768 维或更高。如果将该向量作为字面量直接写入 SQL，解析耗时可能超过实际执行时间，因此建议使用 Prepared Statement。当前 Doris 不支持通过 mysql client 直接执行相关命令，需要通过 JDBC 调用。
 ```
 1. 在 jdbc url 里面开启服务端 prepared statement
 url = jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true
@@ -294,15 +294,15 @@ readStatement.setString("[0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0
 ResultSet resultSet = readStatement.executeQuery();
 ```
 ### 减少 segment 数量
-doris 的 ann 索引是建立在 segment 上的，segment 数量过多会导致各种额外的开销过多，理想情况下带有 ann 索引的表的每个 tablet 下 segment 的数量不应该超过 5 个。可以修改 be.conf 中的 write_buffer_size 和vertical_compaction_max_segment_size 来增大每个 segment 的大小，减少 segment 的数量，建议将上述两个参数设置为 1073741824(10GB)。
+Doris 的 ANN 索引建立在 segment 上，segment 过多会引入额外开销。理想情况下，带 ANN 索引的表每个 tablet 下 segment 数不应超过 5 个。可通过调整 be.conf 中 `write_buffer_size` 与 `vertical_compaction_max_segment_size` 增大单 segment 大小以减少数量；建议两者设置为 10737418240（10GB）。
 ### 减少 rowset 数量
-减少 rowset 数量的目的与减少 segment 数量的目的一样，都是为了减少查询时额外的调度开销，每次导入操作都会生成一个rowset，因此建议用户使用 streamload 或者 INSERT INTO SELECT 来导入数据。
+减少 rowset 数量与减少 segment 的目的相同：降低调度开销。每次导入都会生成一个 rowset，建议使用 stream load 或 `INSERT INTO SELECT` 做批量导入。
 ### Ann 索引常驻内存
-目前 doris 使用的 ann 索引算法都是基于内存的，如果某个被查询的 segment 的索引不在内存，那么会触发一次磁盘 IO，因此为了性能考虑，建议让 ann 索引常驻内存，通过在 be.conf 中设置enable_segment_cache_prune=false 可以确保 ann 索引常驻内存。
+当前 ANN 索引算法基于内存，若查询到的 segment 索引未驻留内存会触发磁盘 I/O。为性能考虑建议常驻，可在 be.conf 中设置 `enable_segment_cache_prune=false`。
 ### parallel_pipeine_task_num = 1
-Ann TopN 查询中从 scanner 返回的数据很少，不需要很高的 pipeline task 并行度，建议 set parallel_pipeline_task_num = 1
+ANN TopN 查询返回行数很少，无需高并行度，建议 `SET parallel_pipeline_task_num = 1`。
 ### enable_profile = false
-当查询对于延迟极其敏感时，需要关闭 query profile。
+若对延迟极其敏感，建议关闭 query profile（`enable_profile=false`）。
 ## 使用限制
 1. Doris 要求 ANN Index 对应的列必须是 NOT NULLABLE 的 `Array<Float>`，并且在后续的导入过程中，需要确保该列的每一个向量的长度均等于索引属性中指定的维度（dim），否则会报错。
 
@@ -317,7 +317,7 @@ SELECT id, l2_distance_approximate(embedding, [xxx]) AS distance
     ORDER BY distance limit 10;
 ```
 
-Id 虽然是主键，但是没有在 id 列构建倒排索引这种能够精确定位行号的二级索引，这类谓词在 doris 中的执行是在索引分析之后执行的，因此此时为了确保 ann topn 的前过滤语意，此时 doris 会回退到暴力计算
+虽然 id 是主键，但未在该列上构建倒排等可精确定位行号的二级索引，此类谓词在 Doris 中会在索引分析之后执行。为保证 ANN TopN 的前过滤语义，系统会回退为暴力计算。
 
 4. 如果 SQL 中指定的距离函数与 DDL 中索引的 metric 类型不匹配，那么此时 doris 无法通过 ANN 索引进行 TOPN 的计算，哪怕你是用的是 l2_distance_approximate/inner_product_approximate。
 

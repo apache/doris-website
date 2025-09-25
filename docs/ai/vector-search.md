@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-In generative AI applications, relying solely on the parameter “memory” of large models has clear limitations: (1) model knowledge becomes outdated and can’t cover the latest information; (2) directly asking the model to “generate” answers is prone to hallucinations. This gives rise to RAG (Retrieval-Augmented Generation). The key task of RAG is not to make the model fabricate answers from nothing, but to retrieve the Top-K most relevant information chunks from an external knowledge base and feed them to the model as grounding context.
+In generative AI applications, relying solely on a large model's internal parameter “memory” has clear limitations: (1) the model’s knowledge becomes outdated and cannot cover the latest information; (2) directly asking the model to “generate” answers increases the risk of hallucinations. This gives rise to RAG (Retrieval-Augmented Generation). The key task of RAG is not to have the model fabricate answers from nothing, but to retrieve the Top-K most relevant information chunks from an external knowledge base and feed them to the model as grounding context.
 
-To achieve this, we need a mechanism to measure semantic relatedness between a user query and documents in the knowledge base. Vector representations are a common tool: by encoding both queries and documents into semantic vectors, we can use vector similarity to measure relevance. With the advancement of pretrained language models, generating high-quality semantic embeddings has become mainstream. Thus, the retrieval part of RAG becomes a typical vector similarity search problem: from a large vector collection, find the K vectors most similar to the query (i.e., candidate knowledge pieces).
+To achieve this, we need a mechanism to measure semantic relatedness between a user query and documents in the knowledge base. Vector representations are a standard tool: by encoding both queries and documents into semantic vectors, we can use vector similarity to measure relevance. With the advancement of pretrained language models, generating high-quality embeddings has become mainstream. Thus, the retrieval stage of RAG becomes a typical vector similarity search problem: from a large vector collection, find the K vectors most similar to the query (i.e., candidate knowledge pieces).
 
-Notably, vector retrieval in RAG is not limited to text; it naturally extends to multimodal scenarios. In a multimodal RAG system, images, audio, video, etc. can also be encoded into vectors for retrieval and then supplied to the generative model as context. For example, if a user uploads an image, the system can first retrieve related descriptions or knowledge snippets, then generate explanatory content. In medical QA, RAG can retrieve patient records and medical literature to support more accurate diagnostic suggestions.
+Vector retrieval in RAG is not limited to text; it naturally extends to multimodal scenarios. In a multimodal RAG system, images, audio, video, and other data types can also be encoded into vectors for retrieval and then supplied to the generative model as context. For example, if a user uploads an image, the system can first retrieve related descriptions or knowledge snippets, then generate explanatory content. In medical QA, RAG can retrieve patient records and literature to support more accurate diagnostic suggestions.
 
 ## Brute-Force Search
 
-Starting from version 2.0, Apache Doris supports nearest neighbor search based on vector distance. Doing vector search with SQL is natural and simple:
+Starting from version 2.0, Apache Doris supports nearest-neighbor search based on vector distance. Performing vector search with SQL is natural and simple:
 
 ```
 SELECT id,
@@ -42,13 +42,13 @@ ORDER  BY distance
 LIMIT  10; 
 ```
 
-When the data volume is small (under 1 million rows), Doris’s exact K-Nearest Neighbor search performance is sufficient, with 100% recall and 100% precision. However, as data grows larger, most users are willing to trade a small amount of recall/accuracy for significant query performance gains. The problem then becomes Approximate Nearest Neighbor (ANN) search.
+When the dataset is small (under ~1 million rows), Doris’s exact K-Nearest Neighbor search performance is sufficient, providing 100% recall and precision. As the dataset grows, however, most users are willing to trade a small amount of recall/accuracy for significantly lower latency. The problem then becomes Approximate Nearest Neighbor (ANN) search.
 
 ## Approximate Nearest Neighbor Search
 
-From version 4.0, Apache Doris officially supports ANN search. No extra data type is introduced: vectors are stored as fixed-length arrays. For distance-based indexing we implemented a new index type, ANN, based on Faiss.
+From version 4.0, Apache Doris officially supports ANN search. No additional data type is introduced: vectors are stored as fixed-length arrays. For distance-based indexing a new index type, ANN, is implemented based on Faiss.
 
-Using the common [SIFT](http://corpus-texmex.irisa.fr/) dataset as an example, you can create a table like:
+Using the common [SIFT](http://corpus-texmex.irisa.fr/) dataset as an example, you can create a table like this:
 
 ```
 CREATE TABLE sift_1M (
@@ -68,10 +68,10 @@ PROPERTIES (
 );
 ```
 
-- index_type: hnsw means using the [Hierarchical Navigable Small World algorithm](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
-- metric_type: l2_distance means using L2 distance as the distance function
-- dim: 128 means the vector dimension is 128
-- quant: flat means each vector dimension is stored as original float32
+- index_type: `hnsw` means using the [Hierarchical Navigable Small World algorithm](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
+- metric_type: `l2_distance` means using L2 distance as the distance function
+- dim: `128` means the vector dimension is 128
+- quant: `flat` means each vector dimension is stored as original float32
 
 | Parameter | Required | Supported/Options | Default | Description |
 |-----------|----------|-------------------|---------|-------------|
@@ -82,7 +82,7 @@ PROPERTIES (
 | `ef_construction` | No | Positive integer | `40` | HNSW efConstruction (candidate queue size during build). Larger gives better quality but slower build. |
 | `quantizer` | No | `flat`, `sq8`, `sq4` | `flat` | Vector encoding/quantization: `flat` = raw; `sq8`/`sq4` = symmetric quantization (8/4 bit) to reduce memory. |
 
-Import via S3 TVF
+Import via S3 TVF:
 
 ```sql
 INSERT INTO sift_1M
@@ -99,7 +99,7 @@ select count(*) from sift_1M
 +----------+
 ```
 
-The SIFT dataset ships with a ground truth set for result validation. Pick one query vector and first run an exact Top-N using the precise distance:
+The SIFT dataset ships with a ground-truth set for result validation. Pick one query vector and first run an exact Top-N using the precise distance:
 
 ```
 SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
@@ -122,7 +122,7 @@ SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44
 10 rows in set (0.29 sec)
 ```
 
-When using `l2_distance` or `inner_product`, Doris computes the distance between the query vector and all 1,000,000 candidate vectors, then applies a TopN operator globally. Using `l2_distance_approximate/inner_product_approximate` triggers the index path:
+When using `l2_distance` or `inner_product`, Doris computes the distance between the query vector and all 1,000,000 candidate vectors, then applies a TopN operator globally. Using `l2_distance_approximate` / `inner_product_approximate` triggers the index path:
 
 ```
 SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
@@ -145,15 +145,15 @@ SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,
 10 rows in set (0.02 sec)
 ```
 
-We can see that with the ANN index, query latency drops from 290ms to 20ms.
+With the ANN index, query latency in this example drops from about 290 ms to 20 ms.
 
-In Doris, ANN indexes are built at the segment granularity. Tables are distributed, so after each segment returns its local TopN, the TopN operator merges results across tablets and segments to produce the global TopN.
+ANN indexes are built at the segment granularity. Because tables are distributed, after each segment returns its local TopN, the TopN operator merges results across tablets and segments to produce the global TopN.
 
-Note: When `metric_type` = `l2_distance`, a smaller distance means closer vectors. For `inner_product`, the larger the value, the closer the vectors. Therefore if using `inner_product` you must use `ORDER BY dist DESC` to get TopN via the index.
+Note: When `metric_type = l2_distance`, a smaller distance means closer vectors. For `inner_product`, a larger value means closer vectors. Therefore, if using `inner_product`, you must use `ORDER BY dist DESC` to obtain TopN via the index.
 
 ## Approximate Range Search
 
-Besides the common TopN nearest neighbor search (return the closest N records), another typical query pattern in vector retrieval is threshold-based range search. Instead of returning a fixed number of results, it returns all points whose distance to the target vector satisfies a given predicate (>, >=, <, <=). For example, a user might want vectors whose distance is greater than some threshold, or less than some threshold. This is useful when you need a set of candidates that are “sufficiently similar” or “sufficiently dissimilar.” In recommendation systems, you might retrieve items that are close but not identical to increase diversity; in anomaly detection you look for points far away from the normal patterns.
+Beyond the common TopN nearest neighbor search (returning the closest N records), another typical pattern is threshold-based range search. Instead of returning a fixed number of results, it returns all points whose distance to the target vector satisfies a predicate (>, >=, <, <=). For example, you might want vectors whose distance is greater than or less than a threshold. This is useful when you need candidates that are “sufficiently similar” or “sufficiently dissimilar.” In recommendation systems you might retrieve items that are close but not identical to improve diversity; in anomaly detection you look for points far from the normal distribution.
 
 Example SQL:
 
@@ -169,11 +169,11 @@ SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77
 1 row in set (0.19 sec)
 ```
 
-In Doris, these range-based vector searches are also accelerated by the ANN index: the index quickly narrows candidates, then approximate distances are computed, reducing cost and improving latency. Supported predicates: `>`, `>=`, `<`, `<=`.
+These range-based vector searches are also accelerated by the ANN index: the index first narrows candidates, then approximate distances are computed, reducing cost and improving latency. Supported predicates: `>`, `>=`, `<`, `<=`.
 
 ## Compound Search
 
-Compound Search refers to combining an ANN TopN search with a Range Search predicate in the same SQL, aiming to return the TopN results that also satisfy a distance range constraint.
+Compound Search combines an ANN TopN search with a range predicate in the same SQL statement, returning the TopN results that also satisfy a distance constraint.
 
 ```
 SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300 ORDER BY dist limit 10
@@ -196,13 +196,13 @@ SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,
 10 rows in set (0.12 sec)
 ```
 
-A key question is whether predicate filtering happens before or after TopN. If predicates filter first and TopN is applied on the reduced set, it’s called pre-filtering; otherwise, post-filtering. Post-filtering is typically faster but can dramatically reduce recall. Doris chooses pre-filtering to preserve recall.
+A key question is whether predicate filtering happens before or after TopN. If predicates filter first and TopN is applied on the reduced set, it’s pre-filtering; otherwise, it’s post-filtering. Post-filtering can be faster but may dramatically reduce recall. Doris uses pre-filtering to preserve recall.
 
-In Doris, both phases can be index-accelerated. However, if the first phase (range filter) has a very high filtering rate, indexing both phases might severely hurt recall. Doris adaptively decides whether to use the index for both phases by considering predicate selectivity and index type.
+Doris can accelerate both phases with the index. However, if the first phase (range filter) is too selective, indexing both phases can hurt recall. Doris adaptively decides whether to use the index twice based on predicate selectivity and index type.
 
 ## ANN Search with Additional Filters
 
-This means applying other predicates before the ANN TopN and returning the TopN under those constraints.
+This refers to applying other predicates before the ANN TopN and returning the TopN under those constraints.
 
 Example with a small 8-D vector and a text filter:
 
@@ -243,9 +243,9 @@ LIMIT 2;
 2 rows in set (0.04 sec)
 ```
 
-To ensure TopN can be accelerated by the vector index, all predicate columns should have appropriate secondary indexes (e.g., inverted index).
+To ensure TopN can be accelerated via the vector index, all predicate columns should have appropriate secondary indexes (e.g., an inverted index).
 
-## Session variable related to ann search
+## Session Variables Related to ANN Search
 
 Beyond build-time parameters for HNSW, you can pass search-time parameters via session variables:
 
@@ -255,7 +255,7 @@ Beyond build-time parameters for HNSW, you can pass search-time parameters via s
 
 ## Vector Quantization
 
-With FLAT encoding, an HNSW index (raw vectors + graph structure) may consume large memory. HNSW must be fully loaded into memory to function, so memory can become a bottleneck at large scale.
+With FLAT encoding, an HNSW index (raw vectors plus graph structure) may consume large amounts of memory. HNSW must be fully resident in memory to function, so memory can become a bottleneck at large scale.
 
 Vector quantization compresses float32 storage to reduce memory. Doris currently supports two scalar quantization schemes: INT8 and INT4 (SQ8 / SQ4). Example using SQ8:
 
@@ -286,13 +286,13 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 | Cohere-LARGE-10M | 768D | Doris (FLAT) | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M vectors |
 | Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 quantization |
 
-Quantization introduces extra build-time overhead because distance computations require decoding the quantized values. For 128-D vectors, build time increases with row count; SQ vs FLAT can be ~10x more expensive in build time.
+Quantization introduces extra build-time overhead because each distance computation must decode quantized values. For 128-D vectors, build time increases with row count; SQ vs. FLAT can be up to ~10× slower to build.
 
 ![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
 
 ## Performance Tuning
 
-Vector search is a typical secondary-index point lookup scenario. For high QPS and low latency, we recommend:
+Vector search is a typical secondary-index point lookup scenario. For high QPS and low latency, consider the following:
 
 With tuning, on hardware FE 32C 64GB + BE 32C 64GB, Doris can reach 3000+ QPS (dataset: Cohere-MEDIUM-1M).
 
@@ -311,7 +311,7 @@ With tuning, on hardware FE 32C 64GB + BE 32C 64GB, Doris can reach 3000+ QPS (d
 
 ### Use Prepared Statements
 
-Modern embedding models often output 768-D or higher vectors. If you inline a 768-D literal into SQL, parsing can exceed execution time. Use prepared statements. Currently Doris does not support MySQL client prepare commands directly; use JDBC:
+Modern embedding models often output 768-D or higher vectors. If you inline a 768-D literal into SQL, parsing time can exceed execution time. Use prepared statements. Currently Doris does not support MySQL client prepare commands directly; use JDBC:
 
 1. Enable server-side prepared statements in the JDBC URL:  
    `jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true`
@@ -319,15 +319,15 @@ Modern embedding models often output 768-D or higher vectors. If you inline a 76
 
 ### Reduce Segment Count
 
-ANN indexes are built per segment. Too many segments cause overhead. Ideally each tablet should have no more than ~5 segments for an ANN-indexed table. Adjust `write_buffer_size` and `vertical_compaction_max_segment_size` in `be.conf` (e.g., both to 1073741824). (Verify the intended size; the original Chinese text states 10GB but 1073741824 bytes equals 1GB.)
+ANN indexes are built per segment. Too many segments cause overhead. Ideally each tablet should have no more than ~5 segments for an ANN-indexed table. Adjust `write_buffer_size` and `vertical_compaction_max_segment_size` in `be.conf` (e.g., both to 10737418240).
 
 ### Reduce Rowset Count
 
-Same motivation as reducing segments: minimize scheduling overhead. Each load creates a rowset, so prefer stream load or `INSERT INTO SELECT` to batch data ingestion.
+Same motivation as reducing segments: minimize scheduling overhead. Each load creates a rowset, so prefer stream load or `INSERT INTO SELECT` for batched ingestion.
 
 ### Keep ANN Index in Memory
 
-Current ANN algorithms are memory-based. If a segment’s index is not in memory, a disk IO occurs. Set `enable_segment_cache_prune=false` in `be.conf` to keep ANN indexes resident.
+Current ANN algorithms are memory-based. If a segment’s index is not in memory, a disk I/O occurs. Set `enable_segment_cache_prune=false` in `be.conf` to keep ANN indexes resident.
 
 ### parallel_pipeline_task_num = 1
 
@@ -335,7 +335,7 @@ ANN TopN queries return very few rows from each scanner, so high pipeline task p
 
 ### enable_profile = false
 
-Disable query profile for ultra latency-sensitive queries.
+Disable query profiling for ultra latency-sensitive queries.
 
 ## Usage Limitations
 
@@ -349,7 +349,7 @@ Disable query profile for ultra latency-sensitive queries.
    WHERE round(id) > 100
    ORDER BY distance LIMIT 10;
    ```
-   Although `id` is a key, without a secondary index like an inverted index, its predicate is applied after index analysis, so Doris falls back to brute force to honor pre-filter semantics.
+  Although `id` is a key, without a secondary index (such as an inverted index), its predicate is applied after index analysis, so Doris falls back to brute force to honor pre-filter semantics.
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.
