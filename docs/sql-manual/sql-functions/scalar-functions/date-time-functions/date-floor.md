@@ -34,9 +34,9 @@ type represent the unit of period
 
 Returns the result of flooring the date down according to the period, with the same type as datetime.
 The floored result is of the same type as datetime:
-- When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
-- When input is DATETIME, returns DATETIME (including date and time).
-- Input with scale will return value with scale.
+- When input is DATE type, returns DATE (only the date part);
+- When input is DATETIME type, returns DATETIME (including date and time).
+- Input with scale will return value with scale, decimal part equal zero.
 
 Special cases:
 - Returns NULL if any parameter is NULL;

@@ -29,7 +29,7 @@ Doris does not support this type of input.
 ## Syntax
 
 ```sql
-DATE_ADD(<date>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 ```
 
 ## Parameters
@@ -43,13 +43,13 @@ DATE_ADD(<date>, <expr> <time_unit>)
 ## Return Value
 
 Returns a result with the same type as <date_or_time_expr>:
-- When DATE is input, returns DATE (date part only);
-- When DATETIME or string with time is input, returns DATETIME (including date and time);
+- When DATE type is input, returns DATE (date part only);
+- When DATETIME type input, returns DATETIME (including date and time);
 - Input with scale (such as '2024-01-01 12:00:00.123') will preserve the scale, with a maximum of six decimal places.
 
 Special cases:
 - When any parameter is NULL, returns NULL;
-- When illegal unit or non-numeric expr, returns NULL;
+- When illegal unit or non-numeric expr, returns error;
 - When the calculation result exceeds the date type range (such as before '0000-00-00 23:59:59' or after '9999-12-31 23:59:59'), returns an error.
 - If the next month does not have enough days for the input date, it will automatically be set to the last day of the next month.
 

@@ -13,7 +13,6 @@
 
 ## 别名
 
-- curdate
 - current_date
 
 ## 语法

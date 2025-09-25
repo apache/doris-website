@@ -26,7 +26,7 @@ doris 不支持这种输入。
 ## 语法
 
 ```sql
-DATE_ADD(<date>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 ```
 
 ## 参数
@@ -40,13 +40,13 @@ DATE_ADD(<date>, <expr> <time_unit>)
 ## 返回值
 
 返回与 date 类型一致的计算结果：
-- 输入 DATE 时，返回 DATE（仅日期部分）；
-- 输入 DATETIME 时，返回 DATETIME（包含日期和时间）。
+- 输入 DATE 类型时，返回 DATE（仅日期部分）；
+- 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
 - 对于带有 scale 的 datetime 类型，会保留 scale 返回.
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
-- 非法 expr（负数）或 time_unit 时，返回 NULL；
+- 非法单位，返回错误。
 - 计算结果早于日期类型支持的最小值（如 '0000-01-01' 之前），返回错误。
 
 ## 举例
@@ -110,6 +110,11 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 +-------------------------------------------+
 | NULL                                      |
 +-------------------------------------------+
+
+--非法单位，返回粗我
+mysql> select date_sub('2022-01-01', INTERVAL 1 Y);
+ERROR 1105 (HY000): errCode = 2, detailMessage = 
+mismatched input 'Y' expecting {'.', '[', 'AND', 'BETWEEN', 'COLLATE', 'DAY', 'DIV', 'HOUR', 'IN', 'IS', 'LIKE', 'MATCH', 'MATCH_ALL', 'MATCH_ANY', 'MATCH_PHRASE', 'MATCH_PHRASE_EDGE', 'MATCH_PHRASE_PREFIX', 'MATCH_REGEXP', 'MINUTE', 'MONTH', 'NOT', 'OR', 'QUARTER', 'REGEXP', 'RLIKE', 'SECOND', 'WEEK', 'XOR', 'YEAR', EQ, '<=>', NEQ, '<', LTE, '>', GTE, '+', '-', '*', '/', '%', '&', '&&', '|', '||', '^'}(line 1, pos 41)
 
 ---超出最小日期
 mysql> select date_sub('0000-01-01', INTERVAL 1 DAY);

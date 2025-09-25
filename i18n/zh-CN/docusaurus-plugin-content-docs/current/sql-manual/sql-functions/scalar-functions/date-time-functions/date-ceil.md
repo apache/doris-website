@@ -19,23 +19,23 @@ type 代表的是周期单位
 
 ## 语法
 
-`DATE_CEIL(<datetime>, INTERVAL <period> <type>)`
+`DATE_CEIL(<date_or_time_expr>, <period> <type>)`
 
 ## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `date_or_time_expr` | 参数是合法的日期表达式，支持输入 为 datetime 或者 date 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
-| `period` | 参数是指定每个周期有多少个单位组成，类型为 INT ，开始的时间起点为 0001-01-01T00:00:00 |
-| `type` | 参数可以是：YEAR, QUARTER, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 为 datetime 或者 date 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
+| `<period>` | 参数是指定每个周期有多少个单位组成，类型为 INT ，开始的时间起点为 0001-01-01T00:00:00 |
+| `<type>` | 参数可以是：YEAR, QUARTER, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|
 
 ## 返回值
 
 返回的是一个日期或时间值，表示将输入值向上舍入到指定单位的结果。
 返回与 datetime 类型一致的取整结果：
-- 输入 DATE 时，返回 DATE（仅日期部分，时间默认为 00:00:00）；
-- 输入 DATETIME，返回 DATETIME（包含日期和时间）。
-- 对于带有 scale 的 datetime, 返回值也会带有 scale.
+- 输入 DATE 类型时，返回 DATE（仅日期部分）；
+- 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）。
+- 对于带有 scale 的 datetime, 返回值也会带有 scale， 小数部分为零.
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；

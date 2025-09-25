@@ -33,9 +33,9 @@ type represent the unit of period
 
 Returns a date or time value representing the result of rounding up the input value to the specified unit.
 The rounded result is of the same type as datetime:
-- When input is DATE, returns DATE (only the date part, time defaults to 00:00:00);
+- When input is DATE, returns DATE (only the date part);
 - When input is DATETIME, returns DATETIME (including date and time).
-- For datetime with scale, the return value will also have scale.
+- For datetime with scale, the return value will also have scale，decimal part equal 0.
 
 Special cases:
 - Returns NULL if any parameter is NULL;

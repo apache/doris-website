@@ -77,7 +77,8 @@ A formatted date string, type is Varchar.
 Special cases:
 - Returns NULL if format is NULL.
 - Returns NULL if any parameter is NULL.
-- Returns error if return value exceeds 128 characters length.
+- Returns error if input value exceeds 128 characters length.
+- output length over 102 size,throw error
 
 ## Examples
 
@@ -170,4 +171,8 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 ---Returns error if the result string exceeds the function's maximum length limit.
 mysql> select date_format('2022-01-12',repeat('a',129));
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of invalid or oversized format is invalid
+
+---output length over 102 size,throw error
+mysql> select date_format('2022-11-13 10:12:12',repeat('%h',52));
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of 142335809712816128,%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h is invalid
 ```

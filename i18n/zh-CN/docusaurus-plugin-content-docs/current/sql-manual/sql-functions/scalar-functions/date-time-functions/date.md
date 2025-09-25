@@ -25,6 +25,7 @@ DATE(<date_or_time_part>)
 ## 返回值
 
 若输入有效，返回 DATE 类型的纯日期值（格式为 YYYY-MM-DD），不含时间部分。
+
 特殊情况：
 - 输入为 NULL 时，返回 NULL；
 

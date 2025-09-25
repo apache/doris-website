@@ -14,7 +14,7 @@ DATE_FORMAT 函数用于将日期或时间值按照指定的格式字符串（fo
 ## 语法
 
 ```sql
-DATE_FORMAT(<date>, <format>)
+DATE_FORMAT(<date_or_time_expr>, <format>)
 ```
 
 ## 参数
@@ -77,7 +77,8 @@ yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 特殊情况：
 - format 为 NULL 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
-- 如果返回值超过 128 字符长度 ,返回错误
+- 如果输入字符超过 128 字符长度 ,返回错误
+- 如果返回结果字符串长度超过 102 ,返回错误
 
 ## 举例
 
@@ -167,7 +168,11 @@ mysql> select date_format(NULL, '%Y-%m-%d');
 | NULL                          |
 +-------------------------------+
 
----超出函数返回字符串长度范围，返回错误
+---超出函数输入字符串长度范围，返回错误
 mysql> select date_format('2022-01-12',repeat('a',129));
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of invalid or oversized format is invalid
+
+---输出结果超过 102 字符串长度，报错
+mysql> select date_format('2022-11-13 10:12:12',repeat('%h',52));
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation date_format of 142335809712816128,%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h%h is invalid
 ```

@@ -32,10 +32,11 @@ type 代表的是周期单位
 ## 返回值
 
 返回一个日期按照 period 周期向下取整的结果，类型和 datetime 保持一致
+
 返回与 datetime 类型一致的取整结果：
-- 输入 DATE 时，返回 DATE（仅日期部分，时间默认为 00:00:00）；
-- 输入 DATETIME 时，返回 DATETIME（包含日期和时间）。
-- 输入带有 scale 的日期时间，返回值也会带有 scale
+- 输入 DATE 类型时，返回 DATE（仅日期部分）；
+- 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
+- 输入带有 scale 的日期时间，返回值也会带有 scale， 小数部分为 0 。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；

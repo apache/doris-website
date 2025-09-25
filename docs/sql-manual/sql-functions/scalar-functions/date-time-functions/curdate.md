@@ -13,7 +13,6 @@ This function is consistent with the [curdate function](https://dev.mysql.com/do
 
 ## Aliases
 
-- curdate
 - current_date
 
 ## Syntax

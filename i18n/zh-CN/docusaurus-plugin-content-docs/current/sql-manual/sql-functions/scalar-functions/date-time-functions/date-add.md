@@ -29,7 +29,7 @@ doris 不支持这种输入。
 ## 语法
 
 ```sql
-DATE_ADD(<date>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 ```
 
 ## 参数
@@ -43,13 +43,13 @@ DATE_ADD(<date>, <expr> <time_unit>)
 ## 返回值
 
 返回与 <date_or_time_expr> 类型一致的结果：
-- 输入 DATE 时，返回 DATE（仅日期部分）；
-- 输入 DATETIME 或带时间的字符串时，返回 DATETIME（包含日期和时间）；
+- 输入 DATE 类型时，返回 DATE（仅日期部分）；
+- 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）；
 - 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
-- 非法单位或非数值 expr 时，返回 NULL；
+- 非法单位或非数值 expr 时，报错；
 - 计算后超出日期类型范围（如 '0000-00-00 23:59:59' 之前,'9999-12-31 23:59:59' 之后）时，返回错误。
 - 若是下月不足输入日期的天数，会自动设置为下月最后一天
 
