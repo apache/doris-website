@@ -48,7 +48,7 @@ Special cases:
 - When any parameter is NULL, returns NULL;
 - If period is negative or 0, returns an error;
 - If the rounding result exceeds the supported range of date types (such as after '9999-12-31'), an error is reported.
-- For datetime input with scale, the output will truncate all scale to 0, and the return value will have scale
+- For datetime input with scale, the output will truncate all decimal to 0, and the return value will have scale
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples

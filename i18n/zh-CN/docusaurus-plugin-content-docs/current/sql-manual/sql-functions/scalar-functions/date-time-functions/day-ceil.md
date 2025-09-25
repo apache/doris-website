@@ -45,7 +45,7 @@ DAY_CEIL(<date_or_time_expr>, <period>, <origin>)
 - 任何参数为 NULL 时，返回 NULL；
 - 若 period 为负数或 0，返回错误；
 - 若取整结果超出日期类型支持的范围（如 '9999-12-31' 之后），报错。
-- 带有 scale 的输入的datetime，输出会截断所有 scale 为0 ，返回值带有 scale
+- 带有 scale 的输入的datetime，返回值带有 scale，小数部分为 0.
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
 
 ## 举例

@@ -82,6 +82,10 @@ mysql> select from_unixtime(1196440219, '%Y-%m-%d %H:%i:%s');
 select from_unixtime(253402281999);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of 253402281999, yyyy-MM-dd HH:mm:ss is invalid
 
+---result over max length
+select from_unixtime(32536799,repeat('a',129));
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_unixtime_new of invalid or oversized format is invalid
+
 ---string-format does not reference any time values
 mysql> select from_unixtime(32536799,"gdaskpdp");
 +------------------------------------+

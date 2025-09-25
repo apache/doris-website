@@ -24,8 +24,8 @@ mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
 
 | Parameter | Description |
 | -- | -- |
-| `unit` | Extract the value of a specified unit from DATETIME. The unit can be year, month, week, day, hour, minute, second, or microsecond |
-| `datetime_or_time_expr` | A valid date expression that supports date/datetime types and strings in date-time format. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<unit>` | Extract the value of a specified unit from DATETIME. The unit can be year, month, week, day, hour, minute, second, or microsecond |
+| `<datetime_or_time_expr>` | A valid date expression that supports date/datetime types and strings in date-time format. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
