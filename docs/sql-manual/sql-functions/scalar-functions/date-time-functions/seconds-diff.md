@@ -60,11 +60,11 @@ SELECT SECONDS_DIFF('2023-01-02', '2023-01-01') AS result;  -- 1 day difference 
 +--------+
 
 --- Times with scale include fractional part difference in calculation
-SELECT SECONDS_DIFF('2023-07-13 12:00:00.123', '2023-07-13 11:59:59') AS result;
+mysql> SELECT SECONDS_DIFF('2023-07-13 12:00:00', '2023-07-13 11:59:59.6') AS result;
 +--------+
 | result |
 +--------+
-|      1 |
+|      0 |
 +--------+
 
 --- Any parameter is NULL (returns NULL)
