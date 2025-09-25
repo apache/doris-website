@@ -28,7 +28,7 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 ## Return Value
 
 Returns date in specified format, of type VARCHAR, returning the result of converting the UTC timezone unix timestamp to the current timezone time.
-- Currently supported unix_timestamp range is [0, 253402271999] (corresponding to dates from 1970-01-01 00:00:00 to 9999-12-31 23:59:59), unix_timestamp outside this range will return an error
+- Currently supported unix_timestamp range is [0, 253402271999] corresponding to dates from 1970-01-01 00:00:00 to 9999-12-31 23:59:59, unix_timestamp outside this range will return an error
 - If string_format is invalid, returns a string that does not meet expectations.
 - If any parameter is NULL, returns NULL
 - If the format length over than 128,return error
