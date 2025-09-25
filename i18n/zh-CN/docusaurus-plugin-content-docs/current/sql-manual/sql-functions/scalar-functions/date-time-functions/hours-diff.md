@@ -21,7 +21,7 @@ HOURS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 | 参数 | 说明 |
 | ---- | ---- |
 | `<date_or_time_expr1>` | 结束时间，参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `<start_date>` | 开始时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
+| `<date_or_time_expr2>` | 开始时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
 
 ## 返回值
 
