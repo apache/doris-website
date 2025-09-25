@@ -9,7 +9,7 @@
 
 The TIME_TO_SEC function converts an input time value to the total number of seconds. This function supports processing TIME and DATETIME types: if the input is DATETIME type, it automatically extracts the time portion (HH:MM:SS) for calculation; if the input is a pure time value, it directly converts to total seconds.
 
-This function behaves consistently with the [time_to_sec function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec) in MySQL using SECOND as the unit.
+This function behaves consistently with the [time_to_sec function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec) in MySQL.
 
 ## Syntax
 

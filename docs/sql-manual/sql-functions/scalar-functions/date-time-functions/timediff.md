@@ -32,7 +32,7 @@ Returns a `TIME` type value representing the time difference between the two inp
 - When `<end_datetime>` and `<start_datetime>` are equal, returns `00:00:00`
 - If `<end_datetime>` or `<start_datetime>` is `NULL`, the function returns `NULL`
 - When the returned time difference is not an integer number of seconds, the returned time has a scale
-- When the calculation result exceeds the time range [-838:59:59, 828:59:59], returns an error
+- When the calculation result exceeds the time range [-838:59:59, 838:59:59], returns an error
 
 ## Examples
 

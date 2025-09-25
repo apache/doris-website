@@ -10,7 +10,9 @@
 The SECOND_CEIL function rounds the input datetime value up to the nearest specified second period. If a starting time (origin) is specified, it uses that time as the basis for dividing periods and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the basis. This function supports processing DATETIME types.
 
 Date calculation formula:
-SECOND_CEIL(<date_or_time_expr>, <period>, <origin>) = min{<origin> + k × <period> × second | k ∈ ℤ ∧ <origin> + k × <period> × second ≥ <date_or_time_expr>}
+$$
+\text{SECOND\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{SECOND} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{SECOND} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K represents the number of periods needed to reach the target time from the base time.
 
 ## Syntax
@@ -38,6 +40,7 @@ Returns a value of type DATETIME, representing the time value after rounding up 
 - If the input is DATE type (only contains year, month, day), its time portion defaults to 00:00:00.
 - If the calculation result exceeds the valid range of DATETIME type (0000-01-01 00:00:00 to 9999-12-31 23:59:59.999999), returns an error.
 - For datetime with scale, all decimal places are truncated to 0.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -66,6 +69,14 @@ SELECT SECOND_CEIL('2025-01-23 12:34:56', 10, '2025-01-23 12:00:00') AS result;
 | 2025-01-23 12:35:00 |
 +---------------------+
 
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+SELECT SECOND_CEIL('2025-01-23 12:34:56', 10, '2029-01-23 12:00:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2025-01-23 12:35:00 |
++---------------------+
+
 --- Datetime with microseconds, decimal places truncated to 0 after rounding
 SELECT SECOND_CEIL('2025-01-23 12:34:56.789', 5) AS result;
 +----------------------------+
@@ -87,8 +98,8 @@ SELECT SECOND_CEIL('9999-12-31 23:59:59', 2) AS result;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_ceil of 9999-12-31 23:59:59, 2 out of range
 
 --- Period is non-positive, returns error
-SELECT SECOND_CEIL('2025-01-23 12:34:56', -3) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation second_ceil of 2025-01-23 12:34:56, -3 input wrong parameters, period can not be negative or zero
+mysql> SELECT SECOND_CEIL('2025-01-23 12:34:56', -3) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_ceil of 2025-01-23 12:34:56, -3 out of range
 
 --- Any parameter is NULL, returns NULL
 SELECT SECOND_CEIL(NULL, 5), SECOND_CEIL('2025-01-23 12:34:56', NULL) AS result;

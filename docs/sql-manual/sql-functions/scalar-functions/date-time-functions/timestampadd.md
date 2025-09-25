@@ -10,7 +10,7 @@
 Same functionality as the [date_add function](./date-add)
 The TIMESTAMPADD function adds (or subtracts) a specified time interval of a specified unit to a given datetime value and returns the calculated datetime value. This function supports multiple time units (such as seconds, minutes, hours, days, weeks, months, years, etc.) and can flexibly handle datetime offset calculations. Negative intervals indicate subtracting the corresponding time.
 
-This function behaves consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL.
+This function behaves consistently with the [timestampadd function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestampadd) in MySQL.
 
 ## Syntax
 

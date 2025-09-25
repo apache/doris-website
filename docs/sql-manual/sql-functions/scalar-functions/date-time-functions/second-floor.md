@@ -10,7 +10,9 @@
 The SECOND_FLOOR function rounds the input datetime value down to the nearest specified second period. If a starting time (origin) is specified, it uses that time as the basis for dividing periods and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the basis. This function supports processing DATETIME types.
 
 Datetime calculation formula:
-SECOND_FLOOR(<date_or_time_expr>, <period>, <origin>) = max{<origin> + k × <period> × second | k ∈ ℤ ∧ <origin> + k × <period> × second ≤ <date_or_time_expr>}
+$$
+\text{SECOND\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+$$
 K represents the number of periods from the base time to the target time.
 
 ## Syntax
@@ -31,12 +33,13 @@ SECOND_FLOOR(<datetime>[, <period>][, <origin_datetime>])
 
 Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified second period based on the input datetime. The precision of the return value matches the precision of the input datetime parameter.
 
-- If `<period>` is a non-positive integer (≤0), returns NULL.
+- If `<period>` is a non-positive (≤0), returns error.
 - If any parameter is NULL, returns NULL.
 - When period is not specified, defaults to a 1-second period.
 - When `<origin_datetime>` is not specified, defaults to 0001-01-01 00:00:00 as the basis.
 - If the input is DATE type (only contains year, month, day), its time portion defaults to 00:00:00.
 - For datetime with scale, all decimal places are truncated to 0.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
@@ -65,6 +68,14 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2025-01-23 12:00:00') AS result;
 | 2025-01-23 12:34:50 |
 +---------------------+
 
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2029-01-23 12:00:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2025-01-23 12:34:50 |
++---------------------+
+
 --- Datetime with microseconds, decimal places truncated to 0 after rounding
 SELECT SECOND_FLOOR('2025-01-23 12:34:56.789', 5) AS result;
 +----------------------------+
@@ -81,13 +92,9 @@ SELECT SECOND_FLOOR('2025-01-23', 30) AS result;
 | 2025-01-23 00:00:00 |
 +---------------------+
 
---- Period is non-positive, returns NULL
-SELECT SECOND_FLOOR('2025-01-23 12:34:56', -3) AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+--- Period is non-positive, returns error
+mysql> SELECT SECOND_FLOOR('2025-01-23 12:34:56', -3) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_floor of 2025-01-23 12:34:56, -3 out of range
 
 --- Any parameter is NULL, returns NULL
 SELECT SECOND_FLOOR(NULL, 5), SECOND_FLOOR('2025-01-23 12:34:56', NULL) AS result;

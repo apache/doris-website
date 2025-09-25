@@ -10,7 +10,7 @@
 与 [date_add 函数](./date-add) 作用一致
 TIMESTAMPADD 函数用于向指定的日期时间值添加（或减去）指定单位的时间间隔，并返回计算后的日期时间值。该函数支持多种时间单位（如秒、分、时、日、周、月、年等），可灵活处理日期时间的偏移计算，负数间隔表示减去对应时间。
 
-该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 行为一致
+该函数与 mysql 中的 [timestampadd 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestampadd) 行为一致
 
 ## 语法
 

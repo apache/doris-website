@@ -8,7 +8,7 @@
 ## 描述
 TIME_TO_SEC 函数用于将输入的时间值转换为以秒为单位的总秒数。该函数支持处理 TIME、DATETIME 类型：若输入为 DATETIME 类型，会自动提取其中的时间部分（HH:MM:SS）进行计算；若输入为纯时间值，则直接转换为总秒数。
 
-该函数与 mysql 中的 [time_to_sec 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec) 使用 SECOND 为单位的行为一致
+该函数与 mysql 中的 [time_to_sec 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec).
 
 ## 语法
 

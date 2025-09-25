@@ -9,6 +9,10 @@
 
 The SECOND_TIMESTAMP function converts an input datetime value to a Unix timestamp (in seconds), which represents the total number of seconds from 1970-01-01 00:00:00 UTC to the specified datetime. This function supports processing DATETIME values, and the result will be adjusted for the machine's timezone offset. For timezone information, please refer to [Timezone Management](../../../../admin-manual/cluster-management/time-zone).
 
+## Alias
+
+- UNIX_TIMESTAMP()
+
 ## Syntax
 
 ```sql
@@ -26,14 +30,14 @@ SECOND_TIMESTAMP(<datetime>)
 Returns a BIGINT type representing the Unix timestamp (in seconds) in the current timezone corresponding to the input datetime.
 
 Special cases:
-- If the input is a DATE type (containing only year, month, day), the time portion defaults to 00:00:00 (UTC time)
+- If the input is a DATE type (containing only year, month, day), the time portion defaults to 00:00:00
 - If the input datetime is earlier than 1970-01-01 00:00:00 UTC, returns a negative timestamp
 - If `<datetime>` is NULL, returns NULL
 
 ## Examples
 
 ```sql
--- Current test is in East 8th timezone, all default times are in East 8th timezone, timezone can also be specified
+--input init datetime
 SELECT SECOND_TIMESTAMP('1970-01-01 00:00:00 UTC') AS result;
 +--------+
 | result |

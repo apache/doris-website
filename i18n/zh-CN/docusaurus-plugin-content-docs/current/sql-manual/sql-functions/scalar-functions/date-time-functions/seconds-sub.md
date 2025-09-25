@@ -8,7 +8,7 @@
 ## 描述
 SECONDS_SUB 函数用于在指定的日期时间值上减少或增加指定的秒数，并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于增加对应秒数。
 
-该函数与 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 SECOND 为单位的行为一致
+该函数与 [date_sub 函数](./date-sub) 和 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 SECOND 为单位的行为一致
 
 ## 语法
 
@@ -25,9 +25,9 @@ SECONDS_SUB(<date_or_time_expr>, <seconds>)
 ## 返回值
 
 返回一个输入日期时间增加对应秒数后的日期时间值，类型为 DATETIME
-- 若 <seconds> 为负数，函数效果等同于向基准时间中增加对应秒数（即 SECONDS_SUB(date, -n) 等价于 SECONDS_ADD(date, n)）。
+- 若 `<seconds>` 为负数，函数效果等同于向基准时间中增加对应秒数（即 SECONDS_SUB(date, -n) 等价于 SECONDS_ADD(date, n)）。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00.
-- 若计算结果超出日期类型的有效范围（DATE 类型：抛出异常。
+- 若计算结果超出日期类型的有效范围,抛出异常。
 - 若任一参数为 NULL，返回 NULL。
 
 
@@ -85,5 +85,5 @@ SELECT SECONDS_SUB(NULL, 30), SECONDS_SUB('2025-01-23 12:34:56', NULL) AS result
 
 --- 计算结果超出日期范围
 SELECT SECONDS_SUB('0000-01-01 00:00:00', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation seconds_sub of 0000-01-01 00:00:00, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation seconds_add of 0000-01-01 00:00:00, -1 out of range
 ```

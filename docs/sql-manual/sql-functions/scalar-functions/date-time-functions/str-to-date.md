@@ -33,21 +33,19 @@ In addition, `<format>` supports the following alternative formats and interpret
 | `yyyy-MM-dd HH:mm:ss`      | `%Y-%m-%d %H:%i:%s`  |
 
 ## Return Value
+Returns a DATETIME value representing the converted date and time.
 
-Returns a DATETIME type value representing the converted datetime.
-
-Datetime matching method uses two pointers pointing to the starting positions of both strings:
-1. When the format string encounters the % symbol, it matches the corresponding time part of the time string according to the letter following %. If it doesn't match (such as %Y matching datetime part but it's 10:10:10, or % with unsupported parsing characters like %*), returns NULL. If successful, moves to parse the next character.
-2. At any moment when either string encounters a space character, it directly skips to parse the next character
-3. When encountering ordinary letter matching, check if the characters pointed to by both string pointers are equal. If not equal, return NULL; if equal, parse the next character
-4. When any date pointer points to the end of the string, if the datetime only contains the date part, the format string will check if it contains characters matching the time part (such as %H). If it does, the time part will be set to 00:00:00.
+Date and time matching method uses two pointers to point to the start of both strings:
+1. When the format string encounters a % symbol, the next letter after % is used to match the corresponding part of the date/time string. If it does not match (e.g., %Y tries to match a time part like 10:10:10, or % is followed by an unsupported character like %*), an error is returned. If matched successfully, move to the next character for parsing.
+2. At any time, if either string encounters a space character, skip it and parse the next character.
+3. When matching ordinary letters, check if the characters pointed to by both pointers are equal. If not, return an error; if equal, parse the next character.
+4. When the date pointer reaches the end of the string, if the date/time only contains the date part, the format string will check whether it contains time part characters (e.g., %H). If so, the time part will be set to 00:00:00.
 5. When the format string pointer reaches the end, matching ends.
-6. Finally check if the matched time parts are valid (such as month must be within [1,12] range). If invalid, return NULL; if valid, return the parsed datetime.
+6. Finally, check whether the matched time parts are valid (e.g., month must be in [1,12]). If invalid, return NULL; if valid, return the parsed date and time.
 
-- If `<datetime_str>` doesn't match `<format>` (e.g., string is 2023/13/01 but format is %Y-%m-%d), returns NULL
-- If any parameter is NULL, returns NULL
-- If `<format>` is an empty string, returns NULL
-- If `<datetime_str>` lacks time part (only date), the time part defaults to 00:00:00 after parsing; if it lacks date part (only time), the date part defaults to 0000-00-00 (invalid date, returns NULL)
+- If any parameter is NULL, returns NULL;
+- If `<format>` is an empty string, returns error;
+- If matching fails, returns an error.
 
 ## Examples
 
@@ -76,15 +74,7 @@ SELECT STR_TO_DATE('20230713', 'yyyyMMdd') AS result;
 | 2023-07-13 00:00:00 |
 +---------------------+
 
--- Time string only (date invalid, returns empty string)
-SELECT STR_TO_DATE('15:30:45', '%H:%i:%s') AS result;
-+--------+
-| result |
-+--------+
-|        |
-+--------+
-
--- Parse string with week day and week number
+-- Parse string with week number and weekday
 SELECT STR_TO_DATE('200442 Monday', '%X%V %W') AS result;
 +------------+
 | result     |
@@ -100,13 +90,9 @@ SELECT STR_TO_DATE('Oct 5 2023 3:45:00 PM', '%b %d %Y %h:%i:%s %p') AS result;
 | 2023-10-05 15:45:00 |
 +---------------------+
 
--- Format doesn't match string (returns NULL)
+-- Format does not match string (returns error)
 SELECT STR_TO_DATE('2023/01/01', '%Y-%m-%d') AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023/01/01 is invalid
 
 -- String contains extra characters (automatically ignored)
 SELECT STR_TO_DATE('2023-01-01 10:00:00 (GMT)', '%Y-%m-%d %H:%i:%s') AS result;
@@ -116,7 +102,7 @@ SELECT STR_TO_DATE('2023-01-01 10:00:00 (GMT)', '%Y-%m-%d %H:%i:%s') AS result;
 | 2023-01-01 10:00:00 |
 +---------------------+
 
--- Parse microseconds (preserving precision)
+-- Parse microseconds (precision preserved)
 SELECT STR_TO_DATE('2023-07-13 12:34:56.789', '%Y-%m-%d %H:%i:%s.%f') AS result;
 +----------------------------+
 | result                     |
@@ -132,11 +118,7 @@ SELECT STR_TO_DATE(NULL, '%Y-%m-%d'), STR_TO_DATE('2023-01-01', NULL) AS result;
 | NULL                           | NULL   |
 +--------------------------------+--------+
 
--- Format is empty string (returns NULL)
+-- Format is an empty string (returns error)
 SELECT STR_TO_DATE('2023-01-01', '') AS result;
-+--------+
-| result |
-+--------+
-| NULL   |
-+--------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023-01-01 is invalid
 ```

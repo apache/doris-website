@@ -7,7 +7,7 @@
 
 ## Description
 
-The SEC_TO_TIME function converts a numeric value in seconds to TIME type, returning the format HH:MM:SS. This function parses the input seconds as a time offset calculated from the start of a day (00:00:00), supporting positive and negative seconds as well as time ranges exceeding one day.
+The SEC_TO_TIME function converts a numeric value in seconds to TIME type,The return format is HH:MM:SS or HH:MM:SS.ssssss. The input seconds represent the time calculated from the starting point of a day (00:00:00.000000), supporting positive and negative seconds as well as time ranges exceeding one day.
 
 This function behaves consistently with the [sec_to_time function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_sec-to-time) in MySQL.
 
@@ -26,9 +26,9 @@ SEC_TO_TIME(<seconds>)
 ## Return Value
 
 Returns a TIME type value converted from seconds.
-- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3023999 to 3023999), returns an error
+- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3023999 to 3023999), returns TIME max or min value
 - If the input is NULL, returns NULL
-- If the input is a decimal, it will be automatically truncated to an integer (e.g., 3661.9 is processed as 3661)
+- if the input is an integer, the return format is HH:MM:SS; if the input is a floating-point number, the return format is HH:MM:SS.ssssss.
 
 ## Examples
 
@@ -65,13 +65,13 @@ SELECT SEC_TO_TIME(0) AS result;
 | 00:00:00 |
 +----------+
 
--- Decimal seconds (automatically truncated)
+-- Decimal seconds
 SELECT SEC_TO_TIME(3661.9) AS result;
-+----------+
-| result   |
-+----------+
-| 01:01:01 |
-+----------+
++-----------------+
+| result          |
++-----------------+
+| 01:01:01.900000 |
++-----------------+
 
 -- Input is NULL (returns NULL)
 SELECT SEC_TO_TIME(NULL) AS result;
@@ -81,7 +81,18 @@ SELECT SEC_TO_TIME(NULL) AS result;
 | NULL   |
 +--------+
 
--- Exceeds TIME type range, returns error
-SELECT SEC_TO_TIME(30245000) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]The function SEC_TO_TIME Argument value 30245000 is out of Time range
+--- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3023999 to 3023999), returns TIME max or min value
+ SELECT SEC_TO_TIME(30245000) AS result;
++-----------+
+| result    |
++-----------+
+| 838:59:59 |
++-----------+
+
+SELECT SEC_TO_TIME(-30245000) AS result;
++------------+
+| result     |
++------------+
+| -838:59:59 |
++------------+
 ```

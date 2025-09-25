@@ -22,7 +22,7 @@ TIMESTAMPDIFF(<unit>, <date_or_time_expr1>, <date_or_time_expr2>)
 
 | 参数 | 说明                                                        |
 | -- |-----------------------------------------------------------|
-| `<unit>` | 时间单位，指定要返回差异的单位，常见的值有 SECOND、MINUTE、HOUR、DAY、MONTH、QUARTERYEAR 等 |
+| `<unit>` | 时间单位，指定要返回的单位，常见的值有 SECOND、MINUTE、HOUR、DAY、MONTH、QUARTERYEAR 等 |
 |`<date_or_time_expr1>`| 第一个日期时间，开始日期时间，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                          |
 |`<date_or_time_expr2>`| 第二个日期时间，结束日期时间，支持输入 date/datetime 类型                                  |
 
@@ -30,10 +30,10 @@ TIMESTAMPDIFF(<unit>, <date_or_time_expr1>, <date_or_time_expr2>)
 
 返回两个日期时间之间的差异，类型为 BIGINT。
 
-- 若 <date_or_time_expr2> 晚于 <date_or_time_expr1>，返回正数；
-- 若 <dat_or_etime_expr2> 早于 <date_or_time_expr1>，返回负数；
+- 若 `<date_or_time_expr2>` 晚于 `<date_or_time_expr1>`，返回正数；
+- 若 `<dat_or_etime_expr2>` 早于 `<date_or_time_expr1>`，返回负数；
 - 若任一参数为 NULL，返回 NULL；
-- 若 <unit> 为不支持的单位，返回 错误；
+- 若 `<unit>` 为不支持的单位，返回 错误；
 - 计算一个单位时，不会忽略下一个单位，例如会计算真实差距是否满足一天，若不足则返回 0
 - 月份计算特殊情况，如 1-31 与 2-28，差数为一月
 - 输入 date 类型时，时间部分默认设置为 00:00:00
@@ -75,8 +75,8 @@ SELECT TIMESTAMPDIFF(DAY, '2023-12-31 23:59:50', '2024-01-01 00:00:05') AS resul
 +--------+
 
 -- 输入非法单位 QUARTER ，返回错误
-SELECT TIMESTAMPDIFF(QUARTER, '2023-01-01', '2023-07-01') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported time stamp diff time unit: QUARTER, supported time unit: YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND
+SELECT TIMESTAMPDIFF(QUAR, '2023-01-01', '2023-07-01') AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported time stamp diff time unit: QUAR, supported time unit: YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND
 
 -- 月份计算特殊情况（月底跨月）
 SELECT TIMESTAMPDIFF(MONTH, '2023-01-31', '2023-02-28') AS result;

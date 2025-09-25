@@ -74,8 +74,8 @@ SELECT TIMESTAMPDIFF(DAY, '2023-12-31 23:59:50', '2024-01-01 00:00:05') AS resul
 +--------+
 
 -- Invalid unit QUARTER, returns error
-SELECT TIMESTAMPDIFF(QUARTER, '2023-01-01', '2023-07-01') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported time stamp diff time unit: QUARTER, supported time unit: YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND
+SELECT TIMESTAMPDIFF(QUAR, '2023-01-01', '2023-07-01') AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported time stamp diff time unit: QUAR, supported time unit: YEAR/MONTH/WEEK/DAY/HOUR/MINUTE/SECOND
 
 -- Special case for month calculation (end of month crossing months)
 SELECT TIMESTAMPDIFF(MONTH, '2023-01-31', '2023-02-28') AS result;

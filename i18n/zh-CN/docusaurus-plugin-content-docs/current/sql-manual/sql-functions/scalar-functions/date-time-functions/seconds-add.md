@@ -8,7 +8,7 @@
 ## 描述
 SECONDS_ADD 函数用于在指定的日期时间值上增加或减少指定的秒数，并并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应秒数。
 
-该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 SECOND 为单位的行为一致
+该函数与 [date_add 函数](./date-add) 和 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 SECOND 为单位的行为一致
 
 ## 语法
 

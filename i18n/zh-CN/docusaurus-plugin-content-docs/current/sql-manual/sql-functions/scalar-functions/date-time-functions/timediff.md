@@ -31,7 +31,7 @@ TIMEDIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 - 当 `<end_datetime>` 和 `<start_datetime>` 相等时，返回 `00:00:00`。
 - 如果 `<end_datetime>` 或 `<start_datetime>` 为 `NULL`，函数返回 `NULL`。
 - 当返回时间差不为整数秒时，返回时间带有 scale.
-- 当计算机结果超出 time 范围[-838:59:59,828:59:59],返回错误
+- 当计算结果超出 time 范围[-838:59:59,838:59:59],返回错误
 
 ## 举例
 

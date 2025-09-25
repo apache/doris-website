@@ -7,7 +7,7 @@
 
 ## 描述
 
-TIMESTAMP 将 datetime 字符串转换为 DATETIME 类型
+TIMESTAMP 将 符合 datetime 格式的字符串转换为 DATETIME 类型
 
 具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
 
@@ -23,31 +23,26 @@ TIMESTAMP(string)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `string` | 日期时间字符串或者 datetime 类型 |
+| `string` | 日期时间字符串类型 |
 
 ## 返回值
 
 返回类型为 DATETIME。
 
 - 若输入为 date 字符串,则时间被设置为 00:00:00
-- 若输入日期时间无效，返回 NULL
 - 输入 NULL，返回 NULL
 ## 举例
 
 ```sql
 -- 将字符串转换为 DATETIME
 SELECT TIMESTAMP('2019-01-01 12:00:00');
-```
 
-```text
 +------------------------------------+
 | timestamp('2019-01-01 12:00:00')   |
 +------------------------------------+
 | 2019-01-01 12:00:00                |
 +------------------------------------+
-```
 
-```sql
 ---输入 date 字符串
 SELECT TIMESTAMP('2019-01-01');
 +-------------------------+
@@ -55,16 +50,6 @@ SELECT TIMESTAMP('2019-01-01');
 +-------------------------+
 | 2019-01-01 00:00:00     |
 +-------------------------+
-```
-
-```sql
----若输入日期时间无效，返回 NULL
-SELECT TIMESTAMP('2019-01-41 12:00:00');
-+----------------------------------+
-| TIMESTAMP('2019-01-41 12:00:00') |
-+----------------------------------+
-| NULL                             |
-+----------------------------------+
 
 --输入 NULL,返回 NULL
 SELECT TIMESTAMP(NULL);

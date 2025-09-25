@@ -7,6 +7,10 @@
 
 ## 描述
 SECOND_TIMESTAMP 函数用于将输入的日期时间值转换为 Unix 时间戳（以秒为单位），该时间戳表示从 1970-01-01 00:00:00 UTC 开始到指定日期时间的总秒数。该函数支持处理 DATETIME，该函数结果会加上机器所在的时区偏移，时区部分请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
+
+## 别名
+- UNIX_TIMESTAMP()
+
 ## 语法
 
 ```sql
@@ -24,17 +28,15 @@ SECOND_TIMESTAMP(<datetime>)
 返回类型为 BIGINT，表示输入日期时间转换为当前时区所对应的 Unix 时间戳（以秒为单位）。
 
 特殊情况说明:
-- 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00（UTC 时间）；
-- 若输入的日期时间早于 1970-01-01 00:00:00 UTC，返回负数时间戳；
-- 若 <datetime> 为 NULL，返回 NULL；
+- 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00；
+- 若输入的日期时间早于 1970-01-01 00:00:00，返回负数时间戳；
+- 若 `<datetime>` 为 NULL，返回 NULL；
 
 ## 举例
 
 ```sql
-
-
----当前测试是在东八区，所有默认时间是东八区所在时间，也可以指定时区
-SELECT SECOND_TIMESTAMP('1970-01-01 00:00:00 UTC') AS result;
+--- 输入初始日期，返回 0
+SELECT SECOND_TIMESTAMP('1970-01-01 00:00:00') AS result;
 +--------+
 | result |
 +--------+

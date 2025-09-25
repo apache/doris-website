@@ -9,7 +9,7 @@
 
 The SECONDS_SUB function subtracts or adds a specified number of seconds to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to adding the corresponding number of seconds.
 
-This function behaves consistently with MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using SECOND as the unit.
+This function behaves consistently with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using SECOND as the unit.
 
 ## Syntax
 
@@ -86,5 +86,5 @@ SELECT SECONDS_SUB(NULL, 30), SECONDS_SUB('2025-01-23 12:34:56', NULL) AS result
 
 --- Calculation result exceeds date range
 SELECT SECONDS_SUB('0000-01-01 00:00:00', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation seconds_sub of 0000-01-01 00:00:00, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation seconds_add of 0000-01-01 00:00:00, -1 out of range
 ```
