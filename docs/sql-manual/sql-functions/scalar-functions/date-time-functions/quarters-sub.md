@@ -31,7 +31,7 @@ Returns a date value consistent with the input date type.
 - If `<quarters>` is negative, the function behaves the same as adding the corresponding number of quarters to the base time (i.e., QUARTERS_SUB(date, -n) is equivalent to QUARTERS_ADD(date, n)).
 - If the input is of DATE type (only includes year, month, and day), the result remains of DATE type; if the input is of DATETIME type, the result preserves the original time component (e.g., '2023-04-01 12:34:56' becomes '2023-01-01 12:34:56' after subtracting 1 quarter).
 - If the input date is the last day of the month and the target month has fewer days than that date, it automatically adjusts to the last day of the target month (e.g., April 30th minus 1 quarter (3 months) becomes January 31st).
-- If the calculation result exceeds the valid range of the date type (DATE type: 0000-01-01 to 9999-12-31; DATETIME type: 0000-01-01 00:00:00 to 9999-12-31 23:59:59), returns NULL or throws an exception.
+- If the calculation result exceeds the valid range of the date type (DATE type: 0000-01-01 to 9999-12-31; DATETIME type: 0000-01-01 00:00:00 to 9999-12-31 23:59:59), throws an exception.
 - If any parameter is NULL, returns NULL.
 
 ## Examples
