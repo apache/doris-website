@@ -7,7 +7,7 @@
 
 ## 描述
 
-转换 datetime 值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值,时区设置请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone) 文档。
+转换 datetime 值，从 from_tz 给定时区转到 to_tz 给定时区，并返回结果值，时区设置请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone) 文档。
 
 该函数与 mysql 中的 [convert_tz 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_convert_tz) 行为一致
 
@@ -21,21 +21,21 @@ CONVERT_TZ(<date_or_time_expr>, <from_tz>, <to_tz>)
 
 | 参数 | 说明 |
 | -- | -- | 
-| `<date_or_time_expr>` | 需要被转换的值,为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
-| `<from_tz>` | dt 的原始时区,该参数为 `varchar` 类型 |
-| `<to_tz>` | 需要转换的时区 ，该参数为 `varchar` 类型|
+| `<date_or_time_expr>` | 需要被转换的值，为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<from_tz>` | dt 的原始时区，该参数为 `varchar` 类型 |
+| `<to_tz>` | 需要转换的时区，该参数为 `varchar` 类型|
 
 ## 返回值
 
 - 转换后的值，类型为 datetime
-- 返回的scale 跟输入的scale 相同
-  - 不带有 scale 的 datetime 输入, 返回结果也不带有 scale
+- 返回的 scale 跟输入的 scale 相同
+  - 不带有 scale 的 datetime 输入，返回结果也不带有 scale
   - 带有 scale 的输入，返回的结果带有相同的 scale
 
 特殊情况:
-- 如果任何参数为 NULL，返回 NULL。
-- 当输入的时区不合法的时候，返回错误。 时区的设置参考 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
-- 输入为date类型，时间部分自动转换为 00:00:00
+- 如果任何参数为 NULL。返回 NULL。
+- 当输入的时区不合法的时候，返回错误，时区的设置参考 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
+- 输入为 date 类型，时间部分自动转换为 00:00:00
 
 ## 示例
 

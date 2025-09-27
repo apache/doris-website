@@ -6,13 +6,18 @@
 ---
 
 ## Description
-The YEAR_FLOOR function rounds down an input datetime value to the nearest specified year interval start time, with the interval unit being year. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
+
+The year_floor function rounds down an input datetime value to the nearest specified year interval start time. If origin is specified, it uses that as the reference; otherwise, it defaults to 0000-01-01 00:00:00.
 
 Date calculation formula:
 $$
-\text{YEAR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{year\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-where K represents the number of periods from the reference time to the target time.
+$k$ represents the number of periods from the reference time to the target time.
 
 ## Syntax
 ```sql

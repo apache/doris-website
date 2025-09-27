@@ -7,14 +7,17 @@
 
 ## Description
 
-The DATE_FLOOR function is used to floor a specified date or time value down to the nearest start of a specified time interval period. That is, it returns the largest periodic moment that is not greater than the input date and time. The period rules are jointly defined by `period` (number of periods) and `type` (period unit), and all periods are calculated based on the fixed starting point 0001-01-01 00:00:00.
+The date_floor function floors a specified date or time value down to the nearest start of a specified time interval period. The period rules are defined by period (number of units) and type (unit), calculated from the fixed starting point 0001-01-01 00:00:00.
 
-Translation of Date and Time Calculation Formula
+Date calculation formula:
 $$
-\text{DATE\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{date\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{type}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-
-Where K represents the number of periods from the reference time to the target time.
+$k$ represents the number of cycles required for the base time to reach the target time.
 
 type represent the unit of period
 

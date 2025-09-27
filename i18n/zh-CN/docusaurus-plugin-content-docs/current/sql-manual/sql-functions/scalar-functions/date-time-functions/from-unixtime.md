@@ -24,14 +24,14 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 | 参数 | 说明 |
 | -- | -- |
 | `<unix_timestamp>` | 输入的 Unix 时间戳，类型为整数 BIGINT，表示从 1970-01-01 00:00:00 UTC 开始的秒数 |
-| `<string_format>` | format 格式,支持类型 varchar 和string，默认为 %Y-%m-%d %H:%i:%s, 具体格式请查看 [date-format](./date-format)|
+| `<string_format>` | format 格式，支持类型 varchar 和 string，默认为 %Y-%m-%d %H:%i:%s，具体格式请查看 [date-format](./date-format)|
 
 ## 返回值
 
-返回指定格式的日期,类型为 VARCHAR，返回的是UTC时区下的时间戳的时间戳转换为当前时区的时间。
-- 目前支持的 unix_timestamp 范围为 [0,  253402271999] 对应日期为 1970-01-01 00:00:00 至 9999-12-31 23:59:59，超出范围的 unix_timestamp 将返回 错误
+返回指定格式的日期，类型为 VARCHAR，返回的是 UTC 时区下的时间戳的时间戳转换为当前时区的时间。
+- 目前支持的 unix_timestamp 范围为 [0，253402271999] 对应日期为 1970-01-01 00:00:00 至 9999-12-31 23:59:59，超出范围的 unix_timestamp 将返回错误
 - 若 string_format 格式无效，返回不符合预期的字符串。
-- 若任意参数为 NULL ,则返回 NULL
+- 若任意参数为 NULL，则返回 NULL
 - 如果 string_format 超过 128 字符长度，返回错误
 
 ## 举例

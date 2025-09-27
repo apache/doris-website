@@ -25,7 +25,7 @@ from_iso8601_date(<dt>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date>` | ISO8601 格式的日期,为字符串类型 |
+| `<date>` | ISO8601 格式的日期，为字符串类型 |
 
 ## 返回值
 
@@ -41,7 +41,6 @@ select
     from_iso8601_date('2023') as year_only, 
     from_iso8601_date('2023-10') as year_month, 
     from_iso8601_date('2023-10-05') as full_date; 
-
 +------------+------------+------------+
 | year_only  | year_month | full_date  |
 +------------+------------+------------+
@@ -54,7 +53,6 @@ select
     from_iso8601_date('2021-059') as day_59, 
     from_iso8601_date('2021-060') as day_60,  
     from_iso8601_date('2024-366') as day_366; 
-
 +------------+------------+------------+------------+
 | day_1      | day_59     | day_60     | day_366    |
 +------------+------------+------------+------------+
@@ -68,7 +66,6 @@ select from_iso8601_date('0522-W01-1') as week_1;
 +------------+
 | 0521-12-29 |
 +------------+
-1 row in set (0.02 sec)
 
 select from_iso8601_date('0522-W01-4') as week_4;
 +------------+
@@ -79,7 +76,6 @@ select from_iso8601_date('0522-W01-4') as week_4;
 
 ---YYY-MMM格式，第一周的周一在521年
 select from_iso8601_date('0522-W01') as week_1;
-
 +------------+
 | week_1     |
 +------------+

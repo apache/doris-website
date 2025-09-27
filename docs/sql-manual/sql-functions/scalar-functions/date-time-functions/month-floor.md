@@ -7,14 +7,17 @@
 
 ## Description
 
-The MONTH_FLOOR function rounds the input datetime value down to the nearest specified month interval. If an origin time is specified, it uses that time as the baseline for dividing intervals and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the baseline. This function supports processing DATETIME and DATE types.
+The month_floor function rounds the input datetime value down to the nearest specified month interval. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
-
 $$
-\text{MONTH\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{month\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{month} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K represents the number of periods from the baseline time to the target time.
+$k$ represents the number of periods from the baseline time to the target time.
 
 ## Syntax
 

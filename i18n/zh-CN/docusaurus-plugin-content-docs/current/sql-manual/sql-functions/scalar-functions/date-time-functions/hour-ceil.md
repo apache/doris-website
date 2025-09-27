@@ -8,11 +8,15 @@
 ## 描述
 
 HOUR_CEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。
-日期计算公式
+日期计算公式：
 $$
-\text{HOUR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{hour\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K 代表基准时间到达目标时间所需的周期数
+$k$ 代表基准时间到达目标时间所需的周期数
 
 ## 语法
 
@@ -29,7 +33,7 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 | -- | -- |
 | `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime 和 date 类型，date 类型会转换为一天的 00:00:00 开始,具体 datetime/date 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 可选参数，指定周期长度（单位：小时），为正整数（如 1、3、5）。默认值为 1，表示每 1 小时一个周期|
-| `<origin>` | 开始的时间起点,支持输入 datetime 和 date 类型，如果不填，默认是 0001-01-01T00:00:00 |
+| `<origin>` | 开始的时间起点，支持输入 datetime 和 date 类型，如果不填，默认是 0001-01-01T00:00:00 |
 
 ## 返回值
 
@@ -37,8 +41,8 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 - 若输入的 period 为非正数，返回错误。
 - 若是任意参数为 NULL ,结果返回 NULL.
-- origin 或 datetime 带有 scale,返回结果带有 scale, 小数部位变为零
-- 计算结果大于最大日期时间范围 9999-12-31 23:59:59,返回 错误
+- origin 或 datetime 带有 scale, 返回结果带有 scale, 小数部位变为零
+- 计算结果大于最大日期时间范围 9999-12-31 23:59:59, 返回 错误
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
 
 

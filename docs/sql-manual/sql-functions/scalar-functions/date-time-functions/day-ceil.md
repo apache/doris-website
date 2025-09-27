@@ -7,15 +7,18 @@
 
 ## Description
 
-The DAY_CEIL function is used to round up a specified date or time value to the start of the nearest specified day period. It returns the smallest period moment that is not less than the input date and time. The period rule is defined jointly by period (number of days in the period) and origin (starting reference time). If no starting reference time is specified, it defaults to 0001-01-01 00:00:00 as the calculation basis.
+
+The day_ceil function rounds up a specified date or time value to the start of the nearest specified day period. The period rule is defined by period (number of days) and origin (reference time). If origin is not specified, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
-
 $$
-\text{DAY\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{day\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-
-where K represents the number of periods required to reach the target time from the reference time.
+$k$ represents the number of periods needed from the baseline time to reach the target time.
 
 ## Syntax
 

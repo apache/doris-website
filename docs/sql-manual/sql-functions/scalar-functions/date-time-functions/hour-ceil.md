@@ -7,13 +7,18 @@
 
 ## Description
 
-The HOUR_CEIL function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is specified as 5 hours, the function will adjust the input time to the next hour mark within that period (if the input time is already at the period origin, it remains unchanged).
+
+The hour_ceil function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the next hour mark within that period.
 
 Date calculation formula:
 $$
-\text{HOUR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{hour\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K represents the number of periods required from the baseline time to reach the target time.
+$k$ represents the number of periods required from the baseline time to reach the target time.
 
 ## Syntax
 

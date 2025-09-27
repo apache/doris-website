@@ -14,7 +14,7 @@ This function is consistent with the [date_format function](https://dev.mysql.co
 ## Syntax
 
 ```sql
-DATE_FORMAT(<date>, <format>)
+DATE_FORMAT(<date_or_time_expr>, <format>)
 ```
 
 ## Parameters

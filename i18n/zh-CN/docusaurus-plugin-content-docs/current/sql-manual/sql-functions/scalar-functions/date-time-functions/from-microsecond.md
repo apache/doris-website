@@ -22,7 +22,7 @@ FROM_MICROSECOND(<unix_timestamp>)
 
 ## 返回值
 
-返回一个 DATETIME 类型的值，表示UTC时区下的unix时间戳，转换为当前时区的时间的结果
+返回一个 DATETIME 类型的值，表示 UTC 时区下的 unix 时间戳，转换为当前时区的时间的结果
 - 如果 <unix_timestamp> 为 NULL，函数返回 NULL。
 - 若输入 <unix_timestamp> 能转换为整数秒，那么结果返回日期时间不带有 scale，如果不能，则结果返回带有 scale
 - 如果 <unix_timestamp> 小于 0 ，返回错误
@@ -42,7 +42,6 @@ SELECT FROM_MICROSECOND(0);
 
 ---将 1700000000000000 微秒加在基准时间后转换为的日期时间
 SELECT FROM_MICROSECOND(1700000000000000);
-
 +------------------------------------+
 | from_microsecond(1700000000000000) |
 +------------------------------------+
@@ -51,7 +50,6 @@ SELECT FROM_MICROSECOND(1700000000000000);
 
 -- 时间戳包含非整数秒（1700000000 秒 + 123456 微秒）
 select from_microsecond(1700000000123456) as dt_with_micro;
-
 +----------------------------+
 | dt_with_micro              |
 +----------------------------+
