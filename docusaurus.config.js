@@ -73,6 +73,12 @@ const config = {
         // 'https://fonts.googleapis.com',
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
+        {
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+            type: 'text/css',
+            integrity: 'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+            crossorigin: 'anonymous',
+        },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
@@ -157,7 +163,8 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
-                    remarkPlugins: [markdownBoldPlugin],
+                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                    rehypePlugins: [require('rehype-katex')],
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',

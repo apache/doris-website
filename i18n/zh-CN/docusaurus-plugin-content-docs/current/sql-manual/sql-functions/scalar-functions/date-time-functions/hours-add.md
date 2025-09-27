@@ -21,7 +21,7 @@ HOURS_ADD(`<date_or_time_expr>`, `<hours>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型，具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<hours>` | 	要增加的小时数，类型为整数（INT），可正可负：正数：增加指定小时，负数：减少指定小时（等效于减去小时）。 |
 
 ## 返回值

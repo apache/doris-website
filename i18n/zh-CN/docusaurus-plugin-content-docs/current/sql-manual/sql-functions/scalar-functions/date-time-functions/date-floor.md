@@ -9,13 +9,17 @@
 
 DATE_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定时间间隔周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期数量）和 type（周期单位）共同定义，所有周期均以固定起点 0001-01-01 00:00:00 为基准计算。
 
-日期时间的计算公式
+日期时间的计算公式：
 $$
-\text{DATE\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{date\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{type} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K 代表的是基准时间到目标时间的周期数
+$k$ 代表的是基准时间到目标时间的周期数
 
-type 代表的是周期单位
+$\text{type}$ 代表的是周期单位
 
 ## 语法
 

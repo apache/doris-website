@@ -82,7 +82,6 @@ SELECT YEARS_DIFF('2024-02-29', '2023-02-28') AS leap_year_diff;
 |              1 |
 +----------------+
 
-
 -- 任一参数为NULL（返回NULL）
 SELECT 
   YEARS_DIFF(NULL, '2023-03-15') AS null_input1,

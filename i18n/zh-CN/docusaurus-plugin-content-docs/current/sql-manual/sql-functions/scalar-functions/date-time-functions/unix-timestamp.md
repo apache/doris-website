@@ -53,10 +53,10 @@ UNIX_TIMESTAMP([DATETIME date[, fmt]])
 ## 返回值
 根据输入返回两种类型
 
-1.若是输入的 date_or_time_expr 为 datetime 类型且 scale 不为零或者带有 format 参数
+1. 若是输入的 date_or_time_expr 为 datetime 类型且 scale 不为零或者带有 format 参数
 返回一个时间戳，类型为 Decimal，最高六位小数精度
 
-2.若是输入的 date_or_time_expr 或 scale 为 0 并且不带有 format 参数
+2. 若是输入的 date_or_time_expr 或 scale 为 0 并且不带有 format 参数
 返回一个时间戳，类型为 INT
 
 将输入时间转换为当前输入时间所对应的时间戳，起始时间为 1970-01-01 00:00:00.

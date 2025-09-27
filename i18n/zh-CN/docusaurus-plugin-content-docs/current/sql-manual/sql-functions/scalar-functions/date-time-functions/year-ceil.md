@@ -1,7 +1,7 @@
 ---
 {
-  "title": "YEAR_CEIL",
-  "language": "zh-CN"
+    "title": "YEAR_CEIL",
+    "language": "zh-CN"
 }
 ---
 
@@ -9,11 +9,15 @@
 
 YEAR_CEIL 函数用于将输入的日期时间值向上舍入到最接近的指定年间隔的起始时间，间隔单位为年。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
-日期计算公式
+日期计算公式：
 $$
-\text{YEAR\_CEIL}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{year\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K 代表基准时间到达目标时间所需的周期数
+$k$ 代表基准时间到达目标时间所需的周期数
 
 ## 语法
 ```sql

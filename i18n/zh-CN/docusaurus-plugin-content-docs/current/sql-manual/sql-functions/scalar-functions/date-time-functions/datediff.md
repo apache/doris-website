@@ -21,12 +21,12 @@ DATEDIFF(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 日期被减数，支持的类型为 datetime 或者 date 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
-| `<expr2>` | 日期减数,支持的类型为 date 和 datetime |
+| `<expr1>` | 日期被减数，支持的类型为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<expr2>` | 日期减数，支持的类型为 date 和 datetime |
 
 ## 返回值
 
-返回 expr1 - expr2 的值，结果精确到天,类型为 INT。
+返回 expr1 - expr2 的值，结果精确到天，类型为 INT。
 
 特殊情况:
 - expr1 大于 expr2 ,返回正数，反之返回负数
@@ -62,8 +62,6 @@ mysql> select datediff('2023-01-01', NULL);
 +------------------------------+
 |                         NULL |
 +------------------------------+
-
-
 
 ---若输入 datetime 类型，会忽略时间部分
 select datediff('2023-01-02 13:00:00', '2023-01-01 12:00:00');

@@ -9,11 +9,15 @@
 
 HOUR_FLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻.
 
-日期时间的计算公式
+日期时间的计算公式：
 $$
-\text{HOUR\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{hour\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K 代表的是基准时间到目标时间的周期数
+$k$ 代表的是基准时间到目标时间的周期数
 
 ## 语法
 
@@ -36,10 +40,10 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回 DATETIME 类型的值，表示向下取整后的最近周期时刻。
 
-- 若输入的 period 为非正数，返回错误s。
+- 若输入的 period 为非正数，返回错误。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale，小数部分变为零
-- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周s期 k 为负数。
+- 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
 
 ## 举例
 
@@ -48,7 +52,6 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 -- 按5小时周期向下取整，默认起点为0001-01-01 00:00:00
 
 mysql> select hour_floor("2023-07-13 22:28:18", 5);
-
 +--------------------------------------+
 | hour_floor("2023-07-13 22:28:18", 5) |
 +--------------------------------------+

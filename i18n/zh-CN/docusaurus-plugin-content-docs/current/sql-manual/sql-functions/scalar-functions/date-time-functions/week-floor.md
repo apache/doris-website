@@ -10,12 +10,16 @@
 
 WEEK_FLOOR 函数用于将输入的日期时间值向下舍入到最接近的指定周间隔的起始时间，间隔单位为 WEEK。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
 
-日期时间的计算公式
+日期时间的计算公式：
 
 $$
-\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{week\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K 代表的是基准时间到目标时间的周期数
+$k$ 代表的是基准时间到目标时间的周期数
 
 ## 语法
 

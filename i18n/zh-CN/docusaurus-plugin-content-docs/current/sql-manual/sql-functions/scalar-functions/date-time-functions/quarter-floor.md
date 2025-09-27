@@ -9,6 +9,15 @@
 
 将日期时间值向下取整到最近的指定季度周期起点。如果指定了起始时间（origin），则以该时间为基准计算周期。
 
+$$
+\begin{aligned}
+&\text{quarter\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{quarter} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{quarter} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
+$$
+$k$ 代表基准时间到目标时间所需要的周期数
+
 ## 语法
 
 ```sql

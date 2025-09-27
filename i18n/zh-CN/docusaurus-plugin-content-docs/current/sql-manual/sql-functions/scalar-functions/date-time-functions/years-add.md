@@ -21,7 +21,7 @@ YEARS_ADD(<date_or_time_expr>, <years>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<years>` | 要增加的年数，类型为 INT,负数表示减少，正数表示增加 |
 
 

@@ -9,11 +9,15 @@
 
 DAY_FLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定天数周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。
 
-日期时间的计算公式
-$
-\text{DAY\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
-$
-K 代表的是基准时间到目标时间的周期数
+日期时间的计算公式：
+$$
+\begin{aligned}
+&\text{day\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{day} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
+$$
+$k$ 代表的是基准时间到目标时间的周期数
 
 ## 语法
 
@@ -28,8 +32,8 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 NULL；若未指定，默认周期为 1 天。 |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 错误；若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
 
 ## 返回值
@@ -39,7 +43,6 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 若输入有效，返回与 datetime 类型一致的取整结果：
 
 `<date_or_time_expr>` 与 `<origin>` 输入都 DATE 类型时，返回 DATE 类型, 否则返回 DATETIME 类型.
-
 
 特殊情况：
 
@@ -53,13 +56,11 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ```sql
 ---五天为一周期向下取整
 select day_floor("2023-07-13 22:28:18", 5);
-
 +-------------------------------------+
 | day_floor("2023-07-13 22:28:18", 5) |
 +-------------------------------------+
 | 2023-07-10 00:00:00                 |
 +-------------------------------------+
-
 
 ---带有 scale 输入的符合日期时间，返回值带有 scale 且全部小数为 0
 mysql> select day_floor("2023-07-13 22:28:18.123", 5);
@@ -68,7 +69,6 @@ mysql> select day_floor("2023-07-13 22:28:18.123", 5);
 +-----------------------------------------+
 | 2023-07-10 00:00:00.000                 |
 +-----------------------------------------+
-
 
 ---输入参数不带有周期，默认一天为一周期
 select day_floor("2023-07-13 22:28:18");

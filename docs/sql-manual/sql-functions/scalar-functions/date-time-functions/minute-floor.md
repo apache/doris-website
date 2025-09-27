@@ -7,14 +7,17 @@
 
 ## Description
 
-The MINUTE_FLOOR function rounds the input datetime value down to the nearest specified minute interval. If an origin time is specified, it uses that time as the baseline for dividing intervals and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the baseline. This function supports processing DATETIME types.
+The minute_floor function rounds the input datetime value down to the nearest specified minute interval. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
-
 $$
-\text{MINUTE\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{minute} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{minute} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{minute\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{minute} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{minute} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K represents the number of periods from the baseline time to the target time.
+$k$ represents the number of periods from the baseline time to the target time.
 
 ## Syntax
 

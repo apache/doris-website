@@ -7,13 +7,17 @@
 
 ## Description
 
-The SECOND_FLOOR function rounds the input datetime value down to the nearest specified second period. If a starting time (origin) is specified, it uses that time as the basis for dividing periods and rounding; if not specified, it defaults to 0001-01-01 00:00:00 as the basis. This function supports processing DATETIME types.
+The second_floor function rounds the input datetime value down to the nearest specified second period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00.
 
-Datetime calculation formula:
+Date calculation formula:
 $$
-\text{SECOND\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{second\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{second} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-K represents the number of periods from the base time to the target time.
+$k$ represents the number of periods from the base time to the target time.
 
 ## Syntax
 

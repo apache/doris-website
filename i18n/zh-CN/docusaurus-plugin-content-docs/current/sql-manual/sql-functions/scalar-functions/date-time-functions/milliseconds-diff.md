@@ -19,8 +19,8 @@ MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr1>` | 结束时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<date_or_time_expr2>` | 结束时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
+| `<date_or_time_expr1>` | 结束时间，支持输入 datetime 类型，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<date_or_time_expr2>` | 结束时间，支持输入 datetime 类型，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
 
 ## 返回值
 
@@ -37,7 +37,6 @@ MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ```sql
 ---计算毫秒差
 SELECT MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000');
-
 +-------------------------------------------------------------------------------+
 | MILLISECONDS_DIFF('2020-12-25 21:00:00.623000', '2020-12-25 21:00:00.123000') |
 +-------------------------------------------------------------------------------+

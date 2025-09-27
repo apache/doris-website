@@ -27,7 +27,6 @@ CURTIME()
 
 ```sql
 mysql> select curtime();
-
 +----------------+
 | curtime()      |
 +----------------+

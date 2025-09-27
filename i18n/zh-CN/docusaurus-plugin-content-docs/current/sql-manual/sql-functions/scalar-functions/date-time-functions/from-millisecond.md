@@ -22,7 +22,7 @@ FROM_MILLISECOND(<millisecond>)
 
 ## 返回值
 
-返回一个 DATETIME 类型的值，表示输入的 UTC时区下的unix时间戳，转换为当前时区的时间的结果
+返回一个 DATETIME 类型的值，表示输入的 UTC 时区下的 unix 时间戳，转换为当前时区的时间的结果
 - 如果 millisecond 为 NULL，函数返回 NULL。
 - 如果 millisecond 超出有效范围 ( 结果日期时间超过了 9999-12-31 23:59:59 ) ，函数返回错误。
 - 若输入 millisecond 能转换为整数秒，那么结果返回日期时间不带有 scale，如果不能，则结果返回带有 scale
@@ -51,7 +51,6 @@ SELECT FROM_MILLISECOND(1700000000000);
 
 -- 时间戳包含非零毫秒（1700000000 秒 + 123 毫秒）
 select from_millisecond(1700000000123) as dt_with_milli;
-
 +----------------------------+
 | dt_with_milli              |
 +----------------------------+

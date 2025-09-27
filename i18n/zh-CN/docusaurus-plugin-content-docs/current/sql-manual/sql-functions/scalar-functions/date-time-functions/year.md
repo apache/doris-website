@@ -19,7 +19,7 @@ YEAR(<date_or_time_expr>)
 
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<date_or_time_expr>`       | 要向上舍入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
+| `<date_or_time_expr>`       | 要向上舍入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
 
 ## 返回值
 
