@@ -43,7 +43,12 @@ EVEN(<a>)
 
 ## Return Value
 
-Returns the smallest even integer that is greater than or equal to x when x > 0, or less than or equal to x when x < 0.
+Returns an even integer based on the following rules:
+
+- If x > 0, round up to the closest even number.
+- If x < 0, round down to the closest even number.
+- If x is already an even number, return it directly.
+- If x is NULL, returns NULL.
 
 ## Examples
 
@@ -81,4 +86,16 @@ select even(4);
 +--------+
 |      4 |
 +--------+
+```
+
+```sql
+select even(NULL);
+```
+
+```text
++------------+
+| even(NULL) |
++------------+
+|       NULL |
++------------+
 ```

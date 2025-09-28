@@ -43,6 +43,7 @@ SIGNBIT(<a>)
 ## Return Value
 
 Returns true if the sign bit of `<a>` is set (i.e., `<a>` is negative), otherwise returns false.
+Specifically, it can also distinguish between positive and negative zeros in floating-point numbers.
 
 ## Examples
 
@@ -80,4 +81,16 @@ select signbit(1.0);
 +----------------------------+
 | false                      |
 +----------------------------+
+```
+
+```sql
+select signbit(cast('+0.0' as double)) , signbit(cast('-0.0' as double));
+```
+
+```text
++---------------------------------+---------------------------------+
+| signbit(cast('+0.0' as double)) | signbit(cast('-0.0' as double)) |
++---------------------------------+---------------------------------+
+|                               0 |                               1 |
++---------------------------------+---------------------------------+
 ```

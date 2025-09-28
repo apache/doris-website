@@ -19,11 +19,12 @@ BIN(<a>)
 
 | Parameter | Description |
 | -- | -- |
-| `<a>` | Decimal value to be converted |
+| `<a>` | Decimal value to be converted (type: BigInt) |
 
 ## Return Value
 
 The binary representation of the parameter `<a>`. When `<a>` is negative, the result is its 64-bit complement.
+When `a` is NULL, returns NULL.
 
 ## Examples
 
@@ -61,4 +62,16 @@ select bin(123);
 +----------+
 | 1111011  |
 +----------+
+```
+
+```sql
+select bin(NULL);
+```
+
+```text
++-----------+
+| bin(NULL) |
++-----------+
+| NULL      |
++-----------+
 ```

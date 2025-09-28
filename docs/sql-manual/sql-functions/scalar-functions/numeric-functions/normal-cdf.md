@@ -30,6 +30,7 @@ NORMAL_CDF(<mean>, <sd>, <x>)
 Return the Cumulative distribution Function (CDF) for a Normal random variable at a value `x`.
 
 - Return `NULL` when standard deviation of the normal distribution is less than or equal to `0`.
+- If any input is NULL, returns NULL.
 
 ## Examples
 
@@ -55,4 +56,16 @@ select NORMAL_CDF(10, 0, 10);
 +-----------------------------------------------------------------------+
 |                                                                  NULL |
 +-----------------------------------------------------------------------+
+```
+
+```sql
+select normal_cdf(10, 9, NULL);
+```
+
+```text
++-------------------------+
+| normal_cdf(10, 9, NULL) |
++-------------------------+
+|                    NULL |
++-------------------------+
 ```

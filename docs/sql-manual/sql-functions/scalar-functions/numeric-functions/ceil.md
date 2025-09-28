@@ -34,6 +34,8 @@ For an entry `<a>` of type Decimal, assuming it is of type `Decimal(p, s)`, the 
 - `Decimal(p, <d>)`，if `0 < <d> <= s`
 - `Decimal(p, s)`，if `<d> > s`
 
+When any input parameter is NULL, returns NULL.
+
 ## Alias
 
 - DCEIL
@@ -102,5 +104,17 @@ select ceil(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers(
 |     123.46 |
 |     123.46 |
 |     123.46 |
++------------+
+```
+
+```sql
+select ceil(NULL);
+```
+
+```text
++------------+
+| ceil(NULL) |
++------------+
+|       NULL |
 +------------+
 ```

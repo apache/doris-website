@@ -34,6 +34,8 @@ CEIL(<a>[, <d>])
 - `Decimal(p, <d>)`，若 `0 < <d> <= s`
 - `Decimal(p, s)`，若 `<d> > s`
 
+任意一个输入参数为 NULL 时，返回 NULL。
+
 ## 别名
 
 - DCEIL
@@ -102,5 +104,17 @@ select ceil(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers(
 |     123.46 |
 |     123.46 |
 |     123.46 |
++------------+
+```
+
+```sql
+select ceil(NULL);
+```
+
+```text
++------------+
+| ceil(NULL) |
++------------+
+|       NULL |
 +------------+
 ```

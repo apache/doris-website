@@ -24,9 +24,11 @@ LOG(<b>[, <x>])
 
 ## Return value
 
-Return b float point number. Special cases:
+Return a float point number. Special cases:
 
-- If a IS NULL or x IS NULL, return NULL
+- If b IS NULL or x IS NULL, return NULL
+- If any parameter is NaN, return NaN
+- If parameters don't meet the input constraints, return NULL
 
 ## Example
 
@@ -100,4 +102,28 @@ select log(NULL,3);
 +------------------------------+
 |                         NULL |
 +------------------------------+
+```
+
+```sql
+select log(2 ,cast('nan' as double));
+```
+
+```text
++-------------------------------+
+| log(2 ,cast('nan' as double)) |
++-------------------------------+
+|                           NaN |
++-------------------------------+
+```
+
+```sql
+select log(2 ,-1);
+```
+
+```text
++------------+
+| log(2 ,-1) |
++------------+
+|       NULL |
++------------+
 ```

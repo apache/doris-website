@@ -29,7 +29,8 @@ LOG10(<x>)
 
 返回一个浮点数。
 
-- 当 x IS NULL：返回 `NULL`
+- 当 `x` 为 NULL 时，返回 `NULL`
+- 当 `x` 为 NaN 时，返回 NaN
 
 ## 举例
 
