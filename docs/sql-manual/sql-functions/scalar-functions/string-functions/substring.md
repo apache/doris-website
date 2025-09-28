@@ -13,6 +13,8 @@ The SUBSTRING function is used to extract a substring from a string. You can spe
 
 SUBSTR
 
+MID
+
 ## Syntax
 
 ```sql
@@ -97,4 +99,16 @@ SELECT substring('abc1def', 2, 2);
 +-----------------------------+
 | bc                          |
 +-----------------------------+
+```
+
+6. NULL example with alias MID
+```sql
+SELECT MID(NULL, 2);
+```
+```text
++--------------+
+| MID(NULL, 2) |
++--------------+
+| NULL         |
++--------------+
 ```
