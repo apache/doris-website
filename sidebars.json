@@ -1338,7 +1338,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-format",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-sub",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/date-diff",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/datediff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/day",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/day-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor",

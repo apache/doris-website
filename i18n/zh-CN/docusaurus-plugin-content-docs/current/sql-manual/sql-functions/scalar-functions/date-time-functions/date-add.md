@@ -10,7 +10,7 @@
 DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
 
 - 支持的输入日期类型包括 DATE、DATETIME（如 '2023-12-31'、'2023-12-31 23:59:59'）。
-- 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示 “添加”，为负数时等效于 “减去” 对应间隔。
+- 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示“添加”，为负数时等效于“减去”对应间隔。
 
 该函数与 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) 行为大致一致，但不同的是，mysql 支持联合单位的增减，如:
 
@@ -36,8 +36,8 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 待处理的日期 / 时间值。支持类型：为 datetime 或者 date 类型 ,最高有六位秒数的精度(如 2022-12-28 23:59:59.999999)，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
-| `<expr>` | 希望添加的时间间隔, 为 `INT` 类型|
+| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
+| `<expr>` | 希望添加的时间间隔，为 `INT` 类型|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND |
 
 ## 返回值
@@ -45,12 +45,12 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 返回与 <date_or_time_expr> 类型一致的结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）；
-- 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale,最高六位小数精度。
+- 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale，最高六位小数精度。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法单位或非数值 expr 时，报错；
-- 计算后超出日期类型范围（如 '0000-00-00 23:59:59' 之前,'9999-12-31 23:59:59' 之后）时，返回错误。
+- 计算后超出日期类型范围（如 '0000-00-00 23:59:59' 之前，'9999-12-31 23:59:59' 之后）时，返回错误。
 - 若是下月不足输入日期的天数，会自动设置为下月最后一天
 
 ## 举例
@@ -58,7 +58,6 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 ```sql
 ---添加天数
 select date_add(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
-
 +-------------------------------------------------+
 | date_add('2010-11-30 23:59:59', INTERVAL 2 DAY) |
 +-------------------------------------------------+

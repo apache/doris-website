@@ -6,7 +6,7 @@
 ---
 ## 描述
 
-DATE 函数用于从日期时间值（包含日期和时间）中提取出纯日期部分，忽略时间信息。该函数可将 DATETIME 类型转换为 DATE 类型，仅保留年、月、日信息。
+DATE 函数用于从日期时间值(包含日期和时间)中提取出纯日期部分，忽略时间信息。该函数可将 DATETIME 类型转换为 DATE 类型，仅保留年、月、日信息。
 
 该函数与 mysql 中的 [date 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date) 行为一致
 

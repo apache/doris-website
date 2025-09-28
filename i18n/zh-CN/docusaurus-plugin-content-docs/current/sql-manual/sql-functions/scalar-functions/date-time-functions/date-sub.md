@@ -33,16 +33,16 @@ DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期值,支持 为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<date_or_time_part>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT` |
-| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK，DAY, HOUR, MINUTE, SECOND |
+| `<time_unit>` | 枚举值：YEAR，QUARTER，MONTH，WEEK，DAY，HOUR，MINUTE，SECOND |
 
 ## 返回值
 
 返回与 date 类型一致的计算结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
-- 对于带有 scale 的 datetime 类型，会保留 scale 返回.
+- 对于带有 scale 的 datetime 类型，会保留 scale 返回。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
@@ -55,7 +55,6 @@ DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 
 ---减去两天
 mysql> select date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY);
-
 +-------------------------------------------------------------------+
 | date_sub(cast('2010-11-30 23:59:59' as datetime), INTERVAL 2 DAY) |
 +-------------------------------------------------------------------+
@@ -95,7 +94,6 @@ mysql> select date_sub('2023-12-31 23:59:59', INTERVAL 61 SECOND);
 +-----------------------------------------------------+
 
 ---季度相减
-
 mysql> select date_sub('2023-12-31 23:59:59', INTERVAL 61 QUARTER);
 +------------------------------------------------------+
 | date_sub('2023-12-31 23:59:59', INTERVAL 61 QUARTER) |

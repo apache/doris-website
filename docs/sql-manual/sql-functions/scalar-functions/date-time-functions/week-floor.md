@@ -7,13 +7,17 @@
 
 ## Description
 
-The WEEK_FLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
+The week_floor function rounds down an input datetime value to the nearest specified week interval start time. If origin is specified, it uses that as the reference; otherwise, it defaults to 0000-01-01 00:00:00.
 
 Date calculation formula:
 $$
-\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\begin{aligned}
+&\text{week\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
 $$
-where K represents the number of periods from the reference time to the target time.
+$k$ represents the number of periods from the reference time to the target time.
 
 ## Syntax
 
@@ -87,8 +91,7 @@ SELECT WEEK_FLOOR('2023-07-13', 1, '2023-07-03') AS result;
 | 2023-07-10 00:00:00 |
 +---------------------+
 
--- Invalid period
--- 无效period，返回错误
+-- Invalid period, returns error
 SELECT WEEK_FLOOR('2023-07-13', 0) AS result;
 RROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_floor of 2023-07-13 00:00:00, 0 out of range
 

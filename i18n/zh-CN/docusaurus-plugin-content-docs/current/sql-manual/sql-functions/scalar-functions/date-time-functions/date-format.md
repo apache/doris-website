@@ -21,8 +21,8 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 合法的日期值，支持 为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
-| `<format>` | 规定日期/时间的输出格式, 为 `varchar` 类型 |
+| `<date_or_time_expr>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
+| `<format>` | 规定日期/时间的输出格式，为 `varchar` 类型 |
 
 支持的 format 格式：
 
@@ -49,10 +49,10 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 | %S     | 秒 (00-59)                          |
 | %s     | 秒 (00-59)                          |
 | %T     | 时间，24-小时 (hh:mm:ss)            |
-| %U     | 周 (00-53) 星期日是一周的第一天,[week](./week),模式 0  |
-| %u     | 周 (00-53) 星期一是一周的第一天,[week](./week),模式 1  |
-| %V     | 周 (01-53) 星期日是一周的第一天,[week](./week),模式 2,与 %X 使用 |
-| %v     | 周 (01-53) 星期一是一周的第一天,[week](./week),模式 3,与 %x 使用 |
+| %U     | 周 (00-53) 星期日是一周的第一天，[week](./week)，模式 0  |
+| %u     | 周 (00-53) 星期一是一周的第一天，[week](./week)，模式 1  |
+| %V     | 周 (01-53) 星期日是一周的第一天，[week](./week)，模式 2，与 %X 使用 |
+| %v     | 周 (01-53) 星期一是一周的第一天，[week](./week)，模式 3，与 %x 使用 |
 | %W     | 周中日的名称 (Sunday-Saturday)    |
 | %w     | 周的天（0=星期日，6=星期六）        |
 | %X     | 年，其中的星期日是周的第一天，4 位，与 %V 使用 |
@@ -72,12 +72,12 @@ yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 
 ## 返回值
 
-格式化后的日期字符串,类型为 Varchar。
+格式化后的日期字符串，类型为 Varchar。
 
 特殊情况：
 - format 为 NULL 返回 NULL。
 - 任一参数为 NULL 返回 NULL。
-- 如果输入字符超过 128 字符长度 ,返回错误
+- 如果输入字符超过 128 字符长度，返回错误
 - 如果返回结果字符串长度超过 102 ,返回错误
 
 ## 举例
@@ -85,7 +85,6 @@ yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 ```sql
 -- 输出星期名、月名、4位年份
 select date_format(cast('2009-10-04 22:23:00' as datetime), '%W %M %Y');
-
 +------------------------------------------------------------------+
 | date_format(cast('2009-10-04 22:23:00' as datetime), '%W %M %Y') |
 +------------------------------------------------------------------+
@@ -94,7 +93,6 @@ select date_format(cast('2009-10-04 22:23:00' as datetime), '%W %M %Y');
 
 -- 输出24小时制时间（时:分:秒）
 select date_format('2007-10-04 22:23:00', '%H:%i:%s');
-
 +------------------------------------------------+
 | date_format('2007-10-04 22:23:00', '%H:%i:%s') |
 +------------------------------------------------+
@@ -103,7 +101,6 @@ select date_format('2007-10-04 22:23:00', '%H:%i:%s');
 
 -- 组合多种格式符和普通字符
 select date_format('1900-10-04 22:23:00', 'Day: %D, Year: %y, Month: %b, DayOfYear: %j');
-
 +-----------------------------------------------------------------------------------+
 | date_format('1900-10-04 22:23:00', 'Day: %D, Year: %y, Month: %b, DayOfYear: %j') |
 +-----------------------------------------------------------------------------------+
@@ -112,7 +109,6 @@ select date_format('1900-10-04 22:23:00', 'Day: %D, Year: %y, Month: %b, DayOfYe
 
 -- %X（年份）与 %V（周数）搭配（星期日为周首）
 select date_format('1999-01-01 00:00:00', '%X-%V');
-
 +---------------------------------------------+
 | date_format('1999-01-01 00:00:00', '%X-%V') |
 +---------------------------------------------+
@@ -121,7 +117,6 @@ select date_format('1999-01-01 00:00:00', '%X-%V');
 
 -- 输出 % 字符（需用 %% 转义）
 select date_format(cast('2006-06-01' as date), '%%%d/%m');
-
 +----------------------------------------------------+
 | date_format(cast('2006-06-01' as date), '%%%d/%m') |
 +----------------------------------------------------+

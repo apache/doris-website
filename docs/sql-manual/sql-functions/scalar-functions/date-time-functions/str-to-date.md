@@ -41,7 +41,7 @@ Date and time matching method uses two pointers to point to the start of both st
 3. When matching ordinary letters, check if the characters pointed to by both pointers are equal. If not, return an error; if equal, parse the next character.
 4. When the date pointer reaches the end of the string, if the date/time only contains the date part, the format string will check whether it contains time part characters (e.g., %H). If so, the time part will be set to 00:00:00.
 5. When the format string pointer reaches the end, matching ends.
-6. Finally, check whether the matched time parts are valid (e.g., month must be in [1,12]). If invalid, return NULL; if valid, return the parsed date and time.
+6. Finally, check whether the matched time parts are valid (e.g., month must be in [1,12]). If invalid, return error; if valid, return the parsed date and time.
 
 - If any parameter is NULL, returns NULL;
 - If `<format>` is an empty string, returns error;

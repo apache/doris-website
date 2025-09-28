@@ -22,7 +22,7 @@ FROM_SECOND(<unix_timestamp>)
 
 ## 返回值
 
-- 返回一个 DATETIME 类型的值，表示输入的UTC时区下的unix时间戳，转换为当前时区的时间的结果
+- 返回一个 DATETIME 类型的值，表示输入的 UTC 时区下的 unix 时间戳，转换为当前时区的时间的结果
 - 如果 <unix_timestamp> 为 NULL，函数返回 NULL。
 - 如果 <unix_timestamp> 超出有效范围( 结果日期时间超过了 9999-12-31 23:59:59 ) ，函数返回错误。
 - 输入秒数为负数，函数返回错误
@@ -41,7 +41,6 @@ FROM_SECOND(<unix_timestamp>)
 
 ---将 1700000000 秒转换为日期时间
 SELECT FROM_SECOND(1700000000);
-
 +-------------------------+
 | from_second(1700000000) |
 +-------------------------+
