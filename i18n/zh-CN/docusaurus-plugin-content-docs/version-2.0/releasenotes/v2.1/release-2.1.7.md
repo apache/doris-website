@@ -118,7 +118,7 @@
 - 修复用户指定的 Start Time 不生效的问题。[#39573](https://github.com/apache/doris/pull/39573)
 - 修复嵌套物化视图不刷新的问题。[#40433](https://github.com/apache/doris/pull/40433)
 - 修复删除重建基表后，物化视图可能不刷新的问题。[#41762](https://github.com/apache/doris/pull/41762)
-- 修复分区补偿改写可能导致结果错误的问题。[#40803]( https://github.com/apache/doris/pull/40803)
+- 修复分区补偿改写可能导致结果错误的问题。[#40803](https://github.com/apache/doris/pull/40803)
 - 当 `sql_select_limit` 设置时，改写结果可能错误的问题。[#40106](https://github.com/apache/doris/pull/40106)
 
 ### 半结构化管理
