@@ -7,42 +7,67 @@
 
 ## Description
 
-Subtracts a specified number of milliseconds from a datetime value and returns a new datetime value.
+The `MILLISECONDS_SUB` function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` types.
 
 ## Syntax
 
 ```sql
-MILLISECONDS_SUB(<basetime>, <delta>)
+MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 ```
 
 ## Parameters
 
-| Parameter | Description                                      |
-|-----------|--------------------------------------------------|
-| `<basetime>`  | The input datetime value, of type DATETIMEV2    |
-| `<delta>`     | The number of milliseconds to subtract, of type INT; 1 second = 1,000 milliseconds = 1,000,000 microseconds |
+| Parameter    | Description                                                                                   |
+|--------------|-----------------------------------------------------------------------------------------------|
+| `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<delta>`    | The number of milliseconds to subtract, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value
 
-Returns a value of type DATETIMEV2, representing the time value after subtracting the specified number of milliseconds from the input datetime. The precision of the return value is the same as that of the input parameter basetime.
+Returns a value of type `DATETIME`, representing the result of subtracting the specified milliseconds from the base time.
 
-## Example
+- If `<delta>` is negative, the function behaves the same as adding the corresponding milliseconds to the base time.
+- If the input is of `DATE` type (only includes year, month, and day), the default time part is set to `00:00:00.000`.
+- If the calculation result exceeds the valid range of the `DATETIME` type (`0000-01-01 00:00:00` to `9999-12-31 23:59:59.999999`), an exception is thrown.
+- If any parameter is `NULL`, the function returns `NULL`.
+
+## Examples
 
 ```sql
+-- Subtract 1 millisecond
 SELECT MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1);
-```
++---------------------------------------------------+
+| MILLISECONDS_SUB('2023-09-08 16:02:08.435123', 1) |
++---------------------------------------------------+
+| 2023-09-08 16:02:08.434123                        |
++---------------------------------------------------+
 
-```text
-+--------------------------------------------------------------------------+
-| milliseconds_sub(cast('2023-09-08 16:02:08.435123' as DATETIMEV2(6)), 1) |
-+--------------------------------------------------------------------------+
-| 2023-09-08 16:02:08.434123                                               |
-+--------------------------------------------------------------------------+
-1 row in set (0.11 sec)
-```
+-- Negative delta (equivalent to addition)
+SELECT MILLISECONDS_SUB('2023-05-01 10:00:00.200', -300);
++---------------------------------------------------+
+| MILLISECONDS_SUB('2023-05-01 10:00:00.200', -300) |
++---------------------------------------------------+
+| 2023-05-01 10:00:00.500000                        |
++---------------------------------------------------+
 
-**Note:**
-- In the example, after subtracting 1 millisecond, the time decreases from .435123 to .434123.
-- 1 millisecond equals 1000 microseconds.
-- The function's result is dependent on the precision of the input time; the example uses a precision of 6 decimal places.
-- The result retains microsecond-level precision.
+-- Input is of DATE type (default time is 00:00:00.000)
+SELECT MILLISECONDS_SUB('2023-01-01', 1500);
++--------------------------------------+
+| MILLISECONDS_SUB('2023-01-01', 1500) |
++--------------------------------------+
+| 2022-12-31 23:59:58.500000           |
++--------------------------------------+
+
+-- Calculation result exceeds the datetime range, throws an exception
+SELECT MILLISECONDS_SUB('0000-01-01',-1500);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation milliseconds_add of 0000-01-01 00:00:00, -1500 out of range
+
+-- Any parameter is NULL, returns NULL
+SELECT MILLISECONDS_SUB(NULL, 100), MILLISECONDS_SUB('2023-01-01', NULL) AS after_sub;
++------------------------------+----------------------------+
+| milliseconds_sub(NULL, 100)  | after_sub                  |
++------------------------------+----------------------------+
+| NULL                         | NULL                       |
++------------------------------+----------------------------+
+
+```

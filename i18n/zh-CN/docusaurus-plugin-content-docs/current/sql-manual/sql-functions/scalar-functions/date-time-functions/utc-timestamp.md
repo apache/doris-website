@@ -5,30 +5,30 @@
 }
 ---
 
-## utc_timestamp
 ## 描述
+UTC_TIMESTAMP 函数用于返回当前 UTC 时区在所的日期时间。该函数不受本地时区影响，始终返回基于 UTC 时区的当前时间，确保跨时区场景下的时间一致性.
+
+该函数与 mysql 中的 [utc_timestamp 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_utc-timestamp) 行为一致。
+
 ## 语法
 
-`DATETIME UTC_TIMESTAMP()`
+```sql
+UTC_TIMESTAMP()
+```
 
-
-返回当前 UTC 日期和时间在 "YYYY-MM-DD HH:MM:SS" 或
-
-"YYYYMMDDHHMMSS"格式的一个值
-
-根据该函数是否用在字符串或数字语境中
+## 返回值
+返回当前 UTC 日期时间，类型为 DATETIME.
 
 ## 举例
 
-```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+```sql
+
+---当前地区时间为东八区 2025-08-14 11：45：42
+SELECT UTC_TIMESTAMP() AS utc_str;
++---------------------+
+| utc_str             |
++---------------------+
+| 2025-08-14 03:45:42 |
++---------------------+
 ```
 
-### keywords
-
-    UTC_TIMESTAMP,UTC,TIMESTAMP

@@ -16,14 +16,10 @@ MAP_CONTAINS_KEY(<map>, <key>)
 ```
 
 ## 参数
-
-| 参数 | 说明 |
-| -- | -- |
-| `<map>` | 输入的 map 内容 |
-| `<key>` | 需要检索的 key |
+- `<map>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) 类型，输入的 map 内容。
+- `<key>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) 支持的 key 类型，需要检索的 key。
 
 ## 返回值
-
 判断给定 `map` 中是否包含特定的键 `key`,存在返回 1 ,不存在返回 0。
 
 ## 举例

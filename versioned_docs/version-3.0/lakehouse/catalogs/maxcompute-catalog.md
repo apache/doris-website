@@ -61,7 +61,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.retry_count`            | `4`             | Number of retries after a timeout.                                          | 2.1.8 and later         |
   | `mc.datetime_predicate_push_down` | `true`  | Whether to allow pushdown of predicate conditions of `timestamp/timestamp_ntz` types. Doris will lose precision (9 -> 6) when synchronizing these two types. Therefore, if the original data has a precision higher than 6 digits, condition pushdown may lead to inaccurate results. | 2.1.9/3.0.5 and later  |
   
-* `{CommonProperties}`
+* `[CommonProperties]`
 
 The CommonProperties section is used to fill in common properties. Please refer to the Catalog Overview section on [Common Properties](../catalog-overview.md).
 

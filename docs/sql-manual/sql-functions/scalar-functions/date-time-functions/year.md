@@ -5,26 +5,52 @@
 }
 ---
 
-## year
-### Description
-#### Syntax
+## Description
+The YEAR function extracts the year part from a specified date or time value, returning the year as an integer. It supports processing DATE and DATETIME types.
 
-`INT YEAR(DATETIME date)`
+This function behaves consistently with the [year function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_year) in MySQL.
 
-
-Returns the year part of the date type, ranging from 1000 to 9999
-
-The parameter is Date or Datetime type
-
-### example
-
+## Syntax
+```sql
+YEAR(`<date_or_time_expr>`)
 ```
-mysql> select year('1987-01-01');
-+-----------------------------+
-| year('1987-01-01 00:00:00') |
-+-----------------------------+
-|                        1987 |
-+-----------------------------+
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<date_or_time_expr>` | The datetime value to extract year from, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+
+## Return Value
+
+Returns the year part of the date/datetime type, INT type, range from 0-9999.
+
+- If the input parameter is NULL, returns NULL
+
+## Examples
+
+```sql
+-- Extract year from DATE type
+SELECT YEAR('1987-01-01') AS year_date;
++-----------+
+| year_date |
++-----------+
+|      1987 |
++-----------+
+
+-- Extract year from DATETIME type (ignoring hours, minutes, seconds)
+SELECT YEAR('2024-05-20 14:30:25') AS year_datetime;
++---------------+
+| year_datetime |
++---------------+
+|          2024 |
++---------------+
+
+-- Input is NULL (returns NULL)
+SELECT YEAR(NULL) AS null_input;
++------------+
+| null_input |
++------------+
+| NULL       |
++------------+
 ```
-### keywords
-    YEAR

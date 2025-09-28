@@ -25,6 +25,11 @@ CSC(<x>)
 
 Returns a Double type value means the cosecant of x.
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive or negative infinity, returns NaN
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -51,4 +56,40 @@ select csc(null);
 +--------------------+
 |      NULL          |
 +--------------------+
+```
+
+```sql
+select csc(cast('nan' as double));
+```
+
+```text
++---------------------------+
+| csc(cast('nan' AS DOUBLE))|
++---------------------------+
+| NaN                       |
++---------------------------+
+```
+
+```sql
+select csc(cast('inf' as double));
+```
+
+```text
++---------------------------+
+| csc(cast('inf' AS DOUBLE))|
++---------------------------+
+| NaN                       |
++---------------------------+
+```
+
+```sql
+select csc(cast('-inf' as double));
+```
+
+```text
++----------------------------+
+| csc(cast('-inf' AS DOUBLE))|
++----------------------------+
+| NaN                        |
++----------------------------+
 ```

@@ -59,7 +59,7 @@ Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，支
 
 实时的内存统计结果通过 Doris BE 的 Web 页面查看 `http://{be_host}:{be_web_server_port}/mem_tracker`，展示 `type=overview` 的 Memory Tracker 当前跟踪的内存大小和峰值内存大小，包括 Query/Load/Compaction/Global 等，`be_web_server_port` 默认 8040。
 
-![image](https://github.com/apache/doris/assets/13197424/f989f4d2-4cc5-4a8e-880e-93ae6073d17d)
+![image](/images/memory-used-by-subsystem.png)
 
 Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker 中除 `process resident memory`、`process virtual memory`、`sum of all trackers` 外，其他 `type=overview` 的 Memory Tracker 都可以通过 `http://{be_host}:{be_web_server_port}/mem_tracker?type=Lable` 查看详情。
 

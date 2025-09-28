@@ -110,7 +110,7 @@
 
 更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config)。
 
-### 第 4 步：建表
+## 第 4 步：建表
 
 由于日志数据的写入和查询都具备明显的特征，因此，在建表时按照本节说明进行针对性配置，以提升性能表现。
 
@@ -202,7 +202,7 @@ PROPERTIES (
 );
 ```
 
-### 第 5 步：采集日志
+## 第 5 步：采集日志
 
 完成建表后，可进行日志采集。
 
@@ -412,7 +412,7 @@ http://fe_host:fe_http_port/api/log_db/log_table/_stream_load
 - 设置 HTTP header "load_to_single_tablet:true"，指定一次导入写入一个分桶减少导入的小文件。
 - 建议写入客户端一个 Batch 的大小为 100MB ～ 1GB。如果你使用的是 Apache Doris 2.1 及更高版本，需通过服务端 Group Commit 功能，降低客户端 Batch 大小。
 
-### 第 6 步：查询和分析日志
+## 第 6 步：查询和分析日志
 
 **日志查询**
 

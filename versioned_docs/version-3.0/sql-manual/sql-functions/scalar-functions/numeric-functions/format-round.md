@@ -24,7 +24,7 @@ FORMAT_ROUND(<number>, <D>)
 | Parameter | Description |
 | -- | -- |
 | `<number>` | The number to be formatted |
-| `<D>` | Number of decimal places |
+| `<D>` | Number of decimal places, range [0, 1024] |
 
 ## Return Value
 
@@ -32,6 +32,7 @@ Returns the formatted string. Special cases:
 
 - Returns NULL when the parameter is NULL
 - If D is 0, the result will have no decimal point or decimal part.
+- If D is not in [0, 1024], an error is returned indicating the argument should be within this range.
 
 ## Examples
 
@@ -105,4 +106,11 @@ mysql> select format_round(123456.123456, 6);
 +--------------------------------+
 | 123,456.123456                 |
 +--------------------------------+
-``` 
+```
+
+```sql
+mysql> SELECT format_round(-0.01, -1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1, it should be in range [0, 1024].
+mysql> SELECT format_round(-0.01, -1500);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1500, it should be in range [0, 1024].
+```

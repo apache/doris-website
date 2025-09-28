@@ -489,4 +489,25 @@ PROPERTIES
 );
 ```
 
+### FAQ
+
+#### 1. How to set AWS SDK DEBUG level logs for BE and Recycler?
+Configure aws_log_level=5 in be.conf and doris_cloud.conf, then restart the processes to apply the changes.
+* Type: int32
+* Description: Log level for AWS SDK
+  ```
+     Off = 0,
+     Fatal = 1,
+     Error = 2,
+     Warn = 3,
+     Info = 4,
+     Debug = 5,
+     Trace = 6
+  ```
+* Default value: 2
+
+#### 2.After setting AWS SDK DEBUG level logs, the following error appears in be.log/recycler.log:
+`OpenSSL SSL_connect: Connection reset by peer in connection to sts.me-south-1.amazonaws.com:443 `
+
+Check whether the AWS VPC network configuration or firewall port settings have issues preventing access to the STS service in the corresponding AWS region (verify connectivity via telnet host:port).
 

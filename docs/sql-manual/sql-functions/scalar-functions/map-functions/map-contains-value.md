@@ -7,7 +7,7 @@
 
 ## Description
 
-Determines whether the given `map` contains a specific value `value`
+Determines whether a given `map` contains a specific value `value`
 
 ## Syntax
 
@@ -16,26 +16,46 @@ MAP_CONTAINS_VALUE(<map>, <value>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<map>` | Input map content |
-| `<value>` | The value to be retrieved |
+- `<map>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) type, the input map content.
+- `<value>` supports multiple types, the value to be searched.
 
 ## Return Value
+Determines whether a given `map` contains a specific value `value`. Returns 1 if exists, 0 if not exists.
 
-Determines whether the given `map` contains a specific value `value`, and returns 1 if it exists, otherwise returns 0.
+## Usage Notes
+1. If parameter `<map>` is NULL, returns NULL.
+2. `<value>` can be NULL. The comparison for NULL is `null-safe-equal`, which means NULL is considered equal to NULL.
 
-## Example
-
-```sql
-select map_contains_value(map(null, 1, 2, null), null),map_contains_value(map(1, "100", 0.1, 2), 101);
-```
-
-```text
-+-------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
-| map_contains_value(map(NULL, 1, 2, NULL), NULL) | map_contains_value(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT)), cast(101 as VARCHAR(3))) |
-+-------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
-|                                               1 |                                                                                                                                  0 |
-+-------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
-```
+## Examples
+1. Regular parameters
+    ```sql
+    select map_contains_value(map(1, "100", 0.1, 2), 100), map_contains_value(map(1, "100", 0.1, 2), 101);
+    ```
+    ```text
+    +------------------------------------------------+------------------------------------------------+
+    | map_contains_value(map(1, "100", 0.1, 2), 100) | map_contains_value(map(1, "100", 0.1, 2), 101) |
+    +------------------------------------------------+------------------------------------------------+
+    |                                              1 |                                              0 |
+    +------------------------------------------------+------------------------------------------------+
+    ```
+2. NULL parameters
+    ```sql
+    select map_contains_value(NULL, 100);
+    ```
+    ```text
+    +-------------------------------+
+    | map_contains_value(NULL, 100) |
+    +-------------------------------+
+    |                          NULL |
+    +-------------------------------+
+    ```
+    ```sql
+    select map_contains_value(map(null, null), null), map_contains_value(map(null, 100), null);
+    ```
+    ```text
+    +-------------------------------------------+------------------------------------------+
+    | map_contains_value(map(null, null), null) | map_contains_value(map(null, 100), null) |
+    +-------------------------------------------+------------------------------------------+
+    |                                         1 |                                        0 |
+    +-------------------------------------------+------------------------------------------+
+    ```

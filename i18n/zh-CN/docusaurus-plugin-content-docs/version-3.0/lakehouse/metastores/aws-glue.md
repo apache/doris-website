@@ -38,7 +38,7 @@ Hive Glue Catalog 用于访问 Hive 表，通过 AWS Glue 的 Hive Metastore 兼
 ### 示例
 
 ```sql
-CREATE CATALOG hive_glue_catalog WITH (
+CREATE CATALOG hive_glue_catalog PROPERTIES (
   'type' = 'hms',
   'hive.metastore.type' = 'glue',
   'glue.region' = 'us-east-1',
@@ -68,7 +68,7 @@ Iceberg Glue Catalog 通过 Glue Client 访问 Glue。配置如下：
 ### 示例
 
 ```sql
-CREATE CATALOG iceberg_glue_catalog WITH (
+CREATE CATALOG iceberg_glue_catalog PROPERTIES (
   'type' = 'iceberg',
   'iceberg.catalog.type' = 'glue',
   'glue.region' = 'us-east-1',
@@ -101,7 +101,7 @@ CREATE CATALOG glue_s3 PROPERTIES (
   'type' = 'iceberg',
   'iceberg.catalog.type' = 'rest',
   'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-  'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+  'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
   'iceberg.rest.sigv4-enabled' = 'true',
   'iceberg.rest.signing-name' = 'glue',
   'iceberg.rest.access-key-id' = '<ak>',

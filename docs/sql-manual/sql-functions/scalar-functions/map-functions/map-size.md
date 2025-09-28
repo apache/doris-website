@@ -7,7 +7,7 @@
 
 ## Description
 
-Count the number of elements in a Map
+Calculates the number of elements in a Map
 
 ## Syntax
 
@@ -16,25 +16,35 @@ MAP_SIZE(<map>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<map>` | Input map content |
-
+- `<map>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) type, the input map content.
 ## Return Value
-
 Returns the number of elements in the Map
 
-## Example
+## Usage Notes
+1. Both NULL keys and values are counted.
+2. For NULL parameters, returns NULL.
 
-```sql
-select map_size(map()),map_size(map(1, "100", 0.1, 2));
-```
+## Examples
+1. Regular parameters
+    ```sql
+    select map_size(map()), map_size(map(1, "100", 0.1, 2, null, null));
+    ```
 
-```text
-+-----------------+-------------------------------------------------------------------------------------------------+
-| map_size(map()) | map_size(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT))) |
-+-----------------+-------------------------------------------------------------------------------------------------+
-|               0 |                                                                                               2 |
-+-----------------+-------------------------------------------------------------------------------------------------+
-```
+    ```text
+    +-----------------+---------------------------------------------+
+    | map_size(map()) | map_size(map(1, "100", 0.1, 2, null, null)) |
+    +-----------------+---------------------------------------------+
+    |               0 |                                           3 |
+    +-----------------+---------------------------------------------+
+    ```
+2. NULL parameters
+    ```sql
+    select map_size(NULL);
+    ```
+    ```text
+    +----------------+
+    | map_size(NULL) |
+    +----------------+
+    |           NULL |
+    +----------------+
+    ```

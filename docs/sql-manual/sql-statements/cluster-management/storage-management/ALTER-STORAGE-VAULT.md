@@ -20,6 +20,8 @@ PROPERTIES (<storage_vault_property>)
 
 **<storage_vault_property>**
 
+> - type: candidate values are s3, hdfs. this field is optional after 3.0.8
+
 >When type is s3, the allowed property fields are as follows:
 >
 >- s3.access_key: ak for s3 vault

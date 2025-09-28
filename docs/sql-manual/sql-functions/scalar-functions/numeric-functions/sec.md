@@ -25,6 +25,11 @@ SEC(<x>)
 
 Returns a Double type value means the secant of x.
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive or negative infinity, returns NaN
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -51,4 +56,40 @@ select sec(null);
 +--------------------+
 |      NULL          |
 +--------------------+
+```
+
+```sql
+select sec(cast('nan' as double));
+```
+
+```text
++---------------------------+
+| sec(cast('nan' AS DOUBLE))|
++---------------------------+
+| NaN                       |
++---------------------------+
+```
+
+```sql
+select sec(cast('inf' as double));
+```
+
+```text
++---------------------------+
+| sec(cast('inf' AS DOUBLE))|
++---------------------------+
+| NaN                       |
++---------------------------+
+```
+
+```sql
+select sec(cast('-inf' as double));
+```
+
+```text
++----------------------------+
+| sec(cast('-inf' AS DOUBLE))|
++----------------------------+
+| NaN                        |
++----------------------------+
 ```

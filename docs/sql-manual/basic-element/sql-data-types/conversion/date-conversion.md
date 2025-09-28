@@ -19,7 +19,7 @@ Valid range for DATE type: `[0000-01-01, 9999-12-31]`
 
 ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-<date>           ::= <year> "-" <month1> "-" <day1>
+<date>           ::= <year> ("-" | "/") <month1> ("-" | "/") <day1>
                    | <year> <month2> <day2>
 
 <year>           ::= <digit>{2} | <digit>{4} ; 1970 as the boundary
@@ -209,7 +209,7 @@ Assume the current Doris time zone is UTC+8 (`+08:00`). For the effect of time z
 | `120102030405.999`                   | Error (format error)        | Missing DATE - TIME separator            |
 | `2020-05-05 12:30:60`                | `2020-05-05`    | Invalid seconds, but not part of DATE interpretation          |
 | `2023-07-16T19.123+08:00`            | Error (format error)        | Date contains non-contiguous fields (hour + milliseconds skip minute, second)        |
-| `2024/05/01`                         | Error (format error)        | Date separator uses '/'                    |
+| `2024/05/01`                         | `2024-05-01`        | Date separator uses '/'                    |
 | `24012`                              | Error (format error)        | Invalid date digit count                       |
 | `2411 123`                           | Error (format error)        | Invalid digit count for both date and time parts                 |
 | `2024-05-01 01:030:02`               | Error (format error)        | Invalid minute digit count                       |

@@ -7,7 +7,7 @@
 
 ## Description
 
-Extract the values of the given `map` into an `ARRAY` of the corresponding type
+Extracts the values from a given [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) into an [`ARRAY`](../../../basic-element/sql-data-types/semi-structured/ARRAY.md) of the corresponding type.
 
 ## Syntax
 
@@ -16,25 +16,37 @@ MAP_VALUES(<map>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<map>` | Input map content |
+- `<map>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) type, the input map content.
 
 ## Return Value
+Extracts the values from a given `map` into an [`ARRAY`](../../../basic-element/sql-data-types/semi-structured/ARRAY.md) of the corresponding type.
 
-Extract the values of the given `map` into an `ARRAY` of the corresponding type
+## Usage Notes
+1. For NULL parameters, returns NULL.
+2. For empty MAP objects, returns an empty array.
+3. NULL values in the MAP are also included in the returned array.
 
-## Example
+## Examples
+1. Regular parameters
+    ```sql
+    select map_values(map()), map_values(map(1, "100", 0.1, 2, 0.3, null));
+    ```
 
-```sql
-select map_values(map()),map_values(map(1, "100", 0.1, 2));
-```
-
-```text
-+-------------------+---------------------------------------------------------------------------------------------------+
-| map_values(map()) | map_values(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT))) |
-+-------------------+---------------------------------------------------------------------------------------------------+
-| []                | ["100", "2"]                                                                                      |
-+-------------------+---------------------------------------------------------------------------------------------------+
-```
+    ```text
+    +-------------------+----------------------------------------------+
+    | map_values(map()) | map_values(map(1, "100", 0.1, 2, 0.3, null)) |
+    +-------------------+----------------------------------------------+
+    | []                | ["100", "2", null]                           |
+    +-------------------+----------------------------------------------+
+    ```
+2. NULL parameters
+    ```sql
+    select map_values(null);
+    ```
+    ```text
+    +------------------+
+    | map_values(null) |
+    +------------------+
+    | NULL             |
+    +------------------+
+    ```

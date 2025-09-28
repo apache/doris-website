@@ -7,11 +7,12 @@
 
 ## Description
 
-Retrieves the current date and returns it as a DATE type.
+Get the current date and return it as a DATE type.
 
-## Alias
+This function is consistent with the [curdate function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_curdate) in MySQL.
 
-- curdate
+## Aliases
+
 - current_date
 
 ## Syntax
@@ -22,30 +23,17 @@ CURDATE()
 
 ## Return Value
 
-The current date.
+The current date, return value is of date type.
 
-## Examples 
+## Examples
 
 ```sql
+-- Get the current date
 SELECT CURDATE();
-```
 
-```text
 +------------+
 | CURDATE()  |
 +------------+
 | 2019-12-20 |
 +------------+
-```
-
-```sql
-SELECT CURDATE() + 0;
-```
-
-```text
-+---------------+
-| CURDATE() + 0 |
-+---------------+
-|      20191220 |
-+---------------+
 ```

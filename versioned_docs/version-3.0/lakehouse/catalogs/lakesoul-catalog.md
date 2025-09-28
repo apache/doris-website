@@ -36,7 +36,7 @@ CREATE CATALOG lakesoul_catalog PROPERTIES (
   | `lakesoul.pg.password`    | Password for the PG source database   |         |
   | `lakesoul.pg.url`         | JDBC URL for the PG metadata database | `jdbc:postgresql://127.0.0.1:5432/lakesoul_test?stringtype=unspecified` |
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is for filling in general properties. Please refer to the [Data Catalog Overview](../catalog-overview.md) under the "Common Properties" section.
 

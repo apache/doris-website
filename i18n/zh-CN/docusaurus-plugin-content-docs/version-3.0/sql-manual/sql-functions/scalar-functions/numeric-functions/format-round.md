@@ -24,7 +24,7 @@ FORMAT_ROUND(<number>, <D>)
 | 参数 | 说明 |
 | -- | -- |
 | `<number>` | 需要被格式化的数字 |
-| `<D>` | 小数位数 |
+| `<D>` | 小数位数，范围 [0, 1024] |
 
 ## 返回值
 
@@ -32,6 +32,7 @@ FORMAT_ROUND(<number>, <D>)
 
 - 当参数为 NULL 时，返回 NULL
 - 如果 D 为 0，结果将没有小数点或小数部分。
+- 如果 D 不在 [0, 1024] 范围内，将返回错误提示参数应在该范围内。
 
 ## 举例
 
@@ -62,8 +63,6 @@ mysql> select format_round(1123.4, 2);
 +-------------------------+
 ```
 
-
-
 ```sql
 mysql> select format_round(123456, 0);
 +-------------------------+
@@ -81,7 +80,6 @@ mysql> select format_round(123456, 3);
 | 123,456.000             |
 +-------------------------+
 ```
-
 
 ```sql
 mysql> select format_round(123456.123456, 0);
@@ -108,4 +106,11 @@ mysql> select format_round(123456.123456, 6);
 +--------------------------------+
 | 123,456.123456                 |
 +--------------------------------+
+```
+
+```sql
+mysql> SELECT format_round(-0.01, -1);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1, it should be in range [0, 1024].
+mysql> SELECT format_round(-0.01, -1500);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1500, it should be in range [0, 1024].
 ```
