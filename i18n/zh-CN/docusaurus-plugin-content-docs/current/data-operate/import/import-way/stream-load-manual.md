@@ -312,7 +312,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | partitions                   | 用于指定这次导入所涉及的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
 | timeout                      | 指定导入的超时时间。单位秒。默认是 600 秒。可设置范围为 1 秒 ~ 259200 秒。例如，指定导入超时时间为 1200s，需要指定命令 `-H "timeout:1200"`。 |
 | strict_mode                  | 用户指定此次导入是否开启严格模式，默认为关闭。例如，指定开启严格模式，需要指定命令 `-H "strict_mode:true"`。 |
-| timezone                     | 指定本次导入所使用的时区。默认为东八区。该参数会影响所有导入涉及的和时区有关的函数结果。例如，指定导入时区为 Africa/Abidjan，需要指定命令 `-H "timezone:Africa/Abidjan"`。 |
+| timezone                     | 指定本次导入所使用的时区。默认FE参数`global time_zone`。该参数会影响所有导入涉及的和时区有关的函数结果。例如，指定导入时区为 Africa/Abidjan，需要指定命令 `-H "timezone:Africa/Abidjan"`。 |
 | exec_mem_limit               | 导入内存限制。默认为 2GB。单位为字节。                       |
 | format                       | 指定导入数据格式，默认是 CSV 格式。目前支持以下格式：CSV, JSON, arrow, csv_with_names（支持 csv 文件行首过滤）csv_with_names_and_types（支持 CSV 文件前两行过滤）Parquet, ORC 例如，指定导入数据格式为 JSON，需要指定命令 `-H "format:json"`。 |
 | jsonpaths                    | 导入 JSON 数据格式有两种方式：简单模式：没有指定 jsonpaths 为简单模式，这种模式要求 JSON 数据是对象类型匹配模式：用于 JSON 数据相对复杂，需要通过 jsonpaths 参数匹配对应的 value 在简单模式下，要求 JSON 中的 key 列与表中的列名是一一对应的，如 JSON 数据 {"k1":1, "k2":2, "k3":"hello"}，其中 k1、k2 及 k3 分别对应表中的列。 |
