@@ -54,10 +54,7 @@ function isLocalLink(link) {
 // }
 
 function removeCodeBlocks(content) {
-  // 删除多行代码块 ```...```
   let result = content.replace(/```[\s\S]*?```/g, ""); 
-  
-  // 删除行内代码 `...`
   result = result.replace(/`[^`]*`/g, ""); 
 
   return result;
