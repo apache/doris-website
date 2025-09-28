@@ -14,7 +14,7 @@
 ## 环境准备
 ### 准备 Apache Doris 和测试数据
 
-确保当前已准备好可用的 Apache Doris 集群。为了便于演示，我们参考 [快速开始](../gettingStarted/quick-start) 文档在 Linux 上部署了一套测试用的 Apache Doris 环境。
+确保当前已准备好可用的 Apache Doris 集群。为了便于演示，我们参考 [快速开始](../gettingStarted/quick-start.mdx) 文档在 Linux 上部署了一套测试用的 Apache Doris 环境。
 创建库和测试表：
 ```
 create database automq_db;
