@@ -49,9 +49,20 @@ function isLocalLink(link) {
          !/.*@.*\..*/.test(link);
 }
 
+// function removeCodeBlocks(content) {
+//   return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+// }
+
 function removeCodeBlocks(content) {
-  return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+  // 删除多行代码块 ```...```
+  let result = content.replace(/```[\s\S]*?```/g, ""); 
+  
+  // 删除行内代码 `...`
+  result = result.replace(/`[^`]*`/g, ""); 
+
+  return result;
 }
+
 
 // Check links in files
 function checkFileLinks(filePath) {
