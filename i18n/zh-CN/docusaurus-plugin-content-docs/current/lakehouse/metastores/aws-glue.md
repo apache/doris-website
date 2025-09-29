@@ -173,7 +173,8 @@ CREATE CATALOG glue_s3 PROPERTIES (
         "glue:GetDatabase",
         "glue:GetDatabases",
         "glue:GetTable",
-        "glue:GetTables"
+        "glue:GetTables",
+        "glue:GetPartitions"
       ],
       "Resource": [
         "arn:aws:glue:<region>:<account-id>:catalog",
@@ -202,6 +203,7 @@ CREATE CATALOG glue_s3 PROPERTIES (
         "glue:GetDatabases",
         "glue:GetTable",
         "glue:GetTables",
+        "glue:GetPartitions",
         "glue:CreateDatabase",
         "glue:UpdateDatabase",
         "glue:DeleteDatabase",
