@@ -7,6 +7,6 @@
     'author': 'velodb.io · VeloDB Engineering Team',
     'externalLink': 'https://www.velodb.io/blog/1504',
     'tags': ['Tech Sharing'],
-    "image": '/images/blogs/coffeebench-part2-250917.PNG'
+    "image": '/images/blogs/coffeebench-part2-250917.jpeg'
 }
 ---

@@ -4,7 +4,7 @@ export const NEWSLETTER_DATA = [
         title: "Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2",
         content: `In every benchmark tested: CoffeeBench, TPC-H, and TPC-DS, Apache Doris consistently pulled ahead, establishing clear dominance over both ClickHouse v25.8 on-premises and ClickHouse Cloud.`,
         to: 'https://www.velodb.io/blog/1504',
-        image: 'blogs/coffeebench-part2-250917.PNG',
+        image: 'blogs/coffeebench-part2-250917.jpeg',
     },
     {
         tags: ['Tech Sharing'],
