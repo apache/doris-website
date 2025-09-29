@@ -224,7 +224,7 @@ const EVENTS_PAGE_DATA = {
             tag: '',
             detailTitle: '走进浪潮｜Apache Doris 企业行',
             date: '2025 年 08 月 15 日',
-            address: '山东省济南市历下区浪潮科技园 S01 2101',
+            address: '山东省济南市历下区浪潮科技园 S01-2101',
             description:
                 '此次活动将首次解读面向 AI 的实时分析型数据库 — Apache Doris 4.0 全新特性，聚焦其在 AI、湖仓一体、存算分离、可观测性、高并发点查等关键场景的技术实践。活动将深入探讨 Apache Doris 如何应对各类复杂业务需求，并邀请来自浪潮与中泰证券的技术专家分享实战经验，共同探索基于 Apache Doris 及其商业化产品 SelectDB 构建实时数据平台的最佳路径。',
             start_date: '2025-08-15T13:00:00.000Z',
