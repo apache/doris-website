@@ -199,6 +199,75 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
+            detailTitle: 'Apache Doris 3.1 新版本解读（三）：湖仓一体升级',
+            date: '2025 年 09 月 25 日',
+            address: '线上直播',
+            description:
+                '作为一款高性能、实时的 MPP 分析型数据库，Doris 持续在湖仓融合、半结构化分析、存算分离、实时分析等方向快速演进。3.1 版本在 3.0 的基础上进一步夯实核心能力，带来半结构化分析、湖仓一体、存储层等方面多项关键特性升级，助力企业构建更高效、更灵活的数据分析系统。',
+            start_date: '2025-09-25T19:30:00.000Z',
+            end_date: '2025-09-25T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250925"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/webinar_3.1_release_250925.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250925',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'Apache Doris 3.1 新版本解读（二）：半结构化分析',
+            date: '2025 年 09 月 16 日',
+            address: '线上直播',
+            description:
+                '作为一款高性能、实时的 MPP 分析型数据库，Doris 持续在湖仓融合、半结构化分析、存算分离、实时分析等方向快速演进。3.1 版本在 3.0 的基础上进一步夯实核心能力，带来半结构化分析、湖仓一体、存储层等方面多项关键特性升级，助力企业构建更高效、更灵活的数据分析系统。',
+            start_date: '2025-09-16T19:30:00.000Z',
+            end_date: '2025-09-16T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250916"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/webinar_3.1_release_250916.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250916',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'Apache Doris 3.1 新版本解读（一）：整体功能介绍',
+            date: '2025 年 09 月 11 日',
+            address: '线上直播',
+            description:
+                '作为一款高性能、实时的 MPP 分析型数据库，Doris 持续在湖仓融合、半结构化分析、存算分离、实时分析等方向快速演进。3.1 版本在 3.0 的基础上进一步夯实核心能力，带来半结构化分析、湖仓一体、存储层等方面多项关键特性升级，助力企业构建更高效、更灵活的数据分析系统。',
+            start_date: '2025-09-11T19:30:00.000Z',
+            end_date: '2025-09-11T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20250911"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/webinar_3.1_release_250911.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20250911',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
             detailTitle: 'Apache Doris x Milvus 解锁 DB for AI 的无限可能',
             date: '2025 年 08 月 28 日',
             address: '线上直播',
