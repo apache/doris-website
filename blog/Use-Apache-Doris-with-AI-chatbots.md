@@ -72,7 +72,7 @@ There are three main types of data sources in our business, business databases s
 
 In order to solve the problems above, we began to explore other datawarehouse architecture solutions. And we conducted a series of research on OLAP engines such as Apache Doris and Clickhouse, which are most widely used in the market.
 
-As the original creator, SelectDB provides commercial support and services for Apache Doris. With the new Apache Doris, SelectDB is now providing global users with a fully-managed database option for deployment.
+As the original creator, SelectDB provides commercial products based on Apache Doris. With the new Apache Doris, SelectDB is now providing global users with a fully-managed database option for deployment.
 
 Comparing with ClickHouse's heavy maintenance, various table types, and lack of support for associated queries, Apache Doris performed better. And combined with our OLAP analysis scenario, we finally decided to introduce Apache Doris.
 
