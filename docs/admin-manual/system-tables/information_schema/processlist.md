@@ -32,4 +32,4 @@ View All Current Connections
 | QUERY_ID          | varchar(256)   | ID of the last query                 |
 | INFO              | varchar(65533) | Query statement of the last query    |
 | FE                | varchar(64)    | Connected Front-End (FE)             |
-| COMPUTE_GROUP     | varchar(64)    | Name of the Cloud Cluster being used |
+| COMPUTE_GROUP     | varchar(64)    | Name of the Compute Group being used |
