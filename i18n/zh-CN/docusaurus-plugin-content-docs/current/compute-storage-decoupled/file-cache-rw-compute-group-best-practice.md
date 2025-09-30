@@ -30,7 +30,7 @@
 - 大部分场景。
 - 用户有权限配置预热关系。
 
-> **[文档链接]**：关于如何配置和使用主动增量预热的详细信息，请参考官方文档 **[FileCache主动增量预热]**。
+> **[文档链接]**：关于如何配置和使用主动增量预热的详细信息，请参考官方文档 **[FileCache主动增量预热](./read-write-splitting.md)**。
 
 ### 2. 只读计算组自动预热
 
@@ -91,12 +91,16 @@ enable_compaction_delay_commit_for_warm_up = true
 enable_warmup_immediately_on_new_rowset = true
 ```
 
-1. 在查询时，通过 Session 变量开启 "预热感知" 的 Rowset 选择策略。
+1. 在查询时，通过 Session 变量或用户属性开启 "预热感知" 的 Rowset 选择策略。
 
-**核心变量 (查询会话)：**
+**设置查询会话：**
 
 ```sql
 SET enable_prefer_cached_rowset = true;
+```
+**或设置用户属性：**
+```sql
+SET property for "jack" enable_prefer_cached_rowset = true;
 ```
 
 1. **工作流程：**
@@ -124,12 +128,18 @@ SET enable_prefer_cached_rowset = true;
 1. **开启预热机制**：
    1. 在只读计算组上开启**主动增量预热**或**只读计算组自动预热**(`enable_warmup_immediately_on_new_rowset=true`)。这是让数据能够被异步加载到缓存的前提。
 2. **设置查询新鲜度容忍度**：
-   1. 在只读计算组的查询会话中，设置 `query_freshness_tolerance_ms` 变量。
+   1. 在只读计算组的查询会话或用户属性中，设置 `query_freshness_tolerance_ms` 变量。
    2. **核心变量 (查询会话)：**
 
+**设置查询会话：**
 ```sql
 -- 设置可以容忍 1000 毫秒（1秒）的数据延迟
 SET query_freshness_tolerance_ms = 1000;
+```
+
+**或设置用户属性：**
+```sql
+SET property for "jack" query_freshness_tolerance_ms = 1000;
 ```
 
 **工作流程：**
@@ -151,8 +161,7 @@ SET query_freshness_tolerance_ms = 1000;
 
 | 方案                                                 | 适用场景                                     | 预期效果（各类写操作对cache命中率的影响）                    |
 | ---------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ |
-| 开启主动增量预热+延迟提交                            | 大部分场景 <br>需要用户有权限配置预热关系    | compaction：无<br>schema change：无<br>新写入的数据：有。写入后立即查询可能会造成cache miss |
-| 只读计算组自动预热+查询感知                          | 用户无权配置预热关系<br>用户使用的是非MoW表  | compaction：无<br>schema change：cache miss<br>新写入的数据：cache miss |
-| 主动增量预热/只读计算组自动预热+配置数据新鲜度容忍度 | 希望避免高频写入场景下只读集群的查询长尾问题 | compaction：无<br>schema change：无（主动增量预热）/ cache miss（只读计算组自动预热）<br>新写入的数据：可以消除大部分cache miss |
+| 开启主动增量预热+延迟提交+ 配置数据新鲜度容忍时间（可选）                           | 适用于查询 latency 要求非常高的场景，需要用户有权限配置预热关系    | compaction：无<br>重量级 schema change：无<br>新写入的数据：取决于新鲜度容忍时间 |
+| 只读计算组自动预热+优先cache数据 + 配置数据新鲜度容忍时间（可选） | 用户无权配置预热关系<br>没有配置新鲜度容忍时间时对于 MOW 主键表无效  | compaction：无<br>重量级 schema change：cache miss<br>新写入的数据：取决于新鲜度容忍时间 |
 
 通过合理地运用上述缓存预热策略和相关配置，您可以有效地管理 Apache Doris 在读写分离架构下的缓存行为，最大限度地减少因缓存未命中带来的性能损失，确保只读查询业务的稳定与高效。
