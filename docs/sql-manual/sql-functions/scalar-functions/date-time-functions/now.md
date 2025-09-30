@@ -9,7 +9,7 @@
 
 The `NOW` function is used to get the current system date and time, returning a value of type `DATETIME`. It supports an optional parameter to specify the precision of fractional seconds, adjusting the number of microsecond digits in the returned result.
 
-This function behaves consistently with MySQL's [now function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_now).
+This function is consistent with MySQL's [now function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_now).
 
 # Alias
 - current_timestamp()

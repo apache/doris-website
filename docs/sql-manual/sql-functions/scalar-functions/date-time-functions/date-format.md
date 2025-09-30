@@ -77,7 +77,7 @@ A formatted date string, type is Varchar.
 Special cases:
 - Returns NULL if format is NULL.
 - Returns NULL if any parameter is NULL.
-- Returns error if input value exceeds 128 characters length.
+- Returns an error if input value exceeds 128 characters length.
 - output length over 102 size,throw error
 
 ## Examples

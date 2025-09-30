@@ -22,7 +22,6 @@ doris 不支持这种输入。
 
 ## 别名
 
-- date_add
 - days_add
 - adddate
 

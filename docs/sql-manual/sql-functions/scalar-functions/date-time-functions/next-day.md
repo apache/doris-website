@@ -9,7 +9,7 @@
 
 The NEXT_DAY function returns the first date after the specified date that matches the target day of the week. For example, NEXT_DAY('2020-01-31', 'MONDAY') returns the first Monday after 2020-01-31. This function supports processing DATE and DATETIME types and ignores the time portion in the input (calculation is based only on the date portion).
 
-This function behaves consistently with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
+This function is consistent with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
 
 ## Syntax
 

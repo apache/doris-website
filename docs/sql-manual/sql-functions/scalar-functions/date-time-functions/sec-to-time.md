@@ -9,7 +9,7 @@
 
 The SEC_TO_TIME function converts a numeric value in seconds to TIME type,The return format is HH:MM:SS or HH:MM:SS.ssssss. The input seconds represent the time calculated from the starting point of a day (00:00:00.000000), supporting positive and negative seconds as well as time ranges exceeding one day.
 
-This function behaves consistently with the [sec_to_time function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_sec-to-time) in MySQL.
+This function is consistent with the [sec_to_time function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_sec-to-time) in MySQL.
 
 ## Syntax
 

@@ -24,7 +24,7 @@ The effect of the mode parameter is shown in the following table:
 |7    |Monday            |1-53             |The week containing the first Monday of the year |
 ```
 
-This function behaves consistently with the [week function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_week) in MySQL.
+This function is consistent with the [week function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_week) in MySQL.
 
 ## Syntax
 ```sql

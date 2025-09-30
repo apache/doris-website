@@ -24,7 +24,7 @@ The effect of parameter mode is shown in the table below:
 |6    |Sunday            |1-53              |The first week with 4 or more days in the year      |
 |7    |Monday            |1-53              |The week containing the first Monday of the year     |
 
-This function behaves consistently with the [yearweek function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_yearweek) in MySQL.
+This function is consistent with the [yearweek function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_yearweek) in MySQL.
 
 ## Syntax
 

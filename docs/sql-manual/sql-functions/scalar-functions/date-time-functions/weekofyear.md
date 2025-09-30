@@ -10,7 +10,7 @@ The WEEKOFYEAR function returns the week number of a specified date within the y
 A week starts on Monday and ends on Sunday.
 Within a year, if a week contains 4 or more days in the current year, that week is considered the 1st week of the current year; otherwise, that week belongs to the last week of the previous year (which may be week 52 or 53).
 
-This function behaves consistently with the [weekofyear function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weekofyear) in MySQL.
+This function is consistent with the [weekofyear function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weekofyear) in MySQL.
 
 ## Syntax
 

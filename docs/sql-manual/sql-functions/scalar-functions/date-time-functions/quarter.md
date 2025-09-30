@@ -13,7 +13,7 @@ The function returns the quarter (1 to 4) that the specified date belongs to. Ea
 - Quarter 3: July to September
 - Quarter 4: October to December
 
-This function behaves consistently with MySQL's [quarter function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_quarter).
+This function is consistent with MySQL's [quarter function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_quarter).
 
 ## Syntax
 
