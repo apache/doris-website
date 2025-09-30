@@ -20,7 +20,6 @@ doris 不支持这种输入。
 ## 别名
 
 - days_sub
-- date_sub
 - subdate
 
 ## 语法

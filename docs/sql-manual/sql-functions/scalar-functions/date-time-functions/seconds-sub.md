@@ -9,7 +9,7 @@
 
 The SECONDS_SUB function subtracts or adds a specified number of seconds to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to adding the corresponding number of seconds.
 
-This function behaves consistently with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using SECOND as the unit.
+This function is consistent with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using SECOND as the unit.
 
 ## Syntax
 

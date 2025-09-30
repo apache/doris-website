@@ -9,7 +9,7 @@
 
 The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59. This function supports processing DATE, DATETIME, and TIME types.
 
-This function behaves consistently with MySQL's [second function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_second).
+This function is consistent with MySQL's [second function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_second).
 
 ## Syntax
 

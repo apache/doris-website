@@ -10,7 +10,7 @@
 
 The FROM_UNIXTIME function is used to convert a Unix timestamp (in seconds) to a date-time string or VARCHAR type value in a specified format. The reference time for Unix timestamps is 1970-01-01 00:00:00 UTC, and the function generates the corresponding date-time representation based on the input timestamp and format string.
 
-This function behaves consistently with the [from_unixtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-unixtime) in MySQL
+This function is consistent with the [from_unixtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-unixtime) in MySQL.
 
 ## Syntax
 

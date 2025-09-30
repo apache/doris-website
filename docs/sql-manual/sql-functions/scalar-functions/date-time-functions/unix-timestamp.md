@@ -17,7 +17,7 @@ For Format specification, please refer to the format description of the date_for
 
 This function is affected by time zone, please see [Time Zone Management](../../../../admin-manual/cluster-management/time-zone) for time zone details.
 
-This function behaves consistently with the [unix_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_unix-timestamp) in MySQL.
+This function is consistent with the [unix_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_unix-timestamp) in MySQL.
 
 ## Syntax
 
@@ -46,16 +46,16 @@ Returns two types based on input:
 Converts the input time to the corresponding timestamp, with the epoch time being 1970-01-01 00:00:00.
 
 - Returns null if any parameter is null.
-- Return error if format is invalid
+- Returns an error if format is invalid
 
 ## Examples
 
 ```sql
--- int put datetime is the begin datetime
-mysql> select unix_timestamp('1970-01-01 +08:00');
-+------------------------------+
-| unix_timestamp('1970-01-01') |
-+------------------------------+
+-- Input datetime is the begin datetime
+mysql> select unix_timestamp('1970-01-01 00:00:00');
++---------------------------------------+
+| unix_timestamp('1970-01-01 00:00:00') |
++---------------------------------------+
 |                            0 |
 +------------------------------+
 
@@ -108,7 +108,7 @@ mysql> select unix_timestamp(NULL);
 |                 NULL |
 +----------------------+
 
---Return error if format is invalid
+-- Returns an error if format is invalid
 mysql> select unix_timestamp('2007-11-30 10:30-19', 's');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation unix_timestamp of 2007-11-30 10:30-19, s is invalid
 ```

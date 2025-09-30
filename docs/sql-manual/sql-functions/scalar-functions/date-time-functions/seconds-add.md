@@ -9,7 +9,7 @@
 
 The SECONDS_ADD function adds or subtracts a specified number of seconds to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to subtracting the corresponding number of seconds.
 
-This function behaves consistently with [date_add function](./date-add) and MySQL's [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) when using SECOND as the unit.
+This function is consistent with [date_add function](./date-add) and MySQL's [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) when using SECOND as the unit.
 
 ## Syntax
 

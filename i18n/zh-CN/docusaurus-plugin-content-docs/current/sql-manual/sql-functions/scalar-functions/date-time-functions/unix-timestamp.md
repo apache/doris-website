@@ -36,19 +36,6 @@ UNIX_TIMESTAMP(<date_or_time_expr>[, fmt])
 | `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 string。若提供该参数，则仅将与格式匹配的部分转换为时间戳。|
 
-## 语法
-
-```sql
-UNIX_TIMESTAMP([DATETIME date[, fmt]])
-
-```
-
-## 参数
-
-| 参数 | 描述 |
-| -- | -- | 
-| `<date>` | 待转换的日期时间值，类型为 `datetime` 或 `date` 类型，支持范围：'1970-01-01 00:00:00.000000 UTC' 至 '9999-12-31 23:59:59.999999 UTC'。|
-| `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 `string`。若提供该参数，则仅将与格式匹配的部分转换为时间戳。 |
 
 ## 返回值
 根据输入返回两种类型

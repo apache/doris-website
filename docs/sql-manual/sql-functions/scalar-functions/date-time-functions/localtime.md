@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LOCALTIME,LOCALTIMESTAMP",
+    This function is consistent with MySQL's [localtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_localtime).title": "LOCALTIME,LOCALTIMESTAMP",
     "language": "en"
 }
 ---
