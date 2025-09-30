@@ -21,6 +21,8 @@ In Doris, the CREATE TABLE statement can specify [table properties](../sql-manua
 
 - **storage_medium**: Controls the storage method for data, such as using HDD, SSD, or remote shared storage.
 
+- **medium_allocation_mode**: Controls how to handle storage medium allocation when the specified medium is unavailable.
+
 - **replication_num**: Controls the number of data replicas to ensure redundancy and reliability.
 
 - **storage_policy**: Controls the migration strategy for cold and hot data separation storage.
