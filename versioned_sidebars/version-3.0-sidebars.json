@@ -565,7 +565,8 @@
                             "type": "category",
                             "label": "Integrations",
                             "items": [
-                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization",
+                                "admin-manual/auth/integrations/aws-iam-role"
                             ]
                         }
                     ]
@@ -921,6 +922,7 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
                     ]
@@ -2244,6 +2246,7 @@
                     "type": "category",
                     "label": "v3.1",
                     "items": [
+                        "releasenotes/v3.1/release-3.1.1",
                         "releasenotes/v3.1/release-3.1.0"
                     ]
                 },
@@ -2251,6 +2254,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.8",
                         "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",

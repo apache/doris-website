@@ -5,18 +5,11 @@
 }
 ---
 
-## weekday
-### Description
-#### Syntax
+## Description
 
-`INT WEEKDAY (DATETIME date)`
+The WEEKDAY function returns the weekday index value of a date, where Monday is 0, Tuesday is 1, and Sunday is 6.
 
-
-The WEEKDAY function returns the index value of the working day of the date, that is, 0 on Monday, 1 on Tuesday, and 6 on Sunday.
-
-The parameter is Date or Datetime type
-
-Notice the difference between WEEKDAY and DAYOFWEEK:
+Note the difference between WEEKDAY and DAYOFWEEK:
 ```
           +-----+-----+-----+-----+-----+-----+-----+
           | Sun | Mon | Tues| Wed | Thur| Fri | Sat |
@@ -27,21 +20,48 @@ dayofweek |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
           +-----+-----+-----+-----+-----+-----+-----+
 ```
 
-### example
-```
-mysql> select weekday('2019-06-25');
-+--------------------------------+
-| weekday('2019-06-25 00:00:00') |
-+--------------------------------+
-|                              1 |
-+--------------------------------+
+This function behaves consistently with the [weekday function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weekday) in MySQL.
 
-mysql> select weekday(cast(20190625 as date)); 
-+---------------------------------+
-| weekday(CAST(20190625 AS DATE)) |
-+---------------------------------+
-|                               1 |
-+---------------------------------+
+## Syntax
+```sql
+WEEKDAY(`<date_or_time_expr>`)
 ```
-### keywords
-    WEEKDAY
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<datetime_or_date>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+
+## Return Value
+Returns the index corresponding to the weekday of the date, type INT.
+
+- If input is NULL, returns NULL
+
+## Examples
+
+```sql
+-- 2023-10-09 is Monday, returns 0
+SELECT WEEKDAY('2023-10-09'); 
++-------------------------+
+| WEEKDAY('2023-10-09')   |
++-------------------------+
+| 0                       |
++-------------------------+
+
+-- 2023-10-15 is Sunday, returns 6
+SELECT WEEKDAY('2023-10-15 18:30:00'); 
++----------------------------------+
+| WEEKDAY('2023-10-15 18:30:00')   |
++----------------------------------+
+| 6                                |
++----------------------------------+
+
+-- Input is NULL, returns NULL
+SELECT WEEKDAY(NULL);
++---------------+
+| WEEKDAY(NULL) |
++---------------+
+|          NULL |
++---------------+
+```

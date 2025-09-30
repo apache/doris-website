@@ -36,7 +36,7 @@ CREATE CATALOG lakesoul_catalog PROPERTIES (
     | `lakesoul.pg.password` | PG 源数据库的密码 | |
     | `lakesoul.pg.url` | PG 元数据库的 JDBC URL | `jdbc:postgresql://127.0.0.1:5432/lakesoul_test?stringtype=unspecified` |
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
   

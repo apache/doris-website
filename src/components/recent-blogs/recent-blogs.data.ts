@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris Empowered 5G Fully-Connected Factory with A Unified Real-time & Batch Data Platform`,
-        link: 'https://www.velodb.io/blog/1444',
+        label: 'Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2',
+        link: 'https://www.velodb.io/blog/1504',
     },
     {
-        label: 'Journey of telecom giant from ClickHouse to Apache Doris: 13PB in one table',
-        link: 'https://www.velodb.io/blog/1440',
+        label: 'The Ultimate OLAP Showdown: Apache Doris vs. ClickHouse vs. Snowflake (Part 1)',
+        link: 'https://www.velodb.io/blog/1463',
     },
     {
-        label: 'How Tencent Music saved 80% in costs by migrating from Elasticsearch to Apache Doris',
-        link: 'https://www.velodb.io/blog/1395',
+        label: 'Apache Doris Tops RTABench, 6x Faster Than ClickHouse, 30x Faster Than PostgreSQL',
+        link: 'https://www.velodb.io/blog/1465',
     },
     {
-        label: 'Why Apache Doris is a Better Alternative to Elasticsearch for Real-Time Analytics',
-        link: 'https://www.velodb.io/blog/1379',
+        label: 'At Apache Doris, we have implemented multiple strategies to make the system more intelligent, enabling it to skip unnecessary data processing. In this article, we will discuss all the data pruning techniques used in Apache Doris.',
+        link: 'https://www.velodb.io/blog/1489',
     },
 
 

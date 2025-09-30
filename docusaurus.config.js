@@ -73,6 +73,10 @@ const config = {
         // 'https://fonts.googleapis.com',
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
+        {
+            href: '/css/katex.min.css',
+            type: 'text/css',
+        },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
@@ -157,7 +161,8 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
-                    remarkPlugins: [markdownBoldPlugin],
+                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                    rehypePlugins: [require('rehype-katex')],
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
