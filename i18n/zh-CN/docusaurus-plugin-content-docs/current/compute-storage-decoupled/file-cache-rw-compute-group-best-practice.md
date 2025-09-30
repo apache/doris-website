@@ -129,18 +129,15 @@ SET property for "jack" enable_prefer_cached_rowset = true;
    1. 在只读计算组上开启**主动增量预热**或**只读计算组自动预热**(`enable_warmup_immediately_on_new_rowset=true`)。这是让数据能够被异步加载到缓存的前提。
 2. **设置查询新鲜度容忍度**：
    1. 在只读计算组的查询会话或用户属性中，设置 `query_freshness_tolerance_ms` 变量。
-   2. **核心变量 (查询会话)：**
-
-**设置查询会话：**
-```sql
--- 设置可以容忍 1000 毫秒（1秒）的数据延迟
-SET query_freshness_tolerance_ms = 1000;
-```
-
-**或设置用户属性：**
-```sql
-SET property for "jack" query_freshness_tolerance_ms = 1000;
-```
+   2. **设置查询会话：**
+      ```sql
+      -- 设置可以容忍 1000 毫秒（1秒）的数据延迟
+      SET query_freshness_tolerance_ms = 1000;
+      ```
+      **或设置用户属性：**
+      ```sql
+      SET property for "jack" query_freshness_tolerance_ms = 1000;
+      ```
 
 **工作流程：**
 

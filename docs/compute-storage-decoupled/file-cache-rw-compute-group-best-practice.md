@@ -30,7 +30,7 @@ This is a more intelligent and automated mechanism. It establishes a warm-up rel
 - Most scenarios.
 - Requires user permission to configure warm-up relationships.
 
-> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up]**.
+> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up](./read-write-splitting.md)**.
 
 ### 2. Read-Only Compute Group Automatic Warm-up
 
@@ -91,12 +91,17 @@ This solution uses intelligent selection at the query layer to **try to skip** n
 enable_warmup_immediately_on_new_rowset = true
 ```
 
-1. During a query, enable the "prefer cached" Rowset selection strategy via a session variable.
+1. During a query, enable the "prefer cached" Rowset selection strategy via a session variable or user property.
 
-**Core Variable (Query Session):**
+**Set in the query session:**
 
 ```sql
 SET enable_prefer_cached_rowset = true;
+```
+
+**Or set as a user property:**
+```sql
+SET property for "jack" enable_prefer_cached_rowset = true;
 ```
 
 1. **Workflow:**
@@ -129,11 +134,16 @@ High-frequency data ingestion (like `INSERT INTO`, `Stream Load`) continuously p
 
    1. In the query session of the read-only compute group, set the `query_freshness_tolerance_ms` variable.
 
-   2. **Core Variable (Query Session):**
+   2. **Set in the query session:**
 
       ```sql
       -- Set a tolerance for 1000 milliseconds (1 second) of data latency
       SET query_freshness_tolerance_ms = 1000;
+      ```
+
+      **Or set as a user property:**
+      ```sql
+      SET property for "jack" query_freshness_tolerance_ms = 1000;
       ```
 
 **Workflow:**
@@ -155,8 +165,7 @@ High-frequency data ingestion (like `INSERT INTO`, `Stream Load`) continuously p
 
 | Solution                                                    | Applicable Scenarios                                         | Expected Effect (Impact of various write operations on cache hit rate) |
 | ----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Enable Proactive Incremental Warm-up + Delayed Commit       | Most scenarios. <br>Requires user permission to configure warm-up relationships. | **Compaction**: None<br>**Schema Change**: None<br>**Newly Written Data**: Yes. Querying immediately after writing may cause a cache miss. |
-| Read-Only Compute Group Auto Warm-up + Query Awareness      | User has no permission to configure warm-up relationships. <br>User uses non-MoW tables. | **Compaction**: None<br>**Schema Change**: Cache miss<br>**Newly Written Data**: Cache miss |
-| Proactive/Auto Warm-up + Configure Data Freshness Tolerance | To avoid long-tail query issues in read-only clusters under high-frequency write scenarios. | **Compaction**: None<br>**Schema Change**: None (with Proactive Warm-up) / Cache miss (with Auto Warm-up)<br>**Newly Written Data**: Can eliminate most cache misses. |
+| Active incremental pre-warming + delayed commit + configurable data freshness tolerance (optional) | Suitable for scenarios with extremely high query latency requirements; requires users to have permission to configure pre-warming relationships | Compaction: None <br> Heavyweight schema change: None <br> Newly written data: Depends on freshness tolerance |
+| Read-only compute group with automatic pre-warming + prefer cached data + configurable data freshness tolerance (optional) | Users have no permission to configure pre-warming relationships <br> If freshness tolerance is not configured, ineffective for MOW primary key tables | Compaction: None <br> Heavyweight schema change: Cache miss <br> Newly written data: Depends on freshness tolerance |
 
 By reasonably applying the above cache warm-up strategies and related configurations, you can effectively manage the cache behavior of Apache Doris in a read-write splitting architecture, minimize performance loss due to cache misses, and ensure the stability and efficiency of your read-only query services.
