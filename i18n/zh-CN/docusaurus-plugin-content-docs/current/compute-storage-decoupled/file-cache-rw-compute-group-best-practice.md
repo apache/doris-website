@@ -147,7 +147,7 @@ SET property for "jack" enable_prefer_cached_rowset = true;
 
 **回退机制：**
 
-> 如果某个 Rowset 的预热过程非常缓慢，超过了 `query_freshness_tolerance_ms` 设置的时间（例如超过1000ms仍未完成），为了保证数据的最终可见性，查询将不再跳过它，而是会回退到默认行为：等待预热完成或直接读取冷数据。
+> 如果某个 Rowset 的预热过程非常缓慢，超过了 `query_freshness_tolerance_ms` 设置的时间（例如超过1000ms仍未完成），为了保证数据的最终可见性，查询将不再跳过它，而是会回退到默认行为：直接读取冷数据。
 
 **优势：**
 

@@ -154,7 +154,7 @@ High-frequency data ingestion (like `INSERT INTO`, `Stream Load`) continuously p
 
 **Fallback Mechanism:**
 
-> If the warm-up process for a Rowset is very slow and exceeds the time set by `query_freshness_tolerance_ms` (e.g., still not finished after 1000ms), the query will no longer skip it to ensure eventual data visibility. It will fall back to the default behavior: wait for the warm-up to finish or read the cold data directly.
+> If the warm-up process for a Rowset is very slow and exceeds the time set by `query_freshness_tolerance_ms` (e.g., still not finished after 1000ms), the query will no longer skip it to ensure eventual data visibility. It will fall back to the default behavior: read the cold data directly.
 
 **Advantages:**
 
