@@ -18,8 +18,14 @@ This function is consistent with the [curtime function](https://dev.mysql.com/do
 ## Syntax
 
 ```sql
-CURTIME()
+CURTIME([<precision>])
 ```
+
+## Parameters
+
+| Parameter     | Description                                                                                                                                  |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `<precision>` | Optional parameter indicating the precision of the fractional seconds part of the return value, ranging from 0 to 6. Default is 0, which means no fractional seconds part is returned. |
 
 ## Return Value
 
@@ -35,4 +41,18 @@ mysql> select curtime();
 +----------------+
 | 15:25:47       |
 +----------------+
+```
+
+```sql
+mysql> select curtime(4);
++---------------+
+| curtime(4)    |
++---------------+
+| 15:31:03.8958 |
++---------------+
+```
+
+```sql
+mysql> select curtime(7);
+ERROR 1105 (HY000): errCode = 2, detailMessage = The precision must be between 0 and 6
 ```
