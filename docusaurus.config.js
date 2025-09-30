@@ -250,7 +250,7 @@ const config = {
                    </a>`,
                     en: `<a href="https://www.airmeet.com/e/10fb98e0-9921-11f0-89cc-795d82447e40?utm_source=Apache_Doris_Banner" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
                     <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
-                   <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Apache Doris Summit 2025!</span> 
+                   <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Apache Doris Summit 2025 · Virtual</span> 
                    <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">See Full Agenda and Register Now -></p> 
                        </a>`,
                 }),
