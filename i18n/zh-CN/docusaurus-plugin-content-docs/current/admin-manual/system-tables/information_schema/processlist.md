@@ -32,4 +32,4 @@
 | QUERY_ID          | varchar(256)   | 最后一次查询的 ID             |
 | INFO              | varchar(65533) | 最后一次查询的查询语句        |
 | FE                | varchar(64)    | 连接的 FE                     |
-| COMPUTE_GROUP     | varchar(64)    | 使用的 Cloud Cluster 名字     |
+| COMPUTE_GROUP     | varchar(64)    | 使用的 Compute Group 名字     |
