@@ -241,6 +241,11 @@ Under the storage-computation separation mode, Compute Groups can be specified i
 -H "cloud_cluster:cluster1"
 ```
 
+Starting from Doris 4.0.0, you can use `compute_group` as an alternative
+```
+-H "compute_group:cluster1"
+```
+
 2. Specify Compute Group in the user properties bound to Stream Load. If both user properties and the HTTP header specify a Compute Group, the Compute Group specified in the Header takes precedence.
 ```
 set property for user1 'default_compute_group'='cluster1';
