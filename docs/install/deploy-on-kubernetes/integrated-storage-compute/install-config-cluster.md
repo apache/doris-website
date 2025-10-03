@@ -18,7 +18,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe).
 
 **BE image configuration**  
 To specify the BE image version, use the following configuration:
@@ -27,7 +27,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be).
 
 ### Replicas configuration
 **FE replicas configuration**  

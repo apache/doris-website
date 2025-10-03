@@ -23,7 +23,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) 可供使用。
 
 **BE Image 设置**  
 
@@ -35,7 +35,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) 可供使用。
 
 ### 副本数设定
 
