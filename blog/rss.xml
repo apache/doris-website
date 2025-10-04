@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Apache Doris Blog</title>
+        <link>https://doris.apache.org/blog/</link>
+        <description>Apache Doris Blog</description>
+        <lastBuildDate>Mon, 08 Sep 2025 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Deep Dive: Data Pruning in Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/data-pruning-250908/</link>
+            <guid>https://doris.apache.org/blog/data-pruning-250908/</guid>
+            <pubDate>Mon, 08 Sep 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[At Apache Doris, we have implemented multiple strategies to make the system more intelligent, enabling it to skip unnecessary data processing. In this article, we will discuss all the data pruning techniques used in Apache Doris.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Deep Dive: Data Pruning in Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-09-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">September 8, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2]]></title>
+            <link>https://doris.apache.org/blog/coffeebench-part2-250917/</link>
+            <guid>https://doris.apache.org/blog/coffeebench-part2-250917/</guid>
+            <pubDate>Sun, 07 Sep 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[In every benchmark tested: CoffeeBench, TPC-H, and TPC-DS, Apache Doris consistently pulled ahead, establishing clear dominance over both ClickHouse v25.8 on-premises and ClickHouse Cloud.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-09-07T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">September 7, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Data Traits in Apache Doris: The Secret Weapon Behind 2x Faster Performance]]></title>
+            <link>https://doris.apache.org/blog/data-trait-250905/</link>
+            <guid>https://doris.apache.org/blog/data-trait-250905/</guid>
+            <pubDate>Fri, 05 Sep 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[At the core of database systems, the query optimizer acts as a shrewd strategist, constantly analyzing data traits to devise the optimal execution plans. Apache Doris, a high-performance MPP analytical database, employs a built-in Data Trait analysis mechanism in its optimizer. By uncovering statistical traits and semantic constraints within the data, Data Trait provides fundamental support for query optimization. Let’s explore its power!]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Data Traits in Apache Doris: The Secret Weapon Behind 2x Faster Performance</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-09-05T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">September 5, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Tops RTABench, 6x Faster Than ClickHouse, 30x Faster Than PostgreSQL]]></title>
+            <link>https://doris.apache.org/blog/rtabench-250902/</link>
+            <guid>https://doris.apache.org/blog/rtabench-250902/</guid>
+            <pubDate>Tue, 02 Sep 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris, a popular real-time data warehouse, ranked first in the latest RTABench results, setting a new benchmark for real-time analytics performance. In standardized tests, Doris delivered up to 6 times the performance of ClickHouse, 30 times that of PostgreSQL, and 100 times that of MongoDB.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Tops RTABench, 6x Faster Than ClickHouse, 30x Faster Than PostgreSQL</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-09-02T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">September 2, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[The Ultimate OLAP Showdown: Apache Doris vs. ClickHouse vs. Snowflake (Part 1)]]></title>
+            <link>https://doris.apache.org/blog/coffeebench-olap-showdown-part1-250829/</link>
+            <guid>https://doris.apache.org/blog/coffeebench-olap-showdown-part1-250829/</guid>
+            <pubDate>Fri, 29 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris consistently delivers significantly faster performance in large-scale benchmarks spanning both straightforward JOINs and production-grade TPC-H/TPC-DS workloads. On top of that, Apache Doris requires just 10%-20% of the cost of Snowflake or ClickHouse for OLAP workloads.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">The Ultimate OLAP Showdown: Apache Doris vs. ClickHouse vs. Snowflake (Part 1)</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-29T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 29, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Unified Lakehouse with Apache Doris and Paimon: Xiaomi Achieves 6× Faster Performance]]></title>
+            <link>https://doris.apache.org/blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance/</link>
+            <guid>https://doris.apache.org/blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance/</guid>
+            <pubDate>Thu, 28 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Xiaomi is a leading global player in consumer electronics. Best known for its smartphones and smart home devices, Xiaomi is among the top global three smartphone makers and continues to expand into new offerings like electric vehicles. With a global operation, Xiaomi requires an analytical data architecture that can support its growth and increasing demand. Their solution: Apache Doris and Apache Paimon.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Unified Lakehouse with Apache Doris and Paimon: Xiaomi Achieves 6&#xD7; Faster Performance</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-28T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 28, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Real-time Data Analytics at Scale: Integrating Apache Flink and Doris]]></title>
+            <link>https://doris.apache.org/blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris/</link>
+            <guid>https://doris.apache.org/blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris/</guid>
+            <pubDate>Mon, 18 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[In this article, we'll discuss the main technical use cases of Flink Doris Connector and Flink CDC, showing a complete playbook to combine Flink's real-time processing with Doris's fast analytics.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Real-time Data Analytics at Scale: Integrating Apache Flink and Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-18T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 18, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Empowers Real-time Lakehouse in Large-Scale Business Scenarios of Cainiao]]></title>
+            <link>https://doris.apache.org/blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios/</link>
+            <guid>https://doris.apache.org/blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios/</guid>
+            <pubDate>Mon, 18 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Cainiao, the world of e-commerce logistics giant, chose Apache Doris to upgrade its data platform. This step-by-step migration started in 2023, including validating Doris in a mission-critical scenario, expanding Doris's application scenarios, and executing full-scale deployment. the cost efficiency, stability, and operational efficiency of Doris have been powerfully proven. Currently, Doris powers over 25 clusters (10,000+ CPUs) across 3 regions without any failure.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Empowers Real-time Lakehouse in Large-Scale Business Scenarios of Cainiao</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-18T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 18, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Leading Cloud Computing Service Provider Chose Apache Doris + Iceberg for Hyperscale Data Lakehouse]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse/</guid>
+            <pubDate>Thu, 14 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[The world's cloud computing service giant chose Apache Doris + Apache Iceberg to upgrade its data platform into a flexible, efficient data lakehouse with low costs. This solution handles reporting and BI, federated analysis, log storage and analysis, and high-concurrency analysis. With Apache Doris, this company has successfully launched 20+ projects with 50+ clusters, 3000+ nodes, and over 15 petabytes of data.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Leading Cloud Computing Service Provider Chose Apache Doris + Iceberg for Hyperscale Data Lakehouse</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-14T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 14, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris + MCP: The Real-Time Analytical Data Platform for the Agentic AI Era]]></title>
+            <link>https://doris.apache.org/blog/real-time-analytical-data-platform-for-the-agentic-ai-era/</link>
+            <guid>https://doris.apache.org/blog/real-time-analytical-data-platform-for-the-agentic-ai-era/</guid>
+            <pubDate>Mon, 11 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris is built to meet the data challenges in the agentic AI era, delivering real-time analytics at scale. But to use Doris's power for AI agents, you need a bridge between them. That's where Doris MCP Server comes in, acting as a communication layer between AI agents and Doris.In this article, we'll explore how agentic AI is rewriting the rules for analytics, how MCP connects AI agents to data sources, and walk through two demos that bring AI agents, MCP, and Apache Doris together in action.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris + MCP: The Real-Time Analytical Data Platform for the Agentic AI Era</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-11T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 11, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Empowered 5G Fully-Connected Factory with A Unified Real-time & Batch Data Platform]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform/</guid>
+            <pubDate>Fri, 08 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[One of the world's biggest telecommunication companies replaced the Lambda architecture with a unified real-time & batch data platform powered by Apache Doris for its 5G Fully-Connected Factory. Leveraging Doris's federated query capabilities, this platform established a unified query gateway and simplified data pipelines, significantly reducing storage costs, improving data freshness, and boosting query performance and development efficiency. Currently, Doris handles 70% of real-time data ingestion and 90% of real-time queries.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Empowered 5G Fully-Connected Factory with A Unified Real-time &amp; Batch Data Platform</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 8, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Stability at Scale: How Apache Doris Handles Pressure]]></title>
+            <link>https://doris.apache.org/blog/stability-at-scale-how-apache-doris-handles-pressure/</link>
+            <guid>https://doris.apache.org/blog/stability-at-scale-how-apache-doris-handles-pressure/</guid>
+            <pubDate>Fri, 08 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[This article takes you under the hood of Apache Doris, a popular real-time data warehouse, to see how it tackles stability challenges: managing massive data volumes and high concurrency, handling diverse analytical workloads, and coping with the pressure of rapid iteration. We'll also highlight engineering practices that any team can adapt to make their systems more resilient]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Stability at Scale: How Apache Doris Handles Pressure</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 8, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Journey of telecom giant from ClickHouse to Apache Doris: 13PB in one table]]></title>
+            <link>https://doris.apache.org/blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table/</link>
+            <guid>https://doris.apache.org/blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table/</guid>
+            <pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[An enterprise big data platform of leading telecommunication company, StreamCloud, chose Apache Doris as its core database solution for ingesting and querying trillions of incremental data daily. Currently, this solution has been deployed in more than ten production scenarios. The largest cluster is deployed on 117 high-performance server nodes and has been operating stably for over six months. Its single table contains over 13 petabytes of raw data and 534 trillion records, maintaining a daily data ingestion of about 145TB and peak loads of about 158TB during holidays.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Journey of telecom giant from ClickHouse to Apache Doris: 13PB in one table</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-08-04T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 4, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[From Snowflake to Apache Doris: real-time analytics with 80% cost savings]]></title>
+            <link>https://doris.apache.org/blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings/</link>
+            <guid>https://doris.apache.org/blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings/</guid>
+            <pubDate>Wed, 30 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Parth Soni, a Senior Data Engineer at Planet, completed a real-world migration from Snowflake to Apache Doris. Following the migration, his team reduced their monthly costs from $25K to $5K, while gaining truly real-time data ingestion, 5x faster query performance across various scenarios, and up to 90x speed improvements for large-table analytics.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From Snowflake to Apache Doris: real-time analytics with 80% cost savings</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-30T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 30, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Leading AI Company Revamped Observability: 10x Faster Queries & 83% Cost Savings with Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/leading-ai-company-revamped-observability-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/leading-ai-company-revamped-observability-with-apache-doris/</guid>
+            <pubDate>Mon, 28 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[A leading AI and Speech Technology company upgraded its observability platform by replacing Elasticsearch and Loki with Apache Doris. This transition addressed critical issues of high storage costs with Elasticsearch and slow query performance with Loki.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Leading AI Company Revamped Observability: 10x Faster Queries &amp; 83% Cost Savings with Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-28T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 28, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[How SF Technology Replaced Presto with Apache Doris to Achieve 3x Faster Queries and 48% Cost Savings]]></title>
+            <link>https://doris.apache.org/blog/sf-technology-replaced-presto-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/sf-technology-replaced-presto-with-apache-doris/</guid>
+            <pubDate>Sun, 27 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[SF Technology migrated its primary BI analytics platform from Presto to Apache Doris, supporting over 1 million daily queries. This strategic move solved critical issues with query speed, stability, and high costs.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How SF Technology Replaced Presto with Apache Doris to Achieve 3x Faster Queries and 48% Cost Savings</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-27T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 27, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Why Apache Doris excels at OLAP: a deep dive into real-time update technology]]></title>
+            <link>https://doris.apache.org/blog/real-time-update-deep-dive/</link>
+            <guid>https://doris.apache.org/blog/real-time-update-deep-dive/</guid>
+            <pubDate>Fri, 25 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris is all about making real-time analytics faster, smoother, and more adaptable for modern data needs. For primary key tables, Apache Doris delivers seamless UPSERT semantics, leveraging primary key indexes and a mark-for-deletion mechanism to ensure top-notch write performance and low-latency queries. Plus, its user-defined conflict resolution boosts concurrency for real-time writes, while fast Schema Change functionality keeps data flows uninterrupted. Flexible column updates and options further empower a wide range of real-time use cases with ease.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Why Apache Doris excels at OLAP: a deep dive into real-time update technology</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-25T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 25, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Kwai Replaced ClickHouse with Apache Doris for a Smart, Unified Lakehouse Architecture]]></title>
+            <link>https://doris.apache.org/blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse/</link>
+            <guid>https://doris.apache.org/blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse/</guid>
+            <pubDate>Sat, 19 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Kwai, a leading social media platform, has replaced ClickHouse with Apache Doris to upgrade its OLAP system, now handling nearly 1 billion daily queries. This move shifts them from a complex lake-warehouse separation model to a unified lakehouse architecture. The new system leverages Doris's direct lake access and an intelligent auto-materialization service to solve critical issues of data redundancy, resource contention, and complex governance.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Kwai Replaced ClickHouse with Apache Doris for a Smart, Unified Lakehouse Architecture</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-19T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 19, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[From ClickHouse to Apache Doris: Powering Trillion-Log-Scale Analytics at a Leading Music Streaming Service]]></title>
+            <link>https://doris.apache.org/blog/from-clickhouse-to-doris-trillion-log-scale-analytics/</link>
+            <guid>https://doris.apache.org/blog/from-clickhouse-to-doris-trillion-log-scale-analytics/</guid>
+            <pubDate>Thu, 17 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[A major music streaming platform successfully migrated its massive 2PB log analytics from ClickHouse to Apache Doris, achieving up to 7x faster searches, 30% lower P99 query latency, 2.5x higher concurrency, and significant operational savings.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From ClickHouse to Apache Doris: Powering Trillion-Log-Scale Analytics at a Leading Music Streaming Service</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-17T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 17, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Building Real-Time Lakehouse with Apache Doris: A Practical Guide]]></title>
+            <link>https://doris.apache.org/blog/building-real-time-lakehouse-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/building-real-time-lakehouse-with-apache-doris/</guid>
+            <pubDate>Tue, 15 Jul 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[The Lakehouse is a data management paradigm that combines the advantages of data lakes and data warehouses. Apache Doris advances this concept with its core philosophies of Boundless Data, Seamless Lakehouse. This article takes a deeper dive into its typical application scenarios to help readers better understand and apply its capabilities.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Building Real-Time Lakehouse with Apache Doris: A Practical Guide</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Engineering Team</span></span><time datetime="2025-07-15T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 15, 2025</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+    </channel>
+</rss>
