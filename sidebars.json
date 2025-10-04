@@ -392,7 +392,8 @@
                     "type": "category",
                     "label": "AI",
                     "items": [
-                        "ai/ai-function-overview"
+                        "ai/ai-function-overview",
+                        "ai/vector-search"
                     ]
                 },
                 {
