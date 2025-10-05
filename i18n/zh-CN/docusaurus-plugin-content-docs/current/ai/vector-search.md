@@ -49,7 +49,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="flat"
+      "quantizer"="flat"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -236,7 +236,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="sq8"    -- 指定使用 INT8 进行量化
+      "quantizer"="sq8"    -- 指定使用 INT8 进行量化
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"

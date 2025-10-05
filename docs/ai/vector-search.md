@@ -58,7 +58,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="flat"
+      "quantizer"="flat"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -71,7 +71,7 @@ PROPERTIES (
 - index_type: `hnsw` means using the [Hierarchical Navigable Small World algorithm](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
 - metric_type: `l2_distance` means using L2 distance as the distance function
 - dim: `128` means the vector dimension is 128
-- quant: `flat` means each vector dimension is stored as original float32
+- quantizer: `flat` means each vector dimension is stored as original float32
 
 | Parameter | Required | Supported/Options | Default | Description |
 |-----------|----------|-------------------|---------|-------------|
@@ -267,7 +267,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="sq8"
+      "quantizer"="sq8"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
