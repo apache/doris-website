@@ -25,7 +25,7 @@ FROM_BASE64 ( <str> )
 
 ## Return value
 
-Parameter <str> The result of Base64 decoding. Special cases:
+Parameter `<str>` The result of Base64 decoding. Special cases:
 
 - When the input string is incorrect (a string that is not possible after Base64 encoding appears), NULL will be returned.
 
