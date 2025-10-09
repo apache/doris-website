@@ -180,5 +180,5 @@ As can be seen from the test report, among the 13 SQLs test in total, the perfor
 
 4. It is extremely easy to use, supporting MySQL protocol and standard SQL, which greatly reduces user learning costs.
 
-_Special thanks to SelectDB, the company building Apache Doris helps us work with the community and get sufficient technical support._
+_Special thanks to SelectDB, a company with products powered by Apache Doris, helps us work with the community and get sufficient technical support._
 
