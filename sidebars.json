@@ -1252,6 +1252,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/domain",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ends-with",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/export-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/elt",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/extract-url-parameter",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/from-base64",
