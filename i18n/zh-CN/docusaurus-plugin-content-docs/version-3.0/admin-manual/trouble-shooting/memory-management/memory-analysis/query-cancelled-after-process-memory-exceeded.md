@@ -86,7 +86,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 通常是因为内存更大的 Query 在 Cancel 阶段卡住，无法及时释放内存。Full GC 会先按照内存从大到小的顺序 Cancel Query，再按照内存从大到小的顺序 Cancel Load。若 Query 在内存 Full GC 中被 Cancel，但此时 BE 进程中存在其他 Query 的内存大于当前被 Cancel 的 Query，需要关注这些更大内存的 Query 是否在 Cancel 过程中卡住。
 
-首先执行 `grep {queryID} be/log/be.INFO` 找到 Query 被 Cancel 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存更大的 Query 存在。执行 `grep {更大内存的queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 同样被 Cancel，且这个更大内存的 Query 被 Cancel 的时间点和当前 Query 被 Cancel 的时间点不同，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中 [Query Cancel 过程中卡住] 分析这个更大内存的 Query 是否在 Cacnel 过程中卡住。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
+首先执行 `grep {queryID} be/log/be.INFO` 找到 Query 被 Cancel 的时间点，然后在上下文搜索 `Memory Tracker Summary` 找到进程内存统计日志，若 `Memory Tracker Summary` 中存在使用内存更大的 Query 存在。执行 `grep {更大内存的queryID} be/log/be.INFO` 确认是否有 `Cancel` 关键词的日志，对应时间点就是 Query 被 Cancel 的时间，若该 Query 同样被 Cancel，且这个更大内存的 Query 被 Cancel 的时间点和当前 Query 被 Cancel 的时间点不同，参考 [内存问题 FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) 中 [Query Cancel 过程中卡住] 分析这个更大内存的 Query 是否在 Cancel 过程中卡住。有关 `Memory Tracker Summary` 的分析参考 [内存日志分析](./memory-log-analysis.md)。
 
 ## 查询和导入任务之外的进程内存过大
 
