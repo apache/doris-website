@@ -531,8 +531,14 @@
                                 "compute-storage-decoupled/file-cache/file-cache-internals"
                             ]
                         },
-                        "compute-storage-decoupled/read-write-splitting",
-                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
+                        {
+                            "type": "category",
+                            "label": "Read-Write Separation",
+                            "items": [
+                                "compute-storage-decoupled/rw/read-write-separation",
+                                "compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice"
+                            ]
+                        },
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
