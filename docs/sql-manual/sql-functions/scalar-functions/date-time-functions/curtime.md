@@ -25,7 +25,7 @@ CURTIME([<precision>])
 
 | Parameter     | Description                                                                                                                                  |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `<precision>` | Optional parameter indicating the precision of the fractional seconds part of the return value, ranging from 0 to 6. Default is 0, which means no fractional seconds part is returned. |
+| `<precision>` | Optional parameter indicating the precision of the fractional seconds part of the return value, must be a constant value ranging from 0 to 6. Default is 0, which means no fractional seconds part is returned. |
 
 ## Return Value
 
@@ -41,6 +41,15 @@ mysql> select curtime();
 +----------------+
 | 15:25:47       |
 +----------------+
+```
+
+```sql
+mysql> select curtime(0);
++------------+
+| curtime(0) |
++------------+
+| 13:15:27   |
++------------+
 ```
 
 ```sql
