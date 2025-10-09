@@ -489,6 +489,89 @@ PROPERTIES
 );
 ```
 
+### AWS EKS Cluster IAM Role Authentication and Authorization
+
+For applications (such as Apache Doris) running in an Amazon EKS cluster that need to be granted AWS Identity and Access Management (IAM) permissions, Amazon EKS provides the following two primary methods:
+
+**1.IAM Roles for Service Accounts (IRSA)​**
+
+**2. EKS Pod Identity​**
+
+Both methods require correct configuration of the IAM Role, corresponding trust policy, and IAM policy in the EKS cluster. For specific configuration methods, please refer to the AWS official documentation:
+
+[Granting AWS Identity and Access Management permissions to workloads on Amazon Elastic Kubernetes Service clusters](https://docs.aws.amazon.com/eks/latest/userguide/service-accounts.html#service-accounts-iam)
+
+Doris FE/BE supports automatically detecting and obtaining credentials via the `WSCredentialsProviderChain` method.
+
+### Bucket Policy Authentication and Authorization
+
+For Doris machines deployed using IAM Roles, import, export, and TVF scenarios also support using Amazon S3 bucket policies to control access to objects in AWS S3 buckets. This allows restricting access to the object bucket only to users associated with the EC2 machine. The specific steps are as follows:
+
+1、Set the Bucket Policy for the target bucket.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::111122223333:root"
+                ]
+            },
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:AbortMultipartUpload",
+                "s3:ListMultipartUploadParts"
+            ],
+            "Resource": "arn:aws:s3:::<bucket>/<prefix>/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::111122223333:root"
+                ]
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::<bucket>",
+        }
+    ]
+}
+```
+
+After configuring the Bucket Policy, Doris FE/BE supports automatically detecting and obtaining credentials via the AWSCredentialsProviderChainmethod. Please replace arn:aws:iam::111122223333:rootwith the ARN of the account or Role bound to the EC2 machine.
+
+2、Use the corresponding SQL syntax for data access. No AK/SK, ARN, or other information is required.
+
+```sql
+  SELECT * FROM S3 (
+      "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
+      "format" = "parquet",
+      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.region" = "us-east-1"
+  )
+```
+
+Doris FE/BE supports automatically detecting and obtaining credentials via the `AWSCredentialsProviderChain` method.
+
+Reference documentation: [Bucket Policy](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/example-bucket-policies.html)
+
+### Best Practices for Authentication Methods
+| Authentication Method                                       | Applicable Scenarios                                   | Advantages | Disadvantages |
+| :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
+| AK/SK Authentication | Import/Export/StorageVault scenarios with privately deployed, security-controlled storage or non-AWS S3 object storage. | Simple configuration, supports object storage compatible with AWS S3. | Risk of secret key leakage; manual key rotation required.     |
+| IAM ROLE Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with high-security requirements. | High security, automatic AWS credential rotation, centralized permission configuration. | Complex Bucket Policy/Trust configuration process. |
+| Bucket Policy Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with a small number of buckets | Moderate configuration complexity, adheres to the principle of least privilege, automatically detects AWS credentials. | Permission configuration is scattered across various bucket policies.     |
+
 ### FAQ
 
 #### 1. How to set AWS SDK DEBUG level logs for BE and Recycler?
