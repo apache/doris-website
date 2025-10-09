@@ -41,7 +41,6 @@ If `dt` is NULL, returns NULL;
 
 --Extract day from DATE type
 select day('1987-01-31');
-
 +----------------------------+
 | day('1987-01-31 00:00:00') |
 +----------------------------+
@@ -50,7 +49,6 @@ select day('1987-01-31');
 
 ---Extract day from DATETIME type (ignoring time part)
 select day('2023-07-13 22:28:18');
-
 +----------------------------+
 | day('2023-07-13 22:28:18') |
 +----------------------------+
@@ -59,7 +57,6 @@ select day('2023-07-13 22:28:18');
 
 ---Input is NULL
 select day(NULL);
-
 +-----------+
 | day(NULL) |
 +-----------+

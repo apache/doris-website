@@ -40,8 +40,7 @@ CONVERT_TZ(<date_or_time_expr>, <from_tz>, <to_tz>)
 ## 示例
 
 ```sql
-
----中国上海时间转换到美国洛杉矶
+-- 中国上海时间转换到美国洛杉矶
 mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), 'Asia/Shanghai', 'America/Los_Angeles');
 +---------------------------------------------------------------------------+
 | CONVERT_TZ('2019-08-01 13:21:03', 'Asia/Shanghai', 'America/Los_Angeles') |
@@ -49,7 +48,7 @@ mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), 'Asia/Shanghai
 | 2019-07-31 22:21:03                                                       |
 +---------------------------------------------------------------------------+
 
----将 东八区（+08:00）的时间 '2019-08-01 13:21:03' 转换为 美国洛杉矶
+-- 将 东八区（+08:00）的时间 '2019-08-01 13:21:03' 转换为 美国洛杉矶
 select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Angeles');
 
 +--------------------------------------------------------------------+
@@ -58,7 +57,7 @@ select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Lo
 | 2019-07-31 22:21:03                                                |
 +--------------------------------------------------------------------+
 
----输入为 date 类型,输出为 datetime 类型，时间部分自动转换为 00:00:00
+-- 输入为 date 类型,输出为 datetime 类型，时间部分自动转换为 00:00:00
 mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', 'America/Los_Angeles');
 +-------------------------------------------------------------------------------------------+
 | CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATEV2), 'Asia/Shanghai', 'America/Los_Angeles') |
@@ -66,8 +65,7 @@ mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', '
 | 2019-07-31 09:00:00                                                                       |
 +-------------------------------------------------------------------------------------------+
 
----转换时间为NULL,输出NULL
-
+-- 转换时间为NULL,输出NULL
 mysql> select CONVERT_TZ(NULL, 'Asia/Shanghai', 'America/New_York');
 +-------------------------------------------------------+
 | CONVERT_TZ(NULL, 'Asia/Shanghai', 'America/New_York') |
@@ -75,7 +73,7 @@ mysql> select CONVERT_TZ(NULL, 'Asia/Shanghai', 'America/New_York');
 | NULL                                                  |
 +-------------------------------------------------------+
 
----任一时区为NULL，返回NULL
+-- 任一时区为NULL，返回NULL
 mysql> select CONVERT_TZ('2019-08-01 13:21:03', NULL, 'America/Los_Angeles');
 +----------------------------------------------------------------+
 | CONVERT_TZ('2019-08-01 13:21:03', NULL, 'America/Los_Angeles') |
@@ -90,7 +88,7 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03', '+08:00', NULL);
 | NULL                                              |
 +---------------------------------------------------+
 
----带有 scale 的时间
+-- 带有 scale 的时间
 mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angeles');
 +------------------------------------------------------------------------+
 | CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angeles') |
@@ -98,7 +96,7 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 | 2019-07-31 22:21:03.636                                                |
 +------------------------------------------------------------------------+
 
----当输入的时区不合法的时候，返回错误
+-- 当输入的时区不合法的时候，返回错误
 select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Anges');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT][E33] Operation convert_tz invalid timezone: America/Los_Anges
 ```

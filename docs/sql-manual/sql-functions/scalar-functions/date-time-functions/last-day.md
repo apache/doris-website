@@ -1,6 +1,6 @@
 ---
 {
-    "titleThis function is consistent with MySQL's [LAST_DAY function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_last-day).: "LAST_DAY",
+    "title": "LAST_DAY",
     "language": "en"
 }
 ---

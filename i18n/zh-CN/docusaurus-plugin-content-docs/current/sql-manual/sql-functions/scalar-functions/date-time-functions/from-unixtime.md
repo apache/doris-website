@@ -9,9 +9,7 @@
 
 FROM_UNIXTIME 函数用于将 Unix 时间戳（以秒为单位） 转换为指定格式的日期时间字符串或 VARCHAR 类型值。Unix 时间戳的基准时间为 1970-01-01 00:00:00 UTC，函数会根据输入的时间戳和格式字符串，生成对应的日期时间表示。
 
-
 该函数与 mysql 中的 [from_unixtime 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-unixtime) 行为一致
-
 
 ## 语法
 

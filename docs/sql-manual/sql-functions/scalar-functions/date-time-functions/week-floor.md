@@ -63,7 +63,7 @@ SELECT WEEK_FLOOR('2023-07-13 22:28:18', 2) AS result;
 | 2023-07-10 00:00:00 |
 +---------------------+
 
---inpput with decimal part
+-- input with decimal part
 mysql> SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
 +-------------------------+
 | result                  |

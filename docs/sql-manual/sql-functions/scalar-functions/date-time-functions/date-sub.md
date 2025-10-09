@@ -9,7 +9,7 @@
 
 The DATE_SUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result. It supports operations on DATE (date only) and DATETIME (date and time) types, where the time interval is defined by both a numerical value and a unit.
 
-This function is generally consistent with the [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL, but the difference is that MySQL supports compound unit additions and subtractions, such as:
+This function behaves generally consistently with the [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL, but the difference is that MySQL supports compound unit additions and subtractions, such as:
 
 ```sql
 SELECT DATE_SUB('2025-01-01 00:00:00',INTERVAL '1 1:1:1' DAY_SECOND);

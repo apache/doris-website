@@ -38,7 +38,6 @@ Special cases:
 ```sql
 -- The two dates differ by 1 day (ignoring the time part)
 select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME));
-
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+
@@ -47,7 +46,6 @@ select datediff(CAST('2007-12-31 23:59:59' AS DATETIME), CAST('2007-12-30' AS DA
 
 -- The first date is earlier than the second date, returning a negative number
 select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME));
-
 +-----------------------------------------------------------------------------------+
 | datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DATETIME)) |
 +-----------------------------------------------------------------------------------+

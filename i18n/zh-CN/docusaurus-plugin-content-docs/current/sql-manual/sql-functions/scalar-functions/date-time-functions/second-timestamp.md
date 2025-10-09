@@ -59,7 +59,6 @@ SELECT SECOND_TIMESTAMP('2023-01-01') AS result;
 | 1672502400 |
 +------------+
 
-
 --- 早于 1970-01-01 的日期（返回负数）
 SELECT SECOND_TIMESTAMP('1964-10-31 23:59:59') AS result;
 +------------+

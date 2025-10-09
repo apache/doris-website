@@ -1,6 +1,6 @@
 ---
 {
-    "This function is consistent with MySQL's [makedate function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_makedate).itle": "MAKEDATE",
+    "title": "MAKEDATE",
     "language": "en"
 }
 ---

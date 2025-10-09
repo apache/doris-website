@@ -65,7 +65,6 @@ SELECT TIMESTAMPDIFF(MINUTE, '2003-02-01', '2003-05-01 12:05:55') AS result;
 | 128885 |
 +--------+
 
-
 -- 计算真实差距不足一天
 SELECT TIMESTAMPDIFF(DAY, '2023-12-31 23:59:50', '2024-01-01 00:00:05') AS result;
 +--------+
@@ -85,7 +84,6 @@ SELECT TIMESTAMPDIFF(MONTH, '2023-01-31', '2023-02-28') AS result;
 +--------+
 |      1 |
 +--------+
-
 
 SELECT TIMESTAMPDIFF(MONTH, '2023-01-31', '2023-02-27') AS result;
 +--------+

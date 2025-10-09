@@ -19,7 +19,7 @@ $$
 $$
 $k$ 代表的是基准时间到目标时间的周期数
 
-$\text{type}$ 代表的是周期单位
+$type$ 代表的是周期单位
 
 ## 语法
 
@@ -57,7 +57,7 @@ mysql> select date_floor(cast("0001-01-01 00:00:18" as datetime), INTERVAL 5 SEC
 | 0001-01-01 00:00:15.000000                                             |
 +------------------------------------------------------------------------+
 
----带有 scale 的日期时间，返回值也会带有 scale
+-- 带有 scale 的日期时间，返回值也会带有 scale
 mysql> select date_floor(cast("0001-01-01 00:00:18.123" as datetime), INTERVAL 5 SECOND);
 +----------------------------------------------------------------------------+
 | date_floor(cast("0001-01-01 00:00:18.123" as datetime), INTERVAL 5 SECOND) |
@@ -73,7 +73,7 @@ mysql> select date_floor("2023-07-10 00:00:00", INTERVAL 5 DAY);
 | 2023-07-10 00:00:00                               |
 +---------------------------------------------------+
 
---- date 类型的向下取整
+-- date 类型的向下取整
 mysql> select date_floor("2023-07-13", INTERVAL 5 YEAR);
 +-------------------------------------------+
 | date_floor("2023-07-13", INTERVAL 5 YEAR) |
@@ -81,16 +81,16 @@ mysql> select date_floor("2023-07-13", INTERVAL 5 YEAR);
 | 2021-01-01 00:00:00                       |
 +-------------------------------------------+
 
----period 为负数，无效返回错误
+-- period 为负数，无效返回错误
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL -5 MINUTE);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_floor of 2023-07-13 22:28:18, -5, 0001-01-01 00:00:00 out of range
 
----不支持的 type 类型
+-- 不支持的 type 类型
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL 5 MILLISECOND);
 ERROR 1105 (HY000): errCode = 2, detailMessage = 
 mismatched input 'MILLISECOND' expecting {'.', '[', 'AND', 'BETWEEN', 'COLLATE', 'DAY', 'DIV', 'HOUR', 'IN', 'IS', 'LIKE', 'MATCH', 'MATCH_ALL', 'MATCH_ANY', 'MATCH_PHRASE', 'MATCH_PHRASE_EDGE', 'MATCH_PHRASE_PREFIX', 'MATCH_REGEXP', 'MINUTE', 'MONTH', 'NOT', 'OR', 'QUARTER', 'REGEXP', 'RLIKE', 'SECOND', 'WEEK', 'XOR', 'YEAR', EQ, '<=>', NEQ, '<', LTE, '>', GTE, '+', '-', '*', '/', '%', '&', '&&', '|', '||', '^'}(line 1, pos 52)
 
----任一参数为 NULL
+-- 任一参数为 NULL
 mysql> select date_floor(NULL, INTERVAL 5 HOUR);
 +-----------------------------------+
 | date_floor(NULL, INTERVAL 5 HOUR) |
@@ -98,7 +98,7 @@ mysql> select date_floor(NULL, INTERVAL 5 HOUR);
 | NULL                              |
 +-----------------------------------+
 
---- 每五周向下取整
+-- 每五周向下取整
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL 5 WEEK);
 +----------------------------------------------------+
 | date_floor("2023-07-13 22:28:18", INTERVAL 5 WEEK) |

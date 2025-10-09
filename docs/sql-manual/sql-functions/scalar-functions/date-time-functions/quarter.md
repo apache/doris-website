@@ -35,7 +35,7 @@ QUARTER(`<date_or_time_expr>`)
 ## Examples
 
 ```sql
---- Quarter 1 (January-March)
+-- Quarter 1 (January-March)
 SELECT QUARTER('2025-01-16') AS result;
 +--------+
 | result |
@@ -43,7 +43,7 @@ SELECT QUARTER('2025-01-16') AS result;
 |      1 |
 +--------+
 
---- Including time component (does not affect result)
+-- Including time component (does not affect result)
 SELECT QUARTER('2025-01-16 01:11:10') AS result;
 +--------+
 | result |
@@ -51,7 +51,7 @@ SELECT QUARTER('2025-01-16 01:11:10') AS result;
 |      1 |
 +--------+
 
---- Quarter 2 (April-June)
+-- Quarter 2 (April-June)
 SELECT QUARTER('2023-05-20') AS result;
 +--------+
 | result |
@@ -59,7 +59,7 @@ SELECT QUARTER('2023-05-20') AS result;
 |      2 |
 +--------+
 
---- Quarter 3 (July-September)
+-- Quarter 3 (July-September)
 SELECT QUARTER('2024-09-30 23:59:59') AS result;
 +--------+
 | result |
@@ -67,7 +67,7 @@ SELECT QUARTER('2024-09-30 23:59:59') AS result;
 |      3 |
 +--------+
 
---- Quarter 4 (October-December)
+-- Quarter 4 (October-December)
 SELECT QUARTER('2022-12-01') AS result;
 +--------+
 | result |
@@ -75,7 +75,7 @@ SELECT QUARTER('2022-12-01') AS result;
 |      4 |
 +--------+
 
---- Input is NULL (returns NULL)
+-- Input is NULL (returns NULL)
 SELECT QUARTER(NULL) AS result;
 +--------+
 | result |

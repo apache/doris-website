@@ -6,7 +6,9 @@
 ---
 
 ## Description
-This function is equivalent to cast(string to date).
+
+This function is equivalent to `CAST(<STRING> TO DATE)`.
+
 The TO_DATE function is used to convert datetime values to DATE type (containing only year, month, and day, in YYYY-MM-DD format). This function automatically ignores the time portion (hours, minutes, seconds, microseconds) from the input and extracts only the date portion for conversion.
 
 ## Syntax

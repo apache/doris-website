@@ -63,7 +63,7 @@ SELECT YEAR_FLOOR('2023-07-13 22:28:18', 5) AS result;
 | 2020-01-01 00:00:00 |  
 +---------------------+
 
----input with scale
+-- input with scale
 mysql> SELECT YEAR_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
 +-------------------------+
 | result                  |
