@@ -34,27 +34,25 @@ SELECT * FROM S3 (
 
 其中 `S3(...)`是一个 TVF（Table Value Function）。Table Value Function 本质上是一张表，因此他可以出现在任意 SQL 语句中“表”可以出现的位置上。
 
-TVF 的属性包括要分析的文件路径，文件格式、对象存储的连接信息等。其中文件路径（URI）可以使用通配符匹配多个文件，以下的文件路径都是合法的：
+TVF 的属性包括要分析的文件路径，文件格式、对象存储的连接信息等。
 
-* 匹配指定的文件
+### 多文件导入
 
-  `s3://bucket/path/to/tvf_test/test.parquet`
+在导入时，文件路径（URI）支持使用通配符进行匹配。Doris 的文件路径匹配采用[Glob匹配模式](https://en.wikipedia.org/wiki/Glob_(programming)#:~:text=glob%20%28%29%20%28%2F%20%C9%A1l%C9%92b%20%2F%29%20is%20a%20libc,into%20a%20list%20of%20names%20matching%20that%20pattern.)，并在此基础上进行了一些扩展，支持更灵活的文件选择方式。
 
-* 匹配所有 `test_` 开头的文件
+- `file_{1..3}`：匹配文件`file_1`、`file_2`、`file_3`
+- `file_{1,3}_{1,2}`：匹配文件`file_1_1`、`file_1_2`、`file_3_1`、`file_1_2` （支持和`{n..m}`方式混用，用逗号隔开）
+- `file_*`：匹配所有`file_`开头的文件
+- `*.parquet`：匹配所有`.parquet`后缀的文件
+- `tvf_test/*`：匹配`tvf_test`目录下的所有文件
+- `*test*`：匹配文件名中包含 `test`的文件
 
-  `s3://bucket/path/to/tvf_test/test_*`
+**注意**
 
-* 匹配所有 `.parquet` 后缀的文件
+- `{1..3}`的写法中顺序可以颠倒，`{3..1}`也是可以的。
+- `file_{-1..2}`、`file_{a..4}`这种写法不符合规定，不支持使用负数或者字母作为枚举端点，但是`file_{1..3,11,a}`是允许的，会匹配到文件`file_1`、`file_2`、`file_3`、`file_11`和`file_a`。
+- doris尽量让能够导入的文件导入成功，如果是`file_{a..b,-1..3,4..5}`这样包含了错误写法的路径，我们会匹配到文件`file_4`和`file_5`。
 
-  `s3://bucket/path/to/tvf_test/*.parquet`
-
-* 匹配 `tvf_test`目录下的所有文件
-
-  `s3://bucket/path/to/tvf_test/*`
-
-* 匹配文件名中包含 `test`的文件
-
-  `s3://bucket/path/to/tvf_test/*test*`
 
 ### 自动推断文件列类型
 
