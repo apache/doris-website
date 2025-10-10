@@ -392,7 +392,8 @@
                     "type": "category",
                     "label": "AI",
                     "items": [
-                        "ai/ai-function-overview"
+                        "ai/ai-function-overview",
+                        "ai/vector-search"
                     ]
                 },
                 {
@@ -531,6 +532,7 @@
                             ]
                         },
                         "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
@@ -808,6 +810,7 @@
                             ]
                         },
                         "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/compaction-principles",
                         "admin-manual/trouble-shooting/metadata-operation",
                         "admin-manual/trouble-shooting/frontend-lock-manager",
                         "admin-manual/trouble-shooting/tablet-local-debug",
@@ -944,6 +947,7 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
                     ]
@@ -1072,6 +1076,7 @@
                                     "label": "Conversion",
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/conversion/overview",
+                                        "sql-manual/basic-element/sql-data-types/conversion/cast-expr",
                                         "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
@@ -1266,6 +1271,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/make-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n",
@@ -1275,6 +1281,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/position",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/printf",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/quote",
@@ -1547,8 +1554,10 @@
                                     "label": "MAP Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-entry",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-entries",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-keys",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-values",
@@ -2419,8 +2428,17 @@
                 "releasenotes/all-release",
                 {
                     "type": "category",
+                    "label": "v3.1",
+                    "items": [
+                        "releasenotes/v3.1/release-3.1.1",
+                        "releasenotes/v3.1/release-3.1.0"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.8",
                         "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",

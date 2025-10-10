@@ -25,6 +25,12 @@ SINH(<x>)
 
 The sinh value of parameter `x`.
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive infinity, returns Infinity
+- When `x` is negative infinity, returns -Infinity
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -61,4 +67,37 @@ select sinh(-1.0);
 +---------------------+
 | -1.1752011936438014 |
 +---------------------+
+```
+
+```sql
+select sinh(cast('nan' as double));
+```
+```
++------------------------------+
+| sinh(cast('nan' AS DOUBLE))  |
++------------------------------+
+| NaN                          |
++------------------------------+
+```
+
+```sql
+select sinh(cast('inf' as double));
+```
+```
++------------------------------+
+| sinh(cast('inf' AS DOUBLE))  |
++------------------------------+
+| Infinity                     |
++------------------------------+
+```
+
+```sql
+select sinh(cast('-inf' as double));
+```
+```
++-------------------------------+
+| sinh(cast('-inf' AS DOUBLE))  |
++-------------------------------+
+| -Infinity                     |
++-------------------------------+
 ```

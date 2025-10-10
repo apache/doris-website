@@ -7,7 +7,18 @@
 
 ## Description
 
-Rounds a datetime value up to the nearest specified quarter period boundary. If an origin time is specified, the period is calculated based on that time.
+
+The quarter_ceil function rounds a datetime value up to the nearest specified quarter period boundary. If origin is specified, the period is calculated based on that time.
+
+Date calculation formula:
+$$
+\begin{aligned}
+&\text{quarter\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{quarter} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{quarter} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
+$$
+$k$ represents the number of periods needed from the baseline time to reach the target time.
 
 ## Syntax
 

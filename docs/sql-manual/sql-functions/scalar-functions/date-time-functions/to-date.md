@@ -1,35 +1,54 @@
 ---
 {
-    "title": "TO_DATE",
-    "language": "en"
+  "title": "TO_DATE",
+  "language": "en"
 }
 ---
 
 ## Description
-Date conversion function, used to convert date time (DATETIME) to date type (DATE), that is, remove the time part and keep only the date (YYYY-MM-DD)
+This function is equivalent to cast(string to date).
+The TO_DATE function is used to convert datetime values to DATE type (containing only year, month, and day, in YYYY-MM-DD format). This function automatically ignores the time portion (hours, minutes, seconds, microseconds) from the input and extracts only the date portion for conversion.
 
 ## Syntax
 ```sql
-TO_DATE(<datetime_value>)
+TO_DATE(`<datetime_value>`)
 ```
 
-## Required parameter
-| Parameter        | Description               |
-|-----------------|--------------------------|
-| `datetime_value` | DATETIME type date-time |
+## Parameters
+| Parameter | Description |
+|-----------|-------------|
+| `<datetime_value>` | DATETIME type datetime value, supports DATETIME format, for datetime format please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 
+## Return Value
 
-## Example
+Returns DATE type.
 
-Convert `2020-02-02 00:00:00` to `2020-02-02`
+## Examples
+
 ```sql
+-- Extract the date part from datetime
 select to_date("2020-02-02 00:00:00");
-```
-```text
+
 +--------------------------------+
 | to_date('2020-02-02 00:00:00') |
 +--------------------------------+
 | 2020-02-02                     |
 +--------------------------------+
+
+-- Input date, returns itself
+select to_date("2020-02-02");
++-----------------------+
+| to_date("2020-02-02") |
++-----------------------+
+| 2020-02-02            |
++-----------------------+
+
+-- Input NULL, returns NULL
+SELECT TO_DATE(NULL) AS result;
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 ```
 

@@ -25,6 +25,11 @@ COT(<x>)
 
 Returns a Double type value means the cotangent of x.
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive or negative infinity, returns NaN
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -51,4 +56,40 @@ select cot(null);
 +--------------------+
 |      NULL          |
 +--------------------+
+```
+
+```sql
+select cot(cast('nan' as double));
+```
+
+```text
++----------------------------+
+| cot(cast('nan' AS DOUBLE)) |
++----------------------------+
+| NaN                        |
++----------------------------+
+```
+
+```sql
+select cot(cast('inf' as double));
+```
+
+```text
++----------------------------+
+| cot(cast('inf' AS DOUBLE)) |
++----------------------------+
+| NaN                        |
++----------------------------+
+```
+
+```sql
+select cot(cast('-inf' as double));
+```
+
+```text
++-----------------------------+
+| cot(cast('-inf' AS DOUBLE)) |
++-----------------------------+
+| NaN                         |
++-----------------------------+
 ```
