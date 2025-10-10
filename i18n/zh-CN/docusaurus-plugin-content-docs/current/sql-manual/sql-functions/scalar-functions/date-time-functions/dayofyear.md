@@ -11,7 +11,6 @@ DAYOFYEAR 函数用于计算日期或时间表达式对应的当年中天数，�
 
 该函数与 mysql 中的 [dayofyear 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayofyear) 行为一致
 
-
 ## 别名
 
 - DOY

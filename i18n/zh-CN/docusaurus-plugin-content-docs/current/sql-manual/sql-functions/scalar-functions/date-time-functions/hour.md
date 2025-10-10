@@ -49,7 +49,6 @@ select
 |        23 |        0 |   12 |
 +-----------+----------+------+
 
-
 -- 从 TIME 类型中提取小时（支持超过24或负数）
 select 
     hour(cast('14:30:00' as time)) as normal_hour,     

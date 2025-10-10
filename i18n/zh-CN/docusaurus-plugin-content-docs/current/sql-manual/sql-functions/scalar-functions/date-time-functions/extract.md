@@ -16,7 +16,6 @@ mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
         -> 201907
 ```
 
-
 ## 语法
 
 `EXTRACT(<unit> FROM <date_or_time_expr>)`
