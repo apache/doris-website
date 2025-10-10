@@ -343,7 +343,7 @@ ANN TopN 查询返回行数很少，无需高并行度，建议 `SET parallel_pi
 
 3. Doris 使用前过滤语意（谓词计算在AnnTopN 计算之前）当 SQL 中的谓词涉及到的列有非二级索引列时，为了保证结果的正确性，此时 Doris 会回退到暴力计算。
 比如
-```
+```sql
 SELECT id, l2_distance_approximate(embedding, [xxx]) AS distance
     FROM sift_1M
     WHERE round(id) > 100
