@@ -27,9 +27,9 @@ under the License.
 在生成式 AI 的应用中，单纯依赖大模型自身的参数“记忆”存在明显局限：一方面，模型知识具有时效性，无法覆盖最新信息；另一方面，完全依赖模型直接“生成”容易产生幻觉（Hallucination）。因此，RAG（检索增强生成）应运而生。其核心目标不是让模型凭空构造答案，而是从外部知识库中检索出与用户查询最相关的 Top-K 信息片段，作为生成依据。为实现这一点，需要一种机制衡量“用户查询”与“知识库文档”之间的语义相关性。向量表示正是常用手段：将查询与文档统一编码为语义向量后，可通过向量相似度衡量相关程度。随着预训练模型的发展，生成高质量语义向量已成主流，RAG 的检索阶段也演化为一个标准的向量相似度搜索问题——从大规模向量集合中找出与查询最相似的 K 个向量（候选知识片段）。需要注意，RAG 的向量检索不限于文本，也可扩展到多模态：图片、语音、视频等数据同样可以编码为向量供生成模型使用。例如，用户上传图片后，系统先检索相关描述或知识片段，再辅助生成解释性内容；在医学问答中，可检索病例资料与医学文献，生成更准确的诊断建议。
 ## 暴力搜索
 Apache Doris 自 2.0 版本起支持基于向量距离的最近邻搜索，通过 SQL 实现向量搜索是一个自然且简单的过程。
-```
-SELECT id,
-       l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
+
+```sql
+SELECT id, l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
 FROM   vector_table
 ORDER  BY distance
 LIMIT  10; 
@@ -41,7 +41,7 @@ LIMIT  10;
 
 Apache Doris 自 4.0 版本开始正式支持 ANN 搜索。系统未引入额外数据类型，向量仍以定长数组存储；针对向量距离检索，我们基于 Faiss 实现了新的 ANN 索引类型。
 以下以常见的 [SIFT](http://corpus-texmex.irisa.fr/) 数据集为例，建表示例如下：
-```
+```sql
 CREATE TABLE sift_1M (
   id int NOT NULL,
   embedding array<float>  NOT NULL  COMMENT "",
@@ -49,7 +49,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="flat"
+      "quantizer"="flat"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -77,8 +77,9 @@ PROPERTIES (
 ```sql
 INSERT INTO sift_1M
 SELECT *
-FROM S3("uri" =
-"https://selectdb-customers-tools-bj.oss-cn-beijing.aliyuncs.com/sift_database.tsv", "format" = "csv");
+FROM S3(
+  "uri" = "https://selectdb-customers-tools-bj.oss-cn-beijing.aliyuncs.com/sift_database.tsv",
+  "format" = "csv");
 
 select count(*) from sift_1M
 --------------
@@ -90,8 +91,16 @@ select count(*) from sift_1M
 +----------+
 ```
 SIFT 数据集同时发布了一组 ground truth，用于校验结果。下面选取一组向量，先使用精确距离函数进行 TopN 召回：
-```
-SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
+
+```sql
+SELECT id,
+       L2_distance(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
+       ) AS distance
+FROM sift_1m
+ORDER BY distance
+LIMIT 10;
 --------------
 
 +--------+----------+
@@ -110,9 +119,17 @@ SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44
 +--------+----------+
 10 rows in set (0.29 sec)
 ```
+
 当使用 `l2_distance` 或 `inner_product` 时，Doris 需要计算查询向量与 1,000,000 个候选向量之间的距离，再通过 TopN 算子得到全局结果。使用 `l2_distance_approximate` / `inner_product_approximate` 可触发索引执行路径：
-```
-SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
+```sql
+SELECT id,
+       l2_distance_approximate(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
+       ) AS distance
+FROM sift_1m
+ORDER BY distance
+LIMIT 10;
 --------------
 
 +--------+----------+
@@ -139,9 +156,16 @@ Doris 中，ANN 索引建立在 segment 粒度；由于表是分布式的，各 
 
 除了常见的 TopN 最近邻搜索（即返回与目标向量最近的前 N 条记录）之外，向量检索中还有一类常见的查询方式是 基于距离阈值的范围搜索。
 这类查询不返回固定数量，而是找出所有与目标向量距离满足条件的数据点。例如：查找距离大于或小于某阈值的向量。范围搜索在需要“足够相似”或“足够不相似”候选集的场景中很有用：推荐系统中可获取“接近但不完全相同”内容以增加多样性；异常检测中可定位远离正常模式的数据点。
+
 一个典型的 SQL 为：
-```
-SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300
+
+```sql
+SELECT count(*)
+FROM   sift_1m
+WHERE  l2_distance_approximate(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
+        > 300 
 --------------
 
 +----------+
@@ -154,8 +178,16 @@ SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77
 在 Doris 中，这类基于范围的向量搜索同样通过 ANN 索引 来加速执行。通过 ANN 索引，系统能够快速筛选出候选向量集合，然后再计算精确的近似距离，从而显著降低计算开销、提升查询效率。目前支持的范围查询条件包括 `>, >=, <, <=`。
 ## 组合搜索
 Compound Search 指在同一条 SQL 中同时进行 ANN TopN 与 Range 条件过滤，返回满足范围约束的 TopN。
-```
-SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300 ORDER BY dist limit 10
+
+```sql
+SELECT id,
+       l2_distance_approximate(
+        embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist
+FROM sift_1M
+WHERE l2_distance_approximate(
+        embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
+        > 300
+ORDER BY dist limit 10
 --------------
 
 +--------+----------+
@@ -179,17 +211,18 @@ SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,
 ## 带过滤条件的 ANN 搜索
 带过滤条件的 ANN 搜索是指在执行 ANN TopN 之前先应用其他谓词过滤，返回满足条件的 TopN。
 下面用一个 8 维示例说明混合搜索流程。
-```
-create table ann_with_fulltext (
-            id int not null,
-            embedding array<float> not null,
-            comment String not null,
-            value int null,
-            INDEX idx_comment(`comment`) USING INVERTED PROPERTIES("parser" = "english") COMMENT 'inverted index for comment',
-            INDEX ann_embedding(`embedding`) USING ANN PROPERTIES("index_type"="hnsw","metric_type"="l2_distance","dim"="8")
-        ) duplicate key (`id`) 
-        distributed by hash(`id`) buckets 1
-        properties("replication_num"="1");
+
+```sql
+CREATE TABLE ann_with_fulltext (
+  id int NOT NULL,
+  embedding array<float> NOT NULL,
+  comment String NOT NULL,
+  value int NULL,
+  INDEX idx_comment(`comment`) USING INVERTED PROPERTIES("parser" = "english") COMMENT 'inverted index for comment',
+  INDEX ann_embedding(`embedding`) USING ANN PROPERTIES("index_type"="hnsw","metric_type"="l2_distance","dim"="8")
+) DUPLICATE KEY (`id`) 
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES("replication_num"="1");
 
 INSERT INTO ann_with_fulltext VALUES
 (1, [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8], 'this is about music', 10),
@@ -198,7 +231,7 @@ INSERT INTO ann_with_fulltext VALUES
 (4, [0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3], 'politics update',40)
 ```
 假设用户输入查询向量 `[0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]`，只在 comment 含 “music” 的文档中检索最相似的前 2 条：
-```
+```sql
 SELECT id, comment,
        l2_distance_approximate(embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) AS dist
 FROM ann_with_fulltext
@@ -228,7 +261,7 @@ LIMIT 2;
 采用 FLAT 编码时，HNSW 索引（原始向量 + 图结构）可能占用大量内存。HNSW 必须全量驻留内存才能工作，因此在超大规模数据集上易成瓶颈。
 向量量化通过压缩 FLOAT32 减少内存开销。Doris 当前支持两种标量量化：INT8 与 INT4（SQ8 / SQ4）。以 SQ8 为例：
 
-```
+```sql
 CREATE TABLE sift_1M (
   id int NOT NULL,
   embedding array<float>  NOT NULL  COMMENT "",
@@ -236,7 +269,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="sq8"    -- 指定使用 INT8 进行量化
+      "quantizer"="sq8"    -- 指定使用 INT8 进行量化
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -310,7 +343,7 @@ ANN TopN 查询返回行数很少，无需高并行度，建议 `SET parallel_pi
 
 3. Doris 使用前过滤语意（谓词计算在AnnTopN 计算之前）当 SQL 中的谓词涉及到的列有非二级索引列时，为了保证结果的正确性，此时 Doris 会回退到暴力计算。
 比如
-```
+```sql
 SELECT id, l2_distance_approximate(embedding, [xxx]) AS distance
     FROM sift_1M
     WHERE round(id) > 100

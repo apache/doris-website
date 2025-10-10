@@ -9,7 +9,7 @@ Apache Doris adopts the MySQL network connection protocol. It is compatible with
 
 ## MySQL Client
 
-Download MySQL Client from the MySQL official website or use the pre-installed [MySQL client](https://dev.mysql.com/downloads/mysql/) for Linux provided by the Apache Doris community. Currently, Doris is primarily compatible with MySQL 5.7 and later clients.
+Download MySQL Client from the [MySQL official website](https://dev.mysql.com/downloads/mysql/) for Linux. Currently, Doris is primarily compatible with MySQL 5.7 and later clients.
 
 Extract the downloaded MySQL client. In the `bin/` directory, find the `mysql` command-line tool. Execute the following command to connect to Doris:
 

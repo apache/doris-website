@@ -34,9 +34,8 @@ Vector retrieval in RAG is not limited to text; it naturally extends to multimod
 
 Starting from version 2.0, Apache Doris supports nearest-neighbor search based on vector distance. Performing vector search with SQL is natural and simple:
 
-```
-SELECT id,
-       l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
+```sql
+SELECT id, l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
 FROM   vector_table
 ORDER  BY distance
 LIMIT  10; 
@@ -50,7 +49,7 @@ From version 4.0, Apache Doris officially supports ANN search. No additional dat
 
 Using the common [SIFT](http://corpus-texmex.irisa.fr/) dataset as an example, you can create a table like this:
 
-```
+```sql
 CREATE TABLE sift_1M (
   id int NOT NULL,
   embedding array<float>  NOT NULL  COMMENT "",
@@ -58,7 +57,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="flat"
+      "quantizer"="flat"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -71,7 +70,7 @@ PROPERTIES (
 - index_type: `hnsw` means using the [Hierarchical Navigable Small World algorithm](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
 - metric_type: `l2_distance` means using L2 distance as the distance function
 - dim: `128` means the vector dimension is 128
-- quant: `flat` means each vector dimension is stored as original float32
+- quantizer: `flat` means each vector dimension is stored as original float32
 
 | Parameter | Required | Supported/Options | Default | Description |
 |-----------|----------|-------------------|---------|-------------|
@@ -87,10 +86,11 @@ Import via S3 TVF:
 ```sql
 INSERT INTO sift_1M
 SELECT *
-FROM S3("uri" =
-"https://selectdb-customers-tools-bj.oss-cn-beijing.aliyuncs.com/sift_database.tsv", "format" = "csv");
+FROM S3(
+  "uri" = "https://selectdb-customers-tools-bj.oss-cn-beijing.aliyuncs.com/sift_database.tsv",
+  "format" = "csv");
 
-select count(*) from sift_1M
+SELECT count(*) FROM sift_1M
 
 +----------+
 | count(*) |
@@ -101,8 +101,15 @@ select count(*) from sift_1M
 
 The SIFT dataset ships with a ground-truth set for result validation. Pick one query vector and first run an exact Top-N using the precise distance:
 
-```
-SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
+```sql
+SELECT id,
+       L2_distance(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
+       ) AS distance
+FROM sift_1m
+ORDER BY distance
+LIMIT 10;
 --------------
 
 +--------+----------+
@@ -124,8 +131,15 @@ SELECT id, l2_distance(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44
 
 When using `l2_distance` or `inner_product`, Doris computes the distance between the query vector and all 1,000,000 candidate vectors, then applies a TopN operator globally. Using `l2_distance_approximate` / `inner_product_approximate` triggers the index path:
 
-```
-SELECT id, l2_distance_approximate(embedding,     [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as distance FROM sift_1M ORDER BY distance limit 10
+```sql
+SELECT id,
+       l2_distance_approximate(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
+       ) AS distance
+FROM sift_1m
+ORDER BY distance
+LIMIT 10;
 --------------
 
 +--------+----------+
@@ -157,8 +171,13 @@ Beyond the common TopN nearest neighbor search (returning the closest N records)
 
 Example SQL:
 
-```
-SELECT  count(*) FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300
+```sql
+SELECT count(*)
+FROM   sift_1m
+WHERE  l2_distance_approximate(
+        embedding,
+        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
+        > 300 
 --------------
 
 +----------+
@@ -175,8 +194,15 @@ These range-based vector searches are also accelerated by the ANN index: the ind
 
 Compound Search combines an ANN TopN search with a range predicate in the same SQL statement, returning the TopN results that also satisfy a distance constraint.
 
-```
-SELECT id, l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist FROM sift_1M  WHERE l2_distance_approximate(embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) > 300 ORDER BY dist limit 10
+```sql
+SELECT id,
+       l2_distance_approximate(
+        embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]) as dist
+FROM sift_1M
+WHERE l2_distance_approximate(
+        embedding, [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
+        > 300
+ORDER BY dist limit 10
 --------------
 
 +--------+----------+
@@ -206,21 +232,21 @@ This refers to applying other predicates before the ANN TopN and returning the T
 
 Example with a small 8-D vector and a text filter:
 
-```
-create table ann_with_fulltext (
-  id int not null,
-  embedding array<float> not null,
-  comment String not null,
-  value int null,
+```sql
+CREATE TABLE ann_with_fulltext (
+  id int NOT NULL,
+  embedding array<float> NOT NULL,
+  comment String NOT NULL,
+  value int NULL,
   INDEX idx_comment(`comment`) USING INVERTED PROPERTIES("parser" = "english") COMMENT 'inverted index for comment',
   INDEX ann_embedding(`embedding`) USING ANN PROPERTIES("index_type"="hnsw","metric_type"="l2_distance","dim"="8")
-) duplicate key (`id`) 
-distributed by hash(`id`) buckets 1
-properties("replication_num"="1");
+) DUPLICATE KEY (`id`) 
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES("replication_num"="1");
 ```
 
 Insert sample data and search only within rows where `comment` contains “music”:
-```
+```sql
 INSERT INTO ann_with_fulltext VALUES
 (1, [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8], 'this is about music', 10),
 (2, [0.2,0.1,0.5,0.3,0.9,0.4,0.7,0.1], 'sports news today',   20),
@@ -259,7 +285,7 @@ With FLAT encoding, an HNSW index (raw vectors plus graph structure) may consume
 
 Vector quantization compresses float32 storage to reduce memory. Doris currently supports two scalar quantization schemes: INT8 and INT4 (SQ8 / SQ4). Example using SQ8:
 
-```
+```sql
 CREATE TABLE sift_1M (
   id int NOT NULL,
   embedding array<float>  NOT NULL  COMMENT "",
@@ -267,7 +293,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quant"="sq8"
+      "quantizer"="sq8"
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -343,13 +369,14 @@ Disable query profiling for ultra latency-sensitive queries.
 2. ANN index is only supported on DuplicateKey table model.
 3. Doris uses pre-filter semantics (predicates applied before ANN TopN). If predicates include columns without secondary indexes that can precisely locate rows (e.g., no inverted index), Doris falls back to brute force to preserve correctness.
    Example:
-   ```
+   ```sql
    SELECT id, l2_distance_approximate(embedding, [xxx]) AS distance
    FROM sift_1M
    WHERE round(id) > 100
    ORDER BY distance LIMIT 10;
    ```
   Although `id` is a key, without a secondary index (such as an inverted index), its predicate is applied after index analysis, so Doris falls back to brute force to honor pre-filter semantics.
+
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.

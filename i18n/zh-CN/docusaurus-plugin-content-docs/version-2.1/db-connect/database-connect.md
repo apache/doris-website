@@ -9,7 +9,7 @@ Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行�
 
 ## MySQL Client
 
-从 MySQL 官方网站下载 MySQL Client，或者下载我们提供的 Linux 上免安装的 [MySQL 客户端](https://cdn.selectdb.com/download/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)。当前 Doris 主要兼容 MySQL 5.7 及其以上的客户端。
+从 [MySQL 官网](https://dev.mysql.com/downloads/mysql/) 下载 Linux 版 MySQL 客户端。目前 Doris 主要兼容 MySQL 5.7 及以上版本的客户端。
 
 解压下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
