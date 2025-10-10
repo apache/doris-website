@@ -52,6 +52,7 @@ When importing, the file path (URI) supports wildcards for matching. Doris file 
 - In the `{1..3}` notation, the order can be reversed, `{3..1}` is also valid.
 - Notations like `file_{-1..2}` and `file_{a..4}` are not supported, as negative numbers or letters cannot be used as enumeration endpoints. However, `file_{1..3,11,a}` is allowed and will match files `file_1`, `file_2`, `file_3`, `file_11`, and `file_a`.
 - Doris tries to import as many files as possible. For paths like `file_{a..b,-1..3,4..5}` that contain incorrect notation, we will match files `file_4` and `file_5`.
+- When using commas with `{1..4,5}`, only numbers are allowed. Expressions like `{1..4,a}` are not supported; in this case, `{a}` will be ignored.
 
 
 ### Automatic Inference of File Column Types
