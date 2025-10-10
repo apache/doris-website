@@ -10,7 +10,7 @@
 AES encryption function. This function behaves the same as the `AES_ENCRYPT` function in MySQL. The default algorithm is `AES_128_ECB`, and the padding mode is `PKCS7`.
 
 The AES_ENCRYPT function does not use the passed key directly, but further processes it. The specific steps are as follows:
-1. Determine the number of bytes of the key according to the encryption algorithm used. For example, if the AES_128_ECB algorithm is used, the number of bytes of the key is `128 / 8 = 16` (if the AES_256_ECB algorithm is used, the number of bytes of the key is `128 / 8 = 32`);
+1. Determine the number of bytes of the key according to the encryption algorithm used. For example, if the AES_128_ECB algorithm is used, the number of bytes of the key is `128 / 8 = 16` (if the AES_256_ECB algorithm is used, the number of bytes of the key is `256 / 8 = 32`);
 2. Then, for the key input by the user, the `i`th bit and the `16*k+i`th bit are XORed. If the key input by the user is less than 16 bits, 0 is added at the end.
 3. Finally, use the newly generated key to encrypt;
 
