@@ -30,10 +30,10 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
-    [MetaStoreProperties],
-    [StorageProperties],
-    [CommonProperties],
-    [OtherProperties]
+    {MetaStoreProperties},
+    {StorageProperties},
+    {CommonProperties},
+    {OtherProperties}
 );
 ```
 
@@ -51,19 +51,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   `'fs.defaultFS' = 'hdfs://namenode:port'`
 
-* `[MetaStoreProperties]`
+* `{MetaStoreProperties}`
 
   The MetaStoreProperties section is for entering connection and authentication information for the Metastore metadata service. Refer to the "Supported Metadata Services" section for details.
 
-* `[StorageProperties]`
+* `{StorageProperties}`
 
   The StorageProperties section is for entering connection and authentication information related to the storage system. Refer to the "Supported Storage Systems" section for details.
 
-* `[CommonProperties]`
+* `{CommonProperties}`
 
   The CommonProperties section is for entering common attributes. Please see the "Common Properties" section in the [Catalog Overview](../catalog-overview.md).
 
-* `[OtherProperties]`
+* `{OtherProperties}`
 
   OtherProperties section is for entering properties related to Hive Catalog.
 
@@ -85,6 +85,8 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 * [AWS Glue](../metastores/aws-glue.md)
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
 
+> Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
+
 ### Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
@@ -96,28 +98,30 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 * [MINIO](../storages/minio.md)
 
 > To create Hive tables and write data through Doris, you need to explicitly add the `fs.defaultFS` property in the Catalog attributes. If the Catalog is created only for querying, this parameter can be omitted.
+>
+> The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
 ### Supported Data Formats
 
 * Hive
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
-  * [ Text/CSV/JSON](../file-formats/text.md)
+  * [Text/CSV/JSON](../file-formats/text.md)
 
 * Hudi
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
 * Iceberg
 
-  * [ Parquet](../file-formats/parquet.md)
+  * [Parquet](../file-formats/parquet.md)
 
-  * [ ORC](../file-formats/orc.md)
+  * [ORC](../file-formats/orc.md)
 
 ## Column Type Mapping
 
@@ -144,60 +148,408 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
 
 ## Examples
+### Hive Metastore
 
-### Hive on HDFS
+<details>
+    <summary>Version 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Access HMS and HDFS services without Kerberos authentication
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.username' = 'doris'
+            );
+            ```
+            Access HMS and HDFS services with Kerberos authentication enabled
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_kerberos_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+        </TabItem>
+        <TabItem value='ViewFs' label='ViewFs'>
+            ```sql
+            CREATE CATALOG hive_viewfs PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+                'fs.defaultFS' = 'viewfs://your-cluster',
+                'fs.viewfs.mounttable.your-cluster.link./ns1' = 'hdfs://your-nameservice/',
+                'fs.viewfs.mounttable.your-cluster.homedir' = '/ns1',
+                'dfs.nameservices' = 'your-nameservice',
+                'dfs.ha.namenodes.your-nameservice' = 'nn1,nn2',
+                'dfs.namenode.rpc-address.your-nameservice.nn1' = '172.21.0.2:8088',
+                'dfs.namenode.rpc-address.your-nameservice.nn2' = '172.21.0.3:8088',
+                'dfs.client.failover.proxy.provider.your-nameservice' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG hive_hms_s3_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.2+)
+            ```sql
+            CREATE CATALOG hive_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region'   = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ``` 
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+            Access HMS with Kerberos authentication enabled
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_kerberos_old_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG hive_hms_cos_test_region_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+            Access HMS with Kerberos authentication enabled
+            ```sql
+            CREATE CATALOG hive_hms_on_cos_kerberos_new_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG test_hive_on_hms_obs_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+            Access HMS with Kerberos authentication enabled
+            ```sql
+            CREATE CATALOG hive_hms_on_obs_kerberos_new_catalog PROPERTIES (
+                'type' = 'hms',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG `hive_hms_on_gcs_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'fs.gcs.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_minio_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.use_path_style' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = '<ak>',
+                'minio.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+<details>
+    <summary>Version 2.1 & 3.0</summary>
 
-```sql
-CREATE CATALOG hive_hdfs PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083'
-);
-```
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Access HMS without Kerberos authentication
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
 
-### Hive on HDFS with HA
+            ```
+            Access HMS with Kerberos authentication enabled
+            ```sql
+            CREATE CATALOG test_two_hive_kerberos PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.kerberos.min.seconds.before.relogin' = '5',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG hms_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG hive_hms_cos_test_region_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
 
-```sql
-CREATE CATALOG hive_hdfs_ha PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'dfs.nameservices' = 'your-nameservice',
-    'dfs.ha.namenodes.your-nameservice' = 'nn1,nn2',
-    'dfs.namenode.rpc-address.your-nameservice.nn1' = '172.21.0.2:8088',
-    'dfs.namenode.rpc-address.your-nameservice.nn2' = '172.21.0.3:8088',
-    'dfs.client.failover.proxy.provider.your-nameservice' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
-);
-```
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_obs_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG hive_hms_on_gcs_s3 PROPERTIES (
+                'type'='hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/gcs/paimon_warehouse',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'gs.endpoint' = 'storage.googleapis.com'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_minio_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19000',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-### Hive on ViewFS
+### AWS Glue
+<details>
+    <summary>Version 3.1+</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            AWS Glue and S3 storage services share the same authentication information.
+            ```sql
+            CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'ap-east-1',
+                'glue.endpoint' = 'https://glue.ap-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+            When Glue service authentication information differs from S3 authentication information, you can specify S3 authentication information separately in the following way.
+            ```sql
+            CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'ap-east-1',
+                'glue.endpoint' = 'https://glue.ap-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com/',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+<details>
+    <summary>Version 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            ```sql
+            create catalog hive_glue PROPERTIES(
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.region' = 'ap-northeast-1',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-```sql
-CREATE CATALOG hive_viewfs PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'dfs.nameservices' = 'your-nameservice',
-    'dfs.ha.namenodes.your-nameservice' = 'nn1,nn2',
-    'dfs.namenode.rpc-address.your-nameservice.nn1' = '172.21.0.2:8088',
-    'dfs.namenode.rpc-address.your-nameservice.nn2' = '172.21.0.3:8088',
-    'dfs.client.failover.proxy.provider.your-nameservice' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
-    'fs.defaultFS' = 'viewfs://your-cluster',
-    'fs.viewfs.mounttable.your-cluster.link./ns1' = 'hdfs://your-nameservice/',
-    'fs.viewfs.mounttable.your-cluster.homedir' = '/ns1'
-);
-```
+### Aliyun DLF
+<details>
+    <summary>Version 3.1+</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG hive_dlf_oss_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'dlf',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
-### Hive on S3
-
-```sql
-CREATE CATALOG hive_s3 PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
-    's3.region' = 'us-east-1',
-    's3.access_key' = 'ak',
-    's3.secret_key' = 'sk',
-    'use_path_style' = 'true'
-);
-```
+<details>
+    <summary>Version 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG hive_dlf_oss_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'dlf',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog.id' = 'p2_regression_case',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
 
 ## Query Operations
 

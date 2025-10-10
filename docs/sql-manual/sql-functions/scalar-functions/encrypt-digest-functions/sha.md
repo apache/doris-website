@@ -15,14 +15,14 @@ SHA
 ## Syntax
 
 ``` sql
-SHA1( <str> )
+SHA1( <input> )
 ```
 
 ## Parameters
 
 | parameter | description         |
 |-----------|-------------|
-| `<str>`   | The sha1 value to be calculated |
+| `<input>`   | The sha1 value to be calculated, accept string and binary types |
 
 ## Return Value
 
@@ -32,13 +32,28 @@ Returns the sha1 value of the input string
 ## Examples
 
 ```sql
-select sha("123"), sha1("123");
+-- vb (VarBinary) and vc (VarChar) used the same string during insertion.
+SELECT * FROM mysql_catalog.binary_test.binary_test;
+```
+```text
++------+------------+------+
+| id   | vb         | vc   |
++------+------------+------+
+|    1 | 0x616263   | abc  |
+|    2 | 0x78797A   | xyz  |
+|    3 | NULL       | NULL |
++------+------------+------+
 ```
 
+```sql
+SELECT SHA1(vb), SHA1(vc) FROM mysql_catalog.binary_test.binary_test;
+```
 ```text
 +------------------------------------------+------------------------------------------+
-| sha1('123')                              | sha1('123')                              |
+| SHA1(vb)                                 | SHA1(vc)                                 |
 +------------------------------------------+------------------------------------------+
-| 40bd001563085fc35165329ea1ff5c5ecbdbbeef | 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
+| a9993e364706816aba3e25717850c26c9cd0d89d | a9993e364706816aba3e25717850c26c9cd0d89d |
+| 66b27417d37e024c46526c2f6d358a754fc552f3 | 66b27417d37e024c46526c2f6d358a754fc552f3 |
+| NULL                                     | NULL                                     |
 +------------------------------------------+------------------------------------------+
 ```

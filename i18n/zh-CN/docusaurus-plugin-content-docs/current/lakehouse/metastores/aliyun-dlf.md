@@ -22,7 +22,7 @@
 | `dlf.access_key` | - | 阿里云 AccessKey，用于访问 DLF 服务。 | 无 | 是 |
 | `dlf.secret_key` | - | 阿里云 SecretKey，用于访问 DLF 服务。 | 无 | 是 |
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID。用于指定元数据目录，如果不设置则使用默认目录。 | 无 | 否 |
-| `warehouse` | - | Warehouse 的存储路径，仅在 Paimon Catalog 中需要填写 | 无 | 否 |
+| `warehouse` | - | Warehouse 的存储路径，仅在 Paimon Catalog 中需要填写。注意，对象存储路径，已经要以 `/` 结尾。 | 无 | 否 |
 
 > 注：
 >

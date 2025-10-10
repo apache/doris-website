@@ -12,7 +12,7 @@ This document describes the supported parameters when connecting to and accessin
 | Property Name | Legacy Name | Description | Default Value | Required |
 | --- | --- | --- | --- | --- | 
 | iceberg.rest.uri | uri | Specifies the Rest service address | - | Yes |
-| iceberg.rest.warehouse | warehouse | Specifies the iceberg warehouse | - | Yes |
+| warehouse | warehouse | Specifies the iceberg warehouse | - | Yes |
 | iceberg.rest.security.type | | Specifies the Rest service authentication method, supports `oauth2`, defaults to `none` (no authentication) | `none` | No |
 | iceberg.rest.oauth2.token | | Bearer token when using `oauth2` authentication | - | No |
 | iceberg.rest.oauth2.scope | | Specifies the resource scope and permission level that users can access after authorization when using `oauth2` authentication | - | No |
@@ -51,7 +51,7 @@ This document describes the supported parameters when connecting to and accessin
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
         'iceberg.rest.sigv4-enabled' = 'true',
         'iceberg.rest.signing-name' = 'glue',
         'iceberg.rest.access-key-id' = '<ak>',
@@ -84,7 +84,7 @@ This document describes the supported parameters when connecting to and accessin
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'http://YOUR_POLARIS_HOST:8181/api/catalog',
-        'iceberg.rest.warehouse' = '<catalog_name>',
+        'warehouse' = '<catalog_name>',
         'iceberg.rest.security.type' = 'oauth2',
         'iceberg.rest.oauth2.credential' = 'client_id:client_secret',
         'iceberg.rest.oauth2.server-uri' = 'http://YOUR_POLARIS_HOST:8181/api/catalog/v1/oauth/tokens',
@@ -99,7 +99,7 @@ This document describes the supported parameters when connecting to and accessin
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'http://YOUR_POLARIS_HOST:8181/api/catalog',
-        'iceberg.rest.warehouse' = '<catalog_name>',
+        'warehouse' = '<catalog_name>',
         'iceberg.rest.security.type' = 'oauth2',
         'iceberg.rest.oauth2.credential' = '6e155b128dc06c13:ce9fbb4cc91c43ff2955f2c6545239d7',
         'iceberg.rest.oauth2.server-uri' = 'http://YOUR_POLARIS_HOST:8181/api/catalog/v1/oauth/tokens',
@@ -119,7 +119,7 @@ This document describes the supported parameters when connecting to and accessin
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
-        'iceberg.rest.warehouse' = 's3://gravitino-iceberg-demo/warehouse',
+        'warehouse' = 's3://gravitino-iceberg-demo/warehouse',
         'iceberg.rest.vended-credentials-enabled' = 'true',
         's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
         's3.region' = 'us-west-2'
@@ -130,7 +130,7 @@ This document describes the supported parameters when connecting to and accessin
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
-        'iceberg.rest.warehouse' = 's3://gravitino-iceberg-demo/warehouse',
+        'warehouse' = 's3://gravitino-iceberg-demo/warehouse',
         'iceberg.rest.vended-credentials-enabled' = 'false',
         's3.access_key' = '<ak>',
         's3.secret_key' = '<sk>',
