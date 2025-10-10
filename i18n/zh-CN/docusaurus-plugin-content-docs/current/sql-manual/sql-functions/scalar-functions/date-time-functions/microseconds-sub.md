@@ -38,7 +38,6 @@ MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 
 ---减去微秒
 SELECT NOW(3) AS current_time, MICROSECONDS_SUB(NOW(3), 100000) AS after_sub;
-
 +-------------------------+----------------------------+
 | current_time            | after_sub                  |
 +-------------------------+----------------------------+

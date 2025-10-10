@@ -34,7 +34,6 @@ MONTHS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 - 若任一参数为 NULL，返回 NULL；
 - 会考虑实际是否相差 一个月(包括天，时 等部分)
 
-
 ## 举例
 
 ```sql
