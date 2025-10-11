@@ -121,7 +121,7 @@ Currently, all rows in the same batch data writing task (whether a load task or 
 
 ## Flexible Partial Column Updates
 
-Previously, Doris's partial update feature required that every row in an import update the same columns. Now, Doris supports a more flexible partial update method that allows each row in a single import to update different columns( supported since 3.1.0).
+Previously, Doris's partial update feature required that every row in an import update the same columns. Now, Doris supports a more flexible partial update method that allows each row in a single import to update different columns(supported since 3.1.0).
 
 :::caution Note:
 
