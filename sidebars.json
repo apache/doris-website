@@ -1695,6 +1695,14 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Binary Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/from_hex",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "System Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/system-functions/connection-id",
