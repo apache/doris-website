@@ -34,6 +34,8 @@ FLOOR(<a>[, <d>])
 - `Decimal(p, <d>)`，若 `0 < <d> <= s`
 - `Decimal(p, s)`，若 `<d> > s`
 
+任意一个输入参数为 NULL 时，返回 NULL。
+
 ## 别名
 
 - DFLOOR
@@ -102,4 +104,16 @@ select floor(x, 2) from ( select cast(123.456 as decimal(6,3)) as x from numbers
 |      123.45 |
 |      123.45 |
 +-------------+
+```
+
+```sql
+select floor(NULL, 2);
+```
+
+```text
++----------------+
+| floor(NULL, 2) |
++----------------+
+|           NULL |
++----------------+
 ```

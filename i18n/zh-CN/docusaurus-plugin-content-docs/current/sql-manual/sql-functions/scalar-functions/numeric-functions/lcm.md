@@ -45,7 +45,7 @@ LCM(<a>, <b>)
 ## Return Value
 
 返回 `<a>` 和 `<b>` 的最小公倍数
-
+任意一个输入为 NULL，返回 NULL
 ## Examples
 
 ```sql
@@ -90,4 +90,16 @@ select lcm(-170141183460469231731687303715884105728, 3);
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not convert to legacy literal: 510423550381407695195061911147652317184
+```
+
+```sql
+select lcm(-4, NULL);
+```
+
+```text
++---------------+
+| lcm(-4, NULL) |
++---------------+
+|          NULL |
++---------------+
 ```
