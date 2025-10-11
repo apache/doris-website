@@ -513,6 +513,7 @@
                                 "compute-storage-decoupled/file-cache/file-cache-internals"
                             ]
                         },
+                        "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
                 },
