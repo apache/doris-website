@@ -97,7 +97,7 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 | 2019-07-31 22:21:03.636                                                |
 +------------------------------------------------------------------------+
 
----When the input time zone is invalid, an error is returned.
+-- When the input time zone is invalid, an error is returned.
 select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Anges');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT][E33] Operation convert_tz invalid timezone: America/Los_Anges
 ```

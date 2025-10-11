@@ -8,7 +8,7 @@
 ## Description
 The WEEKS_SUB function is used to subtract (or add) a specified number of weeks from a given date or time value, returning the adjusted date or time (essentially subtracting weeks_value × 7 days). It supports processing DATE and DATETIME types.
 
-This function behaves consistently with the [weeks_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) using WEEK as the unit in MySQL.
+This function is consistent with the [weeks_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) using WEEK as the unit in MySQL.
 
 ## Syntax
 ```sql

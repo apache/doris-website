@@ -9,7 +9,7 @@
 
 The MINUTE function extracts the minute component from the input datetime value, returning an integer ranging from 0 to 59. This function supports processing DATE, DATETIME, and TIME types.
 
-This function behaves the same as MySQL's [minute function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_minute).
+This function is consistent with MySQL's [minute function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_minute).
 
 ## Syntax
 

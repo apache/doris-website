@@ -20,7 +20,6 @@ Doris does not support this type of input.
 ## Aliases
 
 - days_sub
-- date_sub
 - subdate
 
 ## Syntax

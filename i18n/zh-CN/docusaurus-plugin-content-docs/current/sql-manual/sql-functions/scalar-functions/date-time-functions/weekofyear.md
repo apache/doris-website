@@ -67,7 +67,6 @@ SELECT WEEKOFYEAR('2023-12-25') AS week_20231225;
 |            52 |
 +---------------+
 
-
 ---返回 1022 年的第一周
 select weekofyear('1023-01-04');
 +--------------------------+
@@ -83,7 +82,6 @@ SELECT WEEKOFYEAR('2024-01-01') AS week_20240101;
 +---------------+
 |             1 |
 +---------------+
-
 
 -- NULL 输入（返回 NULL）
 SELECT WEEKOFYEAR(NULL) AS week_null_input; 

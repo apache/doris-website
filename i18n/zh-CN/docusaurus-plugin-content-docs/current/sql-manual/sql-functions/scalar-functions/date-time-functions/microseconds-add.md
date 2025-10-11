@@ -39,7 +39,6 @@ MICROSECONDS_ADD(`<datetime>`, `<delta>`)
 
 ---添加微秒
 SELECT NOW(3) AS current_time, MICROSECONDS_ADD(NOW(3), 100000000) AS after_add;
-
 +-------------------------+----------------------------+
 | current_time            | after_add                  |
 +-------------------------+----------------------------+

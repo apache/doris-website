@@ -49,7 +49,6 @@ SELECT MONTHNAME('2023-07-13 22:28:18') AS result;
 | July    |
 +---------+
 
-
 --- 输入为 NULL 时返回 NULL
 SELECT MONTHNAME(NULL) AS result;
 +--------+

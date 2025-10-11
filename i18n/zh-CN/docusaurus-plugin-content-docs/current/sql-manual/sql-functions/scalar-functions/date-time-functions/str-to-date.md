@@ -75,7 +75,6 @@ SELECT STR_TO_DATE('20230713', 'yyyyMMdd') AS result;
 | 2023-07-13 00:00:00 |
 +---------------------+
 
-
 -- 解析带星期和周数的字符串
 SELECT STR_TO_DATE('200442 Monday', '%X%V %W') AS result;
 +------------+

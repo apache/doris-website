@@ -107,7 +107,7 @@ select hour_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') ;
 | 2023-07-13 20:00:00.000                                        |
 +----------------------------------------------------------------+
 
--- If calculation result exceeds maximum datetime range 9999-12-31 23:59:59, return NULL
+-- If calculation result exceeds maximum datetime range 9999-12-31 23:59:59, return error
 select hour_ceil("9999-12-31 22:28:18", 6);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_ceil of 9999-12-31 22:28:18, 6 out of range
 

@@ -16,7 +16,6 @@ mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
         -> 201907
 ```
 
-
 ## 语法
 
 `EXTRACT(<unit> FROM <date_or_time_expr>)`
@@ -49,8 +48,7 @@ week 单位的取值范围为 0-53，计算规则如下：
 ## 举例
 
 ```sql
-
----提取日期时间中的 year, month, day, hour, minute, second,microsecond 时间组件
+-- 提取日期时间中的 year, month, day, hour, minute, second, microsecond 时间组件
 select extract(year from '2022-09-22 17:01:30') as year,
 extract(month from '2022-09-22 17:01:30') as month,
 extract(day from '2022-09-22 17:01:30') as day,
@@ -65,7 +63,7 @@ extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetime(6))) as m
 | 2022 |     9 |   22 |   17 |      1 |     30 |         123 |
 +------+-------+------+------+--------+--------+-------------+
 
----提取日期时间中的 quarter
+-- 提取日期时间中的 quarter
 mysql> select extract(quarter from '2023-05-15') as quarter;
 +---------+
 | quarter |
@@ -73,7 +71,7 @@ mysql> select extract(quarter from '2023-05-15') as quarter;
 |       2 |
 +---------+
 
----提取对应日期的周数，因为 2024 年的第一个周日在 1 月 7 日，所以 01-07 之前都返回0
+-- 提取对应日期的周数，因为 2024 年的第一个周日在 1 月 7 日，所以 01-07 之前都返回0
 select extract(week from '2024-01-06') as week;
 +------+
 | week |
@@ -81,7 +79,7 @@ select extract(week from '2024-01-06') as week;
 |    0 |
 +------+
 
---- 1 月 7 日为第一个周日，返回 1
+-- 1 月 7 日为第一个周日，返回 1
 select extract(week from '2024-01-07') as week;
 +------+
 | week |
@@ -89,7 +87,7 @@ select extract(week from '2024-01-07') as week;
 |    1 |
 +------+
 
----在这个规则下，2024 年的周数只有 0-52
+-- 在这个规则下，2024 年的周数只有 0-52
 select extract(week from '2024-12-31') as week;
 +------+
 | week |
@@ -97,7 +95,7 @@ select extract(week from '2024-12-31') as week;
 |   52 |
 +------+
 
----输入单位不存在，报错
+-- 输入单位不存在，报错
 select extract(uint from '2024-01-07') as week;
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'uint'
 ```

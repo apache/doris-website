@@ -48,7 +48,7 @@ Returns a value of type DATETIME, representing the time value after rounding dow
 ## Examples
 
 ```sql
---- Default period of 1 second, default starting time 0001-01-01 00:00:00
+-- Default period of 1 second, default starting time 0001-01-01 00:00:00
 SELECT SECOND_FLOOR('2025-01-23 12:34:56') AS result;
 +---------------------+
 | result              |
@@ -56,7 +56,7 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56') AS result;
 | 2025-01-23 12:34:56 |
 +---------------------+
 
---- 5-second period, downward rounding result with default starting point
+-- 5-second period, downward rounding result with default starting point
 SELECT SECOND_FLOOR('2025-01-23 12:34:56', 5) AS result;
 +---------------------+
 | result              |
@@ -64,7 +64,7 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56', 5) AS result;
 | 2025-01-23 12:34:55 |
 +---------------------+
 
---- Specify starting time (origin)
+-- Specify starting time (origin)
 SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2025-01-23 12:00:00') AS result;
 +---------------------+
 | result              |
@@ -72,7 +72,7 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2025-01-23 12:00:00') AS result;
 | 2025-01-23 12:34:50 |
 +---------------------+
 
---- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+-- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
 SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2029-01-23 12:00:00') AS result;
 +---------------------+
 | result              |
@@ -80,7 +80,7 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56', 10, '2029-01-23 12:00:00') AS result;
 | 2025-01-23 12:34:50 |
 +---------------------+
 
---- Datetime with microseconds, decimal places truncated to 0 after rounding
+-- Datetime with microseconds, decimal places truncated to 0 after rounding
 SELECT SECOND_FLOOR('2025-01-23 12:34:56.789', 5) AS result;
 +----------------------------+
 | result                     |
@@ -88,7 +88,7 @@ SELECT SECOND_FLOOR('2025-01-23 12:34:56.789', 5) AS result;
 | 2025-01-23 12:34:55.000000 |
 +----------------------------+
 
---- Input is DATE type (default time 00:00:00)
+-- Input is DATE type (default time 00:00:00)
 SELECT SECOND_FLOOR('2025-01-23', 30) AS result;
 +---------------------+
 | result              |
@@ -96,11 +96,11 @@ SELECT SECOND_FLOOR('2025-01-23', 30) AS result;
 | 2025-01-23 00:00:00 |
 +---------------------+
 
---- Period is non-positive, returns error
+-- Period is non-positive, returns error
 mysql> SELECT SECOND_FLOOR('2025-01-23 12:34:56', -3) AS result;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_floor of 2025-01-23 12:34:56, -3 out of range
 
---- Any parameter is NULL, returns NULL
+-- Any parameter is NULL, returns NULL
 SELECT SECOND_FLOOR(NULL, 5), SECOND_FLOOR('2025-01-23 12:34:56', NULL) AS result;
 +-------------------------+--------+
 | second_floor(NULL, 5)   | result |

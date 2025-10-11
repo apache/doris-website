@@ -68,7 +68,6 @@ SELECT WEEKS_ADD('2023-12-25', 1) AS cross_year_add;
 | 2024-01-01     |
 +----------------+
 
-
 -- 输入为NULL（返回NULL）
 SELECT WEEKS_ADD(NULL, 5) AS null_input;
 +------------+

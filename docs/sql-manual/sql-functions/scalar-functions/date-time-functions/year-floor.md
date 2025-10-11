@@ -63,7 +63,7 @@ SELECT YEAR_FLOOR('2023-07-13 22:28:18', 5) AS result;
 | 2020-01-01 00:00:00 |  
 +---------------------+
 
----input with scale
+-- input with scale
 mysql> SELECT YEAR_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
 +-------------------------+
 | result                  |
@@ -119,7 +119,7 @@ SELECT YEAR_FLOOR('2025-07-13', 3, '2020-01-01') AS result;
 | 2023-01-01 00:00:00 |
 +---------------------+
 
---- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+-- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
 SELECT YEAR_FLOOR('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
 +---------------------+
 | result              |

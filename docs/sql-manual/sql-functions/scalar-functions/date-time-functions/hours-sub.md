@@ -9,7 +9,7 @@
 
 The HOURS_SUB function subtracts a specified number of hours from an input date or datetime value and returns the calculated new datetime. This function supports both DATE and DATETIME input types. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00.
 
-This function behaves consistently with the [date_sub function](./date-sub) and [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL when using the `HOUR` unit.
+This function is consistent with the [date_sub function](./date-sub) and [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL when using the `HOUR` unit.
 
 ## Syntax
 

@@ -19,7 +19,7 @@ $$
 $$
 $k$ represents the number of cycles required for the base time to reach the target time.
 
-type represent the unit of period
+$type$ represents the unit of period
 
 ## Syntax
 

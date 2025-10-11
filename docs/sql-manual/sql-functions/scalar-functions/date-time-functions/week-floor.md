@@ -7,15 +7,11 @@
 
 ## Description
 
-The week_floor function rounds down an input datetime value to the nearest specified week interval start time. If origin is specified, it uses that as the reference; otherwise, it defaults to 0000-01-01 00:00:00.
+The WEEK_FLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
 
 Date calculation formula:
 $$
-\begin{aligned}
-&\text{week\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
-&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \mid \\
-&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{week} \leq \langle\text{date\_or\_time\_expr}\rangle\}
-\end{aligned}
+\text{WEEK\_FLOOR}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \mid k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{WEEK} \leq \langle\text{date\_or\_time\_expr}\rangle\}
 $$
 $k$ represents the number of periods from the reference time to the target time.
 
@@ -40,7 +36,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 Returns DATETIME type, representing the rounded-down datetime value. The time portion of the result will be set to 00:00:00.
 
-- If `<period>` is a non-positive (≤0), the function returns error;
+- If `<period>` is a non-positive (≤0), the function returns an error;
 - If any parameter is NULL, returns NULL;
 - If `<datetime>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point;
 - If input is date type, returns date type
@@ -67,7 +63,7 @@ SELECT WEEK_FLOOR('2023-07-13 22:28:18', 2) AS result;
 | 2023-07-10 00:00:00 |
 +---------------------+
 
---inpput with decimal part
+-- input with decimal part
 mysql> SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
 +-------------------------+
 | result                  |

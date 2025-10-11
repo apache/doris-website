@@ -9,7 +9,7 @@
 
 The MONTH function extracts the month value from a datetime value. The return value ranges from 1 to 12, representing the 12 months of a year. This function supports processing DATE and DATETIME types.
 
-This function behaves the same as MySQL's [month function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_month).
+This function is consistent with MySQL's [month function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_month) when using MONTH as the unit.
 
 ## Syntax
 

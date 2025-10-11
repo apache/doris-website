@@ -82,7 +82,7 @@ SELECT YEAR_CEIL('2023-07-13', 1, '2020-01-01') AS result;
 | 2024-01-01 00:00:00 |
 +---------------------+
 
----input with scale
+-- input with scale
 mysql> SELECT YEAR_CEIL('2023-07-13 22:28:18.123', 5) AS result;
 +-------------------------+
 | result                  |

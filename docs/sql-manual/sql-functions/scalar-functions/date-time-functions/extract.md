@@ -49,8 +49,7 @@ If <unit> is an unsupported unit, an error is reported.
 ## Examples
 
 ```sql
-
----Extract year, month, day, hour, minute, second, microsecond time components from datetime
+-- Extract year, month, day, hour, minute, second, microsecond time components from datetime
 select extract(year from '2022-09-22 17:01:30') as year,
 extract(month from '2022-09-22 17:01:30') as month,
 extract(day from '2022-09-22 17:01:30') as day,
@@ -65,17 +64,15 @@ extract(microsecond from cast('2022-09-22 17:01:30.000123' as datetime(6))) as m
 | 2022 |     9 |   22 |   17 |      1 |     30 |         123 |
 +------+-------+------+------+--------+--------+-------------+
 
----Extract quarter from datetime
-
+-- Extract quarter from datetime
 mysql> select extract(quarter from '2023-05-15') as quarter;
-
 +---------+
 | quarter |
 +---------+
 |       2 |
 +---------+
 
----Extract week number for the corresponding date. Since the first Sunday of 2024 is on January 7th, all dates before 01-07 return 0
+-- Extract week number for the corresponding date. Since the first Sunday of 2024 is on January 7th, all dates before 01-07 return 0
 select extract(week from '2024-01-06') as week;
 +------+
 | week |
@@ -83,7 +80,7 @@ select extract(week from '2024-01-06') as week;
 |    0 |
 +------+
 
---- January 7th is the first Sunday, returns 1
+-- January 7th is the first Sunday, returns 1
 select extract(week from '2024-01-07') as week;
 +------+
 | week |
@@ -91,7 +88,7 @@ select extract(week from '2024-01-07') as week;
 |    1 |
 +------+
 
----Under this rule, 2024 only has weeks 0-52
+-- Under this rule, 2024 only has weeks 0-52
 select extract(week from '2024-12-31') as week;
 +------+
 | week |
@@ -99,7 +96,7 @@ select extract(week from '2024-12-31') as week;
 |   52 |
 +------+
 
----Input unit does not exist, reports error
+-- Input unit does not exist, reports error
 select extract(uint from '2024-01-07') as week;
 
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'uint'

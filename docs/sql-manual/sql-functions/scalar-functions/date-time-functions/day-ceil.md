@@ -57,8 +57,7 @@ Special cases:
 ## Examples
 
 ```sql
-
----Round up with a period of five days
+-- Round up with a period of five days
 select day_ceil( cast("2023-07-13 22:28:18" as datetime), 5);
 
 +------------------------------------+
@@ -67,8 +66,7 @@ select day_ceil( cast("2023-07-13 22:28:18" as datetime), 5);
 | 2023-07-15 00:00:00                |
 +------------------------------------+
 
----Datetime input with scale, return value has scale with all decimals as 0
-
+-- Datetime input with scale, return value has scale with all decimals as 0
 select day_ceil( "2023-07-13 22:28:18.123", 5);
 +-----------------------------------------+
 | day_ceil( "2023-07-13 22:28:18.123", 5) |
@@ -76,7 +74,7 @@ select day_ceil( "2023-07-13 22:28:18.123", 5);
 | 2023-07-15 00:00:00.000                 |
 +-----------------------------------------+
 
----Without specifying period, default to round up by one day
+-- Without specifying period, default to round up by one day
 select day_ceil("2023-07-13 22:28:18");
 
 +---------------------------------+
@@ -85,7 +83,7 @@ select day_ceil("2023-07-13 22:28:18");
 | 2023-07-14 00:00:00             |
 +---------------------------------+
 
----Specify period as 7 days (1 week), custom reference time as 2023-01-01 00:00:00
+-- Specify period as 7 days (1 week), custom reference time as 2023-01-01 00:00:00
 select day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00");
 +-----------------------------------------------------------+
 | day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00") |
@@ -93,7 +91,7 @@ select day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00");
 | 2023-07-16 00:00:00                                       |
 +-----------------------------------------------------------+
 
----Date and time is exactly at the start of the period
+-- Date and time is exactly at the start of the period
 select day_ceil("2023-07-16 00:00:00", 7, "2023-01-01 00:00:00");
 +-----------------------------------------------------------+
 | day_ceil("2023-07-13 22:28:18", 7, "2023-01-01 00:00:00") |
@@ -101,7 +99,7 @@ select day_ceil("2023-07-16 00:00:00", 7, "2023-01-01 00:00:00");
 | 2023-07-16 00:00:00                                       |
 +-----------------------------------------------------------+
 
----Input is DATE type, period is 3 days
+-- Input is DATE type, period is 3 days
 select day_ceil(cast("2023-07-13" as date), 3);
 
 +-----------------------------------------+
@@ -118,7 +116,7 @@ select day_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
 | 2023-07-17 08:00:00.000                                       |
 +---------------------------------------------------------------+
 
----Period time is zero, returns NULL
+-- Period time is zero, returns NULL
 select day_ceil(cast("2023-07-13" as date), 0);
 +-----------------------------------------+
 | day_ceil(cast("2023-07-13" as date), 0) |
@@ -126,15 +124,15 @@ select day_ceil(cast("2023-07-13" as date), 0);
 | NULL                                    |
 +-----------------------------------------+
 
----Period is negative
+-- Period is negative
 mysql> select day_ceil("2023-07-13 22:28:18", -2);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_ceil of 2023-07-13 22:28:18, -2 out of range
 
----Return date exceeds maximum range, returns error
+-- Return date exceeds maximum range, returns error
 select day_ceil("9999-12-31", 5);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_ceil of 9999-12-31 00:00:00, 5 out of range
 
----Any parameter is NULL, returns NULL
+-- Any parameter is NULL, returns NULL
 select day_ceil(NULL, 5, "2023-01-01");
 
 +---------------------------------+

@@ -9,7 +9,7 @@
 
 The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59. This function supports processing DATE, DATETIME, and TIME types.
 
-This function behaves consistently with MySQL's [second function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_second).
+This function is consistent with MySQL's [second function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_second).
 
 ## Syntax
 
@@ -35,7 +35,7 @@ Returns a value of type INT, representing the seconds portion of the input datet
 ## Examples
 
 ```sql
---- Extract seconds from DATETIME
+-- Extract seconds from DATETIME
 SELECT SECOND('2018-12-31 23:59:59') AS result;
 +--------+
 | result |
@@ -43,7 +43,7 @@ SELECT SECOND('2018-12-31 23:59:59') AS result;
 |     59 |
 +--------+
 
---- Input is TIME type
+-- Input is TIME type
 SELECT SECOND(cast('15:42:33' as time)) AS result;
 +--------+
 | result |
@@ -51,7 +51,7 @@ SELECT SECOND(cast('15:42:33' as time)) AS result;
 |     33 |
 +--------+
 
---- Input is DATE type (default seconds is 0)
+-- Input is DATE type (default seconds is 0)
 SELECT SECOND('2023-07-13') AS result;
 +--------+
 | result |
@@ -59,7 +59,7 @@ SELECT SECOND('2023-07-13') AS result;
 |      0 |
 +--------+
 
---- Time with microseconds (ignores microseconds)
+-- Time with microseconds (ignores microseconds)
 SELECT SECOND('2023-07-13 10:30:25.123456') AS result;
 +--------+
 | result |
@@ -67,7 +67,7 @@ SELECT SECOND('2023-07-13 10:30:25.123456') AS result;
 |     25 |
 +--------+
 
---- Case where seconds is 0
+-- Case where seconds is 0
 SELECT SECOND('2024-01-01 00:00:00') AS result;
 +--------+
 | result |
@@ -75,7 +75,7 @@ SELECT SECOND('2024-01-01 00:00:00') AS result;
 |      0 |
 +--------+
 
---- Input is NULL (returns NULL)
+-- Input is NULL (returns NULL)
 SELECT SECOND(NULL) AS result;
 +--------+
 | result |

@@ -9,7 +9,7 @@
 
 The NEXT_DAY function returns the first date after the specified date that matches the target day of the week. For example, NEXT_DAY('2020-01-31', 'MONDAY') returns the first Monday after 2020-01-31. This function supports processing DATE and DATETIME types and ignores the time portion in the input (calculation is based only on the date portion).
 
-This function behaves consistently with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
+This function is consistent with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
 
 ## Syntax
 
@@ -46,7 +46,7 @@ Special cases:
 ## Examples
 
 ```sql
---- First Monday after base date
+-- First Monday after base date
 SELECT NEXT_DAY('2020-01-31', 'MONDAY') AS result;
 +------------+
 | result     |
@@ -54,7 +54,7 @@ SELECT NEXT_DAY('2020-01-31', 'MONDAY') AS result;
 | 2020-02-03 |
 +------------+
 
---- Including time component (ignores time, uses only date for calculation)
+-- Including time component (ignores time, uses only date for calculation)
 SELECT NEXT_DAY('2020-01-31 02:02:02', 'MON') AS result;
 +------------+
 | result     |
@@ -62,7 +62,7 @@ SELECT NEXT_DAY('2020-01-31 02:02:02', 'MON') AS result;
 | 2020-02-03 |
 +------------+
 
---- Base date itself is target day of week (returns next occurrence)
+-- Base date itself is target day of week (returns next occurrence)
 SELECT NEXT_DAY('2023-07-17', 'MON') AS result;  -- 2023-07-17 is Monday
 +------------+
 | result     |
@@ -70,7 +70,7 @@ SELECT NEXT_DAY('2023-07-17', 'MON') AS result;  -- 2023-07-17 is Monday
 | 2023-07-24 |
 +------------+
 
---- Target day of week as abbreviation (case insensitive)
+-- Target day of week as abbreviation (case insensitive)
 SELECT NEXT_DAY('2023-07-13', 'FR') AS result;  -- 2023-07-13 is Thursday
 +------------+
 | result     |
@@ -78,7 +78,7 @@ SELECT NEXT_DAY('2023-07-13', 'FR') AS result;  -- 2023-07-13 is Thursday
 | 2023-07-14 |
 +------------+
 
---- Input is NULL (returns NULL)
+-- Input is NULL (returns NULL)
 SELECT NEXT_DAY(NULL, 'SUN') AS result;
 +--------+
 | result |
