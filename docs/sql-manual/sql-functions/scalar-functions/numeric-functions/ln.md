@@ -30,6 +30,8 @@ LN(<x>)
 Return a float-point number. Special cases:
 
 - If x IS NULL, return NULL
+- If x IS NaN, return NaN
+- If x is positive infinity or negative infinity, return NULL
 
 ## Example
 
@@ -67,4 +69,28 @@ select ln(10);
 +------------------------+
 |      2.302585092994046 |
 +------------------------+
+```
+
+```sql
+select ln(cast('inf' as double));
+```
+
+```text
++---------------------------+
+| ln(cast('inf' as double)) |
++---------------------------+
+|                  Infinity |
++---------------------------+
+```
+
+```sql
+select ln(cast('nan' as double));
+```
+
+```text
++---------------------------+
+| ln(cast('nan' as double)) |
++---------------------------+
+|                       NaN |
++---------------------------+
 ```

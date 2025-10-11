@@ -27,9 +27,10 @@ LOG10(<x>)
 
 ## Return value
 
-Returns a floating-point number.
+Returns a floating-point number. Special cases:
 
-- If x IS NULL: return `NULL`
+- If x IS NULL, return `NULL`
+- If x IS NaN, return NaN
 
 ## Example
 
@@ -67,6 +68,30 @@ select log10(16);
 +---------------------------+
 |        1.2041199826559248 |
 +---------------------------+
+```
+
+```sql
+select log10(NULL);
+```
+
+```text
++-------------+
+| log10(NULL) |
++-------------+
+|        NULL |
++-------------+
+```
+
+```sql
+select log10(cast('nan' as double));
+```
+
+```text
++------------------------------+
+| log10(cast('nan' as double)) |
++------------------------------+
+|                          NaN |
++------------------------------+
 ```
 
 

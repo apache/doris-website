@@ -26,6 +26,8 @@ CONV(<input>, <from_base>, <to_base>)
 ## Return Value
 
 The number under the converted target binary `<to_base>` is returned as a string.
+When any input parameter is NULL, returns NULL.
+If `<from_base>` or `<to_base>` does not meet the range requirement, returns NULL.
 
 ## Examples
 
@@ -63,4 +65,28 @@ SELECT CONV(230,10,16);
 +-------------------+
 | E6                |
 +-------------------+
+```
+
+```sql
+SELECT CONV(230,10,NULL);
+```
+
+```text
++-------------------+
+| CONV(230,10,NULL) |
++-------------------+
+| NULL              |
++-------------------+
+```
+
+```sql
+SELECT CONV(230,10,56);
+```
+
+```text
++-----------------+
+| CONV(230,10,56) |
++-----------------+
+| NULL            |
++-----------------+
 ```
