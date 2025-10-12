@@ -1607,6 +1607,8 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-unquote",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/to-json"
                                     ]
                                 },
