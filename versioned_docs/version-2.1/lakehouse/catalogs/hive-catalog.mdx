@@ -474,6 +474,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'glue.secret_key' = '<sk>'
             );
             ```
+
             When Glue service authentication information differs from S3 authentication information, you can specify S3 authentication information separately in the following way.
             ```sql
             CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
@@ -489,6 +490,16 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 's3.secret_key' = '<sk>'
             );
             ```
+
+            Using IAM Assumed Role to obtain S3 access credentials (Since 3.1.2+)
+            ```sql
+            CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( 
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'us-east-1',
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'
+            );
         </TabItem>
     </Tabs>
 </details>

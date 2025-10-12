@@ -61,7 +61,7 @@ INTO OUTFILE "<file_path>"
 - `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件，`max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
 - `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除 `file_path` 指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
 - `file_suffix`: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
-- `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
+- `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）。自 3.1.1 版本开始，支持对 CSV 格式指定压缩算法，目前支持 "plain", "gz", "bz2", "snappyblock", "lz4block", "zstd"。
 
 **Broker 相关属性**  _（需加前缀 `broker.`）_  
 - `broker.name: broker`: 名称

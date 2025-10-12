@@ -137,6 +137,43 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 >
 > You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
 
+## Namespace Mapping
+
+Iceberg's metadata hierarchy is Catalog -> Namespace -> Table. Namespace can have multiple levels (Nested Namespace).
+
+```
+      ┌─────────┐             
+      │ Catalog │             
+      └────┬────┘             
+           │                  
+     ┌─────┴─────┐            
+  ┌──▼──┐     ┌──▼──┐         
+  │ NS1 │     │ NS2 │         
+  └──┬──┘     └──┬──┘         
+     │           │            
+┌────▼───┐    ┌──▼──┐         
+│ Table1 │    │ NS3 │         
+└────────┘    └──┬──┘         
+                 │            
+          ┌──────┴───────┐    
+     ┌────▼───┐     ┌────▼───┐
+     │ Table2 │     │ Table3 │
+     └────────┘     └────────┘
+```
+
+
+Starting from version 3.1.2, for Iceberg Rest Catalog, Doris supports mapping of Nested Namespace.
+
+In the above example, tables will be mapped to Doris metadata according to the following logic:
+
+| Catalog | Database | Table |
+| --- | --- | --- |
+| Catalog | NS1 | Table1 |
+| Catalog | NS2.NS3 | Table2 |
+| Catalog | NS2.NS3 | Table3 |
+
+Support for Nested Namespace needs to be explicitly enabled. For details, please refer to [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+
 ## Examples
 
 ### Hive Metastore
@@ -469,6 +506,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
                 'glue.secret_key' = '<sk>'
             );
             ```
+            
             When Glue service authentication credentials differ from S3 authentication credentials, you can specify S3 authentication credentials separately using the following method.
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
@@ -483,6 +521,18 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
                 's3.region' = 'ap-northeast-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
+            );
+            ```
+
+            Using IAM Assumed Role to obtain S3 access credentials (Since 3.1.2+)
+            ```sql
+            CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/warehouse',
+                'glue.region' = 'us-east-1',                    
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'                
             );
             ```
         </TabItem>

@@ -19,6 +19,7 @@ This document describes the supported parameters when connecting to and accessin
 | iceberg.rest.oauth2.credential | | `oauth2` credentials used to access `server-uri` to obtain token | - | No |
 | iceberg.rest.oauth2.server-uri | | URI address for obtaining `oauth2` token, used in conjunction with `iceberg.rest.oauth2.credential` | - | No |
 | iceberg.rest.vended-credentials-enabled | | Whether to enable `vended-credentials` functionality. When enabled, it will obtain storage system access credentials such as `access-key` and `secret-key` from the rest server, eliminating the need for manual specification. Requires rest server support for this capability. | `false` | No |
+| iceberg.rest.nested-namespace-enabled | | (Supported since version 3.1.2+) Whether to enable support for Nested Namespace. Default is `false`. If `true`, Nested Namespace will be flattened and displayed as Database names, such as `parent_ns.child_ns`. Some Rest Catalog services do not support Nested Namespace, such as AWS Glue, so this parameter should be set to `false` | No |
 
 > Note:
 >
@@ -27,6 +28,27 @@ This document describes the supported parameters when connecting to and accessin
 > 2. For versions prior to 3.1.0, please use the legacy names.
 >
 > 3. For AWS Glue Rest Catalog, please refer to the [AWS Glue documentation](./aws-glue.md)
+
+## Nested Namespace
+
+Since 3.1.2, to fully access Nested Namespace, in addition to setting `iceberg.rest.nested-namespace-enabled` to `true` in the Catalog properties, you also need to enable the following global parameter:
+
+```
+SET GLOBAL enable_nested_namespace=true;
+```
+
+Assuming the Catalog is "ice", Namespace is "ns1.ns2", and Table is "tbl1", you can access Nested Namespace in the following ways:
+
+```sql
+mysql> USE ice.ns1.ns2;
+mysql> SELECT k1 FROM ice.`ns1.ns2`.tbl1;
+mysql> SELECT tbl1.k1 FROM `ns1.ns2`.tbl1;
+mysql> SELECT `ns1.ns2`.tbl1.k1 FROM ice.`ns1.ns2`.tbl1;
+mysql> SELECT ice.`ns1.ns2`.tbl1.k1 FROM tbl1;
+mysql> REFRESH CATALOG ice;
+mysql> REFRESH DATABASE ice.`ns1.ns2`;
+mysql> REFRESH TABLE ice.`ns1.ns2`.tbl1;
+```
 
 ## Example Configurations
 
@@ -108,6 +130,43 @@ This document describes the supported parameters when connecting to and accessin
         's3.secret_key' = '<sk>',
         's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
         's3.region' = 'us-west-2'
+    );
+    ```
+
+- Connecting to Snowflake Open Catalog (Since 3.1.2)
+
+    ```sql
+    -- Enable vended-credentials
+    CREATE CATALOG snowflake_open_catalog PROPERTIES (
+        'type' = 'iceberg',
+        'warehouse' = '<catalog_name>',
+        'iceberg.catalog.type' = 'rest',
+        'iceberg.rest.uri' = 'https://<open_catalog_account>.snowflakecomputing.com/polaris/api/catalog',
+        'iceberg.rest.security.type' = 'oauth2',
+        'iceberg.rest.oauth2.credential' = '<client_id>:<client_secret>',
+        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:<principal_role>',
+        'iceberg.rest.vended-credentials-enabled' = 'true',
+        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+        's3.region' = 'us-west-2',
+        'iceberg.rest.nested-namespace-enabled' = 'true'
+    );
+    ```
+
+    ```sql
+    -- Disable vended-credentials
+    CREATE CATALOG snowflake_open_catalog PROPERTIES (
+        'type' = 'iceberg',
+        'warehouse' = '<catalog_name>',
+        'iceberg.catalog.type' = 'rest',
+        'iceberg.rest.uri' = 'https://<open_catalog_account>.snowflakecomputing.com/polaris/api/catalog',
+        'iceberg.rest.security.type' = 'oauth2',
+        'iceberg.rest.oauth2.credential' = '<client_id>:<client_secret>',
+        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:<principal_role>',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>',
+        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+        's3.region' = 'us-west-2',
+        'iceberg.rest.nested-namespace-enabled' = 'true'
     );
     ```
 

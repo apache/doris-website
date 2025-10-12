@@ -149,6 +149,42 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 >
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.1.0 版本支持)。
 
+## Namespace 映射
+
+Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
+
+```
+      ┌─────────┐             
+      │ Catalog │             
+      └────┬────┘             
+           │                  
+     ┌─────┴─────┐            
+  ┌──▼──┐     ┌──▼──┐         
+  │ NS1 │     │ NS2 │         
+  └──┬──┘     └──┬──┘         
+     │           │            
+┌────▼───┐    ┌──▼──┐         
+│ Table1 │    │ NS3 │         
+└────────┘    └──┬──┘         
+                 │            
+          ┌──────┴───────┐    
+     ┌────▼───┐     ┌────▼───┐
+     │ Table2 │     │ Table3 │
+     └────────┘     └────────┘
+```
+
+自 3.1.2 版本开始，对于 Iceberg Rest Catalog，Doris 支持对 Nested Namespace 的映射。
+
+在上述示例中表，会按照如下逻辑映射为 Doris 的元数据：
+
+| Catalog | Database | Table |
+| --- | --- | --- |
+| Catalog | NS1 | Table1 |
+| Catalog | NS2.NS3 | Table2 |
+| Catalog | NS1.NS3 | Table3 |
+
+对 Nested Namespace 的支持需要显式开启，具体请参阅 [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+
 ## 基础示例
 
 ### Hive Metastore
@@ -481,6 +517,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'glue.secret_key' = '<sk>'
             );
             ```
+            
             Glue 服务的认证信息和 S3 的认证信息不一致时，可以通过以下方式单独指定 S3 的认证信息。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
@@ -495,6 +532,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.region' = 'ap-northeast-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
+            );
+            ```
+
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+ 支持)
+            ```sql
+            CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/warehouse',
+                'glue.region' = 'us-east-1',                    
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'                
             );
             ```
         </TabItem>
