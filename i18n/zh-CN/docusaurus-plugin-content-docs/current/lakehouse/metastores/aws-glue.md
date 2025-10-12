@@ -18,6 +18,7 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
 | Iceberg     | rest             | 通过 Glue Rest Catalog 对接 Iceberg 表格式  |
 
 本说明文档分别对这写类型的参数进行详细介绍，便于用户配置。
+
 ## 通用参数总览
 | 参数名称                   | 描述                                                          | 是否必须 | 默认值 |
 |---------------------------|-------------------------------------------------------------|------|--------|
@@ -26,24 +27,30 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
 | `glue.access_key`       | AWS Access Key ID                                           | 是       | 空         |
 | `glue.secret_key`       | AWS Secret Access Key                                       | 是       | 空         |
 | `glue.catalog_id`       | Glue Catalog ID（暂未支持）                                       | 否       | 空         |
-| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（自3.1.2+ 支持）                          | 否       | 空         |
-| `glue.external_id`      | IAM External ID，用于访问 Glue（自3.1.2+ 支持）                       | 否       | 空         |
+| `glue.role_arn`         | IAM Role ARN，用于访问 Glue（自 3.1.2+ 支持）                          | 否       | 空         |
+| `glue.external_id`      | IAM External ID，用于访问 Glue（自 3.1.2+ 支持）                       | 否       | 空         |
 
 ### 认证参数
+
 访问 Glue 需要认证信息，支持以下两种方式：
-1. **Access Key 认证** 
+
+1. Access Key 认证
 
    通过 `glue.access_key` 和 `glue.secret_key` 提供的 Access Key 认证访问 Glue。
 
-2. **IAM Role 认证（自3.1.2+ 起支持）**  
+2. IAM Role 认证（自 3.1.2+ 起支持）
+
    通过 `glue.role_arn` 提供的 IAM Role 认证访问 Glue。  
+
    该方式需要 Doris 部署在 AWS EC2 上，并且 EC2 实例需要绑定一个 IAM Role，且该 Role 需要有访问 Glue 的权限。
+
    如果需要通过 External ID 进行访问，需要同时配置 `glue.external_id`。
 
 注意事项：
+
 - 两种方式必须至少配置一种，如果同时配置了两种方式，则优先使用 AccessKey 认证。
 
-示例:
+示例：
 
     ```sql
     CREATE CATALOG hive_glue_catalog PRPPERTIES (
@@ -153,11 +160,10 @@ CREATE CATALOG glue_s3 PROPERTIES (
 
 
 ## 权限策略
+
 根据使用场景不同，可以分为 **只读** 和 **读写** 两类策略。
 
-------------------------------------------------------------------------
-
-### 1. 只读权限（Read-Only Policy）
+### 1. 只读权限
 
 只允许读取 Glue Catalog 的数据库和表信息。
 
@@ -186,7 +192,7 @@ CREATE CATALOG glue_s3 PROPERTIES (
 }
 ```
 
-### 2. 读写权限（Read-Write Policy）
+### 2. 读写权限
 
 在只读的基础上，允许创建 / 修改 / 删除数据库和表。
 
@@ -221,16 +227,19 @@ CREATE CATALOG glue_s3 PROPERTIES (
 }
 ```
 
-
 ### 注意事项
 
-1.  **占位符替换**
-    -   `<region>` → 你的 AWS 区域（如 `us-east-1`）。\
-    -   `<account-id>` → 你的 AWS 账号 ID（12 位数字）。
-2.  **最小权限原则**
-    -   如果只做查询，不要授予写权限。\
-    -   可以替换 `*` 为具体数据库 / 表 ARN，进一步收紧权限。
-3.  **S3 权限**
-    -   上述策略只涉及 Glue Catalog。\
-    -   如果需要读取数据文件，还需额外授予 S3 权限（如
-        `s3:GetObject`, `s3:ListBucket` 等）。
+1. 占位符替换
+
+    - `<region>` → 你的 AWS 区域（如 `us-east-1`）。
+    - `<account-id>` → 你的 AWS 账号 ID（12 位数字）。
+
+2. 最小权限原则
+
+    - 如果只做查询，不要授予写权限。
+    - 可以替换 `*` 为具体数据库、表 ARN，进一步收紧权限。
+
+3. S3 权限
+
+    - 上述策略只涉及 Glue Catalog
+    - 如果需要读取数据文件，还需额外授予 S3 权限（如 `s3:GetObject`, `s3:ListBucket` 等）。

@@ -1,16 +1,15 @@
 ---
 {
-    "title": "OUTFILE",
-    "language": "en"
+  "title": "OUTFILE",
+  "language": "en"
 }
-
 ---
 
 ## Description
 
-This statement is used to export query results to a file using the `SELECT INTO OUTFILE` command. Currently, it supports exporting to remote storage, such as HDFS, S3, BOS, COS (Tencent Cloud), through the Broker process, S3 protocol, or HDFS protocol.
+The `SELECT INTO OUTFILE` command is used to export query results to files. Currently supports exporting to remote storage such as HDFS, S3, BOS, COS (Tencent Cloud) through Broker process, S3 protocol or HDFS protocol.
 
-## Syntax
+## Syntax:
 
 ```sql
 <query_stmt>
@@ -21,33 +20,32 @@ INTO OUTFILE "<file_path>"
 
 ## Required Parameters
 
-**1. `<query_stmt>`**  
+**1. `<query_stmt>`**   
 
-  The query statement must be a valid SQL statement. Please refer to the [query statement documentation](../../data-query/SELECT.md).
+Query statement, must be a valid SQL, refer to [query statement documentation](../../data-query/SELECT.md).  
 
 **2. `<file_path>`**
 
-  file_path points to the path where the file is stored and the file prefix. Such as `hdfs://path/to/my_file_`.  
+File storage path and file prefix. Points to the file storage path and file prefix. For example `hdfs://path/to/my_file_`.  
+The final filename will consist of `my_file_`, file sequence number, and file format suffix. The file sequence number starts from 0, and the quantity is the number of files split. For example:  
+- my_file_abcdefg_0.csv
+- my_file_abcdefg_1.csv
+- my_file_abcdegf_2.csv  
 
-  The final filename will consist of `my_file_`, the file number and the file format suffix. The file serial number starts from 0, and the number is the number of files to be divided. Such as:  
-   - my_file_abcdefg_0.csv
-   - my_file_abcdefg_1.csv
-   - my_file_abcdegf_2.csv
-
-  You can also omit the file prefix and specify only the file directory, such as: `hdfs://path/to/`  
+You can also omit the file prefix and only specify the file directory, such as `hdfs://path/to/`
 
 ## Optional Parameters
 
 **1. `<format_as>`**
 
-   Specifies the export format. Supported formats include :   
-   - `CSV` (Default)
+   Specify export format. Currently supports the following formats:  
+   - `CSV` (default)
    - `PARQUET`
    - `CSV_WITH_NAMES`
    - `CSV_WITH_NAMES_AND_TYPES`
    - `ORC`
 
-   > Note: PARQUET, CSV_WITH_NAMES, CSV_WITH_NAMES_AND_TYPES, and ORC are supported starting in version 1.2 .
+   >   Note: PARQUET, CSV_WITH_NAMES, CSV_WITH_NAMES_AND_TYPES, ORC are supported starting from version 1.2.
 
 **2. `<properties>`**  
 
@@ -55,73 +53,73 @@ INTO OUTFILE "<file_path>"
 [ PROPERTIES ("<key>"="<value>" [, ... ]) ]
 ```  
 
-Specify related properties. Currently exporting via the Broker process, S3 protocol, or HDFS protocol is supported.
+Currently supports export through Broker process, or through S3/HDFS protocol.
 
-**File properties**
-- `column_separator`: column separator,is only for CSV format. mulit-bytes is supported starting in version 1.2, such as: "\\x01", "abc".
-- `line_delimiter`: line delimiter,is only for CSV format. mulit-bytes supported starting in version 1.2, such as: "\\x01", "abc".
-- `max_file_size`: the size limit of a single file, if the result exceeds this value, it will be cut into multiple files, the value range of max_file_size is [5MB, 2GB] and the default is 1GB. (When specified that the file format is ORC, the size of the actual division file will be a multiples of 64MB, such as: specify max_file_size = 5MB, and actually use 64MB as the division; specify max_file_size = 65MB, and will actually use 128MB as cut division points.)
-- `delete_existing_files`: default `false`. If it is specified as true, you will first delete all files specified in the directory specified by the file_path, and then export the data to the directory.For example: "file_path" = "/user/tmp", then delete all files and directory under "/user/"; "file_path" = "/user/tmp/", then delete all files and directory under "/user/tmp/"
-- `file_suffix`: Specify the suffix of the export file. If this parameter is not specified, the default suffix for the file format will be used.
+**Properties related to export file itself**
+- `column_separator`: Column separator, only used for CSV related formats. Starting from version 1.2, supports multi-byte separators, such as: "\\x01", "abc".
+- `line_delimiter`: Line delimiter, only used for CSV related formats. Starting from version 1.2, supports multi-byte separators, such as: "\\x01", "abc".
+- `max_file_size`: Single file size limit, if the result exceeds this value, it will be split into multiple files, `max_file_size` value range is [5MB, 2GB], default is `1GB`. (When specifying export as ORC file format, the actual split file size will be a multiple of 64MB, for example: if `max_file_size = 5MB` is specified, it will actually be split by 64 MB; if `max_file_size = 65MB` is specified, it will actually be split by 128 MB)
+- `delete_existing_files`: Default is `false`, if specified as `true`, it will first delete all files under the directory specified by `file_path`, then export data to that directory. For example: "file_path" = "/user/tmp", will delete all files and directories under "/user/"; "file_path" = "/user/tmp/", will delete all files and directories under "/user/tmp/".
+- `file_suffix`: Specify the suffix of the exported file, if this parameter is not specified, the default suffix of the file format will be used.
+- `compress_type`: When specifying the exported file format as Parquet / ORC file, you can specify the compression method used by Parquet / ORC file. Parquet file format can specify compression methods as SNAPPY, GZIP, BROTLI, ZSTD, LZ4 and PLAIN, default value is SNAPPY. ORC file format can specify compression methods as PLAIN, SNAPPY, ZLIB and ZSTD, default value is ZLIB. This parameter is supported starting from version 2.1.5. (PLAIN means no compression). Starting from version 3.1.1, supports specifying compression algorithms for CSV format, currently supports "plain", "gz", "bz2", "snappyblock", "lz4block", "zstd".
 
-**Broker properties**  _(need to be prefixed with `broker`)_
-- `broker.name: broker`: broker name
-- `broker.hadoop.security.authentication`: specify the authentication method as kerberos
-- `broker.kerberos_principal`: specifies the principal of kerberos
-- `broker.kerberos_keytab`: specifies the path to the keytab file of kerberos. The file must be the absolute path to the file on the server where the broker process is located. and can be accessed by the Broker process
+**Broker related properties**  _(need to add prefix `broker.`)_  
+- `broker.name: broker`: name
+- `broker.hadoop.security.authentication`: Specify authentication method as kerberos
+- `broker.kerberos_principal`: Specify kerberos principal
+- `broker.kerberos_keytab`: Specify kerberos keytab file path. This file must be an absolute path of a file on the server where the Broker process is located. And it can be accessed by the Broker process
 
-**HDFS properties**
+**HDFS related properties**
 - `fs.defaultFS`: namenode address and port
 - `hadoop.username`: hdfs username
-- `dfs.nameservices`: if hadoop enable HA, please set fs nameservice. See hdfs-site.xml
-- `dfs.ha.namenodes.[nameservice ID]`: unique identifiers for each NameNode in the nameservice. See hdfs-site.xml
-- `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: the fully-qualified RPC address for each NameNode to listen on. See hdfs-site.xml
-- `dfs.client.failover.proxy.provider.[nameservice ID]`: the Java class that HDFS clients use to contact the Active NameNode, usually it is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider
+- `dfs.nameservices`: name service name, consistent with hdfs-site.xml
+- `dfs.ha.namenodes.[nameservice ID]`: namenode id list, consistent with hdfs-site.xml
+- `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node rpc address, same number as namenode count, consistent with hdfs-site.xml
+- `dfs.client.failover.proxy.provider.[nameservice ID]`: Java class for HDFS client to connect to active namenode, usually "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 
-**For a kerberos-authentication enabled Hadoop cluster, additional properties need to be set:**
-- `dfs.namenode.kerberos.principal`: HDFS namenode service principal
-- `hadoop.security.authentication`: kerberos
-- `hadoop.kerberos.principal`: the Kerberos pincipal that Doris will use when connectiong to HDFS.
-- `hadoop.kerberos.keytab`: HDFS client keytab location.
+**For Hadoop clusters with kerberos authentication enabled, additional PROPERTIES attributes need to be set:**
+- `dfs.namenode.kerberos.principal`: Principal name of HDFS namenode service
+- `hadoop.security.authentication`: Set authentication method to kerberos
+- `hadoop.kerberos.principal`: Set the Kerberos principal used when Doris connects to HDFS
+- `hadoop.kerberos.keytab`: Set keytab local file path
 
-For the S3 protocol, you can directly execute the S3 protocol configuration:
-- `s3.endpoint`
-- `s3.access_key`
-- `s3.secret_key`
-- `s3.region`
-- `use_path_style`: (optional) default false . The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not be enabled or support virtual-hosted style access. At this time, we can add the use_path_style parameter to force the use of path style access method.
+For S3 protocol, directly configure S3 protocol settings:
+ - `s3.endpoint`
+ - `s3.access_key`
+ - `s3.secret_key`
+ - `s3.region`
+ - `use_path_style`: (Optional) Default is `false`. S3 SDK uses Virtual-hosted Style by default. But some object storage systems may not have enabled or support Virtual-hosted Style access, in this case you can add the `use_path_style` parameter to force the use of Path Style access.
 
-> Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment.
+> Note: To use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` in `fe.conf` and restart fe, then delete_existing_files will take effect. delete_existing_files = true is a dangerous operation, it is recommended to use only in test environments.
 
 ## Return Value
 
-The results returned by the `Outfile` statement are explained as follows:
+The result returned by the Outfile statement, the meaning of each column is as follows:
 
-| Column           | DataType     | Note                                                                                                           |
-|------------------|--------------|----------------------------------------------------------------------------------------------------------------|
-| FileNumber       | int          | The total number of files generated.                                                                           |
-| TotalRows        | int          | The number of rows in the result set.                                                                          |
-| FileSize         | int          | The total size of the exported files, in bytes.                                                                |
-| URL              | string       | The prefix of the exported file paths. Multiple files are numbered sequentially with suffixes like `_0`, `_1`. |
+| Column Name | Type     | Description                                     |
+|-------------|----------|-------------------------------------------------|
+| FileNumber  | int      | Number of files finally generated               |
+| TotalRows   | int      | Number of rows in result set                    |
+| FileSize    | int      | Total size of exported files. Unit: bytes.     |
+| URL         | string   | Prefix of exported file path, multiple files will be numbered with suffixes `_0`,`_1` sequentially. |
 
-## Access Control Requirements
+## Permission Control
 
-The user executing this SQL command must have at least the following privileges:
+Users executing this SQL command must have at least the following permissions:
 
-| Privilege        | Object     | Notes                                           |
-|:-----------------|:-----------|:------------------------------------------------|
-| SELECT_PRIV      | Database   | Requires read access to the database and table. |
+| Permission  | Object        | Description                    |
+|:------------|:-------------|:-------------------------------|
+| SELECT_PRIV | Database     | Requires read permissions on database and table. |
 
+## Notes
 
-## Usage Notes
+### Data Type Mapping
 
-### DataType Mapping
+- All file types support exporting basic data types, while for complex data types (ARRAY/MAP/STRUCT), currently only `csv`, `orc`, `csv_with_names` and `csv_with_names_and_types` support exporting complex types, and nested complex types are not supported.
 
-- All file formats support the export of basic data types, while only csv/orc/csv_with_names/csv_with_names_and_types currently support the export of complex data types (ARRAY/MAP/STRUCT). Nested complex data types are not supported.
+- Parquet and ORC file formats have their own data types, Doris's export function can automatically export Doris data types to corresponding data types in Parquet/ORC file formats. The following are the data type mapping tables between Apache Doris data types and Parquet/ORC file formats:
 
-- Parquet and ORC file formats have their own data types. The export function of Doris can automatically export the Doris data types to the corresponding data types of the Parquet/ORC file format. The following are the data type mapping relationship of the Doris data types and the Parquet/ORC file format data types:
-
-1. The mapping relationship between the Doris data types to the ORC data types is:
+1. **Doris to ORC file format data type mapping table:**
    | Doris Type              | Orc Type  |
    |-------------------------|-----------|
    | boolean                 | boolean   |
@@ -142,7 +140,9 @@ The user executing this SQL command must have at least the following privileges:
    | map                     | map       |
    | array                   | array     |
 
-2. When Doris exports data to the Parquet file format, the Doris memory data will be converted to Arrow memory data format first, and then the paraquet file format is written by Arrow. The mapping relationship between the Doris data types to the ARROW data types is:
+2. **Doris to Parquet file format data type mapping table:**
+
+   When Doris exports to Parquet file format, it first converts Doris memory data to Arrow memory data format, then Arrow writes to Parquet file format. The mapping relationship between Doris data types and Arrow data types is:
    | Doris Type              | Arrow Type |
    |-------------------------|------------|
    | boolean                 | boolean    |
@@ -163,40 +163,36 @@ The user executing this SQL command must have at least the following privileges:
    | map                     | map        |
    | array                   | list       |
 
+### Export Data Volume and Export Efficiency
 
-### Export data volume and export efficiency
+   This function essentially executes a SQL query command. The final result is output in a single thread. So the total export time includes the query execution time and the final result set write time. If the query is large, you need to set the session variable `query_timeout` to appropriately extend the query timeout.
 
-   This function essentially executes an SQL query command. The final result is a single-threaded output. Therefore, the time-consuming of the entire export includes the time-consuming of the query itself and the time-consuming of writing the final result set. If the query is large, you need to set the session variable `query_timeout` to appropriately extend the query timeout.
+### Exported File Management
 
-### Management of export files
+   Doris does not manage exported files. Including successfully exported files or residual files after export failure, all need to be handled by users themselves.
 
-   Doris does not manage exported files. Including the successful export, or the remaining files after the export fails, all need to be handled by the user.
-
-### Export to local file
-   To export to a local file, you need configure `enable_outfile_to_local=true` in fe.conf.
-
+### Export to Local Files
+   To export to local files, you need to first configure `enable_outfile_to_local=true` in `fe.conf`  
    ```sql
-   select * from tbl1 limit 10
+   select * from tbl1 limit 10 
    INTO OUTFILE "file:///home/work/path/result_";
    ```
 
-The ability to export to a local file is not available for public cloud users, only for private deployments. And the default user has full control over the cluster nodes. Doris will not check the validity of the export path filled in by the user. If the process user of Doris does not have write permission to the path, or the path does not exist, an error will be reported. At the same time, for security reasons, if a file with the same name already exists in this path, the export will also fail.
+   The function of exporting to local files is not suitable for public cloud users, only for users with private deployment. And it defaults that users have complete control over cluster nodes. Doris does not perform validity checks on the export path filled by users. If the Doris process user does not have write permission to the path, or the path does not exist, an error will be reported. Also for security considerations, if a file with the same name already exists at the path, the export will also fail.
 
-Doris does not manage files exported locally, nor does it check disk space, etc. These files need to be managed by the user, such as cleaning and so on.
+   Doris does not manage files exported locally, nor does it check disk space, etc. These files need to be managed by users themselves, such as cleanup.
 
-### Results Integrity Guarantee
+### Result Integrity Guarantee
 
-This command is a synchronous command, so it is possible that the task connection is disconnected during the execution process, so that it is impossible to live the exported data whether it ends normally, or whether it is complete. At this point, you can use the `success_file_name` parameter to request that a successful file identifier be generated in the directory after the task is successful. Users can use this file to determine whether the export ends normally.
-
+   This command is a synchronous command, so it's possible that the task connection is disconnected during execution, making it impossible to know whether the exported data ended normally or is complete. In this case, you can use the `success_file_name` parameter to require the task to generate a success file identifier in the directory after successful completion. Users can use this file to determine whether the export ended normally.
 
 ### Concurrent Export
 
-Setting the session variable `set enable_parallel_outfile = true;` enables concurrent export using outfile. For detailed usage, see [Export Query Result](../../../../data-operate/export/outfile).
-
+   Set Session variable `set enable_parallel_outfile = true;` to enable Outfile concurrent export.
 
 ## Examples
 
-- Use the broker method to export, and export the simple query results to the file `hdfs://path/to/result.txt`. Specifies that the export format is CSV. Use `my_broker` and set kerberos authentication information. Specify the column separator as `,` and the row separator as `\n`.
+- Export using Broker method, export simple query results to file `hdfs://path/to/result.txt`. Specify export format as CSV. Use `my_broker` and set kerberos authentication information. Specify column separator as `,`, line delimiter as `\n`.
 
     ```sql
     SELECT * FROM tbl
@@ -214,10 +210,10 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-   If the final generated file is not larger than 100MB, it will be: `result_0.csv`.
+   The final generated file will be: `result_0.csv` if not larger than 100MB.
    If larger than 100MB, it may be `result_0.csv, result_1.csv, ...`.
 
-- Export the simple query results to the file `hdfs://path/to/result.parquet`. Specify the export format as PARQUET. Use `my_broker` and set kerberos authentication information.
+- Export simple query results to file `hdfs://path/to/result.parquet`. Specify export format as PARQUET. Use `my_broker` and set kerberos authentication information.
 
     ```sql
     SELECT c1, c2, c3 FROM tbl
@@ -232,7 +228,7 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-- Export the query result of the CTE statement to the file `hdfs://path/to/result.txt`. The default export format is CSV. Use `my_broker` and set hdfs high availability information. Use the default row and column separators.
+- Export CTE statement query results to file `hdfs://path/to/result.txt`. Default export format is CSV. Use `my_broker` and set HDFS high availability information. Use default row and column separators.
 
     ```sql
     WITH
@@ -255,11 +251,11 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-   If the final generated file is not larger than 1GB, it will be: `result_0.csv`.
+   The final generated file will be: `result_0.csv` if not larger than 1GB.
    If larger than 1GB, it may be `result_0.csv, result_1.csv, ...`.
 
-- Export the query result of the UNION statement to the file `bos://bucket/result.txt`. Specify the export format as PARQUET. Use `my_broker` and set hdfs high availability information. The PARQUET format does not require a column delimiter to be specified.
-   After the export is complete, an identity file is generated.
+- Export UNION statement query results to file `bos://bucket/result.txt`. Specify export format as PARQUET. Use `my_broker` and set HDFS high availability information. PARQUET format does not need to specify column separator.
+   After export completion, generate an identifier file.
 
     ```sql
     SELECT k1 FROM tbl1 UNION SELECT k2 FROM tbl1
@@ -274,8 +270,8 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-- Export the query result of the select statement to the file `s3a://${bucket_name}/path/result.txt`. Specify the export format as csv.
-   After the export is complete, an identity file is generated.
+- Export Select statement query results to file `s3a://${bucket_name}/path/result.txt`. Specify export format as CSV.
+   After export completion, generate an identifier file.
 
     ```sql
     select k1,k2,v1 from tbl1 limit 100000
@@ -294,14 +290,14 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     )
     ```
 
-   If the final generated file is not larger than 1GB, it will be: `my_file_0.csv`.
+   The final generated file will be: `my_file_0.csv` if not larger than 1GB.
    If larger than 1GB, it may be `my_file_0.csv, result_1.csv, ...`.
-   Verify on cos
+   Verification on cos:
 
-          1. A path that does not exist will be automatically created
-          2. Access.key/secret.key/endpoint needs to be confirmed with students of cos. Especially the value of endpoint does not need to fill in bucket_name.
+        1. Non-existing paths will be automatically created
+        2. access.key/secret.key/endpoint need to be confirmed with cos colleagues. Especially the endpoint value, no need to fill in bucket_name.
 
-- Use the s3 protocol to export to bos, and enable concurrent export.
+- Export to bos using S3 protocol, with concurrent export enabled.
 
     ```sql
     set enable_parallel_outfile = true;
@@ -317,10 +313,10 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     )
     ```
 
-   The resulting file is prefixed with `my_file_{fragment_instance_id}_`.
+   The final generated file prefix will be `my_file_{fragment_instance_id}_`.
 
-- Use the s3 protocol to export to bos, and enable concurrent export of session variables.
-   Note: However, since the query statement has a top-level sorting node, even if the concurrently exported session variable is enabled for this query, it cannot be exported concurrently.
+- Export to bos using S3 protocol, with concurrent export Session variable enabled.
+   Note: But because the query statement has a top-level sort node, this query cannot use concurrent export even if the concurrent export Session variable is enabled.
 
     ```sql
     set enable_parallel_outfile = true;
@@ -336,10 +332,10 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     )
     ```
 
-- Use hdfs export to export simple query results to the file `hdfs://${host}:${fileSystem_port}/path/to/result.txt`. Specify the export format as CSV and the user name as work. Specify the column separator as `,` and the row separator as `\n`.
+- Export using HDFS method, export simple query results to file `hdfs://${host}:${fileSystem_port}/path/to/result.txt`. Specify export format as CSV, username as work. Specify column separator as `,`, line delimiter as `\n`.
 
     ```sql
-    -- fileSystem_port 默认值为 9000
+    -- fileSystem_port default value is 9000
     SELECT * FROM tbl
     INTO OUTFILE "hdfs://${host}:${fileSystem_port}/path/to/result_"
     FORMAT AS CSV
@@ -350,7 +346,7 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-   If the Hadoop cluster is highly available and Kerberos authentication is enabled, you can refer to the following SQL statement:
+   If Hadoop cluster has high availability enabled and uses Kerberos authentication, you can refer to the following SQL statement:
 
     ```sql
     SELECT * FROM tbl
@@ -371,11 +367,11 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
     );
     ```
 
-  If the final generated file is not larger than 100MB, it will be: `result_0.csv`.
-  If larger than 100MB, it may be `result_0.csv, result_1.csv, ...`.
+   The final generated file will be: `result_0.csv` if not larger than 100 MB.
+   If larger than 100 MB, it may be `result_0.csv, result_1.csv, ...`.
 
-- Export the query result of the select statement to the file `cosn://${bucket_name}/path/result.txt` on Tencent Cloud Object Storage (COS). Specify the export format as csv.
-   After the export is complete, an identity file is generated.
+- Export Select statement query results to Tencent Cloud cos file `cosn://${bucket_name}/path/result.txt`. Specify export format as CSV.
+   After export completion, generate an identifier file.
 
     ```sql
     select k1,k2,v1 from tbl1 limit 100000
@@ -393,5 +389,3 @@ Setting the session variable `set enable_parallel_outfile = true;` enables concu
         "success_file_name" = "SUCCESS"
     )
     ```
-
-

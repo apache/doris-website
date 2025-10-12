@@ -220,6 +220,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+            
             使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
             ```sql
             CREATE CATALOG hive_hms_on_s3_iamrole PROPERTIES (
@@ -483,6 +484,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'glue.secret_key' = '<sk>'
             );
             ```
+            
             Glue 服务的认证信息和 S3 的认证信息不一致时，可以通过以下方式单独指定 S3 的认证信息。
             ```sql
             CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
@@ -498,6 +500,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+
             使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+ 支持)
             ```sql
             CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( 
