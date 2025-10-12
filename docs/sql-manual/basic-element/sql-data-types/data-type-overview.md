@@ -33,7 +33,7 @@ All are signed integers. The differences among the INT types are the number of b
 ### Floating-point
 
 
-Including imprecise floating-point types [FLOAT](../sql-data-types/numeric/FLOAT.md) and [DOUBLE](../sql-data-types/numeric/DOUBLE.md), corresponding to the `float` and `double` in common programming languages
+Including imprecise floating-point types [FLOAT](../sql-data-types/numeric/FLOATING-POINT.md) and [DOUBLE](../sql-data-types/numeric/FLOATING-POINT.md), corresponding to the `float` and `double` in common programming languages
 
 ### Fixed-point
 

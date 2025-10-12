@@ -29,7 +29,7 @@
 
 **3. 浮点数类型：** 
 
-不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/DOUBLE.md) 文档。
+不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md) 文档。
 
 **4. 定点数类型：** 
 
