@@ -322,6 +322,7 @@
                             ]
                         },
                         "query-acceleration/sql-cache-manual",
+                        "query-acceleration/condition-cache",
                         "query-acceleration/high-concurrent-point-query",
                         "query-acceleration/dictionary",
                         {
