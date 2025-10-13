@@ -38,11 +38,11 @@
 
 ## 日期类型
 
-日期类型包括 DATE、TIME 和 DATETIME，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。
+日期类型包括 DATE、TIME、DATETIME 和 TIMESTAMPTZ，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。TIMESTAMPTZ 是带时区信息的日期时间类型，存储时转换为 UTC 时间，查询时根据会话时区自动转换显示。
 
 对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/scalar-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
 
-更多信息参考 [DATE](../../basic-element/sql-data-types/date-time/DATE)、[TIME](../../basic-element/sql-data-types/date-time/TIME) 和 [DATETIME](../../basic-element/sql-data-types/date-time/DATETIME) 文档。
+更多信息参考 [DATE](../../basic-element/sql-data-types/date-time/DATE)、[TIME](../../basic-element/sql-data-types/date-time/TIME)、[DATETIME](../../basic-element/sql-data-types/date-time/DATETIME) 和 [TIMESTAMPTZ](../../basic-element/sql-data-types/date-time/TIMESTAMPTZ) 文档。
 
 
 ## 字符串类型
