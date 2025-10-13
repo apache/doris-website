@@ -125,11 +125,6 @@ const config = {
                     },
                 ],
                 createRedirects(existingPath) {
-                    if (existingPath.startsWith('/docs/3.0/')) {
-                        const withoutVersion = existingPath.replace('/docs/3.0/', '/docs/');
-                        return [withoutVersion];
-                    }
-                    // return [];
                     if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
                         return [
@@ -139,6 +134,10 @@ const config = {
                             ),
                         ];
                     }
+                    if (existingPath.startsWith('/docs/3.x/')) {
+                        return [existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')];
+                    }
+
                     return undefined; // Return a falsy value: no redirect created
                 },
             },
@@ -208,7 +207,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.0', '/docs/dev'],
+                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.x', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
