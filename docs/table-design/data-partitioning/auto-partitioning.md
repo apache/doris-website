@@ -228,7 +228,7 @@ Doris supports both Auto and Dynamic Partition. In this case, both functions are
 
 There is no conflict between the two syntaxes, just set the corresponding clauses/attributes at the same time. Please note that it is uncertain whether the partition in current period is created by Auto Partition or Dynamic Partition. Different creation methods will lead to different naming formats for the partitions.
 
-## Best Practice
+### Best Practice
 
 In scenarios where you need to set a limit on the partition lifecycle, you can **disable the creation of Dynamic Partition, leaving the creation of partitions to be completed by Auto Partition**, and complete the management of the partition lifecycle through the Dynamic Partition's function of dynamically reclaiming partitions:
 
@@ -252,8 +252,12 @@ properties(
 
 This way we have both the flexibility of Auto Partition and consistency in partition names.
 
-:::note
-In some early versions prior to 2.1.7, this feature was not disabled but not recommended.
+## Conjunct with Auto Bucket
+
+Only AUTO RANGE PARTITION can be used together with the [Auto Bucket](./data-bucketing.md#auto-setting-bucket-number) feature. When using this feature, Doris assumes that the data import is incremental in time order, and each import only involves one partition. In other words, this usage is only recommended for tables that are incrementally imported daily.
+
+:::warning Note!
+If the data import method does not conform to the above pattern, and both auto partitioning and auto bucketing are used at the same time, there is a possibility that the number of buckets in the new partition is extremely unreasonable, which may greatly affect query performance.
 :::
 
 ## Partition Management
