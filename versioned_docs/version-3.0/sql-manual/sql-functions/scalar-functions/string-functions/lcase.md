@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LCASE",
+    "title": "LCASE/LOWER",
     "language": "en"
 }
 ---
@@ -17,6 +17,7 @@ Convert all strings in the parameter to lowercase.
 
 ```sql
 LCASE ( <str> )
+LOWER ( <str> )
 ```
 
 ## Parameters
@@ -41,4 +42,16 @@ SELECT LCASE("AbC123"),LOWER("AbC123")
 +-----------------+-----------------+
 | abc123          | abc123          |
 +-----------------+-----------------+
+```
+
+```sql
+SELECT LOWER("ҚAZAҚ123"),LCASE("ҒАРЫШ");
+```
+
+```text
++---------------------+---------------------+
+| LOWER("ҚAZAҚ123")   | LCASE("ҒАРЫШ")      |
++---------------------+---------------------+
+| қazaқ123            | ғарыш               |
++---------------------+---------------------+
 ```
