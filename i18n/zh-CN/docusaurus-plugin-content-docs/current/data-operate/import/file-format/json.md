@@ -95,7 +95,7 @@ Doris 支持以下三种 JSON 格式：
 2. Broker Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load：参数通过 `PROPERTIES` 指定，如：`PROPERTIES("jsonpaths"="$.data")`
 4. TVF：参数通过 TVF 语句指定，如：`S3("jsonpaths"="$.data")`
-5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为$.，如：`PROPERTIES("jsonpaths"="$.")`
+5. 如果需要将 JSON 文件中根节点的 JSON 对象导入，jsonpaths 需要指定为`$.`或者`$`，如：`PROPERTIES("jsonpaths"="$.")`
 6. read_json_by_line默认为true指的是如果导入时不指定strip_outer_array和read_json_by_line任何一个, 那么read_json_by_line为true.
 7. read_json_by_line不支持配置指强制设置为true, 开启流式读取降低BE内存压力
 :::
@@ -188,155 +188,95 @@ Doris 支持以下三种 JSON 格式：
   
   ```
 
-### JSON Path 和 Columns 的关系
-
-在数据导入过程中，JSON Path 和 Columns 各自承担不同的职责：
-
-**JSON Path**：定义数据抽取规则
-   - 从 JSON 数据中按指定路径抽取字段
-   - 抽取的字段按 JSON Path 中定义的顺序进行重排列
-
-**Columns**：定义数据映射规则
-   - 将抽取的字段映射到目标表的列
-   - 可以进行列的重排和转换
-
-这两个参数的处理过程是串行的：首先 JSON Path 从源数据中抽取字段并形成有序的数据集，然后 Columns 将这些数据映射到表的列中。如果不指定 Columns，抽取的字段将按照表的列顺序直接映射。
-
-#### 使用示例
-
-##### 仅使用 JSON Path
-
-表结构和数据：
-```sql
--- 表结构
-CREATE TABLE example_table (
-    k2 int,
-    k1 int
-);
-
--- JSON 数据
-{"k1": 1, "k2": 2}
-```
-
-导入命令：
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\"]" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-
-```
-
-导入结果：
-```text
-+------+------+
-| k1   | k2   |
-+------+------+
-|    2 |    1 | 
-+------+------+
-```
-
-##### 使用 JSON Path + Columns
-
-使用相同的表结构和数据，添加 columns 参数：
-
-导入命令：
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\"]" \
-    -H "columns: k2, k1" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-导入结果：
-```text
-+------+------+
-| k1   | k2   |
-+------+------+
-|    1 |    2 | 
-+------+------+
-```
-
-##### 字段重复使用
-
-表结构和数据：
-```sql
--- 表结构
-CREATE TABLE example_table (
-    k2 int,
-    k1 int,
-    k1_copy int
-);
-
--- JSON 数据
-{"k1": 1, "k2": 2}
-```
-
-导入命令：
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k1\"]" \
-    -H "columns: k2, k1, k1_copy" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-导入结果：
-```text
-+------+------+---------+
-| k2   | k1   | k1_copy |
-+------+------+---------+
-|    2 |    1 |       1 |
-+------+------+---------+
-```
-
-##### 嵌套字段映射
-
-表结构和数据：
-```sql
--- 表结构
-CREATE TABLE example_table (
-    k2 int,
-    k1 int,
-    k1_nested1 int,
-    k1_nested2 int
-);
-
--- JSON 数据
-{
-    "k1": 1,
-    "k2": 2,
-    "k3": {
-        "k1": 31,
-        "k1_nested": {
-            "k1": 32
-        }
-    }
-}
-```
-
-导入命令：
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k3.k1\", \"$.k3.k1_nested.k1\"]" \
-    -H "columns: k2, k1, k1_nested1, k1_nested2" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-导入结果：
-```text
-+------+------+------------+------------+
-| k2   | k1   | k1_nested1 | k1_nested2 |
-+------+------+------------+------------+
-|    2 |    1 |         31 |         32 |
-+------+------+------------+------------+
-```
-
 ## 使用示例
 
-本节展示了不同导入方式下的 JSON 格式使用方法。
+本节展示了不同导入方式下的 JSON 格式使用方法, 以及各种JSON格式下导入需要指定的参数(以stream load为例)。
+
+### 参数使用说明
+
+#### JSON格式相关参数
+
+对于不同格式的JSON文件，控制导入时候读取方式的两个比较重要的参数：
+
+- `strip_outer_array`
+- `read_json_by_line`
+
+**example1：多行JSON记录**
+
+每行作为一个完整的JSON记录流式地导入，当用户未指定这两个参数的值时候，默认设置`read_json_by_line`为true，`strip_outer_array`为false，因此这种格式的JSON用户不需要对这两个参数做指定（显示指定`read_json_by_line`也是可以的）
+
+```JSON
+{"a": 1, "b": 11}
+{"a": 2, "b": 12}
+{"a": 3, "b": 13}
+{"a": 4, "b": 14}
+```
+
+如果用户误设置`strip_outer_array`为true，会在`FirstErrorMsg`中看到`JSON data is not an array-object, strip_outer_array must be FALSE`这样的报错信息。
+
+---
+
+**example2：数组形式的JSON记录**
+
+文件中JSON记录以数组的形式组织，需要用户指定`strip_outer_array`为true。
+
+```JSON
+[
+    {"a": 1, "b": 11},
+    {"a": 2, "b": 12}
+]
+```
+
+如果用户误设置`read_json_by_line`为true，会在`FirstErrorMsg`中看到`Parse json data failed. code: 28...`这样的报错信息。
+
+---
+
+**example3：多行数组**
+
+如果每一行以数组的形式记录多个JSON记录，需要用户显式的将两个参数都设置为true。
+
+```JSON
+[{"a": 1, "b": 11},{"a": 2, "b": 12}]
+[{"a": 3, "b": 13},{"a": 4, "b": 14}]
+```
+
+如果用户少设置了`strip_outer_array`，会在`FirstErrorMsg`中看到`JSON data is array-object, strip_outer_array must be TRUE`这样的报错信息。而如果用户少设置了`read_json_by_line`，这里**只会导入第一行**的两个JSON记录，需要注意一下。
+
+#### JSON path相关参数
+
+在JSON导入的过程中，用户可以通过设置`jsonpaths`和`json_root`，来更自由地控制数据抽取的路径，以提供对嵌套JSON的一些复杂格式的导入支持。与之相关的另一个参数项是`columns`。
+
+```sql
+-- 表结构
+CREATE TABLE example_table (
+    a INT,
+    b INT
+)
+
+-- JSON 数据
+[
+    {"id":1, "record":{"year":25, "name":"hiki"}},
+    {"id":2, "record":{"year":20, "name":"ykk"}}
+]
+```
+
+```shell
+curl -v ... -H "format: json" \
+    -H "jsonpaths:[\"$.id\",\"$.record.year\"]" \
+    -H "columns:b,a" \
+    -T example.json \
+    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
+
+select * from example_table;
++------+------+
+| a    | b    |
++------+------+
+|   20 |    2 |
+|   25 |    1 |
++------+------+
+```
+
+从上面这样的导入命令和导入后数据不难看出这几个参数的交互。可以假设JSON导入是先从JSON文件中把数据读取出来，组织成一个行数据数组，然后将每一行数据逐个导入到表中。其中从JSON文件到行数据数组的数据分布顺序就由`jsonpaths`和`json_root`来控制，上面的例子中，该数组每一行数据分布的顺序就是JSON文件中的`id`和`year`，将每一行的数据导入到表中各项数据的映射关系，则由`columns`来指定，上面的例子中将`id`的数据导入到`b`表项，将`year`的数据导入到`a`表项。
 
 ### Stream Load 导入
 
