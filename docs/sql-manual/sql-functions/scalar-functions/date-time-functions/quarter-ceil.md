@@ -135,4 +135,4 @@ SELECT QUARTER_CEIL(NULL, 1), QUARTER_CEIL('2023-07-13 22:28:18', NULL) AS resul
 
 ## Best Practices
 
-See also [date_ceil](./date-ceil), [quarter_floor](./quarter-floor)
+See also [date_ceil](./date-ceil)
