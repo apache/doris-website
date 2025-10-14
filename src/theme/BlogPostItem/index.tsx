@@ -18,7 +18,7 @@ function useContainerClassName() {
     return !isBlogPostPage ? 'margin-bottom--xl' : undefined;
 }
 
-export default function BlogPostItem({ children, className, ...props }: Props): React.ReactElement {
+export default function BlogPostItem({ children, className }: Props): React.ReactElement {
     const containerClassName = useContainerClassName();
     const isBrowser = useIsBrowser();
     if (isBrowser) {

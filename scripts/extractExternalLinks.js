@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// 遍历目录下所有 md 文件
+// Traverse all md files in the directory
 function getAllMarkdownFiles(dir) {
   let results = [];
   const files = fs.readdirSync(dir);
@@ -20,7 +20,7 @@ function getAllMarkdownFiles(dir) {
   return results;
 }
 
-// 提取 frontMatter 的 externalLink
+// Extract the externalLink of frontMatter
 function extractExternalLink(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8');
   const frontMatterMatch = content.match(/^---\s*([\s\S]*?)\s*---/);
@@ -29,7 +29,7 @@ function extractExternalLink(filePath) {
 
   const frontMatter = frontMatterMatch[1];
 
-  // 尝试解析 externalLink
+  // Try to resolve externalLink
   const linkMatch = frontMatter.match(/['"]externalLink['"]\s*:\s*['"]([^'"]+)['"]/);
 
   if (!linkMatch) return null;
@@ -37,7 +37,6 @@ function extractExternalLink(filePath) {
   return linkMatch[1];
 }
 
-// 主逻辑
 function main() {
   const blogDir = path.join(__dirname, '../blog');
   const mdFiles = getAllMarkdownFiles(blogDir);
