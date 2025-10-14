@@ -125,19 +125,16 @@ const config = {
                     },
                 ],
                 createRedirects(existingPath) {
-                    if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
                         return [
                             existingPath.replace(
                                 '/gettingStarted/what-is-apache-doris',
                                 '/gettingStarted/what-is-new',
                             ),
+                            existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')
                         ];
                     }
-                    if (existingPath.startsWith('/docs/3.x/')) {
-                        return [existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')];
-                    }
-
                     return undefined; // Return a falsy value: no redirect created
                 },
             },
