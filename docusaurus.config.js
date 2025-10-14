@@ -122,7 +122,7 @@ const config = {
                     {
                         from: '/docs/dev/get-starting/',
                         to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
-                    },
+                    }
                 ],
                 createRedirects(existingPath) {
                     if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
