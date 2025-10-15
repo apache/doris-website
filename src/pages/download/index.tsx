@@ -110,7 +110,10 @@ export default function Download() {
             setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
         } else if (['3.0', '2.0'].includes(values.version[0])) {
             setReleaseNote(`/docs/${values.version[0]}/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
-        } else {
+        } else if(values.version[0] === '4.0'){
+            setReleaseNote(`/docs/dev/releasenotes/v${values.version[0]}/release-${values.version[1]}`)
+        }
+         else {
             setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         }
     }
