@@ -31,7 +31,7 @@ export enum ToolsEnum {
 export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
     Latest = '4.0.0',
-    Prev = '3.0.8',
+    Prev = '3.1.1',
     Earlier = '2.1.11',
 }
 export enum DownloadTypeEnum {
