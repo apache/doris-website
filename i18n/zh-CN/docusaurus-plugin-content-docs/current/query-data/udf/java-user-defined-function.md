@@ -32,6 +32,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | `array<Type>`      | `ArrayList<Type>` `List<Type>` （支持嵌套）              |
 | `map<Type1,Type2>` | `HashMap<Type1,Type2>` `Map<Type1,Type2>`  （支持嵌套）          |
 | `struct<Type...>`  | `ArrayList<Object>`（从 3.0.0 版本开始支持）`List<Type>` |
+| VarBinary  | byte[], Byte[]（从 4.0 版本开始支持Varbinary类型, 优先建议使用byte[] 类型数据会少一层额外转换） |
 
 
 :::tip 提示
