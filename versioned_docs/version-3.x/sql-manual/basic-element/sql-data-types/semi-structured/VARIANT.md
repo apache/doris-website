@@ -1,7 +1,7 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
