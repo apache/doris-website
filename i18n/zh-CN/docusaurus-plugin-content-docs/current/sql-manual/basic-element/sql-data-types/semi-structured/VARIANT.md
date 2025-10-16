@@ -374,18 +374,18 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - VARIANT 本身不可直接用于 ORDER BY、GROUP BY、JOIN KEY 或聚合参数；对子列 CAST 后可正常使用。
 - 字符串类型可隐式转换为 VARIANT。
 
-| VARIANT         | Castable | Coercible | Conversion Function |
-| --------------- | -------- | --------- | ------------------- |
-| `ARRAY`         | ✔        | ❌        |                     |
-| `BOOLEAN`       | ✔        | ✔         |                     |
-| `DATE/DATETIME` | ✔        | ✔         |                     |
-| `FLOAT`         | ✔        | ✔         |                     |
-| `IPV4/IPV6`     | ✔        | ✔         |                     |
-| `DECIMAL`       | ✔        | ✔         |                     |
-| `MAP`           | ❌        | ❌         |                     |
-| `TIMESTAMP`     | ✔        | ✔         |                     |
-| `VARCHAR`       | ✔        | ✔         | `PARSE_TO_JSON`     |
-| `JSON`          | ✔        | ✔         |                     |
+| VARIANT         | Castable | Coercible |
+| --------------- | -------- | --------- |
+| `ARRAY`         | ✔        | ❌        |
+| `BOOLEAN`       | ✔        | ✔         |
+| `DATE/DATETIME` | ✔        | ✔         |
+| `FLOAT`         | ✔        | ✔         |
+| `IPV4/IPV6`     | ✔        | ✔         |
+| `DECIMAL`       | ✔        | ✔         |
+| `MAP`           | ❌        | ❌        |
+| `TIMESTAMP`     | ✔        | ✔         |
+| `VARCHAR`       | ✔        | ✔         |
+| `JSON`          | ✔        | ✔         |
 
 ## 限制
 
@@ -462,6 +462,10 @@ SELECT variant_type(v) FROM variant_tbl;
 ```sql
 SET describe_extend_variant_column = true;
 DESC variant_tbl;
+```
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
 两种方式可结合使用：方案一精确、方案二高效。

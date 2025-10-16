@@ -167,3 +167,50 @@ mysql> select * from testdb.test_variant\G
     public: 1
 created_at: 2020-11-14 02:00:00
 ```
+
+### 第 5 步：检查类型推导
+
+``` sql
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+6 rows in set (0.07 sec)
+
+mysql> set describe_extend_variant_column = true;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
+| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
+....
++------------------------------------------------------------+------------+------+-------+---------+-------+
+406 rows in set (0.07 sec)
+```
+
+可以按照 Partition 来展示
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
+```

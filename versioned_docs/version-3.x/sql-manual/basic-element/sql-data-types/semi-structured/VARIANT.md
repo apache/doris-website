@@ -1,394 +1,559 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
 ## VARIANT
 
-### Description
+## Overview
 
-Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data. It allows storing complex data structures containing different data types (such as integers, strings, boolean values, etc.) without the need to define specific columns in the table structure beforehand. The VARIANT type is particularly useful for handling complex nested structures that may change at any time. During the writing process, this type can automatically infer column information based on the structure and types of the columns, dynamicly merge written schemas. It stores JSON keys and their corresponding values as columns and dynamic sub-columns.
+The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and materializes frequent paths as independent subcolumns, leveraging columnar storage and vectorized execution for both flexibility and performance.
 
-### Note
+## Using VARIANT
 
-Advantages over JSON Type:
+### Create table syntax
 
-1. Different storage methods: The JSON type is stored in binary JSONB format, and the entire JSON is stored row by row in segment files. In contrast, the VARIANT type infers types during writing and stores the written JSON columns. It has a higher compression ratio compared to the JSON type, providing better storage efficiency.
-2. Query: Querying does not require parsing. VARIANT fully utilizes columnar storage, vectorized engines, optimizers, and other components in Doris, providing users with extremely high query performance.
-Below are test results based on clickbench data:
+Declare a VARIANT column when creating a table:
 
-|    | Storage Space |
-|--------------|------------|
-| Predefined Static Columns | 12.618 GB  |
-| VARIANT Type    | 12.718 GB  |
-| JSON Type             | 35.711 GB   |
-
-**Saves approximately 65% storage capacity**
-
-| Query Counts        | Predefined Static Columns | VARIANT Type | JSON Type        |
-|---------------------|---------------------------|--------------|-----------------|
-| First Query (cold)  | 233.79s                   | 248.66s        | **Most queries timeout**  |
-| Second Query (hot) | 86.02s                     | 94.82s          | 789.24s         |
-| Third Query (hot)   | 83.03s                     | 92.29s          | 743.69s         |
-
-[test case](https://github.com/ClickHouse/ClickBench/blob/main/doris/queries.sql) contains 43 queries 
-
-**8x faster query, query performance comparable to static columns**
-
-### Example
-
-Demonstrate the functionality and usage of VARIANT with an example covering table creation, data import, and query cycle.
-
-**Table Creation Syntax**
-Create a table, using the `VARIANT` keyword in the syntax.
-
-``` sql
--- Without index
+```sql
 CREATE TABLE IF NOT EXISTS ${table_name} (
     k BIGINT,
     v VARIANT
 )
-table_properties;
+PROPERTIES("replication_num" = "1");
+```
 
--- Create an index on the v column, optionally specify the tokenize method, default is untokenized 
+Constrain certain paths with a Schema Template (see “Extended types”):
+
+> This feature has been supported since version 3.1.0.
+
+```sql
 CREATE TABLE IF NOT EXISTS ${table_name} (
+    k BIGINT,
+    v VARIANT <
+        'id' : INT,            -- restrict path id to INT
+        'message*' : STRING,   -- restrict message* prefix to STRING
+        'tags*' : ARRAY<TEXT>  -- restrict tags* prefix to ARRAY<TEXT>
+    >
+)
+PROPERTIES("replication_num" = "1");
+```
+
+### Query syntax
+
+```sql
+-- Access nested fields (returns VARIANT; explicit or implicit CAST is required for aggregation/comparison)
+SELECT v['properties']['title'] FROM ${table_name};
+
+-- CAST to a concrete type before aggregation
+SELECT CAST(v['properties']['title'] AS STRING) AS title
+FROM ${table_name}
+GROUP BY title;
+
+-- Query arrays
+SELECT *
+FROM ${table_name}
+WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
+```
+
+## Primitive types
+
+VARIANT infers subcolumn types automatically. Supported types include:
+
+<table>
+<tr><td>Supported types<br/></td></tr>
+<tr><td>TinyInt<br/></td></tr>
+<tr><td>NULL (equivalent to JSON null)<br/></td></tr>
+<tr><td>BigInt (64 bit)<br/>Double<br/></td></tr>
+<tr><td>String (Text)<br/></td></tr>
+<tr><td>Jsonb<br/></td></tr>
+<tr><td>Variant (nested object)<br/></td></tr>
+<tr><td>Array&lt;T&gt; (one-dimensional only)<br/></td></tr>
+</table>
+
+Simple INSERT example:
+
+```sql
+INSERT INTO vartab VALUES
+  (1, 'null'),
+  (2, NULL),
+  (3, 'true'),
+  (4, '-17'),
+  (5, '123.12'),
+  (6, '1.912'),
+  (7, '"A quote"'),
+  (8, '[-1, 12, false]'),
+  (9, '{ "x": "abc", "y": false, "z": 10 }'),
+  (10, '"2021-01-01"');
+```
+
+Tip: Non-standard JSON types such as date/time will be stored as strings unless a Schema Template is provided. For better computation efficiency, consider extracting them to static columns or declaring their types via a Schema Template.
+
+## Extended types (Schema Template)
+
+> This feature has been supported since version 3.1.0.
+
+Besides primitive types, VARIANT supports the following extended types via Schema Template:
+
+- Number (extended)
+  - Decimal: Decimal32 / Decimal64 / Decimal128 / Decimal256
+  - LargeInt
+- Datetime
+- Date
+- IPV4 / IPV6
+- Boolean
+- ARRAY&lt;T&gt; (T can be any of the above, one-dimensional only)
+
+Note: Predefined Schema can only be specified at table creation. ALTER is currently not supported (future versions may support adding new subcolumn definitions, but changing an existing subcolumn type is not supported).
+
+Example:
+
+```sql
+CREATE TABLE test_var_schema (
+    id BIGINT NOT NULL,
+    v1 VARIANT<
+        'large_int_val': LARGEINT,
+        'string_val': STRING,
+        'decimal_val': DECIMAL(38, 9),
+        'datetime_val': DATETIME,
+        'ip_val': IPV4
+    > NULL
+)
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO test_var_schema VALUES (1, '{
+    "large_int_val" : "123222222222222222222222",
+    "string_val" : "Hello World",
+    "decimal_val" : 1.11111111,
+    "datetime_val" : "2025-05-16 11:11:11",
+    "ip_val" : "127.0.0.1"
+}');
+
+SELECT variant_type(v1) FROM test_var_schema;
+
++----------------------------------------------------------------------------------------------------------------------------+
+| variant_type(v1)                                                                                                           |
++----------------------------------------------------------------------------------------------------------------------------+
+| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string"} |
++----------------------------------------------------------------------------------------------------------------------------+
+```
+
+`{"date": 2020-01-01}` and `{"ip": 127.0.0.1}` are invalid JSON texts; the correct format is `{"date": "2020-01-01"}` and `{"ip": "127.0.0.1"}`.
+
+Once a Schema Template is specified, if a JSON value conflicts with the declared type and cannot be converted, it will be stored as NULL. For example:
+
+```sql
+INSERT INTO test_var_schema VALUES (1, '{
+  "decimal_val" : "1.11111111",
+  "ip_val" : "127.xxxxxx.xxxx",
+  "large_int_val" : "aaabbccc"
+}');
+
+-- Only decimal_val remains
+SELECT * FROM test_var_schema;
+
++------+-----------------------------+
+| id   | v1                          |
++------+-----------------------------+
+|    1 | {"decimal_val":1.111111110} |
++------+-----------------------------+
+```
+
+Schema only guides the persisted storage type. During query execution, the effective type depends on actual data at runtime:
+
+```sql
+-- At runtime v['a'] may still be STRING
+SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
+```
+
+Wildcard matching and order:
+
+```sql
+CREATE TABLE test_var_schema (
+    id BIGINT NOT NULL,
+    v1 VARIANT<
+        'enumString*' : STRING,
+        'enum*' : ARRAY<TEXT>,
+        'ip*' : IPV6
+    > NULL
+)
+PROPERTIES ("replication_num" = "1");
+
+-- If enumString1 matches both patterns, the first matching pattern in definition order (STRING) is used
+```
+
+If a column name contains `*` and you want to match it by its literal name (not as a prefix wildcard), use:
+
+```sql
+v1 VARIANT<
+    MATCH_NAME 'enumString*' : STRING
+> NULL
+```
+
+Matched subpaths are materialized as columns by default. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
+
+## Type conflicts and promotion rules
+
+When incompatible types appear on the same path (e.g., the same field shows up as both integer and string), the type is promoted to JSONB to avoid information loss:
+
+```sql
+{"a" : 12345678}
+{"a" : "HelloWorld"}
+-- a will be promoted to JSONB
+```
+
+Promotion rules:
+
+| Source type    | Current type  | Final type   |
+| -------------- | ------------- | ------------ |
+| `TinyInt`      | `BigInt`      | `BigInt`     |
+| `TinyInt`      | `Double`      | `Double`     |
+| `TinyInt`      | `String`      | `JSONB`      |
+| `TinyInt`      | `Array`       | `JSONB`      |
+| `BigInt`       | `Double`      | `JSONB`      |
+| `BigInt`       | `String`      | `JSONB`      |
+| `BigInt`       | `Array`       | `JSONB`      |
+| `Double`       | `String`      | `JSONB`      |
+| `Double`       | `Array`       | `JSONB`      |
+| `Array<Double>`| `Array<String>`| `Array<Jsonb>` |
+
+If you need strict types (for stable indexing and storage), declare them via Schema Template.
+
+## Variant indexes
+
+### Choosing indexes
+
+VARIANT supports BloomFilter and Inverted Index on subpaths.
+- High-cardinality equality/IN filters: prefer BloomFilter (sparser index, better write performance).
+- Tokenization/phrase/range search: use Inverted Index and set proper `parser`/`analyzer` properties.
+
+```sql
+...  
+PROPERTIES("replication_num" = "1", "bloom_filter_columns" = "v");
+
+-- Use BloomFilter for equality/IN filters
+SELECT * FROM tbl WHERE v['id'] = 12345678;
+SELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);
+```
+
+Once an inverted index is created on a VARIANT column, all subpaths inherit the same index properties (e.g., parser):
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT,
-    INDEX idx_var(v) USING INVERTED [PROPERTIES("parser" = "english|unicode|chinese")] [COMMENT 'your comment']
-)
-table_properties;
+    INDEX idx_v(v) USING INVERTED PROPERTIES("parser" = "english")
+);
 
--- Create an bloom filter on v column, to enhance query seed on sub columns
-CREATE TABLE IF NOT EXISTS ${table_name} (
+-- All subpaths inherit the english parser
+SELECT * FROM tbl WHERE v['id_1'] MATCH 'Doris';
+SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
+```
+
+### Index by subpath
+
+> This feature has been supported since version 3.1.0.
+
+In 3.1.x/4.0 and later, you can specify index properties for certain VARIANT subpaths, and even configure both tokenized and non-tokenized inverted indexes for the same path. Path-specific indexes require the path type to be declared via Schema Template.
+
+```sql
+-- Common properties: field_pattern (target path), analyzer, parser, support_phrase, etc.
+CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
-    v VARIANT
-)
-...
-properties("replication_num" = "1", "bloom_filter_columns" = "v");
+    v VARIANT<'content' : STRING>,
+    INDEX idx_tokenized(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "content"),
+    INDEX idx_v(v) USING INVERTED PROPERTIES("field_pattern" = "content")
+);
 
+-- v.content has both tokenized and non-tokenized inverted indexes
+SELECT * FROM tbl WHERE v['content'] MATCH 'Doris';
+SELECT * FROM tbl WHERE v['content'] = 'Doris';
 ```
 
-**Query Syntax**
+Wildcard path indexing:
 
-``` sql
--- use v['a']['b'] format for example, v['properties']['title'] type is VARIANT
-SELECT v['properties']['title'] from ${table_name}
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'pattern_*' : STRING>,
+    INDEX idx_tokenized(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "pattern_*"),
+    INDEX idx_v(v) USING INVERTED -- global non-tokenized inverted index
+);
 
+SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
+SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
 
-**Example based on the GitHub events dataset**
+Note: 2.1.7+ supports only InvertedIndex V2 properties (fewer files, lower write IOPS; suitable for disaggregated storage/compute). 2.1.8+ removes offline Build Index.
 
-Here, github events data is used to demonstrate the table creation, data import, and query using VARIANT.
-The below is a formatted line of data:
+### When indexes don’t work
+
+1. Type changes cause index loss: if a subpath changes to an incompatible type (e.g., INT → JSONB), the index is lost. Fix by pinning types and indexes via Schema Template.
+2. Query type mismatch:
+   ```sql
+   -- v['id'] is actually STRING; using INT equality causes index not to be used
+   SELECT * FROM tbl WHERE v['id'] = 123456;
+   ```
+3. Misconfigured index: indexes apply to subpaths, not the entire VARIANT column.
+   ```sql
+   -- VARIANT itself cannot be indexed as a whole
+   SELECT * FROM tbl WHERE v MATCH 'Doris';
+
+   -- If whole-JSON search is needed, store a duplicate STRING column and index it
+   CREATE TABLE IF NOT EXISTS tbl (
+       k BIGINT,
+       v VARIANT,
+       v_str STRING,
+       INDEX idx_v_str(v_str) USING INVERTED PROPERTIES("parser" = "english")
+   );
+   SELECT * FROM tbl WHERE v_str MATCH 'Doris';
+   ```
+
+## Nested type
+
+> **This feature is experimental.**. To use it, you need to set the session variable `set enable_variant_flatten_nested = true` when creating the table.
 
 ``` json
 {
-  "id": "14186154924",
-  "type": "PushEvent",
-  "actor": {
-    "id": 282080,
-    "login": "brianchandotcom",
-    "display_login": "brianchandotcom",
-    "gravatar_id": "",
-    "url": "https://api.github.com/users/brianchandotcom",
-    "avatar_url": "https://avatars.githubusercontent.com/u/282080?"
-  },
-  "repo": {
-    "id": 1920851,
-    "name": "brianchandotcom/liferay-portal",
-    "url": "https://api.github.com/repos/brianchandotcom/liferay-portal"
-  },
-  "payload": {
-    "push_id": 6027092734,
-    "size": 4,
-    "distinct_size": 4,
-    "ref": "refs/heads/master",
-    "head": "91edd3c8c98c214155191feb852831ec535580ba",
-    "before": "abb58cc0db673a0bd5190000d2ff9c53bb51d04d",
-    "commits": [""]
-  },
-  "public": true,
-  "created_at": "2020-11-13T18:00:00Z"
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 }
 ```
 
-**Table Creation**
+In the JSON above, the objects contained in the array nested are referred to as nested array types.
+Note that currently only one level of array expansion is supported, and the top-level array cannot be expanded.
 
-- Created three columns of VARIANT type: `actor`, `repo`, and `payload`.
-- Simultaneously created an inverted index, `idx_payload`, for the `payload` column while creating the table.
-- Specified the index type as inverted using `USING INVERTED`, aimed at accelerating conditional filtering of sub-columns.
-- `PROPERTIES("parser" = "english")` specified the adoption of English tokenization.
-
-``` sql
-CREATE DATABASE test_variant;
-USE test_variant;
-CREATE TABLE IF NOT EXISTS github_events (
-    id BIGINT NOT NULL,
-    type VARCHAR(30) NULL,
-    actor VARIANT NULL,
-    repo VARIANT NULL,
-    payload VARIANT NULL,
-    public BOOLEAN NULL,
-    created_at DATETIME NULL,
-    INDEX idx_payload (`payload`) USING INVERTED PROPERTIES("parser" = "english") COMMENT 'inverted index for payload'
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(id) BUCKETS 10
-properties("replication_num" = "1");
+Top-level array
+``` json
+ [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
 ```
 
-:::tip
-
-1. Creating an index on VARIANT columns, such as when there are numerous sub-columns in payload, might lead to an excessive number of index columns, impacting write performance.
-2. The tokenization properties for the same VARIANT column are uniform. If you have varied tokenization requirements, consider creating multiple VARIANT columns and specifying index properties separately for each.
-
-:::
-
-
-**Using Streamload for Import**
-
-Importing gh_2022-11-07-3.json, which contains one hour's worth of GitHub events data.
-
-``` shell
-wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/variant/gh_2022-11-07-3.json
-
-curl --location-trusted -u root:  -T gh_2022-11-07-3.json -H "read_json_by_line:true" -H "format:json"  http://127.0.0.1:18148/api/test_variant/github_events/_strea
-m_load
-
+Multi-level arrays
+``` json
 {
-    "TxnId": 2,
-    "Label": "086fd46a-20e6-4487-becc-9b6ca80281bf",
-    "Comment": "",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 139325,
-    "NumberLoadedRows": 139325,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 633782875,
-    "LoadTimeMs": 7870,
-    "BeginTxnTimeMs": 19,
-    "StreamLoadPutTimeMs": 162,
-    "ReadDataTimeMs": 2416,
-    "WriteDataTimeMs": 7634,
-    "CommitAndPublishTimeMs": 55
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "nested2" : []}]
 }
 ```
 
-Confirm the successful import.
+Multi-level nesting
+``` json
+{
+  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "nested2" : [{"a" : 123}]}]
+}
+```
+
+The above data cannot be expanded at the moment.
+
+Table creation sql
 
 ``` sql
--- View the number of rows.
-mysql> select count() from github_events;
-+----------+
-| count(*) |
-+----------+
-|   139325 |
-+----------+
-1 row in set (0.25 sec)
-
--- Random select one row
-mysql> select * from github_events limit 1;
-+-------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------------+
-| id          | type      | actor                                                                                                                                                                                                                       | repo                                                                                                                                                     | payload                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | public | created_at          |
-+-------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------------+
-| 25061821748 | PushEvent | {"gravatar_id":"","display_login":"jfrog-pipelie-intg","url":"https://api.github.com/users/jfrog-pipelie-intg","id":98024358,"login":"jfrog-pipelie-intg","avatar_url":"https://avatars.githubusercontent.com/u/98024358?"} | {"url":"https://api.github.com/repos/jfrog-pipelie-intg/jfinte2e_1667789956723_16","id":562683829,"name":"jfrog-pipelie-intg/jfinte2e_1667789956723_16"} | {"commits":[{"sha":"334433de436baa198024ef9f55f0647721bcd750","author":{"email":"98024358+jfrog-pipelie-intg@users.noreply.github.com","name":"jfrog-pipelie-intg"},"message":"commit message 10238493157623136117","distinct":true,"url":"https://api.github.com/repos/jfrog-pipelie-intg/jfinte2e_1667789956723_16/commits/334433de436baa198024ef9f55f0647721bcd750"}],"before":"f84a26792f44d54305ddd41b7e3a79d25b1a9568","head":"334433de436baa198024ef9f55f0647721bcd750","size":1,"push_id":11572649828,"ref":"refs/heads/test-notification-sent-branch-10238493157623136113","distinct_size":1} |      1 | 2022-11-07 11:00:00 |
-+-------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------------+
-1 row in set (0.23 sec)
+CREATE TABLE `simple_nested_test` (
+  `k` bigint NULL,
+  `v` variant NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 8
+PROPERTIES (
+  "variant_enable_flatten_nested" = "true"
+)
 ```
-Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
 
-``` sql
-mysql> desc github_events;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-6 rows in set (0.07 sec)
+## INSERT and load
 
-mysql> set describe_extend_variant_column = true;
-Query OK, 0 rows affected (0.01 sec)
+### INSERT INTO VALUES
 
-mysql> desc github_events;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
-| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
-....
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-406 rows in set (0.07 sec)
+```sql
+CREATE TABLE IF NOT EXISTS variant_tbl (
+    k BIGINT,
+    v VARIANT
+) PROPERTIES("replication_num" = "1");
+
+INSERT INTO variant_tbl VALUES (1, '{"a" : 123}');
+
+select * from variant_tbl;
++------+-----------+
+| k    | v         |
++------+-----------+
+|    1 | {"a":123} |
++------+-----------+
+
+-- v['a'] is a VARIANT
+select v['a'] from variant_tbl;
++--------+
+| v['a'] |
++--------+
+| 123    |
++--------+
+
+-- Accessing a non-existent key returns NULL
+select v['a']['no_such_key'] from variant_tbl;;
++-----------------------+
+| v['a']['no_such_key'] |
++-----------------------+
+| NULL                  |
++-----------------------+
+
 ```
-DESC can be used to specify partition and view the schema of a particular partition. The syntax is as follows:
+
+### Load (Stream Load)
+
+```bash
+# Line-delimited JSON (one JSON record per line)
+curl --location-trusted -u root: -T gh_2022-11-07-3.json \
+  -H "read_json_by_line:true" -H "format:json" \
+  http://127.0.0.1:8030/api/test_variant/github_events/_stream_load
+```
+
+See also: `https://doris.apache.org/docs/dev/data-operate/import/complex-types/variant`
+
+After loading, verify with `SELECT count(*)` or sample with `SELECT * ... LIMIT 1`. For high-throughput ingestion, prefer RANDOM bucketing and enable Group Commit.
+
+## Supported operations and CAST rules
+
+- VARIANT cannot be compared/operated directly with other types; comparisons between two VARIANTs are not supported either.
+- For comparison, filtering, aggregation, and ordering, CAST subpaths to concrete types (explicitly or implicitly).
+
+```sql
+-- Explicit CAST
+SELECT CAST(v['arr'] AS ARRAY<TEXT>) FROM tbl;
+SELECT * FROM tbl WHERE CAST(v['decimal'] AS DECIMAL(27, 9)) = 1.111111111;
+SELECT * FROM tbl WHERE CAST(v['date'] AS DATE) = '2021-01-02';
+
+-- Implicit CAST
+SELECT * FROM tbl WHERE v['bool'];
+SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
+```
+
+- VARIANT itself cannot be used directly in ORDER BY, GROUP BY, as a JOIN KEY, or as an aggregate argument; CAST subpaths instead.
+- Strings can be implicitly converted to VARIANT.
+
+| VARIANT         | Castable | Coercible |
+| --------------- | -------- | --------- |
+| `ARRAY`         | ✔        | ❌        |
+| `BOOLEAN`       | ✔        | ✔         |
+| `DATE/DATETIME` | ✔        | ✔         |
+| `FLOAT`         | ✔        | ✔         |
+| `IPV4/IPV6`     | ✔        | ✔         |
+| `DECIMAL`       | ✔        | ✔         |
+| `MAP`           | ❌        | ❌        |
+| `TIMESTAMP`     | ✔        | ✔         |
+| `VARCHAR`       | ✔        | ✔         |
+| `JSON`          | ✔        | ✔         |
+
+## Limitations
+
+- `variant_max_subcolumns_count`(only versions above 3.1 support this): default 0 (no limit). In production, set to 2048 (tablet level) to control the number of materialized paths. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).
+- If a path type is specified via Schema Template((only versions above 3.1 support this)), that path will be forced to be materialized; when `variant_enable_typed_paths_to_sparse = true`, it also counts toward the threshold and may be moved to the shared structure.
+- JSON key length ≤ 255.
+- Cannot be a primary key or sort key.
+- Cannot be nested within other types (e.g., `Array<Variant>`, `Struct<Variant>`).
+- Reading the entire VARIANT column scans all subpaths. If a column has many subpaths, consider storing the original JSON string in an extra STRING/JSONB column for whole-object searches like `LIKE`:
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT
+);
+SELECT * FROM example_table WHERE data_variant LIKE '%doris%';
+
+-- Better: keep the original JSON string for whole-object matching
+CREATE TABLE example_table (
+  id INT,
+  data_string STRING,
+  data_variant VARIANT
+);
+SELECT * FROM example_table WHERE data_string LIKE '%doris%';
+```
+
+## Configuration
+
+> Since version 3.1.0, the properties `variant_max_subcolumns_count` and `variant_enable_typed_paths_to_sparse` are supported, and they cannot be modified using `ALTER`.
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_max_subcolumns_count' = '2048',
+          'variant_enable_typed_paths_to_sparse' = 'true'
+      )
+  >
+);
+```
+
+<table>
+<tr><td>Property<br/></td><td>Description<br/></td></tr>
+<tr><td>`variant_max_subcolumns_count`(only versions above 3.1 support this)<br/></td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default 0 (unlimited). Recommended 2048; do not exceed 10000.<br/></td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`(only versions above 3.1 support this)<br/></td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.<br/></td></tr>
+</table>
+
+Behavior at limits and tuning suggestions:
+
+1. After exceeding the threshold, new paths are written into the shared structure; Rowset merges may also recycle some paths into the shared structure (only versions above 3.1 support this).
+2. The system prefers to keep paths with higher non-null ratios and higher access frequencies materialized (only versions above 3.1 support this).
+3. Close to 10,000 materialized paths requires strong hardware (≥128G RAM, ≥32C per node recommended) (only versions above 3.1 support this).
+4. Ingestion tuning: increase client `batch_size` appropriately, or use Group Commit (increase `group_commit_interval_ms`/`group_commit_data_bytes` as needed).
+5. If partition pruning is not needed, consider RANDOM bucketing and enabling single-tablet loading to reduce compaction write amplification.
+6. BE tuning knobs: `max_cumu_compaction_threads` (≥8), `vertical_compaction_num_columns_per_group=500` (improves vertical compaction but increases memory), `segment_cache_memory_percentage=20` (improves metadata cache efficiency).
+7. Watch Compaction Score; if it keeps rising, compaction is lagging—reduce ingestion pressure.
+8. Avoid large `SELECT *` on VARIANT; prefer specific projections like `SELECT v['path']`.
+
+Note: If you see Stream Load error `[DATA_QUALITY_ERROR]Reached max column size limit 2048` (only on 2.1.x and 3.0.x), it means the merged tablet schema reached its column limit. You may increase `variant_max_merged_tablet_schema_size` (not recommended beyond 4096; requires strong hardware).
+
+## Inspect number of columns and types
+
+> Solution 1 is supported starting from version 3.1.0. For earlier versions, it is recommended to use DESC.
+
+Approach 1: use `variant_type` to inspect per-row schema (more precise, higher cost):
+
+```sql
+SELECT variant_type(v) FROM variant_tbl;
+```
+
+Approach 2: extended `DESC` to show materialized subpaths (only those extracted):
+
+```sql
+SET describe_extend_variant_column = true;
+DESC variant_tbl;
+```
 
 ``` sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
-**Querying**
+Use both: Approach 1 is precise; Approach 2 is efficient.
 
-:::tip
+## Compared with JSON type
 
-When utilizing filtering and aggregation functionalities to query sub-columns, additional casting operations need to be performed on sub-columns (because the storage types are not necessarily fixed and require a unified SQL type).
-For instance, `SELECT * FROM tbl where CAST(var['titile'] as text) MATCH "hello world"`
-The simplified examples below illustrate how to use VARIANT for querying:
-The following are three typical query scenarios
+- Storage: JSON is stored as JSONB (row-oriented). VARIANT is inferred and materialized into columns on write (higher compression, smaller size).
+- Query: JSON requires parsing. VARIANT scans columns directly and is usually much faster.
 
-:::
+ClickBench (43 queries):
+- Storage: VARIANT saves ~65% vs JSON.
+- Query: VARIANT is 8x+ faster than JSON, close to predefined static columns.
 
-1. Retrieve the top 5 repositories based on star count from the `github_events` table.
+**Storage space**
 
-``` sql
-mysql> SELECT
-    ->     cast(repo['name'] as text) as repo_name, count() AS stars
-    -> FROM github_events
-    -> WHERE type = 'WatchEvent'
-    -> GROUP BY repo_name
-    -> ORDER BY stars DESC LIMIT 5;
-+--------------------------+-------+
-| repo_name                | stars |
-+--------------------------+-------+
-| aplus-framework/app      |    78 |
-| lensterxyz/lenster       |    77 |
-| aplus-framework/database |    46 |
-| stashapp/stash           |    42 |
-| aplus-framework/image    |    34 |
-+--------------------------+-------+
-5 rows in set (0.03 sec)
-```
+| Type                | Size       |
+| ------------------- | ---------- |
+| Predefined columns  | 12.618 GB  |
+| VARIANT             | 12.718 GB  |
+| JSON                | 35.711 GB  |
 
-2. Retrieve the count of comments containing "doris".
+**~65% space savings**
 
-``` sql
--- implicit cast `payload['comment']['body']` to string type
-mysql> SELECT
-    ->     count() FROM github_events
-    ->     WHERE payload['comment']['body'] MATCH 'doris';
-+---------+
-| count() |
-+---------+
-|       3 |
-+---------+
-1 row in set (0.04 sec)
-```
+| Run             | Predefined | VARIANT | JSON            |
+| ----------------| ---------- | ------- | --------------- |
+| First (cold)    | 233.79s    | 248.66s | Most timed out  |
+| Second (hot)    | 86.02s     | 94.82s  | 789.24s         |
+| Third (hot)     | 83.03s     | 92.29s  | 743.69s         |
 
-3. Query the issue number with the highest number of comments along with its corresponding repository.
+## FAQ
 
-``` sql
-mysql> SELECT 
-    ->   cast(repo['name'] as string) as repo_name, 
-    ->   cast(payload['issue']['number'] as int) as issue_number, 
-    ->   count() AS comments, 
-    ->   count(
-    ->     distinct cast(actor['login'] as string)
-    ->   ) AS authors 
-    -> FROM  github_events 
-    -> WHERE type = 'IssueCommentEvent' AND (cast(payload["action"] as string) = 'created') AND (cast(payload["issue"]["number"] as int) > 10) 
-    -> GROUP BY repo_name, issue_number 
-    -> HAVING authors >= 4
-    -> ORDER BY comments DESC, repo_name 
-    -> LIMIT 50;
-+--------------------------------------+--------------+----------+---------+
-| repo_name                            | issue_number | comments | authors |
-+--------------------------------------+--------------+----------+---------+
-| facebook/react-native                |        35228 |        5 |       4 |
-| swsnu/swppfall2022-team4             |           27 |        5 |       4 |
-| belgattitude/nextjs-monorepo-example |         2865 |        4 |       4 |
-+--------------------------------------+--------------+----------+---------+
-3 rows in set (0.03 sec)
-```
-
-### Usage Restrictions and Best Practices
-
-**There are several limitations when using the VARIANT type:**
-Dynamic columns of VARIANT are nearly as efficient as predefined static columns. When dealing with data like logs, where fields are often added dynamically (such as container labels in Kubernetes), parsing JSON and inferring types can generate additional costs during write operations. Therefore, it's recommended to keep the number of columns for a single import below 1000.
-
-Ensure consistency in types whenever possible. Doris automatically performs compatible type conversions. When a field cannot undergo compatible type conversion, it is uniformly converted to JSONB type. The performance of JSONB columns may degrade compared to columns like int or text.
-
-1. tinyint -> smallint -> int -> bigint, integer types can be promoted following the direction of the arrows.
-2. float -> double, floating-point numbers can be promoted following the direction of the arrow.
-3. text, string type.
-4. JSON, binary JSON type.
-
-When the above types cannot be compatible, they will be transformed into JSON type to prevent loss of type information. If you need to set a strict schema in VARIANT, the VARIANT MAPPING mechanism will be introduced soon.
-
-**Other limitations include:**
-
-- VARIANT columns can only create inverted indexes or bloom filter to speed up query.
-- Using the **RANDOM** mode or [group commit](/docs/data-operate/import/group-commit-manual.md) mode is recommended for higher write performance.
-- Non-standard JSON types such as date and decimal should ideally use static types for better performance, since these types are infered to text type.
-- Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
-- Not supported as primary or sort keys.
-- Queries with filters or aggregations require casting. The storage layer eliminates cast operations based on storage type and the target type of the cast, speeding up queries. 
-- Reading a VARIANT column inherently involves scanning all its subfields. If the column contains numerous subfields, this can lead to substantial scan overhead and negatively impact query performance. To optimize performance when you need to retrieve the entire column, consider adding an additional column of type STRING or JSONB to store the raw JSON string. Example:
-``` sql
--- Lead to scan all subfields of data_variant
-CREATE TABLE example_table (
-  id INT,
-  data_variant VARIANT,
-);
-SELECT * FROM example_table WHERE data_variant LIKE '%doris%'
-
--- Better performance for `LIKE`
-CREATE TABLE example_table (
-  id INT,
-  data_variant VARIANT,
-  data_string STRING
-);
-SELECT * FROM example_table WHERE data_string LIKE '%doris%'
-```
-
-**Tuning Techniques for Column-Count Limits:**
-
-Note: If the number of sub-columns exceeds 5,000, higher requirements for memory and configuration apply. On a single machine, aim for at least 128 GB of RAM and 32 CPU cores.
-
-1. In BE configuration, adjust `variant_max_merged_tablet_schema_size=n`, where n should be greater than the actual number of columns (not recommended to exceed 10,000).
-
-2. Be aware that extracting too many columns will put heavy pressure on compaction (import throughput must be throttled accordingly). Increasing the client-side import `batch_size`—based on memory usage—can reduce write amplification during compaction. Alternatively, enable `group_commit` (a table property) and appropriately increase `group_commit_interval_ms` and `group_commit_data_bytes`.
-
-3. If your queries do not require bucket pruning, use random bucketing and enable the [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) import setting (an import configuration) to reduce compaction write amplification.
-
-4. In BE configuration, adjust `max_cumu_compaction_threads` according to import pressure; ensure at least 8 threads.
-
-5. In BE configuration, set `vertical_compaction_num_columns_per_group=500` to improve grouped-compaction efficiency, although this increases memory overhead.
-
-6. In BE configuration, set `segment_cache_memory_percentage=20` to increase segment cache capacity and improve metadata caching efficiency.
-
-7. Monitor the Compaction Score closely. A continuously rising score indicates that compaction cannot keep up (import pressure should be reduced accordingly).
-
-8. Using `SELECT *` or `SELECT variant` can significantly increase cluster-wide pressure, potentially causing timeouts or out-of-memory errors. It is recommended to include path information in queries—for example, `SELECT variant['path_1']`.
-
-### FAQ
-
-1. Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
-
-Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns(Requires higher-spec hardware).
-
-2. Is there a difference between null in the VARIANT type (e.g., `{"key": null}`) and SQL NULL (i.e., IS NULL)?
-
-No, there is no difference — in the VARIANT type, they are considered equivalent.
-
-### Keywords
-
-    VARIANT
+1. Are `null` in VARIANT and SQL `NULL` different?
+   - No. They are equivalent.
+2. Why doesn’t my query/index work?
+   - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
