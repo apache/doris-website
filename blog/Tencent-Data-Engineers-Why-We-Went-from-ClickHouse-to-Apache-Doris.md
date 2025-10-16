@@ -70,7 +70,7 @@ What’s more, Doris supports multiple data ingestion methods, including batch i
 
 Statistically speaking, these features have cut our storage cost by 42% and development cost by 40%.
 
-During our usage of Doris, we have received lots of support from the open source Apache Doris community and timely help from the SelectDB team, which is now running a commercial version of Apache Doris.
+During our usage of Doris, we have received lots of support from the open source Apache Doris community and timely help from the SelectDB team, which is now running a commercial product based on Apache Doris.
 
 ![data-warehouse-architecture-2.0](/images/TME/TME_3.png)
 

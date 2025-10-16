@@ -55,6 +55,7 @@ github:
 
   collaborators:
     - wangtianyi2004
+    - freemandealer
 
 notifications:
     commits:              commits@doris.apache.org

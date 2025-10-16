@@ -97,7 +97,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
@@ -214,7 +214,15 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/load-internals",
+                                "data-operate/import/load-internals/routine-load-internals"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -314,6 +322,7 @@
                             ]
                         },
                         "query-acceleration/sql-cache-manual",
+                        "query-acceleration/condition-cache",
                         "query-acceleration/high-concurrent-point-query",
                         "query-acceleration/dictionary",
                         {
@@ -382,9 +391,10 @@
                 },
                 {
                     "type": "category",
-                    "label": "AI & LLM",
+                    "label": "AI",
                     "items": [
-                        "ai/llm-function-overview"
+                        "ai/ai-function-overview",
+                        "ai/vector-search"
                     ]
                 },
                 {
@@ -492,7 +502,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -504,8 +524,16 @@
                         "compute-storage-decoupled/compilation-and-deployment",
                         "compute-storage-decoupled/managing-storage-vault",
                         "compute-storage-decoupled/managing-compute-cluster",
-                        "compute-storage-decoupled/file-cache",
+                        {
+                            "type": "category",
+                            "label": "File Cache",
+                            "items": [
+                                "compute-storage-decoupled/file-cache/file-cache",
+                                "compute-storage-decoupled/file-cache/file-cache-internals"
+                            ]
+                        },
                         "compute-storage-decoupled/read-write-splitting",
+                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
@@ -559,7 +587,8 @@
                             "type": "category",
                             "label": "Integrations",
                             "items": [
-                                "admin-manual/auth/integrations/aws-authentication-and-authorization"
+                                "admin-manual/auth/integrations/aws-authentication-and-authorization",
+                                "admin-manual/auth/integrations/aws-iam-role"
                             ]
                         }
                     ]
@@ -609,6 +638,7 @@
                         },
                         "admin-manual/workload-management/analysis-diagnosis",
                         "admin-manual/workload-management/concurrency-control-and-queuing",
+                        "admin-manual/workload-management/spill-disk",
                         "admin-manual/workload-management/sql-blocking",
                         "admin-manual/workload-management/kill-query",
                         "admin-manual/workload-management/job-scheduler"
@@ -781,6 +811,7 @@
                             ]
                         },
                         "admin-manual/trouble-shooting/compaction",
+                        "admin-manual/trouble-shooting/compaction-principles",
                         "admin-manual/trouble-shooting/metadata-operation",
                         "admin-manual/trouble-shooting/frontend-lock-manager",
                         "admin-manual/trouble-shooting/tablet-local-debug",
@@ -917,8 +948,19 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
                     ]
                 },
                 {
@@ -931,9 +973,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
-                        "ecosystem/fluentbit",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf",
                         "ecosystem/hive-hll-udf",
@@ -980,9 +1019,8 @@
                                         "sql-manual/basic-element/sql-data-types/numeric/INT",
                                         "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
                                         "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/FLOAT",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DOUBLE",
-                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL"
+                                        "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+                                        "sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT"
                                     ]
                                 },
                                 {
@@ -1039,6 +1077,7 @@
                                     "label": "Conversion",
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/conversion/overview",
+                                        "sql-manual/basic-element/sql-data-types/conversion/cast-expr",
                                         "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
@@ -1109,24 +1148,25 @@
                                         "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
                                         "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
                                         "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
-                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance"
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance",
+                                        "sql-manual/sql-functions/ai-functions/distance-functions/embed"
                                     ]
                                 },
                                 {
                                     "type": "category",
-                                    "label": "LLM Functions",
+                                    "label": "AI Functions",
                                     "items": [
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-classify",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-extract",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-filter",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-fixgrammar",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-function",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-generate",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-mask",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-sentiment",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-similarity",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-summarize",
-                                        "sql-manual/sql-functions/ai-functions/llm-functions/llm-translate"
+                                        "sql-manual/sql-functions/ai-functions/ai-classify",
+                                        "sql-manual/sql-functions/ai-functions/ai-extract",
+                                        "sql-manual/sql-functions/ai-functions/ai-filter",
+                                        "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+                                        "sql-manual/sql-functions/ai-functions/ai-function",
+                                        "sql-manual/sql-functions/ai-functions/ai-generate",
+                                        "sql-manual/sql-functions/ai-functions/ai-mask",
+                                        "sql-manual/sql-functions/ai-functions/ai-sentiment",
+                                        "sql-manual/sql-functions/ai-functions/ai-similarity",
+                                        "sql-manual/sql-functions/ai-functions/ai-summarize",
+                                        "sql-manual/sql-functions/ai-functions/ai-translate"
                                     ]
                                 }
                             ]
@@ -1187,6 +1227,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/uniform",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/even",
@@ -1231,6 +1272,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/make-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n",
@@ -1240,6 +1282,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/position",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/printf",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/protocol",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/quote",
@@ -1258,6 +1301,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/soundex",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strleft",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/strright",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp",
@@ -1439,7 +1483,7 @@
                                     "label": "Bitwise Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
-                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit_test",
+                                        "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-test",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
                                         "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",
@@ -1511,8 +1555,10 @@
                                     "label": "MAP Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-entry",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value",
+                                        "sql-manual/sql-functions/scalar-functions/map-functions/map-entries",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-keys",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
                                         "sql-manual/sql-functions/scalar-functions/map-functions/map-values",
@@ -1562,6 +1608,8 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-unquote",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/to-json"
                                     ]
                                 },
@@ -1650,6 +1698,14 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Binary Functions",
+                                    "items": [
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/from_hex",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "System Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/system-functions/connection-id",
@@ -1703,6 +1759,7 @@
                             "type": "category",
                             "label": "Aggregate Functions",
                             "items": [
+                                "sql-manual/sql-functions/aggregate-functions/ai-agg",
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
                                 "sql-manual/sql-functions/aggregate-functions/approx-top-k",
@@ -1715,6 +1772,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-count",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
+                                "sql-manual/sql-functions/aggregate-functions/bool-and",
+                                "sql-manual/sql-functions/aggregate-functions/bool-or",
+                                "sql-manual/sql-functions/aggregate-functions/bool-xor",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
                                 "sql-manual/sql-functions/aggregate-functions/corr-welford",
@@ -1801,6 +1861,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-count",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
+                                "sql-manual/sql-functions/aggregate-functions/bool-and",
+                                "sql-manual/sql-functions/aggregate-functions/bool-or",
+                                "sql-manual/sql-functions/aggregate-functions/bool-xor",
                                 "sql-manual/sql-functions/aggregate-functions/collect-list",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
                                 "sql-manual/sql-functions/aggregate-functions/corr-welford",
@@ -2376,8 +2439,24 @@
                 "releasenotes/all-release",
                 {
                     "type": "category",
+                    "label": "v4.0",
+                    "items": [
+                        "releasenotes/v4.0/release-4.0.0"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "v3.1",
+                    "items": [
+                        "releasenotes/v3.1/release-3.1.1",
+                        "releasenotes/v3.1/release-3.1.0"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.8",
                         "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",

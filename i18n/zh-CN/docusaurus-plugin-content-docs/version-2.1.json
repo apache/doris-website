@@ -75,9 +75,9 @@
     "message": "数据表设计",
     "description": "The label for category Data Table Design in sidebar docs"
   },
-  "sidebar.docs.category.Data Models": {
-    "message": "数据模型",
-    "description": "The label for category Data Models in sidebar docs"
+  "sidebar.docs.category.Table Types": {
+    "message": "表类型",
+    "description": "The label for category Table Types in sidebar docs"
   },
   "sidebar.docs.category.Data Partitioning": {
     "message": "数据划分",
@@ -134,6 +134,26 @@
   "sidebar.docs.category.Data Lakehouse": {
     "message": "湖仓一体",
     "description": "The label for category Data Lakehouse in sidebar docs"
+  },
+  "sidebar.docs.category.Data Catalogs": {
+    "message": "数据目录",
+    "description": "The label for category Data Catalogs in sidebar docs"
+  },
+  "sidebar.docs.category.Metastores": {
+    "message": "元数据服务",
+    "description": "The label for category Metastores in sidebar docs"
+  },
+  "sidebar.docs.category.Storages": {
+    "message": "存储服务",
+    "description": "The label for category Storages in sidebar docs"
+  },
+  "sidebar.docs.category.File Format": {
+    "message": "开放文件格式",
+    "description": "The label for category File Format in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Dialect Convertor": {
+    "message": "SQL 方言转换",
+    "description": "The label for category SQL Dialect Convertor in sidebar docs"
   },
   "sidebar.docs.category.Querying Data Lakes": {
     "message": "数据湖分析",

@@ -35,7 +35,7 @@
 - BE：15 台服务器，每台配置 32 核 CPU、256 GB 内存、8 块 680 GB SSD 盘
 - S3 对象存储空间：即为预估冷数据存储空间，600 TB
 
-使用存算分离模式，写入和热数据存储只需要 1副本，能够显著降低成本。
+使用存算分离模式，写入和热数据存储只需要 1 副本，能够显著降低成本。
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
@@ -61,7 +61,7 @@
 
 ## 第 2 步：部署集群
 
-完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群，推荐在物理机及虚拟机环境中进行部署。手动部署集群，可参考 [手动部署](../install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ## 第 3 步：优化 FE 和 BE 配置
 
@@ -80,7 +80,7 @@
 | `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
 | `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
-更多关于 FE 配置项的信息，可参考 [FE 配置项](./admin-manual/config/fe-config)。
+更多关于 FE 配置项的信息，可参考 [FE 配置项](../admin-manual/config/fe-config)。
 
 **优化 BE 配置**
 
@@ -108,23 +108,23 @@
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
-更多关于 BE 配置项的信息，可参考 [BE 配置项](./admin-manual/config/be-config)。
+更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config)。
 
-### 第 4 步：建表
+## 第 4 步：建表
 
 由于日志数据的写入和查询都具备明显的特征，因此，在建表时按照本节说明进行针对性配置，以提升性能表现。
 
 **配置分区分桶参数**
 
 分区按照以下说明配置：
-- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../table-design/data-partitioning/manual-partitioning.md#range-分区) (`PARTITION BY RANGE(`ts`)`)，并开启 [动态分区](../table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为排序 Key (`DUPLICATE KEY(ts)`)，在查询最新 N 条日志时有数倍加速。
 
 分桶按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶的数据量压缩后 5GB 左右。
 - 使用 Random 策略 (`DISTRIBUTED BY RANDOM BUCKETS 60`)，配合写入时的 Single Tablet 导入，可以提升批量（Batch）写入的效率。
 
-更多关于分区分桶的信息，可参考 [数据划分](./table-design/data-partitioning/data-distribution)。
+更多关于分区分桶的信息，可参考 [数据划分](../table-design/data-partitioning/data-distribution)。
 
 **配置压缩参数**
 - 使用 zstd 压缩算法 (`"compression" = "zstd"`), 提高数据压缩率。
@@ -202,7 +202,7 @@ PROPERTIES (
 );
 ```
 
-### 第 5 步：采集日志
+## 第 5 步：采集日志
 
 完成建表后，可进行日志采集。
 
@@ -276,13 +276,13 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](./ecosystem/logstash)。
+更多关于 Logstash 配置和使用的说明，可参考 [Logstash Doris Output Plugin](../ecosystem/observability/logstash)。
 
 **对接 Filebeat**
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-7.17.5.4) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -348,11 +348,11 @@ output {
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
 ```shell  
-chmod +x filebeat-doris-7.17.5.4
-./filebeat-doris-7.17.5.4 -c filebeat_demo.yml
+chmod +x filebeat-doris-2.1.1
+./filebeat-doris-2.1.1 -c filebeat_demo.yml
 ```
 
-更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](./ecosystem/beats)。
+更多关于 Filebeat 配置和使用的说明，可参考 [Beats Doris Output Plugin](../ecosystem/observability/beats)。
 
 **对接 Kafka**
 
@@ -412,7 +412,7 @@ http://fe_host:fe_http_port/api/log_db/log_table/_stream_load
 - 设置 HTTP header "load_to_single_tablet:true"，指定一次导入写入一个分桶减少导入的小文件。
 - 建议写入客户端一个 Batch 的大小为 100MB ～ 1GB。如果你使用的是 Apache Doris 2.1 及更高版本，需通过服务端 Group Commit 功能，降低客户端 Batch 大小。
 
-### 第 6 步：查询和分析日志
+## 第 6 步：查询和分析日志
 
 **日志查询**
 

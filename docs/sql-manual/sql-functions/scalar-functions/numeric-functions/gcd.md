@@ -45,6 +45,7 @@ GCD(<a>, <b>)
 ## Return Value
 
 Returns the greatest common divisor of `<a>` and `<b>`.
+If any input is NULL, returns NULL.
 
 ## Examples
 
@@ -82,4 +83,16 @@ select gcd(0, 10);
 +-----------+
 |        10 |
 +-----------+
+```
+
+```sql
+select gcd(54, NULL);
+```
+
+```text
++---------------+
+| gcd(54, NULL) |
++---------------+
+|          NULL |
++---------------+
 ```

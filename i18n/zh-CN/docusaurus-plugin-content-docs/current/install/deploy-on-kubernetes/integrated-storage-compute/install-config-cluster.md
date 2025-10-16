@@ -23,7 +23,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) 可供使用。
 
 **BE Image 设置**  
 
@@ -35,7 +35,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) 可供使用。
 
 ### 副本数设定
 
@@ -160,8 +160,6 @@ data:
     syg_level = INFO
     # NORMAL, BRIEF, ASYNC
     syg_mode = ASYNC
-    # sys_log_roll_num = 10
-    # sys_log_verbose_modules = org.apache.doris
     # audit_log_dir = $LOG_DIR
     # audit_log_modules = slow_query, query
     # audit_log_roll_num = 10
@@ -397,7 +395,7 @@ spec:
 上述配置中，${your_storageclass} 表示希望使用的 [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) 名称，${storageSize} 表示希望使用的存储大小，${storageSize} 的格式遵循 Kubernetes 的 [quantity 表达方式](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/), 比如：100Gi。
 
 :::tip 提示  
-如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `sys_log_dir` 请重新设置 `mountPath` 。
+如果在[定制化配置文件中](#fe-定制化启动配置)，重新设置了 `meta_dir` 或者 `LOG_DIR` 请重新设置 `mountPath` 。
 :::
 
 ### BE 持久化存储配置
@@ -974,7 +972,7 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabPath: ${keytabPath}
     ```
    ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
-   catalog 请参考配置 [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.md#配置-catalog) 文档。
+   catalog 请参考配置 [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#配置-catalog) 文档。
 
 ## 配置共享存储
 Doris Operator 从 25.4.0 版本开始支持为多个组件的所有 Pod 挂载一个 `ReadWriteMany` 的共享存储。使用前请提前创建好共享存储 `PersistentVolume` 和 `PersistentVolumeClaim` 资源，在部署 Doris 集群之前按照如下配置 `DorisCluster` 资源：

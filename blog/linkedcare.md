@@ -113,7 +113,7 @@ Thanks to the excellent capabilities of the new architecture, the cluster we use
 # Highly Recommended
 The cost of using Doris is very low. Only 3 low-end servers or even desktops can be used to deploy easily a data warehouse based on Apache Doris; For enterprises with limited investment and do not want to be left behind by the market, it is highly recommended to try Apache Doris.
 
-Doris is also a mature analytical database with MPP architecture. At the same time, its community is very active and easy to communicate with. SelectDB, the commercial company behind Doris, has set up a full-time technical team for the community. Any questions can be answered within 1 hour. In the last year, the community has been continuously promoted by SelectDB and introduced a series of industry-leading new features. In addition, the community will seriously consider the user habits when iterating, which will bring a lot of convenience.
+Doris is also a mature analytical database with MPP architecture. At the same time, its community is very active and easy to communicate with. SelectDB, a commercial company with products based on Apache Doris, has set up a full-time technical team for the community. Any questions can be answered within 1 hour. In the last year, the community has been continuously promoted by SelectDB and introduced a series of industry-leading new features. In addition, the community will seriously consider the user habits when iterating, which will bring a lot of convenience.
 
 I really appreciate the full support from the Doris community and the SelectDB team. And I sincerely recommend developers and enterprises to start with Apache Doris today.
 

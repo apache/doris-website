@@ -14,7 +14,7 @@ This statement is used to create a logical view using a specified query statemen
 ```sql
 CREATE VIEW [IF NOT EXISTS] [<db_name>.]<view_name>
    [(<column_definition>)]
-AS <query_stmt>
+[AS] <query_stmt>
 ```
 
 Where:

@@ -67,6 +67,7 @@ The Doris Operator mounts the FE startup configuration using a Kubernetes Config
         query_port = 9030
         edit_log_port = 9010
         enable_fqdn_mode=true
+        deploy_mode = cloud
     ```
 
 2. Deploy the ConfigMap  
@@ -88,7 +89,7 @@ The Doris Operator mounts the FE startup configuration using a Kubernetes Config
    In the `DorisDisaggregatedCluster` resource, the `configMaps` field is an array, with each element's `name` representing the name of the ConfigMap in the current namespace.
 
 :::tip Tip
-1. In Kubernetes deployments, it is not necessary to include `meta_service_endpoint`, `deploy_mode`, or `cluster_id` in the startup configuration, as the Doris Operator will automatically add this information.
+1. In Kubernetes deployments, it is not necessary to include `meta_service_endpoint` or `cluster_id` in the startup configuration, as the Doris Operator will automatically add this information.
 2. When customizing the startup configuration, `enable_fqdn_mode` must be set to true.
    :::
 

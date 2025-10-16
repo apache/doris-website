@@ -112,7 +112,7 @@ export default function Archive() {
                         id="archive-tips-2"
                         values={{
                             latestVersion: (
-                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.0/gettingStarted/what-is-apache-doris`}>
+                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.x/gettingStarted/what-is-apache-doris`}>
                                     <Translate id="archive.latest.version">latest version</Translate>
                                 </Link>
                             ),

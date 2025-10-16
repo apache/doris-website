@@ -72,7 +72,7 @@
                         "table-design/overview",
                         {
                             "type": "category",
-                            "label": "Data Models",
+                            "label": "Table Types",
                             "items": [
                                 "table-design/data-model/overview",
                                 "table-design/data-model/duplicate",
@@ -458,7 +458,17 @@
                     "items": [
                         "observability/overview",
                         "observability/log",
-                        "observability/trace"
+                        "observability/trace",
+                        {
+                            "type": "category",
+                            "label": "Integrations",
+                            "items": [
+                                "ecosystem/observability/logstash",
+                                "ecosystem/observability/beats",
+                                "ecosystem/observability/opentelemetry",
+                                "ecosystem/observability/fluentbit"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -856,8 +866,19 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/observability/logstash",
+                        "ecosystem/observability/beats",
+                        "ecosystem/observability/opentelemetry",
+                        "ecosystem/observability/fluentbit"
                     ]
                 },
                 {
@@ -870,8 +891,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]
@@ -2129,6 +2148,7 @@
                     "type": "category",
                     "label": "v3.0",
                     "items": [
+                        "releasenotes/v3.0/release-3.0.8",
                         "releasenotes/v3.0/release-3.0.7",
                         "releasenotes/v3.0/release-3.0.6",
                         "releasenotes/v3.0/release-3.0.5",

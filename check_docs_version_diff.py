@@ -9,11 +9,11 @@ exclude_keywords = ["sql-manual", "releasenotes", "ecosystem", "admin-manual", "
                     "benchmark", "db-connect", "deploy-on-kubernetes"]
 
 version_21_prefix_cn = "./ii18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/"
-version_30_prefix_cn = "./i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0/"
+version_30_prefix_cn = "./i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/"
 version_dev_prefix_cn = "./i18n/zh-CN/docusaurus-plugin-content-docs/current/"
 
 version_21_prefix_en = "./versioned_docs/version-2.1/"
-version_30_prefix_en = "./versioned_docs/version-3.0/"
+version_30_prefix_en = "./versioned_docs/version-3.x/"
 version_dev_prefix_en = "./docs/"
 
 
@@ -67,7 +67,7 @@ def diff_doc_cn(directories):
             print(f"Missing in version 2.1: {path_v21}")
         
         if not os.path.exists(path_v30):
-            print(f"Missing in version 3.0: {path_v30}")
+            print(f"Missing in version 3.x: {path_v30}")
 
         if not os.path.exists(path_dev):
             print(f"Missing in current (dev) version: {path_dev}")
@@ -102,7 +102,7 @@ def diff_doc_en(directories):
             print(f"Missing in version 2.1: {path_v21}")
 
         if not os.path.exists(path_v30):
-            print(f"Missing in version 3.0: {path_v30}")
+            print(f"Missing in version 3.x: {path_v30}")
 
         if not os.path.exists(path_dev):
             print(f"Missing in current (dev) version: {path_dev}")

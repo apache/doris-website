@@ -22,9 +22,13 @@ This document describes how to use the `CREATE CATALOG` statement to connect and
 | `dlf.access_key` | - | Alibaba Cloud AccessKey for accessing DLF service. | None | Yes |
 | `dlf.secret_key` | - | Alibaba Cloud SecretKey for accessing DLF service. | None | Yes |
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID. Used to specify metadata catalog. If not set, the default catalog is used. | None | No |
-| `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog | None | No |
+| `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog. Note that the object storage path must end with `/`. | None | No |
 
-### DLF Rest Catalog
+> Note:
+>
+> For versions before 3.1.0, please use the former names.
+
+### DLF 2.5+ (Rest Catalog)
 
 > Supported since version 3.1.0
 
@@ -72,7 +76,7 @@ CREATE CATALOG paimon_dlf PROPERTIES (
 );
 ```
 
-### DLF Rest Catalog
+### DLF 2.5+ (Rest Catalog)
 
 ```sql
 CREATE CATALOG paimon_dlf_test PROPERTIES (

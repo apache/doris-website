@@ -25,6 +25,11 @@ TAN(<x>)
 
 Returns the tangent of x.
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive or negative infinity, returns NaN
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -37,4 +42,40 @@ select tan(0),tan(1),tan(-1);
 +------------------------+------------------------+-------------------------+
 |                      0 |     1.5574077246549023 |     -1.5574077246549023 |
 +------------------------+------------------------+-------------------------+
+```
+
+```sql
+select tan(cast('nan' as double));
+```
+
+```text
++----------------------------+
+| tan(cast('nan' AS DOUBLE)) |
++----------------------------+
+| NaN                        |
++----------------------------+
+```
+
+```sql
+select tan(cast('inf' as double));
+```
+
+```text
++----------------------------+
+| tan(cast('inf' AS DOUBLE)) |
++----------------------------+
+| NaN                        |
++----------------------------+
+```
+
+```sql
+select tan(cast('-inf' as double));
+```
+
+```text
++-----------------------------+
+| tan(cast('-inf' AS DOUBLE)) |
++-----------------------------+
+| NaN                         |
++-----------------------------+
 ```

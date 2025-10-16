@@ -7,51 +7,59 @@
 
 ## Description
 
-Converts a Date or Datetime type to a UNIX timestamp.
+Converts Date or Datetime types to unix timestamps.
 
-If no argument is provided, it converts the current time to a timestamp.
+If no parameters are provided, the current time is converted to a timestamp.
 
-The argument must be of Date or Datetime type.
+Parameters must be Date or Datetime type.
 
-For the format specification, refer to the format description of the date_format function.
+For Format specification, please refer to the format description of the date_format function.
 
-This function is affected by the time zone.
+This function is affected by time zone, please see [Time Zone Management](../../../../admin-manual/cluster-management/time-zone) for time zone details.
 
-## Sytax
+This function is consistent with the [unix_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_unix-timestamp) in MySQL.
+
+## Syntax
 
 ```sql
-UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
-
+UNIX_TIMESTAMP()
+UNIX_TIMESTAMP(`<date_or_date_expr>`)
+UNIX_TIMESTAMP(`<date_or_date_expr>`, `<fmt>`)
 ```
 
-## Parameter
+## Parameters
 
-| Paramters | Description |
-| -- | -- | 
-| `<date>` | The datetime value to be converted is of type `datetime` or `date` type, supported range: '1970-01-01 00:00:00.000000 UTC' to '9999-12-31 23:59:59.999999 UTC'.|
-| `<fmt>` | The 'date' parameter refers to the specific part that needs to be converted into a timestamp, and it is a parameter of type string. If this parameter is provided, only the part matching the format will be converted into a timestamp. |
+| Parameter | Description |
+|-----------|-------------|
+| `<date_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<fmt>` | The date parameter specifies the specific part to be converted to timestamp, type is string. If this parameter is provided, only the part matching the format will be converted to timestamp. |
 
-## Return value
-Returns two types based on the input:
+## Return Value
+Returns two types based on input:
 
-- If the input `date`(only `datetime` type have the scale not zero) scale is not 0 or a format parameter is provided,
-returns a timestamp of type Decimal with a maximum precision of six decimal places.
-- If the input datetime scale is 0 and no format parameter is provided,
-returns a timestamp of type INT.
+1. If the input date_or_date_expr is datetime type with non-zero scale or has format parameter:
+   Returns a timestamp of type Decimal, with up to six decimal places precision
 
-- Supported input range is from '1970-01-01 00:00:00.000000 UTC' to '9999-12-31 23:59:59.999999 UTC'. Times earlier than the minimum return 0.
+2. If the input date_or_date_expr has scale 0 and no format parameter:
+   Returns a timestamp of type INT
 
-Returns NULL if any argument is NULL.
+Converts the input time to the corresponding timestamp, with the epoch time being 1970-01-01 00:00:00.
+
+- Returns null if any parameter is null.
+- Returns an error if format is invalid
 
 ## Examples
 
 ```sql
+-- Input datetime is the begin datetime
+mysql> select unix_timestamp('1970-01-01 00:00:00');
++---------------------------------------+
+| unix_timestamp('1970-01-01 00:00:00') |
++---------------------------------------+
+|                            0 |
++------------------------------+
 
--- All the following results are returned in the UTC time zone
-
-set time_zone= 'UTC';
-
-------Displays the timestamp of the current time
+-- Display timestamp of current time
 mysql> select unix_timestamp();
 +------------------+
 | unix_timestamp() |
@@ -59,7 +67,7 @@ mysql> select unix_timestamp();
 |       1753933330 |
 +------------------+
 
----Input a datetime to display its timestamp
+-- Input a datetime to display its timestamp
 mysql> select unix_timestamp('2007-11-30 10:30:19');
 +---------------------------------------+
 | unix_timestamp('2007-11-30 10:30:19') |
@@ -67,7 +75,8 @@ mysql> select unix_timestamp('2007-11-30 10:30:19');
 |                            1196389819 |
 +---------------------------------------+
 
----Matches the format to display the timestamp corresponding to the given datetime
+
+-- Match format to display timestamp for given datetime
 mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
 +------------------------------------------------------------+
 | unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s') |
@@ -75,35 +84,7 @@ mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
 |                                          1196389819.000000 |
 +------------------------------------------------------------+
 
-
----Only matches year, month, and day to display the timestamp
-mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d');
-+-----------------------------------------------------+
-| unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d') |
-+-----------------------------------------------------+
-|                                   1196352000.000000 |
-+-----------------------------------------------------+
-
-
----Matching with other characters
-mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d %H:%i%%3A%s');
-+-----------------------------------------------------------------+
-| unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d %H:%i%%3A%s') |
-+-----------------------------------------------------------------+
-|                                               1196389819.000000 |
-+-----------------------------------------------------------------+
-
-
----Time beyond the minimum range returns 0
-mysql> SELECT UNIX_TIMESTAMP('1970-01-01 00:00:00');
-+---------------------------------------+
-| UNIX_TIMESTAMP('1970-01-01 00:00:00') |
-+---------------------------------------+
-|                                     0 |
-+---------------------------------------+
-
-
----Input time with non-zero scale
+-- Input with non-zero scale
 mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.123');
 +-------------------------------------------+
 | UNIX_TIMESTAMP('2015-11-13 10:20:19.123') |
@@ -111,17 +92,15 @@ mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.123');
 |                            1447381219.123 |
 +-------------------------------------------+
 
----Maximum supported time
+-- For datetime before 1970-01-01, returns 0
+select unix_timestamp('1007-11-30 10:30:19');
++---------------------------------------+
+| unix_timestamp('1007-11-30 10:30:19') |
++---------------------------------------+
+|                                     0 |
++---------------------------------------+
 
-mysql> SELECT UNIX_TIMESTAMP('9999-12-31 23:59:59.999999');
-+--------------------------------------------------+
-| UNIX_TIMESTAMP('9999-12-31 23:59:59.999999')     |
-+--------------------------------------------------+
-|                               253402271999.999999|
-+--------------------------------------------------+
-
-
----Returns NULL if any argument is NULL
+-- Returns NULL if any parameter is null
 mysql> select unix_timestamp(NULL);
 +----------------------+
 | unix_timestamp(NULL) |
@@ -129,15 +108,7 @@ mysql> select unix_timestamp(NULL);
 |                 NULL |
 +----------------------+
 
-mysql> select unix_timestamp('2038-01-19 11:14:08',null);
-+--------------------------------------------+
-| unix_timestamp('2038-01-19 11:14:08',null) |
-+--------------------------------------------+
-|                                       NULL |
-+--------------------------------------------+
-
+-- Returns an error if format is invalid
+mysql> select unix_timestamp('2007-11-30 10:30-19', 's');
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation unix_timestamp of 2007-11-30 10:30-19, s is invalid
 ```
-
-### keywords
-
-    UNIX_TIMESTAMP,UNIX,TIMESTAMP

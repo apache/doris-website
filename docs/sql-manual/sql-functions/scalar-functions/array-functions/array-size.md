@@ -1,45 +1,36 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-Count the number of elements in an array
-
-## Aliases
-
-- SIZE
-- CARDINALITY
+Return the number of elements in an array.
 
 ## Syntax
 
-```sql
-ARRAY_SIZE(<arr>) 
-```
+- `ARRAY_SIZE(arr)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | The array to be calculated |
+- `arr`: `ARRAY<T>`.
 
-## Return Value
+## Return value
 
-Returns the number of elements in the array. If the input array is NULL, it returns NULL.
+- Returns how many elements `arr` contains.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
-```
+- If the input `arr` is `NULL`, returns `NULL`.
 
-```text
-+------------------------------+---------------------+-----------------+
-| cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
-+------------------------------+---------------------+-----------------+
-|                            3 |                   1 |               0 |
-+------------------------------+---------------------+-----------------+
-```
+## Examples
+
+- Arrays:
+  - `ARRAY_SIZE([1, 2, 3])` -> `3`
+  - `ARRAY_SIZE(['a', NULL, 'b'])` -> `3`
+
+- If the input `arr` is `NULL`, returns `NULL`
+  - `ARRAY_SIZE(NULL)` -> `NULL`
+

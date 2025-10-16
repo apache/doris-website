@@ -1,6 +1,6 @@
 [
     {
-        "story": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. The commercial version of Apache Doris, VeloDB Cloud is available on AWS, offering scalable and efficient data analytics capabilities.",
+        "story": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. A commercial product based on Apache Doris, VeloDB Cloud is available on AWS, offering scalable and efficient data analytics capabilities.",
         "name": "AWS",
         "category": "Commercial Distribution",
         "logo": "AWS",
@@ -9,7 +9,7 @@
         "image": "/images/user-logo/Commercial Distribution/AWS.jpg"
     },
     {
-        "story": "Powered by Apache Doris, VeloDB is a modern data warehouse designed for swift analytics on large-scale real-time data. VeloDB Inc, the commercial company of Apache Doris, delivers real-time analytics products and solutions to enterprise users worldwide.",
+        "story": "Powered by Apache Doris, VeloDB is a modern data warehouse designed for swift analytics on large-scale real-time data. VeloDB Inc, a commercial company with products based on Apache Doris, delivers real-time analytics products and solutions to enterprise users worldwide.",
         "name": "VeloDB",
         "category": "Commercial Distribution",
         "logo": "VeloDB",

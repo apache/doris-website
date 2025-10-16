@@ -1588,6 +1588,26 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 导出检查器的运行间隔
 
+#### `enable_mow_load_force_take_ms_lock`
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+存算分离模式下 Merge-On-Write Unique 表上的导入是否开启强制抢锁功能。开启后，当导入事务在提交阶段尝试获取位于 meta-service 中该表的分布式锁时的等待时间超过一个阈值(由配置`mow_load_force_take_ms_lock_threshold_ms`决定)后，将强制获取该分布式锁。该功能可用于减少高频高并发导入下由于等锁导致的导入延迟长尾。
+
+#### `mow_load_force_take_ms_lock_threshold_ms`
+
+默认值：500
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+存算分离模式下 Merge-On-Write Unique 表上的导入事务强制抢锁的超时阈值。
+
 ### 日志
 
 #### `log_roll_size_mb`

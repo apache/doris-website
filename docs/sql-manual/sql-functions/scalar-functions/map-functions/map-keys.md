@@ -7,7 +7,7 @@
 
 ## Description
 
-Extract the keys of the given `map` into an `ARRAY` of the corresponding type
+Extracts the keys from a given `map` into an [`ARRAY`](../../../basic-element/sql-data-types/semi-structured/ARRAY.md) of the corresponding type.
 
 ## Syntax
 
@@ -16,25 +16,31 @@ MAP_KEYS(<map>)
 ```
 
 ## Parameters
-
-| Parameter | Description |
-| -- | -- |
-| `<map>` | Input map content |
+- `<map>` [`MAP`](../../../basic-element/sql-data-types/semi-structured/MAP.md) type, the input map content.
 
 ## Return Value
+Extracts the keys from a given `map` into an [`ARRAY`](../../../basic-element/sql-data-types/semi-structured/ARRAY.md) of the corresponding type.
 
-Extract the keys of the given `map` into an `ARRAY` of the corresponding type
-
-## Example
-
-```sql
-select map_keys(map()),map_keys(map(1, "100", 0.1, 2));
-```
-
-```text
-+-----------------+-------------------------------------------------------------------------------------------------+
-| map_keys(map()) | map_keys(map(cast(1 as DECIMALV3(2, 1)), '100', cast(0.1 as DECIMALV3(2, 1)), cast(2 as TEXT))) |
-+-----------------+-------------------------------------------------------------------------------------------------+
-| []              | [1.0, 0.1]                                                                                      |
-+-----------------+-------------------------------------------------------------------------------------------------+
-```
+## Examples
+1. Regular parameters
+    ```sql
+    select map_keys(map()),map_keys(map(1, "100", 0.1, 2, null, null));
+    ```
+    ```text
+    +-----------------+---------------------------------------------+
+    | map_keys(map()) | map_keys(map(1, "100", 0.1, 2, null, null)) |
+    +-----------------+---------------------------------------------+
+    | []              | [1.0, 0.1, null]                            |
+    +-----------------+---------------------------------------------+
+    ```
+2. NULL parameters
+    ```sql
+    select map_keys(NULL);
+    ```
+    ```text
+    +----------------+
+    | map_keys(NULL) |
+    +----------------+
+    | NULL           |
+    +----------------+
+    ```

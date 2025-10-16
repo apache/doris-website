@@ -19,13 +19,23 @@ ACOS(<x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| `<x>` | The value for which the acos value is to be calculated |  
+| `<x>` | The value for which the arc cosine is to be calculated |  
 
 ## Return Value  
 
-The acos value of parameter `x`. 
+The arc cosine value of parameter `x`, expressed in radians.
 
-## Example
+## Special Cases
+
+- When `x` equals 1, returns 0
+- When `x` equals 0, returns π/2
+- When `x` equals -1, returns π
+- When `x` is not in the range [-1, 1], returns `NULL`
+- When `x` is NaN, returns NaN
+- When `x` is positive or negative infinity, returns `NULL`
+- When `x` is NULL, returns NULL
+
+## Examples
 
 ```sql
 select acos(1);
@@ -52,6 +62,18 @@ select acos(0);
 ```
 
 ```sql
+select acos(-1);
+```
+
+```text
++--------------------+
+| acos(-1.0)         |
++--------------------+
+| 3.141592653589793  |
++--------------------+
+```
+
+```sql
 select acos(-2);
 ```
 
@@ -59,6 +81,42 @@ select acos(-2);
 +------------+
 | acos(-2.0) |
 +------------+
-|        nan |
+|       NULL |
 +------------+
+```
+
+```sql
+select acos(1.0000001);
+```
+
+```text
++-----------------+
+| acos(1.0000001) |
++-----------------+
+|            NULL |
++-----------------+
+```
+
+```sql
+select acos(cast('nan' as double));
+```
+
+```text
++---------------------------+
+| acos(cast('nan' AS DOUBLE)) |
++---------------------------+
+| NaN                       |
++---------------------------+
+```
+
+```sql
+select acos(cast('inf' as double));
+```
+
+```text
++---------------------------+
+| acos(cast('inf' AS DOUBLE)) |
++---------------------------+
+| NULL                      |
++---------------------------+
 ```
