@@ -318,7 +318,7 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
     - `enable_restore_snapshot_rpc_compression`: 开启对 snapshot info 的压缩，主要影响 RPC（默认开启）
     > 注：由于识别 backup/restore job 是否压缩需要额外的代码，而 2.1.8 和 3.0.4 之前的代码中不包含相关代码，因此一旦有 backup/restore job 生成，那么就无法回退到更早的 doris 版本。有两种情况例外：已经 cancel 或者 finished 的 backup/restore job 不会被压缩，因此在回退前等待 backup/restore job 完成或者主动取消 job 后，就能安全回退。
 - Ccr 内部会使用 db/table 名作为一些内部 job 的 label，因此如果 ccr job 中碰到了 label 超过限制了，可以调整 FE 参数 `label_regex_length` 来放松该限制（默认值为 128）
-- 由于 backup 暂时不支持备份带有 cooldown tablet 的表，如果碰到了会导致同步终端，因此需要在创建 ccr job 前检查是否有 table 设置了 `storage_policy` 属性。
+- 由于 backup 暂时不支持备份带有 cooldown tablet 的表，如果碰到了会导致同步中断，因此需要在创建 ccr job 前检查是否有 table 设置了 `storage_policy` 属性。
 ### 性能相关参数
 - 如果用户的数据量非常大，备份、恢复执行完需要的时间可能会超过一天（默认值），那么需要按需调整下列参数
     - `backup_job_default_timeout_ms` 备份/恢复任务超时时间，源、目标集群的 FE 都需要配置
