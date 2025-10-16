@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Read Write Splitting",
+    "title": "Read Write Separation",
     "language": "en"
 }
 ---
