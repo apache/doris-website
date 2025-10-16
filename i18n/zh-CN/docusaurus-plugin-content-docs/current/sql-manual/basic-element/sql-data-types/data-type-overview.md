@@ -29,7 +29,7 @@
 
 **3. 浮点数类型：** 
 
-不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/DOUBLE.md) 文档。
+不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md) 文档。
 
 **4. 定点数类型：** 
 
@@ -54,6 +54,11 @@
 2. [VARCHAR(M)](./string-type/VARCHAR)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
 
 3. [STRING](./string-type/STRING)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
+
+
+## 二进制类型
+
+1. [VARBINARY](./binary-type/VARBINARY)：变长二进制字节序列，M 为最大长度（单位：字节）。与 VARCHAR 类似，但按字节序存储与比较，不涉及字符集或排序规则，适合存储任意二进制数据（如文件片段、加密数据、压缩数据等）。自 4.0 起支持，当前不支持建表和存储，可以结合Catalog 映射其他数据库的BINARY到DORIS中使用。
 
 ## 半结构化类型
 

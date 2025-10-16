@@ -59,7 +59,7 @@ Doris BE uses Memory Tracker to record process memory usage, supports Web page v
 
 Real-time memory statistics can be viewed through Doris BE's Web page `http://{be_host}:{be_web_server_port}/mem_tracker`, which displays the current memory size and peak memory size tracked by Memory Tracker of `type=overview`, including Query/Load/Compaction/Global, etc. `be_web_server_port` defaults to 8040.
 
-![image](https://github.com/apache/doris/assets/13197424/f989f4d2-4cc5-4a8e-880e-93ae6073d17d)
+![image](/images/memory-used-by-subsystem.png)
 
 Memory Tracker is divided into different types. Among the Memory Tracker of type=overview, except for `process resident memory`, `process virtual memory`, and `sum of all trackers`, the details of other Memory Trackers of type=overview can be viewed through `http://{be_host}:{be_web_server_port}/mem_tracker?type=Lable`.
 

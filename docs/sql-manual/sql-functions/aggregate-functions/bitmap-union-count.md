@@ -7,7 +7,7 @@
 
 ## Description
 
-Computes the union of input Bitmaps and returns their cardinality.
+Calculates the union of input Bitmaps and returns its cardinality.
 
 ## Syntax
 
@@ -15,41 +15,55 @@ Computes the union of input Bitmaps and returns their cardinality.
 BITMAP_UNION_COUNT(<expr>)
 ```
 
-## Parameters
+## Arguments
 
-| Parameter | Description |
+| Argument | Description |
 | -- | -- |
-| `<expr>` | Supported data types of BITMAP |
+| `<expr>` | Data type supporting Bitmap |
 
 ## Return Value
 
-Returns the size of the Bitmap union, that is, the number of elements after deduplication
+Returns the size of the Bitmap union, i.e., the number of distinct elements. If there is no valid data in the group, returns 0.
 
 ## Example
 
 ```sql
-select dt,page,bitmap_to_string(user_id) from pv_bitmap;
+-- setup
+CREATE TABLE pv_bitmap (
+    dt INT,
+    page INT,
+    user_id BITMAP
+) DISTRIBUTED BY HASH(dt) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+    (1, 100, to_bitmap(100)),
+    (1, 100, to_bitmap(200)),
+    (1, 100, to_bitmap(300)),
+    (2, 200, to_bitmap(300));
 ```
 
-```text
-+------+------+---------------------------+
-| dt   | page | bitmap_to_string(user_id) |
-+------+------+---------------------------+
-|    1 | 100  | 100,200,300               |
-|    2 | 200  | 300                       |
-+------+------+---------------------------+
-```
-
-Calculate the deduplication value of user_id:
-
-```
+```sql
 select bitmap_union_count(user_id) from pv_bitmap;
 ```
 
+Counts the number of distinct user_id values.
+
 ```text
-+-------------------------------------+
-| bitmap_count(bitmap_union(user_id)) |
-+-------------------------------------+
-|                                   3 |
-+-------------------------------------+
++-----------------------------+
+| bitmap_union_count(user_id) |
++-----------------------------+
+|                           3 |
++-----------------------------+
+```
+
+```sql
+select bitmap_union_count(user_id) from pv_bitmap where user_id is null;
+```
+
+```text
++-----------------------------+
+| bitmap_union_count(user_id) |
++-----------------------------+
+|                           0 |
++-----------------------------+
 ```

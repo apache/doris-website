@@ -18,7 +18,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe).
 
 **BE image configuration**  
 To specify the BE image version, use the following configuration:
@@ -27,7 +27,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be).
 
 ### Replicas configuration
 **FE replicas configuration**  
@@ -135,8 +135,6 @@ data:
     syg_level = INFO
     # NORMAL, BRIEF, ASYNC
     syg_mode = ASYNC
-    # sys_log_roll_num = 10
-    # sys_log_verbose_modules = org.apache.doris
     # audit_log_dir = $LOG_DIR
     # audit_log_modules = slow_query, query
     # audit_log_roll_num = 10
@@ -344,7 +342,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
 :::tip Tip  
-If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
+If you have reconfigured meta_dir or `LOG_DIR` in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
 ### Persistent storage for BE
@@ -830,7 +828,7 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.md#configuring-catalog) documentation.
+   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog) documentation.
 
 ## Configure Shared Storage
 As of version 25.4.0, the Doris Operator supports mounting shared storage with the ReadWriteMany access mode to all pods across multiple components. Before using this feature, ensure that the shared storage PersistentVolume and PersistentVolumeClaim resources have been created. Configure the DorisCluster resource as shown below before deploying the Doris cluster:

@@ -12,14 +12,14 @@
 ## 语法
 
 ```sql
-SHA2(<str>, <digest_length>)
+SHA2(<input>, <digest_length>)
 ```
 
 ## 参数
 
 | 参数      | 说明          |
 |---------|-------------|
-| `<str>` | 待加密的内容 |
+| `<input>` | 待加密的内容, 接受字符串和二进制类型 |
 | `<digest_length>` | 摘要长度，支持 224, 256, 384, 512，必须为常量 |
 
 ## 返回值
@@ -62,4 +62,31 @@ select sha2(k0, k1) from str;
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = the second parameter of sha2 must be a literal but got: k1
+```
+
+```sql
+-- vb (VarBinary) 和 vc (VarChar) 插入时使用了相同的字符串.
+SELECT * FROM mysql_catalog.binary_test.binary_test;
+```
+```text
++------+------------+------+
+| id   | vb         | vc   |
++------+------------+------+
+|    1 | 0x616263   | abc  |
+|    2 | 0x78797A   | xyz  |
+|    3 | NULL       | NULL |
++------+------------+------+
+```
+
+```sql
+SELECT SHA2(vb, 224), SHA2(vc, 224) FROM mysql_catalog.binary_test.binary_test;
+```
+```text
++----------------------------------------------------------+----------------------------------------------------------+
+| SHA2(vb, 224)                                            | SHA2(vc, 224)                                            |
++----------------------------------------------------------+----------------------------------------------------------+
+| 23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7 | 23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7 |
+| 30e90f1cd0ceff8eb3dd6a540a605c0666f841d35de63c57e4dd2877 | 30e90f1cd0ceff8eb3dd6a540a605c0666f841d35de63c57e4dd2877 |
+| NULL                                                     | NULL                                                     |
++----------------------------------------------------------+----------------------------------------------------------+
 ```

@@ -1,42 +1,55 @@
 ---
 {
     "title": "ARRAY_SLICE",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-Specify the starting position and length to extract a portion of elements from an array to form a new sub-array
+Return a subarray, supporting starting offset and length.
 
 ## Syntax
 
-```sql
-ARRAY_SLICE(<arr>, <off>, <len>)
-```
+- `ARRAY_SLICE(arr, offset)`
+- `ARRAY_SLICE(arr, offset, length)`
 
 ## Parameters
 
-| Parameter | Description |
-|--|--|
-| `<arr>` | Corresponding array |
-| `<off>` | Starting position. If off is a positive number, it indicates the offset from the left. If off is a negative number, it indicates the offset from the right. When the specified off is not within the actual range of the array, an empty array is returned. |
-| `<len>` | If len is a negative number, it means the length is 0.|
+- `arr`: `ARRAY<T>`.
+- `offset`: starting position. Positive values count from the head (`1` is the first element); negative values count from the tail (`-1` is the last element).
+- `length`: length to take. A positive value takes `length` elements; a negative value is treated as length 0.
 
-## Return Value
+## Return value
 
-Returns a subarray containing all elements of the specified length starting from the specified position. If the input parameter is NULL, it returns NULL.
+- Returns `ARRAY<T>` of the same type as the input.
 
-## Example
+## Usage notes
 
-```sql
-SELECT ARRAY_SLICE([1, 2, 3, 6],2,3),ARRAY_SLICE([1, 4, 3, 5, NULL],-2,1),ARRAY_SLICE([1, 3, 5],0);
-```
+- Out-of-bounds safe: the start and end are clipped to the array boundaries. If there is no overlap, an empty array is returned.
 
-```text
-+---------------------------------+----------------------------------------+---------------------------+
-| array_slice([1, 2, 3, 6], 2, 3) | array_slice([1, 4, 3, 5, NULL], -2, 1) | array_slice([1, 3, 5], 0) |
-+---------------------------------+----------------------------------------+---------------------------+
-| [2, 3, 6]                       | [5]                                    | []                        |
-+---------------------------------+----------------------------------------+---------------------------+
-```
+## Examples
+
+- Positive starting offset: from the offset to the right end
+  - `ARRAY_SLICE([1,2,3,4,5,6], 2)` -> `[2,3,4,5,6]`
+
+- Negative starting offset: from the offset to the right end
+  - `ARRAY_SLICE([1,2,3,4,5,6], -3)` -> `[4,5,6]`
+
+- Positive length: take to the right starting from offset
+  - `ARRAY_SLICE([1,2,3,4,5,6], 2, 3)` -> `[2,3,4]`
+  - `ARRAY_SLICE([1,2,3,4,5,6], -4, 2)` -> `[3,4]`
+
+- Negative length: treated as length 0
+  - `ARRAY_SLICE([1,2,3,4,5,6], 2, -2)` -> `[]`
+
+- Out-of-range arguments: return empty array
+  - `ARRAY_SLICE([1,2,3,4,5,6], 10, 3)` -> `[]`
+
+- Any `NULL` argument: return `NULL`
+  - `ARRAY_SLICE([1,2,3], NULL, 2)` -> `NULL`
+  - `ARRAY_SLICE([1,2,3], 2, NULL)` -> `NULL`
+  - `ARRAY_SLICE(NULL, 2, 3)` -> `NULL`
+
+
+

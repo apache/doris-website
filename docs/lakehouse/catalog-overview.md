@@ -184,7 +184,7 @@ CREATE CATALOG mysql_catalog properties(
 Then, perform a join query between Iceberg tables and MySQL tables using SQL:
 
 ```sql
-SELECT * FROM FROM
+SELECT * FROM
 iceberg_catalog.iceberg_db.table1 tbl1 JOIN mysql_catalog.mysql_db.dim_table tbl2
 ON tbl1.id = tbl2.id;
 ```

@@ -5,35 +5,43 @@
 }
 ---
 
-## 描述
+## Description
 
-用于返回一个字符串的 二进制表示 中 位数（即总的二进制位数）。它计算的是字符串的二进制编码所占的位数。
+Returns the length of a string or binary value in bits.
 
-## 语法
+## Syntax
 ```sql
 BIT_LENGTH( <str>)
 ```
 
-## 参数
-| 参数    | 说明         |
-|-------|------------|
-| `<str>` |  需计算的字符串 |
+## Parameters
+- `<str>` The string value for which the length is returned.
 
-## 返回值
+## Return Value
 
-返回 `<str>` 的二进制表示中所占用的位数，包括所有的 0 和 1。
+Returns the number of bits occupied by `<str>` in the binary representation, including all 0 and 1.
 
-## 举例
+## Examples
+1. 示例 1
+    ```sql
+    select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
+    ```
 
-```sql
-select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
-```
-
-```text
-+-------------------+----------------------+-----------------------------------------+
-| bit_length('abc') | bit_length('中国')   | bit_length(cast(123 as VARCHAR(65533))) |
-+-------------------+----------------------+-----------------------------------------+
-|                24 |                   48 |                                      24 |
-+-------------------+----------------------+-----------------------------------------+
-```
-
+    ```text
+    +-------------------+----------------------+-----------------+
+    | BIT_LENGTH("abc") | BIT_LENGTH("中国")   | BIT_LENGTH(123) |
+    +-------------------+----------------------+-----------------+
+    |                24 |                   48 |              24 |
+    +-------------------+----------------------+-----------------+
+    ```
+2. NULL 参数
+    ```sql
+    select BIT_LENGTH(NULL);
+    ```
+    ```text
+    +------------------+
+    | BIT_LENGTH(NULL) |
+    +------------------+
+    |             NULL |
+    +------------------+
+    ```

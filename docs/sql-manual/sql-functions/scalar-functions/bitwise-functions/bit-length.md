@@ -5,35 +5,43 @@
 }
 ---
 
-## Description
+## 描述
 
-It is used to return the median of the binary representation of a string (that is, the total number of binary digits). It calculates the number of bits occupied by the binary encoding of the string.
+返回字符串或二进制值的位长度（实际长度就是字节数 * 8。）。
 
-## Syntax
+## 语法
 ```sql
-BIT_LENGTH( <str>)
+BIT_LENGTH(<str>)
 ```
 
-## Parameters
-| parameter | description |
-|-----------|-------------|
-| `<str>`   | The string to be calculated     |
+## 参数
+- `<str>` 要返回长度的字符串值。
 
-## Return Value
+## 返回值
 
-Returns the number of bits occupied by `<str>` in the binary representation, including all 0 and 1.
+返回 `<str>` 在二进制表示中所占的位数，包括所有 0 和 1。
 
-## Examples
+## 示例
+1. Example 1
+    ```sql
+    select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
+    ```
 
-```sql
-select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);
-```
-
-```text
-+-------------------+----------------------+-----------------------------------------+
-| bit_length('abc') | bit_length('中国')   | bit_length(cast(123 as VARCHAR(65533))) |
-+-------------------+----------------------+-----------------------------------------+
-|                24 |                   48 |                                      24 |
-+-------------------+----------------------+-----------------------------------------+
-```
-
+    ```text
+    +-------------------+----------------------+-----------------+
+    | BIT_LENGTH("abc") | BIT_LENGTH("中国")   | BIT_LENGTH(123) |
+    +-------------------+----------------------+-----------------+
+    |                24 |                   48 |              24 |
+    +-------------------+----------------------+-----------------+
+    ```
+2. NULL argument
+    ```sql
+    select BIT_LENGTH(NULL);
+    ```
+    ```text
+    +------------------+
+    | BIT_LENGTH(NULL) |
+    +------------------+
+    |             NULL |
+    +------------------+
+    ```

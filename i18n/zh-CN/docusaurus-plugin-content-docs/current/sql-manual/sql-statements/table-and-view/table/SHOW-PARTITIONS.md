@@ -43,8 +43,9 @@ SHOW [ TEMPORARY ] PARTITIONS
 过滤条件，支持 `PartitionId`,`PartitionName`,`State`,`Buckets`,`ReplicationNum`,`LastConsistencyCheckTime` 等列的过滤。
 
 需要注意的是：
-1. 目前 `where`子句只支持 `=` 操作符，不支持 `>`、`<`、`>=`、`<=` 等操作符。
-2. `where`子句使用 `=` 操作符时，列名需要在左侧。
+1. 目前 `where`子句等操作符。对字符型的 `PartitionName`, `State` 只支持`=`、`!=`、`like` 操作符。对其余的只支持 `=`、`!=`、`>`、`<`、`>=`、`<=` 操作符。
+2. `where`子句使用上面的操作符时，列名需要在左侧。
+3. `where`子句可以包含`AND`。
 
 
 **4. `<order_by_key>`**

@@ -18,17 +18,18 @@ TOPN(<expr>, <top_num> [, <space_expand_rate>])
 ## Parameters
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The column or expression to be counted. |
-| `<top_num>` | The number of the most frequent values to return. It must be a positive integer. |
-| `<space_expand_rate>` | Optional parameter, which is used to set the number of counters used in the Space-Saving algorithm. `counter_numbers = top_num * space_expand_rate` , the larger the value of space_expand_rate, the more accurate the result, and the default value is 50. |
+| `<expr>` | The column or expression to be counted. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String. |
+| `<top_num>` | The number of most frequent values to return. Must be a positive integer. Supported type: Integer. |
+| `<space_expand_rate>` | Optional. Sets the number of counters used in the Space-Saving algorithm: `counter_numbers = top_num * space_expand_rate`. The larger the value, the more accurate the result. Default is 50. Supported type: Integer. |
 
 ## Return Value
 
-Returns a JSON string containing values and their corresponding occurrence counts.
+Returns a JSON string containing the values and their counts.
+If there is no valid data in the group, returns NULL.
 
-## Examples
+## Example
 ```sql
--- Create sample table
+-- setup
 CREATE TABLE page_visits (
     page_id INT,
     user_id INT,
@@ -37,8 +38,6 @@ CREATE TABLE page_visits (
 PROPERTIES (
     "replication_num" = "1"
 );
-
--- Insert test data
 INSERT INTO page_visits VALUES
 (1, 101, '2024-01-01'),
 (2, 102, '2024-01-01'),
@@ -48,11 +47,14 @@ INSERT INTO page_visits VALUES
 (2, 105, '2024-01-01'),
 (1, 106, '2024-01-01'),
 (4, 107, '2024-01-01');
+```
 
--- Find top 3 most visited pages
+```sql
 SELECT TOPN(page_id, 3) as top_pages
 FROM page_visits;
 ```
+
+Find the top 3 most visited pages.
 
 ```text
 +---------------------+
@@ -60,4 +62,17 @@ FROM page_visits;
 +---------------------+
 | {"1":4,"2":2,"4":1} |
 +---------------------+
+```
+
+```sql
+SELECT TOPN(page_id, 3) as top_pages
+FROM page_visits where page_id is null;
+```
+
+```text
++-----------+
+| top_pages |
++-----------+
+| NULL      |
++-----------+
 ```

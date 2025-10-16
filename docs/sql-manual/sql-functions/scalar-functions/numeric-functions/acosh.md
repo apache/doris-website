@@ -19,19 +19,28 @@ ACOSH(<x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| `<x>` | The value for which the hyperbolic arc cosine value is to be calculated |  
+| `<x>` | The value for which the hyperbolic arc cosine is to be calculated |  
 
 ## Return Value  
 
-The acosh value of parameter `x`. 
+The hyperbolic arc cosine value of parameter `x`.
 
-## Example
+## Special Cases
+
+- When `x` equals 1, returns 0
+- When `x` is less than 1, returns `NULL`
+- When `x` is NaN, returns NaN
+- When `x` is positive infinity, returns Infinity
+- When `x` is negative infinity, returns `NULL`
+- When `x` is NULL, returns NULL
+
+## Examples
 
 ```sql
 select acosh(0.0);
 ```
 
-```sql
+```text
 +------------+
 | acosh(0.0) |
 +------------+
@@ -43,7 +52,7 @@ select acosh(0.0);
 select acosh(-1.0);
 ```
 
-```sql
+```text
 +-------------+
 | acosh(-1.0) |
 +-------------+
@@ -55,7 +64,7 @@ select acosh(-1.0);
 select acosh(1.0);
 ```
 
-```sql
+```text
 +------------+
 | acosh(1.0) |
 +------------+
@@ -64,10 +73,46 @@ select acosh(1.0);
 ```
 
 ```sql
-select acosh(10.0);
+select acosh(1.0000001);
+```
+
+```text
++-------------------------+
+| acosh(1.0000001)        |
++-------------------------+
+| 0.0004472135918947727   |
++-------------------------+
 ```
 
 ```sql
+select acosh(cast('nan' as double));
+```
+
+```text
++----------------------------+
+| acosh(cast('nan' AS DOUBLE)) |
++----------------------------+
+| NaN                        |
++----------------------------+
+```
+
+```sql
+select acosh(cast('inf' as double));
+```
+
+```text
++----------------------------+
+| acosh(cast('inf' AS DOUBLE)) |
++----------------------------+
+| Infinity                   |
++----------------------------+
+```
+
+```sql
+select acosh(10.0);
+```
+
+```text
 +-------------------+
 | acosh(10.0)       |
 +-------------------+

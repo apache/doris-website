@@ -82,7 +82,7 @@ curl --location-trusted -u root:"" \
 | A large number of small transactions are generated during import, causing compaction to fail and resulting in continuous -235 errors. | Doris consumes data too quickly, or Kafka data flow is in small batches. | Shared-nothing and shared-storage | Pause the Routine Load job and execute the following command: `ALTER ROUTINE LOAD FOR jobname FROM kafka ("property.enable.partition.eof" = "false");` | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#45528](https://github.com/apache/doris/pull/45528), [#44949](https://github.com/apache/doris/pull/44949), [#39975](https://github.com/apache/doris/pull/39975) |
 | Kafka third-party library destructor hangs, causing data consumption to fail. | Kafka topic deletion (possibly other conditions). | Shared-nothing and shared-storage | Restart all BE nodes. | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#44913](https://github.com/apache/doris/pull/44913) |
 | Routine Load scheduling hangs. | Timeout occurs when FE aborts a transaction in Meta Service. | Shared-storage | Restart the FE node. | <3.0.2 | 3.0.2 | [#41267](https://github.com/apache/doris/pull/41267) |
-| Routine Load restart issue. | Restarting BE nodes. | Shared-nothing and shared-storage | Manually resume the job. | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#3727](https://github.com/selectdb/selectdb-core/pull/3727) |
+| Routine Load restart issue. | Restarting BE nodes. | Shared-nothing and shared-storage | Manually resume the job. | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#3727](https://github.com/apache/doris/pull/40728) |
 
 ### Default Configuration Optimizations
 

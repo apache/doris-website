@@ -132,7 +132,7 @@ Top-N queries are to find the N logs that fit into the specified conditions. It 
 
 ### Visualized operation & maintenance
 
-For more efficient cluster maintenance, VeloDB, a commercial supporter of Apache Doris , has contributed a visualized cluster management tool called [Doris Manager](https://github.com/apache/doris-manager) to the Apache Doris project. Everyday management and maintenance operations can be done via the Doris Manager, including cluster monitoring, inspection, configuration modification, scaling, and upgrading. The visualized tool can save a lot of manual efforts and avoid the risks of maloperations on Doris.
+For more efficient cluster maintenance, VeloDB, a commercial company with products based on Apache Doris , has contributed a visualized cluster management tool called [Doris Manager](https://github.com/apache/doris-manager) to the Apache Doris project. Everyday management and maintenance operations can be done via the Doris Manager, including cluster monitoring, inspection, configuration modification, scaling, and upgrading. The visualized tool can save a lot of manual efforts and avoid the risks of maloperations on Doris.
 
 ![doris-manager-for-visualized-operation-and-maintenance](/images/doris-manager-for-visualized-operation-and-maintenance.png)
 

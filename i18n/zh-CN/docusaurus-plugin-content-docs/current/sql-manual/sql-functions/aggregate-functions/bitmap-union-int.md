@@ -7,7 +7,7 @@
 
 ## 描述
 
-计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和 COUNT(DISTINCT expr) 相同
+计算输入的表达式中不同值的个数，返回值和 COUNT(DISTINCT expr) 相同。
 
 ## 语法
 
@@ -19,29 +19,32 @@ BITMAP_UNION_INT(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 支持 TINYINT，SMALLINT 和 INT 类型的列或列表达式 |
+| `<expr>` | 输入的表达式，支持类型为 TinyInt，SmallInt，Integer。 |
 
 ## 返回值
 
-返回列中不同值的个数
+返回列中不同值的个数。
+组内没有合法数据时，返回 0 。
 
 ## 举例
 
 ```sql
-select dt,page,bitmap_to_string(user_id) from pv_bitmap;
+-- setup
+CREATE TABLE pv_bitmap (
+    dt INT,
+    page INT,
+    user_id BITMAP
+) DISTRIBUTED BY HASH(dt) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+    (1, 100, to_bitmap(100)),
+    (1, 100, to_bitmap(200)),
+    (1, 100, to_bitmap(300)),
+    (1, 300, to_bitmap(300)),
+    (2, 200, to_bitmap(300));
 ```
 
-```text
-+------+------+---------------------------+
-| dt   | page | bitmap_to_string(user_id) |
-+------+------+---------------------------+
-|    1 | 100  | 100,200,300               |
-|    1 | 300  | 300                       |
-|    2 | 200  | 300                       |
-+------+------+---------------------------+
-```
-
-```
+```sql
 select bitmap_union_int(dt) from pv_bitmap;
 ```
 
@@ -50,5 +53,17 @@ select bitmap_union_int(dt) from pv_bitmap;
 | bitmap_union_int(dt) |
 +----------------------+
 |                    2 |
++----------------------+
+```
+
+```sql
+select bitmap_union_int(dt) from pv_bitmap where dt is null;
+```
+
+```text
++----------------------+
+| bitmap_union_int(dt) |
++----------------------+
+|                    0 |
 +----------------------+
 ```

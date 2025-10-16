@@ -12,44 +12,56 @@
 如果没有参数，则是将当前的时间转化为时间戳。
 
 参数需要是 Date 或者 Datetime 类型。
+Format 的格式请参阅 date_format 函数的格式说明。
 
-Format 的格式请参阅 `date_format` 函数的格式说明。
+该函数受时区影响，时区部分请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
 
-该函数受时区影响。
+该函数与 mysql 中的 [unix_timestamp 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_unix-timestamp) 行为一致。
+
 
 ## 语法
 
 ```sql
-UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
+
+UNIX_TIMESTAMP()
+UNIX_TIMESTAMP(<date_or_time_expr>)
+UNIX_TIMESTAMP(<date_or_time_expr>[, fmt])
 
 ```
 
 ## 参数
 
-| 参数 | 描述 |
-| -- | -- | 
-| `<date>` | 待转换的日期时间值，类型为 `datetime` 或 `date` 类型，可转换范围为 '1970-01-01 00:00:01.000000 UTC' 至 '3001-01-19 03:14:07.999999 UTC'。|
-| `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 `string`。若提供该参数，则仅将与格式匹配的部分转换为时间戳。 |
+| 参数                         | 描述                          |
+|----------------------------|-----------------------------|
+| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 string。若提供该参数，则仅将与格式匹配的部分转换为时间戳。|
+
 
 ## 返回值
 根据输入返回两种类型
 
-1.若是输入的 `date` (只有 datetime 类型才可以有 scale 不为零) scale 不为 0 或者带有 `format` 参数
+1. 若是输入的 date_or_time_expr 为 datetime 类型且 scale 不为零或者带有 format 参数
 返回一个时间戳，类型为 Decimal，最高六位小数精度
 
-2.若是输入的 `date` scale 为 0 并且不带有 `format` 参数
+2. 若是输入的 date_or_time_expr 或 scale 为 0 并且不带有 format 参数
 返回一个时间戳，类型为 INT
 
-对于在 1970-01-01 00:00:01.000000 UTC 之前或 3001-01-19 03:14:07.999999 UTC 之后的时间，该函数将返回 0。
+将输入时间转换为当前输入时间所对应的时间戳，起始时间为 1970-01-01 00:00:00.
 
-任意参数为 null 则返回 null
+- 任意参数为 null 则返回 null
+- 无效格式，返回错误
 
 ## 举例
 
 ```sql
-
----以下都是在 UTC 时区返回的结果
-set time_zone= 'UTC';
+---输入时间为起始日期时间，返回 0
+mysql> select unix_timestamp('1970-01-01 00:00:00');
++------------------------------+
+| unix_timestamp('1970-01-01') |
++------------------------------+
+|                            0 |
++------------------------------+
+1 row in set (0.03 sec)
 
 ---显示当前时间的时间戳
 mysql> select unix_timestamp();
@@ -75,7 +87,6 @@ mysql> select unix_timestamp('2007-11-30 10:30-19', '%Y-%m-%d %H:%i-%s');
 |                                          1196389819.000000 |
 +------------------------------------------------------------+
 
-
 ---只匹配年日月显示时间戳
 mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d');
 +-----------------------------------------------------+
@@ -83,7 +94,6 @@ mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d');
 +-----------------------------------------------------+
 |                                   1196352000.000000 |
 +-----------------------------------------------------+
-
 
 ---带有其他字符匹配
 mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d %H:%i%%3A%s');
@@ -93,16 +103,6 @@ mysql> select unix_timestamp('2007-11-30 10:30%3A19', '%Y-%m-%d %H:%i%%3A%s');
 |                                               1196389819.000000 |
 +-----------------------------------------------------------------+
 
-
----超出最小范围内的时间返回 0
-mysql> SELECT UNIX_TIMESTAMP('1970-01-01 00:00:00');
-+---------------------------------------+
-| UNIX_TIMESTAMP('1970-01-01 00:00:00') |
-+---------------------------------------+
-|                                     0 |
-+---------------------------------------+
-
-
 ---输入时间并且 scale 不为 0
 mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.123');
 +-------------------------------------------+
@@ -111,15 +111,13 @@ mysql> SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19.123');
 |                            1447381219.123 |
 +-------------------------------------------+
 
----超过允许时间的最大范围
-
-mysql> SELECT UNIX_TIMESTAMP('3001-01-19 03:14:07.999999');
-+----------------------------------------------+
-| UNIX_TIMESTAMP('3001-01-19 03:14:07.999999') |
-+----------------------------------------------+
-|                                     0.000000 |
-+----------------------------------------------+
-
+---在1970-01-01 之前的日期时间，返回 0
+select unix_timestamp('1007-11-30 10:30:19')
++---------------------------------------+
+| unix_timestamp('1007-11-30 10:30:19') |
++---------------------------------------+
+|                                     0 |
++---------------------------------------+
 
 ---任意参数为 null 则返回 Null
 mysql> select unix_timestamp(NULL);
@@ -136,8 +134,8 @@ mysql> select unix_timestamp('2038-01-19 11:14:08',null);
 |                                       NULL |
 +--------------------------------------------+
 
+--无效格式，返回错误
+mysql> select unix_timestamp('2007-11-30 10:30-19', 's');
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation unix_timestamp of 2007-11-30 10:30-19, s is invalid
 ```
 
-### keywords
-
-    UNIX_TIMESTAMP,UNIX,TIMESTAMP
