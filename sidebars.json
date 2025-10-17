@@ -1241,6 +1241,7 @@
                                     "type": "category",
                                     "label": "String Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/overview",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ascii",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
