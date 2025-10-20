@@ -97,6 +97,9 @@ Syntax explanation:
   <p>- `english`: English tokenization, suitable for columns with English text, uses spaces and punctuation for tokenization, high performance</p>
   <p>- `chinese`: Chinese tokenization, suitable for columns with mainly Chinese text, lower performance than English tokenization</p>
   <p>- `unicode`: Unicode tokenization, suitable for mixed Chinese and English, and mixed multilingual texts. It can tokenize email prefixes and suffixes, IP addresses, and mixed character and number strings, and can tokenize Chinese by characters.</p>
+  <p>- `icu` (Supported since 3.1.0): ICU (International Components for Unicode) tokenization, based on the ICU library. Ideal for internationalized text with complex writing systems and multilingual documents. Supports languages like Arabic, Thai, and other Unicode-based scripts.</p>
+  <p>- `basic` (Supported since 3.1.0): Basic rule-based tokenization using simple character type recognition. Suitable for scenarios with extremely high performance requirements or simple text processing needs. Rules: continuous alphanumeric characters are treated as one token, each Chinese character is a separate token, and punctuation/spaces/special characters are ignored. This tokenizer provides the best performance among all tokenizers but with simpler tokenization logic compared to unicode or icu.</p>
+  <p>- `ik` (Supported since 3.1.0): IK Chinese tokenization, specifically designed for Chinese text analysis.</p>
 
   Tokenization results can be verified using the `TOKENIZE` SQL function, see the following sections for details.
 </details>
@@ -168,7 +171,43 @@ Syntax explanation:
   <p>- none: Use an empty stopword list</p>
 </details>
 
+<details>
+  <summary>dict_compression (Supported since 3.1.0)</summary>
+
+  **Specifies whether to enable ZSTD dictionary compression for the inverted index term dictionary**
+  <p>- true: Enable dictionary compression, which can reduce index storage size by up to 20%, especially effective for large-scale text data and log analysis scenarios</p>
+  <p>- false: Disable dictionary compression (default)</p>
+  <p>- Recommendation: Enable for scenarios with large text datasets, log analytics, or when storage cost is a concern. Works best with inverted_index_storage_format = "V3"</p>
+
+  For example:
+```sql
+   INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "english", "dict_compression" = "true")
+```
+</details>
+
 **4. `COMMENT` is optional for specifying index comments**
+
+**5. Table-level property `inverted_index_storage_format` (Supported since 3.1.0)**
+
+  To use the new V3 storage format for inverted indexes, specify this property when creating the table:
+
+```sql
+CREATE TABLE table_name (
+    column_name TEXT,
+    INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "english", "dict_compression" = "true")
+) PROPERTIES (
+    "inverted_index_storage_format" = "V3"
+);
+```
+
+  **inverted_index_storage_format values:**
+  <p>- "V2": Default storage format</p>
+  <p>- "V3": New storage format with optimized compression. Compared to V2, V3 provides:</p>
+  <p>  - Smaller index files, reducing disk usage and I/O overhead</p>
+  <p>  - Up to 20% storage space savings for large-scale text data and log analysis scenarios</p>
+  <p>  - ZSTD dictionary compression for term dictionaries (when dict_compression is enabled)</p>
+  <p>  - Compression for positional information associated with each term</p>
+  <p>- Recommendation: Use V3 for new tables with large text datasets, log analytics workloads, or when storage optimization is important</p>
 
 ### Adding Inverted Indexes to Existing Tables
 
@@ -339,6 +378,8 @@ To check the actual effect of tokenization or to tokenize a piece of text, you c
 
 The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
 
+```sql
+-- English tokenization
 SELECT TOKENIZE('I love Doris','"parser"="english"');
 +------------------------------------------------+
 | tokenize('I love Doris', '"parser"="english"') |
@@ -346,6 +387,49 @@ SELECT TOKENIZE('I love Doris','"parser"="english"');
 | ["i", "love", "doris"]                         |
 +------------------------------------------------+
 
+-- ICU tokenization for multilingual text (Supported since 3.1.0)
+SELECT TOKENIZE('مرحبا بالعالم Hello 世界', '"parser"="icu"');
++--------------------------------------------------------+
+| tokenize('مرحبا بالعالم Hello 世界', '"parser"="icu"') |
++--------------------------------------------------------+
+| ["مرحبا", "بالعالم", "Hello", "世界"]                   |
++--------------------------------------------------------+
+
+SELECT TOKENIZE('มนไมเปนไปตามความตองการ', '"parser"="icu"');
++-------------------------------------------------------------------+
+| tokenize('มนไมเปนไปตามความตองการ', '"parser"="icu"')            |
++-------------------------------------------------------------------+
+| ["มน", "ไมเปน", "ไป", "ตาม", "ความ", "ตองการ"]                  |
++-------------------------------------------------------------------+
+
+-- Basic tokenization for high performance (Supported since 3.1.0)
+SELECT TOKENIZE('Hello World! This is a test.', '"parser"="basic"');
++-----------------------------------------------------------+
+| tokenize('Hello World! This is a test.', '"parser"="basic"') |
++-----------------------------------------------------------+
+| ["hello", "world", "this", "is", "a", "test"]              |
++-----------------------------------------------------------+
+
+SELECT TOKENIZE('你好世界', '"parser"="basic"');
++-------------------------------------------+
+| tokenize('你好世界', '"parser"="basic"')   |
++-------------------------------------------+
+| ["你", "好", "世", "界"]                    |
++-------------------------------------------+
+
+SELECT TOKENIZE('Hello你好World世界', '"parser"="basic"');
++------------------------------------------------------+
+| tokenize('Hello你好World世界', '"parser"="basic"')    |
++------------------------------------------------------+
+| ["hello", "你", "好", "world", "世", "界"]             |
++------------------------------------------------------+
+
+SELECT TOKENIZE('GET /images/hm_bg.jpg HTTP/1.0', '"parser"="basic"');
++---------------------------------------------------------------------+
+| tokenize('GET /images/hm_bg.jpg HTTP/1.0', '"parser"="basic"')      |
++---------------------------------------------------------------------+
+| ["get", "images", "hm", "bg", "jpg", "http", "1", "0"]              |
++---------------------------------------------------------------------+
 ```
 
 ## Usage Example
