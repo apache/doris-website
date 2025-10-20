@@ -532,8 +532,14 @@
                                 "compute-storage-decoupled/file-cache/file-cache-internals"
                             ]
                         },
-                        "compute-storage-decoupled/read-write-splitting",
-                        "compute-storage-decoupled/file-cache-rw-compute-group-best-practice",
+                        {
+                            "type": "category",
+                            "label": "Read-Write Separation",
+                            "items": [
+                                "compute-storage-decoupled/rw/read-write-separation",
+                                "compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice"
+                            ]
+                        },
                         "compute-storage-decoupled/recycler",
                         "compute-storage-decoupled/upgrade"
                     ]
@@ -1241,6 +1247,7 @@
                                     "type": "category",
                                     "label": "String Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/overview",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ascii",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
@@ -1255,6 +1262,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/domain",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ends-with",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/export-set",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/elt",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/extract-url-parameter",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/from-base64",
@@ -1356,6 +1364,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/get-format",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor",

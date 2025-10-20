@@ -374,18 +374,18 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - VARIANT itself cannot be used directly in ORDER BY, GROUP BY, as a JOIN KEY, or as an aggregate argument; CAST subpaths instead.
 - Strings can be implicitly converted to VARIANT.
 
-| VARIANT         | Castable | Coercible | Conversion Function |
-| --------------- | -------- | --------- | ------------------- |
-| `ARRAY`         | ✔        | ❌        |                     |
-| `BOOLEAN`       | ✔        | ✔         |                     |
-| `DATE/DATETIME` | ✔        | ✔         |                     |
-| `FLOAT`         | ✔        | ✔         |                     |
-| `IPV4/IPV6`     | ✔        | ✔         |                     |
-| `DECIMAL`       | ✔        | ✔         |                     |
-| `MAP`           | ❌        | ❌         |                     |
-| `TIMESTAMP`     | ✔        | ✔         |                     |
-| `VARCHAR`       | ✔        | ✔         | `PARSE_TO_JSON`     |
-| `JSON`          | ✔        | ✔         |                     |
+| VARIANT         | Castable | Coercible |
+| --------------- | -------- | --------- |
+| `ARRAY`         | ✔        | ❌        |
+| `BOOLEAN`       | ✔        | ✔         |
+| `DATE/DATETIME` | ✔        | ✔         |
+| `FLOAT`         | ✔        | ✔         |
+| `IPV4/IPV6`     | ✔        | ✔         |
+| `DECIMAL`       | ✔        | ✔         |
+| `MAP`           | ❌        | ❌        |
+| `TIMESTAMP`     | ✔        | ✔         |
+| `VARCHAR`       | ✔        | ✔         |
+| `JSON`          | ✔        | ✔         |
 
 ## Limitations
 
@@ -462,6 +462,10 @@ Approach 2: extended `DESC` to show materialized subpaths (only those extracted)
 ```sql
 SET describe_extend_variant_column = true;
 DESC variant_tbl;
+```
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
 Use both: Approach 1 is precise; Approach 2 is efficient.
