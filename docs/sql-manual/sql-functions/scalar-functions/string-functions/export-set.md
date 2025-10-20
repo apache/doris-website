@@ -23,11 +23,11 @@ EXPORT_SET(bits, on, off[, separator[, number_of_bits]])
 
 | Parameter         | Description |
 |-------------------|-------------|
-| `bits`            | The integer type used for conversion, supporting LargeInt type, with an effective range of [-2^63, 2^64 - 1]. If less than -2^63, treat it as -2^63. If greater than 2^64 - 1, treat it as 2^63 - 1. |
+| `bits`            | The integer type(LARGEINT) used for conversion. If the value is less than -2^63, treat it as -2^63. If it is greater than 2^64 - 1, treat it as 2^63 - 1. |
 | `on`              | The string displayed when the bit is 1 |
 | `off`             | The string displayed when the bit is 0 |
 | `separator`       | Optional, the string used to separate the bits, default is ',' |
-| `number_of_bits`  | Optional, the number of bits to display in the result, supports integer type with parameter range [-2^31, 2^31] (same as INT range). The default value is 64, and it will be automatically handled with the default value if it exceeds the range [0, 64]. |
+| `number_of_bits`  | Optional, the number of bits to display in the result, supports integer type(INT). The default value is 64, and it will be automatically handled with the default value if it exceeds the range [0, 64]. |
 
 ## Return value
 
