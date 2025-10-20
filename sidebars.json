@@ -1364,6 +1364,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/get-format",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor",
