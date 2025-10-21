@@ -508,23 +508,23 @@ PROPERTIES
 );
 ```
 
-### AWS EKS集群中Iam Role认证鉴权
+### AWS EKS集群中IAM Role认证鉴权
 
 对于在 Amazon EKS 集群中运行的应用（例如 Apache Doris），要授予其 AWS Identity and Access Management（IAM）权限，Amazon EKS 提供了以下两种主要方式：
 
 **1. 服务账户的 IAM 角色 （IRSA）**
 
-**2. EKS 容器组身份 (Pod Identify)**
+**2. EKS 容器组身份 (Pod Identity)**
 
 这两种方式均需在 EKS 集群中正确配置IAM Role和对应的信任策略、IAM策略, 具体配置方法请参阅AWS官方文档：
 
 [Granting AWS Identity and Access Management permissions to workloads on Amazon Elastic Kubernetes Service clusters](https://docs.aws.amazon.com/eks/latest/userguide/service-accounts.html#service-accounts-iam)
 
-Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭证
+Doris FE/BE自动通过`AWSCredentialsProviderChain`获取凭证
 
 ### Bucket Policy 认证鉴权
 
-对于IAM Role部署的Doris机器，导入、导出、TVF的场景也支持使用 Amazon S3 存储桶策略来保护对AWS S3存储桶中的对象进行访问，这样，
+对于IAM Role部署的Doris机器，导入、导出、TVF的场景也支持使用 Amazon S3 存储桶策略来保护对AWS S3存储桶中的对象进行访问，
 这样可以限制只有EC2机器所属用户才能访问对象存储桶，具体步骤如下：
 
 1、设置目标存储桶的Bucket Policy
@@ -568,7 +568,6 @@ Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭�
 }
 ```
 
-配置好Bucket Policy 之后Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭证,
 请将`arn:aws:iam::111122223333:root` 替换为ec2机器所绑定的账户或者Role的ARN
 
 2、使用对应功能的SQL语法进行数据访问，不需要ak/sk，arn等信息
@@ -582,7 +581,7 @@ Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭�
   )
 ```
 
-Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭证
+Doris FE/BE自动通过`AWSCredentialsProviderChain`获取凭证
 
 参考文档：[Bucket Policy](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/example-bucket-policies.html)
 
@@ -590,7 +589,7 @@ Doris FE/BE支持以`AWSCredentialsProviderChain`的方式自动探测获取凭�
 | 鉴权方式                                       | 适用场景                                   | 优 点 | 缺 点 |
 | :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
 | AK/SK 鉴权方式 | 私有化部署安全性可控或非AWS S3的对象存储的导入/导出/StorageVault场景 | 配置简单，支持兼容AWS S3的对象存储 | 存在密钥泄漏风险，需要手动进行密钥轮换     |
-| IAM ROLE 鉴权方式 | AWS S3公有云安全性要求较高的导入/导出/StorageVault场景 | 安全性高,自动轮换AWS凭证, 权限配置集中| 配置Bucket Policy/Trust流程复杂 |
+| IAM Role 鉴权方式 | AWS S3公有云安全性要求较高的导入/导出/StorageVault场景 | 安全性高,自动轮换AWS凭证, 权限配置集中| 配置Bucket Policy/Trust流程复杂 |
 | Bucket Policy 鉴权方式 | AWS S3公有云，bucket数量较少的导入/导出/StorageVault场景 | 配置流程复杂度适中，遵循最小权限原则，自动探测AWS凭证 | 权限配置分散在各个bucket policy中     |
 
 ### FAQ

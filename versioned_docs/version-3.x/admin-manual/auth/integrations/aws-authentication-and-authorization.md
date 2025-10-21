@@ -27,7 +27,7 @@ Doris enables access to external data sources by configuring `AWS IAM User` cred
 
 ![](/images/integrations/iam_user_attach_policy2.png)
 
-S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+S3 read policy template​,applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
 
 **Notes:&#x20;**
 
@@ -249,7 +249,7 @@ After attaching `ec2_role` to `EC2 instances`, you can find the `role_arn` as sh
 
 ### Step2 Configure Permissions for Source Account IAM Role (EC2 Instance Role)
 
-1. Log in to the [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home)，navigate to ​​`Access management` > `Roles`；
+1. Log in to the [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home),navigate to ​​`Access management` > `Roles`；
 2. Find the EC2 instance role and click its name;
 3. On the role details page, go to the ​​`Permissions`​​ tab, click ​​`Add permissions`​​, then select `​​Create inline policy`​​;
 4. In the ​​`Specify permissions​​ section`, switch to the `​​JSON`​​ tab, paste the following policy, and click ​​`Review policy`​​:
@@ -303,7 +303,7 @@ After attaching `ec2_role` to `EC2 instances`, you can find the `role_arn` as sh
 
 ![](/images/integrations/target_role_permission2.png)
 
-S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+S3 read policy template​,applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
 
 **Notes:&#x20;**
 
@@ -501,7 +501,7 @@ Both methods require correct configuration of the IAM Role, corresponding trust 
 
 [Granting AWS Identity and Access Management permissions to workloads on Amazon Elastic Kubernetes Service clusters](https://docs.aws.amazon.com/eks/latest/userguide/service-accounts.html#service-accounts-iam)
 
-Doris FE/BE supports automatically detecting and obtaining credentials via the `WSCredentialsProviderChain` method.
+Doris FE/BE supports automatically detecting and obtaining credentials via the `AWSCredentialsProviderChain` method.
 
 ### Bucket Policy Authentication and Authorization
 
@@ -548,9 +548,9 @@ For Doris machines deployed using IAM Roles, import, export, and TVF scenarios a
 }
 ```
 
-After configuring the Bucket Policy, Doris FE/BE supports automatically detecting and obtaining credentials via the AWSCredentialsProviderChainmethod. Please replace arn:aws:iam::111122223333:rootwith the ARN of the account or Role bound to the EC2 machine.
+Please replace `arn:aws:iam::111122223333:root` with the ARN of the account or Role bound to the EC2 machine.
 
-2、Use the corresponding SQL syntax for data access. No AK/SK, ARN, or other information is required.
+2、Use the corresponding SQL syntax for data access. Authentication credentials are automatically detected, no manual AK/SK or ARN configuration required.
 
 ```sql
   SELECT * FROM S3 (
@@ -569,7 +569,7 @@ Reference documentation: [Bucket Policy](https://docs.aws.amazon.com/zh_cn/Amazo
 | Authentication Method                                       | Applicable Scenarios                                   | Advantages | Disadvantages |
 | :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
 | AK/SK Authentication | Import/Export/StorageVault scenarios with privately deployed, security-controlled storage or non-AWS S3 object storage. | Simple configuration, supports object storage compatible with AWS S3. | Risk of secret key leakage; manual key rotation required.     |
-| IAM ROLE Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with high-security requirements. | High security, automatic AWS credential rotation, centralized permission configuration. | Complex Bucket Policy/Trust configuration process. |
+| IAM Role Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with high-security requirements. | High security, automatic AWS credential rotation, centralized permission configuration. | Complex Bucket Policy/Trust configuration process. |
 | Bucket Policy Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with a small number of buckets | Moderate configuration complexity, adheres to the principle of least privilege, automatically detects AWS credentials. | Permission configuration is scattered across various bucket policies.     |
 
 ### FAQ
