@@ -61,7 +61,7 @@ PROPERTIES (
 1. AUTO RANGE PARTITION:
 
     ```sql
-      AUTO PARTITION BY RANGE(<partition_expr>)
+      [AUTO] PARTITION BY RANGE(<partition_expr>)
       <origin_partitions_definition>
     ```
 
@@ -95,6 +95,8 @@ PROPERTIES (
       "replication_allocation" = "tag.location.default: 1"
       );
     ```
+
+    在 AUTO RANGE PARTITION 中，`AUTO` 关键字可以省略，仍然表达自动分区含义。
 
 2. AUTO LIST PARTITION
 
@@ -217,42 +219,43 @@ show partitions from `DAILY_TRADE_VALUE`;
 
 经过自动分区功能所创建的 PARTITION，与手动创建的 PARTITION 具有完全一致的功能性质。
 
-## 与动态分区联用
+## 生命周期管理
 
-Doris 支持自动分区和动态分区同时使用。此时，二者的功能都生效：
+:::info
+Doris 支持同时使用自动分区与动态分区实现生命周期管理，现已不推荐。
+:::
 
-1. 自动分区将会自动在数据导入过程中按需创建分区；
-2. 动态分区将会自动创建、回收、转储分区。
+在 AUTO RANGE PARTITION 表中，支持属性 `partition.retention_count`，接受一个正整数值作为参数（此处记为 `N`），表示在所有历史分区中，**只保留分区值最大的 `N` 个历史分区**。对于当前及未来分区，全部保留。具体来说：
 
-二者语法功能不存在冲突，同时设置对应的子句/属性即可。请注意，当前时间所在的分区由自动分区还是动态分区创建，是不确定的。不同创建方式会导致分区的名称格式不同。
+- 由于 RANGE 分区一定不相交，`分区 A 的值 > 分区 B 的值` 等价于 `分区 A 的下界值 > 分区 A 的上界值` 等价于 `分区 A 的上界值 > 分区 A 的上界值`。
+- 历史分区指的是**分区上界 <= 当前时间**的分区。
+- 当前及未来分区指的是**分区下界 >= 当前时间**的分区。
 
-### 最佳实践
-
-需要对分区生命周期设限的场景，可以**将 Dynamic Partition 的创建功能关闭，创建分区完全交由 Auto Partition 完成**，通过 Dynamic Partition 动态回收分区的功能完成分区生命周期的管理：
+例如：
 
 ```sql
-create table auto_dynamic(
-    k0 datetime(6) NOT NULL
+create table auto_recycle(
+    k0 datetime(6) not null
 )
-auto partition by range (date_trunc(k0, 'year'))
-(
-)
-DISTRIBUTED BY HASH(`k0`) BUCKETS 2
+AUTO PARTITION BY RANGE (date_trunc(k0, 'day')) ()
+DISTRIBUTED BY HASH(`k0`) BUCKETS 1
 properties(
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.start" = "-50",
-    "dynamic_partition.end" = "0", --- Dynamic Partition 不创建分区
-    "dynamic_partition.time_unit" = "year",
-    "replication_num" = "1"
+    "partition.retention_count" = "3"
 );
 ```
 
-这样我们同时具有了 Auto Partition 的灵活性，且分区名上保持了一致性。
+这代表只保留历史分区日期值最大的 3 个分区。假设当前日期为 `2025-10-21`，插入 `2025-10-16` 至 `2025-10-23` 中每一天的数据。则经过一次回收，剩余如下 6 个分区：
+
+- p20251018000000
+- p20251019000000
+- p20251020000000（该分区及以上：只保留三个历史分区）
+- p20251021000000（该分区及以下：当前及未来分区不受影响）
+- p20251022000000
+- p20251023000000
 
 ## 与自动分桶联用
 
-只有 AUTO RANGE PARTITION 可以同时使用[自动分桶](./data-bucketing.md#自动设置分桶数)功能。使用此功能时，Doris 将假设表的数据导入是按照时间顺序增量的，每次导入仅涉及一个分区。即是说，这种用法仅推荐用于按日增量导入的表。
+只有 AUTO RANGE PARTITION 可以同时使用[自动分桶](./data-bucketing.md#自动设置分桶数)功能。使用此功能时，Doris 将假设表的数据导入是按照时间顺序增量的，每次导入仅涉及一个分区。即是说，这种用法仅推荐用于逐批次增量导入的表。
 
 :::warning 注意！
 如果数据导入方式不符合上述范式，且同时使用了自动分区和自动分桶，存在新分区的分桶数极不合理的可能，较大影响查询性能。
