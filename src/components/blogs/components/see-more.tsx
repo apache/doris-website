@@ -1,4 +1,5 @@
-import { ExternalLinkIcon } from '../../icons/external-link-icon';
+import { ExternalLinkIcon } from '../../Icons/external-link-icon';
+import React from 'react';
 
 export function SeeMore() {
     return (
