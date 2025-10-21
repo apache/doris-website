@@ -9,6 +9,8 @@
 
 Calculate 64-bit murmur3 hash value
 
+This version is specifically optimized for 64-bit output, with better performance than the v2 version, but inconsistent with the standard library implementation.
+
 -Note: After testing, the performance of `xxhash_64` is about twice that of `murmur_hash3_64`, so when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
 
@@ -28,7 +30,7 @@ MURMUR_HASH3_64( <str> [ , <str> ... ] )
 
 Returns the 64-bit murmur3 hash of the input string.
 
-
+Returns NULL if any parameter input is NULL.
 
 ## Examples
 

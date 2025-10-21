@@ -1361,6 +1361,7 @@
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-32",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64",
+                                        "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3",

@@ -11,6 +11,10 @@
 
 -注：经过测试 xxhash_64 的性能大约是 murmur_hash3_64 的 2 倍，所以在计算 hash 值时，更推荐使用`xxhash_64`，而不是`murmur_hash3_64`。
 
+## 别名
+
+- `XXHASH3_64`
+
 ## 语法
 
 ```sql
