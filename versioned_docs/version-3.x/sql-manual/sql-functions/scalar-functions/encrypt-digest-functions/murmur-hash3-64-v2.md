@@ -9,7 +9,7 @@
 
 Computes a 64-bit MurmurHash3 hash value.
 
-This version reuses the 128-bit processing function of MurmurHash3, outputting only the first 64-bit hash value, which is consistent with the standard library implementation.
+The difference from `MURMUR_HASH3_64` is: this version reuses the 128-bit processing function of MurmurHash3, outputting only the first 64-bit hash value, which is consistent with the [standard library](https://mmh3.readthedocs.io/en/latest/api.html#mmh3.hash64) implementation.
 
 Note: According to testing, the performance of `xxhash_64` is approximately 2 times that of `murmur_hash3_64`. Therefore, when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`. If better 64-bit MurmurHash3 performance is needed, consider using `murmur_hash3_64`.
 

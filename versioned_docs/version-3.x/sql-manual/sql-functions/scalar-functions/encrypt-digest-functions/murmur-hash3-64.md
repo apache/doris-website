@@ -9,7 +9,7 @@
 
 Calculate 64-bit murmur3 hash value
 
-This version is specifically optimized for 64-bit output, with better performance than the v2 version, but inconsistent with the standard library implementation.
+The difference from `MURMUR_HASH3_64_V2` is: This version is specifically optimized for 64-bit output, with slightly better performance than the v2 version, but is inconsistent with the [standard library](https://mmh3.readthedocs.io/en/latest/api.html#mmh3.hash64) implementation.
 
 -Note: After testing, the performance of `xxhash_64` is about twice that of `murmur_hash3_64`, so when calculating hash values, it is recommended to use `xxhash_64` instead of `murmur_hash3_64`.
 
