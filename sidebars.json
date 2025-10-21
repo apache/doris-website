@@ -1997,6 +1997,7 @@
                                         "sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT",
                                         "sql-manual/sql-statements/data-modification/DML/UPDATE",
+                                        "sql-manual/sql-statements/data-modification/DML/MERGE-INTO",
                                         "sql-manual/sql-statements/data-modification/DML/DELETE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-DELETE"
                                     ]
