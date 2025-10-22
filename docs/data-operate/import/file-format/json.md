@@ -94,7 +94,7 @@ The following table lists the JSON format parameters supported by various loadin
 2. Broker Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 3. Routine Load: Parameters are specified through `PROPERTIES`, e.g., `PROPERTIES("jsonpaths"="$.data")`
 4. TVF: Parameters are specified in TVF statements, e.g., `S3("jsonpaths"="$.data")`
-5. If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`
+5. If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as `$.` or `$`, e.g., `PROPERTIES("jsonpaths"="$.")`
 6. The default value of read_json_by_line is true, which means if neither strip_outer_array nor read_json_by_line is specified during import, read_json_by_line will be set to true.
 7. "read_json_by_line not configurable" means it is forcibly set to true to enable streaming reading and reduce BE memory usage.
 :::
@@ -186,154 +186,95 @@ The following table lists the JSON format parameters supported by various loadin
   -- Set num_as_string=true, price field will be parsed as string
   ```
 
-### Relationship between JSON Path and Columns
-
-During data loading, JSON Path and Columns serve different responsibilities:
-
-**JSON Path**: Defines data extraction rules
-   - Extracts fields from JSON data according to specified paths
-   - Extracted fields are reordered according to the order defined in JSON Path
-
-**Columns**: Defines data mapping rules
-   - Maps extracted fields to target table columns
-   - Can perform column reordering and transformation
-
-These two parameters are processed serially: first, JSON Path extracts fields from source data and forms an ordered dataset, then Columns maps these data to table columns. If Columns is not specified, extracted fields will be mapped directly according to table column order.
-
-#### Usage Examples
-
-##### Using JSON Path Only
-
-Table structure and data:
-```sql
--- Table structure
-CREATE TABLE example_table (
-    k2 int,
-    k1 int
-);
-
--- JSON data
-{"k1": 1, "k2": 2}
-```
-
-Load command:
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\"]" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-Load result:
-```text
-+------+------+
-| k1   | k2   |
-+------+------+
-|    2 |    1 | 
-+------+------+
-```
-
-##### Using JSON Path + Columns
-
-Using the same table structure and data, adding columns parameter:
-
-Load command:
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\"]" \
-    -H "columns: k2, k1" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-Load result:
-```text
-+------+------+
-| k1   | k2   |
-+------+------+
-|    1 |    2 | 
-+------+------+
-```
-
-##### Field Reuse
-
-Table structure and data:
-```sql
--- Table structure
-CREATE TABLE example_table (
-    k2 int,
-    k1 int,
-    k1_copy int
-);
-
--- JSON data
-{"k1": 1, "k2": 2}
-```
-
-Load command:
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k1\"]" \
-    -H "columns: k2, k1, k1_copy" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-Load result:
-```text
-+------+------+---------+
-| k2   | k1   | k1_copy |
-+------+------+---------+
-|    2 |    1 |       1 |
-+------+------+---------+
-```
-
-##### Nested Field Mapping
-
-Table structure and data:
-```sql
--- Table structure
-CREATE TABLE example_table (
-    k2 int,
-    k1 int,
-    k1_nested1 int,
-    k1_nested2 int
-);
-
--- JSON data
-{
-    "k1": 1,
-    "k2": 2,
-    "k3": {
-        "k1": 31,
-        "k1_nested": {
-            "k1": 32
-        }
-    }
-}
-```
-
-Load command:
-```shell
-curl -v ... -H "format: json" \
-    -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k3.k1\", \"$.k3.k1_nested.k1\"]" \
-    -H "columns: k2, k1, k1_nested1, k1_nested2" \
-    -T example.json \
-    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
-```
-
-Load result:
-```text
-+------+------+------------+------------+
-| k2   | k1   | k1_nested1 | k1_nested2 |
-+------+------+------------+------------+
-|    2 |    1 |         31 |         32 |
-+------+------+------------+------------+
-```
-
 ## Usage Examples
 
-This section demonstrates the usage of JSON format in different loading methods.
+This section demonstrates how to use JSON format with different loading methods, and explains the parameters required for various JSON formats (using Stream Load as an example).
+
+### Parameter Usage Guide
+
+#### JSON Format Parameters
+
+For different JSON file formats, there are two important parameters that control how data is read during import:
+
+- `strip_outer_array`
+- `read_json_by_line`
+
+**Example 1: One Line One Json Record**
+
+Each line contains a complete JSON record and is imported as a stream. When users don't specify values for these two parameters, the default settings are `read_json_by_line=true` and `strip_outer_array=false`. Therefore, users don't need to specify these parameters for this JSON format (although explicitly setting `read_json_by_line` is also acceptable).
+
+```JSON
+{"a": 1, "b": 11}
+{"a": 2, "b": 12}
+{"a": 3, "b": 13}
+{"a": 4, "b": 14}
+```
+
+If you mistakenly set `strip_outer_array` to true, you will see an error message in `FirstErrorMsg` like: `JSON data is not an array-object, strip_outer_array must be FALSE`.
+
+---
+
+**Example 2: Array-Format JSON Records**
+
+When JSON records are organized as an array in the file, you need to set `strip_outer_array=true`.
+
+```JSON
+[
+    {"a": 1, "b": 11},
+    {"a": 2, "b": 12}
+]
+```
+
+If you mistakenly set `read_json_by_line` to true, you will see an error message in `FirstErrorMsg` like: `Parse json data failed. code: 28...`.
+
+---
+
+**Example 3: One Line Multiple Json Records**
+
+If each line contains an array with multiple JSON records, you need to explicitly set both parameters to true.
+
+```JSON
+[{"a": 1, "b": 11},{"a": 2, "b": 12}]
+[{"a": 3, "b": 13},{"a": 4, "b": 14}]
+```
+
+If you forget to set `strip_outer_array`, you will see an error message in `FirstErrorMsg` like: `JSON data is array-object, strip_outer_array must be TRUE`. If you forget to set `read_json_by_line`, **only the first line** (the two JSON records on the first line) will be imported. Please be aware of this behavior.
+
+#### JSON Path Related Parameters
+
+During JSON import, you can configure `jsonpaths` and `json_root` to have more flexible control over data extraction paths, which provides support for importing complex nested JSON formats. Another related parameter is `columns`.
+
+```sql
+-- Table structure
+CREATE TABLE example_table (
+    a INT,
+    b INT
+)
+
+-- JSON data
+[
+    {"id":1, "record":{"year":25, "name":"hiki"}},
+    {"id":2, "record":{"year":20, "name":"ykk"}}
+]
+```
+
+```shell
+curl -v ... -H "format: json" \
+    -H "jsonpaths:[\"$.id\",\"$.record.year\"]" \
+    -H "columns:b,a" \
+    -T example.json \
+    http://<fe_host>:<fe_http_port>/api/db_name/table_name/_stream_load
+
+select * from example_table;
++------+------+
+| a    | b    |
++------+------+
+|   20 |    2 |
+|   25 |    1 |
++------+------+
+```
+
+From the import command and the imported data above, we can clearly see how these parameters work together. You can think of JSON import as a two-step process: first, data is read from the JSON file and organized into an array of row data, then each row is imported into the table one by one. The order of data in this array (from JSON file to row array) is controlled by `jsonpaths` and `json_root`. In the example above, the data order for each row in the array is `id` and `year` from the JSON file. The mapping relationship between each row's data and the table columns is specified by `columns`. In the example above, the `id` data is imported into column `b`, and the `year` data is imported into column `a`.
 
 ### Stream Load
 
