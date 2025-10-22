@@ -233,4 +233,4 @@ SHOW INDEX FROM docs;
 ### 高级主题
 
 - [自定义分析器](../../table-design/index/inverted-index/custom-analyzer.md) — 构建特定领域的分词器和过滤器
-- [向量搜索](../vector-search.md) — 使用嵌入向量进行语义相似度搜索
+- [向量搜索](./vector-search.md) — 使用嵌入向量进行语义相似度搜索

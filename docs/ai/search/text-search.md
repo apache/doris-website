@@ -267,4 +267,4 @@ SHOW INDEX FROM docs;
 ### Advanced Topics
 
 - [Custom Analyzers](../../table-design/index/inverted-index/custom-analyzer.md) — Build domain-specific tokenizers and filters
-- [Vector Search](../vector-search.md) — Semantic similarity search with embeddings
+- [Vector Search](./vector-search.md) — Semantic similarity search with embeddings
