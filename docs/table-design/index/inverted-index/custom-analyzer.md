@@ -5,9 +5,11 @@
 }
 ---
 
-## Introduction
+## Overview
 
 Custom analyzers allow you to overcome the limitations of built-in tokenizers by combining character filters, tokenizers, and token filters according to specific needs. This fine-tunes how text is segmented into searchable terms, directly determining search relevance and data analysis accuracy—a foundational key to enhancing search experience and data value.
+
+![Custom Analyzer Overview](/images/analyzer.png)
 
 ## Using Custom Analyzers
 
@@ -17,23 +19,23 @@ Custom analyzers allow you to overcome the limitations of built-in tokenizers by
 
 ```sql
 CREATE INVERTED INDEX CHAR_FILTER IF NOT EXISTS x_char_filter
-PROPERTIES
-(
-    "type" = "char_replace",    // Type (char_replace)
-    "xxx" = "xxx"               // Parameters
+PROPERTIES (
+  "type" = "char_replace"
+  -- configure pattern/replacement parameters as needed
 );
 ```
 
-The `char_replace` filter replaces specified characters with replacement characters. Parameters include `char_filter_pattern` (characters to replace) and `char_filter_replacement` (replacement characters).
+`char_replace` replaces specified characters before tokenization.
+- Parameters
+  - `char_filter_pattern`: characters to replace
+  - `char_filter_replacement`: replacement characters (default: space)
 
 #### 2. Creating a tokenizer
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS x_tokenizer
-PROPERTIES
-(
-    "type" = "standard",      // Type (standard, ngram, edge_ngram, keyword, basic, icu)
-    "xxx" = "xxx"             // Parameters
+PROPERTIES (
+  "type" = "standard"
 );
 ```
 
@@ -50,10 +52,8 @@ Available tokenizers:
 
 ```sql
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS x_token_filter
-PROPERTIES
-(
-    "type" = "word_delimiter",    // Type (word_delimiter, ascii_folding, lowercase)
-    "xxx" = "xxx"                 // Parameters
+PROPERTIES (
+  "type" = "word_delimiter"
 );
 ```
 
@@ -66,10 +66,9 @@ Available token filters:
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS x_analyzer
-PROPERTIES
-(
-    "tokenizer" = "x_tokenizer",                           // Single tokenizer
-    "token_filter" = "x_token_filter1, x_token_filter2"    // One or more token_filters, executed in order
+PROPERTIES (
+  "tokenizer" = "x_tokenizer",            -- single tokenizer
+  "token_filter" = "x_filter1, x_filter2" -- one or more token_filters, in order
 );
 ```
 
@@ -113,7 +112,7 @@ table_properties;
 
 1. Nesting multiple components in a custom analyzer may degrade tokenization performance
 2. The `tokenize` function supports custom analyzers
-3. Predefined tokenization uses `parser`, custom tokenization uses `analyzer` - only one can exist
+3. Predefined tokenization uses `built_in_analyzer`, custom tokenization uses `analyzer` - only one can exist
 
 ## Complete Examples
 

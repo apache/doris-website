@@ -131,11 +131,10 @@
                                     "label": "Inverted Index",
                                     "items": [
                                         "table-design/index/inverted-index/overview",
-                                        "table-design/index/inverted-index/index-management",
-                                        "table-design/index/inverted-index/index-build",
                                         "table-design/index/inverted-index/search-operators",
+                                        "table-design/index/inverted-index/search-function",
                                         "table-design/index/inverted-index/custom-analyzer",
-                                        "table-design/index/inverted-index/bm25-scoring"
+                                        "table-design/index/inverted-index/scoring"
                                     ]
                                 },
                                 "table-design/index/bloomfilter",
@@ -410,14 +409,7 @@
                             "label": "Search",
                             "items": [
                                 "ai/search/vector-search",
-                                {
-                                    "type": "category",
-                                    "label": "Text Search",
-                                    "items": [
-                                        "ai/search/text-search/inverted-index-overview",
-                                        "ai/search/text-search/search-function"
-                                    ]
-                                }
+                                "ai/search/text-search"
                             ]
                         }
                     ]

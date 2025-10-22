@@ -5,90 +5,90 @@
 }
 ---
 
-## 介绍
+## 概述
 
 自定义分词可以突破内置分词的局限，根据特定需求组合字符过滤器、分词器和词元过滤器，精细定义文本如何被切分成可搜索的词项，这直接决定了搜索结果的相关性与数据分析的准确性，是提升搜索体验与数据价值的底层关键。
+
+![自定义分词示意图](/images/analyzer.png)
 
 ## 使用自定义分词
 
 ### 创建
 
-#### 1. char_filter
+#### 1. char_filter（字符过滤器）
 
 ```sql
 CREATE INVERTED INDEX CHAR_FILTER IF NOT EXISTS x_char_filter
-PROPERTIES
-(
-    "type" = "char_replace",    // 类型（char_replace）
-    "xxx" = "xxx"               // 参数
+PROPERTIES (
+  "type" = "char_replace"
+  -- 其他参数见下文
 );
 ```
 
-| 分词器 | 参数 | 解释 |
-|--------|------|------|
-| **char_replace** | | 将一系列字符替换为某个字符 |
-| | char_filter_pattern | 需要替换的字符列表 |
-| | char_filter_replacement | 替换后的字符 |
+`char_replace`：在分词前将指定字符替换为目标字符。
+- 参数
+  - `char_filter_pattern`：需要替换的字符列表
+  - `char_filter_replacement`：替换后的字符（默认空格）
 
-#### 2. tokenizer 分词器
+#### 2. tokenizer（分词器）
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS x_tokenizer
-PROPERTIES
-(
-    "type" = "standard",      // 类型（standard, ngram, edge_ngram, keyword, basic, icu）
-    "xxx" = "xxx"             // 参数
+PROPERTIES (
+  "type" = "standard"
 );
 ```
 
-| 分词器 | 参数 | 解释 |
-|--------|------|------|
-| **standard** | | 标准分词器提供基于语法的分词功能（遵循Unicode文本分割算法，具体规范见 Unicode Standard Annex #29），适用于大多数语言 |
-| **ngram** | | ngram分词器在遇到指定字符列表中的任意字符时，会先将文本切分为单词，然后为每个单词生成指定长度的N元组 |
-| | min_ngram | 单个字符元的最小长度。默认值为1 |
-| | max_ngram | 单个字符元的最大长度。默认值为2 |
-| | token_chars | 用于定义哪些字符应该被保留在一个token中。系统会根据不属于这些字符类的字符来分割文本（最终token仅保留配置的字符类型）。默认为空列表 []（保留所有字符）<br/>字符类别包括以下任意类型：<br/>- letter（字母） — 例如 a, b, ï 或 京<br/>- digit（数字） — 例如 3 或 7<br/>- whitespace（空白符） — 例如空格或换行符<br/>- punctuation（标点） — 例如 ! 或双引号<br/>- symbol（符号） — 例如 $ 或 √ |
-| **edge_ngram** | | edge_ngram分词器在遇到指定字符列表中的任意字符时，会先将文本切分为单词，然后为每个单词生成固定锚定在词首起始位置的N元组 |
-| | min_ngram | 单个字符元的最小长度，默认值为1 |
-| | max_ngram | 单个字符元的最大长度，默认值为2 |
-| | token_chars | 用于定义哪些字符应该被保留在一个token中。系统会根据不属于这些字符类的字符来分割文本（最终token仅保留配置的字符类型）。默认为空列表 []（保留所有字符）<br/>字符类别支持以下类型：<br/>- letter（字母） — 例如 a, b, ï 或 京<br/>- digit（数字） — 例如 3 或 7<br/>- whitespace（空白符） — 例如空格或换行符<br/>- punctuation（标点） — 例如 ! 或双引号<br/>- symbol（符号） — 例如 $ 或 √ |
-| **keyword** | | keyword分词器是一种无操作型分词器，它接受任意输入文本并将原始文本作为单一术语完整输出。该分词器可配合token过滤器使用以实现输出标准化，例如将电子邮件地址转为小写形式 |
-| **char_group** | tokenize_on_chars | 一个包含字符的列表，用于指定字符串的分词依据。每当遇到该列表中的字符时，就会开始一个新的token。该列表可以接受单个字符（例如 -），也可以接受字符类别，包括：空白符（whitespace）、字母（letter）、数字（digit）、标点符号（punctuation）、符号（symbol）和 中文（cjk） |
-| **basic** | extra_chars | 简单的英文，数字，中文，unicode分词器。例如 extra_chars = \[\]\(\)\.<br/>在默认分词的逻辑之外，将配置的ascii字符分割出来 |
-| **icu** | | 国际话文字切分，支持所有国家文本 |
+- `standard`：标准分词（遵循 Unicode 文本分割），适用于多数语言
+- `ngram`：按 N 元组切分
+  - `min_ngram`：最小长度（默认 1）
+  - `max_ngram`：最大长度（默认 2）
+  - `token_chars`：保留字符类别（默认保留全部）。可选：`letter`、`digit`、`whitespace`、`punctuation`、`symbol`
+- `edge_ngram`：从词首起始位置生成 N 元组
+  - `min_ngram`：最小长度（默认 1）
+  - `max_ngram`：最大长度（默认 2）
+  - `token_chars`：同上
+- `keyword`：整段文本作为一个词项输出，常与 token_filter 组合使用
+- `char_group`：按给定字符切分
+  - `tokenize_on_chars`：字符列表或类别，类别支持 `whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk`
+- `basic`：简单英文/数字/中文/Unicode 分词
+  - `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）
+- `icu`：ICU 国际化分词，支持多语言复杂脚本
 
-#### 3. token_filter 过滤器
+#### 3. token_filter（词元过滤器）
 
 ```sql
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS x_token_filter
-PROPERTIES
-(
-    "type" = "word_delimiter",    // 类型（word_delimiter, ascii_folding, lowercase）
-    "xxx" = "xxx"                 // 参数
+PROPERTIES (
+  "type" = "word_delimiter"
 );
 ```
 
-| 过滤器 | 参数 | 解释 |
-|--------|------|------|
-| **word_delimiter** | | 在非字母数字字符处切分token，并根据预设规则执行可选的token标准化。默认规则如下：<br/>1. 非字母数字切分 → 使用非字母数字字符作为分隔符<br/>示例： Super-Duper → [ Super, Duper ]<br/>2. 移除首尾分隔符 → 清除token首尾的分隔符<br/>示例： XL---42+'Autocoder' → [ XL, 42, Autocoder ]<br/>3. 大小写转换切分 → 在字母大小写转换处切分<br/>示例： PowerShot → [ Power, Shot ]<br/>4. 字母数字过渡切分 → 在字母与数字交界处切分<br/>示例： XL500 → [ XL, 500 ]<br/>5. 移除英文所有格 → 删除词末的's所有格形式<br/>示例： Neil's → [ Neil ] |
-| | generate_number_parts | 设为true时，输出包含纯数字token；设为false则排除。默认为true |
-| | generate_word_parts | 设为true时，输出包含纯字母token；设为false则排除。默认为true |
-| | protected_words | 禁止切分的token列表 |
-| | split_on_case_change | 设为true时，在字母大小写转换处切分（如：camelCase → [camel, Case]）。默认为true |
-| | split_on_numerics | 设为true时，在字母数字交界处切分（如：j2se → [j, 2, se]）。默认为true |
-| | stem_english_possessive | 设为true时，移除英文所有格's后缀（如：O'Neil's → [O, Neil]）。默认为true |
-| | type_table | 自定义字符类型映射表。可将非字母数字字符映射为数字/字母类型避免被切分<br/>示例配置： \[ + => ALPHA, - => ALPHA \]<br/>支持映射类型：<br/>- ALPHA（字母）<br/>- ALPHANUM（字母数字）<br/>- DIGIT（数字）<br/>- LOWER（小写字母）<br/>- SUBWORD_DELIM（非字母数字分隔符）<br/>- UPPER（大写字母） |
-| **ascii_folding** | | 该过滤器将不在基本拉丁语Unicode区块（即前127个ASCII字符）内的字母、数字及符号字符转换为其等效的ASCII字符（若存在对应字符）。例如：将à转换为a |
-| **lowercase** | | 将token文本转为小写形式。例如：输入THE Lazy DoG → 输出the lazy dog（保留原文形态） |
+- `word_delimiter`：在非字母数字字符处切分，并可执行标准化
+  - 默认规则：
+    - 使用非字母数字字符作为分隔符（例：Super-Duper → Super, Duper）
+    - 清除 token 首尾分隔符（例：XL---42+'Autocoder' → XL, 42, Autocoder）
+    - 在大小写转换处切分（例：PowerShot → Power, Shot）
+    - 在字母与数字交界处切分（例：XL500 → XL, 500）
+    - 移除英文所有格 's（例：Neil's → Neil）
+  - 可选参数：
+    - `generate_number_parts`（默认 true）
+    - `generate_word_parts`（默认 true）
+    - `protected_words`
+    - `split_on_case_change`（默认 true）
+    - `split_on_numerics`（默认 true）
+    - `stem_english_possessive`（默认 true）
+    - `type_table`：自定义字符类型映射（如 `[+ => ALPHA, - => ALPHA]`），类型含 `ALPHA`、`ALPHANUM`、`DIGIT`、`LOWER`、`SUBWORD_DELIM`、`UPPER`
+- `ascii_folding`：将非 ASCII 字符映射为等效 ASCII
+- `lowercase`：将 token 文本转为小写
 
-#### 4. analyzer 分析器
+#### 4. analyzer（分析器）
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS x_analyzer
-PROPERTIES
-(
-    "tokenizer" = "x_tokenizer",                           // 单个分词器
-    "token_filter" = "x_token_filter1, x_token_filter2"    // 单个或多个token_filter，按顺序执行
+PROPERTIES (
+  "tokenizer" = "x_tokenizer",            -- 单个分词器
+  "token_filter" = "x_filter1, x_filter2" -- 一个或多个 token_filter，按顺序执行
 );
 ```
 
@@ -133,7 +133,7 @@ table_properties;
 
 1. 自定义分词analyzer嵌套多个可能会导致分词性能降低
 2. select tokenize 分词函数支持自定义分词
-3. 预定义分词使用parser，自定义分词使用anlyzer，只能存在一个
+3. 预定义分词built_in_analyzer，自定义分词使用anlyzer，只能存在一个
 
 ## 完整示例
 

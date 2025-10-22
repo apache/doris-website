@@ -91,6 +91,10 @@
     "message": "表索引",
     "description": "The label for category Table Index in sidebar docs"
   },
+  "sidebar.docs.category.Inverted Index": {
+    "message": "倒排索引",
+    "description": "The label for category Inverted Index in sidebar docs"
+  },
   "sidebar.docs.category.Data Manipulation": {
     "message": "数据操作",
     "description": "The label for category Data Manipulation in sidebar docs"
