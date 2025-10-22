@@ -1792,6 +1792,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/covar",
                                 "sql-manual/sql-functions/aggregate-functions/covar-samp",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+                                "sql-manual/sql-functions/aggregate-functions/group-array-union",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-or",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
