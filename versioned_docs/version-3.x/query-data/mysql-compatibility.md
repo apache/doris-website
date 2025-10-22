@@ -259,3 +259,11 @@ The Doris SELECT syntax is basically the same as MySQL.
 ## SQL Function
 
 Doris Function covers most MySQL functions.
+
+## SQL Mode
+
+| Name | Behavior when enabled | Behavior when disabled | Notes |
+| :-- | :-- | :-- | :-- |
+| PIPES_AS_CONCAT | Parses `\|\|` as the `concat` function | Parses `\|\|` as the logical AND operator | - |
+| NO_BACKSLASH_ESCAPES | Treats backslashes in strings as literal characters | Treats backslashes in strings as escape characters | - |
+| ONLY_FULL_GROUP_BY | Allows only standard aggregations | Allows scalar values not in the GROUP BY key to appear in the aggregation result | Supported since version 3.1.0 |
