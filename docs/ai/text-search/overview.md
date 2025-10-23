@@ -94,7 +94,7 @@ CREATE TABLE docs (
 );
 ```
 
-[Learn about custom analyzers →](./text-search/custom-analyzer.md)
+[Learn about custom analyzers →](./custom-analyzer.md)
 
 ### BM25 Relevance Scoring (4.0+)
 
@@ -121,7 +121,7 @@ LIMIT 10;
 - Combine with `ORDER BY` and `LIMIT` for efficient Top-N retrieval
 - Works with all `MATCH_*` operators and `SEARCH()` function
 
-[Learn more about scoring →](./text-search/scoring.md)
+[Learn more about scoring →](./scoring.md)
 
 ### SEARCH Function: Unified Query DSL (4.0+)
 
@@ -161,7 +161,7 @@ ORDER BY relevance DESC
 LIMIT 20;
 ```
 
-[Complete SEARCH function guide →](./text-search/search-function.md)
+[Complete SEARCH function guide →](./search-function.md)
 
 ## Quick Start
 
@@ -261,7 +261,7 @@ SHOW INDEX FROM docs;
 ### Core Documentation
 
 - [Inverted Index Overview](../../table-design/index/inverted-index/overview.md) — Architecture, indexing principles, and management
-- [Text Search Operators](../../table-design/index/inverted-index/search-operators.md) — Complete operator reference and query acceleration
+- [Text Search Operators](./search-operators.md) — Complete operator reference and query acceleration
 - [SEARCH Function](./search-function.md) — Unified query DSL syntax and examples
 - [Relevance Scoring](./scoring.md) — Relevance ranking algorithm and usage
 

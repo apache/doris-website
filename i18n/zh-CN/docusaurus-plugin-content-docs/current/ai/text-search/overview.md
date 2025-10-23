@@ -227,7 +227,7 @@ SHOW INDEX FROM docs;
 ### 核心文档
 
 - [倒排索引概述](../../table-design/index/inverted-index/overview.md) — 架构、索引原理和管理
-- [文本搜索算子](../../table-design/index/inverted-index/search-operators.md) — 完整算子参考和查询加速
+- [文本搜索算子](./search-operators.md) — 完整算子参考和查询加速
 - [SEARCH 函数](./search-function.md) — 统一查询 DSL 语法和示例
 - [相关性打分](./scoring.md) — 相关性排序算法和用法
 
