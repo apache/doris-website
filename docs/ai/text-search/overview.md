@@ -63,7 +63,7 @@ SELECT * FROM docs WHERE content MATCH_PHRASE 'machine learning ~2';
 SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX 'data ware';  -- matches "data warehouse", "data warehousing"
 ```
 
-[See all operators →](../../table-design/index/inverted-index/search-operators.md)
+[See all operators →](./search-operators.md)
 
 ### Custom Analyzers (3.1+)
 

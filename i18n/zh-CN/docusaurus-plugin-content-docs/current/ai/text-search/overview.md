@@ -57,7 +57,7 @@ SELECT * FROM docs WHERE content MATCH_PHRASE '倒排 索引';
 SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX '数据 仓';
 ```
 
-[查看所有算子 →](../../table-design/index/inverted-index/search-operators.md)
+[查看所有算子 →](./search-operators.md)
 
 ---
 
