@@ -1619,6 +1619,7 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-isnull",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-largeint",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/json-hash",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-insert",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-keys",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-length",
