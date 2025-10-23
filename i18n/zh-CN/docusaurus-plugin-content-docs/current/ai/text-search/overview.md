@@ -1,6 +1,7 @@
 ---
 {
     "title": "文本搜索",
+    "sidebar_label": "概述",
     "language": "zh-CN"
 }
 ---
@@ -56,7 +57,7 @@ SELECT * FROM docs WHERE content MATCH_PHRASE '倒排 索引';
 SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX '数据 仓';
 ```
 
-[查看所有算子 →](../../table-design/index/inverted-index/search-operators.md)
+[查看所有算子 →](./search-operators.md)
 
 ---
 
@@ -90,7 +91,7 @@ CREATE TABLE docs (
 );
 ```
 
-[了解自定义分词 →](../../table-design/index/inverted-index/custom-analyzer.md)
+[了解自定义分词 →](./custom-analyzer.md)
 
 ---
 
@@ -110,7 +111,7 @@ ORDER BY relevance DESC
 LIMIT 10;
 ```
 
-[了解更多打分机制 →](../../table-design/index/inverted-index/scoring.md)
+[了解更多打分机制 →](./scoring.md)
 
 ---
 
@@ -126,7 +127,7 @@ ORDER BY relevance DESC
 LIMIT 20;
 ```
 
-[完整 SEARCH 函数指南 →](../../table-design/index/inverted-index/search-function.md)
+[完整 SEARCH 函数指南 →](./search-function.md)
 
 ## 快速开始
 
@@ -226,11 +227,11 @@ SHOW INDEX FROM docs;
 ### 核心文档
 
 - [倒排索引概述](../../table-design/index/inverted-index/overview.md) — 架构、索引原理和管理
-- [文本搜索算子](../../table-design/index/inverted-index/search-operators.md) — 完整算子参考和查询加速
-- [SEARCH 函数](../../table-design/index/inverted-index/search-function.md) — 统一查询 DSL 语法和示例
-- [BM25 打分](../../table-design/index/inverted-index/scoring.md) — 相关性排序算法和用法
+- [文本搜索算子](./search-operators.md) — 完整算子参考和查询加速
+- [SEARCH 函数](./search-function.md) — 统一查询 DSL 语法和示例
+- [相关性打分](./scoring.md) — 相关性排序算法和用法
 
 ### 高级主题
 
-- [自定义分析器](../../table-design/index/inverted-index/custom-analyzer.md) — 构建特定领域的分词器和过滤器
-- [向量搜索](./vector-search.md) — 使用嵌入向量进行语义相似度搜索
+- [自定义分析器](./custom-analyzer.md) — 构建特定领域的分词器和过滤器
+- [向量搜索](../vector-search.md) — 使用嵌入向量进行语义相似度搜索

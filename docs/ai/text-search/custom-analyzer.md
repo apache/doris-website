@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Custom Analyzer",
+"title": "Custom Analyzer",
     "language": "en"
 }
 ---

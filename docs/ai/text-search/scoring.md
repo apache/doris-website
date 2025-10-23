@@ -1,7 +1,7 @@
 ---
 
 {
-"title": "Text Search Scoring",
+"title": "Relevance Scoring",
 "language": "en"
 }
 ---
@@ -104,4 +104,3 @@ This query returns the top 10 rows most relevant to the search terms, ranked by 
 * **Multiple terms** – For multi-term queries, the total score is the sum of all term scores.
 * **Length effect** – Shorter rows generally receive higher scores when containing the same terms.
 * **No matching terms** – If none of the query terms appear in the table, the score is `0`.
-

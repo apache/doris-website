@@ -1,6 +1,6 @@
 ---
 {
-    "title": "自定义分词",
+"title": "自定义分词",
     "language": "zh-CN"
 }
 ---

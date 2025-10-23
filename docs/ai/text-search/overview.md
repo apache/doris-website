@@ -1,6 +1,7 @@
 ---
 {
     "title": "Text Search",
+    "sidebar_label": "Overview",
     "language": "en"
 }
 ---
@@ -62,7 +63,7 @@ SELECT * FROM docs WHERE content MATCH_PHRASE 'machine learning ~2';
 SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX 'data ware';  -- matches "data warehouse", "data warehousing"
 ```
 
-[See all operators →](../../table-design/index/inverted-index/search-operators.md)
+[See all operators →](./search-operators.md)
 
 ### Custom Analyzers (3.1+)
 
@@ -93,7 +94,7 @@ CREATE TABLE docs (
 );
 ```
 
-[Learn about custom analyzers →](../../table-design/index/inverted-index/custom-analyzer.md)
+[Learn about custom analyzers →](./custom-analyzer.md)
 
 ### BM25 Relevance Scoring (4.0+)
 
@@ -120,7 +121,7 @@ LIMIT 10;
 - Combine with `ORDER BY` and `LIMIT` for efficient Top-N retrieval
 - Works with all `MATCH_*` operators and `SEARCH()` function
 
-[Learn more about scoring →](../../table-design/index/inverted-index/scoring.md)
+[Learn more about scoring →](./scoring.md)
 
 ### SEARCH Function: Unified Query DSL (4.0+)
 
@@ -160,7 +161,7 @@ ORDER BY relevance DESC
 LIMIT 20;
 ```
 
-[Complete SEARCH function guide →](../../table-design/index/inverted-index/search-function.md)
+[Complete SEARCH function guide →](./search-function.md)
 
 ## Quick Start
 
@@ -260,11 +261,11 @@ SHOW INDEX FROM docs;
 ### Core Documentation
 
 - [Inverted Index Overview](../../table-design/index/inverted-index/overview.md) — Architecture, indexing principles, and management
-- [Text Search Operators](../../table-design/index/inverted-index/search-operators.md) — Complete operator reference and query acceleration
-- [SEARCH Function](../../table-design/index/inverted-index/search-function.md) — Unified query DSL syntax and examples
-- [BM25 Scoring](../../table-design/index/inverted-index/scoring.md) — Relevance ranking algorithm and usage
+- [Text Search Operators](./search-operators.md) — Complete operator reference and query acceleration
+- [SEARCH Function](./search-function.md) — Unified query DSL syntax and examples
+- [Relevance Scoring](./scoring.md) — Relevance ranking algorithm and usage
 
 ### Advanced Topics
 
-- [Custom Analyzers](../../table-design/index/inverted-index/custom-analyzer.md) — Build domain-specific tokenizers and filters
-- [Vector Search](./vector-search.md) — Semantic similarity search with embeddings
+- [Custom Analyzers](./custom-analyzer.md) — Build domain-specific tokenizers and filters
+- [Vector Search](../vector-search.md) — Semantic similarity search with embeddings

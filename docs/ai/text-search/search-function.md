@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SEARCH Function",
+"title": "SEARCH Function",
     "language": "en"
 }
 ---
