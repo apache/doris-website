@@ -439,6 +439,7 @@
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
+                                "lakehouse/best-practices/optimization",
                                 "lakehouse/best-practices/doris-hudi",
                                 "lakehouse/best-practices/doris-paimon",
                                 "lakehouse/best-practices/doris-iceberg",
