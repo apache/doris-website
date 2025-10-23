@@ -15,10 +15,21 @@ Generate one JSON object containing specified Key-Value pairs. Returns an error 
 JSON_OBJECT (<key>, <value>[, <key>, <value>, ...])
 ```
 
+```sql
+JSON_OBJECT(*)
+```
+
 ## Parameters
 ### Variable parameters:
 - `<key>`: String type
 - `<value>`: Multiple types, Doris will automatically convert non-JSON type parameters to JSON type through the [`TO_JSON`](./to-json.md) function.
+- `*`: When invoked with an asterisk (wildcard), the OBJECT value is constructed from the specified data using the attribute names as keys and the associated values as values.
+
+    When you pass a wildcard to the function, you can qualify the wildcard with the name or alias for the table. For example, to pass in all of the columns from the table named mytable, specify the following:
+
+    ```sql
+    (mytable.*)
+    ```
 
 ## Notes
 - The number of parameters must be even, can be 0 parameters (returns an empty JSON object).
