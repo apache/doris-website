@@ -1373,6 +1373,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/last-day",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/makedate",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/maketime",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond-timestamp",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microseconds-add",
