@@ -131,10 +131,7 @@
                                     "label": "Inverted Index",
                                     "items": [
                                         "table-design/index/inverted-index/overview",
-                                        "table-design/index/inverted-index/search-operators",
-                                        "table-design/index/inverted-index/search-function",
-                                        "table-design/index/inverted-index/custom-analyzer",
-                                        "table-design/index/inverted-index/scoring"
+                                        "table-design/index/inverted-index/search-operators"
                                     ]
                                 },
                                 "table-design/index/bloomfilter",
@@ -406,12 +403,15 @@
                         "ai/ai-function-overview",
                         {
                             "type": "category",
-                            "label": "Search",
+                            "label": "Text Search",
                             "items": [
-                                "ai/search/vector-search",
-                                "ai/search/text-search"
+                                "ai/text-search/overview",
+                                "ai/text-search/scoring",
+                                "ai/text-search/search-function",
+                                "ai/text-search/custom-analyzer"
                             ]
-                        }
+                        },
+                        "ai/vector-search"
                     ]
                 },
                 {

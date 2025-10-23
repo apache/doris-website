@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SEARCH 函数",
+"title": "SEARCH 函数",
     "language": "zh-CN"
 }
 ---
