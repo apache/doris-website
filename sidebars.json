@@ -1709,7 +1709,6 @@
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/from_hex",
-                                        "sql-manual/sql-functions/scalar-functions/binary-functions/length",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex"
