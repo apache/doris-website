@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cast to DATETIME",
+    "title": "Cast to DATETIME Type",
     "language": "en"
 }
 ---
@@ -23,7 +23,7 @@ The DATETIME type includes a type parameter `p`, which represents the number of 
 
 ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-<date>           ::= <year> "-" <month1> "-" <day1>
+<date>           ::= <year> ("-" | "/") <month1> ("-" | "/") <day1>
                    | <year> <month2> <day2>
 
 <year>           ::= <digit>{2} | <digit>{4} ; 1970 as the boundary
@@ -220,7 +220,7 @@ Assume the current Doris time zone is UTC+8 (`+08:00`). For the effect of time z
 | `20120102030405.123   +08`           | `2012-01-02 03:05:05.123000` | 14-digit concatenated date format + decimal + short timezone offset              |
 | `120102030405.999`                   | Error (format error)                     | Missing DATE - TIME separator                        |
 | `2023-07-16T19.123+08:00`            | Error (format error)                     | Date has non-consecutive fields (hour+milliseconds skipping minutes and seconds)                    |
-| `2024/05/01`                         | Error (format error)                     | Date separator uses '/'                                |
+| `2024/05/01`                         | `2024-05-01`                     | Date separator uses '/'                                |
 | `24012`                              | Error (format error)                     | Invalid number of digits for date                                   |
 | `2411 123`                           | Error (format error)                     | Invalid number of digits for both date and time parts                             |
 | `2024-05-01 01:030:02`               | Error (format error)                     | Invalid number of digits for minutes                                   |
@@ -257,7 +257,7 @@ Assume the current Doris time zone is UTC+8 (`+08:00`). For the effect of time z
 <second> ::= <digit>{1,2}
 
 <separator> ::= ^(<digit> | <alpha>)
-<delimiter> ::= " " | "T"
+<delimiter> ::= " " | "T" | ":"
 
 <fraction> ::= "." <digit>*
 

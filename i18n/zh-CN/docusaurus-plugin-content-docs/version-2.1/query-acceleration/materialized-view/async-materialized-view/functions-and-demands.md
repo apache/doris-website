@@ -86,7 +86,7 @@ CREATE MATERIALIZED VIEW
 
 - **`ON SCHEDULE` 定时触发**
 
-  通过物化视图的创建语句指定间隔多久刷新一次数据，refreshUnit(刷新时间间隔单位)可以是 minute， hour，day，week 等。
+  通过物化视图的创建语句指定间隔多久刷新一次数据，refreshUnit(刷新时间间隔单位) 可以是 minute，hour，day，week 等。
 
   如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
@@ -1144,7 +1144,7 @@ SyncWithBaseTables: 1
 
 - **SchemaChangeDetail：** 表示 SCHEMA_CHANGE 发生的原因。
 
-- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查询刷新任务 TASK 信息](### 查询刷新任务 TASK 信息)。
+- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查询刷新任务 TASK 信息](./functions-and-demands.md#查询刷新任务-task-信息)。
 
 - **SyncWithBaseTables：** 是否和基表数据同步。1 为同步，0 为不同步。如果不同步，可通过 `show partitions` 进一步判断哪个分区不同步。`show partitions` 见下文分区物化视图查看 SyncWithBaseTables 状态方法。
 
@@ -1206,8 +1206,8 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - RefreshMode：COMPLETE 代表刷新了全部分区，PARTIAL 代表刷新了部分分区，NOT_REFRESH 代表不需要刷新任何分区。
 
 :::info 备注
-- 目前 task 存储和展示的数量默认是 100个，可以通过在 fe.conf 文件中配置 max_persistence_task_count 修改数量，超过这个
-  数量将会丢弃旧的 task 记录, 如果值 < 1, 将不会持久化。修改完配置后需要重启 FE 才能生效。
+- 目前 task 存储和展示的数量默认是 100 个，可以通过在 fe.conf 文件中配置 max_persistence_task_count 修改数量，超过这个
+  数量将会丢弃旧的 task 记录，如果值 < 1, 将不会持久化。修改完配置后需要重启 FE 才能生效。
 
 - 如果物化视图创建的时候设置了 `grace_period` 属性，那么即使 `SyncWithBaseTables` 是 false 或者 0，有些情况下它依然可用于透明改写。
 

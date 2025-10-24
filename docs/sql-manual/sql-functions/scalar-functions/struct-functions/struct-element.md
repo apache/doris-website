@@ -1,58 +1,107 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
 ## Description
 
-Return a specific field within a data column of a struct.
+Returns a specific field within a struct data column. The function supports accessing fields in a struct through field position (index) or field name.
 
 ## Syntax
 
 ```sql
-STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
+STRUCT_ELEMENT( <struct>, <field_location_or_name> )
 ```
 
 ## Parameters
 
-| Parameter | Description |
-| -- | -- |
-| `<struct>` | If the input struct column is null, return null |
-| `<filed_location>` | The position of the field starts from 1, and only constants are supported |
-| `<filed_name>` | The field name must be a constant, case sensitive |
+- `<struct>`: Input struct column
+- `<field_location_or_name>`: Field position (starting from 1) or field name, only supports constants
 
 ## Return Value
 
-Return the specified field column, with the type being any type
+Return type: Field value type supported by struct
 
-## Example
+Return value meaning:
+- Returns the specified field value
+- If the input struct is null, returns null
+- If the specified field does not exist, an error will be reported
 
+## Usage
+
+- Supports accessing by field position (index), index starts from 1
+- Supports accessing by field name, field name must match exactly
+- The second parameter must be a constant (cannot be a column)
+- The function is marked as AlwaysNullable, return value may be null
+
+## Examples
+
+**Query Examples:**
+
+Access by position:
 ```sql
-select struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2'),struct_element(named_struct('f1', 1, 'f2', 'a'), 1);
+select struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'), 1);
++--------------------------------------------------------------------------------+
+| struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'), 1) |
++--------------------------------------------------------------------------------+
+| Alice                                                                          |
++--------------------------------------------------------------------------------+
 ```
 
-```text
-+--------------------------------------------------------+-----------------------------------------------------+
-| struct_element(named_struct('f1', 1, 'f2', 'a'), 'f2') | struct_element(named_struct('f1', 1, 'f2', 'a'), 1) |
-+--------------------------------------------------------+-----------------------------------------------------+
-| a                                                      |                                                   1 |
-+--------------------------------------------------------+-----------------------------------------------------+
-```
-
+Access by field name:
 ```sql
-select struct_col, struct_element(struct_col, 'f1') from test_struct;
+select struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'), 'age');
++------------------------------------------------------------------------------------+
+| struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'), 'age') |
++------------------------------------------------------------------------------------+
+|                                                                                 25 |
++------------------------------------------------------------------------------------+
 ```
 
-```text
-+-------------------------------------------------+-------------------------------------+
-| struct_col                                      | struct_element(`struct_col `, 'f1') |
-+-------------------------------------------------+-------------------------------------+
-| {1, 2, 3, 4, 5}                                 |                                   1 |
-| {1, 1000, 10000000, 100000000000, 100000000000} |                                   1 |
-| {5, 4, 3, 2, 1}                                 |                                   5 |
-| NULL                                            |                                NULL |
-| {1, NULL, 3, NULL, 5}                           |                                   1 |
-+-------------------------------------------------+-------------------------------------+
+Accessing struct containing complex types:
+```sql
+select struct_element(named_struct('array', [1,2,3], 'map', {'key':'value'}), 'array');
++---------------------------------------------------------------------------------+
+| struct_element(named_struct('array', [1,2,3], 'map', {'key':'value'}), 'array') |
++---------------------------------------------------------------------------------+
+| [1, 2, 3]                                                                       |
++---------------------------------------------------------------------------------+
+```
+
+Accessing result with null field value:
+```sql
+select struct_element(named_struct('name', null, 'age', 25), 'name');
++---------------------------------------------------------------+
+| struct_element(named_struct('name', null, 'age', 25), 'name') |
++---------------------------------------------------------------+
+| NULL                                                          |
++---------------------------------------------------------------+
+```
+
+Error Examples
+
+Accessing non-existent field name:
+```sql
+select struct_element(named_struct('name', 'Alice', 'age', 25), 'nonexistent');
+ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field name nonexistent was not found: struct_element(named_struct('name', 'Alice', 'age', 25), 'nonexistent')
+```
+
+Accessing out-of-bounds index:
+```sql
+select struct_element(named_struct('name', 'Alice', 'age', 25), 5);
+ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field index out of bound: struct_element(named_struct('name', 'Alice', 'age', 25), 5)
+```
+
+Second parameter is not a constant:
+```sql
+select struct_element(named_struct('name', 'Alice', 'age', 25), inv) from var_with_index where k = 4;
+ERROR 1105 (HY000): errCode = 2, detailMessage = struct_element only allows constant int or string second parameter: struct_element(named_struct('name', 'Alice', 'age', 25), inv)
+```
+
+Input struct is NULL, will report error:
+```sql
+select struct_element(NULL, 5);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: struct_element(NULL, TINYINT)
 ```

@@ -22,6 +22,8 @@ let hasBrokenLinks = false;
 function getModifiedMarkdownFiles(commit) {
   const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
   const lines = output.split("\n");
+  console.log('lines',lines);
+  
   const files = [];
 
   for (const line of lines) {
@@ -43,12 +45,21 @@ function isLocalLink(link) {
          !link.startsWith("https://") &&
          !link.startsWith("mailto:") &&
          !link.startsWith("#") &&
-         !path.isAbsolute(link);
+         !path.isAbsolute(link)&&
+         !/.*@.*\..*/.test(link);
 }
 
+// function removeCodeBlocks(content) {
+//   return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+// }
+
 function removeCodeBlocks(content) {
-  return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+  let result = content.replace(/```[\s\S]*?```/g, ""); 
+  result = result.replace(/`[^`]*`/g, ""); 
+
+  return result;
 }
+
 
 // Check links in files
 function checkFileLinks(filePath) {

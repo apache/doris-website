@@ -30,6 +30,7 @@ Returns a string after masking uppercase character, lowercase character and lnum
 
 - If any Parameter is NULL, NULL will be returned.
 - Non-alphabetic and non-numeric characters will do not masking
+- Only ASCII letters are supported for replacement, non-ASCII letters (such as accented Latin letters) will be preserved as is
 
 ## Examples
 
@@ -67,4 +68,16 @@ select mask('abc123EFG', '*', '#', '$');
 +----------------------------------+
 | ###$$$***                        |
 +----------------------------------+
+```
+
+```sql
+select mask('eeeéèêëìí1234');
+```
+
+```text
++-----------------------------+
+| mask('eeeéèêëìí1234')       |
++-----------------------------+
+| xxxéèêëìínnnn               |
++-----------------------------+
 ```

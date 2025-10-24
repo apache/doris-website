@@ -12,7 +12,7 @@ Statement for creating a synchronized materialized view.
 ## Syntax
 
 ```sql
-CREATE MATERIALIZED VIEW <materialized_view_name> AS <query>            
+CREATE MATERIALIZED VIEW <materialized_view_name> [AS] <query>            
 ```
 
 Where
@@ -63,6 +63,7 @@ query
 
 ## Notes
 
+- The column names in the select list of a sync materialized view must not be the same as any existing columns in the base table, nor duplicate the column names of other sync materialized views on the same base table. You can avoid name conflicts by specifying aliases (e.g., col as xxx).
 - Synchronized materialized views only support SELECT statements for a single table, supporting WHERE, GROUP BY, ORDER BY clauses, but not JOIN, HAVING, LIMIT clauses, or LATERAL VIEW.
 - The SELECT list cannot contain auto-increment columns, constants, duplicate expressions, or window functions.
 - If the SELECT list contains aggregate functions, the aggregate functions must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no other non-aggregate function expressions can follow the aggregate functions (for example, `SELECT x, sum(a)` is acceptable, but `SELECT sum(a), x` is not).
@@ -101,8 +102,8 @@ desc lineitem;
 ```sql
 CREATE MATERIALIZED VIEW sync_agg_mv AS
 SELECT 
-  l_shipdate,
-  l_partkey,
+  l_shipdate as shipdate,
+  l_partkey as partkey,
   count(*),
   sum(l_discount)
 FROM

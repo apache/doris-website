@@ -7,26 +7,24 @@
 
 ## Description
 
-The NEXT_DAY function is used to return the first date that is later than the given date and matches the specified day of the week.
+The NEXT_DAY function returns the first date after the specified date that matches the target day of the week. For example, NEXT_DAY('2020-01-31', 'MONDAY') returns the first Monday after 2020-01-31. This function supports processing DATE and DATETIME types and ignores the time portion in the input (calculation is based only on the date portion).
 
-:::tip
-This function is supported since version 3.0.6.
-:::
+This function is consistent with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
 
 ## Syntax
 
 ```sql
-NEXT_DAY(<datetime/date>, <day_of_week>)
+NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 ```
 
 ## Parameters
 
-| Parameter         | Description                                                   |
-|-------------------|---------------------------------------------------------------|
-| `<datetime/date>` | The date which will be used to find the next day of the week. |
-| `<day_of_week>`   | A STRING expression identifying a day of the week.            |
+| Parameter | Description |
+| --------- | ----------- |
+| `<date_or_time_expr>` | Supports date/datetime types. For specific datetime and date formats, [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<day_of_week>` | String expression used to identify the day of the week, of string type. |
 
-`<day_of_week>` must be one of the following (case insensitive):
+`<day_of_week>` must be one of the following values (case insensitive):
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
 - 'TU', 'TUE', 'TUESDAY'
@@ -36,21 +34,67 @@ NEXT_DAY(<datetime/date>, <day_of_week>)
 - 'SA', 'SAT', 'SATURDAY'
 
 ## Return Value
-A DATE value whatever the input is DATETIME or DATE.
+
+Returns a value of type DATE, representing the first date after the base date that matches `<day_of_week>`.
 
 Special cases:
-- If the `<datetime/date>` input is NULL, the function returns NULL.
-- If the input is NEXT_DAY("9999-12-31 12:00:00", `<day_of_week>`), the function will return same value as the input.
+- If the base date itself is the target day of the week, returns the next occurrence of the target day of the week (not the current date);
+- If `<date_or_time_expr>` is NULL, returns NULL;
+- If `<day_of_week>` is an invalid value (e.g., 'ABC'), throws an exception;
+- If the input is 9999-12-31 (regardless of whether it includes time), returns itself (since this date is the maximum valid date, no subsequent dates exist);
 
-## Example
+## Examples
 
-``` sql
-select next_day("2020-01-31 02:02:02", "MONDAY"),next_day("2020-01-31", "MONDAY");
-```
-```text
-+--------------------------------------------+-----------------------------------+
-| next_day("2020-01-31 02:02:02", "MONDAY")  | next_day("2020-01-31", "MONDAY")  |
-+--------------------------------------------+-----------------------------------+
-| 2020-02-03                                 | 2020-02-03                        |
-+--------------------------------------------+-----------------------------------+
-```
+```sql
+-- First Monday after base date
+SELECT NEXT_DAY('2020-01-31', 'MONDAY') AS result;
++------------+
+| result     |
++------------+
+| 2020-02-03 |
++------------+
+
+-- Including time component (ignores time, uses only date for calculation)
+SELECT NEXT_DAY('2020-01-31 02:02:02', 'MON') AS result;
++------------+
+| result     |
++------------+
+| 2020-02-03 |
++------------+
+
+-- Base date itself is target day of week (returns next occurrence)
+SELECT NEXT_DAY('2023-07-17', 'MON') AS result;  -- 2023-07-17 is Monday
++------------+
+| result     |
++------------+
+| 2023-07-24 |
++------------+
+
+-- Target day of week as abbreviation (case insensitive)
+SELECT NEXT_DAY('2023-07-13', 'FR') AS result;  -- 2023-07-13 is Thursday
++------------+
+| result     |
++------------+
+| 2023-07-14 |
++------------+
+
+-- Input is NULL (returns NULL)
+SELECT NEXT_DAY(NULL, 'SUN') AS result;
++--------+
+| result |
++--------+
+| NULL   |
++--------+
+
+--- Invalid weekday identifier (throws exception)
+mysql> SELECT NEXT_DAY('2023-07-13', 'ABC') AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Function next_day failed to parse weekday: ABC
+
+--- Maximum date (returns itself)
+SELECT NEXT_DAY('9999-12-31 12:00:00', 'SUNDAY') AS result;
++------------+
+| result     |
++------------+
+| 9999-12-31 |
++------------+
+``` 

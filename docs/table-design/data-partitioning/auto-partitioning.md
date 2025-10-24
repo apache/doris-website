@@ -63,7 +63,7 @@ When creating a table, use the following syntax to populate the `partitions_defi
 1. AUTO RANGE PARTITION:
 
     ```sql
-      AUTO PARTITION BY RANGE(<partition_expr>)
+      [AUTO] PARTITION BY RANGE(<partition_expr>)
       <origin_partitions_definition>
     ```
 
@@ -97,6 +97,8 @@ When creating a table, use the following syntax to populate the `partitions_defi
       "replication_allocation" = "tag.location.default: 1"
       );
     ```
+
+    In AUTO RANGE PARTITION, the `AUTO` keyword can be omitted, and it still conveys the meaning of automatic partitioning.
 
 2. AUTO LIST PARTITION
 
@@ -228,32 +230,46 @@ Doris supports both Auto and Dynamic Partition. In this case, both functions are
 
 There is no conflict between the two syntaxes, just set the corresponding clauses/attributes at the same time. Please note that it is uncertain whether the partition in current period is created by Auto Partition or Dynamic Partition. Different creation methods will lead to different naming formats for the partitions.
 
-## Best Practice
+## Lifecycle Management
 
-In scenarios where you need to set a limit on the partition lifecycle, you can **disable the creation of Dynamic Partition, leaving the creation of partitions to be completed by Auto Partition**, and complete the management of the partition lifecycle through the Dynamic Partition's function of dynamically reclaiming partitions:
+:::info
+Doris supports the simultaneous use of automatic partitioning and dynamic partitioning for lifecycle management, but it is now not recommended.
+:::
+
+In the AUTO RANGE PARTITION table, the property `partition.retention_count` is supported, which accepts a positive integer value as a parameter (denoted as `N`), indicating that **only the top `N` historical partitions with the largest partition values** are retained among all historical partitions. All current and future partitions are retained. Specifically:
+
+- Since RANGE partitions are always non-overlapping, `partition A's value > partition B's value` is equivalent to `partition A's lower bound value > partition B's upper bound value` which is equivalent to `partition A's upper bound value > partition B's upper bound value`.
+- Historical partitions refer to **partitions whose upper bound is <= current time**.
+- Current and future partitions refer to **partitions whose lower bound is >= current time**.
+
+For example:
 
 ```sql
-create table auto_dynamic(
-    k0 datetime(6) NOT NULL
+create table auto_recycle(
+    k0 datetime(6) not null
 )
-auto partition by range (date_trunc(k0, 'year'))
-(
-)
-DISTRIBUTED BY HASH(`k0`) BUCKETS 2
+AUTO PARTITION BY RANGE (date_trunc(k0, 'day')) ()
+DISTRIBUTED BY HASH(`k0`) BUCKETS 1
 properties(
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.start" = "-50",
-    "dynamic_partition.end" = "0", --- Dynamic Partition No Partition Creation
-    "dynamic_partition.time_unit" = "year",
-    "replication_num" = "1"
+    "partition.retention_count" = "3"
 );
 ```
 
-This way we have both the flexibility of Auto Partition and consistency in partition names.
+This represents keeping only the top 3 partitions with the largest date values in the history. Assuming the current date is `2025-10-21`, and inserting data for each day from `2025-10-16` to `2025-10-23`, after one recycling, the remaining partitions are as follows:
 
-:::note
-In some early versions prior to 2.1.7, this feature was not disabled but not recommended.
+- p20251018000000
+- p20251019000000
+- p20251020000000 (The following partition and above: Only keep three historical partitions)
+- p20251021000000 (The following partition and below: The current and future partitions are not affected)
+- p20251022000000
+- p20251023000000
+
+## Conjunct with Auto Bucket
+
+Only AUTO RANGE PARTITION can be used together with the [Auto Bucket](./data-bucketing.md#auto-setting-bucket-number) feature. When using this feature, Doris assumes that the data import is incremental in time order, and each import only involves one partition. In other words, this usage is only recommended for tables that are incrementally imported batch by batch.
+
+:::warning Note!
+If the data import method does not conform to the above pattern, and both auto partitioning and auto bucketing are used at the same time, there is a possibility that the number of buckets in the new partition is extremely unreasonable, which may greatly affect query performance.
 :::
 
 ## Partition Management

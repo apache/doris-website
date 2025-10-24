@@ -27,8 +27,9 @@ EXP(<x>)
 
 ## Return Value
 
-Return a value of type double
-- If the parameter has a null value, it returns NULL
+Return a value of type double. Special cases:
+- If the parameter is NULL, returns NULL
+- When the parameter is quite large, returns Infinity
 
 ## Example
 
@@ -44,7 +45,7 @@ select exp(2);
 +------------------+
 ```
 
-```
+```sql
 select exp(3.4);
 ```
 
@@ -54,4 +55,16 @@ select exp(3.4);
 +--------------------+
 | 29.964100047397011 |
 +--------------------+
+```
+
+```sql
+select exp(1000000);
+```
+
+```text
++--------------+
+| EXP(1000000) |
++--------------+
+|     Infinity |
++--------------+
 ```

@@ -239,6 +239,11 @@ mysql> show stream load from testdb;
 -H "cloud_cluster:cluster1"
 ```
 
+从 Doris 4.0.0 开始，你也可以使用 `compute_group` 参数来指定
+```
+-H "compute_group:cluster1"
+```
+
 2. 在 Stream Load 绑定的 user 属性中指定 Compute Group。如果 user 属性和 HTTP header 同时指定了 Compute Group，那么以 Header 中指定的 Compute Group 为准。
 ```
 set property for user1 'default_compute_group'='cluster1';

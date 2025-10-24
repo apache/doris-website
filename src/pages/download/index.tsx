@@ -23,8 +23,8 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
-    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier }
+    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
 function downloadFile(url: string) {
@@ -54,10 +54,10 @@ export default function Download() {
     const [cpus, setCpus] = useState<any[]>([]);
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
-    const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
+    const [releaseFlag, setReleaseFlag] = useState<boolean>(true);
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
     // const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
-    const [releaseNote, setReleaseNote] = useState('/docs/3.0/releasenotes/v3.0/release-3.0.5')
+    const [releaseNote, setReleaseNote] = useState('/docs/dev/releasenotes/v4.0/release-4.0.0');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -89,9 +89,9 @@ export default function Download() {
             case '1.2.8':
                 return 31673;
             default:
-                return null
+                return null;
         }
-    }
+    };
     function toDocsRelease(version: string) {
         const SUPPORTED_VERSION = '>=1.1.0';
         const versionNumber = version.match(/[0-9].[0-9].[0-9]*/)?.[0] || '0.0.0';
@@ -103,13 +103,19 @@ export default function Download() {
     }
 
     function onValuesChange(values: any) {
-        setReleaseFlag(values.version[0] === '1.1' ? false : true)
+        setReleaseFlag(values.version[0] === '1.1' ? false : true);
         if (!toDocsRelease(values.version[1])) {
             setReleaseNote('https://github.com/apache/doris/releases');
         } else if (values.version[0] === '1.2') {
             setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
-        } else if (['3.0', '2.0'].includes(values.version[0])) {
-            setReleaseNote(`/docs/${values.version[0]}/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
+        } else if (['3.0', '2.0', '3.1', '2.1'].includes(values.version[0])) {
+            setReleaseNote(
+                `/docs/${values.version[0] === '3.0' || values.version[0] === '3.1' ? '3.x' : values.version[0]}/releasenotes/v${
+                    values.version[0]
+                }/release-${values.version[1]}`,
+            );
+        } else if (values.version[0] === '4.0') {
+            setReleaseNote(`/docs/dev/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         } else {
             setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         }
@@ -137,10 +143,14 @@ export default function Download() {
     // }
     return (
         <Layout
-            title={translate({ id: 'download.title', message: 'Apache Doris - Download | Easily deploy Doris anywhere' })}
+            title={translate({
+                id: 'download.title',
+                message: 'Apache Doris - Download | Easily deploy Doris anywhere',
+            })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
+                message:
+                    'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
             wrapperClassName="download"
         >
@@ -259,14 +269,16 @@ export default function Download() {
                             </div>
                         </div>
                         <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
-                            Note: For Apache Doris version specifics, please refer to the <Link
+                            Note: For Apache Doris version specifics, please refer to the{' '}
+                            <Link
                                 to="https://doris.apache.org/community/release-versioning"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',
                                     textDecoration: 'underline',
                                 }}
-                            >release versioning.
+                            >
+                                release versioning.
                             </Link>
                         </div>
                     </div>
@@ -293,13 +305,15 @@ export default function Download() {
                                 For more information on the latest release, please refer to the Docs.
                             </div>
                             <div className="mt-[32px]">
-                                Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival purposes only,
-                                and are no longer supported.
+                                Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival purposes
+                                only, and are no longer supported.
                             </div>
                         </div>
-                        {releaseFlag && <div>
-                            <LinkWithArrow to={releaseNote} text="Release note" />
-                        </div>}
+                        {releaseFlag && (
+                            <div>
+                                <LinkWithArrow to={releaseNote} text="Release note" />
+                            </div>
+                        )}
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
@@ -405,7 +419,7 @@ export default function Download() {
                 <div className="container mx-auto">
                     <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
                     <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
-                        {RUN_ANYWHERE.map(item =>
+                        {RUN_ANYWHERE.map(item => (
                             <div
                                 onClick={() => window.open(item.link)}
                                 key={item.title}
@@ -417,7 +431,7 @@ export default function Download() {
                                     <LinkWithArrow to={item.link} text="Learn more" />
                                 </div>
                             </div>
-                        )}
+                        ))}
                     </ul>
                 </div>
             </div>

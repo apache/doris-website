@@ -56,7 +56,7 @@ Apache Doris has become one of the world's most active open-source big data proj
 
 ![Apache-Doris-monthly-active-contributors](/images/summit2023/Apache-Doris-monthly-active-contributors.png)
 
-Along with such growth, we've also witnessed higher diversity among contributors. They are engineers from tech giants and database unicorns, like VeloDB, which is the commercial company based on Apache Doris. Many cloud service providers, including Alibaba Cloud, Tencent Cloud, Huawei Cloud, AWS and GCP (coming soon), have also jumped on the bandwagon and provided Doris-based data warehouse cloud hosting services.
+Along with such growth, we've also witnessed higher diversity among contributors. They are engineers from tech giants and database unicorns, like VeloDB, which is a commercial company with products based on Apache Doris. Many cloud service providers, including Alibaba Cloud, Tencent Cloud, Huawei Cloud, AWS and GCP (coming soon), have also jumped on the bandwagon and provided Doris-based data warehouse cloud hosting services.
 
 ## Fast-expanding user base
 

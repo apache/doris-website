@@ -25,9 +25,6 @@ Currently, the operators that support spilling include:
 When a query triggers spilling, additional disk read/write operations may significantly increase query time. It is recommended to increase the FE Session variable query_timeout. Additionally, spilling can generate significant disk I/O, so it is advisable to configure a separate disk directory or use SSD disks to reduce the impact of query spilling on normal data ingestion or queries. The query spilling feature is currently disabled by default.
 
 ## Memory Management Mechanism
-Doris's memory management is divided into three levels: process level, Workload Group level, and Query level.
-
-![Memory Management Mechanism Spill Disk Memory](/images/workload-management/spill_disk_memory.png)
 
 ### BE Process Memory Configuration
 The memory of the entire BE process is controlled by the mem_limit parameter in be.conf. Once Doris's memory usage exceeds this threshold, Doris cancels the current query that is requesting memory. Additionally, a background task asynchronously kills some queries to release memory or cache. Therefore, Doris's internal management operations (such as spilling to disk, flushing memtable, etc.) need to run when approaching this threshold to avoid reaching it. Once the threshold is reached, to prevent the entire process from experiencing OOM, Doris takes some drastic self-protection measures.
@@ -35,9 +32,10 @@ When Doris's BE is collocated with other processes (such as Doris FE, Kafka, HDF
 When the Doris process is deployed in K8S or managed by Cgroup, Doris automatically senses the memory configuration of the container.
 
 ### Workload Group Memory Configuration
-- memory_limit, default is 30%. Represents the percentage of memory allocated to the current workload group as a fraction of the entire process memory.
-- enable_memory_overcommit, default is true. Indicates whether the memory limit for the current workload group is a hard or soft limit. When this value is true, it means that the memory usage of all tasks within this workload group can exceed the memory_limit. However, when the memory of the entire process is insufficient, to ensure rapid memory reclamation, BE will prioritize canceling queries from workload groups that exceed their limits without waiting for spilling to disk. This is a user-friendly configuration strategy when users are unsure how much memory to allocate to multiple workload groups.
-- write_buffer_ratio, default is 20%. Represents the size of the write buffer within the current workload group. To speed up data ingestion, Doris first accumulates data in memory (i.e., constructs a Memtable), sorts it in its entirety when it reaches a certain size, and then writes it to disk. However, accumulating too many Memtables in memory can affect the memory available for normal queries, leading to query cancellation. Therefore, Doris allocates a separate write buffer for each workload group. For workload groups with heavy write operations, a larger write buffer can effectively improve ingestion throughput; for workload groups with more query operations, this value can be reduced.
+
+- MAX_MEMORY_PERCENT means that when requests are running in the group, their memory usage will never exceed this percentage of the total memory. Once exceeded, the query will either trigger disk spilling or be killed.
+- MIN_MEMORY_PERCENT sets the minimum memory value for a group. When resources are idle, memory exceeding MIN_MEMORY_PERCENT can be used. However, when memory is insufficient, the system will allocate memory according to MIN_MEMORY_PERCENT (minimum memory percentage). It may select some queries to kill, reducing the memory usage of the Workload Group to MIN_MEMORY_PERCENT to ensure that other Workload Groups have sufficient memory available.
+- The sum of MIN_MEMORY_PERCENT across all Workload Groups must not exceed 100%, and MIN_MEMORY_PERCENT cannot be greater than MAX_MEMORY_PERCENT.
 - low watermark: Default is 75%.
 - high watermark: Default is 90%.
 
@@ -45,7 +43,6 @@ When the Doris process is deployed in K8S or managed by Cgroup, Doris automatica
 ### Static Memory Allocation
 The memory used by a query is controlled by the following two parameters:
 - exec_mem_limit, representing the maximum memory that a query can use, with a default value of 2GB.
-- enable_mem_overcommit, default is true. Indicates whether the memory used by a query can exceed the exec_mem_limit. The default value is true, meaning it can exceed this limit. When the process memory is insufficient, queries that exceed the memory limit will be killed. If set to false, the query's memory usage cannot exceed this limit. When exceeded, spilling to disk or query killing will occur based on user settings. These two parameters must be set by the user in the session variable before query execution and cannot be dynamically modified during execution.
 
 ### Slot-Based Memory Allocation
 In practice, we found that with static memory allocation, users often do not know how much memory to allocate to a query. Therefore, exec_mem_limit is frequently set to half of the entire BE process memory, meaning that the memory used by all queries within the BE cannot exceed half of the process memory. In this scenario, this feature effectively becomes a kind of fuse. When we need to implement more granular policy control based on memory size, such as spilling to disk, this value is too large to rely on for control.
@@ -73,16 +70,14 @@ spill_storage_limit=100%
 ```
 set enable_spill=true;
 set exec_mem_limit = 10g
-set enable_mem_overcommit = false
 ```
 - enable_spill, indicates whether spilling is enabled for a query.
 - exec_mem_limit, represents the maximum memory size used by a query.
-- enable_mem_overcommit, indicates whether a query can use memory exceeding the exec_mem_limit.
 
 #### Workload Group
-The default memory_limit for workload groups is 30%, which can be adjusted based on the actual number of workload groups. If there is only one workload group, it can be adjusted to 90%.
+The default max_memory_percent for workload groups is 100%, which can be adjusted based on the actual number of workload groups. If there is only one workload group, it can be adjusted to 90%.
 ```
-alter workload group normal properties ( 'memory_limit'='90%' );
+alter workload group normal properties ( 'max_memory_percent'='90%' );
 ```
 
 ### Monitoring Spilling
@@ -142,18 +137,6 @@ mysql [information_schema]>select * from backend_active_tasks;
 2 rows in set (0.00 sec)
 ```
 
-##### workload_group_resource_usage
-The WRITE_BUFFER_USAGE_BYTES field has been added, representing the memory usage of Memtables for ingestion tasks within the workload group.
-```
-mysql [information_schema]>select * from workload_group_resource_usage;
-+-------+-------------------+--------------------+-------------------+-----------------------------+------------------------------+--------------------------+
-| BE_ID | WORKLOAD_GROUP_ID | MEMORY_USAGE_BYTES | CPU_USAGE_PERCENT | LOCAL_SCAN_BYTES_PER_SECOND | REMOTE_SCAN_BYTES_PER_SECOND | WRITE_BUFFER_USAGE_BYTES |
-+-------+-------------------+--------------------+-------------------+-----------------------------+------------------------------+--------------------------+
-| 10009 |                 1 |          102314948 |              0.69 |                           0 |                            0 |                 23404836 |
-+-------+-------------------+--------------------+-------------------+-----------------------------+------------------------------+--------------------------+
-1 row in set (0.01 sec)
-```
-
 ## Testing
 ### Test Environment
 #### Machine Configuration
@@ -169,7 +152,7 @@ The test used Alibaba Cloud servers with the following specific configurations:
 16 cores(vCPU) 64 GiB 0 Mbps ecs.g6.4xlarge
 ```
 
-#### 测试数据
+#### Dataset
 The test data used TPC-DS 10TB as input, sourced from Alibaba Cloud DLF, and mounted to Doris using the Catalog method. The SQL statement is as follows:
 ```
 CREATE CATALOG dlf PROPERTIES (
@@ -179,9 +162,7 @@ CREATE CATALOG dlf PROPERTIES (
 "dlf.endpoint" = "dlf-vpc.cn-beijing.aliyuncs.com",
 "dlf.region" = "cn-beijing",
 "dlf.uid" = "217316283625971977",
-"dlf.catalog.id" = "emr_dev",
-"dlf.access_key" = "fill in as applicable",
-"dlf.secret_key" = "fill in as applicable"
+"dlf.catalog.id" = "emr_dev"
 );
 ```
 
@@ -190,106 +171,105 @@ Reference website: https://doris.apache.org/zh-CN/docs/dev/benchmark/tpcds
 ### Test Results
 The dataset size was 10TB. The ratio of memory to dataset size was 1:52. The overall runtime was 32,000 seconds, and all 99 queries were successfully executed. In the future, we will provide spilling capabilities for more operators (such as window functions, Intersect, etc.) and continue to optimize performance under spilling conditions, reduce disk consumption, and improve query stability.
 
-| query   |Time(ms)|
-|---------|---------|
-| query1  |25590|
-| query2  |126445|
-| query3  |103859|
-| query4  |1174702|
-| query5  |266281|
-| query6  |62950|
-| query7  |212745|
-| query8  |67000|
-| query9  |602291|
-| query10 |70904|
-| query11 |544436|
-| query12 |25759|
-| query13 |229144|
-| query14 |1120895|
-| query15 |29409|
-| query16 |117287|
-| query17 |260122|
-| query18 |97453|
-| query19 |127384|
-| query20 |32749|
-| query21 |4471|
-| query22 |10162|
-| query23 |1772561|
-| query24 |535506|
-| query25 |272458|
-| query26 |83342|
-| query27 |175264|
-| query28 |887007|
-| query29 |427229|
-| query30 |13661|
-| query31 |108778|
-| query32 |37303|
-| query33 |181351|
-| query34 |84159|
-| query35 |81701|
-| query36 |152990|
-| query37 |36815|
-| query38 |172531|
-| query39 |20155|
-| query40 |75749|
-| query41 |527|
-| query42 |95910|
-| query43 |66821|
-| query44 |209947|
-| query45 |26946|
-| query46 |131490|
-| query47 |158011|
-| query48 |149482|
-| query49 |303515|
-| query50 |298089|
-| query51 |156487|
-| query52 |97440|
-| query53 |98258|
-| query54 |202583|
-| query55 |93268|
-| query56 |185255|
-| query57 |80308|
-| query58 |252746|
-| query59 |171545|
-| query60 |202915|
-| query61 |272184|
-| query62 |38749|
-| query63 |94327|
-| query64 |247074|
-| query65 |270705|
-| query66 |101465|
-| query67 |3744186|
-| query68 |151543|
-| query69 |15559|
-| query70 |132505|
-| query71 |180079|
-| query72 |3085373|
-| query73 |82623|
-| query74 |330087|
-| query75 |830993|
-| query76 |188805|
-| query77 |239730|
-| query78 |1895765|
-| query79 |144829|
-| query80 |463652|
-| query81 |15319|
-| query82 |76961|
-| query83 |32437|
-| query84 |22849|
-| query85 |58186|
-| query86 |33933|
-| query87 |185421|
-| query88 |434867|
-| query89 |108265|
-| query90 |31131|
-| query91 |18864|
-| query92 |24510|
-| query93 |281904|
-| query94 |67761|
-| query95 |3738968|
-| query96 |47245|
-| query97 |536702|
-| query98 |97800|
-| query99 |62210|
-| sum     |31797707|
-
+| Query    | Doris |
+| ---------- | ------- |
+| query1   | 29092 |
+| query2   | 130003 |
+| query3   | 96119 |
+| query4   | 1199097 |
+| query5   | 212719 |
+| query6   | 62259 |
+| query7   | 209154 |
+| query8   | 62433 |
+| query9   | 579371 |
+| query10  | 54260 |
+| query11  | 560169 |
+| query12  | 26084 |
+| query13  | 228756 |
+| query14  | 1137097 |
+| query15  | 27509 |
+| query16  | 84806 |
+| query17  | 288164 |
+| query18  | 94770 |
+| query19  | 124955 |
+| query20  | 30970 |
+| query21  | 4333 |
+| query22  | 9890 |
+| query23  | 1757755 |
+| query24  | 399553 |
+| query25  | 291474 |
+| query26  | 79832 |
+| query27  | 175894 |
+| query28  | 647497 |
+| query29  | 1299597 |
+| query30  | 11434 |
+| query31  | 106665 |
+| query32  | 33481 |
+| query33  | 146101 |
+| query34  | 84055 |
+| query35  | 69885 |
+| query36  | 148662 |
+| query37  | 21598 |
+| query38  | 164746 |
+| query39  | 5874 |
+| query40  | 51602 |
+| query41  | 563 |
+| query42  | 93005 |
+| query43  | 67769 |
+| query44  | 79527 |
+| query45  | 26575 |
+| query46  | 134991 |
+| query47  | 161873 |
+| query48  | 153657 |
+| query49  | 259387 |
+| query50  | 141421 |
+| query51  | 158056 |
+| query52  | 91392 |
+| query53  | 89497 |
+| query54  | 124118 |
+| query55  | 82584 |
+| query56  | 152110 |
+| query57  | 83417 |
+| query58  | 259580 |
+| query59  | 177125 |
+| query60  | 161729 |
+| query61  | 258058 |
+| query62  | 39619 |
+| query63  | 91258 |
+| query64  | 234882 |
+| query65  | 278610 |
+| query66  | 90246 |
+| query67  | 3939554 |
+| query68  | 183648 |
+| query69  | 11031 |
+| query70  | 137901 |
+| query71  | 166454 |
+| query72  | 2859001 |
+| query73  | 92015 |
+| query74  | 336694 |
+| query75  | 838989 |
+| query76  | 174235 |
+| query77  | 174525 |
+| query78  | 1956786 |
+| query79  | 162259 |
+| query80  | 602088 |
+| query81  | 16184 |
+| query82  | 56292 |
+| query83  | 26211 |
+| query84  | 11906 |
+| query85  | 57739 |
+| query86  | 34350 |
+| query87  | 173631 |
+| query88  | 449003 |
+| query89  | 113799 |
+| query90  | 30825 |
+| query91  | 12239 |
+| query92  | 26695 |
+| query93  | 275828 |
+| query94  | 56464 |
+| query95  | 64932 |
+| query96  | 48102 |
+| query97  | 597371 |
+| query98  | 112399 |
+| query99  | 64472 |
+| Sum      | 28102386 |

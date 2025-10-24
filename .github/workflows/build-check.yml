@@ -51,9 +51,13 @@ jobs:
               run: |
                 git config --global user.email "gha@apache.org"
                 git config --global user.name "github-action-test"
-                git reset --soft origin/master
-                git commit -m "All this PR changed(for test)"
-                python check_move.py `git rev-parse HEAD`
+          
+                # Get the base commit of the PR
+                BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
+    
+                # Run the Python script with the base commit range
+                python check_move.py $BASE_COMMIT
+                  
             
             - name: Run Node.js dead link checker
               run: |

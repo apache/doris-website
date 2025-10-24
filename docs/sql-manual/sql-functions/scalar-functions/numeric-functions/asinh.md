@@ -25,6 +25,15 @@ ASINH(<x>)
 
 The asinh value of parameter `x`. 
 
+## Special Cases
+- When `x` is NaN, returns NaN
+- When `x` is positive infinity, returns Infinity
+- When `x` is negative infinity, returns -Infinity
+- When `x` is +0.0, returns 0
+- When `x` is -0.0, returns -0
+- Very large magnitudes may overflow to Infinity/-Infinity (for example, ±1e308)
+- When `x` is NULL, returns NULL
+
 ## Example
 
 ```sql
@@ -61,4 +70,40 @@ select asinh(-1.0);
 +--------------------+
 | -0.881373587019543 |
 +--------------------+
+```
+
+```sql
+select asinh(cast('nan' as double));
+```
+
+```sql
++------------------------------+
+| asinh(cast('nan' AS DOUBLE)) |
++------------------------------+
+| NaN                          |
++------------------------------+
+```
+
+```sql
+select asinh(cast('inf' as double));
+```
+
+```sql
++------------------------------+
+| asinh(cast('inf' AS DOUBLE)) |
++------------------------------+
+| Infinity                     |
++------------------------------+
+```
+
+```sql
+select asinh(cast('-inf' as double));
+```
+
+```sql
++-------------------------------+
+| asinh(cast('-inf' AS DOUBLE)) |
++-------------------------------+
+| -Infinity                     |
++-------------------------------+
 ```

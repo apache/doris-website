@@ -1,92 +1,50 @@
 ---
 {
     "title": "ARRAY_SORTBY",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
-## Description
+## Function
 
-First, arrange the key column in ascending order, and then return the corresponding column of the src column sorted in this order as the result;
-Returns NULL if the input array src is NULL.
-If the input array key is NULL, the order in which src is returned remains unchanged.
-If the input array key element contains NULL, the output sorted array will place NULL first.
+Sort the `values` array according to the order of a `keys` array.
+- For example, if `keys` is `[3, 0, 2]` and `values` is `[5, 7, 8]`, after sorting the `keys` become `[0, 2, 3]` and the corresponding `values` become `[7, 8, 5]`.
 
 ## Syntax
 
-```sql
-ARRAY_SORTBY(<src>, <key>)
-ARRAY_SORTBY(<lambda>, <arr> [, ...])
-```
+- `ARRAY_SORTBY(values, keys)`
+- `ARRAY_SORTBY(lambda, values)`
+- `ARRAY_SORTBY(lambda, values)` is equivalent to `ARRAY_SORTBY(values, ARRAY_MAP(lambda, values))`
 
 ## Parameters
 
-| Parameter | Description | 
-| --- | --- |
-| `<lambda>` | A lambda expression where the input parameters must match the number of columns in the given array. The expression can execute valid scalar functions but does not support aggregate functions. |
-| `<arr>` | ARRAY array |
+- `values`: `ARRAY<T>`, the value array to be sorted. `T` supports numeric, boolean, string, datetime, IP, etc.
+- `keys`: `ARRAY<T>`, a key array of the same length as `values`. `T` supports numeric, boolean, string, datetime, IP, etc.
+- `lambda`: a `lambda` expression applied to `values` to produce the `keys` array used for sorting.
 
-## Return Value
+## Return value
 
-Returns a sorted ARRAY type result.
+- Returns `ARRAY<T>` of the same type as `values`.
+- An error is thrown when, for any row, the element counts of `values` and `keys` are different.
 
-## Example
+## Usage notes
 
-```sql
-select array_sortby(['a','b','c'],[3,2,1]);
-```
+- Stability: `values` are reordered by ascending `keys`. The relative order among equal keys is undefined.
+- In higher-order calls, `keys` are computed first by `ARRAY_MAP`, then `values` are sorted by `keys`.
 
-```text
-+----------------------------------------------------+
-| array_sortby(ARRAY('a', 'b', 'c'), ARRAY(3, 2, 1)) |
-+----------------------------------------------------+
-| ['c', 'b', 'a']                                    |
-+----------------------------------------------------+
-```
+## Examples
 
-```sql
-select array_sortby([1,2,3,4,5],[10,5,1,20,80]);
-```
+- Basic: sort `values` by the ascending order of `keys`.
+  - `ARRAY_SORTBY([10,20,30], [3,1,2])` -> `[20,30,10]`
+  - `ARRAY_SORTBY(['a','b','c'], [2,2,1])` -> `['c','a','b]`
 
-```text
-+-------------------------------------------------------------+
-| array_sortby(ARRAY(1, 2, 3, 4, 5), ARRAY(10, 5, 1, 20, 80)) |
-+-------------------------------------------------------------+
-| [3, 2, 1, 4, 5]                                             |
-+-------------------------------------------------------------+
-```
+- Higher-order: compute `keys` via `lambda`, then sort.
+  - `ARRAY_SORTBY(x -> x + 1, [3,1,2])` -> `[1,2,3]` (with `keys` `[4,2,3]`)
+  - `ARRAY_SORTBY(x -> x*2 <= 2, [1,2,3])` -> `[1,2,3]` (with `keys` `[true,false,false]`)
 
-```sql
-select *,array_sortby(c_array1,c_array2) from test_array_sortby order by id;
-```
+- When `keys` or `values` is `NULL`, return `values` unchanged.
+  - `array_sortby([10,20,30], NULL)` -> `[10, 20, 30]`
+  - `array_sortby(NULL, [2,3])` -> `NULL`
 
-```text
-+------+-----------------+-------------------------+--------------------------------------+
-| id   | c_array1        | c_array2                | array_sortby(`c_array1`, `c_array2`) |
-+------+-----------------+-------------------------+--------------------------------------+
-|    0 | NULL            | [2]                     | NULL                                 |
-|    1 | [1, 2, 3, 4, 5] | [10, 20, -40, 80, -100] | [5, 3, 1, 2, 4]                      |
-|    2 | [6, 7, 8]       | [10, 12, 13]            | [6, 7, 8]                            |
-|    3 | [1]             | [-100]                  | [1]                                  |
-|    4 | NULL            | NULL                    | NULL                                 |
-|    5 | [3]             | NULL                    | [3]                                  |
-|    6 | [1, 2]          | [2, 1]                  | [2, 1]                               |
-|    7 | [NULL]          | [NULL]                  | [NULL]                               |
-|    8 | [1, 2, 3]       | [3, 2, 1]               | [3, 2, 1]                            |
-+------+-----------------+-------------------------+--------------------------------------+
-```
 
-```sql
-select *, array_map((x,y)->(y+x),c_array1,c_array2) as arr_sum,array_sortby((x,y)->(y+x),c_array1,c_array2) as arr_sort from array_test2;
-```
-
-```text
-+------+-----------------+--------------+----------------+-----------------+
-| id   | c_array1        | c_array2     | arr_sum        | arr_sort        |
-+------+-----------------+--------------+----------------+-----------------+
-|    1 | [1, 2, 3]       | [10, 11, 12] | [11, 13, 15]   | [1, 2, 3]       |
-|    2 | [4, 3, 5]       | [10, 20, 30] | [14, 23, 35]   | [4, 3, 5]       |
-|    3 | [-40, 30, -100] | [30, 10, 20] | [-10, 40, -80] | [-100, -40, 30] |
-+------+-----------------+--------------+----------------+-----------------+
-```
 
