@@ -79,7 +79,9 @@ PROPERTIES (
 | `dim` | Yes | Positive integer (> 0) | (none) | Vector dimension. All imported vectors must match or an error is raised. |
 | `max_degree` | No | Positive integer | `32` | HNSW M (max neighbors per node). Affects index memory and search performance. |
 | `ef_construction` | No | Positive integer | `40` | HNSW efConstruction (candidate queue size during build). Larger gives better quality but slower build. |
-| `quantizer` | No | `flat`, `sq8`, `sq4` | `flat` | Vector encoding/quantization: `flat` = raw; `sq8`/`sq4` = symmetric quantization (8/4 bit) to reduce memory. |
+| `quantizer` | No | `flat`, `sq8`, `sq4`, `pq` | `flat` | Vector encoding/quantization: `flat` = raw; `sq8`/`sq4` = scalar quantization (8/4 bit), `pq` = product quantization to reduce memory. |
+| `pq_m` | Required when 'quantizer=pq' | Positive integer | (none) | Specifies how many subvectors are used (vector dimension dim must be divisible by pq_m). |
+| `pq_nbits` | Required when 'quantizer=pq' | Positive integer | (none) | The number of bits used to represent each subvector, in faiss pq_nbits is generally required to be no greater than 24. |
 
 Import via S3 TVF:
 
@@ -283,7 +285,7 @@ Beyond build-time parameters for HNSW, you can pass search-time parameters via s
 
 With FLAT encoding, an HNSW index (raw vectors plus graph structure) may consume large amounts of memory. HNSW must be fully resident in memory to function, so memory can become a bottleneck at large scale.
 
-Vector quantization compresses float32 storage to reduce memory. Doris currently supports two scalar quantization schemes: INT8 and INT4 (SQ8 / SQ4). Example using SQ8:
+Scalar quantization (SQ) compresses float32 storage to reduce memory. Product quantization (PQ) reduces memory overhead by compressing high-dimensional vectors into smaller subvectors and quantizing each subvector independently. For scalar quantization, Doris currently supports two scalar quantization schemes: INT8 and INT4 (SQ8 / SQ4). Example using SQ8:
 
 ```sql
 CREATE TABLE sift_1M (
@@ -314,7 +316,32 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 
 Quantization introduces extra build-time overhead because each distance computation must decode quantized values. For 128-D vectors, build time increases with row count; SQ vs. FLAT can be up to ~10× slower to build.
 
-![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
+Similarly, Doris also supports product quantization, but note that when using PQ, additional parameters need to be provided:
+
+- `pq_m`: Indicates how many sub-vectors to split the original high-dimensional vector into (vector dimension dim must be divisible by pq_m).
+- `pq_nbits`: Indicates the number of bits for each sub-vector quantization, which determines the size of each subspace codebook (k = 2 ^ pq_nbits), in faiss pq_nbits is generally required to be no greater than 24.
+
+```sql
+CREATE TABLE sift_1M (
+  id int NOT NULL,
+  embedding array<float>  NOT NULL  COMMENT "",
+  INDEX ann_index (embedding) USING ANN PROPERTIES(
+      "index_type"="hnsw",
+      "metric_type"="l2_distance",
+      "dim"="128",
+      "quantizer"="pq",    -- Specify using PQ for quantization
+      "pq_m"="2",          -- Required when using PQ, indicates splitting high-dimensional vector into pq_m low-dimensional sub-vectors
+      "pq_nbits"="2"       -- Required when using PQ, indicates the number of bits for each subspace codebook
+  )
+) ENGINE=OLAP
+DUPLICATE KEY(id) COMMENT "OLAP"
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+![ANN-SQ-BUILD_COSTS](/images/ann-index-quantization-build-time.jpg)
 
 ## Performance Tuning
 
