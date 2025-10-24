@@ -20,7 +20,7 @@
 
 2. 开放存储 SDK 的使用有一定的限制，请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中 `使用限制` 的章节。
 
-3. MaxCompute 中的 Project 相当于 Doris 中的 Database。
+3. 在 Doris 3.1.3 版本之前，MaxCompute 中的 Project 相当于 Doris 中的 Database。3.1.3 版本中，可以通过 `mc.enable.namespace.schema` 参数引入 MaxCompute 的 schema 层级。
 
 ## 配置 Catalog
 
@@ -59,7 +59,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.connect_timeout`        | `10s`           | 连接 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.read_timeout`           | `120s`          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.retry_count`            | `4`             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
-  | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于6位，则条件下推可能导致结果不准确。         | 2.1.9/3.0.5（含）之后  |
+  | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于 6 位，则条件下推可能导致结果不准确。         | 2.1.9/3.0.5（含）之后  |
+  | `mc.account_format` | `name`             | 阿里云国际站和中国站的账号系统不一致，对于国际站用户，如出现如 `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` 的错误，可指定该参数为 `id`。 | 3.0.9/3.1.1（含）之后  |
+  | `mc.enable.namespace.schema` | `false`             | 是否支持 MaxCompute 的 schema 层级。详见：https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3（含）之后  |
 
 * `[CommonProperties]`
 
@@ -74,6 +76,24 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * 支持读取分区表、聚簇表、物化视图。
 
 * 不支持读取 MaxCompute 的外部表、逻辑视图、Delta Table。
+
+## 层级映射
+
+- `mc.enable.namespace.schema` 为 false
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | N/A        |
+  | Database | Project    |
+  | Table    | Table      |
+
+- `mc.enable.namespace.schema` 为 true
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | Project    |
+  | Database | Schema     |
+  | Table    | Table      |
 
 ## 列类型映射
 
@@ -126,6 +146,21 @@ CREATE CATALOG mc_catalog PROPERTIES (
 );
 ```
 
+支持 Schema：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.region' = 'cn-beijing',
+    'mc.default.project' = 'project',
+    'mc.access_key' = 'ak',
+    'mc.secret_key' = 'sk'
+    'mc.odps_endpoint' = 'http://service.cn-beijing.maxcompute.aliyun-inc.com/api',
+    'mc.tunnel_endpoint' = 'http://dt.cn-beijing.maxcompute.aliyun-inc.com',
+    'mc.enable.namespace.schema' = 'true'
+);
+```
+
 ## 查询操作
 
 ### 基础查询
@@ -156,7 +191,9 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 
 	请参照该 [文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 中【使用开放存储（按量付费）】的章节，来开启开放存储 (Storage API) 开关，并给 Ak,SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
 
-3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域 Endpoint 对照表】来配置 `mc.endpoint` 。使用 VPC 访问的用户，需要根据【各地域 Endpoint 对照表（阿里云 VPC 网络连接方式）】表中的【VPC 网络 Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域 Endpoint 对照表（阿里云经典网络连接方式）】表中的【经典网络 Endpoint】列、或者选择【各地域 Endpoint 对照表（外网连接方式)】表中的【外网 Endpoint 列来配置 `mc.endpoint`。
+3. 根据 [阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints) 中的【地域 Endpoint 对照表】来配置 `mc.endpoint`
+
+  使用 VPC 访问的用户，需要根据【各地域 Endpoint 对照表（阿里云 VPC 网络连接方式）】表中的【VPC 网络 Endpoint】列来配置 `mc.endpoint` 。使用公网访问的用户，可以选择【各地域 Endpoint 对照表（阿里云经典网络连接方式）】表中的【经典网络 Endpoint】列、或者选择【各地域 Endpoint 对照表（外网连接方式)】表中的【外网 Endpoint 列来配置 `mc.endpoint`。
 
 ### 自定义服务地址 (适用于 Doris 2.1.7 之前)
 
