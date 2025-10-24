@@ -15,10 +15,20 @@
 JSON_OBJECT (<key>, <value>[, <key>, <value>, ...])
 ```
 
+```sql
+JSON_OBJECT(*)
+```
+
 ## 参数
-### 可变参数：
-- <key> String 类型
-- <value> 多种类型，Doris 会自动将非 Json 类型的参数通过 [`TO_JSON`](./to-json.md) 函数将其转换为 Json 类型。
+- `<key>` String 类型
+- `<value>` 多种类型，Doris 会自动将非 Json 类型的参数通过 [`TO_JSON`](./to-json.md) 函数将其转换为 Json 类型。
+：`*` 当使用星号（通配符）调用时，会使用指定数据中的引用名成作为键（key），对应的值作为值（value），从而构造出一个 JSON 类型的值。
+
+    当向该函数传入通配符时，可以用表的名称或别名对通配符进行限定。例如，若要传入名为 mytable 的表中的所有列，请按如下方式指定：
+
+    ```sql
+    (mytable.*)
+    ```
 
 ## 注意事项
 - 参数数量必须为偶数个，可以是 0 个参数（返回一个空的 Json 对象）。
