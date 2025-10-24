@@ -7,165 +7,161 @@
 
 ## Description
 
-Use the first parameter sep as the connector to concatenate the second parameter and all subsequent parameters (or all strings in one ARRAY or multi ARRAY ) into a string. Special cases:
+The CONCAT_WS function (Concatenate With Separator) concatenates multiple strings or arrays using a specified separator. Unlike the CONCAT function, CONCAT_WS automatically skips NULL values (but not empty strings) and inserts a separator between non-NULL values. This function supports both string arguments and array arguments modes, and is very useful in scenarios such as generating CSV formats, path joining, and tag lists.
 
-- If the separator is NULL, NULL is returned.
-
-- The `CONCAT_WS` function does not skip empty strings, but skips NULL values.
-- The `CONCAT_WS` function does not skip empty strings in any `ARRAY` parameters, but skips NULL values in `ARRAY`.
-- The `CONCAT_WS` function does not skip NULL parameter if input multi arrays,return empty string.
-- The first parameters must be a `string` type, and the others must be the same type ,belong to the `string` or `ARRAY` type 
 ## Syntax
 
 ```sql
-CONCAT_WS ( <sep> , <str> [ , <str> ] )
-CONCAT_WS ( <sep> , <array> [ , <array> ])
+-- String mode
+CONCAT_WS(<sep>, <str> [, <str> ...])
+
+-- Array mode  
+CONCAT_WS(<sep>, <array> [, <array> ...])
 ```
 
 ## Parameters
 
-| Parameter | Description |
+| Parameter    | Description              |
 |-------|-----------------|
-| `<sep>` | Connector for concatenating strings, it is `string` type or `varchar` type |
-| `<str>` | String to be concatenated , it is `string` or `varchar` type|
-| `<array>` | Array to be concatenated ,it is `ARRAY` type, and every element is `string` or `varchar` type|
+| `<sep>` | Separator string used to join parts. Type: VARCHAR |
+| `<str>` | String arguments to be concatenated. Type: VARCHAR |
+| `<array>` | Array arguments to be concatenated, array elements must be string type. Type: ARRAY&lt;VARCHAR&gt; |
 
-## Return value
+## Return Value
 
-Parameter `<sep>` or `<array>` The string concatenated with `<str>`. Special cases:
+Returns VARCHAR type, representing the concatenated string with separators.
 
-- If delimiter is NULL, returns NULL.
-- If parameters with mutlti arrays and it contains a null,function will return empty string.
+Concatenation rules:
+- Uses the first argument as the separator to join subsequent arguments
+- Automatically skips NULL values, but preserves empty strings
+- Supports string arguments or array arguments, but cannot be mixed
+- Supports UTF-8 multi-byte characters as separators and content
 
-## Example
+Special cases:
+- If the separator is NULL, returns NULL
+- If all arguments to be concatenated are NULL, returns an empty string
+- In array mode, skips NULL elements in arrays, but preserves empty string elements
+- When NULL arrays are included in multiple array arguments, returns an empty string
+- Mixing string arguments and array arguments is not allowed
 
-Concatenate strings together using or
+## Examples
 
+1. Basic string concatenation
 ```sql
-SELECT CONCAT_WS("or", "d", "is"),CONCAT_WS(NULL, "d", "is"),CONCAT_WS('or', 'd', NULL, 'is')
+SELECT CONCAT_WS(',', 'apple', 'banana', 'orange'), CONCAT_WS('-', 'hello', 'world');
 ```
-
 ```text
-+----------------------------+----------------------------+------------------------------------------+
-| concat_ws('or', 'd', 'is') | concat_ws(NULL, 'd', 'is') | concat_ws('or', 'd', NULL, 'is') |
-+----------------------------+----------------------------+------------------------------------------+
-| doris                      | NULL                       | doris                              |
-+----------------------------+----------------------------+------------------------------------------+
++-------------------------------------------+----------------------------------+
+| CONCAT_WS(',', 'apple', 'banana', 'orange') | CONCAT_WS('-', 'hello', 'world') |
++-------------------------------------------+----------------------------------+
+| apple,banana,orange                       | hello-world                      |
++-------------------------------------------+----------------------------------+
 ```
 
-Concatenate array arrays together using or
-
+2. NULL separator handling
 ```sql
-SELECT CONCAT_WS("or", ["d", "is"]),CONCAT_WS(NULL, ["d", "is"]),CONCAT_WS("or", ["d", NULL,"is"])
+SELECT CONCAT_WS(NULL, 'd', 'is'), CONCAT_WS('or', 'd', NULL, 'is');
 ```
-
 ```text
-+------------------------------+------------------------------+------------------------------------+
-| concat_ws('or', ['d', 'is']) | concat_ws(NULL, ['d', 'is']) | concat_ws('or', ['d', NULL, 'is']) |
-+------------------------------+------------------------------+------------------------------------+
-| doris                        | NULL                         | doris                              |
-+------------------------------+------------------------------+------------------------------------+
++----------------------------+----------------------------------+
+| CONCAT_WS(NULL, 'd', 'is') | CONCAT_WS('or', 'd', NULL, 'is') |
++----------------------------+----------------------------------+
+| NULL                       | doris                            |
++----------------------------+----------------------------------+
 ```
 
-Concatenating multiple arrays
-
+3. Empty string handling (preserves empty strings)
 ```sql
-mysql> SELECT CONCAT_WS("-", ["a", "b"], ["c", NULL], ["d"]);
-
-+------------------------------------------------+
-| CONCAT_WS("-", ["a", "b"], ["c", NULL], ["d"]) |
-+------------------------------------------------+
-| a-b-c-d                                        |
-+------------------------------------------------+
+SELECT CONCAT_WS('|', 'hello', '', 'world', NULL), CONCAT_WS(',', '', 'test', '');
+```
+```text
++--------------------------------------------+-------------------------------+
+| CONCAT_WS('|', 'hello', '', 'world', NULL) | CONCAT_WS(',', '', 'test', '') |
++--------------------------------------------+-------------------------------+
+| hello||world                               | ,test,                        |
++--------------------------------------------+-------------------------------+
 ```
 
-Handling NULL in string parameters
-
+4. All NULL values
 ```sql
-mysql> SELECT CONCAT_WS("|", "hello", "", "world", NULL);
-
-+--------------------------------------------+
-| CONCAT_WS("|", "hello", "", "world", NULL) |
-+--------------------------------------------+
-| hello||world                               |
-+--------------------------------------------+
+SELECT CONCAT_WS('x', NULL, NULL), CONCAT_WS('-', NULL, NULL, NULL);
+```
+```text
++----------------------------+---------------------------------+
+| CONCAT_WS('x', NULL, NULL) | CONCAT_WS('-', NULL, NULL, NULL) |
++----------------------------+---------------------------------+
+|                            |                                 |
++----------------------------+---------------------------------+
 ```
 
-Return empty if NULL in multi arrays;
-
+5. Array mode basic usage
 ```sql
-mysql>  SELECT CONCAT_WS("-", ["a", "b"], null,["c", NULL], ["d"]);
+SELECT CONCAT_WS('or', ['d', 'is']), CONCAT_WS('-', ['apple', 'banana', 'cherry']);
+```
+```text
++------------------------------+--------------------------------------------+
+| CONCAT_WS('or', ['d', 'is']) | CONCAT_WS('-', ['apple', 'banana', 'cherry']) |
++------------------------------+--------------------------------------------+
+| doris                        | apple-banana-cherry                        |
++------------------------------+--------------------------------------------+
+```
+
+6. NULL values in arrays
+```sql
+SELECT CONCAT_WS('or', ['d', NULL, 'is']), CONCAT_WS(',', [NULL, 'a', 'b', NULL, 'c']);
+```
+```text
++------------------------------------+------------------------------------------+
+| CONCAT_WS('or', ['d', NULL, 'is']) | CONCAT_WS(',', [NULL, 'a', 'b', NULL, 'c']) |
++------------------------------------+------------------------------------------+
+| doris                              | a,b,c                                    |
++------------------------------------+------------------------------------------+
+```
+
+7. Multiple array concatenation
+```sql
+SELECT CONCAT_WS('-', ['a', 'b'], ['c', NULL], ['d']), CONCAT_WS('|', ['x'], ['y', 'z']);
+```
+```text
++------------------------------------------------+----------------------------------+
+| CONCAT_WS('-', ['a', 'b'], ['c', NULL], ['d']) | CONCAT_WS('|', ['x'], ['y', 'z']) |
++------------------------------------------------+----------------------------------+
+| a-b-c-d                                        | x|y|z                            |
++------------------------------------------------+----------------------------------+
+```
+
+8. NULL array in multiple arrays
+```sql
+SELECT CONCAT_WS('-', ['a', 'b'], NULL, ['c', NULL], ['d']);
+```
+```text
 +-----------------------------------------------------+
-| CONCAT_WS("-", ["a", "b"], null,["c", NULL], ["d"]) |
+| CONCAT_WS('-', ['a', 'b'], NULL, ['c', NULL], ['d']) |
 +-----------------------------------------------------+
 |                                                     |
 +-----------------------------------------------------+
 ```
 
-Mixing strings and arrays (invalid)
-
+9. UTF-8 multi-byte character handling
 ```sql
-mysql> SELECT CONCAT_WS(",", "a", ["b", "c"]);
-
-ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type ARRAY<VARCHAR(1)> to target type=VARCHAR(65533)
-
+SELECT CONCAT_WS('x', 'ṭṛì', 'ḍḍumai'), CONCAT_WS('→', ['ṭṛì', 'ḍḍumai', 'hello']);
 ```
-
- All NULL inputs
-
- ```sql
- mysql> SELECT CONCAT_WS("x", NULL, NULL);
-
-+----------------------------+
-| CONCAT_WS("x", NULL, NULL) |
-+----------------------------+
-|                            |
-+----------------------------+
- ```
-
-Chiese Charactors concat 
-
-```sql
-mysql> SELECT CONCAT_WS("x", '中文', '中文');
-
-+------------------------------------+
-| CONCAT_WS("x", '中文', '中文')     |
-+------------------------------------+
-| 中文x中文                          |
-+------------------------------------+
-```
-
-Chinese charactors in multi arrays
-
-```sql
-mysql> SELECT CONCAT_WS("x", ['中文'], ['中文']);
-+----------------------------------------+
-| CONCAT_WS("x", ['中文'], ['中文'])     |
-+----------------------------------------+
-| 中文x中文                              |
-+----------------------------------------+
-```
-
-Insert and concat them
-
-```sql
-DROP TABLE IF EXISTS test_concat_ws_1;
-
-CREATE TABLE test_concat_ws_1 (id INT, a ARRAY<VARCHAR>, b ARRAY<VARCHAR>) ENGINE=OLAP DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES ('replication_num' = '1')
-
-INSERT INTO test_concat_ws_1 VALUES (1, ['a','b'], ['css',null,'d']), (2, ['x',null], ['y','z']),(3,['你好','世界'],['Doris',null,'Nereids'])
-
-SELECT concat_ws('-', a, b) FROM test_concat_ws_1 ORDER BY id
-
-```
-
 ```text
++-------------------------------+----------------------------------------------+
+| CONCAT_WS('x', 'ṭṛì', 'ḍḍumai') | CONCAT_WS('→', ['ṭṛì', 'ḍḍumai', 'hello']) |
++-------------------------------+----------------------------------------------+
+| ṭṛìxḍḍumai                    | ṭṛì→ḍḍumai→hello                          |
++-------------------------------+----------------------------------------------+
+```
 
-+-----------------------------+
-| concat_ws('-', a, b)        |
-+-----------------------------+
-| a-b-css-d                   |
-| x-y-z                       |
-| 你好-世界-Doris-Nereids     |
-+-----------------------------+
+10. CSV format generation and path joining
+```sql
+SELECT CONCAT_WS(',', 'Name', 'Age', 'City'), CONCAT_WS('/', 'home', 'user', 'documents', 'file.txt');
+```
+```text
++------------------------------------+--------------------------------------------------------+
+| CONCAT_WS(',', 'Name', 'Age', 'City') | CONCAT_WS('/', 'home', 'user', 'documents', 'file.txt') |
++------------------------------------+--------------------------------------------------------+
+| Name,Age,City                      | home/user/documents/file.txt                          |
++------------------------------------+--------------------------------------------------------+
 ```

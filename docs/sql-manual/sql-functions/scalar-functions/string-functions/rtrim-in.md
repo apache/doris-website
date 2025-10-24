@@ -8,6 +8,7 @@
 ## Description
 
 The RTRIM_IN function removes specified characters from the right side of a string. When no character set is specified, it removes trailing spaces by default. When a character set is specified, it removes all specified characters from the right side (regardless of their order in the set).
+
 The key feature of RTRIM_IN is that it removes any combination of characters from the specified set, while the RTRIM function removes characters based on exact string matching.
 
 ## Syntax
@@ -17,9 +18,9 @@ RTRIM_IN(<str>[, <rhs>])
 ```
 
 ## Parameters
-| Parameter | Description                                                            |
+| Parameter | Description |
 | --------- | ---------------------------------------------------------------------- |
-| `<str>` | The string to be processed. Type: VARCHAR                              |
+| `<str>` | The string to be processed. Type: VARCHAR |
 | `<rhs>` | Optional parameter, the set of characters to be removed. Type: VARCHAR |
 
 ## Return Value
@@ -47,7 +48,6 @@ SELECT rtrim_in('ab d   ') str;
 
 2. Remove specified character set
 ```sql
--- RTRIM_IN removes any 'a' and 'b' characters from the right end
 SELECT rtrim_in('ababccaab', 'ab') str;
 ```
 ```text
@@ -60,7 +60,7 @@ SELECT rtrim_in('ababccaab', 'ab') str;
 
 3. Comparison with RTRIM function
 ```sql
-SELECT rtrim_in('ababccaab', 'ab'),rtrim('ababccaab', 'ab');
+SELECT rtrim_in('ababccaab', 'ab'), rtrim('ababccaab', 'ab');
 ```
 ```text
 +-----------------------------+--------------------------+
@@ -69,3 +69,55 @@ SELECT rtrim_in('ababccaab', 'ab'),rtrim('ababccaab', 'ab');
 | ababcc                      | ababcca                  |
 +-----------------------------+--------------------------+
 ```
+
+4. Character set order does not matter
+```sql
+SELECT rtrim_in('Helloabc', 'cba');
+```
+```text
++-----------------------------+
+| rtrim_in('Helloabc', 'cba') |
++-----------------------------+
+| Hello                       |
++-----------------------------+
+```
+
+5. UTF-8 character support
+```sql
+SELECT rtrim_in('ṭṛì ḍḍumai+++', '+');
+```
+```text
++------------------------------------+
+| rtrim_in('ṭṛì ḍḍumai+++', '+')    |
++------------------------------------+
+| ṭṛì ḍḍumai                         |
++------------------------------------+
+```
+
+6. NULL value handling
+```sql
+SELECT rtrim_in(NULL, 'abc');
+```
+```text
++------------------------+
+| rtrim_in(NULL, 'abc')  |
++------------------------+
+| NULL                   |
++------------------------+
+```
+
+7. Empty character handling
+```sql
+SELECT rtrim_in('', 'abc'), rtrim_in('abc', '');
+```
+```text
++---------------------+---------------------+
+| rtrim_in('', 'abc') | rtrim_in('abc', '') |
++---------------------+---------------------+
+|                     | abc                 |
++---------------------+---------------------+
+```
+
+### Keywords
+
+    RTRIM_IN, RTRIM

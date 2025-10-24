@@ -7,36 +7,74 @@
 
 ## Description
 
-Returns the position of substr in str (counting from 1). If the third parameter pos is specified, the position of substr is searched from the string starting with the pos subscript. If not found, 0 is returned
+The LOCATE function returns the position of the first occurrence of substring substr in string str (counting starts from 1). If an optional third parameter pos is specified, the search starts from the specified position in string str. This is a MySQL-compatible function commonly used for string matching and position finding.
 
 ## Syntax
 
 ```sql
-LOCATE ( <substr> , <str> [, <pos> ] )
+LOCATE(<substr>, <str> [, <pos>])
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|-----------------|
-| `substr`  | The substring to be searched |
-| `str`     | The string to be searched |
-| `pos`     | If this parameter is specified, the position of substr is searched from the string starting with the pos subscript|
+|----------|-----------------|
+| `<substr>` | The target substring to find. Type: VARCHAR |
+| `<str>`    | The source string to search in. Type: VARCHAR |
+| `<pos>`    | Optional parameter, the starting position for the search (counting from 1). Type: INT |
 
-## Return value
+## Return Value
 
-The position of substr in str (counting from 1)
+Returns INT type, representing the position of the first occurrence of substr in str (counting from 1).
 
-## Example
+Search rules:
+- Position counting starts from 1 (not from 0)
+- Returns the position of the first match
+- If pos is specified, search starts from that position, but the returned position is still the absolute position relative to the string beginning
+- Search is case-sensitive
 
+Special cases:
+- If no match is found, returns 0
+- If any parameter is NULL, returns NULL
+- If substr is an empty string, returns 1 (or the value of pos if pos is specified and pos > 1)
+- If str is empty but substr is not, returns 0
+- If pos is less than 1, returns 0
+- If pos is greater than the length of str, returns 0
+
+## Examples
+
+1. Basic search
 ```sql
-SELECT LOCATE('bar', 'foobarbar'),LOCATE('xbar', 'foobar'),LOCATE('bar', 'foobarbar', 5)
+SELECT LOCATE('bar', 'foobarbar'), LOCATE('xbar', 'foobar'), LOCATE('bar', 'foobarbar', 5);
 ```
-
 ```text
 +----------------------------+--------------------------+-------------------------------+
-| locate('bar', 'foobarbar') | locate('xbar', 'foobar') | locate('bar', 'foobarbar', 5) |
+| LOCATE('bar', 'foobarbar') | LOCATE('xbar', 'foobar') | LOCATE('bar', 'foobarbar', 5) |
 +----------------------------+--------------------------+-------------------------------+
 |                          4 |                        0 |                             7 |
 +----------------------------+--------------------------+-------------------------------+
+```
+
+2. Finding first character
+```sql
+SELECT LOCATE('f', 'foobar'), LOCATE('r', 'foobar');
+```
+```text
++-----------------------+-----------------------+
+| LOCATE('f', 'foobar') | LOCATE('r', 'foobar') |
++-----------------------+-----------------------+
+|                     1 |                     6 |
++-----------------------+-----------------------+
+```
+
+3. No match found
+```sql
+SELECT LOCATE('xyz', 'foobar'), LOCATE('FOO', 'foobar');
+```
+```text
++-------------------------+-------------------------+
+| LOCATE('xyz', 'foobar') | LOCATE('FOO', 'foobar') |
++-------------------------+-------------------------+
+|                       0 |                       0 |
++-------------------------+-------------------------+
 ```

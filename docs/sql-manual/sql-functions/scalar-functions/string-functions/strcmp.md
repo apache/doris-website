@@ -17,13 +17,13 @@ STRCMP(<str0>, <str1>)
 
 ## Parameters
 | Parameter | Description |
-| -- | -- |
+| --------- | ----------------------------------------- |
 | `<str0>` | The first string to compare. Type: VARCHAR |
 | `<str1>` | The second string to compare. Type: VARCHAR |
 
 ## Return Value
 
-Returns a TINYINT value indicating the comparison result:
+Returns TINYINT type, indicating the comparison result:
 - Returns 0: if str0 equals str1
 - Returns 1: if str0 is lexicographically greater than str1
 - Returns -1: if str0 is lexicographically less than str1
@@ -33,7 +33,7 @@ Special cases:
 
 ## Examples
 
-1. Comparing identical strings
+1. Identical string comparison
 ```sql
 SELECT strcmp('test', 'test');
 ```
@@ -68,3 +68,7 @@ SELECT strcmp('test', 'test1');
 |                      -1 |
 +-------------------------+
 ```
+
+### Keywords
+
+    STRCMP

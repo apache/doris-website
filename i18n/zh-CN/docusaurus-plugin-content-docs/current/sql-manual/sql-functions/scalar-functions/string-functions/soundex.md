@@ -7,93 +7,141 @@
 
 ## 描述
 
-SOUNDEX 函数用于计算[美国 Soundex](https://zh.wikipedia.org/zh-cn/Soundex) 值，其中包括第一个字母，后跟一个 3 位数字的声音编码
-该编码表示用户指定的字符串的英语发音。
+SOUNDEX 函数用于计算字符串的 [Soundex 编码](https://zh.wikipedia.org/zh-cn/Soundex)。Soundex 是一种语音算法，用于将英文单词编码为表示其发音的代码，相似发音的单词会有相同的编码。
 
-该函数会忽略所有字符串中的非字母字符。
+编码规则：返回由一个大写字母和三位数字组成的4字符代码（如 S530）。
 
 ## 语法
 
 ```sql
-SOUNDEX ( <expr> )
+SOUNDEX(<expr>)
 ```
 
 ## 参数
 
-| 参数      | 说明        |
-|---------|-----------|
-| `<expr>` | 需要计算的字符串，仅接受 ASCII 字符。 |
+| 参数 | 说明 |
+| -------- | ----------------------------------------- |
+| `<expr>` | 需要计算 Soundex 编码的字符串（仅支持 ASCII 字符）。类型：VARCHAR |
 
 ## 返回值
 
-返回一个 VARCHAR(4) 字符串，其中包括一个大写字母，后跟代表英语发音的三位数字声音编码。
+返回 VARCHAR(4) 类型，为字符串的 Soundex 编码。
 
-如果字符串为空，或字符串中不含任何字母字符，则返回空字符串。
+特殊情况：
+- 如果参数为 NULL，返回 NULL
+- 如果字符串为空或不含字母，返回空字符串
+- 仅处理 ASCII 字母，忽略其他字符
+- 非 ASCII 字符会导致函数报错
 
-如果待处理的字符串包含非 ASCII 字符，函数将在计算过程中抛出异常。
+## 示例
 
-输入为 NULL 时返回 NULL。
-
-## 举例
-
-下格模拟了一个名字列表。
+1. 基本用法：单词编码
 ```sql
-CREATE TABLE IF NOT EXISTS soundex_test (
-     name VARCHAR(20)
-) DISTRIBUTED BY HASH(name) BUCKETS 1
-PROPERTIES ("replication_num" = "1"); 
-
-INSERT INTO soundex_test (name) VALUES
-('Doris'),
-('Smith'), ('Smyth'),
-('H'), ('P'), ('Lee'), 
-('Robert'), ('R@b-e123rt'),
-('123@*%'), (''),
-('Ashcraft'), ('Honeyman'), ('Pfister'), (NULL);
-```
-
-```sql
-SELECT name, soundex(name) AS IDX FROM soundex_test;
+SELECT soundex('Doris');
 ```
 ```text
-+------------+------+
-| NULL       | NULL |
-|            |      |
-| 123@*%     |      |
-| Ashcraft   | A261 |
-| Doris      | D620 |
-| H          | H000 |
-| Honeyman   | H555 |
-| Lee        | L000 |
-| P          | P000 |
-| Pfister    | P236 |
-| R@b-e123rt | R163 |
-| Robert     | R163 |
-| Smith      | S530 |
-| Smyth      | S530 |
-+------------+------+
++------------------+
+| soundex('Doris') |
++------------------+
+| D620             |
++------------------+
 ```
 
-对非 ASCII 码的行为：
+2. 相似发音的单词有相同编码
+```sql
+SELECT soundex('Smith'), soundex('Smyth');
+```
+```text
++------------------+------------------+
+| soundex('Smith') | soundex('Smyth') |
++------------------+------------------+
+| S530             | S530             |
++------------------+------------------+
+```
 
-- Doris 在逐字符处理输入字符串时，如果在完成计算之前遇到非 ASCII 字符，会立即抛出错误，示例如下：
+3. 空字符串处理
+```sql
+SELECT soundex('');
+```
+```text
++-------------+
+| soundex('') |
++-------------+
+|             |
++-------------+
+```
+
+4. 处理 NULL 值
 
 ```sql
-SELECT SOUNDEX('你好');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+SELECT soundex(NULL);
 ```
+
+```text
++---------------+
+| soundex(NULL) |
++---------------+
+| NULL          |
++---------------+
+```
+
+5. 空字符串返回空字符串
+
 ```sql
--- 在处理完 `Doris` 后得到 D62（还缺一位数字，未构成完整的 4 字符编码）
--- 读到非 ASCII 字符 `你` 后，函数报错
-SELECT SOUNDEX('Doris 你好');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+SELECT soundex('');
 ```
+
+```text
++-------------+
+| soundex('') |
++-------------+
+|             |
++-------------+
+```
+
+6. 仅包含非字母字符返回空字符串
+
 ```sql
-SELECT SOUNDEX('Apache Doris 你好');
+SELECT soundex('123@*%');
 ```
+
+```text
++-------------------+
+| soundex('123@*%') |
++-------------------+
+|                   |
++-------------------+
+```
+
+7. 忽略非字母字符
+
+```sql
+SELECT soundex('R@b-e123rt'), soundex('Robert');
+```
+
+```text
++-----------------------+-------------------+
+| soundex('R@b-e123rt') | soundex('Robert') |
++-----------------------+-------------------+
+| R163                  | R163              |
++-----------------------+-------------------+
+```
+9. 仅包含非 ASCII 字符报错示例
+
+```sql
+SELECT soundex('你好');  
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = Not Supported: Not Supported: soundex only supports ASCII, but got: 你
+```
+
+```sql
+SELECT soundex('Apache Doris 你好');
+```
+
 ```text
 +--------------------------------+
-| SOUNDEX('Apache Doris 你好')   |
+| soundex('Apache Doris 你好')   |
 +--------------------------------+
 | A123                           |
 +--------------------------------+

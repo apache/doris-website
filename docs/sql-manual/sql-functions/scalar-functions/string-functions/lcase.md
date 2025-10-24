@@ -7,51 +7,69 @@
 
 ## Description
 
-Convert all strings in the parameter to lowercase.
-
-## Alias
-
-- LOWER
+The LCASE function (alias LOWER) converts all uppercase letters in a string to lowercase.
 
 ## Syntax
 
 ```sql
-LCASE ( <str> )
-LOWER ( <str> )
+LCASE(<str>)
+LOWER(<str>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|--------------|
-| `<str>`   | String to be converted to lowercase |
+|---------|--------------|
+| `<str>` | The string to convert to lowercase. Type: VARCHAR |
 
 ## Return Value
 
-Parameter `<str>` String converted to lowercase
+Returns VARCHAR type, representing the string after conversion to lowercase.
 
-## Example
+Conversion rules:
+- Converts all uppercase letters in the string to their corresponding lowercase letters
+- Non-letter characters (numbers, symbols, spaces, etc.) remain unchanged
+- Letters that are already lowercase remain unchanged
 
+Special cases:
+- If parameter is NULL, returns NULL
+- If string is empty, returns empty string
+- If string contains no uppercase letters, returns original string
+
+## Examples
+
+1. Basic English letter conversion
 ```sql
-SELECT LCASE("AbC123"),LOWER("AbC123")
+SELECT LOWER('AbC123'), LCASE('AbC123');
 ```
-
 ```text
 +-----------------+-----------------+
-| lower('AbC123') | lower('AbC123') |
+| LOWER('AbC123') | LCASE('AbC123') |
 +-----------------+-----------------+
 | abc123          | abc123          |
 +-----------------+-----------------+
 ```
 
+2. Mixed character handling
 ```sql
-SELECT LOWER("ҚAZAҚ123"),LCASE("ҒАРЫШ");
+SELECT LOWER('Hello World!'), LCASE('TEST@123');
+```
+```text
++----------------------+------------------+
+| LOWER('Hello World!') | LCASE('TEST@123') |
++----------------------+------------------+
+| hello world!         | test@123         |
++----------------------+------------------+
 ```
 
+3. NULL value handling
+```sql
+SELECT LOWER(NULL), LCASE(NULL);
+```
 ```text
-+---------------------+---------------------+
-| LOWER("ҚAZAҚ123")   | LCASE("ҒАРЫШ")      |
-+---------------------+---------------------+
-| қazaқ123            | ғарыш               |
-+---------------------+---------------------+
++-------------+-------------+
+| LOWER(NULL) | LCASE(NULL) |
++-------------+-------------+
+| NULL        | NULL        |
++-------------+-------------+
 ```

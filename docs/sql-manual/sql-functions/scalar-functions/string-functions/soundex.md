@@ -7,96 +7,147 @@
 
 ## Description
 
-The SOUNDEX function computes the [American Soundex](https://en.wikipedia.org/wiki/Soundex) value, which consists of the first letter followed by a three-digit sound code that represents the English pronunciation of the input string.
+The SOUNDEX function computes the [Soundex encoding](https://en.wikipedia.org/wiki/Soundex) of a string. Soundex is a phonetic algorithm that encodes English words into codes representing their pronunciation, so words with similar pronunciation will have the same encoding.
 
-The function ignores all non-letter characters in the string.
+Encoding rule: Returns a 4-character code consisting of one uppercase letter followed by three digits (e.g., S530).
 
 ## Syntax
 
 ```sql
-SOUNDEX ( <expr> )
+SOUNDEX(<expr>)
 ```
 
-## Arguments
+## Parameters
 
-| Argument | Description                |
-|----------|----------------------------|
-| `<expr>` | The string to compute for, only accept ASCII characters. |
+| Parameter | Description |
+| -------- | ----------------------------------------- |
+| `<expr>` | The string to compute Soundex encoding for (only supports ASCII characters). Type: VARCHAR |
 
 ## Return Value
 
-Returns a VARCHAR(4) string consisting of an uppercase letter followed by a three-digit numeric sound code representing English pronunciation.
+Returns VARCHAR(4) type, representing the Soundex encoding of the string.
 
-If the string is empty or contains no letter characters, an empty string is returned.
-
-If the string to be processed contains non-ASCII characters, the function will throw an exception during the calculation process.
-
-If the input is NULL, NULL is returned.
+Special cases:
+- If the argument is NULL, returns NULL
+- If the string is empty or contains no letters, returns an empty string
+- Only processes ASCII letters, ignoring other characters
+- Non-ASCII characters will cause the function to throw an error
 
 ## Examples
 
-The following table simulates a list of names.
+1. Basic usage: word encoding
 ```sql
-CREATE TABLE IF NOT EXISTS soundex_test (
-     name VARCHAR(20)
-) DISTRIBUTED BY HASH(name) BUCKETS 1
-PROPERTIES ("replication_num" = "1"); 
-
-INSERT INTO soundex_test (name) VALUES
-('Doris'),
-('Smith'), ('Smyth'),
-('H'), ('P'), ('Lee'), 
-('Robert'), ('R@b-e123rt'),
-('123@*%'), (''),
-('Ashcraft'), ('Honeyman'), ('Pfister'), (NULL);
-```
-
-```sql
-SELECT name, soundex(name) AS IDX FROM soundex_test;
+SELECT soundex('Doris');
 ```
 ```text
-+------------+------+
-| NULL       | NULL |
-|            |      |
-| 123@*%     |      |
-| Ashcraft   | A261 |
-| Doris      | D620 |
-| H          | H000 |
-| Honeyman   | H555 |
-| Lee        | L000 |
-| P          | P000 |
-| Pfister    | P236 |
-| R@b-e123rt | R163 |
-| Robert     | R163 |
-| Smith      | S530 |
-| Smyth      | S530 |
-+------------+------+
++------------------+
+| soundex('Doris') |
++------------------+
+| D620             |
++------------------+
 ```
 
-Behavior for non-ASCII characters:
+2. Words with similar pronunciation have the same encoding
+```sql
+SELECT soundex('Smith'), soundex('Smyth');
+```
+```text
++------------------+------------------+
+| soundex('Smith') | soundex('Smyth') |
++------------------+------------------+
+| S530             | S530             |
++------------------+------------------+
+```
 
-- When Doris processes the input string character by character, if it encounters a non-ASCII character before finishing the computation, it will throw an error. Example:
+3. Empty string processing
+```sql
+SELECT soundex('');
+```
+```text
++-------------+
+| soundex('') |
++-------------+
+|             |
++-------------+
+```
+
+4. NULL value handling
 
 ```sql
-SELECT SOUNDEX('你好');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
+SELECT soundex(NULL);
+```
+
+```text
++---------------+
+| soundex(NULL) |
++---------------+
+| NULL          |
++---------------+
+```
+
+5. Empty string returns empty string
+
+```sql
+SELECT soundex('');
+```
+
+```text
++-------------+
+| soundex('') |
++-------------+
+|             |
++-------------+
+```
+
+6. Non-letter characters only return empty string
+
+```sql
+SELECT soundex('123@*%');
+```
+
+```text
++-------------------+
+| soundex('123@*%') |
++-------------------+
+|                   |
++-------------------+
+```
+
+7. Ignoring non-letter characters
+
+```sql
+SELECT soundex('R@b-e123rt'), soundex('Robert');
+```
+
+```text
++-----------------------+-------------------+
+| soundex('R@b-e123rt') | soundex('Robert') |
++-----------------------+-------------------+
+| R163                  | R163              |
++-----------------------+-------------------+
+```
+
+9. Non-ASCII characters only error example
+
+```sql
+SELECT soundex('你好');  
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = Not Supported: Not Supported: soundex only supports ASCII, but got: 你
 ```
 
 ```sql
--- After processing `Doris` it produces D62 (still missing one digit, not a complete 4-character code)
--- When it reads the non-ASCII character `你`, the function errors
-SELECT SOUNDEX('Doris 你好');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]soundex only supports ASCII
-```
-
-```sql
-SELECT SOUNDEX('Apache Doris 你好');
+SELECT soundex('Apache Doris 你好');
 ```
 
 ```text
 +--------------------------------+
-| SOUNDEX('Apache Doris 你好')   |
+| soundex('Apache Doris 你好')   |
 +--------------------------------+
 | A123                           |
 +--------------------------------+
 ```
+
+### Keywords
+
+    SOUNDEX
