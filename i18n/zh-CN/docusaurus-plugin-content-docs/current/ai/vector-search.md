@@ -71,7 +71,9 @@ PROPERTIES (
 | `dim` | 是 | 正整数 (> 0) | （无） | 指定向量维度，后续导入的所有向量的维度必须与此一致，否则报错。 |
 | `max_degree` | 否 | 正整数 | `32` | HNSW 图中单个节点的最大邻居数（M），影响索引内存与搜索性能。 |
 | `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好但构建更慢。 |
-| `quantizer` | 否 | `flat`，`sq8`，`sq4` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为对称量化（8/4 bit）以降低内存占用。 |
+| `quantizer` | 否 | `flat`，`sq8`，`sq4`, `pq` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为标量量化（8/4 bit）, `pq` 为乘积量化。 |
+| `pq_m` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。 |
+| `pq_nbits` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。 |
 
 通过 S3 TVF 导入数据：
 ```sql
@@ -259,7 +261,7 @@ LIMIT 2;
 - hnsw_bounded_queue： 是否使用有界优先队列来优化HNSW的搜索性能。默认为 true。
 ## 向量量化
 采用 FLAT 编码时，HNSW 索引（原始向量 + 图结构）可能占用大量内存。HNSW 必须全量驻留内存才能工作，因此在超大规模数据集上易成瓶颈。
-向量量化通过压缩 FLOAT32 减少内存开销。Doris 当前支持两种标量量化：INT8 与 INT4（SQ8 / SQ4）。以 SQ8 为例：
+标量量化(SQ)通过压缩 FLOAT32 减少内存开销。乘积量化(PQ)通过分解高维向量并分别量化子向量来降低内存开销。Doris 当前支持两种标量量化：INT8 与 INT4（SQ8 / SQ4）。以 SQ8 为例：
 
 ```sql
 CREATE TABLE sift_1M (
@@ -290,7 +292,32 @@ PROPERTIES (
 
 量化会带来额外构建开销，原因是构建阶段需要大量距离计算，且每次计算需对量化值解码。以 128 维向量为例，随行数增长构建时间上升，SQ 相比 FLAT 可能引入约 10 倍构建成本。
 
-![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
+类似的, Doris也支持乘积量化, 不过需要注意的是在使用PQ时需要提供额外的参数:
+
+- `pq_m`: 表示将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。
+- `pq_nbits`: 表示每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。
+
+```sql
+CREATE TABLE sift_1M (
+  id int NOT NULL,
+  embedding array<float>  NOT NULL  COMMENT "",
+  INDEX ann_index (embedding) USING ANN PROPERTIES(
+      "index_type"="hnsw",
+      "metric_type"="l2_distance",
+      "dim"="128",
+      "quantizer"="pq",    -- 指定使用 PQ 进行量化
+      "pq_m"="2",          -- 使用PQ时需要指定, 表示将高维向量分割成 pq_m 个低维子向量
+      "pq_nbits"="2"       -- 使用PQ时需要指定, 表示每个子空间码本的比特数
+  )
+) ENGINE=OLAP
+DUPLICATE KEY(id) COMMENT "OLAP"
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+![ANN-SQ-BUILD_COSTS](/images/ann-index-quantization-build-time.jpg)
 
 
 ## 性能调优

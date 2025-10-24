@@ -51,6 +51,19 @@ CREATE CATALOG mc PROPERTIES (
 );
 ```
 
+Support Schema Level (3.1.3+):
+
+```sql
+CREATE CATALOG mc PROPERTIES (
+  "type" = "max_compute",
+  "mc.default.project" = "xxx",
+  "mc.access_key" = "AKxxxxx",
+  "mc.secret_key" = "SKxxxxx",
+  "mc.endpoint" = "xxxxx",
+  'mc.enable.namespace.schema' = 'true'
+);
+```
+
 Please refer to the [MaxCompute Catalog](../catalogs/maxcompute-catalog.md) documentation for details.
 
 ### 02 Import TPCH Dataset

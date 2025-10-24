@@ -1068,6 +1068,13 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Binary Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/binary-type/VARBINARY"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "Semi-Structured Data Type",
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
@@ -1728,7 +1735,10 @@
                                     "type": "category",
                                     "label": "Binary Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/from_hex",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex"
                                     ]
                                 },
@@ -1812,6 +1822,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/covar",
                                 "sql-manual/sql-functions/aggregate-functions/covar-samp",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+                                "sql-manual/sql-functions/aggregate-functions/group-array-union",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-or",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
@@ -1833,6 +1844,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
@@ -2017,6 +2029,7 @@
                                         "sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT",
                                         "sql-manual/sql-statements/data-modification/DML/UPDATE",
+                                        "sql-manual/sql-statements/data-modification/DML/MERGE-INTO",
                                         "sql-manual/sql-statements/data-modification/DML/DELETE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-DELETE"
                                     ]
