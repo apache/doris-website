@@ -1844,6 +1844,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
