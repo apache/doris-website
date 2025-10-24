@@ -60,6 +60,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.read_timeout`           | `120s`          | 读取 maxcompute 的超时时间                                                          | 2.1.8（含）之后  |
   | `mc.retry_count`            | `4`             | 超时后的重试次数                                                                   | 2.1.8（含）之后  |
   | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于 6 位，则条件下推可能导致结果不准确。         | 2.1.9/3.0.5（含）之后  |
+  | `mc.account_format` | `name`             | 阿里云国际站和中国站的账号系统不一致，对于国际站用户，如出现如 `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` 的错误，可指定该参数为 `id`。 | 3.0.9/3.1.1（含）之后  |
   | `mc.enable.namespace.schema` | `false`             | 是否支持 MaxCompute 的 schema 层级。详见：https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3（含）之后  |
 
 * `[CommonProperties]`

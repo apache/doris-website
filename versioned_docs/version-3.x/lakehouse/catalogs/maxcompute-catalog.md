@@ -60,6 +60,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.read_timeout`           | `120s`          | Timeout for reading from MaxCompute.                                        | 2.1.8 and later         |
   | `mc.retry_count`            | `4`             | Number of retries after a timeout.                                          | 2.1.8 and later         |
   | `mc.datetime_predicate_push_down` | `true`  | Whether to allow pushdown of predicate conditions of `timestamp/timestamp_ntz` types. Doris will lose precision (9 -> 6) when synchronizing these two types. Therefore, if the original data has a precision higher than 6 digits, condition pushdown may lead to inaccurate results. | 2.1.9/3.0.5 and later  |
+  | `mc.account_format` | `name`             | The account systems of Alibaba Cloud International and China are different. For users of the International site, if an error such as `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` occurs, you can specify this parameter as `id`. | 3.0.9/3.1.1 later  |
   | `mc.enable.namespace.schema` | `false`             | Whether MaxCompute's schema level is supported. For details, see: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 and later  |
   
 * `[CommonProperties]`
