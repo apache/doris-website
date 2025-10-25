@@ -7,49 +7,74 @@
 
 ## Description
 
-The MASK function is to shield data to protect sensitive information, and it is commonly used in data anonymization scenarios. Its default behavior is to convert a uppercase letter in the input string to `X`, a lowercase letter to `x`, and a number to `n`. 
+The MASK function is used to mask data to protect sensitive information. The default behavior is to convert uppercase letters to `X`, lowercase letters to `x`, and digits to `n`.
 
 ## Syntax
 
 ```sql
-MASK(<str> [, <upper> [, <lower> [, <number> ]]])
+MASK(<str>[, <upper>[, <lower>[, <number>]]])
 ```
 
 ## Parameters
 
-| Parameter  | Description                                                                                                                                                                                                       |
-|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<str>`    | String that need to be masked                                                                                                                                                                                     |
-| `<upper>`  | Optional Parameter, replaces uppercase character to `X` by default. If a sequence of characters are input, the first character will be taken, and if non ASCII characters are input, the first byte will be taken |
-| `<lower>`  | Optional Parameter, replaces lowercase character to `x` by default. If a sequence of characters are input, the first character will be taken, and if non ASCII characters are input, the first byte will be taken |
-| `<number>` | Optional Parameter, replaces numeric character to `n` by default. If a sequence of characters are input, the first character will be taken, and if non ASCII characters are input, the first byte will be taken   |
+| Parameter | Description |
+| ---------- | ----------------------------------------- |
+| `<str>` | The string to be masked. Type: VARCHAR |
+| `<upper>` | Character to replace uppercase letters with, default is `X` (optional). Type: VARCHAR |
+| `<lower>` | Character to replace lowercase letters with, default is `x` (optional). Type: VARCHAR |
+| `<number>` | Character to replace digits with, default is `n` (optional). Type: VARCHAR |
 
 ## Return Value
 
-Returns a string after masking uppercase character, lowercase character and lnumeric character. Special cases:
+Returns VARCHAR type, the string with letters and digits replaced.
 
-- If any Parameter is NULL, NULL will be returned.
-- Non-alphabetic and non-numeric characters will do not masking
-- Only ASCII letters are supported for replacement, non-ASCII letters (such as accented Latin letters) will be preserved as is
+Special cases:
+- If any parameter is NULL, returns NULL
+- Non-alphanumeric characters remain unchanged
+- If replacement character parameters contain multiple characters, only the first character is used
 
 ## Examples
 
+1. Basic usage: default replacement rules
 ```sql
-select mask('abc123EFG');
+SELECT mask('abc123XYZ');
 ```
-
 ```text
 +-------------------+
-| mask('abc123EFG') |
+| mask('abc123XYZ') |
 +-------------------+
 | xxxnnnXXX         |
 +-------------------+
 ```
 
+2. Custom replacement characters
 ```sql
-select mask(null);
+SELECT mask('abc123XYZ', '*', '#', '$');
+```
+```text
++----------------------------------+
+| mask('abc123XYZ', '*', '#', '$') |
++----------------------------------+
+| ###$$$***                        |
++----------------------------------+
 ```
 
+3. Special characters remain unchanged
+```sql
+SELECT mask('Hello-123!');
+```
+```text
++--------------------+
+| mask('Hello-123!') |
++--------------------+
+| Xxxxx-nnn!         |
++--------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT mask(NULL);
+```
 ```text
 +------------+
 | mask(NULL) |
@@ -58,22 +83,81 @@ select mask(null);
 +------------+
 ```
 
+5. Digits-only string
 ```sql
-select mask('abc123EFG', '*', '#', '$');
+SELECT mask('1234567890');
 ```
-
 ```text
-+----------------------------------+
-| mask('abc123EFG', '*', '#', '$') |
-+----------------------------------+
-| ###$$$***                        |
-+----------------------------------+
++--------------------+
+| mask('1234567890') |
++--------------------+
+| nnnnnnnnnn         |
++--------------------+
+```
+
+6. Letters-only string
+```sql
+SELECT mask('AbCdEfGh');
+```
+```text
++------------------+
+| mask('AbCdEfGh') |
++------------------+
+| XxXxXxXx         |
++------------------+
+```
+
+7. Empty string handling
+```sql
+SELECT mask('');
+```
+```text
++----------+
+| mask('') |
++----------+
+|          |
++----------+
+```
+
+8. Single character replacement (takes first character from multiple)
+```sql
+SELECT mask('Test123', 'ABC', 'xyz', '999');
+```
+```text
++--------------------------------------+
+| mask('Test123', 'ABC', 'xyz', '999') |
++--------------------------------------+
+| Xxxx999                              |
++--------------------------------------+
+```
+
+9. Mask credit card number
+```sql
+SELECT mask('1234-5678-9012-3456');
+```
+```text
++-----------------------------+
+| mask('1234-5678-9012-3456') |
++-----------------------------+
+| nnnn-nnnn-nnnn-nnnn         |
++-----------------------------+
+```
+
+10. Mask email address
+```sql
+SELECT mask('user@example.com');
+```
+```text
++--------------------------+
+| mask('user@example.com') |
++--------------------------+
+| xxxx@xxxxxxx.xxx         |
++--------------------------+
 ```
 
 ```sql
-select mask('eeeéèêëìí1234');
+SELECT mask('eeeéèêëìí1234');
 ```
-
 ```text
 +-----------------------------+
 | mask('eeeéèêëìí1234')       |

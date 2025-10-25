@@ -30,22 +30,10 @@ Returns the string after replacement.
 
 ## Examples
 
+1. Basic usage: specify position and length replacement
 ```sql
-select sub_replace("this is origin str", "NEW-STR", 1);
+SELECT sub_replace('doris', '***', 1, 2);
 ```
-
-```text
-+-------------------------------------------------+
-| sub_replace('this is origin str', 'NEW-STR', 1) |
-+-------------------------------------------------+
-| tNEW-STRorigin str                              |
-+-------------------------------------------------+
-```
-
-```sql
-select sub_replace("doris","***", 1, 2);
-```
-
 ```text
 +-----------------------------------+
 | sub_replace('doris', '***', 1, 2) |
@@ -53,3 +41,79 @@ select sub_replace("doris","***", 1, 2);
 | d***is                            |
 +-----------------------------------+
 ```
+
+2. Using default length replacement
+```sql
+SELECT sub_replace('hello', 'Hi', 0);
+```
+```text
++--------------------------------+
+| sub_replace('hello', 'Hi', 0)  |
++--------------------------------+
+| Hillo                          |
++--------------------------------+
+```
+
+3. Negative parameter returns NULL
+```sql
+SELECT sub_replace('hello', 'Hi', -1, 2);
+```
+```text
++------------------------------------+
+| sub_replace('hello', 'Hi', -1, 2)  |
++------------------------------------+
+| NULL                               |
++------------------------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT sub_replace(NULL, 'new', 0, 3);
+```
+```text
++-------------------------------------+
+| sub_replace(NULL, 'new', 0, 3)      |
++-------------------------------------+
+| NULL                                |
++-------------------------------------+
+```
+
+5. UTF-8 string
+```sql
+SELECT sub_replace('doris', 'ṛìḍḍ', 1, 2);
+```
+```text
++-------------------------------------------+
+| sub_replace('doris', 'ṛìḍḍ', 1, 2)        |
++-------------------------------------------+
+| dṛìḍḍis                                   |
++-------------------------------------------+
+```
+
+6. Start position exceeds string length
+```sql
+SELECT sub_replace('hello', 'Hi', 9, 2);
+```
+```text
++----------------------------------+
+| sub_replace('hello', 'Hi', 9, 2) |
++----------------------------------+
+| NULL                             |
++----------------------------------+
+```
+
+7. Specified replacement length exceeds remaining string length
+```sql
+SELECT sub_replace('hello', 'Hi', 1, 9);
+```
+```text
++----------------------------------+
+| sub_replace('hello', 'Hi', 1, 9) |
++----------------------------------+
+| hHi                              |
++----------------------------------+
+```
+
+### Keywords
+
+    SUB_REPLACE, REPLACE

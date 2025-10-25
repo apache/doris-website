@@ -7,42 +7,86 @@
 
 ## Description
 
-Calculate the N-gram similarity between `text` and `pattern`. The similarity ranges from 0 to 1, where a higher similarity indicates greater similarity between the two strings. 
+The NGRAM_SEARCH function calculates the N-gram similarity between two strings. The similarity ranges from 0 to 1, where higher values indicate more similar strings.
 
-Both `pattern` and `gram_num` must be constants. If the length of either `text` or `pattern` is less than `gram_num`, return 0.
+N-gram decomposes a string into a set of consecutive N characters. The similarity calculation formula is: `2 * |intersection| / (|set1| + |set2|)`
 
-N-gram similarity is a method for calculating text similarity based on N-grams. An N-gram is a set of continuous N characters or words extracted from a text string. For example, for the string "text" with N=2 (bigram), the bigrams are: {"te", "ex", "xt"}.
-
-The N-gram similarity is calculated as:
-
-2 * |Intersection| / (|text set| + |pattern set|)
-
-where |text set| and |pattern set| are the N-grams of `text` and `pattern`, and `Intersection` is the intersection of the two sets.
-
-Note that, by definition, a similarity of 1 does not necessarily mean the two strings are identical.
-
-Only supports ASCII encoding.
+Only ASCII characters are supported.
 
 ## Syntax
 
-`DOUBLE ngram_search(VARCHAR text,VARCHAR pattern,INT gram_num)`
-
-## Example
-
 ```sql
-mysql> select ngram_search('123456789' , '12345' , 3);
+NGRAM_SEARCH(<text>, <pattern>, <gram_num>)
+```
+
+## Parameters
+
+| Parameter | Description |
+| ------------ | ----------------------------------------- |
+| `<text>` | The text string to compare. Type: VARCHAR |
+| `<pattern>` | Pattern string (must be constant). Type: VARCHAR |
+| `<gram_num>` | The N value for N-gram (must be constant). Type: INT |
+
+## Return Value
+
+Returns DOUBLE type, the N-gram similarity between the two strings (between 0 and 1).
+
+Special cases:
+- If any parameter is NULL, returns NULL
+- If string length is less than `<gram_num>`, returns 0
+- `<pattern>` and `<gram_num>` must be constants
+- Similarity of 1 does not necessarily mean strings are completely identical
+
+## Examples
+
+1. Basic usage: Calculate similarity
+```sql
+SELECT ngram_search('123456789', '12345', 3);
+```
+```text
 +---------------------------------------+
 | ngram_search('123456789', '12345', 3) |
 +---------------------------------------+
 |                                   0.6 |
 +---------------------------------------+
+```
 
-mysql> select ngram_search("abababab","babababa",2);
+2. High similarity example
+```sql
+SELECT ngram_search('abababab', 'babababa', 2);
+```
+```text
 +-----------------------------------------+
 | ngram_search('abababab', 'babababa', 2) |
 +-----------------------------------------+
 |                                       1 |
 +-----------------------------------------+
 ```
-## keywords
+
+3. String too short returns 0
+```sql
+SELECT ngram_search('ab', 'abc', 3);
+```
+```text
++----------------------------------+
+| ngram_search('ab', 'abc', 3)     |
++----------------------------------+
+|                                0 |
++----------------------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT ngram_search(NULL, 'test', 2);
+```
+```text
++--------------------------------+
+| ngram_search(NULL, 'test', 2)  |
++--------------------------------+
+| NULL                           |
++--------------------------------+
+```
+
+### Keywords
+
     NGRAM_SEARCH,NGRAM,SEARCH

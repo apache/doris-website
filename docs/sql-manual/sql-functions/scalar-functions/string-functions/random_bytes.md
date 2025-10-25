@@ -7,44 +7,87 @@
 
 ## Description
 
-The RANDOM_BYTES function is used to generate a random byte sequence of the specified length.
+The RANDOM_BYTES function generates a random byte sequence of specified length. The returned byte sequence is represented as a hexadecimal string.
 
 ## Syntax
 
 ```sql
-RANDOM_BYTES( <len> )
+RANDOM_BYTES(<len>)
 ```
 
 ## Parameters
 
-| Parameter | Description                                                                                                                                               |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<len>`   | This parameter specifies the length of the random byte sequence to be generated. This value must be greater than 0; otherwise, an error will be occurred. |
+| Parameter | Description |
+| -------- | ----------------------------------------- |
+| `<len>` | Number of random bytes to generate. Type: INT |
 
 ## Return Value
 
-Returns a random byte sequence of the specified length, encoded in hexadecimal. Special cases:
+Returns VARCHAR type, a hexadecimal-encoded random byte sequence (prefixed with `0x`).
 
-- If any of the parameters is NULL, NULL will be returned.
+Special cases:
+- `<len>` must be greater than 0, otherwise returns error
+- If parameter is NULL, returns NULL
+- Each invocation generates a random result
 
 ## Examples
 
+1. Basic usage: Generate 8-byte random sequence
 ```sql
-select random_bytes(7);
+SELECT random_bytes(8);
 ```
-
 ```text
-+------------------+
-| random_bytes(7)  |
-+------------------+
-| 0x869684a082ab4b |
-+------------------+
++--------------------+
+| random_bytes(8)    |
++--------------------+
+| 0x1a2b3c4d5e6f7089 |
++--------------------+
 ```
 
+2. Generate short sequence
 ```sql
-select random_bytes(-1);
+SELECT random_bytes(4);
+```
+```text
++----------------+
+| random_bytes(4) |
++----------------+
+| 0xab12cd34     |
++----------------+
 ```
 
-```text
-(1105, 'errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]argument -1 of function random_bytes at row 0 was invalid.')
+3. Invalid parameter: Negative number
+```sql
+SELECT random_bytes(-1);
 ```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]argument -1 of function random_bytes at row 0 was invalid.
+```
+
+4. NULL value handling
+```sql
+SELECT random_bytes(NULL);
+```
+```text
++--------------------+
+| random_bytes(NULL) |
++--------------------+
+| NULL               |
++--------------------+
+```
+
+5. Generate longer sequence (16 bytes)
+```sql
+SELECT random_bytes(16);
+```
+```text
++------------------------------------+
+| random_bytes(16)                   |
++------------------------------------+
+| 0x1a2b3c4d5e6f708192a3b4c5d6e7f809 |
++------------------------------------+
+```
+
+### Keywords
+
+    RANDOM_BYTES

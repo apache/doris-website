@@ -7,13 +7,9 @@
 
 ## Description
 
-The REPLACE_EMPTY function is used to replace a part of the characters in a string with other characters. Unlike the [REPLACE](./replace.md) function, when old is an empty string, the new string will be inserted before each character of the str string and at the end of the str string.
+The REPLACE_EMPTY function is used to replace a part of characters in a string with other characters. Unlike the [REPLACE](./replace.md) function, when `old` is an empty string, the `new` string is inserted before each character of the `str` string and at the end of the `str` string.
 
-Apart from this, all other behaviors are exactly the same as the REPLACE() function.
-
-This function is mainly used to be compatible with Presto and Trino, and its behavior is exactly the same as the `REPLACE()` function in Presto and Trino.
-
-Supported since version 2.1.5.
+This function is mainly used to be compatible with Presto and Trino, and its behavior is exactly the same as the `REPLACE()` function in Presto and Trino. Supported since version 2.1.5.
 
 ## Syntax
 

@@ -7,39 +7,37 @@
 
 ## Description
 
-This command is used to delete Spaces or specified characters at both ends of the string. If no rhs parameter is specified, delete the Spaces that appear continuously at the beginning of the right and left parts of str. Otherwise, delete rhs
+The TRIM function is used to remove consecutive spaces or specified strings from both ends of a string. If the second parameter is not specified, leading and trailing spaces are removed; if specified, the function removes the specified complete string from both ends.
 
 ## Syntax
 
 ```sql
-TRIM( <str> [ , <rhs>])
+TRIM(<str>[, <rhs>])
 ```
 
-## Required Parameters
+## Parameters
 
-| Parameters | Description |
-|------|------|
-| `<str>` | Deletes the Spaces  at both ends of the string
-
-
-## Optional Parameters
-
-| Parameters | Description |
-|------|------|
-| `<rhs>` | removes the specified character |
+| Parameter | Description |
+| --------- | ----------- |
+| `<str>` | The string to be processed. Type: VARCHAR |
+| `<rhs>` | Optional parameter, characters to be trimmed from both ends. Type: VARCHAR |
 
 ## Return Value
 
-Deletes Spaces at both ends or the string after a specified character
+Returns a value of type VARCHAR.
 
+Special cases:
+- If any parameter is NULL, NULL is returned
+- If rhs is not specified, removes leading and trailing spaces
+- If rhs is specified, removes the complete rhs string from both ends (not character-by-character)
 
-## Example
+## Examples
 
+1. Remove leading and trailing spaces
 ```sql
 SELECT trim('   ab d   ') str;
 ```
-
-```sql
+```text
 +------+
 | str  |
 +------+
@@ -47,14 +45,90 @@ SELECT trim('   ab d   ') str;
 +------+
 ```
 
+2. Remove specified strings from both ends
 ```sql
-SELECT trim('ababccaab','ab') str;
+SELECT trim('ababccaab', 'ab') str;
+```
+```text
++---------+
+| str     |
++---------+
+| ababcca |
++---------+
 ```
 
+3. UTF-8 character support
 ```sql
-+------+
-| str  |
-+------+
-| cc   |
-+------+
+SELECT trim('   ṭṛì ḍḍumai   ');
 ```
+```text
++------------------------------+
+| trim('   ṭṛì ḍḍumai   ')     |
++------------------------------+
+| ṭṛì ḍḍumai                   |
++------------------------------+
+```
+
+4. No matching prefix/suffix, return original string
+```sql
+SELECT trim('Hello World', 'xyz');
+```
+```text
++--------------------------------+
+| trim('Hello World', 'xyz')     |
++--------------------------------+
+| Hello World                    |
++--------------------------------+
+```
+
+5. NULL value handling
+```sql
+SELECT trim(NULL), trim('Hello', NULL);
+```
+```text
++------------+-----------------------+
+| trim(NULL) | trim('Hello', NULL)   |
++------------+-----------------------+
+| NULL       | NULL                  |
++------------+-----------------------+
+```
+
+6. Empty string handling
+```sql
+SELECT trim(''), trim('abc', '');
+```
+```text
++----------+------------------+
+| trim('') | trim('abc', '')  |
++----------+------------------+
+|          | abc              |
++----------+------------------+
+```
+
+7. Repeated pattern removal from both ends
+```sql
+SELECT trim('abcabcabc', 'abc');
+```
+```text
++------------------------------+
+| trim('abcabcabc', 'abc')     |
++------------------------------+
+|                              |
++------------------------------+
+```
+
+8. Asymmetric removal
+```sql
+SELECT trim('abcHelloabc', 'abc');
+```
+```text
++--------------------------------+
+| trim('abcHelloabc', 'abc')     |
++--------------------------------+
+| Hello                          |
++--------------------------------+
+```
+
+### Keywords
+
+    TRIM

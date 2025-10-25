@@ -1,37 +1,37 @@
 ---
 {
     "title": "UUID_TO_INT",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
-## 描述
+## Description
 
-UUID_TO_INT 函数用于将 UUID 字符串转换为 INT128 整数表示。这对于需要在数据库中以整数形式存储 UUID 的场景非常有用。
+The UUID_TO_INT function converts a UUID string to its INT128 integer representation. This is useful for scenarios where UUIDs need to be stored as integers in the database.
 
-## 语法
+## Syntax
 
 ```sql
 UUID_TO_INT(<uuid>)
 ```
 
-## 参数
+## Parameters
 
-| 参数 | 说明 |
+| Parameter | Description |
 | -------- | ----------------------------------------- |
-| `<uuid>` | 需要转换的 UUID 字符串。类型：VARCHAR |
+| `<uuid>` | UUID string to convert. Type: VARCHAR |
 
-## 返回值
+## Return Value
 
-返回 INT128 类型，为 UUID 的整数表示。
+Returns INT128 type, the integer representation of the UUID.
 
-特殊情况：
-- 如果参数为 NULL，返回 NULL
-- 如果 UUID 格式无效，返回 NULL
+Special cases:
+- If parameter is NULL, returns NULL
+- If UUID format is invalid, returns NULL
 
-## 示例
+## Examples
 
-1. 基本用法：UUID 转整数
+1. Basic usage: UUID to integer
 ```sql
 SELECT uuid_to_int('6ce4766f-6783-4b30-b357-bba1c7600348');
 ```
@@ -43,7 +43,7 @@ SELECT uuid_to_int('6ce4766f-6783-4b30-b357-bba1c7600348');
 +-----------------------------------------------------+
 ```
 
-2. NULL 值处理
+2. NULL value handling
 ```sql
 SELECT uuid_to_int(NULL);
 ```
@@ -55,7 +55,7 @@ SELECT uuid_to_int(NULL);
 +-------------------+
 ```
 
-3. 配合 UUID() 使用
+3. Using with UUID()
 ```sql
 SELECT uuid_to_int(UUID());
 ```
@@ -67,7 +67,7 @@ SELECT uuid_to_int(UUID());
 +----------------------------------------+
 ```
 
-4. 批量转换
+4. Batch conversion
 ```sql
 SELECT uuid, uuid_to_int(uuid) AS uuid_int
 FROM (SELECT '6ce4766f-6783-4b30-b357-bba1c7600348' AS uuid) t;
@@ -80,7 +80,7 @@ FROM (SELECT '6ce4766f-6783-4b30-b357-bba1c7600348' AS uuid) t;
 +--------------------------------------+--------------------------------------+
 ```
 
-4. 大写 UUID 转换
+5. Uppercase UUID conversion
 
 ```sql
 SELECT uuid_to_int('6CE4766F-6783-4B30-B357-BBA1C7600348');
@@ -94,7 +94,7 @@ SELECT uuid_to_int('6CE4766F-6783-4B30-B357-BBA1C7600348');
 +-----------------------------------------------------+
 ```
 
-5. 错误格式的 UUID
+6. Invalid UUID format
 
 ```sql
 SELECT uuid_to_int('invalid-uuid-format');
@@ -107,3 +107,7 @@ SELECT uuid_to_int('invalid-uuid-format');
 | NULL                               |
 +------------------------------------+
 ```
+
+### Keywords
+
+    UUID_TO_INT

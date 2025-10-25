@@ -5,44 +5,88 @@
 }
 ---
 
-## Description
+## 描述
 
-`DOUBLE ngram_search(VARCHAR text,VARCHAR pattern,INT gram_num)`
+NGRAM_SEARCH 函数用于计算两个字符串的 N-gram 相似度。相似度范围为 0 到 1，值越大表示字符串越相似。
 
-计算 text 和 pattern 的 N-gram 相似度。相似度从 0 到 1，相似度越高证明两个字符串越相似。
-其中`pattern`，`gram_num`必须为常量。
-如果`text`或者`pattern`的长度小于`gram_num`，返回 0。
+N-gram 是将字符串分解为连续 N 个字符的集合。相似度计算公式为：`2 * |交集| / (|集合1| + |集合2|)`
 
-N-gram 相似度（N-gram similarity）是一种基于 N-gram（N 元语法）的文本相似度计算方法。N-gram 是指将一个文本串分成连续的 N 个字符或词语的集合。例如，对于字符串“text”，当 N=2 时，其二元组（bi-gram）为：{“te”, “ex”, “xt”}。
+仅支持 ASCII 字符。
 
-N-gram 相似度的计算为 2 * |Intersection| / (|text set| + |pattern set|)
-
-其中|text set|，|pattern set|为 text 和 pattern 的 N-gram，`Intersection`为两个集合的交集。
-
-注意，根据定义，相似度为 1 不代表两个字符串相同。
-
-仅支持 ASCII 编码。
-
-## Syntax
-
-`DOUBLE ngram_search(VARCHAR text,VARCHAR pattern,INT gram_num)`
-
-## Example
+## 语法
 
 ```sql
-mysql> select ngram_search('123456789' , '12345' , 3);
+NGRAM_SEARCH(<text>, <pattern>, <gram_num>)
+```
+
+## 参数
+
+| 参数 | 说明 |
+| ------------ | ----------------------------------------- |
+| `<text>` | 需要比较的文本字符串。类型：VARCHAR |
+| `<pattern>` | 模式字符串（必须为常量）。类型：VARCHAR |
+| `<gram_num>` | N-gram 的 N 值（必须为常量）。类型：INT |
+
+## 返回值
+
+返回 DOUBLE 类型，为两个字符串的 N-gram 相似度（0 到 1 之间）。
+
+特殊情况：
+- 如果任意参数为 NULL，返回 NULL
+- 如果字符串长度小于 `<gram_num>`，返回 0
+- `<pattern>` 和 `<gram_num>` 必须为常量
+- 相似度为 1 不一定表示字符串完全相同
+
+## 示例
+
+1. 基本用法：计算相似度
+```sql
+SELECT ngram_search('123456789', '12345', 3);
+```
+```text
 +---------------------------------------+
 | ngram_search('123456789', '12345', 3) |
 +---------------------------------------+
 |                                   0.6 |
 +---------------------------------------+
+```
 
-mysql> select ngram_search("abababab","babababa",2);
+2. 高相似度示例
+```sql
+SELECT ngram_search('abababab', 'babababa', 2);
+```
+```text
 +-----------------------------------------+
 | ngram_search('abababab', 'babababa', 2) |
 +-----------------------------------------+
 |                                       1 |
 +-----------------------------------------+
 ```
-## keywords
+
+3. 字符串过短返回 0
+```sql
+SELECT ngram_search('ab', 'abc', 3);
+```
+```text
++----------------------------------+
+| ngram_search('ab', 'abc', 3)     |
++----------------------------------+
+|                                0 |
++----------------------------------+
+```
+
+4. NULL 值处理
+```sql
+SELECT ngram_search(NULL, 'test', 2);
+```
+```text
++--------------------------------+
+| ngram_search(NULL, 'test', 2)  |
++--------------------------------+
+| NULL                           |
++--------------------------------+
+```
+
+## Keywords
+
     NGRAM_SEARCH,NGRAM,SEARCH

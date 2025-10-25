@@ -6,44 +6,46 @@
 ---
 
 ## 描述
-COMPRESS 函数用于将字符串或值压缩成二进制数据，压缩后的数据可通过 `UNCOMPRESS` 函数解压还原。
+
+COMPRESS 函数用于将字符串压缩成二进制数据。使用 zlib 压缩算法，压缩后的数据可通过 UNCOMPRESS 函数解压还原。
 
 ## 语法
 
 ```sql
-COMPRESS(<uncompressed_str>)
+COMPRESS(<str>)
 ```
 
 ## 参数
 
-| 参数                | 说明            |
-|--------------------|---------------|
-| `<uncompressed_str>` | 未压缩的原串，参数类型是 varchar 或者 string   |
+| 参数 | 说明 |
+| -------- | ----------------------------------------- |
+| `<str>` | 需要压缩的字符串。类型：VARCHAR |
 
 ## 返回值
 
-返回串与输入的 `uncompressed_str` 类型一致  
-
-返回串是不可读的压缩字节流。  
+返回 VARCHAR 类型，为压缩后的二进制数据（不可读）。
 
 特殊情况：
-- `uncompressed_str` 输入为 empty string(`''`) 时，返回 empty string(`''`)
+- 如果参数为 NULL，返回 NULL
+- 如果输入为空字符串 `''`，返回空字符串 `''`
 
-## 举例
+## 示例
 
-``` sql
-select uncompress(compress('abc'));
+1. 基本用法：压缩和解压
+```sql
+SELECT uncompress(compress('hello'));
 ```
 ```text 
-+-----------------------------+
-| uncompress(compress('abc')) |
-+-----------------------------+
-| abc                         |
-+-----------------------------+
++-------------------------------+
+| uncompress(compress('hello')) |
++-------------------------------+
+| hello                         |
++-------------------------------+
 ```
 
+2. 空字符串处理
 ```sql
-select compress('');
+SELECT compress('');
 ```
 ```text 
 +--------------+
@@ -51,4 +53,28 @@ select compress('');
 +--------------+
 |              |
 +--------------+
+```
+
+3. NULL 值处理
+```sql
+SELECT compress(NULL);
+```
+```text 
++----------------+
+| compress(NULL) |
++----------------+
+| NULL           |
++----------------+
+```
+
+4. utf-8 字符测试
+```sql
+SELECT uncompress(compress('ṭṛì'));
+```
+```text
++----------------------------------+
+| uncompress(compress('ṭṛì'))      |
++----------------------------------+
+| ṭṛì                              |
++----------------------------------+
 ```

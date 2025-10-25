@@ -47,7 +47,6 @@ SELECT rtrim_in('ab d   ') str;
 
 2. 移除指定字符集合
 ```sql
--- RTRIM_IN 会移除右端的'a'和'b'中的任意字符
 SELECT rtrim_in('ababccaab', 'ab') str;
 ```
 ```text
@@ -59,7 +58,7 @@ SELECT rtrim_in('ababccaab', 'ab') str;
 ```
 3. 与 RTRIM 函数的对比
 ```sql
-SELECT rtrim_in('ababccaab', 'ab'),rtrim('ababccaab', 'ab');
+SELECT rtrim_in('ababccaab', 'ab'), rtrim('ababccaab', 'ab');
 ```
 ```text
 +-----------------------------+--------------------------+
@@ -68,3 +67,55 @@ SELECT rtrim_in('ababccaab', 'ab'),rtrim('ababccaab', 'ab');
 | ababcc                      | ababcca                  |
 +-----------------------------+--------------------------+
 ```
+
+4. 字符集合顺序无关
+```sql
+SELECT rtrim_in('Helloabc', 'cba');
+```
+```text
++-----------------------------+
+| rtrim_in('Helloabc', 'cba') |
++-----------------------------+
+| Hello                       |
++-----------------------------+
+```
+
+5. UTF-8 特殊字符支持
+```sql
+SELECT rtrim_in('ṭṛì ḍḍumai+++', '+');
+```
+```text
++------------------------------------+
+| rtrim_in('ṭṛì ḍḍumai+++', '+')    |
++------------------------------------+
+| ṭṛì ḍḍumai                         |
++------------------------------------+
+```
+
+6. NULL 值处理
+```sql
+SELECT rtrim_in(NULL, 'abc');
+```
+```text
++------------------------+
+| rtrim_in(NULL, 'abc')  |
++------------------------+
+| NULL                   |
++------------------------+
+```
+
+7. 空字符处理
+```sql
+SELECT rtrim_in('', 'abc'),rtrim_in('abc', '');
+```
+```text
++---------------------+---------------------+
+| rtrim_in('', 'abc') | rtrim_in('abc', '') |
++---------------------+---------------------+
+|                     | abc                 |
++---------------------+---------------------+
+```
+
+### Keywords
+
+    RTRIM_IN,RTRIM

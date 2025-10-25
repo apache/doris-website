@@ -7,7 +7,7 @@
 
 ## Description
 
-The TRANSLATE function is used for string replacement, converting characters in the source string according to mapping rules. It replaces characters in the source string that appear in the 'from' string with corresponding characters in the 'to' string.
+The TRANSLATE function performs character-by-character string replacement, converting characters in the source string according to mapping rules. This function replaces each character in the source string that appears in the 'from' string with the corresponding character at the same position in the 'to' string.
 
 ## Syntax
 
@@ -24,14 +24,20 @@ TRANSLATE(<source>, <from>, <to>)
 
 ## Return Value
 
-Returns VARCHAR type, representing the transformed string.
+Returns VARCHAR type, representing the string transformed according to character mapping rules.
+
+Character mapping rules:
+- Establishes one-to-one character mapping based on positions in 'from' and 'to' strings
+- 1st character in 'from' maps to 1st character in 'to', 2nd to 2nd, and so on
+- If 'from' contains duplicate characters, uses the first occurrence's mapping and ignores subsequent duplicates
+- Characters in source string not in 'from' string remain unchanged
 
 Special cases:
 - Returns NULL if any parameter is NULL
-- If there are duplicate characters in the 'from' string, only the first occurrence is used
-- If a source character is not in the 'from' string, it remains unchanged
-- If a character's position in the 'from' string exceeds the length of the 'to' string, the corresponding source character will be deleted
-- If both 'from' and 'to' are empty strings, returns the original string
+- Returns empty string if source is empty string
+- Returns original source string if 'from' is empty string
+- Deletes all characters from source that appear in 'from' if 'to' is empty string
+- If 'to' string is shorter than 'from', characters in source corresponding to excess 'from' characters are deleted
 
 ## Examples
 
@@ -83,14 +89,66 @@ SELECT translate('abcd', 'a', '');
 +----------------------------+
 ```
 
-5. Duplicate characters in 'from' string
+5. Duplicate characters in 'from' string (uses first mapping only)
 ```sql
-SELECT translate('abcd', 'aac', 'zq');
+SELECT TRANSLATE('abacad', 'aac', 'zxy');
 ```
 ```text
-+--------------------------------+
-| translate('abcd', 'aac', 'zq') |
-+--------------------------------+
-| zbd                            |
-+--------------------------------+
++-----------------------------------+
+| TRANSLATE('abacad', 'aac', 'zxy') |
++-----------------------------------+
+| zbzyzd                            |
++-----------------------------------+
 ```
+
+6. 'to' string shorter than 'from' (deletes excess characters)
+```sql
+SELECT TRANSLATE('abcde', 'ace', 'xy');
+```
+```text
++-------------------------------+
+| TRANSLATE('abcde', 'ace', 'xy') |
++-------------------------------+
+| xbyd                          |
++-------------------------------+
+```
+
+7. UTF-8 character replacement
+```sql
+SELECT TRANSLATE('ṭṛì ḍḍumai', 'ṭṛ', 'ab');
+```
+```text
++-----------------------------------+
+| TRANSLATE('ṭṛì ḍḍumai', 'ṭṛ', 'ab') |
++-----------------------------------+
+| abì ḍḍumai                        |
++-----------------------------------+
+```
+
+8. Numeric character replacement
+```sql
+SELECT TRANSLATE('a1b2c3', '123', 'xyz');
+```
+```text
++----------------------------------+
+| TRANSLATE('a1b2c3', '123', 'xyz') |
++----------------------------------+
+| axbycz                           |
++----------------------------------+
+```
+
+9. Special symbol replacement
+```sql
+SELECT TRANSLATE('hello@world.com', '@.', '-_');
+```
+```text
++--------------------------------------------+
+| TRANSLATE('hello@world.com', '@.', '-_')   |
++--------------------------------------------+
+| hello-world_com                            |
++--------------------------------------------+
+```
+
+### Keywords
+
+    TRANSLATE

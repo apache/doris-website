@@ -138,3 +138,31 @@ SELECT MID(NULL, 2);
 | NULL         |
 +--------------+
 ```
+
+9. Using alias SUBSTR
+```sql
+SELECT SUBSTR('Hello World', 7, 5);
+```
+```text
++------------------------------+
+| SUBSTR('Hello World', 7, 5)  |
++------------------------------+
+| World                        |
++------------------------------+
+```
+
+10. UTF-8 multi-byte characters
+```sql
+SELECT SUBSTRING('ṭṛì ḍḍumai hello', 5, 6);
+```
+```text
++--------------------------------------+
+| SUBSTRING('ṭṛì ḍḍumai hello', 5, 6)  |
++--------------------------------------+
+| ḍḍumai                               |
++--------------------------------------+
+```
+
+### Keywords
+
+    SUBSTRING, SUBSTR, MID

@@ -7,9 +7,9 @@
 
 ## Description
 
-Calculates the length of a string. For multi-byte characters, returns the number of characters.
+The CHAR_LENGTH function calculates the number of characters (not bytes) in a string. For multi-byte characters (such as Chinese characters), it returns the number of characters.
 
-Currently only supports `utf8` encoding
+Currently only supports UTF-8 encoding.
 
 ## Alias
 
@@ -17,30 +17,71 @@ Currently only supports `utf8` encoding
 
 ## Syntax
 
-```sql
-CHAR_LENGTH ( <str> )
+```sql 
+CHAR_LENGTH(<str>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|------------|
-| `<str>`   | The string to calculate the length of |
+| ------- | ----------------------------------------- |
+| `<str>` | The string to calculate character length. Type: VARCHAR |
 
-## Return value
+## Return Value
 
-The length of the string <str>.
+Returns INT type, representing the number of characters in the string.
 
-## Example
+Special cases:
+- If the parameter is NULL, returns NULL
+- Empty string returns 0
+- Multi-byte UTF-8 characters each count as 1 character
 
+## Examples
+
+1. English characters
 ```sql
-select CHAR_LENGTH("abc"),CHAR_LENGTH("中国")
+SELECT CHAR_LENGTH('hello');
+```
+```text
++----------------------+
+| char_length('hello') |
++----------------------+
+|                    5 |
++----------------------+
 ```
 
+2. Chinese characters (each Chinese character counts as one character)
+```sql
+SELECT CHAR_LENGTH('中国');
+```
 ```text
-+-------------------------+----------------------------+
-| character_length('abc') | character_length('中国')   |
-+-------------------------+----------------------------+
-|                       3 |                          2 |
-+-------------------------+----------------------------+
++----------------------+
+| char_length('中国')  |
++----------------------+
+|                    2 |
++----------------------+
+```
+
+3. NULL value handling
+```sql
+SELECT CHAR_LENGTH(NULL);
+```
+```text
++--------------------+
+| char_length(NULL)  |
++--------------------+
+|               NULL |
++--------------------+
+```
+
+4. Comparison with LENGTH function (LENGTH returns byte count)
+```sql
+SELECT CHAR_LENGTH('中国') AS char_len, LENGTH('中国') AS byte_len;
+```
+```text
++----------+----------+
+| char_len | byte_len |
++----------+----------+
+|        2 |        6 |
++----------+----------+
 ```

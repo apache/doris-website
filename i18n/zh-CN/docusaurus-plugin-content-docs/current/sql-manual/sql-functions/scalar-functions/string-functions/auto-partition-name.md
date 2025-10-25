@@ -1,100 +1,110 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
-:::tip tip
-Supported since Apache Doris 2.1.6
-:::
+## 描述
 
-### Description
-#### Syntax
+AUTO_PARTITION_NAME 函数用于生成自动分区的分区名称。支持两种模式：RANGE 模式按时间单位生成分区名，LIST 模式根据字符串生成分区名。
 
-`VARCHAR AUTO_PARTITION_NAME('RANGE', 'VARCHAR unit', DATETIME datetime)`
+自 Apache Doris 2.1.6 版本开始支持。
 
-`VARCHAR AUTO_PARTITION_NAME('LIST', VARCHAR,...)`
-
-Generate datetime partition names by unit following RANGE's partition name rules
-
-Convert strings to partition names following LIST's partition name rules
-
-The datetime parameter is a legal date expression.
-
-The unit parameter is the time interval you want, the available values are: [`second`, `minute`, `hour`, `day`, `month`, `year`].
-If unit does not match one of these options, a syntax error will be returned. 
-
-**Supported since Doris 2.1.6**
-
-### Example
+## 语法
 
 ```sql
-mysql> select auto_partition_name('range', 'years', '123');
-ERROR 1105 (HY000): errCode = 2, detailMessage = range auto_partition_name must accept year|month|day|hour|minute|second for 2nd argument
+AUTO_PARTITION_NAME('RANGE', <unit>, <datetime>)
+AUTO_PARTITION_NAME('LIST', <value>[, <value> ...])
+```
 
-mysql> select auto_partition_name('range', 'year', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'year', '2022-12-12 19:20:30')   |
-+---------------------------------------------------------------+
-| p20220101000000                                               |
-+---------------------------------------------------------------+
+## 参数
 
-mysql> select auto_partition_name('range', 'month', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'month', '2022-12-12 19:20:30')  |
-+---------------------------------------------------------------+
-| p20221201000000                                               |
-+---------------------------------------------------------------+
+| 参数 | 说明 |
+| ----------- | ----------------------------------------- |
+| `'RANGE'` | RANGE 分区模式，根据时间生成分区名 |
+| `'LIST'` | LIST 分区模式，根据字符串值生成分区名 |
+| `<unit>` | RANGE 模式的时间单位：`year`、`month`、`day`、`hour`、`minute`、`second`。类型：VARCHAR |
+| `<datetime>` | RANGE 模式的日期时间值。类型：DATETIME |
+| `<value>` | LIST 模式的分区值（可多个）。类型：VARCHAR |
 
-mysql> select auto_partition_name('range', 'day', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'day', '2022-12-12 19:20:30')    |
-+---------------------------------------------------------------+
-| p20221212000000                                               |
-+---------------------------------------------------------------+
+## 返回值
 
-mysql> select auto_partition_name('range', 'hour', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'hour', '2022-12-12 19:20:30')   |
-+---------------------------------------------------------------+
-| p20221212190000                                               |
-+---------------------------------------------------------------+
+返回 VARCHAR 类型，为生成的分区名称。
 
-mysql> select auto_partition_name('range', 'minute', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'minute', '2022-12-12 19:20:30') |
-+---------------------------------------------------------------+
-| p20221212192000                                               |
-+---------------------------------------------------------------+
+特殊情况：
+- RANGE 模式：分区名格式为 `pYYYYMMDDHHMMSS`，根据 unit 截断到对应精度
+- LIST 模式：分区名格式为 `p<value><length>`，多个值用长度分隔
+- 如果参数无效，返回错误
 
-mysql> select auto_partition_name('range', 'second', '2022-12-12 19:20:30');
-+---------------------------------------------------------------+
-| auto_partition_name('range', 'second', '2022-12-12 19:20:30') |
-+---------------------------------------------------------------+
-| p20221212192030                                               |
-+---------------------------------------------------------------+
+## 示例
 
-mysql> select auto_partition_name('list', 'helloworld');
+1. 基本用法：RANGE 按天分区
+```sql
+SELECT auto_partition_name('range', 'day', '2022-12-12 19:20:30');
+```
+```text
++------------------------------------------------------------+
+| auto_partition_name('range', 'day', '2022-12-12 19:20:30') |
++------------------------------------------------------------+
+| p20221212000000                                            |
++------------------------------------------------------------+
+```
+
+2. RANGE 按月分区
+```sql
+SELECT auto_partition_name('range', 'month', '2022-12-12 19:20:30');
+```
+```text
++--------------------------------------------------------------+
+| auto_partition_name('range', 'month', '2022-12-12 19:20:30') |
++--------------------------------------------------------------+
+| p20221201000000                                              |
++--------------------------------------------------------------+
+```
+
+3. LIST 单个值
+```sql
+SELECT auto_partition_name('list', 'helloworld');
+```
+```text
 +-------------------------------------------+
 | auto_partition_name('list', 'helloworld') |
 +-------------------------------------------+
 | phelloworld10                             |
 +-------------------------------------------+
+```
 
-mysql> select auto_partition_name('list', 'hello', 'world');
+4. LIST 多个值
+```sql
+SELECT auto_partition_name('list', 'hello', 'world');
+```
+```text
 +-----------------------------------------------+
 | auto_partition_name('list', 'hello', 'world') |
 +-----------------------------------------------+
 | phello5world5                                 |
 +-----------------------------------------------+
+```
 
-mysql> select auto_partition_name('list', "你好");
-+------------------------------------+
-| auto_partition_name('list', "你好") |
-+------------------------------------+
-| p4f60597d2                         |
-+------------------------------------+
+5. UTF-8 特殊字符支持：LIST 模式
+```sql
+SELECT auto_partition_name('list', 'ṭṛì', 'ḍḍumai');
+```
+```text
++------------------------------------------------+
+| auto_partition_name('list', 'ṭṛì', 'ḍḍumai')  |
++------------------------------------------------+
+| pṭṛì9ḍḍumai12                                  |
++------------------------------------------------+
+```
+
+6. 无效的 unit 参数
+```sql
+SELECT auto_partition_name('range', 'years', '2022-12-12');
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = range auto_partition_name must accept year|month|day|hour|minute|second for 2nd argument
 ```
 
 ### Keywords
