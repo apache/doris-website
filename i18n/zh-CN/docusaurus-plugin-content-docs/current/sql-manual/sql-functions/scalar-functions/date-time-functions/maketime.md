@@ -50,6 +50,8 @@ SELECT `hour`, `minute`, `sec`, MAKETIME(`hour`, `minute`, `sec`) AS ans FROM `t
 |  NULL |     15 |      16 | NULL              |
 |     7 |   NULL |       8 | NULL              |
 |     1 |      2 |    NULL | NULL              |
+|    23 |    -40 |      12 | NULL              |
+|    20 |      6 |     -12 | NULL              |
 +-------+--------+---------+-------------------+
 ```
 
@@ -69,5 +71,7 @@ SELECT `hour`, `minute`, MAKETIME(`hour`, `minute`, 27) AS ans FROM `test_maketi
 |  NULL |     15 | NULL       |
 |     7 |   NULL | NULL       |
 |     1 |      2 | 01:02:27   |
+|    23 |    -40 | NULL       |
+|    20 |      6 | 20:06:27   |
 +-------+--------+------------+
 ```
