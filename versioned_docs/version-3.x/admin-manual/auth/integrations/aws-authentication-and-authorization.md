@@ -27,7 +27,7 @@ Doris enables access to external data sources by configuring `AWS IAM User` cred
 
 ![](/images/integrations/iam_user_attach_policy2.png)
 
-S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+S3 read policy template​,applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
 
 **Notes:&#x20;**
 
@@ -249,7 +249,7 @@ After attaching `ec2_role` to `EC2 instances`, you can find the `role_arn` as sh
 
 ### Step2 Configure Permissions for Source Account IAM Role (EC2 Instance Role)
 
-1. Log in to the [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home)，navigate to ​​`Access management` > `Roles`；
+1. Log in to the [AWS IAM Console](https://us-east-1.console.aws.amazon.com/iamv2/home#/home),navigate to ​​`Access management` > `Roles`；
 2. Find the EC2 instance role and click its name;
 3. On the role details page, go to the ​​`Permissions`​​ tab, click ​​`Add permissions`​​, then select `​​Create inline policy`​​;
 4. In the ​​`Specify permissions​​ section`, switch to the `​​JSON`​​ tab, paste the following policy, and click ​​`Review policy`​​:
@@ -303,7 +303,7 @@ After attaching `ec2_role` to `EC2 instances`, you can find the `role_arn` as sh
 
 ![](/images/integrations/target_role_permission2.png)
 
-S3 read policy template​，applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
+S3 read policy template​,applies to Doris features requiring read/list access, e.g: S3 Load, TVF, External Catalog
 
 **Notes:&#x20;**
 
@@ -488,6 +488,89 @@ PROPERTIES
     "s3.external_id" = "<your-external-id>"
 );
 ```
+
+### AWS EKS Cluster IAM Role Authentication and Authorization
+
+For applications (such as Apache Doris) running in an Amazon EKS cluster that need to be granted AWS Identity and Access Management (IAM) permissions, Amazon EKS provides the following two primary methods:
+
+**1.IAM Roles for Service Accounts (IRSA)​**
+
+**2. EKS Pod Identity​**
+
+Both methods require correct configuration of the IAM Role, corresponding trust policy, and IAM policy in the EKS cluster. For specific configuration methods, please refer to the AWS official documentation:
+
+[Granting AWS Identity and Access Management permissions to workloads on Amazon Elastic Kubernetes Service clusters](https://docs.aws.amazon.com/eks/latest/userguide/service-accounts.html#service-accounts-iam)
+
+Doris FE/BE supports automatically detecting and obtaining credentials via the `AWSCredentialsProviderChain` method.
+
+### Bucket Policy Authentication and Authorization
+
+For Doris machines deployed using IAM Roles, import, export, and TVF scenarios also support using Amazon S3 bucket policies to control access to objects in AWS S3 buckets. This allows restricting access to the object bucket only to users associated with the EC2 machine. The specific steps are as follows:
+
+1、Set the Bucket Policy for the target bucket.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::111122223333:root"
+                ]
+            },
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:AbortMultipartUpload",
+                "s3:ListMultipartUploadParts"
+            ],
+            "Resource": "arn:aws:s3:::<bucket>/<prefix>/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::111122223333:root"
+                ]
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::<bucket>",
+        }
+    ]
+}
+```
+
+Please replace `arn:aws:iam::111122223333:root` with the ARN of the account or Role bound to the EC2 machine.
+
+2、Use the corresponding SQL syntax for data access. Authentication credentials are automatically detected, no manual AK/SK or ARN configuration required.
+
+```sql
+  SELECT * FROM S3 (
+      "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
+      "format" = "parquet",
+      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.region" = "us-east-1"
+  )
+```
+
+Doris FE/BE supports automatically detecting and obtaining credentials via the `AWSCredentialsProviderChain` method.
+
+Reference documentation: [Bucket Policy](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/example-bucket-policies.html)
+
+### Best Practices for Authentication Methods
+| Authentication Method                                       | Applicable Scenarios                                   | Advantages | Disadvantages |
+| :-------------------------------------------- | :----------------------------------------- | ----------------------- | -------- |
+| AK/SK Authentication | Import/Export/StorageVault scenarios with privately deployed, security-controlled storage or non-AWS S3 object storage. | Simple configuration, supports object storage compatible with AWS S3. | Risk of secret key leakage; manual key rotation required.     |
+| IAM Role Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with high-security requirements. | High security, automatic AWS credential rotation, centralized permission configuration. | Complex Bucket Policy/Trust configuration process. |
+| Bucket Policy Authentication | Import/Export/StorageVault scenarios on AWS S3 public cloud with a small number of buckets | Moderate configuration complexity, adheres to the principle of least privilege, automatically detects AWS credentials. | Permission configuration is scattered across various bucket policies.     |
 
 ### FAQ
 
