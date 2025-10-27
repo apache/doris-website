@@ -1419,6 +1419,8 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-days",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-iso8601",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-monday",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/utc-date",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/utc-time",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/utc-timestamp",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/unix-timestamp",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/week",
