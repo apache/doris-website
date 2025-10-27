@@ -107,6 +107,15 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 4. 使用 JDBC Catalog 将 MySQL 数据同步到 Doris 中，日期数据同步错误。需要校验下 MySQL 的版本是否与 MySQL 的驱动包是否对应，比如 MySQL8 以上需要使用驱动 com.mysql.cj.jdbc.Driver。
 
+5. 单个字段过大，查询时 Java 内存 OOM
+
+   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用)超过 JVM 内存限制，就会出现 OOM。
+
+   解决方法：
+
+   - 减小 `batch_size` 的值，可以通过 `set batch_size = 512;` 来调整，默认值为 1024。
+   - 增大 BE 的 JVM 内存，通过修改 `JAVA_OPTS` 参数中的 `-Xmx` 来调整 JVM 最大堆内存大小。例如：`"-Xmx8g`。
+
 ## Hive Catalog
 
 1. 通过 Hive Catalog 访问 Iceberg 或 Hive 表报错：`failed to get schema` 或 `Storage schema reading not supported`
