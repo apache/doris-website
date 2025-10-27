@@ -1109,6 +1109,7 @@
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/conversion/overview",
                                         "sql-manual/basic-element/sql-data-types/conversion/cast-expr",
+                                        "sql-manual/basic-element/sql-data-types/conversion/cast-to-string",
                                         "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
