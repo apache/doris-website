@@ -1273,6 +1273,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/is-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/length",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
