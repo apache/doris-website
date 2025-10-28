@@ -35,6 +35,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<warehouse>' --optional
     {MetaStoreProperties},
     {StorageProperties},
+    {IcebergProperties},
     {CommonProperties}
 );
 ```
@@ -68,6 +69,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
+
+* `{IcebergProperties}`
+
+  IcebergProperties 部分用于填写一些 Iceberg Catalog 特有的参数。
+
+  - `list-all-tables`
+
+    自 3.1.2 版本支持。
+
+    针对以 Hive Metastore 作为元数据服务的 Iceberg Catalog。默认为 `true`。在默认情况下，`SHOW TABLES` 操作会罗列出当前 Database 下的所有类型的 Table（Hive Metastore 中可能存储了非 Iceberg 类型的表）。
+    
+    这种方式性能最好。如果设置为 `false`，则 Doris 会逐一检查每个 Table 的类型，并只返回 Iceberg 类型的 Table。该模式在表很多的情况下，性能会比较差。
 
 * `{CommonProperties}`
 
