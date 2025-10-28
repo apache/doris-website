@@ -1084,7 +1084,9 @@ SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as t
     java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
     ```
 
-    3.1 之前的不支持 `s3a` 协议，如果必须使用，可以临时显示添加 `s3a` 协议相关参数临时解决。3.1 之后的版本无需此操作。
+    3.1 之前的版本不支持 `s3a` 协议，如果必须使用，可以临时显示添加 `s3a` 协议相关参数临时解决。
+    
+    3.1 之后的版本无需此操作。同时，3.1 之后的版本如果需要对 Paimon 存储参数进行覆盖，也可以显示的添加 paimon.fs. 前缀的参数。 Paimon底层使用 HDFS 的API，因此所有 fs.s3a 的参数都可以使用。
     
     如：
 

@@ -1085,9 +1085,12 @@ Result:
     ```
     java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
     ```
+    **Versions prior to 3.1**
+    Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add the `s3a`-related parameters as a workaround.
 
-    Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add `s3a` protocol-related parameters as a workaround. This operation is not needed for versions 3.1 and later.
-    
+    **Version 3.1 and above**
+    Starting from version 3.1, explicitly adding `s3a` parameters is no longer necessary. If you need to override Paimon storage parameters, you can add parameters with the `paimon.fs.` prefix. Since Paimon internally uses the HDFS API, all `fs.s3a.*` parameters are supported.
+
     For example:
 
     ```sql

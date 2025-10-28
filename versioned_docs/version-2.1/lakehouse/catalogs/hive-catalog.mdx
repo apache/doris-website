@@ -507,6 +507,14 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
     <summary>Version 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
+            AWS Glue and S3 storage services share the same authentication credentials.
+
+            In non-EC2 environments, you need to use [aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) to configure Credentials information and generate a credentials file in the ~/.aws directory.
+
+            Alternatively, you can explicitly specify the credentials provider factory class
+            when creating the catalog:
+
+            <b>"aws.catalog.credentials.provider.factory.class" = "com.amazonaws.glue.catalog.credentials.ConfigurationAWSCredentialsProviderFactory"</b>
             ```sql
             create catalog hive_glue PROPERTIES(
                 'type' = 'hms',
