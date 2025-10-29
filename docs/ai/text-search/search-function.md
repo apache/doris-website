@@ -19,14 +19,22 @@ Syntax
 
 ```sql
 SEARCH('<search_expression>')
+SEARCH('<search_expression>', '<default_field>')
+SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 ```
 
-- Argument: `<search_expression>` — string literal containing the SEARCH DSL expression
+- `<search_expression>` — string literal containing the SEARCH DSL expression.
+- `<default_field>` *(optional)* — column name automatically applied to terms that do not specify a field.
+- `<default_operator>` *(optional)* — default boolean operator for multi-term expressions; accepts `and` or `or` (case-insensitive). Defaults to `or`.
 
 Usage
 
-- Placement: use in the `WHERE` clause as a predicate
-- Return type: BOOLEAN (TRUE for matching rows)
+- Placement: use in the `WHERE` clause as a predicate.
+- Return type: BOOLEAN (TRUE for matching rows).
+
+When `default_field` is provided, Doris expands bare terms or functions to that field. For example, `SEARCH('foo bar', 'tags', 'and')` behaves like `SEARCH('tags:ALL(foo bar)')`, while `SEARCH('foo bark', 'tags')` expands to `tags:ANY(foo bark)`. Explicit boolean operators inside the DSL always take precedence over the default operator.
+
+`SEARCH()` follows SQL three-valued logic. Rows where all referenced fields are NULL evaluate to UNKNOWN (filtered out in the `WHERE` clause) unless other predicates short-circuit the expression (`TRUE OR NULL = TRUE`, `FALSE OR NULL = NULL`, `NOT NULL = NULL`), matching the behavior of dedicated text search operators.
 
 ### Current Supported Queries
 
@@ -91,6 +99,15 @@ SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ANY(python javascript) AND (category:Technology OR category:Programming)');
 ```
 
+#### Phrase query
+- Syntax: `column:"quoted phrase"`
+- Semantics: matches contiguous tokens in order using the column's analyzer; quotes must wrap the entire phrase.
+- Indexing tip: requires an inverted index configured with a tokenizer (`parser`) that preserves positional information.
+```sql
+SELECT id, title FROM search_test_basic
+WHERE SEARCH('content:"machine learning"');
+```
+
 #### Multi‑column search
 - Syntax: `column1:term OR column2:ANY(...) OR ...`
 - Semantics: search across multiple columns; each column follows its own index/analyzer configuration
@@ -101,6 +118,28 @@ WHERE SEARCH('title:Python OR tags:ANY(database mysql) OR author:Alice');
 
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ALL(tutorial) AND category:Technology');
+```
+
+#### Wildcard query
+- Syntax: `column:prefix*`, `column:*mid*`, `column:?ingle`
+- Semantics: performs pattern matching with `*` (multi-character) and `?` (single-character) wildcards.
+- Indexing tip: works on untokenized indexes and on tokenized indexes with `lower_case` when case-insensitive matching is required.
+```sql
+SELECT id, title FROM search_test_basic
+WHERE SEARCH('firstname:Chris*');
+
+-- Using the default field parameter
+SELECT id, firstname FROM people
+WHERE SEARCH('Chris*', 'firstname');
+```
+
+#### Regular expression query
+- Syntax: `column:/regex/`
+- Semantics: applies Lucene-style regular expression matching; slashes delimit the pattern.
+- Indexing tip: only available on untokenized indexes.
+```sql
+SELECT id, title FROM corpus
+WHERE SEARCH('title:/data.+science/');
 ```
 
 #### EXACT query
@@ -168,6 +207,16 @@ FROM t
 WHERE SEARCH('content:EXACT(machine learning) OR content:ANY(intelligence)')
 ORDER BY id;
 
+-- Simplified syntax with default field/operator
+SELECT id, tags
+FROM tag_dataset
+WHERE SEARCH('deep learning', 'tags', 'and'); -- expands to tags:ALL(deep learning)
+
+-- Phrase and wildcard queries in one DSL
+SELECT id, content FROM t
+WHERE SEARCH('content:"deep learning" OR content:AI*')
+ORDER BY id;
+
 -- VARIANT column with inverted index
 CREATE TABLE test_variant_search_subcolumn (
   id BIGINT,
@@ -205,16 +254,11 @@ ORDER BY id;
 
 ### Current Limitations
 
-- Phrase, prefix, wildcard, and regular expression queries are not yet supported in `SEARCH()`
-- Range/list queries are not yet supported in `SEARCH()`
-- Unsupported patterns may fall back to term queries
+- Range and list clauses (`field:[a TO b]`, `field:IN(...)`) still degrade to term lookups; rely on regular SQL predicates for numeric/date ranges or explicit `IN` filters.
 
 Use standard operators or text search operators as alternatives when needed, for example:
 
 ```sql
--- Phrase search via operator
-SELECT * FROM t WHERE content MATCH_PHRASE 'full text search';
-
 -- Range filters via SQL
 SELECT * FROM t WHERE created_at >= '2024-01-01';
 ```
