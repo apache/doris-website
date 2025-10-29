@@ -327,3 +327,48 @@ mysql> select cast(struct(123,"abc",3.14) as string);
 | {123, "abc", 3.14}                     |
 +----------------------------------------+
 ```
+
+## IPv6
+
+The output format of IPv6 type is the standard IPv6 colon-hexadecimal notation:
+
+1. Find the longest consecutive zero segment and compress it with `::`.
+2. Non-zero groups are represented in hexadecimal (removing leading zeros).
+3. Groups are separated by `:`.
+
+### Special Handling
+
+1. **IPv4 Mapping**:  
+   If the first 6 groups are 0 and the 7th group is 0 or 0xffff, the last 4 bytes are displayed in IPv4 format.  
+   Example:  
+   ```sql
+   mysql> select cast('::ffff:192.0.2.1' as ipv6);
+   +-----------------------------+
+   | cast('::ffff:192.0.2.1' as ipv6) |
+   +-----------------------------+
+   | ::ffff:192.0.2.1           |
+   +-----------------------------+
+   ```
+
+2. **Zero Compression Rules**:  
+   * Compress only the longest consecutive zero segment.  
+   * At least 2 consecutive zero groups are required for compression.  
+   * If there are multiple zero segments of the same length, compress the first one.  
+
+Example:
+
+```sql
+mysql> select cast('2001:0db8:0000:0000:0000:0000:1428:57ab' as ipv6);
++---------------------------------------------------------+
+| cast('2001:0db8:0000:0000:0000:0000:1428:57ab' as ipv6) |
++---------------------------------------------------------+
+| 2001:db8::1428:57ab                                     |
++---------------------------------------------------------+
+
+mysql> select cast('::192.0.2.1' as ipv6);
++-----------------------------+
+| cast('::192.0.2.1' as ipv6) |
++-----------------------------+
+| ::192.0.2.1                 |
++-----------------------------+
+```
