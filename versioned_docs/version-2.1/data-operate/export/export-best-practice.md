@@ -89,3 +89,7 @@ This document mainly introduces how to determine whether resource utilization is
         Whether to split Outfile commands within partitions. This parameter defaults to `partition`, which means no further splitting within partitions. That is, the number of Outfile commands will only be less than or equal to the number of partitions involved. If set to `none`, a partition will be further split, which can improve concurrency, but if the partition is being written to, it may sacrifice export consistency (i.e., different Outfile commands for the same partition may export different versions of data from that partition).
 
         For details, please refer to [Export Command Manual](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
+
+    - `async_task_consumer_thread_num`
+
+        This is an FE configuration parameter that indicates the number of Export Tasks that the current cluster can run concurrently. The default value is 64. An Export Job is split into multiple Export Tasks based on concurrency. All Export Tasks share this threshold. To increase the overall number of concurrent export tasks that the cluster can execute, increase this parameter and restart the FE node.

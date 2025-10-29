@@ -31,33 +31,7 @@ The cache feature is disabled by default. Please refer to the [Data Cache](../da
 
 ## HDFS Read Optimization
 
-In some cases, high HDFS load may cause long delays when reading data replicas from HDFS, slowing down overall query efficiency. HDFS Client provides the Hedged Read feature.
-This feature can start another read thread to read the same data when a read request exceeds a certain threshold without returning, using whichever returns first.
-
-Note: This feature may increase the load on the HDFS cluster, please use it judiciously.
-
-You can enable this feature in the following way:
-
-```
-create catalog regression properties (
-    'type'='hms',
-    'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
-    'dfs.client.hedged.read.threadpool.size' = '128',
-    'dfs.client.hedged.read.threshold.millis' = "500"
-);
-```
-
-- `dfs.client.hedged.read.threadpool.size`: Represents the number of threads used for Hedged Read, which are shared by an HDFS Client. Typically, for an HDFS cluster, BE nodes share one HDFS Client.
-
-- `dfs.client.hedged.read.threshold.millis`: The read threshold in milliseconds. When a read request exceeds this threshold without returning, Hedged Read is triggered.
-
-After enabling, you can see related parameters in the Query Profile:
-
-- `TotalHedgedRead`: Number of times Hedged Read was initiated.
-
-- `HedgedReadWins`: Number of successful Hedged Reads (initiated and returned faster than the original request)
-
-Note that these values are cumulative for a single HDFS Client, not for a single query. The same HDFS Client is reused by multiple queries.
+Please refer to the **HDFS IO Optimization** section in the [HDFS Documentation](../storages/hdfs.md).
 
 ## Merge IO Optimization
 
