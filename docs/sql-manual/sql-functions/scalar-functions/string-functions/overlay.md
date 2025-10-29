@@ -7,7 +7,13 @@
 
 ## Description
 
-The OVERLAY function is used to replace a substring at a specified position and length within a string. Starting from the specified position, it replaces the specified length of characters with a new string.
+The OVERLAY function is used to replace a substring at a specified position and length within a string. Starting from the specified position, it replaces the specified length of characters with a new string.This function is multibyte safe.
+
+This function behaves consistently with the [INSERT function](https://dev.mysql.com/doc/refman/8.4/en/string-functions.html#function_insert) in MySQL.
+
+## Alias
+
+- INSERT
 
 ## Syntax
 
@@ -81,4 +87,15 @@ SELECT overlay('Hello', NULL, 2, 'X');
 +--------------------------------+
 | NULL                           |
 +--------------------------------+
+```
+
+```sql
+SELECT INSERT('🎉🎊🎈', 2, 1, '🎁');
+```
+```text
++--------------------------------------+
+| INSERT('🎉🎊🎈', 2, 1, '🎁')                 |
++--------------------------------------+
+| 🎉🎁🎈                                     |
++--------------------------------------+
 ```
