@@ -19,14 +19,22 @@ SEARCH 是一个返回布尔值的谓词函数，可作为过滤条件出现在 
 
 ```sql
 SEARCH('<search_expression>')
+SEARCH('<search_expression>', '<default_field>')
+SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 ```
 
-- 参数：`<search_expression>` — SEARCH DSL 查询表达式（字符串字面量）
+- `<search_expression>`：SEARCH DSL 查询表达式（字符串字面量）
+- `<default_field>`（可选）：当 DSL 中的词项未显式指定字段时自动套用的列名。
+- `<default_operator>`（可选）：多词项表达式默认布尔运算符，仅接受 `and` 或 `or`（不区分大小写），默认为 `or`。
 
 用法
 
-- 位置：用于 `WHERE`，作为谓词参与行过滤
-- 返回类型：BOOLEAN（匹配为 TRUE）
+- 位置：用于 `WHERE`，作为谓词参与行过滤。
+- 返回类型：BOOLEAN（匹配为 TRUE）。
+
+提供 `default_field` 后，Doris 会把裸词项或函数自动扩展到该字段。例如 `SEARCH('foo bar', 'tags', 'and')` 等价于 `SEARCH('tags:ALL(foo bar)')`，而 `SEARCH('foo bark', 'tags')` 会展开为 `tags:ANY(foo bark)`。DSL 中显式出现的布尔操作优先级最高，会覆盖默认运算符。
+
+`SEARCH()` 遵循 SQL 三值逻辑。当所有参与匹配的列值均为 NULL 时结果为 UNKNOWN（在 `WHERE` 中被过滤），但若与其他子表达式组合，可按布尔短路原则返回 TRUE 或继续保留 NULL（例如 `TRUE OR NULL = TRUE`、`FALSE OR NULL = NULL`、`NOT NULL = NULL`），行为与文本检索算子保持一致。
 
 ### 当前支持语法
 
@@ -91,6 +99,15 @@ SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ANY(python javascript) AND (category:Technology OR category:Programming)');
 ```
 
+#### 词组查询
+- 语法：`column:"quoted phrase"`
+- 语义：根据列的分析器匹配连续且有序的词项，需使用双引号包裹完整短语。
+- 索引建议：目标列必须使用带位置信息的分词倒排索引（配置 `parser`）。
+```sql
+SELECT id, title FROM search_test_basic
+WHERE SEARCH('content:"machine learning"');
+```
+
 #### 多列搜索
 - 语法：`column1:term OR column2:ANY(...) OR ...`
 - 语义：在单条表达式中跨多列匹配；每列按其索引/分词配置生效
@@ -101,6 +118,28 @@ WHERE SEARCH('title:Python OR tags:ANY(database mysql) OR author:Alice');
 
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ALL(tutorial) AND category:Technology');
+```
+
+#### 通配符查询
+- 语法：`column:prefix*`、`column:*mid*`、`column:?ingle`
+- 语义：使用 `*` 匹配任意长度字符串，`?` 匹配单个字符。
+- 索引建议：适用于未分词索引，也可用于开启 `lower_case` 的分词索引以获得不区分大小写的匹配。
+```sql
+SELECT id, title FROM search_test_basic
+WHERE SEARCH('firstname:Chris*');
+
+-- 结合默认字段参数
+SELECT id, firstname FROM people
+WHERE SEARCH('Chris*', 'firstname');
+```
+
+#### 正则表达式查询
+- 语法：`column:/regex/`
+- 语义：使用 Lucene 风格正则表达式匹配，模式由斜杠包裹。
+- 索引建议：仅支持未分词倒排索引。
+```sql
+SELECT id, title FROM corpus
+WHERE SEARCH('title:/data.+science/');
 ```
 
 #### EXACT 查询（严格等值匹配）
@@ -168,6 +207,16 @@ FROM t
 WHERE SEARCH('content:EXACT(machine learning) OR content:ANY(intelligence)')
 ORDER BY id;
 
+-- 使用默认字段与默认运算符的简化写法
+SELECT id, tags
+FROM tag_dataset
+WHERE SEARCH('deep learning', 'tags', 'and'); -- 自动展开为 tags:ALL(deep learning)
+
+-- 同时使用短语与通配符
+SELECT id, content FROM t
+WHERE SEARCH('content:"deep learning" OR content:AI*')
+ORDER BY id;
+
 -- 带 VARIANT 列与倒排索引
 CREATE TABLE test_variant_search_subcolumn (
   id BIGINT,
@@ -205,16 +254,11 @@ ORDER BY id;
 
 ### 当前限制
 
-- `SEARCH()` 暂不支持短语、前缀、通配符、正则查询
-- `SEARCH()` 暂不支持范围/列表查询
-- 不支持的模式可能降级为词项查询
+- 范围与列表子句（如 `field:[a TO b]`、`field:IN(...)`）仍会降级为普通词项匹配，建议使用常规 SQL 范围/`IN` 过滤。
 
 可使用标准操作符或文本检索算子替代：
 
 ```sql
--- 通过算子进行短语检索
-SELECT * FROM t WHERE content MATCH_PHRASE '全文检索';
-
 -- 通过 SQL 进行范围过滤
 SELECT * FROM t WHERE created_at >= '2024-01-01';
 ```
