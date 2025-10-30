@@ -5,6 +5,10 @@
 }
 ---
 
+:::warning Note!
+This feature is deprecated since 3.1.0. For usage inquiries, please contact the developers.
+:::
+
 Doris supports accessing and reading LakeSoul table data using metadata stored in PostgreSQL.
 
 [Quickly Experience Apache Doris & LakeSoul with Docker](../best-practices/doris-lakesoul.md)
