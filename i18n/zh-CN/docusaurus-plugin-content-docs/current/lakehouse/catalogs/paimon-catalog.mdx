@@ -33,6 +33,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<paimon_warehouse>'
     {MetaStoreProperties},
     {StorageProperties},
+    {PaimonProperties},
     {CommonProperties}
 );
 ```
@@ -60,6 +61,27 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
+
+* `{PaimonProperties}`
+
+  PaimonProperties 部分由于填写 Paimon 相关的属性。
+
+  Doris 在访问 Paimon 元数据时，会部分使用 Paimon Java SDK，因此可能有一些自定义参数需要透传给 Paimon Java SDK。可以使用以下前缀：
+
+  ```
+  paimon.s3.xxx
+  paimon.s3a.xxx
+  paimon.fs.xxx
+  ```
+
+  这些参数会进行自动转换并透传，下面列举一些示例：
+
+  | 输入参数 | 转换后适用与 Paimon Java SDK 的参数 |
+  | --- | --- |
+  | "paimon.s3.list.version" = "1" | "fs.s3a.list.version" = "1" |
+  | "paimon.s3.paging.maximum" = "100" | "fs.s3a.paging.maximum" = "100" |
+  | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
+  | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
 * `{CommonProperties}`
 
@@ -1086,7 +1108,7 @@ SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as t
 
     3.1 之前的版本不支持 `s3a` 协议，如果必须使用，可以临时显示添加 `s3a` 协议相关参数临时解决。
     
-    3.1 之后的版本无需此操作。同时，3.1 之后的版本如果需要对 Paimon 存储参数进行覆盖，也可以显示的添加 paimon.fs. 前缀的参数。 Paimon底层使用 HDFS 的API，因此所有 fs.s3a 的参数都可以使用。
+    3.1 之后的版本无需此操作。同时，3.1 之后的版本如果需要对 Paimon 存储参数进行覆盖，也可以显示的添加 paimon.fs. 前缀的参数。Paimon 底层使用 HDFS 的 API，因此所有 fs.s3a 的参数都可以使用。
     
     如：
 
