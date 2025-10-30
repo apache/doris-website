@@ -33,6 +33,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<paimon_warehouse>'
     {MetaStoreProperties},
     {StorageProperties},
+    {PaimonProperties},
     {CommonProperties}
 );
 ```
@@ -60,6 +61,27 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{StorageProperties}`
 
   The StorageProperties section is used to fill in connection and authentication information related to the storage system. Refer to the section on [Supported Storage Systems] for details.
+
+* `{PaimonProperties}`
+
+  The PaimonProperties section is used to fill Paimon-related properties.
+
+  When Doris accesses Paimon metadata, it partially uses the Paimon Java SDK, so some custom parameters may need to be passed through to the Paimon Java SDK. You can use the following prefixes:
+
+  ```
+  paimon.s3.xxx
+  paimon.s3a.xxx
+  paimon.fs.xxx
+  ```
+
+  These parameters will be automatically converted and passed through. Here are some examples:
+
+  | Input Parameter | Converted Parameter for Paimon Java SDK |
+  | --- | --- |
+  | "paimon.s3.list.version" = "1" | "fs.s3a.list.version" = "1" |
+  | "paimon.s3.paging.maximum" = "100" | "fs.s3a.paging.maximum" = "100" |
+  | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
+  | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
 * `{CommonProperties}`
 
