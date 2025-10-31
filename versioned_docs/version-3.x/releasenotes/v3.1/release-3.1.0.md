@@ -9,7 +9,7 @@ We are excited to announce the official release of **Apache Doris 3.1**, a miles
 
 Doris 3.1 introduces **sparse columns and schema template for the VARIANT data type**, allowing users to efficiently store, index, and query datasets with tens of thousands of dynamic fields, ideal for logs, events, and JSON-heavy workloads. 
 
-For lakehouse capabilities, Doris 3.1 brings better **asynchronous materialized view** into lakehosue, building a stronger bridge between data lakes and data warehouses. It also expands support for **Iceberg and Paimon**, making complex lakehouse workloads easier and more efficient to manage.
+For lakehouse capabilities, Doris 3.1 brings better **asynchronous materialized view** into lakehouse, building a stronger bridge between data lakes and data warehouses. It also expands support for **Iceberg and Paimon**, making complex lakehouse workloads easier and more efficient to manage.
 
 More than **90 contributors** submitted over **1,000 improvements and fixes** during the development of Apache Doris 3.1. We'd like to send a big heartfelt thank you to everyone who contributed through development, testing, and feedback.
 
