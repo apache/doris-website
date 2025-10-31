@@ -59,9 +59,9 @@ jobs:
                 python check_move.py $BASE_COMMIT
                   
             
-            - name: Run Node.js dead link checker
-              run: |
-                node ./scripts/check_move.js `git rev-parse HEAD`
+            # - name: Run Node.js dead link checker
+            #   run: |
+            #     node ./scripts/check_move.js `git rev-parse HEAD`
         
             - name: Check exit code
               run: |
