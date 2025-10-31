@@ -363,6 +363,14 @@ Doris 的 ANN 索引建立在 segment 上，segment 过多会引入额外开销�
 ANN TopN 查询返回行数很少，无需高并行度，建议 `SET parallel_pipeline_task_num = 1`。
 ### enable_profile = false
 若对延迟极其敏感，建议关闭 query profile（`enable_profile=false`）。
+
+## Python SDK
+
+在 AI 时代，Python 已经成为数据处理与智能应用开发的主流语言。为了让开发者更方便地在 Python 环境中使用 Doris 的向量搜索能力，一些社区小伙伴为 Doris 贡献了 Python SDK。
+
+* https://github.com/uchenily/doris_vector_search: 针对向量距离检索做了性能优化，是目前市面上性能最好的 doris vector search python sdk
+
+
 ## 使用限制
 1. Doris 要求 ANN Index 对应的列必须是 NOT NULLABLE 的 `Array<Float>`，并且在后续的导入过程中，需要确保该列的每一个向量的长度均等于索引属性中指定的维度（dim），否则会报错。
 
