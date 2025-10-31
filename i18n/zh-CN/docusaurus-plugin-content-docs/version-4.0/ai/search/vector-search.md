@@ -290,7 +290,7 @@ PROPERTIES (
 
 量化会带来额外构建开销，原因是构建阶段需要大量距离计算，且每次计算需对量化值解码。以 128 维向量为例，随行数增长构建时间上升，SQ 相比 FLAT 可能引入约 10 倍构建成本。
 
-![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
+![ANN-SQ-BUILD_COSTS](/images/ann-index-quantization-build-time.jpg)
 
 
 ## 性能调优

@@ -314,7 +314,7 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 
 Quantization introduces extra build-time overhead because each distance computation must decode quantized values. For 128-D vectors, build time increases with row count; SQ vs. FLAT can be up to ~10× slower to build.
 
-![ANN-SQ-BUILD_COSTS](/images/ann-sq-build-time.png)
+![ANN-SQ-BUILD_COSTS](/images/ann-index-quantization-build-time.jpg)
 
 ## Performance Tuning
 
