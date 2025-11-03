@@ -23,7 +23,7 @@ on:
 
 concurrency:
     group: ${{ github.ref }} (Build Extensions)
-    cancel-in-progress: true
+    cancel-in-progress: false
 
 jobs:
     build-and-deploy:
