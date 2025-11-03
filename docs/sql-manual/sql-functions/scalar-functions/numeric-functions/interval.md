@@ -45,6 +45,7 @@ Returns an INT32 result:
 Special cases:
 - Returns NULL if any argument is NULL.
 - If threshold parameters are not arranged in ascending order, the function will still perform binary search but may return incorrect results.
+- return error if paramter less than 2.
 
 ## Example
 
@@ -95,5 +96,9 @@ SELECT INTERVAL(NULL, 1, 10, 100);
 +------------------------------+
 |                         NULL |
 +------------------------------+
+
+-- return error if signal parameter
+SELECT `INTERVAL`(33);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: interval(TINYINT)
 ```
 

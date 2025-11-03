@@ -45,6 +45,7 @@ INTERVAL(N, N1, N2, N3, ...)
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL。
 - 如果阈值参数未按升序排列，函数仍会执行二分查找，但可能返回不正确的结果。
+- 输入参数 <= 1, 报错
 
 ## 举例
 
@@ -95,5 +96,9 @@ SELECT INTERVAL(NULL, 1, 10, 100);
 +------------------------------+
 |                         NULL |
 +------------------------------+
+
+-- 输入单个参数，报错
+SELECT `INTERVAL`(33);
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: interval(TINYINT)
 ```
 
