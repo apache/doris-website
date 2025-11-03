@@ -288,6 +288,7 @@ PROPERTIES (
 |--------|----------|---------------|------------|----------|----------|------|
 | Cohere-MEDIUM-1M | 768D | Doris (FLAT)    | 5.647 GB (2.533 + 3.114) | 2.533 GB | 3.114 GB | 1M 向量，原始 + HNSW FLAT 索引 |
 | Cohere-MEDIUM-1M | 768D | Doris SQ INT8   | 3.501 GB (2.533 + 0.992) | 2.533 GB | 0.992 GB | INT8 对称量化 |
+| Cohere-MEDIUM-1M | 768D | Doris PQ(pq_m=384,pq_nbits=8)   | 3.149 GB (2.535 + 0.614) | 2.535 GB | 0.614 GB | 乘积量化 |
 | Cohere-LARGE-10M | 768D | Doris (FLAT)    | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M 向量 |
 | Cohere-LARGE-10M | 768D | Doris SQ INT8   | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 量化，索引显著减小 |
 
@@ -296,7 +297,9 @@ PROPERTIES (
 类似的, Doris也支持乘积量化, 不过需要注意的是在使用PQ时需要提供额外的参数:
 
 - `pq_m`: 表示将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。
-- `pq_nbits`: 表示每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。
+- `pq_nbits`: 表示每个子向量量化的比特数, 它决定了每个子空间码本的大小, 在faiss中pq_nbits值一般要求不大于24。
+
+特别需要注意的是, pq量化在训练阶段对训练的数据量有要求, 至少需要与每一个聚类中心数量一样多(即 训练点个数 n >= 2 ^ pq_nbits)。
 
 ```sql
 CREATE TABLE sift_1M (

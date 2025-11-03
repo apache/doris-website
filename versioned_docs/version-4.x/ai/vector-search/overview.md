@@ -311,6 +311,7 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 |---------|-----|----------------------|------------|-----------|------------|-------|
 | Cohere-MEDIUM-1M | 768D | Doris (FLAT) | 5.647 GB (2.533 + 3.114) | 2.533 GB | 3.114 GB | 1M vectors |
 | Cohere-MEDIUM-1M | 768D | Doris SQ INT8 | 3.501 GB (2.533 + 0.992) | 2.533 GB | 0.992 GB | INT8 symmetric quantization |
+| Cohere-MEDIUM-1M | 768D | Doris PQ(pq_m=384,pq_nbits=8)   | 3.149 GB (2.535 + 0.614) | 2.535 GB | 0.614 GB | product quantization |
 | Cohere-LARGE-10M | 768D | Doris (FLAT) | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M vectors |
 | Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 quantization |
 
@@ -319,7 +320,9 @@ Quantization introduces extra build-time overhead because each distance computat
 Similarly, Doris also supports product quantization, but note that when using PQ, additional parameters need to be provided:
 
 - `pq_m`: Indicates how many sub-vectors to split the original high-dimensional vector into (vector dimension dim must be divisible by pq_m).
-- `pq_nbits`: Indicates the number of bits for each sub-vector quantization, which determines the size of each subspace codebook (k = 2 ^ pq_nbits), in faiss pq_nbits is generally required to be no greater than 24.
+- `pq_nbits`: Indicates the number of bits for each sub-vector quantization, which determines the size of each subspace codebook, in faiss pq_nbits is generally required to be no greater than 24.
+
+Note that PQ quantization requires sufficient data during the training, the number of training points needing to be at least as large as the number of clusters (n >= 2 ^ pq_nbits).
 
 ```sql
 CREATE TABLE sift_1M (
