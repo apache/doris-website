@@ -10,7 +10,7 @@
 If the value is true, returns 1. Otherwise returns 0.
 
 ```sql
-mysql> select cast(true as string) , cast(false as string);
+select cast(true as string) , cast(false as string);
 +----------------------+-----------------------+
 | cast(true as string) | cast(false as string) |
 +----------------------+-----------------------+
@@ -66,7 +66,7 @@ Detailed rules for converting float values to strings:
 
 3. **Format Rules**:
 
-   * Uses C printf 'g' format specifier semantics (refer to https://en.cppreference.com/w/c/io/fprintf) to convert floating-point numbers to decimal or scientific notation, depending on the value and the number of significant digits. The number of significant digits is set to 7. If the exponent X of the 'e' style conversion result is:
+   * Uses C printf 'g' format specifier semantics (refer to <https://en.cppreference.com/w/c/io/fprintf>) to convert floating-point numbers to decimal or scientific notation, depending on the value and the number of significant digits. The number of significant digits is set to 7. If the exponent X of the 'e' style conversion result is:
 
    * If 7 > X >= -4, then the result uses decimal notation
 
@@ -121,7 +121,7 @@ Detailed rules for converting double values to strings:
 
 3. **Format Rules**:
 
-   * Uses C printf 'g' format specifier semantics (refer to https://en.cppreference.com/w/c/io/fprintf) to convert floating-point numbers to decimal or scientific notation, depending on the value and the number of significant digits. The number of significant digits is set to 16. If the exponent X of the 'e' style conversion result is:
+   * Uses C printf 'g' format specifier semantics (refer to <https://en.cppreference.com/w/c/io/fprintf>) to convert floating-point numbers to decimal or scientific notation, depending on the value and the number of significant digits. The number of significant digits is set to 16. If the exponent X of the 'e' style conversion result is:
 
    * If 16 > X >= -4, then the result uses decimal notation
 
@@ -250,7 +250,7 @@ select cast(cast('-2001314.123' as time(3)) as string);
 6. If an array element is `NULL`, it is represented as the string `null`.
 
 ```sql
-mysql> select cast(array(1,2,3,4) as string);
+select cast(array(1,2,3,4) as string);
 +--------------------------------+
 | cast(array(1,2,3,4) as string) |
 +--------------------------------+
@@ -285,7 +285,7 @@ mysql> select cast(array(1,2,3,4) as string);
 6. Key-value pair structure: Each key-value pair is represented in the form `key:value`, with the key and value separated by a colon `:`.
 
 ```sql
-mysql> select cast(map("abc",123,"def",456) as string);
+select cast(map("abc",123,"def",456) as string);
 +------------------------------------------+
 | cast(map("abc",123,"def",456) as string) |
 +------------------------------------------+
@@ -312,7 +312,7 @@ mysql> select cast(map("abc",123,"def",456) as string);
 5. Each value is separated by a comma followed by a space `", "`.
 
 ```sql
-mysql> select struct(123,"abc",3.14);
+select struct(123,"abc",3.14);
 +-----------------------------------------+
 | struct(123,"abc",3.14)                  |
 +-----------------------------------------+
@@ -320,7 +320,7 @@ mysql> select struct(123,"abc",3.14);
 +-----------------------------------------+
 1 row in set (0.03 sec)
 
-mysql> select cast(struct(123,"abc",3.14) as string);
+select cast(struct(123,"abc",3.14) as string);
 +----------------------------------------+
 | cast(struct(123,"abc",3.14) as string) |
 +----------------------------------------+
@@ -340,9 +340,10 @@ The output format of IPv6 type is the standard IPv6 colon-hexadecimal notation:
 
 1. **IPv4 Mapping**:  
    If the first 6 groups are 0 and the 7th group is 0 or 0xffff, the last 4 bytes are displayed in IPv4 format.  
-   Example:  
+   Example:
+
    ```sql
-   mysql> select cast('::ffff:192.0.2.1' as ipv6);
+   select cast('::ffff:192.0.2.1' as ipv6);
    +-----------------------------+
    | cast('::ffff:192.0.2.1' as ipv6) |
    +-----------------------------+
@@ -358,14 +359,14 @@ The output format of IPv6 type is the standard IPv6 colon-hexadecimal notation:
 Example:
 
 ```sql
-mysql> select cast('2001:0db8:0000:0000:0000:0000:1428:57ab' as ipv6);
+select cast('2001:0db8:0000:0000:0000:0000:1428:57ab' as ipv6);
 +---------------------------------------------------------+
 | cast('2001:0db8:0000:0000:0000:0000:1428:57ab' as ipv6) |
 +---------------------------------------------------------+
 | 2001:db8::1428:57ab                                     |
 +---------------------------------------------------------+
 
-mysql> select cast('::192.0.2.1' as ipv6);
+select cast('::192.0.2.1' as ipv6);
 +-----------------------------+
 | cast('::192.0.2.1' as ipv6) |
 +-----------------------------+
