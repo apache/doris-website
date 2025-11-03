@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON_SET",
+    "title": "JSON_REMOVE",
     "language": "en"
 }
 ---
