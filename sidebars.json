@@ -228,7 +228,8 @@
                                 "data-operate/import/load-internals/load-internals",
                                 "data-operate/import/load-internals/routine-load-internals"
                             ]
-                        }
+                        },
+                        "data-operate/import/streaming-job"
                     ]
                 },
                 {
