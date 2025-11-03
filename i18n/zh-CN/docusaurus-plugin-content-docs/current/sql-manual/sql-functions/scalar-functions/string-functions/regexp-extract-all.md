@@ -32,7 +32,7 @@ REGEXP_EXTRACT_ALL 函数用于对给定字符串str执行正则表达式匹配�
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 

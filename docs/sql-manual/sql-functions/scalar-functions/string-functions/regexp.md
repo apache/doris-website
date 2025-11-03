@@ -6,13 +6,15 @@
 ---
 
 ## Description
-
+~
 Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false. pattern is the regular expression pattern.
 It should be noted that when handling character set matching, Utf-8 standard character classes should be used. This ensures that functions can correctly identify and process various characters from different languages.
 
 If the `pattern` is not allowed regexp regular,throw error;
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+
+Note: After testing, the performance of this function is about 12 times faster when the pattern does not include look-around zero-width assertions (`?=`, `?!`, `?<=`, `?<!`), so it is recommended to rewrite the regular expression to exclude these types of zero-width assertions when using this function.
 
 ## Syntax
 

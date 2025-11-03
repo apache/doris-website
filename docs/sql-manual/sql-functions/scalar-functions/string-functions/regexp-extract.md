@@ -17,7 +17,7 @@ The `pos` parameter is of 'integer' type, used to specify the position in the st
 
 If the `pattern` is not allowed regexp regular,throw error;
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 ```sql

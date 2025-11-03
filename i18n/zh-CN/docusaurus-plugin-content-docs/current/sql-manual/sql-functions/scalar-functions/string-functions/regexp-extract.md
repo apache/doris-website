@@ -37,7 +37,7 @@ pos参数为 'integer' 类型，用于指定字符串中开始搜索正则表达
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 ```sql

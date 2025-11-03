@@ -16,7 +16,7 @@ Support since Apache Doris 3.0.2
 
 If the 'pattern' is not allowed regexp regular,throw error
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 

@@ -17,7 +17,7 @@
 从 Apache Doris 3.0.2 版本开始支持
 :::
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 

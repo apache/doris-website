@@ -12,7 +12,9 @@
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+
+注: 经过测试，该函数在 pattern 不包含 look-around 类零宽断言(`?=`, `?!`, `?<=` `?<!`)时的性能约是包含时的12倍，所以在使用该函数时，更推荐改写正则表达式，使其不包含该类零宽断言
 
 ## 语法
 
