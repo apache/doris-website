@@ -24,7 +24,7 @@ Catalogs are mainly applicable to the following three scenarios, but different c
 | Data Integration | ZeroETL solution, directly accessing different data sources to generate result data, or facilitating data flow between different data sources. |
 | Data Write-back | After data processing via Doris, write back to external data sources.                |
 
-This document uses [Iceberg Catalog](./catalogs/iceberg-catalog.md) as an example to focus on the basic operations of catalogs. For detailed descriptions of different catalogs, please refer to the documentation of the corresponding catalog.
+This document uses [Iceberg Catalog](./catalogs/iceberg-catalog.mdx) as an example to focus on the basic operations of catalogs. For detailed descriptions of different catalogs, please refer to the documentation of the corresponding catalog.
 
 ## Creating Catalog
 
@@ -211,8 +211,8 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Doris supports writing data back to external data sources using the `INSERT` statement. For more details, refer to:
 
-* [Hive Catalog](./catalogs/hive-catalog.md)
-* [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+* [Hive Catalog](./catalogs/hive-catalog.mdx)
+* [Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 * [JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 
 ## Refreshing Catalog
