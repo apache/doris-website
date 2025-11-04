@@ -101,7 +101,7 @@ The current dependent Hudi version is 0.15. It is recommended to access Hudi dat
 
 ## Examples
 
-The creation of a Hudi Catalog is similar to a Hive Catalog. For more examples, please refer to [Hive Catalog](./hive-catalog.md).
+The creation of a Hudi Catalog is similar to a Hive Catalog. For more examples, please refer to [Hive Catalog](./hive-catalog.mdx).
 
 ```sql
 CREATE CATALOG hudi_hms PROPERTIES (
