@@ -33,9 +33,11 @@ In addition, `<format>` supports the following alternative formats and interpret
 | `yyyy-MM-dd HH:mm:ss`      | `%Y-%m-%d %H:%i:%s`  |
 
 ## Return Value
+
 Returns a DATETIME value representing the converted date and time.
 
 Date and time matching method uses two pointers to point to the start of both strings:
+
 1. When the format string encounters a % symbol, the next letter after % is used to match the corresponding part of the date/time string. If it does not match (e.g., %Y tries to match a time part like 10:10:10, or % is followed by an unsupported character like %*), an error is returned. If matched successfully, move to the next character for parsing.
 2. At any time, if either string encounters a space character, skip it and parse the next character.
 3. When matching ordinary letters, check if the characters pointed to by both pointers are equal. If not, return an error; if equal, parse the next character.
@@ -43,9 +45,11 @@ Date and time matching method uses two pointers to point to the start of both st
 5. When the format string pointer reaches the end, matching ends.
 6. Finally, check whether the matched time parts are valid (e.g., month must be in [1,12]). If invalid, return an error; if valid, return the parsed date and time.
 
+Error handling:
+
 - If any parameter is NULL, returns NULL;
-- If `<format>` is an empty string, returns an error;
-- If matching fails, returns an error.
+- If `<format>` is an empty string, returns NULL;
+- If matching between `<datetime_str>` and `<format>` fails, returns NULL.
 
 ## Examples
 
@@ -90,9 +94,13 @@ SELECT STR_TO_DATE('Oct 5 2023 3:45:00 PM', '%b %d %Y %h:%i:%s %p') AS result;
 | 2023-10-05 15:45:00 |
 +---------------------+
 
--- Format does not match string (returns error)
+-- Format does not match string (returns NULL)
 SELECT STR_TO_DATE('2023/01/01', '%Y-%m-%d') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023/01/01 is invalid
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 
 -- String contains extra characters (automatically ignored)
 SELECT STR_TO_DATE('2023-01-01 10:00:00 (GMT)', '%Y-%m-%d %H:%i:%s') AS result;
@@ -118,7 +126,11 @@ SELECT STR_TO_DATE(NULL, '%Y-%m-%d'), STR_TO_DATE('2023-01-01', NULL) AS result;
 | NULL                           | NULL   |
 +--------------------------------+--------+
 
--- Format is an empty string (returns error)
+-- Format is an empty string (returns NULL)
 SELECT STR_TO_DATE('2023-01-01', '') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023-01-01 is invalid
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 ```
