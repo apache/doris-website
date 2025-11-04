@@ -17,9 +17,12 @@
 从 Apache Doris 3.0.2 版本开始支持
 :::
 
-支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+默认支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
 
 Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
+会话变量`enable_extended_regex`设置为`true`时,
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 

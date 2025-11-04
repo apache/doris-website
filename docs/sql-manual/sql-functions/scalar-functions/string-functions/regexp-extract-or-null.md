@@ -16,9 +16,11 @@ Support since Apache Doris 3.0.2
 
 If the 'pattern' is not allowed regexp regular,throw error
 
-Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
 
 Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 

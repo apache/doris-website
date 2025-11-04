@@ -12,11 +12,14 @@ It should be noted that when handling character set matching, Utf-8 standard cha
 
 If the `pattern` is not allowed regexp regular,throw error;
 
-Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
 
 Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
 
-Note: After enabling this variable, performance will only be affected when the regular expression contains advanced syntax (such as look-around). According to testing, the performance of a `pattern` without look-around type zero-width assertions (`?=`, `?!`, `?<=`, `?<!`) is about 12 times faster than when they are included. Therefore, for better performance, it is recommended to optimize your regular expressions as much as possible and avoid using such zero-width assertions.
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+
+Note: After enabling this variable, performance will only be affected when the regular expression contains advanced syntax (such as look-around). Therefore, for better performance, it is recommended to optimize your regular expressions as much as possible and avoid using such zero-width assertions.
+
 
 ## Syntax
 
