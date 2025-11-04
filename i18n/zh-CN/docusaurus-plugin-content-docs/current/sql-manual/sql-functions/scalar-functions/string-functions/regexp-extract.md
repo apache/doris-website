@@ -39,6 +39,8 @@ pos参数为 'integer' 类型，用于指定字符串中开始搜索正则表达
 
 支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
+Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
 ## 语法
 ```sql
 REGEXP_EXTRACT(<str>, <pattern>, <pos>)
@@ -201,4 +203,22 @@ SELECT regexp_extract('AbCdE', '([[:digit:]]+', 1);
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:digit:]]+
 Error: missing ): ([[:digit:]]+
+```
+
+高级的正则表达式
+```sql
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=foo)(\d+)(?=bar). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+```
+```text
++---------------------------------------------------------------+
+| regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1) |
++---------------------------------------------------------------+
+| 123                                                           |
++---------------------------------------------------------------+
 ```

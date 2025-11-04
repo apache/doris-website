@@ -14,7 +14,9 @@ If the `pattern` is not allowed regexp regular,throw error;
 
 Support character match classes : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
-Note: After testing, the performance of this function is about 12 times faster when the pattern does not include look-around zero-width assertions (`?=`, `?!`, `?<=`, `?<!`), so it is recommended to rewrite the regular expression to exclude these types of zero-width assertions when using this function.
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Note: After enabling this variable, performance will only be affected when the regular expression contains advanced syntax (such as look-around). According to testing, the performance of a `pattern` without look-around type zero-width assertions (`?=`, `?!`, `?<=`, `?<!`) is about 12 times faster than when they are included. Therefore, for better performance, it is recommended to optimize your regular expressions as much as possible and avoid using such zero-width assertions.
 
 ## Syntax
 
@@ -193,4 +195,20 @@ SELECT REGEXP('Hello, World!', '([a-z');
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
+```
+
+Advanced regexp
+```sql
+SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]Invalid regex expression: ([a-zA-Z_+-]+(?:/[a-zA-Z_0-9+-]+)*)(?=s|$). Error: invalid perl operator: (?=
+
+SET enable_extended_regex = true;
+SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
+```
+```text
++-----------------------------------------------------------------------+
+| REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)') |
++-----------------------------------------------------------------------+
+|                                                                     1 |
++-----------------------------------------------------------------------+
 ```

@@ -14,7 +14,9 @@
 
 支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
-注: 经过测试，该函数在 pattern 不包含 look-around 类零宽断言(`?=`, `?!`, `?<=` `?<!`)时的性能约是包含时的12倍，所以在使用该函数时，更推荐改写正则表达式，使其不包含该类零宽断言
+Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
+注：启用此变量后，仅当正则表达式中包含高级语法（如 look-around）时才会影响性能。根据测试，不包含 look-around 类零宽断言（`?=`, `?!`, `?<=`, `?<!`）的 `pattern` 的性能约是包含时的 12 倍。因此，为了获得更好的性能，建议您尽可能优化正则表达式，避免使用此类零宽断言。
 
 ## 语法
 
@@ -194,3 +196,18 @@ SELECT REGEXP('Hello, World!', '([a-z');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
 ```
 
+高级的正则表达式
+```sql
+SELECT regexp('foobar', '(?<=foo)bar');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]Invalid regex expression: ([a-zA-Z_+-]+(?:/[a-zA-Z_0-9+-]+)*)(?=s|$). Error: invalid perl operator: (?<
+
+SET enable_extended_regex = true;
+SELECT regexp('foobar', '(?<=foo)bar');
+```
+```text
++---------------------------------+
+| regexp('foobar', '(?<=foo)bar') |
++---------------------------------+
+|                               1 |
++---------------------------------+
+```
