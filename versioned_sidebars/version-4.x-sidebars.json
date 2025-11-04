@@ -130,11 +130,7 @@
                                     "type": "category",
                                     "label": "Inverted Index",
                                     "items": [
-                                        "table-design/index/inverted-index/overview",
-                                        "table-design/index/inverted-index/search-operators",
-                                        "table-design/index/inverted-index/search-function",
-                                        "table-design/index/inverted-index/custom-analyzer",
-                                        "table-design/index/inverted-index/scoring"
+                                        "table-design/index/inverted-index/overview"
                                     ]
                                 },
                                 "table-design/index/bloomfilter",
@@ -406,12 +402,16 @@
                         "ai/ai-function-overview",
                         {
                             "type": "category",
-                            "label": "Search",
+                            "label": "Text Search",
                             "items": [
-                                "ai/search/vector-search",
-                                "ai/search/text-search"
+                                "ai/text-search/overview",
+                                "ai/text-search/search-operators",
+                                "ai/text-search/search-function",
+                                "ai/text-search/custom-analyzer",
+                                "ai/text-search/scoring"
                             ]
-                        }
+                        },
+                        "ai/vector-search"
                     ]
                 },
                 {
@@ -432,7 +432,6 @@
                                 "lakehouse/catalogs/delta-lake-catalog",
                                 "lakehouse/catalogs/bigquery-catalog",
                                 "lakehouse/catalogs/kudu-catalog",
-                                "lakehouse/catalogs/lakesoul-catalog",
                                 "lakehouse/catalogs/jdbc-catalog-overview",
                                 "lakehouse/catalogs/jdbc-mysql-catalog",
                                 "lakehouse/catalogs/jdbc-pg-catalog",
@@ -500,10 +499,10 @@
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
+                                "lakehouse/best-practices/optimization",
                                 "lakehouse/best-practices/doris-hudi",
                                 "lakehouse/best-practices/doris-paimon",
                                 "lakehouse/best-practices/doris-iceberg",
-                                "lakehouse/best-practices/doris-lakesoul",
                                 "lakehouse/best-practices/doris-aws-s3tables",
                                 "lakehouse/best-practices/doris-dlf-paimon",
                                 "lakehouse/best-practices/doris-maxcompute",
@@ -1067,6 +1066,13 @@
                                 },
                                 {
                                     "type": "category",
+                                    "label": "Binary Data Type",
+                                    "items": [
+                                        "sql-manual/basic-element/sql-data-types/binary-type/VARBINARY"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
                                     "label": "Semi-Structured Data Type",
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
@@ -1101,6 +1107,7 @@
                                     "items": [
                                         "sql-manual/basic-element/sql-data-types/conversion/overview",
                                         "sql-manual/basic-element/sql-data-types/conversion/cast-expr",
+                                        "sql-manual/basic-element/sql-data-types/conversion/cast-to-string",
                                         "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
                                         "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
@@ -1291,6 +1298,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/is-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/length",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
@@ -1390,6 +1398,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/last-day",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/makedate",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/maketime",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond-timestamp",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/microseconds-add",
@@ -1493,6 +1502,7 @@
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-32",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64",
+                                        "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3",
@@ -1637,6 +1647,7 @@
                                         "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys",
+                                        "sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value",
                                         "sql-manual/sql-functions/scalar-functions/json-functions/to-json"
                                     ]
                                 },
@@ -1727,7 +1738,10 @@
                                     "type": "category",
                                     "label": "Binary Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/from_hex",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary",
+                                        "sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary",
                                         "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex"
                                     ]
                                 },
@@ -1811,6 +1825,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/covar",
                                 "sql-manual/sql-functions/aggregate-functions/covar-samp",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+                                "sql-manual/sql-functions/aggregate-functions/group-array-union",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-or",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
@@ -1832,6 +1847,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
@@ -2016,6 +2032,7 @@
                                         "sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT",
                                         "sql-manual/sql-statements/data-modification/DML/UPDATE",
+                                        "sql-manual/sql-statements/data-modification/DML/MERGE-INTO",
                                         "sql-manual/sql-statements/data-modification/DML/DELETE",
                                         "sql-manual/sql-statements/data-modification/DML/SHOW-DELETE"
                                     ]

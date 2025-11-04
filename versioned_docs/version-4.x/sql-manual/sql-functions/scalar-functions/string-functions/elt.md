@@ -7,39 +7,133 @@
 
 ## Description
 
-Returns a string at the specified index. Special cases:
-
-- If there is no string at the specified index, NULL is returned.
+The ELT function returns the string at the specified index position. Index counting starts from 1.
 
 ## Syntax
 
 ```sql
-ELT ( <pos> , <str> [ , <str> ] )
+ELT(<pos>, <str>[, <str> ...])
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|------------|
-| `<pos>`   | Specified index value |
-| `<str>`   | String to be indexed |
+| -------- | ----------------------------------------- |
+| `<pos>` | Index position (starting from 1). Type: INT |
+| `<str>` | String list. Type: VARCHAR |
 
-## Return value
+## Return Value
 
-Parameter `<str>` String to be indexed. Special cases:
+Returns VARCHAR type, representing the string at the specified index position.
 
-- If there is no string at the specified index, NULL is returned.
+Special cases:
+- If `<pos>` is less than 1 or greater than the number of strings, returns NULL
+- If `<pos>` is NULL, returns NULL
+- Index starts from 1, the first string has index 1
 
-## Example
+## Examples
+
+1. Basic usage: Get the 1st string
+```sql
+SELECT ELT(1, 'aaa', 'bbb', 'ccc');
+```
+```text
++-----------------------------+
+| elt(1, 'aaa', 'bbb', 'ccc') |
++-----------------------------+
+| aaa                         |
++-----------------------------+
+```
+
+2. Get the 2nd string
+```sql
+SELECT ELT(2, 'aaa', 'bbb', 'ccc');
+```
+```text
++-----------------------------+
+| elt(2, 'aaa', 'bbb', 'ccc') |
++-----------------------------+
+| bbb                         |
++-----------------------------+
+```
+
+3. Index out of bounds returns NULL
+```sql
+SELECT ELT(0, 'aaa', 'bbb'), ELT(5, 'aaa', 'bbb');
+```
+```text
++----------------------+----------------------+
+| elt(0, 'aaa', 'bbb') | elt(5, 'aaa', 'bbb') |
++----------------------+----------------------+
+| NULL                 | NULL                 |
++----------------------+----------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT ELT(NULL, 'aaa', 'bbb');
+```
+```text
++-------------------------+
+| elt(NULL, 'aaa', 'bbb') |
++-------------------------+
+| NULL                    |
++-------------------------+
+```
+
+5. Index exceeds range returns NULL
 
 ```sql
-SELECT ELT(1, 'aaa', 'bbb'),ELT(2, 'aaa', 'bbb'), ELT(0, 'aaa', 'bbb'),ELT(2, 'aaa', 'bbb')
+SELECT ELT(5, 'aaa', 'bbb', 'ccc');
 ```
 
 ```text
-+----------------------+----------------------+----------------------+----------------------+
-| elt(1, 'aaa', 'bbb') | elt(2, 'aaa', 'bbb') | elt(0, 'aaa', 'bbb') | elt(2, 'aaa', 'bbb') |
-+----------------------+----------------------+----------------------+----------------------+
-| aaa                  | bbb                  | NULL                 | bbb                  |
-+----------------------+----------------------+----------------------+----------------------+
++-----------------------------+
+| elt(5, 'aaa', 'bbb', 'ccc') |
++-----------------------------+
+| NULL                        |
++-----------------------------+
+```
+
+6. Negative index returns NULL
+
+```sql
+SELECT ELT(-1, 'first', 'second');
+```
+
+```text
++----------------------------+
+| elt(-1, 'first', 'second') |
++----------------------------+
+| NULL                       |
++----------------------------+
+```
+
+7. UTF-8 string
+
+```sql
+SELECT 
+    ELT(2, 'Hello', 'ṭṛ', 'Hola');
+```
+
+```text
++-----------------------------------+
+| ELT(2, 'Hello', 'ṭṛ', 'Hola')     |
++-----------------------------------+
+| ṭṛ                                |
++-----------------------------------+
+```
+
+8. Handling empty strings
+
+```sql
+SELECT ELT(2, 'first', '', 'third');
+```
+
+```text
++------------------------------+
+| elt(2, 'first', '', 'third') |
++------------------------------+
+|                              |
++------------------------------+
 ```

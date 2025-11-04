@@ -30,22 +30,34 @@ Returns a string consisting of the specified number of spaces. Special cases:
 
 ## Examples
 
+1. Generate specified number of spaces
 ```sql
-SELECT space(10);
+SELECT space(5);
 ```
-
 ```text
-+------------+
-| space(10)  |
-+------------+
-|            |
-+------------+
++----------+
+| space(5) |
++----------+
+|          |
++----------+
 ```
 
+2. Zero or negative number handling
 ```sql
-SELECT space(null);
+SELECT space(0), space(-5);
+```
+```text
++----------+-----------+
+| space(0) | space(-5) |
++----------+-----------+
+|          |           |
++----------+-----------+
 ```
 
+3. NULL value handling
+```sql
+SELECT space(NULL);
+```
 ```text
 +-------------+
 | space(NULL) |
@@ -53,3 +65,19 @@ SELECT space(null);
 | NULL        |
 +-------------+
 ```
+
+4. Use with other functions
+```sql
+SELECT CONCAT('Hello', space(3), 'World');
+```
+```text
++------------------------------------+
+| concat('Hello', space(3), 'World') |
++------------------------------------+
+| Hello   World                      |
++------------------------------------+
+```
+
+### Keywords
+
+    SPACE

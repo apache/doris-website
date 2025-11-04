@@ -7,7 +7,13 @@
 
 ## Description
 
-The OVERLAY function is used to replace a part of a string with another string.
+The OVERLAY function is used to replace a substring at a specified position and length within a string. Starting from the specified position, it replaces the specified length of characters with a new string.This function is multibyte safe.
+
+This function behaves consistently with the [INSERT function](https://dev.mysql.com/doc/refman/8.4/en/string-functions.html#function_insert) in MySQL.
+
+## Alias
+
+- INSERT
 
 ## Syntax
 
@@ -17,27 +23,28 @@ OVERLAY(<str>, <pos>, <len>, <newstr>)
 
 ## Parameters
 
-| Parameter | Description                                                                                                                                                                            |
-| -- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<str>` | String that need to be replaced                                                                                                                                                        |
-| `<pos>` | The starting position of the string that needs to be replaced. Starting from 1. If the input position is not within the length range of `<str>`, the replacement will not be performed |
-| `<len>` | The length that needs to be replaced. When `<len>` is less than 0 or exceeds the length of the rest of the string, it will replace the rest of the string starting from `<pos>`        |
-| `<newstr>` | String for replacement                                                                                                                                                                 |
+| Parameter | Description |
+| ---------- | ----------------------------------------- |
+| `<str>` | The original string to be modified. Type: VARCHAR |
+| `<pos>` | The starting position for replacement (1-based). Type: INT |
+| `<len>` | The length of characters to replace. Type: INT |
+| `<newstr>` | The new string to use for replacement. Type: VARCHAR |
 
 ## Return Value
 
-Returns the string that replacing the specified length with a new string from the specified position. Special cases:
+Returns VARCHAR type, the new string after replacement.
 
-- If any Parameter is NULL, NULL will be returned.
-- If `<pos>` is not within the length range of `<str>`, no replacement will be performed.
-- When `<len>` is less than 0 or exceeds the length range of the remaining part of the `str`, the remaining string starting from `<pos>` will be replaced.
+Special cases:
+- If any parameter is NULL, returns NULL
+- If `<pos>` is less than 1 or exceeds string length, no replacement occurs and returns the original string
+- If `<len>` is less than 0 or exceeds the remaining length, replaces from `<pos>` to the end of the string
 
 ## Examples
 
+1. Basic usage: replace middle part
 ```sql
-select overlay('Quadratic', 3, 4, 'What');
+SELECT overlay('Quadratic', 3, 4, 'What');
 ```
-
 ```text
 +------------------------------------+
 | overlay('Quadratic', 3, 4, 'What') |
@@ -46,38 +53,49 @@ select overlay('Quadratic', 3, 4, 'What');
 +------------------------------------+
 ```
 
+2. Negative length: replace to end
 ```sql
-select overlay('Quadratic', null, 4, 'What');
+SELECT overlay('Quadratic', 2, -1, 'Hi');
+```
+```text
++-----------------------------------+
+| overlay('Quadratic', 2, -1, 'Hi') |
++-----------------------------------+
+| QHi                               |
++-----------------------------------+
 ```
 
+3. Position out of bounds: no replacement
+```sql
+SELECT overlay('Hello', 10, 2, 'X');
+```
 ```text
-+---------------------------------------+
-| overlay('Quadratic', NULL, 4, 'What') |
-+---------------------------------------+
-| NULL                                  |
-+---------------------------------------+
++-------------------------------+
+| overlay('Hello', 10, 2, 'X')  |
++-------------------------------+
+| Hello                         |
++-------------------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT overlay('Hello', NULL, 2, 'X');
+```
+```text
++--------------------------------+
+| overlay('Hello', NULL, 2, 'X') |
++--------------------------------+
+| NULL                           |
++--------------------------------+
 ```
 
 ```sql
-select overlay('Quadratic', -1, 4, 'What');
+SELECT INSERT('🎉🎊🎈', 2, 1, '🎁');
 ```
-
 ```text
-+-------------------------------------+
-| overlay('Quadratic', -1, 4, 'What') |
-+-------------------------------------+
-| Quadratic                           |
-+-------------------------------------+
-```
-
-```sql
-select overlay('Quadratic', 2, -4, 'What');
-```
-
-```text
-+-------------------------------------+
-| overlay('Quadratic', 2, -4, 'What') |
-+-------------------------------------+
-| QWhat                               |
-+-------------------------------------+
++--------------------------------------+
+| INSERT('🎉🎊🎈', 2, 1, '🎁')                 |
++--------------------------------------+
+| 🎉🎁🎈                                     |
++--------------------------------------+
 ```

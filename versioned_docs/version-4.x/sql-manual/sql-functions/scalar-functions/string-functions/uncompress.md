@@ -6,7 +6,7 @@
 ---
 
 ## Description
-The UNCOMPRESS function is used to COMPRESS binary data into strings or values, you need to make sure that the binary data needs to be the result of 'compress'.
+The UNCOMPRESS function decompresses binary data into strings or values. You must ensure the binary data is the result of the `COMPRESS` function.
 
 ## Syntax
 
@@ -16,19 +16,19 @@ UNCOMPRESS(<compressed_str>)
 
 ## Parameters
 
-| Parameters                | Description   |
-|--------------------|---------------|
+| Parameter          | Description            |
+|--------------------|------------------------|
 | `<compressed_str>` | Compressed binary data, parameter type is varchar or string |
-
 
 ## Return Value
 
-The return value is the same as the input `compressed_str` type
+The return value type is the same as the input `compressed_str` type.
 
 Special cases:
-- `compressed_str` Returns NULL if the binary data is not compressed.
+- Returns NULL if `compressed_str` is not binary data obtained from `COMPRESS`.
 
-## Example
+
+## Examples
 
 ``` sql
 select uncompress(compress('abc'));
@@ -51,7 +51,7 @@ select uncompress(compress(''));
 +--------------------------+
 ```
 ```sql
-select uncompress(compress(abc));
+select uncompress('abc');
 ```
 ```text 
 +-------------------+
@@ -60,3 +60,7 @@ select uncompress(compress(abc));
 | NULL              |
 +-------------------+
 ```
+
+### Keywords
+
+    UNCOMPRESS, COMPRESS

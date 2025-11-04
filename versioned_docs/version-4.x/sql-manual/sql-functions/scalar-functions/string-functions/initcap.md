@@ -7,34 +7,83 @@
 
 ## Description
 
-Capitalizes the first letter of the word contained in the parameter and converts the rest of the letters to lowercase. A word is a sequence of alphanumeric characters separated by non-alphanumeric characters.
+The INITCAP function converts the first letter of each word in a string to uppercase and the remaining letters to lowercase. A word is defined as a sequence of alphanumeric characters separated by non-alphanumeric characters. This function is suitable for formatting names, titles, and other scenarios requiring standard case formatting.
 
 ## Syntax
 
 ```sql
-INITCAP ( <str> )
+INITCAP(<str>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
-|-----------|-----------|
-| `<str>`   | The string to be converted |
+|---------|-----------|
+| `<str>` | The string to convert case format. Type: VARCHAR |
 
 ## Return Value
 
-The result of capitalizing the first letter of the word in the parameter `<str>` and lowering the rest of the letters.
+Returns VARCHAR type, representing the converted string.
 
-## Example    
+Conversion rules:
+- The first letter of each word is converted to uppercase
+- Remaining letters in the word are converted to lowercase
+- Words are separated by non-alphanumeric characters (spaces, punctuation, symbols, etc.)
+- Numeric characters are not case-converted
+- Supports Unicode character case conversion
 
+Special cases:
+- If parameter is NULL, returns NULL
+- If string is empty, returns empty string
+- Consecutive non-alphanumeric characters are treated as a single separator
+- Letters at the beginning of the string are capitalized
+
+## Examples
+
+1. Basic word capitalization
 ```sql
-SELECT INITCAP('hello hello.,HELLO123HELlo')
+SELECT INITCAP('hello world');
+```
+```text
++------------------------+
+| INITCAP('hello world') |
++------------------------+
+| Hello World            |
++------------------------+
 ```
 
+2. Mixed case conversion
+```sql
+SELECT INITCAP('hELLo WoRLD');
+```
+```text
++------------------------+
+| INITCAP('hELLo WoRLD') |
++------------------------+
+| Hello World            |
++------------------------+
+```
+
+3. NULL value handling
+```sql
+SELECT INITCAP(NULL);
+```
+```text
++---------------+
+| INITCAP(NULL) |
++---------------+
+| NULL          |
++---------------+
+```
+
+4. String with numbers and symbols
+```sql
+SELECT INITCAP('hello hello.,HELLO123HELlo');
+```
 ```text
 +---------------------------------------+
-| initcap('hello hello.,HELLO123HELlo') |
+| INITCAP('hello hello.,HELLO123HELlo') |
 +---------------------------------------+
-| Hello Hello.,hello123hello            |
+| Hello Hello.,Hello123hello            |
 +---------------------------------------+
 ```

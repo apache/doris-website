@@ -32,26 +32,126 @@ Returns the specified part of the string split according to the delimiter. Speci
 
 ## Examples
 
+1. Basic string splitting
 ```sql
-select split_part("hello world", " ", 1);
+SELECT SPLIT_PART('hello world', ' ', 1);
 ```
-
 ```text
 +----------------------------------+
-| split_part('hello world', ' ', 1) |
+| SPLIT_PART('hello world', ' ', 1) |
 +----------------------------------+
 | hello                            |
 +----------------------------------+
 ```
 
+2. Get second part
 ```sql
-SELECT split_part('apple,banana,cherry', ',', 0);
+SELECT SPLIT_PART('apple,banana,cherry', ',', 2);
 ```
-
 ```text
 +-------------------------------------------+
-| split_part('apple,banana,cherry', ',', 0) |
+| SPLIT_PART('apple,banana,cherry', ',', 2) |
++-------------------------------------------+
+| banana                                    |
++-------------------------------------------+
+```
+
+3. Index is 0 (returns NULL)
+```sql
+SELECT SPLIT_PART('apple,banana,cherry', ',', 0);
+```
+```text
++-------------------------------------------+
+| SPLIT_PART('apple,banana,cherry', ',', 0) |
 +-------------------------------------------+
 | NULL                                      |
 +-------------------------------------------+
 ```
+
+4. Negative index (count from end)
+```sql
+SELECT SPLIT_PART('apple,banana,cherry', ',', -1), SPLIT_PART('apple,banana,cherry', ',', -2);
+```
+```text
++--------------------------------------------+--------------------------------------------+
+| SPLIT_PART('apple,banana,cherry', ',', -1) | SPLIT_PART('apple,banana,cherry', ',', -2) |
++--------------------------------------------+--------------------------------------------+
+| cherry                                     | banana                                     |
++--------------------------------------------+--------------------------------------------+
+```
+
+5. Index out of range
+```sql
+SELECT SPLIT_PART('apple,banana', ',', 5), SPLIT_PART('apple,banana', ',', -5);
+```
+```text
++-----------------------------------+------------------------------------+
+| SPLIT_PART('apple,banana', ',', 5) | SPLIT_PART('apple,banana', ',', -5) |
++-----------------------------------+------------------------------------+
+|                                   |                                    |
++-----------------------------------+------------------------------------+
+```
+
+6. NULL value handling
+```sql
+SELECT SPLIT_PART(NULL, ',', 1), SPLIT_PART('test', NULL, 1), SPLIT_PART('test', ',', NULL);
+```
+```text
++---------------------------+-----------------------------+-------------------------------+
+| SPLIT_PART(NULL, ',', 1)  | SPLIT_PART('test', NULL, 1) | SPLIT_PART('test', ',', NULL) |
++---------------------------+-----------------------------+-------------------------------+
+| NULL                      | NULL                        | NULL                          |
++---------------------------+-----------------------------+-------------------------------+
+```
+
+7. Empty string handling
+```sql
+SELECT SPLIT_PART('', ',', 1), SPLIT_PART('test', '', 2);
+```
+```text
++------------------------+---------------------------+
+| SPLIT_PART('', ',', 1) | SPLIT_PART('test', '', 2) |
++------------------------+---------------------------+
+| NULL                   |                           |
++------------------------+---------------------------+
+```
+
+8. Separator doesn't exist
+```sql
+SELECT SPLIT_PART('hello world', '|', 1), SPLIT_PART('hello world', '|', 2);
+```
+```text
++-----------------------------------+-----------------------------------+
+| SPLIT_PART('hello world', '|', 1) | SPLIT_PART('hello world', '|', 2) |
++-----------------------------------+-----------------------------------+
+| NULL                              | NULL                              |
++-----------------------------------+-----------------------------------+
+```
+
+9. Consecutive separators
+```sql
+SELECT SPLIT_PART('a,,c', ',', 1), SPLIT_PART('a,,c', ',', 2), SPLIT_PART('a,,c', ',', 3);
+```
+```text
++----------------------------+----------------------------+----------------------------+
+| SPLIT_PART('a,,c', ',', 1) | SPLIT_PART('a,,c', ',', 2) | SPLIT_PART('a,,c', ',', 3) |
++----------------------------+----------------------------+----------------------------+
+| a                          |                            | c                          |
++----------------------------+----------------------------+----------------------------+
+```
+
+10. UTF-8 character handling
+```sql
+SELECT SPLIT_PART('ṭṛì ḍḍumai ṭṛì', ' ', 2);
+```
+```text
++--------------------------------------+
+| SPLIT_PART('ṭṛì ḍḍumai ṭṛì', ' ', 2) |
++--------------------------------------+
+| ḍḍumai                               |
++--------------------------------------+
+```
+
+### Keywords
+
+    SPLIT_PART, SPLIT

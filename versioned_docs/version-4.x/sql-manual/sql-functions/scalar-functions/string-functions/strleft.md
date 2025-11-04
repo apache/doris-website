@@ -36,50 +36,102 @@ Special cases:
 
 ## Examples
 
-1. Basic usage
+1. Basic left extraction
 ```sql
-SELECT strleft('Hello doris', 5);
+SELECT STRLEFT('Hello doris', 5), LEFT('Hello doris', 5);
 ```
 ```text
-+---------------------------+
-| strleft('Hello doris', 5) |
-+---------------------------+
-| Hello                     |
-+---------------------------+
++---------------------------+----------------------+
+| STRLEFT('Hello doris', 5) | LEFT('Hello doris', 5) |
++---------------------------+----------------------+
+| Hello                     | Hello                |
++---------------------------+----------------------+
 ```
 
-2. Handling negative length
+2. Different extraction lengths
 ```sql
-SELECT strleft('Hello doris', -5);
+SELECT STRLEFT('Hello World', 3), STRLEFT('Hello World', 8);
 ```
 ```text
-+----------------------------+
-| strleft('Hello doris', -5) |
-+----------------------------+
-|                            |
-+----------------------------+
++----------------------------+----------------------------+
+| STRLEFT('Hello World', 3)  | STRLEFT('Hello World', 8)  |
++----------------------------+----------------------------+
+| Hel                        | Hello Wo                   |
++----------------------------+----------------------------+
 ```
 
-3. Handling NULL parameter
+3. NULL value handling
 ```sql
-SELECT strleft('Hello doris', NULL);
+SELECT STRLEFT(NULL, 5), STRLEFT('Hello doris', NULL);
 ```
 ```text
-+------------------------------+
-| strleft('Hello doris', NULL) |
-+------------------------------+
-| NULL                         |
-+------------------------------+
++------------------+------------------------------+
+| STRLEFT(NULL, 5) | STRLEFT('Hello doris', NULL) |
++------------------+------------------------------+
+| NULL             | NULL                         |
++------------------+------------------------------+
 ```
 
-4. Handling NULL string
+4. Empty string and zero length
 ```sql
-SELECT strleft(NULL, 3);
+SELECT STRLEFT('', 5), STRLEFT('Hello World', 0);
 ```
 ```text
-+------------------+
-| strleft(NULL, 3) |
-+------------------+
-| NULL             |
-+------------------+
++------------------+----------------------------+
+| STRLEFT('', 5)   | STRLEFT('Hello World', 0)  |
++------------------+----------------------------+
+|                  |                            |
++------------------+----------------------------+
 ```
+
+5. Negative length handling
+```sql
+SELECT STRLEFT('Hello doris', -5), STRLEFT('Hello doris', -1);
+```
+```text
++-----------------------------+----------------------------+
+| STRLEFT('Hello doris', -5)  | STRLEFT('Hello doris', -1) |
++-----------------------------+----------------------------+
+|                             |                            |
++-----------------------------+----------------------------+
+```
+
+6. Length exceeds string length
+```sql
+SELECT STRLEFT('ABC', 10), STRLEFT('short', 20);
+```
+```text
++--------------------+----------------------+
+| STRLEFT('ABC', 10) | STRLEFT('short', 20) |
++--------------------+----------------------+
+| ABC                | short                |
++--------------------+----------------------+
+```
+
+7. UTF-8 multi-byte characters
+```sql
+SELECT STRLEFT('ṭṛì ḍḍumai hello', 3), STRLEFT('ṭṛì ḍḍumai hello', 7);
+```
+```text
++---------------------------------+----------------------------------+
+| STRLEFT('ṭṛì ḍḍumai hello', 3)  | STRLEFT('ṭṛì ḍḍumai hello', 7)  |
++---------------------------------+----------------------------------+
+| ṭṛì                             | ṭṛì ḍḍu                          |
++---------------------------------+----------------------------------+
+```
+
+8. Number and ID prefix
+```sql
+SELECT STRLEFT('ID123456789', 5), STRLEFT('USER_987654321', 5);
+```
+```text
++----------------------------+------------------------------+
+| STRLEFT('ID123456789', 5)  | STRLEFT('USER_987654321', 5) |
++----------------------------+------------------------------+
+| ID123                      | USER_                        |
++----------------------------+------------------------------+
+```
+
+### Keywords
+
+    STRLEFT, LEFT
