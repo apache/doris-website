@@ -63,9 +63,9 @@
 
 - Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
-- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../query/view-materialized-view/query-async-materialized-view.md).
+- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md).
 
-- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../sql-manual/sql-types/Data-Types/AGG_STATE.md).
+- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md)
 
 ### Others
 
