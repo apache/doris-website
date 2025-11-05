@@ -1,0 +1,210 @@
+---
+{
+    "title": "Apache Doris vs Elasticsearch",
+    "language": "zh-CN"
+}
+
+---
+
+Elasticsearch 与 Apache Doris 在可观测性、网络安全和实时分析领域均有广泛应用。Elasticsearch 在存储资源与写入成本方面存在较高开销，相比之下，Apache Doris 利用其高效存储架构、存储压缩比等特性显著降低了资源消耗，并提供了更完善的分析能力以及更优的查询性能。
+
+
+## Featured Migration Cases
+
+<div style={{ display:'flex', justifyContent:'space-between' }}>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/citic-bank-zh-CN.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “基于 Apache Doris 构建的日志存储与分析平台上线后，相较于原有的 Elasticsearch 架构，成功减少了日志冗余存储，提高了日志数据存储效率，同时提供了强大且高效的日志检索与分析服务。”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>亮点：</strong></p>             
+                <ul>
+                    <li>节省 50% 资源投入</li>
+                    <li>提升 2-4 倍查询效率</li>
+                    <li>支持 Join，满足多种复杂的数据处理分析需求</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="100" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/bestpay-zh-CN.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “之前采用了多个组件构建安全分析系统，存在数据冗余存储等问题，借助 Apache Doris 统一架构后，系统在数据写入吞吐量、复杂查询响应速度以及存储效率等方面均实现显著优化。”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>亮点：</strong></p>             
+                <ul>
+                    <li>提升 4 倍写入速度</li>
+                    <li>提升 3 倍查询性能</li>
+                    <li>节省 50% 存储空间</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/zto-zh-CN.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “在引入 Doris 替换原有的 OLAP 数据库后，查询性能提升了 5 到 10 倍，同时并发处理能力达 2 倍提升。在 90% 的分析场景中，处理时间从原来的 10 分钟缩短到了 1 分钟以内。此外，资源消耗还减少到了原来的三分之一。”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>亮点：</strong></p>             
+                <ul>
+                    <li>提升 2 倍高并发报表分析</li>
+                    <li>节省 65% 存储空间</li>
+                    <li>支持标准 SQL，简化运维与使用成本</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+</div> 
+
+
+## Apache Doris vs. Elasticsearch
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Apache Doris</th>
+            <th>Elasticsearch</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>开源开放</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Apache License 2.0</li>
+            <li style={{fontSize:'14px'}}>由 Apache 开源软件基金会运营</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>License 多次变更，从 Apache License 2.0 到 Elastic License，再到 AGPL License</li>
+            <li style={{fontSize:'14px'}}>由 Elastic 公司运营</li>
+        </ul>
+        </td>
+    </tr>
+      <tr>
+        <td><strong>系统架构</strong></td>
+        <td>
+         <ul>
+            <p><strong>更灵活、更弹性：</strong></p>
+            <li style={{fontSize:'14px'}}>可满足严格的读写分离需求、不同业务隔离负载需求</li>
+            <li style={{fontSize:'14px'}}>支持存算一体和存算分离</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <p><strong>有限弹性：</strong></p>
+            <li style={{fontSize:'14px'}}>采用线程组方式，仅可实现较弱的计算隔离</li>
+            <li style={{fontSize:'14px'}}>仅支持存算一体</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>实时写入</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>写入吞吐高，开销低：多副本一次索引</li>
+            <li style={{fontSize:'14px'}}>两种写入方式，更易用：既支持外部 Push 写入也支持从消息队列中主动 Pull，无需借助外围工具</li>
+            <li style={{fontSize:'14px'}}>支持 Logstash and Beats 等工具进行数据拉取</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>写入吞吐低，开销高：多副本多次索引</li>
+            <li style={{fontSize:'14px'}}>仅支持外部 Push 写入，Pull 写入方式需要借助 Logstash 外围工具</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>实时存储</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>存储空间占用率低，整体压缩率高达 1:5 - 1:10</li>
+            <li style={{fontSize:'14px'}}>主键模型支持写优化（MoW）与读优化（MoR）, 数据去重时，写入性能损耗仅低于 10%</li>
+            <li style={{fontSize:'14px'}}>聚合模型支持强一致同步、聚合数据更新，并支持与原始数据共存。</li>
+            <li style={{fontSize:'14px'}}>提供更灵活的 Schema Change，满足业务动态需求</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>存储空间占用率高，整体压缩率为 1:1.5</li>
+            <li style={{fontSize:'14px'}}>主键模型仅支持写优化（MoW），数据去重时，写入性能损耗高达 3 倍</li>
+            <li style={{fontSize:'14px'}}>聚合模型仅支持异步最终一致，聚合数据不可更新，不与原始数据共存</li>
+            <li style={{fontSize:'14px'}}>有限 Schema Change</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>实时查询</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>多种查询负载均有极速响应</li>
+            <li style={{fontSize:'14px'}}>支持完整多表 Join 和物化视图、UDF、湖仓一体等复杂分析能力</li>
+            <li style={{fontSize:'14px'}}>标准 SQL 查询，易于使用</li>
+            <li style={{fontSize:'14px'}}>开放的 MySQL 生态</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>点查性能高，但分析性能低</li>
+            <li style={{fontSize:'14px'}}>不支持多表 Join 或更复杂的查询分析能力，仅能满足简单查询负载</li>
+            <li style={{fontSize:'14px'}}>专用查询接口，使用定制 DSL ️，学习门槛高</li>
+            <li style={{fontSize:'14px'}}>私有 Elasticsearch 生态</li>
+        </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+## Performance Comparison
+
+### Observability & Cyber Security
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>[HTTP Logs Benchmark](https://elasticsearch-benchmarks.elastic.co/) 是 Elasticsearch 官方推出的日志存储与分析性能验证测试工具，采用真实 HTTP Logs 数据集，**系统化评估索引构建效率、存储资源利用率及查询响应能力。**</p>
+        <p>该测试包含 11 项典型日志分析操作（关键词检索、时间范围过滤、聚合计算、排序等），其测试场景与指标体系精准匹配可观测性监控与网络安全审计的核心需求，可作为相关领域 OLAP 系统选型的重要性能参照。</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="800" height="338" decoding="async" data-nimg="1" src="/zh-CN/images/comparisons/http-logs.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+
+### Real-Time Analytics
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>ClickBench 是专用于评估分析型数据库性能的基准测试工具，其核心验证场景聚焦于海量宽表处理效能，而非复杂多表关联场景。该性能测试采用头部网络分析平台真实业务数据构建，覆盖点击流分析、结构化日志处理等典型 OLAP 应用场景。</p>
+        <p>测试体系由特定查询集合构成，重点验证聚合运算能力与单表处理性能（不涉及复杂表关联操作），因此该测试成为评估实时数据库的标准之一，尤其适用于验证系统在 PB 级数据规模下的数据处理与实时分析能力。</p>
+        <p>注：右侧测试结果取自于 2024 年 12 月数据，最新对比数据可前往 [ClickBench](https://benchmark.clickhouse.com/#eyJzeXN0ZW0iOnsiQWxsb3lEQiI6ZmFsc2UsIkF0aGVuYSAocGFydGl0aW9uZWQpIjpmYWxzZSwiQXRoZW5hIChzaW5nbGUpIjpmYWxzZSwiQXVyb3JhIGZvciBNeVNRTCI6ZmFsc2UsIkF1cm9yYSBmb3IgUG9zdGdyZVNRTCI6ZmFsc2UsIkJ5Q29uaXR5IjpmYWxzZSwiQnl0ZUhvdXNlIjpmYWxzZSwiY2hEQiI6ZmFsc2UsIkNpdHVzIjpmYWxzZSwiQ2xpY2tIb3VzZSBDbG91ZCAoYXdzKSI6ZmFsc2UsIkNsaWNrSG91c2UgQ2xvdWQgKGdjcCkiOmZhbHNlLCJDbGlja0hvdXNlIChkYXRhIGxha2UsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKGRhdGEgbGFrZSwgc2luZ2xlKSI6ZmFsc2UsIkNsaWNrSG91c2UgKFBhcnF1ZXQsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKFBhcnF1ZXQsIHNpbmdsZSkiOmZhbHNlLCJDbGlja0hvdXNlICh3ZWIpIjpmYWxzZSwiQ2xpY2tIb3VzZSI6ZmFsc2UsIkNsaWNrSG91c2UgKHR1bmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKHR1bmVkLCBtZW1vcnkpIjpmYWxzZSwiQ3JhdGVEQiI6ZmFsc2UsIkRhdGFiZW5kIjpmYWxzZSwiRGF0YUZ1c2lvbiAoUGFycXVldCwgcGFydGl0aW9uZWQpIjpmYWxzZSwiRGF0YUZ1c2lvbiAoUGFycXVldCwgc2luZ2xlKSI6ZmFsc2UsIkFwYWNoZSBEb3JpcyI6dHJ1ZSwiRHJ1aWQiOmZhbHNlLCJEdWNrREIgKFBhcnF1ZXQsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkR1Y2tEQiI6ZmFsc2UsIkVsYXN0aWNzZWFyY2giOnRydWUsIkVsYXN0aWNzZWFyY2ggKHR1bmVkKSI6dHJ1ZSwiR2xhcmVEQiI6ZmFsc2UsIkdyZWVucGx1bSI6ZmFsc2UsIkhlYXZ5QUkiOmZhbHNlLCJIeWRyYSI6ZmFsc2UsIkluZm9icmlnaHQiOmZhbHNlLCJLaW5ldGljYSI6ZmFsc2UsIk1hcmlhREIgQ29sdW1uU3RvcmUiOmZhbHNlLCJNYXJpYURCIjpmYWxzZSwiTW9uZXREQiI6ZmFsc2UsIk1vbmdvREIiOmZhbHNlLCJNb3RoZXJkdWNrIjpmYWxzZSwiTXlTUUwgKE15SVNBTSkiOmZhbHNlLCJNeVNRTCI6ZmFsc2UsIk94bGEuY29tIjpmYWxzZSwiUGFyYWRlREIiOmZhbHNlLCJQaW5vdCI6ZmFsc2UsIlBvc3RncmVTUUwgKHR1bmVkKSI6ZmFsc2UsIlBvc3RncmVTUUwiOmZhbHNlLCJRdWVzdERCIChwYXJ0aXRpb25lZCkiOmZhbHNlLCJRdWVzdERCIjpmYWxzZSwiUmVkc2hpZnQiOmZhbHNlLCJTZWxlY3REQiI6ZmFsc2UsIlNpbmdsZVN0b3JlIjpmYWxzZSwiU25vd2ZsYWtlIjpmYWxzZSwiU1FMaXRlIjpmYWxzZSwiU3RhclJvY2tzIjpmYWxzZSwiVGFibGVzcGFjZSI6ZmFsc2UsIlRpbWVzY2FsZURCIChjb21wcmVzc2lvbikiOmZhbHNlLCJUaW1lc2NhbGVEQiI6ZmFsc2UsIlVtYnJhIjpmYWxzZX0sInR5cGUiOnsiQyI6dHJ1ZSwiY29sdW1uLW9yaWVudGVkIjp0cnVlLCJQb3N0Z3JlU1FMIGNvbXBhdGlibGUiOnRydWUsIm1hbmFnZWQiOnRydWUsImdjcCI6dHJ1ZSwic3RhdGVsZXNzIjp0cnVlLCJKYXZhIjp0cnVlLCJDKysiOnRydWUsIk15U1FMIGNvbXBhdGlibGUiOnRydWUsInJvdy1vcmllbnRlZCI6dHJ1ZSwiQ2xpY2tIb3VzZSBkZXJpdmF0aXZlIjp0cnVlLCJlbWJlZGRlZCI6dHJ1ZSwic2VydmVybGVzcyI6dHJ1ZSwiYXdzIjp0cnVlLCJSdXN0Ijp0cnVlLCJzZWFyY2giOnRydWUsImRvY3VtZW50Ijp0cnVlLCJhbmFseXRpY2FsIjp0cnVlLCJzb21ld2hhdCBQb3N0Z3JlU1FMIGNvbXBhdGlibGUiOnRydWUsInRpbWUtc2VyaWVzIjp0cnVlfSwibWFjaGluZSI6eyIxNiB2Q1BVIDEyOEdCIjp0cnVlLCI4IHZDUFUgNjRHQiI6dHJ1ZSwic2VydmVybGVzcyI6dHJ1ZSwiMTZhY3UiOnRydWUsImM2YS40eGxhcmdlLCA1MDBnYiBncDIiOnRydWUsIkwiOnRydWUsIk0iOnRydWUsIlMiOnRydWUsIlhTIjp0cnVlLCJjNmEubWV0YWwsIDUwMGdiIGdwMiI6dHJ1ZSwiMTkyR0IiOnRydWUsIjI0R0IiOnRydWUsIjM2MEdCIjp0cnVlLCI0OEdCIjp0cnVlLCI3MjBHQiI6dHJ1ZSwiOTZHQiI6dHJ1ZSwiMTQzMEdCIjp0cnVlLCJkZXYiOnRydWUsIjcwOEdCIjp0cnVlLCJjNW4uNHhsYXJnZSwgNTAwZ2IgZ3AyIjp0cnVlLCJjNS40eGxhcmdlLCA1MDBnYiBncDIiOnRydWUsImM2YS40eGxhcmdlLCAxNTAwZ2IgZ3AyIjp0cnVlLCJjbG91ZCI6dHJ1ZSwiZGMyLjh4bGFyZ2UiOnRydWUsInJhMy4xNnhsYXJnZSI6dHJ1ZSwicmEzLjR4bGFyZ2UiOnRydWUsInJhMy54bHBsdXMiOnRydWUsIlMyIjp0cnVlLCJTMjQiOnRydWUsIjJYTCI6dHJ1ZSwiM1hMIjp0cnVlLCI0WEwiOnRydWUsIlhMIjp0cnVlLCJMMSAtIDE2Q1BVIDMyR0IiOnRydWV9LCJjbHVzdGVyX3NpemUiOnsiMSI6dHJ1ZSwiMiI6dHJ1ZSwiNCI6dHJ1ZSwiOCI6dHJ1ZSwiMTYiOnRydWUsIjMyIjp0cnVlLCI2NCI6dHJ1ZSwiMTI4Ijp0cnVlLCJzZXJ2ZXJsZXNzIjp0cnVlLCJkZWRpY2F0ZWQiOnRydWUsInVuZGVmaW5lZCI6dHJ1ZX0sIm1ldHJpYyI6ImhvdCIsInF1ZXJpZXMiOlt0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlXX0=) 查看。</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="950" height="338" decoding="async" data-nimg="1" src="/zh-CN/images/comparisons/clickbench-es.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
