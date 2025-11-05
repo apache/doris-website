@@ -35,7 +35,7 @@ In the future, Apache Doris will gradually support more advanced features of Apa
 
 This article will explain how to quickly set up an Apache Doris + Apache Paimon testing & demonstration environment in a Docker environment and demonstrate the usage of various features.
 
-For more information, please refer to [Paimon Catalog](../catalogs/paimon-catalog.md)
+For more information, please refer to [Paimon Catalog](../catalogs/paimon-catalog.mdx)
 
 ## User Guide
 
