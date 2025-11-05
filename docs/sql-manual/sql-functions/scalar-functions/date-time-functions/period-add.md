@@ -6,7 +6,13 @@
 ---
 
 ## Description
-Adds `<month>` months to the `<period>` (formatted as YYYYMM or YYMM) and returns the result in YYYYMM format.
+Calculate the result of increasing the `<period>` by `<month>` months.
+
+The `<period>` is an integer, the last two digits represent the month (01-12), and the preceding digits represent the year.
+The function returns the calculated period in the format of an integer (year + month).
+
+If the year part is less than 100, it will be processed into a four-digit year format according to [certain rules](#parameters).
+For example: PERIOD_ADD(2501, 0) will return 202501, not 2501.
 
 This function behaves consistently with MySQL's [PERIOD_ADD function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_period-add).
 
@@ -20,7 +26,7 @@ PERIOD_ADD(`<period>`, `month`)
 
 | Parameter  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<period>` | Represents a period consisting of a year and a month. <ul><li>**Format**: The last two digits represent the month, interpreted as YYYYMM or YYMM. If the YYMM format is used, YY values less than 70 are interpreted as 20YY, and YY values greater than or equal to 70 are interpreted as 19YY.</li><li>**Value Range**: Accepts integer values in the range `[0, 2^63-1]`, and the last two digits (month) must be within `[1, 12]`.</li><li>**Year Digits**: The function does not restrict the number of digits in the year, meaning the year can exceed four digits.</li></ul> |
+| `<period>` | represents a period composed of year and month. <ul><li>**Format**: The month occupies the last two digits, which must be within the range `[1, 12]`. The preceding digits represent the year, and the number of digits for the year is unlimited; it can exceed four digits.</li><li>**Year Inference**: The year value is directly taken from all digits except the last two. If the year is a two-digit number (range: [00, 99]), if the year is less than 70, it is interpreted as 20YY; if it is 70 or greater, it is interpreted as 19YY.</li><li>**Value Range**: Accepts integer parameters within the range `[0, 2^63-1]`.</li></ul> |
 | `<month>`  | The number of months to add to `<period>`. Accepts integer values in the range `[-2^63, 2^63-1]`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ## Return Value

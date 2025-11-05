@@ -8,6 +8,11 @@
 ## Description
 Calculates the difference in months between two periods.
 
+where `<period>` is an integer, the last two digits represent the month (01-12), and the preceding digits represent the year.
+The function returns the absolute result of period_1 - period_2.
+
+If the year part is less than 100, it will be converted to a four-digit year format according to [certain rules](#parameters).
+
 This function behaves consistently with MySQL's [PERIOD_DIFF function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_period-diff).
 
 ## Syntax
@@ -20,7 +25,7 @@ PERIOD_DIFF(`<period_1>`, `<period_2>`)
 
 | Parameter      | Description                                                                                     |
 |----------------|-------------------------------------------------------------------------------------------------|
-| `<period_1>`   | Represents a period consisting of a year and a month. <ul><li>**Format**: The last two digits represent the month, interpreted as YYYYMM or YYMM. If the YYMM format is used, YY values less than 70 are interpreted as 20YY, and YY values greater than or equal to 70 are interpreted as 19YY.</li><li>**Value Range**: Accepts integer values in the range `[0, 2^63-1]`, and the last two digits (month) must be within `[1, 12]`.</li><li>**Year Digits**: The function does not restrict the number of digits in the year, meaning the year can exceed four digits.</li></ul> |
+| `<period_1>`   | represents a period composed of year and month. <ul><li>**Format**: The month occupies the last two digits, which must be within the range `[1, 12]`. The preceding digits represent the year, and the number of digits for the year is unlimited; it can exceed four digits.</li><li>**Year Inference**: The year value is directly taken from all digits except the last two. If the year is a two-digit number (range: [00, 99]), if the year is less than 70, it is interpreted as 20YY; if it is 70 or greater, it is interpreted as 19YY.</li><li>**Value Range**: Accepts integer parameters within the range `[0, 2^63-1]`.</li></ul> |
 | `<period_2>`   | Represents another period. The format requirements are the same as `<period_1>`. |
 
 ## Return Value
