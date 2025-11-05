@@ -75,5 +75,5 @@ jobs:
                   npm install -g yarn
                   # yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=6144
-                  yarn && yarn build
+                  yarn && yarn build --locale zh-CN
                   rm -rf build

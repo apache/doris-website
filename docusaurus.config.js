@@ -109,16 +109,6 @@ const config = {
                 },
             };
         },
-        function memoryOptimizationPlugin() {
-            return {
-                name: 'memory-optimization',
-                configureWebpack(config) {
-                    return {
-                        parallelism: 2,  // 限制并行线程
-                    };
-                },
-            };
-        },
         [
             '@docusaurus/plugin-client-redirects',
             {
