@@ -520,7 +520,7 @@ ProxySQL > select * from mysql_server_ping_log;
 enable_proxy_protocol = true
 ```
 
-:::notice
+:::note
 
 1. 仅支持 Proxy Protocol V1。
 
