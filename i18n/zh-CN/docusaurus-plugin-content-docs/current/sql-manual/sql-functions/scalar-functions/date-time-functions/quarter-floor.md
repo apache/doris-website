@@ -33,7 +33,7 @@ QUARTER_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体 datetime/date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体 datetime/date 格式请查看 [datetime 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<period>` | 季度周期值，类型为 INT，表示每个周期包含的季度数 |
 | `<origin_datetime>` | 周期的起始时间点，类型为 DATETIME/DATE ，默认值为 0001-01-01 00:00:00 |
 

@@ -35,6 +35,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<warehouse>' --optional
     {MetaStoreProperties},
     {StorageProperties},
+    {IcebergProperties},
     {CommonProperties}
 );
 ```
@@ -68,6 +69,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{StorageProperties}`
 
   The StorageProperties section is for entering connection and authentication information related to the storage system. Refer to the section on [Supported Storage Systems].
+
+* `{IcebergProperties}`
+
+  The IcebergProperties section is used to fill in parameters specific to Iceberg Catalog.
+
+  - `list-all-tables`
+
+    For Iceberg Catalog that uses Hive Metastore as the metadata service. Default is `true`. By default, the `SHOW TABLES` operation will list all types of tables in the current Database (Hive Metastore may store non-Iceberg type tables). This approach has the best performance.
+    
+    If set to `false`, Doris will check the type of each table one by one and only return Iceberg type tables. This mode will have poor performance when there are many tables.
 
 * `{CommonProperties}`
 

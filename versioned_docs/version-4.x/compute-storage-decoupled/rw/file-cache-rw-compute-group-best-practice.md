@@ -30,7 +30,7 @@ This is a more intelligent and automated mechanism. It establishes a warm-up rel
 - Most scenarios.
 - Requires user permission to configure warm-up relationships.
 
-> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up](./read-write-splitting.md)**.
+> **[Documentation Link]**: For detailed information on how to configure and use proactive incremental warm-up, please refer to the official documentation **[FileCache Proactive Incremental Warm-up](./read-write-separation.md)**.
 
 ### 2. Read-Only Compute Group Automatic Warm-up
 

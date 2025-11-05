@@ -6,7 +6,7 @@
 ---
 
 ## Description
-`JSON_EXTRACT_DOUBLE` extracts the field specified by `<json_path>` from a JSON object and converts it to [`DOUBLE`](../../../basic-element/sql-data-types/numeric/DOUBLE.md) type.
+`JSON_EXTRACT_DOUBLE` extracts the field specified by `<json_path>` from a JSON object and converts it to [`DOUBLE`](../../../basic-element/sql-data-types/numeric/FLOATING-POINT.md) type.
 
 ## Syntax
 ```sql
