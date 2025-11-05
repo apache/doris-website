@@ -109,6 +109,16 @@ const config = {
                 },
             };
         },
+        function memoryOptimizationPlugin() {
+            return {
+                name: 'memory-optimization',
+                configureWebpack(config) {
+                    return {
+                        parallelism: 2,  // 限制并行线程
+                    };
+                },
+            };
+        },
         [
             '@docusaurus/plugin-client-redirects',
             {
@@ -162,7 +172,6 @@ const config = {
                         [
                             require('rehype-katex'),
                             {
-                                // CI 环境中完全禁用警告，减少日志输出和内存占用
                                 strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
                             }
                         ]
