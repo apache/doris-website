@@ -25,7 +25,9 @@ UTC_TIMESTAMP([`<precision>`])
 ## Return Value
 Returns the current UTC date and time.
 
-Depending on the use case, the return type may be a DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]) or an integer type (format: YYYYMMDDHHmmss, milliseconds will be automatically discarded during type conversion).
+Returns DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]). When using the returned result for numeric operations, it will be converted to the [integer format](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss).
+
+When the input is NULL or the precision is out of range, an error will be thrown.
 
 ## Examples
 
@@ -44,4 +46,7 @@ SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0, UTC_TIMESTAMP(5), UTC_TIMESTAMP(5) 
 ```sql
 SELECT UTC_TIMESTAMP(7);
 -- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+
+SELECT UTC_TIMESTAMP(NULL);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIMESTAMP argument cannot be NULL.
 ```

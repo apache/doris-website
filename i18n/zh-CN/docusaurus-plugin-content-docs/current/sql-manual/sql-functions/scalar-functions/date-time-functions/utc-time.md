@@ -26,7 +26,9 @@ UTC_TIME([<`precision`>])
 
 返回当前 UTC 时间。
 
-根据使用场景的不同，返回类型可能为 TIME 类型（格式：HH:mm:ss）或整数类型（表示从 00:00:00 开始经过的时间值，单位为微秒）。
+返回 TIME 类型（格式：HH:mm:ss）。当使用返回结果进行数值运算时，会进行类型转换，返回[整数格式](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from--time)（从 00:00:00 开始经过的时间值，单位为微秒）。
+
+当输入为 NULL 或精度超出范围会报错。
 
 ## 举例
 
@@ -45,4 +47,7 @@ SELECT UTC_TIME(), UTC_TIME() + 1, UTC_TIME(6), UTC_TIME(6) + 1;
 ```sql
 SELECT UTC_TIME(7);
 -- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+
+SELECT UTC_TIME(NULL);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIME argument cannot be NULL.
 ```

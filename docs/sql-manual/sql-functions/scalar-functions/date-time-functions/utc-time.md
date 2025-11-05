@@ -25,7 +25,9 @@ UTC_TIME([<`precision`>])
 ## Return Value
 Returns the current UTC time.
 
-According to different usage scenarios, the return type may be TIME type (format: HH:mm:ss) or integer type (indicating the time elapsed since 00:00:00, in microseconds).
+Return Time type (format: HH:mm:ss). When using the returned result for numerical operations, it will be converted to [integer format](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from--time) (the time value elapsed since 00:00:00, unit in microseconds).
+
+When the input is NULL or the precision is out of range, an error will be thrown.
 
 ## Examples
 
@@ -44,4 +46,7 @@ SELECT UTC_TIME(), UTC_TIME() + 1, UTC_TIME(6), UTC_TIME(6) + 1;
 ```sql
 SELECT UTC_TIME(7);
 -- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+
+SELECT UTC_TIME(NULL);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIME argument cannot be NULL.
 ```

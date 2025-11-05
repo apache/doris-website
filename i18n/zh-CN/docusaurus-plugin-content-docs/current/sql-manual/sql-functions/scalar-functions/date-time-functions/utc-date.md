@@ -19,7 +19,7 @@ UTC_DATE()
 ## 返回值
 返回当前 UTC 日期。
 
-根据使用场景的不同，返回类型可能为 Date 类型（格式：YYYY-MM-DD）或整数类型（格式：YYYYMMDD）。
+返回 Date 类型（格式：YYYY-MM-DD）。当使用返回结果进行数值运算时，会进行类型转换，返回[整数格式](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-date)（格式: YYYYMMDD）。
 
 ## 举例
 
