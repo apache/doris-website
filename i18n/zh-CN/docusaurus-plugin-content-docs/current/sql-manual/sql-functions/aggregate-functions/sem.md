@@ -9,6 +9,12 @@
 
 计算指定列或表达式的所有非 NULL 值的均值标准误。
 
+假设样本值为 $x_i$， 样本量为 $n$，样本均值为 $\bar{x}$：
+
+$
+\mathrm{SEM}=\sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}\bigl(x_i-\bar{x}\bigr)^2}.
+$
+
 ## 语法
 
 ```sql
@@ -46,7 +52,7 @@ insert into t1 values
 select sem(k_double) from t1;
 ```
 
-Double 类型的平均值计算，[222.222,3.3,3.3,null]的均值标准误为72.974。
+Double 类型的均值标准误计算，[222.222,3.3,3.3,null]的均值标准误为72.974。
 
 ```text
 +---------------+
@@ -54,6 +60,20 @@ Double 类型的平均值计算，[222.222,3.3,3.3,null]的均值标准误为72.
 +---------------+
 |        72.974 |
 +---------------+
+```
+
+```sql
+select sem(id) from t1
+```
+
+Int 类型的均值标准误计算，[1,2,3,4]的均值标准误为0.645497。
+
+```text
++--------------------+
+| sem(id)            |
++--------------------+
+| 0.6454972243679028 |
++--------------------+
 ```
 
 ```sql
@@ -82,14 +102,4 @@ select sem(distinct k_double) from t1;
 +------------------------+
 |                109.461 |
 +------------------------+
-```
-
-### 错误示例
-
-```sql
-select sem(id) from t1;
-```
-
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = sem only requires a double parameter: sem(id)
 ```

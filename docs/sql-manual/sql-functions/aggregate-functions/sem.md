@@ -9,6 +9,12 @@
 
 Calculate the standard error of the mean for all non-null values in the specified column or expression.
 
+Let the sample value be $x_i$, the sample size be $n$, and the sample mean be $\bar{x}$:
+
+$
+\mathrm{SEM}=\sqrt{\frac{1}{n(n-1)}\sum_{i=1}^{n}\bigl(x_i-\bar{x}\bigr)^2}.
+$
+
 ## Syntax
 
 ```text
@@ -46,7 +52,7 @@ insert into t1 values
 select sem(k_double) from t1;
 ```
 
-Calculation of the mean for the Double type: the mean and standard error for [222.222, 3.3, 3.3, null] is 72.974.
+Calculation of the Mean Standard Error for Double Type: The standard error of the mean for [222.222, 3.3, 3.3, null] is 72.974
 
 ```text
 +---------------+
@@ -54,6 +60,20 @@ Calculation of the mean for the Double type: the mean and standard error for [22
 +---------------+
 |        72.974 |
 +---------------+
+```
+
+```sql
+select sem(id) from t1
+```
+
+Calculation of the standard error of the mean for an int type: the standard error of the mean for [1, 2, 3, 4] is 0.645497.
+
+```text
++--------------------+
+| sem(id)            |
++--------------------+
+| 0.6454972243679028 |
++--------------------+
 ```
 
 ```sql
@@ -82,14 +102,4 @@ Using the DISTINCT keyword for deduplication calculations, the mean standard err
 +------------------------+
 |                109.461 |
 +------------------------+
-```
-
-### Error example
-
-```sql
-select sem(id) from t1;
-```
-
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = sem only requires a double parameter: sem(id)
 ```
