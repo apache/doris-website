@@ -159,13 +159,13 @@ const config = {
                     showLastUpdateTime: false,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
                     rehypePlugins: [
-                        require('rehype-katex'),
-                        {
-                            strict: process.env.CI === 'true' ? false : 'warn',
-                            // strict: (errorCode) => 
-                            //     (process.env.CI === 'true' && errorCode === 'unicodeTextInMathMode') 
-                            //     ? 'ignore' : 'warn',
-                        }
+                        [
+                            require('rehype-katex'),
+                            {
+                                // CI 环境中完全禁用警告，减少日志输出和内存占用
+                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                            }
+                        ]
                     ]
                 },
                 blog: {
