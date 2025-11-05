@@ -1457,6 +1457,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/time",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timediff",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-date",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-days",
