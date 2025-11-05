@@ -143,9 +143,9 @@ Link descriptions are not advisable to repeatedly use phrases such as "see detai
 
 **2. Link Format**
 
-- Link to other headings within the same document, such as [Inverted Index]()
+- Link to other headings within the same document, such as [Inverted Index]
 
-- Link to adjacent documents: [BITMAP Index]()
+- Link to adjacent documents: [BITMAP Index]
 
 - Link to external websites: [Wikipedia - Inverted Index](https://en.wikipedia.org/wiki/Inverted_index)
 
