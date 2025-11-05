@@ -158,7 +158,15 @@ const config = {
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [require('rehype-katex')],
+                    rehypePlugins: [
+                        require('rehype-katex'),
+                        {
+                            strict: process.env.CI === 'true' ? false : 'warn',
+                            // strict: (errorCode) => 
+                            //     (process.env.CI === 'true' && errorCode === 'unicodeTextInMathMode') 
+                            //     ? 'ignore' : 'warn',
+                        }
+                    ]
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
