@@ -148,7 +148,7 @@ const config = {
                 docs: {
                     lastVersion: getLatestVersion(),
                     versions: getDocsVersions(),
-                    sidebarPath: require.resolve('./sidebars.json'),
+                    sidebarPath: require.resolve('./sidebars.ts'),
                     // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
