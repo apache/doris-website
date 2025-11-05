@@ -977,6 +977,119 @@ group by
 ```
 
 
+### Limit 和 TopN 改写
+当查询包含 ORDER BY 或 LIMIT 子句，或者两者都有（即 Top-N 查询）时，如果物化视图能够提供足够的数据来满足查询的 ORDER BY 和 LIMIT 要求，
+优化器可以利用该物化视图进行透明改写。这种改写能够显著加速常见的 Top-N 分析场景。
+
+**改写条件**
+
+ORDER BY 校验：查询的 ORDER BY 子句必须与物化视图的 ORDER BY 子句兼容或完全相同。
+
+LIMIT 校验：
+如果物化视图没有 LIMIT，任何带 LIMIT 的查询都可以尝试改写。
+如果物化视图有 LIMIT N，那么查询的 LIMIT M 必须满足 M <= N，
+如果物化视图有 LIMIT N OFFSET L，那么查询的 LIMIT M OFFSET O 必须满足 O >= L，且 M + O <= N + L。
+
+物化视图和查询的其他 where 条件应该相同。
+
+
+```sql
+CREATE MATERIALIZED VIEW mv11_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select
+o_orderdate,
+count(o_shippriority),
+count(o_comment),
+l_orderkey,
+count(l_partkey)
+from
+orders
+left join
+lineitem on l_orderkey = o_orderkey
+left join partsupp on ps_partkey = l_partkey and l_suppkey = ps_suppkey
+group by o_orderdate, l_orderkey
+limit 8 offset 1;
+```
+
+如下查询可以命中 mv11_0 的物化视图， 满足上述的校验条件
+```sql
+select
+o_orderdate,
+count(o_shippriority),
+count(o_comment),
+l_orderkey,
+count(l_partkey)
+from
+orders
+left join lineitem on l_orderkey = o_orderkey
+left join partsupp on ps_partkey = l_partkey and l_suppkey = ps_suppkey
+group by o_orderdate, l_orderkey
+limit 4 offset 2;
+```
+
+
+如下查询不可以命中 mv11_0 的物化视图， 因为多了一个 `o_orderdate > '2023-12-08'` 条件，如果 mv11_0 物化视图也有
+`where o_orderdate > '2023-12-08'`条件，那么可以命中物化视图
+
+```sql
+select
+o_orderdate,
+count(o_shippriority),
+count(o_comment),
+l_orderkey,
+count(l_partkey)
+from
+orders
+left join lineitem on l_orderkey = o_orderkey
+left join partsupp on ps_partkey = l_partkey and l_suppkey = ps_suppkey
+where o_orderdate > '2023-12-08'
+group by o_orderdate, l_orderkey
+limit 4 offset 2;
+```
+
+另一个例子
+
+```sql
+CREATE MATERIALIZED VIEW mv11_1
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select
+o_orderdate,
+o_shippriority,
+o_comment,
+l_orderkey,
+l_partkey,
+o_orderkey
+from
+orders left
+join lineitem on l_orderkey = o_orderkey
+left join partsupp on ps_partkey = l_partkey and l_suppkey = ps_suppkey
+where o_orderdate > '2023-12-08'
+order by o_orderkey
+limit 4 offset 2;
+```
+
+如下查询中 order by + limit 会转化成 topN，可以命中 mv11_1 的物化视图， 满足上述的校验条件
+```sql
+select
+o_orderdate,
+o_shippriority,
+o_comment,
+l_orderkey,
+l_partkey
+from
+orders left
+join lineitem on l_orderkey = o_orderkey
+left join partsupp on ps_partkey = l_partkey and l_suppkey = ps_suppkey
+where o_orderdate > '2023-12-08'
+order by o_orderkey
+limit 2 offset 3;
+```
+
+
 ### Explain 查询透明改写情况
 
 查询透明改写命中情况，用于查看和调试。
