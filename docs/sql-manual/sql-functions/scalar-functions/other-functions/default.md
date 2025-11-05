@@ -34,6 +34,10 @@ Non-constant default values (`CURRENT_TIMESTAMP`, `CURRENT_DATE`):
 - If the column is not NOT NULL, returns NULL.
 - If the column is NOT NULL, returns the minimum value of the corresponding type `0000-01-01 00:00:00` or `0000-01-01`.
 
+Special Cases:
+- If the input column is of an aggregate type (`HLL`, `BITMAP`, `QUANTILE_STATE`), throws an error.
+- Input parameters are only allowed for columns. If the input is a constant (including NULL) or an expression, throws an error.
+
 [Doris supported default value related parameters](https://doris.apache.org/docs/dev/sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#column-default-value-related-parameters)
 
 ## Examples
@@ -105,38 +109,25 @@ LIMIT 1;
 +-----------------+--------------------+---------------------+----------------+---------------------+-----------------------------------------+------------------+-------------------+---------------------+----------------------------+-------------------+-------------------+-----------------+--------------------+-------------------+---------------------+-----------------+-----------------+-----------------+-----------------+----------------------+-------------------------+------------------------+-------------------+--------------------+
 | DEFAULT(c_bool) | DEFAULT(c_tinyint) | DEFAULT(c_smallint) | DEFAULT(c_int) | DEFAULT(c_bigint)   | DEFAULT(c_largeint)                     | DEFAULT(c_float) | DEFAULT(c_double) | DEFAULT(c_decimal)  | DEFAULT(c_decimal_compact) | DEFAULT(c_pi)     | DEFAULT(c_e)      | DEFAULT(c_char) | DEFAULT(c_varchar) | DEFAULT(c_string) | DEFAULT(c_datetime) | DEFAULT(c_date) | DEFAULT(c_json) | DEFAULT(c_ipv4) | DEFAULT(c_ipv6) | DEFAULT(c_array_int) | DEFAULT(c_array_string) | DEFAULT(c_map_str_int) | DEFAULT(c_struct) | DEFAULT(c_variant) |
 +-----------------+--------------------+---------------------+----------------+---------------------+-----------------------------------------+------------------+-------------------+---------------------+----------------------------+-------------------+-------------------+-----------------+--------------------+-------------------+---------------------+-----------------+-----------------+-----------------+-----------------+----------------------+-------------------------+------------------------+-------------------+--------------------+
-|               1 |                  7 |               32000 |     2147483647 | 9223372036854775807 | 170141183460469231731687303715884105727 |            3.125 |       2.718281828 | 123456789.123456789 |                 99999.1234 | 3.141592653589793 | 2.718281828459045 | charDemo        |                    | plain string      | 2025-10-25 11:22:33 | 2025-10-31      | NULL            | 192.168.1.1     | 2001:db8::1     | NULL                 | NULL                    | NULL                   | NULL              | NULL               |
+|               1 |                  7 |               32000 |     2147483647 | 9223372036854775807 | 170141183460469231731687303715884105727 |            3.125 |       2.718281828 | 123456789.123456789 |                 99999.1234 | 3.141592653589793 | 2.718281828459045 | charDemo        |                    | plain string      | 2025-10-25 11:22:33 | 2025-10-31      | NULL            | 192.168.1.1     | 2001:db8::1     | []                   | NULL                    | NULL                   | NULL              | NULL               |
 +-----------------+--------------------+---------------------+----------------+---------------------+-----------------------------------------+------------------+-------------------+---------------------+----------------------------+-------------------+-------------------+-----------------+--------------------+-------------------+---------------------+-----------------+-----------------+-----------------+-----------------+----------------------+-------------------------+------------------------+-------------------+--------------------+
 ```
 
 2. Aggregate type example
 ```sql
 CREATE TABLE test_default_agg (
-    k_id          INT             NOT NULL COMMENT 'aggregate key',
+    k_id          INT             NOT NULL COMMENT '聚合键',
     bitmap_col    BITMAP          BITMAP_UNION,
     hll_col       HLL             HLL_UNION,
     quantile_col  QUANTILE_STATE QUANTILE_UNION
 )AGGREGATE KEY(k_id)
 PROPERTIES ( 'replication_num' = '1' );
 
--- Since QUANTILE_STATE type is strictly NOT NULL and does not allow default values
--- For the DEFAULT function, this column is invalid
 SELECT
     default(bitmap_col),default(hll_col)
 FROM test_default_agg
 LIMIT 1;
-```
-```text
-+---------------------+------------------+
-| default(bitmap_col) | default(hll_col) |
-+---------------------+------------------+
-| NULL                | NULL             |
-+---------------------+------------------+
-```
-
-```sql
-SELECT DEFAULT(quantile_col) FROM test_default_agg LIMIT 1;
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Column 'quantile_col' is NOT NULL but has no default value
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Agg type(HLL, BITMAP, QUANTILE_STATE) cannot be used for the DEFAULT function
 ```
 
 3. Non-constant default value (`CURRENT_TIMESTAMP`, `CURRENT_DATE`) example:
@@ -161,4 +152,13 @@ LIMIT 1;
 +------------------+----------------------+-----------------+---------------------+
 | NULL             | 0000-01-01 00:00:00  | NULL            | 0000-01-01          |
 +------------------+----------------------+-----------------+---------------------+
+```
+
+4. constant value
+```sql
+SELECT DEFAULT('hello');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = DEFAULT function requires a column reference, not a constant or expression
+
+SELECT DEFAULT(NULL);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = DEFAULT function requires a column reference, not a constant or expression
 ```
