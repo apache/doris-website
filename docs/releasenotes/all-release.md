@@ -27,6 +27,8 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
+- [2025-10-14, Apache Doris 4.0.0 is released](../releasenotes/v4.0/release-4.0.0.md)
+
 - [2025-09-26, Apache Doris 3.1.1 is released](../releasenotes/v3.1/release-3.1.1.md)
 
 - [2025-09-19, Apache Doris 3.0.8 is released](../releasenotes/v3.0/release-3.0.8.md)

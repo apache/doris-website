@@ -26,6 +26,8 @@
 
 <br />
 
+- [2025-10-14, Apache Doris 4.0.0 版本发布](../releasenotes/v4.0/release-4.0.0.md)
+
 - [2025-09-26, Apache Doris 3.1.1 版本发布](../releasenotes/v3.1/release-3.1.1.md)
 
 - [2025-09-19, Apache Doris 3.0.8 版本发布](../releasenotes/v3.0/release-3.0.8.md)
