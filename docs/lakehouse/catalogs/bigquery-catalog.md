@@ -7,7 +7,7 @@
 
 BigQuery Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access BigQuery tables through the BigQuery Connector.
 
-:::notice
+:::note
 This feature is experimental and has been supported since version 3.0.1.
 :::
 
