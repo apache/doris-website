@@ -1854,6 +1854,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/regr-intercept",
                                 "sql-manual/sql-functions/aggregate-functions/regr-slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
+                                "sql-manual/sql-functions/aggregate-functions/sem",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
                                 "sql-manual/sql-functions/aggregate-functions/skew",
