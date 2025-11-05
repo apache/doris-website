@@ -232,7 +232,7 @@ When you want to display images, it is convenient to co-locate the asset next to
 
 You can display images in two different ways: 
 
-- Simple syntax: ` ![Alt text for images description](co-locate file structure or link) `
+- Simple syntax: ` ![Alt text for images description] (co-locate file structure or link) `
 
 - If you want the image to be centered, you can use HTML as following: 
 
