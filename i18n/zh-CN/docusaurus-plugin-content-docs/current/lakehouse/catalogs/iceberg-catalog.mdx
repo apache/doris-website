@@ -1905,6 +1905,319 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ALTER TABLE tbl DROP TAG t1;
   ```
 
+## Iceberg 表操作
+
+Doris 支持通过 `ALTER TABLE EXECUTE` 语法来执行 Iceberg 表的特定操作（Actions）。该语法提供了统一的接口来执行表优化和快照管理等各种操作。
+
+### ALTER TABLE EXECUTE 语法
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...) [WHERE <condition>]
+```
+
+* `action_name`：要执行的操作名称
+* `("key1" = "value1", ...)`：操作相关的参数，以键值对形式提供。参数名称需要使用双引号包裹
+* `[WHERE <condition>]`：可选的 WHERE 条件，用于指定操作的分区或数据范围（仅部分操作支持）
+
+Iceberg 表操作主要分为两类：
+
+1. **表数据操作**：对表中的数据文件进行优化和重写
+2. **元数据管理操作**：对表的快照（Snapshot）和分支（Branch）进行管理
+
+### 表数据操作
+
+#### rewrite_data_files
+
+`rewrite_data_files` 操作用于对 Iceberg 表进行数据文件重写，实现小文件合并（Compaction）功能，以优化查询性能和存储效率。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <condition>]
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 默认值 | 描述 |
+| -------- | ---- | ------ | ---- |
+| `target-file-size-bytes` | Long | 536870912 (512MB) | 目标文件大小（字节）。输出文件的目标大小 |
+| `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | 最小文件大小（字节）。小于此大小的文件会被重写。如果未指定，默认为目标文件大小的 75% |
+| `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | 最大文件大小（字节）。大于此大小的文件会被拆分。如果未指定，默认为目标文件大小的 180% |
+| `min-input-files` | Integer | 5 | 触发重写的最小输入文件数。只有当需要重写的文件数达到此阈值时才会执行重写 |
+| `rewrite-all` | Boolean | false | 是否重写所有文件，无论文件大小 |
+| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | 单个文件组的最大大小（字节）。用于限制单个重写任务处理的数据量 |
+| `delete-file-threshold` | Integer | Integer.MAX_VALUE | 触发重写所需的最小删除文件数 |
+| `delete-ratio-threshold` | Double | 0.3 | 触发重写所需的最小删除记录比例（删除记录数 / 总记录数）。范围：0.0 - 1.0 |
+| `output-spec-id` | Long | 2 | 输出文件的分区规范 ID |
+
+**返回值：**
+
+执行 `rewrite_data_files` 操作会返回一个结果集，包含以下 4 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `rewritten_data_files_count` | INT | 被重写的数据文件数量 |
+| `added_data_files_count` | INT | 新增的数据文件数量 |
+| `rewritten_bytes_count` | INT | 重写的数据字节数 |
+| `removed_delete_files_count` | BIGINT | 被移除的删除文件数量 |
+
+**示例：**
+
+```sql
+-- 使用默认参数进行数据文件重写
+ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files ();
+
+-- 指定目标文件大小和最小输入文件数
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "134217728",
+  "min-input-files" = "10"
+);
+
+-- 使用 WHERE 条件重写特定分区的数据
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "268435456"
+) WHERE date_col = '2024-01-01';
+
+-- 重写所有文件
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "rewrite-all" = "true",
+  "target-file-size-bytes" = "536870912"
+);
+```
+
+**注意事项：**
+
+1. `rewrite_data_files` 操作会读取数据文件并重新写入，会产生额外的 I/O 和计算开销，建议在业务低峰期执行该操作
+2. 执行前可以通过【查看数据文件分布】章节中的 SQL 来评估是否需要执行重写操作
+3. WHERE 条件可用于限制重写的分区或数据范围，这个条件会过滤掉那些不包含 符合WHERE 条件的数据的文件，从而减少重写的文件数量和数据量
+4. 执行前可以通过下面的sql来预判断被重写的文件 TODO: 添加sql
+
+### 元数据管理操作
+
+元数据管理操作用于管理 Iceberg 表的快照和分支，包括快照的回滚、切换、合并等功能。
+
+#### cherrypick_snapshot
+
+`cherrypick_snapshot` 操作用于将指定快照的变更合并到当前表状态，创建一个新的快照而不修改或删除原始快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 是 | 要合并的快照 ID |
+
+**返回值：**
+
+执行 `cherrypick_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `source_snapshot_id` | BIGINT | 被合并的快照 ID |
+| `current_snapshot_id` | BIGINT | 合并操作后新创建并设置为当前快照的快照 ID |
+
+**示例：**
+
+```sql
+-- 将快照 123456789 的变更合并到当前表状态
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的快照不存在，操作会失败
+3. 合并操作会创建一个新的快照，不会删除原始快照
+
+#### fast_forward
+
+`fast_forward` 操作用于将一个分支的当前快照快速推进到另一个分支的最新快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `branch` | String | 是 | 要推进的分支名称 |
+| `to` | String | 是 | 目标分支名称，会将 `branch` 推进到该分支的最新快照 |
+
+**返回值：**
+
+执行 `fast_forward` 操作会返回一个结果集，包含以下 3 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `branch_updated` | STRING | 被推进的分支名称 |
+| `previous_ref` | BIGINT | 推进操作前分支指向的快照 ID（可为 NULL） |
+| `updated_ref` | BIGINT | 推进操作后分支指向的快照 ID |
+
+**示例：**
+
+```sql
+-- 将 feature 分支推进到 main 分支的最新快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的分支不存在，操作会失败
+3. 只能推进分支，不能推进标签（Tag）
+
+#### rollback_to_snapshot
+
+`rollback_to_snapshot` 操作用于将 Iceberg 表回滚到指定的快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 是 | 要回滚到的快照 ID |
+
+**返回值：**
+
+执行 `rollback_to_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 回滚操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 回滚操作后设置为当前快照的快照 ID |
+
+**示例：**
+
+```sql
+-- 回滚到快照 987654321
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的快照不存在，操作会失败
+3. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照
+
+#### rollback_to_timestamp
+
+`rollback_to_timestamp` 操作用于将 Iceberg 表回滚到指定时间点的快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `timestamp` | String | 是 | 要回滚到的时间点。支持两种格式：<br>1. ISO 日期时间格式：`yyyy-MM-dd HH:mm:ss.SSS`（如 `2024-01-01 10:30:00.000`）<br>2. 毫秒时间戳（如 `1704067200000`） |
+
+**返回值：**
+
+执行 `rollback_to_timestamp` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 回滚操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 指定时间点时的快照 ID，现在设置为当前快照 |
+
+**示例：**
+
+```sql
+-- 回滚到指定时间点（ISO 格式）
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "2024-01-01 10:30:00.000");
+
+-- 回滚到指定时间点（时间戳格式）
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. `timestamp` 参数支持 ISO 日期时间格式（`yyyy-MM-dd HH:mm:ss.SSS`）或毫秒时间戳格式
+3. 如果指定的时间点没有对应的快照，操作会失败
+
+#### set_current_snapshot
+
+`set_current_snapshot` 操作用于将 Iceberg 表的当前快照设置为指定的快照 ID 或引用（分支或标签）。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_name>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 二选一 | 要设置为当前快照的快照 ID |
+| `ref` | String | 二选一 | 要设置为当前快照的引用名称（分支或标签） |
+
+**返回值：**
+
+执行 `set_current_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 设置操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 设置操作后当前快照的 ID（来自 `snapshot_id` 参数或从 `ref` 参数解析得到） |
+
+**示例：**
+
+```sql
+-- 通过快照 ID 设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("snapshot_id" = "123456789");
+
+-- 通过分支名称设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "feature_branch");
+
+-- 通过标签名称设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "v1.0");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. `snapshot_id` 和 `ref` 参数互斥，只能指定其中一个
+3. 如果指定的快照 ID 或引用不存在，操作会失败
+4. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照
+
+
 ## Iceberg 表优化
 
 ### 查看数据文件分布
