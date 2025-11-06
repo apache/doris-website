@@ -49,7 +49,7 @@ Based on the deployment definition provided by Doris Operator, users can customi
 - **Runtime debugging**:  
 
   One of the biggest challenges for Trouble Shooting with containerized services is how to debug at runtime. While pursuing availability and ease of use, Doris Operator also provides more convenient conditions for problem location. In the basic image of Doris, a variety of tools for problem location are pre-set. When you need to view the status in real time, you can enter the container through the exec command provided by kubectl and use the built-in tools for troubleshooting.
-  When the service cannot be started for unknown reasons, Doris Operator provides a Debug running mode. When a Pod is set to Debug startup mode, the container will automatically enter the running state. At this time, you can enter the container through the `exec` command, manually start the service and locate the problem. For details, please refer to [this document](../../install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md#How-to-enter-the-container-when-the-pod-crashes)
+  When the service cannot be started for unknown reasons, Doris Operator provides a Debug running mode. When a Pod is set to Debug startup mode, the container will automatically enter the running state. At this time, you can enter the container through the `exec` command, manually start the service and locate the problem. For details, please refer to [this document](../../install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md)
 
 ## Compatibility
 

@@ -18,7 +18,7 @@
 
 从 2.1.3 版本开始，Apache Doris 支持对 Hive 的 DDL 和 DML 操作。用户可以直接通过 Apache Doris 在 Hive 中创建库表，通过执行`INSERT INTO`语句来向 Hive 表中写入数据。通过该功能，用户可以通过 Apache Doris 对 Hive 进行完整的数据查询和写入操作，进一步帮助用户简化湖仓一体架构。
 
-参考[文档](../../lakehouse/datalake-building/hive-build)
+参考[文档](../../lakehouse/catalogs/hive-catalog)
 
 
 **2. 支持在异步物化视图之上构建新的异步物化视图**
