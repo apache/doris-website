@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [Creating a Catalog in Doris](../lakehouse/datalake-analytics/hive.md)
+2. [Creating a Catalog in Doris](../lakehouse/catalogs/hive-catalog.mdx)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
