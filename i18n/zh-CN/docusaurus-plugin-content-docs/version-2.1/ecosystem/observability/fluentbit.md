@@ -7,7 +7,7 @@
 
 [Fluent Bit](https://fluentbit.io/) 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris Output Plugin 是输出到 Doris 的插件。
 
-Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Fluent Bit Doris Output Plugin 主要有三个步骤：
 1. 下载或编译包含 Doris Output Plugin 的 Fluent Bit 二进制程序
