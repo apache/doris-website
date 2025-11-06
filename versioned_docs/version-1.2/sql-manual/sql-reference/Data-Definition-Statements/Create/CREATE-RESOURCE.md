@@ -110,7 +110,7 @@ illustrate:
    );
    ```
 
-   If S3 resource is used for [cold hot separation](../../../../advanced/cold_hot_separation.md), we should add more required fields.
+   If S3 resource is used for [cold hot separation](../../../../advanced/cold-hot-separation.md), we should add more required fields.
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES

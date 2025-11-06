@@ -110,7 +110,7 @@ PROPERTIES ("key"="value", ...);
    );
    ```
 
-   如果 s3 reource 在[冷热分离](../../../../advanced/cold_hot_separation.md)中使用，需要添加额外的字段。
+   如果 s3 reource 在[冷热分离](../../../../advanced/cold-hot-separation.md)中使用，需要添加额外的字段。
    ```sql
    CREATE RESOURCE "remote_s3"
    PROPERTIES
