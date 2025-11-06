@@ -47,7 +47,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 
 1. `s3.endpoint` 如果不提供`http://` 或 `https://` 前缀, 则默认使用http; 如提供，则会以前缀为准;
 
-2. Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)。
+2. Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)。
 
 ### HDFS vault
 
@@ -164,7 +164,7 @@ PROPERTIES (
 
 **注意:&#x20;**
 
-Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris也支持`AWS Assume Role`的方式创建Storage Vault(仅限于AWS S3)，配置方式请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization#assumed-role-authentication).
 
 ### 7. 创建 MinIO storage vault。
 

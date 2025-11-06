@@ -271,7 +271,7 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 **<index_property>**
 
-> 索引的属性。详细说明请参考[倒排索引](../../../../table-design/index/inverted-index.md)章节。
+> 索引的属性。详细说明请参考[倒排索引](../../../../table-design/index/inverted-index/overview)章节。
 
 ### 自动分区相关参数
 

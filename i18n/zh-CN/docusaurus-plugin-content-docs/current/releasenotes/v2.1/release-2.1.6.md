@@ -37,7 +37,7 @@
 
 - 实现 Iceberg 表的写回功能。
   
-  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/catalogs/iceberg-catalog.md)
+  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/catalogs/iceberg-catalog)
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 

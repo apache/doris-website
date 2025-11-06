@@ -26,7 +26,7 @@
 
 ### 创建临时表
 各种模型的表都可以被定义为临时表， 不论是 Unique、Aggregate 或是 Duplicate 模型。可以在下列 SQL 中添加 TEMPORARY 关键字创建临时表：
--  [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)
+-  [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 -  [CREATE TABLE AS SELECT](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT)
 -  [CREATE TABLE LIKE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE)
 
