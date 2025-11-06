@@ -13,8 +13,6 @@ For more usage methods, refer to the Table Value Function documentation:
 
 * [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md): Supports file analysis on HDFS.
 
-* [FILE](../../version-4.x/sql-manual/sql-functions/table-valued-functions/file): Unified table function, which can support reading S3/HDFS/Local files at the same time. (Supported since version 3.1.0.)
-
 ## Basic Usage
 
 Here we illustrate how to analyze files on object storage using the S3 Table Value Function as an example.
