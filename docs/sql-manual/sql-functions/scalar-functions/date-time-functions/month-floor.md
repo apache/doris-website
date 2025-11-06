@@ -32,7 +32,7 @@ MONTH_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down, of type DATETIME and DATE. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<datetime>` | The datetime value to be rounded down, of type DATETIME and DATE. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The month interval value, of type INT, representing the number of months contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME and DATE. Default value is 0001-01-01 00:00:00. |
 

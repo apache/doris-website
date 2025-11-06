@@ -21,7 +21,7 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 | Parameter | Description |
 | -- | -- | 
-| `<dt>` | The value to be converted, which is of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<dt>` | The value to be converted, which is of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<from_tz>` | The original time zone of dt, this parameter is of `varchar` type |
 | `<to_tz>` | The target time zone to convert to, this parameter is of `varchar` type |
 

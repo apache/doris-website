@@ -21,7 +21,7 @@ MICROSECONDS_SUB(`<datetime>`, `<delta>`)
 
 | Parameter    | Description                                                                                     |
 |--------------|-------------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 | `<delta>`    | The number of microseconds to subtract, of type `BIGINT`. 1 second = 1,000,000 microseconds.       |
 
 ## Return Value

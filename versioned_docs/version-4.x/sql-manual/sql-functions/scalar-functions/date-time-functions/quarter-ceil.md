@@ -32,7 +32,7 @@ QUARTER_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Quarter period value, type INT, indicating the number of quarters contained in each period |
 | `<origin_datetime>` | The starting time point of the period, supports date/datetime types, default value is 0001-01-01 00:00:00 |
 

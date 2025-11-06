@@ -21,7 +21,7 @@ MINUTE(`<date_or_time_expr>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME, or TIME. For specific datetime/date/time formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion), [time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME, or TIME. For specific datetime/date/time formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 
 ## Return Value
 

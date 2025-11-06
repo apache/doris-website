@@ -33,7 +33,7 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime and date types. Date type will be converted to the start of the day at 00:00:00. For specific datetime/date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports datetime and date types. Date type will be converted to the start of the day at 00:00:00. For specific datetime/date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Optional parameter that specifies the period length (unit: hours), must be a positive integer (such as 1, 3, 5). Default value is 1, representing one period every 1 hour |
 | `<origin>` | The starting time origin, supports datetime and date types. If not provided, the default is 0001-01-01T00:00:00 |
 

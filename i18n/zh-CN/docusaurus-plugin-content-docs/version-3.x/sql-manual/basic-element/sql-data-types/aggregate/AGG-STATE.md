@@ -11,7 +11,7 @@
     用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
     
   AGG_STATE 只能配合[state](../../../../sql-manual/sql-functions/combinators/state)
-    /[merge](../../../../../../../../docs/sql-manual/sql-functions/combinators/merge)/[union](../../../../../../../../docs/sql-manual/sql-functions/combinators/union)函数组合器使用。
+    /[merge](../../../../../../../sql-manual/sql-functions/combinators/merge)/[union](../../../../../../../sql-manual/sql-functions/combinators/union)函数组合器使用。
     
   需要注意的是，聚合函数的签名也是类型的一部分，不同签名的 agg_state 无法混合使用。比如如果建表声明的签名为`max_by(int,int)`,那就无法插入`max_by(bigint,int)`或者`group_concat(varchar)`。
   此处 nullable 属性也是签名的一部分，如果能确定不会输入 null 值，可以将参数声明为 not null，这样可以获得更小的存储大小和减少序列化/反序列化开销。

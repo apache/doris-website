@@ -21,7 +21,7 @@ MONTHS_SUB(`<date_or_time_expr>`, `<nums>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The date value from which to subtract months. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date value from which to subtract months. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<nums>` | The number of months to subtract, of type INT. Positive numbers indicate subtracting nums months from the datetime, negative numbers indicate adding nums months. |
 
 ## Return Value
