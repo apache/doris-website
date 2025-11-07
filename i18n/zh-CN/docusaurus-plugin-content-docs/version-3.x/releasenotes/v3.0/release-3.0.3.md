@@ -26,11 +26,11 @@
 
 - 新增 `table$partition` 语法，用于查询 Hive 表的分区信息。[#40774](https://github.com/apache/doris/pull/40774)  
   
-  - [查看文档](../../lakehouse/catalogs/hive-catalog) 
+  - [查看文档](../../lakehouse/catalogs/hive-catalog)
 
 - 支持创建 Text 格式的 Hive 表。[#41860](https://github.com/apache/doris/pull/41860) [#42175](https://github.com/apache/doris/pull/42175)  
 
-  - [查看文档](../../lakehouse/catalogs/hive-catalog) 
+  - [查看文档](../../lakehouse/catalogs/hive-catalog)
 
 ### 异步物化视图
 

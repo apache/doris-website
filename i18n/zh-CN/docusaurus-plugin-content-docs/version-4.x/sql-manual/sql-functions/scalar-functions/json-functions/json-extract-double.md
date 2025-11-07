@@ -6,7 +6,7 @@
 ---
 
 ## 描述
-`JSON_EXTRACT_DOUBLE` 从 JSON 对象中提取 `<json_path>` 指定的字段，并将其转换为 [`DOUBLE`](../../../basic-element/sql-data-types/numeric/DOUBLE.md) 类型。
+`JSON_EXTRACT_DOUBLE` 从 JSON 对象中提取 `<json_path>` 指定的字段，并将其转换为 [`DOUBLE`](../../../basic-element/sql-data-types/numeric/FLOATING-POINT) 类型。
 
 ## 语法
 ```sql
