@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 返回`value`在数组中第一次出现的位置/索引。
@@ -38,14 +19,14 @@ ARRAY_POSITION(<arr>, <vaule>)
 
 | 参数 | 说明 | 
 | --- | --- |
-| `<arr>` | ARRAY数组 |
+| `<arr>` | ARRAY 数组 |
 | `<vaule>` | 待查询的元素 |
 
 ## 返回值
 
-value在arr中的位置（从1开始计算）。特殊情况：
-- 0，如果value在arr中不存在；
-- NULL， 如果数组为NULL。
+value 在 arr 中的位置（从 1 开始计算）。特殊情况：
+- 0，如果 value 在 arr 中不存在；
+- NULL，如果数组为 NULL。
 
 ## 举例
 

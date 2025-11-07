@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Dear community, **Apache Doris version 2.1.7 was officially released on November 10, 2024.** This version brings continuous upgrades and improvements. Additionally, several fixes have been implemented in areas such as the  to the Lakehouse, Async Materialized Views, and Semi-Structured Data Management, Query Optimizer and Permission Management. 
 
 **Quick Download:** https://doris.apache.org/download/
@@ -73,13 +54,13 @@ Dear community, **Apache Doris version 2.1.7 was officially released on November
 ### Lakehouse
 
 - Support for writing data to Hive text format tables. [#40537](https://github.com/apache/doris/pull/40537)
-  - For more information, please  refer to [docs](https://doris.apache.org/docs/lakehouse/datalake-building/hive-build)
+  - For more information, please  refer to [docs](../../lakehouse/catalogs/hive-catalog)
 - Access MaxCompute data using MaxCompute Open Storage API. [#41610](https://github.com/apache/doris/pull/41610)
-  - For more information, please  refer to [docs](https://doris.apache.org/docs/lakehouse/database/max-compute)
+  - For more information, please  refer to [docs](../../lakehouse/catalogs/maxcompute-catalog)
 - Support for Paimon DLF Catalog. [#41694](https://github.com/apache/doris/pull/41694)
-  - For more information, please  refer to [docs](https://doris.apache.org/docs/lakehouse/datalake-analytics/paimon)
+  - For more information, please  refer to [docs](../../lakehouse/catalogs/paimon-catalog)
 - Added `table$partitions` syntax to directly query Hive partition information.[#41230](https://github.com/apache/doris/pull/41230)
-  - For more information, please  refer to [docs](https://doris.apache.org/docs/lakehouse/datalake-analytics/hive)
+  - For more information, please  refer to [docs](../../lakehouse/catalogs/hive-catalog)
 - Support for reading Parquet files in brotli compression format.[#42162](https://github.com/apache/doris/pull/42162)
 - Support for reading DECIMAL 256 types in Parquet files. [#42241](https://github.com/apache/doris/pull/42241)
 - Support for reading Hive tables in OpenCsvSerde format.[#42939](https://github.com/apache/doris/pull/42939)

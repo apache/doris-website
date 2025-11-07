@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules, thereby managing the lifecycle of table partitions (TTL) and reducing data storage pressure. In scenarios such as log management and time-series data management, dynamic partitioning can typically be used to roll-delete expired data.
 
 The diagram below illustrates lifecycle management using dynamic partitioning, with the following rules specified:
@@ -107,7 +88,7 @@ ALTER TABLE test_partition SET (
 
 ### 查看动态分区调度情况
 
-通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/Show-Statements/SHOW-DYNAMIC-PARTITION) 可以查看当前数据库下，所有动态分区表的调度情况：
+通过 [SHOW-DYNAMIC-PARTITION](../../sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES) 可以查看当前数据库下，所有动态分区表的调度情况：
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES;
@@ -146,7 +127,7 @@ Dynamic partition rule parameters are prefixed with `dynamic_partition` and can 
 | `dynamic_partition.start`                        | No       | The starting offset for dynamic partitions, which is a negative number. The default value is -2147483648, meaning historical partitions are not deleted. Depending on the `time_unit` attribute, partitions before this offset based on the current day (week/month) will be deleted. Whether historical partitions after this offset up to the current time are created depends on `dynamic_partition.create_history_partition`.                                                                                                     |
 | `dynamic_partition.end`                          | Yes      | The ending offset for dynamic partitions, which is a positive number. Depending on the `time_unit` attribute, partitions within the specified range ahead of the current day (week/month) are created in advance.                                                                                                                                                                                                                                                                                                  |
 | `dynamic_partition.prefix`                       | Yes      | The prefix for dynamically created partition names.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `dynamic_partition.buckets`                      | No       | The number of buckets corresponding to dynamically created partitions.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `dynamic_partition.buckets`                      | No       | The number of buckets corresponding to dynamically created partitions. Setting this parameter will override the number of buckets specified in `DISTRIBUTED`.                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `dynamic_partition.replication_num`              | No       | The number of replicas corresponding to dynamically created partitions. If not specified, it defaults to the number of replicas specified when the table was created.                                                                                                                                                                                                                                                                                                                                 |
 | `dynamic_partition.create_history_partition`     | No       | Defaults to false. When set to true, Doris will automatically create all partitions according to the rules below. Additionally, the FE parameter `max_dynamic_partition_num` will limit the total number of partitions to avoid creating too many partitions at once. If the number of partitions to be created exceeds the `max_dynamic_partition_num` value, the operation will be prohibited. This parameter does not take effect if the `start` attribute is not specified.                                               |
 | `dynamic_partition.history_partition_num`        | No       | When `create_history_partition` is set to `true`, this parameter specifies the number of historical partitions to create. The default value is -1, meaning it is not set. This variable functions the same as `dynamic_partition.start`, and it is recommended to set only one of them simultaneously.                                                                                                                                                                                                 |

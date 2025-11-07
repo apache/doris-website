@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在数据库中，ROLLUP、CUBE 和 GROUPING SETS 是用于多维数据聚合的高级 SQL 语句。这些功能显著增强了 GROUP BY 子句的能力，使得用户可以在单一查询中获得多种层次的汇总结果，这在语义上等价于使用 UNION ALL 连接多个聚合语句。
 
 - **ROLLUP**：ROLLUP 是一种用于生成层次化汇总的操作。它按照指定的列顺序进行汇总，从最细粒度的数据逐步汇总到最高层次。例如，在销售数据中，可以使用 ROLLUP 按地区、时间进行汇总，得到每个地区每个月的销售额、每个地区的总销售额以及整体总销售额。ROLLUP 适用于需要逐级汇总的场景。
@@ -170,7 +151,7 @@ ORDER BY YEAR(d_date), i_category, ca_state;
 
 ## GROUPING FUNCTION
 
-本节将对介绍通过如何解决使用 ROLLUP 和 CUBE 时出现的两个挑战：
+本节将介绍如何解决使用 ROLLUP 和 CUBE 时出现的两个挑战：
 
 1. 如何以编程方式识别出哪些结果集行代表小计，以及如何准确找到给定小计对应的聚合层级。由于在计算（如总计百分比）时经常需要使用小计，因此，我们需要一种简便的方法来识别这些小计行。
 
@@ -182,7 +163,7 @@ ORDER BY YEAR(d_date), i_category, ca_state;
 
 **1. 原理介绍**
 
-GROUPING 使用单个列作为参数，在遇到由 ROLLUP 或 CUBE 操作创建的 NULL 值时返回 1，即 NULL 表示该行是小计，则 GROUPING 返回 1。任何其他类型的值（包括表数据中本身的 NULL）都返回 0。
+GROUPING 使用单个列作为参数，在遇到由 ROLLUP 或 CUBE 操作创建的 NULL 值时返回 1，即 NULL 表示该行是小计，则 GROUPING 返回 1。任何其他类型的值（包括表数据中本身的 NULL 值）都返回 0。
 
 示例如下：
 
@@ -322,7 +303,7 @@ group by cube(year(d_date), i_category)
 
 在数据库中，GROUPING_ID 和 GROUPING 函数都是用于处理多维数据聚合查询（如 ROLLUP 和 CUBE）时的辅助函数，它们帮助用户区分不同层级的聚合结果。如果你想确定某一行的聚合层级，你需要使用 GROUPING 函数对所有的 GROUP BY 列进行计算，因为单列的计算结果无法满足需求。
 
-GROUPING_ID 函数比 GROUPING 更强大，因为它可以同时对多列进行检测。GROUPING_ID 函数接受多个列作为参数，并返回一个整数，该整数通过二进制位表示多个列的聚合状态。当使用表或物化视图保存计算结果时，使用 GROUPING 表示聚合的不同层级会占用较多的存储空间，在这种场景下，使用 GROUPING_ID 更加合适。
+GROUPING_ID 函数比 GROUPING 更强大，因为它可以同时对多列进行检测。GROUPING_ID 函数接受多个列作为参数，并返回一个整数，该整数通过二进制位表示多个列的聚合状态。当使用表或物化视图保存计算结果时，使用 GROUPING 函数表示聚合的不同层级会占用较多的存储空间，在这种场景下，使用 GROUPING_ID 更加合适。
 
 以 CUBE(a, b) 为例，其 GROUPING_ID 可以表示为：
 
@@ -457,7 +438,7 @@ ORDER BY YEAR(d_date), i_category, ca_state;
 16 rows in set (0.11 sec)
 ```
 
-上面的写法等价于使用 CUBE，但指定了具体的 `grouping_id`，从而减少了不必要的计算：
+上面的写法等价于使用 CUBE，但通过 `grouping_id` 指定了具体的聚合组合，从而减少了不必要的计算：
 
 ```sql
 SELECT  

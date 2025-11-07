@@ -1,0 +1,219 @@
+---
+{
+    "title": "Alternative to Elasticsearch",
+    "language": "zh-CN"
+}
+
+---
+
+Elasticsearch and Apache Doris are both popular in observability, cybersecurity, and real-time analytics. However, Elasticsearch can be costly in terms of storage and write resources. Apache Doris reduces these costs through efficient storage and high compression, and offers comprehensive analytical capabilities, such as JOIN and superior query performance.
+
+## Featured Migration Cases
+
+<div style={{ display:'flex', justifyContent:'space-between' }}>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="100" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/true_watch.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “By replacing Elasticsearch with VeloDB(Powered by Apache Doris), GuanceDB showcases a big stride in improving data processing speed and reducing costs.”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>Highlight:</strong></p>             
+                <ul>
+                    <li>70% Cost Reduction</li>
+                    <li>2-3x Faster full-text search performance</li>
+                    <li>Variant Data type is flexible to handle semi-structured data in log tracing</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="130" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/bestpay.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “Previously, we used multiple components for complex security analysis... Adopting Doris as a unified solution has significantly improved data writes, query performance and storage efficiency.”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>Highlight:</strong></p>             
+                <ul>
+                    <li>4x Faster write speeds</li>
+                    <li>3x Better query performance</li>
+                    <li>50% Storage space savings</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/zto.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “Compared to the original OLAP database, query performance has improved 5-10 times, concurrency has doubled, and analysis time has dropped from 10 minutes to under 1 minute for 90% of cases, all while using just one-third of the original resources.”
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>Highlight:</strong></p>             
+                <ul>
+                    <li>2x Increasing report analysis concurrency</li>
+                    <li>65% Storage space reduction</li>
+                    <li>Simplified query with standard SQL</li>
+                </ul>
+            </div>
+        </div>
+    
+    </div>
+
+</div> 
+
+
+## Apache Doris vs. Elasticsearch
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Apache Doris</th>
+            <th>Elasticsearch</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>Open Source License</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Licensed under Apache License 2.0</li>
+            <li style={{fontSize:'14px'}}>Stable License since governed by the Apache Software Foundation</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>License changed from Apache License 2.0 to Elastic License, then to AGPL License</li>
+            <li style={{fontSize:'14px'}}>Changing license since governed by Elastic NV</li>
+        </ul>
+        </td>
+    </tr>
+      <tr>
+        <td><strong>Architecture</strong></td>
+        <td>
+         <ul>
+            <p><strong>Higher flexibility and elasticity:</strong></p>
+            <li style={{fontSize:'14px'}}>Strict workload isolation by workload group, powered by Linux CGroups, ideal for multi-tenancy</li>
+            <li style={{fontSize:'14px'}}>Compute-Storage decoupled and coupled modes</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <p><strong>Traditional deployment with limited elasticity:</strong></p>
+            <li style={{fontSize:'14px'}}>Soft Workload Isolation by Thread Group</li>
+            <li style={{fontSize:'14px'}}>Does not support decoupling compute and storage</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Real-Time Data Writes</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>High throughput: Indexing only on one replica</li>
+            <li style={{fontSize:'14px'}}>Pull-based ingestion via Kafka CDC, easier and simpler</li>
+            <li style={{fontSize:'14px'}}>Support Logstash and Beats output plugin</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Low throughput: Indexing for multiple data replicas</li>
+            <li style={{fontSize:'14px'}}>Requires additional tools like Logstash and Beats for pull-based ingestion, less convenient</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Real-Time Data Storage</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>Low storage consumption with compression rates up to 1:5 - 1:10</li>
+            <li style={{fontSize:'14px'}}>Unique model supports both write and read optimization (MoW & MoR), retaining 90% of write speed when data is duplicated by key</li>
+            <li style={{fontSize:'14px'}}>Aggregation model supports strong consistency, allows aggregated data updates, and coexists with original data</li>
+            <li style={{fontSize:'14px'}}>Flexible Schema Change to meet dynamic business needs</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>High storage consumption with a compression ratio of 1:1.5</li>
+            <li style={{fontSize:'14px'}}>Unique model only supports write optimization, with write performance loss up to 3 times</li>
+            <li style={{fontSize:'14px'}}>The aggregation model does not allow aggregated data to be updated and does not coexist with the original data</li>
+            <li style={{fontSize:'14px'}}>Limited support for Schema Change</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Real-Time Data Queries</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Lightning-Fast in various query workloads</li>
+            <li style={{fontSize:'14px'}}>Supports multi-table JOINs and optimization for complex analysis</li>
+            <li style={{fontSize:'14px'}}>Easy to use with standard SQL</li>
+            <li style={{fontSize:'14px'}}>Open MySQL ecosystem</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>Good at point queries, but not suited for data analysis</li>
+            <li style={{fontSize:'14px'}}>No support for multi-table JOINs or complex analysis</li>
+            <li style={{fontSize:'14px'}}>Difficult for users due to custom DSL</li>
+            <li style={{fontSize:'14px'}}>Proprietary Elasticsearch ecosystem</li>
+        </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+## Performance Comparison
+
+### Observability & Cyber Security
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>The [HTTP Logs](https://elasticsearch-benchmarks.elastic.co/) benchmark is an official Elasticsearch performance test designed for log storage and analysis. It uses a real-world HTTP log dataset to **evaluate indexing performance, storage efficiency, and query performance.**</p>
+        <p>This benchmark comprises 11 queries commonly used in log analysis scenarios, including keyword search, time range queries, aggregations, and sorting. As a result, it is highly suitable for assessing performance in observability and network security analysis contexts.</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="1200" height="338" decoding="async" data-nimg="1" src="/images/comparisons/http-logs.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+
+### Real-Time Analytics
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>ClickBench is a benchmarking tool to evaluate the performance of analytical databases. It focuses on testing the performance of large, flat tables rather than complex multi-table joins. It uses real-world data from a major web analytics platform, covering typical scenarios such as clickstream analysis and structured logs.</p>
+        <p>The benchmark consists of a set of queries that test aggregation operations and single-table performance, without involving complex joins. This makes it especially useful for evaluating databases optimized for real-time analytics and large-scale data processing.</p>
+        <p>Note: These test results are archived benchmarks captured in December 2024. Current real-time comparisons are maintained at [ClickBench](https://benchmark.clickhouse.com/#eyJzeXN0ZW0iOnsiQWxsb3lEQiI6ZmFsc2UsIkF0aGVuYSAocGFydGl0aW9uZWQpIjpmYWxzZSwiQXRoZW5hIChzaW5nbGUpIjpmYWxzZSwiQXVyb3JhIGZvciBNeVNRTCI6ZmFsc2UsIkF1cm9yYSBmb3IgUG9zdGdyZVNRTCI6ZmFsc2UsIkJ5Q29uaXR5IjpmYWxzZSwiQnl0ZUhvdXNlIjpmYWxzZSwiY2hEQiI6ZmFsc2UsIkNpdHVzIjpmYWxzZSwiQ2xpY2tIb3VzZSBDbG91ZCAoYXdzKSI6ZmFsc2UsIkNsaWNrSG91c2UgQ2xvdWQgKGdjcCkiOmZhbHNlLCJDbGlja0hvdXNlIChkYXRhIGxha2UsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKGRhdGEgbGFrZSwgc2luZ2xlKSI6ZmFsc2UsIkNsaWNrSG91c2UgKFBhcnF1ZXQsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKFBhcnF1ZXQsIHNpbmdsZSkiOmZhbHNlLCJDbGlja0hvdXNlICh3ZWIpIjpmYWxzZSwiQ2xpY2tIb3VzZSI6ZmFsc2UsIkNsaWNrSG91c2UgKHR1bmVkKSI6ZmFsc2UsIkNsaWNrSG91c2UgKHR1bmVkLCBtZW1vcnkpIjpmYWxzZSwiQ3JhdGVEQiI6ZmFsc2UsIkRhdGFiZW5kIjpmYWxzZSwiRGF0YUZ1c2lvbiAoUGFycXVldCwgcGFydGl0aW9uZWQpIjpmYWxzZSwiRGF0YUZ1c2lvbiAoUGFycXVldCwgc2luZ2xlKSI6ZmFsc2UsIkFwYWNoZSBEb3JpcyI6dHJ1ZSwiRHJ1aWQiOmZhbHNlLCJEdWNrREIgKFBhcnF1ZXQsIHBhcnRpdGlvbmVkKSI6ZmFsc2UsIkR1Y2tEQiI6ZmFsc2UsIkVsYXN0aWNzZWFyY2giOnRydWUsIkVsYXN0aWNzZWFyY2ggKHR1bmVkKSI6dHJ1ZSwiR2xhcmVEQiI6ZmFsc2UsIkdyZWVucGx1bSI6ZmFsc2UsIkhlYXZ5QUkiOmZhbHNlLCJIeWRyYSI6ZmFsc2UsIkluZm9icmlnaHQiOmZhbHNlLCJLaW5ldGljYSI6ZmFsc2UsIk1hcmlhREIgQ29sdW1uU3RvcmUiOmZhbHNlLCJNYXJpYURCIjpmYWxzZSwiTW9uZXREQiI6ZmFsc2UsIk1vbmdvREIiOmZhbHNlLCJNb3RoZXJkdWNrIjpmYWxzZSwiTXlTUUwgKE15SVNBTSkiOmZhbHNlLCJNeVNRTCI6ZmFsc2UsIk94bGEuY29tIjpmYWxzZSwiUGFyYWRlREIiOmZhbHNlLCJQaW5vdCI6ZmFsc2UsIlBvc3RncmVTUUwgKHR1bmVkKSI6ZmFsc2UsIlBvc3RncmVTUUwiOmZhbHNlLCJRdWVzdERCIChwYXJ0aXRpb25lZCkiOmZhbHNlLCJRdWVzdERCIjpmYWxzZSwiUmVkc2hpZnQiOmZhbHNlLCJTZWxlY3REQiI6ZmFsc2UsIlNpbmdsZVN0b3JlIjpmYWxzZSwiU25vd2ZsYWtlIjpmYWxzZSwiU1FMaXRlIjpmYWxzZSwiU3RhclJvY2tzIjpmYWxzZSwiVGFibGVzcGFjZSI6ZmFsc2UsIlRpbWVzY2FsZURCIChjb21wcmVzc2lvbikiOmZhbHNlLCJUaW1lc2NhbGVEQiI6ZmFsc2UsIlVtYnJhIjpmYWxzZX0sInR5cGUiOnsiQyI6dHJ1ZSwiY29sdW1uLW9yaWVudGVkIjp0cnVlLCJQb3N0Z3JlU1FMIGNvbXBhdGlibGUiOnRydWUsIm1hbmFnZWQiOnRydWUsImdjcCI6dHJ1ZSwic3RhdGVsZXNzIjp0cnVlLCJKYXZhIjp0cnVlLCJDKysiOnRydWUsIk15U1FMIGNvbXBhdGlibGUiOnRydWUsInJvdy1vcmllbnRlZCI6dHJ1ZSwiQ2xpY2tIb3VzZSBkZXJpdmF0aXZlIjp0cnVlLCJlbWJlZGRlZCI6dHJ1ZSwic2VydmVybGVzcyI6dHJ1ZSwiYXdzIjp0cnVlLCJSdXN0Ijp0cnVlLCJzZWFyY2giOnRydWUsImRvY3VtZW50Ijp0cnVlLCJhbmFseXRpY2FsIjp0cnVlLCJzb21ld2hhdCBQb3N0Z3JlU1FMIGNvbXBhdGlibGUiOnRydWUsInRpbWUtc2VyaWVzIjp0cnVlfSwibWFjaGluZSI6eyIxNiB2Q1BVIDEyOEdCIjp0cnVlLCI4IHZDUFUgNjRHQiI6dHJ1ZSwic2VydmVybGVzcyI6dHJ1ZSwiMTZhY3UiOnRydWUsImM2YS40eGxhcmdlLCA1MDBnYiBncDIiOnRydWUsIkwiOnRydWUsIk0iOnRydWUsIlMiOnRydWUsIlhTIjp0cnVlLCJjNmEubWV0YWwsIDUwMGdiIGdwMiI6dHJ1ZSwiMTkyR0IiOnRydWUsIjI0R0IiOnRydWUsIjM2MEdCIjp0cnVlLCI0OEdCIjp0cnVlLCI3MjBHQiI6dHJ1ZSwiOTZHQiI6dHJ1ZSwiMTQzMEdCIjp0cnVlLCJkZXYiOnRydWUsIjcwOEdCIjp0cnVlLCJjNW4uNHhsYXJnZSwgNTAwZ2IgZ3AyIjp0cnVlLCJjNS40eGxhcmdlLCA1MDBnYiBncDIiOnRydWUsImM2YS40eGxhcmdlLCAxNTAwZ2IgZ3AyIjp0cnVlLCJjbG91ZCI6dHJ1ZSwiZGMyLjh4bGFyZ2UiOnRydWUsInJhMy4xNnhsYXJnZSI6dHJ1ZSwicmEzLjR4bGFyZ2UiOnRydWUsInJhMy54bHBsdXMiOnRydWUsIlMyIjp0cnVlLCJTMjQiOnRydWUsIjJYTCI6dHJ1ZSwiM1hMIjp0cnVlLCI0WEwiOnRydWUsIlhMIjp0cnVlLCJMMSAtIDE2Q1BVIDMyR0IiOnRydWV9LCJjbHVzdGVyX3NpemUiOnsiMSI6dHJ1ZSwiMiI6dHJ1ZSwiNCI6dHJ1ZSwiOCI6dHJ1ZSwiMTYiOnRydWUsIjMyIjp0cnVlLCI2NCI6dHJ1ZSwiMTI4Ijp0cnVlLCJzZXJ2ZXJsZXNzIjp0cnVlLCJkZWRpY2F0ZWQiOnRydWUsInVuZGVmaW5lZCI6dHJ1ZX0sIm1ldHJpYyI6ImhvdCIsInF1ZXJpZXMiOlt0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlXX0=).</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="1450" height="338" decoding="async" data-nimg="1" src="/images/comparisons/clickbench-es.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+## More Migration Stories
+
+- [Why Apache Doris is a Better Alternative to Elasticsearch for Real-Time Analytics](https://medium.com/@kxiao.tiger/apache-doris-vs-elasticsearch-6f7c8232e012)
+
+- [Creator of Talkie migrated from Loki and built a PB-scale logging system with Apache Doris](https://www.velodb.io/blog/883)
+
+- [How Tencent Music saved 80% in costs by migrating from Elasticsearch to Apache Doris](https://www.velodb.io/blog/1395)
+
+- [Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?](https://www.velodb.io/blog/437)

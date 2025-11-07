@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 提供多种方式从本地数据导入：
 
 - **Stream Load**
@@ -32,11 +13,11 @@ Stream Load 是通过 HTTP 协议将本地文件或数据流导入到 Doris 中�
 
 - **streamloader**
 
-Streamloader工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于Stream Load实现，可以提供多文件，多并发导入的功能，降低大数据量导入的耗时。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
+Streamloader 工具是一款用于将数据导入 Doris 数据库的专用客户端工具，底层基于 Stream Load 实现，可以提供多文件，多并发导入的功能，降低大数据量导入的耗时。更多文档参考[Streamloader](../../../ecosystem/doris-streamloader)。
 
 - **MySQL Load**
 
-Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。更多文档参考[mysql load](../import-way/mysql-load-manual.md)。
+Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 [LOAD DATA](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果，主要适用于导入客户端本地 CSV 文件。更多文档参考[MySQL Load](../import-way/mysql-load-manual.md)。
 
 ## 使用 Stream Load 导入
 
@@ -110,7 +91,7 @@ Stream Load 是一种同步导入方式，导入结果会直接返回给用户�
 ### 第 4 步：检查导入数据
 
 ```SQL
-mysql> select count(*) from testdb.test_streamload;
+select count(*) from testdb.test_streamload;
 +----------+
 | count(*) |
 +----------+
@@ -139,7 +120,7 @@ mysql> select count(*) from testdb.test_streamload;
 
 ### 第 2 步：在库中创建表
 
-在 Doris 中创建被导入的表，具体语法如下
+在 Doris 中创建被导入的表，具体语法如下：
 
 ```SQL
 CREATE TABLE testdb.test_streamloader(
@@ -151,7 +132,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### 第 3 步：使用 stream loader工具导入数据
+### 第 3 步：使用 stream loader 工具导入数据
 
 ```Bash
 doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamloader"
@@ -178,7 +159,7 @@ Load Result: {
 ### 第 4 步：检查导入数据
 
 ```SQL
-mysql> select count(*) from testdb.test_streamloader;
+select count(*) from testdb.test_streamloader;
 +----------+
 | count(*) |
 +----------+
@@ -186,7 +167,7 @@ mysql> select count(*) from testdb.test_streamloader;
 +----------+
 ```
 
-## 使用MySQL Load从本地数据导入
+## 使用 MySQL Load 从本地数据导入
 
 ### 第 1 步：准备数据
 
@@ -238,7 +219,7 @@ LINES TERMINATED BY '\n';
 
 ### 第 4 步：检查导入数据
 
-MySQL Load 是一种同步的导入方式，导入后结果会在命令行中返回给用户。如果导入执行失败, 会展示具体的报错信息。
+MySQL Load 是一种同步的导入方式，导入后结果会在命令行中返回给用户。如果导入执行失败，会展示具体的报错信息。
 
 如下是导入成功的结果显示，会返回导入的行数：
 

@@ -24,12 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help the developers and users without a Docker environment. The recommended LDB Toolchain version is 0.19(Robin), which includes clang-16 and gcc-11.
+This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help developers and users without a Docker environment.
+
+| Doris Version | Recommended LDB Toolchain Version | Included Compiler Version |
+| -- | -- | -- |
+| master | 0.25 | clang-20, gcc-15 |
+| 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
 :::tip
-LDB Toolchain is fully known as Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.
-
-Special thanks to [Amos Bird](https://github.com/amosbird) for the contribution.
+LDB Toolchain stands for Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.
 :::
 
 ## Prepare the compilation environment
@@ -38,7 +41,7 @@ This method applies to most Linux distributions (CentOS, Ubuntu, etc.).
 
 1. **Download** **`ldb_toolchain_gen.sh`**
 
-Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases). This script is used to generate ldb toolchain.
+Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases), For ARM architecture, you need to download the latest ldb_toolchain_gen.aarch64.sh. This script is used to generate ldb toolchain.
 
 :::tip
 For more information, please visit <https://github.com/amosbird/ldb_toolchain_gen>
@@ -63,11 +66,14 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 
 3. **Download and install other compilation components**
 
-- Download [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) and install it to /path/to/java.
+- Download [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) for Doris 2.1 and earlier versions and install it to /path/to/java.
 
     > For versions later than 3.0 (inclusive), or the master branch, please use [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz).
 
-- Download [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz) and install it to /path/to/maven.
+    > It is recommended to install Java 8 or Java 17 using the package management tools provided by your Linux distribution, such as yum(java-1.8.0/17-openjdk-devel) or apt(openjdk-8/17-jdk). and verify with java -version
+
+
+- Download [Apache Maven 3.9.9](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) and install it to /path/to/maven.
 - Download [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) and install it to /path/to/node.
 - Different Linux distributions may include different default components. Therefore, you may need to install some additional components. The following takes CentOS 6 as an example. Similar steps may apply to other distributions:
 
@@ -133,7 +139,7 @@ $ USE_AVX2=0 sh build.sh
 $ BUILD_TYPE=Debug sh build.sh
 ```
 
-This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../compute-storage-decoupled/compilation-and-deployment).
+This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../docs/compute-storage-decoupled/compilation-and-deployment.md).
 
 ## Pre-compile third-party libraries
 

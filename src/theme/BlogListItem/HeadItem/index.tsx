@@ -12,13 +12,15 @@ export default function HeadItem(props: any) {
         date,
         authorsExists,
         authors,
+        externalLink,
         size = 'small',
     } = props;
     if (size === 'small') {
         return (
             <li>
                 <Link
-                    to={permalink}
+                    target={externalLink ? '_blank' : '_self'}
+                    to={externalLink || permalink}
                     className="hover:no-underline hover:decoration-none transition-scale relative block rounded-lg border border-[#DFE5F0] px-6 py-5 hover:border-[#0065FD] "
                 >
                     <div className=" ">
@@ -52,7 +54,8 @@ export default function HeadItem(props: any) {
     }
     return (
         <Link
-            to={permalink}
+            target={externalLink ? '_blank' : '_self'}
+            to={externalLink || permalink}
             className={`hover:no-underline hover:decoration-none transition-scale group relative ${
                 large ? 'h-full' : 'h-auto'
             } flex flex-col  `}

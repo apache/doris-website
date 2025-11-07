@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## What is a Synchronous Materialized View
 
 A synchronous materialized view is a special type of table in Doris that stores pre-computed data sets based on defined SELECT statements. Doris automatically maintains the data in synchronous materialized views, ensuring that any new imports or deletions in the base table are reflected in the materialized view in real-time, maintaining data consistency without requiring any additional manual maintenance. When querying, Doris automatically selects the optimal materialized view and retrieves data directly from it.
@@ -50,7 +31,7 @@ A synchronous materialized view is a special type of table in Doris that stores 
 
 - If the condition column for a DELETE statement exists in the materialized view, the DELETE operation cannot proceed. If data deletion is necessary, the materialized view must be dropped first.
 
-- Excessive materialized views on a single table can impact import efficiency: When importing data, both the materialized views and the base table are updated synchronously. Excessive materialized views on a table can slow down imports, similar to importing data into multiple tables simultaneously.
+- Excessive materialized views on a single table can impact import efficiency. When importing data, both the materialized views and the base table are updated synchronously. Excessive materialized views on a table can slow down imports, similar to importing data into multiple tables simultaneously.
 
 - Materialized views on Unique Key data models can only reorder columns and do not support aggregation. Therefore, coarse-grained aggregation operations cannot be performed through materialized views on Unique Key models.
 
@@ -76,7 +57,7 @@ distributed by hash(record_id)
 properties("replication_num" = "1");  
   
 -- Insert data  
-insert into sales_records values(1,1,1,'2020-02-02',1);
+insert into sales_records values(1,1,1,"2020-02-02",1), (1,1,1,"2020-02-02",2);
 ```
 
 ### Creating a Materialized View
@@ -134,19 +115,112 @@ The creation statement for a materialized view can be viewed with the following 
 show create materialized view store_amt on sales_records;
 ```
 
-### Querying a Materialized View
+### Querying Materialized Views
 
-Once a materialized view is created, Doris automatically retrieves pre-aggregated data from the materialized view when querying by store ID, improving query efficiency. Users can still query the `sales_records` table, e.g.,:
-
-```sql
-select store_id, sum(sale_amt) from sales_records group by store_id;
-```
-
-This query will automatically match the `store_amt` materialized view. Users can verify this with the `explain` command:
+Once a materialized view is created, when users query sales volumes for different stores, Doris will directly read the aggregated data from the newly created materialized view `store_amt`, thereby enhancing query efficiency. Users still specify the `sales_records` table in their queries, for example:
 
 ```sql
-explain select store_id, sum(sale_amt) from sales_records group by store_id;
+SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 ```
+
+The above query will automatically match the `store_amt` materialized view. Users can use the following command to verify whether the current query has matched an appropriate materialized view.
+
+```sql
+EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
+```
+
+The result is as follows:
+
+```sql
++------------------------------------------------------------------------+  
+| Explain String (Nereids Planner)                                       |  
++------------------------------------------------------------------------+  
+| PLAN FRAGMENT 0                                                        |  
+|   OUTPUT EXPRS:                                                        |  
+|     store_id[#11]                                                      |  
+|     sum(sale_amt)[#12]                                                 |  
+|   PARTITION: HASH_PARTITIONED: mv_store_id[#7]                         |  
+|                                                                        |  
+|   HAS_COLO_PLAN_NODE: true                                             |  
+|                                                                        |  
+|   VRESULT SINK                                                         |  
+|      MYSQL_PROTOCAL                                                    |  
+|                                                                        |  
+|   3:VAGGREGATE (merge finalize)(384)                                   |  
+|   |  output: sum(partial_sum(mva_SUM__`sale_amt`)[#8])[#10]            |  
+|   |  group by: mv_store_id[#7]                                         |  
+|   |  sortByGroupKey: false                                             |  
+|   |  cardinality = 1                                                   |  
+|   |  final projections: mv_store_id[#9], sum(mva_SUM__`sale_amt`)[#10] |  
+|   |  final project output tuple id: 4                                  |  
+|   |  distribute expr lists: mv_store_id[#7]                            |  
+|   |                                                                    |  
+|   2:VEXCHANGE                                                          |  
+|      offset: 0                                                         |  
+|      distribute expr lists:                                            |  
+|                                                                        |  
+| PLAN FRAGMENT 1                                                        |  
+|                                                                        |  
+|   PARTITION: HASH_PARTITIONED: record_id[#2]                           |  
+|                                                                        |  
+|   HAS_COLO_PLAN_NODE: false                                            |  
+|                                                                        |  
+|   STREAM DATA SINK                                                     |  
+|     EXCHANGE ID: 02                                                    |  
+|     HASH_PARTITIONED: mv_store_id[#7]                                  |  
+|                                                                        |  
+|   1:VAGGREGATE (update serialize)(374)                                 |  
+|   |  STREAMING                                                         |  
+|   |  output: partial_sum(mva_SUM__`sale_amt`[#1])[#8]                  |  
+|   |  group by: mv_store_id[#0]                                         |  
+|   |  sortByGroupKey: false                                             |  
+|   |  cardinality = 1                                                   |  
+|   |  distribute expr lists:                                            |  
+|   |                                                                    |  
+|   0:VOlapScanNode(369)                                                 |  
+|      TABLE: test_db.sales_records(store_amt), PREAGGREGATION: ON       |  
+|      partitions = 1/1 (sales_records)                                  |  
+|      tablets = 10/10, tabletList = 266568, 266570, 266572 ...          |  
+|      cardinality = 1, avgRowSize = 1805.0, numNodes = 1                |  
+|      pushAggOp = NONE                                                  |  
+|                                                                        |  
+|                                                                        |  
+| ========== MATERIALIZATIONS ==========                                 |  
+|                                                                        |  
+| MaterializedView                                                       |  
+| MaterializedViewRewriteSuccessAndChose:                                |  
+|   internal.test_db.sales_records.store_amt chose,                      |  
+|                                                                        |  
+| MaterializedViewRewriteSuccessButNotChose:                             |  
+|   not chose: none,                                                     |  
+|                                                                        |  
+| MaterializedViewRewriteFail:                                           |  
+|                                                                        |  
+|                                                                        |  
+| ========== STATISTICS ==========                                       |  
+| planned with unknown column statistics                                 |  
++------------------------------------------------------------------------+
+```
+
+`MaterializedViewRewriteSuccessAndChose` displays the materialized view that was successfully matched, as shown in the following example:
+
+```sql
++------------------------------------------------------------------------+  
+| MaterializedViewRewriteSuccessAndChose:                                |  
+|   internal.test_db.sales_records.store_amt chose,                      |  
++------------------------------------------------------------------------+
+```
+
+The above content indicates that the query successfully matched the materialized view named `store_amt`. It's worth noting that if there is no data in the target table, the materialized view may not be hit.
+
+Detailed explanations on MATERIALIZATIONS:
+
+- **MaterializedViewRewriteSuccessAndChose**: Displays the materialized view that was successfully selected and used for query optimization.
+
+- **MaterializedViewRewriteSuccessButNotChose**: Displays materialized views that matched the query but were not selected (the optimizer chooses the optimal materialized view based on its cost, and these matched but unselected views indicate they were not the optimal choice).
+
+- **MaterializedViewRewriteFail**: Displays materialized views that failed to match the query, meaning the original SQL query could not match any existing materialized views and therefore could not be optimized using them.
+
 
 ### Dropping a Materialized View
 
@@ -162,325 +236,340 @@ Below are additional examples demonstrating the use of materialized views.
 
 Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
 
-Assuming the raw ad click data is stored in Doris, creating a materialized view with `bitmap_union` can speed up queries for ad PV and UV. First, create a table to store ad click details:
+1. Assuming the raw ad click data is stored in Doris, creating a materialized view with `bitmap_union` can speed up queries for ad PV and UV. First, create a table to store ad click details:
 
-```sql
-create table advertiser_view_record  
-(  
-    click_time datetime,   
-    advertiser varchar(10),   
-    channel varchar(10),   
-    user_id int  
-) distributed by hash(user_id) properties("replication_num" = "1");  
-insert into advertiser_view_record values("2020-02-02 02:02:02",'a','a',1);
-```
+    ```sql
+    create table advertiser_view_record  
+    (  
+        click_time datetime,   
+        advertiser varchar(10),   
+        channel varchar(10),   
+        user_id int  
+    ) distributed by hash(user_id) properties("replication_num" = "1");  
+    insert into advertiser_view_record values("2020-02-02 02:02:02",'a','a',1), ("2020-02-02 02:02:02",'a','a',2);
+    ```
 
-Since users want to query the UV value of advertisements, which requires an exact deduplication of users for the same advertisement, the typical query would be:
+2. Since users want to query the UV value of advertisements, which requires an exact deduplication of users for the same advertisement, the typical query would be:
 
-```sql
-create materialized view advertiser_uv as   
-select   
-    advertiser,   
-    channel,   
-    bitmap_union(to_bitmap(user_id))   
-from   
-    advertiser_view_record   
-group by   
-    advertiser, channel;
-```
+    ```sql
+    select 
+        advertiser, 
+        channel, 
+        count(distinct user_id) 
+    from 
+        advertiser_view_record 
+    group by 
+        advertiser, channel;
+    ```
 
-For this UV calculation scenario, we can create a materialized view with `bitmap_union` to achieve pre-exact deduplication. In Doris, the result of the `count(distinct)` aggregation is identical to the result of the `bitmap_union_count` aggregation. And `bitmap_union_count` is equivalent to counting the results of `bitmap_union`. Therefore, if the query involves `count(distinct)`, creating a materialized view with `bitmap_union` aggregation can speed up the query. Based on current usage scenarios, a materialized view can be created to group by advertisement and channel, with exact deduplication for `user_id`.
+3. For this UV calculation scenario, we can create a materialized view with `bitmap_union` to achieve pre-exact deduplication. In Doris, the result of the `count(distinct)` aggregation is identical to the result of the `bitmap_union_count` aggregation. And `bitmap_union_count` is equivalent to counting the results of `bitmap_union`. Therefore, if the query involves `count(distinct)`, creating a materialized view with `bitmap_union` aggregation can speed up the query. Based on current usage scenarios, a materialized view can be created to group by advertisement and channel, with exact deduplication for `user_id`.
 
-```sql
-create materialized view advertiser_uv as 
-select 
-    advertiser, 
-    channel, 
-    bitmap_union(to_bitmap(user_id)) 
-from 
-    advertiser_view_record 
-group by 
-    advertiser, channel;
-```
+    ```sql
+    create materialized view advertiser_uv as 
+    select 
+        advertiser, 
+        channel, 
+        bitmap_union(to_bitmap(user_id)) 
+    from 
+        advertiser_view_record 
+    group by 
+        advertiser, channel;
+    ```
 
-Once the materialized view table is created, when querying the UV for advertisements, Doris will automatically retrieve data from the newly created materialized view `advertiser_uv`. If the previous SQL is executed:
+4. Once the materialized view table is created, when querying the UV for advertisements, Doris will automatically retrieve data from the newly created materialized view `advertiser_uv`. If the previous SQL is executed:
 
-```sql
-select 
-    advertiser, 
-    channel, 
-    count(distinct user_id) 
-from 
-    advertiser_view_record 
-group by 
-    advertiser, channel;
-```
+    ```sql
+    select 
+        advertiser, 
+        channel, 
+        count(distinct user_id) 
+    from 
+        advertiser_view_record 
+    group by 
+        advertiser, channel;
+    ```
 
+5. After selecting the materialized view, the actual query will be transformed into:
 
-After selecting the materialized view, the actual query will be transformed into:
+    ```sql
+    select 
+        advertiser, 
+        channel, 
+        bitmap_union_count(to_bitmap(user_id)) 
+    from 
+        advertiser_uv 
+    group by 
+        advertiser, channel;
+    ```
 
-```sql
-select 
-    advertiser, 
-    channel, 
-    bitmap_union_count(to_bitmap(user_id)) 
-from 
-    advertiser_uv 
-group by 
-    advertiser, channel;
-```
+6. Use the `explain` command to check if the query matches the materialized view:
 
-Use the `explain` command to check if the query matches the materialized view:
+    ```sql
+    explain select 
+        advertiser, 
+        channel, 
+        count(distinct user_id) 
+    from 
+        advertiser_view_record 
+    group by 
+        advertiser, channel;
+    ```
 
-```sql
-explain select 
-    advertiser, 
-    channel, 
-    count(distinct user_id) 
-from 
-    advertiser_view_record 
-group by 
-    advertiser, channel;
-```
+7. The output will be:
 
-The output will be:
+    ```sql
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                                                                                         |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | PLAN FRAGMENT 0                                                                                                                                         |
+    |   OUTPUT EXPRS:                                                                                                                                         |
+    |     advertiser[#13]                                                                                                                                     |
+    |     channel[#14]                                                                                                                                        |
+    |     count(DISTINCT user_id)[#15]                                                                                                                        |
+    |   PARTITION: HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                        |
+    |                                                                                                                                                         |
+    |   HAS_COLO_PLAN_NODE: true                                                                                                                              |
+    |                                                                                                                                                         |
+    |   VRESULT SINK                                                                                                                                          |
+    |      MYSQL_PROTOCAL                                                                                                                                     |
+    |                                                                                                                                                         |
+    |   3:VAGGREGATE (merge finalize)(440)                                                                                                                    |
+    |   |  output: bitmap_union_count(partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#9])[#12]                 |
+    |   |  group by: mv_advertiser[#7], mv_channel[#8]                                                                                                        |
+    |   |  sortByGroupKey:false                                                                                                                               |
+    |   |  cardinality=1                                                                                                                                      |
+    |   |  final projections: mv_advertiser[#10], mv_channel[#11], bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#12] |
+    |   |  final project output tuple id: 4                                                                                                                   |
+    |   |  distribute expr lists: mv_advertiser[#7], mv_channel[#8]                                                                                           |
+    |   |                                                                                                                                                     |
+    |   2:VEXCHANGE                                                                                                                                           |
+    |      offset: 0                                                                                                                                          |
+    |      distribute expr lists:                                                                                                                             |
+    |                                                                                                                                                         |
+    | PLAN FRAGMENT 1                                                                                                                                         |
+    |                                                                                                                                                         |
+    |   PARTITION: HASH_PARTITIONED: user_id[#6]                                                                                                              |
+    |                                                                                                                                                         |
+    |   HAS_COLO_PLAN_NODE: false                                                                                                                             |
+    |                                                                                                                                                         |
+    |   STREAM DATA SINK                                                                                                                                      |
+    |     EXCHANGE ID: 02                                                                                                                                     |
+    |     HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                                 |
+    |                                                                                                                                                         |
+    |   1:VAGGREGATE (update serialize)(430)                                                                                                                  |
+    |   |  STREAMING                                                                                                                                          |
+    |   |  output: partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint))[#2])[#9]                                      |
+    |   |  group by: mv_advertiser[#0], mv_channel[#1]                                                                                                        |
+    |   |  sortByGroupKey:false                                                                                                                               |
+    |   |  cardinality=1                                                                                                                                      |
+    |   |  distribute expr lists:                                                                                                                             |
+    |   |                                                                                                                                                     |
+    |   0:VOlapScanNode(425)                                                                                                                                  |
+    |      TABLE: test_db.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                                                           |
+    |      partitions=1/1 (advertiser_view_record)                                                                                                            |
+    |      tablets=10/10, tabletList=266637,266639,266641 ...                                                                                                 |
+    |      cardinality=1, avgRowSize=0.0, numNodes=1                                                                                                          |
+    |      pushAggOp=NONE                                                                                                                                     |
+    |                                                                                                                                                         |
+    |                                                                                                                                                         |
+    | ========== MATERIALIZATIONS ==========                                                                                                                  |
+    |                                                                                                                                                         |
+    | MaterializedView                                                                                                                                        |
+    | MaterializedViewRewriteSuccessAndChose:                                                                                                                 |
+    |   internal.test_db.advertiser_view_record.advertiser_uv chose,                                                                                          |
+    |                                                                                                                                                         |
+    | MaterializedViewRewriteSuccessButNotChose:                                                                                                              |
+    |   not chose: none,                                                                                                                                      |
+    |                                                                                                                                                         |
+    | MaterializedViewRewriteFail:                                                                                                                            |
+    |                                                                                                                                                         |
+    |                                                                                                                                                         |
+    | ========== STATISTICS ==========                                                                                                                        |
+    | planed with unknown column statistics                                                                                                                   |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
+    ```
 
-```sql
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                                                                                       |
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                                                                                                       |
-|   OUTPUT EXPRS:                                                                                                                                       |
-|     advertiser[#13]                                                                                                                                   |
-|     channel[#14]                                                                                                                                      |
-|     count(DISTINCT user_id)[#15]                                                                                                                      |
-|   PARTITION: HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                      |
-|                                                                                                                                                       |
-|   HAS_COLO_PLAN_NODE: false                                                                                                                           |
-|                                                                                                                                                       |
-|   VRESULT SINK                                                                                                                                        |
-|      MYSQL_PROTOCAL                                                                                                                                   |
-|                                                                                                                                                       |
-|   3:VAGGREGATE (merge finalize)(145)                                                                                                                  |
-|   |  output: bitmap_union_count(partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(cast(user_id as BIGINT)))[#9])[#12]                 |
-|   |  group by: mv_advertiser[#7], mv_channel[#8]                                                                                                      |
-|   |  sortByGroupKey:false                                                                                                                             |
-|   |  cardinality=1                                                                                                                                    |
-|   |  final projections: mv_advertiser[#10], mv_channel[#11], bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(cast(user_id as BIGINT)))[#12] |
-|   |  final project output tuple id: 4                                                                                                                 |
-|   |  distribute expr lists: mv_advertiser[#7], mv_channel[#8]                                                                                         |
-|   |                                                                                                                                                   |
-|   2:VEXCHANGE                                                                                                                                         |
-|      offset: 0                                                                                                                                        |
-|      distribute expr lists:                                                                                                                           |
-|                                                                                                                                                       |
-| PLAN FRAGMENT 1                                                                                                                                       |
-|                                                                                                                                                       |
-|   PARTITION: HASH_PARTITIONED: user_id[#6]                                                                                                            |
-|                                                                                                                                                       |
-|   HAS_COLO_PLAN_NODE: false                                                                                                                           |
-|                                                                                                                                                       |
-|   STREAM DATA SINK                                                                                                                                    |
-|     EXCHANGE ID: 02                                                                                                                                   |
-|     HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                               |
-|                                                                                                                                                       |
-|   1:VAGGREGATE (update serialize)(139)                                                                                                                |
-|   |  STREAMING                                                                                                                                        |
-|   |  output: partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(cast(user_id as BIGINT))[#2])[#9]                                      |
-|   |  group by: mv_advertiser[#0], mv_channel[#1]                                                                                                      |
-|   |  sortByGroupKey:false                                                                                                                             |
-|   |  cardinality=1                                                                                                                                    |
-|   |  distribute expr lists:                                                                                                                           |
-|   |                                                                                                                                                   |
-|   0:VOlapScanNode(136)                                                                                                                                |
-|      TABLE: test_db.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                            |
-|      partitions=1/1 (advertiser_view_record)                                                                                                          |
-|      tablets=10/10, tabletList=494552,494554,494556 ...                                                                                               |
-|      cardinality=1, avgRowSize=0.0, numNodes=1                                                                                                        |
-|      pushAggOp=NONE                                                                                                                                   |
-|                                                                                                                                                       |
-|                                                                                                                                                       |
-| Statistics                                                                                                                                            |
-|  planed with unknown column statistics                                                                                                                |
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-```
-
-In the result of the explain command, you can see `advertiser_view_record(advertiser_uv)` under the `VOlapScanNode`. This indicates that the query will directly scan the data from the materialized view, confirming a successful match. Additionally, the `count(distinct)` operation on the `user_id` field has been rewritten as `bitmap_union_count(to_bitmap)`, which achieves precise deduplication through the use of Bitmap.
+8. In the result of the explain command, you can see that `internal.test_db.advertiser_view_record.advertiser_uv` was chosen. This indicates that the query will directly scan the data from the materialized view. This confirms that the match was successful. Secondly, the count(distinct) operation on the `user_id` field is rewritten as `bitmap_union_count(to_bitmap)`. This means that the exact deduplication effect is achieved through the use of Bitmap.
 
 ### Example 2: Matching Different Prefix Indexes
 
 Business Scenario: Matching prefix indexes.
 
-If a table has prefix indexes on k1 and k2, but queries sometimes involve k3, a materialized view can be created with k3 as the first column to leverage indexing:
+1. If a table has prefix indexes on k1 and k2, but queries sometimes involve k3, a materialized view can be created with k3 as the first column to leverage indexing:
 
-```sql
-create table test_table  
-(  
-    k1 int,   
-    k2 int,   
-    k3 int,   
-    kx date  
-)   
-distributed by hash(k1)   
-properties("replication_num" = "1");  
-  
-insert into test_table values(1,1,1,1);  
-```
+   ```sql
+   create table test_table  
+   (  
+       k1 int,   
+       k2 int,   
+       k3 int,   
+       kx date  
+   )   
+   distributed by hash(k1)   
+   properties("replication_num" = "1");  
+     
+   insert into test_table values(1,1,1,1),(3,3,3,3);
+   ```
 
+2. Create a materialized view with k3 as the prefix index:
 
-Create a materialized view with k3 as the prefix index:
+   ```sql
+   create materialized view mv_1 as SELECT k3, k2, k1 FROM test_table;
+   ```
 
-```sql
-create materialized view mv_1 as SELECT k3, k2, k1 FROM test_table;
-```
+3. Queries with `WHERE k3 = 3` will match the materialized view, as verified by `explain`.
 
-Queries with `WHERE k3 = 3` will match the materialized view, as verified by `explain`.
+   ```sql
+   explain select k1, k2, k3 from test_table where k3=3;
+   ```
 
-```sql
-explain select k1, k2, k3 from test_table where k3=3;
-```
+4. The output will be:
 
-The output will be:
-
-```sql
-+----------------------------------------------------------+
-| Explain String(Nereids Planner)                          |
-+----------------------------------------------------------+
-| PLAN FRAGMENT 0                                          |
-|   OUTPUT EXPRS:                                          |
-|     k1[#7]                                               |
-|     k2[#8]                                               |
-|     k3[#9]                                               |
-|   PARTITION: HASH_PARTITIONED: mv_k1[#2]                 |
-|                                                          |
-|   HAS_COLO_PLAN_NODE: false                              |
-|                                                          |
-|   VRESULT SINK                                           |
-|      MYSQL_PROTOCAL                                      |
-|                                                          |
-|   0:VOlapScanNode(256)                                   |
-|      TABLE: test_db.test_table(mv_1), PREAGGREGATION: ON |
-|      PREDICATES: (mv_k3[#0] = 3)                         |
-|      partitions=1/1 (test_table)                         |
-|      tablets=10/10, tabletList=271177,271179,271181 ...  |
-|      cardinality=1, avgRowSize=0.0, numNodes=1           |
-|      pushAggOp=NONE                                      |
-|      final projections: mv_k1[#2], mv_k2[#1], mv_k3[#0]  |
-|      final project output tuple id: 2                    |
-|                                                          |
-|                                                          |
-| ========== MATERIALIZATIONS ==========                   |
-|                                                          |
-| MaterializedView                                         |
-| MaterializedViewRewriteSuccessAndChose:                  |
-|   internal.test_db.test_table.mv_1 chose,                |
-|                                                          |
-| MaterializedViewRewriteSuccessButNotChose:               |
-|   not chose: none,                                       |
-|                                                          |
-| MaterializedViewRewriteFail:                             |
-|                                                          |
-|                                                          |
-| ========== STATISTICS ==========                         |
-| planed with unknown column statistics                    |
-+----------------------------------------------------------+
-```
-In the result of the explain command, you can see that `VOlapScanNode的test_table(mv_1)`, indicating that the query hit the materialized view.
+   ```sql
+   +----------------------------------------------------------+
+   | Explain String(Nereids Planner)                          |
+   +----------------------------------------------------------+
+   | PLAN FRAGMENT 0                                          |
+   |   OUTPUT EXPRS:                                          |
+   |     k1[#7]                                               |
+   |     k2[#8]                                               |
+   |     k3[#9]                                               |
+   |   PARTITION: HASH_PARTITIONED: mv_k1[#2]                 |
+   |                                                          |
+   |   HAS_COLO_PLAN_NODE: false                              |
+   |                                                          |
+   |   VRESULT SINK                                           |
+   |      MYSQL_PROTOCAL                                      |
+   |                                                          |
+   |   0:VOlapScanNode(256)                                   |
+   |      TABLE: test_db.test_table(mv_1), PREAGGREGATION: ON |
+   |      PREDICATES: (mv_k3[#0] = 3)                         |
+   |      partitions=1/1 (test_table)                         |
+   |      tablets=10/10, tabletList=271177,271179,271181 ...  |
+   |      cardinality=1, avgRowSize=0.0, numNodes=1           |
+   |      pushAggOp=NONE                                      |
+   |      final projections: mv_k1[#2], mv_k2[#1], mv_k3[#0]  |
+   |      final project output tuple id: 2                    |
+   |                                                          |
+   |                                                          |
+   | ========== MATERIALIZATIONS ==========                   |
+   |                                                          |
+   | MaterializedView                                         |
+   | MaterializedViewRewriteSuccessAndChose:                  |
+   |   internal.test_db.test_table.mv_1 chose,                |
+   |                                                          |
+   | MaterializedViewRewriteSuccessButNotChose:               |
+   |   not chose: none,                                       |
+   |                                                          |
+   | MaterializedViewRewriteFail:                             |
+   |                                                          |
+   |                                                          |
+   | ========== STATISTICS ==========                         |
+   | planed with unknown column statistics                    |
+   +----------------------------------------------------------+
+   ```
+5. In the result of the explain command, you can see that `internal.test_db.test_table.mv_1` was chosen, indicating that the query hit the materialized view.
 
 
 ### Example 3: Pre-filtering and Expression Computation to Accelerate Queries
 
 Business Scenario: Pre-filtering data or accelerating expression computation.
 
-Create a table and materialized views for pre-filtering and expression computation:
+1. Create a table and materialized views for pre-filtering and expression computation:
 
-```sql
-create table d_table (
-   k1 int null,
-   k2 int not null,
-   k3 bigint null,
-   k4 date null
-)
-duplicate key (k1,k2,k3)
-distributed BY hash(k1) buckets 3
-properties("replication_num" = "1");
+   ```sql
+   create table d_table (
+      k1 int null,
+      k2 int not null,
+      k3 bigint null,
+      k4 date null
+   )
+   duplicate key (k1,k2,k3)
+   distributed BY hash(k1) buckets 3
+   properties("replication_num" = "1");
+   
+   insert into d_table select 1,1,1,'2020-02-20';
+   insert into d_table select 2,2,2,'2021-02-20';
+   insert into d_table select 3,-3,null,'2022-02-20';
+   ```
 
-insert into d_table select 1,1,1,'2020-02-20';
-insert into d_table select 2,2,2,'2021-02-20';
-insert into d_table select 3,-3,null,'2022-02-20';
-```
+2. Creating Some Materialized Views:
 
-Create some materialized views:
+   ```sql
+   -- mv1 Perform expression calculations ahead of time
+   create materialized view mv1 as 
+   select 
+       abs(k1)+k2+1,        
+       sum(abs(k2+2)+k3+3) 
+   from 
+       d_table 
+   group by 
+       abs(k1)+k2+1;
+   
+   -- mv2 Use where expressions to filter in advance to reduce the amount of data in materialized views
+   create materialized view mv2 as 
+   select 
+       year(k4),
+       month(k4) 
+   from 
+       d_table 
+   where 
+       year(k4) = 2020;
+   ```
 
-```sql
--- mv1 Perform expression calculations ahead of time
-create materialized view mv1 as 
-select 
-    abs(k1)+k2+1,        
-    sum(abs(k2+2)+k3+3) 
-from 
-    d_table 
-group by 
-    abs(k1)+k2+1;
+3. Testing Whether the Materialized Views Are Successfully Hit with Some Queries:
 
--- mv2 Use where expressions to filter in advance to reduce the amount of data in materialized views
-create materialized view mv2 as 
-select 
-    year(k4),
-    month(k4) 
-from 
-    d_table 
-where 
-    year(k4) = 2020;
-```
-
-Testing Whether the Materialized Views Are Successfully Hit with Some Queries:
-
-
-```sql
--- Hit mv1
-select 
-    abs(k1)+k2+1,
-    sum(abs(k2+2)+k3+3) 
-from 
-    d_table 
-group by 
-    abs(k1)+k2+1;
-    
--- Hit mv1
-select 
-    bin(abs(k1)+k2+1),
-    sum(abs(k2+2)+k3+3) 
-from 
-    d_table 
-group by 
-    bin(abs(k1)+k2+1);
-
--- Hit mv2
-select 
-    year(k4) + month(k4) 
-from 
-    d_table 
-where 
-    year(k4) = 2020;
-
--- Hit table d_table but not hit mv2，because where condition does match
-select 
-    year(k4),
-    month(k4) 
-from 
-    d_table;
-
-```
+   ```sql
+   -- Hit mv1
+   select 
+       abs(k1)+k2+1,
+       sum(abs(k2+2)+k3+3) 
+   from 
+       d_table 
+   group by 
+       abs(k1)+k2+1;
+       
+   -- Hit mv1
+   select 
+       bin(abs(k1)+k2+1),
+       sum(abs(k2+2)+k3+3) 
+   from 
+       d_table 
+   group by 
+       bin(abs(k1)+k2+1);
+   
+   -- Hit mv2
+   select 
+       year(k4) + month(k4) 
+   from 
+       d_table 
+   where 
+       year(k4) = 2020;
+   
+   -- Hit table d_table but not hit mv2, because where condition does not match
+   select 
+       year(k4),
+       month(k4) 
+   from 
+       d_table;
+   
+   ```
 
 ## FAQ
 
 
 1. Why isn't the rewrite successful after creating a materialized view?
 
-If no matching data is found, it might be because the materialized view is still in the building process. In this case, you can use the following command to check the build status of the materialized view:
-```sql
-show alter table materialized view from test_db;
-```
+   If no matching data is found, it might be because the materialized view is still in the building process. In this case, you can use the following command to check the build status of the materialized view:
+   ```sql
+   show alter table materialized view from test_db;
+   ```
 
-If the query result shows that the `status` field is not `FINISHED`, you need to wait until the status becomes `FINISHED` before the materialized view becomes available.
+   If the query result shows that the `status` field is not `FINISHED`, you need to wait until the status becomes `FINISHED` before the materialized view becomes available.
+
+2. When upgrading from 2.x to 3.0.0, why aren't the previous synchronous materialized views being hit?
+
+   Starting from version 3.0.0, transparent rewriting of synchronous materialized views uses plan structure information by default. If you find that materialized views that previously worked in 2.x are not being hit in 3.0.0, you can disable the following switch (which is enabled by default):
+
+   ```sql
+   `SET enable_sync_mv_cost_based_rewrite = true;`

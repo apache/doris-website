@@ -5,30 +5,11 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # RuntimeFilter 的等待时间调整
 
 ## 概述
 
-实际生产场景会遇到因为 RuntimeFilter 等待时间不合理，引起的性能问题的情况。RuntimeFilter 是一种查询优化技术，它通过运行时生成过滤条件，从而避免了对无关数据的扫描。这种优化方式能够大幅减少 I/O 操作和计算量，进而加速查询执行。下节介绍几种常见的案例帮助数据倾斜场景下的调优。
+实际生产场景会遇到因为 RuntimeFilter 等待时间不合理，引起的性能问题的情况。RuntimeFilter 是一种查询优化技术，它通过运行时生成过滤条件，从而避免了对无关数据的扫描。这种优化方式能够大幅减少 I/O 操作和计算量，进而加速查询执行。下面介绍几种常见的案例，帮助在数据倾斜场景下进行调优。。
 
 ## 案例：RuntimeFilter 等待时间过短
 
@@ -68,7 +49,7 @@ OLAP_SCAN_OPERATOR (id=22. nereids_id=1764. table name = test_doris(test_doris))
                  - Info: [IsPushDown = false, RuntimeFilterState = NOT_READY, HasRemoteTarget = true, HasLocalTarget = false, Ignored = false]
 ```
 
-从 Profile 中可以看到：`WaitForRuntimeFilter: 1000ms`。这里RuntimeFilter 等待了 1000ms，但是这个 ScanOperator 并没有等到对应的 RuntimeFilter，`RuntimeFilterState = NOT_READY`。
+从 Profile 中可以看到：`WaitForRuntimeFilter: 1000ms`。这里 RuntimeFilter 等待了 1000ms，但是这个 ScanOperator 并没有等到对应的 RuntimeFilter，`RuntimeFilterState = NOT_READY`。
 
 ```SQL
  RuntimeFilter: (id = 6, type = minmax):
@@ -116,4 +97,4 @@ set runtime_filter_wait_time_ms = 3000;
 
 ## 总结
 
-RuntimeFilter 的等待时间需要根据场景定义，Doris 在进行一些自适应的优化改造。通过 EXPLAIN 和 PROFILE 工具观察执行瓶颈，定位对应问题，通过 SQL 的 HINT 修改 RuntimeFilter 等待时间，规避对应问题对性能的影响。
+RuntimeFilter 的等待时间需要根据场景定义，Doris 正在进行一些自适应的优化改造。通过 EXPLAIN 和 PROFILE 工具观察查询执行瓶颈，定位对应问题，通过 SQL HINT 修改 RuntimeFilter 等待时间，规避对应问题对性能的影响。

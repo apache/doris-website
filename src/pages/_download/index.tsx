@@ -22,7 +22,7 @@ import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
     { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
@@ -96,8 +96,8 @@ export default function Download(): JSX.Element {
     const downloadDocument = () => {
         const url =
             currentLocale === 'en'
-                ? 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
-                : 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
+                ? 'https://doris.apache.org/assets/files/Apache Doris Docs (English).pdf'
+                : 'https://doris.apache.org/assets/files/Apache Doris Docs (中文).pdf';
         downloadFile(url);
     };
 

@@ -1,30 +1,11 @@
 ---
 {
-    "title": "概述",
+    "title": "认证与鉴权概述",
     "language": "zh-CN"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris 的权限管理系统参照了 Mysql 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
+Doris 的权限管理系统参照了 MySQL 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
 
 ## 名词解释
 
@@ -105,7 +86,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
     - `SET validate_password_policy=STRONG`
 
-更多帮助，请参阅[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)。
+更多帮助，请参阅[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER)。
 
 ### 基于 LDAP 的认证方案
 
@@ -115,20 +96,20 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 ### 权限操作
 
-- 创建用户：[CREATE USER](../../../version-3.0/sql-manual/sql-statements/account-management/CREATE-USER.md)
-- 修改用户：[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md)
-- 删除用户：[DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER.md)
+- 创建用户：[CREATE USER](../../sql-manual/sql-statements/account-management/CREATE-USER)
+- 修改用户：[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER)
+- 删除用户：[DROP USER](../../sql-manual/sql-statements/account-management/DROP-USER)
 - 授权/分配角色：[GRANT](../../sql-manual/sql-statements/account-management/GRANT-TO)
-- 撤权/撤销角色：[REVOKE](../../sql-manual/sql-statements/account-management/REVOKE-FROM.md)
-- 创建角色：[CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE.md)
-- 删除角色：[DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE.md)
-- 修改角色：[ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE.md)
-- 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
-- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS.md)
-- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES.md)
-- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY.md)
-- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY.md)
-- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD.md)
+- 撤权/撤销角色：[REVOKE](../../sql-manual/sql-statements/account-management/REVOKE-FROM)
+- 创建角色：[CREATE ROLE](../../sql-manual/sql-statements/account-management/CREATE-ROLE)
+- 删除角色：[DROP ROLE](../../sql-manual/sql-statements/account-management/DROP-ROLE)
+- 修改角色：[ALTER ROLE](../../sql-manual/sql-statements/account-management/ALTER-ROLE)
+- 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-statements/account-management/SHOW-GRANTS)
+- 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-statements/account-management/SHOW-ROLES)
+- 设置用户属性：[SET PROPERTY](../../sql-manual/sql-statements/account-management/SET-PROPERTY)
+- 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-statements/account-management/SHOW-PROPERTY)
+- 修改密码：[SET PASSWORD](../../sql-manual/sql-statements/account-management/SET-PASSWORD)
 - 查看支持的所有权限项：[SHOW PRIVILEGES]
 - 查看行权限策略 [SHOW ROW POLICY]
 - 创建行权限策略 [CREATE ROW POLICY]
@@ -321,7 +302,11 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
     - root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
     - admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
 
-2. 不支持删除或更改默认创建的角色或用户的权限。
+2. 不支持删除或更改默认创建的用户，角色或用户的权限。
+    - 不支持删除 root@'%' 和 admin@'%' 用户，但是允许创建和删除 root@'xxx' 和 admin@'xxx' 用户（xxx 指的是除了 % 之外的 host）（Doris 会把这些用户视为普通用户）
+    - 不支持撤销 root@'%' 和 admin@'%' 的默认角色
+    - 不支持删除角色 operator 和 admin
+    - 不支持操作角色 operator 和 admin 的权限
 
 3. operator 角色的用户有且只有一个，即 Root。admin 角色的用户可以创建多个。
 

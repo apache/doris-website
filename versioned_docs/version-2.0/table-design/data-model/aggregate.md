@@ -1,205 +1,185 @@
 ---
 {
-    "title": "Aggregate Key Model",
+    "title": "Aggregate Model",
     "language": "en"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+Doris's **Aggregate Key Model** is designed to efficiently handle aggregation operations in large-scale data queries. By performing pre-aggregation on the data, it reduces redundancy in computations and improves query performance. The model stores only aggregated data, omitting raw data, which saves storage space and enhances query performance.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+## Use Cases
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+* **Summarizing Detailed Data**: The Aggregate Key Model is used in scenarios like e-commerce platforms evaluating monthly sales, financial risk control calculating customer transaction totals, or advertising campaigns analyzing total ad clicks, for multidimensional summarization of detailed data.
 
-The aggregate data model, also known as the Aggregate model, aggregates data based on key columns. The Doris storage layer retains the aggregated data, which helps reduce storage space and improve query performance. This model is typically used in scenarios where summarization or aggregation of information (such as totals or averages) is required.
+* **No Need to Query Raw Detailed Data**: For use cases such as dashboard reports or user transaction behavior analysis, where the raw data is stored in a data lake and does not need to be retained in the database, only the aggregated data is stored.
 
-The following example illustrates what the aggregate model is and how to use it correctly.
-### Importing Data Aggregation
+## Principle
 
-Assume that the business has the following data table schema:
+Each data import creates a version in the Aggregate Key Model, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
 
-| ColumnName      | Type         | AggregationType | Comment                     |
-| --------------- | ------------ | --------------- | --------------------------- |
-| userid          | LARGEINT     |                 | user id                     |
-| date            | DATE         |                 | date of data filling        |
-| City            | VARCHAR (20) |                 | User City                   |
-| age             | SMALLINT     |                 | User age                    |
-| sex             | TINYINT      |                 | User gender                 |
-| Last_visit_date | DATETIME     | REPLACE         | Last user access time       |
-| Cost            | BIGINT       | SUM             | Total User Consumption      |
-| max dwell time  | INT          | MAX             | Maximum user residence time |
-| min dwell time  | INT          | MIN             | User minimum residence time |
+* **Data Import Stage**
 
-The corresponding to CREATE TABLE statement would be as follows (omitting the Partition and Distribution information):
+  * Data is imported into the aggregate key table in batches, with each batch creating a new version.
 
-```
-CREATE DATABASE IF NOT EXISTS example_db;
+  * Within each version, data with the same aggregation keys is pre-aggregated (e.g., sum, count, etc.).
 
-CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg1
+* **Background File Merging Stage (Compaction)**
+
+  * Multiple batches generate multiple version files, which are periodically merged into a larger version file.
+
+  * During the merge process, data with the same aggregation key is re-aggregated to reduce redundancy and optimize storage.
+
+* **Query Stage**
+
+  * During queries, the system aggregates data with the same aggregation key from all versions to ensure accurate results.
+
+  * This process ensures that aggregation operations are performed efficiently, even with large data volumes. The aggregated results are optimized for fast querying, providing a significant performance improvement over raw data queries
+
+
+## Table Creation Instructions
+
+When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Key Model. The Aggregate Key Model must specify Key columns, which are used to aggregate Value columns during storage. 
+
+```sql
+CREATE TABLE IF NOT EXISTS example_tbl_agg
 (
-    `user_id` LARGEINT NOT NULL COMMENT "user id",
-    `date` DATE NOT NULL COMMENT "data import time",
-    `city` VARCHAR(20) COMMENT "city",
-    `age` SMALLINT COMMENT "age",
-    `sex` TINYINT COMMENT "gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "last visit date time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "user total cost",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "user max dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "user min dwell time"
+    user_id             LARGEINT    NOT NULL,
+    load_dt             DATE        NOT NULL,
+    city                VARCHAR(20),
+    last_visit_dt       DATETIME    REPLACE DEFAULT "1970-01-01 00:00:00",
+    cost                BIGINT      SUM DEFAULT "0",
+    max_dwell           INT         MAX DEFAULT "0",
 )
-AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 10
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3"
-);
+AGGREGATE KEY(user_id, load_dt, city)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-As you can see, this is a typical fact table of user information and visit behaviors. In star models, user information and visit behaviors are usually stored in dimension tables and fact tables, respectively. Here, for the convenience of explanation, we store the two types of information in one single table.
+In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, `city`, and `age` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
 
-The columns in the table are divided into Key (dimension) columns and Value (indicator columns) based on whether they are set with an `AggregationType`. **Key** columns are not set with an  `AggregationType`, such as `user_id`, `date`, and  `age`, while **Value** columns are.
+The following types of dimension aggregation are supported in the Aggregate Key Model:
 
-When data are imported, rows with the same contents in the Key columns will be aggregated into one row, and their values in the Value columns will be aggregated as their `AggregationType` specify. Currently, there are several aggregation methods and "agg_state" options available:
+| Aggregation Method       | Description                                                         |
+|--------------------------|---------------------------------------------------------------------|
+| SUM                      | Sum, accumulates multiple Value rows.                               |
+| REPLACE                  | Replacement, the Value in the next batch replaces the previously inserted Value. |
+| MAX                      | Retain the maximum value.                                           |
+| MIN                      | Retain the minimum value.                                           |
+| REPLACE_IF_NOT_NULL      | Replace non-null values. Unlike REPLACE, null values are not replaced. |
+| HLL_UNION                | Aggregation method for HLL type columns, using the HyperLogLog algorithm. |
+| BITMAP_UNION             | Aggregation method for BITMAP type columns, performing bitmap union aggregation. |
 
-- SUM: Accumulate the values in multiple rows.
-- REPLACE: The newly imported value will replace the previous value.
-- MAX: Keep the maximum value.
-- MIN: Keep the minimum value.
-- REPLACE_IF_NOT_NULL: Non-null value replacement. Unlike REPLACE, it does not replace null values.
-- HLL_UNION: Aggregation method for columns of HLL type, using the HyperLogLog algorithm for aggregation.
-- BITMAP_UNION: Aggregation method for columns of BITMAP type, performing a union aggregation of bitmaps.
 
-:::tip
+:::info Tip:
 
-If these aggregation methods cannot meet the requirements, you can choose to use the "agg_state" type.
+If the aggregation methods above do not meet your business requirements, consider using the `agg_state` type.
 
 :::
 
-Suppose that you have the following import data (raw data):
 
-| user\_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-| -------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
-| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 06:00    | 20   | 10               | 10               |
-| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 15   | 2                | 2                |
-| 10001    | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002    | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003    | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004    | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004    | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+## Data Insertion and Storage
 
+In the Aggregate Key table, data is aggregated based on the primary key. After data insertion, aggregation operations are completed.
 
-And you can import data with the following sql:
+![aggrate-key-model-insert](/images/table-desigin/aggrate-key-model-insert.png)
+
+In the example above, there were originally 4 rows of data in the table. After inserting 2 rows, aggregation operations on the dimension columns are performed based on the Key columns:
 
 ```sql
-insert into example_db.example_tbl_agg1 values
-(10000,"2017-10-01","Beijing",20,0,"2017-10-01 06:00:00",20,10,10),
-(10000,"2017-10-01","Beijing",20,0,"2017-10-01 07:00:00",15,2,2),
-(10001,"2017-10-01","Beijing",30,1,"2017-10-01 17:05:45",2,22,22),
-(10002,"2017-10-02","Shanghai",20,1,"2017-10-02 12:59:12",200,5,5),
-(10003,"2017-10-02","Guangzhou",32,0,"2017-10-02 11:20:00",30,11,11),
-(10004,"2017-10-01","Shenzhen",35,0,"2017-10-01 10:00:15",100,3,3),
-(10004,"2017-10-03","Shenzhen",35,0,"2017-10-03 10:20:22",11,6,6);
+-- 4 rows raw data
+INSERT INTO example_tbl_agg VALUES
+(101, '2024-11-01', 'BJ', '2024-10-29', 10, 20),
+(102, '2024-10-30', 'BJ', '2024-10-29', 20, 20),
+(101, '2024-10-30', 'BJ', '2024-10-28', 5, 40),
+(101, '2024-10-30', 'SH', '2024-10-29', 10, 20);
+
+-- insert into 2 rows
+INSERT INTO example_tbl_agg VALUES
+(101, '2024-11-01', 'BJ', '2024-10-30', 20, 10),
+(102, '2024-11-01', 'BJ', '2024-10-30', 10, 30);
+
+-- check the rows of table
+SELECT * FROM example_tbl_agg;
++---------+------------+------+---------------------+------+----------------+
+| user_id | load_date  | city | last_visit_date     | cost | max_dwell_time |
++---------+------------+------+---------------------+------+----------------+
+| 102     | 2024-10-30 | BJ   | 2024-10-29 00:00:00 |   20 |             20 |
+| 102     | 2024-11-01 | BJ   | 2024-10-30 00:00:00 |   10 |             30 |
+| 101     | 2024-10-30 | BJ   | 2024-10-28 00:00:00 |    5 |             40 |
+| 101     | 2024-10-30 | SH   | 2024-10-29 00:00:00 |   10 |             20 |
+| 101     | 2024-11-01 | BJ   | 2024-10-30 00:00:00 |   30 |             20 |
++---------+------------+------+---------------------+------+----------------+
 ```
 
-This is a table recording the user behaviors when visiting a certain commodity page. The first row of data, for example, is explained as follows:
+## AGG_STATE
 
-| Data             | Description                              |
-| ---------------- | ---------------------------------------- |
-| 10000            | User id, each user uniquely identifies id |
-| 2017-10-01       | Data storage time, accurate to date      |
-| Beijing          | User City                                |
-| 20               | User Age                                 |
-| 0                | Gender male (1 for female)               |
-| 2017-10-01 06:00 | User's time to visit this page, accurate to seconds |
-| 20               | Consumption generated by the user's current visit |
-| 10               | User's visit, time to stay on the page   |
-| 10               | User's current visit, time spent on the page (redundancy) |
-
-After this batch of data is imported into Doris correctly, it will be stored in Doris as follows:
-
-| user\_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-| -------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
-| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001    | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002    | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003    | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004    | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004    | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
-
-The data of User 10000 have been aggregated to one row, while those of other users remain the same. The explanation for the aggregated data of User 10000 is as follows (the first 5 columns remain unchanged, so it starts with Column 6 `last_visit_date`):
-
-- The value in the 6th column is 2017-10-01 07:00: The `last_visit_date` column is aggregated by REPLACE, so `2017-10-01 07:00` has replaced  `2017-10-01 06:00`.
-
-:::tip
-
-When using REPLACE to aggregate data from the same import batch, the order of replacement is uncertain. That means, in this case, the data eventually saved in Doris could be `2017-10-01 06:00`. However, for different import batches, it is certain that data from the new batch will replace those from the old batch.
-
+::: Info Tips:
+AGG_STATE is an experimental feature and is recommended for use in development and testing environments.
 :::
 
-- The value in the 7th column is 35: The `cost`column is aggregated by SUM, so the update value `35` is the result of `20` + `15`.
-- The value in the 8th column is 10: The `max_dwell_time` column is aggregated by MAX, so `10` is saved as it is the maximum between `10` and `2`.
-- The value in the 9th column is 2: The  `min_dwell_time` column is aggregated by MIN, so `2` is saved as it is the minimum between `10` and `2`.
-
-After aggregation, Doris only stores the aggregated data. In other words, the detailed raw data will no longer be available.
-
-### Import data and aggregate with existing data.
-
-Assuming that the table already contains the previously imported data:
-
-| user_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-| ------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
-| 10000   | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001   | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
-
-Now import a new batch of data:
-
-| user_id | date       | city     | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-| ------- | ---------- | -------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
-| 10004   | 2017-10-03 | Shenzhen | 35   | 0    | 2017-10-03 11:22:00 | 44   | 19               | 19               |
-| 10005   | 2017-10-03 | Changsha | 29   | 1    | 2017-10-03 18:11:02 | 3    | 1                | 1                |
-
-With the following SQL:
+AGG_STATE cannot be used as a Key column. The aggregation function's signature must be declared when creating the table. Users don’t need to specify length or default values. The data storage size depends on the function implementation.
 
 ```sql
-insert into example_db.example_tbl_agg1 values
-(10004,"2017-10-03","Shenzhen",35,0,"2017-10-03 11:22:00",44,19,19),
-(10005,"2017-10-03","Changsha",29,1,"2017-10-03 18:11:02",3,1,1);
+set enable_agg_state = true;
+CREATE TABLE aggstate(
+    k1   int  NULL,
+    v1   int  SUM,
+    v2   agg_state<group_concat(string)> generic
+)
+AGGREGATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 3;
 ```
 
-After importing, the data stored in Doris will be updated as follows:
+In this case, `agg_state` is used to declare the data type as `agg_state`, and `sum/group_concat` is the signature of the aggregation function. Note that `agg_state` is a data type, just like `int`, `array`, or `string`. `agg_state` can only be used with combinators such as [state](../../sql-manual/sql-functions/combinators/state), [merge](../../sql-manual/sql-functions/combinators/merge), or [union](../../sql-manual/sql-functions/combinators/union). `agg_state` represents the intermediate result of an aggregation function. For example, for the aggregation function `group_concat`, `agg_state` can represent the intermediate state of `group_concat('a', 'b', 'c')`, rather than the final result.
 
-| user_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-| ------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
-| 10000   | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001   | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 11:22:00 | 55   | 19               | 6                |
-| 10005   | 2017-10-03 | Changsha  | 29   | 1    | 2017-10-03 18:11:02 | 3    | 1                | 1                |
+The `agg_state` type needs to be generated using the `state` function. For this table, you need to use `group_concat_state`:
 
-As you can see, the existing data and the newly imported data of User 10004 have been aggregated. Meanwhile, the new data of User 10005 have been added.
+```sql
+insert into aggstate values(1, 1, group_concat_state('a'));
+insert into aggstate values(1, 2, group_concat_state('b'));
+insert into aggstate values(1, 3, group_concat_state('c'));
+insert into aggstate values(2, 4, group_concat_state('d'));
+```
 
-In Doris, data aggregation happens in the following 3 stages:
+The calculation method in the table is shown in the diagram below:
 
-1. The ETL stage of each batch of import data. At this stage, the batch of import data will be aggregated internally.
-2. The data compaction stage of the underlying BE. At this stage, BE will aggregate data from different batches that have been imported.
-3. The data query stage. The data involved in the query will be aggregated accordingly.
+![state-func-group-concat-state-result-1](/images/table-desigin/state-func-group-concat-state-result-1.png)
 
-At different stages, data will be aggregated to varying degrees. For example, when a batch of data is just imported, it may not be aggregated with the existing data. But for users, they **can only query aggregated data**. That is, what users see are the aggregated data, and they **should not assume that what they have seen are not or partly aggregated**. 
+When querying the table, the [merge](../../sql-manual/sql-functions/combinators/merge/) operation can be used to merge multiple `state` values and return the final aggregation result. Since `group_concat` requires ordering, the result may be unstable.
+
+```sql
+select group_concat_merge(v2) from aggstate;
++------------------------+
+| group_concat_merge(v2) |
++------------------------+
+| d,c,b,a                |
++------------------------+
+```
+
+If you do not want the final aggregation result, you can use `union` to combine multiple intermediate aggregation results and generate a new intermediate result.
+
+```sql
+insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate;
+```
+
+The calculations in the table are as follows:
+
+![state-func-group-concat-state-result-2](/images/table-desigin/state-func-group-concat-state-result-2.png)
+
+The query result is as follows:
+
+```sql
+mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
++---------------+------------------------+
+| sum_merge(k2) | group_concat_merge(k3) |
++---------------+------------------------+
+|            20 | c,b,a,d,c,b,a,d        |
++---------------+------------------------+
+
+mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
++---------------+------------------------+
+| sum_merge(k2) | group_concat_merge(k3) |
++---------------+------------------------+
+|            16 | c,b,a,d,c,b,a          |
++---------------+------------------------+
+```
+

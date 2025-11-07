@@ -4,7 +4,8 @@
     'summary': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, the maker of Talkie-the soulful AI that is sweeping the world.",
     'description': "Serving a PB-scale data size with over 99.9% availability, Apache Doris is the vital signs monitor of MiniMax, the maker of Talkie-the soulful AI that is sweeping the world.",
     'date': '2024-08-29',
-    'author': 'Apache Doris',
+    'externalLink': 'https://www.velodb.io/blog/883',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Best Practice'],
     "image": '/images/minimax-creator-of-talkie.jpeg'
 }

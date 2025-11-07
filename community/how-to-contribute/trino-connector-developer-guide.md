@@ -1,6 +1,6 @@
 ---
 {
-    "title": "How to access a new Trino Connector plugin",
+    "title": "Trino Connector Developer Guide",
     "language": "en"
 }
 
@@ -24,8 +24,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# How to access a new Trino Connector plugin
 
 ## Background
 

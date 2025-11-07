@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris provides powerful data transformation capabilities during data loading, which can simplify data processing workflows and reduce dependency on additional ETL tools. It mainly supports four types of transformations:
 
 - **Column Mapping**: Map source data columns to different columns in the target table.
@@ -113,6 +94,181 @@ Insert Into can directly perform data transformation in the `SELECT` statement, 
 Column mapping is used to define the correspondence between source data columns and target table columns. It can handle the following scenarios:
 - The order of source data columns and target table columns is inconsistent
 - The number of source data columns and target table columns is inconsistent
+
+### Implementation Principle
+
+Column mapping implementation can be divided into two steps:
+
+- **Step 1: Data Source Parsing** - Parse raw data into intermediate variables based on data format
+- **Step 2: Column Mapping and Assignment** - Map intermediate variables to target table fields by column name
+
+The following are processing flows for three different data formats:
+
+#### Load CSV Format Data
+
+![](/images/load-data-convert-csv-en.png)
+
+#### Load JSON Format Data with Specified jsonpaths
+
+![](/images/load-data-convert-json1-en.png)
+
+#### Load JSON Format Data without Specified jsonpaths
+
+![](/images/load-data-convert-json2-en.png)
+
+### Load JSON Data with Specified jsonpaths
+Assume the following source data (column headers are for illustration only, no actual headers exist):
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### Create Target Table
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### Load Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:col1, col3, col2, col4" \
+    -H "jsonpaths:[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (col1, col3, col2, col4)
+    PROPERTIES
+    (
+        "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]"
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(col1, col3, col2, col4)
+PROPERTIES
+(
+    "format" = "json",
+    "jsonpaths" = "[\"$.k1\", \"$.k2\", \"$.k3\", \"$.k4\"]",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### Query Results
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+```
+
+### Load JSON Data without Specified jsonpaths
+Assume the following source data (column headers are for illustration only, no actual headers exist):
+```plain
+{"k1":1,"k2":"100","k3":"beijing","k4":1.1}
+{"k1":2,"k2":"200","k3":"shanghai","k4":1.2}
+{"k1":3,"k2":"300","k3":"guangzhou","k4":1.3}
+{"k1":4,"k2":"\\N","k3":"chongqing","k4":1.4}
+```
+
+##### Create Target Table
+```sql
+CREATE TABLE example_table
+(
+    col1 INT,
+    col2 STRING,
+    col3 INT,
+    col4 DOUBLE
+) ENGINE = OLAP
+DUPLICATE KEY(col1)
+DISTRIBUTED BY HASH(col1) BUCKETS 1;
+```
+
+##### Load Data
+- Stream Load
+```sql
+curl --location-trusted -u user:passwd \
+    -H "columns:k1, k3, k2, k4,col1 = k1, col2 = k3, col3 = k2, col4 = k4" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -T data.json \
+    -X PUT \
+    http://<fe_ip>:<fe_http_port>/api/example_db/example_table/_stream_load
+```
+
+- Broker Load
+```sql
+LOAD LABEL example_db.label_broker
+(
+    DATA INFILE("s3://bucket_name/data.json")
+    INTO TABLE example_table
+    FORMAT AS "json"
+    (k1, k3, k2, k4)
+    SET (
+        col1 = k1,
+        col2 = k3,
+        col3 = k2,
+        col4 = k4
+    )
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, k3, k2, k4, col1 = k1, col2 = k3, col3 = k2, col4 = k4),
+PROPERTIES
+(
+    "format" = "json",
+    "read_json_by_line" = "true"
+)
+FROM KAFKA (...);
+```
+
+##### Query Results
+```
+mysql> SELECT * FROM example_table;
++------+-----------+------+------+
+| col1 | col2      | col3 | col4 |
++------+-----------+------+------+
+|    1 | beijing   |  100 |  1.1 |
+|    2 | shanghai  |  200 |  1.2 |
+|    3 | guangzhou |  300 |  1.3 |
+|    4 | chongqing | NULL |  1.4 |
++------+-----------+------+------+
+``` 
 
 ### Adjusting Column Order
 
@@ -619,7 +775,18 @@ Scenarios where filtering is needed before column mapping and transformation, al
 
 For example, source data contains multiple tables' data (or multiple tables' data is written to the same Kafka message queue). Each row of data has a column indicating which table the data belongs to. Users can use pre-filtering conditions to filter out the corresponding table data for loading.
 
-### Example
+Pre-filtering has the following limitations:
+- Column filtering restrictions
+
+Pre-filtering can only filter independent simple columns in the column list and cannot filter columns with expressions. For example: when the column mapping is (a, tmp, b = tmp + 1), column b cannot be used as a filter condition.
+
+- Data processing restrictions
+
+Pre-filtering occurs before data transformation, using raw data values for comparison, and raw data is treated as string type. For example: for data like `\N`, it will be compared directly as the `\N` string, rather than being converted to NULL before comparison.
+
+### Example 1: Using Numeric Conditions for Pre-filtering
+
+This example demonstrates how to filter source data using simple numeric comparison conditions. By setting the filter condition k1 > 1, we can filter out unwanted records before data transformation.
 
 Suppose we have the following source data (column names are for illustration purposes only, and there is no actual header):
 ```plain
@@ -683,6 +850,64 @@ mysql> select * from example_table;
 +------+------+-----------+------+
 ```
 
+### Example 2: Using Intermediate Columns to Filter Invalid Data
+
+This example demonstrates how to handle data import scenarios containing invalid data.
+
+Source data:
+```plain text
+1,1
+2,abc
+3,3
+```
+
+#### Table Creation
+```sql
+CREATE TABLE example_table
+(
+    k1 INT,
+    k2 INT NOT NULL
+)
+ENGINE = OLAP
+DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1;
+```
+
+For column k2, which is of type INT, `abc` is invalid dirty data. To filter this data, we can introduce an intermediate column for filtering.
+
+#### Load Statements
+- Broker Load
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("s3://bucket_name/data.csv")
+    INTO TABLE example_table
+    COLUMNS TERMINATED BY ","
+    (k1, tmp, k2 = tmp)
+    PRECEDING FILTER tmp != "abc"
+)
+WITH s3 (...);
+```
+
+- Routine Load
+```sql
+CREATE ROUTINE LOAD example_db.example_routine_load ON example_table
+COLUMNS(k1, tmp, k2 = tmp),
+COLUMNS TERMINATED BY ","
+PRECEDING FILTER tmp != "abc"
+FROM KAFKA (...);
+```
+
+#### Load Results
+```sql
+mysql> select * from example_table;
++------+----+
+| k1   | k2 |
++------+----+
+|    1 |  1 |
+|    3 |  3 |
++------+----+
+```
 
 ## Post-filtering
 

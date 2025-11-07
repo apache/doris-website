@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 When `MEM_LIMIT_EXCEEDED` appears in the error message of the query and contains `Process memory not enough`, it means that the process is canceled due to insufficient available memory.
 
 First, parse the error message to confirm the reason for Cancel, the memory size used by the query itself when Canceled, and the memory status of the process. There are usually three reasons for the Cancel of the query:
@@ -102,7 +83,7 @@ It should be noted that if the task fails to apply for memory from the Allocator
 
 Usually, it is because the query with larger memory is stuck in the Cancel stage and cannot release the memory in time. Full GC will first cancel queries in order of memory usage, and then cancel loads in order of memory usage. If a query is canceled in memory Full GC, but there are other queries in the BE process that use more memory than the currently canceled query, you need to pay attention to whether these queries with larger memory usage are stuck during the cancel process.
 
-First, execute `grep {queryID} be/log/be.INFO` to find the time when the query is canceled, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses more memory in `Memory Tracker Summary`. Run `grep {queryID with larger memory} be/log/be.INFO` to check if there is a log with the keyword `Cancel`. The corresponding time point is the time when the query is canceled. If the query is also canceled, and the time point when the query with larger memory is canceled is different from the time point when the current query is canceled, refer to [Query Cancel process stuck] in [Memory Issue FAQ](./memory-issue-faq.md) to analyze whether the query with larger memory is stuck in the cache process. For the analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
+First, execute `grep {queryID} be/log/be.INFO` to find the time when the query is canceled, and then search `Memory Tracker Summary` in the context to find the process memory statistics log. If there is a query that uses more memory in `Memory Tracker Summary`. Run `grep {queryID with larger memory} be/log/be.INFO` to check if there is a log with the keyword `Cancel`. The corresponding time point is the time when the query is canceled. If the query is also canceled, and the time point when the query with larger memory is canceled is different from the time point when the current query is canceled, refer to [Query Cancel process stuck] in [Memory Issue FAQ](../../../trouble-shooting/memory-management/memory-issue-faq) to analyze whether the query with larger memory is stuck in the cache process. For the analysis of `Memory Tracker Summary`, refer to [Memory Log Analysis](./memory-log-analysis.md).
 
 ## Process memory outside query and load tasks is too large
 

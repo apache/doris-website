@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 
 存储审计日志
@@ -66,11 +47,11 @@ under the License.
 | peak_memory_bytes 				| bigint       | 语句执行所占用的 Backend 内存的峰值    |
 | workload_group    				| text         | 语句执行所使用的 Workload Group        |
 | compute_group	  				| string    | 存算分离模式下，执行语句所使用的计算组。3.0 版本开始支持。|
-| trace_id                    | string    | 执行语句时设置的 Trace ID |
+| trace_id                    | string    | 执行语句时设置的 Trace ID。2.1.7 版本后被移除。 |
 | stmt              				| text         | 语句文本                               |
 
 ## 说明
 
 - `client_ip`：如果使用了代理服务，并且没有开启 IP 透传功能，则这里可能记录的是代理服务的 IP 而不是真实客户端 IP。
-- `state`：`EOF` 表示查询执行成功。`OK` 表示 DDL、DML语句执行成功。`ERR` 表示语句执行失败。
+- `state`：`EOF` 表示查询执行成功。`OK` 表示 DDL、DML 语句执行成功。`ERR` 表示语句执行失败。
 

@@ -5,30 +5,11 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 索引原理
 
 n-gram 分词是将一句话或一段文字拆分成多个相邻的词组的分词方法。NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。
 
-与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少IO加速查询。
+与 BloomFilter 索引不同的是，NGram BloomFilter 索引用于加速文本 LIKE 查询，它存入 BloomFilter 的不是原始文本的值，而是对文本进行 NGram 分词，每个词作为值存入 BloomFilter。对于 LIKE 查询，将 LIKE '%pattern%' 的 pattern 也进行 NGram 分词，判断每个词是否在 BloomFilter 中，如果某个词不在则对应的数据块就不满足 LIKE 条件，可以跳过这部分数据减少 IO 加速查询。
 
 ## 使用场景
 
@@ -98,12 +79,16 @@ ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_B
 
 ## 使用索引
 
+使用 NGram BloomFilter 索引需设置如下参数（enable_function_pushdown 默认为 false）：
+```sql
+SET enable_function_pushdown = true;
+```
 NGram BloomFilter 索引用于加速 LIKE 查询，比如：
 ```sql
 SELECT count() FROM table1 WHERE message LIKE '%error%';
 ```
 
-可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括NGram）的加速效果。
+可以通过 Query Profile 中的下面几个指标分析 BloomFilter 索引（包括 NGram）的加速效果。
 - RowsBloomFilterFiltered BloomFilter 索引过滤掉的行数，可以与其他几个 Rows 值对比分析索引过滤效果
 - BlockConditionsFilteredBloomFilterTime BloomFilter 倒排索引消耗的时间
 
@@ -187,7 +172,7 @@ mysql> SELECT COUNT() FROM amazon_reviews;
 
 ### 查询
 
-**首先在没有索引的时候运行查询，WHERE 条件中有 LIKE，耗时7.60s**
+**首先在没有索引的时候运行查询，WHERE 条件中有 LIKE，耗时 7.60s**
 
 ```
 SELECT
@@ -221,7 +206,7 @@ LIMIT 5;
 ```
 
 
-**然后添加 NGram BloomFilter 索引，再次运行相同的查询耗时0.93s，性能提升了8倍**
+**然后添加 NGram BloomFilter 索引，再次运行相同的查询耗时 0.93s，性能提升了 8 倍**
 
 ```
 ALTER TABLE amazon_reviews ADD INDEX review_body_ngram_idx(review_body) USING NGRAM_BF PROPERTIES("gram_size"="10", "bf_size"="10240");

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 描述
 
 公用表表达式（Common Table Expression）定义一个临时结果集，你可以在 SQL 语句的范围内多次引用。CTE 主要用于 SELECT 语句中。
@@ -42,8 +23,8 @@ Doris **不支持** 递归 CTE。有关递归 CTE 的详细解释，可以参考
 
 ```sql
 WITH
-  cte1 AS（SELECT a，b FROM table1），
-  cte2 AS（SELECT c，d FROM table2）
+  cte1 AS (SELECT a，b FROM table1)，
+  cte2 AS (SELECT c，d FROM table2)
 SELECT b，d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 ```
@@ -58,7 +39,7 @@ SELECT b, d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 ```
 
-### 递归 CTE （Doris 不支持）
+### 递归 CTE（Doris 不支持）
 
 ```sql
 WITH r_cte AS (

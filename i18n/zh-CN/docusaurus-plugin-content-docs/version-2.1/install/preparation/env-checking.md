@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 部署 Doris 时，需要对软硬件环境进行以下检查：
 
 - 硬件环境检查
@@ -38,13 +19,13 @@ under the License.
 
 在硬件环境检查中，要对以下硬件条件进行检查：
 
-| 检查项   | 预期结果               |
+| 检查项   | 建议配置               |
 | -------- | ---------------------- |
-| CPU      | 具有 AVX2 指令集。     |
+| CPU      | 支持 AVX2 指令集。     |
 | 内存     | 建议至少 CPU 4 倍。    |
 | 存储     | 推荐 SSD 硬盘。        |
 | 文件系统 | ext4 或 xfs 文件系统。 |
-| 网卡     | 万兆网卡。             |
+| 网卡     | 10GbE 网卡。             |
 
 ### CPU 检查
 
@@ -69,7 +50,7 @@ Doris 没有强制的内存限制。一般在生产环境中，可以根据以�
 
 ### 存储检查
 
-Doris 部署时数据可以存放在 SSD 或 HDD 硬盘或者对象存储中。
+Doris 支持将数据存储在 SSD、HDD 或对象存储中。
 
 在以下几种场景中建议使用 SSD 作为数据存储：
 
@@ -79,41 +60,49 @@ Doris 部署时数据可以存放在 SSD 或 HDD 硬盘或者对象存储中。
 
 ### 文件系统检查
 
-Doris 推荐使用 EXT4 或 XFS 文件系统。EXT4 文件系统具有良好的稳定性、性能和较低的碎片化问题。XFS 文件系统在处理大规模数据和高并发写操作时表现优越，适合高吞吐量应用。
+Doris 推荐使用 EXT4 或 XFS 文件系统：
+
+- **EXT4 文件系统**：具有良好的稳定性、性能和较低的碎片化问题。
+
+- **XFS 文件系统**：在处理大规模数据和高并发写操作时表现优越，适合高吞吐量应用。
 
 ### 网卡检查
 
-Doris 在进行计算过程涉及将数据分片分发到不同的实例上进行并行处理，会导致一定的网络资源开销。为了最大程度优化 Doris 性能并降低网络资源开销，强烈建议在部署时选用万兆网卡（10 Gigabit Ethernet，即 10GbE）或者更快网络。如果有多块网卡，建议使用链路聚合方式将多块网卡绑定成一块网卡，提高网络带宽、冗余性和复杂均衡的能力。
+Doris 的计算过程涉及数据分片和并行处理，可能产生网络资源开销。为了最大程度优化 Doris 性能并降低网络资源开销，强烈建议在部署时选用万兆网卡（10 Gigabit Ethernet，即 10GbE）或者更快网络。如果有多块网卡，建议使用链路聚合方式将多块网卡绑定成一块网卡，提高网络带宽、冗余性和复杂均衡的能力。
 
 ## 服务器建议配置
 
 Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构的服务器上。
 
-- 开发及测试环境
+- **开发及测试环境**
+
+  开发与测试环境中可以混合部署 FE 与 BE 实例，遵循以下规则：
+
+  * 验证测试环境中可以在一台服务器上混合部署一个 FE 与 BE，但不建议部署多个 FE 与 BE 实例；
+
+  * 如果需要 3 副本数据，至少需要 3 台服各部署一个 BE 实例。
+
+  服务器规格建议如下：
   
   | 模块       | CPU   | 内存     | 磁盘                | 网络      | 实例数量（最低要求） |
   | -------- | ----- | ------ | ----------------- | ------- | ---------- |
-  | Frontend | 8 核 + | 8 GB+  | SSD 或 SATA，10 GB+ | 千兆/万兆网卡 | 1          |
-  | Backend  | 8 核 + | 16 GB+ | SSD 或 SATA，50 GB+ | 千兆/万兆网卡 | 1          |
+  | Frontend | 8 核 + | 8 GB+  | SSD 或 SATA，10 GB+ | 1GbE/10GbE 网卡 | 1          |
+  | Backend  | 8 核 + | 16 GB+ | SSD 或 SATA，50 GB+ | 1GbE/10GbE 网卡 | 1          |
 
-  :::info 说明
-  * 在验证测试环境中，可以将 FE 与 BE 部署在同一台服务器上
-  * 一台机器上一般只建议部署一个 BE 实例，同时只能部署一个 FE
-  * 如果需要 3 副本数据，那么至少需要 3 台机器各部署一个 BE 实例，而不是 1 台机器部署 3 
-  :::
-
-- 生产环境
+- **生产环境**
   
+  生产环境中建议 FE 与 BE 实例独立部署，遵循以下规则：
+
+  * 如果环境资源紧张，将 FE 与 BE 混部在一台服务器上，建议 FE 与 BE 数据放在不同的硬盘；
+
+  * BE 节点可以配置多块硬盘存储，在一个 BE 实例上绑定多块 HDD 或 SSD 盘。
+
+  服务器规格建议如下：
+
   | 模块       | CPU    | 内存     | 磁盘                  | 网络   | 实例数量（最低要求） |
   | -------- | ------ | ------ | ------------------- | ---- | ---------- |
-  | Frontend | 16 核 + | 64 GB+ | SSD 或 RAID 卡，100GB+ | 万兆网卡 | 1          |
-  | Backend  | 16 核 + | 64 GB+ | SSD 或 SATA，100G+    | 万兆网卡 | 3          |
-
-  :::info 说明
-  * 在生产环境中，如果 FE 与 BE 混布，需要注意资源争用问题，建议元数据存储与数据存储分盘存放
-  * BE 节点可以配置多块硬盘存储，在一个 BE 实例上绑定多块 HDD 或 SSD 盘
-  * 集群的性能与 BE 节点的资源有关，BE 节点越多，Doris 性能越好。通常情况下在 10 - 100 台机器上可以充分发挥 Doris 的性能
-  :::
+  | Frontend | 16 核 + | 64 GB+ | SSD，100GB+ | 10GbE 网卡 | 1          |
+  | Backend  | 16 核 + | 64 GB+ | SSD 或 SATA，100GB+    | 10GbE 网卡 | 3          |
 
 ## 硬盘空间计算
 
@@ -128,6 +117,6 @@ Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构�
 
 Doris 的所有进程都依赖 Java。
 
-- 在 2.1（含）版本之前，请使用 Java 8，推荐版本：`openjdk-8u352-b08-linux-x64`。
+- 在 2.1（含）版本之前，请使用 Java 8，推荐版本：`jdk-8u352` 之后版本。
   
-- 从 3.0（含）版本之后，请使用 Java 17，推荐版本：`jdk-17.0.10_linux-x64_bin.tar.gz`。
+- 从 3.0（含）版本之后，请使用 Java 17，推荐版本：`jdk-17.0.10` 之后版本。

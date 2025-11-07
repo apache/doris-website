@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 The caches managed by Doris are currently all LRU elimination strategies, and all support controlling the capacity and elimination time through parameters separately.
 
 ## Doris Cache Type
@@ -132,7 +113,7 @@ The following analyzes the situation where different caches use more memory.
 
 - Execute `curl -X POST http://{be_host}:{be_web_server_port}/api/update_config?disable_storage_page_cache=true` to disable DataPageCache for the running BE, and clear it after a maximum of 10 minutes by default. However, this is a temporary method. DataPageCache will take effect again after BE restarts.
 
-- If you are sure that you want to reduce the memory usage of DataPageCache for a long time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md), reduce `storage_page_cache_limit` in `conf/be.conf` to reduce the capacity of DataPageCache, or reduce `data_page_cache_stale_sweep_time_sec` to reduce the effective time of DataPageCache cache, or increase `disable_storage_page_cache=true` to disable DataPageCache, and then restart the BE process.
+- If you are sure that you want to reduce the memory usage of DataPageCache for a long time, refer to [BE Configuration Items](../../../config/be-config), reduce `storage_page_cache_limit` in `conf/be.conf` to reduce the capacity of DataPageCache, or reduce `data_page_cache_stale_sweep_time_sec` to reduce the effective time of DataPageCache cache, or increase `disable_storage_page_cache=true` to disable DataPageCache, and then restart the BE process.
 
 ### SegmentCache uses a lot of memory
 
@@ -140,10 +121,10 @@ The following analyzes the situation where different caches use more memory.
 
 - Execute `curl -X POST http:/{be_host}:{be_web_server_port}/api/update_config?disable_segment_cache=true` to disable SegmentCache for the running BE, and clear it after a maximum of 10 minutes by default, but this is a temporary method, and SegmentCache will take effect again after BE restarts.
 
-- If you are sure that you want to reduce the memory usage of SegmentCache for a long time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md), adjust `segment_cache_capacity` or `segment_cache_memory_percentage` in `conf/be.conf` to reduce the capacity of SegmentCache, or reduce `tablet_rowset_stale_sweep_time_sec` to reduce the effective time of SegmentCache cache, or add `disable_segment_cache=true` in `conf/be.conf` to disable SegmentCache and restart the BE process.
+- If you are sure that you want to reduce the memory usage of SegmentCache for a long time, refer to [BE Configuration Items](../../../config/be-config), adjust `segment_cache_capacity` or `segment_cache_memory_percentage` in `conf/be.conf` to reduce the capacity of SegmentCache, or reduce `tablet_rowset_stale_sweep_time_sec` to reduce the effective time of SegmentCache cache, or add `disable_segment_cache=true` in `conf/be.conf` to disable SegmentCache and restart the BE process.
 
 ### PKIndexPageCache uses a lot of memory
 
 - After Doris 2.1.6, execute `curl http://{be_host}:{be_web_server_port}/api/clear_cache/PKIndexPageCache` to manually clean up during BE operation.
 
-- Refer to [BE configuration items](../../../admin-manual/config/be-config.md), reduce the capacity of PKIndexPageCache by lowering `pk_storage_page_cache_limit` in `conf/be.conf`, or reduce the effective time of PKIndexPageCache by lowering `pk_index_page_cache_stale_sweep_time_sec`, or add `disable_pk_storage_page_cache=true` in `conf/be.conf` to disable PKIndexPageCache, and then restart the BE process.
+- Refer to [BE Configuration Items](../../../config/be-config), reduce the capacity of PKIndexPageCache by lowering `pk_storage_page_cache_limit` in `conf/be.conf`, or reduce the effective time of PKIndexPageCache by lowering `pk_index_page_cache_stale_sweep_time_sec`, or add `disable_pk_storage_page_cache=true` in `conf/be.conf` to disable PKIndexPageCache, and then restart the BE process.

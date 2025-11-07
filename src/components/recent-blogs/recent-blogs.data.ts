@@ -1,19 +1,20 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 2.1.8 just released`,
-        link: 'https://doris.apache.org/blog/release-note-2.1.8',
+        label: 'Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2',
+        link: 'https://www.velodb.io/blog/1504',
     },
     {
-        label: 'Automatic and flexible data sharding: Auto Partition in Apache Doris',
-        link: 'https://doris.apache.org/blog/auto-partition-in-apache-doris',
+        label: 'The Ultimate OLAP Showdown: Apache Doris vs. ClickHouse vs. Snowflake (Part 1)',
+        link: 'https://www.velodb.io/blog/1463',
     },
     {
-        label: 'Migrate data lakehouse from BigQuery to Apache Doris, saving $4,500 per month',
-        link: 'https://doris.apache.org/blog/migrate-lakehouse-from-bigquery-to-doris',
+        label: 'Apache Doris Tops RTABench, 6x Faster Than ClickHouse, 30x Faster Than PostgreSQL',
+        link: 'https://www.velodb.io/blog/1465',
     },
     {
-        label: 'Why Apache Doris is the Best Open Source Alternative to Rockset',
-        link: 'https://doris.apache.org/blog/apache-doris-vs-rockset',
+        label: 'At Apache Doris, we have implemented multiple strategies to make the system more intelligent, enabling it to skip unnecessary data processing. In this article, we will discuss all the data pruning techniques used in Apache Doris.',
+        link: 'https://www.velodb.io/blog/1489',
     },
+
 
 ];

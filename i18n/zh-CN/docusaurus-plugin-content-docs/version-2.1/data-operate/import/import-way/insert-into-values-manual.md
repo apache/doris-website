@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSERT INTO VALUES 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO VALUES 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。
 
 ## 使用场景
@@ -40,11 +20,11 @@ INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSE
 
 INSERT INTO VALUES 通过 MySQL 协议提交和传输。下例以 MySQL 命令行为例，演示通过 INSERT INTO VALUES 提交导入作业。
 
-详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md)。
+详细语法可以参见 [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT)。
 
 ### 前置检查
 
-INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO.md) 命令给用户授权。
+INSERT INTO VALUES 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -94,7 +74,7 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table;
 
 ### 查看导入作业
 
-可以通过 show  load 命令查看已完成的 INSERT INTO VALUES 任务。
+可以通过 `show load` 命令查看已完成的 INSERT INTO VALUES 任务。
 
 ```sql
 mysql> SHOW LOAD FROM testdb\G
@@ -150,7 +130,7 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 | --- | --- | --- |
 | insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
 | enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
-| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本，仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
 
 ### 导入返回值
 

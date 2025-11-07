@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Description
 
 Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
@@ -53,12 +34,12 @@ LOCAL(
 | `column_separator`      | The column separator, optional, defaults to `\t`.                                                                                                                                 |                                                                       |
 | `line_delimiter`        | The line delimiter, optional, defaults to `\n`.                                                                                                                                   |                                                                       |
 | `compress_type`         | The compression type, optional. Supported types are `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Defaults to `UNKNOWN`, and the type will be automatically inferred from the `uri` suffix. |                                                                       |
-| `read_json_by_line`     | For JSON format imports, optional, defaults to `true`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `strip_outer_array`     | For JSON format imports, optional, defaults to `false`.                                                                                                                           | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_root`             | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `json_paths`            | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `num_as_string`         | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
-| `fuzzy_parse`           | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md) |
+| `read_json_by_line`     | For JSON format imports, optional, defaults to `true`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array`     | For JSON format imports, optional, defaults to `false`.                                                                                                                           | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `json_root`             | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `json_paths`            | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `num_as_string`         | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse`           | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
 | `trim_double_quotes`    | For CSV format imports, optional, defaults to `false`. If true, it will trim the outermost double quotes around each field in the CSV file.                                          | For CSV format                                                           |
 | `skip_lines`            | For CSV format imports, optional, defaults to `0`, which means skipping the first few lines of the CSV file. When the format is `csv_with_names` or `csv_with_names_and_types`, this parameter is ignored. | For CSV format                                                           |
 | `path_partition_keys`   | Optional, specifies the partition column names carried in the file path, e.g., `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`. This will automatically read the corresponding column names and values from the path for import. |                                                                       |
@@ -95,10 +76,10 @@ select * from local(
 +--------------------------------------------------------+
 | c1                                                     |
 +--------------------------------------------------------+
-| start time: 2023年 08月 07日 星期一 23:20:32 CST       |
-| start time: 2023年 08月 07日 星期一 23:32:10 CST       |
-| start time: 2023年 08月 08日 星期二 00:20:50 CST       |
-| start time: 2023年 08月 08日 星期二 00:29:15 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
+| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
+| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
 +--------------------------------------------------------+
 ```
 

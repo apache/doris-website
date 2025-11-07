@@ -5,28 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
 ## 描述
 
 该语句用于对有 partition 的 table 进行修改操作。
@@ -59,7 +37,7 @@ partition_desc ["key"="value"]
 - 分区为左闭右开区间，如果用户仅指定右边界，系统会自动确定左边界
 - 如果没有指定分桶方式，则自动使用建表使用的分桶方式和分桶数。
 - 如指定分桶方式，只能修改分桶数，不可修改分桶方式或分桶列。如果指定了分桶方式，但是没有指定分桶数，则分桶数会使用默认值 10，不会使用建表时指定的分桶数。如果要指定分桶数，则必须指定分桶方式。
-- ["key"="value"] 部分可以设置分区的一些属性，具体说明见 [CREATE TABLE](../Create/CREATE-TABLE.md)
+- ["key"="value"] 部分可以设置分区的一些属性，具体说明见 [CREATE TABLE](./CREATE-TABLE)
 - 如果建表时用户未显式创建 Partition，则不支持通过 ALTER 的方式增加分区
 - 如果用户使用的是 List Partition 则可以增加 default partition，default partition 将会存储所有不满足其他分区键要求的数据。
   -  ALTER TABLE table_name ADD PARTITION partition_name

@@ -1,58 +1,36 @@
 ---
 {
     "title": "JSON",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+By default, it supports up to 1048576 bytes (1MB), and can be increased up to 2147483643 bytes (2GB). This can be adjusted via the string_type_length_soft_limit_bytes configuration.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+Compared to storing JSON strings in a regular STRING type, the JSON type has two main advantages:
 
-`JSON` 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。
+JSON format validation during data insertion.
+More efficient binary storage format, enabling faster access to JSON internal fields using functions like json_extract, compared to get_json_xx functions.
+Note: In version 1.2.x, the JSON type was named JSONB. To maintain compatibility with MySQL, it was renamed to JSON starting from version 2.0.0. Older tables can still use the previous name.
 
-默认支持 1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
+## CSV format import
 
-与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
+### Step 1: Prepare the data
 
-1. 数据写入时进行 JSON 格式校验
-2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
-
-:::caution[注意]
-在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
-:::
-
-## CSV格式导入
-
-### 第 1 步：准备数据
-
-创建如下的 csv 文件：`test_json.csv`
-其中分隔符使用 `|` 而不是逗号，以便和 json 中的逗号区分。
+Create the following csv file: `test_json.csv`
+The separator is `|` instead of comma to distinguish it from the comma in json.
 
 ```
 1|{"name": "tom", "age": 35}
 2|{"name": null, "age": 28}
-3|{"name": "micheal", "age": null}
+3|{"name": "michael", "age": null}
 4|{"name": null, "age": null}
 5|null
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE json_test (
@@ -66,7 +44,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -77,7 +55,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 SELECT * FROM json_test;
@@ -86,30 +64,30 @@ SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | null                          |
 +------+-------------------------------+
 5 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON format import
 
-### 第 1 步：准备数据
+### Step 1: Prepare the data
 
-创建如下的 JSON 文件，`test_json.json`
+Create the following JSON file, `test_json.json`
 
 ```json
 [
     {"id": 1, "c_json": {"name": "tom", "age": 35}},
     {"id": 2, "c_json": {"name": null, "age": 28}},
-    {"id": 3, "c_json": {"name": "micheal", "age": null}},
+    {"id": 3, "c_json": {"name": "michael", "age": null}},
     {"id": 4, "c_json": {"name": null, "age": null}},
     {"id": 5, "c_json": null}
 ]
 ```
 
-### 第 2 步：在数据库中建表
+### Step 2: Create a table in the database
 
 ```sql
 CREATE TABLE json_test (
@@ -123,7 +101,7 @@ PROPERTIES (
 );
 ```
 
-### 第 3 步：导入数据
+### Step 3: Load data
 
 ```bash
 curl --location-trusted \
@@ -135,7 +113,7 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/json_test/_stream_load
 ```
 
-### 第 4 步：检查导入数据
+### Step 4: Check the imported data
 
 ```sql
 mysql> SELECT * FROM json_test;
@@ -144,7 +122,7 @@ mysql> SELECT * FROM json_test;
 +------+-------------------------------+
 |    1 | {"name":"tom","age":35}       |
 |    2 | {"name":null,"age":28}        |
-|    3 | {"name":"micheal","age":null} |
+|    3 | {"name":"michael","age":null} |
 |    4 | {"name":null,"age":null}      |
 |    5 | NULL                          |
 +------+-------------------------------+

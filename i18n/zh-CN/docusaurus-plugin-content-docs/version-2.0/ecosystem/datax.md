@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # DataX doriswriter
 
 [DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load 的方式同步到 Doris 中。
@@ -265,7 +246,7 @@ my_import.json
 >1. 这里我们使用了 JSON 格式导入数据
 >2.  `line_delimiter` 默认是换行符，可能会和数据中的值冲突，我们可以使用一些特殊字符或者不可见字符，避免导入错误
 >3. strip_outer_array：在一批导入数据中表示多行数据，Doris 在解析时会将数组展开，然后依次解析其中的每一个 Object 作为一行数据
->4. 更多 Stream load 参数请参照 [Stream load 文档]([Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/data-operate/import/stream-load-manual))
+>4. 更多 Stream load 参数请参照 [Stream load 文档](../data-operate/import/import-way/stream-load-manual)
 >5. 如果是 CSV 格式我们可以这样使用
 >
 >```json

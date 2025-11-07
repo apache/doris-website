@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，再一次经历数月的等候后，我们很高兴地宣布，Apache Doris 于 2022 年 12 月 7 日迎来 1.2.0 Release 版本的正式发布！有近 118 位 Contributor 为 Apache Doris 提交了超 2400 项优化和修复，感谢每一位让 Apache Doris 更好的你！
 
 自从社区正式确立 LTS 版本管理机制后，在 1.1.x 系列版本中不再合入大的功能，仅提供问题修复和稳定性改进，力求满足更多社区用户在稳定性方面的高要求。而在综合考虑版本迭代节奏和用户需求后，我们决定将众多新特性在 1.2 版本中发布，这无疑承载了众多社区用户和开发者的深切期盼，同时这也是一场厚积而薄发后的全面进化！
@@ -31,7 +12,7 @@ under the License.
 在 1.2 版本中，我们实现了全面的向量化、**实现多场景查询性能 3-11 倍的提升**，在 Unique Key 模型上实现了 Merge-on-Write 的数据更新模式、**数据高频更新时查询性能提升达 3-6 倍**，增加了 Multi-Catalog 多源数据目录、**提供了无缝接入 Hive、ES、Hudi、Iceberg 等外部数据源的能力**，引入了 Light Schema Change 轻量表结构变更、**实现毫秒级的 Schema Change 操作并可以借助 Flink CDC 自动同步上游数据库的 DML 和 DDL 操作**，以 JDBC 外部表替换了过去的 ODBC 外部表，支持了 Java UDF 和 Romote UDF 以及 Array 数组类型和 JSONB 类型，修复了诸多之前版本的性能和稳定性问题，推荐大家下载和使用！
 
 # 下载安装
-GitHub下载：[https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
+GitHub 下载：[https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 官网下载页：[https://doris.apache.org/download](https://doris.apache.org/download)
 
@@ -47,7 +28,7 @@ GitHub下载：[https://github.com/apache/doris/releases](https://github.com/apa
 
 3. apache-doris-java-udf-jar-with-dependencies
 
-其中新增的 `apache-doris-java-udf-jar-with-dependencies` 包用于支持 1.2.0 版本中的 JDBC 外表和 JAVA UDF 。下载后，需要将其中的 `java-udf-jar-with-dependencies.jar` 文件放到 `be/lib` 目录下，方可启动 BE，否则无法启动成功。
+其中新增的 `apache-doris-java-udf-jar-with-dependencies` 包用于支持 1.2.0 版本中的 JDBC 外表和 JAVA UDF。下载后，需要将其中的 `java-udf-jar-with-dependencies.jar` 文件放到 `be/lib` 目录下，方可启动 BE，否则无法启动成功。
 
 ### 部署说明：
 
@@ -77,7 +58,7 @@ GitHub下载：[https://github.com/apache/doris/releases](https://github.com/apa
 
 ### 2. 在 Unique Key 模型上实现了 Merge-on-Write 的数据更新模式
 
-在过去版本中， Apache Doris 主要是通过 Unique Key 数据模型来实现数据实时更新的。但由于采用的是 Merge-on-Read 的实现方式，查询存在着效率瓶颈，有大量非必要的 CPU 计算资源消耗和 IO 开销，且可能将出现查询性能抖动等问题。
+在过去版本中，Apache Doris 主要是通过 Unique Key 数据模型来实现数据实时更新的。但由于采用的是 Merge-on-Read 的实现方式，查询存在着效率瓶颈，有大量非必要的 CPU 计算资源消耗和 IO 开销，且可能将出现查询性能抖动等问题。
 
 在 1.2.0 版本中，我们在原有的 Unique Key 数据模型上，增加了 Merge-on-Write 的数据更新模式。该模式在数据写入时即对需要删除或更新的数据进行标记，始终保证有效的主键只出现在一个文件中（即在写入的时候保证了主键的唯一性），不需要在读取的时候通过归并排序来对主键进行去重，这对于高频写入的场景来说，大大减少了查询执行时的额外消耗。此外还能够支持谓词下推，并能够很好利用 Doris 丰富的索引，在数据  IO 层面就能够进行充分的数据裁剪，大大减少数据的读取量和计算量，因此在很多场景的查询中都有非常明显的性能提升。
 
@@ -189,7 +170,7 @@ Multi-Catalog 多源数据目录功能的目标在于能够帮助用户更方便
 
 影响范围：
   1. 用户需要在建表时指定 DateV2 和 DatetimeV2，原有表的 Date 以及 Datetime 不受影响。
-  2. Datev2 和 Datetimev2 在与原来的 Date 和 Datetime 做计算时（例如等值连接），原有类型会被cast 成新类型做计算
+  2. Datev2 和 Datetimev2 在与原来的 Date 和 Datetime 做计算时（例如等值连接），原有类型会被 cast 成新类型做计算
   3. Example 参考文档中说明
 
 ### 10. 全新内存管理框架
@@ -331,7 +312,7 @@ rowsets 是 Doris 中内置系统表，存放在 information_schema 数据库下
 
 ### 12. 备份恢复
 
-  - Restore作业支持 `reserve_replica` 参数，使得恢复后的表的副本数和备份时一致。
+  - Restore 作业支持 `reserve_replica` 参数，使得恢复后的表的副本数和备份时一致。
   - Restore 作业支持 `reserve_dynamic_partition_enable` 参数，使得恢复后的表保持动态分区开启状态。
 
   文档：[https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/RESTORE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/RESTORE)
@@ -354,7 +335,7 @@ rowsets 是 Doris 中内置系统表，存放在 information_schema 数据库下
 
 ### 15. New built-in-function 新增内置函数
 
-  新增以下内置函数:
+  新增以下内置函数：
 
   - cbrt
   - sequence_match/sequence_count 
@@ -380,7 +361,7 @@ rowsets 是 Doris 中内置系统表，存放在 information_schema 数据库下
 
 # 升级注意事项
 
-### FE 元数据版本变更 【重要】
+### FE 元数据版本变更【重要】
 
 FE Meta Version 由 107 变更为 114，因此从 1.1.x 以及更早版本升级至 1.2.0 版本后，不可回滚到之前版本。
 升级过程中，建议通过灰度升级的方式，先升级部分节点并观察业务运行情况，以降低升级风险，若执行非法的回滚操作将可能导致数据丢失与损坏。
@@ -394,34 +375,34 @@ FE Meta Version 由 107 变更为 114，因此从 1.1.x 以及更早版本升级
   - GlobalPrivs 和 ResourcePrivs 保持不变
   - 新增 CatalogPrivs 层级。
   - 原 DatabasePrivs 层级增加 internal 前缀（表示 internal catalog 中的 db）
-  - 原 TablePrivs 层级增加 internal 前缀（表示internal catalog中的 tbl）
+  - 原 TablePrivs 层级增加 internal 前缀（表示 internal catalog 中的 tbl）
 - GroupBy 和 Having 子句中，优先使用列名而不是别名进行匹配。
 - 不再支持创建以 "mv_" 开头的列。"mv_" 是物化视图中的保留关键词
 - 移除了 order by 语句默认添加的 65535 行的 Limit 限制，并增加 Session 变量 `default_order_by_limit` 可以自定配置这个限制。
-- "Create Table As Select" 生成的表，所有字符串列统一使用 String类型，不再区分 varchar/char/string 
+- "Create Table As Select" 生成的表，所有字符串列统一使用 String 类型，不再区分 varchar/char/string 
 - audit log 中，移除 db 和 user 名称前的 `default_cluster` 字样。
 - audit log 中增加 sql digest 字段
 - union 子句总 order by 逻辑变动。新版本中，order by 子句将在 union 执行完成后执行，除非通过括号进行显式的关联。
 - 进行 decommission 操作时，会忽略回收站中的 tablet，确保 decomission 能够完成。
-- Decimal 的返回结果将按照原始列中声明的精度进行显示 ，或者按照显式指定的 cast 函数中的精度进行展示。
+- Decimal 的返回结果将按照原始列中声明的精度进行显示，或者按照显式指定的 cast 函数中的精度进行展示。
 - 列名的长度限制由 64 变更为 256
 - FE 配置项变动
   - 默认开启 `enable_vectorized_load` 参数。
   - 增大了 `create_table_timeout` 值。建表操作的默认超时时间将增大。 
-  - 修改 `stream_load_default_timeout_second` 默认值为 3天。
+  - 修改 `stream_load_default_timeout_second` 默认值为 3 天。
   - 修改`alter_table_timeout_second` 的默认值为 一个月。
-  - 增加参数 `max_replica_count_when_schema_change` 用于限制 alter 作业中涉及的 replica数量，默认为100000。
-  - 添加 `disable_iceberg_hudi_table`。默认禁用了 iceberg 和 hudi 外表，推荐使用 multi catalog功能。
+  - 增加参数 `max_replica_count_when_schema_change` 用于限制 alter 作业中涉及的 replica 数量，默认为 100000。
+  - 添加 `disable_iceberg_hudi_table`。默认禁用了 iceberg 和 hudi 外表，推荐使用 multi catalog 功能。
 - BE 配置项变动
-  - 移除了 `disable_stream_load_2pc` 参数。2PC的stream load可直接使用。
-  - 修改`tablet_rowset_stale_sweep_time_sec` ，从1800秒修改为 300 秒。
-- Session变量变动
-  - 修改变量 `enable_insert_strict` 默认为 true。这会导致一些之前可以执行，但是插入了非法值的insert操作，不再能够执行。
+  - 移除了 `disable_stream_load_2pc` 参数。2PC 的 stream load 可直接使用。
+  - 修改`tablet_rowset_stale_sweep_time_sec` ，从 1800 秒修改为 300 秒。
+- Session 变量变动
+  - 修改变量 `enable_insert_strict` 默认为 true。这会导致一些之前可以执行，但是插入了非法值的 insert 操作，不再能够执行。
   - 修改变量 `enable_local_exchange` 默认为 true 
   - 默认通过 lz4 压缩进行数据传输，通过变量 `fragment_transmission_compression_codec` 控制 
   - 增加 `skip_storage_engine_merge` 变量，用于调试 unique 或 agg 模型的数据 
     文档：https://doris.apache.org/zh-CN/docs/dev/advanced/variables
-- BE 启动脚本会通过 `/proc/sys/vm/max_map_count` 检查数值是否大于200W，否则启动失败。
+- BE 启动脚本会通过 `/proc/sys/vm/max_map_count` 检查数值是否大于 200W，否则启动失败。
 - 移除了 mini load 接口
 
 ### 升级过程中需注意
@@ -440,9 +421,9 @@ FE Meta Version 由 107 变更为 114，因此从 1.1.x 以及更早版本升级
 
 ### 性能影响
 
-- 默认使用 JeMalloc 作为新版本 BE 的内存分配器，替换 TcMalloc 。
+- 默认使用 JeMalloc 作为新版本 BE 的内存分配器，替换 TcMalloc。
 
-JeMalloc 相比 TcMalloc 使用的内存更少、高并发场景性能更高，但在内存充足的性能测试时，TcMalloc 比 JeMalloc 性能高5%-10%，详细测试见: https://github.com/apache/doris/pull/12496
+JeMalloc 相比 TcMalloc 使用的内存更少、高并发场景性能更高，但在内存充足的性能测试时，TcMalloc 比 JeMalloc 性能高 5%-10%，详细测试见：https://github.com/apache/doris/pull/12496
 
 - tablet sink 中的 batch size 修改为至少 8K。
 - 默认关闭 Page Cache 和 减少 Chunk Allocator 预留内存大小
@@ -459,7 +440,7 @@ chunk_reserved_bytes_limit=10%
 
 - BE 的 http api 错误返回信息，由 `{"status": "Fail", "msg": "xxx"}` 变更为更具体的 ``{"status": "Not found", "msg": "Tablet not found. tablet_id=1202"}``
 
-- `SHOW CREATE TABLE` 中， comment的内容由双引号包裹变为单引号包裹
+- `SHOW CREATE TABLE` 中，comment 的内容由双引号包裹变为单引号包裹
 
 - 支持普通用户通过 http 命令获取 query profile。
 
@@ -470,24 +451,24 @@ chunk_reserved_bytes_limit=10%
 文档：[https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
 
 - `show backends` 和 `show tablets` 返回结果中，增加远端存储的空间使用情况 (#11450)
-- 移除了 Num-Based Compaction 相关代码(#13409)
-- 重构了BE的错误码机制，部分返回的错误信息会发生变化(#8855)
+- 移除了 Num-Based Compaction 相关代码 (#13409)
+- 重构了 BE 的错误码机制，部分返回的错误信息会发生变化 (#8855)
 
 # 其他
 
-- 支持Docker 官方镜像。
+- 支持 Docker 官方镜像。
 - 支持在 MacOS(x86/M1) 和 ubuntu-22.04 上编译 Doris
-- 支持进行image 文件的校验。
+- 支持进行 image 文件的校验。
  
 文档搜索“--image”：[https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/metadata-operation](https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/metadata-operation)
 - 脚本相关
-  - FE、BE 的 stop 脚本支持通过 `--grace` 参数退出FE、BE（使用 kill -15 信号代替 kill -9）
-  - FE start 脚本支持通过 --version 查看当前FE 版本(#11563)
+  - FE、BE 的 stop 脚本支持通过 `--grace` 参数退出 FE、BE（使用 kill -15 信号代替 kill -9）
+  - FE start 脚本支持通过 --version 查看当前 FE 版本 (#11563)
 - 支持通过 `ADMIN COPY TABLET` 命令获取某个 tablet 的数据和相关建表语句，用于本地问题调试 
 
 文档：[https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Database-Administration-Statements/ADMIN-COPY-TABLET](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Database-Administration-Statements/ADMIN-COPY-TABLET)
 
-- 支持通过 http api，获取一个SQL语句相关的 建表语句，用于本地问题复现
+- 支持通过 http api，获取一个 SQL 语句相关的 建表语句，用于本地问题复现
 
 文档：[https://doris.apache.org/zh-CN/docs/dev/admin-manual/http-actions/fe/query-schema-action](https://doris.apache.org/zh-CN/docs/dev/admin-manual/http-actions/fe/query-schema-action)
 

@@ -1,29 +1,22 @@
 import clsx from 'clsx';
 import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
-import More from '../components/More/index';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
 import PageColumn from '../components/PageColumn';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { JSX } from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
 import './index.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import { NEWSLETTER_DATA } from '../constant/newsletter.data';
 import { AchievementBanner } from '../components/achievement-banner/achievement-banner';
 import { CoreCapabilitiesData } from '../constant/core-capabilities.data';
 import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-capabilities-card';
-import { VariousAnalyticsData } from '../constant/various-analytics.data';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper';
 import GetStarted from '@site/src/components/get-started/get-started';
-import { Collapse, Tabs } from 'antd';
-import { Content } from 'antd/es/layout/layout';
-import ReadMore from '../components/ReadMore';
-import { ArrowDownIcon } from '../components/Icons/arrow-down-icon';
+import HomeEvenStarIcon from '@site/static/images/home-event-star.svg';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
+import { DEFAULT_VERSION } from '@site/src/constant/version';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -37,12 +30,12 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/gettingStarted/what-is-apache-doris',
+            link: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
             type: 'ghost',
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
             type: 'ghost',
         },
     ];
@@ -75,6 +68,29 @@ export default function Home(): JSX.Element {
                     </Translate>
                 </p>
             </div>
+        ),
+        event: (
+            <Link
+                to={'https://www.airmeet.com/e/10fb98e0-9921-11f0-89cc-795d82447e40?utm_source=Apache_Doris_Banner'}
+                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+                onMouseEnter={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+                }}
+                onMouseLeave={() => {
+                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+                }}
+                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+            >
+                <div className="lg:mb-0 mb-4 flex items-center">
+                    <HomeEvenStarIcon id="event-star-icon" />
+                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+                        NEW EVENT
+                    </span>
+                </div>
+                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+                    Apache Doris Summit 2025 · Virtual —— See Full Agenda and Register Now
+                </p>
+            </Link>
         ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,
@@ -169,9 +185,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_497" />
                         </filter>
@@ -200,9 +216,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14560" />
                         </filter>
@@ -259,16 +275,16 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1926_14564" />
                         </filter>
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw',
+            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
@@ -298,9 +314,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_513" />
                         </filter>
@@ -313,7 +329,7 @@ export default function Home(): JSX.Element {
             title: <Translate id="community.title.c5">LinkedIn</Translate>,
             img: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="61" height="60" viewBox="0 0 61 60" fill="none">
-                    <g clip-path="url(#clip0_1665_520)">
+                    <g clipPath="url(#clip0_1665_520)">
                         <g opacity="0.6" filter="url(#filter0_f_1665_520)">
                             <ellipse cx="30.5" cy="47" rx="11" ry="3" fill="#1460D4" />
                         </g>
@@ -331,9 +347,9 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_520" />
                         </filter>
@@ -369,21 +385,24 @@ export default function Home(): JSX.Element {
                             width="42"
                             height="26"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                         >
-                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feFlood floodOpacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                             <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_524" />
                         </filter>
                     </defs>
                 </svg>
             ),
-            href: 'https://www.youtube.com/@apachedoris/channels',
+            href: 'https://www.youtube.com/hashtag/apachedoris',
         },
     ];
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}
+            title={translate({
+                id: 'homepage.title',
+                message: 'Apache Doris: Open source data warehouse for real time data analytics',
+            })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
@@ -392,7 +411,7 @@ export default function Home(): JSX.Element {
             showAnnouncementBar={true}
             keywords={translate({
                 id: 'homepage.keywords',
-                message: 'Open Source database, OLAP, data warehouse, database analytics'
+                message: 'Open Source database, OLAP, data warehouse, database analytics',
             })}
         >
             <PageBanner {...banner}></PageBanner>
@@ -412,7 +431,7 @@ export default function Home(): JSX.Element {
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
-                                to="/docs/gettingStarted/what-is-apache-doris"
+                                to={`/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`}
                                 text={
                                     <Translate id="homepage.more" description="more link">
                                         Learn more

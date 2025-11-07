@@ -72,7 +72,7 @@ function BlogListPageContent(props) {
     const [blogs, setBlogs] = useState([]);
     const blogCategories = getBlogCategories(props);
     const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
-
+    
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const [active, setActive] = useState(() => {
@@ -92,7 +92,6 @@ function BlogListPageContent(props) {
             location.state,
         );
     };
-
     useEffect(() => {
         let currentPageNumber = 1;
         let currentCategoryName = allText;

@@ -526,7 +526,6 @@
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-and-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-and-not-count",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-union-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-xor-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-or-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-contains",
@@ -536,8 +535,6 @@
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-min",
                                         "sql-manual/sql-functions/bitmap-functions/intersect-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-intersect",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect",
-                                        "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect-count",
                                         "sql-manual/sql-functions/bitmap-functions/bitmap-hash64"
                                     ]
                                 },
@@ -1199,12 +1196,9 @@
                 "ecosystem/seatunnel",
                 "ecosystem/kettle",
                 "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
                 "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",
-                "ecosystem/hive-hll-udf",
                 {
                     "type": "category",
                     "label": "BI",
@@ -1212,6 +1206,7 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau",

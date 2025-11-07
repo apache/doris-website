@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 For concepts related to backup, please refer to [Backup and Restore](./overview.md). This guide provides the steps to create a Repository and back up data.
 
 ## Step 1. Create Repository
@@ -32,7 +13,7 @@ For concepts related to backup, please refer to [Backup and Restore](./overview.
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
+Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
 
 ### Option 1: Create Repository on S3
 
@@ -56,7 +37,28 @@ PROPERTIES
 
 ### Option 2: Create Repository on Azure
 
-**Not supported in Doris 2.1.**
+**Azure is supported since 3.0.4.**
+
+To create a Repository on Azure storage, use the following SQL command:
+
+```sql
+CREATE REPOSITORY `azure_repo`
+WITH S3
+ON LOCATION "s3://bucket_name/azure_repo"
+PROPERTIES
+(
+    "s3.endpoint" = "selectdbcloudtestwestus3.blob.core.windows.net",
+    "s3.region" = "dummy_region",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "provider" = "AZURE"
+);
+```
+
+- Replace `bucket_name` with your Azure container name.
+- Provide your Azure storage account and key for authentication.
+- `s3.region` is a dummy but required field.
+- The `provider` must be set to `AZURE` for Azure storage.
 
 ### Option 3: Create Repository on GCP
 
@@ -141,7 +143,7 @@ PROPERTIES
 
 ## Step 2. Backup
 
-Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md).
+Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP).
 
 It is recommended to use meaningful label names, such as those containing the databases and tables included in the backup.
 
@@ -241,4 +243,4 @@ mysql> SHOW SNAPSHOT ON example_repo;
 
 ## Step 5. Cancel Backup (if necessary)
 
-You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md).
+You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP).

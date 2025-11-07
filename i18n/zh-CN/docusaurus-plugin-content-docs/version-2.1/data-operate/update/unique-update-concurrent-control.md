@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概览
 
 Doris 采用多版本并发控制机制（MVCC - Multi-Version Concurrency Control）来管理并发更新。每次数据写入操作均会分配一个写入事务，该事务确保数据写入的原子性（即写入操作要么完全成功，要么完全失败）。在写入事务提交时，系统会为其分配一个版本号。当用户使用 Unique Key 模型并多次导入数据时，如果存在重复主键，Doris 会根据版本号确定覆盖顺序：版本号较高的数据会覆盖版本号较低的数据。
@@ -151,7 +132,7 @@ MySQL> select * from test_table;
 
 **1. Stream Load**
 
-stream load 的写法是在 header 中的 `function_column.sequence_col` 字段添加隐藏列对应的 source_sequence 的映射，示例
+Stream Load 的写法是在 header 中的 `function_column.sequence_col` 字段添加隐藏列对应的 source_sequence 的映射，示例如下：
 
 ```shell
 curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
@@ -258,6 +239,12 @@ MySQL [test]> select * from test_table;
 Table test_tbl has sequence column, need to specify the sequence column
 ```
 
-2. 自版本 2.0 起，Doris 对 Unique Key 表的 Merge-on-Write 实现支持了部分列更新能力，在部分列更新导入中，用户每次可以只更新一部分列，因此并不是必须要包含 sequence 列。若用户提交的导入任务中，包含 sequence 列，则行为无影响；若用户提交的导入任务不包含 sequence 列，Doris 会使用匹配的历史数据中的 sequence 列作为更新后该行的 sequence 列的值。如果历史数据中不存在相同 key 的列，则会自动用 null 或默认值填充。
+2. 在使用 Insert 语句插入数据时，由于用户必须显示指定 sequence 列，否则会报如上异常。为了方便用户在一些场景下（表复制，内部数据迁移等场景）使用，Doris 可以通过 session 参数控制，来关闭 sequence 列的检查约束：
 
-3. 当出现并发导入时，Doris 会利用 MVCC 机制来保证数据的正确性。如果两批数据导入都更新了一个相同 key 的不同列，则其中系统版本较高的导入任务会在版本较低的导入任务成功后，使用版本较低的导入任务写入的相同 key 的数据行重新进行补齐。
+```sql
+set require_sequence_in_insert = false;
+```
+
+3. 自版本 2.0 起，Doris 对 Unique Key 表的 Merge-on-Write 实现支持了部分列更新能力，在部分列更新导入中，用户每次可以只更新一部分列，因此并不是必须要包含 sequence 列。若用户提交的导入任务中，包含 sequence 列，则行为无影响；若用户提交的导入任务不包含 sequence 列，Doris 会使用匹配的历史数据中的 sequence 列作为更新后该行的 sequence 列的值。如果历史数据中不存在相同 key 的列，则会自动用 null 或默认值填充。
+
+4. 当出现并发导入时，Doris 会利用 MVCC 机制来保证数据的正确性。如果两批数据导入都更新了一个相同 key 的不同列，则其中系统版本较高的导入任务会在版本较低的导入任务成功后，使用版本较低的导入任务写入的相同 key 的数据行重新进行补齐。

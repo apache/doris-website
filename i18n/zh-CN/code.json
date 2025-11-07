@@ -28,7 +28,7 @@
         "description": "stable version"
     },
     "archive.admonition.latest": {
-        "message": "版本（3.0）",
+        "message": "版本（3.x）",
         "description": "latest version"
     },
     "archive.admonition.and": {
@@ -52,15 +52,34 @@
         "description": "Archive date"
     },
     "archive-tips-1": {
-        "message":"本页将归档 Apache Doris 暂停维护版本的所有文档，并提供 PDF 格式供用户下载。",
+        "message": "本页将归档 Apache Doris 暂停维护版本的所有文档，并提供 PDF 格式供用户下载。",
         "description": "Archive tips"
     },
     "archive-tips-2": {
-        "message":"请注意，归档文档将不再进行任何更新，建议用户使用最新版本。",
+        "message": "请注意，归档文档将不再进行任何更新，建议用户使用{latestVersion}。",
         "description": "Archive tips"
     },
-    "archive-download-text":{
-        "message":"下载 PDF",
-        "description":"archive download text"
+    "archive-download-text": {
+        "message": "下载 PDF",
+        "description": "archive download text"
+    },
+    "archive.latest.version": {
+        "message": "最新版本",
+        "description": "archive latest version"
+    },
+    "theme.docs.versions.latestVersionSuggestionLabel": {
+        "message": "使用参考请跳转至 {recommondVersionLink} 或 {latestVersionLink} 正式版本文档进行查阅。"
+    },
+    "theme.docs.versions.latestVersionLinkLabel": {
+        "message": "3.x"
+    },
+    "theme.docs.versions.recommondVersionLinkLabel": {
+        "message": "2.1"
+    },
+    "theme.docs.versions.unreleasedVersionLabel": {
+        "message": "此处为 Apache Doris {unreleased}的版本文档，不建议作为使用参考。"
+    },
+    "theme.docs.versions.unreleasedText": {
+        "message": "尚未发布"
     }
 }

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Introduction
 
 Doris provides support for backup and restore operations. These features allow users to back up data from databases, tables, or partitions to remote storage systems and restore it when needed.
@@ -72,7 +53,7 @@ Doris provides support for backup and restore operations. These features allow u
    Backup or restore of **asynchronous materialized views (MTMV)** is not supported. These views are not considered in backup and restore operations.
 
 3. **Tables with Storage Policies Not Supported**:
-   Tables that use [**storage policies**](../../../table-desgin/tiered-storage/remote-storage.md) **do not support** backup and restore operations.
+   Tables that use [**storage policies**](../../../table-design/tiered-storage/remote-storage) **do not support** backup and restore operations.
 
 4. **Incremental Backup**:
    Currently, Doris only supports full backups. Incremental backups (only storing data changed since the last backup) are not supported; you can back up specific partitions to achieve incremental backup.

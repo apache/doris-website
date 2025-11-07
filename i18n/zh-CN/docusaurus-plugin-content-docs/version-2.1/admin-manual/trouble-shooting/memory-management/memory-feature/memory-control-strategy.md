@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris Allocator 作为系统中大块内存申请的统一入口，在合适的时机干预限制内存分配的过程，确保内存申请的高效可控。
 
 Doris MemoryArbitrator 作为内存仲裁器，实时监控 Doris BE 进程的内存使用，并定时更新内存状态和收集内存相关统计信息的快照。
@@ -34,7 +15,7 @@ Doris MemoryReclamation 作为内存回收器，在可用内存不足时触发�
 
 ![Memory Management Overview](/images/memory-management-overview.png)
 
-Allocator从系统申请内存，并在申请过程中使用 MemTracker 跟踪内存申请和释放的大小，执行算子所需批量申请的大内存将交由不同的数据结构管理。
+Allocator 从系统申请内存，并在申请过程中使用 MemTracker 跟踪内存申请和释放的大小，执行算子所需批量申请的大内存将交由不同的数据结构管理。
 
 查询执行过程中大块内存的分配主要使用 Arena、HashTable、PODArray 这三个数据结构管理，Allocator 作为 Arena、PODArray、HashTable 的统一内存接口，实现内存统一管理和局部的内存复用。
 
@@ -76,7 +57,7 @@ Doris BE 会定时从系统获取进程的物理内存和系统当前剩余可�
 
 ## 内存限制和水位线计算方法
 
-- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%，具体参考 。
+- 进程内存上限 MemLimit = `be.conf/mem_limit * PhysicalMemory`, 默认系统总内存的 90%，具体参考。
 
 - 进程内存软限 SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`, 默认系统总内存的 81%。
 

@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Indexing Principles
 
 The NGram BloomFilter index, similar to the BloomFilter index, is a skip index based on BloomFilter. 
@@ -92,6 +72,11 @@ ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_B
 ```
 
 ## Using Indexes
+
+To use NGram BloomFilter index, you need to set the following parameters (enable_function_pushdown is false by default):
+```sql
+SET enable_function_pushdown = true;
+```
 
 NGram BloomFilter index is used to accelerate LIKE queries, for example:
 SELECT count() FROM table1 WHERE message LIKE '%error%';

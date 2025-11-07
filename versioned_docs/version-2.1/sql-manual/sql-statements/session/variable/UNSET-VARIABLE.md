@@ -5,67 +5,56 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## Description
 
 This statement is used to restore Doris system variables. These system variables can be modified at global or session level.
 
-grammar:
+## Syntax
 
 ```sql
-UNSET [SESSION|GLOBAL] VARIABLE (variable_name | ALL)
+UNSET [<effective_scope>] VARIABLE (<variable_name>)
 ```
 
-illustrate:
+## Required Parameters
+**1. `<variable_name>`**
+> Specifies the variable name, or if you want to unset all variables, this parameter you can give a keyword `ALL`.
 
-1. (variable_name | ALL): statement must be ended with a variable name or keyword `ALL`.
+## Optional Parameters
+**1. `<effective_scope>`**
+> Effective scope is one of `GLOBAL` or `SESSION` or `LOCAL`. If there is no effective scope, default value is `SESSION`. `LOCAL` is an alias of `SESSION`.
 
-> Note:
->
-> 1. Only ADMIN users can unset variables to take effect globally
-> 2. When restore a variable with `GLOBAL`,  it only affect your current using session and new open sessions. It does not affect other current open sessions.
+## Access Control Requirements
+Users executing this SQL command must have at least the following privileges:
 
-## Examples
+| Privilege  | Object | Notes                                        |
+| :--------- | :----- | :------------------------------------------- |
+| ADMIN_PRIV | Session  | unset global variables need admin privilege |
 
-1. Restore value of the time zone
+## Usage Notes
+
+- Only ADMIN users can unset variables to take effect globally
+- When restore a variable with `GLOBAL`,  it only affects your current using session and new open sessions. It does not affect other current open sessions.
+
+
+
+## Example
+
+- Restore value of the time zone
 
    ```
    UNSET VARIABLE time_zone;
    ```
 
-2. Restore the global execution memory size
+
+- Restore the global execution memory size
 
    ```
    UNSET GLOBAL VARIABLE exec_mem_limit;
    ```
-3. Restore all variables globally
+
+
+- Restore all variables globally
 
    ```
    UNSET GLOBAL VARIABLE ALL;
    ```
-## Keywords
-
-    UNSET, VARIABLE
-
-## Best Practice
-

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 集群的工作负载分析主要分成两个阶段：
 - 第一个是运行时的工作负载分析，当集群可用性下降时，可以通过监控发现资源开销比较大的查询，并进行降级处理。
 - 第二个是分析历史数据，比如审计日志表等，找出不合理的工作负载，并进行优化。
@@ -45,7 +26,7 @@ under the License.
     - 如果是内存瓶颈，可以通过设置该 Group 的内存为硬限，并调低 memory_limit 的值，来释放部分内存，需要注意的是这可能会导致当前 Group 大量查询失败。
 
 5. 完成以上步骤后，通常集群的可用性会有所恢复。此时可以做更进一步的分析，也就是引起该 Group 资源用量升高的主要原因，
-   是这个 Group 的整体查询并发升高导致的还是某些大查询导致的，如果是某些大查询导致的，那么可以通过快速杀死这些大查询的方式进行故障恢复。
+   如果是这个 Group 的整体查询并发升高导致的还是某些大查询导致的，如果是某些大查询导致的，那么可以通过快速杀死这些大查询的方式进行故障恢复。
 
 6. 可以使用 backend_active_tasks 结合 active_queries 找出目前集群中资源用量比较异常的 SQL，然后通过 kill 语句杀死这些 SQL 释放资源。
 
@@ -56,7 +37,7 @@ under the License.
    
    1. 用户对于集群中 SQL 资源的使用量有一定的预期，比如大部分延迟都是秒级，扫描行数在千万，那么当有扫描行数在亿级别十亿级别的 SQL，就属于异常 SQL，需要人工进行处理
    
-   2. 用户如果对于集群中 SQL 资源用量也没有预期，这个时候可以通过百分位函数计算资源用量的方式，找出资源用量比较异常的 SQL。以 CPU 瓶颈为例，可以先计算历史时间段内查询 CPU 时间的 tp50/tp75/tp99/tp999，以该值为正常值，对照当前集群相同时间段内查询 CPU 时间的百分位函数，比如历史时段的 tp999 为 1min，但是当前集群相同时段 CPU 时间的 tp50 就已经是 1min，说明当前时段内相比于历史出现了大量的 CPU 时间在 1min 以上的 sql，那么 CPU 时间大于 1min 的 SQL 就可以定义为异常 SQL。其他指标的异常值的查看也是同理。
+   2. 如果用户对于集群中 SQL 资源用量也没有预期，这个时候可以通过百分位函数计算资源用量的方式，找出资源用量比较异常的 SQL。以 CPU 瓶颈为例，可以先计算历史时间段内查询 CPU 时间的 tp50/tp75/tp99/tp999，以该值为正常值，对照当前集群相同时间段内查询 CPU 时间的百分位函数，比如历史时段的 tp999 为 1min，但是当前集群相同时段 CPU 时间的 tp50 就已经是 1min，说明当前时段内相比于历史出现了大量的 CPU 时间在 1min 以上的 sql，那么 CPU 时间大于 1min 的 SQL 就可以定义为异常 SQL。其他指标的异常值的查看也是同理。
 3. 对资源用量异常的 SQL 进行优化，比如 SQL 改写，表结构优化，并行度调节等方式降低单 SQL 的资源用量。
 4. 如果通过审计表发现 SQL 的资源用量都比较正常，那么可以通过监控和审计查看当时执行的 SQL 的数量相比于历史时期是否有增加，如果有的话，可以跟上游业务确认对应时间段上游的访问流量是否有增加，从而选择是进行集群扩容还是排队限流操作。
 

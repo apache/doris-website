@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 `JSON` 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。
 
 默认支持 1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
@@ -31,13 +12,13 @@ under the License.
 与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
 
 1. 数据写入时进行 JSON 格式校验
-2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
+2. 二进制存储格式更加高效，通过 json_extract 等函数可以高效访问 JSON 内部字段，比 get_json_xx 函数快几倍
 
 :::caution[注意]
-在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
+在 1.2.x 版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
 :::
 
-## CSV格式导入
+## CSV 格式导入
 
 ### 第 1 步：准备数据
 
@@ -93,7 +74,7 @@ SELECT * FROM json_test;
 5 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON 格式导入
 
 ### 第 1 步：准备数据
 

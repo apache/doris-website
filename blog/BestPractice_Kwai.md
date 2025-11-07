@@ -44,7 +44,7 @@ Kwai’s commercial report engine provides advertisers with real-time query serv
 # 2 Previous Architecture
 
 ## 2.1 Background
-Traditional OLAP engines deal with multi-dimensional analysis in a more pre-modeled way, by building a data cube (Cube) to perform operations such as Drill-down, Roll-up, Slice, and Dice and Pivot. Modern OLAP analysis introduces the idea of ​​a relational model, representing data in two-dimensional relational tables. In the modeling process, usally there are two modeling methods. One is to ingest the data of multiple tables into one wide table through Join; the other is to use the star schema, divide the data into fact table and dim-table.  And then Join them when querying. 
+Traditional OLAP engines deal with multi-dimensional analysis in a more pre-modeled way, by building a data cube (Cube) to perform operations such as Drill-down, Roll-up, Slice, and Dice and Pivot. Modern OLAP analysis introduces the idea of ​​a relational model, representing data in two-dimensional relational tables. In the modeling process, usually there are two modeling methods. One is to ingest the data of multiple tables into one wide table through Join; the other is to use the star schema, divide the data into fact table and dim-table.  And then Join them when querying. 
 Both options have some pros and cons:
 
 Wide table:
@@ -77,7 +77,7 @@ Druid is a timing-based query engine that supports real-time data ingestion and 
 
 ## 2.4 Engine of the Reports
 
-The report engine can be divided into two layers: REFront and REQuery. REMeta is an independent metadata management module. The report engine implements MEMJoin inside REQuery. It supports associative query between fact data in Druid and dimension data in Elasticsearch. And it also provides virtual cube query for upper-layer business, avoiding the exposion of complex cross-engine management and query logic.
+The report engine can be divided into two layers: REFront and REQuery. REMeta is an independent metadata management module. The report engine implements MEMJoin inside REQuery. It supports associative query between fact data in Druid and dimension data in Elasticsearch. And it also provides virtual cube query for upper-layer business, avoiding the explosion of complex cross-engine management and query logic.
 
 ![page_1](/images/Kwai/en/page_1.png)
 
@@ -94,7 +94,7 @@ So we conducted a survey on popular OLAP databases in the industry, the most rep
 
 From this point of view, Doris can better improve the performance of Join and is much better in other aspects such as migration cost, horizontal expansion, and concurrency. However, Elasticsearch has inherent advantages in high-frequency Update.
 
-It would be an ideal solution to deal with high-frequency Upate and Join performance at the same time by building engines through Doris on Elasticsearch.
+It would be an ideal solution to deal with high-frequency Update and Join performance at the same time by building engines through Doris on Elasticsearch.
 
 ## 3.3 Good Choice: Doris on Elasticsearch
 

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Query circuit breaking is a protective mechanism used to prevent long-running or resource-consuming queries from having a negative impact on the system. When a query exceeds predefined resource or time limits, the circuit breaker mechanism automatically terminates the query to avoid adverse effects on system performance, resource usage, and other queries. This mechanism ensures the stability of the cluster in a multi-user environment, preventing a single query from exhausting system resources or slowing down responses, thereby improving overall availability and efficiency.
 
 In Doris, there are two types of circuit breaker strategies:
@@ -59,7 +40,7 @@ Blocking rules can be categorized according to the scope of blocking into:
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select \\* from t",
+  "sql"="select \\* from t",
   "global" = "true",
   "enable" = "true"
 )
@@ -79,7 +60,7 @@ MySQL root@127.0.0.1:test> select * from t;
 ```sql
 CREATE SQL_BLOCK_RULE rule_001
 PROPERTIES (
-  "SQL"="select * from t",
+  "sql"="select * from t",
   "global" = "false",
   "enable" = "true"
 )
@@ -187,7 +168,7 @@ For example, to block the `abs` function. You can use the following regular expr
 ```sql
 CREATE SQL_BLOCK_RULE rule_abs
 PROPERTIES(
-  "SQL"="(?i)abs\\s*\\(.+\\)",
+  "sql"="(?i)abs\\s*\\(.+\\)",
   "global"="true",
   "enable"="true"
 );
@@ -226,15 +207,15 @@ SQL Block Rule is a configuration for circuit breaking during planning, but beca
 
 Since Doris version 2.1, Workload Policy can be used to implement circuit breaking for large queries.
 
-| Version                 | 2.1 |
-|--------------------|-----|
-| select             | √   |
-| insert into select | √   |
-| insert into values | X   |
-| stream load        | √   |
-| routine load       | √   |
-| backup             | X   |
-| compaction         | X   |
+| Version                 | since 2.1 |
+|--------------------|-----------|
+| select             | yes       |
+| insert into select | yes       |
+| insert into values | no        |
+| stream load        | yes       |
+| routine load       | yes       |
+| backup             | no        |
+| compaction         | no        |
 
 ### Creating Workload Policy
 Use the `CREATE WORKLOAD Policy` command to create a resource management policy.
@@ -242,7 +223,7 @@ Use the `CREATE WORKLOAD Policy` command to create a resource management policy.
 In the example below, create a Policy named `test_cancel_Policy`, which will cancel queries running in the cluster for more than 1000ms. The current status is enabled. Creating a Workload Policy requires `admin_priv` privileges.
 
 ```sql
-create workload Policy test_cancel_Policy
+create workload policy test_cancel_Policy
 Conditions(query_time > 1000)
 Actions(cancel_query) 
 properties('enabled'='true'); 
@@ -280,7 +261,7 @@ When creating a Workload Policy, the following must be specified:
 By default, Workload Policies apply to all supported queries. If you want to specify that a Policy only targets a specific Workload Group, you need to bind the Workload Group through the `workload_group` option. The statement is as follows:
 
 ```sql
-create workload Policy test_cancel_big_query
+create workload policy test_cancel_big_query
 Conditions(query_time > 1000)
 Actions(cancel_query) 
 properties('workload_group'='normal')
@@ -299,8 +280,8 @@ properties('workload_group'='normal')
 Attempt to modify concurrency-related parameters in the session variables of the Admin account.
 
 ```sql
-// log on admin to check variables
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
+-- log on admin to check variables
+show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
 +-------------------------------------+-------+---------------+---------+
@@ -308,13 +289,13 @@ mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 1 row in set (0.00 sec)
 
-// Create a Policy to modify the concurrency parameters of the admin account.
+-- Create a Policy to modify the concurrency parameters of the admin account.
 create workload Policy test_set_var_Policy
 Conditions(username='admin')
 Actions(set_session_variable 'parallel_fragment_exec_instance_num=1') 
 
-// After some time, check the admin account's parameters again.
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
+-- After some time, check the admin account's parameters again.
+show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
 +-------------------------------------+-------+---------------+---------+

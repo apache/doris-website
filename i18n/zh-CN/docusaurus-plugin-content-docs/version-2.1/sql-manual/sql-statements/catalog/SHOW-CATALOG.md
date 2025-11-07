@@ -1,83 +1,59 @@
 ---
 {
-    "title": "SHOW CATALOGS",
+    "title": "SHOW-CATALOG",
     "language": "zh-CN"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-
-
-
 ## 描述
 
-该语句用于显示已存在是数据目录（catalog）
+该语句用于显示已存在是数据目录（catalog）属性
 
-语法：
+## 语法
 
 ```sql
-SHOW CATALOGS [LIKE]
+SHOW CATALOG <catalog_name>
 ```
 
-说明：
 
-LIKE：可按照 CATALOG 名进行模糊查询
+## 必填参数
 
-返回结果说明：
+**1. `<catalog_name>`**
 
-* CatalogId：数据目录唯一 ID
-* CatalogName：数据目录名称。其中 internal 是默认内置的 catalog，不可修改。
-* Type：数据目录类型。
-* IsCurrent: 是否为当前正在使用的数据目录。
+需要显示 catalog 的名字
+
+## 返回值
+
+
+## 权限控制
+
+| 权限（Privilege）                                                                                | 对象（Object） | 说明（Notes）      |
+|:---------------------------------------------------------------------------------------------|:-----------|:---------------|
+| ADMIN_PRIV / SELECT_PRIV / LOAD_PRIV / ALTER_PRIV / CREATE_PRIV / SHOW_VIEW_PRIV / DROP_PRIV | Catalog    | 需要有上述权限中的一种就可以 |
+
+
 
 ## 示例
 
-1. 查看当前已创建的数据目录
+1. 查看创建的数据目录属性
 
    ```sql
-   SHOW CATALOGS;
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-    |         0 | internal    | internal | yes       | UNRECORDED              | NULL                | Doris internal catalog |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-       ```
-   
-2. 按照目录名进行模糊搜索
-
+   SHOW CATALOG test_mysql;
+   ```
    ```sql
-   SHOW CATALOGS LIKE 'hi%';
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    | CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-    |    130100 | hive        | hms      |           | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-    +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-       ```
+      +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+   | Key            | Value                                                                                                                                               |
+   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+   | checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |
+   | create_time    | 2025-02-17 17:21:13.099                                                                                                                             |
+   | driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |
+   | driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |
+   | jdbc_url       | jdbc:mysql://127.0.0.1:3306/db                                                                                                                      |
+   | password       | *XXX                                                                                                                                                |
+   | type           | jdbc                                                                                                                                                |
+   | use_meta_cache | true                                                                                                                                                |
+   | user           | root                                                                                                                                                |
+   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+ 
+   ```
 
-## 关键词
-
-SHOW, CATALOG, CATALOGS
-
-## 最佳实践
 

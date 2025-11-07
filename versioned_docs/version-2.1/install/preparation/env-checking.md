@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 When deploying Doris, the following checks need to be performed for the hardware and software environment:
 
 - Hardware Environment Check
@@ -80,7 +61,11 @@ SSD is recommended for data storage in the following scenarios:
 
 ### File System Check
 
-Doris recommends using EXT4 or XFS file systems. The EXT4 file system offers good stability, performance, and lower fragmentation issues. The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
+Doris recommends using EXT4 or XFS file systems:
+
+- **EXT4**: The EXT4 file system offers good stability, performance, and lower fragmentation issues. 
+
+- **XFS**: The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
 
 ### Network Card Check
 
@@ -90,35 +75,33 @@ Doris involves distributing data partitions across different instances for paral
 
 Doris can be deployed on x86-64 or ARM64 architecture server platforms.
 
-- Development and Testing Environments
+- **Development and Testing Environments**
+
+  In development and testing environments, FE and BE instances can be deployed in a mixed manner, following these guidelines:
+
+  * In a validation testing environment, one FE and one BE can be deployed on a single server, but it is not recommended to deploy multiple FE and BE instances on the same machine.
+
+  * If 3 replicas of data are required, at least 3 servers are needed, with each server deploying one BE instance.
 
   | Module    | CPU        | Memory  | Disk                         | Network              | Minimum Instance Count |
   | --------- | ---------- | ------- | ---------------------------- | -------------------- | ---------------------- |
   | Frontend  | 8 cores +  | 8 GB+   | SSD or SATA, 10 GB+          | Gigabit/Ten-Gigabit  | 1                      |
   | Backend   | 8 cores +  | 16 GB+  | SSD or SATA, 50 GB+          | Gigabit/Ten-Gigabit  | 1                      |
 
-  :::info
+- **Production Environments**
 
-   * In the test validation environment, you can deploy FE and BE on the same server.
-   * It is generally recommended to deploy only one BE instance per machine and only one FE instance.
-   * If 3 replicas of data are required, at least 3 machines should each deploy one BE instance, instead of deploying 3 instances on a single machine.
+  In a production environment, it is recommended to deploy FE and BE instances independently, following these guidelines:
 
-  :::
+  * If resources are limited and FE and BE need to be co-located on the same server, it is advised to store FE and BE data on separate hard drives.
 
-- Production Environments
+  * BE nodes can be configured with multiple hard drives, allowing a single BE instance to utilize multiple HDD or SSD disks.
+
+  Recommended server specifications are as follows:
 
   | Module    | CPU        | Memory   | Disk                         | Network   | Minimum Instance Count |
   | --------- | ---------- | -------- | ---------------------------- | --------- | ---------------------- |
   | Frontend  | 16 cores + | 64 GB+   | SSD or RAID card, 100 GB+     | 10-Gigabit | 1                      |
   | Backend   | 16 cores + | 64 GB+   | SSD or SATA, 100 GB+          | 10-Gigabit | 3                      |
-
-  :::info
-
-  * In production environments, if FE and BE are mixed, attention should be paid to resource contention. It is recommended to store metadata and data on separate disks.
-  * BE nodes can be configured with multiple hard drives, binding multiple HDDs or SSDs on a single BE instance.
-  * The performance of the cluster depends on the resources of the BE nodes. The more BE nodes, the better the Doris performance. Typically, Doris can fully perform on clusters with 10 to 100 machines.
-
-  :::
 
 ## Disk Space Calculation
 
@@ -131,9 +114,8 @@ In the Doris cluster, FE (Frontend) is mainly used for metadata storage, includi
 
 ## Java Environment Check
 
-All Doris processes depend on Java.
+All Doris processes depend on Java:
 
-- For versions prior to 2.1, use Java 8. Recommended version: `openjdk-8u352-b08-linux-x64`.
-  
-- For versions 3.0 and later, use Java 17. Recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+- **For versions before 2.1 (inclusive)**: please use Java 8, recommended version: `jdk-8u352` or later.
 
+- **For versions from 3.0 (inclusive) onwards**: please use Java 17, recommended version: `jdk-17.0.10` or later.

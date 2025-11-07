@@ -109,7 +109,7 @@ We have been in close contact with the open source Doris community all the way f
 - Optimize the underlying compaction of data and reduce resource usage as much as possible.
 - Provide optimization suggestions for slow SQL and warnings for abnormal table creation behaviors.
 
-If the perfect data warehouse is not there to be found, I think providing feedback for the second best is a way to help make one. We are also looking into its commercialized version called SelectDB to see if more custom-tailored advanced features can grease the wheels.
+If the perfect data warehouse is not there to be found, I think providing feedback for the second best is a way to help make one. We are also looking into a commercialized products based on Apach Doris called SelectDB to see if more custom-tailored advanced features can grease the wheels.
 
 # Conclusion
 

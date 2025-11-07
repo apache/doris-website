@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Usually, we first use Query Profile to analyze query memory usage. If the sum of the memory of each operator counted in Query Profile is much smaller than the memory counted by Query Memory Tracker, it means that the operator memory counted by Query Profile is much different from the actual memory used. Then, we often need to use Heap Profile for further analysis. If Query is Canceled due to memory limit overrun and cannot be completed, Query Profile is incomplete and may not be analyzed accurately. Usually, we directly use Heap Profile to analyze query memory usage.
 
 ## Query Memory View
@@ -44,7 +25,7 @@ The memory statistics of historical queries can be viewed in `peakMemoryBytes` o
 
 ## Use Query Profile to analyze query memory usage
 
-Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../../query/query-analysis/query-profile.md). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
+Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
 
 1. Locate Operators or memory data structures that use a lot of memory
 

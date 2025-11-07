@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 支持在分区表中添加临时分区。临时分区与正式分区不同，临时分区不会被常规查询检索到，只有通过特殊查询语句才能查询。
 
 - 临时分区的分区列与正式分区相同且不可修改。
@@ -102,7 +83,7 @@ PROPERTIES (
 -- 待替换的分区 p1, p2, p3 的范围 (=> 并集)：
 [10, 20), [20, 30), [40, 50) => [10, 30), [40, 50)
 
--- 替换分区 tp1, tp2 的范围(=> 并集)：
+-- 替换分区 tp1, tp2 的范围 (=> 并集)：
 [10, 30), [40, 45), [45, 50) => [10, 30), [40, 50)
 
 --范围并集相同，则可以使用 tp1 和 tp2 替换 p1, p2, p3。
@@ -114,7 +95,7 @@ PROPERTIES (
 -- 待替换的分区 p1 的范围 (=> 并集)：
 [10, 50) => [10, 50)
 
--- 替换分区 tp1, tp2 的范围(=> 并集)：
+-- 替换分区 tp1, tp2 的范围 (=> 并集)：
 [10, 30), [40, 50) => [10, 30), [40, 50)
 
 -- 范围并集不相同，如果 strict_range 为 true，则不可以使用 tp1 和 tp2 替换 p1。如果为 false，且替换后的两个分区范围 [10, 30), [40, 50) 和其他正式分区不重叠，则可以替换。
@@ -123,10 +104,10 @@ PROPERTIES (
 **示例 3**
 
 ```sql
--- 待替换的分区 p1, p2 的枚举值(=> 并集)：
+-- 待替换的分区 p1, p2 的枚举值 (=> 并集)：
 (1, 2, 3), (4, 5, 6) => (1, 2, 3, 4, 5, 6)
 
--- 替换分区 tp1, tp2, tp3 的枚举值(=> 并集)：
+-- 替换分区 tp1, tp2, tp3 的枚举值 (=> 并集)：
 (1, 2, 3), (4), (5, 6) => (1, 2, 3, 4, 5, 6)
 
 -- 枚举值并集相同，可以使用 tp1，tp2，tp3 替换 p1，p2
@@ -135,10 +116,10 @@ PROPERTIES (
 **示例 4**
 
 ```sql
--- 待替换的分区 p1, p2，p3 的枚举值(=> 并集)：
+-- 待替换的分区 p1, p2，p3 的枚举值 (=> 并集)：
 (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai")), (("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
 
--- 替换分区 tp1, tp2 的枚举值(=> 并集)：
+-- 替换分区 tp1, tp2 的枚举值 (=> 并集)：
 (("1","beijing"), ("1", "shanghai")), (("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai")) => (("1","beijing"), ("1", "shanghai"), ("2","beijing"), ("2", "shanghai"), ("3","beijing"), ("3", "shanghai"))
 
 -- 枚举值并集相同，可以使用 tp1，tp2 替换 p1，p2，p3

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 子查询（Subquery）是嵌套在另一个查询（通常是 SELECT 语句）中的 SQL 查询。它可以用在 SELECT、FROM、WHERE 或 HAVING 子句中，为外部查询提供数据或条件。子查询的使用使得 SQL 查询变得更加灵活和强大，因为它们允许我们在单个查询中解决更复杂的问题。  
   
 子查询的一些重要特征如下：  
@@ -302,25 +283,25 @@ where
 
 ## 常见问题
 
-由于标量子查询的输出必须是一个单值，Doris 对于关联和非关联的标量子查询采取了不同的处理方式。
+由于标量子查询的输出必须是一个单值，如果子查询返回的数据量超过一条记录，将会报告运行时错误。
 
 ### 对于关联的标量子查询
 
-目前 Doris 暂时只能以静态的方式确保子查询输出为单值（即没有 `group by` 的单个聚合函数）。因此，在使用关联标量子查询时，需要根据需求添加没有 `group by` 的聚合函数，如`any_value`，以便优化器能顺利识别单值语义。用户需要保证子查询一定只返回一个值，如果子查询实际返回多个值（其他数据库系统会在运行时报错），由于添加了聚合函数，它始终只返回一个值，虽然能得到结果，但可能和预期不符。
+在使用关联标量子查询时，如果满足关联条件的子查询返回的数据量超过一条记录，将会报告运行时错误。
 
 请参考以下 SQL 示例：
 
 ```sql
--- 关联的标量子查询，缺少单个无 group by 的聚合函数，目前不支持  
-select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;  
+-- 关联的标量子查询，如果 t2 表中满足 t1.c2 = t2.c2 的数据多于 1 条，则会报运行时错误
+select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;
 
--- 添加单个聚合函数，让优化器顺利识别  
-select t1.*, (select any_value(t2.c1) from t2 where t1.c2 = t2.c2) from t1;
+-- 报错信息样例如下 
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT][E33] correlate scalar subquery must return only 1 row
 ```
 
 ### 对于非关联的标量子查询
 
-Doris 会在运行时添加一个`assert num rows`算子，如果子查询返回的数据大于一条，则会报一个运行时错误。
+Doris 会在运行时添加一个`assert num rows`算子，如果子查询返回的数据量超过一条记录，将会报告运行时错误。
 
 请参考以下 SQL 示例：
 

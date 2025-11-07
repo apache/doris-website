@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## JSON
 
 The JSON data type stores [JSON](https://www.rfc-editor.org/rfc/rfc8785) data efficiently in a binary format and allows access to its internal fields through JSON functions.
@@ -847,6 +828,38 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 19 rows in set (0.03 sec)
 
 ```
+
+### FAQ
+
+1. Is there a difference between null in JSON and NULL in SQL (i.e., IS NULL)?
+
+Yes, there is a difference. In JSON, null (e.g., {"key1": null}) means that the key key1 exists and its value is explicitly null. This is a special type that gets encoded into JSON binary.
+
+In contrast, SQL NULL (when using IS NULL) can indicate that the key doesn’t exist at all in the JSON object.
+
+For example:
+
+``` sql
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL;
++----------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL |
++----------------------------------------------------------+
+|                                                        0 |
++----------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL;
++-------------------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL |
++-------------------------------------------------------------------+
+|                                                                 1 |
++-------------------------------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+2. What’s the difference between `GET_JSON_XXX` and `JSON_EXTRACT_XXX` functions, and how should I choose between them?
+
+The `GET_JSON_XXX` functions are designed for use on string types — they extract values directly from raw JSON strings. On the other hand, `JSON_EXTRACT_XXX` functions are implemented specifically for the JSON data type and are optimized for it.
 
 ### keywords
 JSONB, JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_string, json_exists_path, json_type

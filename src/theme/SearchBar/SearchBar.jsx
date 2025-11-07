@@ -6,7 +6,7 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
 import { ReactContextError, useDocsPreferredVersion } from '@docusaurus/theme-common';
 import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
-import { fetchIndexesByWorker, searchByWorker } from './searchByWorker';
+import { fetchIndexesByWorker, searchByWorker } from '@yang1666204/docusaurus-search-local/dist/client/client/theme/searchByWorker'
 import { SuggestionTemplate } from './SuggestionTemplate';
 import { EmptyTemplate } from './EmptyTemplate';
 import {
@@ -21,12 +21,14 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
-import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/common';
+import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
+import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { DataContext } from '../Layout';
+
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
     const autoComplete = autoCompleteModule.default;
@@ -47,7 +49,7 @@ function getVersionUrl(baseUrl, pathname) {
     }
     if (pathname?.startsWith('/docs') || pathname?.startsWith('/zh-CN/docs')) {
         let version = pathname?.startsWith('/docs') ? pathname.split('/')[2] : pathname.split('/')[3];
-        if (VERSIONS.includes(version)) {
+        if (VERSIONS.includes(version) && version !== DEFAULT_VERSION) {
             versionUrl += `docs/${version}/`;
         }
     }
@@ -196,7 +198,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 if (versionUrl !== baseUrl) {
                     if (!versionUrl.startsWith(baseUrl)) {
                         throw new Error(
-                            `Version url '${versionUrl}' does not start with base url '${baseUrl}', this is a bug of \`@easyops-cn/docusaurus-search-local\`, please report it.`,
+                            `Version url '${versionUrl}' does not start with base url '${baseUrl}', this is a bug of \`@yang1666204/docusaurus-search-local\`, please report it.`,
                         );
                     }
                     params.set('version', versionUrl.substring(baseUrl.length));
@@ -243,7 +245,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [
                     {
                         source: debounce(async (input, callback) => {
-                            const result = await searchByWorker(versionUrl, searchContext, input);
+                            const result = await searchByWorker(versionUrl, searchContext, input, searchResultLimits);
                             callback(result);
                         }, 300),
                         templates: {

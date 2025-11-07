@@ -6,24 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services. This capability ensures businesses can meet growing demands or reduce idle resource waste. Scaling up or down BE nodes does not affect cluster availability but involves data migration, so it is recommended to perform scaling operations during periods of low business activity.
 
 ## Scale In/Out the FE Clusters
@@ -66,7 +48,7 @@ fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
     ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
     ```
 
-  * Register the node as a Observer FE:
+  * Register the node as an Observer FE:
 
     ```sql
     ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";

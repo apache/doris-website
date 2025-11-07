@@ -5,32 +5,13 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 支持自定义时区设置
 
 ## 基本概念
 
 Doris 内部存在以下两个时区相关参数：
 
-- system_time_zone : 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
+- system_time_zone : 当服务器启动时，系统会根据机器设置时区自动设置，设置后不可修改。
 
 - time_zone : 集群当前时区，可以修改。集群启动时，该变量会设置为与 `system_time_zone` 相同，之后不再变动，除非用户手动修改。
 
@@ -58,13 +39,13 @@ Doris 内部存在以下两个时区相关参数：
 
 受时区影响的函数：
 
-- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris Session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
+- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
 
-- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris Session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
+- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
 
-- `CURTIME`：返回当前 Doris Session `time_zone` 指定时区的时间。
+- `CURTIME`：返回当前 Doris session `time_zone` 指定时区的时间。
 
-- `NOW`：返回当前 Doris Session `time_zone` 指定时区的日期时间。
+- `NOW`：返回当前 Doris session `time_zone` 指定时区的日期时间。
 
 - `CONVERT_TZ`：将一个日期时间从一个指定时区转换到另一个指定时区。
 
@@ -87,7 +68,7 @@ Doris 内部存在以下两个时区相关参数：
 
 时区值可以使用多种格式给出，以下是 Doris 中完善支持的标准格式：
 
-1. 标准具名时区格式，如 "Asia/Shanghai", "America/Los_Angeles"。此类格式来源于[本机所带时区数据](#数据来源)，如 "Etc/GMT+3" 等亦属此列。
+1. 标准具名时区格式，如 "Asia/Shanghai", "America/Los_Angeles"。此类格式来源于[本机所带时区数据](./time-zone.md)，如 "Etc/GMT+3" 等亦属此列。
 
 2. 标准偏移格式，如 "+02:30", "-10:00"（不支持诸如 "+12:03" 等特殊偏移）
 
@@ -109,9 +90,9 @@ Doris 内部存在以下两个时区相关参数：
 
 时区问题主要涉及三个影响因素：
 
-1. Session variable `time_zone` —— 集群时区
+1. session variable `time_zone` —— 集群时区
 
-2. Stream Load、Broker Load 等导入时指定的 Header `timezone` —— 导入时区
+2. Stream Load、Broker Load 等导入时指定的 header `timezone` —— 导入时区
 
 3. 时区类型字面量 "2023-12-12 08:00:00+08:00" 中的 "+08:00" —— 数据时区
 
@@ -205,7 +186,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
 
 ### 夏令时
 
-夏令时的起讫时间来自[当前时区数据源](#数据来源)，不一定与当年度时区所在地官方实际确认时间完全一致。该数据由 ICANN 进行维护。如果需要确保夏令时表现与当年度实际规定一致，请保证 Doris 所选择的数据源为最新的 ICANN 所公布时区数据，下载途径见下文。
+夏令时的起讫时间来自[当前时区数据源](./time-zone.md#数据来源)，不一定与当年度时区所在地官方实际确认时间完全一致。该数据由 ICANN 进行维护。如果需要确保夏令时表现与当年度实际规定一致，请保证 Doris 所选择的数据源为最新的 ICANN 所公布时区数据，下载途径见下文。
 
 ### 信息更新
 

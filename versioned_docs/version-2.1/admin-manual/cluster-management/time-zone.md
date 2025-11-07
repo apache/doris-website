@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Time Zone
 
 Doris supports custom time zone settings
@@ -41,13 +22,13 @@ The following two time zone related parameters exist within Doris:
 
     View the current time zone related configuration
 
-2. `SET [global] time_zone = 'Asia/Shanghai'`
+2. `SET [global] time_zone = 'Asia/Shanghai';`
 
    This command sets the time zone at the session level. If the `global` keyword is used, Doris FE persists the parameter and it takes effect for all new sessions afterwards.
 
 ## Data source
 
-The time zone data contains the name of the time zone, the corresponding time offset, and the change of daylight saving time. On the machine where the BE is located, the source of the data is the directory returned by command `TZDIR`. If was not supported, the directory `/usr/share/zoneinfo`.
+The time zone data contains the name of the time zone, the corresponding time offset, and the change of daylight saving time. On the machine where the BE is located, the source of the data is the directory returned by command `TZDIR`. If it was not supported, the directory `/usr/share/zoneinfo`.
 
 ## Impact of time zone
 
@@ -59,9 +40,9 @@ However, it does not affect the less than value of the time-type partitioned col
 
 Functions affected by time zone:
 
-- `FROM_UNIXTIME`: Given a UTC timestamp, return its date and time in the time zone specified by Doris session `time_zone`. For example, when `time_zone` is `CST`, `FROM_UNIXTIME(0)` returns `1970-01-01 08: 00:00`.
+- `FROM_UNIXTIME`: Given a UTC timestamp, return its date and time in the time zone specified by Doris session `time_zone`. For example, when `time_zone` is `CST`, `FROM_UNIXTIME(0)` returns `1970-01-01 08:00:00`.
 
-- `UNIX_TIMESTAMP`: Given a date and time, return its UTC timestamp in the time zone specified by Doris session `time_zone`, such as when `time_zone` is `CST` `UNIX_TIMESTAMP('1970-01-01 08:00:00 ')` returns `0`.
+- `UNIX_TIMESTAMP`: Given a date and time, return its UTC timestamp in the time zone specified by Doris session `time_zone`, such as when `time_zone` is `CST` `UNIX_TIMESTAMP('1970-01-01 08:00:00')` returns `0`.
 
 - `CURTIME`: Returns the time in the time zone specified by the current Doris session `time_zone`.
 
@@ -98,11 +79,11 @@ Time zone values can be given in a variety of formats. The following standard fo
 
    2. "CST", which is equivalent to the "Asia/Shanghai" time zone
 
-4. single letter Z, for Zulu time zone, equivalent to "+00:00" time zone
+4. single letter Z for Zulu time zone, equivalent to "+00:00" time zone
 
 Besides, all parsing of alphabet is case insensitive.
 
-Note: Some other formats are currently supported in some imports in Doris due to different implementations. **Production environments should not rely on these formats that are not listed here, and their behaviour may change at any time**, so keep an eye on the relevant changelog for version updates.
+Note: Some other formats are currently supported in some imports in Doris due to different implementations. **Production environments should not rely on these formats that are not listed here, and their behavior may change at any time**, so keep an eye on the relevant changelog for version updates.
 
 ## Best Practices
 
@@ -207,11 +188,11 @@ Doris is currently compatible with importing data in various time zones into Dor
 
 ### Daylight Saving Time
 
-The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN published time zone data. See below for download access.
+The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN-published time zone data. See below for download access.
 
 ### Information Update
 
-Real-world time zone and daylight saving time data may change from time to time for a variety of reasons, and IANA periodically records these changes and updates the corresponding time zone files. If you want the time zone information in Doris to be up to date with the latest IANA data, do one of the followings:
+Real-world time zone and daylight saving time data may change from time to time for various reasons, and IANA periodically records these changes and updates the corresponding time zone files. If you want the time zone information in Doris to be up to date with the latest IANA data, do one of the followings:
 
 1. Use the Package Manager to update
 

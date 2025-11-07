@@ -5,31 +5,12 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris 中的跨集群复制 (CCR) 功能，主要用于在多个集群之间高效同步数据，从而增强业务连续性和容灾能力。CCR 支持 Doris 中的多种操作，确保数据在不同集群间保持一致性。以下是 CCR 支持的主要 Doris 操作的详细情况。
 
 :::note
 
 1. Doris Version 中的 `-` 表示 Doris 2.0 及以上版本，CCR 所有版本。建议使用 Doris 使用 2.0.15 或者 2.1.6 或者更新的版本。
-2. CCR Syncer 和 Doris 的版本要求: Syncer Version >= 下游 Doris Version >= 上游 Doris Version。因此升级前先升 Syncer，再升下游 Doris，最后升上游 Doris。
+2. CCR Syncer 和 Doris 的版本要求：Syncer Version >= 下游 Doris Version >= 上游 Doris Version。因此升级前先升 Syncer，再升下游 Doris，最后升上游 Doris。
 3. CCR 目前不支持存算分离模式。
 
 :::
@@ -68,7 +49,7 @@ CCR 任务不同步修改库属性操作。
 | 表模型（duplicate，unique，aggregate）          | 支持     | -             | SQL      |                                                          |
 | 分区分桶                                  | 支持     | -             | SQL      |                                                          |
 | replication_num                           | 支持     | -             | SQL      |                                                          |
-| replication_allocation （resource group） | 支持     | -             | SQL      | 上游必须与下游一致，BE tag 必须一致，否则 CCR 任务会失败 |
+| replication_allocation（resource group） | 支持     | -             | SQL      | 上游必须与下游一致，BE tag 必须一致，否则 CCR 任务会失败 |
 | colocate_with                             | 不支持   |               |             |          |                                                          |
 | storage_policy                            | 不支持   |               |             |          |                                                          |
 | dynamic_partition                         | 支持     | -             | SQL      |                                                          |
@@ -81,7 +62,6 @@ CCR 任务不同步修改库属性操作。
 | compaction_policy                         | 支持     | -             | SQL      |                                                          |
 | time_series_compaction 系列               | 支持     | -             | SQL      |                                                          |
 | binlog 系列                               | 支持     | -             | SQL      | |
-| variant_enable_flatten_nested             | 支持     | -             | SQL      |                                                          |
 | skip_write_index_on_load                  | 支持     | -             | SQL      |                                                          |
 | row_strore 系列                            | 支持     | -             | SQL      |                                                          |
 | seq 列                                    | 支持     | -             | SQL      |                                                          |
@@ -111,7 +91,7 @@ CCR 任务不同步修改库属性操作。
 
 | 属性                       | 是否支持 | Doris version | 上游是否可以操作 | 下游是否可以操作                           | 说明                                    |
 | -------------------------- | -------- | ------------- | ---------------- | ------------------------------------------ | --------------------------------------- |
-| colocate                   | 不支持   |               | 可以             | 不可以，触发full sync 下游操作会丢失       |                                         |
+| colocate                   | 不支持   |               | 可以             | 不可以，触发 full sync 下游操作会丢失       |                                         |
 | distribution type          | 不支持   |               | 不可以           | 同上                                       |                                         |
 | dynamic partition          | 不支持   |               | 可以             | 同上                                       |                                         |
 | replication_num            | 不支持   |               | 不可以           | 不可以                                     |                                         |
@@ -121,13 +101,13 @@ CCR 任务不同步修改库属性操作。
 | row_store                  | 支持     | 2.1.8/3.0.4 |                  |                                            | 通过 Partial Sync |
 | bloom_filter_columns       |  支持 | 2.1.8/3.0.4 |                  |                                            | 通过 Partial Sync |
 | bloom_filter_fpp       |  支持 | 2.1.8/3.0.4 |                  |                                            | 通过 Partial Sync |
-| bucket num                 | 不支持   |               | 可以             | 不可以，触发full sync 下游操作会丢失       |                                         |
+| bucket num                 | 不支持   |               | 可以             | 不可以，触发 full sync 下游操作会丢失       |                                         |
 | isBeingSynced               | 不支持   |               | 不可以           | 不可以                                     |                                         |
-| compaction 系列属性        | 不支持   |               | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+| compaction 系列属性        | 不支持   |               | 可以             | 不可以，触发 full sync 下游操作会丢失不可以 |                                         |
 | skip_write_index_on_load   | 不支持   |               | 可以             | 同上                                       |                                         |
-| seq 列                     | 支持     | -             | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+| seq 列                     | 支持     | -             | 可以             | 不可以，触发 full sync 下游操作会丢失不可以 |                                         |
 | delete sign 列             | 支持     | -             | 可以             | 同上                                       |                                         |
-| comment                    | 支持   | 2.1.8/3.0.4 | 可以             | 不可以，触发full sync 下游操作会丢失不可以 |                                         |
+| comment                    | 支持   | 2.1.8/3.0.4 | 可以             | 不可以，触发 full sync 下游操作会丢失不可以 |                                         |
 
 ### 列操作
 
@@ -192,7 +172,7 @@ Bloom Filter
 
 | 导入方式     | 是否支持             | Doris version | 同步方式 | 下游是否可以操作                                             | 说明                                                 |
 | ------------ | -------------------- | ------------- | -------- | ------------------------------------------------------------ | ---------------------------------------------------- |
-| stream load  | 支持（临时分区除外） | -             | TXN      | 不可以，如果下游导入了，后续触发full或者Partial Sync，下游导入的数据会丢失 | 上游事务可见，即数据可见时生成binlog，下游开始同步。 |
+| stream load  | 支持（临时分区除外） | -             | TXN      | 不可以，如果下游导入了，后续触发 full 或者 Partial Sync，下游导入的数据会丢失 | 上游事务可见，即数据可见时生成 binlog，下游开始同步。 |
 | broker load  | 支持（临时分区除外） | -             | TXN      | 同上                                                         | 同上                                                 |
 | routine load | 支持（临时分区除外） | -             | TXN      | 同上                                                         | 同上                                                 |
 | mysql load   | 支持（临时分区除外） | -             | TXN      | 同上                                                         | 同上                                                 |
@@ -202,18 +182,18 @@ Bloom Filter
 
 | 操作                      | 是否支持             | Doris version | 同步方式     | 下游是否可以操作                                             | 说明                                                 |
 | ------------------------- | -------------------- | ------------- | ------------ | ------------------------------------------------------------ | ---------------------------------------------------- |
-| delete                    | 支持                 | -             | TXN          | 不可以，如果下游操作，后续触发full或者Partial Sync，下游操作会丢失 | 上游事务可见，即数据可见时生成binlog，下游开始同步。 |
+| delete                    | 支持                 | -             | TXN          | 不可以，如果下游操作，后续触发 full 或者 Partial Sync，下游操作会丢失 | 上游事务可见，即数据可见时生成 binlog，下游开始同步。 |
 | update                    | 支持                 | -             | TXN          | 同上                                                         | 同上                                                 |
 | insert                    | 支持                 | -             | TXN          | 同上                                                         | 同上                                                 |
 | insert into overwrite     | 支持（临时分区除外） | 2.1.6         | Partial Sync | 同上                                                         | 同上                                                 |
 | insert into overwrite     | 支持（临时分区除外） | 2.0           | full sync    | 同上                                                         | 同上                                                 |
-| 显式事务(3.0)begin commit | 不支持               |               |              |                                                              |                                                      |
+| 显式事务 (3.0)begin commit | 不支持               |               |              |                                                              |                                                      |
 
 ## 分区操作
 
 | 操作               | 是否支持                        | Doris version |        同步方式            | 下游是否可以单独操作                                        | 说明                                                         |
 | ------------------ | ------------------------------- | ------------- | ---------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
-| add partition      | 支持                            | -             | SQL                                | 不能，后续触发Full Sync 或者 Partial Sync 会导致下游操作丢失 | cooldown time 属性及其行为未知                               |
+| add partition      | 支持                            | -             | SQL                                | 不能，后续触发 Full Sync 或者 Partial Sync 会导致下游操作丢失 | cooldown time 属性及其行为未知                               |
 | add temp partition | 不支持                          |               |                                    | 同上                                                        | backup 不支持 tmp partition，从 doris 2.1.8/3.0.4 开始，可以修改上游 FE 配置：`ignore_backup_tmp_partitions` 绕过该问题 |
 | drop partition     | 支持                            | -             | SQL/Full Sync | 同上                                                        | 2.0.15/2.1.6 前：Full Sync，之后：SQL |
 | replace partition  | 支持                            | 2.1.7/3.0.3 | Partial Sync                       | 同上                                                        | Partial Sync **只支持 strict range 和 non-tmp partition 的 replace 方式**，否则会触发 Full Sync。 |

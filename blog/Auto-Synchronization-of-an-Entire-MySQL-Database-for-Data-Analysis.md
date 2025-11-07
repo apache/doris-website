@@ -3,8 +3,9 @@
     'title': 'Auto synchronization of an entire MySQL database for data analysis',
     'description': "Flink-Doris-Connector 1.4.0 allows users to ingest a whole database (MySQL or Oracle) that contains thousands of tables into Apache Doris, in one step.",
     'date': '2023-08-16',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Tech Sharing'],
+    'externalLink': 'https://www.velodb.io/blog/135',
     "image": '/images/auto-synchronize.png'
 }
 
@@ -87,13 +88,13 @@ According to feedback from early adopters, the Connector has also delivered high
 
 ## How It Benefits Data Engineers
 
-Engineers no longer have to worry about table creation or table schema maintenance, saving them days of tedious and error-prone work. Previously in Flink CDC, you need to create a Flink job for each table and build a log parsing link at the source end, but now with whole-database ingestion, resouce consumption in the source database is largely reduced. It is also a unified solution for incremental update and full update.
+Engineers no longer have to worry about table creation or table schema maintenance, saving them days of tedious and error-prone work. Previously in Flink CDC, you need to create a Flink job for each table and build a log parsing link at the source end, but now with whole-database ingestion, resource consumption in the source database is largely reduced. It is also a unified solution for incremental update and full update.
 
 ## Other Features
 
 **1. Joining dimension table and fact table**
 
-The common practice is to put dimension tables in Doris and run join queries via the real-time stream of Flink. Based on the [Async I/O of Flink](https://nightlies.apache.org/flink/flink-docs-release-1.14/docs/dev/datastream/operators/asyncio/), Flink-Doris-Connector 1.4.0 implements asynchronous Lookup Join, so the Flink real-time stream won't be blocked due to queries. Also, the Connector allows you to combine mulitple queries into one big query, and send it to Doris at once for processing. This improves the efficiency and throughput of such join queries.
+The common practice is to put dimension tables in Doris and run join queries via the real-time stream of Flink. Based on the [Async I/O of Flink](https://nightlies.apache.org/flink/flink-docs-release-1.14/docs/dev/datastream/operators/asyncio/), Flink-Doris-Connector 1.4.0 implements asynchronous Lookup Join, so the Flink real-time stream won't be blocked due to queries. Also, the Connector allows you to combine multiple queries into one big query, and send it to Doris at once for processing. This improves the efficiency and throughput of such join queries.
 
 **2. Thrift** **SDK**
 

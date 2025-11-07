@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 通常先使用 Query Profile 分析查询内存使用，如果 Query Profile 中统计的各个算子（Operator）内存之和远小于 Query Memory Trcker 统计到的内存，说明 Query Profile 统计到的算子内存与实际使用的内存相差较大，那么往往还需要使用 Heap Profile 进一步分析。如果 Query 因为内存超限被 Cancel，无法执行完成，此时 Query Profile 不完整，可能无法准确分析，通常直接使用 Heap Profile 分析 Query 内存使用。
 
 ## 查询内存查看
@@ -38,17 +19,17 @@ MemTrackerLimiter Label=query, Type=overview, Limit=-1.00 B(-1 B), Used=83.32 MB
 
 首先定位大内存查询的 QueryID，在 BE web 页面 `http://{be_host}:{be_web_server_port}/mem_tracker?type=query` 中按照 `Current Consumption` 排序可以看到实时的大内存查询，在 `label` 中可以找到 QueryID。
 
-当报错进程内存超限或可用内存不足时，在 `be.INFO` 日志中 `Memory Tracker Summary` 下半部分包含内存使用 TOP 10 的任务（查询/导入/Compaction等）的 Memory Tracker，格式为 `MemTrackerLimiter Label=Query#Id=xxx, Type=query`，通常在 TOP 10 的任务中就能定位到大内存查询的 QueryID。
+当报错进程内存超限或可用内存不足时，在 `be.INFO` 日志中 `Memory Tracker Summary` 下半部分包含内存使用 TOP 10 的任务（查询/导入/Compaction 等）的 Memory Tracker，格式为 `MemTrackerLimiter Label=Query#Id=xxx, Type=query`，通常在 TOP 10 的任务中就能定位到大内存查询的 QueryID。
 
-历史查询的内存统计结果可以查看`fe/log/fe.audit.log`中每个查询的`peakMemoryBytes`，或者在`be/log/be.INFO`中搜索`Deregister query/load memory tracker, queryId`查看单个BE上每个查询的内存峰值。
+历史查询的内存统计结果可以查看`fe/log/fe.audit.log`中每个查询的`peakMemoryBytes`，或者在`be/log/be.INFO`中搜索`Deregister query/load memory tracker, queryId`查看单个 BE 上每个查询的内存峰值。
 
 ## 使用 Query Profile 分析查询内存使用
 
-依据 QueryID 在 `fe/log/fe.audit.log` 中找到包括 SQL 在内的查询信息，`explain SQL` 得到查询计划，`set enable_profile=true`后执行 SQL 得到查询的 Query Profile，有关 Query Profile 的详细介绍参考文档 [Query Profile](../../../query/query-analysis/query-profile.md)，这里只介绍 Query Profile 中内存相关的内容，并据此定位使用大量内存的 Operator 和数据结构。
+依据 QueryID 在 `fe/log/fe.audit.log` 中找到包括 SQL 在内的查询信息，`explain SQL` 得到查询计划，`set enable_profile=true`后执行 SQL 得到查询的 Query Profile，有关 Query Profile 的详细介绍参考文档 [Query Profile](../../../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)，这里只介绍 Query Profile 中内存相关的内容，并据此定位使用大量内存的 Operator 和数据结构。
 
 1. 定位使用大量内存的 Operator 或内存数据结构
 
-Query Profile 分为两部分:
+Query Profile 分为两部分：
 
 - `MergedProfile` 
 

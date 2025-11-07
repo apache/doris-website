@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris can continuously consume data from Kafka Topic through the Routine Load method. After submitting a Routine Load job, Doris will continuously run the load job, generating real-time loading tasks to constantly consume messages from the specified Topic in the Kafka cluster.
 
 Routine Load is a streaming load job that supports Exactly-Once semantics, ensuring that data is neither lost nor duplicated.
@@ -76,6 +57,24 @@ The specific import process of Routine Load is shown in the following diagram:
 
 5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
+### Auto Resume
+
+To ensure high availability of jobs, an auto-resume mechanism has been introduced. In the event of an unexpected pause, the Routine Load Scheduler thread will attempt to auto-resume the job. For unexpected Kafka outages or other scenarios where the system is unable to function, the auto-resume mechanism ensures that once Kafka is restored, the routine load job can continue running normally without manual intervention.
+
+Situations where auto-resume will not occur:
+
+- The user manually executes the PAUSE ROUTINE LOAD command.
+
+- There are issues with data quality.
+
+- Situations where resuming is not possible, such as when a database table is deleted.
+
+Apart from these three situations, other paused jobs will attempt to resume automatically.
+
+### FAQ
+
+Auto-resume may encounter some issues during cluster restarts or upgrades. Before version 2.1.7, there was a high probability that tasks would not automatically resume after being paused due to cluster restarts or upgrades. Since version 2.1.7, the likelihood of tasks not resuming automatically after such events has decreased.
+
 ## Quick Start
 
 ### Create Job
@@ -89,7 +88,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Kafka, there is the following sample data:
 
     ```SQL
-    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
     1,Emily,25
     2,Benjamin,35
     3,Olivia,28
@@ -170,6 +169,9 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
         "kafka_broker_list" = "192.168.88.62:9092"
     );
     ```
+:::info Note
+If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`"
+:::
 
 ### Viewing Status
 
@@ -302,7 +304,7 @@ The modules for creating a loading job are explained as follows:
 | job_name               | Specifies the name of the created loading job. The job name must be unique within the same database. |
 | tbl_name               | Specifies the name of the table to be loaded. This parameter is optional. If not specified, the dynamic table mode will be used, where Kafka data should contain the table name information. |
 | merge_type             | Specifies the data merge type. The default value is APPEND. Possible merge_type options are: <ul><li>APPEND: Append load mode</li><li>MERGE: Merge load mode</li><li>DELETE: load data as delete records</li></ul> |
-| load_properties        | Describes the load properties, including:<ul><li>colum_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
+| load_properties        | Describes the load properties, including:<ul><li>column_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
 | job_properties         | Specifies the general load parameters for Routine Load.      |
 | data_source_properties | Describes the properties of Kafka data source.               |
 | comment                | Describes any additional comments for the loading job.       |
@@ -1573,8 +1575,8 @@ The columns in the result set provide the following information:
     | 2022-05-06 | 10001 | Test01   | Shanghai    | windows | NULL |
     | 2022-05-05 | 10002 | Test01   | Beijing     | linux   | NULL |
     | 2022-05-06 | 10002 | Test01   | Shanghai    | linux   | NULL |
-    | 2022-05-05 | 10004 | Test01   | Heibei      | windows | NULL |
-    | 2022-05-06 | 10004 | Test01   | Shanxi      | windows | NULL |
+    | 2022-05-05 | 10004 | Test01   | Hebei      | windows | NULL |
+    | 2022-05-06 | 10004 | Test01   | Shaanxi      | windows | NULL |
     | 2022-05-05 | 10003 | Test01   | Beijing     | macos   | NULL |
     | 2022-05-06 | 10003 | Test01   | Jiangsu     | macos   | NULL |
     +------------+-------+----------+----------+---------+------+
@@ -1720,6 +1722,30 @@ FROM KAFKA
     "kafka_topic" = "my_topic"
 );
 ```
+
+## Connect to the SASL Kafka service
+
+Here we take accessing the StreamNative message service as an example:
+
+```
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age)
+FROM KAFKA (
+"kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+"kafka_topic" = "my_topic",
+"property.security.protocol" = "SASL_SSL",
+"property.sasl.mechanism" = "PLAIN",
+"property.sasl.username" = "user",
+"property.sasl.password" = "token:eyJhbxxx",
+"property.group.id" = "my_group_id_1",
+"property.client.id" = "my_client_id_1",
+"property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+Note that if the trusted CA certificate path is not configured on the BE side, you need to set `"property.enable.ssl.certificate.verification" = "false"` to not verify whether the server certificate is credible.
+
+Otherwise, you need to configure the trusted CA certificate path: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
 
 ## More Details
 

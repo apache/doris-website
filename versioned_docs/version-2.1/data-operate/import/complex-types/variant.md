@@ -5,26 +5,7 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-The VARIANT type can store semi-structured JSON data, allowing for the storage of complex data structures that contain different data types (such as integers, strings, booleans, etc.) without the need to predefine specific columns in the table structure. This type is particularly suitable for handling complex nested structures that may change at any time. During the writing process, the VARIANT type can automatically infer the structure and type of the columns, dynamically merging the written schema, and storing the JSON keys and their corresponding values as columns and dynamic sub-columns. For more documentation, please refer to [VARIANT](../../../sql-manual/sql-data-types/semi-structured/VARIANT.md).
+The VARIANT type can store semi-structured JSON data, allowing for the storage of complex data structures that contain different data types (such as integers, strings, booleans, etc.) without the need to predefine specific columns in the table structure. This type is particularly suitable for handling complex nested structures that may change at any time. During the writing process, the VARIANT type can automatically infer the structure and type of the columns, dynamically merging the written schema, and storing the JSON keys and their corresponding values as columns and dynamic sub-columns. For more documentation, please refer to [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT).
 
 ## Usage Limitations
 
@@ -185,4 +166,53 @@ mysql> select * from testdb.test_variant\G
    payload: {"before":"abb58cc0db673a0bd5190000d2ff9c53bb51d04d","commits":[""],"distinct_size":4,"head":"91edd3c8c98c214155191feb852831ec535580ba","push_id":6027092734,"ref":"refs/heads/master","size":4}
     public: 1
 created_at: 2020-11-14 02:00:00
+```
+
+### Step 5: Check type inference
+
+Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
+
+``` sql
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+6 rows in set (0.07 sec)
+
+mysql> set describe_extend_variant_column = true;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
+| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
+....
++------------------------------------------------------------+------------+------+-------+---------+-------+
+406 rows in set (0.07 sec)
+```
+DESC can be used to specify partition and view the schema of a particular partition. The syntax is as follows:
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```

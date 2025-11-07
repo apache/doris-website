@@ -50,10 +50,16 @@ For different versions of Doris, you need to download different build images. Th
 
 | Image Version                                       | Doris Version |
 | --------------------------------------------------- | ------------- |
-| apache/doris:build-env-for-2.0                      | 2.0.x         |
-| apache/doris:build-env-for-2.0-no-avx2              | 2.0.x         |
-| apache/doris:build-env-ldb-toolchain-latest         | master        |
-| apache/doris:build-env-ldb-toolchain-no-avx2-latest | master        |
+| apache/doris:build-env-for-2.0                      | 2.0.x      |
+| apache/doris:build-env-for-2.0-no-avx2              | 2.0.x      |
+| apache/doris:build-env-for-2.1                      | 2.1.x      |
+| apache/doris:build-env-for-2.1-no-avx2              | 2.1.x      |
+| apache/doris:build-env-for-3.0                      | 3.0.x      |
+| apache/doris:build-env-for-3.0-no-avx2              | 3.0.x      |
+| apache/doris:build-env-for-3.1                      | 3.1.x      |
+| apache/doris:build-env-for-3.1-no-avx2              | 3.1.x      |
+| apache/doris:build-env-ldb-toolchain-latest         | master     |
+| apache/doris:build-env-ldb-toolchain-no-avx2-latest | master     |
 
 Take Doris 2.0 as an example, download and check the correponding Docker image.
 
@@ -70,7 +76,8 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 **Note:** 
 
 - Download the right image version for the Doris version that you're working with. The image version number is aligned with the Doris version number. For example, you should use "apache/doris:build-env-for-2.0" to compile Doris 2.0.
-- `apache/doris:build-env-ldb-toolchain-latest` is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
+- `apache/doris:build-env-ldb-toolchain-latest` (Currently, only for x64 architecture) is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
+- To perform Docker compilation on an ARM64 architecture, you need to download a Linux image that supports ARM64 (e.g., apache/doris:base-latest, which corresponds to Ubuntu 22.04.5 LTS). Then, refer to the compilation documentation for Linux and ARM platforms to download and install the required dependency packages before proceeding with the build.
 - Images with "no-avx2" in their names contain third-party libraries that can run on CPUs that do not support AVX2 instructions. Using these images, you can compile Doris with the "USE_AVX2=0".
 - For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
 - The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands. For versions earlier than 2.1 (inclusive), please use JDK 8. For versions later than 3.0 (inclusive) or the master branch, please use JDK 17.

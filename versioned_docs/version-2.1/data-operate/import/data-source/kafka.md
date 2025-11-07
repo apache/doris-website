@@ -5,30 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris provides the following methods to load data from Kafka:
 
 - **Using Routine Load to consume Kafka data**
 
-Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated.For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
+Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated. For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
 
 - **Doris Kafka Connector to consume Kafka data**
 
@@ -45,7 +26,7 @@ In most cases, you can directly choose Routine Load for loading data without the
 
 ### Operation Example
 
-In Doris, create a persistent Routine Load load task through the CREATE ROUTINE LOAD command, which can be divided into single-table load and multi-table load. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD).
+In Doris, create a persistent Routine Load load task through the CREATE ROUTINE LOAD command, which can be divided into single-table load and multi-table load. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD).
 
 #### Single Table Load
 
@@ -90,13 +71,12 @@ FROM KAFKA(
 **Step 4: Check Loaded Data**
 
 ```SQL
-mysql> select * from test_routineload_tbl;
+select * from test_routineload_tbl;
 +-----------+----------------+------+
 | user_id   | name           | age  |
 +-----------+----------------+------+
 |  1        | Emily          | 25   |
 +-----------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### Multi-Table Load
@@ -158,21 +138,19 @@ FROM KAFKA(
 **Step 4: Check Loaded Data**
 
 ```SQL
-mysql> select * from test_multi_table_load1;
+select * from test_multi_table_load1;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
 |  1   | Emily          | 25   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 
-mysql> select * from test_multi_table_load2;
+select * from test_multi_table_load2;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
 |  2   | Benjamin       | 35   |
 +------+----------------+------+
-1 rows in set (0.01 sec)
 ```
 
 #### **Configure Security Authentication**

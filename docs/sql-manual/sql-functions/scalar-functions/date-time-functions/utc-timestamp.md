@@ -5,47 +5,48 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
+The UTC_TIMESTAMP function returns the current date and time in UTC timezone. This function is not affected by local timezone and always returns the current time based on UTC timezone, ensuring time consistency across different timezone scenarios.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+This function behaves consistently with the [utc_timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_utc-timestamp) in MySQL.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+## Syntax
 
-## utc_timestamp
-### Description
-#### Syntax
-
-`DATETIME UTC_TIMESTAMP()`
-
-
-Returns the current UTC date and time in "YYYY-MM-DD HH: MM: SS" or
-
-A Value of "YYYYMMDDHMMSS" Format
-
-Depending on whether the function is used in a string or numeric context
-
-### example
-
+```sql
+UTC_TIMESTAMP([`<precision>`])
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<precision>` | The precision of the returned date-time value supports integer types within the range [0, 6]. Only integer type constants are accepted.。 |
+
+## Return Value
+Returns the current UTC date and time.
+
+Returns DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]). When using the returned result for numeric operations, it will be converted to the [integer format](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss).
+
+When the input is NULL or the precision is out of range, an error will be thrown.
+
+## Examples
+
+```sql
+-- Current local time is UTC+8 2025-10-27 14:43:21
+SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0, UTC_TIMESTAMP(5), UTC_TIMESTAMP(5) + 0;
 ```
-### keywords
-    UTC_TIMESTAMP,UTC,TIMESTAMP
+```text
++---------------------+---------------------+---------------------------+----------------------+
+| UTC_TIMESTAMP()     | UTC_TIMESTAMP() + 0 | UTC_TIMESTAMP(5)          | UTC_TIMESTAMP(5) + 0 |
++---------------------+---------------------+---------------------------+----------------------+
+| 2025-10-27 06:43:21 |      20251027064321 | 2025-10-27 06:43:21.88177 |       20251027064321 |
++---------------------+---------------------+---------------------------+----------------------+
+```
+
+```sql
+SELECT UTC_TIMESTAMP(7);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+
+SELECT UTC_TIMESTAMP(NULL);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIMESTAMP argument cannot be NULL.
+```

@@ -5,29 +5,10 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Materialized views, as an efficient solution, combine the flexibility of views with the high
-performance advantages of physical tables.
-They can pre-compute and store the result sets of queries,
-allowing for quick retrieval of results directly from the stored materialized view
+Materialized views, as an efficient solution, combine the flexibility of views with the high 
+performance advantages of physical tables. 
+They can pre-compute and store the result sets of queries, 
+allowing for quick retrieval of results directly from the stored materialized view 
 when query requests arrive, thus avoiding the overhead of re-executing complex query statements.
 
 ## Use Cases
@@ -40,8 +21,8 @@ when query requests arrive, thus avoiding the overhead of re-executing complex q
 ## Limitations
 - **Consistency of Asynchronous Materialized Views with Base Table Data**: Asynchronous materialized views will eventually be consistent with the base table data, but they cannot be synchronized in real-time, meaning real-time consistency cannot be maintained.
 - **Support for Window Function Queries**: Currently, if a query contains window functions, it is not supported to transparently rewrite that query to utilize materialized views.
-- **Materialized Views with ORDER BY and Queries**: If the materialized view itself contains an ORDER BY clause, the system does not currently support using that materialized view for transparent query rewriting. However, please note that the query itself can still include an ORDER BY clause.
 - **Materialized Views Joining More Tables than Query Tables**: If the number of tables joined in the materialized view exceeds the number of tables involved in the query (for example, if the query only involves t1 and t2, while the materialized view includes t1, t2, and an additional t3), the system currently does not support transparently rewriting that query to utilize the materialized view.
+- If the materialized view contains set operations such as UNION ALL, LIMIT, ORDER BY, or CROSS JOIN, the materialized view can be built normally, but it cannot be used for transparent rewriting.
 
 ## Principle Introduction
 
@@ -127,6 +108,77 @@ The support for materialized refresh data lakes varies by table type and catalog
         <td>Not supported</td>
     </tr>
 </table>
+
+## Transparent Rewriting Support for Data Lake
+Currently, the transparent rewriting feature of asynchronous materialized views supports the following types of tables and catalogs.
+
+Real-time Base Table Data Awareness: Refers to the materialized view's ability to detect changes in the underlying table data it uses and utilize the latest data during queries.
+
+<table>
+    <tr>
+        <th>Table Type</th>
+        <th>Catalog Type</th>
+        <th>Transparent Rewriting Support</th>
+        <th>Real-time Base Table Data Awareness</th>
+    </tr>
+    <tr>
+        <td>Internal Table</td>
+        <td>Internal</td>
+        <td>Supported</td>
+        <td>Supported</td>
+    </tr>
+    <tr>
+        <td>Hive</td>
+        <td>Hive</td>
+        <td>Supported</td>
+        <td>3.1 Supported</td>
+    </tr>
+    <tr>
+        <td>Iceberg</td>
+        <td>Iceberg</td>
+        <td>Supported</td>
+        <td>3.1 Supported</td>
+    </tr>
+    <tr>
+        <td>Paimon</td>
+        <td>Paimon</td>
+        <td>Supported</td>
+        <td>3.1 Supported</td>
+    </tr>
+    <tr>
+        <td>Hudi</td>
+        <td>Hudi</td>
+        <td>Supported</td>
+        <td>3.1 Supported</td>
+    </tr>
+    <tr>
+        <td>JDBC</td>
+        <td>JDBC</td>
+        <td>Supported</td>
+        <td>Not Supported</td>
+    </tr>
+    <tr>
+        <td>ES</td>
+        <td>ES</td>
+        <td>Supported</td>
+        <td>Not Supported</td>
+    </tr>
+</table>
+
+Materialized views using external tables do not participate in transparent rewriting by default, because they cannot detect changes in external table data and cannot guarantee the data in the materialized view is up-to-date.
+If you want to enable transparent rewriting for materialized views containing external tables, you can set `SET materialized_view_rewrite_enable_contain_external_table = true`.
+
+Since version 2.1.11, Doris has optimized the transparent rewriting performance for external tables, mainly improving the performance of obtaining available materialized views containing external tables.
+
+For partitioned materialized views containing external tables, if transparent rewriting is slow, you need to configure in fe.conf:
+`max_hive_partition_cache_num = 20000`, the maximum number of Hive Metastore table-level partition caches, with a default value of 10000.
+If the external Hive table has many partitions, you can set this value higher.
+
+`external_cache_expire_time_minutes_after_access`, the duration after last access when cache expires. Default is 10 minutes, can be appropriately increased.
+(Applies to external table schema cache and Hive metadata cache)
+
+`external_cache_refresh_time_minutes = 60`, the automatic refresh interval for external table metadata cache. Default is 10 minutes, can be appropriately increased. This configuration is supported starting from version 3.1.
+For details about external table metadata cache configuration, see [Metadata Cache](../../../lakehouse/meta-cache.md)
 
 ## Relationship Between Materialized Views and OLAP Internal Tables
 

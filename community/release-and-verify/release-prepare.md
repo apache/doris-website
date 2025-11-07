@@ -36,7 +36,6 @@ This document describes the main process and prep work for release. For specific
 
 * [Doris Core Release](./release-doris-core.md)
 * [Doris Connectors Release](./release-doris-connectors.md)
-* [Doris Manager Release](./release-doris-manager.md)
 * [Doris Shade Release](./release-doris-shade.md)
 * [Doris Sdk Release](./release-doris-sdk.md)
 
@@ -67,7 +66,7 @@ The overall release process is as follows.
     2. upload the content to be released to the [Apache Dev SVN repository](https://dist.apache.org/repos/dist/dev/doris)
     3. preparation of other Convenience Binaries (e.g. upload to [Maven Staging repository](https://repository.apache.org/#stagingRepositories))
 4. Community Release Polling Process
-	2. Initiate a VOTE in the [Doris Community Dev Mail Group](dev@doris.apache.org).
+	2. Initiate a VOTE in the Doris Community Dev Mail Group: dev@doris.apache.org.
 	3. After the vote is approved, send a Result email in the Doris community.
 5. Complete the work
 	1. Upload the signed packages to the [Apache Release repository](https://dist.apache.org/repos/dist/release/doris) and generate the relevant links.

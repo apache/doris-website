@@ -5,30 +5,11 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 This document primarily introduces how to update the Doris Aggregate model based on data load.
 
 ## Whole Row Update
 
-When loading data into the Aggregate model table using Doris-supported methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., the new values will be aggregated with the old values according to the column's aggregation function to produce new aggregated values. This value may be produced at the time of insertion or during asynchronous compaction, but users will get the same return value when querying.
+When loading data into the Aggregate model table using Doris-supported methods such as Stream Load, Broker Load, Routine Load, Insert Into, etc., the new values will be aggregated with the old values according to the column's aggregation function to produce new aggregated values.  This value may be generated at the time of insertion or during asynchronous compaction, but users will get the same return value when querying.
 
 ## Partial Column Update of Aggregate Model
 
@@ -58,14 +39,14 @@ Whether it is Stream Load, Broker Load, Routine Load, or `INSERT INTO`, directly
 
 **Example**
 
-Similar to the previous example, the corresponding Stream Load command is (no additional header required):
+Similar to the previous examples, the corresponding Stream Load command is (no additional header required):
 
 ```shell
 $ cat update.csv
 
 1,To be shipped
 
-curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
+curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T ./update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 The corresponding `INSERT INTO` statement is (no additional session variable settings required):

@@ -5,31 +5,12 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 使用要求
 
 ### 网络要求
 
 - 需要 Syncer 与上下游的 FE 和 BE 是互通的
-- 下游 BE 与上游 BE 通过 Doris BE 进程使用的 IP （`show frontends/backends` 看到的） 是直通的。
+- 下游 BE 与上游 BE 通过 Doris BE 进程使用的 IP（`show frontends/backends` 看到的）是直通的。
 
 ### 权限要求
 
@@ -302,7 +283,7 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
     - 修改源集群 db/table property，设置 binlog 保留限制
         - `binlog.max_bytes`: binlog 最大占用内存，建议至少保留 4GB（默认无限制）
         - `binlog.ttl_seconds`: binlog 保留时间，从 2.0.5 之前的老版本默认无限制；之后的版本默认值为一天（86400）
-        比如要修改 binlog ttl seconds 为保留一个小时: `ALTER TABLE  table SET ("binlog.ttl_seconds"="3600")`
+        比如要修改 binlog ttl seconds 为保留一个小时：`ALTER TABLE  table SET ("binlog.ttl_seconds"="3600")`
 - CCR 正确性依也赖于目标集群的事务状态，因此要保证在同步过程中事务不会过快被回收，需要调大下列配置
     - `label_num_threshold`：用于控制 TXN Label 数量
     - `stream_load_default_timeout_second`：用于控制 TXN 超时时间
@@ -317,9 +298,9 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
     - `fe_thrift_max_pkg_bytes`:
         同上，一个额外的参数，2.0 中需要调整，默认值为 20MB
     - `restore_download_task_num_per_be`:
-        发送给每个 BE download task 数量上限，默认值是 3，对 restore job 来说太小了，需要调整为 0（也就是关闭这个限制）； 2.1.8 和 3.0.4 起不再需要这个配置。
+        发送给每个 BE download task 数量上限，默认值是 3，对 restore job 来说太小了，需要调整为 0（也就是关闭这个限制）；2.1.8 和 3.0.4 起不再需要这个配置。
     - `backup_upload_task_num_per_be`:
-        发送给每个 BE upload task 数量上限，默认值是 3，对 backup job 来说太小了，需要调整为 0 （也就是关闭这个限制）；2.1.8 和 3.0.4 起不再需要这个配置。
+        发送给每个 BE upload task 数量上限，默认值是 3，对 backup job 来说太小了，需要调整为 0（也就是关闭这个限制）；2.1.8 和 3.0.4 起不再需要这个配置。
     - 除了上述 FE 的配置外，如果 ccr job 的 db type 是 mysql，还需要调整 mysql 的一些配置：
         - mysql 服务端会限制单次 select/insert 返回/插入数据包的大小。增加下列配置以放松该限制，比如调整到上限 1GB
         ```
@@ -341,7 +322,7 @@ cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
 ### 性能相关参数
 - 如果用户的数据量非常大，备份、恢复执行完需要的时间可能会超过一天（默认值），那么需要按需调整下列参数
     - `backup_job_default_timeout_ms` 备份/恢复任务超时时间，源、目标集群的 FE 都需要配置
-    - 上游修改 binlog 保留时间: `ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`
+    - 上游修改 binlog 保留时间：`ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`
 - 下游 BE 下载速度慢
     - `max_download_speed_kbps` 下游单个 BE 中单个下载线程的下载限速，默认值为 50MB/s
     - `download_worker_count` 下游执行下载任务的线程数，默认值为 1；需要结合客户机型调整，在不影响客户正常读写时跳到最大；如果调整了这个参数，就可以不用调整 `max_download_speed_kbps`。

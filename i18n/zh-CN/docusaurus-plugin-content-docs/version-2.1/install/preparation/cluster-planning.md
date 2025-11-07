@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 端口规划
 
 Doris 的各个实例通过网络进行通信，其正常运行需要网络环境提供以下端口。管理员可以根据实际环境自行调整 Doris 的端口配置：
@@ -48,9 +28,9 @@ FE 节点主要负责用户请求的接入、查询解析规划、元数据管�
 
 对于生产集群，一般建议部署至少 3 个节点的 FE 以实现高可用环境。FE 节点分为以下两种角色：
 
-- Follower 节点：参与选举操作，当 Master 节点宕机时，会选择一个可用的 Follower 节点成为新的 Master。
+- **Follower 节点**：参与选举操作，当 Master 节点宕机时，会选择一个可用的 Follower 节点成为新的 Master。
   
-- Observer 节点：仅从 Leader 节点同步元数据，不参与选举，可用于横向扩展以提升元数据的读服务能力。
+- **Observer 节点**：仅从 Leader 节点同步元数据，不参与选举，可用于横向扩展以提升元数据的读服务能力。
 
 通常情况下，建议部署至少 3 个 Follower 节点。在高并发的场景中，可以通过增加 Observer 节点的数量来提高集群的连接数。
 

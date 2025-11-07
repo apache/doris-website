@@ -30,7 +30,7 @@ under the License.
 
 PR 提交指南还可以参考：
 
-- [为 Doris 做贡献](https://doris.apache.org/zh-CN/community/how-to-contribute/)
+- [为 Doris 做贡献](https://doris.apache.org/zh-CN/community/how-to-contribute/contribute-to-doris)
 
 - [代码提交指南](https://doris.apache.org/zh-CN/community/how-to-contribute/pull-request)
 :::

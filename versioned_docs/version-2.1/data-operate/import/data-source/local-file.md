@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Doris provides multiple ways to load data from local sources:
 
 ### 1. Stream Load
@@ -32,7 +13,7 @@ Load local files or data streams into Doris via HTTP protocol. Supports CSV, JSO
 
 ### 2. Streamloader Tool
 
-The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and multi-concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
+The Streamloader tool is a dedicated client tool for loading data into the Doris database, based on Stream Load. It can provide multi-file and concurrent load capabilities, reducing the time required for loading large volumes of data. For more documentation, refer to [Streamloader](../../../ecosystem/doris-streamloader).
 
 ### 3. MySQL Load
 
@@ -120,7 +101,7 @@ Create the table in Doris with the same syntax as above.
 Use the Streamloader tool to load data:
 
 ```Bash
-doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamloader"
+doris-streamloader --source_file="streamloader_example.csv" --url="http://localhost:8330" --header="column_separator:," --db="testdb" --table="test_streamload"
 ```
 
 Example of load result:
@@ -136,7 +117,7 @@ Load Result: {
 ### Step 4: Check Loaded Data
 
 ```SQL
-mysql> SELECT COUNT(*) FROM testdb.test_streamloader;
+mysql> SELECT COUNT(*) FROM testdb.test_streamload;
 +----------+
 | count(*) |
 +----------+

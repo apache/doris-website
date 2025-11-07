@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 概述
 
 Doris 支持使用 Hint 来调整 Join 操作中数据 Shuffle 的类型，从而优化查询性能。本节将详细介绍如何在 Doris 中利用 Hint 来指定 Join Shuffle 的类型。
@@ -49,7 +30,7 @@ SELECT COUNT(*) FROM t2 JOIN [shuffle] t1 ON t1.c1 = t2.c2;
 EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 ```
 
-原始 SQL 的计划如下，可见 t1 连接 t2 使用了 hash distribute即`DistributionSpecHash`的方式。
+原始 SQL 的计划如下，可见 t1 连接 t2 使用了 hash distribute 即`DistributionSpecHash`的方式。
 
 ```sql
 +----------------------------------------------------------------------------------+  
@@ -75,7 +56,7 @@ EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN t2 ON t1.c1 = t2.c2;
 EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
 ```
 
-可见 t1 连接 t2 的分发方式改为了 broadcast即`DistributionSpecReplicated`的方式。
+可见 t1 连接 t2 的分发方式改为了 broadcast 即`DistributionSpecReplicated`的方式。
 
 ```sql
 +----------------------------------------------------------------------------------+  

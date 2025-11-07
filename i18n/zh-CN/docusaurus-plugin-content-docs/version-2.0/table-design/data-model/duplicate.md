@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 在某些多维分析场景下，必须保留所有原始数据记录，针对这种需求，可以使用明细数据模型。在明细数据模型中，存储层会保留写入的所有数据。即使两行数据完全相同，也都会保留。建表语句中指定的 Duplicate Key，只是用来指明数据存储按照哪些列进行排序，可以用于优化常用查询。在 Duplicate Key 的选择上，建议选择前 2-4 列即可。
 
 举例如下，一个表有如下的数据列，需要保留所有原始数据记录，有两种方法可以创建明细模型的表，分别为：指定排序列以及默认为明细模型。
