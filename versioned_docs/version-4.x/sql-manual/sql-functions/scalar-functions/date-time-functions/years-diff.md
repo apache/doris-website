@@ -19,7 +19,7 @@ YEARS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr1>` | End date, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr1>` | End date, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<date_or_time_expr2>` | Start date, supports date/datetime types and strings conforming to date-time format |
 
 ## Return Value

@@ -32,7 +32,7 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down, of type DATETIME. For specific datetime formats, [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | The datetime value to be rounded down, of type DATETIME. For specific datetime formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
 

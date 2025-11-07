@@ -23,7 +23,7 @@ SECOND_TIMESTAMP(<datetime>)
 
 | Parameter    | Description                                                                                                                                                                                                                                       |
 |--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<datetime>` | Required. The input DATETIME value representing the datetime to be converted to Unix timestamp. Supports datetime type input. For specific datetime formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | Required. The input DATETIME value representing the datetime to be converted to Unix timestamp. Supports datetime type input. For specific datetime formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 
 ## Return Value
 

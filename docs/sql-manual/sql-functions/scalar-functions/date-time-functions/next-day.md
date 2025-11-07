@@ -21,7 +21,7 @@ NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | Supports date/datetime types. For specific datetime and date formats, [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | Supports date/datetime types. For specific datetime and date formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<day_of_week>` | String expression used to identify the day of the week, of string type. |
 
 `<day_of_week>` must be one of the following values (case insensitive):

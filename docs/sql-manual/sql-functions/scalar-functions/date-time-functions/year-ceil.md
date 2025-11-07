@@ -31,7 +31,7 @@ YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Optional, represents how many seconds each period consists of, supports positive integer type (INT). Default is 1 second. |
 | `<origin_datetime>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00. |
 

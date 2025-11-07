@@ -33,7 +33,7 @@ MINUTE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The datetime value to be rounded up, of type DATETIME. For specific datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<date_or_time_expr>` | The datetime value to be rounded up, of type DATETIME. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
 

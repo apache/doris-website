@@ -19,7 +19,7 @@ MICROSECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | The end time, of type DATETIME. For datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<date_or_time_expr1>` | The end time, of type DATETIME. For datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 | `<date_or_time_expr2>` | The start time, of type DATETIME or a valid datetime string. |
 
 ## Return Value

@@ -21,7 +21,7 @@ TIMEDIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | Parameter              | Description                                                                                                                                                                                                                                                              |
 |------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<date_or_time_expr1>` | The ending time or datetime value. Supports date/datetime type input. For specific datetime and date formats, please refer to [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr1>` | The ending time or datetime value. Supports date/datetime type input. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<date_or_time_expr2>` | The starting time or datetime value. Supports date/datetime type input                                                                                                                                                                                                  |
 
 ## Return Value

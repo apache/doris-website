@@ -22,7 +22,7 @@ MICROSECOND(`<datetime>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The input datetime value, of type DATETIME. For datetime formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) . Precision must be greater than 0. |
+| `<datetime>` | The input datetime value, of type DATETIME. For datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) . Precision must be greater than 0. |
 
 ## Return Value
 
