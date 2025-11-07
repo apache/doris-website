@@ -24,11 +24,11 @@ Dear community members, the Apache Doris 3.0.3 version was officially released o
 
 - Added `table$partition` syntax for querying partition information of Hive tables. [#40774](https://github.com/apache/doris/pull/40774)
   
-  - [View Documentation](https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/hive)
+  - [View Documentation](../../lakehouse/catalogs/hive-catalog)
 
 - Supported creation of Hive tables in Text format. [#41860](https://github.com/apache/doris/pull/41860) [#42175](https://github.com/apache/doris/pull/42175)
 
-  - [View Documentation](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/datalake-building/hive-build#table)
+  - [View Documentation](../../lakehouse/catalogs/hive-catalog)
 
 ### Asynchronous Materialized Views
 
@@ -75,7 +75,7 @@ Dear community members, the Apache Doris 3.0.3 version was officially released o
 
 - Paimon Catalog supported Alibaba Cloud DLF and OSS-HDFS storage. [#41247](https://github.com/apache/doris/pull/41247) [#42585](https://github.com/apache/doris/pull/42585)
   
-  - View [Documentation](https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/paimon)
+  - View [Documentation](../../lakehouse/catalogs/paimon-catalog)
 
 - Supported reading of Hive tables in OpenCSV format. [#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
 - Optimized the performance of accessing the `information_schema.columns` table in External Catalog. [#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)

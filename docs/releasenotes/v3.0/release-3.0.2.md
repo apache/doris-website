@@ -44,7 +44,7 @@ Dear community members, the Apache Doris 3.0.2 version was officially released o
 
 ### Lakehouse
 
-- New Lakesoul Catalog has been added. [Apache Doris Docs](https://doris.apache.org/zh-CN/docs/dev/lakehouse/datalake-analytics/lakesoul)  
+- New Lakesoul Catalog has been added.
 - A new system table `catalog_meta_cache_statistics` has been added to view the usage of various metadata caches in external catalog. [#40155](https://github.com/apache/doris/pull/40155)  
 
 ### Query Optimizer

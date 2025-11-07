@@ -7,7 +7,7 @@
 
 ## 描述
 
-与 [month_diff 函数](./month-diff) 不同的是，month-between 函数不会忽略日单位，返回的是浮点数，代表真实差距多少个月，而不是日期上显示的月单位所差的月数
+与 [months_diff 函数](./months-diff) 不同的是，month-between 函数不会忽略日单位，返回的是浮点数，代表真实差距多少个月，而不是日期上显示的月单位所差的月数
 MONTHS_BETWEEN 函数用于计算两个日期时间值之间的月份差值，返回结果为浮点数。该函数支持处理 DATE、DATETIME 类型，并可通过可选参数控制结果是否四舍五入。
 
 该函数与 orcle 的 [month-between 函数](https://docs.oracle.com/cd/E11882_01/olap.112/e23381/row_functions042.htm#OLAXS434) 行为一致
