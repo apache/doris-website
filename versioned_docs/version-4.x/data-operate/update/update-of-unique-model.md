@@ -141,7 +141,7 @@ For existing Merge-On-Write tables created in old versions of Doris, after upgra
 
 **Using Flexible Column Updates for New Tables**
 
-For new tables, to use the flexible column update feature, specify the following table properties when creating the table to enable Merge-on-Write, light-schema-change, and include the required hidden bitmap column for flexible column updates:
+For new tables, to use the flexible column update feature, specify the following table properties when creating the table to enable Merge-on-Write and include the required hidden bitmap column for flexible column updates:
 
 ```Plain
 "enable_unique_key_merge_on_write" = "true"
