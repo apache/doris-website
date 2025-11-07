@@ -13,7 +13,7 @@
 
 * [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md)：支持 HDFS 上的文件分析。
 
-* [FILE](../sql-manual/sql-functions/table-valued-functions/local.md)：统一表函数，可以同时支持 S3/HDFS/Local 文件的读取。（自 3.1.0 版本支持。）
+* [FILE]：请参考 4.x 文档。
 
 ## 基础使用
 
