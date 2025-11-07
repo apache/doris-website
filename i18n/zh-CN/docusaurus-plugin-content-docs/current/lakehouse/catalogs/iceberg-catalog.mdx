@@ -1995,7 +1995,7 @@ EXECUTE rewrite_data_files (
 1. `rewrite_data_files` 操作会读取数据文件并重新写入，会产生额外的 I/O 和计算开销，建议在业务低峰期执行该操作
 2. 执行前可以通过【查看数据文件分布】章节中的 SQL 来评估是否需要执行重写操作
 3. WHERE 条件可用于限制重写的分区或数据范围，这个条件会过滤掉那些不包含 符合WHERE 条件的数据的文件，从而减少重写的文件数量和数据量
-4. 执行前可以通过下面的sql来预判断被重写的文件 TODO: 添加sql
+4. 执行前可以通过【查看会被重写的文件】章节中的 SQL 来预测哪些文件会被重写
 
 ### 元数据管理操作
 
@@ -2222,7 +2222,7 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 
 ### 查看数据文件分布
 
-通过以下 SQL 可以分析 Iceberg 表的数据分布和 delete 文件数量等，从而判断是否需要进行优化，如 Compaction。
+通过以下 SQL 可以分析 Iceberg 表的数据分布和 delete 文件数量等，从而判断是否需要进行优化，如 `rewrite_data_files`。
 
 - 显示数据文件大小分布。可以判断是否有过多的小文件。
 
@@ -2275,6 +2275,192 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
   | PositionDeleteFile |      11 |       36608 |   10890 |
   +--------------------+---------+-------------+---------+
   ```
+
+### 查看会被重写的文件
+
+你可以使用以下 SQL 查询来基于系统表信息分析哪些文件会被重写。这有助于你在执行实际重写操作之前进行调试和理解重写行为。
+
+重写操作会在文件同时满足文件级别和分区组级别条件时重写文件：
+
+**文件级别条件：**
+1. **文件大小超出范围**：文件小于 `min-file-size-bytes` 或大于 `max-file-size-bytes`
+2. **删除文件过多**：关联的删除文件数量 >= `delete-file-threshold` ⚠️ *无法通过系统表 SQL 查询准确计算*
+3. **删除比例过高**：删除记录比例 >= `delete-ratio-threshold` ⚠️ *无法通过系统表 SQL 查询准确计算*
+
+**关于删除文件条件的说明：** 与删除文件相关的条件（`delete-file-threshold` 和 `delete-ratio-threshold`）会影响文件重写选择，但无法通过系统表 SQL 查询准确计算。这是因为当前系统表信息不足以准确判断哪些数据文件受到删除文件的影响。删除文件可能只影响特定的数据文件（特别是 Position Delete 文件），删除文件与数据文件的关联需要更详细的元数据，这些信息在当前系统表中不可用。实际的重写操作将基于系统表中未暴露的更详细元数据来评估这些条件。
+
+**分区组级别条件**（文件按分区分组）：
+1. **足够的输入文件**：分区文件数 > 1 且文件数 >= `min-input-files`
+2. **足够的内容**：分区文件数 > 1 且总大小 > `target-file-size-bytes`
+3. **内容过多**：分区总大小 > `max-file-group-size-bytes`
+4. **包含有删除文件问题的文件**：分区内至少有一个文件有太多删除文件或删除比例过高 ⚠️ *无法通过系统表 SQL 查询准确计算*
+5. **包含有大小问题的文件**：分区内至少有一个文件满足文件大小条件
+
+只有当文件满足至少一个文件级别条件 AND 其所在分区组满足至少一个分区组级别条件时，该文件才会被重写。
+
+#### 查询 1：识别大小不合适的文件
+
+该查询识别过小或过大的文件：
+
+```sql
+-- 设置参数（根据你的重写参数调整）
+SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (默认: target-file-size-bytes * 0.75)
+SET @max_file_size_bytes = 768 * 1024 * 1024;   -- 768 MB (默认: target-file-size-bytes * 1.8)
+
+-- 查询因大小需要重写的文件
+SELECT 
+    file_path,
+    `partition`,
+    file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+    record_count,
+    CASE 
+        WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
+        WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
+    END AS issue
+FROM iceberg_table$data_files
+WHERE file_size_in_bytes < @min_file_size_bytes 
+   OR file_size_in_bytes > @max_file_size_bytes
+ORDER BY `partition`, file_size_in_bytes;
+```
+
+#### 查询 2：完整的重写候选分析
+
+该查询提供所有会被重写文件的综合分析，同时考虑文件级别和分区组级别的条件：
+
+```sql
+-- 设置参数（根据你的重写参数调整）
+SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB
+SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB
+SET @min_input_files = 5;                      -- 默认: 5
+SET @max_file_group_size_bytes = 107374182400; -- 默认: 100GB
+SET @target_file_size_bytes = 536870912;       -- 默认: 512MB
+
+WITH data_files AS (
+    SELECT 
+        file_path,
+        `partition`,
+        CAST(`partition` AS STRING) AS partition_str,
+        spec_id,
+        file_size_in_bytes,
+        record_count,
+        file_format
+    FROM iceberg_table$data_files
+),
+file_analysis AS (
+    SELECT 
+        df.file_path,
+        df.`partition`,
+        df.partition_str,
+        df.spec_id,
+        df.file_size_in_bytes,
+        df.record_count,
+        
+        -- 检查文件级别条件
+        (df.file_size_in_bytes < @min_file_size_bytes OR df.file_size_in_bytes > @max_file_size_bytes) AS size_issue
+        
+    FROM data_files df
+),
+partition_group_stats AS (
+    SELECT 
+        partition_str,
+        spec_id,
+        COUNT(*) AS file_count,
+        SUM(file_size_in_bytes) AS total_size_bytes,
+        SUM(CASE WHEN size_issue THEN 1 ELSE 0 END) AS files_with_issues
+    FROM file_analysis
+    GROUP BY partition_str, spec_id
+),
+partition_group_analysis AS (
+    SELECT 
+        partition_str,
+        spec_id,
+        file_count,
+        total_size_bytes,
+        files_with_issues,
+        -- 检查分区组级别条件
+        (file_count > 1 AND file_count >= @min_input_files) AS enough_input_files,
+        (file_count > 1 AND total_size_bytes > @target_file_size_bytes) AS enough_content,
+        (total_size_bytes > @max_file_group_size_bytes) AS too_much_content,
+        (files_with_issues > 0) AS has_files_with_issues
+    FROM partition_group_stats
+)
+SELECT 
+    fa.file_path,
+    fa.`partition`,
+    fa.file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+    fa.record_count,
+    pga.file_count AS partition_file_count,
+    pga.total_size_bytes / 1024.0 / 1024.0 / 1024.0 AS partition_total_size_gb,
+    fa.size_issue,
+    pga.enough_input_files,
+    pga.enough_content,
+    pga.too_much_content,
+    pga.has_files_with_issues,
+    -- 文件会被重写当且仅当：文件有文件级别问题 AND 分区组满足组级别条件
+    (fa.size_issue 
+     AND (pga.enough_input_files OR pga.enough_content OR pga.too_much_content OR pga.has_files_with_issues)) AS should_rewrite,
+    CONCAT(
+        CASE WHEN fa.size_issue THEN 'Size issue; ' ELSE '' END,
+        CASE WHEN NOT (pga.enough_input_files OR pga.enough_content OR pga.too_much_content OR pga.has_files_with_issues) THEN 'Partition group conditions not met; ' ELSE '' END
+    ) AS issues
+FROM file_analysis fa
+JOIN partition_group_analysis pga 
+    ON fa.partition_str = pga.partition_str AND fa.spec_id = pga.spec_id
+WHERE fa.size_issue
+ORDER BY fa.`partition`, fa.file_size_in_bytes DESC;
+```
+
+#### 查询 3：总体统计摘要
+
+该查询提供关于会被重写文件的总体统计信息：
+
+```sql
+-- 设置参数（根据你的重写参数调整）
+SET @min_file_size_bytes = 16 * 1024 * 1024;
+SET @max_file_size_bytes = 768 * 1024 * 1024;
+
+WITH file_analysis AS (
+    SELECT 
+        partition,
+        file_path,
+        file_size_in_bytes,
+        record_count,
+        (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS needs_rewrite
+    FROM iceberg_table$data_files
+)
+SELECT 
+    'Total files' AS metric, 
+    COUNT(*) AS value
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Files need rewrite', 
+    SUM(CASE WHEN needs_rewrite THEN 1 ELSE 0 END)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Total size (GB)', 
+    ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Size need rewrite (GB)', 
+    ROUND(SUM(CASE WHEN needs_rewrite THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Rewrite percentage (%)', 
+    ROUND(SUM(CASE WHEN needs_rewrite THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
+FROM file_analysis;
+```
+
+**注意事项：**
+
+- 根据你的实际重写参数调整参数值（`@min_file_size_bytes`、`@max_file_size_bytes`、`@min_input_files`、`@max_file_group_size_bytes`、`@target_file_size_bytes`）
+- 上面显示的默认值对应于默认重写参数（target-file-size-bytes = 512MB，min-input-files = 5，max-file-group-size-bytes = 100GB）
+- 对于大表，这些查询可能需要一些时间。建议先添加分区过滤条件或使用 `LIMIT` 在子集上测试
+- 文件按分区分组进行分区组级别分析。在重写操作中，一个分区对应一个文件组
+- **删除文件条件：** 重写操作也会考虑 `delete-file-threshold` 和 `delete-ratio-threshold` 参数，这些参数会影响文件重写选择。但是，这些条件无法通过系统表 SQL 查询准确计算，因为删除文件与数据文件的关联需要更详细的元数据，这些信息在当前系统表中不可用。因此，分析查询仅关注可以准确计算的文件大小条件
 
 ### 查看快照和分支对应情况
 

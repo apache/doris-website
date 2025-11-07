@@ -1984,7 +1984,7 @@ EXECUTE rewrite_data_files (
 1. The `rewrite_data_files` operation reads and rewrites data files, which will generate additional I/O and computational overhead. It is recommended to execute this operation during off-peak business hours
 2. Before execution, you can use the SQL in the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether a rewrite operation is needed
 3. The WHERE condition can be used to limit the partition or data range for rewriting. This condition will filter out files that do not contain data matching the WHERE condition, thereby reducing the number of files and amount of data to rewrite
-4. Before execution, you can use the following SQL to predict which files will be rewritten TODO: Add SQL
+4. Before execution, you can use the SQL in the [View Files That Will Be Rewritten](#view-files-that-will-be-rewritten) section to predict which files will be rewritten
 
 ### Metadata Management Operations
 
@@ -2210,7 +2210,7 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 
 ### View Data File Distribution
 
-You can use the following SQL to analyze the data distribution and delete file count of Iceberg tables, helping determine whether optimization like Compaction is needed.
+You can use the following SQL to analyze the data distribution and delete file count of Iceberg tables, helping determine whether optimization like `rewrite_data_files` is needed.
 
 - Display data file size distribution. This can help identify if there are too many
 
@@ -2263,6 +2263,192 @@ You can use the following SQL to analyze the data distribution and delete file c
   | PositionDeleteFile |      11 |       36608 |   10890 |
   +--------------------+---------+-------------+---------+
   ```
+
+### View Files That Will Be Rewritten
+
+You can use the following SQL queries to analyze which files will be rewritten based on system table information. This helps you debug and understand the rewrite behavior before executing the actual rewrite operation.
+
+The rewrite operation will rewrite files that meet both file-level and partition group-level conditions:
+
+**File-level conditions:**
+1. **File size outside desired range**: Files smaller than `min-file-size-bytes` or larger than `max-file-size-bytes`
+2. **Too many delete files**: Files with associated delete file count >= `delete-file-threshold` ⚠️ *Cannot be accurately calculated via system table SQL queries*
+3. **High delete ratio**: Files with delete record ratio >= `delete-ratio-threshold` ⚠️ *Cannot be accurately calculated via system table SQL queries*
+
+**Note on delete file conditions:** The conditions related to delete files (`delete-file-threshold` and `delete-ratio-threshold`) affect file rewrite selection, but they cannot be accurately calculated using system table SQL queries. This is because the current system table information is insufficient to accurately determine which data files are affected by delete files. Delete files may only affect specific data files (especially Position Delete files), and the association between delete files and data files requires more detailed metadata that is not available in the current system tables. The actual rewrite operation will evaluate these conditions based on more detailed metadata that is not exposed in the system tables.
+
+**Partition group-level conditions** (files are grouped by partition):
+1. **Enough input files**: Partition has more than 1 file and file count >= `min-input-files`
+2. **Enough content**: Partition has more than 1 file and total size > `target-file-size-bytes`
+3. **Too much content**: Partition total size > `max-file-group-size-bytes`
+4. **Has files with delete issues**: Partition contains at least one file with too many delete files or high delete ratio ⚠️ *Cannot be accurately calculated via system table SQL queries*
+5. **Has files with size issues**: Partition contains at least one file that meets file size conditions
+
+A file will be rewritten only if it meets at least one file-level condition AND its partition group meets at least one partition group-level condition.
+
+#### Query 1: Identify files with size issues
+
+This query identifies files that are too small or too large:
+
+```sql
+-- Set parameters (adjust according to your rewrite parameters)
+SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (default: target-file-size-bytes * 0.75)
+SET @max_file_size_bytes = 768 * 1024 * 1024;   -- 768 MB (default: target-file-size-bytes * 1.8)
+
+-- Query files that need rewriting due to size
+SELECT 
+    file_path,
+    `partition`,
+    file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+    record_count,
+    CASE 
+        WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
+        WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
+    END AS issue
+FROM iceberg_table$data_files
+WHERE file_size_in_bytes < @min_file_size_bytes 
+   OR file_size_in_bytes > @max_file_size_bytes
+ORDER BY `partition`, file_size_in_bytes;
+```
+
+#### Query 2: Complete rewrite candidate analysis
+
+This query provides a comprehensive analysis of all files that will be rewritten, considering both file-level and partition group-level conditions:
+
+```sql
+-- Set parameters (adjust according to your rewrite parameters)
+SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB
+SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB
+SET @min_input_files = 5;                      -- Default: 5
+SET @max_file_group_size_bytes = 107374182400; -- Default: 100GB
+SET @target_file_size_bytes = 536870912;       -- Default: 512MB
+
+WITH data_files AS (
+    SELECT 
+        file_path,
+        partition,
+        CAST(partition AS STRING) AS partition_str,
+        spec_id,
+        file_size_in_bytes,
+        record_count,
+        file_format
+    FROM iceberg_table$data_files
+),
+file_analysis AS (
+    SELECT 
+        df.file_path,
+        df.partition,
+        df.partition_str,
+        df.spec_id,
+        df.file_size_in_bytes,
+        df.record_count,
+        
+        -- Check file-level conditions
+        (df.file_size_in_bytes < @min_file_size_bytes OR df.file_size_in_bytes > @max_file_size_bytes) AS size_issue
+        
+    FROM data_files df
+),
+partition_group_stats AS (
+    SELECT 
+        partition_str,
+        spec_id,
+        COUNT(*) AS file_count,
+        SUM(file_size_in_bytes) AS total_size_bytes,
+        SUM(CASE WHEN size_issue THEN 1 ELSE 0 END) AS files_with_issues
+    FROM file_analysis
+    GROUP BY partition_str, spec_id
+),
+partition_group_analysis AS (
+    SELECT 
+        partition_str,
+        spec_id,
+        file_count,
+        total_size_bytes,
+        files_with_issues,
+        -- Check partition group-level conditions
+        (file_count > 1 AND file_count >= @min_input_files) AS enough_input_files,
+        (file_count > 1 AND total_size_bytes > @target_file_size_bytes) AS enough_content,
+        (total_size_bytes > @max_file_group_size_bytes) AS too_much_content,
+        (files_with_issues > 0) AS has_files_with_issues
+    FROM partition_group_stats
+)
+SELECT 
+    fa.file_path,
+    fa.partition,
+    fa.file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+    fa.record_count,
+    pga.file_count AS partition_file_count,
+    pga.total_size_bytes / 1024.0 / 1024.0 / 1024.0 AS partition_total_size_gb,
+    fa.size_issue,
+    pga.enough_input_files,
+    pga.enough_content,
+    pga.too_much_content,
+    pga.has_files_with_issues,
+    -- File will be rewritten if it has file-level issues AND partition group meets group-level conditions
+    (fa.size_issue 
+     AND (pga.enough_input_files OR pga.enough_content OR pga.too_much_content OR pga.has_files_with_issues)) AS should_rewrite,
+    CONCAT(
+        CASE WHEN fa.size_issue THEN 'Size issue; ' ELSE '' END,
+        CASE WHEN NOT (pga.enough_input_files OR pga.enough_content OR pga.too_much_content OR pga.has_files_with_issues) THEN 'Partition group conditions not met; ' ELSE '' END
+    ) AS issues
+FROM file_analysis fa
+JOIN partition_group_analysis pga 
+    ON fa.partition_str = pga.partition_str AND fa.spec_id = pga.spec_id
+WHERE fa.size_issue
+ORDER BY fa.partition, fa.file_size_in_bytes DESC;
+```
+
+#### Query 3: Summary statistics
+
+This query provides overall statistics about files that will be rewritten:
+
+```sql
+-- Set parameters (adjust according to your rewrite parameters)
+SET @min_file_size_bytes = 16 * 1024 * 1024;
+SET @max_file_size_bytes = 768 * 1024 * 1024;
+
+WITH file_analysis AS (
+    SELECT 
+        partition,
+        file_path,
+        file_size_in_bytes,
+        record_count,
+        (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS needs_rewrite
+    FROM iceberg_table$data_files
+)
+SELECT 
+    'Total files' AS metric, 
+    COUNT(*) AS value
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Files need rewrite', 
+    SUM(CASE WHEN needs_rewrite THEN 1 ELSE 0 END)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Total size (GB)', 
+    ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Size need rewrite (GB)', 
+    ROUND(SUM(CASE WHEN needs_rewrite THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
+FROM file_analysis
+UNION ALL
+SELECT 
+    'Rewrite percentage (%)', 
+    ROUND(SUM(CASE WHEN needs_rewrite THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
+FROM file_analysis;
+```
+
+**Notes:**
+
+- Adjust the parameter values (`@min_file_size_bytes`, `@max_file_size_bytes`, `@min_input_files`, `@max_file_group_size_bytes`, `@target_file_size_bytes`) according to your actual rewrite parameters
+- The default values shown above correspond to the default rewrite parameters (target-file-size-bytes = 512MB, min-input-files = 5, max-file-group-size-bytes = 100GB)
+- For large tables, these queries may take some time. Consider adding partition filters or using `LIMIT` to test on a subset first
+- Files are grouped by partition for partition group-level analysis. A partition corresponds to a file group in the rewrite operation
+- **Delete file conditions:** The rewrite operation also considers `delete-file-threshold` and `delete-ratio-threshold` parameters, which affect file rewrite selection. However, these conditions cannot be accurately calculated using system table SQL queries because the association between delete files and data files requires more detailed metadata that is not available in the current system tables. Therefore, the analysis queries only focus on file size conditions that can be accurately calculated
 
 ### View Snapshot and Branch
 
