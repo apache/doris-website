@@ -390,6 +390,12 @@ ANN TopN queries return very few rows from each scanner, so high pipeline task p
 
 Disable query profiling for ultra latency-sensitive queries.
 
+## Python SDK
+
+In the era of AI, Python has become the mainstream language for data processing and intelligent application development. To make it easier for developers to use Doris's vector search capabilities in Python environments, some community contributors have developed Python SDKs for Doris.
+
+* https://github.com/uchenily/doris_vector_search: Optimized for vector distance retrieval, this is currently the highest-performance Doris vector search Python SDK available.
+
 ## Usage Limitations
 
 1. The ANN index column must be a NOT NULL `Array<Float>`, and every imported vector must match the declared `dim`, otherwise an error is thrown.

@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- 然后可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
+2. [在 Doris 中创建 Catalog](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
