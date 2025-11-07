@@ -71,16 +71,4 @@ Before deployment, you need to check the host system. Refer to [Operating System
 
 ### Deploy Doris Operator
 
-Before deploying Doris Operator on Kubernetes, you need to install Doris Operator CRD.
-
-* For detailed installation documents, please refer to: [Doris Operator Installation](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator)
-
-### Deploy Doris cluster
-
-* For cluster configuration documents, please refer to: [Doris Operator Cluster Configuration](../../install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster)
-* For installation documents, please refer to: [Doris Cluster Installation](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster)
-
-### Cluster operation and maintenance
-
-* For cluster operation and maintenance documents, please refer to: [Doris Operator Cluster Operation](../../install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation)
-* For cluster access documents, please refer to: [Doris Operator Cluster Access](../../install/deploy-on-kubernetes/integrated-storage-compute/access-cluster)
+For details, please see Doris Operator installation doc for [Compute-Storage Coupled](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md) or [Compute-Storage Decoupled](../../install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md)
