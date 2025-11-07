@@ -18,8 +18,8 @@ Apache Doris 已支持的数据类型列表如下：
 | [INT](../sql-manual/basic-element/sql-data-types/numeric/INT)            | 4         | 有符号整数，范围 [-2147483648, 2147483647]                   |
 | [BIGINT](../sql-manual/basic-element/sql-data-types/numeric/BIGINT)         | 8         | 有符号整数，范围 [-9223372036854775808, 9223372036854775807]。 |
 | [LARGEINT](../sql-manual/basic-element/sql-data-types/numeric/LARGEINT)       | 16        | 有符号整数，范围 [-2^127 + 1 ~ 2^127 - 1]。                  |
-| [FLOAT](../sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT)          | 4         | 浮点数，范围 [-3.4*10^38 ~ 3.4*10^38]。                      |
-| [DOUBLE](../sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT)         | 8         | 浮点数，范围 [-1.79*10^308 ~ 1.79*10^308]。                  |
+| [FLOAT](../sql-manual/basic-element/sql-data-types/numeric/FLOAT)          | 4         | 浮点数，范围 [-3.4*10^38 ~ 3.4*10^38]。                      |
+| [DOUBLE](../sql-manual/basic-element/sql-data-types/numeric/DOUBLE)         | 8         | 浮点数，范围 [-1.79*10^308 ~ 1.79*10^308]。                  |
 | [DECIMAL](../sql-manual/basic-element/sql-data-types/numeric/DECIMAL)        | 4/8/16/32    | 高精度定点数，格式：DECIMAL(P[,S])。其中，P 代表一共有多少个有效数字（precision），S 代表小数位有多少数字（scale）。有效数字 P 的范围是 [1, MAX_P]，`enable_decimal256`=false 时，MAX_P=38，`enable_decimal256`=true 时，MAX_P=76。小数位数字数量 S 的范围是 [0, P]。<br>`enable_decimal256` 的默认值是 false，设置为 true 可以获得更加精确的结果，但是会带来一些性能损失。<br>存储空间：<ul><li>0 < precision <= 9 时，占用 4 字节。<li>9 < precision <= 18 时，占用 8 字节。<li>16 < precision <= 38 时，占用 16 字节。<li>38 < precision <= 76 的场合，占用 32 字节。<ul>|
 
 ### [日期类型](../sql-manual/basic-element/sql-data-types/data-type-overview#日期类型)

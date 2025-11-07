@@ -196,7 +196,7 @@
 
 :::info 备注
 
-参考文档：[数据湖构建](../../lakehouse/catalogs/hive-catalog.md)
+参考文档：[数据湖构建](../../lakehouse/catalogs/hive-catalog)
 
 :::
 
