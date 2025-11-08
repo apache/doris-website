@@ -7,7 +7,7 @@
 
 BigQuery Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 BigQuery Connector 来访问 BigQuery 表。
 
-:::notice
+:::note
 该功能为实验功能，自 3.0.1 版本开始支持。
 :::
 

@@ -185,7 +185,7 @@ HDFS 相关参数如下：
 
 **6. 创建 HMS resource**
 
-   HMS resource 用于 [hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)
+   HMS resource 用于 [hms catalog](../../../../lakehouse/catalogs/hive-catalog)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

@@ -1,7 +1,7 @@
 ---
 {
-"title": "Config Cluster",
-"language": "en"
+  "title": "Config Cluster",
+  "language": "en"
 }
 ---
 
@@ -41,30 +41,30 @@ public static void main(String[] args) {
 **Golang Implementation:**
 ```go
 import (
-    "crypto/sha1"
-    "encoding/hex"
-    "fmt"
-    "strings"
+"crypto/sha1"
+"encoding/hex"
+"fmt"
+"strings"
 )
 
 func main() {
-    // Original password
-    plan := "123456"
-    
-    // First stage encryption
-    h := sha1.New()
-    h.Write([]byte(plan))
-    eb := h.Sum(nil)
+// Original password
+plan := "123456"
 
-    // Second stage encryption
-    h.Reset()
-    h.Write(eb)
-    teb := h.Sum(nil)
-    dst := hex.EncodeToString(teb)
-    tes := strings.ToUpper(fmt.Sprintf("%s", dst))
-    
-    // Output the two-stage encrypted password
-    fmt.Println("*" + tes)
+// First stage encryption
+h := sha1.New()
+h.Write([]byte(plan))
+eb := h.Sum(nil)
+
+// Second stage encryption
+h.Reset()
+h.Write(eb)
+teb := h.Sum(nil)
+dst := hex.EncodeToString(teb)
+tes := strings.ToUpper(fmt.Sprintf("%s", dst))
+
+// Output the two-stage encrypted password
+fmt.Println("*" + tes)
 }
 ```
 Add the resulting encrypted password to the fe.conf file as required. Then, follow the instructions in the [FE startup configuration section](config-fe.md#custom-startup-configuration) to deliver the configuration file to the Kubernetes cluster using a `ConfigMap`.
@@ -89,28 +89,28 @@ Doris Operator also supports using a [Basic Authentication Secret](https://kuber
 The Secret must contain exactly two fields: `username` and `password`.
 
 1. Define the Secret  
-    Create a Basic Authentication Secret in the following format:
+   Create a Basic Authentication Secret in the following format:
 
     ```yaml
     stringData:
       username: root
       password: ${password}
     ```
-    ${password} is the plaintext password for the root user.  
-    Deploy the Secret to the Kubernetes cluster using the command below:
+   ${password} is the plaintext password for the root user.  
+   Deploy the Secret to the Kubernetes cluster using the command below:
     ```yaml
     kubectl -n ${namespace} apply -f ${secretFileName}.yaml
     ```
-    ${namespace}: the target namespace where the DorisDisaggregatedCluster will be deployed.  
-    ${secretFileName}: the name of the YAML file containing the Secret definition
+   ${namespace}: the target namespace where the DorisDisaggregatedCluster will be deployed.  
+   ${secretFileName}: the name of the YAML file containing the Secret definition
 
 2. Configure the DorisDisaggregatedCluster Resource  
-    Reference the Secret in the `DorisDisaggregatedCluster` resource using the `spec.authSecret` field:
+   Reference the Secret in the `DorisDisaggregatedCluster` resource using the `spec.authSecret` field:
     ```yaml
     spec:
       authSecret: ${secretName}
     ```
-    Here, ${secretName} is the name of the Kubernetes Secret containing the root user credentials.
+   Here, ${secretName} is the name of the Kubernetes Secret containing the root user credentials.
 
 ### Automatically Creating a Non-Root Administrative User and Password During Deployment (Recommended)
 If you choose not to set an initial password for the root user during the first deployment, you can configure a non-root administrative user and its password using either environment variables or a Kubernetes Secret. Doris's auxiliary services within the container will automatically create this user within Doris, assign the specified password, and grant it the `Node_priv` privilege. The Doris Operator will then use this automatically created user account to manage cluster nodes.
@@ -171,7 +171,7 @@ Refer to the official [CREATE USER documentation](../../../sql-manual/sql-statem
 
 #### Step 3: Update the DorisDisaggregatedCluster Resource
 - Option 1: Using Environment Variables  
-    Specify the newly created user and password in the DorisDisaggregatedCluster resource:
+  Specify the newly created user and password in the DorisDisaggregatedCluster resource:
     ```yaml
     spec:
       adminUser:
@@ -181,30 +181,31 @@ Refer to the official [CREATE USER documentation](../../../sql-manual/sql-statem
   ${DB_ADMIN_USER}: the name of the new administrative user. ${DB_ADMIN_PASSWD}: the corresponding password.
 
 - Option 2: Using a Secret  
-    a. Define the Secret  
-    Create a Basic Authentication Secret in the following format:
+  a. Define the Secret  
+  Create a Basic Authentication Secret in the following format:
     ```yaml
     stringData:
       username: ${DB_ADMIN_USER}
       password: ${DB_ADMIN_PASSWD}
     ```
-    Deploy the Secret to your Kubernetes cluster using the following command:
+  Deploy the Secret to your Kubernetes cluster using the following command:
     ```shell
     kubectl -n ${namespace} apply -f ${secretFileName}.yaml
     ```
-    ${namespace}: the namespace where the DorisDisaggregatedCluster resource is deployed. ${secretFileName}: the name of the Secret definition file.
+  ${namespace}: the namespace where the DorisDisaggregatedCluster resource is deployed. ${secretFileName}: the name of the Secret definition file.
 
-    b. Update the DorisDisaggregatedCluster Resource  
-    Reference the Secret in the resource configuration:
+  b. Update the DorisDisaggregatedCluster Resource  
+  Reference the Secret in the resource configuration:
     ```yaml
     spec:
       authSecret: ${secretName}
     ```
-    ${secretName}: the name of the Secret containing the user credentials.
+  ${secretName}: the name of the Secret containing the user credentials.
 
 :::tip Note
-After configuring the root password and specifying a new user with node management privileges, Doris Operator will trigger a rolling restart of existing services in the cluster.
-:::
+- After configuring the root password and specifying a new user with node management privileges, Doris Operator will trigger a rolling restart of existing services in the cluster.
+  :::
+
 
 ## Using Kerberos Authentication
 The Doris Operator has supported Kerberos authentication for Doris (versions 2.1.10, 3.0.6, and later) in Kubernetes since version 25.5.1. To enable Kerberos authentication in Doris, both the [krb5.conf file](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) and [keytab files](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) are required.
@@ -228,4 +229,4 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/datalake-analytics/hive.md#catalog-configuration) documentation.
+   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.mdx) documentation.

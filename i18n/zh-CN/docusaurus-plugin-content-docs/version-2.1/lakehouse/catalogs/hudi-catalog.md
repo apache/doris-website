@@ -108,7 +108,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 基础示例
 
-Hudi Catalog 的创建方式和 Hive Catalog 一致。更多示例可参阅[ Hive Catalog](./hive-catalog.md)
+Hudi Catalog 的创建方式和 Hive Catalog 一致。更多示例可参阅[ Hive Catalog](./hive-catalog)
 
 ```sql
 CREATE CATALOG hudi_hms PROPERTIES (

@@ -37,7 +37,7 @@
 
 - 会话变量 `read_csv_empty_line_as_null` 用于控制在读取 CSV 格式文件时，是否忽略空行。默认情况下忽略空行，当设置为 true 时，空行将被读取为所有列均为 Null 的行。[#37153](https://github.com/apache/doris/pull/37153)  
   
-  - 更多信息，请参考[文档](../../lakehouse/datalake-analytics/hive?_highlight=compress_type)。
+  - 更多信息，请参考[文档](../../lakehouse/catalogs/hive-catalog)。
 
 - 新增兼容 Presto 的复杂类型输出格式。通过设置 `set serde_dialect="presto"`，可以控制复杂类型的输出格式 与 Presto 一致，用于平滑迁移 Presto 业务。[#37253](https://github.com/apache/doris/pull/37253)
 

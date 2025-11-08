@@ -519,7 +519,7 @@ Add to `fe.conf` in FE:
 enable_proxy_protocol = true
 ```
 
-:::notice
+:::note
 
 1. Only supports Proxy Protocol V1.
 

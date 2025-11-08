@@ -32,8 +32,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
     {MetaStoreProperties},
     {StorageProperties},
-    {CommonProperties},
-    {OtherProperties}
+    {HiveProperties},
+    {CommonProperties}
 );
 ```
 
@@ -61,19 +61,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `{CommonProperties}`
+* `{HiveProperties}`
 
-  CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
-
-* `{OtherProperties}`
-
-  OtherProperties 部分用于填写和 Hive Catalog 相关的其他参数。
+  HiveProperties 部分用于填写和 Hive Catalog 相关的其他参数。
 
   * `get_schema_from_table`：默认为 false。默认情况下，Doris 会从 Hive Metastore 中获取表的 Schema 信息。但某些情况下可能出现兼容问题，如错误 `Storage schema reading not supported`。此时可以将这个参数设置为 true，则会从 Table 对象中直接获取表 Schema。但注意，该方式会导致列的默认值信息被忽略。该参数自 2.1.10 和 3.0.6 版本支持。
 
   * `hive.recursive_directories`：在 list 分区目录时，是否递归子目录。该参数自 3.0.2 版本支持。在 4.0 版本之前，该参数默认值为 `false`，之后的版本，该默认值为 `true`。某些 Hive 外表的分区路径可能和表结构中的分区信息不匹配，需要将这个参数设为 `true` 以便获取子目录下的数据文件。
 
   * `hive.ignore_absent_partitions`：是否忽略不存在的分区。默认为 `true`。如果设为 `false`，当遇到不存在的分区时，查询会报错。该参数自 3.0.2 版本支持。
+
+* `{CommonProperties}`
+
+  CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
 ### 支持的 Hive 版本
 

@@ -13,7 +13,11 @@ It should be noted that when handling character set matching, Utf-8 standard cha
 
 If the 'pattern' is not allowed regexp regular, throw error;
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 
@@ -183,4 +187,22 @@ SELECT regexp_extract_all('hello (world) 123', '([[:alpha:]+');
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:alpha:]+
 Error: missing ]: [[:alpha:]+
+```
+
+Advanced regexp
+```sql
+SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=ID:)([A-Z]{2}-\d). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
+```
+```text
++-------------------------------------------------------------------------+
+| REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)') |
++-------------------------------------------------------------------------+
+| ['AA-1','BB-2','CC-3']                                                  |
++-------------------------------------------------------------------------+
 ```

@@ -1,9 +1,9 @@
 ## Versions 
 
 - [ ] dev
+- [ ] 4.x
 - [ ] 3.x
 - [ ] 2.1
-- [ ] 2.0
 
 ## Languages
 

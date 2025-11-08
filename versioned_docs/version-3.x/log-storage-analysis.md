@@ -214,7 +214,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](../table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](./table-design/data-partitioning/dynamic-partitioning.md)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](./table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](./table-design/data-partitioning/dynamic-partitioning)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 

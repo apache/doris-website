@@ -23,7 +23,7 @@ Doris 通过可扩展的连接器框架，支持主流数据系统和数据格�
 
 对于湖仓系统，Doris 可从元数据服务，如 Hive Metastore，AWS Glue、Unity Catalog 中获取数据表的结构和分布信息，进行合理的查询规划，并利用 MPP 架构进行分布式计算。
 
-具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog)
 
 #### 可扩展的连接器框架
 

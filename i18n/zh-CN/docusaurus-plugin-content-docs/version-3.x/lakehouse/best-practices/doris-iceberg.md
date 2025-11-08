@@ -36,7 +36,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 
 未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 也将逐步支持包括 Update/Delete/Merge、写回时排序、增量数据读取、元数据管理等 Apache Iceberg 更多高级特性，共同构建统一、高性能、实时的湖仓平台。
 
-关于更多说明，请参阅 [Iceberg Catalog](../catalogs/iceberg-catalog.md)
+关于更多说明，请参阅 [Iceberg Catalog](../catalogs/iceberg-catalog)
 
 ## 使用指南
 
