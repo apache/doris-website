@@ -224,6 +224,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/routine-load-internals',
                             ],
                         },
+                        "data-operate/import/streaming-job"
                     ],
                 },
                 {
