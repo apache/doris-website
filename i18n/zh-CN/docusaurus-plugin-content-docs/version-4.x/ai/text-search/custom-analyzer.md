@@ -54,6 +54,21 @@ PROPERTIES (
 - `basic`：简单英文/数字/中文/Unicode 分词
   - `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）
 - `icu`：ICU 国际化分词，支持多语言复杂脚本
+- `pinyin`：拼音分词器，用于中文拼音搜索
+  - `keep_first_letter`：启用时，仅保留每个汉字的首字母。例如，`刘德华` 变为 `ldh`。默认值：true
+  - `keep_separate_first_letter`：启用时，将每个汉字的首字母分别保留。例如，`刘德华` 变为 `l`,`d`,`h`。默认值：false。注意：由于词频的原因，这可能会增加查询的模糊性
+  - `limit_first_letter_length`：设置首字母结果的最大长度。默认值：16
+  - `keep_full_pinyin`：启用时，保留每个汉字的完整拼音。例如，`刘德华` 变为 [`liu`,`de`,`hua`]。默认值：true
+  - `keep_joined_full_pinyin`：启用时，连接每个汉字的完整拼音。例如，`刘德华` 变为 [`liudehua`]。默认值：false
+  - `keep_none_chinese`：在结果中保留非中文字母或数字。默认值：true
+  - `keep_none_chinese_together`：将非中文字母保持在一起。默认值：true。例如，`DJ音乐家` 变为 `DJ`,`yin`,`yue`,`jia`。当设置为 false 时，`DJ音乐家` 变为 `D`,`J`,`yin`,`yue`,`jia`。注意：需要先启用 `keep_none_chinese`
+  - `keep_none_chinese_in_first_letter`：在首字母中保留非中文字母。例如，`刘德华AT2016` 变为 `ldhat2016`。默认值：true
+  - `keep_none_chinese_in_joined_full_pinyin`：在连接的完整拼音中保留非中文字母。例如，`刘德华2016` 变为 `liudehua2016`。默认值：false
+  - `none_chinese_pinyin_tokenize`：如果非中文字母是拼音，则将其拆分为单独的拼音词元。默认值：true。例如，`liudehuaalibaba13zhuanghan` 变为 `liu`,`de`,`hua`,`a`,`li`,`ba`,`ba`,`13`,`zhuang`,`han`。注意：需要先启用 `keep_none_chinese` 和 `keep_none_chinese_together`
+  - `keep_original`：启用时，同时保留原始输入。默认值：false
+  - `lowercase`：将非中文字母转换为小写。默认值：true
+  - `trim_whitespace`：默认值：true
+  - `remove_duplicated_term`：启用时，删除重复的词元以节省索引空间。例如，`de的` 变为 `de`。默认值：false。注意：可能会影响位置相关的查询
 
 #### 3. token_filter（词元过滤器）
 
@@ -81,6 +96,7 @@ PROPERTIES (
     - `type_table`：自定义字符类型映射（如 `[+ => ALPHA, - => ALPHA]`），类型含 `ALPHA`、`ALPHANUM`、`DIGIT`、`LOWER`、`SUBWORD_DELIM`、`UPPER`
 - `ascii_folding`：将非 ASCII 字符映射为等效 ASCII
 - `lowercase`：将 token 文本转为小写
+- `pinyin`：在分词后将中文字符转换为拼音的过滤器。参数详情请参考上文的 **pinyin** 分词器。
 
 #### 4. analyzer（分析器）
 
@@ -278,4 +294,83 @@ select tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 [
   {"token":"hello world"}
 ]
+```
+
+### 示例4：中文拼音搜索
+
+使用拼音分词器进行中文姓名和文本搜索 - 支持全拼、首字母缩写和中英文混合文本。
+
+#### 使用拼音分词器
+
+```sql
+-- 创建支持多种输出格式的拼音分词器
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS pinyin_tokenizer
+PROPERTIES (
+    "type" = "pinyin",
+    "keep_first_letter" = "true",
+    "keep_full_pinyin" = "true",
+    "keep_joined_full_pinyin" = "true",
+    "keep_original" = "true",
+    "keep_none_chinese" = "true",
+    "lowercase" = "true",
+    "remove_duplicated_term" = "true"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS pinyin_analyzer
+PROPERTIES (
+    "tokenizer" = "pinyin_tokenizer"
+);
+
+CREATE TABLE contacts (
+    id BIGINT NOT NULL AUTO_INCREMENT(1),
+    name TEXT NULL,
+    INDEX idx_name (name) USING INVERTED PROPERTIES("analyzer" = "pinyin_analyzer", "support_phrase" = "true")
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+
+INSERT INTO contacts VALUES (1, "刘德华"), (2, "张学友"), (3, "郭富城");
+
+SELECT * FROM contacts WHERE name MATCH '刘德华';
+SELECT * FROM contacts WHERE name MATCH 'liudehua';
+SELECT * FROM contacts WHERE name MATCH 'liu';
+SELECT * FROM contacts WHERE name MATCH 'ldh';
+```
+
+#### 使用拼音过滤器
+
+```sql
+-- 创建拼音过滤器，应用于 keyword 分词器之后
+CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS pinyin_filter
+PROPERTIES (
+    "type" = "pinyin",
+    "keep_first_letter" = "true",
+    "keep_full_pinyin" = "true",
+    "keep_original" = "true",
+    "lowercase" = "true"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS keyword_pinyin
+PROPERTIES (
+    "tokenizer" = "keyword",
+    "token_filter" = "pinyin_filter"
+);
+
+CREATE TABLE stars (
+    id BIGINT NOT NULL AUTO_INCREMENT(1),
+    name TEXT NULL,
+    INDEX idx_name (name) USING INVERTED PROPERTIES("analyzer" = "keyword_pinyin")
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+
+INSERT INTO stars VALUES (1, "刘德华"), (2, "张学友"), (3, "刘德华ABC");
+
+-- 支持多种搜索模式：
+SELECT * FROM stars WHERE name MATCH '刘德华';
+SELECT * FROM stars WHERE name MATCH 'liu';
+SELECT * FROM stars WHERE name MATCH 'ldh';
+SELECT * FROM stars WHERE name MATCH 'zxy';
 ```

@@ -88,12 +88,23 @@ avgdl = total_terms / total_rows
 SELECT *,
        score() AS relevance
 FROM search_demo
-WHERE content MATCH_ANY '检索测试'
+WHERE content MATCH_ANY 'text search test'
 ORDER BY relevance DESC
 LIMIT 10;
 ```
 
 该语句会根据 BM25 打分结果返回前 10 条最相关的记录。
+
+```text
++------+-----------------------------------+---------+--------------+-----------+
+| id   | content                           | author  | publish_date | relevance |
++------+-----------------------------------+---------+--------------+-----------+
+|    1 | Full text search engine test demo | Alice   | 2024-01-01   |  2.915228 |
+|    7 | Text processing techniques        | Grace   | 2024-01-07   |  1.341931 |
+|    5 | Performance test framework        | Eve     | 2024-01-05   |  1.341931 |
+|    3 | Advanced search algorithms        | Charlie | 2024-01-03   |  1.341931 |
++------+-----------------------------------+---------+--------------+-----------+
+```
 
 ---
 
