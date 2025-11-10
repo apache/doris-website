@@ -26,7 +26,7 @@ This document introduces how to configure remote Doris cluster connections and p
 
 ### Syntax
 
-```
+```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'doris', -- required
     'fe_http_hosts' = 'http://<fe-host1>:<fe-http-port>,<fe-host2>:<fe-http-port>', -- required
@@ -75,7 +75,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `{CommonProperties}`
 
-  CommonProperties section is used to fill in common properties. Please refer to the 【Common Properties】 section in the Data Catalog Overview.
+  CommonProperties section is used to fill in common properties. Please refer to the [Common Properties] section in the Data Catalog Overview.
 
 ## Column Type Mapping
 
