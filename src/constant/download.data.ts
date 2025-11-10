@@ -2458,12 +2458,12 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on bare metal',
         description: 'A platform for visualized cluster deployment on bare metal or VM.',
-        link: 'https://doris.apache.org/docs/install/deploy-manually/storage-compute-coupled-deploy-manually',
+        link: 'https://doris.apache.org/docs/install/deploy-manually/integrated-storage-compute-deploy-manually',
     },
     {
         title: 'Doris on Kubernetes',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
-        link: 'https://doris.apache.org/docs/install/deploy-on-kubernetes/install-doris-operator',
+        link: 'https://doris.apache.org/docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster',
     },
     {
         title: 'Doris on AWS',
