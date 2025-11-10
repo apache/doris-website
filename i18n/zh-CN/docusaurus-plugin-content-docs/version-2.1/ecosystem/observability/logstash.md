@@ -11,7 +11,7 @@
 
 Logstash 是一个日志 ETL 框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。
 
-Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Logstash Doris output plugin 调用 [Doris Stream Load](../../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Logstash Doris output plugin 主要有三个步骤：
 1. 将插件安装到 Logstash 中

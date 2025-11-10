@@ -148,7 +148,7 @@ const config = {
                 docs: {
                     lastVersion: getLatestVersion(),
                     versions: getDocsVersions(),
-                    sidebarPath: require.resolve('./sidebars.json'),
+                    sidebarPath: require.resolve('./sidebars.ts'),
                     // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
@@ -158,7 +158,14 @@ const config = {
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [require('rehype-katex')],
+                    rehypePlugins: [
+                        [
+                            require('rehype-katex'),
+                            {
+                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                            }
+                        ]
+                    ]
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',

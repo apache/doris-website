@@ -35,7 +35,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 
 | Parameter              | Required | Description                                                                                                      |
 |:----------------|:-----|:--------------------------------------------------------------------------------------------------------|
-| `s3.endpoint`    | Required   | The endpoint for object storage. For Azure Blob Storage, the endpoint is fixed as blob.core.windows.net.。 |
+| `s3.endpoint`    | Required   | The endpoint for object storage. For Azure Blob Storage, the endpoint is fixed as blob.core.windows.net. |
 | `s3.region`      | Required   | The region of your storage bucket. (Not required if using GCP or AZURE). |
 | `s3.root.path`   | Required   | The path to store data. |
 | `s3.bucket`      | Required   | The bucket of your object storage account. (For Azure, this is the StorageAccount). |
@@ -48,7 +48,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 
 1. `s3.endpoint` if neither `http://` nor `https://` prefix is not provided, ​​`http`​​ will be used by default. If a prefix is explicitly specified, it will take effect with the prefix;
 
-2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md).
 
 ### HDFS vault
 
@@ -165,7 +165,8 @@ PROPERTIES (
 
 **Note:&#x20;**
 
-Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md)
+
 
 ### 7. Create MinIO storage vault
 
