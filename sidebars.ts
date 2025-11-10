@@ -2459,12 +2459,19 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'v4.0',
-                    items: ['releasenotes/v4.0/release-4.0.0'],
+                    items: [
+                        'releasenotes/v4.0/release-4.0.1',
+                        'releasenotes/v4.0/release-4.0.0'
+                    ],
                 },
                 {
                     type: 'category',
                     label: 'v3.1',
-                    items: ['releasenotes/v3.1/release-3.1.1', 'releasenotes/v3.1/release-3.1.0'],
+                    items: [
+                        'releasenotes/v3.1/release-3.1.2', 
+                        'releasenotes/v3.1/release-3.1.1', 
+                        'releasenotes/v3.1/release-3.1.0'
+                    ],
                 },
                 {
                     type: 'category',
