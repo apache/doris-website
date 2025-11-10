@@ -474,7 +474,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试工具**
 
-* [doris-streamloader](/ecosystem/doris-streamloader.md)
+* [doris-streamloader](../../ecosystem/doris-streamloader.md)
 
 **测试方法**
 
