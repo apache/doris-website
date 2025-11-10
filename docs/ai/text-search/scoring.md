@@ -96,6 +96,17 @@ LIMIT 10;
 
 This query returns the top 10 rows most relevant to the search terms, ranked by BM25 score.
 
+```text
++------+-----------------------------------+---------+--------------+-----------+
+| id   | content                           | author  | publish_date | relevance |
++------+-----------------------------------+---------+--------------+-----------+
+|    1 | Full text search engine test demo | Alice   | 2024-01-01   |  2.915228 |
+|    7 | Text processing techniques        | Grace   | 2024-01-07   |  1.341931 |
+|    5 | Performance test framework        | Eve     | 2024-01-05   |  1.341931 |
+|    3 | Advanced search algorithms        | Charlie | 2024-01-03   |  1.341931 |
++------+-----------------------------------+---------+--------------+-----------+
+```
+
 ---
 
 ## Result Interpretation
