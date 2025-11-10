@@ -73,8 +73,8 @@ SELECT * FROM S3
 CanceledTaskCount: 0
           Comment: \N
        Properties: \N
-    CurrentOffset: {"endFile":"s3/demo/test/1.csv"}
-        EndOffset: {"endFile":"s3/demo/test/1.csv"}
+    CurrentOffset: {"fileName":"s3/demo/test/1.csv"}
+        EndOffset: {"fileName":"s3/demo/test/1.csv"}
     LoadStatistic: {"scannedRows":20,"loadBytes":425,"fileNumber":2,"fileSize":256}
          ErrorMsg: \N
     JobRuntimeMsg: \N
@@ -191,8 +191,8 @@ SELECT * FROM S3
 CanceledTaskCount: 0
           Comment: 
        Properties: {"s3.max_batch_files":"2","session.insert_max_filter_ratio":"0.5"}
-    CurrentOffset: {"endFile":"s3/demo/test/1.csv"}
-        EndOffset: {"endFile":"s3/demo/test/1.csv"}
+    CurrentOffset: {"fileName":"s3/demo/test/1.csv"}
+        EndOffset: {"fileName":"s3/demo/test/1.csv"}
     LoadStatistic: {"scannedRows":0,"loadBytes":0,"fileNumber":0,"fileSize":0}
          ErrorMsg: \N
 ```
@@ -242,7 +242,7 @@ mysql> select * from tasks(type='insert') where jobId='1758534452459'\G
 LoadStatistic: {"scannedRows":20,"loadBytes":425,"fileNumber":2,"fileSize":256}
          User: root
 FirstErrorMsg: \N
-RunningOffset: {"endFile": "s3/demo/test/1.csv"}
+RunningOffset: {"startFileName":"s3/demo/1.csv","endFileName":"s3/demo/8.csv"}
 ```
 
 | Results Columns | Description |
