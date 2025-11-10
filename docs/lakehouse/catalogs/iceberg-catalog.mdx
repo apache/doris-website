@@ -1896,29 +1896,25 @@ Supported schema change operations include:
 
 ## Iceberg Table Actions
 
-Doris supports executing specific actions on Iceberg tables through the `ALTER TABLE EXECUTE` syntax. This syntax provides a unified interface for executing various actions such as table optimization and snapshot management.
+> This feature is supported since 4.0.2
+>
+> This is an experimental feature.
 
-### ALTER TABLE EXECUTE Syntax
+Doris supports executing specific actions on Iceberg tables through the `ALTER TABLE EXECUTE` syntax. This syntax provides a unified interface for executing various actions such as table optimization and snapshot management.
 
 ```sql
 ALTER TABLE [catalog.][database.]table_name
-EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...) [WHERE <condition>]
+EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
+[WHERE <condition>]
 ```
 
 * `action_name`: The name of the action to execute
 * `("key1" = "value1", ...)`: Action-related parameters provided as key-value pairs. Parameter names must be wrapped in double quotes
 * `[WHERE <condition>]`: Optional WHERE condition to specify the partition or data range for the operation (only supported by some operations)
 
-Iceberg table operations are mainly divided into two categories:
+### rewrite_data_files
 
-1. **Data Operations**: Optimize and rewrite data files in the table
-2. **Metadata Management Operations**: Manage snapshots and branches of the table
-
-### Data Operations
-
-#### rewrite_data_files
-
-The `rewrite_data_files` operation rewrites data files in an Iceberg table to implement small file compaction, optimizing query performance and storage efficiency.
+The `rewrite_data_files` operation rewrites data files in an Iceberg table to implement small file compaction, optimizing query performance and storage efficiency. This is a synchronized operation.
 
 **Syntax:**
 
@@ -1956,7 +1952,7 @@ Executing `rewrite_data_files` returns a result set with the following 4 columns
 
 ```sql
 -- Rewrite data files with default parameters
-ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files ();
+ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files();
 
 -- Specify target file size and minimum input files
 ALTER TABLE iceberg_db.iceberg_table 
@@ -1969,7 +1965,8 @@ EXECUTE rewrite_data_files (
 ALTER TABLE iceberg_db.iceberg_table 
 EXECUTE rewrite_data_files (
   "target-file-size-bytes" = "268435456"
-) WHERE date_col = '2024-01-01';
+)
+WHERE date_col = '2024-01-01';
 
 -- Rewrite all files
 ALTER TABLE iceberg_db.iceberg_table 
@@ -1981,16 +1978,12 @@ EXECUTE rewrite_data_files (
 
 **Notes:**
 
-1. The `rewrite_data_files` operation reads and rewrites data files, which will generate additional I/O and computational overhead. It is recommended to execute this operation during off-peak business hours
+1. The `rewrite_data_files` operation reads and rewrites data files, which will generate additional I/O and computational overhead. Please allocate cluster resources reasonably.
 2. Before execution, you can use the SQL in the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether a rewrite operation is needed
 3. The WHERE condition can be used to limit the partition or data range for rewriting. This condition will filter out files that do not contain data matching the WHERE condition, thereby reducing the number of files and amount of data to rewrite
 4. Before execution, you can use the SQL in the [Rewrite File Selection Logic](#rewrite-file-selection-logic) section to calculate which files will be rewritten
 
-### Metadata Management Operations
-
-Metadata management operations are used to manage snapshots and branches of Iceberg tables, including snapshot rollback, switching, merging, and other functions.
-
-#### cherrypick_snapshot
+### cherrypick_snapshot
 
 The `cherrypick_snapshot` operation merges changes from a specified snapshot into the current table state, creating a new snapshot without modifying or deleting the original snapshot.
 
@@ -2030,7 +2023,7 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
 2. If the specified snapshot does not exist, the operation will fail
 3. The merge operation creates a new snapshot and does not delete the original snapshot
 
-#### fast_forward
+### fast_forward
 
 The `fast_forward` operation fast-forwards the current snapshot of one branch to the latest snapshot of another branch.
 
@@ -2072,7 +2065,7 @@ EXECUTE fast_forward ("branch" = "feature", "to" = "main");
 2. If the specified branch does not exist, the operation will fail
 3. Only branches can be fast-forwarded, not tags
 
-#### rollback_to_snapshot
+### rollback_to_snapshot
 
 The `rollback_to_snapshot` operation rolls back an Iceberg table to a specified snapshot.
 
@@ -2112,7 +2105,7 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 2. If the specified snapshot does not exist, the operation will fail
 3. If the current snapshot is already the target snapshot, the operation returns directly without creating a new snapshot
 
-#### rollback_to_timestamp
+### rollback_to_timestamp
 
 The `rollback_to_timestamp` operation rolls back an Iceberg table to the snapshot at a specified timestamp.
 
@@ -2156,7 +2149,7 @@ EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 2. The `timestamp` parameter supports ISO datetime format (`yyyy-MM-dd HH:mm:ss.SSS`) or milliseconds timestamp format
 3. If there is no snapshot corresponding to the specified timestamp, the operation will fail
 
-#### set_current_snapshot
+### set_current_snapshot
 
 The `set_current_snapshot` operation sets the current snapshot of an Iceberg table to a specified snapshot ID or reference (branch or tag).
 
@@ -2264,174 +2257,180 @@ You can use the following SQL to analyze the data distribution and delete file c
   +--------------------+---------+-------------+---------+
   ```
 
-### Rewrite File Selection Logic
+## Appendix
 
-You can view this section to understand the file selection logic for rewriting. You can also use the following SQL queries to analyze which files will be rewritten based on system table information. This helps you debug and understand the rewrite behavior before executing the actual rewrite operation.
+### `rewrite_data_files` File Selection Strategy
+
+You can check this section to understand the logic for selecting files to be rewritten. You can also use the following SQL queries to analyze which files will be rewritten based on system table information. This helps you debug and understand rewrite behavior before executing actual rewrite operations.
 
 The rewrite operation uses a two-stage filtering and grouping strategy:
 
-**Stage 1: File-level filtering**
-Files are first filtered based on file-level conditions. Only files that meet at least one of the following conditions will be considered for rewriting:
+1. Stage 1: File-level filtering
 
-1. **File size outside desired range**: Files smaller than `min-file-size-bytes` or larger than `max-file-size-bytes`
-2. **Too many delete files**: Files with associated delete file count >= `delete-file-threshold` ⚠️ *Cannot be accurately calculated via system table SQL queries*
-3. **High delete ratio**: Files with delete record ratio >= `delete-ratio-threshold` ⚠️ *Cannot be accurately calculated via system table SQL queries*
+    First, files are filtered based on file-level conditions. Only files that meet at least one of the following conditions will be considered for rewriting:
 
-**Note on delete file conditions:** The conditions related to delete files (`delete-file-threshold` and `delete-ratio-threshold`) affect file rewrite selection, but they cannot be accurately calculated using system table SQL queries. This is because the current system table information is insufficient to accurately determine which data files are affected by delete files. Delete files may only affect specific data files (especially Position Delete files), and the association between delete files and data files requires more detailed metadata that is not available in the current system tables. The actual rewrite operation will evaluate these conditions based on more detailed metadata that is not exposed in the system tables.
+    1. **File size out of range**: File is smaller than `min-file-size-bytes` or larger than `max-file-size-bytes`
+    2. **Too many delete files**: Number of associated delete files >= `delete-file-threshold`
+    3. **High delete ratio**: Delete record ratio >= `delete-ratio-threshold`
 
-**Stage 2: BinPack grouping and group-level filtering**
-After file-level filtering, files are grouped by partition, and then within each partition, files are grouped using the **BinPack algorithm** based on file size and `max-file-group-size-bytes`. The BinPack algorithm intelligently packs files into groups to optimize the rewrite operation.
+    **Note about delete file conditions:** Conditions related to delete files (`delete-file-threshold` and `delete-ratio-threshold`) affect file rewrite selection, but cannot be accurately calculated through system table SQL queries. This is because current system table information is insufficient to accurately determine which data files are affected by delete files. Delete files may only affect specific data files (especially Position Delete files), and the association between delete files and data files requires more detailed metadata that is not available in current system tables. Actual rewrite operations will evaluate these conditions based on more detailed metadata not exposed in system tables.
 
-After grouping, file groups are filtered based on group-level conditions. A file group will be rewritten if it meets at least one of the following conditions:
+2. Stage 2: BinPack grouping and group-level filtering
 
-1. **Enough input files**: Group has more than 1 file and file count >= `min-input-files`
-2. **Enough content**: Group has more than 1 file and total size > `target-file-size-bytes`
-3. **Too much content**: Group total size > `max-file-group-size-bytes`
-4. **Has files with delete issues**: Group contains at least one file with too many delete files or high delete ratio ⚠️ *Cannot be accurately calculated via system table SQL queries*
+    After file-level filtering, files are grouped by partition, then within each partition, files are grouped using the **BinPack algorithm** based on file size and `max-file-group-size-bytes`. The BinPack algorithm intelligently packs files into groups to optimize rewrite operations.
 
-⚠️ **Note on BinPack grouping:** The BinPack algorithm used for grouping files within each partition is a complex optimization algorithm that cannot be accurately simulated using system table SQL queries. The algorithm considers file sizes and `max-file-group-size-bytes` to intelligently pack files into groups, which may result in different groupings than simple partition-based grouping. Therefore, the SQL queries provided below can only identify files that meet file-level conditions, but cannot accurately calculate the final file groups that will be rewritten.
+    After grouping, file groups are filtered based on group-level conditions. File groups will be rewritten when they meet at least one of the following conditions:
 
-#### Query 1: Identify files that meet file-level conditions
+    1. **Sufficient input files**: Number of files in group > 1 and file count >= `min-input-files`
+    2. **Sufficient content**: Number of files in group > 1 and total size > `target-file-size-bytes`
+    3. **Too much content**: Group total size > `max-file-group-size-bytes`
+    4. **Contains files with delete file issues**: At least one file in the group has too many delete files or high delete ratio.
 
-This query identifies files that meet file-level conditions (file size) and will be considered for rewriting:
+    **Note about BinPack grouping:** The BinPack algorithm used to group files within each partition is a complex optimization algorithm that cannot be accurately simulated through system table SQL queries. This algorithm considers file size and `max-file-group-size-bytes` to intelligently pack files into groups, which may result in different grouping results than simple partition-based grouping. Therefore, the SQL queries provided below can only identify files that meet file-level conditions, but cannot accurately calculate the final file groups that will be rewritten.
 
-```sql
--- Set parameters (adjust according to your rewrite parameters)
-SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (default: target-file-size-bytes * 0.75)
-SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB (default: target-file-size-bytes * 1.8)
+Here are some example query strategies:
 
-SELECT 
-    file_path,
-    `partition`,
-    file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
-    record_count,
-    CASE 
-        WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
-        WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
-    END AS size_issue
-FROM iceberg_table$data_files
-WHERE file_size_in_bytes < @min_file_size_bytes 
-   OR file_size_in_bytes > @max_file_size_bytes
-ORDER BY `partition`, file_size_in_bytes DESC;
-```
+- Query 1: Identify files meeting file-level conditions
 
-**Example output:**
+    This query identifies files that meet file-level conditions (file size) and will be considered for rewriting:
 
-```
-+----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
-| file_path                                                                             | partition                 | file_size_mb | record_count | size_issue |
-+----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
-| s3a://bucket/path/to/table/data/date_col=2024-01-01/00000-0-00000-00000-0.parquet   | {"date_col":"2024-01-01"} |     0.00215  |            5 | Too small  |
-| s3a://bucket/path/to/table/data/date_col=2024-01-01/00001-0-00001-00001-0.parquet     | {"date_col":"2024-01-01"} |     0.00198  |            5 | Too small  |
-| s3a://bucket/path/to/table/data/date_col=2024-01-02/00002-0-00002-00002-0.parquet     | {"date_col":"2024-01-02"} |     0.00231  |            5 | Too small  |
-| s3a://bucket/path/to/table/data/date_col=2024-01-02/00003-0-00003-00003-0.parquet     | {"date_col":"2024-01-02"} |   850.23456  |      1250000 | Too large  |
-| s3a://bucket/path/to/table/data/date_col=2024-01-03/00004-0-00004-00004-0.parquet     | {"date_col":"2024-01-03"} |     0.00245  |            5 | Too small  |
-+----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
-5 rows in set
-```
+    ```sql
+    -- Set parameters (adjust according to your rewrite parameters)
+    SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (default: target-file-size-bytes * 0.75)
+    SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB (default: target-file-size-bytes * 1.8)
 
-⚠️ **Note:** This query only identifies files that meet file-level conditions (file size). The actual file groups that will be rewritten depend on the BinPack grouping algorithm, which cannot be accurately simulated using SQL queries. Files identified by this query may be grouped differently by the BinPack algorithm, and some groups may be filtered out based on group-level conditions.
-
-#### Query 2: Summary statistics
-
-This query provides overall statistics about files that meet file-level conditions:
-
-```sql
--- Set parameters (adjust according to your rewrite parameters)
-SET @min_file_size_bytes = 16 * 1024 * 1024;
-SET @max_file_size_bytes = 768 * 1024 * 1024;
-
-WITH file_analysis AS (
     SELECT 
-        `partition`,
         file_path,
-        file_size_in_bytes,
+        `partition`,
+        file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
         record_count,
-        (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS meets_file_level_conditions
+        CASE 
+            WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
+            WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
+        END AS size_issue
     FROM iceberg_table$data_files
-)
-SELECT 
-    'Total files' AS metric, 
-    COUNT(*) AS value
-FROM file_analysis
-UNION ALL
-SELECT 
-    'Files meeting file-level conditions', 
-    SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END)
-FROM file_analysis
-UNION ALL
-SELECT 
-    'Total size (GB)', 
-    ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
-FROM file_analysis
-UNION ALL
-SELECT 
-    'Size meeting file-level conditions (GB)', 
-    ROUND(SUM(CASE WHEN meets_file_level_conditions THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
-FROM file_analysis
-UNION ALL
-SELECT 
-    'Percentage meeting file-level conditions (%)', 
-    ROUND(SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
-FROM file_analysis;
-```
+    WHERE file_size_in_bytes < @min_file_size_bytes 
+    OR file_size_in_bytes > @max_file_size_bytes
+    ORDER BY `partition`, file_size_in_bytes DESC;
+    ```
 
-**Example output:**
+    **Sample output:**
 
-```
-+----------------------------------------------+--------+
-| metric                                       | value  |
-+----------------------------------------------+--------+
-| Total files                                  |  15.00 |
-| Total size (GB)                              |   2.45 |
-| Files meeting file-level conditions          |  12.00 |
-| Size meeting file-level conditions (GB)      |   1.85 |
-| Percentage meeting file-level conditions (%) |  80.00 |
-+----------------------------------------------+--------+
-5 rows in set
-```
+    ```
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | file_path                                                                             | partition                 | file_size_mb | record_count | size_issue |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00000-0-00000-00000-0.parquet   | {"date_col":"2024-01-01"} |     0.00215  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00001-0-00001-00001-0.parquet     | {"date_col":"2024-01-01"} |     0.00198  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00002-0-00002-00002-0.parquet     | {"date_col":"2024-01-02"} |     0.00231  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00003-0-00003-00003-0.parquet     | {"date_col":"2024-01-02"} |   850.23456  |      1250000 | Too large  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-03/00004-0-00004-00004-0.parquet     | {"date_col":"2024-01-03"} |     0.00245  |            5 | Too small  |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    5 rows in set
+    ```
 
-**Notes:**
+    **Note:** This query can only identify files that meet file-level conditions (file size). The actual file groups to be rewritten depend on the BinPack grouping algorithm, which cannot be accurately simulated through SQL queries. Files identified by this query may be grouped differently by the BinPack algorithm, and some groups may be filtered out based on group-level conditions.
 
-- Replace `iceberg_table` in the examples with your actual table name
-- Adjust the parameter values (`@min_file_size_bytes`, `@max_file_size_bytes`) according to your actual rewrite parameters
-- The default values shown above correspond to the default rewrite parameters (min-file-size-bytes = target-file-size-bytes * 0.75, max-file-size-bytes = target-file-size-bytes * 1.8)
+- Query 2: Overall statistics summary
 
-### View Snapshot and Branch
+    This query provides overall statistics about files that meet file-level conditions:
 
-```sql
-SELECT
-  refs_data.snapshot_id,
-  snapshots.committed_at,
-  snapshots.operation,
-  ARRAY_SORT(refs_data.refs)
-FROM (
-  SELECT
-    snapshot_id,
-    ARRAY_AGG(CONCAT(type, ':', name)) AS refs
-  FROM
-    iceberg_table$refs
-  GROUP BY
-    snapshot_id
-) AS refs_data
-JOIN (
-  SELECT
-    snapshot_id,
-    committed_at,
-    operation
-  FROM
-    iceberg_table$snapshots
-) AS snapshots
-ON refs_data.snapshot_id = snapshots.snapshot_id
-ORDER BY
-  snapshots.committed_at;
+    ```sql
+    -- Set parameters (adjust according to your rewrite parameters)
+    SET @min_file_size_bytes = 16 * 1024 * 1024;
+    SET @max_file_size_bytes = 768 * 1024 * 1024;
 
-+---------------------+----------------------------+-----------+-------------------------------------+
-| snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
-+---------------------+----------------------------+-----------+-------------------------------------+
-| 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
-| 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
-|   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
-| 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
-+---------------------+----------------------------+-----------+-------------------------------------+
-```
+    WITH file_analysis AS (
+        SELECT 
+            `partition`,
+            file_path,
+            file_size_in_bytes,
+            record_count,
+            (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS meets_file_level_conditions
+        FROM iceberg_table$data_files
+    )
+    SELECT 
+        'Total files' AS metric, 
+        COUNT(*) AS value
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Files meeting file-level conditions', 
+        SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Total size (GB)', 
+        ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Size meeting file-level conditions (GB)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Percentage meeting file-level conditions (%)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
+    FROM file_analysis;
+    ```
+
+    **Sample output:**
+
+    ```
+    +----------------------------------------------+--------+
+    | metric                                       | value  |
+    +----------------------------------------------+--------+
+    | Total files                                  |  15.00 |
+    | Total size (GB)                              |   2.45 |
+    | Files meeting file-level conditions          |  12.00 |
+    | Size meeting file-level conditions (GB)      |   1.85 |
+    | Percentage meeting file-level conditions (%) |  80.00 |
+    +----------------------------------------------+--------+
+    5 rows in set
+    ```
+
+    **Notes:**
+
+    - Replace `iceberg_table` in the example with the actual table name
+    - Adjust parameter values (`@min_file_size_bytes`, `@max_file_size_bytes`) according to your actual rewrite parameters
+    - The default values shown above correspond to default rewrite parameters (min-file-size-bytes = target-file-size-bytes * 0.75, max-file-size-bytes = target-file-size-bytes * 1.8)
+
+- View snapshot and branch relationships
+
+    ```sql
+    SELECT
+    refs_data.snapshot_id,
+    snapshots.committed_at,
+    snapshots.operation,
+    ARRAY_SORT(refs_data.refs)
+    FROM (
+    SELECT
+        snapshot_id,
+        ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+    FROM
+        iceberg_table$refs
+    GROUP BY
+        snapshot_id
+    ) AS refs_data
+    JOIN (
+    SELECT
+        snapshot_id,
+        committed_at,
+        operation
+    FROM
+        iceberg_table$snapshots
+    ) AS snapshots
+    ON refs_data.snapshot_id = snapshots.snapshot_id
+    ORDER BY
+    snapshots.committed_at;
+
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
+    | 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
+    |   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
+    | 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    ```
