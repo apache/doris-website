@@ -31,7 +31,7 @@ export default function ClusterManagement() {
                                 label="Download"
                             ></ExternalLink>
                             <ExternalLink
-                                href="https://docs.velodb.io/enterprise/velodb-enterprise-overview"
+                                href="https://docs.velodb.io/enterprise/getting-started/velodb-enterprise-overview"
                                 className="sub-btn"
                                 label="Docs"
                             ></ExternalLink>
