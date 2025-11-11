@@ -5,79 +5,145 @@
 }
 ---
 
-## Power BI 介绍
+Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
-Power BI 是软件服务、应用连接器的集合，其可以连接到多种数据源，包括 Excel、SQL Server、Azure、Google Analytics 等，以便用户可以轻松得整合和清洗数据。通过 Power BI 的数据建模，用户可以创建关系模型、数据分析表达式和数据关系，以支持高级的数据分析和可视化。Power BI 提供了丰富的可视化选项，包括图标、地图、仪表盘和自定义可视化工具，以帮助用户更直观地理解数据。
+您可以使用 Power BI Desktop，用于创建仪表板和可视化的 Windows 桌面应用程序。
 
-Apache Doris 社区提供了基于 Mysql ODBC 的 Power BI DirectQuery 自定义连接器，支持了 Apache Doris 的内部数据建模以及数据查询与可视化处理。
+本教程将指导您完成以下过程：
 
-## 前置条件
+- 安装 mysql ODBC 驱动程序
+- 将 Doris Power BI 连接器安装到 Power BI Desktop
+- 从 Doris 查询数据以在 Power BI Desktop 中可视化
 
-- 未安装 Power BI Desktop 可以访问 [此处](https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop)，下载安装 Power BI。
-- 需要获取 [power-bi-doris](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) 自定义连接器。
-- 未安装 Mysql ODBC 需要下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 。
+## 前提条件
 
-:::info Note
-选择 MySQL ODBC Driver 5.3
-:::
+### Power BI 安装
 
-## Power BI 与 Doris 的自定义连接器配置
+本教程假定您已经在 Windows 计算机上安装了 Microsoft Power BI Desktop。您可以在 [这里](https://www.microsoft.com/en-us/download/details.aspx?id=58494) 下载并安装 Power BI Desktop。
+
+我们建议您更新到最新版本的 Power BI。
+
+### 连接信息
+
+收集您的 Apache Doris 连接详细信息
+
+您需要以下详细信息以连接到您的 Apache Doris 实例：
+
+| 参数 | 含义 | 示例 |
+| ---- | ---- | ---- |
+| **Doris Data Source** | 数据库连接串，host + port | 127.0.1.28:9030 |
+| **Database** | 数据库名 | test_db |
+| **SQL Statement** | SQL 语句，必须包含 Database，仅适用于Import 模式 | select * from database.table |
+| **Data Connectivity Mode** | 数据连接模式，包含 Import 和 DirectQuery |  |
+| **User Name** | 用户名 |  |
+| **Password** | 密码 |  |
+
+## Power BI Desktop
+
+要开始在 Power BI Desktop 中查询数据，您需要完成以下步骤：
+
+1. 安装 Mysql ODBC 驱动程序
+2. 查找 Doris 连接器
+3. 连接到 Doris
+4. 查询和可视化数据
+
+### 安装 ODBC 驱动程序
+
+下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 （版本为 5.3）。
+
+执行提供的 `.msi` 安装程序并按照向导进行操作。
+
+![](/images/ecomsystem/powerbi/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
+
+![](/images/ecomsystem/powerbi/LYh9bi780o3DaCxwF3BcuPrknlh.png)
+
+![](/images/ecomsystem/powerbi/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
+
+安装完成
+
+![](/images/ecomsystem/powerbi/PURIbSCFhoara3xodBBc5xaNnjc.png)
+
+#### 验证 ODBC 驱动程序
+
+当驱动程序安装完成后，您可以通过以下方式验证安装是否成功：
+
+在开始菜单中输入  'ODBC'  并选择 "ODBC 数据源 (64 位)"。
+
+![](/images/ecomsystem/powerbi/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
+
+验证 mysql 驱动程序是否列出。
+
+![](/images/ecomsystem/powerbi/OzVSbojxto9SpRxP3sLcnqHmnme.png)
+
+### 安装 Doris 连接器
+
+当前 Power BI 自定义 Connector  暂时关闭认证通道，因此 Doris 提供的 自定义 Connector 是属于未经认证的，对于未认证连接器，配置方式([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors))如下：
 
 1. 参考此处路径：`\Power BI Desktop\Custom Connectors folder`，放置 `Doris.mez` 自定义连接器文件（如果路径不存在，按需手动创建）。
-2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。
-3. 选择 `ok` ，然后重启 Power BI Desktop。
+2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。可以屏蔽掉未认证连接器的限制。
 
-## 本地加载数据与创建模型
+首先，选择 `File`
+
+![](/images/ecomsystem/powerbi/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
+
+然后，选择 ` Options and settings` > `Options`
+
+![](/images/ecomsystem/powerbi/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
+
+进入 `Options` 界面，`GLOBAL` >`Security`，在 `Data Extensions` 下，
+
+勾选 `(Not Recommended) Allow any extension to load without validation or warning` 选项 。
+
+![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
+
+1. 选择 `ok` ，然后重启 Power BI Desktop。
+
+### 查找 Doris 连接器
 
 1. 启动 Power BI Desktop
 2. 在 Power BI Desktop 打开界面点击新建报表。若已有本地报表可以选择打开已有报表
 
-   ![start page](/images/powerbi/bi-powerbi-en-2.png)
+![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
-3. 点击获取数据，在弹出窗口中选择 Doris 数据库
+1. 点击获取数据，在弹出窗口中选择 Doris 数据库
 
-   ![get data](/images/powerbi/bi-powerbi-en-3-new.png)
+![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 
-4. 配置数据库连接信息，在服务器输入框中输入 host:port。Doris 默认的端口号为 9030
+### 连接到 Doris
 
-   ![connection information](/images/powerbi/bi-powerbi-en-4-new.png)
+选择连接器，并输入 Doris 实例凭据：
 
-5. 上一步点击确定后在新的连接窗口处填写 Doris 的连接信息。
+- Doris Data Source（必填） - 您的实例域名/地址或者 host:port。
+- Database（必填） - 您的数据库名。
+- SQL statement - 预先执行的 sql 语句（仅在 ‘Import’ 模式下可用）
+- 数据连接模式 - DirectQuery/Import
 
-   ![uname and pwd](/images/powerbi/bi-powerbi-en-5-new.png)
+![](/images/ecomsystem/powerbi/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
 
-6. 加载选中的表，使其表中数据至 Power BI Desktop
+**备注**
 
-   ![load data](/images/powerbi/bi-powerbi-en-6.png)
+我们建议选择 DirectQuery 以直接查询 Doris。
 
-7. 配置需要的统计罗盘
+如果您有少量数据的用例，可以选择导入模式，整个数据将加载到 Power BI。
 
-   ![create compass](/images/powerbi/bi-powerbi-en-7.png)
+- 指定用户名和密码
 
-8. 把创建好的统计罗盘保存至本地
+![](/images/ecomsystem/powerbi/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
 
-   ![savie file](/images/powerbi/bi-powerbi-en-8.png)
+### 查询和可视化数据
 
-## 设置数据自动刷新
+最后，您应该在导航器视图中看到数据库和表。选择所需的表并单击 "加载" 以从 Apache Doris 导入数据。
 
-1. 下载 On-premises data gateway。下载地址：https://learn.microsoft.com/en-us/power-bi/connect-data/service-gateway-personal-mode
-2. 安装 On-premises data gateway
+![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
-   ![gateway install](/images/powerbi/bi-powerbi-en-9.png)
+导入完成后，您的 Doris 数据应在 Power BI 中如常访问。
 
-3. 登陆 Power BI Online，在个人的工作区中把刚保存的本地模型进行导入
+![](/images/ecomsystem/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
 
-   ![upload](/images/powerbi/bi-powerbi-en-10-zh.png)
+配置需要的统计罗盘
 
-4. 点击模型配置自动刷新时间
+![](/images/ecomsystem/powerbi/ClEJb1iuyoUBYvx4BJYcfDWCnqc.png)
 
-   ![click module](/images/powerbi/bi-powerbi-en-11-zh.png)
+把创建好的统计罗盘保存至本地
 
-5. 数据刷新的配置需要有 gataway 连接，本地开启网关后可以在网关连接中看到本地启动的网关，选取本地的网关即可。更多关于 gateway：https://learn.microsoft.com/zh-cn/power-bi/connect-data/service-gateway-onprem
-
-   ![config gateway](/images/powerbi/bi-powerbi-en-12-zh.png)
-
-6. 配置相关刷新计划即可完成 Power BI 自动数据刷新
-
-   ![make plan](/images/powerbi/bi-powerbi-en-13.png)
-
+![](/images/ecomsystem/powerbi/Mpeib5CoeoHZGIxrxDYcdeUwnAe.png)
