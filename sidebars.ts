@@ -1204,6 +1204,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/degrees',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/e',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/exp',
+                                        'sql-manual/sql-functions/scalar-functions/numeric-functions/factorial',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/floor',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/fmod',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/format-round',
@@ -2468,8 +2469,8 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v3.1',
                     items: [
-                        'releasenotes/v3.1/release-3.1.2', 
-                        'releasenotes/v3.1/release-3.1.1', 
+                        'releasenotes/v3.1/release-3.1.2',
+                        'releasenotes/v3.1/release-3.1.1',
                         'releasenotes/v3.1/release-3.1.0'
                     ],
                 },
