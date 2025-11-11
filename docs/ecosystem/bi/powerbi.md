@@ -53,15 +53,15 @@ Download and install [MySQL ODBC](https://downloads.mysql.com/archives/c-odbc/),
 
 Run the provided `.msi` installer and follow the wizard.
 
-![](static/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
+![](/images/ecomsystem/powerbi/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
 
-![](static/LYh9bi780o3DaCxwF3BcuPrknlh.png)
+![](/images/ecomsystem/powerbi/LYh9bi780o3DaCxwF3BcuPrknlh.png)
 
-![](static/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
+![](/images/ecomsystem/powerbi/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
 
 Installation completed
 
-![](static/PURIbSCFhoara3xodBBc5xaNnjc.png)
+![](/images/ecomsystem/powerbi/PURIbSCFhoara3xodBBc5xaNnjc.png)
 
 #### Verify the ODBC driver
 
@@ -69,11 +69,11 @@ After the driver installation is complete, you can verify that it was successful
 
 In the Start menu, type ODBC and select "ODBC Data Sources **(64-bit)**".
 
-![](static/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
+![](/images/ecomsystem/powerbi/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
 
 Verify that the MySQL driver is listed.
 
-![](static/OzVSbojxto9SpRxP3sLcnqHmnme.png)
+![](/images/ecomsystem/powerbi/OzVSbojxto9SpRxP3sLcnqHmnme.png)
 
 ### Install the Doris connector
 
@@ -84,17 +84,17 @@ The certification channel for Power BI custom connectors is currently closed, so
 
 First, choose `File`
 
-![](static/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
+![](/images/ecomsystem/powerbi/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
 
 Then choose `Options and settings` > `Options`
 
-![](static/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
+![](/images/ecomsystem/powerbi/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
 
 In the `Options` dialog, go to `GLOBAL` > `Security`. Under `Data Extensions`,
 
 check `(Not Recommended) Allow any extension to load without validation or warning`.
 
-![](static/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
+![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
 
 1. Click `OK`, then restart Power BI Desktop.
 
@@ -103,11 +103,11 @@ check `(Not Recommended) Allow any extension to load without validation or warni
 1. Launch Power BI Desktop
 2. On the Power BI Desktop start screen, click "New report". If you already have a local report, you can open the existing report.
 
-![](static/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
+![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
 1. Click "Get Data" and select the Doris database in the pop-up window.
 
-![](static/G9UWbT1P6otb53xlgj4cljUInz1.png)
+![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 
 ### Connect to Doris
 
@@ -118,7 +118,7 @@ Select the connector and enter your Doris instance credentials:
 - SQL statement - A pre-executed SQL statement (only available in 'Import' mode)
 - Data connectivity mode - DirectQuery/Import
 
-![](static/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
+![](/images/ecomsystem/powerbi/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
 
 **Note**
 
@@ -128,22 +128,22 @@ If you have use cases with a small amount of data, you can choose Import mode, a
 
 - Specify the user name and password
 
-![](static/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
+![](/images/ecomsystem/powerbi/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
 
 ### Query and visualize data
 
 Finally, you should see the databases and tables in the Navigator view. Select the desired tables and click "Load" to import data from Apache Doris.
 
-![](static/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
+![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
 After the import is complete, your Doris data should be accessible in Power BI as usual.
 
-![](static/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
+![](/images/ecomsystem/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
 
 Configure the required statistical compass
 
-![](static/ClEJb1iuyoUBYvx4BJYcfDWCnqc.png)
+![](/images/ecomsystem/powerbi/ClEJb1iuyoUBYvx4BJYcfDWCnqc.png)
 
 Save the created statistical compass locally
 
-![](static/Mpeib5CoeoHZGIxrxDYcdeUwnAe.png)
+![](/images/ecomsystem/powerbi/Mpeib5CoeoHZGIxrxDYcdeUwnAe.png)
