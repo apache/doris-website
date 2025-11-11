@@ -122,6 +122,10 @@ const config = {
                     {
                         from: '/docs/dev/get-starting/',
                         to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
+                    },
+                    {
+                        from: '/docs/4.0/releasenotes/v4.0/release-4.0.0/',
+                        to: '/docs/4.x/releasenotes/v4.0/release-4.0.0'
                     }
                 ],
                 createRedirects(existingPath) {
