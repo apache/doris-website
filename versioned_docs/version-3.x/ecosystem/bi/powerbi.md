@@ -136,14 +136,52 @@ Finally, you should see the databases and tables in the Navigator view. Select t
 
 ![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
-After the import is complete, your Doris data should be accessible in Power BI as usual.
+After the import is complete, your Doris data should be accessible in Power BI as usual, Configure the required statistical compass.
 
 ![](/images/ecomsystem/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
 
-Configure the required statistical compass
+## Building Visualizations in Power BI
 
-![](/images/ecomsystem/powerbi/ClEJb1iuyoUBYvx4BJYcfDWCnqc.png)
+We've chosen TPC-H data as our data source. For instructions on building a Doris TPC-H data source, refer to [this document](../../benchmark/tpch).
+Now that we've configured the Doris data source in Power BI, let's visualize the data...
 
-Save the created statistical compass locally
+Suppose we need to know the order revenue statistics across different regions. We'll build a dashboard based on this requirement.
 
-![](/images/ecomsystem/powerbi/Mpeib5CoeoHZGIxrxDYcdeUwnAe.png)
+1. First, create the table model relationships. Click Model view.
+
+![](/images/ecomsystem/powerbi/V7PsbP3oKoJpLjxK5HdcPsnLnKf.png)
+
+2. Drag and drop to place these four tables on the same screen as needed, and then drag and drop the related fields.
+
+![](/images/ecomsystem/powerbi/FZL5b2kJcoifIaxI7Eocpak7nvf.png)
+
+![](/images/ecomsystem/powerbi/UxL2b1OV2or1LhxZjHsc0JG7ntb.png)
+
+The relationships between the four tables are as follows:
+
+- **customer** ：c_nationkey  --  **nation** : n_nationkey
+- **customer** ：c_custkey  --  **orders** : o_custkey
+- **nation** : n_regionkey  --  **region** : r_regionkey
+
+3. The results after association are as follows:
+
+![](/images/ecomsystem/powerbi/LomhbQTPPoZr58xp8f3cxcTen8d.png)
+
+4. Return to the Report view workbench and build the dashboard.
+5. Drag the `o_totalprice` field from the `orders` table to the dashboard.
+
+![](/images/ecomsystem/powerbi/MB34bks6woK3mDx0eVccivKEngc.png)
+
+6. Drag the `r_name` field from the `region` table to column X.
+
+![](/images/ecomsystem/powerbi/JxpJbihDHoHGwixjWQScNyxvn4e.png)
+
+7. You should now have the expected dashboard content.
+
+![](/images/ecomsystem/powerbi/CfGWb6oaYoj4LyxpPIGcz3Binzb.png)
+
+8. Click the save button in the upper left corner of the workbench to save the created statistical compass to your local machine.
+
+![](/images/ecomsystem/powerbi/WozGbmqAOoP2mqxq2NmcJRFyntc.png)
+
+At this point, you have successfully connected Power BI to Apache Doris and implemented data analysis and dashboard creation.
