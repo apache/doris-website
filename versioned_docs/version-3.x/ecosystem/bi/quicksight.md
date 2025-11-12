@@ -27,7 +27,7 @@ QuickSight can connect to Apache Doris via the official MySQL data source in Dir
   1 row in set (0.01 sec)
   ```
 
-## Connect QuickSight to ClickHouse
+## Connect QuickSight to Apache Doris
 
 First, visit [https://quicksight.aws.amazon.com](https://quicksight.aws.amazon.com/), navigate to Datasets, and click "New dataset":
 

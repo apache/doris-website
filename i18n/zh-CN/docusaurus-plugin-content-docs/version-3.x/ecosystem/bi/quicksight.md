@@ -27,7 +27,7 @@ QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模�
   1 row in set (0.01 sec)
   ```
 
-## 将 QuickSight 连接到 ClickHouse
+## 将 QuickSight 连接到 Apache Doris
 
 首先，访问 [https://quicksight.aws.amazon.com](https://quicksight.aws.amazon.com/)，导航到数据集并点击“新建数据集”：
 
