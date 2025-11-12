@@ -5,31 +5,60 @@
 }
 ---
 
-## Introduction
-QuickSight is a robust data visualization and analysis platform that seamlessly integrates data computation with visually appealing charts. It does not necessitate programming skills from users, as data insights can be quickly obtained through simple drag-and-drop operations. QuickSight offers a diverse range of viewing options for exploring data from various perspectives. Furthermore, it facilitates easy integration of multiple data sources, simplifying and streamlining the process of presenting, exploring, and analyzing data. This platform not only accelerates data processing but also enhances the intuitiveness and comprehensibility of the analysis process, significantly improving user work efficiency and analytical capabilities.
+QuickSight can connect to Apache Doris via the official MySQL data source in Directly query or Import mode
 
-## Data configuration
+## Prerequisites
 
-1. Upon completing the registration process, please proceed to sign in to QuickSight and choose the desired dataset.
+- Apache Doris version must be no less than 3.1.2
+- Network connectivity (VPC, security group configuration) needs to be configured according to the Doris deployment environment to ensure that AWS servers can access your Doris cluster.
+- Run the following SQL on the MySQL client that connects to Doris to adjust the declared MySQL compatibility version:
 
-   ![dataset select](/images/bi-quicksight-en-1.png)
+  ```sql
+  SET GLOBAL version = '8.3.99';
+  ```
+  Verification result:
+  ```sql
+  mysql> show variables like "version";
+  +---------------+--------+---------------+---------+
+  | Variable_name | Value  | Default_Value | Changed |
+  +---------------+--------+---------------+---------+
+  | version       | 8.3.99 | 5.7.99        | 1       |
+  +---------------+--------+---------------+---------+
+  1 row in set (0.01 sec)
+  ```
 
-2. Select MySQL on the dataset selection page.
+## Connect QuickSight to Apache Doris
 
-   ![database select](/images/bi-quicksight-en-2.png)
+First, visit [https://quicksight.aws.amazon.com](https://quicksight.aws.amazon.com/), navigate to Datasets, and click "New dataset":
 
-3. On the data connection page, fill in the corresponding IP, port, database name, username, and password for Doris. After filling in the information, click "Verify the Connection". If the test is successful, create a data source.
+![](/images/ecomsystem/quicksight/Cm8EbaeoIoYDeAxGDR8cuSFhns1.png)
 
-   ![connection information](/images/bi-quicksight-en-3.png)
+![](/images/ecomsystem/quicksight/XngnbqKxhouZHIxgVYhcyta5n3f.png)
 
-4. Select the table for which you want to create the dashboard.
+Search for the official MySQL connector bundled with QuickSight (named simply **MySQL**):
 
-   ![jdbc connector download](/images/bi-quicksight-en-4.png)
+![](/images/ecomsystem/quicksight/Pjf5bRheroLmtKxcZ2PcFYMkn7d.png)
 
-5. QuickSight offers two methods for importing tables. You can choose the appropriate import method based on your needs.
+Specify your connection details. Note that the MySQL interface port defaults to 9030, which may vary depending on your FE `query_port` configuration.
 
-   ![table select](/images/bi-quicksight-en-5.png)
+![](/images/ecomsystem/quicksight/DlJobTycDoqhDOxdUtCcqZCxnkc.png)
 
-6. After importing the table, you can create the desired dashboard.
+Now, you can select a table from the list:
 
-   ![table import](/images/bi-quicksight-en-6.png)
+![](/images/ecomsystem/quicksight/LAFXbSSnwop5C7xn3kPcEcBZnmc.png)
+
+Additionally, you can specify a custom SQL to fetch your data:
+
+![](/images/ecomsystem/quicksight/ASnSCopmkPwncLbB5FXZcEc7xn3.png)
+
+It is recommended to choose the "Directly query" mode:
+
+![](/images/ecomsystem/quicksight/RN4fbtJU5o89gQxePQKcOGRBnyh.png)
+
+Additionally, by clicking "Edit/Preview data", you should be able to view the internal table structure or adjust the custom SQL, and you can adjust the dataset here:
+
+![](/images/ecomsystem/quicksight/DoVOMbQTxBrRBpx3Bbgn2gcUXLd.png)
+
+Now, you can proceed to publish the dataset and create new visualizations!
+
+![](/images/ecomsystem/quicksight/MXgObQbdDoLBVTxBrRBcUpx3n2g.png)
