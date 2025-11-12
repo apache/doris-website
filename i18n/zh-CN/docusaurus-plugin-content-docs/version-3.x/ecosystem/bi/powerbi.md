@@ -96,7 +96,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
 ![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
 
-1. 选择 `ok` ，然后重启 Power BI Desktop。
+选择 `ok` ，然后重启 Power BI Desktop。
 
 ### 查找 Doris 连接器
 
@@ -105,7 +105,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
 ![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
-1. 点击获取数据，在弹出窗口中选择 Doris 数据库
+3. 点击获取数据，在弹出窗口中选择 Doris 数据库
 
 ![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 

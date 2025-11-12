@@ -96,7 +96,7 @@ check `(Not Recommended) Allow any extension to load without validation or warni
 
 ![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
 
-1. Click `OK`, then restart Power BI Desktop.
+Click `OK`, then restart Power BI Desktop.
 
 ### Find the Doris connector
 
@@ -105,7 +105,7 @@ check `(Not Recommended) Allow any extension to load without validation or warni
 
 ![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
-1. Click "Get Data" and select the Doris database in the pop-up window.
+3. Click "Get Data" and select the Doris database in the pop-up window.
 
 ![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 
