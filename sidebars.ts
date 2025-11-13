@@ -1197,6 +1197,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/ceil',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/conv',
+                                        'sql-manual/sql-functions/scalar-functions/numeric-functions/century',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cos',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cosh',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cot',
