@@ -1163,11 +1163,11 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'AI Functions',
                                     items: [
+                                        'sql-manual/sql-functions/ai-functions/ai-function-overview',
                                         'sql-manual/sql-functions/ai-functions/ai-classify',
                                         'sql-manual/sql-functions/ai-functions/ai-extract',
                                         'sql-manual/sql-functions/ai-functions/ai-filter',
                                         'sql-manual/sql-functions/ai-functions/ai-fixgrammar',
-                                        'sql-manual/sql-functions/ai-functions/ai-function',
                                         'sql-manual/sql-functions/ai-functions/ai-generate',
                                         'sql-manual/sql-functions/ai-functions/ai-mask',
                                         'sql-manual/sql-functions/ai-functions/ai-sentiment',
