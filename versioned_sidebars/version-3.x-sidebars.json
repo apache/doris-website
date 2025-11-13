@@ -396,7 +396,6 @@
                                 "lakehouse/catalogs/delta-lake-catalog",
                                 "lakehouse/catalogs/bigquery-catalog",
                                 "lakehouse/catalogs/kudu-catalog",
-                                "lakehouse/catalogs/doris-catalog",
                                 "lakehouse/catalogs/lakesoul-catalog",
                                 "lakehouse/catalogs/jdbc-catalog-overview",
                                 "lakehouse/catalogs/jdbc-mysql-catalog",
