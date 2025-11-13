@@ -1,6 +1,6 @@
 ---
 {
-    "title": "AI 函数综述",
+    "title": "综述",
     "language": "zh-CN"
 }
 ---

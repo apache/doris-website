@@ -1,6 +1,6 @@
 ---
 {
-    "title": "AI Function Overview",
+    "title": "Overview",
     "language": "en"
 }
 ---
