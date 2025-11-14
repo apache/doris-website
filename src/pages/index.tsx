@@ -71,7 +71,7 @@ export default function Home(): JSX.Element {
         ),
         event: (
             <Link
-                to={'https://www.airmeet.com/e/10fb98e0-9921-11f0-89cc-795d82447e40?utm_source=Apache_Doris_Banner'}
+                to={'https://www.velodb.io/events/GenAI-AWS-251113'}
                 style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
                 onMouseEnter={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
@@ -79,7 +79,7 @@ export default function Home(): JSX.Element {
                 onMouseLeave={() => {
                     document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
                 }}
-                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[45rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
             >
                 <div className="lg:mb-0 mb-4 flex items-center">
                     <HomeEvenStarIcon id="event-star-icon" />
@@ -88,7 +88,7 @@ export default function Home(): JSX.Element {
                     </span>
                 </div>
                 <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    Apache Doris Summit 2025 · Virtual —— See Full Agenda and Register Now
+                    Webinar: Data Analytics in the Agentic AI Era —— Register Now
                 </p>
             </Link>
         ),
