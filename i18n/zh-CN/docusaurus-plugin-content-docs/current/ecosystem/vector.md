@@ -26,59 +26,91 @@ Doris Sink 支持丰富的配置选项，以满足不同场景下的数据写入
 
 ### 基础配置
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `type`                                             | string  | -        | 固定为 "doris"                             |
-| `inputs`                                           | array   | -        | 上游数据源名称列表                               |
-| `endpoints`                                        | array   | -        | Doris FE 节点地址列表，如 ["http://fe1:8030"]   |
-| `database`                                         | string  | -        | 目标数据库名称                                 |
-| `table`                                            | string  | -        | 目标表名称                                   |
-| `label_prefix`                                     | string  | "vector" | Stream Load 标签前缀，建议使用有意义的名称如 "web_logs" |
+| 参数名称       | 类型          | 默认值     | 说明 |
+|--------------|-------------|----------|-----|
+| `type`       | string      | -        | 固定为 `doris` |
+| `inputs`     | array       | -        | 上游数据源名称列表 |
+| `endpoints`  | array\<string> | -     | Doris FE HTTP/HTTPS 地址，必须包含协议与端口，如 `["https://fe1:8030"]` |
+| `database`   | string/模板   | -        | 目标数据库名称，支持 [Template](https://vector.dev/docs/reference/configuration/template-syntax/) |
+| `table`      | string/模板   | -        | 目标表名称，支持模板 |
+| `label_prefix` | string    | `"vector"` | Stream Load 标签前缀，最终标签形式为 `{label_prefix}_{database}_{table}_{timestamp}_{uuid}` |
 
 ### 认证配置
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `auth.strategy`                                    | string  | "basic"  | 认证策略，通常为 "basic"                        |
-| `auth.user`                                        | string  | -        | Doris 用户名                               |
-| `auth.password`                                    | string  | -        | Doris 密码                                |
+| 参数名称        | 类型   | 默认值    | 说明 |
+|---------------|------|---------|-----|
+| `auth.strategy` | string | `"basic"` | 认证策略，目前 Doris 仅支持 Basic Auth |
+| `auth.user`     | string | -         | Doris 用户名 |
+| `auth.password` | string | -         | Doris 密码，可配合环境变量或密钥管理系统 |
 
-### 请求配置
+### 请求与并发配置
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `request.concurrency`                              | integer | 1        | 并发请求数                                   |
-| `request.timeout_secs`                             | integer | 60       | 单次请求超时时间（秒）                             |
-| `request.adaptive_concurrency.initial_concurrency` | integer | 1        | 自适应并发初始值                                |
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `request.concurrency` | string/integer | `"adaptive"` | 控制并发策略，支持 `"adaptive"`、`"none"`（串行）或正整数并发上限 |
+| `request.timeout_secs` | integer | `60` | 单次 Stream Load 请求的超时（秒） |
+| `request.rate_limit_duration_secs` | integer | `1` | 速率限制时间窗（秒） |
+| `request.rate_limit_num` | integer | `9_223_372_036_854_775_807` | 每个时间窗内允许的请求数，默认近似无限制 |
+| `request.retry_attempts` | integer | `usize::MAX` | Tower 中间件的最大重试次数，缺省表示无限重试 |
+| `request.retry_initial_backoff_secs` | integer | `1` | 第一次重试前的等待时间（秒），后续按 Fibonacci 退避 |
+| `request.retry_max_duration_secs` | integer | `30` | 单次重试退避的最大等待时长（秒） |
+| `request.retry_jitter_mode` | string | `"full"` | 重试抖动模式，支持 `full` 或 `none` |
 
-### 数据格式配置
+**自适应并发 (`request.adaptive_concurrency`，仅在 `request.concurrency = "adaptive"` 时生效)**
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `headers.format`                                   | string  | "json"   | 数据格式，支持 "json", "csv" 等                 |
-| `headers.strip_outer_array`                        | string  | "false"  | 是否移除外层数组                                |
-| `headers.read_json_by_line`                        | string  | "true"   | 是否按行读取 JSON（NDJSON 格式）                  |
-| `headers.column_separator`                         | string  | -        | CSV 列分隔符（当 format=csv 时）                |
-| `headers.columns`                                  | string  | -        | 指定列名映射                                  |
-| `headers.where`                                    | string  | -        | 过滤条件                                    |
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `request.adaptive_concurrency.initial_concurrency` | integer | `1` | 自适应并发的起始值 |
+| `request.adaptive_concurrency.max_concurrency_limit` | integer | `200` | 自适应并发的上限，防止过载 |
+| `request.adaptive_concurrency.decrease_ratio` | float | `0.9` | 触发降速时使用的缩减比例 |
+| `request.adaptive_concurrency.ewma_alpha` | float | `0.4` | RTT 指标的指数移动平均权重 |
+| `request.adaptive_concurrency.rtt_deviation_scale` | float | `2.5` | RTT 偏差放大系数，用于忽略正常波动 |
+
+### 编码与数据格式
+
+Doris Sink 使用 `encoding` 区块控制事件序列化行为，默认发出 NDJSON（换行分隔的 JSON）：
+
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `encoding.codec` | string | `"json"` | 序列化编码，可选 `json`、`text`、`csv` 等 |
+| `encoding.timestamp_format` | string | - | 调整时间戳输出格式，支持 `rfc3339`、`unix` 等 |
+| `encoding.only_fields` / `encoding.except_fields` | array\<string> | - | 控制字段白名单或黑名单 |
+| `encoding.framing.method` | string | 自动推断 | 当需要自定义帧格式时设置，如 `newline_delimited`、`character_delimited` |
+
+#### Stream Load 头部（`headers`）
+
+`headers` 是一个键值对映射，直接透传为 Doris Stream Load 的 HTTP 头。常见设置如下（所有值均需为字符串）：
+
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `headers.format` | string | `"json"` | 数据格式，支持 `json`、`csv`、`parquet` 等 |
+| `headers.read_json_by_line` | string | `"true"` | 是否按行读取 JSON（NDJSON） |
+| `headers.strip_outer_array` | string | `"false"` | 是否移除最外层数组 |
+| `headers.column_separator` | string | - | CSV 列分隔符（`format = csv` 时生效） |
+| `headers.columns` | string | - | CSV/JSON 映射的列顺序，如 `timestamp,client_ip,status_code` |
+| `headers.where` | string | - | Stream Load `where` 过滤条件 |
 
 ### 批处理配置
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `batch.max_events`                                 | integer | 1000     | 单批最大事件数                                 |
-| `batch.max_bytes`                                  | integer | 10485760 | 单批最大字节数（默认10MB）                         |
-| `batch.timeout_secs`                               | integer | 1        | 批处理超时时间（秒）                              |
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `batch.max_bytes` | integer | `10485760` | 单批最大字节数（10 MB） |
+| `batch.max_events` | integer/`null` | `null` | 单批最大事件数，默认不限制，以字节数为主 |
+| `batch.timeout_secs` | float | `1` | 批次最长等待时间（秒） |
 
-### 高级配置
+### 可靠性与安全配置
 
-| 参数名称                                               | 类型      | 默认值      | 说明                                      |
-|----------------------------------------------------|---------|----------|-----------------------------------------|
-| `log_request`                                      | boolean | false    | 是否记录 Stream Load 请求和响应                  |
-| `log_progress_interval`                            | integer | 10       | 进度日志打印间隔（秒）                             |
-| `buffer_bound`                                     | integer | 10000    | 内部事件缓冲上限（条数）                            |
-| `skip_unknown_fields`                              | boolean | false    | 是否跳过未知字段                                |
-| `compression`                                      | string  | -        | 压缩格式，支持 "gzip", "lz4" 等                 |
+| 参数名称 | 类型 | 默认值 | 说明 |
+|--------|------|------|-----|
+| `max_retries` | integer | `-1` | Sink 级别的最大重试次数，`-1` 表示无限制 |
+| `log_request` | boolean | `false` | 是否打印每次 Stream Load 请求与响应（生产环境建议按需开启） |
+| `compression` | string/object | `"none"` | HTTP 请求体压缩算法，支持 `none`、`gzip`、`zlib`、`zstd`、`snappy`，可通过对象形式指定压缩级别 |
+| `distribution.retry_initial_backoff_secs` | integer | `1` | 端点健康检查恢复的初始回退时间（秒） |
+| `distribution.retry_max_duration_secs` | integer | `3600` | 健康检查最大回退时长（秒） |
+| `tls.verify_certificate` | boolean | `true` | 启用/禁用上游证书校验 |
+| `tls.verify_hostname` | boolean | `true` | 启用/禁用主机名校验 |
+| `tls.ca_file` / `tls.crt_file` / `tls.key_file` / `tls.key_pass` / `tls.alpn_protocols` / `tls.server_name` | 各类 | - | 标准 Vector TLS 客户端配置项，用于自定义 CA、双向认证或 SNI |
+| `acknowledgements.enabled` | boolean | `false` | 启用端到端确认，用于与支持 acknowledgements 的 Source 组合 |
 ## 使用示例
 
 以下将通过一个完整的 Web 服务器访问日志采集示例，展示如何使用 Vector 将日志数据实时写入 Doris。
@@ -207,12 +239,17 @@ parts = split!(.message, "|")
 [sinks.doris]
 type = "doris"
 inputs = ["parse_access_logs"]
-endpoints = ["http://172.20.50.127:8030"]
+endpoints = ["https://localhost:8030"]
 database = "vector_test"
 table = "web_access_logs"
 label_prefix = "web_logs"
 log_request = true
-log_progress_interval = 5
+
+[sinks.doris.encoding]
+codec = "json"
+
+[sinks.doris.encoding.framing]
+method = "newline_delimited"
 
 [sinks.doris.auth]
 user = "root"
