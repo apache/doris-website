@@ -1647,8 +1647,6 @@
                             "items": [
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-k",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-sum",
                                 "sql-manual/sql-functions/aggregate-functions/array-agg",
                                 "sql-manual/sql-functions/aggregate-functions/avg",
                                 "sql-manual/sql-functions/aggregate-functions/avg-weighted",
