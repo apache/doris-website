@@ -25,31 +25,31 @@ We’ll start by preparing the data and authentication setup on the **Fabric (On
 
 1. Open the **Microsoft Fabric** console and create a new **Workspace** (it’s recommended *not* to use the default workspace, as some settings may be restricted).
 
-   ![onelake1](/images/integrations/lakehouse/onelake/onelake1.png)
+   ![onelake1](/images/integrations/lakehouse/onelake/onelake-1.png)
 
 2. Inside the workspace, select **New Item → Lakehouse** to create a Lakehouse instance.
 
-   ![onelake2](/images/integrations/lakehouse/onelake/onelake2.png)
+   ![onelake2](/images/integrations/lakehouse/onelake/onelake-2.png)
 
 3. Go to **Workspace Settings** and enable the necessary feature toggles to activate Lakehouse functionality.
 
-   ![onelake3](/images/integrations/lakehouse/onelake/onelake3.png)
+   ![onelake3](/images/integrations/lakehouse/onelake/onelake-3.png)
 
 ### Upload Local Files
 
 For demonstration purposes, we’ll upload a local CSV file directly into OneLake. This is a sample file:
 
-![onelake4](/images/integrations/lakehouse/onelake/onelake4.png)
+![onelake4](/images/integrations/lakehouse/onelake/onelake-4.png)
 
 1. Navigate to the workspace’s **Files** section, click **Upload → Upload Files**, and select your CSV file.
 
-   ![onelake5](/images/integrations/lakehouse/onelake/onelake5.png)
+   ![onelake5](/images/integrations/lakehouse/onelake/onelake-5.png)
 
 2. After uploading, choose **Load Tables → New table** (or load into an existing table if one already exists).
 
 3. Once the import finishes, go to the **Tables** view to inspect your tables and data.
 
-   ![onelake6](/images/integrations/lakehouse/onelake/onelake6.png)
+   ![onelake6](/images/integrations/lakehouse/onelake/onelake-6.png)
 
 ### **Authentication Setup**
 
@@ -61,19 +61,19 @@ To allow Doris to access OneLake via the Iceberg REST Catalog, you’ll need to 
 
    * Directory (tenant) ID
 
-   ![onelake7](/images/integrations/lakehouse/onelake/onelake7.png)
+   ![onelake7](/images/integrations/lakehouse/onelake/onelake-7.png)
 
 * Under **API Permissions**, add the required permissions for **Azure Storage** (follow the principle of least privilege).
 
-  ![onelake8](/images/integrations/lakehouse/onelake/onelake8.png)
+  ![onelake8](/images/integrations/lakehouse/onelake/onelake-8.png)
 
 * Under **Certificates & secrets**, create a **client secret** and store its value securely — it will be hidden once you leave the page.
 
-  ![onelake9](/images/integrations/lakehouse/onelake/onelake9.png)
+  ![onelake9](/images/integrations/lakehouse/onelake/onelake-9.png)
 
 * Return to the **Fabric Workspace → Manage Access**, and add the registered app (by its display name) as an access principal.
 
-  ![onelake10](/images/integrations/lakehouse/onelake/onelake10.png)
+  ![onelake10](/images/integrations/lakehouse/onelake/onelake-10.png)
 
 Once these steps are complete, your OneLake data and authentication setup are ready.
 
