@@ -13,6 +13,8 @@ OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企
 
 本文将介绍如何使用 Doris 访问 OneLake，并给出完整的环境准备与示例查询流程。
 
+> 需要 Doris 3.1.4 版本。
+
 ## Onelake 环境准备
 
 下面先完成 OneLake（Fabric）侧的数据准备与认证配置，然后演示在 Doris 中创建 Iceberg Rest Catalog 并进行查询。
@@ -45,7 +47,7 @@ OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企
 
    ![onelake5](/images/integrations/lakehouse/onelake/onelake-5.png)
 
-### **认证信息配置**
+### 认证信息配置
 
 要让 Doris 通过 Iceberg Rest Catalog 访问 OneLake，需在 Azure 中为 Fabric 的访问配置应用注册与权限：
 
