@@ -15,7 +15,7 @@ At the technical level, Doris interacts with OneLake through open table formats 
 
 This post walks you through how to connect Doris to OneLake, including environment setup, authentication, and example query workflows.
 
-> Require Doris version 3.1+
+> Require Doris version 3.1.4+
 
 ## Onelake Setup
 
@@ -51,7 +51,7 @@ For demonstration purposes, we’ll upload a local CSV file directly into OneLak
 
    ![onelake6](/images/integrations/lakehouse/onelake/onelake-6.png)
 
-### **Authentication Setup**
+### Authentication Setup
 
 To allow Doris to access OneLake via the Iceberg REST Catalog, you’ll need to configure **application registration and permissions** in the Azure portal:
 
