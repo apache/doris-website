@@ -437,6 +437,7 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                         'lakehouse/file-analysis',
+                        'lakehouse/huggingface',
                         {
                             type: 'category',
                             label: 'Metastores',
@@ -1973,6 +1974,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
                                 'sql-manual/sql-functions/table-valued-functions/frontends_disks',
                                 'sql-manual/sql-functions/table-valued-functions/hdfs',
+                                'sql-manual/sql-functions/table-valued-functions/http',
                                 'sql-manual/sql-functions/table-valued-functions/hudi-meta',
                                 'sql-manual/sql-functions/table-valued-functions/iceberg-meta',
                                 'sql-manual/sql-functions/table-valued-functions/jobs',
