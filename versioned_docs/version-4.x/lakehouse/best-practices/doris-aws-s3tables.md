@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Integration with AWS S3 Tables",
+    "title": "Integration with Glue + AWS S3 Tables",
     "language": "en"
 }
 
