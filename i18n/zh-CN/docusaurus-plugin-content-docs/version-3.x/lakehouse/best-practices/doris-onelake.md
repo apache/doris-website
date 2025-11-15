@@ -21,15 +21,15 @@ OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企
 
 1. 打开 Fabric 控制台，新建一个 WorkSpace（建议不要使用默认 WorkSpace，因为部分设置项可能受限）。
 
-   ![onelake1](/images/integrations/lakehouse/onelake/onelake1.PNG)
+   ![onelake1](/images/integrations/lakehouse/onelake/onelake1.png)
 
 2. 进入创建好的 WorkSpace，选择 New Item -> Lakehouse，创建一个 Lakehouse。
 
-   ![onelake2](/images/integrations/lakehouse/onelake/onelake2.PNG)
+   ![onelake2](/images/integrations/lakehouse/onelake/onelake2.png)
 
 3. 进入 WorkSpace Setting，打开页面中的相关开关（以便启用 Lakehouse 的一些功能）。
 
-   ![onelake3](/images/integrations/lakehouse/onelake/onelake3.PNG)
+   ![onelake3](/images/integrations/lakehouse/onelake/onelake3.png)
 
 ### 将本地文件上传到 OneLake
 
@@ -37,13 +37,13 @@ OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企
 
 1. 进入 WorkSpace 的 Files 页面，点击 Upload -> Upload Files，选择要上传的 CSV 文件。
 
-   ![onelake4](/images/integrations/lakehouse/onelake/onelake4.PNG)
+   ![onelake4](/images/integrations/lakehouse/onelake/onelake4.png)
 
 2. 选择上传后的文件，点击 Load Tables -> New table（如果目标表已存在，也可以选择导入到现有表）。
 
 3. 等待数据导入完成，进入 Tables 查看表及数据信息。
 
-   ![onelake5](/images/integrations/lakehouse/onelake/onelake5.PNG)
+   ![onelake5](/images/integrations/lakehouse/onelake/onelake5.png)
 
 ### **认证信息配置**
 
@@ -51,21 +51,21 @@ OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企
 
 1. 打开 Azure 门户，进入 App registrations，点击 New registration，新建应用并记录以下信息以便后续配置：应用 ID、租户 ID 等。
 
-   ![onelake6](/images/integrations/lakehouse/onelake/onelake6.PNG)
+   ![onelake6](/images/integrations/lakehouse/onelake/onelake6.png)
 
-   ![onelake7](/images/integrations/lakehouse/onelake/onelake7.PNG)
+   ![onelake7](/images/integrations/lakehouse/onelake/onelake7.png)
 
 2. 在新建应用的 API Permissions 中，添加对 Azure Storage 的相应权限（根据最小权限原则选择所需权限）。
 
-   ![onelake8](/images/integrations/lakehouse/onelake/onelake8.PNG)
+   ![onelake8](/images/integrations/lakehouse/onelake/onelake8.png)
 
 3. 在 Certificates & secrets 中创建客户端密钥（Secret），并将生成的值妥善保存——此值离开页面后将无法再次查看。
 
-   ![onelake9](/images/integrations/lakehouse/onelake/onelake9.PNG)
+   ![onelake9](/images/integrations/lakehouse/onelake/onelake9.png)
 
 4. 回到 Fabric 的 WorkSpace 界面，进入 Manage Access，使用应用的 DisplayName 添加该应用为 WorkSpace 的访问主体。
 
-   ![onelake10](/images/integrations/lakehouse/onelake/onelake10.PNG)
+   ![onelake10](/images/integrations/lakehouse/onelake/onelake10.png)
 
 至此，OneLake 侧的数据准备和认证配置完成。
 
