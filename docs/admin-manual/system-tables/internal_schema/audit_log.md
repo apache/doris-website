@@ -20,7 +20,8 @@ Store audit logs
 | Column Name       | Type         | Description                                                  |
 | ----------------- | ------------ | ------------------------------------------------------------ |
 | query_id          | varchar(48)  | ID of the Query                                              |
-| time              | datetime(3)  | Time when the query was executed(in milliseconds)                           |
+| time              | datetime(3)  | Time when the query was executed(in milliseconds)            |
+| session_id        | varchar(36)  | ID of user session the query was executed                    |
 | client_ip         | varchar(128) | IP address of the client sending the query                   |
 | user              | varchar(128) | User                                                         |
 | catalog           | varchar(128) | Current Catalog during statement execution                   |
@@ -54,5 +55,3 @@ Store audit logs
 
 - `client_ip`: If a proxy service is used and the IP pass-through is not enabled, the proxy service IP may be recorded here instead of the real client IP.
 - `state`: `EOF` indicates that the query is executed successfully. `OK` indicates that the DDL and DML statements are executed successfully. `ERR` indicates that the statement execution fails.
-
-

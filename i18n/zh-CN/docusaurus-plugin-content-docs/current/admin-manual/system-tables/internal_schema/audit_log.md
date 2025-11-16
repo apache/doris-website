@@ -21,6 +21,7 @@
 | :-------------------------- | :----------- | :------------------------------------- |
 | query_id          				| varchar(48)  | Query 的 ID。                            |
 | time              				| datetime(3)  | 查询发生的时间。                         |
+| session_id        				| varchar(36)  | 执行查询的用户会话的 ID |
 | client_ip         				| varchar(128) | 发送查询的客户端 IP                   |
 | user              				| varchar(128) | 用户                                   |
 | catalog           				| varchar(128) | 语句执行时的当前 Catalog               |

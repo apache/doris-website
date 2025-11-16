@@ -59,7 +59,8 @@ mysql> desc audit_log;
 +-------------------+--------------+------+-------+---------+-------+
 | query_id          | varchar(48)  | Yes  | true  | NULL    |       |
 | time              | datetime     | Yes  | true  | NULL    |       |
-| client_ip         | varchar(128) | Yes  | true  | NULL    |       |
+| session_id        | varchar(36)  | Yes  | true  | NULL    |       |
+| client_ip         | varchar(128) | Yes  | false | NULL    | NONE  |
 | user              | varchar(128) | Yes  | false | NULL    | NONE  |
 | catalog           | varchar(128) | Yes  | false | NULL    | NONE  |
 | db                | varchar(128) | Yes  | false | NULL    | NONE  |
