@@ -35,7 +35,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
             type: 'ghost',
         },
     ];
@@ -284,7 +284,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
