@@ -49,7 +49,7 @@ PROPERTIES (
     'ai.max_token' = '1024',
     'ai.max_retries' = '3',
     'ai.retry_delay_second' = '1',
-    'ai.dimensions' = '1024';
+    'ai.dimensions' = '1024'
 );
  ```
 
@@ -73,7 +73,7 @@ PROPERTIES (
 
 `ai.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
 
-`ai.dimensions`: 可选，控制[EMBED](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/distance-functions/embed)输出的向量维度。**设置前务必确认`ai.model_name`所填模型支持自定义向量维度**，否则可能会导致模型调用失败。
+`ai.dimensions`: 可选，控制[EMBED](./distance-functions/embed.md)输出的向量维度。**设置前务必确认`ai.model_name`所填模型支持自定义向量维度**，否则可能会导致模型调用失败。
 
 ---
 
@@ -105,7 +105,7 @@ SELECT AI_FUNCTION([<resource_name>], <args...>);
 ```sql
 SET default_ai_resource='global_default_resource';
 SELECT AI_SENTIMENT('this is a test'); -- 调用名为'global_default_resource'的资源
-SELECT AI_SENTIMENT('invoke_resource', 'this is a test') --调用名为'invoke_resource'的资源
+SELECT AI_SENTIMENT('invoke_resource', 'this is a test'); --调用名为'invoke_resource'的资源
 ```
 
 ---

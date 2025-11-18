@@ -20,12 +20,12 @@ UTC_TIMESTAMP([`<precision>`])
 
 | Parameter | Description |
 |-----------|-------------|
-| `<precision>` | The precision of the returned date-time value supports integer types within the range [0, 6]. Only integer type constants are accepted.。 |
+| `<precision>` | The precision of the returned date-time value supports integer types within the range [0, 6]. Only integer type constants are accepted. |
 
 ## Return Value
 Returns the current UTC date and time.
 
-Returns DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]). When using the returned result for numeric operations, it will be converted to the [integer format](https://doris.apache.org/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss).
+Returns DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]). When using the returned result for numeric operations, it will be converted to the [integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss).
 
 When the input is NULL or the precision is out of range, an error will be thrown.
 
