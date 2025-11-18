@@ -68,7 +68,7 @@ under the License.
 - [AI_TRANSLATE](../sql-manual/sql-functions/ai-functions/ai-translate.md)：
 将文本翻译为指定语言。
 
-- [AI_AGG](../sql-manual/sql-functions/ai-functions.md):
+- [AI_AGG](../sql-manual/sql-functions/aggregate-functions/ai-agg.md):
 对多条文本进行跨行聚合分析。
 
 ## AI 配置相关参数
