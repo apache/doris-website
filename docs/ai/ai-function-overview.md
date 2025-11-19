@@ -38,43 +38,43 @@ All large language models must be provided externally to Doris and support text 
 
 ## Supported Functions
 
-- [AI_CLASSIFY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-classify):  
+- [AI_CLASSIFY](../sql-manual/sql-functions/ai-functions/ai-classify.md):  
   Extracts the single label string that best matches the text content from the given labels.
 
-- [AI_EXTRACT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-extract):  
+- [AI_EXTRACT](../sql-manual/sql-functions/ai-functions/ai-extract.md):  
   Extracts relevant information for each given label based on the text content.
 
-- [AI_FILTER](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-filter):
+- [AI_FILTER](../sql-manual/sql-functions/ai-functions/ai-filter.md):
   Check if the text content is correct and return a boolean value.
 
-- [AI_FIXGRAMMAR](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-fixgrammar):  
+- [AI_FIXGRAMMAR](../sql-manual/sql-functions/ai-functions/ai-fixgrammar.md):  
   Fixes grammar and spelling errors in the text.
 
-- [AI_GENERATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-generate):  
+- [AI_GENERATE](../sql-manual/sql-functions/ai-functions/ai-generate.md):  
   Generates content based on the input parameters.
 
-- [AI_MASK](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-mask):  
+- [AI_MASK](../sql-manual/sql-functions/ai-functions/ai-mask.md):  
   Replaces sensitive information in the original text with `[MASKED]` according to the labels.
 
-- [AI_SENTIMENT](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-sentiment):  
+- [AI_SENTIMENT](../sql-manual/sql-functions/ai-functions/ai-sentiment.md):  
   Analyzes the sentiment of the text, returning one of `positive`, `negative`, `neutral`, or `mixed`.
 
-- [AI_SIMILARITY](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-similarity):  
+- [AI_SIMILARITY](../sql-manual/sql-functions/ai-functions/ai-similarity.md):  
   Determine the similarity of the meaning between two texts, return a floating-point number between 0 and 10, 
   the larger the value, the more similar the meaning.
 
-- [AI_SUMMARIZE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-summarize):  
+- [AI_SUMMARIZE](../sql-manual/sql-functions/ai-functions/ai-summarize.md):  
   Provides a highly condensed summary of the text.
 
-- [AI_TRANSLATE](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-translate):  
+- [AI_TRANSLATE](../sql-manual/sql-functions/ai-functions/ai-translate.md):  
   Translates the text into the specified language.
 
-- [AI_AGG](https://doris.apache.org/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg):
+- [AI_AGG](../sql-manual/sql-functions/aggregate-functions/ai-agg.md):
 Perform cross-line aggregation analysis on multiple texts
 
 ## AI Configuration Parameters
 
-Doris centrally manages AI API access through the [resource mechanism](https://doris.apache.org/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), ensuring key security and permission control.  
+Doris centrally manages AI API access through the [resource mechanism](../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md), ensuring key security and permission control.  
 The currently available parameters are as follows:
 
 `type`: Required, must be `ai`, indicating the type as AI.
@@ -105,7 +105,7 @@ The provider selection only affects the API format constructed internally by Dor
 
 ## Quick Start
 
-> The following examples are minimal implementations. For detailed steps, refer to the documentation: https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/ai-function
+> The following examples are minimal implementations. For detailed steps, refer to the [documentation](../sql-manual/sql-functions/ai-functions/overview.md).
 
 1. Configure AI Resource
 

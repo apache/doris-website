@@ -50,7 +50,7 @@ PROPERTIES (
     'ai.max_token' = '1024',
     'ai.max_retries' = '3',
     'ai.retry_delay_second' = '1',
-    'ai.dimensions' = '1024';
+    'ai.dimensions' = '1024'
 );
  ```
 
@@ -76,7 +76,7 @@ The default value is -1, which means this parameter is not set. The default valu
 
 `ai.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
 
-`ai.dimensions`: Optional, control the vector dimension of [EMBED](https://doris.apache.org/docs/dev/sql-manual/sql-functions/ai-functions/distance-functions/embed) output. 
+`ai.dimensions`: Optional, control the vector dimension of [EMBED](./distance-functions/embed.md) output. 
 **Make sure to confirm that the model filled in `ai.model_name` supports custom vector dimension before setting**, 
 otherwise it may cause model call failure.
 
@@ -111,7 +111,7 @@ Example:
 ```sql
 SET default_ai_resource='global_default_resource';
 SELECT AI_SENTIMENT('this is a test'); -- Uses resource named 'global_default_resource'
-SELECT AI_SENTIMENT('invoke_resource', 'this is a test') --Uses resource named 'invoke_resource'
+SELECT AI_SENTIMENT('invoke_resource', 'this is a test'); --Uses resource named 'invoke_resource'
 ```
 
 ---
