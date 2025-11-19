@@ -32,7 +32,7 @@ DO <Insert_Command>
 
 ## Optional parameters
 
-**1. `job_properties`**
+**1. `<job_properties>`**
 | Parameters | Default Values ​​| Description |
 | ------------------ | ------ | ------------------------------------------------------------ |
 | session.* | None | Supports configuring all session variables in job_properties |

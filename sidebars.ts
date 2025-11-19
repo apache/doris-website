@@ -2412,6 +2412,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'sql-manual/sql-statements/job/CREATE-JOB',
                                 'sql-manual/sql-statements/job/CREATE-STREAMING-JOB',
+                                'sql-manual/sql-statements/job/ALTER-JOB',
                                 'sql-manual/sql-statements/job/PAUSE-JOB',
                                 'sql-manual/sql-statements/job/DROP-JOB',
                                 'sql-manual/sql-statements/job/RESUME-JOB',
