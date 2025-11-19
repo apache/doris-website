@@ -113,182 +113,386 @@ Doris Sink 使用 `encoding` 区块控制事件序列化行为，默认发出 ND
 | `acknowledgements.enabled` | boolean | `false` | 启用端到端确认，用于与支持 acknowledgements 的 Source 组合 |
 ## 使用示例
 
-以下将通过一个完整的 Web 服务器访问日志采集示例，展示如何使用 Vector 将日志数据实时写入 Doris。
+### TEXT 日志采集示例
 
-### Web 服务器访问日志采集
+该示例以 Doris FE 的日志为例展示 TEXT 日志采集。
 
-#### 准备数据源
+**1. 数据**
 
-在开始之前，我们需要准备 Web 服务器的访问日志文件。这些日志文件通常采用管道符（|）分隔格式。
+FE 日志文件一般位于 Doris 安装目录下的 fe/log/fe.log 文件，是典型的 Java 程序日志，包括时间戳，日志级别，线程名，代码位置，日志内容等字段。不仅有正常的日志，还有带 stacktrace 的异常日志，stacktrace 是跨行的，日志采集存储需要把主日志和 stacktrace 组合成一条日志。
 
-1. **创建日志目录**：
-   ```bash
-   mkdir -p /var/log/webserver
-   ```
+```
+2024-07-08 21:18:01,432 INFO (Statistics Job Appender|61) [StatisticsJobAppender.runAfterCatalogReady():70] Stats table not available, skip
+2024-07-08 21:18:53,710 WARN (STATS_FETCH-0|208) [StmtExecutor.executeInternalQuery():3332] Failed to run internal SQL: OriginStatement{originStmt='SELECT * FROM __internal_schema.column_statistics WHERE part_id is NULL  ORDER BY update_time DESC LIMIT 500000', idx=0}
+org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031 has no queryable replicas. err: replica 10032's backend 10008 does not exist or not alive
+        at org.apache.doris.planner.OlapScanNode.addScanRangeLocations(OlapScanNode.java:931) ~[doris-fe.jar:1.2-SNAPSHOT]
+        at org.apache.doris.planner.OlapScanNode.computeTabletInfo(OlapScanNode.java:1197) ~[doris-fe.jar:1.2-SNAPSHOT]
+```
 
-2. **日志文件格式说明**：
-   
-   每行记录采用管道符（|）分隔，包含以下字段：
+**2. 建表**
 
-   | 字段序号 | 字段名称 | 类型 | 示例值 | 说明 |
-   |---------|----------|------|--------|------|
-   | 1 | 时间戳 | DATETIME | `2024-01-15 10:30:25` | 请求发生时间 |
-   | 2 | 客户端IP | VARCHAR | `192.168.1.100` | 发起请求的客户端地址 |
-   | 3 | HTTP方法 | VARCHAR | `GET` | HTTP 请求方法 |
-   | 4 | 请求URL | VARCHAR | `/api/users` | 请求的资源路径 |
-   | 5 | HTTP版本 | VARCHAR | `HTTP/1.1` | HTTP 协议版本 |
-   | 6 | 状态码 | INT | `200` | HTTP 响应状态码 |
-   | 7 | 响应大小 | BIGINT | `1024` | 响应内容字节数 |
-   | 8 | 来源页面 | VARCHAR | `https://example.com/dashboard` | HTTP Referer 头 |
-   | 9 | 用户代理 | VARCHAR | `Mozilla/5.0...` | User-Agent 信息 |
-   | 10 | 请求处理时间 | DECIMAL | `0.045` | 服务器处理时间（秒） |
-   | 11 | 上游响应时间 | DECIMAL | `0.032` | 后端服务响应时间（秒） |
-   | 12 | 日志级别 | VARCHAR | `INFO` | 日志记录级别 |
-
-   **示例数据**：
-   ```text
-   2024-01-15 10:30:25|192.168.1.100|GET|/api/users|HTTP/1.1|200|1024|https://example.com/dashboard|Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36|0.045|0.032|INFO
-   2024-01-15 10:30:26|10.0.0.50|POST|/api/login|HTTP/1.1|401|256|-|curl/7.68.0|0.012|0.008|WARN
-   2024-01-15 10:30:27|172.16.0.25|GET|/static/css/main.css|HTTP/1.1|200|4096|https://example.com/|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)|0.003|0.001|INFO
-   ```
-
-3. **设置文件权限**：
-   ```bash
-   chmod 644 /var/log/webserver/*.log
-   ```
-
-
-#### 创建 Doris 表
-
-在 Doris 中创建用于存储访问日志的目标表：
+表结构包括日志的产生时间，采集时间，主机名，日志文件路径，日志类型，日志级别，线程名，代码位置，日志内容等字段。
 
 ```sql
-CREATE DATABASE IF NOT EXISTS vector_test;
-
-CREATE TABLE IF NOT EXISTS vector_test.web_access_logs (
-    timestamp DATETIME,
-    client_ip VARCHAR(45),
-    method VARCHAR(10),
-    url VARCHAR(2048),
-    http_version VARCHAR(10),
-    status_code INT,
-    response_size BIGINT,
-    referer VARCHAR(2048),
-    user_agent VARCHAR(1024),
-    request_time DECIMAL(10,3),
-    upstream_time DECIMAL(10,3),
-    log_level VARCHAR(20)
-)
-DUPLICATE KEY(timestamp, client_ip)
-DISTRIBUTED BY HASH(client_ip) BUCKETS 10
+CREATE TABLE `doris_log` (
+  `log_time` datetime NULL COMMENT 'log content time',
+  `collect_time` datetime NULL COMMENT 'log agent collect time',
+  `host` text NULL COMMENT 'hostname or ip',
+  `path` text NULL COMMENT 'log file path',
+  `type` text NULL COMMENT 'log type',
+  `level` text NULL COMMENT 'log level',
+  `thread` text NULL COMMENT 'log thread',
+  `position` text NULL COMMENT 'log code position',
+  `message` text NULL COMMENT 'log message',
+  INDEX idx_host (`host`) USING INVERTED COMMENT '',
+  INDEX idx_path (`path`) USING INVERTED COMMENT '',
+  INDEX idx_type (`type`) USING INVERTED COMMENT '',
+  INDEX idx_level (`level`) USING INVERTED COMMENT '',
+  INDEX idx_thread (`thread`) USING INVERTED COMMENT '',
+  INDEX idx_position (`position`) USING INVERTED COMMENT '',
+  INDEX idx_message (`message`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true") COMMENT ''
+) ENGINE=OLAP
+DUPLICATE KEY(`log_time`)
+COMMENT 'OLAP'
+PARTITION BY RANGE(`log_time`) ()
+DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
-    "replication_num" = "1"
+"replication_num" = "1",
+"dynamic_partition.enable" = "true",
+"dynamic_partition.time_unit" = "DAY",
+"dynamic_partition.start" = "-7",
+"dynamic_partition.end" = "1",
+"dynamic_partition.prefix" = "p",
+"dynamic_partition.buckets" = "10",
+"dynamic_partition.create_history_partition" = "true",
+"compaction_policy" = "time_series"
 );
 ```
 
-:::tip 表模型选择
-这里使用 DUPLICATE KEY 模型，因为访问日志场景中可能存在相同时间戳的多个请求记录，DUPLICATE 模型能够很好地支持这种数据特征。
-:::
-
-#### Vector 配置
-
-Vector 通过配置文件定义数据流处理管道，包括数据源（**sources**）、数据转换（**transforms**）和目标系统（**sinks**）。
-
-以下是完整的 `vector.toml` 配置文件示例（也支持 YAML 格式），该配置实现了从日志文件读取数据、解析管道符分隔的访问日志，并将处理后的数据写入 Doris：
+**3. Vector 配置**
 
 ```toml
-[sources.web_logs]
-type = "file"
-include = [
-  "/var/log/webserver/*.log",
-  "/var/log/nginx/access.log*",
-  "/var/log/apache2/access.log*"
-]
-read_from = "end"  # Read new logs in real-time
-line_delimiter = "\n"
-ignore_checkpoints = false  # Keep checkpoints for production environment
-ignore_older_secs = 0
+# ==================== Sources ====================
+[sources.fe_log_input]
+  type = "file"
+  include = ["/path/fe/log/fe.log"]
+  start_at_beginning = true
+  max_line_bytes = 102400
+  ignore_older_secs = 0
+  fingerprint.strategy = "device_and_inode"
+  
+  # 多行日志处理 - 对应 Logstash 的 multiline codec
+  # 以时间戳开头的行是新日志，其他行合并到前一行（处理 stacktrace）
+  multiline.start_pattern = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}"
+  multiline.mode = "halt_before"
+  multiline.condition_pattern = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}"
+  multiline.timeout_ms = 1000
 
-[sources.web_logs.fingerprint]
-strategy = "checksum"
+# ==================== Transforms ====================
+# 使用 grok 解析日志内容
+[transforms.parse_log]
+  inputs = ["fe_log_input"]
+  type = "remap"
+  source = '''
+    # 添加 type 字段（对应 Logstash 的 add_field）
+    .type = "fe.log"
+    
+    # 添加 collect_time（对应 Logstash 的 @timestamp）
+    # 使用 Asia/Shanghai 时区，与 log_time 保持一致
+    .collect_time = format_timestamp!(.timestamp, format: "%Y-%m-%d %H:%M:%S", timezone: "Asia/Shanghai")
+    
+    # 解析日志格式：2024-01-01 12:00:00,123 INFO (thread-name) [position] message
+    # 使用 (?s) 启用 DOTALL 模式，让 .* 可以匹配换行符（处理多行日志）
+    parsed, err = parse_regex(.message, r'(?s)^(?P<log_time>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}) (?P<level>[A-Z]+) \((?P<thread>[^\)]+)\) \[(?P<position>[^\]]+)\] (?P<content>.*)')
+    
+    # 提取解析出的字段
+    if err == null {
+      .log_time = parsed.log_time
+      .level = parsed.level
+      .thread = parsed.thread
+      .position = parsed.position
+      # 保留完整的原始 message（包括多行堆栈信息）
+    } else {
+      # 如果解析失败，设置默认值避免 NULL（避免分区错误）
+      .log_time = .collect_time
+      .level = "UNKNOWN"
+      .thread = ""
+      .position = ""
+    }
+    
+    # 提取 host 和 path（Vector 会自动添加这些元数据）
+    .host = .host
+    .path = .file
+  '''
 
-[transforms.parse_access_logs]
-type = "remap"
-inputs = ["web_logs"]
-source = '''
-if !exists(.message) || is_null(.message) || .message == "" {
-  abort
-}
-parts = split!(.message, "|")
-. = {
-  "timestamp": parse_timestamp!(parts[0], "%Y-%m-%d %H:%M:%S"),
-  "client_ip": parts[1],
-  "method": parts[2],
-  "url": parts[3],
-  "http_version": parts[4],
-  "status_code": to_int!(parts[5]),
-  "response_size": to_int!(parts[6]),
-  "referer": if parts[7] == "-" { null } else { parts[7] },
-  "user_agent": parts[8],
-  "request_time": to_float!(parts[9]),
-  "upstream_time": to_float!(parts[10]),
-  "log_level": parts[11]
-}
-'''
-
+# ==================== Sinks ====================
 [sinks.doris]
-type = "doris"
-inputs = ["parse_access_logs"]
-endpoints = ["https://localhost:8030"]
-database = "vector_test"
-table = "web_access_logs"
-label_prefix = "web_logs"
-log_request = true
-
-[sinks.doris.encoding]
-codec = "json"
-
-[sinks.doris.encoding.framing]
-method = "newline_delimited"
+  inputs = ["parse_log"]
+  type = "doris"
+  endpoints = ["http://localhost:8030"]
+  database = "log_db"
+  table = "doris_log"
+  label_prefix = "vector_fe_log"
+  log_request = true
 
 [sinks.doris.auth]
-user = "root"
-password = ""
-strategy = "basic"
+  user = "root"
+  password = ""
+  strategy = "basic"
+
+[sinks.doris.encoding]
+  codec = "json"
+
+[sinks.doris.framing]
+  method = "newline_delimited"
+
+[sinks.doris.request]
+  concurrency = 10
 
 [sinks.doris.headers]
-format = "json"
-strip_outer_array = "false"
-read_json_by_line = "true"
+  format = "json"
+  read_json_by_line = "true"
+  load_to_single_tablet = "true"
 
 [sinks.doris.batch]
-max_events = 10000      # Moderate batch size for high log volume
-max_bytes = 10485760    # 10MB
-timeout_secs = 10       # Short timeout for real-time processing
+  max_events = 10000
+  timeout_secs = 3
+  max_bytes = 100000000
+
 ```
 
-#### 配置详解
+**4. 运行 Vector**
 
-**1. 数据源配置（Sources）**
-- `type = "file"`: 使用文件类型数据源
-- `include`: 指定要监控的日志文件路径，支持通配符
-- `read_from = "end"`: 从文件末尾开始读取，适合实时日志处理
-- `fingerprint.strategy = "checksum"`: 使用校验和策略来识别文件
+```
 
-**2. 数据转换配置（Transforms）**
-- 使用 VRL（Vector Remap Language）编写转换逻辑
-- 将管道符分隔的原始日志解析为结构化的 JSON 数据
-- 包含数据类型转换和空值处理逻辑
+${VECTOR_HOME}/bin/vector --config vector_fe_log.toml
 
-**3. 数据写入配置（Sinks）**
-- 配置 Doris 集群连接信息和认证
-- 设置批处理参数以优化写入性能
-- 启用请求日志记录便于问题排查
+# log_request 为 true 时日志会输出每次 Stream Load 的请求参数和响应结果
+2025-11-19T10:14:40.822071Z  INFO sink{component_kind="sink" component_id=doris component_type=doris}:request{request_id=82}: vector::sinks::doris::service: Doris stream load response received. status_code=200 OK stream_load_status=Successful response={
+  "TxnId": 169721,
+  "Label": "vector_fe_log_log_db_doris_log_1763547280791_e2e619ee-4067-4fe8-974e-9f35f0d4e48e",
+  "Comment": "",
+  "TwoPhaseCommit": "false",
+  "Status": "Success",
+  "Message": "OK",
+  "NumberTotalRows": 10,
+  "NumberLoadedRows": 10,
+  "NumberFilteredRows": 0,
+  "NumberUnselectedRows": 0,
+  "LoadBytes": 7301,
+  "LoadTimeMs": 30,
+  "BeginTxnTimeMs": 0,
+  "StreamLoadPutTimeMs": 1,
+  "ReadDataTimeMs": 0,
+  "WriteDataTimeMs": 8,
+  "ReceiveDataTimeMs": 2,
+  "CommitAndPublishTimeMs": 18
+} internal_log_rate_limit=true
+```
+
+### JSON 日志采集示例
+
+该样例以 github events archive 的数据为例展示 JSON 日志采集。
+
+**1. 数据**
+
+github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
+
+```
+wget https://data.gharchive.org/2024-01-01-15.json.gz
+
+```
+
+下面是一条数据样例，实际一条数据一行，这里为了方便展示进行了格式化。
+
+```
+{
+  "id": "37066529221",
+  "type": "PushEvent",
+  "actor": {
+    "id": 46139131,
+    "login": "Bard89",
+    "display_login": "Bard89",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Bard89",
+    "avatar_url": "https://avatars.githubusercontent.com/u/46139131?"
+  },
+  "repo": {
+    "id": 780125623,
+    "name": "Bard89/talk-to-me",
+    "url": "https://api.github.com/repos/Bard89/talk-to-me"
+  },
+  "payload": {
+    "repository_id": 780125623,
+    "push_id": 17799451992,
+    "size": 1,
+    "distinct_size": 1,
+    "ref": "refs/heads/add_mvcs",
+    "head": "f03baa2de66f88f5f1754ce3fa30972667f87e81",
+    "before": "85e6544ede4ae3f132fe2f5f1ce0ce35a3169d21"
+  },
+  "public": true,
+  "created_at": "2024-04-01T23:00:00Z"
+}
+```
+
+
+**2. Doris 建表**
+
+```
+CREATE DATABASE log_db;
+USE log_db;
+
+
+CREATE TABLE github_events
+(
+  `created_at` DATETIME,
+  `id` BIGINT,
+  `type` TEXT,
+  `public` BOOLEAN,
+  `actor.id` BIGINT,
+  `actor.login` TEXT,
+  `actor.display_login` TEXT,
+  `actor.gravatar_id` TEXT,
+  `actor.url` TEXT,
+  `actor.avatar_url` TEXT,
+  `repo.id` BIGINT,
+  `repo.name` TEXT,
+  `repo.url` TEXT,
+  `payload` TEXT,
+  `host` TEXT,
+  `path` TEXT,
+  INDEX `idx_id` (`id`) USING INVERTED,
+  INDEX `idx_type` (`type`) USING INVERTED,
+  INDEX `idx_actor.id` (`actor.id`) USING INVERTED,
+  INDEX `idx_actor.login` (`actor.login`) USING INVERTED,
+  INDEX `idx_repo.id` (`repo.id`) USING INVERTED,
+  INDEX `idx_repo.name` (`repo.name`) USING INVERTED,
+  INDEX `idx_host` (`host`) USING INVERTED,
+  INDEX `idx_path` (`path`) USING INVERTED,
+  INDEX `idx_payload` (`payload`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
+)
+ENGINE = OLAP
+DUPLICATE KEY(`created_at`)
+PARTITION BY RANGE(`created_at`) ()
+DISTRIBUTED BY RANDOM BUCKETS 10
+PROPERTIES (
+"replication_num" = "1",
+"compaction_policy" = "time_series",
+"enable_single_replica_compaction" = "true",
+"dynamic_partition.enable" = "true",
+"dynamic_partition.create_history_partition" = "true",
+"dynamic_partition.time_unit" = "DAY",
+"dynamic_partition.start" = "-30",
+"dynamic_partition.end" = "1",
+"dynamic_partition.prefix" = "p",
+"dynamic_partition.buckets" = "10",
+"dynamic_partition.replication_num" = "1"
+);
+```
+
+**3. Vector 配置**
+
+```toml
+# Sources
+[sources.github_events_reload]
+  type = "file"
+  include = ["/path/2024-01-01-15.json"]
+  read_from = "beginning"
+  ignore_checkpoints = true
+  max_line_bytes = 10485760
+  ignore_older_secs = 0
+  line_delimiter = "\n"
+  fingerprint.strategy = "device_and_inode"
+
+# Transforms
+# 解析 JSON 格式的 GitHub Events 数据
+[transforms.parse_json]
+  inputs = ["github_events_reload"]
+  type = "remap"
+  source = '''
+    # 解析 JSON 数据（每行是一个完整的 JSON 对象）
+    . = parse_json!(.message)
+  '''
+
+# 映射字段到 Doris 表结构
+[transforms.map_fields]
+  inputs = ["parse_json"]
+  type = "remap"
+  source = '''
+    # 映射顶层字段
+    .created_at = .created_at
+    .id = .id
+    .type = .type
+    .public = .public
+    
+    # 映射嵌套的 actor 字段（使用点表示法）
+    ."actor.id" = .actor.id
+    ."actor.login" = .actor.login
+    ."actor.display_login" = .actor.display_login
+    ."actor.gravatar_id" = .actor.gravatar_id
+    ."actor.url" = .actor.url
+    ."actor.avatar_url" = .actor.avatar_url
+    
+    # 映射嵌套的 repo 字段
+    ."repo.id" = .repo.id
+    ."repo.name" = .repo.name
+    ."repo.url" = .repo.url
+    
+    # 映射 payload（转为 JSON 字符串）
+    .payload = encode_json(.payload)
+    
+    # 映射 host 和 path 字段
+    .host = .host
+    .path = .file
+    
+    # 删除原始嵌套对象，只保留映射后的扁平字段
+    del(.actor)
+    del(.repo)
+  '''
+
+# ==================== Sinks ====================
+[sinks.doris]
+  inputs = ["map_fields"]
+  type = "doris"
+  endpoints = ["http://10.16.10.6:8630"]
+  database = "log_db"
+  table = "github_events"
+  label_prefix = "vector_github_events"
+  log_request = true
+
+[sinks.doris.auth]
+  user = "root"
+  password = ""
+  strategy = "basic"
+
+[sinks.doris.encoding]
+  codec = "json"
+
+[sinks.doris.framing]
+  method = "newline_delimited"
+
+[sinks.doris.request]
+  concurrency = 10
+
+[sinks.doris.headers]
+  format = "json"
+  read_json_by_line = "true"
+  load_to_single_tablet = "true"
+
+[sinks.doris.batch]
+  max_events = 10000
+  timeout_secs = 3
+  max_bytes = 100000000
+
+
+
+```
 
 #### 启动 Vector
 
 使用以下命令启动 Vector 服务：
 
 ```bash
-vector --config vector.toml
+vector --config vector_config.toml
 ```
