@@ -455,7 +455,7 @@ PROPERTIES (
 [sinks.doris]
   inputs = ["map_fields"]
   type = "doris"
-  endpoints = ["http://10.16.10.6:8630"]
+  endpoints = ["http://localhost:8030"]
   database = "log_db"
   table = "github_events"
   label_prefix = "vector_github_events"
