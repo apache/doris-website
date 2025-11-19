@@ -63,15 +63,15 @@ OSS-HDFS 服务（JindoFS 服务）是一个阿里云云原生数据湖存储功
 
 ### 参数总览
 
-| 属性名称                       | 曾用名                       | 描述                                                         | 默认值 |是否必须 | 
-| ------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------ | --- |
-| oss.hdfs.endpoint                   | s3.endpoint                  | 阿里云 OSS-HDFS 服务的 Endpoint，例如 `cn-hangzhou.oss-dls.aliyuncs.com`。  | 无     | 是 |
-| oss.hdfs.access_key                 | s3.access_key                | OSS Access Key，用于身份验证                                 | 无     | 是 |
-| oss.hdfs.secret_key                 | s3.secret_key                | OSS Secret Key，与 Access Key 配合使用                       | 无     | 是 |
-| oss.hdfs.region                     | s3.region                    | OSS bucket 所在的地域 ID，例如 `cn-beijing`。                            | 无     | 是 |
-| oss.hdfs.fs.defaultFS               |             | 3.1 版本支持。指定 OSS 的文件系统访问路径，例如 `oss://my-bucket/`。 | 无  | 否 |
-| oss.hdfs.hadoop.config.resources    |       | 3.1 版本支持。指定包含 OSS 文件系统配置的路径，需使用相对路径，默认目录为（FE/BE）部署目录下的 /plugins/hadoop_conf/（可修改 fe.conf/be.conf 中的 hadoop_config_dir 来更改默认路径）。所有 FE 和 BE 节点需配置相同相对路径。示例：`hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml`。                 | 无    | 否 |
-
+| 属性名称                             | 曾用名           | 描述                                                         | 默认值 |是否必须 | 
+|----------------------------------|---------------| ------------------------------------------------------------ | ------ | --- |
+| oss.hdfs.endpoint                | oss.endpoint  | 阿里云 OSS-HDFS 服务的 Endpoint，例如 `cn-hangzhou.oss-dls.aliyuncs.com`。  | 无     | 是 |
+| oss.hdfs.access_key              | oss.access_key | OSS Access Key，用于身份验证                                 | 无     | 是 |
+| oss.hdfs.secret_key              | oss.secret_key | OSS Secret Key，与 Access Key 配合使用                       | 无     | 是 |
+| oss.hdfs.region                  | oss.region     | OSS bucket 所在的地域 ID，例如 `cn-beijing`。                            | 无     | 是 |
+| oss.hdfs.fs.defaultFS            |               | 3.1 版本支持。指定 OSS 的文件系统访问路径，例如 `oss://my-bucket/`。 | 无  | 否 |
+| oss.hdfs.hadoop.config.resources |               | 3.1 版本支持。指定包含 OSS 文件系统配置的路径，需使用相对路径，默认目录为（FE/BE）部署目录下的 /plugins/hadoop_conf/（可修改 fe.conf/be.conf 中的 hadoop_config_dir 来更改默认路径）。所有 FE 和 BE 节点需配置相同相对路径。示例：`hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml`。                 | 无    | 否 |
+| fs.oss-hdfs.support              |oss.hdfs.enabled | 3.1 版本支持。显示声明启用 OSS-HDFS 功能。需要设置为 true | 无  | 否 |
 > 3.1 版本之前，请使用曾用名。
 
 ### Endpoint 配置
@@ -100,17 +100,19 @@ OSS-HDFS 支持通过 `oss.hdfs.hadoop.config.resources` 参数来指定 HDFS �
 ### 示例配置
 
 ```properties
+"fs.oss-hdfs.support" = "true",
 "oss.hdfs.access_key" = "your-access-key",
 "oss.hdfs.secret_key" = "your-secret-key",
 "oss.hdfs.endpoint" = "cn-hangzhou.oss-dls.aliyuncs.com",
 "oss.hdfs.region" = "cn-hangzhou"
 ```
 
-3.1 之前的版：
+3.1 之前的版本：
 
 ```
-"s3.access_key" = "your-access-key",
-"s3.secret_key" = "your-secret-key",
-"s3.endpoint" = "cn-hangzhou.oss-dls.aliyuncs.com",
-"s3.region" = "cn-hangzhou"
+"oss.hdfs.enabled" = "true",
+"oss.access_key" = "your-access-key",
+"oss.secret_key" = "your-secret-key",
+"oss.endpoint" = "cn-hangzhou.oss-dls.aliyuncs.com",
+"oss.region" = "cn-hangzhou"
 ```
