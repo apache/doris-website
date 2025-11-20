@@ -61,7 +61,7 @@ QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模�
 
 ## 在 QuickSight 中构建可视化
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考此文档：[https://doris.apache.org/zh-CN/docs/3.x/benchmark/tpch](https://doris.apache.org/zh-CN/docs/3.x/benchmark/tpch)
+我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
 
 现在我们在 QuickSight 中配置了 Doris 数据源，让我们可视化数据...
 
