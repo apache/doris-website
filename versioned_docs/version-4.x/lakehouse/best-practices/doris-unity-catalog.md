@@ -73,6 +73,20 @@ Click the user avatar in the top right corner, go to the `Settings` page, and se
 ### Creating a Catalog
 
 ```sql
+-- Use oath2 credential and vended credentials
+CREATE CATALOG dbx_unity_catalog PROPERTIES (
+  "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
+  "type" = "iceberg",
+  "warehouse" = "my-unity-catalog",
+  "iceberg.catalog.type" = "rest",
+  "iceberg.rest.security.type" = "oauth2",
+  "iceberg.rest.oauth2.credential" = "clientid:clientsecret",
+  "iceberg.rest.oauth2.server-uri" = "https://dbc-xx.cloud.databricks.com:443/oidc/v1/token",
+  "iceberg.rest.oauth2.scope" = "all-apis",
+  "iceberg.rest.vended-credentials-enabled" = "true"
+);
+
+-- Use PAT and vended credentials
 CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "uri" = "https://<dbc-account>.cloud.databricks.com/api/2.1/unity-catalog/iceberg-rest/",
   "type" = "iceberg",
@@ -81,6 +95,22 @@ CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "iceberg.rest.security.type" = "oauth2",
   "iceberg.rest.oauth2.token" = "<token>",
   "iceberg.rest.vended-credentials-enabled" = "true"
+);
+
+-- Use oath2 credential and static ak/sk for accessing aws s3
+CREATE CATALOG dbx_unity_catalog PROPERTIES (
+  "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
+  "type" = "iceberg",
+  "warehouse" = "my-unity-catalog",
+  "iceberg.catalog.type" = "rest",
+  "iceberg.rest.security.type" = "oauth2",
+  "iceberg.rest.oauth2.credential" = "clientid:clientsecret",
+  "iceberg.rest.oauth2.server-uri" = "https://dbc-xx.cloud.databricks.com:443/oidc/v1/token",
+  "iceberg.rest.oauth2.scope" = "all-apis",
+  "s3.endpoint" = "https://s3.<region>.amazonaws.com",
+  "s3.access_key" = "<ak>",
+  "s3.secret_key" = "<sk>",
+  "s3.region" = "<region>"
 );
 ```
 
