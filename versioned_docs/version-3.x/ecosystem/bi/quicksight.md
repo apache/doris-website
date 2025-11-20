@@ -35,7 +35,7 @@ First, visit [https://quicksight.aws.amazon.com](https://quicksight.aws.amazon.c
 
 ![](/images/ecomsystem/quicksight/XngnbqKxhouZHIxgVYhcyta5n3f.png)
 
-Search for the official MySQL connector bundled with QuickSight (named simply **MySQL**):
+Search for the official MySQL connector bundled with QuickSight:
 
 ![](/images/ecomsystem/quicksight/Pjf5bRheroLmtKxcZ2PcFYMkn7d.png)
 
@@ -46,10 +46,6 @@ Specify your connection details. Note that the MySQL interface port defaults to 
 Now, you can select a table from the list:
 
 ![](/images/ecomsystem/quicksight/LAFXbSSnwop5C7xn3kPcEcBZnmc.png)
-
-Additionally, you can specify a custom SQL to fetch your data:
-
-![](/images/ecomsystem/quicksight/ASnSCopmkPwncLbB5FXZcEc7xn3.png)
 
 It is recommended to choose the "Directly query" mode:
 
@@ -69,7 +65,7 @@ We've chosen TPC-H data as our data source. For instructions on building a Doris
 
 Now that we've configured the Doris data source in QuickSight, let's visualize the data...
 
-Suppose we need to know order statistics at different statuses across various countries. The following is how to build a dashboard based on this requirement:
+Due to Doris's excellent performance in multi-table join scenarios, we chose to design a dashboard based on this scenario. Let's say we need to know order statistics for different countries at different statuses. We will then build the dashboard according to this requirement.
 
 1. Add the following table as a Dataset to the Data source created using the steps above.
 

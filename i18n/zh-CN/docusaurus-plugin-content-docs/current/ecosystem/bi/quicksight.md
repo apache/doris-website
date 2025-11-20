@@ -35,7 +35,7 @@ QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模�
 
 ![](/images/ecomsystem/quicksight/XngnbqKxhouZHIxgVYhcyta5n3f.png)
 
-搜索 QuickSight 捆绑的官方 MySQL 连接器（仅命名为 **MySQL**）：
+搜索 QuickSight 捆绑的官方 MySQL 连接器：
 
 ![](/images/ecomsystem/quicksight/Pjf5bRheroLmtKxcZ2PcFYMkn7d.png)
 
@@ -46,10 +46,6 @@ QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模�
 现在，您可以从列表中选择一个表：
 
 ![](/images/ecomsystem/quicksight/LAFXbSSnwop5C7xn3kPcEcBZnmc.png)
-
-此外，您可以指定一个自定义 SQL 来获取您的数据：
-
-![](/images/ecomsystem/quicksight/ASnSCopmkPwncLbB5FXZcEc7xn3.png)
 
 这里推荐您选择 “Directly query” 模式：
 
@@ -65,11 +61,11 @@ QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模�
 
 ## 在 QuickSight 中构建可视化
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考此文档：[https://doris.apache.org/zh-CN/docs/3.x/benchmark/tpch](https://doris.apache.org/zh-CN/docs/3.x/benchmark/tpch)
+我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
 
 现在我们在 QuickSight 中配置了 Doris 数据源，让我们可视化数据...
 
-假设我们需要知道在各个国家之间不同状态的订单统计，接下来按照此需求进行看板构建
+由于Doris 在多表关联场景下的出色性能，我们选择一个设计多表关联的场景，假设我们需要知道各个国家不同状态的订单统计，接下来按照此需求进行看板构建
 
 1. 使用上述步骤创建的 Data source 添加以下表作为 Dataset
 
