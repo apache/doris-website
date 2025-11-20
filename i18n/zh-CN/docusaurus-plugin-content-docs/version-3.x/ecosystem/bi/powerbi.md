@@ -5,7 +5,7 @@
 }
 ---
 
-Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
+Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。
 
 您可以使用 Power BI Desktop，用于创建仪表板和可视化的 Windows 桌面应用程序。
 
@@ -29,14 +29,14 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
 您需要以下详细信息以连接到您的 Apache Doris 实例：
 
-| 参数 | 含义 | 示例 |
-| ---- | ---- | ---- |
-| **Doris Data Source** | 数据库连接串，host + port | 127.0.1.28:9030 |
-| **Database** | 数据库名 | test_db |
+| 参数 | 含义 | 示例                           |
+| ---- | ---- |------------------------------|
+| **Doris Data Source** | 数据库连接串，host + port | 127.0.1.28:9030              |
+| **Database** | 数据库名 | test_db                      |
+| **Data Connectivity Mode** | 数据连接模式，包含 Import 和 DirectQuery |       DirectQuery                       |
 | **SQL Statement** | SQL 语句，必须包含 Database，仅适用于Import 模式 | select * from database.table |
-| **Data Connectivity Mode** | 数据连接模式，包含 Import 和 DirectQuery |  |
-| **User Name** | 用户名 |  |
-| **Password** | 密码 |  |
+| **User Name** | 用户名 | admin                        |
+| **Password** | 密码 | xxxxxx                       |
 
 ## Power BI Desktop
 
@@ -79,7 +79,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
 当前 Power BI 自定义 Connector  暂时关闭认证通道，因此 Doris 提供的 自定义 Connector 是属于未经认证的，对于未认证连接器，配置方式([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors))如下：
 
-1. 参考此处路径：`\Power BI Desktop\Custom Connectors folder`，放置 `Doris.mez` 自定义连接器文件（如果路径不存在，按需手动创建）。
+1. 假定 `power_bi_path` 为 windows 操作系统中 Power BI Desktop 的目录，一般默认为：`power_bi_path = C:\Program Files\Power BI Desktop` 参考此处路径 `%power_bi_path%\Custom Connectors folder`，放置 `Doris.mez` 自定义连接器文件（如果路径不存在，按需手动创建）。
 2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。可以屏蔽掉未认证连接器的限制。
 
 首先，选择 `File`
@@ -132,7 +132,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 
 ### 查询和可视化数据
 
-最后，您应该在导航器视图中看到数据库和表。选择所需的表并单击 "加载" 以从 Apache Doris 导入数据。
+最后，您应该在导航器视图中看到数据库和表。选择所需的表并单击 "加载" 以从 Apache Doris 加载表结构和预览数据。
 
 ![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
@@ -145,7 +145,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载到内存数据。
 我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
 现在我们在 Power BI 中配置了 Doris 数据源，让我们可视化数据...  
 
-假设我们需要知道在各个地区之间的订单营收统计，接下来按照此需求进行看板构建  
+假设我们需要知道在各个地区的订单营收统计，接下来按照此需求进行看板构建  
 
 1. 首先进行表模型关系的创建 ，点击 Model view
 
