@@ -489,6 +489,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```    
         </TabItem>
         <TabItem value='OSS' label='OSS'>
+            使用 OSS
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
@@ -498,6 +499,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
                 'oss.access_key'='<ak>',
                 'oss.secret_key'='<sk>'
+            );
+            ```
+
+            使用 OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'fs.oss-hdfs.support' = 'true',
+                'oss.hdfs.access_key' = '<ak>',
+                'oss.hdfs.secret_key' = '<sk>',
+                'oss.hdfs.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.region' = 'cn-beijing'
             );
             ```
         </TabItem>
@@ -583,6 +599,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
+            使用 OSS
+
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
@@ -592,6 +610,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
                 'oss.access_key'='<ak>',
                 'oss.secret_key'='<sk>'
+            );
+            ```
+
+            使用 OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.hdfs.enabled' = 'true',
+                'oss.access_key' = 'your-access-key',
+                'oss.secret_key' = 'your-secret-key',
+                'oss.endpoint' = 'cn-hangzhou.oss-dls.aliyuncs.com',
+                'oss.region' = 'cn-hangzhou'
             );
             ```
         </TabItem>

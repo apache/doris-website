@@ -13,9 +13,11 @@
 - Export 属性
 - Outfile 属性
 
-**Doris 使用 S3 Client，通过 S3 兼容协议访问阿里云 OSS。**
+## OSS
 
-## 参数总览
+Doris 使用 S3 Client，通过 S3 兼容协议访问阿里云 OSS。
+
+### 参数总览
 
 | 属性名称                       | 曾用名                       | 描述                                                         | 默认值 |
 | ------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------ |
@@ -30,7 +32,7 @@
 
 > 3.1 版本之前，请使用曾用名。
 
-## 示例配置
+### 示例配置
 
 ```properties
 "oss.access_key" = "your-access-key",
@@ -48,7 +50,7 @@
 "s3.region" = "cn-beijing"
 ```
 
-## 使用建议
+### 使用建议
 
 * 推荐使用 `oss.` 前缀配置参数，保证与阿里云 OSS 的一致性和清晰度。
 * 3.1 之前的版本，请使用曾用名 `s3.` 作为前缀。
@@ -72,6 +74,7 @@ OSS-HDFS 服务（JindoFS 服务）是一个阿里云云原生数据湖存储功
 | oss.hdfs.fs.defaultFS            |               | 3.1 版本支持。指定 OSS 的文件系统访问路径，例如 `oss://my-bucket/`。 | 无  | 否 |
 | oss.hdfs.hadoop.config.resources |               | 3.1 版本支持。指定包含 OSS 文件系统配置的路径，需使用相对路径，默认目录为（FE/BE）部署目录下的 /plugins/hadoop_conf/（可修改 fe.conf/be.conf 中的 hadoop_config_dir 来更改默认路径）。所有 FE 和 BE 节点需配置相同相对路径。示例：`hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml`。                 | 无    | 否 |
 | fs.oss-hdfs.support              |oss.hdfs.enabled | 3.1 版本支持。显示声明启用 OSS-HDFS 功能。需要设置为 true | 无  | 否 |
+
 > 3.1 版本之前，请使用曾用名。
 
 ### Endpoint 配置

@@ -13,9 +13,11 @@ This document describes the parameters required to access Alibaba Cloud OSS, whi
 - Export properties
 - Outfile properties
 
-**Doris uses S3 Client to access Alibaba Cloud OSS through S3-compatible protocol.**
+## OSS
 
-## Parameter Overview
+Doris uses S3 Client to access Alibaba Cloud OSS through S3-compatible protocol.
+
+### Parameter Overview
 
 | Property Name                  | Legacy Name                  | Description                                                  | Default Value |
 | ------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------------- |
@@ -48,7 +50,7 @@ For versions before 3.1:
 "s3.region" = "cn-beijing"
 ```
 
-## Usage Recommendations
+### Usage Recommendations
 
 * It is recommended to use the `oss.` prefix for configuration parameters to ensure consistency and clarity with Alibaba Cloud OSS.
 * For versions before 3.1, please use the legacy name `s3.` as the prefix.
