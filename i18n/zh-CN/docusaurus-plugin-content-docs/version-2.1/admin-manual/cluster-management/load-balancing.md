@@ -121,7 +121,287 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-### 03 HAProxy
+### 03 NJet
+
+使用 [NJet](https://docs.njet.org.cn/) 可以在保持与 Nginx 一致体验的同时，获取动态管理和健康检查等增强能力。以下示例同样以 `192.168.1.100` 为代理节点，后端为 `192.168.1.101/102/103`。
+
+#### 安装 NJet
+
+请参考 [NJet](https://docs.njet.org.cn/docs/v4.0.0/guide/install/index.html) 官网正确安装 NJet， 这里以 docker 和 ubuntu 系统中安装 njet 为例展示 njet 的安装步骤。
+
+1. Docker 安装
+
+   ```shell
+   ## 拉取NJET 镜像
+   docker pull tmlake/njet:latest
+   
+   ## 启动NJET
+   docker run  -d --rm --privileged  tmlake/njet:latest
+   ```
+
+2. Ubuntu 系统中安装
+
+   ```shell
+    ## 生成njet.repo
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://njet.org.cn/download/linux/   ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/   keyrings/njet.gpg
+    sudo chmod a+r /etc/apt/keyrings/njet.gpg
+   
+    ## 添加APT 源​
+    echo 
+    "deb [arch=$(dpkg --print-architecture) signed-
+    by=/etc/apt/keyrings/njet.gpg] https://njet.org.   cn/download/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME")    stable" | \
+    sudo tee /etc/apt/sources.list.d/njet.list > /   dev/null
+    sudo apt-get update
+   
+    ## 安装及启动
+    sudo apt-get install njet
+    sudo systemctl start njet
+    ```
+
+#### NJet 初始配置
+
+`njet.conf`：
+
+  ```text
+      events {
+      worker_connections 1024;
+      }
+      stream {
+        upstream mysqld {
+            hash $remote_addr consistent;
+            server 192.168.1.101:9030 weight=1       max_fails=2 fail_timeout=60s;
+            server 192.168.1.102:9030 weight=1       max_fails=2 fail_timeout=60s;
+            server 192.168.1.103:9030 weight=1       max_fails=2 fail_timeout=60s;
+        }
+        server {
+         # Proxy port
+            listen 6030;
+            proxy_connect_timeout 300s;
+            proxy_timeout 300s;
+            proxy_pass mysqld;
+        }
+      }
+  ```
+
+#### 动态成员维护
+
+OpenNJet 通过 API 可以动态增删 upstream 成员。为此需要在数据面和控制面启用相关模块。
+
+数据面配置 `njet.conf` 示例：
+
+```text
+helper broker modules/njt_helper_broker_module.so conf/mqtt.conf;
+helper ctrl modules/njt_helper_ctrl_module.so conf/ctrl.conf;
+load_module modules/njt_http_upstream_member_module.so; 
+
+stream {
+  upstream mysqld {
+      zone mysqld 16k; #必须配置共享内存
+      hash $remote_addr consistent;
+      server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+      server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+      server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+  }
+  server {
+      listen 6030;
+      proxy_connect_timeout 300s;
+      proxy_timeout 300s;
+      proxy_pass mysqld;
+  }
+}
+```
+
+控制面配置 `njet_ctrl.conf` 示例：
+
+```text
+load_module modules/njt_http_sendmsg_module.so;
+load_module modules/njt_http_upstream_api_module.so; 
+load_module modules/njt_helper_health_check_module.so;
+
+http {
+   server {
+        listen 8081;
+        location /api {
+            dyn_module_api;
+        }
+    }
+}
+```
+
+##### 添加 upstream 成员
+
+当 Doris 扩容新增 FE 节点，添加了 `192.168.1.104:9030` 时，可以通过以下 api 进行添加，添加成员 `192.168.1.104:9030` 后，OpenNJet 会自动给该成员按顺序分配 id，可以通过该 id 后续对该成员进行查询，删除，修改等操作。
+
+api url: `POST http://{ip}:8081/api/v1/upstream_api/stream/upstreams/{upstream_name}/servers/`
+
+```bash
+curl -X POST http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/ -d '{
+  "server": "192.168.1.104:9030",
+  "weight": 2,
+  "max_conns": 2,
+  "max_fails": 1,
+  "fail_timeout": "5s",
+  "slow_start": "5s",
+  "route": "",
+  "backup": false,
+  "down": false
+}'
+```
+
+##### 删除 upstream 成员
+
+api url : `DELETE http://{ip}:8081/api/v1/upstream_api/stream/upstreams/{upstream_name}/servers/{id}`
+
+```bash
+curl -X DELETE http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/3
+```
+
+#### 配置自动健康检查
+
+默认启用主动健康检查，可通过 `http://{ip}:8081/api/v1/hc/smysql/{upstream}` 配置：
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8081/api/v1/hc/smysql/mysqld' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "interval": "5s",
+  "jitter": "1s",
+  "timeout": "5s",
+  "passes": 1,
+  "fails": 1,
+  "sql": {
+    "select": "select 1",
+    "useSsl": true,
+    "user": "root",
+    "password": "123456",
+    "db": "db"
+  }
+}'
+```
+
+字段说明：
+
+- `interval`：必填，主动检查频率。
+- `visit_interval`：可选，健康检查时，如果指定的时间间隔内该 server 被客户端访问过，则该server跳过此次健康检查,interval > visit_interval。
+- `jitter`：必填，设置健康检查项定时器最大偏差。防止所有检查项同时触发。
+- `timeout`：必填，超时时间。
+- `passes`：必填，server_body server 块内的指令集，每条指令用分号分隔。server_body 内容可以为空。。
+- `fails`：必填，连续不通过 fails 次检测，更新 peer 为 unhealthy 状态。
+- `port`：可选，指定健康检查的端口，如果不指定，使用 upstream 中设置的端口。
+- `sql`：包含 `select/useSsl/user/password/db` 等字段，其中 `db` 为必填。
+
+#### JSON 配置文件支持
+
+NJet 支持 JSON 配置，便于脚本化维护。将 `njet.conf` 改写为 `njet.json` 后即可通过 `njet -c conf/njet.json` 加载。
+
+```json
+[
+  {
+    "cmd": "events",
+    "args": [],
+    "block": [
+      {
+        "cmd": "worker_connections",
+        "args": [
+          "1024"
+        ]
+      }
+    ]
+  },
+  {
+    "cmd": "stream",
+    "args": [],
+    "block": [
+      {
+        "cmd": "upstream",
+        "args": [
+          "mysqld"
+        ],
+        "block": [
+          {
+            "cmd": "hash",
+            "args": [
+              "$remote_addr",
+              "consistent"
+            ]
+          },
+          {
+            "cmd": "server",
+            "args": [
+              "192.168.1.101:9030",
+              "weight=1",
+              "max_fails=2",
+              "fail_timeout=60s"
+            ]
+          },
+          {
+            "cmd": "server",
+            "args": [
+              "192.168.1.102:9030",
+              "weight=1",
+              "max_fails=2",
+              "fail_timeout=60s"
+            ]
+          },
+          {
+            "cmd": "server",
+            "args": [
+              "192.168.1.103:9030",
+              "weight=1",
+              "max_fails=2",
+              "fail_timeout=60s"
+            ]
+          }
+        ]
+      },
+      {
+        "cmd": "server",
+        "args": [],
+        "block": [
+          {
+            "cmd": "listen",
+            "args": [
+              "6030"
+            ]
+          },
+          {
+            "cmd": "proxy_connect_timeout",
+            "args": [
+              "300s"
+            ]
+          },
+          {
+            "cmd": "proxy_timeout",
+            "args": [
+              "300s"
+            ]
+          },
+          {
+            "cmd": "proxy_pass",
+            "args": [
+              "mysqld"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+更多参考：
+
+- OpenNJet 安装指南：https://docs.njet.org.cn/docs/v4.0.0/guide/install/index.html
+- 健康检查详情：https://docs.njet.org.cn/docs/v4.0.0/reference/upstream/health_check/mysql_health_check/index.html
+- upstream_api 全量能力：https://docs.njet.org.cn/docs/v4.0.0/reference/upstream/upstream_api/index.html
+
+### 04 HAProxy
 
 [HAProxy](https://www.haproxy.org/) 是一个使用 C 语言编写高性能 TCP/HTTP 负载均衡器。
 
@@ -244,7 +524,7 @@ mysql> show databases;
 
 `mysql -h 192.168.1.100 -uroot -P6030 -p`
 
-### 04 ProxySQL
+### 05 ProxySQL
 
 [ProxySQL](https://proxysql.com/) 是基于 MySQL 的开源数据库代理软件，用 C 语言编写。能实现连接管理、读写分离、负载均衡、故障切换等功能，具有高性能、可配置、动态管理等优势，常用于 Web 服务、大数据平台、云数据库等场景。
 
