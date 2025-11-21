@@ -25,7 +25,7 @@
 
 Users connect to Doris over the MySQL protocol through the FE query port (`query_port`, default `9030`). When multiple FE nodes are deployed, you can place a load balancing layer in front of the FEs to provide high availability and connection distribution for the Doris query entry point.
 
-This document describes four load balancing options for Doris and explains how to forward the real client IP through the proxy layer using Proxy Protocol.
+This document describes five load balancing options for Doris and explains how to forward the real client IP through the proxy layer using Proxy Protocol.
 
 ## Applicable Scenarios
 
@@ -35,6 +35,7 @@ This document describes four load balancing options for Doris and explains how t
 | Existing Nginx infrastructure, TCP-layer reverse proxy required | Nginx | General-purpose TCP reverse proxy, simple configuration |
 | High-performance TCP proxy with health checks required | HAProxy | Dedicated TCP/HTTP load balancer with a rich set of health-check strategies |
 | MySQL protocol-aware proxy required (connection management, read/write splitting, etc.) | ProxySQL | Database proxy designed for the MySQL protocol |
+| Dynamic FE membership and active SQL health checks required | NJet | TCP proxy with optional management APIs |
 | Need to preserve the real client IP behind the load balancer | Proxy Protocol | Used together with Nginx or HAProxy |
 
 ## Prerequisites
@@ -601,6 +602,189 @@ ProxySQL > select * from mysql_server_ping_log;
 +---------------+------+------------------+----------------------+------------+
 110 rows in set (0.001 sec)
 ```
+
+### Option 5: NJet
+
+[OpenNJet](https://github.com/OpenNJet/OpenNJet) provides TCP proxying, dynamic upstream management, and optional active MySQL health checks. The following example uses the same proxy and FE addresses as the preceding sections.
+
+The proxy distributes **connections**. An established MySQL session remains on one FE; it does not distribute each SQL statement or replay an interrupted query. These settings cover the FE MySQL port. Stream Load uses the HTTP endpoint and can redirect to a BE; the client must be able to reach the address returned by that redirect.
+
+#### Prepare NJet and the Configuration Files
+
+The example uses the official `tmlake/njet:4.0.2.0` image and its `/usr/local/njet` installation prefix. This image is Linux/AMD64; use a matching image or configure emulation on ARM hosts. For native installation, see the [OpenNJet quick start](https://njet.org.cn/docs/quickstart/), and adjust module/configuration paths to your installation.
+
+Save the following two files in the same directory. The FE addresses must be reachable from the container.
+
+**`njet.conf` (data plane):**
+
+```text
+worker_processes 1;
+cluster_name njet;
+node_name node1;
+
+helper ctrl modules/njt_helper_ctrl_module.so conf/njet_ctrl.conf;
+helper broker modules/njt_helper_broker_module.so;
+load_module modules/njt_http_upstream_member_module.so;
+
+events {
+    worker_connections 1024;
+}
+stream {
+    upstream mysqld {
+        zone mysqld 128k;
+        hash $remote_addr consistent;
+        server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+    }
+    server {
+        listen 6030;
+        proxy_connect_timeout 5s;
+        proxy_timeout 300s;
+        proxy_pass mysqld;
+    }
+}
+http {
+    dyn_kv_conf conf/iot-work.conf;
+}
+```
+
+The `http` block initializes the data-plane modules used by the management APIs, even though Doris traffic is forwarded by `stream`. The helper uses `conf/njet_ctrl.conf`; it does not use a separate `conf/ctrl.conf` or `conf/mqtt.conf` in this example.
+
+**`njet_ctrl.conf` (control plane):**
+
+```text
+load_module modules/njt_http_sendmsg_module.so;
+load_module modules/njt_http_upstream_api_module.so;
+load_module modules/njt_helper_health_check_module.so;
+load_module modules/njt_health_check_mysql_module.so;
+
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 127.0.0.1:8081;
+        location /api {
+            dyn_module_api;
+        }
+    }
+}
+```
+
+The MySQL health-check module must be loaded explicitly. The management API listens on loopback inside the container; the examples access it with `docker exec`.
+
+#### Start and Verify
+
+Run from the directory containing both configuration files:
+
+```shell
+docker run -d --name doris-njet \
+  --platform linux/amd64 \
+  --cap-add=NET_ADMIN --cap-add=DAC_READ_SEARCH \
+  -p 6030:6030 \
+  -v "$PWD/njet.conf:/usr/local/njet/conf/njet.conf:ro" \
+  -v "$PWD/njet_ctrl.conf:/usr/local/njet/conf/njet_ctrl.conf:ro" \
+  tmlake/njet:4.0.2.0
+```
+
+Validate both files and inspect the backend list:
+
+```shell
+docker exec doris-njet njet -t
+docker exec doris-njet curl --max-time 10 -sS \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+`njet -t` reports successful validation for both configuration files. The API returns HTTP 200 and a JSON array containing the three configured FEs. Connect through the proxy:
+
+```shell
+mysql -h192.168.1.100 -P6030 -u<doris_user> -p -e 'SELECT 1 AS connection_test;'
+```
+
+```text
++-----------------+
+| connection_test |
++-----------------+
+|               1 |
++-----------------+
+```
+
+Key settings:
+
+| Setting | Example | Effect |
+| --- | --- | --- |
+| `zone` | `mysqld 128k` | Shared state required for dynamic upstream management. |
+| `hash` | `$remote_addr consistent` | Assigns new connections using a consistent hash of client IP. Clients sharing one source IP may reach the same FE. |
+| `max_fails` / `fail_timeout` | `2` / `60s` | Passive failure detection for backend connections. This does not configure active SQL checks. |
+| `listen` | `6030` | Proxy's MySQL-protocol port. Docker publishes it with `-p 6030:6030`. |
+| `proxy_connect_timeout` / `proxy_timeout` | `5s` / `300s` | Backend connection timeout and proxy inactivity timeout. Adapt these to your query/session requirements. |
+
+#### Dynamically Add and Remove an FE
+
+To add an FE, send:
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{"server":"192.168.1.104:9030","weight":2,"max_fails":1,"fail_timeout":"5s"}' \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+The API returns HTTP 201 and the new member, including its assigned `id`. For the initial three-member configuration, the first new member has ID 3. Use the actual returned ID when deleting it:
+
+```shell
+docker exec doris-njet curl --max-time 10 -i -X DELETE \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/3
+```
+
+Deletion returns HTTP 200; a subsequent GET no longer lists that member. Keep the configuration files consistent with your intended membership before recreating the container.
+
+#### Configure Active MySQL Health Checks
+
+Active SQL checks require an explicit API configuration and a working Doris account/database. Run the following as a Doris administrator, replacing the password:
+
+```sql
+CREATE DATABASE IF NOT EXISTS health_check_db;
+CREATE USER IF NOT EXISTS 'njet_health'@'%' IDENTIFIED BY '<replace-with-password>';
+GRANT SELECT_PRIV ON health_check_db.* TO 'njet_health'@'%';
+```
+
+Use the same password in the request below. `useSsl` is `false` for a non-TLS FE listener; set it to `true` only when the FE listener is configured for TLS.
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "interval":"5s",
+    "jitter":"1s",
+    "timeout":"5s",
+    "passes":1,
+    "fails":1,
+    "sql":{
+      "select":"select 1",
+      "useSsl":false,
+      "user":"njet_health",
+      "password":"<replace-with-password>",
+      "db":"health_check_db"
+    }
+  }' \
+  http://127.0.0.1:8081/api/v1/hc/smysql/mysqld
+```
+
+A successful configuration returns HTTP 200 with `{"code":0,"msg":"success"}`. Subsequent checks authenticate, select the configured database, and execute `select 1` against each FE.
+
+| Field | Required / Default | Description |
+| --- | --- | --- |
+| `interval`, `jitter`, `timeout` | Set explicitly in this example | Check interval, timer jitter, and timeout, expressed as durations. |
+| `passes`, `fails` | Set explicitly in this example | Consecutive successes/failures required to change health state. |
+| `port` | Optional; upstream server port | Override the port used for checks. |
+| `sql.select` | Set explicitly | SQL statement used to validate the FE. |
+| `sql.useSsl` | Optional; NJet defaults to `true` | Must match the FE listener's TLS setting. |
+| `sql.user`, `sql.password` | Set for the Doris account | Credentials used by the health checker. |
+| `sql.db` | Required, nonempty | Existing database selected by the checker. |
+
+If the API times out, verify the helper paths and the data-plane `http` block. If a health check fails, verify the database, credentials, network reachability, and TLS setting; a successful configuration response alone does not prove the FE is healthy. For more details, see the [OpenNJet source and documentation](https://github.com/OpenNJet/OpenNJet) and [JSON configuration format](https://njet.org.cn/cases/njet_support_json/).
 
 ## Client IP Forwarding (Proxy Protocol)
 
