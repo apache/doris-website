@@ -1608,6 +1608,14 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 存算分离模式下 Merge-On-Write Unique 表上的导入事务强制抢锁的超时阈值。
 
+#### `enable_stream_load_profile`
+
+默认值: false
+
+是否为Master FE节点独有的配置项: false
+
+是否开启StreamLoad profile
+
 ### 日志
 
 #### `log_roll_size_mb`

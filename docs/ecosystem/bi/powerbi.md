@@ -29,14 +29,14 @@ Collect your Apache Doris connection details
 
 You will need the following details to connect to your Apache Doris instance:
 
-| Parameter | Description | Example |
-| ---- | ---- | ---- |
-| **Doris Data Source** | Database connection string, host + port | 127.0.1.28:9030 |
-| **Database** | Database name | test_db |
+| Parameter | Description | Example                      |
+| ---- | ---- |------------------------------|
+| **Doris Data Source** | Database connection string, host + port | 127.0.1.28:9030              |
+| **Database** | Database name | test_db                      |
+| **Data Connectivity Mode** | Data connectivity mode, includes Import and DirectQuery |      DirectQuery                        |
 | **SQL Statement** | SQL statement that must include the Database, only for Import mode | select * from database.table |
-| **Data Connectivity Mode** | Data connectivity mode, includes Import and DirectQuery |  |
-| **User Name** | User name |  |
-| **Password** | Password |  |
+| **User Name** | User name | admin                        |
+| **Password** | Password | xxxxxx                       |
 
 ## Power BI Desktop
 
@@ -79,7 +79,7 @@ Verify that the MySQL driver is listed.
 
 The certification channel for Power BI custom connectors is currently closed, so the Doris custom connector is uncertified. For uncertified connectors, configure it as follows ([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors)):
 
-1. Locate the path: `\Power BI Desktop\Custom Connectors folder`, and place the `Doris.mez` custom connector file there (create the path if it does not exist).
+1. Assuming `power_bi_path` is the directory of Power BI Desktop in the Windows operating system, the default is usually: `power_bi_path = C:\Program Files\Power BI Desktop`. Refer to this path `%power_bi_path%\Custom Connectors folder` and place the `Doris.mez` custom connector file (if the path does not exist, create it manually as needed).
 2. In Power BI Desktop, choose `File` > `Options and settings` > `Options` > `Security`. Under `Data Extensions`, check `(Not Recommended) Allow any extension to load without validation or warning` to bypass the restriction on uncertified connectors.
 
 First, choose `File`
@@ -132,7 +132,7 @@ If you have use cases with a small amount of data, you can choose Import mode, a
 
 ### Query and visualize data
 
-Finally, you should see the databases and tables in the Navigator view. Select the desired tables and click "Load" to import data from Apache Doris.
+Finally, you should see the database and tables in the navigator view. Select the desired table and click "Load" to load the table structure and preview the data from Apache Doris.
 
 ![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
@@ -145,7 +145,7 @@ After the import is complete, your Doris data should be accessible in Power BI a
 We've chosen TPC-H data as our data source. For instructions on building a Doris TPC-H data source, refer to [this document](../../benchmark/tpch).
 Now that we've configured the Doris data source in Power BI, let's visualize the data...
 
-Suppose we need to know the order revenue statistics across different regions. We'll build a dashboard based on this requirement.
+Suppose we need to know the order revenue statistics for each region, then we will build a dashboard based on this requirement.
 
 1. First, create the table model relationships. Click Model view.
 

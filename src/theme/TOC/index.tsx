@@ -96,7 +96,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                     <Link
                         className="toc-icon-content group"
                         to={
-                            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w'
+                            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
                         }
                     >
                         <div style={{ padding: '2px' }}>

@@ -472,6 +472,10 @@
                                 "lakehouse/best-practices/doris-aws-s3tables",
                                 "lakehouse/best-practices/doris-dlf-paimon",
                                 "lakehouse/best-practices/doris-maxcompute",
+                                "lakehouse/best-practices/doris-polaris",
+                                "lakehouse/best-practices/doris-gravitino",
+                                "lakehouse/best-practices/doris-onelake",
+                                "lakehouse/best-practices/doris-unity-catalog",
                                 "lakehouse/best-practices/tpch",
                                 "lakehouse/best-practices/tpcds"
                             ]
@@ -1647,8 +1651,6 @@
                             "items": [
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-k",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-sum",
                                 "sql-manual/sql-functions/aggregate-functions/array-agg",
                                 "sql-manual/sql-functions/aggregate-functions/avg",
                                 "sql-manual/sql-functions/aggregate-functions/avg-weighted",

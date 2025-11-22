@@ -15,7 +15,7 @@ Apache Doris 是一款基于 MPP 架构的高性能、实时分析型数据库�
 
 Apache Doris 最初是百度广告报表业务的 Palo 项目。2017 年正式对外开源，2018 年 7 月由百度捐赠给 Apache 基金会进行孵化。在 Apache 导师的指导下，由孵化器项目管理委员会成员进行孵化和运营。2022 年 6 月，Apache Doris 成功从 Apache 孵化器毕业，正式成为 Apache 顶级项目（Top-Level Project，TLP）。
 
-目前，Apache Doris 社区已经聚集了来自不同行业数百家企业的 600 余位贡献者，并且每月活跃贡献者人数超过 120 位。
+目前，Apache Doris 社区已经聚集了来自不同行业数百家企业的 700 余位贡献者，并且每月活跃贡献者人数超过 120 位。
 
 ### 应用现状
 
@@ -136,7 +136,7 @@ Apache Doris 也支持强一致的单表物化视图和异步刷新的多表物�
 
 Apache Doris 采用大规模并行处理（MPP）架构，支持节点间和节点内并行执行，以及多个大型表的分布式 Shuffle Join，从而更好地应对复杂查询。
 
-![MPP-based 查询引擎](/images/getting-started/apache-doris-query-engine-1.png)
+![查询引擎](/images/getting-started/apache-doris-query-engine-1.png)
 
 Doris 查询引擎是向量化引擎，所有内存结构均按列式布局，可显著减少虚函数调用，提高缓存命中率，并有效利用 SIMD 指令。在宽表聚合场景下，性能是非向量化引擎的 5-10 倍。
 

@@ -79,9 +79,9 @@
 | time             | x    | A      | A       | A  | P     | P       | P    | P     | x       | P   | P       | A   | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
 | IPv4             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x    | P   | P   |      |         |        | x      | x   | x    | x     | x   | x      |         |
 | IPv6             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x    | x    | P   |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| char             | A   | A      | A       | A  | A     | A       | A    | A     | A      | A   | A       | A   | A   | A   |      |         |        | x      | x   | A   | A    | A  | A     |         |
-| varchar          | A   | A      | A       | A  | A     | A       | A    | A     | A      | A   | A       | A   | A   | A   |      |         |        | x      | x   | A   | A    | A  | A     |         |
-| string           | A   | A      | A       | A  | A     | A       | A    | A     | A      | A   | A       | A   | A   | A   |      |         |        | x      | x   | A   | A    | A  | A     |         |
+| char             | P   | P      | P       | P  | P     | P       | P    | P     | P      | P   | P       | P   | P   | P   |      |         |        | x      | x   | P   | P    | P  | P     |         |
+| varchar          | P   | P      | P       | P  | P     | P       | P    | P     | P      | P   | P       | P   | P   | P   |      |         |        | x      | x   | P   | P    | P  | P     |         |
+| string           | P   | P      | P       | P  | P     | P       | P    | P     | P      | P   | P       | P   | P   | P   |      |         |        | x      | x   | P   | P    | P  | P     |         |
 | bitmap           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x    | x    | x    | x    | x       | x      | P     | x   | x    | x     | x   | x      |         |
 | hll              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x    | x    | x    | x    | x       | x      | x      | P  | x    | x     | x   | x      |         |
 | json             | A   | A      | A       | A  | A     | A       | A    | A     | A      | x    | x        | x    | x    | x    | A   | A      | A     | x      | x   | P   | A    | x   | A     |         |

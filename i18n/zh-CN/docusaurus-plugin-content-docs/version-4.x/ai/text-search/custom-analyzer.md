@@ -54,7 +54,7 @@ PROPERTIES (
 - `basic`：简单英文/数字/中文/Unicode 分词
   - `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）
 - `icu`：ICU 国际化分词，支持多语言复杂脚本
-- `pinyin`：拼音分词器，用于中文拼音搜索
+- `pinyin`：拼音分词器，用于中文拼音搜索（4.0.2开始支持，暂不支持短语查询）
   - `keep_first_letter`：启用时，仅保留每个汉字的首字母。例如，`刘德华` 变为 `ldh`。默认值：true
   - `keep_separate_first_letter`：启用时，将每个汉字的首字母分别保留。例如，`刘德华` 变为 `l`,`d`,`h`。默认值：false。注意：由于词频的原因，这可能会增加查询的模糊性
   - `limit_first_letter_length`：设置首字母结果的最大长度。默认值：16

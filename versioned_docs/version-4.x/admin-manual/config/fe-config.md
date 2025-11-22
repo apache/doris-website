@@ -1593,6 +1593,14 @@ Default：5
 
 Export checker's running interval.
 
+#### `enable_stream_load_profile`
+
+Default: false
+
+MasterOnly: false
+
+Whether to enable stream load profile
+
 ### Log
 
 #### `log_roll_size_mb`
