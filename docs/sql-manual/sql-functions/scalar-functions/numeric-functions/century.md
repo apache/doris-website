@@ -19,13 +19,11 @@ century(<x>)
 
 | Parameter | Description |  
 | -- | -- |  
-| `<x>` | It returns the century of the corresponding date and supports error type handling.  |  
+| `<x>` | The input date, which returns the corresponding century and supports error type handling.  |  
 
 ## Return Value  
 
 The century corresponding to the given date
-
-## Special Cases
 
 - When date is a valid date, returns the corresponding century
 - When date is not in the supported date range [0001-01-01, 9999-12-31], returns NULL
