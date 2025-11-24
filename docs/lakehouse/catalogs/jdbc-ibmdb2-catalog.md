@@ -67,6 +67,7 @@ When mapping IBM Db2, Doris's Database corresponds to a Schema under the specifi
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
+| BLOB             | varbinary     |Controlled by the enable.mapping.varbinary property in properties (supported since 4.0.3). The default is false, which maps to string; when true, it maps to varbinary type.|
 | other            | UNSUPPORTED   |         |
 
 ## Common Issues

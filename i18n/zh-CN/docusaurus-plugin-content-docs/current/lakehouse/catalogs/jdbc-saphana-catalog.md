@@ -67,4 +67,5 @@ CREATE CATALOG saphana_catalog PROPERTIES (
 | shorttext          | string                            |                                                              |
 | char(N)            | char(N)                           |                                                              |
 | nchar(N)           | char(N)                           |                                                              |
+| binary/varbinary   | varbinary                         | 由properties 中enable.mapping.varbianry(4.0.3后开始支持) 属性控制。默认为 false, 则映射到 string; 为 true 时, 则映射到 varbinary 类型。|
 | other              | UNSUPPORTED                       |                                                              |
