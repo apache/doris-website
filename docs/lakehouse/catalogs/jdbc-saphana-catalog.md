@@ -67,4 +67,5 @@ When mapping SAP HANA, the Database in Doris corresponds to a Schema under the s
 | shorttext          | string                            |                                                              |
 | char(N)            | char(N)                           |                                                              |
 | nchar(N)           | char(N)                           |                                                              |
+| binary/varbinary             | varbinary     |Controlled by the enable.mapping.varbinary property in properties (supported since 4.0.3). The default is false, which maps to string; when true, it maps to varbinary type.|
 | other              | UNSUPPORTED                       |                                                              |
