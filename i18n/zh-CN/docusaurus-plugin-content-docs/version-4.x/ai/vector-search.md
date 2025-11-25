@@ -1,6 +1,6 @@
 ---
 {
-    "title": "向量搜索",
+    "title": "向量搜索概览",
     "language": "zh-CN"
 }
 ---
