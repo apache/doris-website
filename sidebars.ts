@@ -1202,7 +1202,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/bin',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/ceil',
-                                        'sql-manual/sql-functions/scalar-functions/numeric-functions/century',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/conv',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cos',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/cosh',
@@ -1349,6 +1348,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Date Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/century',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curdate',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curtime',
