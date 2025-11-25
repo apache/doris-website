@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Century",
+    "title": "CENTURY",
     "language": "en"
 }
 ---
