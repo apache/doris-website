@@ -5,100 +5,44 @@
 }
 ---
 
-## Description
+## Description  
+Returns the century of the given date.  
+If the input is invalid or out of the supported range, it returns NULL.
 
-The century corresponding to the given date
-
-## Syntax
-
+## Syntax  
 ```sql
-century(`<date_or_time_expr>`)
+CENTURY(`<date_or_time_expr>`)
 ```
 
 ## Parameters
+| Parameter     | Description                                                   |
+| ------------- | ------------------------------------------------------------- |
+| `<date_or_time_expr>` | The date or datetime expression to calculate the century for. |
 
-| Parameter | Description |  
-| -- | -- |  
-| `<date_or_time_expr>` | The input date, which returns the corresponding century and supports error type handling.  |  
-
-## Return Value  
-
-The century corresponding to the given date
-
-- When date is a valid date, returns the corresponding century
-- When date is not in the supported date range [0001-01-01, 9999-12-31], returns NULL
-- When date is NULL or cannot be parsed as a valid date, returns NULL
+## Return Value
+Returns an integer (INT) representing the century of the input date. For example, the years 1901 to 2000 belong to the 20th century. Returns NULL if the input is NULL or an invalid date.
 
 ## Examples
-
 ```sql
-select century('2024-01-01');
-```
-
-```text
-+-----------------------+
-| century('2024-01-01') |
-+-----------------------+
-|                    21 |
-+-----------------------+
-```
-
-```sql
-select century('1999-12-31');
-```
-
-```text
-+------------------------+
-| century('1999-12-31')  |
-+------------------------+
-|                     20 |
-+------------------------+
-```
-
-```sql
-select century('0000-12-25');
-```
-
-```text
-+------------------------+
-| century('0000-12-25')  |
-+------------------------+
-|                   NULL |
-+------------------------+
-```
-
-```sql
-select century('10000-01-01');
-```
-
-```text
+SELECT CENTURY('2024-01-01');
 +-------------------------+
-| century('10000-01-01')  |
+| CENTURY('2024-01-01')   |
 +-------------------------+
-|                    NULL |
+| 21                      |
 +-------------------------+
-```
 
-```sql
-select century(NULL);
-```
+SELECT CENTURY('1999-12-31') AS century_of_date;
++----------------------+
+| century_of_date      |
++----------------------+
+| 20                   |
++----------------------+
 
-```text
-+----------------+
-| century(NULL)  |
-+----------------+
-|           NULL |
-+----------------+
-```
+SELECT CENTURY(NULL);
++------------------+
+| CENTURY(NULL)    |
++------------------+
+| NULL             |
++------------------+
 
-```sql
-select century('invalid-date');
-```
-
-```text
-+--------------------------+
-| century('invalid-date')  |
-+--------------------------+
-|                     NULL |
-+--------------------------+
 ```
