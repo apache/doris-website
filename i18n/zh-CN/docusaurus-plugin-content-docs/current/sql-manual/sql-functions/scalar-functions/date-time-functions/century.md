@@ -13,7 +13,7 @@
 
 ## 语法  
 ```sql
-century(<x>)
+century(`<date_or_time_expr>`)
 
 ```
 ## 举例
