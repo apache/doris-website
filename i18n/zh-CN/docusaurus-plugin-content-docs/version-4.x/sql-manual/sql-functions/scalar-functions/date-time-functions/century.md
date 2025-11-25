@@ -10,10 +10,10 @@ CENTURY 函数用于提取指定日期或时间值中的世纪部分，返回整
 
 ## 语法  
 ```sql
-CENTURY(<date_or_time_expr>) [AS <alias>]
+CENTURY(<date_or_time_expr>)
 ```
 
-##参数
+## 参数
 | 参数                    | 说明                                                                                                                                                                                                                                                                        |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `<date_or_time_expr>` | 要提取世纪的日期或时间值，支持输入 DATE 或 DATETIME 类型，具体的日期和时间格式请参考 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
