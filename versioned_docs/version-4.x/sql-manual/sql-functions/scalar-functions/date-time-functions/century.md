@@ -24,14 +24,14 @@ Returns an integer (INT) representing the century of the input date. For example
 
 ## Examples
 ```sql
-SELECT CENTURY(2024-01-01);
+SELECT CENTURY('2024-01-01');
 +-------------------------+
 | CENTURY('2024-01-01')   |
 +-------------------------+
 | 21                      |
 +-------------------------+
 
-SELECT CENTURY(1999-12-31) AS century_of_date;
+SELECT CENTURY('1999-12-31') AS century_of_date;
 +----------------------+
 | century_of_date      |
 +----------------------+
