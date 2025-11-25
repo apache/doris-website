@@ -12,14 +12,14 @@ The century corresponding to the given date
 ## Syntax
 
 ```sql
-century(<x>)
+century(`<date_or_time_expr>`)
 ```
 
 ## Parameters
 
 | Parameter | Description |  
 | -- | -- |  
-| `<x>` | The input date, which returns the corresponding century and supports error type handling.  |  
+| `<date_or_time_expr>` | The input date, which returns the corresponding century and supports error type handling.  |  
 
 ## Return Value  
 
