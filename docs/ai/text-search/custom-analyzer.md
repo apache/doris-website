@@ -29,6 +29,11 @@ PROPERTIES (
 - Parameters
   - `char_filter_pattern`: characters to replace
   - `char_filter_replacement`: replacement characters (default: space)
+`icu_normalizer`: Preprocess text using ICU normalization.
+- Parameters
+  - `name`: Normalization form (default `nfkc_cf`). Options: `nfc`, `nfkc`, `nfkc_cf`, `nfd`, `nfkd`
+  - `mode`: Normalization mode (default `compose`). Options: `compose`, `decompose`
+  - `unicode_set_filter`: Specify the character set to normalize (e.g. `[a-z]`)
 
 #### 2. Creating a tokenizer
 
@@ -77,6 +82,9 @@ Available token filters:
 - **ascii_folding**: Converts non-ASCII characters to ASCII equivalents
 - **lowercase**: Converts tokens to lowercase
 - **pinyin**: Converts Chinese characters to pinyin after tokenization. For parameter details, refer to the **pinyin** tokenizer above.
+- **icu_normalizer**: Process tokens using ICU normalization.
+  - `name`: Normalization form (default `nfkc_cf`). Options: `nfc`, `nfkc`, `nfkc_cf`, `nfd`, `nfkd`
+  - `unicode_set_filter`: Specify the character set to normalize
 
 #### 4. Creating an analyzer
 

@@ -29,6 +29,11 @@ PROPERTIES (
 - 参数
   - `char_filter_pattern`：需要替换的字符列表
   - `char_filter_replacement`：替换后的字符（默认空格）
+`icu_normalizer`：使用 ICU 标准化对文本进行预处理。
+- 参数
+  - `name`：标准化形式（默认 `nfkc_cf`）。可选：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
+  - `mode`：标准化模式（默认 `compose`）。可选：`compose`（组合）、`decompose`（分解）
+  - `unicode_set_filter`：指定需要标准化的字符集（如 `[a-z]`）
 
 #### 2. tokenizer（分词器）
 
@@ -81,6 +86,9 @@ PROPERTIES (
     - `type_table`：自定义字符类型映射（如 `[+ => ALPHA, - => ALPHA]`），类型含 `ALPHA`、`ALPHANUM`、`DIGIT`、`LOWER`、`SUBWORD_DELIM`、`UPPER`
 - `ascii_folding`：将非 ASCII 字符映射为等效 ASCII
 - `lowercase`：将 token 文本转为小写
+- `icu_normalizer`：使用 ICU 标准化对词元进行处理。
+  - `name`：标准化形式（默认 `nfkc_cf`）。可选：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
+  - `unicode_set_filter`：指定需要标准化的字符集
 
 #### 4. analyzer（分析器）
 
