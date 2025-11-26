@@ -407,8 +407,8 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Vector Search',
                             items: [
-                                'ai/vector-search/vector-search.md',
-                                'ai/vector-search/hnsw.md',
+                                'ai/vector-search/vector-search',
+                                'ai/vector-search/hnsw',
                             ],
                         },
                     ],
