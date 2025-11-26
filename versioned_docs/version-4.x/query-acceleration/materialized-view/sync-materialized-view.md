@@ -27,6 +27,8 @@ A synchronous materialized view is a special type of table in Doris that stores 
 
 - The SELECT list cannot include auto-increment columns, constants, duplicate expressions, or window functions.
 
+- The column names in the select list of a sync materialized view must not be the same as any existing columns in the base table, nor duplicate the column names of other sync materialized views on the same base table. You can avoid name conflicts by specifying aliases (e.g., col as xxx).
+
 - If the SELECT list contains aggregation functions, these must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no non-aggregation function expressions can follow the aggregation function (e.g., `SELECT x, sum(a)` is allowed, but `SELECT sum(a), x` is not).
 
 - If the condition column for a DELETE statement exists in the materialized view, the DELETE operation cannot proceed. If data deletion is necessary, the materialized view must be dropped first.
@@ -66,7 +68,7 @@ If users frequently need to analyze sales volumes by different stores, they can 
 
 ```sql
 create materialized view store_amt as   
-select store_id, sum(sale_amt) from sales_records group by store_id;
+select store_id as store_id_, sum(sale_amt) from sales_records group by store_id;
 ```
 
 ### Checking if the Materialized View is Created
@@ -132,73 +134,73 @@ EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
 The result is as follows:
 
 ```sql
-+------------------------------------------------------------------------+  
-| Explain String (Nereids Planner)                                       |  
-+------------------------------------------------------------------------+  
-| PLAN FRAGMENT 0                                                        |  
-|   OUTPUT EXPRS:                                                        |  
-|     store_id[#11]                                                      |  
-|     sum(sale_amt)[#12]                                                 |  
-|   PARTITION: HASH_PARTITIONED: mv_store_id[#7]                         |  
-|                                                                        |  
-|   HAS_COLO_PLAN_NODE: true                                             |  
-|                                                                        |  
-|   VRESULT SINK                                                         |  
-|      MYSQL_PROTOCAL                                                    |  
-|                                                                        |  
-|   3:VAGGREGATE (merge finalize)(384)                                   |  
-|   |  output: sum(partial_sum(mva_SUM__`sale_amt`)[#8])[#10]            |  
-|   |  group by: mv_store_id[#7]                                         |  
-|   |  sortByGroupKey: false                                             |  
-|   |  cardinality = 1                                                   |  
-|   |  final projections: mv_store_id[#9], sum(mva_SUM__`sale_amt`)[#10] |  
-|   |  final project output tuple id: 4                                  |  
-|   |  distribute expr lists: mv_store_id[#7]                            |  
-|   |                                                                    |  
-|   2:VEXCHANGE                                                          |  
-|      offset: 0                                                         |  
-|      distribute expr lists:                                            |  
-|                                                                        |  
-| PLAN FRAGMENT 1                                                        |  
-|                                                                        |  
-|   PARTITION: HASH_PARTITIONED: record_id[#2]                           |  
-|                                                                        |  
-|   HAS_COLO_PLAN_NODE: false                                            |  
-|                                                                        |  
-|   STREAM DATA SINK                                                     |  
-|     EXCHANGE ID: 02                                                    |  
-|     HASH_PARTITIONED: mv_store_id[#7]                                  |  
-|                                                                        |  
-|   1:VAGGREGATE (update serialize)(374)                                 |  
-|   |  STREAMING                                                         |  
-|   |  output: partial_sum(mva_SUM__`sale_amt`[#1])[#8]                  |  
-|   |  group by: mv_store_id[#0]                                         |  
-|   |  sortByGroupKey: false                                             |  
-|   |  cardinality = 1                                                   |  
-|   |  distribute expr lists:                                            |  
-|   |                                                                    |  
-|   0:VOlapScanNode(369)                                                 |  
-|      TABLE: test_db.sales_records(store_amt), PREAGGREGATION: ON       |  
-|      partitions = 1/1 (sales_records)                                  |  
-|      tablets = 10/10, tabletList = 266568, 266570, 266572 ...          |  
-|      cardinality = 1, avgRowSize = 1805.0, numNodes = 1                |  
-|      pushAggOp = NONE                                                  |  
-|                                                                        |  
-|                                                                        |  
-| ========== MATERIALIZATIONS ==========                                 |  
-|                                                                        |  
-| MaterializedView                                                       |  
-| MaterializedViewRewriteSuccessAndChose:                                |  
-|   internal.test_db.sales_records.store_amt chose,                      |  
-|                                                                        |  
-| MaterializedViewRewriteSuccessButNotChose:                             |  
-|   not chose: none,                                                     |  
-|                                                                        |  
-| MaterializedViewRewriteFail:                                           |  
-|                                                                        |  
-|                                                                        |  
-| ========== STATISTICS ==========                                       |  
-| planned with unknown column statistics                                 |  
++------------------------------------------------------------------------+
+| Explain String (Nereids Planner)                                       |
++------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                        |
+|   OUTPUT EXPRS:                                                        |
+|     store_id[#11]                                                      |
+|     sum(sale_amt)[#12]                                                 |
+|   PARTITION: HASH_PARTITIONED: store_id_[#7]                           |
+|                                                                        |
+|   HAS_COLO_PLAN_NODE: true                                             |
+|                                                                        |
+|   VRESULT SINK                                                         |
+|      MYSQL_PROTOCAL                                                    |
+|                                                                        |
+|   3:VAGGREGATE (merge finalize)(384)                                   |
+|   |  output: sum(partial_sum(__sum_1)[#8])[#10]                        |
+|   |  group by: store_id_[#7]                                           |
+|   |  sortByGroupKey: false                                             |
+|   |  cardinality = 1                                                   |
+|   |  final projections: store_id_[#9], sum(__sum_1)[#10]               |
+|   |  final project output tuple id: 4                                  |
+|   |  distribute expr lists: store_id_[#7]                              |
+|   |                                                                    |
+|   2:VEXCHANGE                                                          |
+|      offset: 0                                                         |
+|      distribute expr lists:                                            |
+|                                                                        |
+| PLAN FRAGMENT 1                                                        |
+|                                                                        |
+|   PARTITION: HASH_PARTITIONED: record_id[#2]                           |
+|                                                                        |
+|   HAS_COLO_PLAN_NODE: false                                            |
+|                                                                        |
+|   STREAM DATA SINK                                                     |
+|     EXCHANGE ID: 02                                                    |
+|     HASH_PARTITIONED: store_id_[#7]                                    |
+|                                                                        |
+|   1:VAGGREGATE (update serialize)(374)                                 |
+|   |  STREAMING                                                         |
+|   |  output: partial_sum(__sum_1[#1])[#8]                              |
+|   |  group by: store_id_[#0]                                           |
+|   |  sortByGroupKey: false                                             |
+|   |  cardinality = 1                                                   |
+|   |  distribute expr lists:                                            |
+|   |                                                                    |
+|   0:VOlapScanNode(369)                                                 |
+|      TABLE: test_db.sales_records(store_amt), PREAGGREGATION: ON       |
+|      partitions = 1/1 (sales_records)                                  |
+|      tablets = 10/10, tabletList = 266568, 266570, 266572 ...          |
+|      cardinality = 1, avgRowSize = 1805.0, numNodes = 1                |
+|      pushAggOp = NONE                                                  |
+|                                                                        |
+|                                                                        |
+| ========== MATERIALIZATIONS ==========                                 |
+|                                                                        |
+| MaterializedView                                                       |
+| MaterializedViewRewriteSuccessAndChose:                                |
+|   internal.test_db.sales_records.store_amt chose,                      |
+|                                                                        |
+| MaterializedViewRewriteSuccessButNotChose:                             |
+|   not chose: none,                                                     |
+|                                                                        |
+| MaterializedViewRewriteFail:                                           |
+|                                                                        |
+|                                                                        |
+| ========== STATISTICS ==========                                       |
+| planned with unknown column statistics                                 |
 +------------------------------------------------------------------------+
 ```
 
@@ -267,8 +269,8 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
     ```sql
     create materialized view advertiser_uv as 
     select 
-        advertiser, 
-        channel, 
+        advertiser as advertiser_,
+        channel as channel_,
         bitmap_union(to_bitmap(user_id)) 
     from 
         advertiser_view_record 
@@ -326,7 +328,7 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
     |     advertiser[#13]                                                                                                                                     |
     |     channel[#14]                                                                                                                                        |
     |     count(DISTINCT user_id)[#15]                                                                                                                        |
-    |   PARTITION: HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                        |
+    |   PARTITION: HASH_PARTITIONED: advertiser_[#7], channel_[#8]                                                                                            |
     |                                                                                                                                                         |
     |   HAS_COLO_PLAN_NODE: true                                                                                                                              |
     |                                                                                                                                                         |
@@ -334,13 +336,13 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
     |      MYSQL_PROTOCAL                                                                                                                                     |
     |                                                                                                                                                         |
     |   3:VAGGREGATE (merge finalize)(440)                                                                                                                    |
-    |   |  output: bitmap_union_count(partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#9])[#12]                 |
-    |   |  group by: mv_advertiser[#7], mv_channel[#8]                                                                                                        |
+    |   |  output: bitmap_union_count(partial_bitmap_union_count(__bitmap_union_2)[#9])[#12]                                                                  |
+    |   |  group by: advertiser_[#7], channel_[#8]                                                                                                            |
     |   |  sortByGroupKey:false                                                                                                                               |
     |   |  cardinality=1                                                                                                                                      |
-    |   |  final projections: mv_advertiser[#10], mv_channel[#11], bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#12] |
+    |   |  final projections: advertiser_[#10], channel_[#11], bitmap_union_count(__bitmap_union_2)[#12]                                                      |
     |   |  final project output tuple id: 4                                                                                                                   |
-    |   |  distribute expr lists: mv_advertiser[#7], mv_channel[#8]                                                                                           |
+    |   |  distribute expr lists: advertiser_[#7], channel_[#8]                                                                                               |
     |   |                                                                                                                                                     |
     |   2:VEXCHANGE                                                                                                                                           |
     |      offset: 0                                                                                                                                          |
@@ -354,12 +356,12 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
     |                                                                                                                                                         |
     |   STREAM DATA SINK                                                                                                                                      |
     |     EXCHANGE ID: 02                                                                                                                                     |
-    |     HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                                 |
+    |     HASH_PARTITIONED: advertiser_[#7], channel_[#8]                                                                                                     |
     |                                                                                                                                                         |
     |   1:VAGGREGATE (update serialize)(430)                                                                                                                  |
     |   |  STREAMING                                                                                                                                          |
-    |   |  output: partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint))[#2])[#9]                                      |
-    |   |  group by: mv_advertiser[#0], mv_channel[#1]                                                                                                        |
+    |   |  output: partial_bitmap_union_count(__bitmap_union_2[#2])[#9]                                                                                       |
+    |   |  group by: advertiser_[#0], channel_[#1]                                                                                                            |
     |   |  sortByGroupKey:false                                                                                                                               |
     |   |  cardinality=1                                                                                                                                      |
     |   |  distribute expr lists:                                                                                                                             |
@@ -403,7 +405,7 @@ Business Scenario: Matching prefix indexes.
        k1 int,   
        k2 int,   
        k3 int,   
-       kx date  
+       kx int  
    )   
    distributed by hash(k1)   
    properties("replication_num" = "1");  
@@ -414,7 +416,7 @@ Business Scenario: Matching prefix indexes.
 2. Create a materialized view with k3 as the prefix index:
 
    ```sql
-   create materialized view mv_1 as SELECT k3, k2, k1 FROM test_table;
+   create materialized view mv_1 as SELECT k3 as k3_, k2 as k2_, k1 as k1_ FROM test_table;
    ```
 
 3. Queries with `WHERE k3 = 3` will match the materialized view, as verified by `explain`.
@@ -434,7 +436,7 @@ Business Scenario: Matching prefix indexes.
    |     k1[#7]                                               |
    |     k2[#8]                                               |
    |     k3[#9]                                               |
-   |   PARTITION: HASH_PARTITIONED: mv_k1[#2]                 |
+   |   PARTITION: HASH_PARTITIONED: k1_[#2]                   |
    |                                                          |
    |   HAS_COLO_PLAN_NODE: false                              |
    |                                                          |
@@ -448,7 +450,7 @@ Business Scenario: Matching prefix indexes.
    |      tablets=10/10, tabletList=271177,271179,271181 ...  |
    |      cardinality=1, avgRowSize=0.0, numNodes=1           |
    |      pushAggOp=NONE                                      |
-   |      final projections: mv_k1[#2], mv_k2[#1], mv_k3[#0]  |
+   |      final projections: k1_[#2], mv_k2[#1], mv_k3[#0]    |
    |      final project output tuple id: 2                    |
    |                                                          |
    |                                                          |
