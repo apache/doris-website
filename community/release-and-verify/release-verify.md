@@ -101,7 +101,7 @@ Please see the compilation documentation of each component to verify the compila
 * Spark Doris Connector, see [compilation documentation](/docs/ecosystem/spark-doris-connector)
 
 ## 5. Vote
-See the [ASF voting process]((https://www.apache.org/foundation/voting.html)) page for general information about voting.
+See the [ASF voting process](https://www.apache.org/foundation/voting.html) page for general information about voting.
 
 After the verification is completed, the following template can be used to send voting emails to the dev@doris:
 

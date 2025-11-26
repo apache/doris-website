@@ -1,6 +1,6 @@
 ---
 {
-"title": "Java UDF, UDAF, UDTF",
+"title": "Java UDF, UDAF, UDWF, UDTF",
 "language": "en"
 }
 ---
@@ -13,7 +13,9 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 
 2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
 
-3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
+3. Java UDWF: stands for User-Defined Window Function, which returns a computed value for each row based on a window (one or multiple rows). Common examples include ROW_NUMBER, RANK, and DENSE_RANK.
+
+4. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
 
 ## Type Correspondence
 
@@ -341,6 +343,37 @@ public class MedianUDAF {
     +-----------------+
     |               7 |
     +-----------------+
+    ```
+
+### Introduction to Java-UDWF Example
+
+1. The implementation is similar to Java UDAF, but requires an additional reset() method to clear the state.
+
+    ```JAVA
+    void reset(State state)
+    ```
+
+2. Register and create the Java-UDWF function same as UDAF in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+
+    ```sql
+    CREATE AGGREGATE FUNCTION simple_demo_window(INT) RETURNS INT PROPERTIES (
+        "file"="file:///pathTo/java-udaf.jar",
+        "symbol"="org.apache.doris.udf.SimpleDemo",
+        "always_nullable"="true",
+        "type"="JAVA_UDF"
+    );
+    ```
+
+3. Java UDWF allows querying computed results within specific window frames. For detailed syntax, refer to [Window Function](../window-function.md)
+
+    ```sql
+    select id, simple_demo_window(id) over(partition by id order by d1 rows between 1 preceding and 1 following) as res from test_table;
+        +------+------+
+        | id   | res  |
+        +------+------+
+        |    1 |    1 |
+        |    6 |    6 |
+        +------+------+
     ```
 
 ### Introduction to Java-UDTF Example

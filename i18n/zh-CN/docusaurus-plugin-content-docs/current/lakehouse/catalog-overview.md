@@ -24,7 +24,7 @@ Doris 中的数据目录分为两种：
 | 数据集成 | ZeroETL 方案，直接访问不同数据源生成结果数据，或让数据在不同数据源中便捷流转。 |
 | 数据写回 | 通过 Doris 进行数据加工处理后，写回到外部数据源。                |
 
-本文以 [Iceberg Catalog](./catalogs/iceberg-catalog.mdx) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
+本文以 [Iceberg Catalog](./catalogs/iceberg-catalog) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
 ## 创建数据目录
 

@@ -23,7 +23,7 @@ Whether it's Hive, Iceberg, Hudi, Paimon, or database systems supporting the JDB
 
 For lakehouse systems, Doris can obtain the structure and distribution information of data tables from metadata services such as Hive Metastore, AWS Glue, and Unity Catalog, perform reasonable query planning, and utilize the MPP architecture for distributed computing.
 
-For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 
 #### Extensible Connector Framework
 
