@@ -315,13 +315,13 @@ Doris 的 ANN 索引是基于 Meta 开源的 [faiss](https://github.com/facebook
 
 我们在 16C 64GB 的机器上测试了 Doris HNSW 索引的查询性能。Doris 生产集群的典型部署模式应该是 FE 与 BE 分开部署，此时需要两台 16C 64GB 的机器，因此我们把典型部署模式的测试结果与 FE BE 混合部署的测试结果都列了出来。
 
-测试框架来自于 [VectorDBBench](https://github.com/zilliztech/VectorDBBench)，目前测试代码还未合并到上游主分支，想要复现的用户可以使用这个 [fork 版本](https://github.com/zhiqiang-hhhh/VectorDBBenchPub/tree/main)。
+测试框架来自于 [VectorDBBench](https://github.com/zilliztech/VectorDBBench)。
 压测 client 是另一台 16C 的机器。
 
 #### Performance768D1M
 测试命令
 ```bash
-NUM_PER_BATCH=1000000 python3.11 -m vectordb_bench.cli.vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var ef_search=128
+NUM_PER_BATCH=1000000 python3.11 -m vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var ef_search=128
 ```
 
 |  | Doris（FE/BE 分离） | Doris（FE/BE 混合） |

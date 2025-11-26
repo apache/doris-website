@@ -368,7 +368,7 @@ To maintain stable performance, ensure that each BE has enough memory; otherwise
 
 We benchmarked Doris HNSW index query performance on a 16‑core, 64‑GB machine. In a typical production deployment, FE and BE are on separate machines, so two such machines are needed. We provide results for both the typical (separate FE/BE) deployment and a mixed FE/BE deployment on a single machine.
 
-The benchmark framework is [VectorDBBench](https://github.com/zilliztech/VectorDBBench). The test code we used has not yet been merged into the upstream main branch; if you want to reproduce the results, you can use this [fork](https://github.com/zhiqiang-hhhh/VectorDBBenchPub/tree/main).
+The benchmark framework is [VectorDBBench](https://github.com/zilliztech/VectorDBBench).
 
 The load generator runs on another 16‑core machine.
 
@@ -377,7 +377,7 @@ The load generator runs on another 16‑core machine.
 Benchmark command:
 
 ```bash
-NUM_PER_BATCH=1000000 python3.11 -m vectordb_bench.cli.vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var ef_search=128
+NUM_PER_BATCH=1000000 python3.11 -m vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var ef_search=128
 ```
 
 |  | Doris (FE/BE separate) | Doris (FE/BE mixed) |
