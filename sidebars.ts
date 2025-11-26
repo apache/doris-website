@@ -1350,6 +1350,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Date Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/add-time',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curdate',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curtime',
@@ -1420,6 +1421,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date',
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/sub_time",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff',
