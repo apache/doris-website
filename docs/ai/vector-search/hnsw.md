@@ -183,7 +183,7 @@ ANN indexes support both Top‑N search and range search.
 
 When the vector column has high dimensionality, the literal representation of the query vector itself can incur extra parsing overhead. Therefore, directly embedding the full query vector into raw SQL is not recommended in production, especially under high concurrency. A better practice is to use prepared statements, which avoid repetitive SQL parsing.
 
-We recommend using the Doris vector search [Python library](), which wraps the necessary operations for vector search in Doris based on prepared statements, and includes data conversion utilities that map Doris query results into Pandas `DataFrame`s for convenient downstream AI application development.
+We recommend using the [doris-vector-search](https://github.com/uchenily/doris_vector_search) python library, which wraps the necessary operations for vector search in Doris based on prepared statements, and includes data conversion utilities that map Doris query results into Pandas `DataFrame`s for convenient downstream AI application development.
 
 ```python
 from doris_vector_search import DorisVectorClient, AuthOptions

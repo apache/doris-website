@@ -159,7 +159,7 @@ SHOW BUILD INDEX WHERE TableName = "sift_1M"
 ### 进行查询
 ANN 索引支持对 topn search 还有 range search 进行加速。
 
-当向量列是高维向量时，用于描述查询向量的字符串本身会引入额外的解析开销，因此不建议在生产环境中，尤其是高并发场景里，直接使用原始 SQL 执行向量搜索查询。使用 prepare statement 来提前对 sql 进行解析是一个能够提高查询性能的做法，所以建议使用 doris 的向量搜索 [python library]()，在这个 python library 里面封装了基于 prepare statement 对 doris 进行向量搜索的必要的操作，并且集成了相关的数据转化流程，可以直接将 doris 的查询结果转为 pandas 的 DataFrame，方便用户基于 doris 开发 AI 应用。
+当向量列是高维向量时，用于描述查询向量的字符串本身会引入额外的解析开销，因此不建议在生产环境中，尤其是高并发场景里，直接使用原始 SQL 执行向量搜索查询。使用 prepare statement 来提前对 sql 进行解析是一个能够提高查询性能的做法，所以建议使用 doris 的向量搜索 [python library](https://github.com/uchenily/doris_vector_search)，在这个 python library 里面封装了基于 prepare statement 对 doris 进行向量搜索的必要的操作，并且集成了相关的数据转化流程，可以直接将 doris 的查询结果转为 pandas 的 DataFrame，方便用户基于 doris 开发 AI 应用。
 
 ```python
 from doris_vector_search import DorisVectorClient, AuthOptions
