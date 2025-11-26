@@ -110,6 +110,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 > 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
+Iceberg Catalog 功能支持矩阵
+
+| 元数据服务 | 表查询 | 视图查询 | DDL 操作   | 数据写回| 系统表 (3.1+ 支持)|
+| ---------- | -------- | -------- |----------| ------- | ------- |
+| Hive MetaStore | √ | √ | √        | √ | √ |
+| AWS Glue | √ | √ | x        | x | √ |
+| Aliyun DLF | √ | √ | √        | √ | ? |
+| Iceberg Rest Catalog | √ | √ | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方 |
+| FileSystem | √ | √ | √        | √ | √ |
+
+
 ### 支持的存储系统
 
 * [HDFS](../storages/hdfs.md)
