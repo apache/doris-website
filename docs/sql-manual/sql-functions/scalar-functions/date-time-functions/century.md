@@ -24,25 +24,37 @@ Returns an integer (INT) representing the century of the input date. For example
 
 ## Examples
 ```sql
-SELECT CENTURY('2024-01-01');
-+-------------------------+
-| CENTURY('2024-01-01')   |
-+-------------------------+
-| 21                      |
-+-------------------------+
+-- Extract the century from a DATE type
+SELECT CENTURY('2024-01-01') AS century_date;
++-----------------+
+| century_date    |
++-----------------+
+| 21              |
++-----------------+
 
-SELECT CENTURY('1999-12-31') AS century_of_date;
+-- Extract the century from a DATETIME type (ignoring hours, minutes, and seconds)
+SELECT CENTURY('2024-05-20 14:30:25') AS century_datetime;
++----------------------+ 
+| century_datetime     |
 +----------------------+
-| century_of_date      |
-+----------------------+
-| 20                   |
+| 21                   |
 +----------------------+
 
-SELECT CENTURY(NULL);
-+------------------+
-| CENTURY(NULL)    |
-+------------------+
-| NULL             |
-+------------------+
+-- Input is NULL (returns NULL)
+SELECT CENTURY(NULL) AS null_input;
++----------------+
+| null_input     |
++----------------+
+| NULL           |
++----------------+
+
+-- Invalid date input (returns NULL)
+SELECT CENTURY('10000-01-01') AS invalid_date;
++-------------------+
+| invalid_date      |
++-------------------+
+| NULL              |
++-------------------+
+
 
 ```
