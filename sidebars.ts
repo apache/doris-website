@@ -1421,7 +1421,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date',
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/sub_time",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff',
