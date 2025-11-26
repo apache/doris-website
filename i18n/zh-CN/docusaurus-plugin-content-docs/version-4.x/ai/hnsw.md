@@ -39,7 +39,7 @@ HNSW (Hierarchical Navigable Small World) 算法是在 [Efficient and robust app
 1. 随着数据量的增加，查询路由阶段的迭代次数会有幂律级别的增加。
 2. 构建一个高质量的 proximity graph 很难，很容易出现局部聚集导致图不具备全局联通的问题。
 
-![low_quality_pgraph](../../images/vector-search/low_quality_pgraph.png)
+![low_quality_pgraph](/images/vector-search/low_quality_pgraph.png)
 
 这里有一张示意图可以直观展示一个不理想的 proximity graph 的形状。图中颜色越深的点表示该点的连通性越差，可以看到有个别点几乎没有找到自己的邻居，那么在搜索阶段这些点就很难被路由到。
 
@@ -65,7 +65,7 @@ NSW 算法具有多重对数复杂度的原因是总的距离计算次数大致�
 
 HNSW 算法则是通过加速 zoom-out 过程来将查询时间复杂度降低到对数时间复杂度。
 
-![alt text](../../images/vector-search/hnsw.png)
+![alt text](/images/vector-search/hnsw.png)
 
 具体来说，HNSW 中所谓的分层指的是按照顶点边的典型长度范围（characteristic radius），来对 NSW 图中的顶点分层。
 搜索时，选取高度最高的点作为入口，逐层进行贪心搜索，找到当前层的最近点后，向下移动，重复该过程，直到最底层。每一层中顶点的最大连接数有一个上限，因此保证了总体的对数时间复杂度。
