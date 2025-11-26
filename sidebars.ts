@@ -1350,6 +1350,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Date Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/century',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curdate',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curtime',
