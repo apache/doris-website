@@ -62,6 +62,12 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/struct_test/_stream_load
 ```
 
+Can also use `INSERT INTO VALUES`:
+
+```sql
+INSERT INTO struct_test VALUES(1, named_struct('f1', '1', 'f2', '2.0', 'f3', 'abc'));
+```
+
 ### Step 4: Check the imported data
 
 ```sql
