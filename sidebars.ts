@@ -404,7 +404,14 @@ const sidebars: SidebarsConfig = {
                                 'ai/text-search/scoring',
                             ],
                         },
-                        'ai/vector-search',
+                        {
+                            type: 'category',
+                            label: 'Vector Search',
+                            items: [
+                                'ai/vector-search/vector-search',
+                                'ai/vector-search/hnsw',
+                            ],
+                        },
                     ],
                 },
                 {
