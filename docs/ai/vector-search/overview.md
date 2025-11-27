@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Vector Search Overview",
+  "title": "Overview",
   "language": "en"
 }
 ---
