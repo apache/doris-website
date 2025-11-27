@@ -225,11 +225,11 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
 
 - **链接格式**
   
-  - 链接至同一文档中的其他标题：[倒排索引]（# 前缀索引）
+  - 链接至同一文档中的其他标题：[倒排索引]
   
-  - 链接至相邻文档：[BITMAP 索引]（../data-table/index/bloomfilter）
+  - 链接至相邻文档：[BITMAP 索引]
   
-  - 链接至外部站点：[维基百科 - Inverted Index]（https://en.wikipedia.org/wiki/Inverted_index）
+  - 链接至外部站点：[维基百科 - Inverted Index](https://en.wikipedia.org/wiki/Inverted_index)
 
 - **链接路径**
 

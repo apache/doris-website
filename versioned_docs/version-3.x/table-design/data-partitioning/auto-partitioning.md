@@ -263,10 +263,10 @@ In some early versions prior to 2.1.7, this feature was not disabled but not rec
 ## Conjunct with Auto Bucket
 
 :::note
-This feature has been working normally since Doris 3.1.1
+This feature has been working normally since Doris 3.1.2
 :::
 
-Only AUTO RANGE PARTITION can be used together with the [Auto Bucket](./data-bucketing.md#auto-setting-bucket-number) feature. When using this feature, Doris assumes that the data import is incremental in time order, and each import only involves one partition. In other words, this usage is only recommended for tables that are incrementally imported daily.
+Only AUTO RANGE PARTITION can be used together with the [Auto Bucket](./data-bucketing.md#auto-setting-bucket-number) feature. When using this feature, Doris assumes that the data import is incremental in time order, and each import only involves one partition. In other words, this usage is only recommended for tables that are incrementally imported batch by batch.
 
 :::warning Note!
 If the data import method does not conform to the above pattern, and both auto partitioning and auto bucketing are used at the same time, there is a possibility that the number of buckets in the new partition is extremely unreasonable, which may greatly affect query performance.

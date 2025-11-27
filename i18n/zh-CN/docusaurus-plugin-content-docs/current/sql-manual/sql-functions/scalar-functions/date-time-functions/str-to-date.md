@@ -33,9 +33,11 @@ STR_TO_DATE(<datetime_str>, <format>)
 |`yyyy-MM-dd HH:mm:ss`|`%Y-%m-%d %H:%i:%s`|
 
 ## 返回值
+
 返回一个 DATETIME 类型值，表示转换后的日期时间。
 
-日期时间匹配方式，用两根指针指向两字符串起始位置
+日期时间匹配方式，用两根指针指向两字符串起始位置，然后：
+
 1. 当遇格式字符串到 % 符号时，会根据 % 下一个字母匹配时间字符对应的时间部分，若不匹配（如 %Y 匹配日期时间部分却为 10:10:10 或者 % 不支持解析的字符如 %*），则返回错误，匹配成功则移动到下一个字符解析。
 2. 任意时刻两串中的任一个遇到空格字符，直接跳过解析下一个字符
 3. 当遇到普通字母的匹配，则查看两字符串现在指针所指向的字符是否相等，不相等则返回错误，相等则解析下一个字符
@@ -43,10 +45,11 @@ STR_TO_DATE(<datetime_str>, <format>)
 5. 当格式字符串指向末尾时，匹配结束。
 6. 最后检查匹配时间部分是否合法（如月份必须在 [1，12] 区间内），如果不合法，则返回错误，合法则返回解析出的日期时间
 
+错误处理：
 
 - 若任一参数为 NULL，返回 NULL；
-- 若 `<format>` 为空字符串，返回错误；
-- 匹配失败，返回错误
+- 若 `<format>` 为空字符串，返回 NULL；
+- `<datetime_str>` 与 `<format>` 匹配失败，返回 NULL
 
 ## 举例
 
@@ -91,9 +94,13 @@ SELECT STR_TO_DATE('Oct 5 2023 3:45:00 PM', '%b %d %Y %h:%i:%s %p') AS result;
 | 2023-10-05 15:45:00 |
 +---------------------+
 
--- 格式与字符串不匹配（返回错误）
+-- 格式与字符串不匹配（返回 NULL）
 SELECT STR_TO_DATE('2023/01/01', '%Y-%m-%d') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023/01/01 is invalid
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 
 -- 字符串包含多余字符（自动忽略）
 SELECT STR_TO_DATE('2023-01-01 10:00:00 (GMT)', '%Y-%m-%d %H:%i:%s') AS result;
@@ -119,7 +126,11 @@ SELECT STR_TO_DATE(NULL, '%Y-%m-%d'), STR_TO_DATE('2023-01-01', NULL) AS result;
 | NULL                           | NULL   |
 +--------------------------------+--------+
 
--- 格式为空字符串（返回错误））
+-- 格式为空字符串（返回 NULL）
 SELECT STR_TO_DATE('2023-01-01', '') AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation str_to_date of 2023-01-01 is invalid
++--------+
+| result |
++--------+
+| NULL   |
++--------+
 ```

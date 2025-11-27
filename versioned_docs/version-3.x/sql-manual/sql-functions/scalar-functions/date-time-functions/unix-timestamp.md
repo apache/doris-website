@@ -17,10 +17,6 @@ For the format specification, refer to the format description of the date_format
 
 This function is affected by the time zone.
 
-:::note
-Since 3.0.8 and 3.1.0, the maximum supported time is extended to `9999-12-31 23:59:59.999999`.
-:::
-
 ## Sytax
 
 ```sql
@@ -36,6 +32,7 @@ UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])
 | `<fmt>` | The 'date' parameter refers to the specific part that needs to be converted into a timestamp, and it is a parameter of type string. If this parameter is provided, only the part matching the format will be converted into a timestamp. |
 
 ## Return value
+
 Returns two types based on the input:
 
 - If the input `date`(only `datetime` type have the scale not zero) scale is not 0 or a format parameter is provided,
@@ -140,20 +137,6 @@ mysql> select unix_timestamp('2038-01-19 11:14:08',null);
 |                                       NULL |
 +--------------------------------------------+
 
-```
-
-### New behavior examples (since 3.0.8 and 3.1.0)
-
-The following examples illustrate the extended upper bound available in 3.0.8 and 3.1.0 and later. Prior to these versions, such inputs would return 0.
-
-```sql
--- Maximum supported time in 3.0.8/3.1.0+
-mysql> SELECT UNIX_TIMESTAMP('9999-12-31 23:59:59.999999');
-+--------------------------------------------------+
-| UNIX_TIMESTAMP('9999-12-31 23:59:59.999999')     |
-+--------------------------------------------------+
-|                               253402271999.999999|
-+--------------------------------------------------+
 ```
 
 ### keywords

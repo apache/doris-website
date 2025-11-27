@@ -8,6 +8,7 @@
 
 Converts an ISO8601 formatted date expression to a DATE type date expression.
 Date strings conforming to the ISO 8601 standard, supported formats include:
+
 - YYYY: Year only (returns January 1st of that year)
 - YYYY-MM: Year and month (returns the 1st of that month)
 - YYYY-DDD: Year + day of year (DDD range 1-366, e.g., 0000-059 represents the 59th day of year 0000)
@@ -30,9 +31,10 @@ from_iso8601_date(<dt>)
 ## Return Value
 
 Returns DATE type in the format YYYY-MM-DD, representing the parsed specific date.
-- If the input format is invalid (e.g., week number exceeds 53), returns NULL.
-- If the input contains time or timezone information (e.g., 2023-10-01T12:34), returns NULL.
-- Input NULL, returns NULL
+
+- If the input format is invalid, returns NULL;
+- Result is not valid datetime value, returns NULL;
+- Input NULL, returns NULL.
 
 ## Examples
 
@@ -55,7 +57,6 @@ select
     from_iso8601_date('2021-059') as day_59, 
     from_iso8601_date('2021-060') as day_60,  
     from_iso8601_date('2024-366') as day_366; 
-
 +------------+------------+------------+------------+
 | day_1      | day_59     | day_60     | day_366    |
 +------------+------------+------------+------------+
@@ -80,16 +81,27 @@ select from_iso8601_date('0522-W01-4') as week_4;
 
 ---YYY-MMM format, Monday of the first week is in year 521
 select from_iso8601_date('0522-W01') as week_1;
-
 +------------+
 | week_1     |
 +------------+
 | 0521-12-29 |
 +------------+
 
----invalid style, return error
+---invalid style, return NULL
 select from_iso8601_date('2023-10-01T12:34:10');
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation from_iso8601_date of 2023-10-01T12:34:10 is invalid
++------------------------------------------+
+| from_iso8601_date('2023-10-01T12:34:10') |
++------------------------------------------+
+| NULL                                     |
++------------------------------------------+
+
+---invalid result value, return NULL
+select from_iso8601_date('2024-400');
++-------------------------------+
+| from_iso8601_date('2024-400') |
++-------------------------------+
+| NULL                          |
++-------------------------------+
 
 ---input NULL
 select from_iso8601_date(NULL);

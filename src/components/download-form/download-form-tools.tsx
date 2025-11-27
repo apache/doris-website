@@ -63,8 +63,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             } else {
                 currentVersion = currentTool.find(item => version === item.value);
             }
-            const tempType = params.type === 'sha512' ? 'sha1' : params.type;
-            return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${tempType}`;
+            return !params.type ? `${currentVersion[params.tarBall]}` : `${currentVersion[params.tarBall]}.${params.type}`;
         }
     };
 

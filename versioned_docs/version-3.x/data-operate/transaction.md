@@ -131,7 +131,7 @@ This method not only achieves atomicity, but also in Doris, it enhances the writ
 
 If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
 
-See [Insert Into](import/load-atomicity.md#insert-into) for more details.
+See [Insert Into](import/import-way/insert-into-manual) for more details.
 
 ### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
 

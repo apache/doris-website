@@ -92,7 +92,6 @@ function BlogListPageContent(props) {
             location.state,
         );
     };
-
     useEffect(() => {
         let currentPageNumber = 1;
         let currentCategoryName = allText;

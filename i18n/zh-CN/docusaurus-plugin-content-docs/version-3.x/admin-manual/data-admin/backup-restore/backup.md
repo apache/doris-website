@@ -37,27 +37,25 @@ PROPERTIES
 
 ### 方法 2: 在 Azure 上创建 Repository
 
-**自 Doris 3.0.4 开始支持**
+**自 Doris 3.1.3 开始支持**
 
 要在 Azure 存储上创建 Repository，请使用以下 SQL 命令：
 
 ```sql
 CREATE REPOSITORY `azure_repo`
 WITH S3
-ON LOCATION "s3://bucket_name/azure_repo"
+ON LOCATION "s3://<container_name>/azure_repo"
 PROPERTIES
 (
-    "s3.endpoint" = "selectdbcloudtestwestus3.blob.core.windows.net",
-    "s3.region" = "dummy_region",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
+    "azure.endpoint" = "https://<account_name>.blob.core.windows.net",
+    "azure.account_name" = "<account_name>",
+    "azure.account_key" = "<account_key>",
     "provider" = "AZURE"
 );
 ```
 
-- 将 bucket_name 替换为您的 Azure 容器名称。
+- 将 <container_name> 替换为您的 Azure 容器名称。
 - 提供您的 Azure 存储帐户和密钥以进行身份验证。
-- `s3.region` 只是一个虚假的 region，任意指定一个即可，但是必须要指定。
 - `provider` 必须为 `AZURE`。
 
 ### 方法 3: 在 GCP 上创建 Repository

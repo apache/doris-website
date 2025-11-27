@@ -12,23 +12,27 @@ The purpose of setting `parallel_pipeline_task_num` is to fully utilize multi-co
 
 The default value in Doris is 0, which is half the number of CPU cores of the BE. This value takes into account the resource utilization of both single queries and concurrent operations, and usually does not require user intervention for adjustment. When there is a performance bottleneck, refer to the following examples for necessary adjustments. Doris is continuously improving its adaptive strategy, and it is usually recommended to make necessary adjustments in specific scenarios or at the SQL level.
 
-### Examples
-
 Suppose the BE has 16 CPU cores:
 
 1. For simple operations on a single table (such as single-table point queries, `WHERE` clause scans to retrieve a small amount of data, `LIMIT` a small amount of data, or hitting a materialized view), **the parallelism can be set to 1**.
+
    Explanation: Simple operations on a single table involve only one Fragment. The bottleneck of such queries usually lies in data scanning and processing. The data scanning thread and the query execution thread are separated, and the data scanning thread will perform parallel scanning adaptively. Here, the bottleneck is not the query thread, so the parallelism can be directly set to 1.
+
 2. For queries involving two-table `JOIN` or aggregation queries, if the data volume is large and it is confirmed to be a CPU-bound query, **the parallelism can be set to 16**.
+   
    Explanation: For two-table `JOIN` or aggregation queries, which are data computation-intensive queries, if the CPU is not fully utilized, consider increasing the parallelism on the basis of the default value to take advantage of the parallel capabilities of the Pipeline execution engine and fully utilize CPU resources for computation. It cannot be guaranteed that each PipelineTask can utilize the allocated CPU resources to the fullest. Therefore, the parallelism can be adjusted appropriately, for example, set to 16, to make better use of the CPU. However, the parallelism should not be increased indefinitely. Setting it to 48 will not bring substantial benefits and will instead increase thread scheduling overhead and framework scheduling overhead.
+
 3. In a stress testing scenario, where the multiple queries in the stress test can fully utilize the CPU, **the parallelism can be set to 1**.
+   
    Explanation: In a stress testing scenario, there are sufficient query tasks. Excessive parallelism also brings thread scheduling overhead and framework scheduling overhead. Setting it to 1 is more reasonable in this case.
+
 4. For complex queries, the parallelism should be adjusted flexibly based on the Profile and machine load. Here, it is recommended to use the default value. If it is not suitable, a stepwise adjustment of 4-2-1 can be tried, and the query performance and machine load should be observed.
 
 ## Methods of Parallelism Tuning
 
 Doris allows users to manually specify the parallelism of a query to adjust the parallel execution efficiency during query execution.
 
-### SQL Level Adjustment:
+### SQL Level Adjustment
 
 Use SQL HINT to specify the parallelism of a single SQL statement. This allows for flexible control of the parallelism of different SQL statements to achieve the best execution results.
 
@@ -37,7 +41,7 @@ select /*+SET_VAR("parallel_pipeline_task_num=8")*/ * from nation, lineitem wher
 select /*+SET_VAR("parallel_pipeline_task_num=8,runtime_filter_mode=global")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
 ```
 
-### Session Level Adjustment:
+### Session Level Adjustment
 
 Adjust the parallelism at the session level through session variables. All query statements in the session will be executed with the specified parallelism. Please note that even single-line SQL queries will use this parallelism, which may lead to performance degradation.
 
@@ -45,13 +49,25 @@ Adjust the parallelism at the session level through session variables. All query
 set parallel_pipeline_task_num = 8;
 ```
 
-### Global Adjustment:
+### Global Adjustment
 
 If global adjustment is required, usually involving CPU utilization adjustment, the parallelism can be set globally.
 
 ```SQL
 set global parallel_pipeline_task_num = 8;
 ```
+
+## Tablets and parallelism
+
+Since version 2.1, Doris supports decoupling parallelism from the number of tablets.
+
+In previous versions, parallelism could not exceed the number of tablets involved in the query. For example, if a query involved 5 tablets, the maximum scan concurrency was only 5. This could prevent some large tablets from being read concurrently.
+
+In the new version, Doris supports concurrent reads within a shard. This feature is enabled automatically and requires no user configuration.
+
+Note that this feature only supports the Duplicate and Unique Key Merge-On-Write table models. It does not apply to the Aggregate and Unique Key Merge-On-Read models. For these two models, query parallelism is still constrained by the number of tablets.
+
+## Best Practice
 
 ## Case 1: High Parallelism Leading to High CPU Usage in a High-Concurrency Pressure Scenario
 

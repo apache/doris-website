@@ -84,9 +84,134 @@ Doris JSONB 支持所有 JSON 标准类型。主要区别在于 Doris 对 Number
   - JSONB 列不能直接与其他数据类型（包括其他 JSONB 列）进行比较或进行算术运算。
   - 解决方案： 使用 JSON_EXTRACT 函数提取出 JSONB 中的标量值（如 INT, DOUBLE, STRING, BOOLEAN），然后将其转换为对应的 Doris 原生类型进行比较或运算。
 - 排序与分组：
-  - JSONB 列不支持 ORDER BY 和 GROUP BY 操作。
+  - JSONB 列不支持 ORDER BY 操作。
 - 隐式转换：
   - 仅限输入： 在将数据输入到 JSONB 列时，STRING 类型可以隐式转换为 JSONB（前提是字符串内容是有效的 JSON 文本）。其他 Doris 类型不能隐式转换为 JSONB。
+
+## JSON 的分组支持
+
+从 4.0 版本开始，Doris 支持对 JSON 类型进行 `GROUP BY` 和 `DISTINCT` 操作。以下是一些示例：
+
+### 示例 1：对 JSON 列进行 GROUP BY
+```sql
+mysql> SELECT * FROM test_jsonb_groupby;
++------+---------------+
+| id   | j             |
++------+---------------+
+|    1 | {"a":1,"b":2} |
+|    2 | {"a":1,"b":3} |
+|    3 | {"a":2,"b":2} |
+|    4 | {"a":2,"b":2} |
+|    5 | {"a":1,"b":2} |
+|    6 | {"a":2,"b":2} |
++------+---------------+
+6 rows in set (0.07 sec)
+
+mysql> SELECT j, COUNT(*) FROM test_jsonb_groupby GROUP BY j;
++---------------+----------+
+| j             | COUNT(*) |
++---------------+----------+
+| {"a":1,"b":3} |        1 |
+| {"a":2,"b":2} |        3 |
+| {"a":1,"b":2} |        2 |
++---------------+----------+
+```
+
+### 示例 2：对 JSON 列进行 DISTINCT 查询
+```sql
+mysql> SELECT DISTINCT j FROM test_jsonb_groupby;
++---------------+
+| j             |
++---------------+
+| {"a":1,"b":3} |
+| {"a":2,"b":2} |
+| {"a":1,"b":2} |
++---------------+
+```
+
+### 注意事项
+1. **二进制比较**：JSON 的比较是基于二进制的。如果两个 JSON 数据在语义上相同，但二进制表示不同，则无法分组到一起。例如：
+   ```sql
+   mysql> SELECT * FROM test_jsonb;
+   +------+------+
+   | id   | j    |
+   +------+------+
+   |    1 | 123  |
+   |    2 | 123  |
+   +------+------+
+
+   mysql> SELECT j, COUNT(*) FROM test_jsonb GROUP BY j;
+   +------+----------+
+   | j    | COUNT(*) |
+   +------+----------+
+   | 123  |        1 |
+   | 123  |        1 |
+   +------+----------+
+   ```
+
+   这是因为第一个 `123` 是 `BIGINT` 类型，第二个 `123` 是 `TINYINT` 类型，二进制表示不同。可以通过以下查询验证其类型：
+   ```sql
+   mysql> SELECT j, json_type(j, '$') FROM test_jsonb;
+   +------+------------------+
+   | j    | json_type(j, '$') |
+   +------+------------------+
+   | 123  | bigint           |
+   | 123  | int              |
+   +------+------------------+
+   ```
+
+
+   JSON 对象的键顺序不同也会导致无法分组到一起。例如：
+   ```sql
+   mysql> SELECT * FROM test_jsonb;
+   +------+---------------+
+   | id   | j             |
+   +------+---------------+
+   |    2 | {"b":2,"a":1} |
+   |    1 | {"a":1,"b":2} |
+   +------+---------------+
+
+   mysql> SELECT j, COUNT(*) FROM test_jsonb GROUP BY j;
+   +---------------+----------+
+   | j             | COUNT(*) |
+   +---------------+----------+
+   | {"b":2,"a":1} |        1 |
+   | {"a":1,"b":2} |        1 |
+   +---------------+----------+
+   ```
+
+2. **数字类型一致性**：如果希望忽略数字类型的差异，可以使用 `NORMALIZE_JSON_NUMBERS_TO_DOUBLE` 函数将 JSON 中的数字统一转换为 `DOUBLE` 类型：
+   ```sql
+   mysql> SELECT NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j), COUNT(*) 
+          FROM test_jsonb 
+          GROUP BY NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j);
+   +-------------------------------------+----------+
+   | NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j) | COUNT(*) |
+   +-------------------------------------+----------+
+   | 123                                 |        2 |
+   +-------------------------------------+----------+
+   ```
+  当通过文本解析方式（如使用 CAST 将字符串转为 JSON）创建 JSON 对象时，Doris 会自动选择合适的数值类型存储，通常情况下不需要担心数值类型不一致的问题。
+  所以如果你的Jsonb数据是通过文本解析方式创建的，那么就不会遇到上述的group by问题。
+
+3. **键顺序一致性**：
+   可以使用 `SORT_JSON_OBJECT_KEYS` 函数对键进行排序：
+   ```sql
+   mysql> SELECT SORT_JSON_OBJECT_KEYS(j), COUNT(*) 
+          FROM test_jsonb 
+          GROUP BY SORT_JSON_OBJECT_KEYS(j);
+   +--------------------------+----------+
+   | SORT_JSON_OBJECT_KEYS(j) | COUNT(*) |
+   +--------------------------+----------+
+   | {"a":1,"b":2}            |        2 |
+   +--------------------------+----------+
+   ```
+
+  当通过文本解析方式（如使用 CAST 将字符串转为 JSON）创建 JSON 对象时，Doris会保留文本中的键顺序。
+  所以如果你的Jsonb数据是通过文本解析方式创建的，那么就不会遇到上述的group by问题。
+
+### 建议
+如果无法保证 JSON 数据的数字类型一致或键顺序一致，建议在 `GROUP BY` 前先使用 `NORMALIZE_JSON_NUMBERS_TO_DOUBLE` 和 `SORT_JSON_OBJECT_KEYS` 函数进行预处理，以确保分组操作符合预期。
 
 ### 语法
 
@@ -130,7 +255,7 @@ SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
 
 :::tip
 
-JSON 类型暂时不能用于 GROUP BY，ORDER BY，比较大小
+JSON 类型暂时不能用于 ORDER BY，比较大小
 
 :::
 

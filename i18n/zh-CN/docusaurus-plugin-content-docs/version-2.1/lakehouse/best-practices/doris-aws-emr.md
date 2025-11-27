@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 集成 AWS EMR",
+    "title": "集成 AWS EMR",
     "language": "zh-CN"
 }
 

@@ -396,7 +396,7 @@ Dear community, **Apache Doris version 2.1.6 was officially released on Septembe
 
 - Fixed the occasional planning error issue when executing `insert into as select` with CTEs. [#38526](https://github.com/apache/doris/pull/38526)
 
-- Fixed the issue where `insert into values` cannot automatically fill null default values. **[[fix](Nereids) fix insert into table with null literal default value #39122](https://github.com/apache/doris/pull/39122)**
+- Fixed the issue where `insert into values` cannot automatically fill null default values. [#39122](https://github.com/apache/doris/pull/39122)
 
 - Fixed the NPE issue caused by using cte in delete without using it. [#39379](https://github.com/apache/doris/pull/39379)
 

@@ -1,7 +1,7 @@
 ---
 {
     "title": "Release 3.1.1",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 ## Overview
