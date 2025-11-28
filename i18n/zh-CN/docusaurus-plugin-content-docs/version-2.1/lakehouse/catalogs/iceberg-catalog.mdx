@@ -2445,3 +2445,16 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
     | 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
     +---------------------+----------------------------+-----------+-------------------------------------+
     ```
+## FAQ
+### When accessing object storage (such as COS, OSS, or other S3-compatible systems) through the Rest Catalog, Doris encounters the error: `aws-chunked encoding is not supported with the specified x-amz-content-sha256 value` during the data write-back phase.
+
+Starting from **version 2.3.30**, the AWS S3 SDK **enables Request Checksum Calculation by default**.
+This mechanism automatically applies **`aws-chunked`** transfer encoding.
+However, **many S3-compatible object storage services** (such as OSS, COS, etc.) **do not support `aws-chunked`**, which results in the above error.
+    
+To resolve this issue, add the following JVM parameter to **fe.conf** to disable automatic checksum calculation and avoid using `aws-chunked` encoding:
+
+```bash
+    -Daws.requestChecksumCalculation=WHEN_REQUIRED
+```
+## Change Log

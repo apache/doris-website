@@ -2445,3 +2445,14 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
     | 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
     +---------------------+----------------------------+-----------+-------------------------------------+
     ```
+
+## FAQ
+### 使用 Rest Catalog 访问对象存储（如 COS、OSS 或其他兼容 S3 协议的对象存储）时，Doris 在数据回写阶段出现 `aws-chunked encoding is not supported with the specified x-amz-content-sha256 value` 错误。
+
+AWS S3 SDK 从 **2.3.30** 版本开始默认启用了新的请求完整性校验机制（Request Checksum），该机制会自动使用 `aws-chunked` 编码。而部分兼容 S3 协议的对象存储（如 OSS、COS 等）**并不支持 `aws-chunked`**，因此会导致该错误。
+解决此问题，可在 **fe.conf** 中添加以下 JVM 参数以禁用自动校验，从而避免使用 `aws-chunked` 编码：
+
+```bash
+-Daws.requestChecksumCalculation=WHEN_REQUIRED
+```
+## Change Log    
