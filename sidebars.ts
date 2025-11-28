@@ -1418,6 +1418,8 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/now',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub',
