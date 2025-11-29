@@ -25,7 +25,7 @@ UTC_TIMESTAMP([`<precision>`])
 ## 返回值
 返回当前 UTC 日期时间.
 
-返回 DATETIME 类型（格式：YYYY-MM-DD HH:mm:ss[.ssssss]）。当使用返回结果进行数值运算时，会进行类型转换，返回[整数格式](https://doris.apache.org/zh-CN/docs/dev/sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime)（格式YYYYMMDDHHmmss）。
+返回 DATETIME 类型（格式：YYYY-MM-DD HH:mm:ss[.ssssss]）。当使用返回结果进行数值运算时，会进行类型转换，返回[整数格式](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime)（格式YYYYMMDDHHmmss）。
 
 当输入为 NULL 或精度超出范围会报错。
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 集成 AWS S3 Tables",
+    "title": "集成 Glue + AWS S3 Tables",
     "language": "zh-CN"
 }
 

@@ -22,6 +22,7 @@ query
     :
     SELECT <select_expr> select_expr[, select_expr ...]
     FROM <base_table>
+    WHERE condition
     GROUP BY <column_name>[, <column_name> ...]
     ORDER BY <column_name>[, <column_name> ...]
 ```
@@ -48,6 +49,8 @@ query
 >   - Must include at least one single column.
 > - `base_table`: The name of the base table for the materialized view, a required item.
 >   - Must be a single table, not a subquery.
+> - `where`: The filter condition of the materialized view, an optional item.
+>   - If not specified, no data filtering will be performed.
 > - `group by`: The grouping columns of the materialized view, an optional item.
 >   - If not specified, the data will not be grouped.
 > - `order by`: The sorting columns of the materialized view, an optional item.
@@ -68,6 +71,7 @@ query
 - If the SELECT list contains aggregate functions, the aggregate functions must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no other non-aggregate function expressions can follow the aggregate functions (for example, `SELECT x, sum(a)` is acceptable, but `SELECT sum(a), x` is not).
 - Too many materialized views on a single table can affect the efficiency of data import: when importing data, the data of the materialized views and the Base table are updated synchronously. If there are too many materialized views on a table, it may slow down the import speed, similar to importing data into multiple tables simultaneously in a single import operation.
 - When a materialized view targets the Unique Key data model, it can only change the order of columns and cannot perform aggregation. Therefore, on the Unique Key model, data cannot be coarsely aggregated by creating materialized views.
+- When a materialized view targets Unique Key and Aggregate Key data models, if a WHERE clause is specified, it can only use Key columns and not Value columns.
 
 ## Example
 

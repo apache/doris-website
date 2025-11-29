@@ -145,10 +145,9 @@ For existing Merge-On-Write tables created in old versions of Doris, after upgra
 
 **Using Flexible Column Updates for New Tables**
 
-For new tables, to use the flexible column update feature, specify the following table properties when creating the table to enable Merge-on-Write, light-schema-change, and include the required hidden bitmap column for flexible column updates:
+For new tables, to use the flexible column update feature, specify the following table properties when creating the table to enable Merge-on-Write and include the required hidden bitmap column for flexible column updates:
 
 ```Plain
-"enable_light_schema_change" = "true"
 "enable_unique_key_merge_on_write" = "true"
 "enable_unique_key_skip_bitmap_column" = "true"
 ```
@@ -185,7 +184,6 @@ CREATE TABLE t1 (
 PROPERTIES(
 "replication_num" = "3",
 "enable_unique_key_merge_on_write" = "true",
-"enable_light_schema_change" = "true",
 "enable_unique_key_skip_bitmap_column" = "true");
 ```
 
@@ -269,7 +267,6 @@ CREATE TABLE t2 (
 PROPERTIES(
 "replication_num" = "3",
 "enable_unique_key_merge_on_write" = "true",
-"enable_light_schema_change" = "true",
 "enable_unique_key_skip_bitmap_column" = "true",
 "function_column.sequence_type" = "int");
 ```
@@ -334,7 +331,6 @@ CREATE TABLE t3 (
 PROPERTIES(
 "replication_num" = "3",
 "enable_unique_key_merge_on_write" = "true",
-"enable_light_schema_change" = "true",
 "enable_unique_key_skip_bitmap_column" = "true",
 "function_column.sequence_col" = "v5");
 ```

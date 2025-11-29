@@ -12,14 +12,6 @@ The DATE_ADD function is used to add a specified time interval to a specified da
 - Supported input date types include DATE, DATETIME (such as '2023-12-31', '2023-12-31 23:59:59').
 - The time interval is specified by both a numeric value (`expr`) and a unit (`time_unit`). When `expr` is positive, it means "add", and when it is negative, it is equivalent to "subtract" the corresponding interval.
 
-This function behaves generally consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL, but the difference is that MySQL supports compound unit additions and subtractions, such as:
-
-```sql
-SELECT DATE_ADD('2100-12-31 23:59:59',INTERVAL '1:1' MINUTE_SECOND);
-        -> '2101-01-01 00:01:00'
-```
-Doris does not support this type of input.
-
 ## Aliases
 
 - days_add
@@ -37,7 +29,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 | -- | -- |
 | `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be added, of `INT` type |
-| `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
+| `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND |
 
 ## Return Value
 
@@ -103,6 +95,30 @@ mysql> select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 HOUR);
 +--------------------------------------------------+
 | 2024-01-01 01:00:00                              |
 +--------------------------------------------------+
+
+-- Add DAY_SECOND
+mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 1:2:3' DAY_SECOND);
++-------------------------------------------------------------------+
+| DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 1:2:3' DAY_SECOND) |
++-------------------------------------------------------------------+
+| 2025-10-24 11:12:13                                               |
++-------------------------------------------------------------------+
+
+-- Add DAY_HOUR
+mysql>  select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 2' DAY_HOUR);
++----------------------------------------------------------+
+| DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 2' DAY_HOUR) |
++----------------------------------------------------------+
+| 2025-10-24 12:10:10                                      |
++----------------------------------------------------------+
+
+-- Add MINUTE_SECOND
+mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1:1' MINUTE_SECOND);
++---------------------------------------------------------------+
+| DATE_ADD('2025-10-23 10:10:10', INTERVAL '1:1' MINUTE_SECOND) |
++---------------------------------------------------------------+
+| 2025-10-23 10:11:11                                           |
++---------------------------------------------------------------+
 
 -- Illegal unit
 select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 sa);

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "动态分区",
+    "title": "动态分区（不推荐）",
     "language": "zh-CN"
 }
 ---
@@ -211,4 +211,3 @@ PROPERTIES (
     "dynamic_partition.reserved_history_periods"="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"
 );
 ```
-

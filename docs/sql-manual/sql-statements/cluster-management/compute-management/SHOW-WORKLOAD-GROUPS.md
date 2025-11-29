@@ -24,27 +24,74 @@ This statement only does a simple display of workload groups, for a more complex
 1. Show all workload groups:
     
     ```sql
-    mysql> show workload groups;
-    +----------+--------+--------------------------+---------+
-    | Id       | Name   | Item                     | Value   |
-    +----------+--------+--------------------------+---------+
-    | 10343386 | normal | cpu_share                | 10      |
-    | 10343386 | normal | memory_limit             | 30%     |
-    | 10343386 | normal | enable_memory_overcommit | true    |
-    | 10352416 | g1     | memory_limit             | 20%     |
-    | 10352416 | g1     | cpu_share                | 10      |
-    +----------+--------+--------------------------+---------+
+mysql> show workload groups \G;
+*************************** 1. row ***************************
+                          Id: 1754728930516
+                        Name: normal
+             min_cpu_percent: 20%
+             max_cpu_percent: 30%
+          min_memory_percent: 0%
+          max_memory_percent: 50%
+             max_concurrency: 1
+              max_queue_size: 1
+               queue_timeout: 0
+             scan_thread_num: 16
+  max_remote_scan_thread_num: -1
+  min_remote_scan_thread_num: -1
+        memory_low_watermark: 75%
+       memory_high_watermark: 85%
+               compute_group: default
+       read_bytes_per_second: -1
+remote_read_bytes_per_second: -1
+          slot_memory_policy: none
+           running_query_num: 0
+           waiting_query_num: 0
+*************************** 2. row ***************************
+                          Id: 1754740507946
+                        Name: test_group2
+             min_cpu_percent: 10%
+             max_cpu_percent: 30%
+          min_memory_percent: 0%
+          max_memory_percent: 3%
+             max_concurrency: 2147483647
+              max_queue_size: 0
+               queue_timeout: 0
+             scan_thread_num: -1
+  max_remote_scan_thread_num: -1
+  min_remote_scan_thread_num: -1
+        memory_low_watermark: 75%
+       memory_high_watermark: 85%
+               compute_group: default
+       read_bytes_per_second: -1
+remote_read_bytes_per_second: -1
+          slot_memory_policy: none
+           running_query_num: 0
+           waiting_query_num: 0
     ```
 
 2. Show workload groups using pattern
     
     ```sql
-    mysql> show workload groups like "normal%";
-    +----------+--------+--------------------------+---------+
-    | Id       | Name   | Item                     | Value   |
-    +----------+--------+--------------------------+---------+
-    | 10343386 | normal | cpu_share                | 10      |
-    | 10343386 | normal | memory_limit             | 30%     |
-    | 10343386 | normal | enable_memory_overcommit | true    |
-    +----------+--------+--------------------------+---------+
+mysql> show workload groups like "normal%" \G;
+*************************** 1. row ***************************
+                          Id: 1754728930516
+                        Name: normal
+             min_cpu_percent: 20%
+             max_cpu_percent: 30%
+          min_memory_percent: 0%
+          max_memory_percent: 50%
+             max_concurrency: 1
+              max_queue_size: 1
+               queue_timeout: 0
+             scan_thread_num: 16
+  max_remote_scan_thread_num: -1
+  min_remote_scan_thread_num: -1
+        memory_low_watermark: 75%
+       memory_high_watermark: 85%
+               compute_group: default
+       read_bytes_per_second: -1
+remote_read_bytes_per_second: -1
+          slot_memory_policy: none
+           running_query_num: 0
+           waiting_query_num: 0
     ```

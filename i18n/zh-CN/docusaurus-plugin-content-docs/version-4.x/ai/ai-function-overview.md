@@ -38,42 +38,42 @@ under the License.
 
 ## 函数支持
 
-- [AI_CLASSIFY](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-classify)：
+- [AI_CLASSIFY](../sql-manual/sql-functions/ai-functions/ai-classify.md)：
 在给定的标签中提取与文本内容匹配度最高的单个标签字符串
 
-- [AI_EXTRACT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-extract)：
+- [AI_EXTRACT](../sql-manual/sql-functions/ai-functions/ai-extract.md)：
 根据文本内容，为每个给定标签提取相关信息。
 
-- [AI_FILTER](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-filter):
+- [AI_FILTER](../sql-manual/sql-functions/ai-functions/ai-filter.md):
 判断文本内容是否正确，返回值为bool类型。
 
-- [AI_FIXGRAMMAR](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-fixgrammar)：
+- [AI_FIXGRAMMAR](../sql-manual/sql-functions/ai-functions/ai-fixgrammar.md)：
 修复文本中的语法、拼写错误。
 
-- [AI_GENERATE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-generate)：
+- [AI_GENERATE](../sql-manual/sql-functions/ai-functions/ai-generate.md)：
 基于参数内容生成内容。
 
-- [AI_MASK](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-mask):
+- [AI_MASK](../sql-manual/sql-functions/ai-functions/ai-mask.md):
 根据标签，将原文中的敏感信息用`[MASKED]`进行替换处理。
 
-- [AI_SENTIMENT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-sentiment)：
+- [AI_SENTIMENT](../sql-manual/sql-functions/ai-functions/ai-sentiment.md)：
 分析文本情感倾向，返回值为`positive`、`negative`、`neutral`、`mixed`其中之一。
 
-- [AI_SIMILARITY](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-similarity)：
+- [AI_SIMILARITY](../sql-manual/sql-functions/ai-functions/ai-similarity.md)：
 判断两文本的语义相似度，返回值为 0 - 10 之间的浮点数，值越大代表语义越相似。
 
-- [AI_SUMMARIZE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-summarize)：
+- [AI_SUMMARIZE](../sql-manual/sql-functions/ai-functions/ai-summarize.md)：
 对文本进行高度总结概括。
 
-- [AI_TRANSLATE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-translate)：
+- [AI_TRANSLATE](../sql-manual/sql-functions/ai-functions/ai-translate.md)：
 将文本翻译为指定语言。
 
-- [AI_AGG](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/aggregate-functions/ai-agg):
+- [AI_AGG](../sql-manual/sql-functions/aggregate-functions/ai-agg.md):
 对多条文本进行跨行聚合分析。
 
 ## AI 配置相关参数
 
-Doris 通过[资源机制](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)
+Doris 通过[资源机制](../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md)
 集中管理 AI API 访问，保障密钥安全与权限可控。
 现阶段可选择的参数如下：
 
@@ -105,7 +105,7 @@ Doris 通过[资源机制](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sq
 
 ## 快速上手
 
-> 以下示例均为最小实现，具体步骤参考文档：https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/ai-functions/ai-function
+> 以下示例均为最小实现，具体步骤参考[文档](../sql-manual/sql-functions/ai-functions/overview.md).
 
 1. 配置 AI 资源
 

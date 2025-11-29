@@ -255,12 +255,14 @@ properties(
 );
 ```
 
-This represents keeping only the top 3 partitions with the largest date values in the history. Assuming the current date is `2025-10-21`, and inserting data for each day from `2025-10-16` to `2025-10-23`, after one recycling, the remaining partitions are as follows:
+This represents keeping only the top 3 partitions with the largest date values in the history. Assuming the current date is `2025-10-21`, and inserting data for each day from `2025-10-16` to `2025-10-23`, after one recycling, as shown in the figure, the remaining partitions are as follows:
+
+![Recycle](/images/blogs/auto-partition-lifetime1.png)
 
 - p20251018000000
 - p20251019000000
-- p20251020000000 (The following partition and above: Only keep three historical partitions)
-- p20251021000000 (The following partition and below: The current and future partitions are not affected)
+- p20251020000000 (This partition and above: Only keep three historical partitions)
+- p20251021000000 (This partition and below: The current and future partitions are not affected)
 - p20251022000000
 - p20251023000000
 

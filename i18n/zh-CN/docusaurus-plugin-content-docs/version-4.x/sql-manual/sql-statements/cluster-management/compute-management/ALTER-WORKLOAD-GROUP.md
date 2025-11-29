@@ -23,13 +23,8 @@ PROPERTIES (
 
 1.`<property>`
 
-`<property>` 格式为 `<key>` = `<value>`，`<key>`的具体可选值如下：
+`<property>` 格式为 `<key>` = `<value>`，`<key>`的具体可选值可以参考[workload group](../../../../admin-manual/workload-management/workload-group.md).
 
-| 参数 | 说明 | 是否必填 |
-| -- | -- | -- |
-| `<cpu_share>` | 用于设置资源组获取 cpu 时间的多少，可以实现 cpu 资源软隔离。cpu_share 是相对值，表示正在运行的资源组可获取 cpu 资源的权重。例如，用户创建了 3 个资源组 rg-a、rg-b 和 rg-c，cpu_share 分别为 10、30、40，某一时刻 rg-a 和 rg-b 正在跑任务，而 rg-c 没有任务，此时 rg-a 可获得 (10 / (10 + 30)) = 25% 的 cpu 资源，而资源组 rg-b 可获得 75% 的 cpu 资源。如果系统只有一个资源组正在运行，则不管其 cpu_share 的值为多少，它都可以获取全部的 cpu 资源。 | 是 |
-| `<memory_limit>` | 用于设置资源组可以使用 be 内存的百分比。资源组内存限制的绝对值为：`物理内存 * mem_limit * memory_limit`，其中 mem_limit 为 be 配置项。系统所有资源组的 memory_limit 总合不可超过 100%。资源组在绝大多数情况下保证组内任务可使用 memory_limit 的内存，当资源组内存使用超出该限制后，组内内存占用较大的任务可能会被 cancel 以释放超出的内存，参考 enable_memory_overcommit。 | 是 |
-| `<enable_memory_overcommit>` | 用于开启资源组内存软隔离，默认为 false。如果设置为 false，则该资源组为内存硬隔离，系统检测到资源组内存使用超出限制后将立即 cancel 组内内存占用最大的若干个任务，以释放超出的内存；如果设置为 true，则该资源组为内存软隔离，如果系统有空闲内存资源则该资源组在超出 memory_limit 的限制后可继续使用系统内存，在系统总内存紧张时会 cancel 组内内存占用最大的若干个任务，释放部分超出的内存以缓解系统内存压力。建议在有资源组开启该配置时，所有资源组的 memory_limit 总和低于 100%，剩余部分用于资源组内存超发。 | 否 |
 
 ## 示例
 
@@ -38,7 +33,7 @@ PROPERTIES (
     ```sql
     alter workload group g1
     properties (
-        "cpu_share"="30",
-        "memory_limit"="30%"
+        "max_cpu_percent"="20%",
+        "max_memory_percent"="40%"
     );
     ```
