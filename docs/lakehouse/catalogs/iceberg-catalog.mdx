@@ -136,8 +136,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | timestamptz (Timestamp with timezone)  | datetime(6)          | Mapped to datetime with precision 6     |
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
-| binary                                 | string/varbinary     | Controlled by the enable.mapping.varbinary property in properties (supported since 4.0.3). The default is false, which maps to string; when true, it maps to varbinary type.|
-| uuid                                   | string/varbinary     | Before 4.0.3, it was mapped to STRING; after that, it is mapped to VARBINARY type.|
+| binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| uuid                                   | string/varbinary     | Before 4.0.3, it was mapped to `string`; after that, it is mapped to `varbinary` type.|
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
 | list                                   | array                |                                         |

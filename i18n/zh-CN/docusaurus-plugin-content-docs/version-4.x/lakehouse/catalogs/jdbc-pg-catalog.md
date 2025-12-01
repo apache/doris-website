@@ -81,6 +81,7 @@ CREATE CATALOG postgresql_catalog PROPERTIES (
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris 不支持 bit 类型，bit 类型会在 bit(1) 时被映射为 boolean，其他情况下映射为 string。 |
+| bytea | varbinary | 由 properties 中 `enable.mapping.varbianry` (4.0.3 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | other                                   | UNSUPPORTED            |                                                                 |
 
 ## 附录

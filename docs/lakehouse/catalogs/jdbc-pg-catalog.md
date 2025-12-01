@@ -81,7 +81,7 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under a spe
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris does not support bit type, bit type will be mapped to boolean when bit(1), otherwise mapped to string. |
-| bytea             | varbinary     |Controlled by the enable.mapping.varbinary property in properties (supported since 4.0.3). The default is false, which maps to string; when true, it maps to varbinary type.|
+| bytea             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other                                   | UNSUPPORTED            |                                                                 |
 
 ## Appendix

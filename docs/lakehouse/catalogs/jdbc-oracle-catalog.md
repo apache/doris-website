@@ -60,7 +60,7 @@ When mapping Oracle, a Database in Apache Doris corresponds to a User in Oracle.
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |
-| BLOB             | varbinary     |Controlled by the enable.mapping.varbinary property in properties (supported since 4.0.3). The default is false, which maps to string; when true, it maps to varbinary type.|
+| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other                                 | UNSUPPORTED                          |                                                                                                                 |
 
 ## Common Issues

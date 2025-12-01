@@ -143,8 +143,7 @@ The currently dependent Paimon version is 1.0.0.
 | decimal(P, S)                      | decimal(P, S) |                                                                         |
 | varchar                            | string        |                                                                         |
 | char                               | string        |                                                                         |
-| binary                             | string        |                                                                         |
-| varbinary                          | string        |                                                                         |
+| binary, varbinary                             | string/varbinary | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | date                               | date          |                                                                         |
 | timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
 | timestamp\_with\_local\_time\_zone | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
