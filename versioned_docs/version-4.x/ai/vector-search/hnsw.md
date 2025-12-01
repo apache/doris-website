@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HNSW and How to use it in Apaceh Doris",
+    "title": "HNSW",
     "language": "en"
 }
 ---

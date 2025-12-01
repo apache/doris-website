@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HNSW 以及如何在 Apache Doris 中使用 HNSW 算法的索引",
+    "title": "HNSW",
     "language": "zh-CN"
 }
 ---
@@ -23,7 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# HNSW 以及如何在 Apache Doris 中使用 HNSW 算法的索引
 
 HNSW（Malkov & Yashunin, 2016）由于在工程实践中能以较小的资源达到高召回和低延迟的查询表现，已成为在线高性能向量检索的事实标准。Apache Doris 自 4.x 版本起支持基于 HNSW 的 Ann Index，本文将从 HNSW 算法原理出发，结合参数与工程实践，讲如何在 Apache Doris 生产集群中使用与调优基于 HNSW 算法的 ANN 索引。
 
