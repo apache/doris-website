@@ -42,7 +42,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
 
-上例中定义了用户信息和访问的行为事实表，将 `user_id`、`load_dt`、`city` 作为 Key 列进行聚合操作。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。
+上例中定义了用户信息和访问的行为事实表，将 `user_id`、`load_dt` 及 `city` 作为 Key 列进行聚合操作。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。
 
 
 在聚合表中支持以下类型的维度聚合：

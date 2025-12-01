@@ -54,7 +54,7 @@ AGGREGATE KEY(user_id, load_dt, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, and `city` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
+In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_dt`, and `city` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
 
 The following types of dimension aggregation are supported in the Aggregate Key Model:
 
