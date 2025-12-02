@@ -462,8 +462,36 @@ Additionally, if the partition field is of string type, the date format can be s
 
 For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
+#### Multi-PCT Refresh
+"Multi-PCT Refresh" allows asynchronous materialized views to have multiple partition change tracking (PCT) tables, meaning that when data changes occur in multiple base tables, only partition-level refresh is performed instead of a full refresh.
+
+This feature has the following limitations in usage:
+- Only materialized views built based on INNER JOIN or UNION (including UNION ALL) are supported.
+- When the materialized view uses UNION operations, all participating union components must support Partition Change Tracking (PCT). For example, if the materialized view's SQL definition is: q1 UNION ALL q2, then both q1 and q2 must individually support partition refresh when used alone to create materialized views, and the derived partition columns must have consistent ordering.
+- The partition granularity across multiple PCT tables must be aligned:
+    - **Allowed example**:
+
+      Partitions of base table t1: [2020-01-01, 2020-01-02), [2020-01-02, 2020-01-03)
+
+      Partitions of base table t2: [2020-01-02, 2020-01-03), [2020-01-03, 2020-01-04)
+
+      The partitions of multiple base tables are not completely identical, but they do not overlap.
+
+    - **Disallowed example**:
+
+      Partitions of base table t1: [2020-01-01, 2020-01-03), [2020-01-03, 2020-01-05)
+
+      Partitions of base table t2: [2020-01-01, 2020-01-02), [2020-01-03, 2020-01-05)
+
+      Partitions [2020-01-01, 2020-01-03) and [2020-01-01, 2020-01-02) overlap but are not identical.
+
 ### SQL Definition
-There are no restrictions on the SQL definition of asynchronous materialized views.
+
+Asynchronous materialized views can be created based on internal views but do not support construction based on views from external data sources.
+
+It is important to note that when the underlying internal views are modified or rebuilt, it may lead to data inconsistencies between the asynchronous materialized view and the base tables. In such cases, although the data in the materialized view still exists, it cannot support transparent query rewriting.
+
+Additionally, if structural changes affect the partition tracking tables or columns relied upon by the asynchronous materialized view, or cause changes to its schema, the materialized view will fail to refresh successfully. If the changes do not impact these elements, the materialized view can resume normal operation after a refresh.
 
 ## Direct Querying of Materialized Views
 
