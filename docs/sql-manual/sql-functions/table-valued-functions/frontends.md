@@ -18,7 +18,7 @@ FRONTENDS()
 
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Return Value
 | Field                    | Description                                                                                             |

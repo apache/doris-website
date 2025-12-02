@@ -165,7 +165,7 @@ from doris_vector_search import DorisVectorClient, AuthOptions
 
 auth = AuthOptions(
     host="localhost",
-    query_port=8030,
+    query_port=9030,
     user="root",
     password="",
 )
@@ -320,7 +320,7 @@ Doris 的 ANN 索引是基于 Meta 开源的 [faiss](https://github.com/facebook
 #### Performance768D1M
 测试命令
 ```bash
-NUM_PER_BATCH=1000000 python3.11 -m vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var ef_search=128
+NUM_PER_BATCH=1000000 python3.11 -m vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=512 --session-var hnsw_ef_search=128
 ```
 
 |  | Doris（FE/BE 分离） | Doris（FE/BE 混合） |
