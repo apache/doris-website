@@ -81,8 +81,8 @@ CCR 支持四种同步方式：
 
 | 版本 | 架构  | 包地址                                                                                                                                         | SHA256                                                           |
 |------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-arm64.tar.xz) | 8ee7bd72baae87f2f226a5effbe4b10a8fac4b1fa25c9cc027e183e5f4c04bcc |
-| 2.1     | X64   | [ccr-syncer-2.1.10-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc02-x64.tar.xz)     | 3c36dd4a807931b00b191c3d9f3541f2e5732acb6d1d9fc83b8cb3fb334046a2 |
-| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc02-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-arm64.tar.xz) | 7225cf8bc2acc37c09712a3655b0ff1939d574f42ed7bba29344a50742d7dcff |
-| 3.0     | X64   | [ccr-syncer-3.0.6-rc02-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc02-x64.tar.xz)   | 9fdafb90fdb337e3842dc690be40c77d64c1c1ea3b7b688b74bb9aeaf955681c |
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc05-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc05-arm64.tar.xz) | d58f251ddef698fe1554a6aafa0c7b373d01abaebf9f7bab64cb66f6b9db6c2c |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc05-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc05-x64.tar.xz)     | 0bc93211bc49f57bd011c9a0c9e72a51f5435477903a0cedccb748890700e45c |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc04-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc04-arm64.tar.xz) | 210478eacd4e7ddc22e75025a93cf5528200dee2e2a144b6180749cb79b3e126 |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc04-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc04-x64.tar.xz)   | fefd0a4cac24fb9fb880d2b05e34ab1bccd9a69ef288f0a28da5046b6ce036c2 |
 
