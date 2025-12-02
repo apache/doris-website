@@ -410,6 +410,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'ai/vector-search/overview',
                                 'ai/vector-search/hnsw',
+                                'ai/vector-search/ivf',
                             ],
                         },
                     ],
