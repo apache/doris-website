@@ -65,22 +65,7 @@ const config = {
             },
         },
     },
-    scripts: ['/js/custom-script.js',
-        {
-            async: true,
-            src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
-            'data-website-id': '10c44fc4-7375-4b37-9554-b39132bcb855',
-            'data-modal-title': 'Apache Doris AI',
-            'data-project-name': 'Apache Doris Website',
-            'data-project-logo': 'https://cdn.selectdb.com/static/doris_1_3c42247c63.png',
-            'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_only_9617fa366a.png',
-            'data-project-color': '#444FD9',
-            'data-modal-disclaimer': 'This is a custom LLM with access to all [Doris documentation](https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris).',
-            'data-consent-required': true,
-            'data-consent-screen-disclaimer': "By clicking &quot;I agree, let's chat&quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies.",
-            'data-user-analytics-cookie-enabled': false,
-        }
-    ],
+    scripts: ['/js/custom-script.js'],
     stylesheets: [
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
