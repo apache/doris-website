@@ -90,7 +90,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8;
 
 :::
 
-分桶键可以是一列或者多列。如果是 DUPLICATE 表，任何 Key 列与 Value 列都可以作为分桶键。如果是 AGGREGATE 或 UNIQUE 表，为了保证逐渐的聚合性，分桶列必须是 Key 列。
+分桶键可以是一列或者多列。如果是 DUPLICATE 表，任何 Key 列与 Value 列都可以作为分桶键。如果是 AGGREGATE 或 UNIQUE 表，为了保证主键的聚合性，分桶列必须是 Key 列。
 
 通常情况下，可以根据以下规则选择分桶键：
 
