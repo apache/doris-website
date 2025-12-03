@@ -411,6 +411,7 @@ const sidebars: SidebarsConfig = {
                                 'ai/vector-search/overview',
                                 'ai/vector-search/hnsw',
                                 'ai/vector-search/ivf',
+                                'ai/vector-search/index-management',
                             ],
                         },
                     ],
