@@ -416,7 +416,8 @@
                             "label": "Vector Search",
                             "items": [
                                 "ai/vector-search/overview",
-                                "ai/vector-search/hnsw"
+                                "ai/vector-search/hnsw",
+                                "ai/vector-search/ivf"
                             ]
                         }
                     ]
