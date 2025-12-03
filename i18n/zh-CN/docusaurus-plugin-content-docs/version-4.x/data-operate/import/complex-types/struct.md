@@ -47,6 +47,12 @@ curl --location-trusted \
         http://localhost:8040/api/testdb/struct_test/_stream_load
 ```
 
+也可以使用 `INSERT INTO VALUES` 语句导入：
+
+```sql
+INSERT INTO struct_test VALUES(1, named_struct('f1', '1', 'f2', '2.0', 'f3', 'abc'));
+```
+
 ### 第 4 步：检查导入数据
 
 ```sql

@@ -22,6 +22,7 @@ query
     :
     SELECT <select_expr> select_expr[, select_expr ...]
     FROM <base_table>
+    WHERE condition
     GROUP BY <column_name>[, <column_name> ...]
     ORDER BY <column_name>[, <column_name> ...]
 ```
@@ -48,6 +49,8 @@ query
 >   - 至少包含一个单列。
 > - `base_table`：物化视图的原始表名，必填项。
 >   - 必须是单表，且非子查询
+> - `where`：物化视图的过滤条件，选填项。
+>   - 不填则数据不进行过滤。
 > - `group by`：物化视图的分组列，选填项。
 >   - 不填则数据不进行分组。
 > - `order by`：物化视图的排序列，选填项。
@@ -69,6 +72,7 @@ query
 - 如果 SELECT 列表包含聚合函数，则聚合函数必须是根表达式（不支持 `sum(a) + 1`，支持 `sum(a + 1)`），且聚合函数之后不能有其他非聚合函数表达式（例如，`SELECT x, sum(a)` 可以，而 `SELECT sum(a)`, x 不行）。
 - 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 Base 表的数据是同步更新的。如果一张表的物化视图表过多，可能会导致导入速度变慢，这就像单次导入需要同时导入多张表的数据一样。
 - 物化视图针对 Unique Key 数据模型时，只能改变列的顺序，不能起到聚合的作用。因此，在 Unique Key 模型上不能通过创建物化视图的方式对数据进行粗粒度的聚合操作。
+- 物化视图针对 Unique Key和Aggregate Key 数据模型时，如果指定了where条件，那where条件只能使用Key列，而不能使用Value列。
 
 ## 示例
 

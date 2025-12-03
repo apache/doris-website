@@ -88,8 +88,7 @@ When mapping MySQL, a Database in Doris corresponds to a Database in MySQL. A Ta
 | enum                                 | string                     |                                                                                |
 | bit                                  | boolean / string           | Doris does not support the bit type, so the bit type is mapped to boolean when bit(1), and to string in other cases.                |
 | tinytext, text, mediumtext, longtext | string                     |                                                                                |
-| blob, mediumblob, longblob, tinyblob | string                     |                                                                                |
-| binary, varbinary                    | string                     |                                                                                |
+| blob, mediumblob, longblob, tinyblob, binary, varbinary | string/varbinary                     |  Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.                                                                              |
 | other                                | UNSUPPORTED                |                                                                                |
 
 ## Appendix
