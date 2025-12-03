@@ -55,7 +55,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
             }
         }
     }, [typeof window !== 'undefined' && location.pathname]);
-
+    
     return (
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>
             <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
@@ -65,7 +65,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         <span className="group-hover:text-[#444FD9]">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
                     </div>
                 </Link>
-                {isCN && ['3.x', '2.0', '2.1'].includes(currentVersion) ? (
+                {isCN && ['4.x','3.x', '2.0', '2.1'].includes(currentVersion) ? (
                     <div
                         className="toc-icon-content group"
                         onClick={() => {

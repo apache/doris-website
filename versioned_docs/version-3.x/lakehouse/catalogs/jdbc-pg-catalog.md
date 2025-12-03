@@ -81,7 +81,22 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under a spe
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris does not support bit type, bit type will be mapped to boolean when bit(1), otherwise mapped to string. |
+| bytea             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| array                                   | array                  | Please refer to the following explanation regarding the mapping methods for array types. |
 | other                                   | UNSUPPORTED            |                                                                 |
+
+- Array Types
+
+    In PostgreSQL, array types can be defined as follows:
+
+    ```
+    col1 text[]
+    col2 in4[][]
+    ```
+
+    However, the array dimensions cannot be directly obtained from the PostgreSQL metadata. For example, `text[]` could be a one-dimensional array or a two-dimensional array. The array dimensions can only be determined after data is written.
+
+    Doris requires the array dimensions to be explicitly declared. Therefore, Doris can only map correctly if the corresponding array column in PostgreSQL contains data; otherwise, the array column will be mapped as `UNSUPPORTED`.
 
 ## Appendix
 

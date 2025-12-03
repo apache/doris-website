@@ -268,4 +268,4 @@ SHOW INDEX FROM docs;
 ### Advanced Topics
 
 - [Custom Analyzers](./custom-analyzer.md) — Build domain-specific tokenizers and filters
-- [Vector Search](../vector-search.md) — Semantic similarity search with embeddings
+- [Vector Search](../vector-search/overview.md) — Semantic similarity search with embeddings

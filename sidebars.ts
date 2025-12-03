@@ -400,10 +400,19 @@ const sidebars: SidebarsConfig = {
                                 'ai/text-search/search-operators',
                                 'ai/text-search/search-function',
                                 'ai/text-search/custom-analyzer',
+                                'ai/text-search/custom-normalizer',
                                 'ai/text-search/scoring',
                             ],
                         },
-                        'ai/vector-search',
+                        {
+                            type: 'category',
+                            label: 'Vector Search',
+                            items: [
+                                'ai/vector-search/overview',
+                                'ai/vector-search/hnsw',
+                                'ai/vector-search/ivf',
+                            ],
+                        },
                     ],
                 },
                 {
@@ -1338,6 +1347,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/uncompress',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/unhex',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/ucase',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/unicode_normalize',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/url-decode',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/url-encode',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/uuid',
@@ -1348,6 +1358,8 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Date Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/add-time',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/century',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curdate',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/curtime',
@@ -1407,6 +1419,8 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/now',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub',
@@ -1418,6 +1432,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date',
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff',
@@ -2472,6 +2487,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v3.1',
                     items: [
+                        "releasenotes/v3.1/release-3.1.3",
                         'releasenotes/v3.1/release-3.1.2',
                         'releasenotes/v3.1/release-3.1.1',
                         'releasenotes/v3.1/release-3.1.0'

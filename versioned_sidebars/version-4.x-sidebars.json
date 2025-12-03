@@ -411,7 +411,15 @@
                                 "ai/text-search/scoring"
                             ]
                         },
-                        "ai/vector-search"
+                        {
+                            "type": "category",
+                            "label": "Vector Search",
+                            "items": [
+                                "ai/vector-search/overview",
+                                "ai/vector-search/hnsw",
+                                "ai/vector-search/ivf"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -1372,6 +1380,8 @@
                                     "type": "category",
                                     "label": "Date Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/add-time",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/century",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/curdate",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/curtime",
@@ -1431,6 +1441,8 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/now",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/period-add",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub",
@@ -1442,6 +1454,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-diff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
@@ -2499,6 +2512,7 @@
                     "type": "category",
                     "label": "v3.1",
                     "items": [
+                        "releasenotes/v3.1/release-3.1.3",
                         "releasenotes/v3.1/release-3.1.2",
                         "releasenotes/v3.1/release-3.1.1",
                         "releasenotes/v3.1/release-3.1.0"

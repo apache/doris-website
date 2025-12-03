@@ -892,6 +892,21 @@ group by
 
 ```
 
+:::caution Notice
+Currently, partition compensation is supported, but compensation with conditional UNION ALLis not yet available.
+
+For example, if a materialized view contains a WHEREclause—such as adding the filter WHERE l_shipdate > '2023-10-19'in the example above—while 
+the query condition is WHERE l_shipdate > '2023-10-18', this scenario currently cannot be compensated via UNION ALL. Support for this case is planned for a future release.
+:::
+
+:::info Note
+Starting from version 3.1.0
+The partition compensation rewrite feature supports the following types of partitioned tables: internal tables, Hive, Iceberg, and Paimon.
+
+This means that the partition compensation mechanism can only be triggered when a partitioned materialized view is built on partitioned tables of the aforementioned types.
+:::
+
+
 ### Nested Materialized View Rewriting
 
 The SQL definition of a materialized view can use another materialized view; this is called a nested materialized view.
