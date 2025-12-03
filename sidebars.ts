@@ -1589,6 +1589,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'MAP Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/deduplicate-map',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-entry',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key',
