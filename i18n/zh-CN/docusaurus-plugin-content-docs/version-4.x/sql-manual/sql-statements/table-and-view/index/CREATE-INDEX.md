@@ -98,6 +98,6 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
     CREATE INDEX index3 ON table1 (`embedding`) USING ANN PROPERTIES(
     "index_type"="hnsw",
     "metric_type"="l2_distance",
-    "dim"="1"
+    "dim"="128"
     );
     ```
