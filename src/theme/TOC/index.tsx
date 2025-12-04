@@ -11,6 +11,7 @@ import { SlackIcon } from '../../components/Icons/slack-icon';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
+import { Spin } from 'antd';
 import Link from '@docusaurus/Link';
 
 import styles from './styles.module.css';
@@ -20,25 +21,47 @@ import styles from './styles.module.css';
 const LINK_CLASS_NAME = 'table-of-contents__link toc-highlight';
 const LINK_ACTIVE_CLASS_NAME = 'table-of-contents__link--active';
 
-export function downloadFile(url: string, filename: string) {
-    var xml = new XMLHttpRequest();
-    xml.open('GET', url, true);
-    xml.responseType = 'blob';
-    xml.onload = function () {
-        var url = window.URL.createObjectURL(xml.response);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-    };
-    xml.send();
-}
-
 export default function TOC({ className, ...props }: Props): React.ReactElement {
     const { siteConfig } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
+    const [loading, setLoading] = useState(false);
+
+    function downloadFileWithLoading(url: string, filename: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            setLoading(true);
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                setLoading(false);
+                if (xhr.status === 200) {
+                    try {
+                        const blobUrl = window.URL.createObjectURL(xhr.response);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = filename;
+                        a.click();
+                        window.URL.revokeObjectURL(blobUrl);
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                }
+            };
+            xhr.onerror = function () {
+                setLoading(false);
+                reject(new Error('netwo'));
+            };
+            xhr.ontimeout = function () {
+                setLoading(false);
+                reject(new Error('timeout'));
+            };
+
+            xhr.send();
+        });
+    }
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -55,7 +78,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
             }
         }
     }, [typeof window !== 'undefined' && location.pathname]);
-    
+
     return (
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>
             <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
@@ -65,16 +88,18 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         <span className="group-hover:text-[#444FD9]">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
                     </div>
                 </Link>
-                {isCN && ['4.x','3.x', '2.0', '2.1'].includes(currentVersion) ? (
+                {isCN && ['4.x', '3.x', '2.0', '2.1'].includes(currentVersion) ? (
                     <div
-                        className="toc-icon-content group"
-                        onClick={() => {
+                        className={`${loading ? '!cursor-not-allowed' : 'cursor-pointer'} toc-icon-content group`}
+                        onClick={async () => {
+                            if (loading) return;
                             const pdfInfo = DOWNLOAD_PDFS.find(item => item.version === currentVersion);
-                            downloadFile(pdfInfo.link, pdfInfo.filename);
+                            await downloadFileWithLoading(pdfInfo.link, pdfInfo.filename);
                         }}
                     >
                         <PdfIcon className="group-hover:text-[#444FD9]" />
-                        <span className="group-hover:text-[#444FD9]">{isCN ? '下载 PDF' : 'Download PDF'}</span>
+                        <span className={` group-hover:text-[#444FD9] mr-2`}>{isCN ? '下载 PDF' : 'Download PDF'}</span>
+                        <Spin size="small" spinning={loading} />
                     </div>
                 ) : null}
                 {isCN ? (
