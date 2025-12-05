@@ -15,7 +15,7 @@ Create a new index on a table. The table name and index name must be specified. 
 ```sql
 CREATE INDEX [IF NOT EXISTS] <index_name> 
              ON <table_name> (<column_name> [, ...])
-             [USING {INVERTED | NGRAM_BF}]
+             [USING {INVERTED | NGRAM_BF | ANN}]
              [PROPERTIES ("<key>" = "<value>"[ , ...])]
              [COMMENT '<index_comment>']
 ```
@@ -96,3 +96,15 @@ The user executing this SQL command must have at least the following permissions
   ```sql
   CREATE INDEX index2 ON table1 USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
   ```
+
+
+- Create an ANN index `index3` on `table1` (`embedding`) vector column.
+
+
+  ```sql
+  CREATE INDEX index3 ON table1 (`embedding`) USING ANN PROPERTIES(
+    "index_type"="hnsw",
+    "metric_type"="l2_distance",
+    "dim"="128"
+  );
+    ```
