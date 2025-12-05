@@ -434,6 +434,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
                                 'lakehouse/catalogs/jdbc-mysql-catalog',
