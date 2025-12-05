@@ -8,13 +8,6 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris Catalog 允许用户跨多个 Doris 集群的数据访问，目前有两种实现方式。
-
-1. 通过 HTTP 协议和 Arrow Flight 协议访问外部Doris集群
-2. 通过把远端集群当作本集群的一部分，远端表直接视作内表，执行计划直接下发到远端集群执行
-
-本文档介绍如何配置远程 Doris 集群连接并进行查询。
-
 :::note
 该功能自 4.0.2 版本支持。
 
@@ -25,7 +18,7 @@ Doris Catalog 允许用户跨多个 Doris 集群的数据访问，目前有两�
 
 | 场景     | 说明                                                                  |
 |---------|-----------------------------------------------------------------------|
-| 联邦查询 | Doris 通过上述两种实现方式之一，实现对多个独立 Doris 集群的关联查询 |
+| 联邦查询 | 对多个独立 Doris 集群的关联查询 |
 
 ## 配置 Catalog
 
@@ -60,7 +53,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `use_arrow_flight`
 
-采用Arrow Flight方式访问远端 Doris 集群还是将远端表当做内表执行计划发送给远端 Doris 集群执行
+采用 Arrow Flight 方式访问远端 Doris 集群还是将远端表当做内表执行计划发送给远端 Doris 集群执行
 
 * `{QueryProperties}`
 
@@ -68,7 +61,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   
   | 参数名称                      | 说明                                                                                     | 默认值 |
   |-----------------------------|------------------------------------------------------------------------------------------|-------|
-  | `enable_parallel_result_sink` | 开启后，本地 Doris BE 节点将并行地从远端 Doris 集群各 BE 节点拉取数据。(针对Arrow Flight方式)          | true  |
+  | `enable_parallel_result_sink` | 开启后，本地 Doris BE 节点将并行地从远端 Doris 集群各 BE 节点拉取数据。(针对 Arrow Flight 方式)          | true  |
   | `query_retry_count`          | 向远端 Doris 发送查询请求失败的最大重试次数。(不包含请求被接受后，远端 Doris 异步执行过程中可能发生的失败) | 3     |
   | `query_timeout_sec`           | 向远端 Doris 发送查询的超时时间。(不包含请求被接受后，远端 Doris 异步执行时间)                         | 15    |
   | `compatible`                  | 用于在访问版本低于本集群的远端 Doris 时，尝试兼容其元数据格式。集群版本一致时无需开启。                 | false |
@@ -93,13 +86,39 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   CommonProperties 部分用于填写通用属性。请参阅 数据目录概述 中【通用属性】部分。
 
+## 访问模式
+
+### Arrow Flight 模式
+
+当 `use_arrow_flight` 属性为 `true` 时，则为 Arrow Flight 模式。
+
+![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
+
+在该模式下进行跨集群查询时，FE 之间通过 HTTP 协议同步 Schema 等元信息，然后本地集群的 BE 节点，通过 Arrow Flight 接口访问 Remote Doris 集群。
+
+**优点**：对于 FE 基本没开销，执行计划仅生成查询 SQL 发往远端集群
+
+**缺点**：可能无法利用 Doris 内表的各种优化特性，如聚合下推、有限的谓词下推等。
+
+### 虚拟集群模式
+
+当 `use_arrow_flight` 属性为 `false` 时，则为虚拟集群模式。
+
+![virtual-cluster-mode](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
+
+在该模式下进行跨集群查询时，会将 Remote Doris 集群中的 Backend 节点当做虚拟节点进行查询规划。
+
+FE 之间通过 HTTP 协议同步 Schema 等元信息。BE 直接通过内部通信协议进行数据传输。
+
+**优点**：基本可以利用 Doris 内表查询的所有优化特性。查询执行流程和单集群内部流程一致。
+
+**缺点**：对于较大的远端表来说，会获取远端表的所有信息 (分区信息，副本信息)。FE 的内存开销会上升，需要扩大 FE 内存。在各集群版本不一致时，比如高版本查询低版本，可能会出现查询失败。
+
 ## 列类型映射
 
 Doris 外表类型与本地 Doris 类型完全相同。
 
 ## 查询操作
-
-### 基础查询
 
 配置好 Catalog 后，可以通过以下方式查询 Catalog 中的表数据：
 
@@ -117,12 +136,15 @@ SELECT * FROM doris_tbl LIMIT 10;
 SELECT * FROM doris_ctl.doris_db.doris_tbl LIMIT 10;
 ```
 
-### 查询优化
+## 查询优化
 
-#### Arrow Flight方式
+### Arrow Flight 模式
 
-Doris Catalog 访问数据源时，Doris 会尽量将谓词或函数条件下推并拼接到生成的 SQL 中。可以通过 EXPLAIN SQL 查看到生成的 SQL 语句。
-```
+该模式下，Doris 会尽量将谓词或函数条件下推并拼接到生成的 SQL 中。
+
+可以通过 EXPLAIN SQL 查看到生成的 SQL 语句。
+
+```sql
 ...
 |   0:VREMOTE_DORIS_SCAN_NODE(68)                                                                                                                   |
 |      TABLE: test.test_time                                                                                                                        |
@@ -131,11 +153,13 @@ Doris Catalog 访问数据源时，Doris 会尽量将谓词或函数条件下推
 ...
 ```
 
-#### 远端表当做内表方式
+### 虚拟集群模式
 
-Doris Catalog 访问数据源时，将远端表看做内表，执行计划看到是VOlapScanNode，doris针对内表查询的各种优化都可以继续利用，比如 Join Runtime Filter
+该模式下，执行计划看到的依然是 `VOlapScanNode`。
 
-```
+Doris 针对内表查询的各种优化都可以继续利用，比如 Join Runtime Filter。
+
+```sql
 MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.example_tbl_duplicate b on (a.log_type = b.log_type) where error_code=2;
 +-------------------------------------------------------------------------------------------------------------------------------------------+
 | Explain String(Nereids Planner)                                                                                                           |
@@ -201,17 +225,3 @@ MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.ex
 |      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
 |      pushAggOp=NONE
 ```
-
-### 优缺点
-
-#### Arrow Flight方式
-
-**优点**： 对于FE基本没开销，执行计划仅生成查询SQL发往远端集群
-
-**缺点**： 可能无法利用Doris内表的各种优化特性
-
-#### 远端表当做内表方式
-
-**优点**： 基本可以利用Doris内表查询的所有优化特性
-
-**缺点**： 对于较大的远端表来说，会获取远端表的所有信息(分区信息，副本信息)FE的内存开销会上升，需要扩大FE内存。在各集群版本不一致时，比如高版本查询低版本，可能会出现查询失败。
