@@ -23,7 +23,7 @@ Doris 默认会开启内表的自动抽样收集，因此绝大多数情况下�
 
 目前，系统仅支持收集基本类型列的统计信息，包括 BOOLEAN、TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DATE、DATETIME、STRING、VARCHAR、TEXT 等。
 
-复杂类型的列会被跳过，包括 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME、TIMEV2 等。
+复杂类型的列会被跳过，包括 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME、TIMEV2、VARBINARY 等。
 
 统计信息的收集方式有手动和自动两种，收集的结果会保存在 `internal.__internal_schema.column_statistics` 表中。下面将详细介绍这两种收集方式。
 
@@ -442,7 +442,7 @@ Set global auto_analyze_table_width_threshold=350
 
 ### Q3：为什么部分列没有统计信息？
 
-目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
+目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME、 TIMEV2、VARBINARY 等系统会选择跳过。
 
 ### Q4：报错 "Stats table not available, please make sure your cluster status is normal"
 
