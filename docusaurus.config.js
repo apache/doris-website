@@ -230,7 +230,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
+                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
