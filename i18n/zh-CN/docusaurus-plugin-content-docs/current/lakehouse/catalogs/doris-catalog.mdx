@@ -16,9 +16,9 @@ import TabItem from '@theme/TabItem';
 
 ## 适用场景
 
-| 场景     | 说明                                                                  |
-|---------|-----------------------------------------------------------------------|
-| 联邦查询 | 对多个独立 Doris 集群的关联查询 |
+对多个 Doris 集群进行跨集群的联邦分析。
+
+不同于通过 JDBC Catalog 连接其他 Doris 集群，该方案通过 Arrow Flight 或虚拟集群方式，能够进行高效的多 Doris 集群联邦分析。
 
 ## 配置 Catalog
 
@@ -103,6 +103,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 ### 虚拟集群模式
 
 当 `use_arrow_flight` 属性为 `false` 时，则为虚拟集群模式。
+
+> 该模式目前仅支持存算一体方式部署的 Doris 集群。
 
 ![virtual-cluster-mode](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
 
