@@ -16,9 +16,9 @@ This is an experimental feature.
 
 ## Use Cases
 
-| Scenario | Description |
-|----------|-------------|
-| Federated Query | Join queries across multiple independent Doris clusters |
+Perform cross-cluster federated analysis across multiple Doris clusters.
+
+Unlike connecting to other Doris clusters through JDBC Catalog, this solution enables efficient multi-Doris cluster federated analysis through Arrow Flight or virtual cluster mode.
 
 ## Configuring Catalog
 
@@ -102,6 +102,8 @@ In this mode, during cross-cluster queries, FEs synchronize schema and other met
 ### Virtual Cluster Mode
 
 When the `use_arrow_flight` property is `false`, it operates in virtual cluster mode.
+
+> Currently, this mode only support compute-storage coupled Doris cluster. 
 
 ![virtual-cluster-mode](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
 
