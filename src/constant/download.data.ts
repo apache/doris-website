@@ -2578,12 +2578,12 @@ export const DOWNLOAD_PDFS = [
      {
         version: '4.x',
         filename: 'Apache Doris 中文手册（v4.x）.pdf',
-        link: 'https://doris.apache.org/pdf/Apache_Doris_v4_x.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v4_x_j3h8d6b1v0.pdf',
     },
     {
         version: '3.x',
-        filename: 'Apache Doris 中文手册（v3.0）.pdf',
-        link: 'https://doris.apache.org/pdf/Apache_Doris_v3_0_4412376f6e.pdf',
+        filename: 'Apache Doris 中文手册（v3.x）.pdf',
+        link: 'https://doris.apache.org/pdf/Apache_Doris_v3_x_t5x7q9z2y4.pdf',
     },
     {
         version: '2.1',

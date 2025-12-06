@@ -76,8 +76,7 @@ PROPERTIES
     "s3.endpoint" = "http://s3-REGION.amazonaws.com",
     "s3.region" = "s3-REGION",
     "s3.access_key" = "AWS_ACCESS_KEY",
-    "s3.secret_key"="AWS_SECRET_KEY",
-    "s3.region" = "REGION"
+    "s3.secret_key"="AWS_SECRET_KEY"
 );
 ```
 

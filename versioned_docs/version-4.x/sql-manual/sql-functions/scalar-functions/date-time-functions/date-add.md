@@ -29,7 +29,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 | -- | -- |
 | `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be added, of `INT` type |
-| `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND |
+| `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND, SECOND_MICROSECOND |
 
 ## Return Value
 
@@ -119,6 +119,14 @@ mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1:1' MINUTE_SECOND);
 +---------------------------------------------------------------+
 | 2025-10-23 10:11:11                                           |
 +---------------------------------------------------------------+
+
+-- Add SECOND_MICROSECOND
+mysql>  select date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICROSECOND);
++---------------------------------------------------------------------------+
+| date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICROSECOND) |
++---------------------------------------------------------------------------+
+| 2025-10-10 10:10:11.223456                                                |
++---------------------------------------------------------------------------+
 
 -- Illegal unit
 select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 sa);

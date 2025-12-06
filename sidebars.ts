@@ -410,6 +410,8 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'ai/vector-search/overview',
                                 'ai/vector-search/hnsw',
+                                'ai/vector-search/ivf',
+                                'ai/vector-search/index-management',
                             ],
                         },
                     ],
@@ -432,6 +434,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
                                 'lakehouse/catalogs/jdbc-mysql-catalog',

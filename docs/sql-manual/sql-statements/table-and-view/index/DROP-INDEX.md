@@ -7,7 +7,7 @@
 
 ## Description
 
-This statement is used to delete an index with a specified name from a table. Currently, only bitmap indexes are supported.
+This statement is used to delete an index with a specified name from a table. Currently, only bitmap indexes, inverted indexes and ann indexes are supported.
 
 ## Syntax
 

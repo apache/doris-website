@@ -79,7 +79,7 @@ Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。
 
 当前 Power BI 自定义 Connector  暂时关闭认证通道，因此 Doris 提供的 自定义 Connector 是属于未经认证的，对于未认证连接器，配置方式([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors))如下：
 
-1. 假定 `power_bi_path` 为 windows 操作系统中 Power BI Desktop 的目录，一般默认为：`power_bi_path = C:\Program Files\Power BI Desktop` 参考此处路径 `%power_bi_path%\Custom Connectors folder`，放置 `Doris.mez` 自定义连接器文件（如果路径不存在，按需手动创建）。
+1. 假定 `power_bi_path` 为 windows 操作系统中 Power BI Desktop 的目录，一般默认为：`power_bi_path = C:\Program Files\Power BI Desktop` 参考此处路径 `%power_bi_path%\Custom Connectors folder`，放置 [Doris.mez](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) 自定义连接器文件（如果路径不存在，按需手动创建）。
 2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。可以屏蔽掉未认证连接器的限制。
 
 首先，选择 `File`

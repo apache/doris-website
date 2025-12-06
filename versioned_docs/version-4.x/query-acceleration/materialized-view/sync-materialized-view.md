@@ -27,6 +27,8 @@ A synchronous materialized view is a special type of table in Doris that stores 
 
 - The SELECT list cannot include auto-increment columns, constants, duplicate expressions, or window functions.
 
+- The SELECT list cannot include VARBINARY type column.
+
 - The column names in the select list of a sync materialized view must not be the same as any existing columns in the base table, nor duplicate the column names of other sync materialized views on the same base table. You can avoid name conflicts by specifying aliases (e.g., col as xxx).
 
 - If the SELECT list contains aggregation functions, these must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no non-aggregation function expressions can follow the aggregation function (e.g., `SELECT x, sum(a)` is allowed, but `SELECT sum(a), x` is not).
