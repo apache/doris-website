@@ -106,6 +106,82 @@ SET GLOBAL enable_file_cache = true;
 
 用户可以通过系统表 [`file_cache_statistics`](../admin-manual/system-tables/information_schema/file_cache_statistics) 查看各个 Backend 节点的缓存统计指标。
 
+## 缓存预热（Warmup）
+
+Data Cache 提供缓存“预热（warmup）”功能，允许将外部数据提前加载到 BE 节点的本地缓存中，从而提升后续首次查询的命中率和查询性能。
+
+### 语法
+
+```
+WARM UP SELECT <select_expr_list>
+FROM <table_reference>
+[WHERE <boolean_expression>]
+```
+
+#### 语法说明
+
+* **支持**：
+
+  * 单表查询（仅允许一个 table_reference）
+  * 指定列的简单 SELECT
+  * WHERE 过滤（支持常规谓词）
+
+* **不支持**：
+
+  * JOIN、UNION、子查询、CTE
+  * GROUP BY、HAVING、ORDER BY
+  * LIMIT
+  * INTO OUTFILE
+  * 多表 / 复杂查询计划
+  * 其它复杂语法
+
+### 示例
+
+#### 1. 预热整张表
+
+```sql
+WARM UP SELECT * FROM hive_db.tpch100_parquet.lineitem;
+```
+
+#### 2. 根据分区预热部分列
+
+```sql
+WARM UP SELECT l_orderkey, l_shipmode
+FROM hive_db.tpch100_parquet.lineitem
+WHERE dt = '2025-01-01';
+```
+
+#### 3. 根据过滤条件预热部分列
+
+```sql
+WARM UP SELECT l_shipmode, l_linestatus
+FROM hive_db.tpch100_parquet.lineitem
+WHERE l_orderkey = 123456;
+```
+
+### 执行返回结果
+
+执行 `WARM UP SELECT` 后，FE 会下发任务至各 BE，BE 扫描远端数据并写入 Data Cache。
+系统会直接返回各 BE 的扫描与缓存写入统计信息（注意：统计信息基本准确，会有一定误差）。例如：
+
+```
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+| BackendId     | ScanRows  | ScanBytes   | ScanBytesFromLocalStorage | ScanBytesFromRemoteStorage | BytesWriteIntoCache |
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+| 1755134092928 | 294744184 | 11821864798 | 538154009                 | 11283717130                | 11899799492         |
+| 1755134092929 | 305293718 | 12244439301 | 560970435                 | 11683475207                | 12332861380         |
+| TOTAL         | 600037902 | 24066304099 | 1099124444                | 22967192337                | 24232660872         |
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+```
+
+#### 字段解释
+
+* **ScanRows**：扫描读取行数。
+* **ScanBytes**：扫描读取数据量。
+* **ScanBytesFromLocalStorage**：从本地缓存扫描读取的数据量。
+* **ScanBytesFromRemoteStorage**：从远端存储扫描读取的数据量。
+* **BytesWriteIntoCache**：本次预热写入 Data Cache 的数据量。
+
 ## 附录
 
 ### 原理
