@@ -106,6 +106,84 @@ If `BytesScannedFromRemote` is 0, it means the cache is fully hit.
 
 Users can view cache statistics for each Backend node through the system table [`file_cache_statistics`](../admin-manual/system-tables/information_schema/file_cache_statistics).
 
+## Cache Warmup
+
+Data Cache provides a cache "warmup" feature that allows preloading external data into the local cache of BE nodes, thereby improving cache hit rates and query performance for subsequent first-time queries.
+
+> This feature is supported since version 4.0.2.
+
+### Syntax
+
+```sql
+WARM UP SELECT <select_expr_list>
+FROM <table_reference>
+[WHERE <boolean_expression>]
+```
+
+Usage restrictions:
+
+* Supported:
+
+  * Single table queries (only one table_reference allowed)
+  * Simple SELECT for specified columns
+  * WHERE filtering (supports regular predicates)
+
+* Not supported:
+
+  * JOIN, UNION, subqueries, CTE
+  * GROUP BY, HAVING, ORDER BY
+  * LIMIT
+  * INTO OUTFILE
+  * Multi-table / complex query plans
+  * Other complex syntax
+
+### Examples
+
+1. Warm up the entire table
+
+  ```sql
+  WARM UP SELECT * FROM hive_db.tpch100_parquet.lineitem;
+  ```
+
+2. Warm up partial columns by partition
+
+  ```sql
+  WARM UP SELECT l_orderkey, l_shipmode
+  FROM hive_db.tpch100_parquet.lineitem
+  WHERE dt = '2025-01-01';
+  ```
+3. Warm up partial columns by filter conditions
+
+  ```sql
+  WARM UP SELECT l_shipmode, l_linestatus
+  FROM hive_db.tpch100_parquet.lineitem
+  WHERE l_orderkey = 123456;
+  ```
+
+### Execution Results
+
+After executing `WARM UP SELECT`, the FE dispatches tasks to each BE. The BE scans remote data and writes it to Data Cache.
+
+The system directly returns scan and cache write statistics for each BE (Note: Statistics are generally accurate but may have some margin of error). For example:
+
+```
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+| BackendId     | ScanRows  | ScanBytes   | ScanBytesFromLocalStorage | ScanBytesFromRemoteStorage | BytesWriteIntoCache |
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+| 1755134092928 | 294744184 | 11821864798 | 538154009                 | 11283717130                | 11899799492         |
+| 1755134092929 | 305293718 | 12244439301 | 560970435                 | 11683475207                | 12332861380         |
+| TOTAL         | 600037902 | 24066304099 | 1099124444                | 22967192337                | 24232660872         |
++---------------+-----------+-------------+---------------------------+----------------------------+---------------------+
+```
+
+Field explanations:
+
+* ScanRows: Number of rows scanned and read.
+* ScanBytes: Amount of data scanned and read.
+* ScanBytesFromLocalStorage: Amount of data scanned and read from local cache.
+* ScanBytesFromRemoteStorage: Amount of data scanned and read from remote storage.
+* BytesWriteIntoCache: Amount of data written to Data Cache during this warmup.
+
 ## Appendix
 
 ### Principle
