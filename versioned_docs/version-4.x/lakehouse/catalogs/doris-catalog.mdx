@@ -89,6 +89,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Arrow Flight Mode
 
+> Supported since 4.0.2.
+
 When the `use_arrow_flight` property is `true`, it operates in Arrow Flight mode.
 
 ![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
@@ -100,6 +102,8 @@ In this mode, during cross-cluster queries, FEs synchronize schema and other met
 **Disadvantages**: May not be able to utilize various optimization features of Doris internal tables, such as aggregation pushdown, limited predicate pushdown, etc.
 
 ### Virtual Cluster Mode
+
+> Supported since 4.0.3.
 
 When the `use_arrow_flight` property is `false`, it operates in virtual cluster mode.
 
@@ -117,7 +121,18 @@ FEs synchronize schema and other metadata through HTTP protocol. BEs directly tr
 
 ## Column Type Mapping
 
-Doris external table types are completely identical to local Doris types.
+### Arrow Flight Mode
+
+The supported column types and table types in this mode depend on the capabilities of Arrow Flight SQL. Currently, it has the following capabilities and limitations:
+
+- Supports all primitive types
+- Supports all nested types (Array, Map, Struct)
+- Does not support hll, bitmap, and variant types
+- Supports all table models (detail tables, aggregate tables, and primary key tables)
+
+### Virtual Cluster Mode
+
+In virtual cluster mode, all column types and all table models (detail tables, aggregate tables, and primary key tables) are supported.
 
 ## Query Operations
 

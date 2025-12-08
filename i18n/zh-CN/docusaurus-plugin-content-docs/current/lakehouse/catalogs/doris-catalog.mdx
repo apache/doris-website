@@ -90,6 +90,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Arrow Flight 模式
 
+> 自 4.0.2 版本支持。
+
 当 `use_arrow_flight` 属性为 `true` 时，则为 Arrow Flight 模式。
 
 ![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
@@ -101,6 +103,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 **缺点**：可能无法利用 Doris 内表的各种优化特性，如聚合下推、有限的谓词下推等。
 
 ### 虚拟集群模式
+
+> 自 4.0.3 版本支持。
 
 当 `use_arrow_flight` 属性为 `false` 时，则为虚拟集群模式。
 
@@ -118,7 +122,18 @@ FE 之间通过 HTTP 协议同步 Schema 等元信息。BE 直接通过内部通
 
 ## 列类型映射
 
-Doris 外表类型与本地 Doris 类型完全相同。
+### Arrow Flight 模式
+
+该模式下支持的列类型和表类型，取决于 Arrow Flight SQL 的支持能力，目前有以下能力和限制：
+
+- 支持所有基础类型（Primitive Type）
+- 支持所有嵌套类型（Array、Map、Struct）
+- 不支持 hll、bitmap、variant 类型
+- 支持所有的表模式（明细表、聚合表和主键表）
+
+### 虚拟集群模式
+
+虚拟集群模式下，支持所有的列类型和所有的表模式（明细表、聚合表和主键表）。
 
 ## 查询操作
 
