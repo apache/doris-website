@@ -21,6 +21,8 @@ TIMESTAMPTZ 的取值范围与 DATETIME 相同，为 `[0000-01-01 00:00:00.00000
 TIMESTAMPTZ 支持指定精度，格式为 TIMESTAMPTZ(p)，其中 `p` 表示精度，取值范围为 `[0, 6]`，默认值为 0。换句话说，TIMESTAMPTZ 等同于 TIMESTAMPTZ(0)。
 默认输出格式为 `'yyyy-MM-dd HH:mm:ss.SSSSSS+XX:XX'`，其中 `+XX:XX` 表示时区偏移量（注意，`SSSSSS` 的位数由精度 `p` 决定）。
 
+TIMESTAMPTZ 类型可以作为主键、分区列、分桶列。
+
 ### 工作原理
 
 TIMESTAMPTZ 的实现并非在每行数据中单独存储时区信息，而是采用以下机制：

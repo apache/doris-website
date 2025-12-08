@@ -97,6 +97,7 @@ Besides primitive types, VARIANT supports the following extended types via Schem
   - Decimal: Decimal32 / Decimal64 / Decimal128 / Decimal256
   - LargeInt
 - Datetime
+- Timestamptz
 - Date
 - IPV4 / IPV6
 - Boolean
@@ -114,6 +115,7 @@ CREATE TABLE test_var_schema (
         'string_val': STRING,
         'decimal_val': DECIMAL(38, 9),
         'datetime_val': DATETIME,
+        'tz_val': TIMESTAMPTZ,
         'ip_val': IPV4
     > NULL
 )
@@ -124,16 +126,17 @@ INSERT INTO test_var_schema VALUES (1, '{
     "string_val" : "Hello World",
     "decimal_val" : 1.11111111,
     "datetime_val" : "2025-05-16 11:11:11",
+    "tz_val" : "2025-05-16 11:11:11+08:00",
     "ip_val" : "127.0.0.1"
 }');
 
 SELECT variant_type(v1) FROM test_var_schema;
 
-+----------------------------------------------------------------------------------------------------------------------------+
-| variant_type(v1)                                                                                                           |
-+----------------------------------------------------------------------------------------------------------------------------+
-| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string"} |
-+----------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| variant_type(v1)                                                                                                                                  |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string","tz_val":"timestamptz"} |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
 `{"date": 2020-01-01}` and `{"ip": 127.0.0.1}` are invalid JSON texts; the correct format is `{"date": "2020-01-01"}` and `{"ip": "127.0.0.1"}`.

@@ -97,6 +97,7 @@ We categorize CAST by the target_data_type:
 - [Cast to DATE](./date-conversion.md)
 - [Cast to TIME](./time-conversion.md)
 - [Cast to DATETIME](./datetime-conversion.md)
+- [Cast to TIMESTAMPTZ](./timestamptz-conversion.md)
 - [Cast to integers (INT, etc.)](./int-conversion.md)
 - [Cast to floating point (FLOAT/DOUBLE)](./float-double-conversion.md)
 - [Cast to DECIMAL](./decimal-conversion.md)

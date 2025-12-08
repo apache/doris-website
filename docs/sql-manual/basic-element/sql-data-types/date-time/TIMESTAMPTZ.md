@@ -19,6 +19,8 @@ According to SQL standards, the standalone TIMESTAMP type should not carry time 
 The range of TIMESTAMPTZ is the same as DATETIME, being `[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]`.
 TIMESTAMPTZ supports specifying precision in the format TIMESTAMPTZ(p), where `p` represents the precision and can range from `[0, 6]`, with a default value of 0. In other words, TIMESTAMPTZ is equivalent to TIMESTAMPTZ(0). The default output format is `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'`, where `+XX:XX` represents the time zone offset (note that the number of digits in `SSSSSS` is determined by the precision `p`).
 
+The TIMESTAMPTZ type can be used as a primary key, partitioning column, and bucketing column.
+
 ### Working Principle
 
 TIMESTAMPTZ implementation does not store time zone information with each row of data, but instead adopts the following mechanism:

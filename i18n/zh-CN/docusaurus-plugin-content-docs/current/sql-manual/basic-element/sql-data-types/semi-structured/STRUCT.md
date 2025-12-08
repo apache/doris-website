@@ -10,7 +10,7 @@
 STRUCT 类型用于将多个字段组合成一个结构体，每个字段可以有自己的名字和类型，适合表示嵌套或复杂的业务数据结构。
 - `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` 
   - `field_name` 表征名字，**不可为空，不可重复，名字不区分大小写**。
-  - `field_type` 表征类型，类型是Nullable的，不可指定NOT NULL，支持的类型有：`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPTV4, IPV6, ARRAY, MAP, STRUCT`。
+  - `field_type` 表征类型，类型是Nullable的，不可指定NOT NULL，支持的类型有：`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPTV4, IPV6, ARRAY, MAP, STRUCT`。
   - `[COMMENT 'comment-string']` 表征注释，可选的。
 
 ## 类型约束
