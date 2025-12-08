@@ -117,7 +117,18 @@ FEs synchronize schema and other metadata through HTTP protocol. BEs directly tr
 
 ## Column Type Mapping
 
-Doris external table types are completely identical to local Doris types.
+### Arrow Flight Mode
+
+The supported column types and table types in this mode depend on the capabilities of Arrow Flight SQL. Currently, it has the following capabilities and limitations:
+
+- Supports all primitive types
+- Supports all nested types (Array, Map, Struct)
+- Does not support hll, bitmap, and variant types
+- Supports all table models (detail tables, aggregate tables, and primary key tables)
+
+### Virtual Cluster Mode
+
+In virtual cluster mode, all column types and all table models (detail tables, aggregate tables, and primary key tables) are supported.
 
 ## Query Operations
 
