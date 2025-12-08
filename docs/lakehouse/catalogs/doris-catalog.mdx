@@ -89,6 +89,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Arrow Flight Mode
 
+> Supported since 4.0.2.
+
 When the `use_arrow_flight` property is `true`, it operates in Arrow Flight mode.
 
 ![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
@@ -100,6 +102,8 @@ In this mode, during cross-cluster queries, FEs synchronize schema and other met
 **Disadvantages**: May not be able to utilize various optimization features of Doris internal tables, such as aggregation pushdown, limited predicate pushdown, etc.
 
 ### Virtual Cluster Mode
+
+> Supported since 4.0.3.
 
 When the `use_arrow_flight` property is `false`, it operates in virtual cluster mode.
 

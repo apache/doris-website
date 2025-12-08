@@ -90,6 +90,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Arrow Flight 模式
 
+> 自 4.0.2 版本支持。
+
 当 `use_arrow_flight` 属性为 `true` 时，则为 Arrow Flight 模式。
 
 ![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
@@ -101,6 +103,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 **缺点**：可能无法利用 Doris 内表的各种优化特性，如聚合下推、有限的谓词下推等。
 
 ### 虚拟集群模式
+
+> 自 4.0.3 版本支持。
 
 当 `use_arrow_flight` 属性为 `false` 时，则为虚拟集群模式。
 
