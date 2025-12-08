@@ -11,7 +11,7 @@ export const NEWSLETTER_DATA = [
         title: "From OneLake to Insights: Building Modern Analytics with Apache Doris and Microsoft Fabric",
         content: `Connect Apache Doris to Microsoft Fabric’s OneLake, the unified data lake behind Fabric. See how to set up data and authentication in Fabric, creating an Iceberg REST Catalog in Doris, and query OneLake tables without data movement.`,
         to: 'https://www.velodb.io/blog/connect-apache-doris-and-microsoft-fabric-and-onelake',
-        image: 'blogs/20251117_OneLake_1800 × 766.png',
+        image: 'blogs/20251117_OneLake_1800x766.png',
     },
     {
         tags: ['Tech Sharing'],
@@ -25,7 +25,7 @@ export const NEWSLETTER_DATA = [
         title: "Apache Doris Achieves 70% Better Price-Performance on ARM-based AWS Graviton",
         content: `We benchmarked Apache Doris on ARM-based AWS Graviton against x86 instances across five industry-standard OLAP tests (ClickBench, SSB 100G, SSB-Flat, TPC-H, and TPC-DS), and found Doris running on ARM-based Graviton consistently delivered 54%–70% higher price-performance.`,
         to: 'https://www.velodb.io/blog/apache-doris-achieves-70-better-price-performance',
-        image: 'blogs/Doris on AWS Graviton_1800X766.png',
+        image: 'blogs/Doris_on_AWS_Graviton_1800X766.png',
     },
 
 
