@@ -53,4 +53,8 @@
 
 - `client_ip`：如果使用了代理服务，并且没有开启 IP 透传功能，则这里可能记录的是代理服务的 IP 而不是真实客户端 IP。
 - `state`：`EOF` 表示查询执行成功。`OK` 表示 DDL、DML 语句执行成功。`ERR` 表示语句执行失败。
+- `scan_bytes`： 表示BE 处理的数据的大小，它表示从磁盘读取的数据解压后的大小，包括了从Doris 内部的page cache 中读取的数据，它真实的反应了一个查询需要处理的数据量。 所以这个值并不等于 `scan_bytes_from_local_storage` + `scan_bytes_from_remote_storage`。
+- `scan_rows`：表示查询执行过程中扫描的行数，由于Doris 是列存数据库，所以会首先扫描有谓词过滤的列，根据过滤后的结果再扫描其他列，所以不同的列扫描的行数实际不一样，实际是谓词列扫描的行数比非谓词列多，而这个值反应了查询执行过程中谓词列扫描的行数。
+- `scan_bytes_from_local_storage`：表示从本地磁盘读取的数据大小，这是压缩前的数据，如果需要读取的数据位于Doris的 page cache 中，则不会被统计在内，但是如果位于操作系统的page cache内，则会被统计在内。
+- `scan_bytes_from_remote_storage`：表示从远端存储读取的数据大小，这是压缩前的数据。
 
