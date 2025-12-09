@@ -638,9 +638,27 @@ BaseCompaction:546859:
 
 #### `update_replica_infos_interval_seconds`
 
+* Type: int32
 * Description: Minimal interval (s) to update peer replica infos
 * Default value: 60 (s)
 
+#### `cold_data_compaction_score_threshold`
+
+* Type: int32
+* Description: This configuration specifies the minimum compaction score threshold for cold data before triggering compaction. When the compaction score of cold data exceeds this threshold, compaction will be considered. Adjusting this value helps control the frequency and aggressiveness of compaction on cold data in remote storage. Supported since 3.1.3.
+* Default value: 100
+
+#### `cold_data_compaction_thread_num`
+
+* Type: int32
+* Description: The number of threads used for cold data compaction. This configuration controls the degree of parallelism for cold data compaction tasks. Increasing this value allows more compaction tasks on cold data to run simultaneously, which may improve throughput but also increase resource usage.
+* Default value: 2
+
+#### `cold_data_compaction_interval_sec`
+
+* Type: int32
+* Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
+* Default value: 1800 (seconds)
 
 ### Load
 
