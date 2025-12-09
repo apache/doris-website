@@ -1445,7 +1445,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-days',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-iso8601',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-monday',
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/to-second",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/to-seconds",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/utc-date',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/utc-time',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/utc-timestamp',

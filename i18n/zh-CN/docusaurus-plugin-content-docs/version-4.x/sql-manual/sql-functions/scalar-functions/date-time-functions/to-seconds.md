@@ -1,12 +1,12 @@
 ---
 {
-  "title": "TO_SECONDSS",
+  "title": "TO_SECONDS",
   "language": "zh-CN"
 }
 ---
 
 ## 描述
-秒数计算函数，它用于将日期转换为秒数值，即计算从公元 1 年 12 月 31 日（基准日期）到指定日期的总天数。
+秒数计算函数，它用于将日期转换为秒数值，即计算从零日期(`0000-00-00`)到指定日期时间的总秒数。
 
 该函数与 mysql 中的 [to_seconds 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-seconds) 行为一致。
 
@@ -17,14 +17,27 @@ TO_SECONDS(`<date_or_time_expr>`)
 ```
 
 ## 参数
-| 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion) |
+
+## 返回值
+返回从零日期(`0000-00-00`)到指定日期时间的总秒数，类型为 BIGINT。
+
+若输入为 NULL 则返回 NULL。
 
 
 ## 举例
 
 ```sql
+-- 以`0000-00-00`为基准日期
+select to_seconds('0000-01-01');
++--------------------------+
+| to_seconds('0000-01-01') |
++--------------------------+
+|                    86400 |
++--------------------------+
+-- 从 00-00算 1 天，共 24 * 3600 == 86400s
+
 select to_seconds('2025-01-01'), to_seconds(20250101);
 +--------------------------+----------------------+
 | to_seconds('2025-01-01') | to_seconds(20250101) |
@@ -40,6 +53,13 @@ SELECT
 +---------------+-------------+
 |   63902949753 | 63902949753 |
 +---------------+-------------+
+
+select to_seconds('9999-12-31 23:59:59.999999');
++------------------------------------------+
+| to_seconds('9999-12-31 23:59:59.999999') |
++------------------------------------------+
+|                             315569519999 |
++------------------------------------------+
 
 SELECT to_seconds(NULL);
 +------------------+

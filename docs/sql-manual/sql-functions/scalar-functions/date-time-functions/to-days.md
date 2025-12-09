@@ -6,7 +6,7 @@
 ---
 
 ## Description
-A date calculation function that converts a date to a numeric value representing days, calculating the total number of days from December 31, year 1 (the reference date) to the specified date.
+A date calculation function that converts a date to a numeric value representing days, calculating the total number of days from the base date (`0000-00-00`) to the specified date.
 
 This function behaves consistently with the [to_days function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) in MySQL.
 
@@ -28,6 +28,14 @@ Returns BIGINT type representing the number of days.
 ## Examples
 
 ```sql
+-- Based on the date `0000-00-00`
+select to_days('0000-01-01');
++-----------------------+
+| to_days('0000-01-01') |
++-----------------------+
+|                     1 |
++-----------------------+
+
 --input date type
 select to_days('2007-10-07');
 +---------------------------------------+
