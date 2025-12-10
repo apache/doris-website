@@ -1225,6 +1225,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/floor',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/fmod',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/format-round',
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/interval",
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isinf',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isnan',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/ln',
