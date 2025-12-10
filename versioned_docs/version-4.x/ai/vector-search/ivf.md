@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# IVF and How to use it in Apaceh Doris
+# IVF and How to use it in Apache Doris
 
 
 IVF index is an efficient data structure used for Approximate Nearest Neighbor (ANN) search. It helps narrow down the scope of vectors during search, significantly improving search speed. Since Apache Doris 4.x, an ANN index based on IVF has been supported. This document walks through the IVF algorithm, key parameters, and engineering practices, and explains how to build and tune IVF‑based ANN indexes in production Doris clusters.
