@@ -256,7 +256,7 @@ const EVENTS_PAGE_DATA = {
                     width={384}
                     height={164}
                     className="rounded-t-lg"
-                    src={`${require('@site/static/images/events/summit2025-1105-1106-zh.jpg').default}`}
+                    src={`${require('@site/static/images/events/summit2025-zh.jpg').default}`}
                 />
             ),
             isCover: true,
