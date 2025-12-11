@@ -96,6 +96,7 @@ select try_cast('abc' as int);
 - [转换为 DATE](./date-conversion.md)
 - [转换为 TIME](./time-conversion.md)
 - [转换为 DATETIME](./datetime-conversion.md)
+- [转换为 TIMESTAMPTZ](./timestamptz-conversion.md)
 - [转换为整数（INT 等）](./int-conversion.md)
 - [转换为浮点（FLOAT/DOUBLE）](./float-double-conversion.md)
 - [转换为 DECIMAL](./decimal-conversion.md)

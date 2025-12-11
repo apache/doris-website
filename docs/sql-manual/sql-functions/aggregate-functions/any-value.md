@@ -24,7 +24,7 @@ ANY(<expr>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The column or expression to be aggregated. Supported types are String, Date, DateTime, IPv4, IPv6, Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Array, Map, Struct, AggState, Bitmap, HLL, QuantileState. |
+| `<expr>` | The column or expression to be aggregated. Supported types are String, Date, DateTime, Timestamptz, IPv4, IPv6, Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Array, Map, Struct, AggState, Bitmap, HLL, QuantileState. |
 
 ## Return Value
 

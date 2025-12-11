@@ -107,5 +107,3 @@ TODO
 ### Common Type
 
 When an implicit conversion is required due to the operands being used as mathematical operations, the first step is to determine the common type. If the operands on both sides are not consistent with the common type, each will plan a CAST expression to the common type.
-
-TODO

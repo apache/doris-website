@@ -13,7 +13,7 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
 
   - `field_name` represents the name, **cannot be empty, cannot be duplicated, and is case-insensitive**.
 
-  - `field_type` represents the type, which is nullable and cannot be specified as NOT NULL. Supported types include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`.
+  - `field_type` represents the type, which is nullable and cannot be specified as NOT NULL. Supported types include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`.
 
   - `[COMMENT 'comment-string']` represents an optional comment.
 

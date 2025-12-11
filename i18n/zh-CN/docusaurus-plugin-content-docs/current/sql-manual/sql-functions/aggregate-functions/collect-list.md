@@ -23,7 +23,7 @@ COLLECT_LIST(<expr> [,<max_size>])
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 确定要放入数组的值的表达式，支持类型为 Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，IPV4，IPV6，String，Array，Map，Struct。|
+| `<expr>` | 确定要放入数组的值的表达式，支持类型为 Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，Timestamptz，IPV4，IPV6，String，Array，Map，Struct。|
 | `<max_size>` | 可选参数，通过设置该参数能够将结果数组的大小限制为 max_size 个元素，支持类型为 Integer。 |
 
 ## 返回值

@@ -23,7 +23,7 @@ NDV(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 用于计算的表达式。支持的类型包括 String、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。|
+| `<expr>` | 用于计算的表达式。支持的类型包括 String、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。|
 
 ## 返回值
 

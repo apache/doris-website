@@ -488,7 +488,9 @@ Results are shown using DATETIME(6), which is a DATETIME type that accommodates 
 
 ## From Datelike Types
 
-Date and Time types can be converted to Datetime type. Since Datetime has different precision values, there are also conversions between Datetime types of different precisions.
+Date, Time, and Timestamptz types can be converted to Datetime type. Since Datetime has different precision values, there are also conversions between Datetime types of different precisions.
+
+When converting Timestamptz to Datetime, the conversion is performed based on the current session's time zone.
 
 ### Date
 
@@ -567,3 +569,51 @@ Assume the current date is 2025-04-29, then:
 | `2020-12-12 00:00:00.123456` | Datetime(6) | Datetime(3) | `2020-12-12 00:00:00.123`    | Decrease precision, no carry             |
 | `2020-12-12 00:00:00.99666`  | Datetime(6) | Datetime(2) | `2020-12-12 00:00:01.00`     | Decrease precision, carry to second            |
 | `9999-12-31 23:59:59.999999` | Datetime(6) | Datetime(5) | NULL                         | Carry overflow, produces an invalid date of year 10000 |
+
+### Timestamptz
+
+#### Strict Mode
+
+##### Rule Description
+
+When converting from lower precision to higher precision, the newly appearing decimal places are filled with 0, and this conversion is always valid.
+
+When converting from higher precision to lower precision, there will be a carry forward, which can continue to propagate forward. If an overflow occurs, the converted value is invalid.
+
+##### Error Handling
+
+If an overflow occurs, an error is reported.
+
+##### Examples
+
+
+| Input TIMESTAMPTZ                  | Source Type         | Target Type        | Result DATETIME                  | Comment              |
+| ---------------------------- | ----------- | ----------- | ---------------------------- | -------------------- |
+| `2020-12-12 00:00:00.123+08:00`    | Timestamptz(3) | Datetime(6) | `2020-12-12 00:00:00.123000` | Increase precision                 |
+| `2020-12-12 00:00:00.123456+08:00` | Timestamptz(6) | Datetime(3) | `2020-12-12 00:00:00.123`    | Decrease precision, no carry             |
+| `2020-12-12 00:00:00.99666+08:00`  | Timestamptz(6) | Datetime(2) | `2020-12-12 00:00:01.00`     | Decrease precision, carry to second            |
+| `9999-12-31 23:59:59.999999+08:00` | Timestamptz(6) | Datetime(5) | Error                           | Carry overflow, produces an invalid date of year 10000 |
+
+#### Non-Strict Mode
+
+Except for error handling, the behavior of non-strict mode is exactly the same as strict mode.
+
+##### Rule Description
+
+When converting from lower precision to higher precision, the newly appearing decimal places are filled with 0, and this conversion is always valid.
+
+When converting from higher precision to lower precision, there will be a carry forward, which can continue to propagate forward. If an overflow occurs, the converted value is invalid.
+
+##### Error Handling
+
+If an overflow occurs, NULL is returned.
+
+##### Examples
+
+
+| Input TIMESTAMPTZ                  | Source Type         | Target Type        | Result DATETIME                  | Comment              |
+| ---------------------------- | ----------- | ----------- | ---------------------------- | -------------------- |
+| `2020-12-12 00:00:00.123+08:00`    | Timestamptz(3) | Datetime(6) | `2020-12-12 00:00:00.123000` | Increase precision                 |
+| `2020-12-12 00:00:00.123456+08:00` | Timestamptz(6) | Datetime(3) | `2020-12-12 00:00:00.123`    | Decrease precision, no carr             |
+| `2020-12-12 00:00:00.99666+08:00`  | Timestamptz(6) | Datetime(2) | `2020-12-12 00:00:01.00`     | Decrease precision, carry to second            |
+| `9999-12-31 23:59:59.999999+08:00` | Timestamptz(6) | Datetime(5) | NULL                         | Carry overflow, produces an invalid date of year 10000 |
