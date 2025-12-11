@@ -121,12 +121,13 @@ PROPERTIES (
 
 **3. LoongCollector 配置**
 
-LoongCollector 配置文件 loongcollector_doris_log.yaml 主要由 3 部分组成：
+LoongCollector 配置文件主要由 3 部分组成：
 1. inputs 负责读取原始数据
 2. processors 负责做数据转换
 3. flushers 负责将数据输出
 
 配置文件位置 `conf/continuous_pipeline_config/local/`
+创建配置文件 `loongcollector_doris_log.yaml `
 
 ```yaml
 enable: true
@@ -297,7 +298,7 @@ PROPERTIES (
 2. 没有用复杂的 processor plugin，因为 JSON 数据已经有结构化字段
 
 配置文件位置 `conf/continuous_pipeline_config/local/`
-创建配置文件 loongcollector_doris_log.yaml
+创建配置文件 `loongcollector_doris_log.yaml`
 
 ```yaml
 enable: true
@@ -331,9 +332,6 @@ flushers:
       format: json
       read_json_by_line: "true"
       load_to_single_tablet: "true"
-      strip_outer_array: "false"
-      jsonpaths: '["$.created_at","$.id","$.type","$.public","$.actor","$.repo","$.payload"]'
-      columns: "created_at,id,type,public,actor,repo,payload"
     Convert:
       Protocol: custom_single_flatten
       Encoding: json
