@@ -1,15 +1,15 @@
 ---
 {
-    "title": "LoongCollector Doris Flusher",
+    "title": "LoongCollector (iLogtail) Doris Flusher",
     "language": "zh-CN"
 }
 ---
 
-# LoongCollector Doris Flusher 
+# LoongCollector (iLogtail) Doris Flusher 
 
 ## 介绍
 
-LoongCollector 是一个开源高性能日志采集与处理框架，来源于阿里云，支持自定义输出插件将数据写入存储系统，LoongCollector Doris Flusher 是输出到 Doris 的插件。
+[LoongCollector (iLogtail)](https://github.com/alibaba/loongcollector) 是一个开源高性能日志采集与处理框架，来源于阿里云，3.0版本之前的命名为：Logtail/iLogtail。支持自定义输出插件将数据写入存储系统，LoongCollector Doris Flusher 是输出到 Doris 的插件。
 
 Doris Flusher 调用 Doris Stream Load HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
@@ -18,7 +18,15 @@ Doris Flusher 调用 Doris Stream Load HTTP 接口将数据实时写入 Doris，
 2. 配置 Doris 输出地址和其他参数
 3. 启动 LoongCollector 将数据实时写入 Doris
 
-## 编译安装
+## 安装
+
+### 从官网下载
+
+```bash
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/loongcollector-linux-amd64.tar.gz
+```
+
+### 从源码编译
 
 ```shell
 # Clone the repository
@@ -122,6 +130,7 @@ LoongCollector 配置文件 loongcollector_doris_log.yaml 主要由 3 部分组�
 
 ```yaml
 enable: true
+
 inputs:
   # 1. inputs 负责读取原始数据
   # file_log input 是一个 input plugin，可以配置读取的日志文件路径
@@ -132,6 +141,7 @@ inputs:
     Multiline:
       Mode: custom
       StartPattern: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+
 processors:
   # 2. processors 部分负责数据转换
   # processor_regex 是一个常用的数据转换插件，使用正则表达式提取字段
@@ -149,6 +159,7 @@ processors:
     Fields:
       type: fe.log
     IgnoreIfExist: false
+
 flushers:
   # 3. flushers 部分负责数据输出
   # flusher_doris 将数据输出到 Doris，使用的是 Stream Load HTTP 接口
@@ -243,33 +254,19 @@ wget https://data.gharchive.org/2024-01-01-15.json.gz
 CREATE DATABASE log_db;
 USE log_db;
 
-
 CREATE TABLE github_events
 (
   `created_at` DATETIME,
   `id` BIGINT,
   `type` TEXT,
   `public` BOOLEAN,
-  `actor.id` BIGINT,
-  `actor.login` TEXT,
-  `actor.display_login` TEXT,
-  `actor.gravatar_id` TEXT,
-  `actor.url` TEXT,
-  `actor.avatar_url` TEXT,
-  `repo.id` BIGINT,
-  `repo.name` TEXT,
-  `repo.url` TEXT,
+  `actor` VARIANT,
+  `repo` VARIANT,
   `payload` TEXT,
-  `host` TEXT,
-  `path` TEXT,
   INDEX `idx_id` (`id`) USING INVERTED,
   INDEX `idx_type` (`type`) USING INVERTED,
-  INDEX `idx_actor.id` (`actor.id`) USING INVERTED,
-  INDEX `idx_actor.login` (`actor.login`) USING INVERTED,
-  INDEX `idx_repo.id` (`repo.id`) USING INVERTED,
-  INDEX `idx_repo.name` (`repo.name`) USING INVERTED,
-  INDEX `idx_host` (`host`) USING INVERTED,
-  INDEX `idx_path` (`path`) USING INVERTED,
+  INDEX `idx_actor` (`actor`) USING INVERTED,
+  INDEX `idx_host` (`repo`) USING INVERTED,
   INDEX `idx_payload` (`payload`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
 )
 ENGINE = OLAP
@@ -278,6 +275,7 @@ PARTITION BY RANGE(`created_at`) ()
 DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
 "replication_num" = "1",
+"inverted_index_storage_format"= "v2",
 "compaction_policy" = "time_series",
 "enable_single_replica_compaction" = "true",
 "dynamic_partition.enable" = "true",
@@ -303,32 +301,21 @@ PROPERTIES (
 
 ```yaml
 enable: true
+
 inputs:
   # file_log input 读取 JSON 格式日志文件
   - Type: input_file
     FilePaths:
       - /path/2024-01-01-15.json
+
 processors:
-  # 第一步：解析 content，只展开第一层（actor, repo, payload 变成 JSON 字符串）
+  # 解析 content，只展开第一层（actor, repo 保持为 JSON 字符串供 VARIANT 类型使用）
   - Type: processor_json
     SourceKey: content
     KeepSource: false
     ExpandDepth: 1
     ExpandConnector: ""
-  # 第二步：解析 actor 字符串，用 . 连接，并使用 actor 作为前缀
-  - Type: processor_json
-    SourceKey: actor
-    KeepSource: false
-    ExpandDepth: 0
-    ExpandConnector: "."
-    UseSourceKeyAsPrefix: true
-  # 第三步：解析 repo 字符串，用 . 连接，并使用 repo 作为前缀
-  - Type: processor_json
-    SourceKey: repo
-    KeepSource: false
-    ExpandDepth: 0
-    ExpandConnector: "."
-    UseSourceKeyAsPrefix: true
+
 flushers:
   # flusher_doris 将数据输出到 Doris
   - Type: flusher_doris
@@ -345,14 +332,11 @@ flushers:
       read_json_by_line: "true"
       load_to_single_tablet: "true"
       strip_outer_array: "false"
-      jsonpaths: '["$.created_at","$.id","$.type","$.public","$.\"actor.id\"","$.\"actor.login\"","$.\"actor.display_login\"","$.\"actor.gravatar_id\"","$.\"actor.url\"","$.\"actor.avatar_url\"","$.\"repo.id\"","$.\"repo.name\"","$.\"repo.url\"","$.payload","$.host","$.path"]'
-      columns: "created_at,id,type,public,`actor.id`,`actor.login`,`actor.display_login`,`actor.gravatar_id`,`actor.url`,`actor.avatar_url`,`repo.id`,`repo.name`,`repo.url`,payload,host,path"
+      jsonpaths: '["$.created_at","$.id","$.type","$.public","$.actor","$.repo","$.payload"]'
+      columns: "created_at,id,type,public,actor,repo,payload"
     Convert:
       Protocol: custom_single_flatten
       Encoding: json
-      TagFieldsRename:
-        host.ip: host
-        log.file.path: path
     LogProgressInterval: 10
     Concurrency: 3
 ```
