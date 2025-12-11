@@ -12,7 +12,7 @@
 通过 [HTTP Table Value Function](../sql-manual/sql-functions/table-valued-functions/http.md) 功能，Doris 可以直接通过 SQL 访问 Hugging Face 数据集上的数据。
 
 :::note
-该功能自 4.0.3 版本支持
+该功能自 4.0.2 版本支持
 :::
 
 ## 使用说明

@@ -12,7 +12,7 @@
 Through the [HTTP Table Value Function](../sql-manual/sql-functions/table-valued-functions/http.md) feature, Doris can directly access data on Hugging Face datasets via SQL.
 
 :::note
-This feature is supported since version 4.0.3
+This feature is supported since version 4.0.2
 :::
 
 ## Usage Instructions

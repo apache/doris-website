@@ -143,7 +143,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | decimal(P, S)                      | decimal(P, S) |                                        |
 | varchar                            | string        |                                        |
 | char                               | string        |                                        |
-| bianry, varbinary                  | string/varbinary|由 properties 中 `enable.mapping.varbianry` (4.0.3 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| bianry, varbinary                  | string/varbinary|由 properties 中 `enable.mapping.varbianry` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | date                               | date          |                                        |
 | timestamp\_without\_time\_zone     | datetime(N)   | 会根据精度进行对应映射。如果精度大于 6，则最大映射到 6。（可能导致精度丢失） |
 | timestamp\_with\_local\_time\_zone | datetime(N)   | 会根据精度进行对应映射。如果精度大于 6，则最大映射到 6。（可能导致精度丢失） |
