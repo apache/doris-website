@@ -136,8 +136,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | timestamptz (Timestamp with timezone)  | datetime(6)          | Mapped to datetime with precision 6     |
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
-| binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
-| uuid                                   | string/varbinary     | Before 4.0.3, it was mapped to `string`; after that, it is mapped to `varbinary` type.|
+| binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| uuid                                   | string/varbinary     | Before 4.0.2, it was mapped to `string`; after that, it is mapped to `varbinary` type.|
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
 | list                                   | array                |                                         |
@@ -1796,6 +1796,63 @@ Supported schema change operations include:
   ```sql
   ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
+
+### Partition Evolution
+
+Starting from version 4.0.2, Doris supports Partition Evolution for Iceberg tables through `ALTER` statements.
+
+Supported partition transforms include:
+
+| Transform | Syntax | Example |
+|-----------|--------|---------|
+| bucket | `bucket(N, column)` | `bucket(16, id)` |
+| truncate | `truncate(N, column)` | `truncate(10, name)` |
+| year | `year(column)` | `year(ts)` |
+| month | `month(column)` | `month(ts)` |
+| day | `day(column)` | `day(ts)` |
+| hour | `hour(column)` | `hour(ts)` |
+| identity | `column` | `category` |
+
+Supported operations include:
+
+- **Add partition key**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name ADD PARTITION KEY partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY year(ts);
+    -- use optional AS keyword to specify a custom name for the partition field 
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id) AS shard;
+    ```
+
+- **Drop partition key**
+
+    ```sql
+    ALTER TABLE table_name DROP PARTITION KEY partition_transform｜key_name;
+
+    -- example
+    ALTER TABLE prod.db.sample DROP PARTITION KEY catalog;
+    ALTER TABLE prod.db.sample DROP PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY year(ts);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY shard;
+    ```
+
+- **Replace partition key**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name REPLACE PARTITION KEY key_name WITH partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts);
+    -- use optional AS keyword to specify a custom name for the new partition field 
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts) AS day_of_ts;
+    ```
 
 ### Managing Branch & Tag
 
