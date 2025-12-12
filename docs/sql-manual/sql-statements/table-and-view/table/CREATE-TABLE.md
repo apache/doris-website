@@ -347,6 +347,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | min_load_replica_num | Sets the minimum number of replicas required for a successful data import, with a default value of -1. When this property is less than or equal to 0, it indicates that the majority of replicas must still succeed for the data import. |
 | is_being_synced | Used to identify whether this table is being replicated by CCR and is currently being synchronized by the syncer, with a default value of `false`. If set to `true`, the `colocate_with` and `storage_policy` properties will be cleared. The `dynamic partition and` `auto bucket` features will become ineffective. That is, they will appear enabled in `show create table` but will not actually take effect. When `is_being_synced` is set to `false`, these features will resume. This property is for use only by the CCR peripheral module and should not be manually set during the CCR synchronization process. |
 | storage_medium | Declares the initial storage medium for table data. |
+| medium_allocation_mode | Specifies how to handle storage allocation when the desired medium is unavailable. Supports `strict` (fails if specified medium is unavailable) and `adaptive` (automatically uses alternative available medium). |
 | storage_cooldown_time | Sets the expiration time for the initial storage medium of the table data. After this time, it will automatically downgrade to the first-level storage medium. |
 | colocate_with | When the Colocation Join feature is needed, use this parameter to set the Colocation Group. |
 | bloom_filter_columns | A list of column names specified by the user that require the addition of a Bloom Filter index. Each column's Bloom Filter index is independent and not a composite index. For example: `"bloom_filter_columns" = "k1, k2, k3"` |
@@ -577,6 +578,40 @@ DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
 PROPERTIES(
     "storage_medium" = "SSD",
     "storage_cooldown_time" = "2015-06-04 00:00:00"
+);
+```
+
+**Medium Allocation Mode**
+
+```sql
+-- Strict mode: Must use SSD, fails if SSD is unavailable
+CREATE TABLE table_strict
+(
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+PROPERTIES(
+    "storage_medium" = "SSD",
+    "medium_allocation_mode" = "strict",
+    "replication_num" = "1"
+);
+
+-- Adaptive mode: Prefer SSD, automatically switch to HDD when needed
+CREATE TABLE table_adaptive
+(
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+PROPERTIES(
+    "storage_medium" = "SSD",
+    "medium_allocation_mode" = "adaptive",
+    "replication_num" = "1"
 );
 ```
 
