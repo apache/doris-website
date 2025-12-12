@@ -647,9 +647,15 @@ BaseCompaction:546859:
 
 #### `update_replica_infos_interval_seconds`
 
+* 类型：int32
 * 描述：更新 peer replica infos 的最小间隔时间
 * 默认值：60（s）
 
+#### `cold_data_compaction_score_threshold`
+
+* 类型：int32
+* 描述：该配置项指定触发冷数据 compaction 的最小 compaction 分数阈值。当冷数据的 compaction 分数超过该阈值时，会触发 compaction。调整该值有助于控制远程存储（如冷数据）上的 compaction 频率和激进程度。自 3.1.3 版本起支持。
+* 默认值：100
 
 ### 导入
 

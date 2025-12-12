@@ -8,7 +8,7 @@
 HTTP 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HTTP 路径上的文件内容。目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` 文件格式。
 
 :::note
-该函数自 4.0.3 版本支持。
+该函数自 4.0.2 版本支持。
 :::
 
 ## 语法

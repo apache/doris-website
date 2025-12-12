@@ -151,8 +151,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | timestamptz (Timestamp with timezone)  | datetime(6)          | 固定映射到精度为 6 的 datetime |
 | fixed(N)                               | char(N)              |                       |
 | string                                 | string               |                       |
-| binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbianry` (4.0.3 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
-| uuid                                   | string/varbinary     |4.0.3 之前映射成 `string`，之后则映射成 `varbianry` 类型。   |
+| binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
+| uuid                                   | string/varbinary     |4.0.2 之前映射成 `string`，之后则映射成 `varbinary` 类型。   |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
@@ -1807,6 +1807,63 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ```sql
   ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
+
+### Partition Evolution
+
+自 4.0.2 版本开始，Doris 支持通过 `ALTER` 语句对 Iceberg 表进行 Partition Evolution。
+
+支持的分区变换包括
+
+| 变换 | 语法 | 示例 |
+|-----------|--------|---------|
+| bucket | `bucket(N, column)` | `bucket(16, id)` |
+| truncate | `truncate(N, column)` | `truncate(10, name)` |
+| year | `year(column)` | `year(ts)` |
+| month | `month(column)` | `month(ts)` |
+| day | `day(column)` | `day(ts)` |
+| hour | `hour(column)` | `hour(ts)` |
+| identity | `column` | `category` |
+
+支持的操作包括：
+
+- **增加分区键**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name ADD PARTITION KEY partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY year(ts);
+    -- use optional AS keyword to specify a custom name for the partition field 
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id) AS shard;
+    ```
+
+- **删除分区键**
+
+    ```sql
+    ALTER TABLE table_name DROP PARTITION KEY partition_transform｜key_name;
+
+    -- example
+    ALTER TABLE prod.db.sample DROP PARTITION KEY catalog;
+    ALTER TABLE prod.db.sample DROP PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY year(ts);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY shard;
+    ```
+
+- **替换分区键**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name REPLACE PARTITION KEY key_name WITH partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts);
+    -- use optional AS keyword to specify a custom name for the new partition field 
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts) AS day_of_ts;
+    ```
 
 ### 管理 Branch & Tag
 

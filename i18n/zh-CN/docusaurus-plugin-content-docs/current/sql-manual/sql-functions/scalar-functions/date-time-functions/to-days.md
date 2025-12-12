@@ -6,9 +6,9 @@
 ---
 
 ## 描述
-日期计算函数，它用于将日期转换为天数数值，即计算从公元 1 年 12 月 31 日（基准日期）到指定日期的总天数。
+日期计算函数，它用于将日期转换为天数数值，即计算从零日期(`0000-00-00`)到指定日期的总天数。
 
-该函数与 mysql 中的 [to_day 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) 行为一致。
+该函数与 mysql 中的 [to_days 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) 行为一致。
 
 ## 语法
 
@@ -25,6 +25,14 @@ TO_DAYS(`<date_or_time_expr>`)
 ## 举例
 
 ```sql
+-- 以`0000-00-00`为基准日期
+select to_days('0000-01-01');
++-----------------------+
+| to_days('0000-01-01') |
++-----------------------+
+|                     1 |
++-----------------------+
+
 --输入 date 类型
 select to_days('2007-10-07');
 +---------------------------------------+

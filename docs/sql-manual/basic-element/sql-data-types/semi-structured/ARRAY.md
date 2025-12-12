@@ -11,7 +11,7 @@
 
 The `ARRAY<T>` type is used to represent an ordered collection of elements, where each element has the same data type. For example, an array of integers can be represented as `[1, 2, 3]`, and an array of strings as `["a", "b", "c"]`.
 
-- `ARRAY<T>` represents an array composed of elements of type T, where T is nullable. Supported types for T include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>`.
+- `ARRAY<T>` represents an array composed of elements of type T, where T is nullable. Supported types for T include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>`.
   - Note: Among the above T types, `JSONB` and `VARIANT` are only supported in the computation layer of Doris and **do not support using `ARRAY<JSONB>` and `ARRAY<VARIANT>` in table creation in Doris**.
 
 ## Type Constraints
@@ -23,7 +23,7 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   - String type can be converted to `ARRAY<T>` type (through parsing, returning NULL if parsing fails).
 - In the `AGGREGATE` table model, `ARRAY<T>` type only supports `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, it cannot be used as a KEY column, nor as a partition or bucket column**.
 - Columns of `ARRAY<T>` type **support `ORDER BY` and `GROUP BY` operations**.
-  - T types that support `ORDER BY` and `GROUP BY` include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6`.
+  - T types that support `ORDER BY` and `GROUP BY` include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`.
 - Columns of `ARRAY<T>` type do not support being used as `JOIN KEY` and do not support being used in `DELETE` statements.
 
 ## Constant Construction
@@ -178,7 +178,7 @@ select array(null) < array(-1), array(null) > array(-1);
 ## Query Acceleration
 
 - Columns of type `ARRAY<T>` in Doris tables support adding inverted indexes to accelerate computations involving `ARRAY` functions on this column.
-  - T types supported by inverted indexes: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6`.
+  - T types supported by inverted indexes: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`.
   - Accelerated `ARRAY` functions: `ARRAY_CONTAINS`, `ARRAYS_OVERLAP`, but when the function parameters include NULL, it falls back to regular vectorized computation.
 
 ## Examples

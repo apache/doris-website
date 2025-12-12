@@ -100,38 +100,7 @@ SELECT count(*) FROM sift_1M
 |  1000000 |
 +----------+
 ```
-
-The SIFT dataset ships with a ground-truth set for result validation. Pick one query vector and first run an exact Top-N using the precise distance:
-
-```sql
-SELECT id,
-       L2_distance(
-        embedding,
-        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
-       ) AS distance
-FROM sift_1m
-ORDER BY distance
-LIMIT 10;
---------------
-
-+--------+----------+
-| id     | distance |
-+--------+----------+
-| 178811 | 210.1595 |
-| 177646 | 217.0161 |
-| 181997 | 218.5406 |
-| 181605 | 219.2989 |
-| 821938 | 221.7228 |
-| 807785 | 226.7135 |
-| 716433 | 227.3148 |
-| 358802 | 230.7314 |
-| 803100 | 230.9112 |
-| 866737 | 231.6441 |
-+--------+----------+
-10 rows in set (0.29 sec)
-```
-
-When using `l2_distance` or `inner_product`, Doris computes the distance between the query vector and all 1,000,000 candidate vectors, then applies a TopN operator globally. Using `l2_distance_approximate` / `inner_product_approximate` triggers the index path:
+Using `l2_distance_approximate` / `inner_product_approximate` triggers the ANN index path. The function must match the index `metric_type` exactly (e.g., `metric_type=l2_distance` → use `l2_distance_approximate`; `metric_type=inner_product` → use `inner_product_approximate`). For ordering: L2 uses ascending distance (smaller is closer); inner product uses descending score (larger is closer).
 
 ```sql
 SELECT id,
@@ -139,7 +108,7 @@ SELECT id,
         embedding,
         [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
        ) AS distance
-FROM sift_1m
+FROM sift_1M
 ORDER BY distance
 LIMIT 10;
 --------------
@@ -161,11 +130,19 @@ LIMIT 10;
 10 rows in set (0.02 sec)
 ```
 
-With the ANN index, query latency in this example drops from about 290 ms to 20 ms.
+To compare with exact ground truth, use `l2_distance` or `inner_product` (without the `_approximate` suffix). In this example, exact search takes ~290 ms:
 
-ANN indexes are built at the segment granularity. Because tables are distributed, after each segment returns its local TopN, the TopN operator merges results across tablets and segments to produce the global TopN.
+```
+10 rows in set (0.29 sec)
+```
 
-Note: When `metric_type = l2_distance`, a smaller distance means closer vectors. For `inner_product`, a larger value means closer vectors. Therefore, if using `inner_product`, you must use `ORDER BY dist DESC` to obtain TopN via the index.
+With the ANN index, query latency drops from ~290 ms to ~20 ms in this example.
+
+ANN indexes are built at segment granularity. In distributed tables, each segment returns its local TopN; then the TopN operator merges results across tablets and segments to produce the global TopN.
+
+Note on ordering:
+- For `metric_type = l2_distance`, smaller distance = closer vectors → use `ORDER BY dist ASC`.
+- For `metric_type = inner_product`, larger value = closer vectors → use `ORDER BY dist DESC` to obtain TopN via the index.
 
 ## Approximate Range Search
 
@@ -175,7 +152,7 @@ Example SQL:
 
 ```sql
 SELECT count(*)
-FROM   sift_1m
+FROM   sift_1M
 WHERE  l2_distance_approximate(
         embedding,
         [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
@@ -311,6 +288,7 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 |---------|-----|----------------------|------------|-----------|------------|-------|
 | Cohere-MEDIUM-1M | 768D | Doris (FLAT) | 5.647 GB (2.533 + 3.114) | 2.533 GB | 3.114 GB | 1M vectors |
 | Cohere-MEDIUM-1M | 768D | Doris SQ INT8 | 3.501 GB (2.533 + 0.992) | 2.533 GB | 0.992 GB | INT8 symmetric quantization |
+| Cohere-MEDIUM-1M | 768D | Doris PQ(pq_m=384,pq_nbits=8)   | 3.149 GB (2.535 + 0.614) | 2.535 GB | 0.614 GB | product quantization |
 | Cohere-LARGE-10M | 768D | Doris (FLAT) | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M vectors |
 | Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 quantization |
 
@@ -319,7 +297,9 @@ Quantization introduces extra build-time overhead because each distance computat
 Similarly, Doris also supports product quantization, but note that when using PQ, additional parameters need to be provided:
 
 - `pq_m`: Indicates how many sub-vectors to split the original high-dimensional vector into (vector dimension dim must be divisible by pq_m).
-- `pq_nbits`: Indicates the number of bits for each sub-vector quantization, which determines the size of each subspace codebook (k = 2 ^ pq_nbits), in faiss pq_nbits is generally required to be no greater than 24.
+- `pq_nbits`: Indicates the number of bits for each sub-vector quantization, which determines the size of each subspace codebook, in faiss pq_nbits is generally required to be no greater than 24.
+
+Note that PQ quantization requires sufficient data during the training, the number of training points needing to be at least as large as the number of clusters (n >= 2 ^ pq_nbits).
 
 ```sql
 CREATE TABLE sift_1M (

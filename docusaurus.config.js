@@ -79,6 +79,7 @@ const config = {
             'data-consent-required': true,
             'data-consent-screen-disclaimer': "By clicking &quot;I agree, let's chat&quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies.",
             'data-user-analytics-cookie-enabled': false,
+            'data-bot-protection-mechanism': "hcaptcha"
         }
     ],
     stylesheets: [

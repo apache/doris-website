@@ -9,6 +9,7 @@
 
 The `WARM UP COMPUTE GROUP` statement is used to warm up data in a compute group to improve query performance. The warm-up operation can fetch resources from another compute group or specify particular tables and partitions for warming up. The warm-up operation returns a job ID that can be used to track the status of the warm-up job.
 
+> For information on how to warmup the cache for Catalog query scenarios, please refer to the [Data Cache documentation](../../../../lakehouse/data-cache.md).
 
 ## Syntax
 

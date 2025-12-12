@@ -60,6 +60,7 @@ CREATE CATALOG oracle_catalog PROPERTIES (
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |
+| BLOB | varbinary | 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | other                                 | UNSUPPORTED                          |                                                                                                                 |
 
 ## 常见问题

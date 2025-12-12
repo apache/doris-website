@@ -24,7 +24,7 @@ ANY(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 要聚合的列或表达式，支持类型为 String，Date，DateTime，IPv4，IPv6，Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Array，Map，Struct，AggState，Bitmap，HLL，QuantileState。 |
+| `<expr>` | 要聚合的列或表达式，支持类型为 String，Date，DateTime，Timestamptz，IPv4，IPv6，Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Array，Map，Struct，AggState，Bitmap，HLL，QuantileState。 |
 
 ## 返回值
 

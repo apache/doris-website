@@ -29,6 +29,8 @@ Data Cache accelerates subsequent queries accessing the same data by caching rec
 
 The cache feature is disabled by default. Please refer to the [Data Cache](../data-cache.md) documentation to configure and enable it.
 
+Since version 4.0.2, cache warmup functionality is supported, which can further actively utilize data cache to improve query performance.
+
 ## HDFS Read Optimization
 
 Please refer to the **HDFS IO Optimization** section in the [HDFS Documentation](../storages/hdfs.md).

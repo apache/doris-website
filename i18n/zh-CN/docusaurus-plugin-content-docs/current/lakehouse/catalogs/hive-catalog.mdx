@@ -152,7 +152,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | string/varbianry| 由 properties 中 `enable.mapping.varbianry` (4.0.3 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| binary        | string/varbinary| 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | array         | array         |                           |
 | map           | map           |                           |
 | struct        | struct        |                           |
