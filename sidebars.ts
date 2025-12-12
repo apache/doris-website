@@ -324,6 +324,7 @@ const sidebars: SidebarsConfig = {
                         'query-acceleration/condition-cache',
                         'query-acceleration/high-concurrent-point-query',
                         'query-acceleration/dictionary',
+                        'query-acceleration/query-profile',
                         {
                             type: 'category',
                             label: 'Distincting Counts',
