@@ -69,6 +69,7 @@ PROPERTIES (
   - `lowercase`：将非中文字母转换为小写。默认值：true
   - `trim_whitespace`：默认值：true
   - `remove_duplicated_term`：启用时，删除重复的词元以节省索引空间。例如，`de的` 变为 `de`。默认值：false。注意：可能会影响位置相关的查询
+  - `ignore_pinyin_offset`：该参数暂时没有用处。默认值：true
 
 #### 3. token_filter（词元过滤器）
 
