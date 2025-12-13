@@ -393,6 +393,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'AI',
                     items: [
+                        'ai/ai-overview',
                         'ai/ai-function-overview',
                         {
                             type: 'category',
