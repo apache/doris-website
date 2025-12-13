@@ -151,8 +151,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | timestamptz (Timestamp with timezone)  | datetime(6)          | 固定映射到精度为 6 的 datetime |
 | fixed(N)                               | char(N)              |                       |
 | string                                 | string               |                       |
-| binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbianry` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
-| uuid                                   | string/varbinary     |4.0.2 之前映射成 `string`，之后则映射成 `varbianry` 类型。   |
+| binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
+| uuid                                   | string/varbinary     |4.0.2 之前映射成 `string`，之后则映射成 `varbinary` 类型。   |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
