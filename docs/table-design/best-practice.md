@@ -67,6 +67,7 @@ Old and new records with the same AGGREGATE KEY will be aggregated. The currentl
 5. REPLACE_IF_NOT_NULL: replaces non-null values. Unlike REPLACE, it does not replace null values;
 6. HLL_UNION: aggregates columns of HLL type using the HyperLogLog algorithm;
 7. BITMAP_UNION: aggregates columns of BITMAP type using bitmap union aggregation;
+8. FIRST: retains the first value;
 
 This is suitable for reporting and multi-dimensional analysis scenarios such as:
 
