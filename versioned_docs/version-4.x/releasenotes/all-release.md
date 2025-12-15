@@ -8,7 +8,7 @@
 This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
 
 :::tip Latest Release
-🎉 Version 4.0.1 is released. Check out the 🔗[Release Notes](../releasenotes/v4.0/release-4.0.1) here. Apache Doris 4.0 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
+🎉 Version 4.0.2 is released. Check out the 🔗[Release Notes](../releasenotes/v4.0/release-4.0.2) here. Apache Doris 4.0 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
 
 <br />
 
@@ -26,6 +26,8 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
+
+- [2025-12-15, Apache Doris 4.0.2 is released](../releasenotes/v4.0/release-4.0.2.md)
 
 - [2025-11-24, Apache Doris 3.1.3 is released](../releasenotes/v3.1/release-3.1.3.md)
 
