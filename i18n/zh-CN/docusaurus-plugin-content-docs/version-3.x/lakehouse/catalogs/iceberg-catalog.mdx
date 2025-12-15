@@ -2325,6 +2325,16 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
   +--------------------+---------+-------------+---------+
   ```
 
+### Dangling Delete
+
+某些情况下，在执行完 `rewrite_data_files` 方法后，某些 Position Delete 的引用可能没有从 Snapshot 元数据中删除（Dangling Delete）。此时如果直接使用元数据中的行数信息，结果可能是[错误](https://iceberg.apache.org/docs/nightly/spark-procedures/#rewrite_position_delete_files)的。
+
+因此，在默认情况下，对于 `COUNT(*)` 查询，如果发现存在 Position Delete 文件，则不启用 COUNT 下推优化，而是直接读取文件获取真实的 `COUNT(*)` 结果。但这种方式耗时较长。
+
+如果用户能确保没有 Dangling Delete 问题，则可以通过 Doris 会话变量 `ignore_iceberg_dangling_delete` 来跳过这个检查。该变量默认为 `false`。当设置为 `true` 时，则会直接通过元数据中的行数信息，返回 `COUNT(*)` 的结果，提升查询效率。
+
+该功能自 3.1.4 和 4.0.3 版本支持。
+
 ## 附录
 
 ### `rewrite_data_files` 文件选择策略

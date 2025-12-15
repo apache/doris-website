@@ -1273,7 +1273,7 @@ For the `FOR VERSION AS OF` syntax, Doris will automatically determine whether t
 
 ### View
 
-> Since version 3.1.0
+> Since 3.1.0
 
 Supports querying Iceberg views. View queries work the same way as regular table queries. Please note the following:
 
@@ -2313,6 +2313,16 @@ You can use the following SQL to analyze the data distribution and delete file c
   | PositionDeleteFile |      11 |       36608 |   10890 |
   +--------------------+---------+-------------+---------+
   ```
+
+### Dangling Delete
+
+In some cases, after executing the `rewrite_data_files` action, references to certain Position Deletes may not have been removed from the Snapshot metadata (Dangling Delete). If you directly use the row number information from the metadata in this situation, the result may be incorrect.
+
+Therefore, by default, for `COUNT(*)` queries, if a Position Delete file is found, COUNT pushdown optimization is not enabled; instead, the file is read directly to obtain the actual `COUNT(*)` result. However, this method is time-consuming.
+
+If the user can ensure there is no Dangling Delete issue, this check can be skipped using the Doris session variable `ignore_iceberg_dangling_delete`. This variable defaults to `false`. When set to `true`, the system will directly return the `COUNT(*)` result based on the row count information in the metadata, improving query efficiency.
+
+This feature is supported from versions 3.1.4 and 4.0.3.
 
 ## Appendix
 
