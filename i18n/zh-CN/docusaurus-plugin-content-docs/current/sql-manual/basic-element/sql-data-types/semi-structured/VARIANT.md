@@ -97,6 +97,7 @@ INSERT INTO vartab VALUES
   - Decimal：Decimal32 / Decimal64 / Decimal128 / Decimal256
   - LargeInt
 - Datetime
+- Timestamptz
 - Date
 - IPV4 / IPV6
 - Boolean
@@ -114,6 +115,7 @@ CREATE TABLE test_var_schema (
         'string_val': STRING,
         'decimal_val': DECIMAL(38, 9),
         'datetime_val': DATETIME,
+        'tz_val': TIMESTAMPTZ,
         'ip_val': IPV4
     > NULL
 )
@@ -124,16 +126,17 @@ INSERT INTO test_var_schema VALUES (1, '{
     "string_val" : "Hello World",
     "decimal_val" : 1.11111111,
     "datetime_val" : "2025-05-16 11:11:11",
+    "tz_val" : "2025-05-16 11:11:11+08:00",
     "ip_val" : "127.0.0.1"
 }');
 
 SELECT variant_type(v1) FROM test_var_schema;
 
-+----------------------------------------------------------------------------------------------------------------------------+
-| variant_type(v1)                                                                                                           |
-+----------------------------------------------------------------------------------------------------------------------------+
-| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string"} |
-+----------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| variant_type(v1)                                                                                                                                  |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string","tz_val":"timestamptz"} |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
 `{"date": 2020-01-01}` 与 `{"ip": 127.0.0.1}` 均为非法 JSON 文本，正确格式应为 `{"date": "2020-01-01"}` 与 `{"ip": "127.0.0.1"}`。
@@ -374,18 +377,18 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - VARIANT 本身不可直接用于 ORDER BY、GROUP BY、JOIN KEY 或聚合参数；对子列 CAST 后可正常使用。
 - 字符串类型可隐式转换为 VARIANT。
 
-| VARIANT         | Castable | Coercible | Conversion Function |
-| --------------- | -------- | --------- | ------------------- |
-| `ARRAY`         | ✔        | ❌        |                     |
-| `BOOLEAN`       | ✔        | ✔         |                     |
-| `DATE/DATETIME` | ✔        | ✔         |                     |
-| `FLOAT`         | ✔        | ✔         |                     |
-| `IPV4/IPV6`     | ✔        | ✔         |                     |
-| `DECIMAL`       | ✔        | ✔         |                     |
-| `MAP`           | ❌        | ❌         |                     |
-| `TIMESTAMP`     | ✔        | ✔         |                     |
-| `VARCHAR`       | ✔        | ✔         | `PARSE_TO_JSON`     |
-| `JSON`          | ✔        | ✔         |                     |
+| VARIANT         | Castable | Coercible |
+| --------------- | -------- | --------- |
+| `ARRAY`         | ✔        | ❌        |
+| `BOOLEAN`       | ✔        | ✔         |
+| `DATE/DATETIME` | ✔        | ✔         |
+| `FLOAT`         | ✔        | ✔         |
+| `IPV4/IPV6`     | ✔        | ✔         |
+| `DECIMAL`       | ✔        | ✔         |
+| `MAP`           | ❌        | ❌        |
+| `TIMESTAMP`     | ✔        | ✔         |
+| `VARCHAR`       | ✔        | ✔         |
+| `JSON`          | ✔        | ✔         |
 
 ## 限制
 
@@ -462,6 +465,10 @@ SELECT variant_type(v) FROM variant_tbl;
 ```sql
 SET describe_extend_variant_column = true;
 DESC variant_tbl;
+```
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
 两种方式可结合使用：方案一精确、方案二高效。

@@ -9,7 +9,7 @@
 
 `ARRAY<T>` 类型用于表示有序元素集合，集合中的每个元素具有相同的数据类型。例如，一个整数数组可表示为`[1, 2, 3]`，一个字符串数组可表示为`["a", "b", "c"]`。
 
-- `ARRAY<T>` 表示由T类型组成的数组，T类型是Nullable的，T支持的类型有：`BOOLEAN,TINYINT,SMALLINT,INT,BIGINT,LARGEINT,FLOAT,DOUBLE,DECIMAL,DATE,DATETIME,CHAR,VARCHAR,STRING,IPTV4,IPV6,STRUCT,MAP,VARIANT,JSONB,ARRAY<T>`。
+- `ARRAY<T>` 表示由T类型组成的数组，T类型是Nullable的，T支持的类型有：`BOOLEAN,TINYINT,SMALLINT,INT,BIGINT,LARGEINT,FLOAT,DOUBLE,DECIMAL,DATE,DATETIME,TIMESTAMPTZ,CHAR,VARCHAR,STRING,IPTV4,IPV6,STRUCT,MAP,VARIANT,JSONB,ARRAY<T>`。
   - 注意：上述T类型中的`JSONB`和`VARIANT`只是在Doris层中的计算层支持，**不支持Doris建表中使用`ARRAY<JSONB>`和`ARRAY<VARIANT>`**。
 
 ## 类型约束
@@ -21,7 +21,7 @@
   - 字符串类型可以转换成`ARRAY<T>`类型（通过解析的形式，解析失败返回 NULL）。
 - `ARRAY<T>`类型在`AGGREGATE`表模型中只支持`REPLACE`和`REPLACE_IF_NOT_NULL`，**在任何表模型中都无法作为KEY列，无法作为分区分桶列**。
 - `ARRAY<T>`类型的列**支持`ORDER BY`和`GROUP BY`操作**。
-  - 支持`ORDER BY`和`GROUP BY`的T类型包括：`BOOLEAN,TINYINT,SMALLINT,INT,BIGINT,LARGEINT,FLOAT,DOUBLE,DECIMAL,DATE,DATETIME,CHAR,VARCHAR,STRING,IPTV4,IPV6`。
+  - 支持`ORDER BY`和`GROUP BY`的T类型包括：`BOOLEAN,TINYINT,SMALLINT,INT,BIGINT,LARGEINT,FLOAT,DOUBLE,DECIMAL,DATE,DATETIME,TIMESTAMPTZ,CHAR,VARCHAR,STRING,IPTV4,IPV6`。
 - `ARRAY<T>`类型的列不支持作为 `JOIN KEY`，不支持在`DELETE`语句中使用。
   
 ## 常量构造
@@ -117,10 +117,66 @@
   +-------------------------------------------------------+
   ```
 
+## 比较关系
+
+ARRAY 是有序类型，`[1, 2, 3]` 和 `[3, 2, 1]` 是两个不同的 ARRAY。两个 ARRAY 相等当且仅当它们内部的元素按顺序逐个相等。
+
+```sql
+select array(1,2,3) = array(3,2,1);
++-----------------------------+
+| array(1,2,3) = array(3,2,1) |
++-----------------------------+
+|                           0 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3);
++-----------------------------+
+| array(1,2,3) = array(1,2,3) |
++-----------------------------+
+|                           1 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3,3);
++-------------------------------+
+| array(1,2,3) = array(1,2,3,3) |
++-------------------------------+
+|                             0 |
++-------------------------------+
+```
+
+在偏序比较中，ARRAY 遵循字典序。给定两个数组 `A` 与 `B`，从索引 `i = 1` 开始，对应位置的元素 `A[i]` 与 `B[i]` 进行比较：
+
+- 若 `A[i] ≠ B[i]` 不相等，则其比较结果（<、>）直接决定数组整体的比较结果
+- 若 `A[i] = B[i]`，继续比较下一个位置
+- 当数组在所有共同长度范围内完全相等时，较短的数组较小。
+
+```sql
+select array(1,2,3) > array(1,2,3,3), array(1,2,3) < array(1,2,3,3);
++-------------------------------+-------------------------------+
+| array(1,2,3) > array(1,2,3,3) | array(1,2,3) < array(1,2,3,3) |
++-------------------------------+-------------------------------+
+|                             0 |                             1 |
++-------------------------------+-------------------------------+
+
+select array(1,3,2) > array(1,2,3), array(1,3,2) < array(1,2,3);
++-----------------------------+-----------------------------+
+| array(1,3,2) > array(1,2,3) | array(1,3,2) < array(1,2,3) |
++-----------------------------+-----------------------------+
+|                           1 |                           0 |
++-----------------------------+-----------------------------+
+
+select array(null) < array(-1), array(null) > array(-1);
++-------------------------+-------------------------+
+| array(null) < array(-1) | array(null) > array(-1) |
++-------------------------+-------------------------+
+|                       1 |                       0 |
++-------------------------+-------------------------+
+```
+
 ## 查询加速
 
 - Doris表中`ARRAY<T>`类型的列支持添加倒排索引，用来加速这一列执行`ARRAY`函数的计算。
-  - T类型为倒排索引支持的类型：`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPTV4, IPV6`。
+  - T类型为倒排索引支持的类型：`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME,TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPTV4, IPV6`。
   - 支持加速的ARRAY函数为：`ARRAY_CONTAINS, ARRAYS_OVERLAP`，但是当函数中的参数包含NULL时，会退化为普通的向量化计算。
 
 ## 示例

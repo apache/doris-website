@@ -37,11 +37,11 @@
 
 - 实现 Iceberg 表的写回功能。
   
-  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/datalake-building/iceberg-build)
+  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/catalogs/iceberg-catalog)
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 
-  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/workload-management/sql-blocking.md)
+  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/workload-management/sql-blocking)
 
 - 新增系统表`file_cache_statistics`，用于查看 BE 节点的数据缓存性能指标。
 
@@ -100,7 +100,7 @@
 
 - 革新外表元数据缓存机制。
   
-  - 更多信息，请查看文档 [元数据缓存](../../lakehouse/metacache)。
+  - 更多信息，请查看文档 [元数据缓存](../../lakehouse/meta-cache.md)
 
 - 新增会话变量`keep_carriage_return`，默认关闭。读取 Hive Text 格式表时，默认将`\r\n`与`\n`均视为换行符。[#38099](https://github.com/apache/doris/pull/38099)
 

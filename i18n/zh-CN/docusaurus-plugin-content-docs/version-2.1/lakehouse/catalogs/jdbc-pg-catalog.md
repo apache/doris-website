@@ -81,7 +81,22 @@ CREATE CATALOG postgresql_catalog PROPERTIES (
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris 不支持 bit 类型，bit 类型会在 bit(1) 时被映射为 boolean，其他情况下映射为 string。 |
+| bytea | varbinary | 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| array                                   | array                  | 关于数组类型的映射方式，请参与下面的说明。 |
 | other                                   | UNSUPPORTED            |                                                                 |
+
+- 数组类型
+
+    PostgreSQL 中可以通过如下方式定义数组类型：
+
+    ```
+    col1 text[]
+    col2 in4[][]
+    ```
+
+    但无法从 PostgreSQL 元数据中直接获取数组的维度，比如 `text[]` 有可能是一维数组，也有可能是二维数组。数组的维度，只有在写入数据后，才能确定。
+
+    而 Doris 必须显式声明数组的维度。因此，只有 PostgreSQL 对应的数组列中有数据，Doris 才能正确映射，否则，数组列会被映射为 `UNSUPPORTED`。
 
 ## 附录
 

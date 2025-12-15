@@ -15,7 +15,6 @@ import SearchBar from '@theme/SearchBar';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
-
 interface DataType {
     showSearchPageMobile: boolean;
     setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;

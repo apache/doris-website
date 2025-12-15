@@ -24,7 +24,7 @@ Doris 中的数据目录分为两种：
 | 数据集成 | ZeroETL 方案，直接访问不同数据源生成结果数据，或让数据在不同数据源中便捷流转。 |
 | 数据写回 | 通过 Doris 进行数据加工处理后，写回到外部数据源。                |
 
-本文以 [Iceberg Catalog](./catalogs/iceberg-catalog.md) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
+本文以 [Iceberg Catalog](./catalogs/iceberg-catalog) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
 ## 创建数据目录
 
@@ -184,7 +184,7 @@ CREATE CATALOG mysql_catalog properties(
 之后通过 SQL 对 Iceberg 表和 MySQL 表进行关联查询：
 
 ```sql
-SELECT * FROM FROM
+SELECT * FROM
 iceberg_catalog.iceberg_db.table1 tbl1 JOIN mysql_catalog.mysql_db.dim_table tbl2
 ON tbl1.id = tbl2.id;
 ```
@@ -211,9 +211,9 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Doris 支持通过 `INSERT` 语句直接将数据写回到外部数据源。具体参阅：
 
-* [ Hive Catalog ](./catalogs/hive-catalog.md)
+* [ Hive Catalog ](./catalogs/hive-catalog.mdx)
 
-* [ Iceberg Catalog](./catalogs/iceberg-catalog.md)
+* [ Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 
 * [ JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 

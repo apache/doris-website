@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 集成 AWS S3 Tables",
+    "title": "集成 Glue + AWS S3 Tables",
     "language": "zh-CN"
 }
 
@@ -54,7 +54,7 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
         'iceberg.rest.sigv4-enabled' = 'true',
         'iceberg.rest.signing-name' = 'glue',
         'iceberg.rest.access-key-id' = '<ak>',

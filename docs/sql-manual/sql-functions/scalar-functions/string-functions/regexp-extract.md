@@ -17,7 +17,11 @@ The `pos` parameter is of 'integer' type, used to specify the position in the st
 
 If the `pattern` is not allowed regexp regular,throw error;
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 ```sql
@@ -179,4 +183,22 @@ SELECT regexp_extract('AbCdE', '([[:digit:]]+', 1);
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:digit:]]+
 Error: missing ): ([[:digit:]]+
+```
+
+Advanced regexp
+```sql
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=foo)(\d+)(?=bar). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+```
+```text
++---------------------------------------------------------------+
+| regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1) |
++---------------------------------------------------------------+
+| 123                                                           |
++---------------------------------------------------------------+
 ```

@@ -67,10 +67,15 @@ When mapping IBM Db2, Doris's Database corresponds to a Schema under the specifi
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
+| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other            | UNSUPPORTED   |         |
 
 ## Common Issues
 
 1. When reading IBM Db2 data through JDBC Catalog, an `Invalid operation: result set is closed. ERRORCODE=-4470` exception occurs.
 
-   Add connection parameters to the jdbc\_url connection string when creating the IBM Db2 Catalog: `allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`. For example: `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`.
+    Add connection parameters to the jdbc\_url connection string when creating the IBM Db2 Catalog: `allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`. For example: `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`.
+
+2. Caught java.io.CharConversionException
+
+    This issue may be caused by a character set problem. You can try adding the configuration `-Ddb2.jcc.charsetDecoderEncoder=3` to the `JAVA_OPTS` in `be.conf`, then restart the BE to see if it resolves the issue. You may also experiment with values such as `1` or `2`. For more details, please refer to: https://www.ibm.com/docs/en/content-collector/4.0.1?topic=manager-jdbc-throws-javaiocharconversionexception

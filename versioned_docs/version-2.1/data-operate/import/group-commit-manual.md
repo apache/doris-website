@@ -470,7 +470,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Tool
 
-* [doris-streamloader](/ecosystem/doris-streamloader)
+* [doris-streamloader](../../ecosystem/doris-streamloader)
 
 #### Test Method
 

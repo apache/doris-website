@@ -23,7 +23,7 @@ COLLECT_LIST(<expr> [,<max_size>])
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | An expression to determine the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String, Array, Map, Struct. |
+| `<expr>` | An expression to determine the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, Timestamptz, IPV4, IPV6, String, Array, Map, Struct. |
 | `<max_size>` | Optional parameter to limit the result array size to max_size elements. Supported type: Integer. |
 
 ## Return Value

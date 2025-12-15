@@ -23,6 +23,7 @@ when query requests arrive, thus avoiding the overhead of re-executing complex q
 - **Support for Window Function Queries**: Currently, if a query contains window functions, it is not supported to transparently rewrite that query to utilize materialized views.
 - **Materialized Views Joining More Tables than Query Tables**: If the number of tables joined in the materialized view exceeds the number of tables involved in the query (for example, if the query only involves t1 and t2, while the materialized view includes t1, t2, and an additional t3), the system currently does not support transparently rewriting that query to utilize the materialized view.
 - If the materialized view contains set operations such as UNION ALL, LIMIT, ORDER BY, or CROSS JOIN, the materialized view can be built normally, but it cannot be used for transparent rewriting.
+- When creating a materialized view, the VARBINARY type is not currently supported.
 
 ## Principle Introduction
 
@@ -42,7 +43,15 @@ Transparent rewriting is an important means for databases to optimize query perf
 
 Doris asynchronous materialized views utilize a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) model. This algorithm can deeply analyze the structural information of SQL, automatically searching for and selecting suitable materialized views for transparent rewriting. When multiple materialized views are available, the algorithm will also choose the optimal materialized view to respond to the query SQL based on certain strategies (such as cost models), further enhancing query performance.
 
-## Support for Materialized Refresh Data Lake
+## Creating Asynchronous Materialized Views Based on Data Lakes
+The syntax for creating asynchronous materialized views based on data lakes is exactly the same as that for creating asynchronous materialized views based on internal tables, but there are some considerations:
+- Refreshing materialized views requires metadata from the data lake, such as partition version information. This information is obtained from the metadata cache in the data lake rather than directly from the external environment. Therefore, after the materialized view is refreshed, the data remains consistent with the results queried from the data lake through Doris. However, it may not match the results queried from the data lake through other engines, depending on the refresh status of the cache.
+- If the underlying Hive data is modified by an external process not controlled by Doris (such as Spark, Hive, or Flink jobs) without changing the metadata (e.g., executing insert overwrite), the materialized view may assume consistency with the base table data, but the queried data may not match the results queried from the data lake through Doris. This issue can be resolved by manually forcing a refresh of the materialized view.
+- When creating partitioned materialized views based on Iceberg, only Iceberg tables with a single partition column are supported. Limited support is provided for partition evolution. For example, changes to the time range of a time-based partition are supported, but changes to the partition field are not. If the partition field is modified, the materialized view refresh will fail.
+- When creating materialized views based on Hudi, there is no awareness of whether the base table data has changed. Therefore, once the materialized view (or a partition of the materialized view) has been refreshed, it is considered synchronized with the base table. As a result, creating materialized views based on Hudi is only suitable for scenarios requiring manual on-demand refresh.
+
+
+### Support for Materialized Refresh Data Lake
 
 The support for materialized refresh data lakes varies by table type and catalog.
 
@@ -76,21 +85,21 @@ The support for materialized refresh data lakes varies by table type and catalog
         <td>Iceberg</td>
         <td>Iceberg</td>
         <td>Supported in 2.1</td>
-        <td>Not supported</td>
+        <td>Supported in 3.1</td>
         <td>Not supported</td>
     </tr>
     <tr>
         <td>Paimon</td>
         <td>Paimon</td>
         <td>Supported in 2.1</td>
-        <td>Not supported</td>
+        <td>Supported in 3.1</td>
         <td>Not supported</td>
     </tr>
     <tr>
         <td>Hudi</td>
         <td>Hudi</td>
         <td>Supported in 2.1</td>
-        <td>Not supported</td>
+        <td>Supported in 3.1</td>
         <td>Not supported</td>
     </tr>
     <tr>
@@ -109,7 +118,7 @@ The support for materialized refresh data lakes varies by table type and catalog
     </tr>
 </table>
 
-## Transparent Rewriting Support for Data Lake
+### Transparent Rewriting Support for Data Lake
 Currently, the transparent rewriting feature of asynchronous materialized views supports the following types of tables and catalogs.
 
 Real-time Base Table Data Awareness: Refers to the materialized view's ability to detect changes in the underlying table data it uses and utilize the latest data during queries.
@@ -149,7 +158,7 @@ Real-time Base Table Data Awareness: Refers to the materialized view's ability t
         <td>Hudi</td>
         <td>Hudi</td>
         <td>Supported</td>
-        <td>3.1 Supported</td>
+        <td>Not supported</td>
     </tr>
     <tr>
         <td>JDBC</td>
@@ -165,7 +174,7 @@ Real-time Base Table Data Awareness: Refers to the materialized view's ability t
     </tr>
 </table>
 
-Materialized views using external tables do not participate in transparent rewriting by default, because they cannot detect changes in external table data and cannot guarantee the data in the materialized view is up-to-date.
+Materialized views using external tables do not participate in transparent rewriting by default.
 If you want to enable transparent rewriting for materialized views containing external tables, you can set `SET materialized_view_rewrite_enable_contain_external_table = true`.
 
 Since version 2.1.11, Doris has optimized the transparent rewriting performance for external tables, mainly improving the performance of obtaining available materialized views containing external tables.

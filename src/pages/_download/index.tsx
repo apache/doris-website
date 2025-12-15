@@ -22,7 +22,7 @@ import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
     { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 

@@ -30,8 +30,8 @@ Doris is highly compatible with MySQL syntax and supports standard SQL. However,
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Date      | <p>- Supported</p> <p>- Range: ['1000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD | <p>- Supported</p> <p>- Range: ['0000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD |
 | DateTime  | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  - Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'  <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  <p>- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p>   - Format: YYYY-MM-DD hh:mm:ss[.fraction] |
-| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Not supported                                              |
-| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Not supported                                              |
+| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Supported<br />- TIMESTAMPTZ([P]), where optional parameter P represents precision <br />- Range: ['0000-01-01 00:00:00[.000000]' UTC, '9999-12-31 23:59:59[.999999]' UTC] <br />- Format: YYYY-MM-DD hh:mm:ss[.fraction]+XX:XX                                              |
+| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Supports computation, but not supported as column storage in OLAP tables <br />- Time[(p)] <br /> - Range: ['-838:59:59.999999' to '838:59:59.999999'] <br />- Format: hh:mm:ss[.fraction]  |
 | Year      | <p>- Supported</p> <p>- Range: 1901 to 2155, or 0000</p>   - Format: yyyy  | - Not supported                                              |
 
 ### String Types
@@ -259,3 +259,11 @@ The Doris SELECT syntax is basically the same as MySQL.
 ## SQL Function
 
 Doris Function covers most MySQL functions.
+
+## SQL Mode
+
+| Name | Behavior when enabled | Behavior when disabled | Notes |
+| :-- | :-- | :-- | :-- |
+| PIPES_AS_CONCAT | Parses `\|\|` as the `concat` function | Parses `\|\|` as the logical AND operator | - |
+| NO_BACKSLASH_ESCAPES | Treats backslashes in strings as literal characters | Treats backslashes in strings as escape characters | - |
+| ONLY_FULL_GROUP_BY | Allows only standard aggregations | Allows scalar values not in the GROUP BY key to appear in the aggregation result | Supported since version 3.1.0 |

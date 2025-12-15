@@ -22,7 +22,7 @@ NDV(<expr>)
 
 | Parameters | Description |
 | -- | -- |
-| `<expr>` | The expression to get the value. Supported types are String, Date, DateTime, IPv4, IPv6, TinyInt, Bool, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal. |
+| `<expr>` | The expression to get the value. Supported types are String, Date, DateTime,Timestamptz, IPv4, IPv6, TinyInt, Bool, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal. |
 
 ## Return Value
 

@@ -32,10 +32,10 @@ Store audit logs
 | scan_bytes        | bigint       | Amount of data scanned                                       |
 | scan_rows         | bigint       | Number of rows scanned                                       |
 | return_rows       | bigint       | Number of rows returned                                      |
-| shuffleSendRows             | bigint  | The number of rows transferred between nodes during statement execution. Supported since version 3.0. |
-| shuffleSendBytes            | bigint    | The amount of data transferred between nodes during statement execution. Supported since version 3.0. | 
-| scanBytesFromLocalStorage   | bigint    | The amount of data read from the local disk. Supported since version 3.0. |
-| scanBytesFromRemoteStorage  | bigint    | The amount of data read from the remote storage. Supported since version 3.0. |
+| shuffle_send_rows             | bigint  | The number of rows transferred between nodes during statement execution. Supported since version 3.0. |
+| shuffle_send_bytes            | bigint    | The amount of data transferred between nodes during statement execution. Supported since version 3.0. | 
+| scan_bytes_from_local_storage   | bigint    | The amount of data read from the local disk. Supported since version 3.0. |
+| scan_bytes_from_remote_storage  | bigint    | The amount of data read from the remote storage. Supported since version 3.0. |
 | stmt_id           | bigint       | Statement ID                                                 |
 | stmt_type                   | string    | Statement type. Supported since version 3.0. |
 | is_query          | tinyint      | Whether it is a query                                        |
@@ -54,5 +54,9 @@ Store audit logs
 
 - `client_ip`: If a proxy service is used and the IP pass-through is not enabled, the proxy service IP may be recorded here instead of the real client IP.
 - `state`: `EOF` indicates that the query is executed successfully. `OK` indicates that the DDL and DML statements are executed successfully. `ERR` indicates that the statement execution fails.
+- `scan_bytes`: Indicates the size of data processed by the BE. It represents the uncompressed size of data read from disk, including data read from Doris' internal page cache, and truly reflects the amount of data that a query needs to process. And this value not equal to `scan_bytes_from_local_storage` + `scan_bytes_from_remote_storage`.
+- `scan_rows`: Indicates the number of rows scanned during query execution. Since Doris is a columnar storage database, it first scans the columns with predicate filters, and then scans other columns based on the filtered results. Therefore, the number of rows scanned for different columns is actually different. In fact, the number of rows scanned for predicate columns is greater than that for non-predicate columns, and this value reflects the number of rows scanned for predicate columns during query execution.
+- `scan_bytes_from_local_storage`: Indicates the size of data read from local disk, which is the size before compression. Data read from Doris' page cache is not counted, while data from the operating system's page cache is included in this statistic.
+- `scan_bytes_from_remote_storage`: Indicates the size of data read from remote storage, which is the size before compression.
 
 

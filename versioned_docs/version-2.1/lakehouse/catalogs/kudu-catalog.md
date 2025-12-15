@@ -7,7 +7,7 @@
 
 Kudu Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access Kudu tables through the Kudu Connector.
 
-:::notice
+:::note
 This feature is experimental and has been supported since version 3.0.1.
 :::
 
@@ -67,7 +67,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   The `TrinoProperties` section is used to specify properties that will be passed to the Trino Connector. These properties are prefixed with `trino.`. In theory, all properties supported by Trino are also supported here. For more information about Kudu properties, refer to the [Trino documentation](https://trino.io/docs/current/connector/kudu.html).
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is used to specify general properties. Please refer to the [Catalog Overview](../catalog-overview.md) under the "Common Properties" section.
   

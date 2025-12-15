@@ -33,7 +33,7 @@ All are signed integers. The differences among the INT types are the number of b
 ### Floating-point
 
 
-Including imprecise floating-point types [FLOAT](../sql-data-types/numeric/FLOAT.md) and [DOUBLE](../sql-data-types/numeric/DOUBLE.md), corresponding to the `float` and `double` in common programming languages
+Including imprecise floating-point types [FLOAT](../sql-data-types/numeric/FLOATING-POINT.md) and [DOUBLE](../sql-data-types/numeric/FLOATING-POINT.md), corresponding to the `float` and `double` in common programming languages
 
 ### Fixed-point
 
@@ -43,11 +43,11 @@ The precise fixed-point type [DECIMAL](../sql-data-types/numeric/DECIMAL.md), us
 
 ## Date Types
 
-Date types include DATE, TIME and DATETIME, DATE type only stores the date accurate to the day, DATETIME type stores the date and time, which can be accurate to microseconds. TIME type only stores the time, and **does not support the construction of the table storage for the time being, can only be used in the query process**.
+Date types include DATE, TIME, DATETIME and TIMESTAMPTZ. DATE type only stores the date accurate to the day, DATETIME type stores the date and time, which can be accurate to microseconds. TIME type only stores the time, and **does not support the construction of the table storage for the time being, can only be used in the query process**. TIMESTAMPTZ is a time zone-aware date-time type that stores values in UTC and automatically converts them based on the session time zone during queries.
 
 Do calculation for datetime types or converting them to numeric types, please use functions like [TIME_TO_SEC](../../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/scalar-functions/date-time-functions/unix-timestamp) . The result of directly converting them as numeric types as not guaranteed.
 
-For more information refer to [DATE](../sql-data-types/date-time/DATE), [TIME](../sql-data-types/date-time/TIME) and [DATETIME](../sql-data-types/date-time/DATETIME) documents.
+For more information refer to [DATE](../sql-data-types/date-time/DATE), [TIME](../sql-data-types/date-time/TIME), [DATETIME](../sql-data-types/date-time/DATETIME) and [TIMESTAMPTZ](../sql-data-types/date-time/TIMESTAMPTZ) documents.
 
 
 
@@ -61,6 +61,10 @@ Doris supports both fixed-length and variable-length strings, including:
 - **[VARCHAR(M)](./string-type/VARCHAR)**: A variable-length string, where M is the maximum length. The range for M is [1, 65533].
 
 - **[STRING](./string-type/STRING)**: A variable-length string with a default maximum length of 1,048,576 bytes (1 MB). This maximum length can be increased up to 2,147,483,643 bytes (2 GB) by configuring the `string_type_length_soft_limit_bytes`setting.
+
+## Binary Types
+
+- **[VARBINARY](./binary-type/VARBINARY)**: A variable-length binary byte sequence, where M is the maximum length (in bytes). Similar to VARCHAR, but uses byte-wise storage and comparison with no character set or collation involved; suitable for storing arbitrary binary data (e.g., file fragments, encrypted data, compressed data). Supported since 4.0; currently not supported for table creation and storage in Doris, but you can use Catalogs to map BINARY columns from other databases into Doris for use.
 
 ## Semi-Structured Types
 

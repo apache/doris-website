@@ -32,15 +32,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* `{MetaStoreProperties}`
+* `[MetaStoreProperties]`
 
   The MetaStoreProperties section is used to fill in the connection and authentication information for the Metastore metadata service. See the section [Supported Metadata Services] for details.
 
-* `{StorageProperties}`
+* `[StorageProperties]`
 
   The StorageProperties section is used to fill in the connection and authentication information related to the storage system. See the section [Supported Storage Systems] for details.
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is used to fill in common properties. Please refer to the [Data Catalog Overview](../catalog-overview.md) section on [Common Properties].
 
@@ -101,7 +101,7 @@ The current dependent Hudi version is 0.15. It is recommended to access Hudi dat
 
 ## Examples
 
-The creation of a Hudi Catalog is similar to a Hive Catalog. For more examples, please refer to [Hive Catalog](./hive-catalog.md).
+The creation of a Hudi Catalog is similar to a Hive Catalog. For more examples, please refer to [Hive Catalog](./hive-catalog.mdx).
 
 ```sql
 CREATE CATALOG hudi_hms PROPERTIES (

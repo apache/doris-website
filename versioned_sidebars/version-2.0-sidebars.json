@@ -504,8 +504,18 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/logstash",
+                        "ecosystem/beats",
+                        "ecosystem/fluentbit"
                     ]
                 },
                 {
@@ -518,8 +528,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]

@@ -19,7 +19,7 @@ MIN(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 用于计算的表达式。支持的类型包括 String、Time、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。 |
+| `<expr>` | 用于计算的表达式。支持的类型包括 String、Time、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array。 |
 
 ## 返回值
 
@@ -33,15 +33,16 @@ MIN(<expr>)
 create table t1(
         k1 int,
         k_string varchar(100),
-        k_decimal decimal(10, 2)
+        k_decimal decimal(10, 2),
+        k_array array<int>
 ) distributed by hash (k1) buckets 1
 properties ("replication_num"="1");
 insert into t1 values 
-    (1, 'apple', 10.01),
-    (1, 'banana', 20.02),
-    (2, 'orange', 30.03),
-    (2, null, null),
-    (3, null, null);
+    (1, 'apple', 10.01, [10, 20, 30]),
+    (1, 'banana', 20.02, [10, 20]),
+    (2, 'orange', 30.03, [10, 20, 40]),
+    (2, null, null, [10, 20, null]),
+    (3, null, null, null);
 ```
 
 ```sql
@@ -73,6 +74,22 @@ Decimal 类型：返回最小的高精度小数值。
 |    1 |          10.01 |
 |    2 |          30.03 |
 |    3 |           NULL |
++------+----------------+
+```
+
+```sql
+select k1, min(k_array) from t1 group by k1;
+```
+
+Array 类型: 返回最小的数组值（逐元素比较大小，null为最小元素）。
+
+```text
++------+----------------+
+| k1   | min(k_array)   |
++------+----------------+
+|    1 | [10, 20]       |
+|    2 | [10, 20, null] |
+|    3 | NULL           |
 +------+----------------+
 ```
 

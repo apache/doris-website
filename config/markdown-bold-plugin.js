@@ -29,6 +29,9 @@ function getFirstBoldContent(str, startIdx = 0) {
  */
 const plugin = options => {
     const transformer = async (ast, file) => {
+        // Disable warnings in CI environment to avoid excessive log output
+        const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+
         visit(ast, 'text', (node, index, parent) => {
             if (getFirstBoldContent(node.value)) {
                 const { start, end } = getFirstBoldContent(node.value);
@@ -56,15 +59,21 @@ const plugin = options => {
                         value: boldAfter,
                     });
                 }
-                console.warn(
-                    `[WARNING] The bold syntax of "${value}" in "${file.path}" is invalid and is being automatically optimized`,
-                );
+                // Only show warnings in local development
+                if (!isCI) {
+                    console.warn(
+                        `[WARNING] The bold syntax of "${value}" in "${file.path}" is invalid and is being automatically optimized`,
+                    );
+                }
             } else if (/(?<!\*)\*\*(?!\*)/.test(node.value)) {
                 // When there are multiple bold syntax in the text that does not take effect, you need to modify it manually
                 // For example: aa**test1:**bb**test2:**cc will be rendered as aa**test1:<strong>bb</strong>test2:**cc
-                console.warn(
-                    `[WARNING] markdownBoldPlugin found a ** in the text node (${node.value}) of the file ${file.path}, which may cause the document to not render as expected`,
-                );
+                // Only show warnings in local development
+                if (!isCI) {
+                    console.warn(
+                        `[WARNING] markdownBoldPlugin found a ** in the text node (${node.value}) of the file ${file.path}, which may cause the document to not render as expected`,
+                    );
+                }
             }
         });
     };

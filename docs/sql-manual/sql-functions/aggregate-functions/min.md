@@ -19,7 +19,7 @@ MIN(<expr>)
 
 | Parameters | Description |
 | -- | -- |
-| `<expr>` | The expression to get the value. Supported types are String, Time, Date, DateTime, IPv4, IPv6, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal. |
+| `<expr>` | The expression to get the value. Supported types are String, Time, Date, DateTime, Timestamptz, IPv4, IPv6, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Array. |
 
 ## Return Value
 
@@ -33,15 +33,16 @@ If all records in the group are NULL, the function returns NULL.
 create table t1(
         k1 int,
         k_string varchar(100),
-        k_decimal decimal(10, 2)
+        k_decimal decimal(10, 2),
+        k_array array<int>
 ) distributed by hash (k1) buckets 1
 properties ("replication_num"="1");
 insert into t1 values 
-    (1, 'apple', 10.01),
-    (1, 'banana', 20.02),
-    (2, 'orange', 30.03),
-    (2, null, null),
-    (3, null, null);
+    (1, 'apple', 10.01, [10, 20, 30]),
+    (1, 'banana', 20.02, [10, 20]),
+    (2, 'orange', 30.03, [10, 20, 40]),
+    (2, null, null, [10, 20, null]),
+    (3, null, null, null);
 ```
 
 ```sql
@@ -73,6 +74,22 @@ Decimal type: Returns the minimum high-precision decimal value.
 |    1 |          10.01 |
 |    2 |          30.03 |
 |    3 |           NULL |
++------+----------------+
+```
+
+```sql
+select k1, min(k_array) from t1 group by k1;
+```
+
+For Array type: Returns the minimum array value for each group(Compare elements one by one; null is the smallest element.).
+
+```text
++------+----------------+
+| k1   | min(k_array)   |
++------+----------------+
+|    1 | [10, 20]       |
+|    2 | [10, 20, null] |
+|    3 | NULL           |
 +------+----------------+
 ```
 
