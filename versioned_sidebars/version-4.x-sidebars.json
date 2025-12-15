@@ -542,7 +542,8 @@
                                 "ecosystem/observability/logstash",
                                 "ecosystem/observability/beats",
                                 "ecosystem/observability/opentelemetry",
-                                "ecosystem/observability/fluentbit"
+                                "ecosystem/observability/fluentbit",
+                                "ecosystem/observability/loongcollector"
                             ]
                         }
                     ]
@@ -998,7 +999,8 @@
                         "ecosystem/observability/logstash",
                         "ecosystem/observability/beats",
                         "ecosystem/observability/opentelemetry",
-                        "ecosystem/observability/fluentbit"
+                        "ecosystem/observability/fluentbit",
+                        "ecosystem/observability/loongcollector"
                     ]
                 },
                 {
