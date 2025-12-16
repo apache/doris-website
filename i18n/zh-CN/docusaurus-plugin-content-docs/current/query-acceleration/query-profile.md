@@ -94,7 +94,7 @@ show query profile
 1 row in set (0.00 sec)
 ```
 ### profile_level
-默认值为 1。该参数在 4.0 及 master 分支生效。
+默认值为 1。**该参数在 4.0 及 master 分支生效, 不要在 4.0 版本之前使用该参数，4.0 之前有不同的语意。**
 
 默认情况下，BE 仅汇报精简版 Profile（足以在 FE 聚合为 MergedProfile）。若需要更详细信息且尽量不影响性能，可设置 `profile_level=2`。目前最大为 3，level 为 3 时，部分 Counter 的采集可能影响查询性能。
 
