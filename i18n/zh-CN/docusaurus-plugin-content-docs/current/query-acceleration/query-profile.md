@@ -94,7 +94,7 @@ show query profile
 1 row in set (0.00 sec)
 ```
 ### profile_level
-默认值为 1。该参数在 4.0 及 master 分支生效。
+默认值为 1。**该参数在 4.0 及 master 分支生效, 不要在 4.0 版本之前使用该参数，4.0 之前有不同的语意。**
 
 默认情况下，BE 仅汇报精简版 Profile（足以在 FE 聚合为 MergedProfile）。若需要更详细信息且尽量不影响性能，可设置 `profile_level=2`。目前最大为 3，level 为 3 时，部分 Counter 的采集可能影响查询性能。
 
@@ -339,13 +339,14 @@ auto_profile_threshold_ms     | 1            | -1
 
 4. MergedProfile
 为 `DetailProfile` 的聚合结果。MergedProfile 主要作用：
-- 便于快速理解查询计划与 Pipeline 的结构。
+* 便于快速理解查询计划与 Pipeline 的结构。
 
 Doris 查询计划具有 Query → Fragment → PlanNode 的层级结构；执行层以 Pipeline 为单位调度，每个 Pipeline 由一组 Operator 构成。查询计划到 Pipeline 之间存在转换，MergedProfile 能清晰展现该结构。稍后示例将说明如何据此复原查询计划与 Pipeline 流水线。
-− 便于快速找到性能瓶颈的算子。
+
+* 便于快速找到性能瓶颈的算子。
 
 定位性能问题时，通常需确定具体的瓶颈算子。可先在 MergedProfile 中根据 `DependencyWaitTime` 找到耗时最大的算子，再在 DetailProfile 中查看其详细信息，进一步判断瓶颈。
-− 便于对比数据倾斜。
+* 便于对比数据倾斜。
 
 MergedProfile 记录数据在算子之间的流动细节。对比 `InputRows` 与 `RowsProduced` 可判断不同 Backend 上的数据是否存在不均衡分布，数据分布不均常导致查询变慢或失败。
 

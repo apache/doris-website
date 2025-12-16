@@ -23,13 +23,13 @@ Query Profile 的核心由两部分组成：FE 的 `ProfileManager` 与 BE 的 `
 5. 用户通过 Web UI 或 curl 发送 HTTP 请求查看 Profile。
 6. `ProfileManager` 会从内存或外部存储中查找 Profile，并以文本形式返回。
 
-整个流程中，异步汇报与持久化对 Profile 功能影响最大。
+整个收集流程中，第二步的异步汇报与第四步的 Profile 持久化对 Profile 功能影响最大。
 
 在集群压力较大时，异步汇报可能出现超时。为避免 FE 侧占用过多内存，`ProfileManager` 会在等待一段时间后放弃超时的 Profile。可调整 `fe.conf` 中的 `profile_async_collect_expire_time_secs` 控制等待时长。若频繁超时，建议优先检查机器资源使用率；必要时可关闭全局 Profile 以降低风险。
 
-Profile 持久化到磁盘后可以确保：
-1. Profile 不再占据 FE 大量内存
-2. FE 重启后依然可以查询到之前的 Profile
+ProfileManager 把 Profile 持久化到磁盘后，可以确保：
+1. Profile 不再占据 FE 的大量内存
+2. FE 重启后依然能够查询到之前的 Profile
 
 前者使 FE 能够保留数千份完整 Profile，后者便于对比集群升级前后的表现，从而验证版本升级是否提升 Doris 查询性能。
 
@@ -94,7 +94,7 @@ show query profile
 1 row in set (0.00 sec)
 ```
 ### profile_level
-默认值为 1。该参数在 4.0 及 master 分支生效。
+默认值为 1。**该参数在 4.0 及 master 分支生效, 不要在 4.0 版本之前使用该参数，4.0 之前有不同的语意。**
 
 默认情况下，BE 仅汇报精简版 Profile（足以在 FE 聚合为 MergedProfile）。若需要更详细信息且尽量不影响性能，可设置 `profile_level=2`。目前最大为 3，level 为 3 时，部分 Counter 的采集可能影响查询性能。
 
@@ -290,7 +290,7 @@ Summary:
 ```
 ### 直接从磁盘里获取 Profile 文件
 3.0 起，Profile 支持持久化，默认保存目录为 log/profile。若需更快查看，可直接使用 unzip 解压目标文件以获得文本格式。但需注意：
-1. Doris FE 对 log/profile 目录有保护，请勿将解压后的输出保留在 log/profile 内，否则会被删除。
+1. Doris FE 对 log/profile 目录有保护，所以不要把 Profile 文件解压缩后的输出留在 log/profile 目录内，不然会被删除。
 2. Profile 文本与 Web UI 的展示略有不同：`Summary` 以 JSON 形式作为 meta 保存，后续部分与 Web UI 一致。
 
 ```bash
@@ -339,13 +339,14 @@ auto_profile_threshold_ms     | 1            | -1
 
 4. MergedProfile
 为 `DetailProfile` 的聚合结果。MergedProfile 主要作用：
-- 便于快速理解查询计划与 Pipeline 的结构。
+* 便于快速理解查询计划与 Pipeline 的结构。
 
 Doris 查询计划具有 Query → Fragment → PlanNode 的层级结构；执行层以 Pipeline 为单位调度，每个 Pipeline 由一组 Operator 构成。查询计划到 Pipeline 之间存在转换，MergedProfile 能清晰展现该结构。稍后示例将说明如何据此复原查询计划与 Pipeline 流水线。
-- 便于快速找到性能瓶颈的算子。
+
+* 便于快速找到性能瓶颈的算子。
 
 定位性能问题时，通常需确定具体的瓶颈算子。可先在 MergedProfile 中根据 `DependencyWaitTime` 找到耗时最大的算子，再在 DetailProfile 中查看其详细信息，进一步判断瓶颈。
-- 便于对比数据倾斜。
+* 便于对比数据倾斜。
 
 MergedProfile 记录数据在算子之间的流动细节。对比 `InputRows` 与 `RowsProduced` 可判断不同 Backend 上的数据是否存在不均衡分布，数据分布不均常导致查询变慢或失败。
 
@@ -389,4 +390,193 @@ MergedProfile:
                 - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
                   - WaitForData0: avg 11sec450ms, max 11sec450ms, min 11sec450ms
        Fragment 1:
+         Pipeline 0(instance_num=2):
+           DATA_STREAM_SINK_OPERATOR(dest_id=8):
+             CommonCounters:
+                - ExecTime: avg 31.515us, max 33.405us, min 29.626us
+                - InputRows: sum 20, avg 10, max 11, min 9
+                - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
+                  - WaitForRpcBufferQueue: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+                - BlocksProduced: sum 2, avg 1, max 1, min 1
+           SORT_OPERATOR(nereids_id=443)(id=7):
+             CommonCounters:
+                - ExecTime: avg 980ns, max 1.199us, min 762ns
+                - RowsProduced: sum 20, avg 10, max 11, min 9
+                - WaitForDependency[SORT_OPERATOR_DEPENDENCY]Time: avg 11sec450ms, max 11sec450ms, min 11sec450ms
+             CustomCounters:
+         Pipeline 1(instance_num=2):
+           SORT_SINK_OPERATOR(nereids_id=443)(id=7):
+             CommonCounters:
+                - ExecTime: avg 49.414us, max 54.802us, min 44.27us
+                - InputRows: sum 20, avg 10, max 11, min 9
+                - WaitForDependency[SORT_SINK_OPERATOR_DEPENDENCY]Time: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+           AGGREGATION_OPERATOR(nereids_id=438)(id=6):
+             CommonCounters:
+                - ExecTime: avg 34.521us, max 36.402us, min 32.640us
+                - RowsProduced: sum 20, avg 10, max 11, min 9
+                - WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time: avg 11sec450ms, max 11sec450ms, min 11sec450ms
+             CustomCounters:
+         Pipeline 2(instance_num=2):
+           AGGREGATION_SINK_OPERATOR(nereids_id=438)(id=6):
+             CommonCounters:
+                - ExecTime: avg 109.89us, max 118.582us, min 99.596us
+                - InputRows: sum 40, avg 20, max 22, min 18z
+                - WaitForDependency[AGGREGATION_SINK_OPERATOR_DEPENDENCY]Time: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+           EXCHANGE_OPERATOR(id=5):
+             CommonCounters:
+                - ExecTime: avg 29.741us, max 34.521us, min 24.962us
+                - RowsProduced: sum 40, avg 20, max 22, min 18
+             CustomCounters:
+                - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
+                  - WaitForData0: avg 11sec450ms, max 11sec450ms, min 11sec450ms
+       Fragment 2:
+         Pipeline 0(instance_num=2):
+           DATA_STREAM_SINK_OPERATOR(dest_id=5):
+             CommonCounters:
+                - ExecTime: avg 71.148us, max 73.242us, min 69.54us
+                - InputRows: sum 40, avg 20, max 20, min 20
+                - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
+                  - WaitForRpcBufferQueue: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+           AGGREGATION_OPERATOR(nereids_id=428)(id=4):
+             CommonCounters:
+                - ExecTime: avg 350.431us, max 393.100us, min 307.762us
+                - RowsProduced: sum 40, avg 20, max 20, min 20
+                - WaitForDependency[AGGREGATION_OPERATOR_DEPENDENCY]Time: avg 11sec30ms, max 11sec450ms, min 10sec610ms
+             CustomCounters:
+         Pipeline 1(instance_num=2):
+           AGGREGATION_SINK_OPERATOR(nereids_id=428)(id=4):
+             CommonCounters:
+                - ExecTime: avg 442.308ms, max 449.109ms, min 435.506ms
+                - InputRows: sum 150.0M (150000000), avg 75.0M (75000000), max 75.000001M (75000001), min 74.999999M (74999999)
+                - MemoryUsage: sum 2.05 MB, avg 1.03 MB, max 1.03 MB, min 1.03 MB
+                - MemoryUsagePeak: sum 2.05 MB, avg 1.03 MB, max 1.03 MB, min 1.03 MB
+                - WaitForDependency[AGGREGATION_SINK_OPERATOR_DEPENDENCY]Time: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+                - MemoryUsageHashTable: sum 1.03 MB, avg 526.28 KB, max 526.28 KB, min 526.28 KB
+                - MemoryUsageSerializeKeyArena: sum 1.02 MB, avg 524.00 KB, max 524.00 KB, min 524.00 KB
+           HASH_JOIN_OPERATOR(nereids_id=418)(id=3):
+             CommonCounters:
+                - ExecTime: avg 9sec169ms, max 9sec582ms, min 8sec756ms
+                - RowsProduced: sum 150.0M (150000000), avg 75.0M (75000000), max 75.000001M (75000001), min 74.999999M (74999999)
+                - WaitForDependency[HASH_JOIN_OPERATOR_DEPENDENCY]Time: avg 949.860ms, max 962.978ms, min 936.743ms
+             CustomCounters:
+                - ProbeRows: sum 150.0M (150000000), avg 75.0M (75000000), max 75.000001M (75000001), min 74.999999M (74999999)
+           OLAP_SCAN_OPERATOR(nereids_id=397. table_name=orders(orders))(id=2):
+             CommonCounters:
+                - ExecTime: avg 396.233ms, max 410.306ms, min 382.160ms
+                - RowsProduced: sum 150.0M (150000000), avg 75.0M (75000000), max 75.000001M (75000001), min 74.999999M (74999999)
+             CustomCounters:
+                - WaitForDependency[OLAP_SCAN_OPERATOR_DEPENDENCY]Time: avg 0ns, max 0ns, min 0ns
+         Pipeline 2(instance_num=2):
+           HASH_JOIN_SINK_OPERATOR(nereids_id=418)(id=3):
+             CommonCounters:
+                - ExecTime: avg 445.146ms, max 890.258ms, min 34.635us
+                - InputRows: sum 15.0M (15000000), avg 7.5M (7500000), max 15.0M (15000000), min 0
+                - WaitForDependency[HASH_JOIN_SINK_OPERATOR_DEPENDENCY]Time: avg 482.355ms, max 964.711ms, min 0ns
+             CustomCounters:
+                - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00 
+           EXCHANGE_OPERATOR(id=1):
+             CommonCounters:
+                - ExecTime: avg 10.131ms, max 20.243ms, min 19.26us
+                - RowsProduced: sum 15.0M (15000000), avg 7.5M (7500000), max 15.0M (15000000), min 0
+             CustomCounters:
+                - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
+                  - WaitForData0: avg 47.582ms, max 47.582ms, min 47.582ms
+       Fragment 3:
+         Pipeline 0(instance_num=2):
+           DATA_STREAM_SINK_OPERATOR(dest_id=1):
+             CommonCounters:
+                - ExecTime: avg 3.269ms, max 3.281ms, min 3.258ms
+                - InputRows: sum 15.0M (15000000), avg 7.5M (7500000), max 7.500001M (7500001), min 7.499999M (7499999)
+                - WaitForDependencyTime: avg 0ns, max 0ns, min 0ns
+                  - WaitForLocalExchangeBuffer0: avg 142.859ms, max 285.713ms, min 6.733us
+                  - WaitForRpcBufferQueue: avg 0ns, max 0ns, min 0ns
+             CustomCounters:
+           OLAP_SCAN_OPERATOR(nereids_id=403. table_name=customer(customer))(id=0):
+             CommonCounters:
+                - ExecTime: avg 77.435ms, max 78.752ms, min 76.118ms
+                - RowsProduced: sum 15.0M (15000000), avg 7.5M (7500000), max 7.500001M (7500001), min 7.499999M (7499999)
+             CustomCounters:
+                - WaitForDependency[OLAP_SCAN_OPERATOR_DEPENDENCY]Time: avg 49.690ms, max 50.522ms, min 48.858ms
 ```
+上面的是精简过的 MergedProfile。Doris 的查询计划有 Query - Fragment - PlanNode 的三级结构，而 Backend 上的执行引擎还会在此基础上再增加 Pipeline - Operator 两层。
+我们先用一张图来说明上述查询从查询计划的角度来看如何分成三级。
+### Query & Fragment & PlanNode
+![alt text](/images/profile/profile-image-2.png)
+
+图中的箭头表示数据的流向。从上图可以看到整个 Query 的查询计划被分为了 4 个 Fragment（上图左侧的四个方块）和多个 PlanNode (Fragment 和属于他的 PlanNode 在同一个水平线上），PlanNode 中包含了两个 SCAN_NODE，分别读取 customer 和 orders 这两张表，多个 DATA_STREAM_SINK 和 EXCHANGE，用于在不同的 Fragment 之间传递数据，HASH_JOIN 用来对 SCAN 读上来的数据进行连接操作，聚合操作被分为了两阶段，第一阶段 AGGREGATION 和第二阶段 AGGREGATION(MERGE)，RESULT_SINK 用于向 FE 返回结果，而在他之前还有个 TOP-N 算子，用来限制结果的行数。
+
+### Pipeline & Operator
+
+上述的 QueryPlan 如何转化为执行引擎的 Pipeline 与 Operator？我们以包含 AGGREGATION 与 HASH_JOIN 这两个算子的 Fragment 1 和 Fragment 2 为例。
+
+![alt text](/images/profile/profile-image-3.png)
+
+可以看到，Doris 的执行引擎在执行时会将一些 PlanNode 拆分成一个或者多个 Operator。
+
+比如 DATA_STREAM_SINK 被转换成了一个 DATA_STREAM_SINK_OPERATOR，该节点是 Fragment 向外输出数据的算子，本身没有 OperatorId，只有他的目标 OperatorId，dest_id=5 表示该算子把数据发送到 id=5 的 EXCHANGE_OPERATOR。
+
+PlanNodeId 等于 3 的 HASH_JOIN 就被拆成了两个 Operator，分别是 HASH_JOIN_SINK_OPERATOR 与 HASH_JOIN_OPERATOR，他俩的 Operator Id 都为 3，等于他们的 PlanNodeId。
+第一阶段的 AGGREGATION 与 第二阶段的 AGGREGATION(MERGE) 也各自都被拆分成了一对 SINK 与 SORCE 算子。
+
+当 PlanNode 被拆成 Operator 之后，执行引擎会把一些 Operator 连接起来组成 Pipeline，上图中可以看到，Fragment 1 与 Fragment 2 内部各自有 3 条 Pipeline。Pipeline 内部的算子之间的数据流动是不会阻塞的，相反，用于连接 Pipeline 的算子相互之间则有阻塞关系，这种阻塞关系包括有计算逻辑上的依赖导致的阻塞（比如 HashJoin 的 Probe 侧需要等待 HashJoin 的 Build 侧构建完 Hash 表才能执行）还包括计算机系统物理环境导致的阻塞（比如 EXCHANGE_OPERATOR 需要等待 DATA_STREAM_SINK_OPERATOR 通过网络把数据传输过来，天然形成阻塞）。
+
+通过 Pipeline 把不阻塞的算子连接到一起调度执行可以使得资源利用率和缓存命中率更高。
+
+### CommonCounters & CustomCounters
+CommonCounters 是所有的 Operator 都必须有的 Counter。目前 doris 中要求每个算子都必须有的 Counter 包含：
+
+- ExecTime: 当前 Operator 执行花费的时间，注意不包括当前算子的上游算子的执行时间。
+- RowsProduced（非SinkOperator）: 除了SinkOperator 之外，所有的 Source 算子都有 RowsProduced，记录当前算子输出了多少行。
+- InputRows(SinkOperator): 所有的 Sink 算子都有 InputRows，表示当前算子的输入是多少行。
+- MemoryUsage & MemoryUsagePeak: 算子当前的内存使用量以及内存使用的峰值。
+- WaitForDepencency: 等待它的依赖执行结束花费的时间。
+
+CustomCounter 则是 Operator 特有的 Counter。参考文章 Doris算子Profile梳理，里面详细介绍了每个算子的 CustomCounter 的含义。
+
+### HashJoin 
+当我们梳理出来 Doris 执行时的基本概念之后，我们再回过头来看一下之前的查询，通过 MergedProfile 我们来复原一下 Join 的执行细节。
+
+![alt text](/images/profile/profile-image-4.png)
+
+记住我们在执行 SQL 之前设置了查询 Pipeline 的并行度为 2，所以虽然上图中只显示了一组 连接的 Pipeline 1 和 Pipeline 2，但是在实际执行时他们应该是有 4 个 Pipeline Task，每条 Pipeline 都有两个 Pipeline Task。
+```
+Pipeline 0(instance_num=2)
+```
+每条 Pipeline 的后面有一个括号，括号内记录的 instance_num 等于该 Pipeline 在所有 BE 上的 PipelineTask 数量之和，我们构建的 集群只有 1 BE，所以这里看到的 instance_num 就等于 1 * parallel_pipeline_task_num = 2。
+
+相同颜色的表示在同一条 Pipeline 内，Pipeline 2 的两个 PipelineTask 累计处理了 15M 行数据用于构建 HashTable，而构建 HashTable 这一步的平均执行时间是 445.146 ms。还记得前面提到的 Pipeline 的依赖关系么，Pipeline 1 的执行前提是 Pipeline 2 完成了构建 HashTable 的操作，而这里的的等待时间就反映在 WaitForDependency 上，avg 为 949.860 ms，但是构建 HashTable 的平均时间只有 445.146 ms，问题出在哪里？在这个 case 中，FE 规划的 JOIN 类型为 BROADCAST_JOIN，此时两个进行 JOIN Build 操作的 PipelineTask 中只会选一个来真正进行 BuildHash 表的操作
+
+```text
+HASH_JOIN_SINK_OPERATOR(nereids_id=418)(id=3):
+ CommonCounters:
+    - ExecTime: avg 445.146ms, max 890.258ms, min 34.635us
+    - InputRows: sum 15.0M (15000000), avg 7.5M (7500000), max 15.0M (15000000), min 0
+    - WaitForDependency[HASH_JOIN_SINK_OPERATOR_DEPENDENCY]Time: avg 482.355ms, max 964.711ms, min 0ns
+ CustomCounters:
+    - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00 
+```
+
+从 HASH_JOIN_SINK_OPERATOR 的 MergedProfile 中可以看到，并行度为 2 的 HASH_JOIN_SINK_OPERATOR 虽然平均执行时间为 445.146 ms，但是其中最慢的 PipelineTask 耗时是 890.258 ms，而最快的为 34.625 us，仔细看 InputRows 的分布，说明所有的数据都是一个 PipelineTask 处理的，另一个 PipelineTask 没有做事。因此 
+```text
+- WaitForDependency[HASH_JOIN_OPERATOR_DEPENDENCY]Time: avg 949.860ms, max 962.978ms, min 936.743ms
+```
+这里的时间也就说的通了。
+
+
+继续看 HASH_JOIN_OPERATOR，它在等待了平均 949.860 ms后，开始执行 JOIN 的 Probe 侧，两个 id=2 的 OLAP_SCAN_OPERATOR 从存储中读出了 150M 行，这 150 M 被 HASH_JOIN_OPERATOR 算子处理之后，一行没剩下，全部往上给了 AGGREGATION_SINK_OPERATOR，该算子将会对这 150M 构建 HASH 表，继续进行聚合运算。
+
+### Aggregation
+查询中涉及到的聚合操作是 `Count(o.o_orderkey) AS total_orders, Sum(o.o_totalprice) AS total_spent` 和 `GROUP BY c.c_name`
+![alt text](/images/profile/profile-image-5.png)
+
+对于这个查询，Doris 使用两阶段的Aggregation。
+第一阶段的 Aggregation 在 id=4 的一对 AGGREGATION 算子里完成，AGGREGATION_SINK_OPERATOR(id=4) 的输入一共是 150M 行，然后对 GROUP BY 列构建 Hash 表，同时更新每一个聚合结果的 AggregationData。
+第一阶段结束后，把 AggregationData 通过 EXCHANGE 发送给第二阶段执行，第一阶段执行时不同的 PipelineTask 可能会处理相同的 GROUP BY 的 列，因此在 EXCHANGE 阶段会根据 name 列进行 HASH 分区后，把相同的 name 行发送到相同的 第二阶段的算子。
+我们看到 AGGREGATION_OPERATOR(id=4)的输出一共是 40 行，说明我们在第一阶段构建的 Hash 表总共为 40 行。第二阶段的 AGGREGATION_SINK_OPERATOR(id=6) 把第一阶段的结果进行反序列化成 AggregationData，然后再进行 Merge 操作，结果由 AGGREGATION_OPERATOR(id=6) 发送给下游的 TOP-N，由于我们的查询带了 limit 20，当 TOP-N算子收集到 20 行数据后就提前结束了本次执行。
+
+整体来看，本次查询最耗时的操作是在 HASH_JOIN_OPERATOR(id=3)，定位到这里后，我们可以继续看 DetailProfile 中 HASH_JOIN_OPERATOR(id=3) 的更细粒度的 Counter。关于更细粒度的 Counter 可以参考每个算子的文档，详细解释了每个Counter的含义。
