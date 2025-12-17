@@ -31,8 +31,8 @@
 
 Minio 默认使用 Host-style 访问方式，但也支持 Path-style 访问。可以通过设置 `minio.use_path_style` 参数来切换。
 
-- Host-style 访问（默认）: https://bucket.minio.example.com
-- Path-style 访问（开启后）: https://minio.example.com/bucket
+- Host-style 访问（默认）: `https://bucket.minio.example.com`
+- Path-style 访问（开启后）: `https://minio.example.com/bucket`
 
 ## 示例配置
 
