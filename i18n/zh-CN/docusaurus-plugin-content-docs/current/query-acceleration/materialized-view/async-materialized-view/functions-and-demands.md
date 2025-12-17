@@ -1008,6 +1008,109 @@ group by
     l_suppkey;
 ```
 
+### 窗口函数改写
+当查询和物化视图都包含窗口函数时，如果窗口函数的定义完全匹配，可以进行透明改写。
+窗口函数改写能够复用物化视图中预计算的窗口函数结果,显著提升包含复杂窗口计算的查询性能。
+目前支持所有窗口函数的透明改写。
+
+
+```sql
+CREATE MATERIALIZED VIEW mv11_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select *
+from (
+  select 
+  o_orderkey,
+  FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+  RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+  from 
+  orders
+) t
+where o_orderkey > 1;
+```
+
+
+如下查询可以命中 mv11_0 的物化视图，节省了窗口函数的计算，可以看到查询中的条件 `o_orderkey > 2` 和物化视图不一致，也可以改写成功
+```sql
+select *
+from (
+  select 
+  o_orderkey,
+  FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+  RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+  from 
+  orders
+) t
+where o_orderkey > 2;
+```
+
+另一个例子
+
+```sql
+CREATE MATERIALIZED VIEW mv11_1
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select 
+o_orderkey,
+o_orderdate,
+FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+from 
+orders
+where o_orderdate > '2023-12-09';
+```
+
+如下查询可以命中 `mv11_1` 的物化视图，节省了窗口函数的计算，可以看到查询中的条件 `o_orderdate > '2023-12-10'` 和物化视图定义不一致。
+`o_orderdate` 属于窗口函数的 partition by 字段，这种情况下，虽然查询条件 `o_orderdate > '2023-12-10'` 早于
+window 函数执行，也可以进行透明改写。
+
+
+```sql
+select 
+o_orderdate,
+FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+from 
+orders
+where o_orderdate > '2023-12-10';
+```
+用例中使用的是单表，多表 join 场景下，窗口函数改写同样适用。
+
 
 ### Limit 和 TopN 改写
 当查询包含 ORDER BY 或 LIMIT 子句，或者两者都有（即 Top-N 查询）时，如果物化视图能够提供足够的数据来满足查询的 ORDER BY 和 LIMIT 要求，
