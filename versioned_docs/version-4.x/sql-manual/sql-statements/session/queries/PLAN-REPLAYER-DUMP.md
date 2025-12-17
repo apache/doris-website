@@ -24,7 +24,7 @@ PLAN REPLAYER DUMP <query>
 
 - Refers to the query statement inside the corresponding DML.
 - If it is not a query statement, a parse error will be reported.
-- For more details, please refer to the [SELECT](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-statements/data-query/SELECT) syntax.
+- For more details, please refer to the [SELECT](https://doris.apache.org/docs/dev/sql-manual/sql-statements/data-query/SELECT) syntax.
 
 
 ## Permission Control

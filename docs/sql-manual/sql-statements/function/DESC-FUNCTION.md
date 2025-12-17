@@ -19,7 +19,7 @@ DESC FUNCTION <table_valued_function>
 
 **<table_valued_function>**
 
-> table_valued_function, the name of the table-valued function, such as CATALOGS. For a list of supported table-valued functions, please refer to the "[Table-Valued Functions](https://doris.apache.org/zh-CN/docs/dev/lakehouse/file-analysis)" section
+> table_valued_function, the name of the table-valued function, such as CATALOGS. For a list of supported table-valued functions, please refer to the "[Table-Valued Functions](https://doris.apache.org/docs/dev/lakehouse/file-analysis)" section
 
 ## Examples
 

@@ -68,7 +68,7 @@ Query in DBeaver:
 
 Doris FE has a built-in Web UI. It allows users to perform SQL queries and view other related information without the need to install the MySQL client
 
-To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_port, for example, http://172.20.63.118:8030. This will open the built-in Web console of Doris.
+To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_port, for example, `http://172.20.63.118:8030`. This will open the built-in Web console of Doris.
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
