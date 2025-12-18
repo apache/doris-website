@@ -32,6 +32,12 @@ By directly searching for the `slow_query` tag in `fe.audit.log`, you can quickl
 
 The slow SQL obtained through `fe.audit.log` allows users to easily access detailed information such as execution time, number of rows scanned, number of rows returned, and the SQL statement itself, laying the foundation for further reproducing and locating performance issues.
 
+Additionally, the Audit Log includes a `SqlDigest` field (e.g., `SqlDigest=...` in the example above). This field is a hash value generated from the structure of the SQL statement (with specific parameter values removed). By aggregating and analyzing `SqlDigest` in `slow_query`, you can identify "patterns" of slow queries. This means that even if specific SQL statements differ slightly due to parameters, their `SqlDigest` will be identical as long as the structure is the same.
+
+Using `SqlDigest`, users can determine which SQL patterns appear most frequently or consume the most time, allowing them to prioritize optimization for these "high-frequency" or "high-latency" patterns. This approach significantly improves the efficiency of slow query optimization by avoiding the inefficiency of analyzing individual SQL statements one by one.
+
+It is important to note that `SqlDigest` itself is just a hash value and is not directly readable. Once the slow query pattern to be optimized is identified, you need to refer to the `Stmt` field in the Audit Log to get the specific SQL statement content corresponding to that pattern. Furthermore, the `QueryId` field can be used to retrieve detailed Profile information for the query (Profile retrieval and analysis will be detailed in subsequent sections) for in-depth performance analysis and optimization.
+
 ## audit_log System Table
 
 Starting from Doris version 2.1, the `audit_log` system table is provided under the `__internal_schema` database for users to view the execution status of SQL queries. Before using it, the global configuration `set global enable_audit_plugin=true`; needs to be enabled (this switch is disabled by default).
