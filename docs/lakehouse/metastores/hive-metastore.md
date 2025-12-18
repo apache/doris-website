@@ -226,6 +226,17 @@ The following parameters are specific to each Catalog type, in addition to the c
         'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com'
     );
     ```
+## HMS Access Port Requirements
+
+Doris requires at least the following ports to be open to access HMS:
+
+| Service        | Port Purpose          | Default Port | Protocol |
+|----------------|-----------------------|--------------|----------|
+| Hive Metastore | Thrift (metadata access) | 9083         | TCP      |
+
+Notes:
+- Ports may be customized in `hive-site.xml`. Always follow your actual configuration.
+- When Kerberos authentication is enabled, ensure network connectivity from Doris to the Kerberos KDC. The KDC listens on TCP port 88 by default, unless customized in your KDC configuration.
 
 ## Frequently Asked Questions (FAQ)
 
