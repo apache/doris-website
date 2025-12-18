@@ -226,6 +226,17 @@ Kerberos 详细配置参考 Kerberos 认证。
 	    'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com'
 	);
 	```
+## HMS 访问端口要求
+
+说明：Doris 访问 HMS 最少需保证以下端口连通。
+
+| 服务             | 端口用途              | 默认端口 | 协议           |
+|----------------|-------------------|------|--------------|
+| Hive Metastore | Thrift（元数据访问） | 9083 | TCP          |
+
+注意：
+- 端口可能被 `hive-site.xml`自定义，请以实际配置为准。
+- 当启用 Kerberos 认证时，需要保证 Doris 到 Kerberos KDC 的网络连通。KDC 默认监听 TCP 88 端口，如有自定义请以实际配置为准。
 
 ## 常见问题 FAQ
 
