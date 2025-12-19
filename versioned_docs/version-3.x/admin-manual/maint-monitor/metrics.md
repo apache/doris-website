@@ -1,7 +1,8 @@
 ---
 {
     "title": "Monitor Metrics",
-    "language": "en"
+    "language": "en",
+    "description": "Doris FE process and BE processes provide complete monitoring metrics. Monitoring metrics can be divided into two categories:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATA",
-    "language": "en"
+    "language": "en",
+    "description": "The SHOW DATA statement is used to display information about data volume, replica count, and row statistics."
 }
 ---
 

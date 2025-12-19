@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ASBINARY",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a geometric figure to a standard WKB (Well-known binary) representation."
 }
 ---
 

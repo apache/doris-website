@@ -1,9 +1,9 @@
 ---
 {
     "title": "DIAGNOSE TABLET",
-    "language": "en"
+    "language": "en",
+    "description": "In the compute-storage coupled mode, this statement is used to diagnose a specified tablet."
 }
-
 ---
 
 ## Description

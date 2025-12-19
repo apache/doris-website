@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.0",
-    "language": "en"
+    "language": "en",
+    "description": "Dear community, we are pleased to share with you the official release of Apache Doris 2.1.0, now available for download and use as of March 8th."
 }
 ---
 

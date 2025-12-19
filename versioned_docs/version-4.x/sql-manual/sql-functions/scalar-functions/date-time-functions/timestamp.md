@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The TIMESTAMP function converts a datetime format string to DATETIME type."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFYEAR",
-    "language": "en"
+    "language": "en",
+    "description": "The DAYOFYEAR function is used to calculate the number of days in the current year corresponding to a date or time expression, i.e.,"
 }
 ---
 

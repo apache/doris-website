@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNCOMPRESS",
-    "language": "en"
+    "language": "en",
+    "description": "The UNCOMPRESS function decompresses binary data into strings or values. You must ensure the binary data is the result of the COMPRESS function."
 }
 ---
 

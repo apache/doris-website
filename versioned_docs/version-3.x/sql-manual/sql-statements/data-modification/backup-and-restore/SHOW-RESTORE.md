@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW RESTORE",
-"language": "en"
+    "title": "SHOW RESTORE",
+    "language": "en",
+    "description": "This statement is used to view RESTORE tasks"
 }
 ---
 

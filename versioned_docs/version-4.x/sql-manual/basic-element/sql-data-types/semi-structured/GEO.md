@@ -1,7 +1,8 @@
 ---
 {
     "title": "GEO",
-    "language": "en"
+    "language": "en",
+    "description": ":::info The GEO type described in this document is not an actual data type in Doris,"
 }
 ---
 

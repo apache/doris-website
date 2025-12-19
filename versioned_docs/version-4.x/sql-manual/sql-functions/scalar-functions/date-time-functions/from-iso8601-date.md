@@ -1,9 +1,11 @@
 ---
 {
     "title": "FROM_ISO8601_DATE",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an ISO8601 formatted date expression to a DATE type date expression. Date strings conforming to the ISO 8601 standard,"
 }
 ---
+
 ## Description
 
 Converts an ISO8601 formatted date expression to a DATE type date expression.

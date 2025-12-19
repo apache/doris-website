@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ZIP",
-    "language": "en"
+    "language": "en",
+    "description": "Merges all arrays into a single array. The resulting array contains corresponding elements from the source arrays,"
 }
 ---
 

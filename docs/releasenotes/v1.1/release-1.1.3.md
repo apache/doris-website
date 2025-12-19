@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.3",
-    "language": "en"
+    "language": "en",
+    "description": "In this release, Doris Team has fixed more than 80 issues or performance improvement since 1.1.2. This release is a bugfix release on 1."
 }
 ---
 

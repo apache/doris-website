@@ -1,7 +1,8 @@
 ---
 {
     "title": "Transparent Rewriting by Async-Materialized View",
-    "language": "en"
+    "language": "en",
+    "description": "The Async-materialized view adopts a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern."
 }
 ---
 

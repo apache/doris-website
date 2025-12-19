@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATEDIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the difference between two given dates."
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "REBALANCE DISK",
-    "language": "en"
+    "language": "en",
+    "description": "The REBALANCE DISK statement is used to optimize the data distribution on Backend (BE) nodes. This statement has the following functionalities:"
 }
-
 ---
 
 ## Description

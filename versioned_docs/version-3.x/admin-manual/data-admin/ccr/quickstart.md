@@ -1,7 +1,8 @@
 ---
 {
     "title": "Quick Start",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Configure the following information in the fe.conf and be.conf of both the source and target clusters:"
 }
 ---
 

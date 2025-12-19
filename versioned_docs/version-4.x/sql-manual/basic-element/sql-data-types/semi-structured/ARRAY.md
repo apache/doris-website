@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "The ARRAY<T> type is used to represent an ordered collection of elements, where each element has the same data type. For example,"
 }
 ---
 

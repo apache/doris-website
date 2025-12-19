@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The YEARSADD function is used to add (or subtract) a specified number of years to a given date or time value, returning the adjusted date or time."
 }
 ---
 

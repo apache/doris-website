@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Small File Action",
-    "language": "en"
+    "language": "en",
+    "description": "Through the file id, download the file in the small file manager."
 }
 ---
 

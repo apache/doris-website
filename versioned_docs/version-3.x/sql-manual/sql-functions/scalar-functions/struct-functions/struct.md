@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "en"
+    "language": "en",
+    "description": "construct an struct with variadic elements and return it, Tn could be column or literal"
 }
 ---
 

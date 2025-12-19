@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AND_NOT,BITMAP_ANDNOT",
-    "language": "en"
+    "language": "en",
+    "description": "Perform a NOT operation on two BITMAPs and return the result. The first input parameter is called base BITMAP and the second is called exclude BITMAP."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Handling Data Issues",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Statistics",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports automatic or manual statistics collection for tables from external data sources like Hive, Iceberg and Paimon."
 }
 ---
 

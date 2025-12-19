@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the execution status of the specified import task."
 }
 ---
 

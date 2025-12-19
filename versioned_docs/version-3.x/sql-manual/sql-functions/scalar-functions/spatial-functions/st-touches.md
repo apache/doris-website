@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_TOUCHES",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether two geometric shapes have boundary contact only (i.e., there are common points on the boundaries, but no internal intersection)."
 }
 ---
 

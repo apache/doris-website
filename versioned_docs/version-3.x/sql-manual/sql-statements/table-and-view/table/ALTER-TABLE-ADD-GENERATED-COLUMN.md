@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ALTER TABLE ADD GENERATED COLUMN",
-  "language": "en"
+    "title": "ALTER TABLE ADD GENERATED COLUMN",
+    "language": "en",
+    "description": "The ALTER TABLE ADD COLUMN is not supported for adding a generated column,"
 }
 ---
 

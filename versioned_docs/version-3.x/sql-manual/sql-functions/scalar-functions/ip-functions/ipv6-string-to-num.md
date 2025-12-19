@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_STRING_TO_NUM",
-    "language": "en"
+    "language": "en",
+    "description": "The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format."
 }
 ---
 

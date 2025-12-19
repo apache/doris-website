@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT_ROUND",
-    "language": "en"
+    "language": "en",
+    "description": "Formats a number in a format similar to \"#,###,###.##\", rounds to the specified decimal places, and returns the result as a string."
 }
 ---
 

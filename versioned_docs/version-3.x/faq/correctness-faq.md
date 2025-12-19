@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Integrity FAQ",
-    "language": "en"
+    "language": "en",
+    "description": "This document is mainly used to record common data integrity issues encountered during the use of Doris. It will be updated periodically."
 }
 ---
 

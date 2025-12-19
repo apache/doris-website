@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_SUBSET_LIMIT",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts a subset of Bitmap elements starting from a specified position, with a limit on the number of elements specified by the cardinality limit,"
 }
 ---
 

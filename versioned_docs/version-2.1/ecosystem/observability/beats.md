@@ -1,7 +1,8 @@
 ---
 {
-"title": "Filebeat",
-"language": "en"
+    "title": "Filebeat",
+    "language": "en",
+    "description": "Beats is a data collection agent that supports custom output plugins to write data into storage systems,"
 }
 ---
 

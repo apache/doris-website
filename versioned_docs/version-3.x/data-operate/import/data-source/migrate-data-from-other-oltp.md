@@ -1,7 +1,8 @@
 ---
 {
     "title": "Migrating Data from Other OLTP",
-    "language": "en"
+    "language": "en",
+    "description": "There are various ways to migrate data from other TP systems, such as MySQL/SqlServer/Oracle, to Doris."
 }
 ---
 

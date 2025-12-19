@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERVIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Window functions (also known as analytic functions) are special built-in functions that perform calculations while preserving the original rows."
 }
 ---
 

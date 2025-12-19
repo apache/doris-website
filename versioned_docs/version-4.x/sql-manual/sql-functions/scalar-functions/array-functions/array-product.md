@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PRODUCT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "<version since=\"2.0.0\">"
 }
 ---
 

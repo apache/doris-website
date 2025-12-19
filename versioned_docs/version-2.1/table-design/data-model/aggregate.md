@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aggregate Model",
-    "language": "en"
+    "language": "en",
+    "description": "Doris's Aggregate Key Model is designed to efficiently handle aggregation operations in large-scale data queries."
 }
 ---
 

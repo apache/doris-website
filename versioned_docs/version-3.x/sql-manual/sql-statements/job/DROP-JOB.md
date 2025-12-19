@@ -1,7 +1,8 @@
 ---
 {
-"title": "DROP JOB",
-"language": "en"
+    "title": "DROP JOB",
+    "language": "en",
+    "description": "The user deletes a JOB job. The job will be stopped and deleted immediately."
 }
 ---
 

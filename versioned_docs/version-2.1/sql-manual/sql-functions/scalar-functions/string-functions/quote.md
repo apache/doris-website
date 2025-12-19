@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "Output all the strings in the argument as is and wrap them with ''"
 }
 ---
 

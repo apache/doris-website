@@ -1,7 +1,8 @@
 ---
 {
     "title": "MULTI_SEARCH_ALL_POSITIONS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns an ARRAY where the i-th element is the position of the i-th element in needles(i.e. needle)'s first occurrence in the string haystack."
 }
 ---
 

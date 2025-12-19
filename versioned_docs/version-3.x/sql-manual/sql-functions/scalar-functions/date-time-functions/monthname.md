@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHNAME",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the English name of the month corresponding to a given date."
 }
 ---
 

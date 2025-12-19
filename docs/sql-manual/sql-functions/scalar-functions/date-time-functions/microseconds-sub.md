@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECONDS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECONDSSUB function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value."
 }
 ---
 

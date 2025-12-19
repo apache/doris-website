@@ -1,7 +1,8 @@
 ---
 {
     "title": "DECIMAL",
-    "language": "en"
+    "language": "en",
+    "description": "DECIMAL"
 }
 ---
 

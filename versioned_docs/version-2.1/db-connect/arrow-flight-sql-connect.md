@@ -1,7 +1,8 @@
 ---
 {
     "title": "Connecting by Arrow Flight SQL Protocol",
-    "language": "en"
+    "language": "en",
+    "description": "Since Doris 2.1, a high-speed data link based on the Arrow Flight SQL protocol has been implemented,"
 }
 ---
 

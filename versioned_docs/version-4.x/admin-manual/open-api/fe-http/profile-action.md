@@ -1,7 +1,8 @@
 ---
 {
     "title": "Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": ":::caution Note:"
 }
 ---
 

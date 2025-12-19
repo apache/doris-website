@@ -1,7 +1,8 @@
 ---
 {
     "title": "JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "JDBC Catalog supports connecting to databases that are compatible with the JDBC protocol through a standard JDBC interface."
 }
 ---
 

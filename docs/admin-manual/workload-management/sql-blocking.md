@@ -1,7 +1,8 @@
 ---
 {
-"title": "Query Circuit Breaker",
-"language": "en"
+    "title": "Query Circuit Breaker",
+    "language": "en",
+    "description": "Query circuit breaking is a protective mechanism used to prevent long-running or resource-consuming queries from having a negative impact on the "
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM",
-    "language": "en"
+    "language": "en",
+    "description": "This command is used to delete Spaces or specified characters at both ends of the string. If no rhs parameter is specified,"
 }
 ---
 

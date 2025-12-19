@@ -1,7 +1,8 @@
 ---
 {
     "title": "Flink Doris Connector",
-    "language": "en"
+    "language": "en",
+    "description": "The Flink Doris Connector is used to read from and write data to a Doris cluster through Flink. It also integrates FlinkCDC,"
 }
 ---
 

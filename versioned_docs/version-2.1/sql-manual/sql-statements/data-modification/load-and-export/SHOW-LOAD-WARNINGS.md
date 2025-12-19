@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW LOAD WARNINGS",
-    "language": "en"
+    "language": "en",
+    "description": "If an import task fails and the error message is ETLQUALITYUNSATISFIED, it indicates that there are import quality issues."
 }
 ---
 

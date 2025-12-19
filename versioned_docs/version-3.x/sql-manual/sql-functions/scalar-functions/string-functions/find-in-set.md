@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIND_IN_SET",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the position of the first occurrence of str in strlist (counting starts at 1)."
 }
 ---
 

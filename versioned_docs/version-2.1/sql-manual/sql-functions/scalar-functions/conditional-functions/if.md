@@ -1,7 +1,8 @@
 ---
 {
     "title": "IF",
-    "language": "en"
+    "language": "en",
+    "description": "Returns valueTrue when the condition is true, and returns valueFalseOrNull otherwise."
 }
 ---
 

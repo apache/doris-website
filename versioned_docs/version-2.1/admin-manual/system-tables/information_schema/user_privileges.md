@@ -1,7 +1,8 @@
 ---
 {
     "title": "user_privileges",
-    "language": "en"
+    "language": "en",
+    "description": "View user authorization information."
 }
 ---
 

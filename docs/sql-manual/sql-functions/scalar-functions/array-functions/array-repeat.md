@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REPEAT",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAYREPEAT is used to generate an array of a specified length, where all elements have the given value."
 }
 ---
 

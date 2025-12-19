@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_DISJOINT",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether two geometric shapes are completely disjoint (i.e., have no common points)."
 }
 ---
 

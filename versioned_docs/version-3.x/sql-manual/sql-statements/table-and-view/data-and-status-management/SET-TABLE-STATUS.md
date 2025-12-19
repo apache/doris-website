@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET TABLE STATUS",
-    "language": "en"
+    "language": "en",
+    "description": "The SET TABLE STATUS statement is used to manually set the status of an OLAP table. This statement has the following functionalities:"
 }
 ---
 

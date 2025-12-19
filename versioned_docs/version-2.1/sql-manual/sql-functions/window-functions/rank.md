@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANK",
-    "language": "en"
+    "language": "en",
+    "description": "RANK() is a window function that returns the rank of values in an ordered dataset. Rankings start at 1 and increment sequentially."
 }
 ---
 

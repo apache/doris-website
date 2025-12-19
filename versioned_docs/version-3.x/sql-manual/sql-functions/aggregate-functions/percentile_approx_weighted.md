@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_APPROX_WEIGHTED",
-    "language": "en"
+    "language": "en",
+    "description": "The PERCENTILEAPPROXWEIGHTED function calculates weighted approximate percentiles,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Config Cluster",
-  "language": "en"
+    "title": "Config Cluster",
+    "language": "en",
+    "description": "In a disaggregated compute-storage cluster, certain configurations apply at the cluster level,"
 }
 ---
 

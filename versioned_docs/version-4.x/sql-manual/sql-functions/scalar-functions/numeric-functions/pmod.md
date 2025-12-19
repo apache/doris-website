@@ -1,7 +1,8 @@
 ---
 {
     "title": "PMOD",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the smallest positive solution of the modulo operation x mod y within the modular system, which is obtained by calculating (x % y + y) % y."
 }
 ---
 

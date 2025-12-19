@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_AGG",
-    "language": "en"
+    "language": "en",
+    "description": "The MAPAGG function is used to form a mapping structure based on key-value pairs from multiple rows of data."
 }
 ---
 

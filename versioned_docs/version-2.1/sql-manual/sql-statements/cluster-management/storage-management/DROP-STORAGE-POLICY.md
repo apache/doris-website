@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP STORAGE POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "Delete a storage policy. For detailed descriptions of storage policies, please refer to the \"Storage Policy\" chapter."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Delta Lake Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Delta Lake Catalog uses the Trino Connector compatibility framework to access Delta Lake tables through the Delta Lake Connector."
 }
 ---
 

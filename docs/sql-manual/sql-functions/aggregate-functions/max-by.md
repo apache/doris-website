@@ -1,10 +1,10 @@
 ---
 {
     "title": "MAX_BY",
-    "language": "en"
+    "language": "en",
+    "description": "The MAXBY function returns the associated value based on the maximum value of the specified column."
 }
 ---
-
 
 ## Description
 

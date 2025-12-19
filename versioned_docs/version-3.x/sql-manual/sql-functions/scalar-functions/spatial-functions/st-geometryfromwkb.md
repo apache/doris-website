@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_GEOMETRYFROMWKB",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a standard figure WKB (Well-known binary) to the corresponding memory geometry"
 }
 ---
 

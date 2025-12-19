@@ -1,7 +1,8 @@
 ---
 {
-"title": "JSON_CONTAINS",
-"language": "en"
+    "title": "JSON_CONTAINS",
+    "language": "en",
+    "description": "Used to determine whether a JSON document contains a specified JSON element. If the specified element exists in the JSON document, it returns 1,"
 }
 ---
 

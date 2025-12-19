@@ -1,7 +1,8 @@
 ---
 {
     "title": "Session Action",
-    "language": "en"
+    "language": "en",
+    "description": "Session Action is used to obtain the current session information."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": ":::tip quarter is supported since version 3.0.8 and 3.1.0. :::"
 }
 ---
 

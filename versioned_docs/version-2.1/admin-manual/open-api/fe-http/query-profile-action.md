@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": "Gets information about select queries for all fe nodes in the cluster."
 }
 ---
 

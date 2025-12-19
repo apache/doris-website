@@ -1,7 +1,8 @@
 ---
 {
     "title": "SKEW,SKEW_POP,SKEWNESS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the skewness of the expr expression. The forumula used for this function is 3-th centrol moment / ((variance)^{1.5}), when variance is zero,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Managing Storage Vault",
-    "language": "en"
+    "language": "en",
+    "description": "The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The QUARTERSADD function is used to add or subtract a specified number of quarters (1 quarter = 3 months) to a specified datetime value and returns "
 }
 ---
 

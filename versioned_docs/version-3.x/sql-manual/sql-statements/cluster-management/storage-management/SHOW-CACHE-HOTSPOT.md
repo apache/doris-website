@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CACHE HOTSPOT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the hotspot information of the file cache."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE PROPERTY",
-    "language": "en"
+    "language": "en",
+    "description": ":::caution Differences between Partition Attributes and Table Attributes"
 }
 ---
 

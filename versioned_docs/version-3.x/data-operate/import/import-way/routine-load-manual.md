@@ -1,7 +1,8 @@
 ---
 {
     "title": "Routine Load",
-    "language": "en"
+    "language": "en",
+    "description": "Doris can continuously consume data from Kafka Topic through the Routine Load method. After submitting a Routine Load job,"
 }
 ---
 

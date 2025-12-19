@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Add a specified time interval to the date."
 }
 ---
 

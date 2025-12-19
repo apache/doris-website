@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Analysis Guide",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris provides Query Profile to expose query execution details. This article covers the overall architecture and practical guidance, including:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST",
-    "language": "en"
+    "language": "en",
+    "description": "Use a lambda bool expression and an array as the input parameters,"
 }
 ---
 

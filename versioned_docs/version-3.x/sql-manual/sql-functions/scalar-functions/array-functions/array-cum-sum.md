@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CUM_SUM",
-    "language": "en"
+    "language": "en",
+    "description": "Get the cumulative sum of an array (NULL values are skipped). If the array contains NULL values,"
 }
 ---
 

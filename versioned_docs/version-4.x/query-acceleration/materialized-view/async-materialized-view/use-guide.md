@@ -1,7 +1,8 @@
 ---
 {
     "title": "Best Practices",
-    "language": "en"
+    "language": "en",
+    "description": ":::caution Note"
 }
 ---
 

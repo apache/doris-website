@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ROW POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "Delete row security policy. For details about row security policies, please refer to the \"Security Policies\" chapter"
 }
 ---
 

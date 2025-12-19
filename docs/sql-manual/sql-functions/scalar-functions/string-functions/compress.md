@@ -1,7 +1,8 @@
 ---
 {
     "title": "COMPRESS",
-    "language": "en"
+    "language": "en",
+    "description": "The COMPRESS function compresses a string into binary data using the zlib compression algorithm."
 }
 ---
 

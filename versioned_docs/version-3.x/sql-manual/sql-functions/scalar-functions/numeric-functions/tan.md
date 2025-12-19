@@ -1,7 +1,8 @@
 ---
 {
     "title": "TAN",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the tangent of x, where x is the value in radians."
 }
 ---
 

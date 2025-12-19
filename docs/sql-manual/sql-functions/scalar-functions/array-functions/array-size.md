@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Return the number of elements in an array."
 }
 ---
 

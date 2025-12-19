@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Data Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to get the total data volume of the cluster or the data volume of the specified database. Unit byte."
 }
 ---
 

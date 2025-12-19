@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CIRCLE",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a WKT (Well-Known Text) into a circle on the Earth's spherical surface."
 }
 ---
 

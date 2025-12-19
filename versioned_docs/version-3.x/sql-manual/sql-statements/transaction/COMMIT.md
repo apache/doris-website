@@ -1,7 +1,8 @@
 ---
 {
     "title": "COMMIT",
-    "language": "en"
+    "language": "en",
+    "description": "Submit an explicit transaction, used in pairs with BEGIN."
 }
 ---
 

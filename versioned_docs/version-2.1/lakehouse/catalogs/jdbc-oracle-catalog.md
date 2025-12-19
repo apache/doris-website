@@ -1,7 +1,8 @@
 ---
 {
     "title": "Oracle JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris JDBC Catalog supports connecting to Oracle databases via the standard JDBC interface."
 }
 ---
 

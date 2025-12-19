@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR",
-    "language": "en"
+    "language": "en",
+    "description": "Obtains the hour information from the given datetime."
 }
 ---
 

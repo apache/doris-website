@@ -1,7 +1,8 @@
 ---
 {
-"title": "Federated Authentication",
-"language": "en"
+    "title": "Federated Authentication",
+    "language": "en",
+    "description": "Integrate third-party LDAP services to provide login authentication and group authorization services for Doris."
 }
 ---
 

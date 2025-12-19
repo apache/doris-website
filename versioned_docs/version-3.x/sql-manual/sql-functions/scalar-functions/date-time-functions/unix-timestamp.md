@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNIX_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a Date or Datetime type to a UNIX timestamp."
 }
 ---
 

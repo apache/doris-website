@@ -1,7 +1,8 @@
 ---
 {
-"title": "PARTITION_VALUES",
-"language": "en"
+    "title": "PARTITION_VALUES",
+    "language": "en",
+    "description": "Table function that generates a temporary table of partition values, allowing you to view the list of partition values for a specific TABLE."
 }
 ---
 

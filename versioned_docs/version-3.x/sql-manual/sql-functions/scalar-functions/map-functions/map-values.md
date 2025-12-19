@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_VALUES",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the values of the given map into an ARRAY of the corresponding type"
 }
 ---
 

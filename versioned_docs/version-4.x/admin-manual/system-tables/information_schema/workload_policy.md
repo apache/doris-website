@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_policy",
-    "language": "en"
+    "language": "en",
+    "description": "Records the configuration information of Workload Policies."
 }
 ---
 

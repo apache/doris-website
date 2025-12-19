@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SUM",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the sum of all elements in an array"
 }
 ---
 

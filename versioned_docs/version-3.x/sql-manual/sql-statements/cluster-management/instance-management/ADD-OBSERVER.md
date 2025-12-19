@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD OBSERVER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement adds a node with the OBSERVER role to the FRONTEND node (only used by administrators!)"
 }
 ---
 

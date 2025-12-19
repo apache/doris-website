@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER STORAGE VAULT",
-"language": "en"
+    "title": "ALTER STORAGE VAULT",
+    "language": "en",
+    "description": "Modify the mutable properties of a Storage Vault."
 }
 ---
 

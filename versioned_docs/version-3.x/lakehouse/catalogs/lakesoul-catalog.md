@@ -1,7 +1,8 @@
 ---
 {
     "title": "LakeSoul Catalog",
-    "language": "en"
+    "language": "en",
+    "description": ":::warning Note! This feature is deprecated since 3.1.0. For usage inquiries, please contact the developers. :::"
 }
 ---
 

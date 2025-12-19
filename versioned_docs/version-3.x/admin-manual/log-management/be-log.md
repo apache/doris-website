@@ -1,7 +1,8 @@
 ---
 {
     "title": "BE Log Management",
-    "language": "en"
+    "language": "en",
+    "description": "This document mainly introduces the log management of the Backend (BE) process."
 }
 ---
 

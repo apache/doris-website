@@ -1,7 +1,8 @@
 ---
 {
     "title": "NORMALIZE_JSON_NUMBERS_TO_DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
 }
 ---
 

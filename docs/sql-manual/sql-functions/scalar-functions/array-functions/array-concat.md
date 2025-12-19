@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CONCAT",
-    "language": "en"
+    "language": "en",
+    "description": "<version since=\"2.0.0\">"
 }
 ---
 

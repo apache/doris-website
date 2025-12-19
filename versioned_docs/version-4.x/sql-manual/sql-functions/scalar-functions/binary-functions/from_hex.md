@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_HEX",
-    "language": "en"
+    "language": "en",
+    "description": "Convert the input binary data into a string converted using hexadecimal encoding."
 }
 ---
 

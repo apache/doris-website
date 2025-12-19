@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to IP Types",
-    "language": "en"
+    "language": "en",
+    "description": "IP types are used to store and process IP addresses, including IPv4 and IPv6 types. IPv4 is stored as uint32, while IPv6 is stored as uint128."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_active_tasks",
-    "language": "en"
+    "language": "en",
+    "description": "View the resource usage of Query or Load tasks currently running on Backends."
 }
 ---
 

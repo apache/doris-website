@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Bitmap UDF",
-    "language": "en"
+    "language": "en",
+    "description": "Hive Bitmap UDF provides UDFs for generating bitmap and bitmap operations in hive tables. The bitmap in Hive is exactly the same as the Doris bitmap."
 }
 ---
 

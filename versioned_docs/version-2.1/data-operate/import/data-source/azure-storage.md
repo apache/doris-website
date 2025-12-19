@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Storage",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from Azure Storage:"
 }
 ---
 

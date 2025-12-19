@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATABASE ID",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to find the corresponding database name based on the database id (only used by administrators)"
 }
 ---
 

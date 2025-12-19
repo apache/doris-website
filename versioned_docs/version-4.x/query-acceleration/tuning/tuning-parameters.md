@@ -1,7 +1,8 @@
 ---
 {
     "title": "Common Tuning Parameters",
-    "language": "en"
+    "language": "en",
+    "description": "Learn about common tuning parameters in Doris including enable_nereids_planner, parallel_pipeline_task_num, and runtime_filter_mode for performance optimization and version upgrade strategies."
 }
 ---
 

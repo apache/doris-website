@@ -1,7 +1,8 @@
 ---
 {
     "title": "Broker Load",
-    "language": "en"
+    "language": "en",
+    "description": "Broker Load is initiated from the MySQL API. Doris will actively pull the data from the source based on the information in the LOAD statement."
 }
 ---
 

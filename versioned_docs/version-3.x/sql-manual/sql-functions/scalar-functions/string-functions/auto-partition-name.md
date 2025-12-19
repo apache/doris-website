@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::tip 提示 该功能自 Apache Doris 2.1.6 版本起支持 :::"
 }
 ---
 

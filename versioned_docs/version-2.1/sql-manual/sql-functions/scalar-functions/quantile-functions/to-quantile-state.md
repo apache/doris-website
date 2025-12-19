@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_QUANTILE_STATE",
-    "language": "en"
+    "language": "en",
+    "description": "This function converts numeric types to QUANTILESTATE type. The compression parameter is optional and can be set in the range [2048, 10000]."
 }
 ---
 

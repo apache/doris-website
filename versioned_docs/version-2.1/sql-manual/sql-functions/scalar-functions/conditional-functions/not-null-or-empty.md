@@ -1,7 +1,8 @@
 ---
 {
     "title": "NOT_NULL_OR_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "The notnullorempty function checks if the given value is neither NULL nor empty."
 }
 ---
 

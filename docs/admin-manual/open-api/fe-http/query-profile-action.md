@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": "GET /rest/v2/manager/query/statistics/{traceid} (4.0.0+)"
 }
 ---
 

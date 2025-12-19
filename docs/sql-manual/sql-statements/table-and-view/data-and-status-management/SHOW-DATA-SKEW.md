@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW DATA SKEW",
-"language": "en"
+    "title": "SHOW DATA SKEW",
+    "language": "en",
+    "description": "The SHOW DATA SKEW statement is used to view the data skew of a table or partition. This statement has the following functionalities:"
 }
 ---
 

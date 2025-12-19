@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRUNCATE TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to clear the data of the specified table and partition."
 }
 ---
 

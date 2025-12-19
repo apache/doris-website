@@ -1,7 +1,8 @@
 ---
 {
-"title": "MAP",
-"language": "en"
+    "title": "MAP",
+    "language": "en",
+    "description": "MAP"
 }
 ---
 

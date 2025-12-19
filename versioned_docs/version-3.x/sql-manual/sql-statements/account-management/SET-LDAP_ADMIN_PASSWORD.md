@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET LDAP_ADMIN_PASSWORD",
-    "language": "en"
+    "language": "en",
+    "description": "The SET LDAPADMINPASSWORD command is used to set the LDAP administrator password. When using LDAP authentication,"
 }
 ---
 

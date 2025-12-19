@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE-OUTER",
-    "language": "en"
+    "language": "en",
+    "description": "The explode function accepts an array and maps each element of the array to a separate row."
 }
 ---
 

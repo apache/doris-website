@@ -1,9 +1,10 @@
---- 
+---
 {
     "title": "High-Concurrency Point Query Optimization",
-    "language": "en"
+    "language": "en",
+    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
 }
---- 
+---
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one

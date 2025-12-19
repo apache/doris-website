@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "en"
+    "language": "en",
+    "description": "The AUTOPARTITIONNAME function is used to generate partition names for auto partitions."
 }
 ---
 

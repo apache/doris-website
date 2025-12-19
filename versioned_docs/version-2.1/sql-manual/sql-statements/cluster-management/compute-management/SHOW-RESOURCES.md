@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW RESOURCES",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display resources that the user has permission to use. Ordinary users can only display resources with permission,"
 }
 ---
 

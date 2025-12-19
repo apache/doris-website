@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logout Action",
-    "language": "en"
+    "language": "en",
+    "description": "Logout Action is used to log out of the current login."
 }
 ---
 

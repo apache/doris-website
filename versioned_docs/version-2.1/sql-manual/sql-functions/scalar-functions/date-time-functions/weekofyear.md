@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKOFYEAR",
-    "language": "en"
+    "language": "en",
+    "description": "Get the Weeks of the Year"
 }
 ---
 

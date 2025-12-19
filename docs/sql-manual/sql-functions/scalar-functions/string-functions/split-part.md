@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_PART",
-    "language": "en"
+    "language": "en",
+    "description": "The SPLITPART function splits a string into multiple parts according to the specified separator and return one of the parts."
 }
 ---
 

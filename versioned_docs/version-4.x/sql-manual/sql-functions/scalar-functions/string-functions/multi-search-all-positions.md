@@ -1,7 +1,8 @@
 ---
 {
     "title": "MULTI_SEARCH_ALL_POSITIONS",
-    "language": "en"
+    "language": "en",
+    "description": "The MULTISEARCHALLPOSITIONS function searches for multiple substrings in a string in batch."
 }
 ---
 

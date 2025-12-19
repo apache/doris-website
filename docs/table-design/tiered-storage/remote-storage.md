@@ -1,7 +1,8 @@
 ---
 {
     "title": "Remote Storage",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Remote storage supports placing cold data in external storage (such as object storage, HDFS)."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Schema Action",
-    "language": "en"
+    "language": "en",
+    "description": "The Query Schema Action can return the table creation statement for the given SQL-related table. Can be used to test some query scenarios locally."
 }
 ---
 

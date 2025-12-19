@@ -1,7 +1,8 @@
 ---
 {
     "title": "SINH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the hyperbolic sine of x."
 }
 ---
 

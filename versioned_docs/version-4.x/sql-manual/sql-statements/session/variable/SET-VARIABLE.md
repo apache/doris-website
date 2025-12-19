@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET VARIABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is mainly used to modify Doris system variables. These system variables can be modified at the global and session level,"
 }
 ---
 

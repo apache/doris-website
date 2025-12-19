@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURRENT_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The function retrieves the current system time and returns it as a datetime value (DATETIME)."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "QuickSight",
-  "language": "en"
+    "title": "QuickSight",
+    "language": "en",
+    "description": "QuickSight can connect to Apache Doris via the official MySQL data source in Directly query or Import mode"
 }
 ---
 

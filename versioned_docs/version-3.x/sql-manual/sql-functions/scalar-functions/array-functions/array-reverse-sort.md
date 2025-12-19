@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REVERSE_SORT",
-    "language": "en"
+    "language": "en",
+    "description": "Sort the elements in an array in descending order"
 }
 ---
 
