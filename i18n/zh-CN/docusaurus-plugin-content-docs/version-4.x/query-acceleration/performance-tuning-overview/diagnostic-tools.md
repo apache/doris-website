@@ -38,6 +38,29 @@ Doris Manager 的日志模块提供了慢 SQL 筛选功能。用户可以通过�
 
 需要注意的是，`SqlDigest` 本身只是一个哈希值，无法直接阅读。在确定了需要优化的慢查询模式后，还需要结合 Audit Log 中的 `Stmt` 字段来获取该模式对应的具体 SQL 语句内容。进一步地，可以通过 `QueryId` 字段获取该查询的详细 Profile 信息（Profile 的获取与分析将在后续章节详细介绍），从而进行深度的性能分析和优化。
 
+### 慢查询分析示例
+
+以上述 `fe.audit.log` 中的 4 条慢查询日志为例，我们可以看到：
+
+1.  第一条日志（`Time(ms)=11603`）的 `SqlDigest` 为 `f23c7a7ecff61da33f537b2699e9b053`。
+2.  后三条日志（`Time(ms)=8978`, `8514`, `8660`）的 `SqlDigest` 均为 `fec5a7136f9375aa968a4de971b994da`。
+
+这表明后三条慢查询虽然执行时间（`Time(ms)`）和部分执行细节略有不同，但它们属于同一种 SQL 模式（结构相同）。
+
+在实际优化场景中，如果我们发现某个 `SqlDigest`（如 `fec5a7136f9375aa968a4de971b994da`）在慢查询日志中反复出现，或者其累计耗时占比很高，那么我们应该优先关注这个模式。
+
+**优化步骤建议：**
+
+1.  **定位业务逻辑**：通过查看该模式下任意一条日志的 `Stmt` 字段：
+    ```sql
+    select     s_name,     count(*) as numwait from     supplier,     lineitem l1,     orders,     nation where ...
+    ```
+    我们可以确定具体的 SQL 业务逻辑。
+
+2.  **深度分析**：利用日志中的 `QueryId`（如 `6e1fae453cb04d9a-b1e5f94d9cea1885`）在 Doris 中查找对应的 Query Profile。通过 Profile 可以进一步分析是扫描数据量过大、Join 耗时过长，还是其他原因，从而制定针对性的优化策略（如增加索引、优化 SQL 写法或调整表结构）。
+
+一旦解决了这个模式的问题，所有属于该模式的慢查询都能得到改善。
+
 ## audit_log 系统表
 
 Doris 2.1 以后的版本在 `__internal_schema` 数据库下提供了 `audit_log` 系统表，供用户查看 SQL 运行的情况。使用前需要打开全局配置 `set global enable_audit_plugin=true;`（此开关默认关闭）。
