@@ -1,7 +1,10 @@
-import { Pagination } from 'swiper';
 import React, { useCallback, useRef, useState } from 'react';
 import usePhone from '../../hooks/use-phone';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 import { NEWSLETTER_DATA } from '../../constant/newsletter.data';
 import ReadMore from '../../components/ReadMore';
 import { useAnimationFrame } from '../../hooks/use-animation-frame';

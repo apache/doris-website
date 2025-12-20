@@ -318,8 +318,8 @@ export default function Learning(): JSX.Element {
                     }
                 >
                     <div className="sitemap-list row">
-                        {sitemapList.map((item, index) => (
-                            <div className="sitemap-item" key={index}>
+                        {sitemapList.map(item => (
+                            <div className="sitemap-item" key={item.title}>
                                 <div className="sitemap-title">{item.title}</div>
                                 <div className="sitemap-icon">
                                     <img src={item.icon} alt="" />

@@ -500,8 +500,8 @@ export default function Home(): JSX.Element {
             >
                 <div className="communitys">
                     <div className="row">
-                        {communitys.map((item, index) => (
-                            <div className={clsx('col', isPhone ? 'col--6' : 'col--4')} key={index}>
+                        {communitys.map(item => (
+                            <div className={clsx('col', isPhone ? 'col--6' : 'col--4')} key={item.title ?? item.href}>
                                 <Link to={item.href} className="community-item">
                                     {item.img}
                                     <div className="community-title">{item.title}</div>

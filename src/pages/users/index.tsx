@@ -5,8 +5,7 @@ import { translate } from '@docusaurus/Translate';
 import './index.scss';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-
-import { Pagination } from 'swiper';
+import { Pagination } from 'swiper/modules';
 import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
 import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
@@ -91,9 +90,8 @@ export default function Users(): JSX.Element {
                         {USER_STORIES_CATEGORIES.map((item: any) => (
                             <li className="py-px" key={item} onClick={() => changeCategory(item)}>
                                 <span
-                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
-                                        active === item && 'bg-primary text-white'
-                                    }`}
+                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${active === item && 'bg-primary text-white'
+                                        }`}
                                 >
                                     {item}
                                 </span>

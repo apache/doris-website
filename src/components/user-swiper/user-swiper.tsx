@@ -1,7 +1,7 @@
 import usePhone from '@site/src/hooks/use-phone';
-import { Pagination } from 'swiper';
 import React, { useCallback, useState } from 'react';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';

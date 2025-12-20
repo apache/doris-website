@@ -26,18 +26,20 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
         <section className={clsx('banner-section', className)}>
             <div className="banner-container container">
                 <div className="banner-info mb-10 lg:mb-20">
-                    { event }
+                    {event}
                     <div className="banner-title-wrap">
                         <div className="banner-title">{title}</div>
                         <div className="banner-sub-title">{subTitle}</div>
                     </div>
                     <div className="banner-buttons">
-                        {buttons.map((btn, index) =>
-                            typeof btn.link === 'string' ? (
+                        {buttons.map(btn => {
+                            const buttonKey = typeof btn.link === 'string' ? btn.link : `${btn.type}-${String(btn.label)}`;
+
+                            return typeof btn.link === 'string' ? (
                                 <Link
                                     className={clsx('button button--secondary button--lg', btn.type)}
                                     to={btn.link}
-                                    key={index}
+                                    key={buttonKey}
                                 >
                                     {btn.label}
                                 </Link>
@@ -45,7 +47,7 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
                                 <div
                                     onClick={btn.link}
                                     className={clsx('button button--secondary button--lg', btn.type)}
-                                    key={index}
+                                    key={buttonKey}
                                 >
                                     {btn.label}
                                     <svg
@@ -72,8 +74,8 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
                                         />
                                     </svg>
                                 </div>
-                            ),
-                        )}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
