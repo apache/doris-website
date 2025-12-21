@@ -1573,6 +1573,7 @@
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-contains",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-contains_all",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-count",
+                                        "sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-difference",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-distinct",
