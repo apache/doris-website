@@ -1,6 +1,5 @@
-import React from 'react';
-import { ComponentProps, JSXElementConstructor } from 'react';
-import { ReleaseNoteIcon } from '../Icons/release-note';
+import React, { JSX } from 'react';
+import { ComponentProps } from 'react';
 import './style.scss';
 import Link from '@docusaurus/Link';
 import { BLOG_TAG_ICONS } from '@site/src/constant/common';

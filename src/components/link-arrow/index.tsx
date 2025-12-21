@@ -1,6 +1,5 @@
 import Link from '@docusaurus/Link';
 import React, { CSSProperties } from 'react';
-import { useAlternatePageUtils } from '@docusaurus/theme-common';
 
 interface ReadMoreProps {
     to: string;

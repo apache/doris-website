@@ -4,7 +4,6 @@ import { EcomsystemCategoryEnum } from '../ecomsystem.data';
 import { ClusterManagementIcon } from './components/icons/cluster-management-icon';
 import { DataMigrationIcon } from './components/icons/data-migration-icon';
 import { ConnectorsIcon } from './components/icons/connectors-icon';
-import { DistributionsAndPackagingIcon } from './components/icons/distributions-packaging-icon';
 import { DataLoadingIcon } from './components/icons/data-loading';
 
 import { TabItem } from './components/tab-item';
