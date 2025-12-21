@@ -13,9 +13,9 @@ const HomeIcon: React.FC<HomeIconProps> = props => {
             {...props}
         >
             <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M3.835 6.44a1 1 0 0 0-.445.832v8.939c0 .436.354.79.79.79H16.81a.79.79 0 0 0 .79-.79V7.272a1 1 0 0 0-.446-.832L11.05 2.37a1 1 0 0 0-1.11 0zm7.26 4.16a.6.6 0 1 0-1.2 0v3.3a.6.6 0 0 0 1.2 0z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
             ></path>
         </svg>
     );

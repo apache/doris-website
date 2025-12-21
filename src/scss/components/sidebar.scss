@@ -1,7 +1,7 @@
 .theme-doc-sidebar-container {
     background-color: var(--global-colors-background);
     border-right: none !important;
-    clip-path: none !important;
+    clipPath: none !important;
     z-index: 100;
 
     @media (min-width: 997px) {

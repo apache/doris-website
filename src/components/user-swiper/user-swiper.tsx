@@ -63,7 +63,11 @@ export function UserSwiper() {
                 modules={[Pagination]}
                 loop={true}
                 onSlideChange={() => setProgressCount(0)}
-                onSwiper={setSwiperRef}
+                onSwiper={(swiper) => {
+                    setTimeout(() => {
+                        setSwiperRef(swiper);
+                    });
+                }}
             >
                 {USER_STORIES.map(userStory => {
                     return (
