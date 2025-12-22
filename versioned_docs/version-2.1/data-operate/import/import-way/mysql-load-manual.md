@@ -147,7 +147,7 @@ Descriptions of modules in the Load job:
 | COLUMNS TERMINATED BY | This specifies the column delimiter.                         |
 | LINE TERMINATED BY    | This specifies the row delimiter.                            |
 | IGNORE num LINES      | This specifies the number of rows to skip in the CSV import, typically specified as 1 to skip the header. |
-| col_name_or_user_var  | This specifies the column mapping syntax. For more information, refer to [Column Mapping](https://doris.apache.org/docs/2.0/data-operate/import/load-data-convert#column-mapping). |
+| col_name_or_user_var  | This specifies the column mapping syntax. For more information, refer to [Column Mapping](https://doris.apache.org/docs/dev/data-operate/import/load-data-convert#column-mapping). |
 | PROPERTIES            | Parameters for the Load.                                     |
 
 ### Parameters

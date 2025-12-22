@@ -31,8 +31,8 @@ This document describes the parameters required to access MinIO, which apply to 
 
 MinIO uses Host-style access by default, but also supports Path-style access. You can switch by setting the `minio.use_path_style` parameter.
 
-- Host-style access (default): https://bucket.minio.example.com
-- Path-style access (when enabled): https://minio.example.com/bucket
+- Host-style access (default): `https://bucket.minio.example.com`
+- Path-style access (when enabled): `https://minio.example.com/bucket`
 
 ## Example Configuration
 
